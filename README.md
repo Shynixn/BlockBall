@@ -1,8 +1,12 @@
 # BlockBall
-[![GitHub license](http://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/Shynixn/BlockBall/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://raw.githubusercontent.com/Shynixn/BlockBall/master/LICENSE)
+
+| branch        | status        | 
+| ------------- | --------------| 
+| master        | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=master)](https://travis-ci.org/Shynixn/BlockBall) |
+| workflow      | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=workflow)](https://travis-ci.org/Shynixn/BlockBall) | 
 
 ## Description
-
 Spigot plugin to simulate a football/soccer game in minecraft.
 
 ## Features
@@ -14,7 +18,7 @@ Spigot plugin to simulate a football/soccer game in minecraft.
 
 ## Installation
 
-* Download the plugin BlockBall
+* [Download the plugin BlockBall](https://github.com/Shynixn/BlockBall/releases)
 * Put the plugin into your plugin folder
 * Install the plugin Worldedit
 * Start the server (1.8.0 - 1.11.2, Java 7/Java 8)
@@ -30,8 +34,8 @@ Spigot plugin to simulate a football/soccer game in minecraft.
 ```xml
 <dependency>
      <groupId>com.github.shynixn</groupId>
-     <artifactId></artifactId>
-     <version></version>
+     <artifactId>blockball</artifactId>
+     <version>3.7.0</version>
 </dependency>
 ```
 
