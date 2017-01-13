@@ -1,0 +1,17 @@
+name: BlockBall
+version: 3.6.4
+author: Shynixn
+website: https://www.spigotmc.org/members/shynixn.63455/
+main: com.github.shynixn.blockball.business.bukkit.BlockBallPlugin
+softdepend: [WorldGuard, BossBarAPI, PlaceholderAPI, Vault]
+commands:
+   blockball:
+      description: Opens the arena menu.
+      usage: /<command>
+      permission: blockball.admin
+      permission-message: You don't have permission.
+   blockballreload:
+      description: Reloads Blockball config.
+      usage: /<command>
+      permission: blockball.admin
+      permission-message: You don't have permission.

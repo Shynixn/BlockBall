@@ -1,0 +1,125 @@
+#######################################################################
+#                          BlockBall                                  #
+# 		            	   by Shynixn							      #
+#######################################################################
+
+# Permission:
+# LEVEL		 DESCRIPTION									PERMISSION
+# user       Access to join a blockball game				blockball.user
+# admin      Access to the /blockball command 				blockball.admin
+
+# Where is the arena configuration?
+# Join your server, it can be configured ingame!
+
+#Commands settings
+#Choose your wanted command (dynamic command engine)
+
+# <command> = selected command
+# <game> = arena alias or arena id
+# <team> = team name
+
+global-join:
+  enabled: true
+  command: bbjoin
+  useage: /<command> <game> <team>
+  description: Join a game.
+  permission: blockball.user
+  permission-message: You don't have permission
+global-leave:
+  enabled: true
+  command: bbleave
+  useage: /<command>
+  description: Leaves current game.
+  permission: blockball.user
+  permission-message: You don't have permission
+navigate-chatmenu:
+  enabled: false
+  command: bbc
+  useage: /<command>
+  description: Helps navigating through the chamenu.
+  permission: blockball.admin
+  permission-message: You don't have permission
+forcefield-join:
+  enabled: false
+  command: bb
+  useage: /<command> <team>
+  description: Join the current game.
+  permission: blockball.user
+  permission-message: You don't have permission
+referee-game:
+  enabled: false
+  command: bbreferee
+  useage: /<command>
+  description: Opens the configuration game section.
+  permission: blockball.admin
+  permission-message: You don't have permission
+#Sign settings
+
+# <game> = arena alias or arena id
+# <team> = team name
+# <state> = status of the arena
+# <players> = amount of players on the team or in the arena
+# <maxplayers> = max amount of players on the team or in the arena
+
+#Warning! One line has to be '<game>' in order to make the sign working!
+
+minigame-sign:
+ line-1: '&l[Blockball]'
+ line-2: '<game>'
+ line-3: '<state>'
+ line-4: '<players>/<maxplayers>'
+leave-sign:
+ line-1: '&l[Blockball]'
+ line-2: 'Leave game'
+ line-3: ''
+ line-4: ''
+lobbygame-sign:
+ line-1: '&l[Blockball]'
+ line-2: '<game>'
+ line-3: '<team>'
+ line-4: '<players>/<maxplayers>'
+#Chat settings
+#Enable this to handle chat messages asynchronly
+async-chat: true
+highest-priority: true
+
+#Spawnpoint settings
+#Set this to add a spawnpoint for players who try to respawn in an blockball field
+join-spawnpoint:
+ enabled: false
+ world: 'world'
+ coordinates:
+  x: 0.0
+  y: 0.0
+  z: 0.0
+  yaw: 0.0
+  pitch: 0.0
+#Particles settings
+particles:
+ visible-for-all: true
+ visible-permission: ''
+
+#Knockback settings
+entity-velocity-protection:
+ x: 5.0
+ y: 2.0
+ z: 5.0
+player-launch-up-protection:
+ x: 0.0
+ y: 2.0
+ z: 0.0
+
+#Delays the start of the plugin
+plugin-start-delay:
+ enabled: false
+ time-seconds: 20
+
+#Goals settings
+#Enable this to show a scoreboard of the top goals on your server
+goals-scoreboard:
+ enabled: false
+ scoreboard-title: '&6Top Goals'
+ firstplace-prefix: '&c'
+ secondplace-prefix: '&9'
+ thirdplace-prefix: '&a'
+ other-prefix: '&7'
