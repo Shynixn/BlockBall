@@ -38,10 +38,10 @@ interface ServerInfo {
     }
 
     class Container implements ServerInfo {
-        private int playerAmount = 0;
-        private int maxPlayerAmount = 0;
+        private int playerAmount;
+        private int maxPlayerAmount;
         private State state;
-        private String serverName;
+        private final String serverName;
 
         Container(String serverName, int playerAmount, int maxPlayerAmount) {
             this.playerAmount = playerAmount;
@@ -64,7 +64,7 @@ interface ServerInfo {
                     else if (started)
                         motd += data.charAt(i);
                 }
-                state = State.getStateFromName(motd);
+                this.state = State.getStateFromName(motd);
                 motd = "";
                 started = false;
                 for (; i < data.length(); i++) {
@@ -78,7 +78,7 @@ interface ServerInfo {
                         motd += data.charAt(i);
                     }
                 }
-                playerAmount = Integer.parseInt(motd);
+                this.playerAmount = Integer.parseInt(motd);
                 motd = "";
                 started = false;
                 for (; i < data.length(); i++) {
@@ -89,32 +89,32 @@ interface ServerInfo {
                     else if (started)
                         motd += data.charAt(i);
                 }
-                maxPlayerAmount = Integer.parseInt(motd);
+                this.maxPlayerAmount = Integer.parseInt(motd);
             } catch (Exception ex) {
-                state = State.RESTARTING;
-                playerAmount = 0;
-                maxPlayerAmount = 0;
+                this.state = State.RESTARTING;
+                this.playerAmount = 0;
+                this.maxPlayerAmount = 0;
             }
         }
 
         @Override
         public int getPlayerAmount() {
-            return playerAmount;
+            return this.playerAmount;
         }
 
         @Override
         public int getMaxPlayerAmount() {
-            return maxPlayerAmount;
+            return this.maxPlayerAmount;
         }
 
         @Override
         public State getState() {
-            return state;
+            return this.state;
         }
 
         @Override
         public String getServerName() {
-            return serverName;
+            return this.serverName;
         }
     }
 }
