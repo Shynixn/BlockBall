@@ -1,8 +1,6 @@
 # BlockBall
 [![GitHub license](http://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/Shynixn/BlockBall/master/LICENSE)
 
-![alt tag](http://www.mediafire.com/convkey/8782/9kjiwk2sisw5hk6zg.jpg)
-
 ## Description
 
 Spigot plugin to simulate a football/soccer game in minecraft.
@@ -49,6 +47,11 @@ Spigot plugin to simulate a football/soccer game in minecraft.
 ```
 
 * Check out the [BlockBall-Spigot-Page](https://www.spigotmc.org/resources/blockball-minigame-bungeecord-soccer-football-1-8-1-9-1-10-1-11.15320/) to get more information. 
+
+## Screenshots
+
+![alt tag](http://www.mediafire.com/convkey/8782/9kjiwk2sisw5hk6zg.jpg)
+![alt tag](http://www.mediafire.com/convkey/a253/ur76bhb6doccomvzg.jpg)
 
 ## Licence
 
