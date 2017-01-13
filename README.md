@@ -50,7 +50,7 @@ Spigot plugin to simulate a football/soccer game in minecraft.
 
 ## Screenshots
 
-![alt tag](http://www.mediafire.com/convkey/8782/9kjiwk2sisw5hk6zg.jpg)
+![alt tag](http://www.mediafire.com/convkey/0fc6/c5wd0rfxbc01xm7zg.jpg)
 ![alt tag](http://www.mediafire.com/convkey/a253/ur76bhb6doccomvzg.jpg)
 
 ## Licence
