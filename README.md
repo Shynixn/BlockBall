@@ -1,5 +1,5 @@
 # BlockBall
-[![GitHub license](https://img.shields.io/badge/Apache%20License%202.0-plastic-blue.svg)](https://raw.githubusercontent.com/Shynixn/BlockBall/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://raw.githubusercontent.com/Shynixn/BlockBall/master/LICENSE)
 
 | branch        | status        | 
 | ------------- | --------------| 
