@@ -14,7 +14,7 @@ class BallMetaEntity implements Serializable, BallMeta {
 
     private LightParticle playerTeamBlueHitParticle = new SParticle(ParticleEffect.REDSTONE, 1, 1, 0, 0, 1).setColors(0, 0, 255);
     private LightParticle playerTeamRedHitParticle = new SParticle(ParticleEffect.REDSTONE, 1, 1, 0, 0, 0).setColors(255, 0, 0);
-    //
+
     private LightParticle ballSpawnParticle = new SParticle(ParticleEffect.SMOKE_LARGE, 4, 0.0002, 2, 2, 2);
     private LightSound ballSpawnSound = new FastSound("NOTE_BASS", 1.0, 1.0);
     private LightParticle ballGoalParticle = new SParticle(ParticleEffect.NOTE, 4, 0.0002, 2, 2, 2).setNoteColor(2);
