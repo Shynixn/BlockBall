@@ -194,10 +194,20 @@
         </dependency>
     </dependencies>
 
+    <scm>
+        <connection>scm:git:git://github.com/Shynixn/BlockBall.git</connection>
+        <developerConnection>scm:git:ssh://github.com:Shynixn/BlockBall.git</developerConnection>
+        <url>http://github.com/Shynixn/BlockBall.git/tree/master</url>
+    </scm>
+
     <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
         <repository>
-            <id>releases</id>
-            <url>file://D:/Benutzer/Deployments/BlockBall</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 </project>
