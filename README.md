@@ -1,10 +1,9 @@
-# BlockBall
-[![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://raw.githubusercontent.com/Shynixn/BlockBall/master/LICENSE)
+# BlockBall [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://raw.githubusercontent.com/Shynixn/BlockBall/master/LICENSE)
 
-| branch        | status        | 
-| ------------- | --------------| 
-| master        | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=master)](https://travis-ci.org/Shynixn/BlockBall) |
-| workflow      | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=workflow)](https://travis-ci.org/Shynixn/BlockBall) | 
+| branch        | status        | download      |
+| ------------- | --------------| --------------| 
+| master        | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=master)](https://travis-ci.org/Shynixn/BlockBall) |[Download latest release (recommend)](https://github.com/Shynixn/BlockBall/releases)|
+| workflow      | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=workflow)](https://travis-ci.org/Shynixn/BlockBall) | [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/) |
 
 ## Description
 Spigot plugin to simulate a football/soccer game in minecraft.
