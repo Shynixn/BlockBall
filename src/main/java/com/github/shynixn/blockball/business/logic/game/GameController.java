@@ -46,7 +46,7 @@ public final class GameController extends SEvents {
     }
 
     Game getGameFromBall(Ball ball) {
-        for (GameEntity game : this.games) {
+        for (final GameEntity game : this.games) {
             if (game.getBall() != null && game.getBall().equals(ball))
                 return game;
         }
@@ -54,7 +54,7 @@ public final class GameController extends SEvents {
     }
 
     Game isInGameLobby(Player player) {
-        for (Game game : this.games) {
+        for (final Game game : this.games) {
             if (game instanceof HelperGameEntity && ((HelperGameEntity) game).isInLobby(player))
                 return game;
         }
@@ -62,7 +62,7 @@ public final class GameController extends SEvents {
     }
 
     Game getGameFromAlias(String alias) {
-        for (Game game : this.games) {
+        for (final Game game : this.games) {
             if (game.getArena().getAlias() != null && ChatColor.stripColor(game.getArena().getAlias()).equalsIgnoreCase(ChatColor.stripColor(alias)))
                 return game;
         }
@@ -70,7 +70,7 @@ public final class GameController extends SEvents {
     }
 
     Game getGameFromPlayer(Player player) {
-        for (Game game : this.games) {
+        for (final Game game : this.games) {
             if (game.isInGame(player))
                 return game;
         }
@@ -78,7 +78,7 @@ public final class GameController extends SEvents {
     }
 
     Game getGameFromArenaId(int id) {
-        for (Game game : this.games) {
+        for (final Game game : this.games) {
             if (game.getArena().getId() == id)
                 return game;
         }
@@ -88,7 +88,7 @@ public final class GameController extends SEvents {
     public void close() {
         if (this.games == null)
             return;
-        for (GameEntity game : this.games) {
+        for (final GameEntity game : this.games) {
             game.reset();
         }
     }
@@ -96,13 +96,13 @@ public final class GameController extends SEvents {
     public void reload() {
         this.arenaManager.reload();
         if (this.games != null) {
-            for (GameEntity game : this.games) {
+            for (final GameEntity game : this.games) {
                 game.reset();
             }
         }
         this.games = new GameEntity[this.arenaManager.getArenas().size()];
         for (int i = 0; i < this.games.length; i++) {
-            Arena arena = this.arenaManager.getArenas().get(i);
+            final Arena arena = this.arenaManager.getArenas().get(i);
             if (arena.getGameType() == GameType.BUNGEE) {
                 this.games[i] = new BungeeGameEntity(arena);
             } else if (arena.getGameType() == GameType.LOBBY) {

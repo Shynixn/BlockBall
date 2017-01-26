@@ -29,6 +29,7 @@ public abstract class GameEntity implements Game {
     private Object bossBar;
     private Ball ball;
 
+    List<Player> previousFlying = new ArrayList<>();
     final Map<Player, ItemStack[]> armorContents = new HashMap<>();
     final List<Player> redTeam = new ArrayList<>();
     final List<Player> blueTeam = new ArrayList<>();
@@ -95,6 +96,8 @@ public abstract class GameEntity implements Game {
         player.setAllowFlight(false);
         this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
         this.arena.getTeamMeta().getScoreboard().remove(player);
+        if(this.previousFlying.contains(player))
+            player.setAllowFlight(true);
         if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
             NMSRegistry.setBossBar(player, null);
         }
@@ -342,6 +345,8 @@ public abstract class GameEntity implements Game {
             Interpreter19.setGlowing(player, false);
             player.setFlying(false);
             player.setAllowFlight(false);
+            if(this.previousFlying.contains(player))
+                player.setAllowFlight(true);
         }
         if (teleport && this.arena.getTeamMeta().getGameEndSpawnpoint() != null) {
             for (final Player player : this.getPlayers()) {
@@ -360,6 +365,7 @@ public abstract class GameEntity implements Game {
             this.ball.despawn();
         if (this.hologram != null)
             this.hologram.remove(SFileUtils.getOnlinePlayers().toArray(new Player[SFileUtils.getOnlinePlayers().size()]));
+        this.previousFlying.clear();
         this.redTeam.clear();
         this.blueTeam.clear();
         this.playData.clear();

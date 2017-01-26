@@ -59,10 +59,12 @@ class HelperGameEntity extends GameEntity implements MiniGame {
         if (this.canJoinLobby(player)) {
             this.lobby.add(player);
             this.armorContents.put(player, player.getInventory().getArmorContents().clone());
+            if(player.getAllowFlight())
+                this.previousFlying.add(player);
             player.getInventory().setArmorContents(new ItemStack[4]);
             player.getInventory().clear();
             player.updateInventory();
-            player.setHealth((double)player.getMaxHealth());
+            player.setHealth(player.getMaxHealth());
             player.setFoodLevel(20);
             player.setExp(0);
             player.setLevel(999);

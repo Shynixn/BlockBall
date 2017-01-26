@@ -37,9 +37,9 @@ class EventGameEntity extends GameEntity {
     }
 
     void executeJoinAllCommand() {
-        for (String s : this.arena.getEventMeta().getRegisteredRedPlayers()) {
+        for (final String s : this.arena.getEventMeta().getRegisteredRedPlayers()) {
             Player splayer = null;
-            for (Player player : SFileUtils.getOnlinePlayers()) {
+            for (final Player player : SFileUtils.getOnlinePlayers()) {
                 if (player.getName().equalsIgnoreCase(s)) {
                     splayer = player;
                 }
@@ -50,9 +50,9 @@ class EventGameEntity extends GameEntity {
                 this.join(splayer, Team.RED);
             }
         }
-        for (String s : this.arena.getEventMeta().getRegisteredBluePlayers()) {
+        for (final String s : this.arena.getEventMeta().getRegisteredBluePlayers()) {
             Player splayer = null;
-            for (Player player : SFileUtils.getOnlinePlayers()) {
+            for (final Player player : SFileUtils.getOnlinePlayers()) {
                 if (player.getName().equalsIgnoreCase(s)) {
                     splayer = player;
                 }
@@ -97,7 +97,7 @@ class EventGameEntity extends GameEntity {
 
     @Override
     public void reset() {
-        for (Player player : this.playerstorage.keySet()) {
+        for (final Player player : this.playerstorage.keySet()) {
             player.getInventory().setContents(this.playerstorage.get(player).contents);
             player.setLevel(this.playerstorage.get(player).level);
             player.setExp(this.playerstorage.get(player).exp);
@@ -119,13 +119,13 @@ class EventGameEntity extends GameEntity {
         if (this.secondbumper <= 0) {
             this.secondbumper = 20;
             if (this.gameStage == GameStage.RUNNING) {
-                if (this.getPlayers().size() == 0) {
+                if (this.getPlayers().isEmpty()) {
                     this.reset();
                 } else if (this.getPlayers().size() < this.arena.getLobbyMeta().getMinPlayers()) {
                     this.sendMessageToPlayers(Language.GAME_DRAW_TITLE, Language.GAME_DRAW_SUBTITLE);
                     this.reset();
                 }
-                for (Player player : this.getPlayers()) {
+                for (final Player player : this.getPlayers()) {
                     player.setLevel(this.countdown);
                     player.setExp(((float) this.countdown) / ((float) this.arena.getLobbyMeta().getGameTime()));
                 }
@@ -136,7 +136,7 @@ class EventGameEntity extends GameEntity {
                 else {
                     try {
                         this.blingsound.play(this.referee);
-                    } catch (InterPreter19Exception e) {
+                    } catch (final InterPreter19Exception e) {
                         SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [BlingSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
                     }
                     this.referee.setLevel(this.countdown);
@@ -161,7 +161,7 @@ class EventGameEntity extends GameEntity {
             this.bumeper--;
             if (this.bumeper <= 0) {
                 this.bumeper = 40;
-                for (Player player : this.getPlayers()) {
+                for (final Player player : this.getPlayers()) {
                     if (!this.arena.isLocationInArea(player.getLocation())) {
                         if (!this.bumpers.containsKey(player))
                             this.bumpers.put(player, 0);
@@ -199,7 +199,7 @@ class EventGameEntity extends GameEntity {
         this.playerstorage.put(player, new PlayerProperties(player.getInventory().getContents().clone(), player.getLevel(), player.getExp(), player.getFoodLevel(), player.getHealth(), player.getGameMode()));
         player.getInventory().clear();
         player.updateInventory();
-        player.setHealth((double)player.getMaxHealth());
+        player.setHealth(player.getMaxHealth());
         player.setFoodLevel(20);
         player.setExp(0);
         player.setLevel(0);
