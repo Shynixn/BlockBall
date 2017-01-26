@@ -203,7 +203,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                     ArenaCommandExecutor.this.manager.persist(this.arenaEntity);
                     this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + "Successfully saved arena.");
                     ArenaCommandExecutor.this.manager.manager.reload();
-                    if (this.arenaEntity.getGameType() == GameType.MINIGAME) {
+                    if (this.arenaEntity.getGameType() == GameType.BUNGEE) {
                         for (Player player : SFileUtils.getOnlinePlayers()) {
                             player.kickPlayer(Language.PREFIX + "Server is restarting for BlockBall bungee mode!");
                         }
