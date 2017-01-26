@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
  * Created by Shynixn
  */
 class GlobalLeaveCommandExecutor extends DynamicCommandHelper {
-    private GameController controller;
+    private final GameController controller;
 
     GlobalLeaveCommandExecutor(GameController controller) {
         super(Config.getInstance().getGlobalLeaveCommand());
@@ -21,10 +21,10 @@ class GlobalLeaveCommandExecutor extends DynamicCommandHelper {
     public void onCommandSend(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
             Game game;
-            Player player = (Player) sender;
-            if ((game = controller.isInGameLobby(player)) != null)
+            final Player player = (Player) sender;
+            if ((game = this.controller.isInGameLobby(player)) != null)
                 game.leave(player);
-            if ((game = controller.getGameFromPlayer(player)) != null)
+            if ((game = this.controller.getGameFromPlayer(player)) != null)
                 game.leave(player);
         }
     }

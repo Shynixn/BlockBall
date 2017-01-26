@@ -188,4 +188,12 @@ public interface TeamMeta extends ConfigurationSerializable {
     LightBossBar getBossBar();
 
     LightScoreboard getScoreboard();
+
+    void setGoalShooterGlowing(boolean enable);
+
+    boolean isGoalShooterGlowing();
+
+    void setGoalShooterGlowingSeconds(int seconds);
+
+    int getGoalShooterGlowingSeconds();
 }

@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
  * Created by Shynixn
  */
 class GlobalJoinCommandExecutor extends DynamicCommandHelper {
-    private GameController controller;
+    private final GameController controller;
 
     GlobalJoinCommandExecutor(GameController controller) {
         super(Config.getInstance().getGlobalJoinCommand());
@@ -24,24 +24,24 @@ class GlobalJoinCommandExecutor extends DynamicCommandHelper {
     @Override
     public void onCommandSend(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
-            Player player = (Player) sender;
+            final Player player = (Player) sender;
             Game game;
-            if ((game = controller.isInGameLobby(player)) != null)
+            if ((game = this.controller.isInGameLobby(player)) != null)
                 game.leave(player);
-            if ((game = controller.getGameFromPlayer(player)) != null)
+            if ((game = this.controller.getGameFromPlayer(player)) != null)
                 game.leave(player);
             if (args.length >= 3) {
                 String s = "";
                 for (int i = 1; i < args.length; i++) {
-                    if (!s.equals(""))
-                        s = s + " ";
-                    s = s + args[i];
+                    if (!s.isEmpty())
+                        s += " ";
+                    s += args[i];
                 }
                 args = new String[]{args[0], s};
             }
             if (args.length == 2 &&
-                    ((SMathUtils.tryPInt(args[0]) && (game = controller.getGameFromArenaId(Integer.parseInt(args[0]))) != null) ||
-                            ((game = controller.getGameFromAlias(args[0])) != null))) {
+                    ((SMathUtils.tryPInt(args[0]) && (game = this.controller.getGameFromArenaId(Integer.parseInt(args[0]))) != null) ||
+                            ((game = this.controller.getGameFromAlias(args[0])) != null))) {
                 if (ChatColor.stripColor(game.getArena().getTeamMeta().getRedTeamName()).equalsIgnoreCase(ChatColor.stripColor(args[1]))) {
                     if (game instanceof MiniGameEntity) {
                         if ((((MiniGameEntity) game)).isLobbyFull())
@@ -65,7 +65,7 @@ class GlobalJoinCommandExecutor extends DynamicCommandHelper {
                         }
                     }
                 }
-            } else if (args.length == 1 && ((SMathUtils.tryPInt(args[0]) && (game = controller.getGameFromArenaId(Integer.parseInt(args[0]))) != null) || ((game = controller.getGameFromAlias(args[0])) != null))) {
+            } else if (args.length == 1 && ((SMathUtils.tryPInt(args[0]) && (game = this.controller.getGameFromArenaId(Integer.parseInt(args[0]))) != null) || ((game = this.controller.getGameFromAlias(args[0])) != null))) {
                 if (game instanceof MiniGameEntity) {
                     if ((((MiniGameEntity) game)).isLobbyFull())
                         player.sendMessage(Language.PREFIX + Language.ARENA_LOBBYFULL_MESSAGE);

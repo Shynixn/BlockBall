@@ -88,8 +88,8 @@ class LobbyGameEntity extends GameEntity {
             fixCachedRangePlayers();
             if (arena.getTeamMeta().isSpectatorMessagesEnabled()) {
                 for (Player player : getPlayersInRange()) {
-                    if (!playeddata.contains(player))
-                        playeddata.add(player);
+                    if (!playData.contains(player))
+                        playData.add(player);
                 }
                 arena.getTeamMeta().getScoreboard().play(null, redGoals, blueGoals, getPlayersInRange());
             } else {

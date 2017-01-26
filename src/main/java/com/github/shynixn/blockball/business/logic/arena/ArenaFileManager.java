@@ -26,9 +26,9 @@ class ArenaFileManager {
     }
 
     private File getFolder() {
-        if (plugin == null)
+        if (this.plugin == null)
             throw new IllegalStateException("Plugin cannot be null!");
-        final File file = new File(plugin.getDataFolder(), "arena");
+        final File file = new File(this.plugin.getDataFolder(), "arena");
         if (!file.exists()) {
             if (!file.mkdir())
                 throw new IllegalStateException("Cannot create folder!");
@@ -38,7 +38,7 @@ class ArenaFileManager {
 
     void save(Player player, int number) {
         try {
-            final File file = new File(plugin.getDataFolder(), "goals.yml");
+            final File file = new File(this.plugin.getDataFolder(), "goals.yml");
             if (!file.exists()) {
                 if (!file.createNewFile())
                     throw new IllegalStateException("Cannot create file!");
@@ -55,7 +55,7 @@ class ArenaFileManager {
 
     Map<String, Integer> getTopTenPlayers() {
         try {
-            final File file = new File(plugin.getDataFolder(), "goals.yml");
+            final File file = new File(this.plugin.getDataFolder(), "goals.yml");
             if (!file.exists()) {
                 if (!file.createNewFile())
                     throw new IllegalStateException("Cannot create file!");
@@ -85,7 +85,7 @@ class ArenaFileManager {
 
     Integer getNumber(Player player) {
         try {
-            final File file = new File(plugin.getDataFolder(), "goals.yml");
+            final File file = new File(this.plugin.getDataFolder(), "goals.yml");
             if (!file.exists()) {
                 if (!file.createNewFile())
                     throw new IllegalStateException("Cannot create file!");
@@ -123,7 +123,7 @@ class ArenaFileManager {
         return true;
     }
 
-    public boolean delete(Arena item) {
+    boolean delete(Arena item) {
         try {
             final File file = new File(this.getFolder(), "arena_" + item.getName() + ".yml");
             if (file.exists()) {
@@ -136,10 +136,10 @@ class ArenaFileManager {
         return false;
     }
 
-    public Arena[] load() {
+    Arena[] load() {
         final List<Arena> items = new ArrayList<>();
         for (int i = 0; (this.getFolder() != null) && (i < this.getFolder().list().length); i++) {
-            String s = this.getFolder().list()[i];
+            final String s = this.getFolder().list()[i];
             try {
                 if (s.contains("arena_")) {
                     final FileConfiguration configuration = new YamlConfiguration();

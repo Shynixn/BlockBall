@@ -177,8 +177,8 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                 }
                 if (this.arena.getTeamMeta().isSpectatorMessagesEnabled()) {
                     for (Player player : this.getPlayersInRange()) {
-                        if (!this.playeddata.contains(player))
-                            this.playeddata.add(player);
+                        if (!this.playData.contains(player))
+                            this.playData.add(player);
                     }
                     this.arena.getTeamMeta().getScoreboard().play(this.countdown, this.redGoals, this.blueGoals, this.getPlayersInRange());
                 } else {

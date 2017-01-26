@@ -19,6 +19,16 @@ public class Interpreter19 {
         }
     }
 
+    public static void setGlowing(Player player, boolean glowing)
+    {
+        if (ReflectionLib.getServerVersion().equals("1_9_R1")
+                || ReflectionLib.getServerVersion().equals("1_9_R2")
+                || ReflectionLib.getServerVersion().equals("v1_10_R1")
+                || ReflectionLib.getServerVersion().equals("v1_11_R1")) {
+             ReflectionLib.invokeMethodByObject(player, "setGlowing", glowing);
+        }
+    }
+
     public static void setItemInHand19(Player player, ItemStack itemStack, boolean offHand) {
         if (!ReflectionLib.getServerVersion().equals("1_9_R1")
                 && !ReflectionLib.getServerVersion().equals("1_9_R2")

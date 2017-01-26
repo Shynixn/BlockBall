@@ -57,9 +57,9 @@ public interface LobbyMeta extends ConfigurationSerializable {
 
     int getCountDown();
 
-    String getGamesubTitleMessage();
+    String getGameSubTitleMessage();
 
-    void setGamesubTitleMessage(String gamesubTitleMessage);
+    void setGameSubTitleMessage(String gamesubTitleMessage);
 
     String getGameTitleMessage();
 

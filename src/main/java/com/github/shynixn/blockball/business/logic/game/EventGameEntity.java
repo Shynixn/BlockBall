@@ -101,7 +101,7 @@ class EventGameEntity extends GameEntity {
             player.getInventory().setContents(this.playerstorage.get(player).contents);
             player.setLevel(this.playerstorage.get(player).level);
             player.setExp(this.playerstorage.get(player).exp);
-            player.setFoodLevel(this.playerstorage.get(player).foodlevel);
+            player.setFoodLevel(this.playerstorage.get(player).foodLevel);
             player.setHealth(this.playerstorage.get(player).health);
             player.setGameMode(this.playerstorage.get(player).mode);
             player.updateInventory();

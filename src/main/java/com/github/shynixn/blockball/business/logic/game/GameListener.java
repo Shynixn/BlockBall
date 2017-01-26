@@ -66,15 +66,15 @@ class GameListener extends SEvents {
 
     @EventHandler
     public void onItemPickUpEvent(PlayerPickupItemEvent event) {
-        Game game;
+        final Game game;
         if ((game = this.controller.getGameFromPlayer(event.getPlayer())) != null) {
-            for (Item item : game.getArena().getBoostItemHandler().getDroppedItems()) {
-                BoostItem boostItem;
+            for (final Item item : game.getArena().getBoostItemHandler().getDroppedItems()) {
+                final BoostItem boostItem;
                 if (item.equals(event.getItem()) && ((boostItem = game.getArena().getBoostItemHandler().getBoostFromItem(item)) != null)) {
                     try {
                         new FastSound("NOTE_PLING", 2.0, 2.0).play(event.getPlayer().getLocation(), event.getPlayer());
-                    } catch (InterPreter19Exception e) {
-                        e.printStackTrace();
+                    } catch (final InterPreter19Exception e) {
+                        Bukkit.getLogger().log(Level.WARNING, "Failed to play sound.", e);
                     }
                     game.getArena().getBoostItemHandler().removeItem(event.getItem());
                     boostItem.apply(event.getPlayer());
@@ -87,7 +87,7 @@ class GameListener extends SEvents {
 
     @EventHandler
     public void onItemDespawnEvent(ItemDespawnEvent event) {
-        for (Game game : this.controller.games) {
+        for (final Game game : this.controller.games) {
             if (game.getArena().isLocationInArea(event.getLocation()))
                 game.getArena().getBoostItemHandler().removeItem(event.getEntity());
         }
@@ -95,13 +95,13 @@ class GameListener extends SEvents {
 
     @EventHandler
     public void onPlayerRequestPlaceHolder(PlaceHolderRequestEvent event) {
-        int gameid = event.getGame();
-        if (gameid == -1) {
+        int gameId = event.getGame();
+        if (gameId == -1) {
             if (this.controller.getGameFromPlayer(event.getPlayer()) == null)
                 return;
-            gameid = this.controller.getGameFromPlayer(event.getPlayer()).getArena().getId();
+            gameId = this.controller.getGameFromPlayer(event.getPlayer()).getArena().getId();
         }
-        GameEntity game = (GameEntity) this.controller.getGameFromArenaId(gameid);
+        final GameEntity game = (GameEntity) this.controller.getGameFromArenaId(gameId);
         if (game != null) {
             event.setResult(game.getPlaceHolder(event.getType()));
         }
@@ -109,7 +109,7 @@ class GameListener extends SEvents {
 
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
-        for (Game game : this.controller.games) {
+        for (final Game game : this.controller.games) {
             if (game instanceof BungeeGameEntity) {
                 if (!game.getArena().isEnabled())
                     return;
@@ -119,10 +119,10 @@ class GameListener extends SEvents {
             }
         }
         if (Config.getInstance().isJoiningSpawnpointEnabled() && Config.getInstance().getJoinSpawnpoint() != null) {
-            for (Arena arena : this.controller.arenaManager.getArenas()) {
+            for (final Arena arena : this.controller.arenaManager.getArenas()) {
                 if (event.getPlayer().getLocation().getWorld().getName().equals(arena.getBallSpawnLocation().getWorld().getName()) && arena.isLocationInArea(event.getPlayer().getLocation())) {
                     event.getPlayer().teleport(Config.getInstance().getJoinSpawnpoint());
-                    break;
+                    return;
                 }
             }
         }
@@ -130,14 +130,14 @@ class GameListener extends SEvents {
 
     private Game getGameFromSign(Sign sign) {
         try {
-            String line = sign.getLine(Config.getInstance().getTeamSign().getGameLine());
-            for (Game game : this.controller.games) {
+            final String line = sign.getLine(Config.getInstance().getTeamSign().getGameLine());
+            for (final Game game : this.controller.games) {
                 if (String.valueOf(game.getArena().getId()).equals(line) || (game.getArena().getAlias() != null && ChatColor.stripColor(game.getArena().getAlias()).equals(ChatColor.stripColor(line)))) {
                     return game;
                 }
             }
             return null;
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             return null;
         }
     }
@@ -148,7 +148,7 @@ class GameListener extends SEvents {
             if (event.getClickedBlock().getType() == Material.SIGN_POST || event.getClickedBlock().getType() == Material.WALL_SIGN) {
                 Game game;
                 if ((game = this.getGameFromSign((Sign) event.getClickedBlock().getState())) != null) {
-                    for (Location location : game.getArena().getLobbyMeta().getBlueTeamSignLocations()) {
+                    for (final Location location : game.getArena().getLobbyMeta().getBlueTeamSignLocations()) {
                         if (SLocation.compareLocation(location, event.getClickedBlock().getLocation())) {
                             if (game instanceof LobbyGameEntity) {
                                 if (!game.join(event.getPlayer(), Team.BLUE)) {
@@ -161,7 +161,7 @@ class GameListener extends SEvents {
                             break;
                         }
                     }
-                    for (Location location : game.getArena().getLobbyMeta().getRedTeamSignLocations()) {
+                    for (final Location location : game.getArena().getLobbyMeta().getRedTeamSignLocations()) {
                         if (SLocation.compareLocation(location, event.getClickedBlock().getLocation())) {
                             if (game instanceof LobbyGameEntity) {
                                 if (!game.join(event.getPlayer(), Team.RED)) {
@@ -186,14 +186,14 @@ class GameListener extends SEvents {
                 }
                 if ((this.controller.isInGameLobby(event.getPlayer()) != null && this.controller.isInGameLobby(event.getPlayer()) instanceof HelperGameEntity)) {
                     game = this.controller.isInGameLobby(event.getPlayer());
-                    for (Location location : game.getArena().getLobbyMeta().getLeaveSignLocations()) {
+                    for (final Location location : game.getArena().getLobbyMeta().getLeaveSignLocations()) {
                         if (SLocation.compareLocation(location, event.getClickedBlock().getLocation())) {
                             game.leave(event.getPlayer());
                         }
                     }
                 } else if (this.controller.getGameFromPlayer(event.getPlayer()) != null && this.controller.getGameFromPlayer(event.getPlayer()) instanceof HelperGameEntity) {
                     game = this.controller.getGameFromPlayer(event.getPlayer());
-                    for (Location location : game.getArena().getLobbyMeta().getLeaveSignLocations()) {
+                    for (final Location location : game.getArena().getLobbyMeta().getLeaveSignLocations()) {
                         if (SLocation.compareLocation(location, event.getClickedBlock().getLocation())) {
                             game.leave(event.getPlayer());
                         }
@@ -215,22 +215,22 @@ class GameListener extends SEvents {
 
     @EventHandler
     public void onBallHitWallEvent(BallHitWallEvent event) {
-        GameEntity gameEntity;
+        final GameEntity gameEntity;
         if ((gameEntity = ((GameEntity) this.controller.getGameFromBall(event.getBall()))) != null) {
-            for (String s : gameEntity.getArena().getBounceTypes()) {
+            for (final String s : gameEntity.getArena().getBounceTypes()) {
                 try {
-                    int id;
-                    int subid = 0;
+                    final int id;
+                    int subId = 0;
                     if (s.contains(":")) {
                         id = Integer.parseInt(s.split(Pattern.quote(":"))[0]);
-                        subid = Integer.parseInt(s.split(Pattern.quote(":"))[1]);
+                        subId = Integer.parseInt(s.split(Pattern.quote(":"))[1]);
                     } else {
                         id = Integer.parseInt(s);
                     }
-                    if (event.getBlock().getType().getId() == id && ((int) event.getBlock().getData()) == subid) {
+                    if (event.getBlock().getType().getId() == id && ((int) event.getBlock().getData()) == subId) {
                         gameEntity.bumpBallBack();
                     }
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
                     Bukkit.getLogger().log(Level.WARNING, "Invalid bounce type '" + s + "' in " + gameEntity.getArena().getId() + ".");
                 }
             }
@@ -245,7 +245,7 @@ class GameListener extends SEvents {
                 boolean isNeverInArena = true;
                 for (int i = 0; i < this.controller.games.length; i++) {
                     if ((this.controller.games[i] instanceof LobbyGameEntity || this.controller.games[i] instanceof EventGameEntity) && this.controller.games[i].arena.isEnabled()) {
-                        Arena arena = this.controller.games[i].getArena();
+                        final Arena arena = this.controller.games[i].getArena();
                         if (this.controller.games[i] instanceof EventGameEntity) {
                             EventGameEntity gameEntity = (EventGameEntity) this.controller.games[i];
                             if (!gameEntity.visitorForceField) {
@@ -265,7 +265,7 @@ class GameListener extends SEvents {
                                 if (this.moveCounter.get(event.getPlayer()) > 20) {
                                     event.getPlayer().setVelocity(Config.getInstance().getPlayerLaunchUpProtectionVelocity());
                                 } else {
-                                    Vector knockback = this.lastLocation.get(event.getPlayer()).getLocation().toVector().subtract(event.getPlayer().getLocation().toVector());
+                                    final Vector knockback = this.lastLocation.get(event.getPlayer()).getLocation().toVector().subtract(event.getPlayer().getLocation().toVector());
                                     event.getPlayer().getLocation().setDirection(knockback);
                                     event.getPlayer().setVelocity(knockback);
                                     event.getPlayer().setAllowFlight(true);
@@ -366,8 +366,8 @@ class GameListener extends SEvents {
     @EventHandler
     public void onFly(PlayerToggleFlightEvent event) {
         if (this.controller.getGameFromPlayer(event.getPlayer()) != null) {
-            Game game = this.controller.getGameFromPlayer(event.getPlayer());
-            Player player = event.getPlayer();
+            final Game game = this.controller.getGameFromPlayer(event.getPlayer());
+            final Player player = event.getPlayer();
             if ((player.getGameMode() != GameMode.CREATIVE)) {
                 event.setCancelled(true);
                 player.setAllowFlight(false);
@@ -404,7 +404,7 @@ class GameListener extends SEvents {
 
     @EventHandler
     public void ballMoveEvent(BallMoveEvent event) {
-        Game game;
+        final Game game;
         if ((game = this.controller.getGameFromBall(event.getBall())) != null) {
             game.playBallMoveEffects();
         }
@@ -412,17 +412,17 @@ class GameListener extends SEvents {
 
     @EventHandler
     public void ballKickEvent(BallKickEvent event) {
-        Game game;
+        final Game game;
         if ((game = this.controller.getGameFromBall(event.getBall())) != null) {
             game.playBallKickEffects(event.getPlayer());
-            GameEntity entity = (GameEntity) game;
-            if (entity.ballpreviousbumperLocation != null && entity.ballpreviousbumperLocation.distance(event.getBall().getLocation().toVector()) < 2) {
-                entity.ballcornerbumper++;
+            final GameEntity entity = (GameEntity) game;
+            if (entity.ballPreviousCacheLocation != null && entity.ballPreviousCacheLocation.distance(event.getBall().getLocation().toVector()) < 2) {
+                entity.ballCornerBumper++;
             } else {
-                entity.ballcornerbumper = 0;
+                entity.ballCornerBumper = 0;
             }
-            if (entity.ballcornerbumper >= 3) {
-                Vector direction = entity.arena.getBallSpawnLocation().toVector().subtract(event.getBall().getLocation().toVector());
+            if (entity.ballCornerBumper >= 3) {
+                final Vector direction = entity.arena.getBallSpawnLocation().toVector().subtract(event.getBall().getLocation().toVector());
                 int x = 1;
                 int z = 1;
                 if (direction.getX() < 0)
@@ -430,9 +430,9 @@ class GameListener extends SEvents {
                 if (direction.getZ() < 0)
                     z = -1;
                 event.getBall().teleport(new Location(event.getBall().getLocation().getWorld(), event.getBall().getLocation().getX() + x, event.getBall().getLocation().getY(), event.getBall().getLocation().getZ() + z));
-                entity.ballcornerbumper = 0;
+                entity.ballCornerBumper = 0;
             }
-            entity.ballpreviousbumperLocation = event.getBall().getLocation().toVector();
+            entity.ballPreviousCacheLocation = event.getBall().getLocation().toVector();
         }
     }
 
