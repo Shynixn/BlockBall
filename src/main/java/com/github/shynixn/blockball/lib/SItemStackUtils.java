@@ -1,7 +1,9 @@
 package com.github.shynixn.blockball.lib;
 
 import java.util.Arrays;
+import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,7 +19,7 @@ public final class SItemStackUtils {
             try {
                 configuration.loadFromString(text);
             } catch (InvalidConfigurationException e) {
-                e.printStackTrace();
+                Bukkit.getLogger().log(Level.WARNING, "Cannot deserialize itemsstack.", e);
             }
             return configuration.getItemStack("dummy");
         }

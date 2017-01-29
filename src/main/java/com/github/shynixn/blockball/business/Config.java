@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.lib.SConsoleUtils;
 import com.github.shynixn.blockball.lib.SLocation;
 import com.github.shynixn.blockball.lib.SPluginLoader.PluginLoader;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public final class Config {
     @PluginLoader
@@ -96,9 +98,9 @@ public final class Config {
 
             this.particleVisibleForAll = this.c.getBoolean("particles.visible-for-all");
             this.particlePermission = this.c.getString("particles.visible-permission");
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (final Exception ex) {
             SConsoleUtils.sendColoredMessage("Please delete your config file to fix this problem.", ChatColor.GREEN, BlockBallPlugin.PREFIX_CONSOLE);
+            Bukkit.getLogger().log(Level.WARNING, "Cannot setup config." , ex);
         }
     }
 

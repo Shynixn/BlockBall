@@ -50,7 +50,7 @@ public class FastSound implements LightSound {
 
     @Override
     public void play(Location location) throws InterPreter19Exception {
-        this.play(location, location.getWorld().getPlayers().toArray(new Player[0]));
+        this.play(location, location.getWorld().getPlayers().toArray(new Player[location.getWorld().getPlayers().size()]));
     }
 
     @Override

@@ -19,9 +19,11 @@ public class FastPotioneffect implements LightPotioneffect {
     private boolean particles;
 
     public FastPotioneffect() {
+        super();
     }
 
     public FastPotioneffect(Map<String, Object> items) throws Exception {
+        super();
         this.type = (int) items.get("type");
         this.duration = (int) items.get("duration");
         this.strength = (int) items.get("strength");

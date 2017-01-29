@@ -226,7 +226,7 @@ public class SParticle implements Serializable, LightParticle {
 
     @Override
     public void play(Location location) {
-        this.play(location, location.getWorld().getPlayers().toArray(new Player[0]));
+        this.play(location, location.getWorld().getPlayers().toArray(new Player[location.getWorld().getPlayers().size()]));
     }
 
     private List<Player> getAllowedPlayers(Player[] players) {
@@ -255,9 +255,8 @@ public class SParticle implements Serializable, LightParticle {
                             SParticle.this.effect.display(new ParticleEffect.ItemData(SParticle.this.material, SParticle.this.data), (float) SParticle.this.x, (float) SParticle.this.y, (float) SParticle.this.z, (float) SParticle.this.speed, SParticle.this.amount, location, SParticle.this.getAllowedPlayers(players));
                         else
                             SParticle.this.effect.display((float) SParticle.this.x, (float) SParticle.this.y, (float) SParticle.this.z, (float) SParticle.this.speed, SParticle.this.amount, location, SParticle.this.getAllowedPlayers(players));
-                    } catch (Exception e) {
-                        Bukkit.getLogger().log(Level.WARNING, "Cannot execute particle effect. Configuration contains an error!");
-                        e.printStackTrace();
+                    } catch (final Exception e) {
+                        Bukkit.getLogger().log(Level.WARNING, "Cannot execute particle effect. Configuration contains an error!", e);
                     }
                 }
             }
@@ -292,8 +291,8 @@ public class SParticle implements Serializable, LightParticle {
 
     public static String getParticlesText() {
         String s = "";
-        for (ParticleEffect particleEffect : ParticleEffect.values()) {
-            if (s.equals(""))
+        for (final ParticleEffect particleEffect : ParticleEffect.values()) {
+            if (s.isEmpty())
                 s += particleEffect.getName();
             else
                 s += ", " + particleEffect.getName();
@@ -302,10 +301,9 @@ public class SParticle implements Serializable, LightParticle {
     }
 
     public static ParticleEffect getParticleEffectFromName(String name) {
-        for (ParticleEffect particleEffect : ParticleEffect.values()) {
+        for (ParticleEffect particleEffect : ParticleEffect.values())
             if (particleEffect.getName().equalsIgnoreCase(name))
                 return particleEffect;
-        }
         return null;
     }
 

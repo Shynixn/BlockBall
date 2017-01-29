@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
  * Created by Shynixn
  */
 public class GoalShootEvent extends SEvent {
-    private Game game;
-    private Player player;
-    private Team team;
+    private final Game game;
+    private final Player player;
+    private final Team team;
 
     public GoalShootEvent(Game game, Player player, Team team) {
         this.game = game;
@@ -20,14 +20,14 @@ public class GoalShootEvent extends SEvent {
     }
 
     public Game getGame() {
-        return game;
+        return this.game;
     }
 
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
 
     public Team getTeam() {
-        return team;
+        return this.team;
     }
 }

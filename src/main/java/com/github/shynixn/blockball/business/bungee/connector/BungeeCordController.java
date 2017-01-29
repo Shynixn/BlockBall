@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.business.bungee.connector;
 
 import com.github.shynixn.blockball.business.bungee.game.BungeeCord;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Created by Shynixn
@@ -51,21 +53,24 @@ public class BungeeCordController implements BungeeCordProvider.CallBack {
     public void add(String server, Location location) {
         BungeeCordSignInfo info = new BungeeCordSignInfo.Container(location, server);
         this.signs.add(info);
-        final BungeeCordSignInfo[] signInfos = this.signs.toArray(new BungeeCordSignInfo[0]);
+        final BungeeCordSignInfo[] signInfos = this.signs.toArray(new BungeeCordSignInfo[this.signs.size()]);
         this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
             @Override
             public void run() {
                 try {
-                    FileConfiguration configuration = new YamlConfiguration();
-                    File file = new File(BungeeCordController.this.plugin.getDataFolder(), "bungeecord_signs.yml");
-                    if (file.exists())
-                        file.delete();
+                    final FileConfiguration configuration = new YamlConfiguration();
+                    final File file = new File(BungeeCordController.this.plugin.getDataFolder(), "bungeecord_signs.yml");
+                    if (file.exists()) {
+                        if (!file.delete()) {
+                            Bukkit.getLogger().log(Level.WARNING, "File cannot get deleted.");
+                        }
+                    }
                     for (int i = 0; i < signInfos.length; i++) {
                         configuration.set("signs." + i, signInfos[i].serialize());
                     }
                     configuration.save(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (final IOException e) {
+                    Bukkit.getLogger().log(Level.WARNING, "Save sign location.", e);
                 }
             }
         });
@@ -73,9 +78,9 @@ public class BungeeCordController implements BungeeCordProvider.CallBack {
 
     @Override
     public void run(ServerInfo serverInfo) {
-        for (BungeeCordSignInfo signInfo : this.signs.toArray(new BungeeCordSignInfo[0])) {
+        for (final BungeeCordSignInfo signInfo : this.signs.toArray(new BungeeCordSignInfo[this.signs.size()])) {
             if (signInfo.getServer().equals(serverInfo.getServerName())) {
-                Location location = signInfo.getLocation();
+                final Location location = signInfo.getLocation();
                 if (location.getBlock().getState() instanceof Sign) {
                     this.updateSign((Sign) location.getBlock().getState(), serverInfo);
                 } else {
@@ -86,8 +91,8 @@ public class BungeeCordController implements BungeeCordProvider.CallBack {
     }
 
     Set<String> getServers() {
-        Set<String> server = new HashSet<>();
-        for (BungeeCordSignInfo signInfo : this.signs) {
+        final Set<String> server = new HashSet<>();
+        for (final BungeeCordSignInfo signInfo : this.signs) {
             server.add(signInfo.getServer());
         }
         return server;
@@ -103,19 +108,22 @@ public class BungeeCordController implements BungeeCordProvider.CallBack {
 
     private void load(JavaPlugin plugin) {
         try {
-            FileConfiguration configuration = new YamlConfiguration();
-            File file = new File(plugin.getDataFolder(), "bungeecord_signs.yml");
-            if (!file.exists())
-                file.createNewFile();
+            final FileConfiguration configuration = new YamlConfiguration();
+            final File file = new File(plugin.getDataFolder(), "bungeecord_signs.yml");
+            if (!file.exists()) {
+                if (!file.createNewFile()) {
+                    Bukkit.getLogger().log(Level.WARNING, "File cannot get created.");
+                }
+            }
             configuration.load(file);
             if (configuration.getConfigurationSection("signs") != null) {
-                Map<String, Object> data = configuration.getConfigurationSection("signs").getValues(false);
-                for (String s : data.keySet()) {
+                final Map<String, Object> data = configuration.getConfigurationSection("signs").getValues(false);
+                for (final String s : data.keySet()) {
                     this.signs.add(new BungeeCordSignInfo.Container(((ConfigurationSection) data.get(s)).getValues(true)));
                 }
             }
         } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            Bukkit.getLogger().log(Level.WARNING, "Save load location.", e);
         }
     }
 

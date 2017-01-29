@@ -9,6 +9,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Created by Shynixn
@@ -69,9 +70,9 @@ public class FastScoreboard implements LightScoreboard {
                 this.objective.getScore(this.redTeam).setScore(redgoals);
             if (bluegoals != null)
                 this.objective.getScore(this.blueTeam).setScore(bluegoals);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             SConsoleUtils.sendColoredMessage("Scoreboard crashed. Check if the text is short enough for the scoreboard!", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
-            ex.printStackTrace();
+            Bukkit.getLogger().log(Level.WARNING, "Cannot set scoreboard.", ex);
             this.scoreboard = null;
             this.objective = null;
         }
@@ -79,7 +80,7 @@ public class FastScoreboard implements LightScoreboard {
 
     @Override
     public void play(Integer timeleft, Integer redgoals, Integer bluegoals, List<Player> players) {
-        this.play(timeleft, redgoals, bluegoals, players.toArray(new Player[0]));
+        this.play(timeleft, redgoals, bluegoals, players.toArray(new Player[players.size()]));
     }
 
     @Override
@@ -137,7 +138,7 @@ public class FastScoreboard implements LightScoreboard {
         if (this.scoreboard == null) {
             return;
         }
-        for (Player player : SFileUtils.getOnlinePlayers()) {
+        for (final Player player : SFileUtils.getOnlinePlayers()) {
             this.remove(player);
         }
         this.objective = null;

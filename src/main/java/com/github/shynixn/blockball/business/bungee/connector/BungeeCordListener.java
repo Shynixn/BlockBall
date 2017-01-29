@@ -9,13 +9,16 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Level;
+
 /**
  * Created by Shynixn
  */
 class BungeeCordListener implements Listener {
-    private BungeeCordController controller;
+    private final BungeeCordController controller;
 
     BungeeCordListener(BungeeCordController controller, JavaPlugin plugin) {
+        super();
         this.controller = controller;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
@@ -24,21 +27,21 @@ class BungeeCordListener implements Listener {
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (event.getClickedBlock().getState() instanceof Sign) {
-                if (controller.lastServer.containsKey(event.getPlayer())) {
-                    String server = controller.lastServer.get(event.getPlayer());
-                    controller.lastServer.remove(event.getPlayer());
-                    Sign sign = (Sign) event.getClickedBlock().getState();
-                    controller.add(server, sign.getLocation());
-                    controller.updateSign(sign, new ServerInfo.Container(server, 0, 0));
+                if (this.controller.lastServer.containsKey(event.getPlayer())) {
+                    final String server = this.controller.lastServer.get(event.getPlayer());
+                    this.controller.lastServer.remove(event.getPlayer());
+                    final Sign sign = (Sign) event.getClickedBlock().getState();
+                    this.controller.add(server, sign.getLocation());
+                    this.controller.updateSign(sign, new ServerInfo.Container(server, 0, 0));
                 } else {
-                    Sign sign = (Sign) event.getClickedBlock().getState();
+                    final Sign sign = (Sign) event.getClickedBlock().getState();
                     try {
-                        BungeeCordSignInfo signInfo;
-                        if ((signInfo = getBungeeCordSignInfo(sign.getLocation())) != null) {
-                            controller.connect(event.getPlayer(), signInfo.getServer());
+                        final BungeeCordSignInfo signInfo;
+                        if ((signInfo = this.getBungeeCordSignInfo(sign.getLocation())) != null) {
+                            this.controller.connect(event.getPlayer(), signInfo.getServer());
                         }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                    } catch (final Exception ex) {
+                        Bukkit.getLogger().log(Level.WARNING, "Cannot connect player to server.", ex);
                     }
                 }
             }
@@ -46,8 +49,8 @@ class BungeeCordListener implements Listener {
     }
 
     private BungeeCordSignInfo getBungeeCordSignInfo(Location location2) {
-        for (BungeeCordSignInfo info : controller.signs.toArray(new BungeeCordSignInfo[0])) {
-            Location location1 = info.getLocation();
+        for (final BungeeCordSignInfo info : this.controller.signs.toArray(new BungeeCordSignInfo[this.controller.signs.size()])) {
+            final Location location1 = info.getLocation();
             if (location1.getBlockX() == location2.getBlockX()) {
                 if (location1.getBlockY() == location2.getBlockY()) {
                     if (location1.getBlockZ() == location2.getBlockZ()) {

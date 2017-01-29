@@ -11,7 +11,7 @@ public class SEvents implements Listener {
 
     public SEvents() {
         if (plugin == null)
-            throw new IllegalArgumentException("Pluginloader failed to load " + getClass().getSimpleName() + ".");
+            throw new IllegalArgumentException("Pluginloader failed to load " + getClass().getSimpleName() + '.');
         register();
     }
 

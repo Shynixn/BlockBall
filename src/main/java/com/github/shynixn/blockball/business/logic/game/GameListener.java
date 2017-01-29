@@ -231,7 +231,7 @@ class GameListener extends SEvents {
                         gameEntity.bumpBallBack();
                     }
                 } catch (final Exception ex) {
-                    Bukkit.getLogger().log(Level.WARNING, "Invalid bounce type '" + s + "' in " + gameEntity.getArena().getId() + ".");
+                    Bukkit.getLogger().log(Level.WARNING, "Invalid bounce type '" + s + "' in " + gameEntity.getArena().getId() + '.');
                 }
             }
         }
@@ -536,7 +536,7 @@ class GameListener extends SEvents {
 
     private boolean isValidNotLeave(String message) {
         try {
-            return !message.split(Pattern.quote(":"))[0].equalsIgnoreCase("/" + Config.getInstance().getGlobalLeaveCommand().getCommand());
+            return !message.split(Pattern.quote(":"))[0].equalsIgnoreCase('/' + Config.getInstance().getGlobalLeaveCommand().getCommand());
         } catch (final Exception ex) {
             return true;
         }

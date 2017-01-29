@@ -75,7 +75,7 @@ public final class ArenaController {
     }
 
     public List<Arena> getArenas() {
-        return Arrays.asList(this.arenas.toArray(new Arena[0]));
+        return Arrays.asList(this.arenas.toArray(new Arena[this.arenas.size()]));
     }
 
     private ArenaFileManager getFileManager() {

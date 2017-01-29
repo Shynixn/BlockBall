@@ -100,13 +100,13 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         this.redColor = (String) items.get("red.color");
         if (items.get("red.spawnpoint") != null)
             this.redSpawnPoint = new SLocation(((MemorySection) items.get("red.spawnpoint")).getValues(true));
-        this.redItems = ((List<String>) items.get("red.armor")).toArray(new String[0]);
+        this.redItems = ((List<String>) items.get("red.armor")).toArray(new String[((List<String>) items.get("red.armor")).size()]);
 
         this.blueTeamName = (String) items.get("blue.name");
         this.blueColor = (String) items.get("blue.color");
         if (items.get("blue.spawnpoint") != null)
             this.blueSpawnPoint = new SLocation(((MemorySection) items.get("blue.spawnpoint")).getValues(true));
-        this.blueItems = ((List<String>) items.get("blue.armor")).toArray(new String[0]);
+        this.blueItems = ((List<String>) items.get("blue.armor")).toArray(new String[((List<String>) items.get("blue.armor")).size()]);
 
         this.specatormessages = (boolean) items.get("spectators.enabled");
         this.specatorradius = (int) items.get("spectators.radius");

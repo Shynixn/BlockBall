@@ -21,9 +21,9 @@ public class SItemStack {
         if (itemStack.getItemMeta() != null) {
             this.displayName = itemStack.getItemMeta().getDisplayName();
             if (itemStack.getItemMeta().getLore() != null)
-                this.lore = itemStack.getItemMeta().getLore().toArray(new String[0]);
+                this.lore = itemStack.getItemMeta().getLore().toArray(new String[itemStack.getItemMeta().getLore().size()]);
             if (itemStack.getItemMeta() instanceof SkullMeta) {
-                SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
+                final SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
                 this.skullName = meta.getOwner();
             }
         }
@@ -57,7 +57,7 @@ public class SItemStack {
 
     public SItemStack(Material material, String displayName, List<String> lore) {
         this(material, displayName);
-        this.lore = lore.toArray(new String[0]);
+        this.lore = lore.toArray(new String[lore.size()]);
     }
 
     public SItemStack(Material material, String displayName, String... lore) {
@@ -78,7 +78,7 @@ public class SItemStack {
 
     public SItemStack(Material material, int id, String displayName, List<String> lore) {
         this(material, displayName);
-        this.lore = lore.toArray(new String[0]);
+        this.lore = lore.toArray(new String[lore.size()]);
         this.id = id;
     }
 

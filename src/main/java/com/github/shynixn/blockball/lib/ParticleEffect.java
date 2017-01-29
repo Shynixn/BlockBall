@@ -417,7 +417,7 @@ public enum ParticleEffect {
 
 
         public String getPacketDataString() {
-            return "_" + this.packetData[0] + "_" + this.packetData[1];
+            return "_" + this.packetData[0] + '_' + this.packetData[1];
         }
     }
 
@@ -711,7 +711,7 @@ public enum ParticleEffect {
             try {
                 sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), this.packet);
             } catch (Exception exception) {
-                throw new PacketSendingException("Failed to send the packet to player '" + player.getName() + "'", exception);
+                throw new PacketSendingException("Failed to send the packet to player '" + player.getName() + '\'', exception);
             }
         }
 

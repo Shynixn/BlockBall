@@ -134,7 +134,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 if (entity.getAlias() == null)
                     this.player.sendMessage(Language.PREFIX + entity.getName() + " - " + ChatColor.GRAY + entity.getDownCornerLocation());
                 else
-                    this.player.sendMessage(Language.PREFIX + entity.getName() + " - " + ChatColor.GRAY + entity.getAlias() + ChatColor.GRAY + " " + entity.getDownCornerLocation());
+                    this.player.sendMessage(Language.PREFIX + entity.getName() + " - " + ChatColor.GRAY + entity.getAlias() + ChatColor.GRAY + ' ' + entity.getDownCornerLocation());
             }
             this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + MENU_BACK);
             this.player.sendMessage(Language.PREFIX + ChatColor.RED + MENU_EXIT);
@@ -1197,7 +1197,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class EditColorParticlePage extends SChatpage {
+    private static class EditColorParticlePage extends SChatpage {
         private final LightParticle particle;
         private final int type;
 
@@ -1275,7 +1275,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class EditMaterialParticlePage extends SChatpage {
+    private static class EditMaterialParticlePage extends SChatpage {
         private final LightParticle particle;
 
         EditMaterialParticlePage(Player player, LightParticle particle) {
@@ -1831,9 +1831,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
             int i = 0;
             for (BoostItem boostItem : this.arenaEntity.getBoostItemHandler().getBoostItems()) {
                 if (Material.getMaterial(boostItem.getId()) != null)
-                    this.player.sendMessage(Language.PREFIX + i + " - " + Material.getMaterial(boostItem.getId()).name().toUpperCase() + "-" + boostItem.getDamage());
+                    this.player.sendMessage(Language.PREFIX + i + " - " + Material.getMaterial(boostItem.getId()).name().toUpperCase() + '-' + boostItem.getDamage());
                 else
-                    this.player.sendMessage(Language.PREFIX + i + " - " + boostItem.getId() + "-" + boostItem.getDamage());
+                    this.player.sendMessage(Language.PREFIX + i + " - " + boostItem.getId() + '-' + boostItem.getDamage());
                 i++;
             }
         }
@@ -1939,7 +1939,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class EditPotionEffect extends SChatpage {
+    private static class EditPotionEffect extends SChatpage {
         private final ArenaEntity arenaEntity;
         private final LightPotioneffect lightPotioneffect;
 
@@ -2012,7 +2012,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class EditCommands extends SChatpage {
+    private static class EditCommands extends SChatpage {
         private final ArenaEntity arenaEntity;
 
         EditCommands(Player player, ArenaEntity entity) {
@@ -2060,7 +2060,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class EventMetaSettingsPage extends SChatpage {
+    private static class EventMetaSettingsPage extends SChatpage {
         private final ArenaEntity arena;
 
         public EventMetaSettingsPage(Player player, ArenaEntity arena) {
@@ -2144,7 +2144,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class HologramSettingsPage extends SChatpage {
+    private static class HologramSettingsPage extends SChatpage {
         private final ArenaEntity arena;
 
         public HologramSettingsPage(Player player, ArenaEntity arena) {
@@ -2197,7 +2197,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class GlowingSettingsPage extends SChatpage {
+    private static class GlowingSettingsPage extends SChatpage {
         private final ArenaEntity arena;
 
         public GlowingSettingsPage(Player player, ArenaEntity arena) {

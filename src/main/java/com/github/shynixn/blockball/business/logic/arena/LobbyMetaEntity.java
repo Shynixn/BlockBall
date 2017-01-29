@@ -56,6 +56,7 @@ class LobbyMetaEntity implements LobbyMeta {
         return locations;
     }
 
+    @Override
     public String getGameSubTitleMessage() {
         return this.gameSubTitleMessage;
     }

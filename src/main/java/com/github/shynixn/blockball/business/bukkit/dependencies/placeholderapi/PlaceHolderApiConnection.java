@@ -31,7 +31,7 @@ public class PlaceHolderApiConnection {
                 return "";
             try {
                 if (PlaceHolderType.getTypeFromName(s) != null) {
-                    PlaceHolderRequestEvent event;
+                    final PlaceHolderRequestEvent event;
                     if (s.split("_")[0].equals("player")) {
                         event = new PlaceHolderRequestEvent(player, PlaceHolderType.getTypeFromName(s), -1);
                     } else {
