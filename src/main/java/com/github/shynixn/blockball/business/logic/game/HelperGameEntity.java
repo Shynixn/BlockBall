@@ -59,10 +59,12 @@ class HelperGameEntity extends GameEntity implements MiniGame {
         if (this.canJoinLobby(player)) {
             this.lobby.add(player);
             this.armorContents.put(player, player.getInventory().getArmorContents().clone());
+            if(player.getAllowFlight())
+                this.previousFlying.add(player);
             player.getInventory().setArmorContents(new ItemStack[4]);
             player.getInventory().clear();
             player.updateInventory();
-            player.setHealth((double)player.getMaxHealth());
+            player.setHealth(player.getMaxHealth());
             player.setFoodLevel(20);
             player.setExp(0);
             player.setLevel(999);
@@ -177,8 +179,8 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                 }
                 if (this.arena.getTeamMeta().isSpectatorMessagesEnabled()) {
                     for (Player player : this.getPlayersInRange()) {
-                        if (!this.playeddata.contains(player))
-                            this.playeddata.add(player);
+                        if (!this.playData.contains(player))
+                            this.playData.add(player);
                     }
                     this.arena.getTeamMeta().getScoreboard().play(this.countdown, this.redGoals, this.blueGoals, this.getPlayersInRange());
                 } else {
@@ -186,24 +188,24 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                 }
                 if (this.countdown <= 10 && !this.endgame) {
                     try {
-                        this.blingsound.play(this.getPlayers().toArray(new Player[0]));
+                        this.blingsound.play(this.getPlayers().toArray(new Player[this.getPlayers().size()]));
                     } catch (InterPreter19Exception e) {
                         SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [BlingSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
                     }
                 }
                 if (this.countdown <= 0) {
-                    NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardGames(), this.blueTeam.toArray(new Player[0]));
-                    NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardGames(), this.redTeam.toArray(new Player[0]));
+                    NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardGames(), this.blueTeam.toArray(new Player[this.blueTeam.size()]));
+                    NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardGames(), this.redTeam.toArray(new Player[this.redTeam.size()]));
                     this.executeCommand(this.arena.getTeamMeta().getGamendCommand(), this.getPlayers());
                     this.getArena().getTeamMeta().getScoreboard().remove();
                     if (this.redGoals > this.blueGoals) {
                         this.executeCommand(this.arena.getTeamMeta().getWinCommand(), this.redTeam);
-                        NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardWinning(), this.redTeam.toArray(new Player[0]));
+                        NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardWinning(), this.redTeam.toArray(new Player[this.redTeam.size()]));
                         this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getRedwinnerTitleMessage()), this.decryptText(this.arena.getTeamMeta().getRedwinnerSubtitleMessage()));
                         this.endGame();
                     } else if (this.redGoals < this.blueGoals) {
                         this.executeCommand(this.arena.getTeamMeta().getWinCommand(), this.blueTeam);
-                        NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardWinning(), this.blueTeam.toArray(new Player[0]));
+                        NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardWinning(), this.blueTeam.toArray(new Player[this.blueTeam.size()]));
                         this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getBluewinnerTitleMessage()), this.decryptText(this.arena.getTeamMeta().getBluewinnerSubtitleMessage()));
                         this.endGame();
                     } else {
@@ -213,7 +215,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                 }
             }
             if (this.stage == GameStage.ENABLED) {
-                if (this.lobby.size() > 0 && this.lobby.size() >= this.arena.getLobbyMeta().getMinPlayers()) {
+                if (!this.lobby.isEmpty() && this.lobby.size() >= this.arena.getLobbyMeta().getMinPlayers()) {
                     if (!this.isStarting) {
                         this.isStarting = true;
                     } else {
@@ -222,14 +224,14 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                             player.setLevel(this.countdown);
                         }
                         if (this.countdown <= 10) {
-                            for (Player player : this.lobby) {
-                                float exp = ((float) (10 - this.countdown)) / 10;
+                            for (final Player player : this.lobby) {
+                                final float exp = ((float) (10 - this.countdown)) / 10;
                                 player.setExp(exp);
                             }
                         }
                         if (this.countdown <= 5) {
                             try {
-                                this.blingsound.play(this.lobby.toArray(new Player[0]));
+                                this.blingsound.play(this.lobby.toArray(new Player[this.lobby.size()]));
                             } catch (InterPreter19Exception e) {
                                 SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [BlingSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
                             }
@@ -291,7 +293,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
     }
 
     private void updateSigns() {
-        Location[] locations = this.arena.getLobbyMeta().getSignLocations().toArray(new Location[0]);
+        Location[] locations = this.arena.getLobbyMeta().getSignLocations().toArray(new Location[this.arena.getLobbyMeta().getSignLocations().size()]);
         for (int i = 0; i < locations.length; i++) {
             Location location = locations[i];
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
@@ -300,7 +302,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                 this.arena.getLobbyMeta().removeSignLocation(i);
             }
         }
-        locations = this.arena.getLobbyMeta().getRedTeamSignLocations().toArray(new Location[0]);
+        locations = this.arena.getLobbyMeta().getRedTeamSignLocations().toArray(new Location[this.arena.getLobbyMeta().getRedTeamSignLocations().size()]);
         for (int i = 0; i < locations.length; i++) {
             Location location = locations[i];
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
@@ -309,7 +311,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                 this.arena.getLobbyMeta().removeRedTeamSignLocation(i);
             }
         }
-        locations = this.arena.getLobbyMeta().getBlueTeamSignLocations().toArray(new Location[0]);
+        locations = this.arena.getLobbyMeta().getBlueTeamSignLocations().toArray(new Location[this.arena.getLobbyMeta().getBlueTeamSignLocations().size()]);
         for (int i = 0; i < locations.length; i++) {
             Location location = locations[i];
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {

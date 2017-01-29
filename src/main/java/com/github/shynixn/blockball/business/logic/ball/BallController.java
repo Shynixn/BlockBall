@@ -22,6 +22,6 @@ public final class BallController {
     }
 
     Ball[] getBalls() {
-        return this.balls.toArray(new Ball[0]);
+        return this.balls.toArray(new Ball[this.balls.size()]);
     }
 }

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
 
 /**
  * Created by Shynixn
@@ -69,7 +70,7 @@ public interface LightHologram {
                 constructor.setAccessible(true);
                 return (LightHologram) constructor.newInstance(location);
             } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                e.printStackTrace();
+                Bukkit.getLogger().log(Level.WARNING, "Cannot invoke hologram.", e);
                 throw new RuntimeException("Cannot start hologram.");
             }
         }

@@ -30,7 +30,7 @@ interface ServerInfo {
                     return State.RESTARTING;
                 else if (name.equalsIgnoreCase(BungeeCord.MOD_WAITING_FOR_PLAYERS))
                     return State.WAITING_FOR_PLAYERS;
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 return RESTARTING;
             }
             return State.UNKNOWN;

@@ -4,7 +4,9 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,7 +16,7 @@ public class SLanguage {
 
     public static void reload(Class<?> cls) {
         if (plugin == null)
-            throw new IllegalArgumentException("Pluginloader failed to load " + SLanguage.class.getSimpleName() + ".");
+            throw new IllegalArgumentException("Pluginloader failed to load " + SLanguage.class.getSimpleName() + '.');
         File file = new File(plugin.getDataFolder(), "lang.yml");
         if (!file.exists())
             buildFile(cls, plugin, file);
@@ -53,8 +55,8 @@ public class SLanguage {
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (final Exception e) {
+            Bukkit.getLogger().log(Level.WARNING, "Cannot load config file.", e);
         }
     }
 
@@ -64,12 +66,12 @@ public class SLanguage {
             ArrayList<String> s = new ArrayList<>();
             s.add("#Language");
             s.add("");
-            for (Field field : cls.getDeclaredFields()) {
-                s.add(field.getName().toLowerCase() + ": \"" + String.valueOf(field.get(null)).replace('§', '&') + "\"");
+            for (final Field field : cls.getDeclaredFields()) {
+                s.add(field.getName().toLowerCase() + ": \"" + String.valueOf(field.get(null)).replace('§', '&') + '"');
             }
             SFileUtils.writeAllLines(file, s);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (final Exception e) {
+            Bukkit.getLogger().log(Level.WARNING, "Cannot build config file.", e);
         }
     }
 }

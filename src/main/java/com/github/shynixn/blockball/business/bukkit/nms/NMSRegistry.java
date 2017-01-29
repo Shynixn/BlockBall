@@ -19,6 +19,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Level;
+
 public final class NMSRegistry {
     private NMSRegistry() {
         super();
@@ -41,8 +43,8 @@ public final class NMSRegistry {
                     WorldGuardConnection6.allowSpawn(location, getWorldGuard());
                 else if (RegisterHelper.isRegistered("WorldGuard", '5'))
                     WorldGuardConnection5.allowSpawn(location, getWorldGuard());
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (final Exception e) {
+                Bukkit.getLogger().log(Level.WARNING, "Cannot access worldguard.", e);
             }
         }
     }
@@ -67,8 +69,8 @@ public final class NMSRegistry {
                     WorldGuardConnection6.rollBack();
                 else if (RegisterHelper.isRegistered("WorldGuard", '5'))
                     WorldGuardConnection5.rollBack();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (final Exception e) {
+                Bukkit.getLogger().log(Level.WARNING, "Cannot access worldguard.", e);
             }
         }
     }

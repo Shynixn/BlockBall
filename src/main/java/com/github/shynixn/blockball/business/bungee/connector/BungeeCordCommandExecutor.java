@@ -9,6 +9,7 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 /**
  * Created by Shynixn
@@ -48,8 +49,8 @@ class BungeeCordCommandExecutor extends BukkitCommand {
             Object instance = subclazz.cast(Bukkit.getServer());
             instance = BungeeCord.invokeMethodByObject(instance, "getCommandMap");
             ReflectionLib.invokeMethodByObject(instance, "register", command, clazz);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (final Exception ex) {
+            Bukkit.getLogger().log(Level.WARNING, "Cannot register dynamic command.", ex);
         }
     }
 }

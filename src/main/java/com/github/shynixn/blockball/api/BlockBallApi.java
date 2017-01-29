@@ -1,17 +1,13 @@
 package com.github.shynixn.blockball.api;
 
-import com.github.shynixn.blockball.business.logic.game.GameController;
-import com.github.shynixn.blockball.lib.SPluginLoader;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.github.shynixn.blockball.api.entities.Arena;
 import com.github.shynixn.blockball.api.entities.Ball;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.business.logic.ball.BallController;
-import org.bukkit.util.Vector;
+import com.github.shynixn.blockball.business.logic.game.GameController;
+import com.github.shynixn.blockball.lib.SPluginLoader;
+import org.bukkit.World;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * API to access BlockBall games.

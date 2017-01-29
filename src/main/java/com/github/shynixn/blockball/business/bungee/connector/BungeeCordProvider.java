@@ -13,14 +13,15 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
 
 /**
  * Created by Shynixn
  */
 class BungeeCordProvider implements PluginMessageListener {
-    private BungeeCordController controller;
-    private JavaPlugin plugin;
-    private CallBack callBack;
+    private final BungeeCordController controller;
+    private final JavaPlugin plugin;
+    private final CallBack callBack;
 
     BungeeCordProvider(BungeeCordController controller, JavaPlugin plugin, CallBack callBack) {
         this.controller = controller;
@@ -31,14 +32,14 @@ class BungeeCordProvider implements PluginMessageListener {
     }
 
     void ping() {
-        Player player = getFirstPlayer();
+        final Player player = this.getFirstPlayer();
         if (player == null)
             return;
-        for (String s : controller.getServers()) {
+        for (final String s : this.controller.getServers()) {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("ServerIP");
             out.writeUTF(s);
-            player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+            player.sendPluginMessage(this.plugin, "BungeeCord", out.toByteArray());
         }
     }
 
@@ -46,7 +47,7 @@ class BungeeCordProvider implements PluginMessageListener {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
         out.writeUTF(serverName);
-        player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+        player.sendPluginMessage(this.plugin, "BungeeCord", out.toByteArray());
     }
 
     @Override
@@ -54,17 +55,17 @@ class BungeeCordProvider implements PluginMessageListener {
         if (!channel.equals("BungeeCord")) {
             return;
         }
-        ByteArrayDataInput in = ByteStreams.newDataInput(message);
-        String type = in.readUTF();
+        final ByteArrayDataInput in = ByteStreams.newDataInput(message);
+        final String type = in.readUTF();
         if (type.equals("ServerIP")) {
             final String serverName = in.readUTF();
             final String ip = in.readUTF();
             final short port = in.readShort();
-            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+            this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
                 @Override
                 public void run() {
-                    String data = receiveResultFromServer(serverName, ip, port);
-                    parseData(serverName, data);
+                    final String data = BungeeCordProvider.this.receiveResultFromServer(serverName, ip, port);
+                    BungeeCordProvider.this.parseData(serverName, data);
                 }
             });
         }
@@ -75,14 +76,14 @@ class BungeeCordProvider implements PluginMessageListener {
             if (data == null)
                 return;
             final ServerInfo serverInfo = new ServerInfo.Container(serverName, data);
-            plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
+            this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable() {
                 @Override
                 public void run() {
-                    callBack.run(serverInfo);
+                    BungeeCordProvider.this.callBack.run(serverInfo);
                 }
             });
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (final Exception e) {
+            Bukkit.getLogger().log(Level.WARNING, "Cannot parse result from server.", e);
         }
     }
 
@@ -91,8 +92,8 @@ class BungeeCordProvider implements PluginMessageListener {
     }
 
     private Player getFirstPlayer() {
-        for (World world : Bukkit.getWorlds()) {
-            if (world.getPlayers().size() > 0)
+        for (final World world : Bukkit.getWorlds()) {
+            if (!world.getPlayers().isEmpty())
                 return world.getPlayers().get(0);
         }
         return null;
@@ -104,7 +105,7 @@ class BungeeCordProvider implements PluginMessageListener {
             try (DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
                 out.write(0xFE);
                 try (DataInputStream in = new DataInputStream(socket.getInputStream())) {
-                    StringBuilder buffer = new StringBuilder();
+                    final StringBuilder buffer = new StringBuilder();
                     int b;
                     while ((b = in.read()) != -1) {
                         if (b != 0 && b > 16 && b != 255 && b != 23 && b != 24) {
@@ -114,8 +115,8 @@ class BungeeCordProvider implements PluginMessageListener {
                     data = buffer.toString();
                 }
             }
-        } catch (Exception e) {
-            Bukkit.getServer().getConsoleSender().sendMessage(controller.PREFIX + ChatColor.RED + "Failed to reach server " + serverName + " (" + hostname + ":" + port + ").");
+        } catch (final Exception e) {
+            Bukkit.getServer().getConsoleSender().sendMessage(this.controller.PREFIX + ChatColor.RED + "Failed to reach server " + serverName + " (" + hostname + ':' + port + ").");
         }
         return data;
     }

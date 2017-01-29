@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * Created by Shynixn
@@ -46,7 +47,7 @@ public class BungeeCord {
 
     public static void reload(JavaPlugin plugin, String prefix, String command, String headline) {
         COMMAND_COMMAND = command;
-        COMMAND_USEAGE = "/" + command + " <server>";
+        COMMAND_USEAGE = '/' + command + " <server>";
         COMMAND_PERMISSION = command + ".admin";
         SIGN_LINE_1 = ChatColor.BOLD + headline;
         buildConfigFile(plugin);
@@ -75,9 +76,10 @@ public class BungeeCord {
 
     private static void buildConfigFile(JavaPlugin plugin) {
         try {
-            File file = new File(plugin.getDataFolder(), "bungeecord.yml");
+            final File file = new File(plugin.getDataFolder(), "bungeecord.yml");
             if (!file.exists()) {
-                file.createNewFile();
+                if (!file.createNewFile())
+                    Bukkit.getLogger().log(Level.WARNING, "Cannot create file.");
                 ArrayList<String> s = new ArrayList<>();
                 s.add("#BungeeCord");
                 s.add("enabled: false");
@@ -87,51 +89,50 @@ public class BungeeCord {
                 s.add("");
                 for (Field field : BungeeCord.class.getDeclaredFields()) {
                     if (field.getType() == String.class) {
-                        s.add(field.getName().toLowerCase() + ": \"" + String.valueOf(field.get(null)).replace('§', '&') + "\"");
+                        s.add(field.getName().toLowerCase() + ": \"" + String.valueOf(field.get(null)).replace('§', '&') + '"');
                     }
                 }
-                writeAllLines(file, s.toArray(new String[0]));
+                writeAllLines(file, s.toArray(new String[s.size()]));
             } else {
-                try {
-                    FileConfiguration configuration = new YamlConfiguration();
-                    configuration.load(file);
-                    ENABLED = configuration.getBoolean("enabled");
-                    if (configuration.getString("connection").equalsIgnoreCase("MINIGAME"))
-                        SIGN_MODE = false;
-                    Map<String, Object> map = configuration.getConfigurationSection("").getValues(true);
-                    for (Field field : BungeeCord.class.getDeclaredFields()) {
-                        for (String key : map.keySet()) {
-                            if (field.getName().equalsIgnoreCase(key)) {
-                                if (field.getType() == String.class) {
-                                    field.set(null, ChatColor.translateAlternateColorCodes('&', (String) map.get(key)));
-                                } else {
-                                    field.set(null, map.get(key));
-                                }
+                final FileConfiguration configuration = new YamlConfiguration();
+                configuration.load(file);
+                ENABLED = configuration.getBoolean("enabled");
+                if (configuration.getString("connection").equalsIgnoreCase("MINIGAME"))
+                    SIGN_MODE = false;
+                final Map<String, Object> map = configuration.getConfigurationSection("").getValues(true);
+                for (final Field field : BungeeCord.class.getDeclaredFields())
+                    for (final String key : map.keySet()) {
+                        if (field.getName().equalsIgnoreCase(key)) {
+                            if (field.getType() == String.class) {
+                                field.set(null, ChatColor.translateAlternateColorCodes('&', (String) map.get(key)));
+                            } else {
+                                field.set(null, map.get(key));
                             }
                         }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (final Exception e) {
+            Bukkit.getLogger().log(Level.WARNING, "Cannot build config file.", e);
         }
     }
 
     private static boolean writeAllLines(File file, String... text) {
         try {
             if (file.exists())
-                file.delete();
-            file.createNewFile();
+            {
+                if(!file.delete())
+                    Bukkit.getLogger().log(Level.WARNING, "Cannot delete file.");
+            }
+            if(!file.createNewFile())
+                Bukkit.getLogger().log(Level.WARNING, "Cannot create file.");
             try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
                 for (final String aText : text) {
-                    bufferedWriter.write(aText + "\n");
+                    bufferedWriter.write(aText + '\n');
                 }
             }
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (final Exception e) {
+            Bukkit.getLogger().log(Level.WARNING, "Cannot delete file.", e);
             return false;
         }
     }
@@ -139,14 +140,14 @@ public class BungeeCord {
     public static Object invokeMethodByObject(Object object, String name, Object... params) {
         Class<?> clazz = object.getClass();
         do {
-            for (Method method : clazz.getDeclaredMethods()) {
+            for (final Method method : clazz.getDeclaredMethods()) {
                 try {
                     if (method.getName().equalsIgnoreCase(name)) {
                         method.setAccessible(true);
                         return method.invoke(object, params);
                     }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                } catch (final Exception ex) {
+                    Bukkit.getLogger().log(Level.WARNING, "Cannot invoke Method.", ex);
                 }
             }
             clazz = clazz.getSuperclass();
@@ -157,7 +158,7 @@ public class BungeeCord {
     public static String getServerVersion() {
         try {
             return Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             throw new RuntimeException("Version not found!");
         }
     }

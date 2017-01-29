@@ -53,14 +53,12 @@ public final class SFileUtils {
         try {
             if (!file.exists())
                 file.createNewFile();
-            final FileReader in = new FileReader(file.getPath());
-            final BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"));
-            String line;
-            while ((line = br.readLine()) != null) {
-                data.add(line);
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    data.add(line);
+                }
             }
-            in.close();
-            br.close();
         } catch (final Exception e) {
             Bukkit.getLogger().log(Level.INFO, "Failed to read all lines.", e);
         }
@@ -72,11 +70,11 @@ public final class SFileUtils {
             if (file.exists())
                 file.delete();
             file.createNewFile();
-            final BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
-            for (final String aText : text) {
-                bufferedWriter.write(aText + "\n");
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
+                for (final String aText : text) {
+                    bufferedWriter.write(aText + '\n');
+                }
             }
-            bufferedWriter.close();
             return true;
         } catch (final Exception e) {
             Bukkit.getLogger().log(Level.INFO, "Failed to write all lines.", e);
@@ -118,8 +116,7 @@ public final class SFileUtils {
             while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             Bukkit.getLogger().log(Level.INFO, "Failed to copy resource.", e);
             return false;
         }

@@ -75,9 +75,9 @@ public class SLocation implements IPosition {
 
     @Override
     public IPosition addCoordinates(double x, double y, double z) {
-        this.x = this.x + x;
-        this.y = this.y + y;
-        this.z = this.z + z;
+        this.x += x;
+        this.y += y;
+        this.z += z;
         return this;
     }
 
@@ -214,8 +214,8 @@ public class SLocation implements IPosition {
     @Override
     public String toString() {
         if (this.getWorld() == null)
-            return "unloaded world " + " " + this.getBlockX() + "x " + this.getBlockY() + "y " + this.getBlockZ() + "z.";
-        return this.getWorld().getName() + " " + this.getBlockX() + "x " + this.getBlockY() + "y " + this.getBlockZ() + "z.";
+            return "unloaded world " + ' ' + this.getBlockX() + "x " + this.getBlockY() + "y " + this.getBlockZ() + "z.";
+        return this.getWorld().getName() + ' ' + this.getBlockX() + "x " + this.getBlockY() + "y " + this.getBlockZ() + "z.";
     }
 
     public int distance(SLocation to) {

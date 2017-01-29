@@ -2,12 +2,9 @@ package com.github.shynixn.blockball.lib;
 
 import org.bukkit.Bukkit;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -30,7 +27,7 @@ public enum LightRegistry {
             this.name = name;
             this.saveGame_18_19_10 = saveGame_18_19_10;
             this.saveGame_11 = saveGame_11;
-            this.nmsClass = Class.forName("net.minecraft.server." + getServerVersion() + "." + nmsClassName);
+            this.nmsClass = Class.forName("net.minecraft.server." + getServerVersion() + '.' + nmsClassName);
         } catch (final Exception ex) {
             Bukkit.getLogger().log(Level.WARNING, "Wrong PowerRegistryType configuration. ", ex);
         }
@@ -79,7 +76,6 @@ public enum LightRegistry {
 
     private static class WrappedEntityRegistry implements EntityRegistry {
         private static final Map<Class<?>, LightRegistry> types = new HashMap<>();
-        private static final List<Object> saveKey = new ArrayList<>();
 
         @Override
         public void registerCustomEntity(Class<?> customEntityClazz, LightRegistry powerRegistry) throws Exception {
@@ -116,7 +112,6 @@ public enum LightRegistry {
                 final Method add = registry.getClass().getDeclaredMethod("a", Integer.TYPE, Object.class, Object.class);
                 add.setAccessible(true);
                 add.invoke(registry, Integer.valueOf(entityId), key, clazz);
-                saveKey.add(key);
             }
         }
 

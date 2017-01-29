@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.lib;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Array;
-import java.sql.Ref;
 import java.util.List;
 
 /**
@@ -133,7 +132,7 @@ public class FastBossBar implements LightBossBar {
 
     @Override
     public Object play(Object bossBar, String message, List<Player> players) {
-        return this.play(bossBar, message, players.toArray(new Player[0]));
+        return this.play(bossBar, message, players.toArray(new Player[players.size()]));
     }
 
     public static String getColorsText() {
@@ -164,7 +163,7 @@ public class FastBossBar implements LightBossBar {
     private static String getText(String classPath) {
         String s = "";
         for (Object object : ReflectionLib.getClassFromName(classPath).getEnumConstants()) {
-            if (s.equals(""))
+            if (s.isEmpty())
                 s += ReflectionLib.invokeMethodByObject(object, "name").toString().toLowerCase();
             else
                 s += ", " + ReflectionLib.invokeMethodByObject(object, "name").toString().toLowerCase();

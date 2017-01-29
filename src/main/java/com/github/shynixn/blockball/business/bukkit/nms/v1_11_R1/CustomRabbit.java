@@ -345,6 +345,7 @@ public final class CustomRabbit extends EntityRabbit {
         spigotTimings(false);
     }
 
+    @Override
     public void recalcPosition() {
         AxisAlignedBB axisalignedbb = this.getBoundingBox();
         this.locX = (axisalignedbb.a + axisalignedbb.d) / 2.0D;

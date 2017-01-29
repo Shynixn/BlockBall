@@ -134,7 +134,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 if (entity.getAlias() == null)
                     this.player.sendMessage(Language.PREFIX + entity.getName() + " - " + ChatColor.GRAY + entity.getDownCornerLocation());
                 else
-                    this.player.sendMessage(Language.PREFIX + entity.getName() + " - " + ChatColor.GRAY + entity.getAlias() + ChatColor.GRAY + " " + entity.getDownCornerLocation());
+                    this.player.sendMessage(Language.PREFIX + entity.getName() + " - " + ChatColor.GRAY + entity.getAlias() + ChatColor.GRAY + ' ' + entity.getDownCornerLocation());
             }
             this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + MENU_BACK);
             this.player.sendMessage(Language.PREFIX + ChatColor.RED + MENU_EXIT);
@@ -203,7 +203,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                     ArenaCommandExecutor.this.manager.persist(this.arenaEntity);
                     this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + "Successfully saved arena.");
                     ArenaCommandExecutor.this.manager.manager.reload();
-                    if (this.arenaEntity.getGameType() == GameType.MINIGAME) {
+                    if (this.arenaEntity.getGameType() == GameType.BUNGEE) {
                         for (Player player : SFileUtils.getOnlinePlayers()) {
                             player.kickPlayer(Language.PREFIX + "Server is restarting for BlockBall bungee mode!");
                         }
@@ -569,7 +569,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
             else if (this.lastNumber == 8)
                 this.arenaEntity.getLobbyMeta().setGameTitleMessage(text);
             else if (this.lastNumber == 9)
-                this.arenaEntity.getLobbyMeta().setGamesubTitleMessage(text);
+                this.arenaEntity.getLobbyMeta().setGameSubTitleMessage(text);
             else
                 return true;
             return false;
@@ -655,7 +655,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 this.arenaEntity.getTeamMeta().setTeamAutoJoin(false);
                 this.arenaEntity.getTeamMeta().setFastJoin(false);
                 this.arenaEntity.getTeamMeta().setEmptyReset(false);
-                this.arenaEntity.getLobbyMeta().setGamesubTitleMessage(ChatColor.YELLOW + "Starting in :countdown seconds.");
+                this.arenaEntity.getLobbyMeta().setGameSubTitleMessage(ChatColor.YELLOW + "Starting in :countdown seconds.");
                 this.arenaEntity.getLobbyMeta().setGameTitleMessage(ChatColor.GOLD + "Game");
                 this.player.sendMessage(Language.PREFIX + "Reset this page.");
             } else if (number == 12) {
@@ -1062,13 +1062,17 @@ class ArenaCommandExecutor extends SCommandExecutor {
                     this.open(this.player, new VaultSettings(this.player, this.arenaEntity));
             } else if (number == 7) {
                 this.open(this.player, new SpawnerItems(this.player, this.arenaEntity));
-            } else if (number == 8) {
+            }
+            else if (number == 8) {
+                this.open(this.player, new GlowingSettingsPage(this.player, this.arenaEntity));
+            }
+            else if (number == 9) {
                 this.arenaEntity.getTeamMeta().setAllowDoubleJump(true);
                 this.arenaEntity.getTeamMeta().setDoubleJumpParticle(new SParticle(ParticleEffect.EXPLOSION_NORMAL, 4, 0.0002, 2, 2, 2));
                 this.arenaEntity.getTeamMeta().setDoubleJumpSound(new FastSound("GHAST_FIREBALL", 100.0, 1.0));
                 this.arenaEntity.getTeamMeta().setDamage(true);
                 this.player.sendMessage(Language.PREFIX + "Reset this page.");
-            } else if (number == 9) {
+            } else if (number == 10) {
                 this.player.sendMessage(Language.PREFIX + "Saved settings.");
                 this.open(this.player, new MainSettingsPage(this.player, this.arenaEntity));
             }
@@ -1086,8 +1090,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
             this.player.sendMessage(Language.PREFIX + "5 - Set Hologram");
             this.player.sendMessage(Language.PREFIX + "6 - [Vault] Set rewards");
             this.player.sendMessage(Language.PREFIX + "7 - Item Spawner");
-            this.player.sendMessage(Language.PREFIX + "8 - Reset this page");
-            this.player.sendMessage(Language.PREFIX + "9 - Save settings");
+            this.player.sendMessage(Language.PREFIX + "8 - ScoreGlowing 1.9+");
+            this.player.sendMessage(Language.PREFIX + "9 - Reset this page");
+            this.player.sendMessage(Language.PREFIX + "10 - Save settings");
             this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + MENU_BACK);
             this.player.sendMessage(Language.PREFIX + ChatColor.RED + MENU_EXIT);
             this.player.sendMessage("");
@@ -1192,7 +1197,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class EditColorParticlePage extends SChatpage {
+    private static class EditColorParticlePage extends SChatpage {
         private final LightParticle particle;
         private final int type;
 
@@ -1270,7 +1275,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class EditMaterialParticlePage extends SChatpage {
+    private static class EditMaterialParticlePage extends SChatpage {
         private final LightParticle particle;
 
         EditMaterialParticlePage(Player player, LightParticle particle) {
@@ -1826,9 +1831,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
             int i = 0;
             for (BoostItem boostItem : this.arenaEntity.getBoostItemHandler().getBoostItems()) {
                 if (Material.getMaterial(boostItem.getId()) != null)
-                    this.player.sendMessage(Language.PREFIX + i + " - " + Material.getMaterial(boostItem.getId()).name().toUpperCase() + "-" + boostItem.getDamage());
+                    this.player.sendMessage(Language.PREFIX + i + " - " + Material.getMaterial(boostItem.getId()).name().toUpperCase() + '-' + boostItem.getDamage());
                 else
-                    this.player.sendMessage(Language.PREFIX + i + " - " + boostItem.getId() + "-" + boostItem.getDamage());
+                    this.player.sendMessage(Language.PREFIX + i + " - " + boostItem.getId() + '-' + boostItem.getDamage());
                 i++;
             }
         }
@@ -1934,7 +1939,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class EditPotionEffect extends SChatpage {
+    private static class EditPotionEffect extends SChatpage {
         private final ArenaEntity arenaEntity;
         private final LightPotioneffect lightPotioneffect;
 
@@ -2007,7 +2012,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class EditCommands extends SChatpage {
+    private static class EditCommands extends SChatpage {
         private final ArenaEntity arenaEntity;
 
         EditCommands(Player player, ArenaEntity entity) {
@@ -2055,7 +2060,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class EventMetaSettingsPage extends SChatpage {
+    private static class EventMetaSettingsPage extends SChatpage {
         private final ArenaEntity arena;
 
         public EventMetaSettingsPage(Player player, ArenaEntity arena) {
@@ -2139,7 +2144,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-    private class HologramSettingsPage extends SChatpage {
+    private static class HologramSettingsPage extends SChatpage {
         private final ArenaEntity arena;
 
         public HologramSettingsPage(Player player, ArenaEntity arena) {
@@ -2192,6 +2197,55 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
+    private static class GlowingSettingsPage extends SChatpage {
+        private final ArenaEntity arena;
+
+        public GlowingSettingsPage(Player player, ArenaEntity arena) {
+            super(player);
+            this.arena = arena;
+        }
+
+        @Override
+        public boolean playerPreChatEnter(String text) {
+            if (this.lastNumber == 2 && SMathUtils.tryPInt(text)) {
+                this.arena.getTeamMeta().setGoalShooterGlowingSeconds(Integer.parseInt(text));
+                this.player.sendMessage(Language.PREFIX + "Changed amount of glowing seconds.");
+            } else
+                return true;
+            return false;
+        }
+
+        @Override
+        public void onPlayerSelect(int number) {
+            if (number == 1) {
+                this.arena.getTeamMeta().setGoalShooterGlowing(!this.arena.getTeamMeta().isGoalShooterGlowing());
+                if (this.arena.getTeamMeta().isGoalShooterGlowing())
+                    this.player.sendMessage(Language.PREFIX + "Enabled glowing.");
+                else
+                    this.player.sendMessage(Language.PREFIX + "Disabled glowing.");
+            } else if (number == 2) {
+                this.player.sendMessage(Language.PREFIX + "Enter the amount of seconds a player should be glowing:");
+            }  else if (number == 3) {
+                this.open(this.player, this.getLastInstance());
+            }
+        }
+
+        @Override
+        public void show() {
+            this.player.sendMessage("");
+            this.player.sendMessage(HEADER_STANDARD);
+            this.player.sendMessage("");
+            this.player.sendMessage(Language.PREFIX + "1 - Toggle glowing");
+            this.player.sendMessage(Language.PREFIX + "2 - Set glowing seconds");
+            this.player.sendMessage(Language.PREFIX + "3 - Save settings");
+            this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + MENU_BACK);
+            this.player.sendMessage(Language.PREFIX + ChatColor.RED + MENU_EXIT);
+            this.player.sendMessage("");
+            this.player.sendMessage(FOOTER_STANDARD);
+            this.player.sendMessage("");
+        }
+    }
+
     public class BungeeMinigameSettings extends SChatpage {
         private final ArenaEntity arenaEntity;
 
@@ -2209,7 +2263,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
             else if (this.lastNumber == 7)
                 this.arenaEntity.getLobbyMeta().setGameTitleMessage(text);
             else if (this.lastNumber == 8)
-                this.arenaEntity.getLobbyMeta().setGamesubTitleMessage(text);
+                this.arenaEntity.getLobbyMeta().setGameSubTitleMessage(text);
             else
                 return true;
             return false;
@@ -2278,7 +2332,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 this.arenaEntity.getTeamMeta().setTeamAutoJoin(false);
                 this.arenaEntity.getTeamMeta().setFastJoin(false);
                 this.arenaEntity.getTeamMeta().setEmptyReset(false);
-                this.arenaEntity.getLobbyMeta().setGamesubTitleMessage(ChatColor.YELLOW + "Starting in :countdown seconds.");
+                this.arenaEntity.getLobbyMeta().setGameSubTitleMessage(ChatColor.YELLOW + "Starting in :countdown seconds.");
                 this.arenaEntity.getLobbyMeta().setGameTitleMessage(ChatColor.GOLD + "Game");
                 this.player.sendMessage(Language.PREFIX + "Reset this page.");
             } else if (number == 10) {

@@ -29,28 +29,26 @@ public abstract class GameEntity implements Game {
     private Object bossBar;
     private Ball ball;
 
-    //Storage
+    List<Player> previousFlying = new ArrayList<>();
     final Map<Player, ItemStack[]> armorContents = new HashMap<>();
     final List<Player> redTeam = new ArrayList<>();
     final List<Player> blueTeam = new ArrayList<>();
-    int blueGoals = 0;
-    int redGoals = 0;
+    int blueGoals;
+    int redGoals;
 
-    //Bumper objects
     private int bumper = 20;
-    private int bumerCounter = 0;
+    private int bumperCounter;
     private int buffer = 2;
-    int ballcornerbumper = 0;
-    Vector ballpreviousbumperLocation;
+    int ballCornerBumper;
+    Vector ballPreviousCacheLocation;
     private int counter = 3;
-    private boolean freshReset = false;
-    boolean ballSpawning = false;
+    private boolean freshReset;
+    boolean ballSpawning;
 
-    //Hit calculator
-    private Team lastHitTeam = null;
-    private Player lastHit = null;
+    private Team lastHitTeam;
+    private Player lastHit;
 
-    final List<Player> playeddata = new ArrayList<>();
+    final List<Player> playData = new ArrayList<>();
 
     private LightHologram hologram;
 
@@ -58,235 +56,257 @@ public abstract class GameEntity implements Game {
         this.arena = arena;
     }
 
+    @Override
     public abstract boolean join(Player player, Team team);
 
     LightHologram getHologram() {
-        if (hologram == null && this.arena.getTeamMeta().isHologramEnabled() && this.arena.getTeamMeta().getHologramLocation() != null) {
-            hologram = new LightHologram.Builder(this.arena.getTeamMeta().getHologramLocation());
+        if (this.hologram == null && this.arena.getTeamMeta().isHologramEnabled() && this.arena.getTeamMeta().getHologramLocation() != null) {
+            this.hologram = new LightHologram.Builder(this.arena.getTeamMeta().getHologramLocation());
         }
-        return hologram;
+        return this.hologram;
     }
 
     @Override
     public Player[] getBlueTeamPlayers() {
-        return blueTeam.toArray(new Player[0]);
+        return this.blueTeam.toArray(new Player[this.blueTeam.size()]);
     }
 
     @Override
     public Player[] getRedTeamPlayers() {
-        return redTeam.toArray(new Player[0]);
+        return this.redTeam.toArray(new Player[this.redTeam.size()]);
     }
 
     @Override
     public boolean isInGame(Player player) {
-        return getPlayers().contains(player);
+        return this.getPlayers().contains(player);
     }
 
     synchronized boolean leave(Player player, boolean message) {
-        if (redTeam.contains(player))
-            redTeam.remove(player);
-        if (blueTeam.contains(player))
-            blueTeam.remove(player);
+        if (this.redTeam.contains(player))
+            this.redTeam.remove(player);
+        if (this.blueTeam.contains(player))
+            this.blueTeam.remove(player);
         if (player.isOnline() && message)
-            player.sendMessage(Language.PREFIX + arena.getTeamMeta().getLeaveMessage());
-        if (armorContents.containsKey(player))
-            player.getInventory().setArmorContents(armorContents.get(player).clone());
+            player.sendMessage(Language.PREFIX + this.arena.getTeamMeta().getLeaveMessage());
+        if (this.armorContents.containsKey(player))
+            player.getInventory().setArmorContents(this.armorContents.get(player).clone());
         player.updateInventory();
-        armorContents.remove(player);
+        this.armorContents.remove(player);
         player.setFlying(false);
         player.setAllowFlight(false);
-        arena.getTeamMeta().getBossBar().stopPlay(bossBar, player);
-        arena.getTeamMeta().getScoreboard().remove(player);
-        if (arena.getTeamMeta().isBossBarPluginEnabled()) {
+        this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
+        this.arena.getTeamMeta().getScoreboard().remove(player);
+        if(this.previousFlying.contains(player))
+            player.setAllowFlight(true);
+        if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
             NMSRegistry.setBossBar(player, null);
         }
-        if (getHologram() != null) {
-            getHologram().remove(player);
+        if (!ReflectionLib.getServerVersion().contains("1_8")) {
+            Interpreter19.setGlowing(player, false);
+        }
+        if (this.getHologram() != null) {
+            this.getHologram().remove(player);
         }
         return true;
     }
 
+    @Override
     public synchronized boolean leave(Player player) {
-        return leave(player, true);
+        return this.leave(player, true);
     }
 
     @Override
     public void playBallMoveEffects() {
-        if (lastHitTeam != null) {
-            if (lastHitTeam == Team.RED) {
-                arena.getBallMeta().getPlayerTeamRedHitParticle().play(ball.getLocation());
+        if (this.lastHitTeam != null) {
+            if (this.lastHitTeam == Team.RED) {
+                this.arena.getBallMeta().getPlayerTeamRedHitParticle().play(this.ball.getLocation());
             } else {
-                arena.getBallMeta().getPlayerTeamBlueHitParticle().play(ball.getLocation());
+                this.arena.getBallMeta().getPlayerTeamBlueHitParticle().play(this.ball.getLocation());
             }
         }
     }
 
     @Override
     public void playBallKickEffects(Player player) {
-        if (buffer == 0) {
-            arena.getBallMeta().getGenericHitParticle().play(ball.getLocation());
+        if (this.buffer == 0) {
+            this.arena.getBallMeta().getGenericHitParticle().play(this.ball.getLocation());
             try {
-                arena.getBallMeta().getGenericHitSound().play(ball.getLocation());
+                this.arena.getBallMeta().getGenericHitSound().play(this.ball.getLocation());
             } catch (InterPreter19Exception e) {
                 SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [GenericHitSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
             }
-            buffer = 10;
+            this.buffer = 10;
         }
-        if (blueTeam.contains(player))
-            lastHitTeam = Team.BLUE;
+        if (this.blueTeam.contains(player))
+            this.lastHitTeam = Team.BLUE;
         else
-            lastHitTeam = Team.RED;
-        lastHit = player;
+            this.lastHitTeam = Team.RED;
+        this.lastHit = player;
     }
 
     public Ball getBall() {
-        return ball;
+        return this.ball;
     }
 
+    @Override
     public Arena getArena() {
-        return arena;
+        return this.arena;
     }
 
     private Location lastBallLocation;
 
     final void fixCachedRangePlayers() {
-        for (Player player : playeddata.toArray(new Player[0])) {
-            if (player.getLocation().getWorld().getName().equals(arena.getBallSpawnLocation().getWorld().getName())) {
-                if (player.getLocation().distance(arena.getCenter()) > arena.getTeamMeta().getSpecatorradius()) {
-                    arena.getTeamMeta().getScoreboard().remove(player);
-                    arena.getTeamMeta().getBossBar().stopPlay(bossBar, player);
-                    if (arena.getTeamMeta().isBossBarPluginEnabled()) {
+        for (final Player player : this.playData.toArray(new Player[this.playData.size()])) {
+            if (player.getLocation().getWorld().getName().equals(this.arena.getBallSpawnLocation().getWorld().getName())) {
+                if (player.getLocation().distance(this.arena.getCenter()) > this.arena.getTeamMeta().getSpecatorradius()) {
+                    this.arena.getTeamMeta().getScoreboard().remove(player);
+                    this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
+                    if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
                         NMSRegistry.setBossBar(player, null);
                     }
-                    playeddata.remove(player);
+                    this.playData.remove(player);
                 }
             } else {
-                arena.getTeamMeta().getScoreboard().remove(player);
-                arena.getTeamMeta().getBossBar().stopPlay(bossBar, player);
-                if (arena.getTeamMeta().isBossBarPluginEnabled()) {
+                this.arena.getTeamMeta().getScoreboard().remove(player);
+                this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
+                if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
                     NMSRegistry.setBossBar(player, null);
                 }
-                playeddata.remove(player);
+                this.playData.remove(player);
             }
         }
     }
 
     public void run() {
-        getArena().getBoostItemHandler().run(this);
-        if (buffer > 0)
-            buffer--;
-        if (ballSpawning) {
-            counter--;
-            if (counter <= 0) {
-                if (arena.getTeamMeta().isBossBarPluginEnabled()) {
-                    if (arena.getTeamMeta().isSpectatorMessagesEnabled()) {
-                        for (Player player : getPlayersInRange()) {
-                            if (!playeddata.contains(player))
-                                playeddata.add(player);
-                            NMSRegistry.setBossBar(player, decryptText(arena.getTeamMeta().getBossBarPluginMessage()));
+        this.getArena().getBoostItemHandler().run(this);
+        if (this.buffer > 0)
+            this.buffer--;
+        if (this.ballSpawning) {
+            this.counter--;
+            if (this.counter <= 0) {
+                if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
+                    if (this.arena.getTeamMeta().isSpectatorMessagesEnabled()) {
+                        for (final Player player : this.getPlayersInRange()) {
+                            if (!this.playData.contains(player))
+                                this.playData.add(player);
+                            NMSRegistry.setBossBar(player, this.decryptText(this.arena.getTeamMeta().getBossBarPluginMessage()));
                         }
                     } else {
-                        for (Player player : getPlayers()) {
-                            NMSRegistry.setBossBar(player, decryptText(arena.getTeamMeta().getBossBarPluginMessage()));
+                        for (final Player player : this.getPlayers()) {
+                            NMSRegistry.setBossBar(player, this.decryptText(this.arena.getTeamMeta().getBossBarPluginMessage()));
                         }
                     }
                 }
-                if (arena.getTeamMeta().isSpectatorMessagesEnabled()) {
-                    fixCachedRangePlayers();
-                    for (Player player : getPlayersInRange()) {
-                        if (!playeddata.contains(player))
-                            playeddata.add(player);
+                if (this.arena.getTeamMeta().isSpectatorMessagesEnabled()) {
+                    this.fixCachedRangePlayers();
+                    for (final Player player : this.getPlayersInRange()) {
+                        if (!this.playData.contains(player))
+                            this.playData.add(player);
                     }
-                    bossBar = arena.getTeamMeta().getBossBar().play(bossBar, decryptText(arena.getTeamMeta().getBossBar().getMessage()), getPlayersInRange());
+                    this.bossBar = this.arena.getTeamMeta().getBossBar().play(this.bossBar, this.decryptText(this.arena.getTeamMeta().getBossBar().getMessage()), this.getPlayersInRange());
                 } else {
-                    bossBar = arena.getTeamMeta().getBossBar().play(bossBar, decryptText(arena.getTeamMeta().getBossBar().getMessage()), getPlayers());
+                    this.bossBar = this.arena.getTeamMeta().getBossBar().play(this.bossBar, this.decryptText(this.arena.getTeamMeta().getBossBar().getMessage()), this.getPlayers());
                 }
-                ball = BlockBallApi.createNewBall(arena.getBallSpawnLocation().getWorld());
-                ball.spawn(arena.getBallSpawnLocation());
-                ball.setSkin(arena.getBallMeta().getBallSkin());
-                ball.setKickStrengthHorizontal(arena.getBallMeta().getHorizontalStrength());
-                ball.setKickStrengthVertical(arena.getBallMeta().getVerticalStrength());
-                ball.setRotating(arena.getBallMeta().isRotating());
-                ballSpawning = false;
-                freshReset = true;
-                counter = 0;
-                arena.getBallMeta().getBallSpawnParticle().play(ball.getLocation());
+                this.ball = BlockBallApi.createNewBall(this.arena.getBallSpawnLocation().getWorld());
+                this.ball.spawn(this.arena.getBallSpawnLocation());
+                this.ball.setSkin(this.arena.getBallMeta().getBallSkin());
+                this.ball.setKickStrengthHorizontal(this.arena.getBallMeta().getHorizontalStrength());
+                this.ball.setKickStrengthVertical(this.arena.getBallMeta().getVerticalStrength());
+                this.ball.setRotating(this.arena.getBallMeta().isRotating());
+                this.ballSpawning = false;
+                this.freshReset = true;
+                this.counter = 0;
+                this.arena.getBallMeta().getBallSpawnParticle().play(this.ball.getLocation());
                 try {
-                    arena.getBallMeta().getBallSpawnSound().play(ball.getLocation());
+                    this.arena.getBallMeta().getBallSpawnSound().play(this.ball.getLocation());
                 } catch (InterPreter19Exception e) {
                     SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [BallSpawnSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
                 }
             }
-        } else if ((ball == null || ball.isDead()) && (redTeam.size() > 0 || blueTeam.size() > 0) && getPlayers().size() >= arena.getTeamMeta().getTeamMinSize()) {
-            ballSpawning = true;
-            counter = arena.getBallMeta().getBallSpawnTime() * 20;
+        } else if ((this.ball == null || this.ball.isDead()) && (!this.redTeam.isEmpty() || !this.blueTeam.isEmpty()) && this.getPlayers().size() >= this.arena.getTeamMeta().getTeamMinSize()) {
+            this.ballSpawning = true;
+            this.counter = this.arena.getBallMeta().getBallSpawnTime() * 20;
         }
-        if (ball != null) {
-            if (!this.arena.isLocationInArea(ball.getLocation())) {
-                if (bumper == 0)
-                    bumpBallBack();
+        if (this.ball != null) {
+            if (!this.arena.isLocationInArea(this.ball.getLocation())) {
+                if (this.bumper == 0)
+                    this.bumpBallBack();
             } else {
-                bumerCounter = 0;
-                lastBallLocation = ball.getLocation().clone();
+                this.bumperCounter = 0;
+                this.lastBallLocation = this.ball.getLocation().clone();
             }
-            if (getPlayers().size() == 0)
-                ball.despawn();
-            if (bumper > 0)
-                bumper--;
+            if (this.getPlayers().isEmpty())
+                this.ball.despawn();
+            if (this.bumper > 0)
+                this.bumper--;
         }
-        if (freshReset && arena.getTeamMeta().isEmtptyReset() && getPlayers().size() == 0) {
-            reset();
-            freshReset = false;
+        if (this.freshReset && this.arena.getTeamMeta().isEmtptyReset() && this.getPlayers().isEmpty()) {
+            this.reset();
+            this.freshReset = false;
         }
-        if (ball != null && !ball.isDead() && arena.isLocationInGoal(ball.getLocation())) {
-            Team team = arena.getTeamFromGoal(ball.getLocation());
-            arena.getBallMeta().getBallGoalParticle().play(ball.getLocation());
+        if (this.ball != null && !this.ball.isDead() && this.arena.isLocationInGoal(this.ball.getLocation())) {
+            final Team team = this.arena.getTeamFromGoal(this.ball.getLocation());
+            this.useLastHitGlowing();
+            this.arena.getBallMeta().getBallGoalParticle().play(this.ball.getLocation());
             try {
-                arena.getBallMeta().getBallGoalSound().play(ball.getLocation());
-            } catch (InterPreter19Exception e) {
+                this.arena.getBallMeta().getBallGoalSound().play(this.ball.getLocation());
+            } catch (final InterPreter19Exception e) {
                 SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [BallGoalSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
             }
-            ball.despawn();
-            if (Team.RED == team) {
-                redGoals++;
-                sendMessageToPlayers(decryptText(arena.getTeamMeta().getRedtitleScoreMessage()), decryptText(arena.getTeamMeta().getRedsubtitleMessage()));
-                if (lastHit != null && redTeam.contains(lastHit)) {
-                    NMSRegistry.addMoney(arena.getTeamMeta().getRewardGoals(), lastHit);
-                    Bukkit.getPluginManager().callEvent(new GoalShootEvent(this, lastHit, team));
+            this.ball.despawn();
+            if (team == Team.RED) {
+                this.redGoals++;
+                this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getRedtitleScoreMessage()), this.decryptText(this.arena.getTeamMeta().getRedsubtitleMessage()));
+                if (this.lastHit != null && this.redTeam.contains(this.lastHit)) {
+                    NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardGoals(), this.lastHit);
+                    Bukkit.getPluginManager().callEvent(new GoalShootEvent(this, this.lastHit, team));
                 }
-                if (redGoals >= arena.getTeamMeta().getMaxScore() && lastHit != null) {
-                    NMSRegistry.addMoney(arena.getTeamMeta().getRewardGames(), blueTeam.toArray(new Player[0]));
-                    NMSRegistry.addMoney(arena.getTeamMeta().getRewardGames(), redTeam.toArray(new Player[0]));
-                    NMSRegistry.addMoney(arena.getTeamMeta().getRewardWinning(), redTeam.toArray(new Player[0]));
+                if (this.redGoals >= this.arena.getTeamMeta().getMaxScore() && this.lastHit != null) {
+                    NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardGames(), this.blueTeam.toArray(new Player[this.blueTeam.size()]));
+                    NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardGames(), this.redTeam.toArray(new Player[this.redTeam.size()]));
+                    NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardWinning(), this.redTeam.toArray(new Player[this.redTeam.size()]));
 
-                    executeCommand(arena.getTeamMeta().getGamendCommand(), getPlayers());
-                    executeCommand(arena.getTeamMeta().getWinCommand(), redTeam);
+                    this.executeCommand(this.arena.getTeamMeta().getGamendCommand(), this.getPlayers());
+                    this.executeCommand(this.arena.getTeamMeta().getWinCommand(), this.redTeam);
 
-                    sendMessageToPlayers(decryptText(arena.getTeamMeta().getRedwinnerTitleMessage()), decryptText(arena.getTeamMeta().getRedwinnerSubtitleMessage()));
-                    reset();
+                    this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getRedwinnerTitleMessage()), this.decryptText(this.arena.getTeamMeta().getRedwinnerSubtitleMessage()));
+                    this.reset();
                 }
-            } else if (Team.BLUE == team) {
-                blueGoals++;
-                sendMessageToPlayers(decryptText(arena.getTeamMeta().getBluetitleScoreMessage()), decryptText(arena.getTeamMeta().getBluesubtitleMessage()));
-                if (lastHit != null && blueTeam.contains(lastHit)) {
-                    NMSRegistry.addMoney(arena.getTeamMeta().getRewardGoals(), lastHit);
-                    Bukkit.getPluginManager().callEvent(new GoalShootEvent(this, lastHit, team));
+            } else if (team == Team.BLUE) {
+                this.blueGoals++;
+                this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getBluetitleScoreMessage()), this.decryptText(this.arena.getTeamMeta().getBluesubtitleMessage()));
+                if (this.lastHit != null && this.blueTeam.contains(this.lastHit)) {
+                    NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardGoals(), this.lastHit);
+                    Bukkit.getPluginManager().callEvent(new GoalShootEvent(this, this.lastHit, team));
                 }
-                if (blueGoals >= arena.getTeamMeta().getMaxScore()) {
-                    NMSRegistry.addMoney(arena.getTeamMeta().getRewardGames(), blueTeam.toArray(new Player[0]));
-                    NMSRegistry.addMoney(arena.getTeamMeta().getRewardGames(), redTeam.toArray(new Player[0]));
-                    NMSRegistry.addMoney(arena.getTeamMeta().getRewardWinning(), blueTeam.toArray(new Player[0]));
+                if (this.blueGoals >= this.arena.getTeamMeta().getMaxScore()) {
+                    NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardGames(), this.blueTeam.toArray(new Player[this.blueTeam.size()]));
+                    NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardGames(), this.redTeam.toArray(new Player[this.redTeam.size()]));
+                    NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardWinning(), this.blueTeam.toArray(new Player[this.blueTeam.size()]));
 
-                    executeCommand(arena.getTeamMeta().getGamendCommand(), getPlayers());
-                    executeCommand(arena.getTeamMeta().getWinCommand(), blueTeam);
+                    this.executeCommand(this.arena.getTeamMeta().getGamendCommand(), this.getPlayers());
+                    this.executeCommand(this.arena.getTeamMeta().getWinCommand(), this.blueTeam);
 
-                    sendMessageToPlayers(decryptText(arena.getTeamMeta().getBluewinnerTitleMessage()), decryptText(arena.getTeamMeta().getBluewinnerSubtitleMessage()));
-                    reset();
+                    this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getBluewinnerTitleMessage()), this.decryptText(this.arena.getTeamMeta().getBluewinnerSubtitleMessage()));
+                    this.reset();
                 }
             }
-            if (getHologram() != null) {
-                getHologram().setText(decryptText(arena.getTeamMeta().getHologramText()));
+            if (this.getHologram() != null) {
+                this.getHologram().setText(this.decryptText(this.arena.getTeamMeta().getHologramText()));
             }
+        }
+    }
+
+    private void useLastHitGlowing() {
+        if (this.arena.getTeamMeta().isGoalShooterGlowing() && (!ReflectionLib.getServerVersion().contains("1_8")) && this.lastHit != null) {
+            final Player player = this.lastHit;
+            Interpreter19.setGlowing(player, true);
+            plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    Interpreter19.setGlowing(player, false);
+                }
+            }, 20L * this.arena.getTeamMeta().getGoalShooterGlowingSeconds());
         }
     }
 
@@ -296,88 +316,96 @@ public abstract class GameEntity implements Game {
         if (command.replace(":player", "").length() == command.length()) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         } else {
-            for (Player player : players) {
+            for (final Player player : players) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace(":player", player.getName()));
             }
         }
     }
 
     final void bumpBallBack() {
-        if (lastBallLocation != null) {
-            Vector knockback = lastBallLocation.toVector().subtract(ball.getLocation().toVector());
-            ball.getLocation().setDirection(knockback);
-            ball.setVelocity(knockback);
-            Vector direction = this.arena.getBallSpawnLocation().toVector().subtract(ball.getLocation().toVector());
-            ball.setVelocity(direction.multiply(0.1));
-            bumper = 40;
-            bumerCounter++;
-            if (bumerCounter == 5) {
-                ball.teleport(arena.getBallSpawnLocation());
+        if (this.lastBallLocation != null) {
+            final Vector knockback = this.lastBallLocation.toVector().subtract(this.ball.getLocation().toVector());
+            this.ball.getLocation().setDirection(knockback);
+            this.ball.setVelocity(knockback);
+            final Vector direction = this.arena.getBallSpawnLocation().toVector().subtract(this.ball.getLocation().toVector());
+            this.ball.setVelocity(direction.multiply(0.1));
+            this.bumper = 40;
+            this.bumperCounter++;
+            if (this.bumperCounter == 5) {
+                this.ball.teleport(this.arena.getBallSpawnLocation());
             }
         }
     }
 
     void reset(boolean teleport) {
-        for (Player player : armorContents.keySet()) {
-            player.getInventory().setArmorContents(armorContents.get(player).clone());
+        for (final Player player : this.armorContents.keySet()) {
+            player.getInventory().setArmorContents(this.armorContents.get(player).clone());
+            player.getInventory().setArmorContents(this.armorContents.get(player).clone());
             player.updateInventory();
+            Interpreter19.setGlowing(player, false);
+            player.setFlying(false);
+            player.setAllowFlight(false);
+            if(this.previousFlying.contains(player))
+                player.setAllowFlight(true);
         }
-        if (teleport && arena.getTeamMeta().getGameEndSpawnpoint() != null) {
-            for (Player player : getPlayers()) {
-                player.teleport(arena.getTeamMeta().getGameEndSpawnpoint());
+        if (teleport && this.arena.getTeamMeta().getGameEndSpawnpoint() != null) {
+            for (final Player player : this.getPlayers()) {
+                player.teleport(this.arena.getTeamMeta().getGameEndSpawnpoint());
             }
         }
-        for (Player player : playeddata) {
-            arena.getTeamMeta().getBossBar().stopPlay(bossBar, player);
-            if (arena.getTeamMeta().isBossBarPluginEnabled()) {
+        for (final Player player : this.playData) {
+            this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
+            if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
                 NMSRegistry.setBossBar(player, null);
             }
         }
-        ((ItemSpawner) arena.getBoostItemHandler()).clearGroundItems();
-        FastBossBar.dispose(bossBar);
-        if (ball != null)
-            ball.despawn();
-        if (hologram != null)
-            hologram.remove(SFileUtils.getOnlinePlayers().toArray(new Player[0]));
-        redTeam.clear();
-        blueTeam.clear();
-        playeddata.clear();
-        ball = null;
-        blueGoals = 0;
-        redGoals = 0;
+        ((ItemSpawner) this.arena.getBoostItemHandler()).clearGroundItems();
+        FastBossBar.dispose(this.bossBar);
+        if (this.ball != null)
+            this.ball.despawn();
+        if (this.hologram != null)
+            this.hologram.remove(SFileUtils.getOnlinePlayers().toArray(new Player[SFileUtils.getOnlinePlayers().size()]));
+        this.previousFlying.clear();
+        this.redTeam.clear();
+        this.blueTeam.clear();
+        this.playData.clear();
+        this.ball = null;
+        this.blueGoals = 0;
+        this.redGoals = 0;
     }
 
     public void reset() {
-        reset(true);
+        this.reset(true);
     }
 
     void sendMessageToPlayers(String title, String subTitle) {
-        if (arena.getTeamMeta().isSpectatorMessagesEnabled()) {
-            for (Player player : getPlayersInRange()) {
+        if (this.arena.getTeamMeta().isSpectatorMessagesEnabled()) {
+            for (final Player player : this.getPlayersInRange()) {
                 LightScreenMessenger.Builder.getInstance().setPlayerTitle(player, title, subTitle, 0, 20 * 3, 10);
             }
         } else {
-            for (Player player : getPlayers()) {
+            for (final Player player : this.getPlayers()) {
                 LightScreenMessenger.Builder.getInstance().setPlayerTitle(player, title, subTitle, 0, 20 * 3, 10);
             }
         }
     }
 
     List<Player> getPlayersInRange() {
-        List<Player> players = new ArrayList<>();
-        for (Player player : getArena().getCenter().getWorld().getPlayers()) {
-            if (player.getLocation().distance(getArena().getCenter()) <= arena.getTeamMeta().getSpecatorradius())
+        final List<Player> players = new ArrayList<>();
+        for (final Player player : this.getArena().getCenter().getWorld().getPlayers()) {
+            if (player.getLocation().distance(this.getArena().getCenter()) <= this.arena.getTeamMeta().getSpecatorradius())
                 players.add(player);
         }
         return players;
     }
 
+    @Override
     public final List<Player> getPlayers() {
-        ArrayList<Player> players = new ArrayList<>();
-        for (Player player : blueTeam) {
+        final List<Player> players = new ArrayList<>();
+        for (final Player player : this.blueTeam) {
             players.add(player);
         }
-        for (Player player : redTeam) {
+        for (final Player player : this.redTeam) {
             players.add(player);
         }
         return players;
@@ -385,26 +413,26 @@ public abstract class GameEntity implements Game {
 
     protected String decryptText(String text) {
         try {
-            if (lastHit == null) {
+            if (this.lastHit == null) {
                 return ChatColor.translateAlternateColorCodes('&', text
                         .replace(":redscore", String.valueOf(this.redGoals))
                         .replace(":bluescore", String.valueOf(this.blueGoals))
-                        .replace(":redcolor", arena.getTeamMeta().getRedColor())
-                        .replace(":bluecolor", arena.getTeamMeta().getBlueColor())
-                        .replace(":red", arena.getTeamMeta().getRedTeamName())
-                        .replace(":blue", arena.getTeamMeta().getBlueTeamName()));
+                        .replace(":redcolor", this.arena.getTeamMeta().getRedColor())
+                        .replace(":bluecolor", this.arena.getTeamMeta().getBlueColor())
+                        .replace(":red", this.arena.getTeamMeta().getRedTeamName())
+                        .replace(":blue", this.arena.getTeamMeta().getBlueTeamName()));
             } else {
                 return ChatColor.translateAlternateColorCodes('&', text
                         .replace(":redscore", String.valueOf(this.redGoals))
                         .replace(":bluescore", String.valueOf(this.blueGoals))
-                        .replace(":redcolor", arena.getTeamMeta().getRedColor())
-                        .replace(":bluecolor", arena.getTeamMeta().getBlueColor())
-                        .replace(":player", lastHit.getName())
-                        .replace(":red", arena.getTeamMeta().getRedTeamName())
-                        .replace(":blue", arena.getTeamMeta().getBlueTeamName()));
+                        .replace(":redcolor", this.arena.getTeamMeta().getRedColor())
+                        .replace(":bluecolor", this.arena.getTeamMeta().getBlueColor())
+                        .replace(":player", this.lastHit.getName())
+                        .replace(":red", this.arena.getTeamMeta().getRedTeamName())
+                        .replace(":blue", this.arena.getTeamMeta().getBlueTeamName()));
             }
-        } catch (Exception e) {
-            sendErrorMessage();
+        } catch (final Exception e) {
+            this.sendErrorMessage();
         }
         throw new RuntimeException("The following error has already been fixed. Please wait for the games to get restarted...");
     }
@@ -421,21 +449,21 @@ public abstract class GameEntity implements Game {
         if (type == PlaceHolderType.BLUESCORE)
             return String.valueOf(this.blueGoals);
         else if (type == PlaceHolderType.BLUEAMOUNT)
-            return String.valueOf(blueTeam.size());
+            return String.valueOf(this.blueTeam.size());
         else if (type == PlaceHolderType.BLUECOLOR)
-            return String.valueOf(arena.getTeamMeta().getBlueColor());
+            return String.valueOf(this.arena.getTeamMeta().getBlueColor());
         else if (type == PlaceHolderType.BLUENAME)
-            return String.valueOf(arena.getTeamMeta().getBlueTeamName());
-        else if (lastHit != null && type == PlaceHolderType.LASTHITPLAYERNAME)
-            return lastHit.getName();
+            return String.valueOf(this.arena.getTeamMeta().getBlueTeamName());
+        else if (this.lastHit != null && type == PlaceHolderType.LASTHITPLAYERNAME)
+            return this.lastHit.getName();
         else if (type == PlaceHolderType.REDSCORE)
             return String.valueOf(this.redGoals);
         else if (type == PlaceHolderType.REDAMOUNT)
-            return String.valueOf(redTeam.size());
+            return String.valueOf(this.redTeam.size());
         else if (type == PlaceHolderType.REDCOLOR)
-            return String.valueOf(arena.getTeamMeta().getRedColor());
+            return String.valueOf(this.arena.getTeamMeta().getRedColor());
         else if (type == PlaceHolderType.REDNAME)
-            return String.valueOf(arena.getTeamMeta().getRedTeamName());
+            return String.valueOf(this.arena.getTeamMeta().getRedTeamName());
         return "";
     }
 }

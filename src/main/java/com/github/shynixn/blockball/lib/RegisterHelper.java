@@ -35,7 +35,7 @@ public final class RegisterHelper {
     public static boolean register(String pluginName, String path, char version) {
         boolean canregister = true;
         if (pluginName != null && Bukkit.getPluginManager().getPlugin(pluginName) != null) {
-            Bukkit.getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.GRAY + "found dependency [" + pluginName + "] " + version + ".");
+            Bukkit.getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.GRAY + "found dependency [" + pluginName + "] " + version + '.');
             if (path != null) {
                 try {
                     Class.forName(path);
@@ -48,10 +48,10 @@ public final class RegisterHelper {
             }
             if (canregister) {
                 registered.put(pluginName, Bukkit.getPluginManager().getPlugin(pluginName).getDescription().getVersion());
-                Bukkit.getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_GREEN + "hooked successfully into [" + pluginName + "] " + version + ".");
+                Bukkit.getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_GREEN + "hooked successfully into [" + pluginName + "] " + version + '.');
                 return true;
             } else {
-                Bukkit.getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "failed to hook into [" + pluginName + "] " + version + ".");
+                Bukkit.getServer().getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "failed to hook into [" + pluginName + "] " + version + '.');
             }
         }
         return false;

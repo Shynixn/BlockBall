@@ -20,7 +20,7 @@ public class SCommandExecutor implements CommandExecutor {
 
     public SCommandExecutor() {
         if (plugin == null)
-            throw new IllegalArgumentException("Pluginloader failed to load " + this.getClass().getSimpleName() + ".");
+            throw new IllegalArgumentException("Pluginloader failed to load " + this.getClass().getSimpleName() + '.');
         plugin.getCommand(this.getCommand()).setExecutor(this);
     }
 

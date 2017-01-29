@@ -3,20 +3,21 @@ package com.github.shynixn.blockball.business.bungee.game;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
+import java.util.logging.Level;
 
 /**
  * Created by Shynixn
  */
-public class BungeeCordMinigame {
-    public void setMotd(String motd) {
+public final class BungeeCordMinigame {
+    void setMotd(String motd) {
         try {
             motd = motd.replace("[", "").replace("]", "");
-            Class<?> clazz = Class.forName("org.bukkit.craftbukkit.VERSION.CraftServer".replace("VERSION", BungeeCord.getServerVersion()));
+            final Class<?> clazz = Class.forName("org.bukkit.craftbukkit.VERSION.CraftServer".replace("VERSION", BungeeCord.getServerVersion()));
             Object obj = clazz.cast(Bukkit.getServer());
             obj = BungeeCord.invokeMethodByObject(obj, "getServer");
-            BungeeCord.invokeMethodByObject(obj, "setMotd", "[" + motd + ChatColor.RESET + "]");
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            BungeeCord.invokeMethodByObject(obj, "setMotd", '[' + motd + ChatColor.RESET + ']');
+        } catch (final Exception ex) {
+            Bukkit.getLogger().log(Level.WARNING, "Cannot set motd.", ex);
         }
     }
 }

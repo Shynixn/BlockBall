@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
  */
 public class PlaceHolderRequestEvent extends SEvent {
     private String result;
-    private Player player;
-    private PlaceHolderType type;
-    private int game;
+    private final Player player;
+    private final PlaceHolderType type;
+    private final int game;
 
     public PlaceHolderRequestEvent(Player player,PlaceHolderType type, int game) {
         this.player = player;
@@ -20,19 +20,19 @@ public class PlaceHolderRequestEvent extends SEvent {
     }
 
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
 
     public int getGame() {
-        return game;
+        return this.game;
     }
 
     public PlaceHolderType getType() {
-        return type;
+        return this.type;
     }
 
     public String getResult() {
-        return result;
+        return this.result;
     }
 
     public void setResult(String result) {

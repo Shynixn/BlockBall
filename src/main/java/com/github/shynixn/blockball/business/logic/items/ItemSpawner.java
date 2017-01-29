@@ -18,105 +18,112 @@ import java.util.*;
 public class ItemSpawner implements BoostItemHandler {
     private static final long serialVersionUID = 1L;
     private transient Random random;
-    private transient int secondbumer = 20;
+    private transient int bumper = 20;
     private transient Map<Item, BoostItem> droppedItems;
 
     private Spawnrate rate = Spawnrate.NONE;
-    private List<BoostItem> items = new ArrayList<>();
+    private final List<BoostItem> items = new ArrayList<>();
 
     public ItemSpawner() {
+        super();
     }
 
     public ItemSpawner(Map<String, Object> items) throws Exception {
+        super();
         this.rate = Spawnrate.getSpawnrateFromName((String) items.get("spawn-rate"));
         for (int i = 0; i < 10000 && items.containsKey("items." + i); i++)
             this.items.add(new SpawnItem(((MemorySection) items.get("items." + i)).getValues(true)));
     }
 
     private Random getRandom() {
-        if (random == null)
-            random = new Random();
-        return random;
+        if (this.random == null)
+            this.random = new Random();
+        return this.random;
     }
 
     private Map<Item, BoostItem> getLDroppedItems() {
-        if (droppedItems == null)
-            droppedItems = new HashMap<>();
-        return droppedItems;
+        if (this.droppedItems == null)
+            this.droppedItems = new HashMap<>();
+        return this.droppedItems;
     }
 
     public void clearGroundItems() {
-        for (Item item : getLDroppedItems().keySet()) {
+        for (final Item item : this.getLDroppedItems().keySet()) {
             if (!item.isDead())
                 item.remove();
         }
-        getLDroppedItems().clear();
+        this.getLDroppedItems().clear();
     }
 
+    @Override
     public void run(Game game) {
-        Arena arena = game.getArena();
-        if (rate == Spawnrate.NONE)
+        final Arena arena = game.getArena();
+        if (this.rate == Spawnrate.NONE)
             return;
-        if (secondbumer <= 0) {
-            if (game.getPlayers().size() == 0) {
-                clearGroundItems();
-                secondbumer = 40;
+        if (this.bumper <= 0) {
+            if (game.getPlayers().isEmpty()) {
+                this.clearGroundItems();
+                this.bumper = 40;
                 return;
             }
-            for (Item item : getLDroppedItems().keySet().toArray(new Item[0])) {
+            for (final Item item : this.getLDroppedItems().keySet().toArray(new Item[this.getLDroppedItems().size()])) {
                 if (item.isDead() || item.getTicksLived() > 1000) {
                     item.remove();
-                    getLDroppedItems().remove(item);
+                    this.getLDroppedItems().remove(item);
                 }
             }
-            if (getRandom().nextInt(100) < rate.getSpawnChance()) {
-                if (getLDroppedItems().size() < rate.getMaxAmount()) {
-                    spawnRandomItem(arena);
+            if (this.getRandom().nextInt(100) < this.rate.getSpawnChance()) {
+                if (this.getLDroppedItems().size() < this.rate.getMaxAmount()) {
+                    this.spawnRandomItem(arena);
                 }
             }
-            secondbumer = 40;
+            this.bumper = 40;
         }
-        secondbumer--;
+        this.bumper--;
     }
 
+    @Override
     public void clear() {
-        rate = Spawnrate.NONE;
-        items.clear();
+        this.rate = Spawnrate.NONE;
+        this.items.clear();
     }
 
+    @Override
     public void removeItem(Item item) {
-        if (getLDroppedItems().containsKey(item))
-            getLDroppedItems().remove(item);
+        if (this.getLDroppedItems().containsKey(item))
+            this.getLDroppedItems().remove(item);
     }
 
+    @Override
     public Item[] getDroppedItems() {
-        return getLDroppedItems().keySet().toArray(new Item[0]);
+        return this.getLDroppedItems().keySet().toArray(new Item[this.getLDroppedItems().size()]);
     }
 
+    @Override
     public BoostItem getBoostFromItem(Item item) {
-        if (getLDroppedItems().containsKey(item))
-            return getLDroppedItems().get(item);
+        if (this.getLDroppedItems().containsKey(item))
+            return this.getLDroppedItems().get(item);
         return null;
     }
 
     private void spawnRandomItem(final Arena arena) {
-        final BoostItem[] boostItems = items.toArray(new BoostItem[0]);
+        final BoostItem[] boostItems = this.items.toArray(new BoostItem[this.items.size()]);
         AsyncRunnable.toAsynchroneThread(new AsyncRunnable() {
             @Override
             public void run() {
-                List<BoostItem> tmp = new ArrayList<>();
-                for (BoostItem item : boostItems) {
+                final List<BoostItem> tmp = new ArrayList<>();
+                for (final BoostItem item : boostItems) {
                     for (int i = 0; i < item.getSpawnrate().getSpawnChance(); i++) {
                         tmp.add(item);
                     }
                 }
                 Collections.shuffle(tmp);
-                if (tmp.size() > 0) {
+                if (!tmp.isEmpty()) {
                     final BoostItem item = tmp.get(0);
                     AsyncRunnable.toSynchroneThread(new AsyncRunnable() {
                         @Override
                         public void run() {
-                            spawnItem(arena, item);
+                            ItemSpawner.this.spawnItem(arena, item);
                         }
                     });
                 }
@@ -125,31 +132,36 @@ public class ItemSpawner implements BoostItemHandler {
     }
 
     private void spawnItem(Arena arena, BoostItem item) {
-        Location location = arena.getRandomFieldPosition(getRandom());
-        Item item1 = location.getWorld().dropItem(location, item.generate());
+        final Location location = arena.getRandomFieldPosition(this.getRandom());
+        final Item item1 = location.getWorld().dropItem(location, item.generate());
         item1.setCustomNameVisible(true);
         item1.setCustomName(item.getDisplayName());
-        getLDroppedItems().put(item1, item);
+        this.getLDroppedItems().put(item1, item);
     }
 
+    @Override
     public void setBoostItem(BoostItem boostItem) {
-        if (!items.contains(boostItem))
-            items.add(boostItem);
+        if (!this.items.contains(boostItem))
+            this.items.add(boostItem);
     }
 
+    @Override
     public void removeBoostItem(BoostItem boostItem) {
-        if (items.contains(boostItem))
-            items.remove(boostItem);
+        if (this.items.contains(boostItem))
+            this.items.remove(boostItem);
     }
 
+    @Override
     public List<BoostItem> getBoostItems() {
         return Collections.unmodifiableList(this.items);
     }
 
+    @Override
     public Spawnrate getRate() {
-        return rate;
+        return this.rate;
     }
 
+    @Override
     public void setSpawnRate(Spawnrate rate) {
         this.rate = rate;
     }
@@ -160,10 +172,10 @@ public class ItemSpawner implements BoostItemHandler {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("spawn-rate", rate.name().toUpperCase());
-        for (int i = 0; i < items.size(); i++)
-            map.put("items." + i, items.get(i).serialize());
+        final Map<String, Object> map = new HashMap<>();
+        map.put("spawn-rate", this.rate.name().toUpperCase());
+        for (int i = 0; i < this.items.size(); i++)
+            map.put("items." + i, this.items.get(i).serialize());
         return map;
     }
 }

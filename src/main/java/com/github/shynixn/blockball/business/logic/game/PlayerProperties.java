@@ -10,15 +10,16 @@ class PlayerProperties {
     ItemStack[] contents;
     int level;
     float exp;
-    int foodlevel;
+    int foodLevel;
     double health;
     GameMode mode;
 
-    PlayerProperties(ItemStack[] contents, int level, float exp, int foodlevel, double health, GameMode gameMode) {
+    PlayerProperties(ItemStack[] contents, int level, float exp, int foodLevel, double health, GameMode gameMode) {
+        super();
         this.contents = contents;
         this.level = level;
         this.exp = exp;
-        this.foodlevel = foodlevel;
+        this.foodLevel = foodLevel;
         this.health = health;
         this.mode = gameMode;
     }

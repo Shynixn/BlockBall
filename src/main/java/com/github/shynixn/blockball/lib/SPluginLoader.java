@@ -10,7 +10,9 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SPluginLoader {
@@ -31,7 +33,7 @@ public final class SPluginLoader {
                         }
                     }
                 } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
+                    Bukkit.getLogger().log(Level.WARNING, "Cannot use plugin loader.", e);
                 }
                 tClass = tClass.getSuperclass();
             } while (tClass != null);
@@ -49,7 +51,7 @@ public final class SPluginLoader {
                         }
                     }
                 } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
+                    Bukkit.getLogger().log(Level.WARNING, "Cannot use plugin unloader.", e);
                 }
                 tClass = tClass.getSuperclass();
             } while (tClass != null);

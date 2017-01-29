@@ -25,7 +25,7 @@ class SpawnItem implements BoostItem {
     private String owner;
     private Spawnrate spawnrate = Spawnrate.MEDIUM;
     private String displayName;
-    private Map<Integer, LightPotioneffect> potioneffectList = new HashMap<>();
+    private final Map<Integer, LightPotioneffect> potioneffectList = new HashMap<>();
 
     SpawnItem() {
     }
@@ -36,106 +36,116 @@ class SpawnItem implements BoostItem {
         this.owner = (String) items.get("owner");
         this.displayName = (String) items.get("name");
         this.spawnrate = Spawnrate.getSpawnrateFromName((String) items.get("rate"));
-        for (PotionEffectType potionEffectType : PotionEffectType.values()) {
+        for (final PotionEffectType potionEffectType : PotionEffectType.values()) {
             if (potionEffectType != null && items.containsKey("potioneffects." + potionEffectType.getId())) {
                 this.potioneffectList.put(potionEffectType.getId(), new FastPotioneffect(((MemorySection) items.get("potioneffects." + potionEffectType.getId())).getValues(true)));
             }
         }
     }
 
+    @Override
     public ItemStack generate() {
-        ItemStack itemStack = new ItemStack(Material.getMaterial(id), 1, (short) damage);
-        if (id == Material.SKULL_ITEM.getId() && damage == 3) {
-            if (owner != null && owner.contains("textures.minecraft")) {
-                itemStack = SSKulls.activateHeadByURL(owner, itemStack);
-            } else if (owner != null) {
-                itemStack = SSKulls.activateHeadByName(owner, itemStack);
+        ItemStack itemStack = new ItemStack(Material.getMaterial(this.id), 1, (short) this.damage);
+        if (this.id == Material.SKULL_ITEM.getId() && this.damage == 3) {
+            if (this.owner != null && this.owner.contains("textures.minecraft")) {
+                itemStack = SSKulls.activateHeadByURL(this.owner, itemStack);
+            } else if (this.owner != null) {
+                itemStack = SSKulls.activateHeadByName(this.owner, itemStack);
             }
         }
         return itemStack;
     }
 
-
+    @Override
     public String getDisplayName() {
-        return displayName;
+        return this.displayName;
     }
 
+    @Override
     public void setDisplayName(String displayName) {
         this.displayName = ChatColor.translateAlternateColorCodes('&', displayName);
     }
 
     @Override
     public void apply(Player player) {
-        for (LightPotioneffect lightPotioneffect : potioneffectList.values()) {
+        for (final LightPotioneffect lightPotioneffect : this.potioneffectList.values()) {
             lightPotioneffect.apply(player);
         }
     }
 
     @Override
     public void setPotionEffect(LightPotioneffect lightPotioneffect) {
-        potioneffectList.put(lightPotioneffect.getType(), lightPotioneffect);
+        this.potioneffectList.put(lightPotioneffect.getType(), lightPotioneffect);
     }
 
     @Override
     public void removePotionEffect(PotionEffectType type) {
-        if (potioneffectList.containsKey(type.getId()))
-            potioneffectList.remove(type.getId());
+        if (this.potioneffectList.containsKey(type.getId()))
+            this.potioneffectList.remove(type.getId());
     }
 
     @Override
     public LightPotioneffect getPotionEffect(PotionEffectType type) {
-        if (potioneffectList.containsKey(type.getId()))
-            return potioneffectList.get(type.getId());
+        if (this.potioneffectList.containsKey(type.getId()))
+            return this.potioneffectList.get(type.getId());
         return null;
     }
 
     @Override
     public LightPotioneffect[] getPotionEffects() {
-        return potioneffectList.values().toArray(new LightPotioneffect[0]);
+        return this.potioneffectList.values().toArray(new LightPotioneffect[this.potioneffectList.size()]);
     }
 
+    @Override
     public Spawnrate getSpawnrate() {
-        return spawnrate;
+        return this.spawnrate;
     }
 
+    @Override
     public void setSpawnrate(Spawnrate spawnrate) {
         this.spawnrate = spawnrate;
     }
 
+    @Override
     public int getId() {
-        return id;
+        return this.id;
     }
 
+    @Override
     public void setId(int id) {
         this.id = id;
     }
 
+    @Override
     public int getDamage() {
-        return damage;
+        return this.damage;
     }
 
+    @Override
     public void setDamage(int damage) {
         this.damage = damage;
     }
 
+    @Override
     public String getOwner() {
-        return owner;
+        return this.owner;
     }
 
+    @Override
     public void setOwner(String owner) {
         this.owner = owner;
     }
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
-        map.put("damage", damage);
-        map.put("owner", owner);
-        map.put("name", displayName);
-        map.put("rate", spawnrate.name().toUpperCase());
-        for (Integer integer : potioneffectList.keySet()) {
-            map.put("potioneffects." + integer, potioneffectList.get(integer).serialize());
+        final Map<String, Object> map = new HashMap<>();
+        map.put("id", this.id);
+        map.put("damage", this.damage);
+        map.put("owner", this.owner);
+        map.put("name", this.displayName);
+        map.put("rate", this.spawnrate.name().toUpperCase());
+        for (final Integer integer : this.potioneffectList.keySet()) {
+            map.put("potioneffects." + integer, this.potioneffectList.get(integer).serialize());
         }
         return map;
     }
