@@ -9,7 +9,7 @@
     <description>Spigot plugin to simulate a football/soccer game in minecraft.</description>
     <url>https://github.com/Shynixn/BlockBall</url>
     <packaging>jar</packaging>
-    <version>3.8.0</version>
+    <version>3.8.1-SNAPSHOT</version>
 
     <developers>
         <developer>

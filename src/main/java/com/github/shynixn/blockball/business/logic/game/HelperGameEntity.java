@@ -58,7 +58,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
     public synchronized boolean joinLobby(Player player) {
         if (this.canJoinLobby(player)) {
             this.lobby.add(player);
-            this.armorContents.put(player, player.getInventory().getArmorContents().clone());
+            this.armorContents.put(player, new InventoryCache(player));
             if(player.getAllowFlight())
                 this.previousFlying.add(player);
             player.getInventory().setArmorContents(new ItemStack[4]);

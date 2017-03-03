@@ -32,7 +32,7 @@ class LobbyGameEntity extends GameEntity {
         if (team == Team.RED && this.redTeam.size() <= this.arena.getTeamMeta().getTeamMaxSize() && (!this.arena.getTeamMeta().isTeamAutoJoin() || this.redTeam.size() <= this.blueTeam.size())) {
             if(player.getAllowFlight())
                 this.previousFlying.add(player);
-            this.armorContents.put(player, player.getInventory().getArmorContents().clone());
+            this.armorContents.put(player, new InventoryCache(player));
             player.getInventory().setArmorContents(this.arena.getTeamMeta().getRedItems());
             this.redTeam.add(player);
             player.sendMessage(Language.PREFIX + this.arena.getTeamMeta().getJoinMessage());
@@ -49,7 +49,7 @@ class LobbyGameEntity extends GameEntity {
             if(player.getAllowFlight())
                 this.previousFlying.add(player);
             this.blueTeam.add(player);
-            this.armorContents.put(player, player.getInventory().getArmorContents().clone());
+            this.armorContents.put(player, new InventoryCache(player));
             player.getInventory().setArmorContents(this.arena.getTeamMeta().getBlueItems());
             player.sendMessage(Language.PREFIX + this.arena.getTeamMeta().getJoinMessage());
             if (this.arena.getTeamMeta().getBlueSpawnPoint() != null)

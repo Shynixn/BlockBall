@@ -30,7 +30,7 @@ public abstract class GameEntity implements Game {
     private Ball ball;
 
     List<Player> previousFlying = new ArrayList<>();
-    final Map<Player, ItemStack[]> armorContents = new HashMap<>();
+    final Map<Player, InventoryCache> armorContents = new HashMap<>();
     final List<Player> redTeam = new ArrayList<>();
     final List<Player> blueTeam = new ArrayList<>();
     int blueGoals;
@@ -88,16 +88,20 @@ public abstract class GameEntity implements Game {
             this.blueTeam.remove(player);
         if (player.isOnline() && message)
             player.sendMessage(Language.PREFIX + this.arena.getTeamMeta().getLeaveMessage());
-        if (this.armorContents.containsKey(player))
-            player.getInventory().setArmorContents(this.armorContents.get(player).clone());
+        if (this.armorContents.containsKey(player)) {
+            this.armorContents.get(player).apply(player);
+            this.armorContents.remove(player);
+        }
         player.updateInventory();
-        this.armorContents.remove(player);
         player.setFlying(false);
         player.setAllowFlight(false);
         this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
         this.arena.getTeamMeta().getScoreboard().remove(player);
-        if(this.previousFlying.contains(player))
+        if (this.previousFlying.contains(player))
             player.setAllowFlight(true);
+        if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
+            NMSRegistry.setBossBar(player, null);
+        }
         if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
             NMSRegistry.setBossBar(player, null);
         }
@@ -339,24 +343,11 @@ public abstract class GameEntity implements Game {
 
     void reset(boolean teleport) {
         for (final Player player : this.armorContents.keySet()) {
-            player.getInventory().setArmorContents(this.armorContents.get(player).clone());
-            player.getInventory().setArmorContents(this.armorContents.get(player).clone());
-            player.updateInventory();
-            Interpreter19.setGlowing(player, false);
-            player.setFlying(false);
-            player.setAllowFlight(false);
-            if(this.previousFlying.contains(player))
-                player.setAllowFlight(true);
+            this.leave(player);
         }
         if (teleport && this.arena.getTeamMeta().getGameEndSpawnpoint() != null) {
             for (final Player player : this.getPlayers()) {
                 player.teleport(this.arena.getTeamMeta().getGameEndSpawnpoint());
-            }
-        }
-        for (final Player player : this.playData) {
-            this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
-            if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
-                NMSRegistry.setBossBar(player, null);
             }
         }
         ((ItemSpawner) this.arena.getBoostItemHandler()).clearGroundItems();
@@ -465,5 +456,24 @@ public abstract class GameEntity implements Game {
         else if (type == PlaceHolderType.REDNAME)
             return String.valueOf(this.arena.getTeamMeta().getRedTeamName());
         return "";
+    }
+
+    static class InventoryCache {
+        private final int level;
+        private final float exp;
+        private final ItemStack[] armor;
+
+        InventoryCache(Player player) {
+            super();
+            this.level = player.getLevel();
+            this.exp = player.getExp();
+            this.armor = player.getInventory().getArmorContents().clone();
+        }
+
+        void apply(Player player) {
+            player.getInventory().setArmorContents(this.armor);
+            player.setLevel(this.level);
+            player.setExp(this.exp);
+        }
     }
 }

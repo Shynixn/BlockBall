@@ -195,7 +195,7 @@ class EventGameEntity extends GameEntity {
 
     @Override
     public boolean join(Player player, Team team) {
-        this.armorContents.put(player, player.getInventory().getArmorContents().clone());
+        this.armorContents.put(player, new InventoryCache(player));
         this.playerstorage.put(player, new PlayerProperties(player.getInventory().getContents().clone(), player.getLevel(), player.getExp(), player.getFoodLevel(), player.getHealth(), player.getGameMode()));
         player.getInventory().clear();
         player.updateInventory();
