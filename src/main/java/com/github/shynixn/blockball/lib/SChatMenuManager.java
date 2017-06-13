@@ -34,7 +34,9 @@ public final class SChatMenuManager extends SEvents {
     }
 
     public void handleChatMessage(Player player, String message) {
-        boolean wasFalse = this.pages.get(player).playerPreChatEnter(message);
+        if(message == null || !this.pages.containsKey(player))
+            return;
+        final boolean wasFalse = this.pages.get(player).playerPreChatEnter(message);
         this.pages.get(player).lastNumber = -1;
         if (SMathUtils.tryPInt(message) && wasFalse) {
             this.pages.get(player).setLastNumber(Integer.parseInt(message));
@@ -66,12 +68,7 @@ public final class SChatMenuManager extends SEvents {
                 event.setCancelled(true);
                 final String message = ChatColor.stripColor(event.getMessage());
                 final Player player = event.getPlayer();
-                plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        SChatMenuManager.this.handleChatMessage(player, message);
-                    }
-                }, 1L);
+                plugin.getServer().getScheduler().runTaskLater(plugin, () -> SChatMenuManager.this.handleChatMessage(player, message), 1L);
             }
         }
     }
@@ -94,12 +91,7 @@ public final class SChatMenuManager extends SEvents {
                 event.setCancelled(true);
                 final String message = ChatColor.stripColor(event.getMessage());
                 final Player player = event.getPlayer();
-                plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        SChatMenuManager.this.handleChatMessage(player, message);
-                    }
-                }, 1L);
+                plugin.getServer().getScheduler().runTaskLater(plugin, () -> SChatMenuManager.this.handleChatMessage(player, message), 1L);
             }
         }
     }

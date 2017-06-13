@@ -71,7 +71,7 @@ public final class SSKulls {
 
     public static String getNameFromItemStack(ItemStack itemStack) {
         if (itemStack.getItemMeta() instanceof SkullMeta) {
-            SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
+            final SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
             return meta.getOwner();
         }
         return null;

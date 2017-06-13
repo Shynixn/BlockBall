@@ -23,6 +23,7 @@ interface BungeeCordSignInfo extends ConfigurationSerializable {
         private final String server;
 
         Container(Map<String, Object> data) {
+            super();
             this.server = (String) data.get("server");
             this.x = (double) data.get("x");
             this.y = (double) data.get("y");
@@ -31,6 +32,7 @@ interface BungeeCordSignInfo extends ConfigurationSerializable {
         }
 
         Container(Location location, String server) {
+            super();
             this.server = server;
             this.world = location.getWorld().getName();
             this.x = location.getX();

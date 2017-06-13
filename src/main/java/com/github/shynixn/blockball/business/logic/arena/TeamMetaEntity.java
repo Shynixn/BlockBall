@@ -82,9 +82,11 @@ class TeamMetaEntity implements TeamMeta, Serializable {
     private int scoreGlowingSeconds = 3;
 
     TeamMetaEntity() {
+        super();
     }
 
     TeamMetaEntity(Map<String, Object> items) throws Exception {
+        super();
         this.maxScore = (int) items.get("generic.max-score");
         this.autoTeamJoin = (boolean) items.get("generic.auto-team-join");
         this.fastJoin = (boolean) items.get("generic.instant-join");
@@ -165,7 +167,7 @@ class TeamMetaEntity implements TeamMeta, Serializable {
     }
 
     private static String[] initalize(Color color) {
-        String[] itemStacks = new String[4];
+        final String[] itemStacks = new String[4];
         itemStacks[0] = SItemStackUtils.serialize(SItemStackUtils.setColor(new ItemStack(Material.LEATHER_BOOTS), color));
         itemStacks[1] = SItemStackUtils.serialize(SItemStackUtils.setColor(new ItemStack(Material.LEATHER_LEGGINGS), color));
         itemStacks[2] = SItemStackUtils.serialize(SItemStackUtils.setColor(new ItemStack(Material.LEATHER_CHESTPLATE), color));
@@ -550,7 +552,7 @@ class TeamMetaEntity implements TeamMeta, Serializable {
 
     @Override
     public ItemStack[] getBlueItems() {
-        ItemStack[] itemStack = new ItemStack[4];
+        final ItemStack[] itemStack = new ItemStack[4];
         itemStack[0] = SItemStackUtils.deserialize(this.blueItems[0]);
         itemStack[1] = SItemStackUtils.deserialize(this.blueItems[1]);
         itemStack[2] = SItemStackUtils.deserialize(this.blueItems[2]);
@@ -579,7 +581,7 @@ class TeamMetaEntity implements TeamMeta, Serializable {
 
     @Override
     public ItemStack[] getRedItems() {
-        ItemStack[] itemStack = new ItemStack[4];
+        final ItemStack[] itemStack = new ItemStack[4];
         itemStack[0] = SItemStackUtils.deserialize(this.redItems[0]);
         itemStack[1] = SItemStackUtils.deserialize(this.redItems[1]);
         itemStack[2] = SItemStackUtils.deserialize(this.redItems[2]);
@@ -754,22 +756,22 @@ class TeamMetaEntity implements TeamMeta, Serializable {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        Map<String, Object> tmp1 = new LinkedHashMap<>();
-        Map<String, Object> tmp2 = new LinkedHashMap<>();
-        Map<String, Object> tmp3 = new LinkedHashMap<>();
-        Map<String, Object> tmp4 = new LinkedHashMap<>();
-        Map<String, Object> tmp5 = new LinkedHashMap<>();
-        Map<String, Object> tmp6 = new LinkedHashMap<>();
-        Map<String, Object> tmp7 = new LinkedHashMap<>();
-        Map<String, Object> tmp8 = new LinkedHashMap<>();
-        Map<String, Object> tmp9 = new LinkedHashMap<>();
-        Map<String, Object> tmp10 = new LinkedHashMap<>();
-        Map<String, Object> tmp11 = new LinkedHashMap<>();
-        Map<String, Object> tmp12 = new LinkedHashMap<>();
-        Map<String, Object> tmp14 = new LinkedHashMap<>();
-        Map<String, Object> tmp15 = new LinkedHashMap<>();
-        Map<String, Object> tmp0 = new LinkedHashMap<>();
+        final Map<String, Object> map = new LinkedHashMap<>();
+        final Map<String, Object> tmp1 = new LinkedHashMap<>();
+        final Map<String, Object> tmp2 = new LinkedHashMap<>();
+        final Map<String, Object> tmp3 = new LinkedHashMap<>();
+        final Map<String, Object> tmp4 = new LinkedHashMap<>();
+        final Map<String, Object> tmp5 = new LinkedHashMap<>();
+        final Map<String, Object> tmp6 = new LinkedHashMap<>();
+        final Map<String, Object> tmp7 = new LinkedHashMap<>();
+        final Map<String, Object> tmp8 = new LinkedHashMap<>();
+        final Map<String, Object> tmp9 = new LinkedHashMap<>();
+        final Map<String, Object> tmp10 = new LinkedHashMap<>();
+        final Map<String, Object> tmp11 = new LinkedHashMap<>();
+        final Map<String, Object> tmp12 = new LinkedHashMap<>();
+        final Map<String, Object> tmp14 = new LinkedHashMap<>();
+        final Map<String, Object> tmp15 = new LinkedHashMap<>();
+        final Map<String, Object> tmp0 = new LinkedHashMap<>();
 
         tmp1.put("max-score", this.maxScore);
         tmp1.put("auto-team-join", this.autoTeamJoin);

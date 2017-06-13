@@ -17,19 +17,20 @@ public class SLanguage {
     public static void reload(Class<?> cls) {
         if (plugin == null)
             throw new IllegalArgumentException("Pluginloader failed to load " + SLanguage.class.getSimpleName() + '.');
-        File file = new File(plugin.getDataFolder(), "lang.yml");
+        final File file = new File(plugin.getDataFolder(), "lang.yml");
         if (!file.exists())
             buildFile(cls, plugin, file);
         loadFile(cls, file);
     }
 
     private SLanguage() {
+        super();
     }
 
     private static void loadFile(Class<?> cls, File file) {
         try {
-            HashMap<String, String> map = new HashMap<>();
-            for (String s : SFileUtils.readAllLines(file)) {
+            final HashMap<String, String> map = new HashMap<>();
+            for (final String s : SFileUtils.readAllLines(file)) {
                 if (s.contains(":")) {
                     String key = "";
                     String value = "";
@@ -48,8 +49,8 @@ public class SLanguage {
                     map.put(key.toLowerCase(), value);
                 }
             }
-            for (Field field : cls.getDeclaredFields()) {
-                for (String key : map.keySet()) {
+            for (final Field field : cls.getDeclaredFields()) {
+                for (final String key : map.keySet()) {
                     if (field.getName().equalsIgnoreCase(key)) {
                         field.set(null, ChatColor.translateAlternateColorCodes('&', map.get(key)));
                     }
@@ -63,7 +64,7 @@ public class SLanguage {
     private static void buildFile(Class<?> cls, JavaPlugin plugin, File file) {
         try {
             file.createNewFile();
-            ArrayList<String> s = new ArrayList<>();
+            final ArrayList<String> s = new ArrayList<>();
             s.add("#Language");
             s.add("");
             for (final Field field : cls.getDeclaredFields()) {

@@ -63,7 +63,7 @@ public final class ArenaController {
 
     public void reload() {
         this.arenas.clear();
-        for (Arena arena : this.fileManager.load()) {
+        for (final Arena arena : this.fileManager.load()) {
             this.arenas.add((ArenaEntity) arena);
         }
     }

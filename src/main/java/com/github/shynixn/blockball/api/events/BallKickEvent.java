@@ -12,6 +12,7 @@ public final class BallKickEvent extends SEvent {
 	private boolean isCancelled;
 	
 	public BallKickEvent(Player player, Ball ball) {
+		super();
 		this.player = player;
 		this.ball = ball;
 	}

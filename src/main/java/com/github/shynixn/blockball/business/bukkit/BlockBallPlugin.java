@@ -24,12 +24,7 @@ public final class BlockBallPlugin extends JavaPlugin {
     public void onEnable() {
         this.saveDefaultConfig();
         if (this.getConfig().getBoolean("plugin-start-delay.enabled")) {
-            this.getServer().getScheduler().runTaskLater(this, new Runnable() {
-                @Override
-                public void run() {
-                    BlockBallPlugin.this.reload();
-                }
-            }, TICK_TIME * this.getConfig().getInt("plugin-start-delay.time-seconds"));
+            this.getServer().getScheduler().runTaskLater(this, BlockBallPlugin.this::reload, TICK_TIME * this.getConfig().getInt("plugin-start-delay.time-seconds"));
         } else {
             this.reload();
         }
@@ -48,7 +43,7 @@ public final class BlockBallPlugin extends JavaPlugin {
         if (!NMSRegistry.isVersionValid()) {
             SConsoleUtils.sendColoredMessage("================================================", ChatColor.RED, PREFIX_CONSOLE);
             SConsoleUtils.sendColoredMessage("BlockBall does not support your server version", ChatColor.RED, PREFIX_CONSOLE);
-            SConsoleUtils.sendColoredMessage("Install v1.8.0 - v1.11.2", ChatColor.RED, PREFIX_CONSOLE);
+            SConsoleUtils.sendColoredMessage("Install v1.8.0 - v1.12.0", ChatColor.RED, PREFIX_CONSOLE);
             SConsoleUtils.sendColoredMessage("Plugin gets now disabled!", ChatColor.RED, PREFIX_CONSOLE);
             SConsoleUtils.sendColoredMessage("================================================", ChatColor.RED, PREFIX_CONSOLE);
             this.enabled = false;

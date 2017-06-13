@@ -28,6 +28,7 @@ public class BungeeCordController implements BungeeCordProvider.CallBack {
     List<BungeeCordSignInfo> signs = new ArrayList<>();
 
     public BungeeCordController(JavaPlugin plugin, String prefix) {
+        super();
         this.PREFIX = prefix;
         this.plugin = plugin;
         this.provider = new BungeeCordProvider(this, plugin, this);
@@ -42,36 +43,28 @@ public class BungeeCordController implements BungeeCordProvider.CallBack {
     }
 
     private void run(JavaPlugin plugin) {
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
-            @Override
-            public void run() {
-                BungeeCordController.this.provider.ping();
-            }
-        }, 0L, 10L);
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, BungeeCordController.this.provider::ping, 0L, 10L);
     }
 
     public void add(String server, Location location) {
-        BungeeCordSignInfo info = new BungeeCordSignInfo.Container(location, server);
+        final BungeeCordSignInfo info = new BungeeCordSignInfo.Container(location, server);
         this.signs.add(info);
         final BungeeCordSignInfo[] signInfos = this.signs.toArray(new BungeeCordSignInfo[this.signs.size()]);
-        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final FileConfiguration configuration = new YamlConfiguration();
-                    final File file = new File(BungeeCordController.this.plugin.getDataFolder(), "bungeecord_signs.yml");
-                    if (file.exists()) {
-                        if (!file.delete()) {
-                            Bukkit.getLogger().log(Level.WARNING, "File cannot get deleted.");
-                        }
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            try {
+                final FileConfiguration configuration = new YamlConfiguration();
+                final File file = new File(BungeeCordController.this.plugin.getDataFolder(), "bungeecord_signs.yml");
+                if (file.exists()) {
+                    if (!file.delete()) {
+                        Bukkit.getLogger().log(Level.WARNING, "File cannot get deleted.");
                     }
-                    for (int i = 0; i < signInfos.length; i++) {
-                        configuration.set("signs." + i, signInfos[i].serialize());
-                    }
-                    configuration.save(file);
-                } catch (final IOException e) {
-                    Bukkit.getLogger().log(Level.WARNING, "Save sign location.", e);
                 }
+                for (int i = 0; i < signInfos.length; i++) {
+                    configuration.set("signs." + i, signInfos[i].serialize());
+                }
+                configuration.save(file);
+            } catch (final IOException e) {
+                Bukkit.getLogger().log(Level.WARNING, "Save sign location.", e);
             }
         });
     }

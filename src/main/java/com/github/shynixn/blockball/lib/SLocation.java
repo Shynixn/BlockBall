@@ -21,6 +21,7 @@ public class SLocation implements IPosition {
     private double pitch;
 
     public SLocation(String worldname, double x, double y, double z, float yaw, float pitch) {
+        super();
         this.world = worldname;
         this.x = x;
         this.y = y;
@@ -30,6 +31,7 @@ public class SLocation implements IPosition {
     }
 
     public SLocation(Map<String, Object> keys) {
+        super();
         this.x = (double) keys.get("x");
         this.y = (double) keys.get("y");
         this.z = (double) keys.get("z");
@@ -44,6 +46,7 @@ public class SLocation implements IPosition {
     }
 
     public SLocation() {
+        super();
     }
 
     public SLocation(String worldname, double x, double y, double z, double yaw, double pitch) {
@@ -150,7 +153,7 @@ public class SLocation implements IPosition {
     @Override
     public boolean equals(Object arg0) {
         if (arg0 instanceof SLocation) {
-            SLocation location = (SLocation) arg0;
+            final SLocation location = (SLocation) arg0;
             if (location.getBlockX() == this.getBlockX() && location.getBlockY() == this.getBlockY() && location.getBlockZ() == this.getBlockZ())
                 return true;
         }
@@ -235,7 +238,7 @@ public class SLocation implements IPosition {
 
     @Override
     public Map<String, Object> serialize() {
-        HashMap<String, Object> map = new HashMap<>();
+        final HashMap<String, Object> map = new HashMap<>();
         map.put("x", this.x);
         map.put("y", this.y);
         map.put("z", this.z);

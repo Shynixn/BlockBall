@@ -28,9 +28,11 @@ class LobbyMetaEntity implements LobbyMeta {
     transient Arena reference;
 
     LobbyMetaEntity() {
+        super();
     }
 
     LobbyMetaEntity(Map<String, Object> items) throws Exception {
+        super();
         if (items.get("spawnpoint") != null)
             this.lobbySpawn = new SLocation(((MemorySection) items.get("spawnpoint")).getValues(true));
         this.gameTime = (int) items.get("gameduration");
@@ -233,9 +235,9 @@ class LobbyMetaEntity implements LobbyMeta {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        Map<String, Object> tmp1 = new LinkedHashMap<>();
-        Map<String, Object> tmp2 = new LinkedHashMap<>();
+        final Map<String, Object> map = new LinkedHashMap<>();
+        final Map<String, Object> tmp1 = new LinkedHashMap<>();
+        final Map<String, Object> tmp2 = new LinkedHashMap<>();
         map.put("spawnpoint", SFileUtils.serialize(this.lobbySpawn));
         map.put("gameduration", this.gameTime);
         map.put("lobbyduration", this.countdown);

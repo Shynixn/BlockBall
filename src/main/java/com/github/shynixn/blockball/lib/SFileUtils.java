@@ -41,9 +41,7 @@ public final class SFileUtils {
     public static List<Player> getOnlinePlayers() {
         final List<Player> players = new ArrayList<>();
         for (final World world : Bukkit.getWorlds()) {
-            for (final Player player : world.getPlayers()) {
-                players.add(player);
-            }
+            players.addAll(world.getPlayers());
         }
         return players;
     }
@@ -103,7 +101,7 @@ public final class SFileUtils {
                     folder.delete();
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Bukkit.getLogger().log(Level.INFO, "Failed to delete directory.", e);
         }
         return true;

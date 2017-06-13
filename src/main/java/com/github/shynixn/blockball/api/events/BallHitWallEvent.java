@@ -12,6 +12,7 @@ public class BallHitWallEvent extends SEvent {
     private final Block block;
 
     public BallHitWallEvent(Ball ball, Block block) {
+        super();
         this.ball = ball;
         this.block = block;
     }

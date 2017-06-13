@@ -12,13 +12,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+@Deprecated
 public final class SItemStackUtils {
     public static ItemStack deserialize(String text) {
         if (text != null) {
             final FileConfiguration configuration = new YamlConfiguration();
             try {
                 configuration.loadFromString(text);
-            } catch (InvalidConfigurationException e) {
+            } catch (final InvalidConfigurationException e) {
                 Bukkit.getLogger().log(Level.WARNING, "Cannot deserialize itemsstack.", e);
             }
             return configuration.getItemStack("dummy");
@@ -34,7 +35,7 @@ public final class SItemStackUtils {
 
     public static String serialize(ItemStack itemStack) {
         if (itemStack != null) {
-            FileConfiguration configuration = new YamlConfiguration();
+            final FileConfiguration configuration = new YamlConfiguration();
             configuration.set("dummy", itemStack);
             return configuration.saveToString();
         }
@@ -118,7 +119,7 @@ public final class SItemStackUtils {
     }
 
     public boolean compareDisplayNamesMaterialsLore(ItemStack itemStack, SItemStack itemStack2) {
-        return compareDisplayNamesMaterials(itemStack, itemStack2) && compareLore(itemStack, itemStack2);
+        return this.compareDisplayNamesMaterials(itemStack, itemStack2) && compareLore(itemStack, itemStack2);
     }
 
     public static ItemStack clone(ItemStack itemStack) {

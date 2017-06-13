@@ -6,13 +6,14 @@ install:
     - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar -P /home/travis/build/Shynixn/BlockBall/lib/
 script:
     - cd /home/travis/build/Shynixn/BlockBall/lib/
-    - java -jar BuildTools.jar --rev 1.8
-    - java -jar BuildTools.jar --rev 1.8.3
-    - java -jar BuildTools.jar --rev 1.8.8
-    - java -jar BuildTools.jar --rev 1.9
-    - java -jar BuildTools.jar --rev 1.9.4
-    - java -jar BuildTools.jar --rev 1.10
-    - java -jar BuildTools.jar
+    - java -jar BuildTools.jar --rev 1.8 > /dev/null
+    - java -jar BuildTools.jar --rev 1.8.3 > /dev/null
+    - java -jar BuildTools.jar --rev 1.8.8 > /dev/null
+    - java -jar BuildTools.jar --rev 1.9 > /dev/null
+    - java -jar BuildTools.jar --rev 1.9.4 > /dev/null
+    - java -jar BuildTools.jar --rev 1.10 > /dev/null
+    - java -jar BuildTools.jar --rev 1.11 > /dev/null
+    - java -jar BuildTools.jar --rev 1.12
     - cd -
     - mvn compile test
 jdk:

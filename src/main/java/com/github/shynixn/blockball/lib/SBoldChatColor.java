@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.lib;
 
 import org.bukkit.ChatColor;
 
+@Deprecated
 public enum SBoldChatColor {
     AQUA(ChatColor.AQUA + "" + ChatColor.BOLD),
     BLACK(ChatColor.BLACK + "" + ChatColor.BOLD),

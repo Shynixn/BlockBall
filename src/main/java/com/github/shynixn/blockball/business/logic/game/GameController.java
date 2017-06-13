@@ -16,6 +16,7 @@ public final class GameController extends SEvents {
     GameEntity[] games;
 
     public GameController() {
+        super();
         this.arenaManager = ArenaController.createArenaController(this);
         new EventCommandExecutor(this);
         if (Config.getInstance().getGlobalJoinCommand().isEnabled())
@@ -31,15 +32,12 @@ public final class GameController extends SEvents {
     }
 
     private void run() {
-        plugin.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
-            @Override
-            public void run() {
-                if (GameController.this.games != null) {
-                    for (GameEntity game : GameController.this.games) {
-                        if (game == null)
-                            throw new RuntimeException("There cannot be a game null!");
-                        game.run();
-                    }
+        plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
+            if (GameController.this.games != null) {
+                for (final GameEntity game : GameController.this.games) {
+                    if (game == null)
+                        throw new RuntimeException("There cannot be a game null!");
+                    game.run();
                 }
             }
         }, 0L, 1L);
@@ -106,7 +104,7 @@ public final class GameController extends SEvents {
             if (arena.getGameType() == GameType.BUNGEE) {
                 this.games[i] = new BungeeGameEntity(arena);
             } else if (arena.getGameType() == GameType.LOBBY) {
-                this.games[i] = new LobbyGameEntity(arena);
+                this.games[i] = new HubGameEntity(arena);
             } else if (arena.getGameType() == GameType.MINIGAME) {
                 this.games[i] = new MiniGameEntity(arena);
             } else if (arena.getGameType() == GameType.EVENT) {

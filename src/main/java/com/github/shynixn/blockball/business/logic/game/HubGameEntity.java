@@ -10,13 +10,10 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
-/**
- * Created by Shynixn
- */
-class LobbyGameEntity extends GameEntity {
+class HubGameEntity extends GameEntity {
     private int timer;
 
-    LobbyGameEntity(Arena arena) {
+    HubGameEntity(Arena arena) {
         super(arena);
     }
 
@@ -30,9 +27,7 @@ class LobbyGameEntity extends GameEntity {
                 team = Team.RED;
         }
         if (team == Team.RED && this.redTeam.size() <= this.arena.getTeamMeta().getTeamMaxSize() && (!this.arena.getTeamMeta().isTeamAutoJoin() || this.redTeam.size() <= this.blueTeam.size())) {
-            if(player.getAllowFlight())
-                this.previousFlying.add(player);
-            this.armorContents.put(player, new InventoryCache(player));
+            this.storeTemporaryInventory(player);
             player.getInventory().setArmorContents(this.arena.getTeamMeta().getRedItems());
             this.redTeam.add(player);
             player.sendMessage(Language.PREFIX + this.arena.getTeamMeta().getJoinMessage());
@@ -46,11 +41,9 @@ class LobbyGameEntity extends GameEntity {
             }
             return true;
         } else if (team == Team.BLUE && this.blueTeam.size() <= this.arena.getTeamMeta().getTeamMaxSize() && (!this.arena.getTeamMeta().isTeamAutoJoin() || this.blueTeam.size() <= this.redTeam.size())) {
-            if(player.getAllowFlight())
-                this.previousFlying.add(player);
-            this.blueTeam.add(player);
-            this.armorContents.put(player, new InventoryCache(player));
+            this.storeTemporaryInventory(player);
             player.getInventory().setArmorContents(this.arena.getTeamMeta().getBlueItems());
+            this.blueTeam.add(player);
             player.sendMessage(Language.PREFIX + this.arena.getTeamMeta().getJoinMessage());
             if (this.arena.getTeamMeta().getBlueSpawnPoint() != null)
                 player.teleport(this.arena.getTeamMeta().getBlueSpawnPoint());
@@ -61,14 +54,6 @@ class LobbyGameEntity extends GameEntity {
                 this.getHologram().show(player);
             }
             return true;
-        }
-        return false;
-    }
-
-    private boolean isCustomDrop(Entity entity) {
-        for (final Item item : this.arena.getBoostItemHandler().getDroppedItems()) {
-            if (item.equals(entity))
-                return true;
         }
         return false;
     }
@@ -123,5 +108,20 @@ class LobbyGameEntity extends GameEntity {
                 this.arena.getLobbyMeta().removeBlueTeamSignLocation(i);
             }
         }
+    }
+
+    private void storeTemporaryInventory(Player player) {
+        final TemporaryPlayerStorage storage = new TemporaryPlayerStorage();
+        storage.armorContent = player.getInventory().getArmorContents().clone();
+        storage.isFlying = player.getAllowFlight();
+        this.temporaryStorage.put(player, storage);
+    }
+
+    private boolean isCustomDrop(Entity entity) {
+        for (final Item item : this.arena.getBoostItemHandler().getDroppedItems()) {
+            if (item.equals(entity))
+                return true;
+        }
+        return false;
     }
 }

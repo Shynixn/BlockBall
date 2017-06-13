@@ -28,6 +28,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
     private final ArenaController manager;
 
     ArenaCommandExecutor(ArenaController manager) {
+        super();
         this.manager = manager;
         if (Config.getInstance().getChatNavigateCommand().isEnabled()) {
             new DynamicCommandHelper(Config.getInstance().getChatNavigateCommand()) {
@@ -92,7 +93,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         public void onPlayerSelect(int number) {
             if (this.type == 1) {
                 if (ArenaCommandExecutor.this.manager.contains(number)) {
-                    ArenaEntity arenaEntity = (ArenaEntity) ArenaCommandExecutor.this.manager.getArenaFromName(String.valueOf(number));
+                    final ArenaEntity arenaEntity = (ArenaEntity) ArenaCommandExecutor.this.manager.getArenaFromName(String.valueOf(number));
                     this.open(this.player, new EditArenaPage(this.player, arenaEntity));
                 }
             } else if (this.type == 2) {
@@ -103,8 +104,8 @@ class ArenaCommandExecutor extends SCommandExecutor {
             }
             if (this.type == 3) {
                 if (ArenaCommandExecutor.this.manager.contains(number)) {
-                    ArenaEntity arenaEntity = (ArenaEntity) ArenaCommandExecutor.this.manager.getArenaFromName(String.valueOf(number));
-                    ArenaEntity newentity = ArenaCommandExecutor.this.manager.createNewArenaEntity();
+                    final ArenaEntity arenaEntity = (ArenaEntity) ArenaCommandExecutor.this.manager.getArenaFromName(String.valueOf(number));
+                    final ArenaEntity newentity = ArenaCommandExecutor.this.manager.createNewArenaEntity();
 
                     ((BallMetaEntity) arenaEntity.getBallMeta()).copy((BallMetaEntity) newentity.getBallMeta());
                     ((TeamMetaEntity) arenaEntity.getTeamMeta()).copy((TeamMetaEntity) newentity.getTeamMeta());
@@ -130,7 +131,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
             else if (this.type == 3)
                 this.player.sendMessage(Language.PREFIX + "Enter the number of an arena to copy its properties:");
             for (int i = 0; i < ArenaCommandExecutor.this.manager.getArenas().size(); i++) {
-                ArenaEntity entity = (ArenaEntity) ArenaCommandExecutor.this.manager.getArenas().get(i);
+                final ArenaEntity entity = (ArenaEntity) ArenaCommandExecutor.this.manager.getArenas().get(i);
                 if (entity.getAlias() == null)
                     this.player.sendMessage(Language.PREFIX + entity.getName() + " - " + ChatColor.GRAY + entity.getDownCornerLocation());
                 else
@@ -204,7 +205,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                     this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + "Successfully saved arena.");
                     ArenaCommandExecutor.this.manager.manager.reload();
                     if (this.arenaEntity.getGameType() == GameType.BUNGEE) {
-                        for (Player player : SFileUtils.getOnlinePlayers()) {
+                        for (final Player player : SFileUtils.getOnlinePlayers()) {
                             player.kickPlayer(Language.PREFIX + "Server is restarting for BlockBall bungee mode!");
                         }
                         SFileUtils.restartServer();
@@ -468,7 +469,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         @Override
         public void hitBlockEvent(Block block) {
             if (this.lastNumber == 5 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
-                Sign sign = (Sign) block.getState();
+                final Sign sign = (Sign) block.getState();
                 sign.setLine(0, Config.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.RED));
                 sign.setLine(1, Config.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.RED));
                 sign.setLine(2, Config.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.RED));
@@ -479,7 +480,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 this.player.sendMessage(Language.PREFIX + "Set sign.");
             }
             if (this.lastNumber == 6 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
-                Sign sign = (Sign) block.getState();
+                final Sign sign = (Sign) block.getState();
                 sign.setLine(0, Config.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.BLUE));
                 sign.setLine(1, Config.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.BLUE));
                 sign.setLine(2, Config.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.BLUE));
@@ -578,7 +579,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         @Override
         public void hitBlockEvent(Block block) {
             if (this.lastNumber == 5 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
-                Sign sign = (Sign) block.getState();
+                final Sign sign = (Sign) block.getState();
                 sign.setLine(0, Config.getInstance().getMinigameSign().getLine1(this.arenaEntity, null));
                 sign.setLine(1, Config.getInstance().getMinigameSign().getLine2(this.arenaEntity, null));
                 sign.setLine(2, Config.getInstance().getMinigameSign().getLine3(this.arenaEntity, null));
@@ -589,7 +590,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 this.player.sendMessage(Language.PREFIX + "Set sign.");
             }
             if (this.lastNumber == 6 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
-                Sign sign = (Sign) block.getState();
+                final Sign sign = (Sign) block.getState();
                 sign.setLine(0, Config.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.RED));
                 sign.setLine(1, Config.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.RED));
                 sign.setLine(2, Config.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.RED));
@@ -600,7 +601,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 this.player.sendMessage(Language.PREFIX + "Set sign.");
             }
             if (this.lastNumber == 7 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
-                Sign sign = (Sign) block.getState();
+                final Sign sign = (Sign) block.getState();
                 sign.setLine(0, Config.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.BLUE));
                 sign.setLine(1, Config.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.BLUE));
                 sign.setLine(2, Config.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.BLUE));
@@ -611,7 +612,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 this.player.sendMessage(Language.PREFIX + "Set sign.");
             }
             if (this.lastNumber == 8 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
-                Sign sign = (Sign) block.getState();
+                final Sign sign = (Sign) block.getState();
                 sign.setLine(0, Config.getInstance().getLeaveSign().getLine1(this.arenaEntity, null));
                 sign.setLine(1, Config.getInstance().getLeaveSign().getLine2(this.arenaEntity, null));
                 sign.setLine(2, Config.getInstance().getLeaveSign().getLine3(this.arenaEntity, null));
@@ -1587,13 +1588,13 @@ class ArenaCommandExecutor extends SCommandExecutor {
             if (number == 1) {
                 this.arenaEntity.getTeamMeta().setSpecatorMessages(!this.arenaEntity.getTeamMeta().isSpectatorMessagesEnabled());
                 if (this.arenaEntity.getTeamMeta().isSpectatorMessagesEnabled())
-                    this.player.sendMessage(Language.PREFIX + "Enabled specator annoucements.");
+                    this.player.sendMessage(Language.PREFIX + "Enabled spectator annoucements.");
                 else
-                    this.player.sendMessage(Language.PREFIX + "Disabled specator annoucements.");
+                    this.player.sendMessage(Language.PREFIX + "Disabled sspectatorannoucements.");
             } else if (number == 2) {
-                this.player.sendMessage(Language.PREFIX + "Enter the radius where players receive the latest annoucements:");
+                this.player.sendMessage(Language.PREFIX + "Enter the radius where players receive the latest announcements:");
             } else if (number == 3) {
-                this.open(this.player, new AnnouncementSettingsPage(this.player, this.arenaEntity));
+                this.open(this.player, new GeneralSettingsPage(this.player, this.arenaEntity));
             }
         }
 
@@ -1602,9 +1603,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
             this.player.sendMessage("");
             this.player.sendMessage(HEADER_STANDARD);
             this.player.sendMessage("");
-            this.player.sendMessage(Language.PREFIX + "1 - Toggle nearby specator annoucements");
-            this.player.sendMessage(Language.PREFIX + "2 - Set specator radius");
-            this.player.sendMessage(Language.PREFIX + "3 - Save specator settings");
+            this.player.sendMessage(Language.PREFIX + "1 - Toggle nearby spectator announcements");
+            this.player.sendMessage(Language.PREFIX + "2 - Set spectator radius");
+            this.player.sendMessage(Language.PREFIX + "3 - Save spectator settings");
             this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + MENU_BACK);
             this.player.sendMessage(Language.PREFIX + ChatColor.RED + MENU_EXIT);
             this.player.sendMessage("");
@@ -1646,7 +1647,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 this.player.sendMessage(Language.PREFIX + "Enter the id of the block to remove wallbouncing:");
             } else if (number == 3) {
                 this.player.sendMessage(Language.PREFIX + "Bouncing ids:");
-                for (String s : this.arenaEntity.getBounceTypes()) {
+                for (final String s : this.arenaEntity.getBounceTypes()) {
                     this.player.sendMessage(Language.PREFIX + s);
                 }
             } else if (number == 4) {
@@ -1776,7 +1777,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                     this.player.sendMessage(Language.PREFIX + "Enter the spawn rate of the booster items:");
                     this.player.sendMessage(Language.PREFIX + "[None, Little, Medium, High, Highest]");
                 } else if (number == 2) {
-                    BoostItem item = ItemSpawner.createBoostItem();
+                    final BoostItem item = ItemSpawner.createBoostItem();
                     this.arenaEntity.getBoostItemHandler().setBoostItem(item);
                     this.open(this.player, new EditSpawnerItems(this.player, this.arenaEntity, item));
                 } else if (number == 3) {
@@ -1829,7 +1830,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
         private void listItems() {
             int i = 0;
-            for (BoostItem boostItem : this.arenaEntity.getBoostItemHandler().getBoostItems()) {
+            for (final BoostItem boostItem : this.arenaEntity.getBoostItemHandler().getBoostItems()) {
                 if (Material.getMaterial(boostItem.getId()) != null)
                     this.player.sendMessage(Language.PREFIX + i + " - " + Material.getMaterial(boostItem.getId()).name().toUpperCase() + '-' + boostItem.getDamage());
                 else
@@ -1894,21 +1895,21 @@ class ArenaCommandExecutor extends SCommandExecutor {
             } else if (number == 5) {
                 this.player.sendMessage(Language.PREFIX + "Enter the displayname of the item:");
             } else if (number == 6) {
-                LightPotioneffect potioneffect = new FastPotioneffect();
+                final LightPotioneffect potioneffect = new FastPotioneffect();
                 this.boostItem.setPotionEffect(potioneffect);
                 this.open(this.player, new EditPotionEffect(this.player, this.arenaEntity, potioneffect));
             } else if (number == 7) {
                 this.player.sendMessage(Language.PREFIX + "Type the name to edit the potioneffect:");
-                for (LightPotioneffect lightPotioneffect : this.boostItem.getPotionEffects()) {
+                for (final LightPotioneffect lightPotioneffect : this.boostItem.getPotionEffects()) {
                     this.player.sendMessage(Language.PREFIX + lightPotioneffect.getType());
                 }
             } else if (number == 8) {
                 this.player.sendMessage(Language.PREFIX + "Type the name to remove the potioneffect:");
-                for (LightPotioneffect lightPotioneffect : this.boostItem.getPotionEffects()) {
+                for (final LightPotioneffect lightPotioneffect : this.boostItem.getPotionEffects()) {
                     this.player.sendMessage(Language.PREFIX + lightPotioneffect.getType());
                 }
             } else if (number == 9) {
-                for (LightPotioneffect lightPotioneffect : this.boostItem.getPotionEffects()) {
+                for (final LightPotioneffect lightPotioneffect : this.boostItem.getPotionEffects()) {
                     this.player.sendMessage(Language.PREFIX + lightPotioneffect.getType());
                 }
             } else if (number == 10) {
@@ -2094,7 +2095,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
         private void printPlayers(String[] data) {
             this.player.sendMessage(Language.PREFIX + "Players:");
-            for (String s : data) {
+            for (final String s : data) {
                 this.player.sendMessage(s);
             }
         }
@@ -2272,7 +2273,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         @Override
         public void hitBlockEvent(Block block) {
             if (this.lastNumber == 4 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
-                Sign sign = (Sign) block.getState();
+                final Sign sign = (Sign) block.getState();
                 sign.setLine(0, Config.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.RED));
                 sign.setLine(1, Config.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.RED));
                 sign.setLine(2, Config.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.RED));
@@ -2283,7 +2284,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 this.player.sendMessage(Language.PREFIX + "Set sign.");
             }
             if (this.lastNumber == 5 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
-                Sign sign = (Sign) block.getState();
+                final Sign sign = (Sign) block.getState();
                 sign.setLine(0, Config.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.BLUE));
                 sign.setLine(1, Config.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.BLUE));
                 sign.setLine(2, Config.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.BLUE));
@@ -2294,7 +2295,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 this.player.sendMessage(Language.PREFIX + "Set sign.");
             }
             if (this.lastNumber == 6 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
-                Sign sign = (Sign) block.getState();
+                final Sign sign = (Sign) block.getState();
                 sign.setLine(0, Config.getInstance().getLeaveSign().getLine1(this.arenaEntity, null));
                 sign.setLine(1, Config.getInstance().getLeaveSign().getLine2(this.arenaEntity, null));
                 sign.setLine(2, Config.getInstance().getLeaveSign().getLine3(this.arenaEntity, null));

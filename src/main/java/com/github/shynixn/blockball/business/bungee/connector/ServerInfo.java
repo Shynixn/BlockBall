@@ -44,6 +44,7 @@ interface ServerInfo {
         private final String serverName;
 
         Container(String serverName, int playerAmount, int maxPlayerAmount) {
+            super();
             this.playerAmount = playerAmount;
             this.maxPlayerAmount = maxPlayerAmount;
             this.state = State.UNKNOWN;
@@ -51,6 +52,7 @@ interface ServerInfo {
         }
 
         Container(String serverName, String data) throws Exception {
+            super();
             this.serverName = serverName;
             try {
                 String motd = "";
@@ -90,7 +92,7 @@ interface ServerInfo {
                         motd += data.charAt(i);
                 }
                 this.maxPlayerAmount = Integer.parseInt(motd);
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 this.state = State.RESTARTING;
                 this.playerAmount = 0;
                 this.maxPlayerAmount = 0;

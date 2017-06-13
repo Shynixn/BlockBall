@@ -244,7 +244,7 @@ class ArenaEntity extends SArenaLite implements Arena {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> items = new LinkedHashMap<>();
+        final Map<String, Object> items = new LinkedHashMap<>();
         items.put("id", this.getId());
         items.put("name", this.alias);
         items.put("enabled", this.isEnabled());
@@ -257,7 +257,7 @@ class ArenaEntity extends SArenaLite implements Arena {
         items.put("ball.spawn", this.ballSpawnLocation.serialize());
         items.put("ball.properties", this.properties.serialize());
         items.put("event", this.properties3.serialize());
-        Map<String, Object> data = this.properties2.serialize();
+        final Map<String, Object> data = this.properties2.serialize();
         data.put("wall-bouncing", this.bounce_types);
         data.put("boost-items", this.getBoostItemHandler().serialize());
         items.put("properties", data);

@@ -5,6 +5,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Created by Shynixn
  */
+
+@Deprecated
 public abstract class AsyncRunnable<T> implements Runnable {
     @SPluginLoader.PluginLoader
     private static JavaPlugin plugin;
@@ -37,24 +39,18 @@ public abstract class AsyncRunnable<T> implements Runnable {
     }
 
     public static void toAsynchroneThread(final AsyncRunnable runnable, final Object... params) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-            @Override
-            public void run() {
-                runnable.paramcache = params;
-                runnable.isSynchrone = false;
-                runnable.run();
-            }
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            runnable.paramcache = params;
+            runnable.isSynchrone = false;
+            runnable.run();
         });
     }
 
     protected static void toSynchroneThread(final AsyncRunnable runnable, final Object... params) {
-        plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                runnable.paramcache = params;
-                runnable.isSynchrone = true;
-                runnable.run();
-            }
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
+            runnable.paramcache = params;
+            runnable.isSynchrone = true;
+            runnable.run();
         });
     }
 }

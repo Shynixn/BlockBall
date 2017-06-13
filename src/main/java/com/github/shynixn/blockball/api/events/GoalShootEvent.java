@@ -14,6 +14,7 @@ public class GoalShootEvent extends SEvent {
     private final Team team;
 
     public GoalShootEvent(Game game, Player player, Team team) {
+        super();
         this.game = game;
         this.player = player;
         this.team = team;

@@ -86,7 +86,7 @@ public enum LightRegistry {
         @Override
         public void unregister() throws Exception {
             final Class<?> entityTypeClazz = Class.forName("net.minecraft.server.VERSION.EntityTypes".replace("VERSION", getServerVersion()));
-            if (!getServerVersion().equals("v1_11_R1")) {
+            if (!getServerVersion().equals("v1_11_R1") && !getServerVersion().equals("v1_12_R1")) {
                 for (final Class<?> customEntityClazz : types.keySet()) {
                     final LightRegistry powerRegistry = types.get(customEntityClazz);
                     this.<Class<?>, String>getMap(entityTypeClazz, "d").remove(customEntityClazz);
@@ -98,7 +98,7 @@ public enum LightRegistry {
 
         private void modify(Class<?> clazz, String saveGameId, int entityId) throws Exception {
             final Class<?> entityTypeClazz = Class.forName("net.minecraft.server.VERSION.EntityTypes".replace("VERSION", getServerVersion()));
-            if (!getServerVersion().equals("v1_11_R1")) {
+            if (!getServerVersion().equals("v1_11_R1") && !getServerVersion().equals("v1_12_R1")) {
                 this.<String, Class<?>>getMap(entityTypeClazz, "c").put(saveGameId, clazz);
                 this.<Class<?>, String>getMap(entityTypeClazz, "d").put(clazz, saveGameId);
                 this.<Integer, Class<?>>getMap(entityTypeClazz, "e").put(entityId, clazz);

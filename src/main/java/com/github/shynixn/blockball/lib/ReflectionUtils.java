@@ -13,12 +13,13 @@ import org.bukkit.Bukkit;
 public final class ReflectionUtils {
     // Prevent accidental construction
     private ReflectionUtils() {
+        super();
     }
 
 
     public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... parameterTypes) throws NoSuchMethodException {
-        Class<?>[] primitiveTypes = DataType.getPrimitive(parameterTypes);
-        for (Constructor<?> constructor : clazz.getConstructors()) {
+        final Class<?>[] primitiveTypes = DataType.getPrimitive(parameterTypes);
+        for (final Constructor<?> constructor : clazz.getConstructors()) {
             if (!DataType.compare(DataType.getPrimitive(constructor.getParameterTypes()), primitiveTypes)) {
                 continue;
             }
@@ -44,8 +45,8 @@ public final class ReflectionUtils {
 
 
     public static Method getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException {
-        Class<?>[] primitiveTypes = DataType.getPrimitive(parameterTypes);
-        for (Method method : clazz.getMethods()) {
+        final Class<?>[] primitiveTypes = DataType.getPrimitive(parameterTypes);
+        for (final Method method : clazz.getMethods()) {
             if (!method.getName().equals(methodName) || !DataType.compare(DataType.getPrimitive(method.getParameterTypes()), primitiveTypes)) {
                 continue;
             }
@@ -76,7 +77,7 @@ public final class ReflectionUtils {
 
 
     public static Field getField(Class<?> clazz, boolean declared, String fieldName) throws NoSuchFieldException, SecurityException {
-        Field field = declared ? clazz.getDeclaredField(fieldName) : clazz.getField(fieldName);
+        final Field field = declared ? clazz.getDeclaredField(fieldName) : clazz.getField(fieldName);
         field.setAccessible(true);
         return field;
     }
@@ -190,7 +191,7 @@ public final class ReflectionUtils {
 
         // Initialize map for quick class lookup
         static {
-            for (DataType type : values()) {
+            for (final DataType type : values()) {
                 CLASS_MAP.put(type.primitive, type);
                 CLASS_MAP.put(type.reference, type);
             }
@@ -219,20 +220,20 @@ public final class ReflectionUtils {
 
 
         public static Class<?> getPrimitive(Class<?> clazz) {
-            DataType type = fromClass(clazz);
+            final DataType type = fromClass(clazz);
             return type == null ? clazz : type.getPrimitive();
         }
 
 
         public static Class<?> getReference(Class<?> clazz) {
-            DataType type = fromClass(clazz);
+            final DataType type = fromClass(clazz);
             return type == null ? clazz : type.getReference();
         }
 
 
         public static Class<?>[] getPrimitive(Class<?>[] classes) {
-            int length = classes == null ? 0 : classes.length;
-            Class<?>[] types = new Class<?>[length];
+            final int length = classes == null ? 0 : classes.length;
+            final Class<?>[] types = new Class<?>[length];
             for (int index = 0; index < length; index++) {
                 types[index] = getPrimitive(classes[index]);
             }
@@ -241,8 +242,8 @@ public final class ReflectionUtils {
 
 
         public static Class<?>[] getReference(Class<?>[] classes) {
-            int length = classes == null ? 0 : classes.length;
-            Class<?>[] types = new Class<?>[length];
+            final int length = classes == null ? 0 : classes.length;
+            final Class<?>[] types = new Class<?>[length];
             for (int index = 0; index < length; index++) {
                 types[index] = getReference(classes[index]);
             }
@@ -251,8 +252,8 @@ public final class ReflectionUtils {
 
 
         public static Class<?>[] getPrimitive(Object[] objects) {
-            int length = objects == null ? 0 : objects.length;
-            Class<?>[] types = new Class<?>[length];
+            final int length = objects == null ? 0 : objects.length;
+            final Class<?>[] types = new Class<?>[length];
             for (int index = 0; index < length; index++) {
                 types[index] = getPrimitive(objects[index].getClass());
             }
@@ -261,8 +262,8 @@ public final class ReflectionUtils {
 
 
         public static Class<?>[] getReference(Object[] objects) {
-            int length = objects == null ? 0 : objects.length;
-            Class<?>[] types = new Class<?>[length];
+            final int length = objects == null ? 0 : objects.length;
+            final Class<?>[] types = new Class<?>[length];
             for (int index = 0; index < length; index++) {
                 types[index] = getReference(objects[index].getClass());
             }
@@ -275,8 +276,8 @@ public final class ReflectionUtils {
                 return false;
             }
             for (int index = 0; index < primary.length; index++) {
-                Class<?> primaryClass = primary[index];
-                Class<?> secondaryClass = secondary[index];
+                final Class<?> primaryClass = primary[index];
+                final Class<?> secondaryClass = secondary[index];
                 if (primaryClass.equals(secondaryClass) || primaryClass.isAssignableFrom(secondaryClass)) {
                     continue;
                 }

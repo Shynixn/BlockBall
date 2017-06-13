@@ -8,7 +8,8 @@ public class Interpreter19 {
         if (!ReflectionLib.getServerVersion().equals("1_9_R1")
                 && !ReflectionLib.getServerVersion().equals("1_9_R2")
                 && !ReflectionLib.getServerVersion().equals("v1_10_R1")
-                && !ReflectionLib.getServerVersion().equals("v1_11_R1")) {
+                && !ReflectionLib.getServerVersion().equals("v1_11_R1")
+                && !ReflectionLib.getServerVersion().equals("v1_12_R1")) {
             return (ItemStack) ReflectionLib.invokeMethodByObject(player, "getItemInHand");
         } else {
             if (offHand) {
@@ -24,7 +25,8 @@ public class Interpreter19 {
         if (ReflectionLib.getServerVersion().equals("1_9_R1")
                 || ReflectionLib.getServerVersion().equals("1_9_R2")
                 || ReflectionLib.getServerVersion().equals("v1_10_R1")
-                || ReflectionLib.getServerVersion().equals("v1_11_R1")) {
+                || ReflectionLib.getServerVersion().equals("v1_11_R1")
+                || ReflectionLib.getServerVersion().equals("v1_12_R1")) {
              ReflectionLib.invokeMethodByObject(player, "setGlowing", glowing);
         }
     }
@@ -33,7 +35,8 @@ public class Interpreter19 {
         if (!ReflectionLib.getServerVersion().equals("1_9_R1")
                 && !ReflectionLib.getServerVersion().equals("1_9_R2")
                 && !ReflectionLib.getServerVersion().equals("v1_10_R1")
-                && !ReflectionLib.getServerVersion().equals("v1_11_R1")) {
+                && !ReflectionLib.getServerVersion().equals("v1_11_R1")
+                && !ReflectionLib.getServerVersion().equals("v1_12_R1")) {
             ReflectionLib.invokeMethodByObject(player, "setItemInHand", itemStack);
         } else {
             if (offHand) {

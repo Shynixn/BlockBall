@@ -28,9 +28,11 @@ class SpawnItem implements BoostItem {
     private final Map<Integer, LightPotioneffect> potioneffectList = new HashMap<>();
 
     SpawnItem() {
+        super();
     }
 
     SpawnItem(Map<String, Object> items) throws Exception {
+        super();
         this.id = (int) items.get("id");
         this.damage = (int) items.get("damage");
         this.owner = (String) items.get("owner");

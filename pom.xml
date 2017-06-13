@@ -9,7 +9,7 @@
     <description>Spigot plugin to simulate a football/soccer game in minecraft.</description>
     <url>https://github.com/Shynixn/BlockBall</url>
     <packaging>jar</packaging>
-    <version>3.8.1-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
 
     <developers>
         <developer>
@@ -31,7 +31,7 @@
 
     <build>
         <plugins>
-           <plugin>
+         <!--  <plugin>
              <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.2.1</version>
@@ -70,13 +70,13 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin> -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
                 <version>2.3.2</version>
             </plugin>
@@ -101,10 +101,6 @@
     </build>
 
     <repositories>
-        <repository>
-            <id>inventive-repo</id>
-            <url>https://repo.inventivetalent.org/content/groups/public/</url>
-        </repository>
         <repository>
             <id>placeholderapi</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
@@ -167,13 +163,14 @@
             <artifactId>minecraft111R1</artifactId>
             <scope>system</scope>
             <version>1.0</version>
-            <systemPath>${basedir}/lib/spigot-1.11.2.jar</systemPath>
+            <systemPath>${basedir}/lib/spigot-1.11.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.inventivetalent</groupId>
-            <artifactId>bossbarapi</artifactId>
-            <version>RELEASE</version>
-            <scope>provided</scope>
+            <groupId>net</groupId>
+            <artifactId>minecraft112R1</artifactId>
+            <scope>system</scope>
+            <version>1.0</version>
+            <systemPath>${basedir}/lib/spigot-1.12.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>

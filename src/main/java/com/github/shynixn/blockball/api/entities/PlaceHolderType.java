@@ -17,7 +17,7 @@ public enum PlaceHolderType {
     LASTHITPLAYERNAME;
 
     public static PlaceHolderType getTypeFromName(String name) {
-        for (PlaceHolderType type : PlaceHolderType.values()) {
+        for (final PlaceHolderType type : PlaceHolderType.values()) {
             if (name.toUpperCase().contains(type.name().toUpperCase()))
                 return type;
         }

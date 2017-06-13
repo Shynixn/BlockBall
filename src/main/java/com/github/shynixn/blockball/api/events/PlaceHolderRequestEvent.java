@@ -14,6 +14,7 @@ public class PlaceHolderRequestEvent extends SEvent {
     private final int game;
 
     public PlaceHolderRequestEvent(Player player,PlaceHolderType type, int game) {
+        super();
         this.player = player;
         this.game = game;
         this.type = type;

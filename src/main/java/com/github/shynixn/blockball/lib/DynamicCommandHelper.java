@@ -20,7 +20,7 @@ public abstract class DynamicCommandHelper extends BukkitCommand {
         this.description = c.getDescription();
         this.usageMessage = c.getUseage();
         this.setPermission(c.getPermission());
-        this.setAliases(new ArrayList<String>());
+        this.setAliases(new ArrayList<>());
         NMSRegistry.registerDynamicCommand(c.getCommand(), this);
     }
 

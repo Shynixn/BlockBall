@@ -183,6 +183,7 @@ public final class Config {
     }
 
     private Config(JavaPlugin plugin) {
+        super();
         this.reload();
     }
 
@@ -207,6 +208,7 @@ public final class Config {
         private final String permissionMessage;
 
         public CommandContainer(String upper) {
+            super();
             this.command = Config.this.c.getString(upper + ".command");
             this.enabled = Config.this.c.getBoolean(upper + ".enabled");
             this.useage = Config.this.c.getString(upper + ".useage");
@@ -247,6 +249,7 @@ public final class Config {
         private final String line4;
 
         public SignContainer(String upper) {
+            super();
             this.line1 = Config.this.c.getString(upper + ".line-1");
             this.line2 = Config.this.c.getString(upper + ".line-2");
             this.line3 = Config.this.c.getString(upper + ".line-3");
@@ -255,11 +258,11 @@ public final class Config {
 
         public void updateTeamSignConsideringMaxPlayers(Sign sign, Game game, Team team, List<Player> players) {
             int i = 0;
-            for (String s : new String[]{this.line1, this.line2, this.line3, this.line4}) {
-                if (Team.BLUE == team)
+            for (final String s : new String[]{this.line1, this.line2, this.line3, this.line4}) {
+                if (team == Team.BLUE)
                     sign.setLine(i, this.replace(s, game.getArena(), team, true).replace("<players>", String.valueOf(players.size()))
                             .replace("<maxplayers>", String.valueOf(game.getArena().getTeamMeta().getTeamMaxSize())));
-                if (Team.RED == team)
+                if (team == Team.RED)
                     sign.setLine(i, this.replace(s, game.getArena(), team, true).replace("<players>", String.valueOf(players.size()))
                             .replace("<maxplayers>", String.valueOf(game.getArena().getTeamMeta().getTeamMaxSize())));
                 i++;
@@ -268,8 +271,8 @@ public final class Config {
         }
 
         public List<Player> getAmountFromTeam(Team team, Map<Player, Team> preselection) {
-            List<Player> players = new ArrayList<>();
-            for (Player player : preselection.keySet()) {
+            final List<Player> players = new ArrayList<>();
+            for (final Player player : preselection.keySet()) {
                 if (preselection.get(player) == team)
                     players.add(player);
             }
@@ -279,7 +282,7 @@ public final class Config {
         public void updateTeamSignConsideringMinigame(Sign sign, Game game, Team team, Map<Player, Team> preselection) {
             int i = 0;
             List<Player> players = null;
-            for (String s : new String[]{this.line1, this.line2, this.line3, this.line4}) {
+            for (final String s : new String[]{this.line1, this.line2, this.line3, this.line4}) {
                 if (team == Team.RED) {
                     if (game.getRedTeamPlayers().length > this.getAmountFromTeam(Team.RED, preselection).size()) {
                         players = Arrays.asList(game.getRedTeamPlayers());
@@ -303,7 +306,7 @@ public final class Config {
 
         public void updateJoinSignConsideringMaxPlayers(Sign sign, Game game, List<Player> players) {
             int i = 0;
-            MiniGame g = (MiniGame) game;
+            final MiniGame g = (MiniGame) game;
             String stage = "unknown";
             if (g.getStage() == GameStage.DISABLED)
                 stage = Language.SIGN_DISABLED;
@@ -311,7 +314,7 @@ public final class Config {
                 stage = Language.SIGN_ENABLED;
             else if (g.getStage() == GameStage.RUNNING)
                 stage = Language.SIGN_RUNNING;
-            for (String s : new String[]{this.line1, this.line2, this.line3, this.line4}) {
+            for (final String s : new String[]{this.line1, this.line2, this.line3, this.line4}) {
                 if (game.getPlayers().size() < players.size()) {
                     sign.setLine(i, this.replace(s, game.getArena(), null, true).replace("<players>", String.valueOf(players.size()))
                             .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers()))
@@ -329,7 +332,7 @@ public final class Config {
 
         public int getGameLine() {
             int i = 0;
-            for (String s : new String[]{this.line1, this.line2, this.line3, this.line4}) {
+            for (final String s : new String[]{this.line1, this.line2, this.line3, this.line4}) {
                 if (s.equals("<game>")) {
                     return i;
                 }

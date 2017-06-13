@@ -19,6 +19,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 public final class CustomRabbit extends EntityRabbit {
     private Ball ball;
@@ -36,9 +37,9 @@ public final class CustomRabbit extends EntityRabbit {
         super(((CraftWorld) world).getHandle());
         this.b(true);
         try {
-            Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
+            final Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
             bField.setAccessible(true);
-            Field cField = PathfinderGoalSelector.class.getDeclaredField("c");
+            final Field cField = PathfinderGoalSelector.class.getDeclaredField("c");
             cField.setAccessible(true);
             bField.set(this.goalSelector, new UnsafeList<PathfinderGoalSelector>());
             bField.set(this.targetSelector, new UnsafeList<PathfinderGoalSelector>());
@@ -46,14 +47,14 @@ public final class CustomRabbit extends EntityRabbit {
             cField.set(this.targetSelector, new UnsafeList<PathfinderGoalSelector>());
             this.goalSelector.a(0, new PathfinderGoalFloat(this));
             this.ball = ball;
-        } catch (Exception exc) {
-            exc.printStackTrace();
+        } catch (final Exception exc) {
+            Bukkit.getLogger().log(Level.WARNING, "Failed to register pathfinder.", exc);
         }
     }
 
     void spawn(Location location) {
         NMSRegistry.accessWorldGuardSpawn(location);
-        net.minecraft.server.v1_8_R1.World mcWorld = ((CraftWorld) location.getWorld()).getHandle();
+        final net.minecraft.server.v1_8_R1.World mcWorld = ((CraftWorld) location.getWorld()).getHandle();
         this.setPosition(location.getX(), location.getY(), location.getZ());
         mcWorld.addEntity(this, SpawnReason.CUSTOM);
         this.getSpigotEntity().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 9999999, 1));
@@ -76,11 +77,11 @@ public final class CustomRabbit extends EntityRabbit {
         Class<?> clazz = null;
         try {
             clazz = Class.forName("org.bukkit.craftbukkit.v1_8_R1.SpigotTimings");
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
 
         }
         if (clazz != null) {
-            Object moveTimer = ReflectionLib.getValueFromFieldByClazz("entityMoveTimer", clazz);
+            final Object moveTimer = ReflectionLib.getValueFromFieldByClazz("entityMoveTimer", clazz);
             if (started) {
                 ReflectionLib.invokeMethodByObject(moveTimer, "startTiming");
             } else {
@@ -98,9 +99,9 @@ public final class CustomRabbit extends EntityRabbit {
         } else {
             try {
                 this.checkBlockCollisions();
-            } catch (Throwable var84) {
-                CrashReport crashreport = CrashReport.a(var84, "Checking entity block collision");
-                CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Entity being checked for collision");
+            } catch (final Throwable var84) {
+                final CrashReport crashreport = CrashReport.a(var84, "Checking entity block collision");
+                final CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Entity being checked for collision");
                 this.appendEntityCrashDetails(crashreportsystemdetails);
                 throw new ReportedException(crashreport);
             }
@@ -108,9 +109,9 @@ public final class CustomRabbit extends EntityRabbit {
                 return;
             }
             this.world.methodProfiler.a("move");
-            double d3 = this.locX;
-            double d4 = this.locY;
-            double d5 = this.locZ;
+            final double d3 = this.locX;
+            final double d4 = this.locY;
+            final double d5 = this.locZ;
             if (this.H) {
                 this.H = false;
                 d0 *= 0.25D;
@@ -122,11 +123,11 @@ public final class CustomRabbit extends EntityRabbit {
             }
 
             double d6 = d0;
-            double d7 = d1;
+            final double d7 = d1;
             double d8 = d2;
-            boolean flag = this.onGround && this.isSneaking() && false;
+            final boolean flag = this.onGround && this.isSneaking() && false;
             if (flag) {
-                double d9;
+                final double d9;
                 for (d9 = 0.05D; d0 != 0.0D && this.world.getCubes(this, this.getBoundingBox().c(d0, -1.0D, 0.0D)).isEmpty(); d6 = d0) {
                     if (d0 < d9 && d0 >= -d9) {
                         d0 = 0.0D;
@@ -167,16 +168,16 @@ public final class CustomRabbit extends EntityRabbit {
                 }
             }
 
-            List list = this.world.getCubes(this, this.getBoundingBox().a(d0, d1, d2));
-            AxisAlignedBB axisalignedbb = this.getBoundingBox();
+            final List list = this.world.getCubes(this, this.getBoundingBox().a(d0, d1, d2));
+            final AxisAlignedBB axisalignedbb = this.getBoundingBox();
 
             AxisAlignedBB axisalignedbb1;
-            for (Iterator flag1 = list.iterator(); flag1.hasNext(); d1 = axisalignedbb1.b(this.getBoundingBox(), d1)) {
+            for (final Iterator flag1 = list.iterator(); flag1.hasNext(); d1 = axisalignedbb1.b(this.getBoundingBox(), d1)) {
                 axisalignedbb1 = (AxisAlignedBB) flag1.next();
             }
 
             this.a(this.getBoundingBox().c(0.0D, d1, 0.0D));
-            boolean var85 = this.onGround || d7 != d1 && d7 < 0.0D;
+            final boolean var85 = this.onGround || d7 != d1 && d7 < 0.0D;
 
             Iterator iterator1;
             AxisAlignedBB axisalignedbb2;
@@ -192,19 +193,19 @@ public final class CustomRabbit extends EntityRabbit {
 
             this.a(this.getBoundingBox().c(0.0D, 0.0D, d2));
             if (this.S > 0.0F && var85 && (d6 != d0 || d8 != d2)) {
-                double d10 = d0;
-                double d11 = d1;
-                double d12 = d2;
-                AxisAlignedBB event = this.getBoundingBox();
+                final double d10 = d0;
+                final double d11 = d1;
+                final double d12 = d2;
+                final AxisAlignedBB event = this.getBoundingBox();
                 this.a(axisalignedbb);
                 d1 = (double) this.S;
-                List event1 = this.world.getCubes(this, this.getBoundingBox().a(d6, d1, d8));
+                final List event1 = this.world.getCubes(this, this.getBoundingBox().a(d6, d1, d8));
                 AxisAlignedBB axisalignedbb4 = this.getBoundingBox();
-                AxisAlignedBB axisalignedbb5 = axisalignedbb4.a(d6, 0.0D, d8);
+                final AxisAlignedBB axisalignedbb5 = axisalignedbb4.a(d6, 0.0D, d8);
                 double d13 = d1;
 
                 AxisAlignedBB axisalignedbb6;
-                for (Iterator iterator2 = event1.iterator(); iterator2.hasNext(); d13 = axisalignedbb6.b(axisalignedbb5, d13)) {
+                for (final Iterator iterator2 = event1.iterator(); iterator2.hasNext(); d13 = axisalignedbb6.b(axisalignedbb5, d13)) {
                     axisalignedbb6 = (AxisAlignedBB) iterator2.next();
                 }
 
@@ -212,7 +213,7 @@ public final class CustomRabbit extends EntityRabbit {
                 double d14 = d6;
 
                 AxisAlignedBB axisalignedbb7;
-                for (Iterator iterator3 = event1.iterator(); iterator3.hasNext(); d14 = axisalignedbb7.a(axisalignedbb4, d14)) {
+                for (final Iterator iterator3 = event1.iterator(); iterator3.hasNext(); d14 = axisalignedbb7.a(axisalignedbb4, d14)) {
                     axisalignedbb7 = (AxisAlignedBB) iterator3.next();
                 }
 
@@ -220,7 +221,7 @@ public final class CustomRabbit extends EntityRabbit {
                 double d15 = d8;
 
                 AxisAlignedBB axisalignedbb8;
-                for (Iterator axisalignedbb9 = event1.iterator(); axisalignedbb9.hasNext(); d15 = axisalignedbb8.c(axisalignedbb4, d15)) {
+                for (final Iterator axisalignedbb9 = event1.iterator(); axisalignedbb9.hasNext(); d15 = axisalignedbb8.c(axisalignedbb4, d15)) {
                     axisalignedbb8 = (AxisAlignedBB) axisalignedbb9.next();
                 }
 
@@ -229,7 +230,7 @@ public final class CustomRabbit extends EntityRabbit {
                 double d16 = d1;
 
                 AxisAlignedBB axisalignedbb10;
-                for (Iterator iterator5 = event1.iterator(); iterator5.hasNext(); d16 = axisalignedbb10.b(var89, d16)) {
+                for (final Iterator iterator5 = event1.iterator(); iterator5.hasNext(); d16 = axisalignedbb10.b(var89, d16)) {
                     axisalignedbb10 = (AxisAlignedBB) iterator5.next();
                 }
 
@@ -237,7 +238,7 @@ public final class CustomRabbit extends EntityRabbit {
                 double d17 = d6;
 
                 AxisAlignedBB axisalignedbb11;
-                for (Iterator iterator6 = event1.iterator(); iterator6.hasNext(); d17 = axisalignedbb11.a(var89, d17)) {
+                for (final Iterator iterator6 = event1.iterator(); iterator6.hasNext(); d17 = axisalignedbb11.a(var89, d17)) {
                     axisalignedbb11 = (AxisAlignedBB) iterator6.next();
                 }
 
@@ -245,13 +246,13 @@ public final class CustomRabbit extends EntityRabbit {
                 double d18 = d8;
 
                 AxisAlignedBB axisalignedbb12;
-                for (Iterator iterator7 = event1.iterator(); iterator7.hasNext(); d18 = axisalignedbb12.c(var89, d18)) {
+                for (final Iterator iterator7 = event1.iterator(); iterator7.hasNext(); d18 = axisalignedbb12.c(var89, d18)) {
                     axisalignedbb12 = (AxisAlignedBB) iterator7.next();
                 }
 
                 var89 = var89.c(0.0D, 0.0D, d18);
-                double d19 = d14 * d14 + d15 * d15;
-                double d20 = d17 * d17 + d18 * d18;
+                final double d19 = d14 * d14 + d15 * d15;
+                final double d20 = d17 * d17 + d18 * d18;
                 if (d19 > d20) {
                     d0 = d14;
                     d2 = d15;
@@ -265,7 +266,7 @@ public final class CustomRabbit extends EntityRabbit {
                 d1 = (double) (-this.S);
 
                 AxisAlignedBB axisalignedbb13;
-                for (Iterator iterator8 = event1.iterator(); iterator8.hasNext(); d1 = axisalignedbb13.b(this.getBoundingBox(), d1)) {
+                for (final Iterator iterator8 = event1.iterator(); iterator8.hasNext(); d1 = axisalignedbb13.b(this.getBoundingBox(), d1)) {
                     axisalignedbb13 = (AxisAlignedBB) iterator8.next();
                 }
 
@@ -285,13 +286,13 @@ public final class CustomRabbit extends EntityRabbit {
             this.E = d7 != d1;
             this.onGround = this.E && d7 < 0.0D;
             this.F = this.positionChanged || this.E;
-            int i = MathHelper.floor(this.locX);
-            int j = MathHelper.floor(this.locY - 0.20000000298023224D);
-            int k = MathHelper.floor(this.locZ);
+            final int i = MathHelper.floor(this.locX);
+            final int j = MathHelper.floor(this.locY - 0.20000000298023224D);
+            final int k = MathHelper.floor(this.locZ);
             BlockPosition blockposition = new BlockPosition(i, j, k);
             net.minecraft.server.v1_8_R1.Block block = this.world.getType(blockposition).getBlock();
             if (block.getMaterial() == Material.AIR) {
-                net.minecraft.server.v1_8_R1.Block flag2 = this.world.getType(blockposition.down()).getBlock();
+                final net.minecraft.server.v1_8_R1.Block flag2 = this.world.getType(blockposition.down()).getBlock();
                 if (flag2 instanceof BlockFence || flag2 instanceof BlockCobbleWall || flag2 instanceof BlockFenceGate) {
                     block = flag2;
                     blockposition = blockposition.down();

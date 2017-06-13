@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * Created by Shynixn
  */
+@Deprecated
 public class FastBossBar implements LightBossBar {
     private int style;
     private int color;
@@ -16,13 +17,16 @@ public class FastBossBar implements LightBossBar {
     private boolean enabled;
 
     public FastBossBar(String message) {
+        super();
         this.message = message;
     }
 
     public FastBossBar() {
+        super();
     }
 
     public FastBossBar(int style, int color, int flag, String message) {
+        super();
         this.style = style;
         this.color = color;
         this.flag = flag;
@@ -106,12 +110,12 @@ public class FastBossBar implements LightBossBar {
     @Override
     public Object play(Object bossBar, String message, Player... players) {
         if (canBeUsed() && this.isEnabled()) {
-            for (Player player : players) {
+            for (final Player player : players) {
                 if (bossBar == null) {
-                    Object colorb = ReflectionLib.getClassFromName("org.bukkit.boss.BarColor").getEnumConstants()[this.color];
-                    Object styleb = ReflectionLib.getClassFromName("org.bukkit.boss.BarStyle").getEnumConstants()[this.style];
+                    final Object colorb = ReflectionLib.getClassFromName("org.bukkit.boss.BarColor").getEnumConstants()[this.color];
+                    final Object styleb = ReflectionLib.getClassFromName("org.bukkit.boss.BarStyle").getEnumConstants()[this.style];
                     if (this.flag >= 0) {
-                        Object[] objects = (Object[]) Array.newInstance(ReflectionLib.getClassFromName("org.bukkit.boss.BarFlag"), 1);
+                        final Object[] objects = (Object[]) Array.newInstance(ReflectionLib.getClassFromName("org.bukkit.boss.BarFlag"), 1);
                         objects[0] = ReflectionLib.getClassFromName("org.bukkit.boss.BarFlag").getEnumConstants()[this.flag];
                         bossBar = ReflectionLib.invokeMethodByClazz(ReflectionLib.getClassFromName("org.bukkit.Bukkit"), "createBossBar", message, colorb, styleb, objects);
                     } else {
@@ -162,7 +166,7 @@ public class FastBossBar implements LightBossBar {
 
     private static String getText(String classPath) {
         String s = "";
-        for (Object object : ReflectionLib.getClassFromName(classPath).getEnumConstants()) {
+        for (final Object object : ReflectionLib.getClassFromName(classPath).getEnumConstants()) {
             if (s.isEmpty())
                 s += ReflectionLib.invokeMethodByObject(object, "name").toString().toLowerCase();
             else
@@ -180,7 +184,11 @@ public class FastBossBar implements LightBossBar {
     }
 
     public static boolean canBeUsed() {
-        return ReflectionLib.getServerVersion().equals("v1_9_R1") || ReflectionLib.getServerVersion().equals("v1_9_R2") || ReflectionLib.getServerVersion().equals("v1_10_R1") || ReflectionLib.getServerVersion().equals("v1_11_R1");
+        return ReflectionLib.getServerVersion().equals("v1_9_R1")
+                || ReflectionLib.getServerVersion().equals("v1_9_R2")
+                || ReflectionLib.getServerVersion().equals("v1_10_R1")
+                || ReflectionLib.getServerVersion().equals("v1_11_R1")
+                || ReflectionLib.getServerVersion().equals("v1_12_R1");
     }
 
     @Override

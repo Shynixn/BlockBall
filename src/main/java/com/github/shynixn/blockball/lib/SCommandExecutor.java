@@ -19,6 +19,7 @@ public class SCommandExecutor implements CommandExecutor {
     protected static JavaPlugin plugin;
 
     public SCommandExecutor() {
+        super();
         if (plugin == null)
             throw new IllegalArgumentException("Pluginloader failed to load " + this.getClass().getSimpleName() + '.');
         plugin.getCommand(this.getCommand()).setExecutor(this);

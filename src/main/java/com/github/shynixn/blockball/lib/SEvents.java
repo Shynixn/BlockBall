@@ -10,9 +10,10 @@ public class SEvents implements Listener {
     protected static JavaPlugin plugin;
 
     public SEvents() {
+        super();
         if (plugin == null)
-            throw new IllegalArgumentException("Pluginloader failed to load " + getClass().getSimpleName() + '.');
-        register();
+            throw new IllegalArgumentException("Pluginloader failed to load " + this.getClass().getSimpleName() + '.');
+        this.register();
     }
 
     protected void register() {

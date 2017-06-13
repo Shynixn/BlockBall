@@ -39,7 +39,7 @@ public final class RegisterHelper {
             if (path != null) {
                 try {
                     Class.forName(path);
-                } catch (ClassNotFoundException e) {
+                } catch (final ClassNotFoundException e) {
                     canregister = false;
                 }
             }
@@ -64,7 +64,7 @@ public final class RegisterHelper {
             if (path != null) {
                 try {
                     Class.forName(path);
-                } catch (ClassNotFoundException e) {
+                } catch (final ClassNotFoundException e) {
                     canregister = false;
                 }
             }

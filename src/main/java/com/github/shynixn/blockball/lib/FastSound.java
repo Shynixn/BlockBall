@@ -17,6 +17,7 @@ public class FastSound implements LightSound {
     private double pitch = 1.0;
 
     public FastSound(String sound, double volume, double pitch) {
+        super();
         this.sound = sound;
         this.volume = volume;
         this.pitch = pitch;
@@ -32,6 +33,7 @@ public class FastSound implements LightSound {
     }
 
     public FastSound(Map<String, Object> items) throws Exception {
+        super();
         this.sound = (String) items.get("name");
         this.volume = (double) items.get("volume");
         this.pitch = (double) items.get("pitch");
@@ -46,6 +48,7 @@ public class FastSound implements LightSound {
     }
 
     public FastSound() {
+        super();
     }
 
     @Override
@@ -57,10 +60,10 @@ public class FastSound implements LightSound {
     public void play(Location location, Player... players) throws InterPreter19Exception {
         try {
             this.changeSound();
-            for (Player player : players) {
+            for (final Player player : players) {
                 player.playSound(location, getSoundFromName(this.sound), (float) this.volume, (float) this.pitch);
             }
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             throw new InterPreter19Exception("Cannot parse sound!");
         }
     }
@@ -69,16 +72,20 @@ public class FastSound implements LightSound {
     public void play(Player... players) throws InterPreter19Exception {
         try {
             this.changeSound();
-            for (Player player : players) {
+            for (final Player player : players) {
                 player.playSound(player.getLocation(), getSoundFromName(this.sound), (float) this.volume, (float) this.pitch);
             }
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             throw new InterPreter19Exception("Cannot parse sound!");
         }
     }
 
     private void changeSound() {
-        if (ReflectionLib.getServerVersion().equals("v1_9_R1") || ReflectionLib.getServerVersion().equals("v1_9_R2") || ReflectionLib.getServerVersion().equals("v1_10_R1") || ReflectionLib.getServerVersion().equals("v1_11_R1")) {
+        if (ReflectionLib.getServerVersion().equals("v1_9_R1")
+                || ReflectionLib.getServerVersion().equals("v1_9_R2")
+                || ReflectionLib.getServerVersion().equals("v1_10_R1")
+                || ReflectionLib.getServerVersion().equals("v1_11_R1")
+                || ReflectionLib.getServerVersion().equals("v1_12_R1")) {
             if (this.sound.equals("ZOMBIE_WOOD"))
                 this.sound = "ENTITY_ZOMBIE_ATTACK_DOOR_WOOD";
             if (this.sound.equals("GHAST_FIREBALL"))

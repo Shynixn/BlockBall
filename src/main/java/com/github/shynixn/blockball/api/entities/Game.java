@@ -7,6 +7,8 @@ import java.util.List;
 public interface Game {
     Arena getArena();
 
+    Ball getBall();
+
     boolean join(Player player, Team team);
 
     boolean isInGame(Player player);

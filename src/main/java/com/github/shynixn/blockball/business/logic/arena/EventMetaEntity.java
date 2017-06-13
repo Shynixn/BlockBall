@@ -21,6 +21,7 @@ class EventMetaEntity implements Serializable, EventMeta {
     }
 
     EventMetaEntity(Map<String, Object> items) throws Exception {
+        super();
         if (items.get("redplayers") != null) {
             this.registeredRedPlayers.addAll((Collection<? extends String>) items.get("redplayers"));
         }

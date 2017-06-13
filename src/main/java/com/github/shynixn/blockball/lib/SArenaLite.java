@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.bukkit.Location;
 
+@Deprecated
 public class SArenaLite implements Serializable {
     private static final long serialVersionUID = 1L;
 

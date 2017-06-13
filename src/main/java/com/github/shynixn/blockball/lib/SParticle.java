@@ -29,6 +29,7 @@ public class SParticle implements Serializable, LightParticle {
     private Byte data;
 
     public SParticle(Map<String, Object> items) throws Exception {
+        super();
         this.effect = SParticle.getParticleEffectFromName((String) items.get("effect"));
         this.isEnabled = (boolean) items.get("enabled");
         this.amount = (int) items.get("amount");
@@ -46,6 +47,7 @@ public class SParticle implements Serializable, LightParticle {
     }
 
     public SParticle(ParticleEffect effect, int amount, double speed, double x, double y, double z) {
+        super();
         this.effect = effect;
         this.amount = amount;
         this.x = x;
@@ -61,7 +63,7 @@ public class SParticle implements Serializable, LightParticle {
 
     @Override
     public LightParticle copy() {
-        SParticle particle = new SParticle();
+        final SParticle particle = new SParticle();
         particle.effect = this.effect;
         particle.amount = this.amount;
         particle.x = this.x;
@@ -222,6 +224,7 @@ public class SParticle implements Serializable, LightParticle {
     }
 
     public SParticle() {
+        super();
     }
 
     @Override
@@ -230,8 +233,8 @@ public class SParticle implements Serializable, LightParticle {
     }
 
     private List<Player> getAllowedPlayers(Player[] players) {
-        List<Player> players1 = new ArrayList<>();
-        for (Player player : players) {
+        final List<Player> players1 = new ArrayList<>();
+        for (final Player player : players) {
             if (Config.getInstance().isParticleVisibleForAll() || (Config.getInstance().getParticlePermission() != null && player.hasPermission(Config.getInstance().getParticlePermission())))
                 players1.add(player);
         }
@@ -301,7 +304,7 @@ public class SParticle implements Serializable, LightParticle {
     }
 
     public static ParticleEffect getParticleEffectFromName(String name) {
-        for (ParticleEffect particleEffect : ParticleEffect.values())
+        for (final ParticleEffect particleEffect : ParticleEffect.values())
             if (particleEffect.getName().equalsIgnoreCase(name))
                 return particleEffect;
         return null;
@@ -309,22 +312,22 @@ public class SParticle implements Serializable, LightParticle {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = new LinkedHashMap<>();
+        final Map<String, Object> map = new LinkedHashMap<>();
         map.put("effect", this.effect.getName().toUpperCase());
         map.put("enabled", this.isEnabled);
         map.put("amount", this.amount);
         map.put("speed", this.speed);
-        Map<String, Object> tmp3 = new LinkedHashMap<>();
+        final Map<String, Object> tmp3 = new LinkedHashMap<>();
         tmp3.put("x", this.x);
         tmp3.put("y", this.y);
         tmp3.put("z", this.z);
         map.put("size", tmp3);
-        Map<String, Object> tmp = new LinkedHashMap<>();
+        final Map<String, Object> tmp = new LinkedHashMap<>();
         tmp.put("blue", this.blue);
         tmp.put("red", this.red);
         tmp.put("green", this.green);
         map.put("color", tmp);
-        Map<String, Object> tmp2 = new LinkedHashMap<>();
+        final Map<String, Object> tmp2 = new LinkedHashMap<>();
         if (this.material != null)
             tmp2.put("material", this.material.getId());
         else

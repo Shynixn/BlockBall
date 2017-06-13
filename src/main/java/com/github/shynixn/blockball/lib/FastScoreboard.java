@@ -25,9 +25,11 @@ public class FastScoreboard implements LightScoreboard {
     private boolean enabled;
 
     public FastScoreboard() {
+        super();
     }
 
     public FastScoreboard(String redTeam, String blueTeam, String timeLeft, String title) {
+        super();
         this.redTeam = redTeam;
         this.blueTeam = blueTeam;
         this.timeLeft = timeLeft;

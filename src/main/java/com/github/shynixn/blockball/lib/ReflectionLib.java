@@ -10,12 +10,13 @@ import java.lang.reflect.Method;
 /**
  * Created by Shynixn
  */
+@Deprecated
 public final class ReflectionLib {
 
     public static String getServerVersion() {
         try {
             return Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             throw new RuntimeException("Version not found!");
         }
     }
@@ -24,7 +25,7 @@ public final class ReflectionLib {
         try {
             name = name.replace("VERSION", getServerVersion());
             return Class.forName(name);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException("Cannot find correct class.");
         }
     }
@@ -42,11 +43,11 @@ public final class ReflectionLib {
 
     public static Object invokeConstructor(Class<?> clazz, Object... params) {
         do {
-            for (Constructor constructor : clazz.getDeclaredConstructors()) {
+            for (final Constructor constructor : clazz.getDeclaredConstructors()) {
                 try {
                     constructor.setAccessible(true);
                     return constructor.newInstance(params);
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
 
                 }
             }
@@ -58,13 +59,13 @@ public final class ReflectionLib {
     public static Object invokeMethodByObject(Object object, String name, Object... params) {
         Class<?> clazz = object.getClass();
         do {
-            for (Method method : clazz.getDeclaredMethods()) {
+            for (final Method method : clazz.getDeclaredMethods()) {
                 try {
                     if (method.getName().equalsIgnoreCase(name)) {
                         method.setAccessible(true);
                         return method.invoke(object, params);
                     }
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
 
                 }
             }
@@ -77,13 +78,13 @@ public final class ReflectionLib {
     public static Object invokeMethod(Object object, String name, Object... params) {
         Class<?> clazz = object.getClass();
         do {
-            for (Method method : clazz.getDeclaredMethods()) {
+            for (final Method method : clazz.getDeclaredMethods()) {
                 try {
                     if (method.getName().equalsIgnoreCase(name)) {
                         method.setAccessible(true);
                         return method.invoke(object, params);
                     }
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
 
                 }
             }
@@ -95,12 +96,12 @@ public final class ReflectionLib {
     public static void setValueOfField(String fieldName, Object instance, Object object) {
         Class<?> clazz = object.getClass();
         while (clazz != null) {
-            for (Field field : clazz.getDeclaredFields()) {
+            for (final Field field : clazz.getDeclaredFields()) {
                 if (field.getName().equals(fieldName)) {
                     field.setAccessible(true);
                     try {
                         field.set(instance, object);
-                    } catch (IllegalAccessException e) {
+                    } catch (final IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
@@ -113,12 +114,12 @@ public final class ReflectionLib {
     public static Object getValueFromField(String fieldName, Object object) {
         Class<?> clazz = object.getClass();
         while (clazz != null) {
-            for (Field field : clazz.getDeclaredFields()) {
+            for (final Field field : clazz.getDeclaredFields()) {
                 if (field.getName().equals(fieldName)) {
                     field.setAccessible(true);
                     try {
                         return field.get(object);
-                    } catch (IllegalAccessException e) {
+                    } catch (final IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
@@ -131,12 +132,12 @@ public final class ReflectionLib {
     public static Object getValueFromFieldByObject(String fieldName, Object object) {
         Class<?> clazz = object.getClass();
         while (clazz != null) {
-            for (Field field : clazz.getDeclaredFields()) {
+            for (final Field field : clazz.getDeclaredFields()) {
                 if (field.getName().equals(fieldName)) {
                     field.setAccessible(true);
                     try {
                         return field.get(object);
-                    } catch (IllegalAccessException e) {
+                    } catch (final IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
@@ -149,12 +150,12 @@ public final class ReflectionLib {
     public static Object getValueFromFieldByClazz(String fieldName, Class<?> object) {
         Class<?> clazz = object;
         while (clazz != null) {
-            for (Field field : clazz.getDeclaredFields()) {
+            for (final Field field : clazz.getDeclaredFields()) {
                 if (field.getName().equals(fieldName)) {
                     field.setAccessible(true);
                     try {
                         return field.get(null);
-                    } catch (IllegalAccessException e) {
+                    } catch (final IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
@@ -167,12 +168,12 @@ public final class ReflectionLib {
     public static Object getValueFromField(String fieldName, Class<?> object) {
         Class<?> clazz = object;
         while (clazz != null) {
-            for (Field field : clazz.getDeclaredFields()) {
+            for (final Field field : clazz.getDeclaredFields()) {
                 if (field.getName().equals(fieldName)) {
                     field.setAccessible(true);
                     try {
                         return field.get(null);
-                    } catch (IllegalAccessException e) {
+                    } catch (final IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
@@ -184,13 +185,13 @@ public final class ReflectionLib {
 
     public static Object invokeMethodByClazz(Class<?> clazz, String name, Object... params) {
         do {
-            for (Method method : clazz.getDeclaredMethods()) {
+            for (final Method method : clazz.getDeclaredMethods()) {
                 try {
                     if (method.getName().equalsIgnoreCase(name)) {
                         method.setAccessible(true);
                         return method.invoke(null, params);
                     }
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
 
                 }
             }
@@ -201,13 +202,13 @@ public final class ReflectionLib {
 
     public static Object invokeMethod(Class<?> clazz, String name, Object... params) {
         do {
-            for (Method method : clazz.getDeclaredMethods()) {
+            for (final Method method : clazz.getDeclaredMethods()) {
                 try {
                     if (method.getName().equalsIgnoreCase(name)) {
                         method.setAccessible(true);
                         return method.invoke(null, params);
                     }
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
 
                 }
             }
@@ -217,12 +218,12 @@ public final class ReflectionLib {
     }
 
     public static Method getMethodFromName(String name, Class<?> clazz) {
-        for (Method method : clazz.getDeclaredMethods()) {
+        for (final Method method : clazz.getDeclaredMethods()) {
             try {
                 if (method.getName().equalsIgnoreCase(name)) {
                     return method;
                 }
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
 
             }
         }
@@ -234,7 +235,7 @@ public final class ReflectionLib {
         try {
             classPath = classPath.replace("VERSION", getServerVersion());
             return Class.forName(classPath);
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             e.printStackTrace();
         }
         throw new RuntimeException("Cannot find correct class.");
@@ -242,7 +243,7 @@ public final class ReflectionLib {
 
     public static <T extends Annotation> T getAnnotation(Class<T> annotation, Class<?> clazz) {
         while (clazz != null) {
-            for (Annotation annot : clazz.getDeclaredAnnotations()) {
+            for (final Annotation annot : clazz.getDeclaredAnnotations()) {
                 if (annot.annotationType().getName().equalsIgnoreCase(annotation.getName())) {
                     return (T) annot;
                 }

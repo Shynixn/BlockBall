@@ -24,6 +24,7 @@ class BungeeCordProvider implements PluginMessageListener {
     private final CallBack callBack;
 
     BungeeCordProvider(BungeeCordController controller, JavaPlugin plugin, CallBack callBack) {
+        super();
         this.controller = controller;
         this.plugin = plugin;
         this.callBack = callBack;
@@ -36,7 +37,7 @@ class BungeeCordProvider implements PluginMessageListener {
         if (player == null)
             return;
         for (final String s : this.controller.getServers()) {
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            final ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("ServerIP");
             out.writeUTF(s);
             player.sendPluginMessage(this.plugin, "BungeeCord", out.toByteArray());
@@ -44,7 +45,7 @@ class BungeeCordProvider implements PluginMessageListener {
     }
 
     void connectToServer(Player player, String serverName) {
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        final ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
         out.writeUTF(serverName);
         player.sendPluginMessage(this.plugin, "BungeeCord", out.toByteArray());
@@ -61,12 +62,9 @@ class BungeeCordProvider implements PluginMessageListener {
             final String serverName = in.readUTF();
             final String ip = in.readUTF();
             final short port = in.readShort();
-            this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
-                @Override
-                public void run() {
-                    final String data = BungeeCordProvider.this.receiveResultFromServer(serverName, ip, port);
-                    BungeeCordProvider.this.parseData(serverName, data);
-                }
+            this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+                final String data = BungeeCordProvider.this.receiveResultFromServer(serverName, ip, port);
+                BungeeCordProvider.this.parseData(serverName, data);
             });
         }
     }
@@ -76,12 +74,7 @@ class BungeeCordProvider implements PluginMessageListener {
             if (data == null)
                 return;
             final ServerInfo serverInfo = new ServerInfo.Container(serverName, data);
-            this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable() {
-                @Override
-                public void run() {
-                    BungeeCordProvider.this.callBack.run(serverInfo);
-                }
-            });
+            this.plugin.getServer().getScheduler().runTask(this.plugin, () -> BungeeCordProvider.this.callBack.run(serverInfo));
         } catch (final Exception e) {
             Bukkit.getLogger().log(Level.WARNING, "Cannot parse result from server.", e);
         }
