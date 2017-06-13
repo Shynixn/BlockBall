@@ -12,7 +12,7 @@ Spigot plugin to simulate a football/soccer game in minecraft.
 
 * Simulates a working football/soccer game in minecraft with a real looking ball
 * 4 different gamemodes
-* Version support 1.8.R1 - 1.11.R1
+* Version support 1.8.R1 - 1.12.R1
 * Check out the [BlockBall-Spigot-Page](https://www.spigotmc.org/resources/blockball-minigame-bungeecord-soccer-football-1-8-1-9-1-10-1-11.15320/) to get more information. 
 
 ## Installation
@@ -20,7 +20,7 @@ Spigot plugin to simulate a football/soccer game in minecraft.
 * [Download the plugin BlockBall](https://github.com/Shynixn/BlockBall/releases)
 * Put the plugin into your plugin folder
 * Install the plugin Worldedit
-* Start the server (1.8.0 - 1.11.2, Java 7/Java 8)
+* Start the server (1.8.0 - 1.12.0, Java 8)
 * Join and play :)
 
 ## API
