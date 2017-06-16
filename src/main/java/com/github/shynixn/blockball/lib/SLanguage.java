@@ -6,20 +6,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SLanguage {
-    @SPluginLoader.PluginLoader
-    private static JavaPlugin plugin;
 
     public static void reload(Class<?> cls) {
+        Plugin plugin = JavaPlugin.getPlugin(BlockBallPlugin.class);
         if (plugin == null)
             throw new IllegalArgumentException("Pluginloader failed to load " + SLanguage.class.getSimpleName() + '.');
         final File file = new File(plugin.getDataFolder(), "lang.yml");
         if (!file.exists())
-            buildFile(cls, plugin, file);
+            buildFile(cls, file);
         loadFile(cls, file);
     }
 
@@ -61,7 +62,7 @@ public class SLanguage {
         }
     }
 
-    private static void buildFile(Class<?> cls, JavaPlugin plugin, File file) {
+    private static void buildFile(Class<?> cls, File file) {
         try {
             file.createNewFile();
             final ArrayList<String> s = new ArrayList<>();

@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.business.logic.arena;
 
 import com.github.shynixn.blockball.api.entities.Arena;
 import com.github.shynixn.blockball.business.Config;
+import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.logic.game.GameController;
 import com.github.shynixn.blockball.lib.*;
 import com.github.shynixn.blockball.api.events.GoalShootEvent;
@@ -19,8 +20,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.*;
 
 public final class ArenaController {
-    @SPluginLoader.PluginLoader
-    private static JavaPlugin plugin;
+    private final JavaPlugin plugin;
     private static final String[] A = new String[0];
     private static final int MAX_AMOUNT_ARENA = 10000000;
     private final ArenaFileManager fileManager;
@@ -30,7 +30,8 @@ public final class ArenaController {
 
     private ArenaController(GameController manager) {
         super();
-        this.fileManager = new ArenaFileManager(plugin);
+        this.plugin = JavaPlugin.getPlugin(BlockBallPlugin.class);
+        this.fileManager = new ArenaFileManager(this.plugin);
         this.manager = manager;
         new ArenaCommandExecutor(this);
         new BlockBallCommandExecutor();
@@ -105,33 +106,27 @@ public final class ArenaController {
         return new ArenaController(manager);
     }
 
-    private class ArenaShortListener extends SEvents {
+    private class ArenaShortListener extends SimpleListener {
         private final Map<Player, Integer> players = new HashMap<>();
         private Map<String, Integer> topTenNumbers = new HashMap<>();
         private final Scoreboard scoreboard;
         private final Objective objective;
 
         ArenaShortListener() {
-            super();
+            super(JavaPlugin.getPlugin(BlockBallPlugin.class));
             this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
             this.objective = this.scoreboard.registerNewObjective("blockballstats", "dummy");
             this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             this.objective.setDisplayName(Config.getInstance().getScoreboardTitle());
-            AsyncRunnable.toAsynchroneThread(new AsyncRunnable() {
-                @Override
-                public void run() {
-                    ArenaShortListener.this.topTenNumbers = ArenaController.this.getFileManager().getTopTenPlayers();
-                    AsyncRunnable.toSynchroneThread(new AsyncRunnable() {
-                        @Override
-                        public void run() {
-                            ArenaShortListener.this.refreshScoreboard();
-                            for (final Player player1 : SFileUtils.getOnlinePlayers()) {
-                                if (!player1.getScoreboard().equals(ArenaShortListener.this.scoreboard))
-                                    player1.setScoreboard(ArenaShortListener.this.scoreboard);
-                            }
-                        }
-                    });
-                }
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                ArenaShortListener.this.topTenNumbers = ArenaController.this.getFileManager().getTopTenPlayers();
+                plugin.getServer().getScheduler().runTask(plugin, () -> {
+                    ArenaShortListener.this.refreshScoreboard();
+                    for (final Player player1 : SFileUtils.getOnlinePlayers()) {
+                        if (!player1.getScoreboard().equals(ArenaShortListener.this.scoreboard))
+                            player1.setScoreboard(ArenaShortListener.this.scoreboard);
+                    }
+                });
             });
         }
 
@@ -184,36 +179,30 @@ public final class ArenaController {
                 if (!player1.getScoreboard().equals(this.scoreboard))
                     player1.setScoreboard(this.scoreboard);
             }
-            AsyncRunnable.toAsynchroneThread(new AsyncRunnable() {
-                @Override
-                public void run() {
-                    synchronized (ArenaShortListener.this.players) {
-                        if (!ArenaShortListener.this.players.containsKey(player)) {
-                            ArenaShortListener.this.players.put(player, ArenaController.this.getFileManager().getNumber(player));
-                        }
-                        ArenaShortListener.this.players.put(player, ArenaShortListener.this.players.get(player) + 1);
-                        final int number = ArenaShortListener.this.players.get(player);
-                        synchronized (ArenaController.this.getFileManager()) {
-                            ArenaController.this.getFileManager().save(player, number);
-                        }
-                        AsyncRunnable.toSynchroneThread(new AsyncRunnable() {
-                            @Override
-                            public void run() {
-                                if (ArenaShortListener.this.topTenNumbers.size() < 10) {
-                                    ArenaShortListener.this.topTenNumbers.put(player.getName(), number);
-                                } else if (!ArenaShortListener.this.topTenNumbers.containsKey(player.getName())) {
-                                    for (final String name : ArenaShortListener.this.topTenNumbers.keySet().toArray(A)) {
-                                        if (ArenaShortListener.this.topTenNumbers.get(name) < number) {
-                                            ArenaShortListener.this.topTenNumbers.remove(name);
-                                            ArenaShortListener.this.topTenNumbers.put(player.getName(), number);
-                                            break;
-                                        }
-                                    }
-                                }
-                                ArenaShortListener.this.refreshScoreboard();
-                            }
-                        });
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                synchronized (ArenaShortListener.this.players) {
+                    if (!ArenaShortListener.this.players.containsKey(player)) {
+                        ArenaShortListener.this.players.put(player, ArenaController.this.getFileManager().getNumber(player));
                     }
+                    ArenaShortListener.this.players.put(player, ArenaShortListener.this.players.get(player) + 1);
+                    final int number = ArenaShortListener.this.players.get(player);
+                    synchronized (ArenaController.this.getFileManager()) {
+                        ArenaController.this.getFileManager().save(player, number);
+                    }
+                    plugin.getServer().getScheduler().runTask(plugin, () -> {
+                        if (ArenaShortListener.this.topTenNumbers.size() < 10) {
+                            ArenaShortListener.this.topTenNumbers.put(player.getName(), number);
+                        } else if (!ArenaShortListener.this.topTenNumbers.containsKey(player.getName())) {
+                            for (final String name : ArenaShortListener.this.topTenNumbers.keySet().toArray(A)) {
+                                if (ArenaShortListener.this.topTenNumbers.get(name) < number) {
+                                    ArenaShortListener.this.topTenNumbers.remove(name);
+                                    ArenaShortListener.this.topTenNumbers.put(player.getName(), number);
+                                    break;
+                                }
+                            }
+                        }
+                        ArenaShortListener.this.refreshScoreboard();
+                    });
                 }
             });
         }

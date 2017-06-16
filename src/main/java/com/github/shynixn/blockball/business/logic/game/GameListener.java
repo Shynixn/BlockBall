@@ -28,6 +28,7 @@ import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("deprecation")
-class GameListener extends SEvents {
+class GameListener extends SimpleListener {
     private final Map<Player, SLocation> lastLocation = new HashMap<>();
     private final Map<Player, Game> connectedGames = new HashMap<>();
     private final List<Player> toggledPlayers = new ArrayList<>();
@@ -46,7 +47,7 @@ class GameListener extends SEvents {
     private final GameController controller;
 
     GameListener(final GameController controller) {
-        super();
+        super(JavaPlugin.getPlugin(BlockBallPlugin.class));
         this.controller = controller;
         if (Config.getInstance().getForcefieldHelperCommand().isEnabled()) {
             new DynamicCommandHelper(Config.getInstance().getForcefieldHelperCommand()) {

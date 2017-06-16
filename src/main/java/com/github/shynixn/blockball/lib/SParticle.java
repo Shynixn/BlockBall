@@ -5,10 +5,12 @@ import java.util.*;
 import java.util.logging.Level;
 
 import com.github.shynixn.blockball.business.Config;
+import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class SParticle implements Serializable, LightParticle {
     private static final long serialVersionUID = 1L;
@@ -243,24 +245,21 @@ public class SParticle implements Serializable, LightParticle {
 
     @Override
     public void play(final Location location, final Player... players) {
-        AsyncRunnable.toAsynchroneThread(new AsyncRunnable() {
-            @Override
-            public void run() {
-                if (SParticle.this.isEnabled()) {
-                    try {
-                        if (SParticle.this.effect == ParticleEffect.SPELL_MOB || SParticle.this.effect == ParticleEffect.SPELL_MOB_AMBIENT || SParticle.this.effect == ParticleEffect.REDSTONE)
-                            SParticle.this.effect.display(new ParticleEffect.OrdinaryColor(SParticle.this.red, SParticle.this.green, SParticle.this.blue), location, SParticle.this.getAllowedPlayers(players));
-                        else if (SParticle.this.effect == ParticleEffect.NOTE)
-                            SParticle.this.effect.display(new ParticleEffect.NoteColor(SParticle.this.red), location, SParticle.this.getAllowedPlayers(players));
-                        else if (SParticle.this.effect == ParticleEffect.BLOCK_CRACK || SParticle.this.effect == ParticleEffect.BLOCK_DUST)
-                            SParticle.this.effect.display(new ParticleEffect.BlockData(SParticle.this.material, SParticle.this.data), (float) SParticle.this.x, (float) SParticle.this.y, (float) SParticle.this.z, (float) SParticle.this.speed, SParticle.this.amount, location, SParticle.this.getAllowedPlayers(players));
-                        else if (SParticle.this.effect == ParticleEffect.ITEM_CRACK)
-                            SParticle.this.effect.display(new ParticleEffect.ItemData(SParticle.this.material, SParticle.this.data), (float) SParticle.this.x, (float) SParticle.this.y, (float) SParticle.this.z, (float) SParticle.this.speed, SParticle.this.amount, location, SParticle.this.getAllowedPlayers(players));
-                        else
-                            SParticle.this.effect.display((float) SParticle.this.x, (float) SParticle.this.y, (float) SParticle.this.z, (float) SParticle.this.speed, SParticle.this.amount, location, SParticle.this.getAllowedPlayers(players));
-                    } catch (final Exception e) {
-                        Bukkit.getLogger().log(Level.WARNING, "Cannot execute particle effect. Configuration contains an error!", e);
-                    }
+        JavaPlugin.getPlugin(BlockBallPlugin.class).getServer().getScheduler().runTaskAsynchronously(JavaPlugin.getPlugin(BlockBallPlugin.class), () -> {
+            if (SParticle.this.isEnabled()) {
+                try {
+                    if (SParticle.this.effect == ParticleEffect.SPELL_MOB || SParticle.this.effect == ParticleEffect.SPELL_MOB_AMBIENT || SParticle.this.effect == ParticleEffect.REDSTONE)
+                        SParticle.this.effect.display(new ParticleEffect.OrdinaryColor(SParticle.this.red, SParticle.this.green, SParticle.this.blue), location, SParticle.this.getAllowedPlayers(players));
+                    else if (SParticle.this.effect == ParticleEffect.NOTE)
+                        SParticle.this.effect.display(new ParticleEffect.NoteColor(SParticle.this.red), location, SParticle.this.getAllowedPlayers(players));
+                    else if (SParticle.this.effect == ParticleEffect.BLOCK_CRACK || SParticle.this.effect == ParticleEffect.BLOCK_DUST)
+                        SParticle.this.effect.display(new ParticleEffect.BlockData(SParticle.this.material, SParticle.this.data), (float) SParticle.this.x, (float) SParticle.this.y, (float) SParticle.this.z, (float) SParticle.this.speed, SParticle.this.amount, location, SParticle.this.getAllowedPlayers(players));
+                    else if (SParticle.this.effect == ParticleEffect.ITEM_CRACK)
+                        SParticle.this.effect.display(new ParticleEffect.ItemData(SParticle.this.material, SParticle.this.data), (float) SParticle.this.x, (float) SParticle.this.y, (float) SParticle.this.z, (float) SParticle.this.speed, SParticle.this.amount, location, SParticle.this.getAllowedPlayers(players));
+                    else
+                        SParticle.this.effect.display((float) SParticle.this.x, (float) SParticle.this.y, (float) SParticle.this.z, (float) SParticle.this.speed, SParticle.this.amount, location, SParticle.this.getAllowedPlayers(players));
+                } catch (final Exception e) {
+                    Bukkit.getLogger().log(Level.WARNING, "Cannot execute particle effect. Configuration contains an error!", e);
                 }
             }
         });

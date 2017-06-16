@@ -4,14 +4,13 @@ import com.github.shynixn.blockball.api.entities.*;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.lib.SConsoleUtils;
 import com.github.shynixn.blockball.lib.SLocation;
-import com.github.shynixn.blockball.lib.SPluginLoader.PluginLoader;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
@@ -22,10 +21,9 @@ import java.util.Map;
 import java.util.logging.Level;
 
 public final class Config {
-    @PluginLoader
-    private static JavaPlugin plugin;
     private static Config instance;
     private FileConfiguration c;
+    private Plugin plugin;
 
     private boolean asyncChat = true;
     private boolean highpriority = true;
@@ -58,7 +56,7 @@ public final class Config {
 
     public static Config getInstance() {
         if (instance == null)
-            instance = new Config(plugin);
+            instance = new Config();
         return instance;
     }
 
@@ -182,8 +180,9 @@ public final class Config {
         return this.asyncChat;
     }
 
-    private Config(JavaPlugin plugin) {
+    private Config() {
         super();
+        this.plugin = JavaPlugin.getPlugin(BlockBallPlugin.class);
         this.reload();
     }
 

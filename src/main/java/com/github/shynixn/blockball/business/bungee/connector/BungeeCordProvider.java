@@ -80,6 +80,7 @@ class BungeeCordProvider implements PluginMessageListener {
         }
     }
 
+    @FunctionalInterface
     interface CallBack {
         void run(ServerInfo serverInfo);
     }

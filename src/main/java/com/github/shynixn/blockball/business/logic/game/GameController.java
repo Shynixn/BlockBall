@@ -2,6 +2,8 @@ package com.github.shynixn.blockball.business.logic.game;
 
 import com.github.shynixn.blockball.api.entities.GameType;
 import com.github.shynixn.blockball.business.Config;
+import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
+import com.github.shynixn.blockball.lib.SimpleListener;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -9,14 +11,14 @@ import com.github.shynixn.blockball.api.entities.Arena;
 import com.github.shynixn.blockball.api.entities.Ball;
 import com.github.shynixn.blockball.api.entities.Game;
 import com.github.shynixn.blockball.business.logic.arena.ArenaController;
-import com.github.shynixn.blockball.lib.SEvents;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public final class GameController extends SEvents {
+public final class GameController extends SimpleListener {
     ArenaController arenaManager;
     GameEntity[] games;
 
     public GameController() {
-        super();
+        super(JavaPlugin.getPlugin(BlockBallPlugin.class));
         this.arenaManager = ArenaController.createArenaController(this);
         new EventCommandExecutor(this);
         if (Config.getInstance().getGlobalJoinCommand().isEnabled())
@@ -32,7 +34,7 @@ public final class GameController extends SEvents {
     }
 
     private void run() {
-        plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
+        this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, () -> {
             if (GameController.this.games != null) {
                 for (final GameEntity game : GameController.this.games) {
                     if (game == null)

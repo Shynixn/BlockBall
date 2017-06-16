@@ -327,6 +327,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
         storage.exp = player.getExp();
         storage.health = player.getHealth();
         storage.foodLevel = player.getFoodLevel();
+        storage.scoreboard = player.getScoreboard();
         this.temporaryStorage.put(player, storage);
     }
 

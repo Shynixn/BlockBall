@@ -222,6 +222,7 @@ class EventGameEntity extends GameEntity {
         storage.gameMode = player.getGameMode();
         storage.level = player.getLevel();
         storage.exp = player.getExp();
+        storage.scoreboard = player.getScoreboard();
         this.temporaryStorage.put(player, storage);
     }
 }

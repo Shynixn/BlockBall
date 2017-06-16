@@ -12,6 +12,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+
 /**
  * @author Shynixn
  */
@@ -35,7 +38,6 @@ public final class BlockBallPlugin extends JavaPlugin {
         if (this.enabled) {
             BlockBallApi.closeGames();
             NMSRegistry.unregisterAll();
-            SPluginLoader.unload(this, BlockBallApi.class);
         }
     }
 
@@ -56,7 +58,11 @@ public final class BlockBallPlugin extends JavaPlugin {
                 this.enabled = false;
                 SConsoleUtils.sendColoredMessage("Enabled BlockBallBungeeConnector " + this.getDescription().getVersion() + " by Shynixn", ChatColor.GREEN, PREFIX_CONSOLE);
             } else {
-                SPluginLoader.load(BlockBallPlugin.this, SLanguage.class, AsyncRunnable.class, SCommandExecutor.class, SEvents.class, ArenaController.class, Config.class, GameEntity.class, BlockBallApi.class);
+                try {
+                    ReflectionUtils.invokeMethodByClass(BlockBallApi.class, "initialize", new Class[0], new Object[0]);
+                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                    Bukkit.getLogger().log(Level.WARNING, "Failed to init BlockBall.", e);
+                }
                 Config.getInstance().reload();
                 NMSRegistry.registerAll();
                 SLanguage.reload(Language.class);

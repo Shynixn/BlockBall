@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.lib;
 import java.util.HashMap;
 
 import com.github.shynixn.blockball.business.Config;
+import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,11 +13,17 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 @SuppressWarnings("deprecation")
-public final class SChatMenuManager extends SEvents {
+public final class SChatMenuManager extends SimpleListener {
     private static SChatMenuManager instance;
-    protected HashMap<Player, SChatpage> pages = new HashMap<>();
+    private final HashMap<Player, SChatpage> pages = new HashMap<>();
+
+    public SChatMenuManager() {
+        super(JavaPlugin.getPlugin(BlockBallPlugin.class));
+    }
 
     public static SChatMenuManager getInstance() {
         if (instance == null)

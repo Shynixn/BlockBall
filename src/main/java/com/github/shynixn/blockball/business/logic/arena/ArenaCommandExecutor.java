@@ -19,8 +19,8 @@ import org.bukkit.entity.Player;
 @SuppressWarnings("deprecation")
 @SCommandExecutor.Command(command = "blockball")
 class ArenaCommandExecutor extends SCommandExecutor {
-    private static final String HEADER_STANDARD = SBoldChatColor.WHITE + "" + ChatColor.UNDERLINE + "                         Balls                      ";
-    private static final String FOOTER_STANDARD = SBoldChatColor.WHITE + "" + ChatColor.UNDERLINE + "                           ┌1/1┐                            ";
+    private static final String HEADER_STANDARD = ChatColor.WHITE + "" +  ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Balls                      ";
+    private static final String FOOTER_STANDARD = ChatColor.WHITE + "" +  ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           ┌1/1┐                            ";
 
     private static final String MENU_BACK = "b - Go back";
     private static final String MENU_EXIT = "e - Close chat menu";

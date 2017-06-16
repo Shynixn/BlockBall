@@ -66,7 +66,7 @@ public class FastScoreboard implements LightScoreboard {
                     player.setScoreboard(this.scoreboard);
                 }
             }
-            if (timeleft != null)
+            if (timeleft != null && timeleft >= 0)
                 this.objective.getScore(this.timeLeft).setScore(timeleft);
             if (redgoals != null)
                 this.objective.getScore(this.redTeam).setScore(redgoals);

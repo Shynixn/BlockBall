@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.lib;
 
-import com.github.shynixn.blockball.lib.ReflectionUtils.PackageType;
+import com.github.shynixn.blockball.lib.ParticleReflectionUtils.PackageType;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 //Darkblade12
+@Deprecated
 public enum ParticleEffect {
 
     EXPLOSION_NORMAL("explode", 0, -1, ParticleProperty.DIRECTIONAL),
@@ -652,10 +653,10 @@ public enum ParticleEffect {
                     enumParticle = PackageType.MINECRAFT_SERVER.getClass("EnumParticle");
                 }
                 final Class<?> packetClass = PackageType.MINECRAFT_SERVER.getClass(version < 7 ? "Packet63WorldParticles" : "PacketPlayOutWorldParticles");
-                packetConstructor = ReflectionUtils.getConstructor(packetClass);
-                getHandle = ReflectionUtils.getMethod("CraftPlayer", PackageType.CRAFTBUKKIT_ENTITY, "getHandle");
-                playerConnection = ReflectionUtils.getField("EntityPlayer", PackageType.MINECRAFT_SERVER, false, "playerConnection");
-                sendPacket = ReflectionUtils.getMethod(playerConnection.getType(), "sendPacket", PackageType.MINECRAFT_SERVER.getClass("Packet"));
+                packetConstructor = ParticleReflectionUtils.getConstructor(packetClass);
+                getHandle = ParticleReflectionUtils.getMethod("CraftPlayer", PackageType.CRAFTBUKKIT_ENTITY, "getHandle");
+                playerConnection = ParticleReflectionUtils.getField("EntityPlayer", PackageType.MINECRAFT_SERVER, false, "playerConnection");
+                sendPacket = ParticleReflectionUtils.getMethod(playerConnection.getType(), "sendPacket", PackageType.MINECRAFT_SERVER.getClass("Packet"));
             } catch (final Exception exception) {
                 throw new VersionIncompatibleException("Your current bukkit version seems to be incompatible with this library", exception);
             }
@@ -687,23 +688,23 @@ public enum ParticleEffect {
                     if (this.data != null) {
                         name += this.data.getPacketDataString();
                     }
-                    ReflectionUtils.setValue(this.packet, true, "a", name);
+                    ParticleReflectionUtils.setValue(this.packet, true, "a", name);
                 } else {
-                    ReflectionUtils.setValue(this.packet, true, "a", enumParticle.getEnumConstants()[this.effect.getId()]);
-                    ReflectionUtils.setValue(this.packet, true, "j", this.longDistance);
+                    ParticleReflectionUtils.setValue(this.packet, true, "a", enumParticle.getEnumConstants()[this.effect.getId()]);
+                    ParticleReflectionUtils.setValue(this.packet, true, "j", this.longDistance);
                     if (this.data != null) {
                         final int[] packetData = this.data.getPacketData();
-                        ReflectionUtils.setValue(this.packet, true, "k", this.effect == ParticleEffect.ITEM_CRACK ? packetData : new int[]{packetData[0] | (packetData[1] << 12)});
+                        ParticleReflectionUtils.setValue(this.packet, true, "k", this.effect == ParticleEffect.ITEM_CRACK ? packetData : new int[]{packetData[0] | (packetData[1] << 12)});
                     }
                 }
-                ReflectionUtils.setValue(this.packet, true, "b", (float) center.getX());
-                ReflectionUtils.setValue(this.packet, true, "c", (float) center.getY());
-                ReflectionUtils.setValue(this.packet, true, "d", (float) center.getZ());
-                ReflectionUtils.setValue(this.packet, true, "e", this.offsetX);
-                ReflectionUtils.setValue(this.packet, true, "f", this.offsetY);
-                ReflectionUtils.setValue(this.packet, true, "g", this.offsetZ);
-                ReflectionUtils.setValue(this.packet, true, "h", this.speed);
-                ReflectionUtils.setValue(this.packet, true, "i", this.amount);
+                ParticleReflectionUtils.setValue(this.packet, true, "b", (float) center.getX());
+                ParticleReflectionUtils.setValue(this.packet, true, "c", (float) center.getY());
+                ParticleReflectionUtils.setValue(this.packet, true, "d", (float) center.getZ());
+                ParticleReflectionUtils.setValue(this.packet, true, "e", this.offsetX);
+                ParticleReflectionUtils.setValue(this.packet, true, "f", this.offsetY);
+                ParticleReflectionUtils.setValue(this.packet, true, "g", this.offsetZ);
+                ParticleReflectionUtils.setValue(this.packet, true, "h", this.speed);
+                ParticleReflectionUtils.setValue(this.packet, true, "i", this.amount);
             } catch (final Exception exception) {
                 throw new PacketInstantiationException("Packet instantiation failed", exception);
             }

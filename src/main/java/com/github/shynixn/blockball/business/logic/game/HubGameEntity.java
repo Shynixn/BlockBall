@@ -114,6 +114,7 @@ class HubGameEntity extends GameEntity {
         final TemporaryPlayerStorage storage = new TemporaryPlayerStorage();
         storage.armorContent = player.getInventory().getArmorContents().clone();
         storage.isFlying = player.getAllowFlight();
+        storage.scoreboard = player.getScoreboard();
         this.temporaryStorage.put(player, storage);
     }
 

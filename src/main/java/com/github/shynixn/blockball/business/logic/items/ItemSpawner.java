@@ -1,20 +1,19 @@
 package com.github.shynixn.blockball.business.logic.items;
 
-import com.github.shynixn.blockball.api.entities.items.BoostItemHandler;
-import com.github.shynixn.blockball.api.entities.items.Spawnrate;
 import com.github.shynixn.blockball.api.entities.Arena;
 import com.github.shynixn.blockball.api.entities.Game;
 import com.github.shynixn.blockball.api.entities.items.BoostItem;
-import com.github.shynixn.blockball.lib.AsyncRunnable;
+import com.github.shynixn.blockball.api.entities.items.BoostItemHandler;
+import com.github.shynixn.blockball.api.entities.items.Spawnrate;
+import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Item;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
-/**
- * Created by Shynixn
- */
 public class ItemSpawner implements BoostItemHandler {
     private static final long serialVersionUID = 1L;
     private transient Random random;
@@ -23,6 +22,7 @@ public class ItemSpawner implements BoostItemHandler {
 
     private Spawnrate rate = Spawnrate.NONE;
     private final List<BoostItem> items = new ArrayList<>();
+    private final Plugin plugin = JavaPlugin.getPlugin(BlockBallPlugin.class);
 
     public ItemSpawner() {
         super();
@@ -108,25 +108,17 @@ public class ItemSpawner implements BoostItemHandler {
 
     private void spawnRandomItem(final Arena arena) {
         final BoostItem[] boostItems = this.items.toArray(new BoostItem[this.items.size()]);
-        AsyncRunnable.toAsynchroneThread(new AsyncRunnable() {
-            @Override
-            public void run() {
-                final List<BoostItem> tmp = new ArrayList<>();
-                for (final BoostItem item : boostItems) {
-                    for (int i = 0; i < item.getSpawnrate().getSpawnChance(); i++) {
-                        tmp.add(item);
-                    }
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            final List<BoostItem> tmp = new ArrayList<>();
+            for (final BoostItem item : boostItems) {
+                for (int i = 0; i < item.getSpawnrate().getSpawnChance(); i++) {
+                    tmp.add(item);
                 }
-                Collections.shuffle(tmp);
-                if (!tmp.isEmpty()) {
-                    final BoostItem item = tmp.get(0);
-                    AsyncRunnable.toSynchroneThread(new AsyncRunnable() {
-                        @Override
-                        public void run() {
-                            ItemSpawner.this.spawnItem(arena, item);
-                        }
-                    });
-                }
+            }
+            Collections.shuffle(tmp);
+            if (!tmp.isEmpty()) {
+                final BoostItem item = tmp.get(0);
+                ItemSpawner.this.plugin.getServer().getScheduler().runTask(ItemSpawner.this.plugin, () -> ItemSpawner.this.spawnItem(arena, item));
             }
         });
     }
