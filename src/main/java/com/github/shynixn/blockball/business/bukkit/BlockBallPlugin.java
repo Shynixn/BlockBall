@@ -12,6 +12,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+
 /**
  * @author Shynixn
  */
@@ -24,12 +27,7 @@ public final class BlockBallPlugin extends JavaPlugin {
     public void onEnable() {
         this.saveDefaultConfig();
         if (this.getConfig().getBoolean("plugin-start-delay.enabled")) {
-            this.getServer().getScheduler().runTaskLater(this, new Runnable() {
-                @Override
-                public void run() {
-                    BlockBallPlugin.this.reload();
-                }
-            }, TICK_TIME * this.getConfig().getInt("plugin-start-delay.time-seconds"));
+            this.getServer().getScheduler().runTaskLater(this, BlockBallPlugin.this::reload, TICK_TIME * this.getConfig().getInt("plugin-start-delay.time-seconds"));
         } else {
             this.reload();
         }
@@ -40,7 +38,6 @@ public final class BlockBallPlugin extends JavaPlugin {
         if (this.enabled) {
             BlockBallApi.closeGames();
             NMSRegistry.unregisterAll();
-            SPluginLoader.unload(this, BlockBallApi.class);
         }
     }
 
@@ -48,7 +45,7 @@ public final class BlockBallPlugin extends JavaPlugin {
         if (!NMSRegistry.isVersionValid()) {
             SConsoleUtils.sendColoredMessage("================================================", ChatColor.RED, PREFIX_CONSOLE);
             SConsoleUtils.sendColoredMessage("BlockBall does not support your server version", ChatColor.RED, PREFIX_CONSOLE);
-            SConsoleUtils.sendColoredMessage("Install v1.8.0 - v1.11.2", ChatColor.RED, PREFIX_CONSOLE);
+            SConsoleUtils.sendColoredMessage("Install v1.8.0 - v1.12.0", ChatColor.RED, PREFIX_CONSOLE);
             SConsoleUtils.sendColoredMessage("Plugin gets now disabled!", ChatColor.RED, PREFIX_CONSOLE);
             SConsoleUtils.sendColoredMessage("================================================", ChatColor.RED, PREFIX_CONSOLE);
             this.enabled = false;
@@ -61,7 +58,11 @@ public final class BlockBallPlugin extends JavaPlugin {
                 this.enabled = false;
                 SConsoleUtils.sendColoredMessage("Enabled BlockBallBungeeConnector " + this.getDescription().getVersion() + " by Shynixn", ChatColor.GREEN, PREFIX_CONSOLE);
             } else {
-                SPluginLoader.load(BlockBallPlugin.this, SLanguage.class, AsyncRunnable.class, SCommandExecutor.class, SEvents.class, ArenaController.class, Config.class, GameEntity.class, BlockBallApi.class);
+                try {
+                    ReflectionUtils.invokeMethodByClass(BlockBallApi.class, "initialize", new Class[0], new Object[0]);
+                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                    Bukkit.getLogger().log(Level.WARNING, "Failed to init BlockBall.", e);
+                }
                 Config.getInstance().reload();
                 NMSRegistry.registerAll();
                 SLanguage.reload(Language.class);

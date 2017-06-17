@@ -6,9 +6,6 @@ import com.github.shynixn.blockball.lib.DynamicCommandHelper;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-/**
- * Created by Shynixn
- */
 class GlobalLeaveCommandExecutor extends DynamicCommandHelper {
     private final GameController controller;
 

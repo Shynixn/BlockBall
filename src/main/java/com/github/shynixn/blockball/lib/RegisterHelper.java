@@ -5,9 +5,6 @@ import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 
-/**
- * Created by Shynixn
- */
 public final class RegisterHelper {
     public static String PREFIX;
     private static final HashMap<String, String> registered = new HashMap<>();
@@ -39,7 +36,7 @@ public final class RegisterHelper {
             if (path != null) {
                 try {
                     Class.forName(path);
-                } catch (ClassNotFoundException e) {
+                } catch (final ClassNotFoundException e) {
                     canregister = false;
                 }
             }
@@ -64,7 +61,7 @@ public final class RegisterHelper {
             if (path != null) {
                 try {
                     Class.forName(path);
-                } catch (ClassNotFoundException e) {
+                } catch (final ClassNotFoundException e) {
                     canregister = false;
                 }
             }

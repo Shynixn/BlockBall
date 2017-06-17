@@ -4,9 +4,7 @@ import com.github.shynixn.blockball.lib.SEvent;
 import com.github.shynixn.blockball.api.entities.PlaceHolderType;
 import org.bukkit.entity.Player;
 
-/**
- * Created by Shynixn
- */
+
 public class PlaceHolderRequestEvent extends SEvent {
     private String result;
     private final Player player;
@@ -14,6 +12,7 @@ public class PlaceHolderRequestEvent extends SEvent {
     private final int game;
 
     public PlaceHolderRequestEvent(Player player,PlaceHolderType type, int game) {
+        super();
         this.player = player;
         this.game = game;
         this.type = type;

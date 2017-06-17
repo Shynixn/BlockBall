@@ -11,9 +11,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
 
-/**
- * Created by Shynixn
- */
 class BungeeCordListener implements Listener {
     private final BungeeCordController controller;
 

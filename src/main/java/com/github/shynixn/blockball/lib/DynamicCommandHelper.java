@@ -8,9 +8,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
-/**
- * Created by Shynixn
- */
 public abstract class DynamicCommandHelper extends BukkitCommand {
     private final Config.CommandContainer c;
 
@@ -20,7 +17,7 @@ public abstract class DynamicCommandHelper extends BukkitCommand {
         this.description = c.getDescription();
         this.usageMessage = c.getUseage();
         this.setPermission(c.getPermission());
-        this.setAliases(new ArrayList<String>());
+        this.setAliases(new ArrayList<>());
         NMSRegistry.registerDynamicCommand(c.getCommand(), this);
     }
 

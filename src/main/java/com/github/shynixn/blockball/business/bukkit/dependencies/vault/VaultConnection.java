@@ -5,9 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-/**
- * Created by Shynixn
- */
 public class VaultConnection {
     private static Economy economy;
 

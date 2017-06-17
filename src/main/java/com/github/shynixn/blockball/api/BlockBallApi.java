@@ -5,9 +5,7 @@ import com.github.shynixn.blockball.api.entities.Ball;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.business.logic.ball.BallController;
 import com.github.shynixn.blockball.business.logic.game.GameController;
-import com.github.shynixn.blockball.lib.SPluginLoader;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * API to access BlockBall games.
@@ -20,8 +18,7 @@ public final class BlockBallApi {
         super();
     }
 
-    @SPluginLoader.PluginLoader
-    private static void initialize(JavaPlugin plugin) {
+    private static void initialize() {
         manager = new BallController();
         gameManager = new GameController();
         gameManager.reload();
@@ -32,8 +29,6 @@ public final class BlockBallApi {
             throw new IllegalArgumentException("World cannot be null!");
         final Ball ball = NMSRegistry.createBall(world);
         manager.addBall(ball);
-
-
         return ball;
     }
 

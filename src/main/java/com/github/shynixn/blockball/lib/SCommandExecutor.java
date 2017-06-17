@@ -9,19 +9,21 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
+import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SCommandExecutor implements CommandExecutor {
-    @SPluginLoader.PluginLoader
-    protected static JavaPlugin plugin;
+    protected JavaPlugin plugin;
 
     public SCommandExecutor() {
-        if (plugin == null)
+        super();
+        this.plugin = JavaPlugin.getPlugin(BlockBallPlugin.class);
+        if (this.plugin == null)
             throw new IllegalArgumentException("Pluginloader failed to load " + this.getClass().getSimpleName() + '.');
-        plugin.getCommand(this.getCommand()).setExecutor(this);
+        this.plugin.getCommand(this.getCommand()).setExecutor(this);
     }
 
     public final String getCommand() {

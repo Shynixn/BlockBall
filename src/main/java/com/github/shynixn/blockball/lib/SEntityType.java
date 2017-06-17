@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.lib;
 
 
+@Deprecated
 public enum SEntityType {
     //Drops
     ITEM("ITEM", 1, "Item"),
@@ -92,7 +93,7 @@ public enum SEntityType {
     }
 
     public static SEntityType getSEntityTypeByOtherId(String otherId) {
-        for (SEntityType sEntityType : SEntityType.values()) {
+        for (final SEntityType sEntityType : SEntityType.values()) {
             if (otherId.contains(sEntityType.otherID))
                 return sEntityType;
         }
@@ -102,7 +103,7 @@ public enum SEntityType {
     public Class<?> getNMSEntityClass() {
         try {
             return ReflectionLib.getClassFromName("net.minecraft.server.VERSION.Entity" + this.otherID);
-        } catch (Exception e) {
+        } catch (final Exception e) {
         }
         throw new IllegalArgumentException("Class not found!");
     }

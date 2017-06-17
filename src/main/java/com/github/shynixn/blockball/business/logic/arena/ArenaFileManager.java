@@ -22,6 +22,7 @@ class ArenaFileManager {
     private final JavaPlugin plugin;
 
     ArenaFileManager(JavaPlugin plugin) {
+        super();
         this.plugin = plugin;
     }
 

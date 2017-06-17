@@ -15,9 +15,6 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Shynixn
- */
 class SpawnItem implements BoostItem {
     private static final long serialVersionUID = 1L;
     private int id = 260;
@@ -28,9 +25,11 @@ class SpawnItem implements BoostItem {
     private final Map<Integer, LightPotioneffect> potioneffectList = new HashMap<>();
 
     SpawnItem() {
+        super();
     }
 
     SpawnItem(Map<String, Object> items) throws Exception {
+        super();
         this.id = (int) items.get("id");
         this.damage = (int) items.get("damage");
         this.owner = (String) items.get("owner");

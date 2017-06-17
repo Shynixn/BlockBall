@@ -5,9 +5,6 @@ import org.bukkit.entity.Player;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by Shynixn
- */
 public interface LightBossBar extends Serializable {
     void stopPlay(Object bossBar, Player player);
 

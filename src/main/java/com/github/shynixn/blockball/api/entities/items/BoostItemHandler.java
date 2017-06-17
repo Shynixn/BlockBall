@@ -7,9 +7,6 @@ import org.bukkit.entity.Item;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by Shynixn
- */
 public interface BoostItemHandler extends Serializable, ConfigurationSerializable {
     void setBoostItem(BoostItem boostItem);
 

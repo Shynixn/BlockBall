@@ -9,6 +9,7 @@ public abstract class SChatpage {
     private SChatpage lastInstance;
 
     protected SChatpage(Player player) {
+        super();
         this.player = player;
     }
 
@@ -17,7 +18,7 @@ public abstract class SChatpage {
     }
 
     protected SChatpage getLastInstance() {
-        return lastInstance;
+        return this.lastInstance;
     }
 
     public boolean playerPreChatEnter(String text) {

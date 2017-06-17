@@ -13,13 +13,9 @@ import org.bukkit.util.Vector;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Shynixn
- */
 class EventGameEntity extends GameEntity {
     Player referee;
     private int countdown;
-    private final Map<Player, PlayerProperties> playerstorage = new HashMap<>();
 
     boolean innerForcefield;
     boolean visitorForceField;
@@ -97,18 +93,8 @@ class EventGameEntity extends GameEntity {
 
     @Override
     public void reset() {
-        for (final Player player : this.playerstorage.keySet()) {
-            player.getInventory().setContents(this.playerstorage.get(player).contents);
-            player.setLevel(this.playerstorage.get(player).level);
-            player.setExp(this.playerstorage.get(player).exp);
-            player.setFoodLevel(this.playerstorage.get(player).foodLevel);
-            player.setHealth(this.playerstorage.get(player).health);
-            player.setGameMode(this.playerstorage.get(player).mode);
-            player.updateInventory();
-        }
-        this.bumpers.clear();
-        this.playerstorage.clear();
         super.reset();
+        this.bumpers.clear();
     }
 
     @Override
@@ -167,10 +153,10 @@ class EventGameEntity extends GameEntity {
                             this.bumpers.put(player, 0);
                         else
                             this.bumpers.put(player, this.bumpers.get(player) + 1);
-                        Vector knockback = this.arena.getBallSpawnLocation().toVector().subtract(player.getLocation().toVector());
+                        final Vector knockback = this.arena.getBallSpawnLocation().toVector().subtract(player.getLocation().toVector());
                         player.getLocation().setDirection(knockback);
                         player.setVelocity(knockback);
-                        Vector direction = this.arena.getBallSpawnLocation().toVector().subtract(player.getLocation().toVector());
+                        final Vector direction = this.arena.getBallSpawnLocation().toVector().subtract(player.getLocation().toVector());
                         player.setVelocity(direction.multiply(0.1));
                         if (this.bumpers.get(player) == 5) {
                             player.teleport(this.arena.getBallSpawnLocation());
@@ -187,7 +173,7 @@ class EventGameEntity extends GameEntity {
     protected String decryptText(String text) {
         try {
             text = ChatColor.translateAlternateColorCodes('&', text.replace(":countdown", String.valueOf(this.countdown / 60)));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             this.sendErrorMessage();
         }
         return super.decryptText(text);
@@ -195,8 +181,7 @@ class EventGameEntity extends GameEntity {
 
     @Override
     public boolean join(Player player, Team team) {
-        this.armorContents.put(player, player.getInventory().getArmorContents().clone());
-        this.playerstorage.put(player, new PlayerProperties(player.getInventory().getContents().clone(), player.getLevel(), player.getExp(), player.getFoodLevel(), player.getHealth(), player.getGameMode()));
+        this.storeTemporaryInventory(player);
         player.getInventory().clear();
         player.updateInventory();
         player.setHealth(player.getMaxHealth());
@@ -227,5 +212,17 @@ class EventGameEntity extends GameEntity {
             }
         }
         return true;
+    }
+
+    private void storeTemporaryInventory(Player player) {
+        final TemporaryPlayerStorage storage = new TemporaryPlayerStorage();
+        storage.armorContent = player.getInventory().getArmorContents().clone();
+        storage.isFlying = player.getAllowFlight();
+        storage.inventory = player.getInventory().getContents().clone();
+        storage.gameMode = player.getGameMode();
+        storage.level = player.getLevel();
+        storage.exp = player.getExp();
+        storage.scoreboard = player.getScoreboard();
+        this.temporaryStorage.put(player, storage);
     }
 }

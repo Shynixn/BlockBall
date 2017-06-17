@@ -26,6 +26,7 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import java.util.Random;
+import java.util.logging.Level;
 
 public final class CustomArmorstand extends EntityArmorStand implements Ball, SEntityCompareable {
     private boolean isSpecial;
@@ -68,8 +69,8 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball, SE
                     else
                         this.setPositionRotation(this.slime.getSpigotEntity().getLocation().getX(), this.slime.getSpigotEntity().getLocation().getY() - 0.7, this.slime.getSpigotEntity().getLocation().getZ(), this.slime.getSpigotEntity().getLocation().getYaw(), this.slime.getSpigotEntity().getLocation().getPitch());
                     if (this.isRotating) {
-                        EulerAngle a = this.getSpigotEntity().getHeadPose();
-                        int value = (int) a.getX();
+                        final EulerAngle a = this.getSpigotEntity().getHeadPose();
+                        final int value = (int) a.getX();
                         if (value % this.rvalue != 0) {
                             if (this.rvalue - a.getX() > this.rvalue * 0.5) {
                                 this.getSpigotEntity().setHeadPose(new EulerAngle(a.getX() + 0.1, a.getY() + 0.2, a.getZ() + 0.3));
@@ -83,9 +84,9 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball, SE
                         }
                     }
                     if (this.counter <= 0) {
-                        for (Player player : this.getSpigotEntity().getWorld().getPlayers()) {
+                        for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
                             if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {
-                                BallKickEvent event = new BallKickEvent(player, this);
+                                final BallKickEvent event = new BallKickEvent(player, this);
                                 Bukkit.getPluginManager().callEvent(new BallKickEvent(player, this));
                                 if (!event.isCancelled()) {
                                     this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(this.hstrength);
@@ -93,7 +94,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball, SE
                                     this.slime.getSpigotEntity().setVelocity(this.startVector.clone());
                                     if (this.isRotating)
                                         this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
-                                    Random random = new Random();
+                                    final Random random = new Random();
                                     this.rvalue = random.nextInt(5) + 5;
                                     this.jumps = random.nextInt(5) + 2;
                                     break;
@@ -114,10 +115,10 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball, SE
                 this.getBukkitEntity().setFireTicks(0);
                 this.slime.getSpigotEntity().setFireTicks(0);
                 Bukkit.getPluginManager().callEvent(new BallMoveEvent(this));
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 SConsoleUtils.sendColoredMessage(ChatColor.RED + "Critical EntityHackError happend! Shynixn catcher algorithm prevented server crash!");
                 SConsoleUtils.sendColoredMessage(ChatColor.RED + "Report this bug to the author Shynixn!");
-                e.printStackTrace();
+                Bukkit.getLogger().log(Level.WARNING, "Critical error.", e);
             }
         }
         super.doTick();
@@ -136,10 +137,10 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball, SE
     @Override
     public void spawn(Location location) {
         NMSRegistry.accessWorldGuardSpawn(location);
-        World mcWorld = ((CraftWorld) location.getWorld()).getHandle();
+        final World mcWorld = ((CraftWorld) location.getWorld()).getHandle();
         this.setPosition(location.getX(), location.getY(), location.getZ());
         mcWorld.addEntity(this, SpawnReason.CUSTOM);
-        NBTTagCompound compound = new NBTTagCompound();
+        final NBTTagCompound compound = new NBTTagCompound();
         compound.setBoolean("invulnerable", true);
         compound.setBoolean("Invisible", true);
         compound.setBoolean("PersistenceRequired", true);
@@ -206,7 +207,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball, SE
     @Override
     public boolean equals(Object object) {
         if (object instanceof CustomArmorstand) {
-            CustomArmorstand stander = (CustomArmorstand) object;
+            final CustomArmorstand stander = (CustomArmorstand) object;
             if (stander.getEntityId() == this.getEntityId())
                 return true;
         }
@@ -226,7 +227,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball, SE
     public void damage() {
         if (!this.getSpigotEntity().isDead()) {
             final PacketPlayOutAnimation animation = new PacketPlayOutAnimation(this, 1);
-            for (Player player : this.getSpigotEntity().getWorld().getPlayers()) {
+            for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
                 ((CraftPlayer) player).getHandle().playerConnection.sendPacket(animation);
             }
         }

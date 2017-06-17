@@ -11,9 +11,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-/**
- * Created by Shynixn
- */
 class BungeeCordCommandExecutor extends BukkitCommand {
     private final BungeeCordController controller;
 
@@ -24,7 +21,7 @@ class BungeeCordCommandExecutor extends BukkitCommand {
         this.usageMessage = BungeeCord.COMMAND_USEAGE;
         this.setPermission(BungeeCord.COMMAND_PERMISSION);
         this.setPermissionMessage(BungeeCord.COMMAND_PERMISSION_MESSAGE);
-        this.setAliases(new ArrayList<String>());
+        this.setAliases(new ArrayList<>());
         this.registerDynamicCommand(BungeeCord.COMMAND_COMMAND, this);
     }
 
@@ -45,7 +42,7 @@ class BungeeCordCommandExecutor extends BukkitCommand {
 
     private void registerDynamicCommand(String command, BukkitCommand clazz) {
         try {
-            Class<?> subclazz = Class.forName("org.bukkit.craftbukkit.VERSION.CraftServer".replace("VERSION", BungeeCord.getServerVersion()));
+            final Class<?> subclazz = Class.forName("org.bukkit.craftbukkit.VERSION.CraftServer".replace("VERSION", BungeeCord.getServerVersion()));
             Object instance = subclazz.cast(Bukkit.getServer());
             instance = BungeeCord.invokeMethodByObject(instance, "getCommandMap");
             ReflectionLib.invokeMethodByObject(instance, "register", command, clazz);

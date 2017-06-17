@@ -8,6 +8,7 @@ public final class BallController {
     private final ArrayList<Ball> balls = new ArrayList<>();
 
     public BallController() {
+        super();
         new BallListener(this);
     }
 

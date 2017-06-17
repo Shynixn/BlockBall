@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.lib;
 
-import com.github.shynixn.blockball.lib.ReflectionUtils.PackageType;
+import com.github.shynixn.blockball.lib.ParticleReflectionUtils.PackageType;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 //Darkblade12
+@Deprecated
 public enum ParticleEffect {
 
     EXPLOSION_NORMAL("explode", 0, -1, ParticleProperty.DIRECTIONAL),
@@ -113,7 +114,7 @@ public enum ParticleEffect {
 
     // Initialize map for quick name and id lookup
     static {
-        for (ParticleEffect effect : values()) {
+        for (final ParticleEffect effect : values()) {
             NAME_MAP.put(effect.name, effect);
             ID_MAP.put(effect.id, effect);
         }
@@ -154,7 +155,7 @@ public enum ParticleEffect {
 
 
     public static ParticleEffect fromName(String name) {
-        for (Entry<String, ParticleEffect> entry : NAME_MAP.entrySet()) {
+        for (final Entry<String, ParticleEffect> entry : NAME_MAP.entrySet()) {
             if (!entry.getKey().equalsIgnoreCase(name)) {
                 continue;
             }
@@ -165,7 +166,7 @@ public enum ParticleEffect {
 
 
     public static ParticleEffect fromId(int id) {
-        for (Entry<Integer, ParticleEffect> entry : ID_MAP.entrySet()) {
+        for (final Entry<Integer, ParticleEffect> entry : ID_MAP.entrySet()) {
             if (entry.getKey() != id) {
                 continue;
             }
@@ -176,15 +177,15 @@ public enum ParticleEffect {
 
 
     private static boolean isWater(Location location) {
-        Material material = location.getBlock().getType();
+        final Material material = location.getBlock().getType();
         return material == Material.WATER || material == Material.STATIONARY_WATER;
     }
 
 
     private static boolean isLongDistance(Location location, List<Player> players) {
-        String world = location.getWorld().getName();
-        for (Player player : players) {
-            Location playerLocation = player.getLocation();
+        final String world = location.getWorld().getName();
+        for (final Player player : players) {
+            final Location playerLocation = player.getLocation();
             if (!world.equals(playerLocation.getWorld().getName()) || playerLocation.distanceSquared(location) < 65536) {
                 continue;
             }
@@ -395,6 +396,7 @@ public enum ParticleEffect {
 
         @SuppressWarnings("deprecation")
         public ParticleData(Material material, byte data) {
+            super();
             this.material = material;
             this.data = data;
             this.packetData = new int[]{material.getId(), data};
@@ -460,6 +462,7 @@ public enum ParticleEffect {
 
 
         public OrdinaryColor(int red, int green, int blue) throws IllegalArgumentException {
+            super();
             if (red < 0) {
                 throw new IllegalArgumentException("The red value is lower than 0");
             }
@@ -528,6 +531,7 @@ public enum ParticleEffect {
 
 
         public NoteColor(int note) throws IllegalArgumentException {
+            super();
             if (note < 0) {
                 throw new IllegalArgumentException("The note value is lower than 0");
             }
@@ -608,6 +612,7 @@ public enum ParticleEffect {
 
 
         public ParticlePacket(ParticleEffect effect, float offsetX, float offsetY, float offsetZ, float speed, int amount, boolean longDistance, ParticleData data) throws IllegalArgumentException {
+            super();
             initialize();
             if (speed < 0) {
                 throw new IllegalArgumentException("The speed is lower than 0");
@@ -647,12 +652,12 @@ public enum ParticleEffect {
                 if (version > 7) {
                     enumParticle = PackageType.MINECRAFT_SERVER.getClass("EnumParticle");
                 }
-                Class<?> packetClass = PackageType.MINECRAFT_SERVER.getClass(version < 7 ? "Packet63WorldParticles" : "PacketPlayOutWorldParticles");
-                packetConstructor = ReflectionUtils.getConstructor(packetClass);
-                getHandle = ReflectionUtils.getMethod("CraftPlayer", PackageType.CRAFTBUKKIT_ENTITY, "getHandle");
-                playerConnection = ReflectionUtils.getField("EntityPlayer", PackageType.MINECRAFT_SERVER, false, "playerConnection");
-                sendPacket = ReflectionUtils.getMethod(playerConnection.getType(), "sendPacket", PackageType.MINECRAFT_SERVER.getClass("Packet"));
-            } catch (Exception exception) {
+                final Class<?> packetClass = PackageType.MINECRAFT_SERVER.getClass(version < 7 ? "Packet63WorldParticles" : "PacketPlayOutWorldParticles");
+                packetConstructor = ParticleReflectionUtils.getConstructor(packetClass);
+                getHandle = ParticleReflectionUtils.getMethod("CraftPlayer", PackageType.CRAFTBUKKIT_ENTITY, "getHandle");
+                playerConnection = ParticleReflectionUtils.getField("EntityPlayer", PackageType.MINECRAFT_SERVER, false, "playerConnection");
+                sendPacket = ParticleReflectionUtils.getMethod(playerConnection.getType(), "sendPacket", PackageType.MINECRAFT_SERVER.getClass("Packet"));
+            } catch (final Exception exception) {
                 throw new VersionIncompatibleException("Your current bukkit version seems to be incompatible with this library", exception);
             }
             initialized = true;
@@ -683,24 +688,24 @@ public enum ParticleEffect {
                     if (this.data != null) {
                         name += this.data.getPacketDataString();
                     }
-                    ReflectionUtils.setValue(this.packet, true, "a", name);
+                    ParticleReflectionUtils.setValue(this.packet, true, "a", name);
                 } else {
-                    ReflectionUtils.setValue(this.packet, true, "a", enumParticle.getEnumConstants()[this.effect.getId()]);
-                    ReflectionUtils.setValue(this.packet, true, "j", this.longDistance);
+                    ParticleReflectionUtils.setValue(this.packet, true, "a", enumParticle.getEnumConstants()[this.effect.getId()]);
+                    ParticleReflectionUtils.setValue(this.packet, true, "j", this.longDistance);
                     if (this.data != null) {
-                        int[] packetData = this.data.getPacketData();
-                        ReflectionUtils.setValue(this.packet, true, "k", this.effect == ParticleEffect.ITEM_CRACK ? packetData : new int[]{packetData[0] | (packetData[1] << 12)});
+                        final int[] packetData = this.data.getPacketData();
+                        ParticleReflectionUtils.setValue(this.packet, true, "k", this.effect == ParticleEffect.ITEM_CRACK ? packetData : new int[]{packetData[0] | (packetData[1] << 12)});
                     }
                 }
-                ReflectionUtils.setValue(this.packet, true, "b", (float) center.getX());
-                ReflectionUtils.setValue(this.packet, true, "c", (float) center.getY());
-                ReflectionUtils.setValue(this.packet, true, "d", (float) center.getZ());
-                ReflectionUtils.setValue(this.packet, true, "e", this.offsetX);
-                ReflectionUtils.setValue(this.packet, true, "f", this.offsetY);
-                ReflectionUtils.setValue(this.packet, true, "g", this.offsetZ);
-                ReflectionUtils.setValue(this.packet, true, "h", this.speed);
-                ReflectionUtils.setValue(this.packet, true, "i", this.amount);
-            } catch (Exception exception) {
+                ParticleReflectionUtils.setValue(this.packet, true, "b", (float) center.getX());
+                ParticleReflectionUtils.setValue(this.packet, true, "c", (float) center.getY());
+                ParticleReflectionUtils.setValue(this.packet, true, "d", (float) center.getZ());
+                ParticleReflectionUtils.setValue(this.packet, true, "e", this.offsetX);
+                ParticleReflectionUtils.setValue(this.packet, true, "f", this.offsetY);
+                ParticleReflectionUtils.setValue(this.packet, true, "g", this.offsetZ);
+                ParticleReflectionUtils.setValue(this.packet, true, "h", this.speed);
+                ParticleReflectionUtils.setValue(this.packet, true, "i", this.amount);
+            } catch (final Exception exception) {
                 throw new PacketInstantiationException("Packet instantiation failed", exception);
             }
         }
@@ -710,7 +715,7 @@ public enum ParticleEffect {
             this.initializePacket(center);
             try {
                 sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), this.packet);
-            } catch (Exception exception) {
+            } catch (final Exception exception) {
                 throw new PacketSendingException("Failed to send the packet to player '" + player.getName() + '\'', exception);
             }
         }
@@ -720,7 +725,7 @@ public enum ParticleEffect {
             if (players.isEmpty()) {
                 return;
             }
-            for (Player player : players) {
+            for (final Player player : players) {
                 this.sendTo(center, player);
             }
         }
@@ -730,9 +735,9 @@ public enum ParticleEffect {
             if (range < 1) {
                 throw new IllegalArgumentException("The range is lower than 1");
             }
-            String worldName = center.getWorld().getName();
-            double squared = range * range;
-            for (Player player : SFileUtils.getOnlinePlayers()) {
+            final String worldName = center.getWorld().getName();
+            final double squared = range * range;
+            for (final Player player : SFileUtils.getOnlinePlayers()) {
                 if (!player.getWorld().getName().equals(worldName) || player.getLocation().distanceSquared(center) > squared) {
                     continue;
                 }

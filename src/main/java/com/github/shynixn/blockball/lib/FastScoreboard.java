@@ -11,9 +11,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.List;
 import java.util.logging.Level;
 
-/**
- * Created by Shynixn
- */
 public class FastScoreboard implements LightScoreboard {
     private transient Scoreboard scoreboard;
     private transient Objective objective;
@@ -25,9 +22,11 @@ public class FastScoreboard implements LightScoreboard {
     private boolean enabled;
 
     public FastScoreboard() {
+        super();
     }
 
     public FastScoreboard(String redTeam, String blueTeam, String timeLeft, String title) {
+        super();
         this.redTeam = redTeam;
         this.blueTeam = blueTeam;
         this.timeLeft = timeLeft;
@@ -64,7 +63,7 @@ public class FastScoreboard implements LightScoreboard {
                     player.setScoreboard(this.scoreboard);
                 }
             }
-            if (timeleft != null)
+            if (timeleft != null && timeleft >= 0)
                 this.objective.getScore(this.timeLeft).setScore(timeleft);
             if (redgoals != null)
                 this.objective.getScore(this.redTeam).setScore(redgoals);

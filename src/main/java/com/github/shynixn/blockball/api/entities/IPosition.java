@@ -9,9 +9,6 @@ import org.bukkit.util.Vector;
 
 import java.io.Serializable;
 
-/**
- * Created by Shynixn
- */
 public interface IPosition extends ConfigurationSerializable, Serializable {
     IPosition setCoordinates(double x, double y, double z);
 

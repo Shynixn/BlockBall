@@ -2,8 +2,9 @@ package com.github.shynixn.blockball.business.logic.ball;
 
 import com.github.shynixn.blockball.api.entities.Ball;
 import com.github.shynixn.blockball.api.events.BallDeathEvent;
+import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.lib.SEntityCompareable;
-import com.github.shynixn.blockball.lib.SEvents;
+import com.github.shynixn.blockball.lib.SimpleListener;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
@@ -14,14 +15,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
-class BallListener extends SEvents {
+class BallListener extends SimpleListener {
     private final BallController manager;
 
     BallListener(BallController manager) {
-        super();
+        super(JavaPlugin.getPlugin(BlockBallPlugin.class));
         this.manager = manager;
-        plugin.getServer().getScheduler().runTaskTimer(plugin, new RemoveOldBalls(), 0L, 20L * 10);
+        this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new RemoveOldBalls(), 0L, 20L * 10);
     }
 
     @EventHandler

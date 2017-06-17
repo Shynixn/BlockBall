@@ -7,6 +7,7 @@ public final class BallDeathEvent extends SEvent {
 	private final Ball ball;
 
 	public BallDeathEvent(Ball ball) {
+		super();
 		this.ball = ball;
 	}
 

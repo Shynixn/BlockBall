@@ -8,9 +8,6 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.io.Serializable;
 
-/**
- * Created by Shynixn
- */
 public interface BoostItem extends Serializable, ConfigurationSerializable {
     LightPotioneffect[] getPotionEffects();
 

@@ -5,9 +5,6 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.List;
 
-/**
- * Created by Shynixn
- */
 public interface LobbyMeta extends ConfigurationSerializable {
     List<Location> getSignLocations();
 

@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+@Deprecated
 public class SItemStack {
     private String displayName;
     private String[] lore;
@@ -16,6 +17,7 @@ public class SItemStack {
     private String skullName;
 
     public SItemStack(ItemStack itemStack) {
+        super();
         this.material = itemStack.getType();
         this.id = itemStack.getDurability();
         if (itemStack.getItemMeta() != null) {
@@ -30,6 +32,7 @@ public class SItemStack {
     }
 
     public SItemStack(Material material) {
+        super();
         this.material = material;
     }
 
@@ -66,6 +69,7 @@ public class SItemStack {
     }
 
     public SItemStack(Material material, int id, String displayName) {
+        super();
         this.material = material;
         this.displayName = displayName;
         this.id = id;

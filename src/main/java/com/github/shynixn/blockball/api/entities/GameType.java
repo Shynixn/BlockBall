@@ -1,8 +1,5 @@
 package com.github.shynixn.blockball.api.entities;
 
-/**
- * Created by Shynixn
- */
 public enum GameType {
     LOBBY,
     MINIGAME,
@@ -10,7 +7,7 @@ public enum GameType {
     EVENT;
 
     public static GameType getGameTypeFromName(String name) {
-        for (GameType gameType : GameType.values()) {
+        for (final GameType gameType : GameType.values()) {
             if (gameType.name().equalsIgnoreCase(name))
                 return gameType;
         }

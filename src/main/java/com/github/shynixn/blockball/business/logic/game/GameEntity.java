@@ -10,10 +10,13 @@ import com.github.shynixn.blockball.lib.*;
 import com.github.shynixn.blockball.api.events.GoalShootEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -22,20 +25,31 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class GameEntity implements Game {
-    @SPluginLoader.PluginLoader
-    protected static JavaPlugin plugin;
+    protected Plugin plugin;
 
+    /**
+     * Static arena
+     */
     protected final Arena arena;
-    private Object bossBar;
-    private Ball ball;
 
-    List<Player> previousFlying = new ArrayList<>();
-    final Map<Player, ItemStack[]> armorContents = new HashMap<>();
+    /**
+     * Temporary Storage
+     */
+    Map<Player, TemporaryPlayerStorage> temporaryStorage = new HashMap<>();
+
+    /**
+     * Teams and goals per team
+     */
     final List<Player> redTeam = new ArrayList<>();
     final List<Player> blueTeam = new ArrayList<>();
     int blueGoals;
     int redGoals;
 
+    /**
+     * Ball calculations
+     */
+    private Ball ball;
+    private Location lastBallLocation;
     private int bumper = 20;
     private int bumperCounter;
     private int buffer = 2;
@@ -45,40 +59,46 @@ public abstract class GameEntity implements Game {
     private boolean freshReset;
     boolean ballSpawning;
 
+    /**
+     * HitCounter
+     */
     private Team lastHitTeam;
     private Player lastHit;
 
+    /**
+     * BossBar
+     */
+    private Object bossBar;
     final List<Player> playData = new ArrayList<>();
-
+    /**
+     * Hologram
+     */
     private LightHologram hologram;
 
     GameEntity(Arena arena) {
+        super();
+        this.plugin = JavaPlugin.getPlugin(BlockBallPlugin.class);
         this.arena = arena;
     }
 
+    /**
+     * Adds the player to the temporary storage
+     *
+     * @param player player
+     * @param team   team
+     * @return success
+     */
     @Override
     public abstract boolean join(Player player, Team team);
-
-    LightHologram getHologram() {
-        if (this.hologram == null && this.arena.getTeamMeta().isHologramEnabled() && this.arena.getTeamMeta().getHologramLocation() != null) {
-            this.hologram = new LightHologram.Builder(this.arena.getTeamMeta().getHologramLocation());
-        }
-        return this.hologram;
-    }
-
-    @Override
-    public Player[] getBlueTeamPlayers() {
-        return this.blueTeam.toArray(new Player[this.blueTeam.size()]);
-    }
-
-    @Override
-    public Player[] getRedTeamPlayers() {
-        return this.redTeam.toArray(new Player[this.redTeam.size()]);
-    }
 
     @Override
     public boolean isInGame(Player player) {
         return this.getPlayers().contains(player);
+    }
+
+    @Override
+    public boolean leave(Player player) {
+        return this.leave(player, true);
     }
 
     synchronized boolean leave(Player player, boolean message) {
@@ -86,18 +106,41 @@ public abstract class GameEntity implements Game {
             this.redTeam.remove(player);
         if (this.blueTeam.contains(player))
             this.blueTeam.remove(player);
+        if (this.temporaryStorage.containsKey(player)) {
+            final TemporaryPlayerStorage storage = this.temporaryStorage.get(player);
+            if (storage.inventory != null) {
+                player.getInventory().setContents(storage.inventory);
+            }
+            if (storage.armorContent != null) {
+                player.getInventory().setArmorContents(storage.armorContent);
+            }
+            if (storage.gameMode != null) {
+                player.setGameMode(storage.gameMode);
+            }
+            if (storage.level != null) {
+                player.setLevel(storage.level);
+            }
+            if (storage.exp != null) {
+                player.setExp(storage.exp);
+            }
+            if (storage.foodLevel != null) {
+                player.setFoodLevel(storage.foodLevel);
+            }
+            if (storage.health != null) {
+                player.setHealthScale(storage.health);
+            }
+            if (storage.scoreboard != null) {
+                player.setScoreboard(storage.scoreboard);
+            }
+            player.setFlying(false);
+            player.setAllowFlight(storage.isFlying);
+            player.updateInventory();
+            this.temporaryStorage.remove(player);
+        }
         if (player.isOnline() && message)
             player.sendMessage(Language.PREFIX + this.arena.getTeamMeta().getLeaveMessage());
-        if (this.armorContents.containsKey(player))
-            player.getInventory().setArmorContents(this.armorContents.get(player).clone());
-        player.updateInventory();
-        this.armorContents.remove(player);
-        player.setFlying(false);
-        player.setAllowFlight(false);
         this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
         this.arena.getTeamMeta().getScoreboard().remove(player);
-        if(this.previousFlying.contains(player))
-            player.setAllowFlight(true);
         if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
             NMSRegistry.setBossBar(player, null);
         }
@@ -110,9 +153,37 @@ public abstract class GameEntity implements Game {
         return true;
     }
 
-    @Override
-    public synchronized boolean leave(Player player) {
-        return this.leave(player, true);
+    public void reset() {
+        this.reset(true);
+    }
+
+    void reset(boolean teleport) {
+        for (final Player player : this.getPlayers()) {
+            this.leave(player);
+        }
+        if (teleport && this.arena.getTeamMeta().getGameEndSpawnpoint() != null) {
+            for (final Player player : this.getPlayers()) {
+                player.teleport(this.arena.getTeamMeta().getGameEndSpawnpoint());
+            }
+        }
+        for (final Player player : this.playData) {
+            this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
+            if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
+                NMSRegistry.setBossBar(player, null);
+            }
+        }
+        ((ItemSpawner) this.arena.getBoostItemHandler()).clearGroundItems();
+        FastBossBar.dispose(this.bossBar);
+        if (this.ball != null)
+            this.ball.despawn();
+        if (this.hologram != null)
+            this.hologram.remove(SFileUtils.getOnlinePlayers().toArray(new Player[SFileUtils.getOnlinePlayers().size()]));
+        this.redTeam.clear();
+        this.blueTeam.clear();
+        this.playData.clear();
+        this.ball = null;
+        this.blueGoals = 0;
+        this.redGoals = 0;
     }
 
     @Override
@@ -132,7 +203,7 @@ public abstract class GameEntity implements Game {
             this.arena.getBallMeta().getGenericHitParticle().play(this.ball.getLocation());
             try {
                 this.arena.getBallMeta().getGenericHitSound().play(this.ball.getLocation());
-            } catch (InterPreter19Exception e) {
+            } catch (final InterPreter19Exception e) {
                 SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [GenericHitSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
             }
             this.buffer = 10;
@@ -144,16 +215,6 @@ public abstract class GameEntity implements Game {
         this.lastHit = player;
     }
 
-    public Ball getBall() {
-        return this.ball;
-    }
-
-    @Override
-    public Arena getArena() {
-        return this.arena;
-    }
-
-    private Location lastBallLocation;
 
     final void fixCachedRangePlayers() {
         for (final Player player : this.playData.toArray(new Player[this.playData.size()])) {
@@ -219,7 +280,7 @@ public abstract class GameEntity implements Game {
                 this.arena.getBallMeta().getBallSpawnParticle().play(this.ball.getLocation());
                 try {
                     this.arena.getBallMeta().getBallSpawnSound().play(this.ball.getLocation());
-                } catch (InterPreter19Exception e) {
+                } catch (final InterPreter19Exception e) {
                     SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [BallSpawnSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
                 }
             }
@@ -301,12 +362,7 @@ public abstract class GameEntity implements Game {
         if (this.arena.getTeamMeta().isGoalShooterGlowing() && (!ReflectionLib.getServerVersion().contains("1_8")) && this.lastHit != null) {
             final Player player = this.lastHit;
             Interpreter19.setGlowing(player, true);
-            plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    Interpreter19.setGlowing(player, false);
-                }
-            }, 20L * this.arena.getTeamMeta().getGoalShooterGlowingSeconds());
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> Interpreter19.setGlowing(player, false), 20L * this.arena.getTeamMeta().getGoalShooterGlowingSeconds());
         }
     }
 
@@ -337,56 +393,12 @@ public abstract class GameEntity implements Game {
         }
     }
 
-    void reset(boolean teleport) {
-        for (final Player player : this.armorContents.keySet()) {
-            player.getInventory().setArmorContents(this.armorContents.get(player).clone());
-            player.getInventory().setArmorContents(this.armorContents.get(player).clone());
-            player.updateInventory();
-            Interpreter19.setGlowing(player, false);
-            player.setFlying(false);
-            player.setAllowFlight(false);
-            if(this.previousFlying.contains(player))
-                player.setAllowFlight(true);
-        }
-        if (teleport && this.arena.getTeamMeta().getGameEndSpawnpoint() != null) {
-            for (final Player player : this.getPlayers()) {
-                player.teleport(this.arena.getTeamMeta().getGameEndSpawnpoint());
-            }
-        }
-        for (final Player player : this.playData) {
-            this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
-            if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
-                NMSRegistry.setBossBar(player, null);
-            }
-        }
-        ((ItemSpawner) this.arena.getBoostItemHandler()).clearGroundItems();
-        FastBossBar.dispose(this.bossBar);
-        if (this.ball != null)
-            this.ball.despawn();
-        if (this.hologram != null)
-            this.hologram.remove(SFileUtils.getOnlinePlayers().toArray(new Player[SFileUtils.getOnlinePlayers().size()]));
-        this.previousFlying.clear();
-        this.redTeam.clear();
-        this.blueTeam.clear();
-        this.playData.clear();
-        this.ball = null;
-        this.blueGoals = 0;
-        this.redGoals = 0;
-    }
-
-    public void reset() {
-        this.reset(true);
-    }
-
     void sendMessageToPlayers(String title, String subTitle) {
         if (this.arena.getTeamMeta().isSpectatorMessagesEnabled()) {
-            for (final Player player : this.getPlayersInRange()) {
-                LightScreenMessenger.Builder.getInstance().setPlayerTitle(player, title, subTitle, 0, 20 * 3, 10);
-            }
+            ScreenUtils.setTitle(title, subTitle, 0, 20 * 3, 10, this.getPlayersInRange().toArray(new Player[this.getPlayersInRange().size()]));
+
         } else {
-            for (final Player player : this.getPlayers()) {
-                LightScreenMessenger.Builder.getInstance().setPlayerTitle(player, title, subTitle, 0, 20 * 3, 10);
-            }
+            ScreenUtils.setTitle(title, subTitle, 0, 20 * 3, 10, this.getPlayers().toArray(new Player[this.getPlayers().size()]));
         }
     }
 
@@ -400,14 +412,20 @@ public abstract class GameEntity implements Game {
     }
 
     @Override
+    public Ball getBall() {
+        return this.ball;
+    }
+
+    @Override
+    public Arena getArena() {
+        return this.arena;
+    }
+
+    @Override
     public final List<Player> getPlayers() {
         final List<Player> players = new ArrayList<>();
-        for (final Player player : this.blueTeam) {
-            players.add(player);
-        }
-        for (final Player player : this.redTeam) {
-            players.add(player);
-        }
+        players.addAll(this.blueTeam);
+        players.addAll(this.redTeam);
         return players;
     }
 
@@ -445,6 +463,16 @@ public abstract class GameEntity implements Game {
         BlockBallApi.reloadGames();
     }
 
+    @Override
+    public Player[] getBlueTeamPlayers() {
+        return this.blueTeam.toArray(new Player[this.blueTeam.size()]);
+    }
+
+    @Override
+    public Player[] getRedTeamPlayers() {
+        return this.redTeam.toArray(new Player[this.redTeam.size()]);
+    }
+
     final String getPlaceHolder(PlaceHolderType type) {
         if (type == PlaceHolderType.BLUESCORE)
             return String.valueOf(this.blueGoals);
@@ -465,5 +493,24 @@ public abstract class GameEntity implements Game {
         else if (type == PlaceHolderType.REDNAME)
             return String.valueOf(this.arena.getTeamMeta().getRedTeamName());
         return "";
+    }
+
+    final LightHologram getHologram() {
+        if (this.hologram == null && this.arena.getTeamMeta().isHologramEnabled() && this.arena.getTeamMeta().getHologramLocation() != null) {
+            this.hologram = new LightHologram.Builder(this.arena.getTeamMeta().getHologramLocation());
+        }
+        return this.hologram;
+    }
+
+    static class TemporaryPlayerStorage {
+        ItemStack[] inventory;
+        ItemStack[] armorContent;
+        Integer level;
+        Float exp;
+        boolean isFlying;
+        GameMode gameMode;
+        Integer foodLevel;
+        Double health;
+        Scoreboard scoreboard;
     }
 }

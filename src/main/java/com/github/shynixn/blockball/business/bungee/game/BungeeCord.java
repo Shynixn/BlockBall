@@ -14,12 +14,10 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-/**
- * Created by Shynixn
- */
 public class BungeeCord {
     public static String MOD_RESTARTING = ChatColor.RED + "Restarting";
     public static String MOD_WAITING_FOR_PLAYERS = ChatColor.GREEN + "Waiting for players...";
@@ -40,7 +38,7 @@ public class BungeeCord {
     public static String SIGN_LINE_3 = "<state>";
     public static String SIGN_LINE_4 = "<players>/<maxplayers>";
 
-    public static boolean ENABLED = false;
+    public static boolean ENABLED;
     public static boolean SIGN_MODE = true;
 
     private static BungeeCordMinigame minigameListener;
@@ -80,14 +78,14 @@ public class BungeeCord {
             if (!file.exists()) {
                 if (!file.createNewFile())
                     Bukkit.getLogger().log(Level.WARNING, "Cannot create file.");
-                ArrayList<String> s = new ArrayList<>();
+                final List<String> s = new ArrayList<>();
                 s.add("#BungeeCord");
                 s.add("enabled: false");
                 s.add("");
                 s.add("#Select the connection type: MINIGAME or SIGN");
                 s.add("connection: MINIGAME");
                 s.add("");
-                for (Field field : BungeeCord.class.getDeclaredFields()) {
+                for (final Field field : BungeeCord.class.getDeclaredFields()) {
                     if (field.getType() == String.class) {
                         s.add(field.getName().toLowerCase() + ": \"" + String.valueOf(field.get(null)).replace('§', '&') + '"');
                     }

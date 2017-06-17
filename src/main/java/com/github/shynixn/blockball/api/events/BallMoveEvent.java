@@ -7,6 +7,7 @@ public final class BallMoveEvent extends SEvent {
 	private final Ball ball;
 
 	public BallMoveEvent(Ball ball) {
+		super();
 		this.ball = ball;
 	}
 

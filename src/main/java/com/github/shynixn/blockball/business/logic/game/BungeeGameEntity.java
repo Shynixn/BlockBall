@@ -5,9 +5,6 @@ import com.github.shynixn.blockball.lib.SFileUtils;
 import com.github.shynixn.blockball.business.bungee.game.BungeeCord;
 import org.bukkit.entity.Player;
 
-/**
- * Created by Shynixn
- */
 class BungeeGameEntity extends HelperGameEntity {
     BungeeGameEntity(Arena arena) {
         super(arena);
@@ -30,11 +27,9 @@ class BungeeGameEntity extends HelperGameEntity {
     @Override
     public void reset() {
         BungeeCord.setModt(BungeeCord.MOD_RESTARTING);
-        for (final Player player : this.armorContents.keySet()) {
-            this.leave(player);
-        }
         super.reset();
-        if (this.arena.isEnabled())
+        if (this.arena.isEnabled()) {
             SFileUtils.restartServer();
+        }
     }
 }

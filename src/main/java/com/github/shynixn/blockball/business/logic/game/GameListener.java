@@ -28,6 +28,7 @@ import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("deprecation")
-class GameListener extends SEvents {
+class GameListener extends SimpleListener {
     private final Map<Player, SLocation> lastLocation = new HashMap<>();
     private final Map<Player, Game> connectedGames = new HashMap<>();
     private final List<Player> toggledPlayers = new ArrayList<>();
@@ -46,6 +47,7 @@ class GameListener extends SEvents {
     private final GameController controller;
 
     GameListener(final GameController controller) {
+        super(JavaPlugin.getPlugin(BlockBallPlugin.class));
         this.controller = controller;
         if (Config.getInstance().getForcefieldHelperCommand().isEnabled()) {
             new DynamicCommandHelper(Config.getInstance().getForcefieldHelperCommand()) {
@@ -150,7 +152,7 @@ class GameListener extends SEvents {
                 if ((game = this.getGameFromSign((Sign) event.getClickedBlock().getState())) != null) {
                     for (final Location location : game.getArena().getLobbyMeta().getBlueTeamSignLocations()) {
                         if (SLocation.compareLocation(location, event.getClickedBlock().getLocation())) {
-                            if (game instanceof LobbyGameEntity) {
+                            if (game instanceof HubGameEntity) {
                                 if (!game.join(event.getPlayer(), Team.BLUE)) {
                                     event.getPlayer().sendMessage(Language.PREFIX + game.getArena().getTeamMeta().getTeamFullMessage());
                                 }
@@ -163,7 +165,7 @@ class GameListener extends SEvents {
                     }
                     for (final Location location : game.getArena().getLobbyMeta().getRedTeamSignLocations()) {
                         if (SLocation.compareLocation(location, event.getClickedBlock().getLocation())) {
-                            if (game instanceof LobbyGameEntity) {
+                            if (game instanceof HubGameEntity) {
                                 if (!game.join(event.getPlayer(), Team.RED)) {
                                     event.getPlayer().sendMessage(Language.PREFIX + game.getArena().getTeamMeta().getTeamFullMessage());
                                 }
@@ -174,7 +176,7 @@ class GameListener extends SEvents {
                             break;
                         }
                     }
-                    for (Location location : game.getArena().getLobbyMeta().getSignLocations()) {
+                    for (final Location location : game.getArena().getLobbyMeta().getSignLocations()) {
                         if (game instanceof MiniGameEntity && SLocation.compareLocation(location, event.getClickedBlock().getLocation())) {
                             if ((((MiniGameEntity) game)).isLobbyFull())
                                 event.getPlayer().sendMessage(Language.PREFIX + Language.ARENA_LOBBYFULL_MESSAGE);
@@ -244,10 +246,10 @@ class GameListener extends SEvents {
                 boolean isInArena = false;
                 boolean isNeverInArena = true;
                 for (int i = 0; i < this.controller.games.length; i++) {
-                    if ((this.controller.games[i] instanceof LobbyGameEntity || this.controller.games[i] instanceof EventGameEntity) && this.controller.games[i].arena.isEnabled()) {
+                    if ((this.controller.games[i] instanceof HubGameEntity || this.controller.games[i] instanceof EventGameEntity) && this.controller.games[i].arena.isEnabled()) {
                         final Arena arena = this.controller.games[i].getArena();
                         if (this.controller.games[i] instanceof EventGameEntity) {
-                            EventGameEntity gameEntity = (EventGameEntity) this.controller.games[i];
+                            final EventGameEntity gameEntity = (EventGameEntity) this.controller.games[i];
                             if (!gameEntity.visitorForceField) {
                                 continue;
                             }
@@ -272,7 +274,7 @@ class GameListener extends SEvents {
                                     this.toggledPlayers.add(event.getPlayer());
                                 }
                             }
-                            if (this.controller.games[i] instanceof LobbyGameEntity && !this.connectedGames.containsKey(event.getPlayer())) {
+                            if (this.controller.games[i] instanceof HubGameEntity && !this.connectedGames.containsKey(event.getPlayer())) {
                                 if (event.getPlayer().hasPermission("blockball.user")) {
                                     if (arena.getTeamMeta().isFastJoin()) {
                                         if (!this.controller.games[i].join(event.getPlayer(), null)) {
@@ -376,7 +378,7 @@ class GameListener extends SEvents {
                     player.setVelocity(player.getLocation().getDirection().multiply(2.6D).setY(1.0D));
                     try {
                         game.getArena().getTeamMeta().getDoubleJumpSound().play(player.getLocation());
-                    } catch (InterPreter19Exception e) {
+                    } catch (final InterPreter19Exception e) {
                         SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [DoubleJumpSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
                     }
                     game.getArena().getTeamMeta().getDoubleJumpParticle().play(player.getLocation());
@@ -439,10 +441,10 @@ class GameListener extends SEvents {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerAsyncChatEvent(PlayerChatEvent event) {
         if (Config.getInstance().isHighpriority() && !Config.getInstance().isAsyncChat()) {
-            String message = ChatColor.stripColor(event.getMessage());
-            Player player = event.getPlayer();
+            final String message = ChatColor.stripColor(event.getMessage());
+            final Player player = event.getPlayer();
             if (this.controller.getGameFromPlayer(player) != null) {
-                Game game = this.controller.getGameFromPlayer(player);
+                final Game game = this.controller.getGameFromPlayer(player);
                 if (message.equalsIgnoreCase(ChatColor.stripColor(game.getArena().getTeamMeta().getRedTeamName())) || message.equalsIgnoreCase(ChatColor.stripColor(game.getArena().getTeamMeta().getBlueTeamName()))) {
                     this.connectedGames.put(player, game);
                 }
@@ -460,7 +462,7 @@ class GameListener extends SEvents {
             final String message = ChatColor.stripColor(event.getMessage());
             final Player player = event.getPlayer();
             if (this.controller.getGameFromPlayer(player) != null) {
-                Game game = this.controller.getGameFromPlayer(player);
+                final Game game = this.controller.getGameFromPlayer(player);
                 if (message.equalsIgnoreCase(ChatColor.stripColor(game.getArena().getTeamMeta().getRedTeamName())) || message.equalsIgnoreCase(ChatColor.stripColor(game.getArena().getTeamMeta().getBlueTeamName()))) {
                     this.connectedGames.put(player, game);
                 }
@@ -468,22 +470,17 @@ class GameListener extends SEvents {
             if (this.connectedGames.containsKey(player)) {
                 event.setCancelled(true);
             }
-            plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    GameListener.this.handleChatMessage(player, message);
-                }
-            }, 1L);
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> GameListener.this.handleChatMessage(player, message), 1L);
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerAsyncChatEvent2(PlayerChatEvent event) {
         if (!Config.getInstance().isHighpriority() && !Config.getInstance().isAsyncChat()) {
-            String message = ChatColor.stripColor(event.getMessage());
-            Player player = event.getPlayer();
+            final String message = ChatColor.stripColor(event.getMessage());
+            final Player player = event.getPlayer();
             if (this.controller.getGameFromPlayer(player) != null) {
-                Game game = this.controller.getGameFromPlayer(player);
+                final Game game = this.controller.getGameFromPlayer(player);
                 if (message.equalsIgnoreCase(ChatColor.stripColor(game.getArena().getTeamMeta().getRedTeamName())) || message.equalsIgnoreCase(ChatColor.stripColor(game.getArena().getTeamMeta().getBlueTeamName()))) {
                     this.connectedGames.put(player, game);
                 }
@@ -501,7 +498,7 @@ class GameListener extends SEvents {
             final String message = ChatColor.stripColor(event.getMessage());
             final Player player = event.getPlayer();
             if (this.controller.getGameFromPlayer(player) != null) {
-                Game game = this.controller.getGameFromPlayer(player);
+                final Game game = this.controller.getGameFromPlayer(player);
                 if (message.equalsIgnoreCase(ChatColor.stripColor(game.getArena().getTeamMeta().getRedTeamName())) || message.equalsIgnoreCase(ChatColor.stripColor(game.getArena().getTeamMeta().getBlueTeamName()))) {
                     this.connectedGames.put(player, game);
                 }
@@ -509,18 +506,13 @@ class GameListener extends SEvents {
             if (this.connectedGames.containsKey(player)) {
                 event.setCancelled(true);
             }
-            plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    GameListener.this.handleChatMessage(player, message);
-                }
-            }, 1L);
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> GameListener.this.handleChatMessage(player, message), 1L);
         }
     }
 
     private void handleChatMessage(Player player, String message) {
         if (this.connectedGames.containsKey(player)) {
-            Arena arena = this.connectedGames.get(player).getArena();
+            final Arena arena = this.connectedGames.get(player).getArena();
             if (message.equalsIgnoreCase(ChatColor.stripColor(arena.getTeamMeta().getRedTeamName()))) {
                 if (!this.connectedGames.get(player).join(player, Team.RED)) {
                     player.sendMessage(Language.PREFIX + this.connectedGames.get(player).getArena().getTeamMeta().getTeamFullMessage());

@@ -1,8 +1,5 @@
 package com.github.shynixn.blockball.api.entities.items;
 
-/**
- * Created by Shynixn
- */
 public enum Spawnrate {
     NONE(0, 0),
     LITTLE(20, 2),

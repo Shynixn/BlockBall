@@ -1,8 +1,5 @@
 package com.github.shynixn.blockball.api.entities;
 
-/**
- * Created by Shynixn
- */
 public enum PlaceHolderType {
     REDSCORE,
     REDAMOUNT,
@@ -17,7 +14,7 @@ public enum PlaceHolderType {
     LASTHITPLAYERNAME;
 
     public static PlaceHolderType getTypeFromName(String name) {
-        for (PlaceHolderType type : PlaceHolderType.values()) {
+        for (final PlaceHolderType type : PlaceHolderType.values()) {
             if (name.toUpperCase().contains(type.name().toUpperCase()))
                 return type;
         }
