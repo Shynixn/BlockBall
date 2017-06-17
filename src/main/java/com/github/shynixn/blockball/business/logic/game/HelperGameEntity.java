@@ -23,9 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Shynixn
- */
 class HelperGameEntity extends GameEntity implements MiniGame {
     private final List<Player> lobby = new ArrayList<>();
     private GameStage stage = GameStage.DISABLED;
@@ -34,7 +31,6 @@ class HelperGameEntity extends GameEntity implements MiniGame {
     private final Map<Player, Team> preSelection = new HashMap<>();
     private final LightSound blingsound = new FastSound("NOTE_PLING", 1.0, 2.0);
 
-    //Bumper
     private int bumeper = 40;
     private int secondbumper = 20;
     private final Map<Player, Integer> bumpers = new HashMap<>();

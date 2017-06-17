@@ -5,9 +5,6 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Array;
 import java.util.List;
 
-/**
- * Created by Shynixn
- */
 @Deprecated
 public class FastBossBar implements LightBossBar {
     private int style;

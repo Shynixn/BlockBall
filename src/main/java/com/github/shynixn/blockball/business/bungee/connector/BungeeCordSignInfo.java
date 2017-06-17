@@ -7,9 +7,6 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Shynixn
- */
 interface BungeeCordSignInfo extends ConfigurationSerializable {
     String getServer();
 

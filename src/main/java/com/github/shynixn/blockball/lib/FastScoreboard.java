@@ -11,9 +11,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.List;
 import java.util.logging.Level;
 
-/**
- * Created by Shynixn
- */
 public class FastScoreboard implements LightScoreboard {
     private transient Scoreboard scoreboard;
     private transient Objective objective;

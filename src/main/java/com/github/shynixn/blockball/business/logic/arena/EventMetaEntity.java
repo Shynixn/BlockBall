@@ -5,9 +5,6 @@ import com.github.shynixn.blockball.api.entities.EventMeta;
 import java.io.Serializable;
 import java.util.*;
 
-/**
- * Created by Shynixn
- */
 class EventMetaEntity implements Serializable, EventMeta {
     private static final String[] A = new String[0];
     private static final long serialVersionUID = 1L;

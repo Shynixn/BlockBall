@@ -11,9 +11,6 @@ import org.bukkit.configuration.MemorySection;
 
 import java.util.*;
 
-/**
- * Created by Shynixn
- */
 class LobbyMetaEntity implements LobbyMeta {
     private IPosition lobbySpawn;
     private final List<IPosition> signLocations = new ArrayList<>();

@@ -11,9 +11,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-/**
- * Created by Shynixn
- */
 class BungeeCordCommandExecutor extends BukkitCommand {
     private final BungeeCordController controller;
 

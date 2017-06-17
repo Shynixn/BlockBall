@@ -7,9 +7,6 @@ import org.bukkit.entity.Player;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Created by Shynixn
- */
 public class FastSound implements LightSound {
     private static final long serialVersionUID = 1L;
     private String sound;

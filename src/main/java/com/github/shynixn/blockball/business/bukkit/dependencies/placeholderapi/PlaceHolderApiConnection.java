@@ -9,9 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/**
- * Created by Shynixn
- */
 public class PlaceHolderApiConnection {
     public static void init(JavaPlugin plugin) {
         final PlaceHolderScoreHooker hooker = new PlaceHolderScoreHooker(plugin);

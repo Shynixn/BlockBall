@@ -6,9 +6,6 @@ import org.bukkit.entity.Player;
 
 import java.io.Serializable;
 
-/**
- * Created by Shynixn
- */
 public interface LightSound extends Serializable, ConfigurationSerializable {
     LightSound copy();
 

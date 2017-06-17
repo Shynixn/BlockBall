@@ -1,8 +1,5 @@
 package com.github.shynixn.blockball.api.entities;
 
-/**
- * Created by Shynixn
- */
 public enum PlaceHolderType {
     REDSCORE,
     REDAMOUNT,

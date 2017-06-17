@@ -16,9 +16,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 
-/**
- * Created by Shynixn
- */
 public class BungeeCordController implements BungeeCordProvider.CallBack {
     public final String PREFIX;
     private final JavaPlugin plugin;

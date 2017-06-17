@@ -5,9 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
-/**
- * Created by Shynixn
- */
 public interface LightParticle extends ConfigurationSerializable {
     LightParticle copy();
 

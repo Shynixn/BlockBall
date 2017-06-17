@@ -7,9 +7,6 @@ import com.github.shynixn.blockball.lib.SCommandExecutor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-/**
- * Created by Shynixn
- */
 @SCommandExecutor.Command(command = "blockballreload")
 class BlockBallCommandExecutor extends SCommandExecutor {
     @ConsoleCommand

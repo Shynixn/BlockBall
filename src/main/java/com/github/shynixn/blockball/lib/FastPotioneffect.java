@@ -7,9 +7,6 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Created by Shynixn
- */
 public class FastPotioneffect implements LightPotioneffect {
     private static final long serialVersionUID = 1L;
     private int type = PotionEffectType.ABSORPTION.getId();

@@ -10,9 +10,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 
-/**
- * Created by Shynixn
- */
 @Deprecated
 public interface LightHologram {
     void show(Player... players);

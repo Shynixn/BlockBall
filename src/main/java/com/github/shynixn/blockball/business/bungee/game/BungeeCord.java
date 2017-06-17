@@ -18,9 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-/**
- * Created by Shynixn
- */
 public class BungeeCord {
     public static String MOD_RESTARTING = ChatColor.RED + "Restarting";
     public static String MOD_WAITING_FOR_PLAYERS = ChatColor.GREEN + "Waiting for players...";

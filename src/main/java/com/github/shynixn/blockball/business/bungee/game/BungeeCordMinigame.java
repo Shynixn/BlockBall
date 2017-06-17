@@ -5,9 +5,7 @@ import org.bukkit.ChatColor;
 
 import java.util.logging.Level;
 
-/**
- * Created by Shynixn
- */
+
 public final class BungeeCordMinigame {
     void setMotd(String motd) {
         try {

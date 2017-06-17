@@ -8,9 +8,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
-/**
- * Created by Shynixn
- */
 public abstract class DynamicCommandHelper extends BukkitCommand {
     private final Config.CommandContainer c;
 

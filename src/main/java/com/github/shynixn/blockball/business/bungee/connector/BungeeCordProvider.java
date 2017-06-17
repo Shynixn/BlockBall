@@ -15,9 +15,6 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 
-/**
- * Created by Shynixn
- */
 class BungeeCordProvider implements PluginMessageListener {
     private final BungeeCordController controller;
     private final JavaPlugin plugin;

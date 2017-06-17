@@ -2,9 +2,6 @@ package com.github.shynixn.blockball.api.entities;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-/**
- * Created by Shynixn
- */
 public interface EventMeta extends ConfigurationSerializable {
     void addRegisteredRedPlayer(String name);
 

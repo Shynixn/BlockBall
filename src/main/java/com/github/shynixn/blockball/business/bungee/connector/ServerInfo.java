@@ -3,9 +3,6 @@ package com.github.shynixn.blockball.business.bungee.connector;
 import com.github.shynixn.blockball.business.bungee.game.BungeeCord;
 import org.bukkit.ChatColor;
 
-/**
- * Created by Shynixn
- */
 interface ServerInfo {
     int getPlayerAmount();
 

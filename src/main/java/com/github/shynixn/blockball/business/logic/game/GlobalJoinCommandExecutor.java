@@ -10,9 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-/**
- * Created by Shynixn
- */
 class GlobalJoinCommandExecutor extends DynamicCommandHelper {
     private final GameController controller;
 

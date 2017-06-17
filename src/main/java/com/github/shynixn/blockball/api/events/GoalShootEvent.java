@@ -5,9 +5,6 @@ import com.github.shynixn.blockball.api.entities.Team;
 import com.github.shynixn.blockball.lib.SEvent;
 import org.bukkit.entity.Player;
 
-/**
- * Created by Shynixn
- */
 public class GoalShootEvent extends SEvent {
     private final Game game;
     private final Player player;
