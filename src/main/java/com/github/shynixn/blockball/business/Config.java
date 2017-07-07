@@ -316,11 +316,11 @@ public final class Config {
             for (final String s : new String[]{this.line1, this.line2, this.line3, this.line4}) {
                 if (game.getPlayers().size() < players.size()) {
                     sign.setLine(i, this.replace(s, game.getArena(), null, true).replace("<players>", String.valueOf(players.size()))
-                            .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers()))
+                            .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers()*2))
                             .replace("<state>", stage));
                 } else {
                     sign.setLine(i, this.replace(s, game.getArena(), null, true).replace("<players>", String.valueOf(game.getPlayers().size()))
-                            .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers()))
+                            .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers()*2))
                             .replace("<state>", stage));
                 }
 

@@ -375,7 +375,9 @@ class GameListener extends SimpleListener {
                 player.setAllowFlight(false);
                 player.setFlying(false);
                 if (game.getArena().getTeamMeta().isAllowDoubleJump()) {
-                    player.setVelocity(player.getLocation().getDirection().multiply(2.6D).setY(1.0D));
+                    player.setVelocity(player.getLocation().getDirection()
+                            .multiply(game.getArena().getTeamMeta().getDoubleJumpMeta().getHorizontalStrength())
+                            .setY(game.getArena().getTeamMeta().getDoubleJumpMeta().getVerticalStrength()));
                     try {
                         game.getArena().getTeamMeta().getDoubleJumpSound().play(player.getLocation());
                     } catch (final InterPreter19Exception e) {

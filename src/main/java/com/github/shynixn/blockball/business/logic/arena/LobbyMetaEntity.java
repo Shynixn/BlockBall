@@ -212,12 +212,12 @@ class LobbyMetaEntity implements LobbyMeta {
 
     @Override
     public int getMinPlayers() {
-        return this.reference.getTeamMeta().getTeamMinSize() * 2;
+        return this.reference.getTeamMeta().getTeamMinSize();
     }
 
     @Override
     public int getMaxPlayers() {
-        return this.reference.getTeamMeta().getTeamMaxSize() * 2;
+        return this.reference.getTeamMeta().getTeamMaxSize();
     }
 
     @Override

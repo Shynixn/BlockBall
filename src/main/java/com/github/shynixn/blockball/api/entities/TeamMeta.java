@@ -9,6 +9,19 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 
 public interface TeamMeta extends ConfigurationSerializable {
+
+    /**
+     * Forces even teams on both sides. Red and blue team amount has to be the same
+     * @param enabled enabled
+     */
+    void setForceEvenTeams(boolean enabled);
+
+    /**
+     * Returns if even teams on both sides is enabled. Red and blue team amount has to be the same to start
+     * @return enabled
+     */
+    boolean isForceEvenTeamsEnabled();
+
     int getMaxScore();
 
     void setMaxScore(int maxScore);
@@ -23,6 +36,8 @@ public interface TeamMeta extends ConfigurationSerializable {
 
     void setHologramText(String text);
 
+
+
     void setHologramEnabled(boolean enabled);
 
     boolean isHologramEnabled();
@@ -33,11 +48,6 @@ public interface TeamMeta extends ConfigurationSerializable {
 
     void setRedSpawnPoint(Location redSpawnPoint);
 
-    LightParticle getDoubleJumpParticle();
-
-    void setDoubleJumpParticle(LightParticle doubleJumpParticle);
-
-    LightSound getDoubleJumpSound();
 
     boolean isFastJoin();
 
@@ -70,8 +80,6 @@ public interface TeamMeta extends ConfigurationSerializable {
     void setRewardWinning(int rewardWinning);
 
     void setFastJoin(boolean enable);
-
-    void setDoubleJumpSound(LightSound doubleJumpSound);
 
     String getRedtitleScoreMessage();
 
@@ -173,9 +181,29 @@ public interface TeamMeta extends ConfigurationSerializable {
 
     String getHowToJoinMessage();
 
+    @Deprecated
     boolean isAllowDoubleJump();
 
+    @Deprecated
     void setAllowDoubleJump(boolean allowDoubleJump);
+
+    @Deprecated
+    LightParticle getDoubleJumpParticle();
+
+    @Deprecated
+    void setDoubleJumpParticle(LightParticle doubleJumpParticle);
+
+    @Deprecated
+    LightSound getDoubleJumpSound();
+
+    @Deprecated
+    void setDoubleJumpSound(LightSound doubleJumpSound);
+
+    /**
+     * Returns the settings for the double jump
+     * @return doubleJumpMeta
+     */
+    DoubleJumpMeta getDoubleJumpMeta();
 
     String getBossBarPluginMessage();
 

@@ -15,12 +15,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.ChatPaginator;
 
 @SuppressWarnings("deprecation")
 @SCommandExecutor.Command(command = "blockball")
 class ArenaCommandExecutor extends SCommandExecutor {
-    private static final String HEADER_STANDARD = ChatColor.WHITE + "" +  ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Balls                      ";
-    private static final String FOOTER_STANDARD = ChatColor.WHITE + "" +  ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           ┌1/1┐                            ";
+    private static final String HEADER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Balls                      ";
+    private static final String FOOTER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           ┌1/1┐                            ";
 
     private static final String MENU_BACK = "b - Go back";
     private static final String MENU_EXIT = "e - Close chat menu";
@@ -407,9 +408,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
             if (number == 1)
                 this.player.sendMessage(Language.PREFIX + "Enter the max score of a game:");
             else if (number == 2)
-                this.player.sendMessage(Language.PREFIX + "Enter the max number of players:");
+                this.player.sendMessage(Language.PREFIX + "Enter the max amount of players per team:");
             else if (number == 3)
-                this.player.sendMessage(Language.PREFIX + "Enter the min number of players:");
+                this.player.sendMessage(Language.PREFIX + "Enter the min amount of players:");
             else if (number == 4) {
                 this.arenaEntity.getTeamMeta().setRedSpawnPoint(this.player.getLocation());
                 this.player.sendMessage(Language.PREFIX + "Set the red spawn at your location.");
@@ -442,8 +443,8 @@ class ArenaCommandExecutor extends SCommandExecutor {
             this.player.sendMessage(HEADER_STANDARD);
             this.player.sendMessage("");
             this.player.sendMessage(Language.PREFIX + "1 - Set max score");
-            this.player.sendMessage(Language.PREFIX + "2 - Set max players");
-            this.player.sendMessage(Language.PREFIX + "3 - Set min players");
+            this.player.sendMessage(Language.PREFIX + "2 - Set max players per team");
+            this.player.sendMessage(Language.PREFIX + "3 - Set min players for match");
             this.player.sendMessage(Language.PREFIX + "4 - Set red spawnpoint");
             this.player.sendMessage(Language.PREFIX + "5 - Set blue spawnpoint");
             this.player.sendMessage(Language.PREFIX + "6 - Set red equipment");
@@ -882,7 +883,6 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
-
     //-------------------------------------------------------------------------------------------
 
     private class BallDesignSettingsPage extends SChatpage {
@@ -961,7 +961,6 @@ class ArenaCommandExecutor extends SCommandExecutor {
             this.player.sendMessage("");
         }
     }
-
 
     private class BallSoundParticlesSettingPage extends SChatpage {
         private final ArenaEntity arenaEntity;
@@ -1044,36 +1043,32 @@ class ArenaCommandExecutor extends SCommandExecutor {
                     this.player.sendMessage(Language.PREFIX + "Enabled damage.");
                 else
                     this.player.sendMessage(Language.PREFIX + "Disabled damage.");
-            } else if (number == 2) {
-                this.arenaEntity.getTeamMeta().setAllowDoubleJump(!this.arenaEntity.getTeamMeta().isAllowDoubleJump());
-                if (this.arenaEntity.getTeamMeta().isAllowDoubleJump())
-                    this.player.sendMessage(Language.PREFIX + "Enabled double jump.");
+            }
+            else if (number == 2) {
+                this.arenaEntity.getTeamMeta().setForceEvenTeams(!this.arenaEntity.getTeamMeta().isForceEvenTeamsEnabled());
+                if (this.arenaEntity.getTeamMeta().isForceEvenTeamsEnabled())
+                    this.player.sendMessage(Language.PREFIX + "Enabled force-even-teams.");
                 else
-                    this.player.sendMessage(Language.PREFIX + "Disabled double jump.");
-            } else if (number == 3) {
-                this.open(this.player, new EditParticlePage(this.player, this.arenaEntity.getTeamMeta().getDoubleJumpParticle(), this.arenaEntity));
+                    this.player.sendMessage(Language.PREFIX + "Disabled force-even-teams.");
+            }
+            else if (number == 3) {
+                this.open(this.player, new EditDoubleJumpPage(this.player, this.arenaEntity));
             } else if (number == 4) {
-                this.open(this.player, new EditSoundPage(this.player, this.arenaEntity.getTeamMeta().getDoubleJumpSound(), this.arenaEntity));
-            } else if (number == 5) {
                 this.open(this.player, new HologramSettingsPage(this.player, this.arenaEntity));
-            } else if (number == 6) {
+            } else if (number == 5) {
                 if (NMSRegistry.getCurrencyName() == null)
                     this.player.sendMessage(Language.PREFIX + "Cannot find valid currency name. Did you install/setup Vault and an economy plugin?");
                 else
                     this.open(this.player, new VaultSettings(this.player, this.arenaEntity));
-            } else if (number == 7) {
+            } else if (number == 6) {
                 this.open(this.player, new SpawnerItems(this.player, this.arenaEntity));
-            }
-            else if (number == 8) {
+            } else if (number == 7) {
                 this.open(this.player, new GlowingSettingsPage(this.player, this.arenaEntity));
-            }
-            else if (number == 9) {
-                this.arenaEntity.getTeamMeta().setAllowDoubleJump(true);
-                this.arenaEntity.getTeamMeta().setDoubleJumpParticle(new SParticle(ParticleEffect.EXPLOSION_NORMAL, 4, 0.0002, 2, 2, 2));
-                this.arenaEntity.getTeamMeta().setDoubleJumpSound(new FastSound("GHAST_FIREBALL", 100.0, 1.0));
+            } else if (number == 8) {
+                this.arenaEntity.getTeamMeta().setForceEvenTeams(false);
                 this.arenaEntity.getTeamMeta().setDamage(true);
                 this.player.sendMessage(Language.PREFIX + "Reset this page.");
-            } else if (number == 10) {
+            } else if (number == 9) {
                 this.player.sendMessage(Language.PREFIX + "Saved settings.");
                 this.open(this.player, new MainSettingsPage(this.player, this.arenaEntity));
             }
@@ -1084,16 +1079,15 @@ class ArenaCommandExecutor extends SCommandExecutor {
             this.player.sendMessage("");
             this.player.sendMessage(HEADER_STANDARD);
             this.player.sendMessage("");
-            this.player.sendMessage(Language.PREFIX + "1 - Toggle damage");
-            this.player.sendMessage(Language.PREFIX + "2 - Toggle DoubleJump");
-            this.player.sendMessage(Language.PREFIX + "3 - Set DoubleJump particle");
-            this.player.sendMessage(Language.PREFIX + "4 - Set DoubleJump sound");
-            this.player.sendMessage(Language.PREFIX + "5 - Set Hologram");
-            this.player.sendMessage(Language.PREFIX + "6 - [Vault] Set rewards");
-            this.player.sendMessage(Language.PREFIX + "7 - Item Spawner");
-            this.player.sendMessage(Language.PREFIX + "8 - ScoreGlowing 1.9+");
-            this.player.sendMessage(Language.PREFIX + "9 - Reset this page");
-            this.player.sendMessage(Language.PREFIX + "10 - Save settings");
+            this.player.sendMessage(Language.PREFIX + "1 - Enable/Disable damage");
+            this.player.sendMessage(Language.PREFIX + "2 - Enable/Disable force-even-teams");
+            this.player.sendMessage(Language.PREFIX + "3 - Set DoubleJump");
+            this.player.sendMessage(Language.PREFIX + "4 - Set Hologram");
+            this.player.sendMessage(Language.PREFIX + "5 - [Vault] Set rewards");
+            this.player.sendMessage(Language.PREFIX + "6 - Item Spawner");
+            this.player.sendMessage(Language.PREFIX + "7 - ScoreGlowing 1.9+");
+            this.player.sendMessage(Language.PREFIX + "8 - Reset this page");
+            this.player.sendMessage(Language.PREFIX + "9 - Save settings");
             this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + MENU_BACK);
             this.player.sendMessage(Language.PREFIX + ChatColor.RED + MENU_EXIT);
             this.player.sendMessage("");
@@ -1102,6 +1096,73 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
     }
 
+    private class EditDoubleJumpPage extends SChatpage {
+        private final ArenaEntity arenaEntity;
+
+        private EditDoubleJumpPage(Player player, ArenaEntity entity) {
+            super(player);
+            this.arenaEntity = entity;
+        }
+
+        @Override
+        public boolean playerPreChatEnter(String text) {
+            if (this.lastNumber == 2 && SMathUtils.tryPDouble(text))
+                this.arenaEntity.getTeamMeta().getDoubleJumpMeta().setHorizontalStrength(Double.parseDouble(text));
+            else if (this.lastNumber == 3 && SMathUtils.tryPDouble(text))
+                this.arenaEntity.getTeamMeta().getDoubleJumpMeta().setVerticalStrength(Double.parseDouble(text));
+            else
+                return true;
+            return false;
+        }
+
+        @Override
+        public void onPlayerSelect(int number) {
+            if (number == 1) {
+                this.arenaEntity.getTeamMeta().setAllowDoubleJump(!this.arenaEntity.getTeamMeta().isAllowDoubleJump());
+                if (this.arenaEntity.getTeamMeta().isAllowDoubleJump())
+                    this.player.sendMessage(Language.PREFIX + "Enabled double jump.");
+                else
+                    this.player.sendMessage(Language.PREFIX + "Disabled double jump.");
+            } else if (number == 2) {
+                this.player.sendMessage(Language.PREFIX + "Enter the amount of horizontal-strength (Default: 2.6):");
+            } else if (number == 3) {
+                this.player.sendMessage(Language.PREFIX + "Enter the amount of vertical-strength (Default: 1.0):");
+            } else if (number == 4) {
+                this.open(this.player, new EditParticlePage(this.player, this.arenaEntity.getTeamMeta().getDoubleJumpParticle(), this.arenaEntity));
+            } else if (number == 5) {
+                this.open(this.player, new EditSoundPage(this.player, this.arenaEntity.getTeamMeta().getDoubleJumpSound(), this.arenaEntity));
+            } else if (number == 6) {
+                this.arenaEntity.getTeamMeta().setAllowDoubleJump(true);
+                this.arenaEntity.getTeamMeta().setDoubleJumpParticle(new SParticle(ParticleEffect.EXPLOSION_NORMAL, 4, 0.0002, 2, 2, 2));
+                this.arenaEntity.getTeamMeta().setDoubleJumpSound(new FastSound("GHAST_FIREBALL", 100.0, 1.0));
+                this.arenaEntity.getTeamMeta().getDoubleJumpMeta().setHorizontalStrength(2.6);
+                this.arenaEntity.getTeamMeta().getDoubleJumpMeta().setVerticalStrength(1.0);
+                this.player.sendMessage(Language.PREFIX + "Reset this page.");
+            } else if (number == 7) {
+                this.player.sendMessage(Language.PREFIX + "Saved settings.");
+                this.open(this.player, new AddtionalSettingPage(this.player, this.arenaEntity));
+            }
+        }
+
+        @Override
+        public void show() {
+            this.player.sendMessage("");
+            this.player.sendMessage(HEADER_STANDARD);
+            this.player.sendMessage("");
+            this.player.sendMessage(Language.PREFIX + "1 - Enable/Disable DoubleJump");
+            this.player.sendMessage(Language.PREFIX + "2 - Set horizontal strength");
+            this.player.sendMessage(Language.PREFIX + "3 - Set vertical strength");
+            this.player.sendMessage(Language.PREFIX + "4 - Set particle");
+            this.player.sendMessage(Language.PREFIX + "5 - Set sound");
+            this.player.sendMessage(Language.PREFIX + "6 - Reset this page");
+            this.player.sendMessage(Language.PREFIX + "7 - Save settings");
+            this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + MENU_BACK);
+            this.player.sendMessage(Language.PREFIX + ChatColor.RED + MENU_EXIT);
+            this.player.sendMessage("");
+            this.player.sendMessage(FOOTER_STANDARD);
+            this.player.sendMessage("");
+        }
+    }
 
     //-----------------------------------------------------
 
@@ -1389,7 +1450,6 @@ class ArenaCommandExecutor extends SCommandExecutor {
             this.mode = mode;
         }
 
-
         @Override
         public boolean playerPreChatEnter(String text) {
             if (this.mode == 0 && this.lastNumber == 1) {
@@ -1485,7 +1545,6 @@ class ArenaCommandExecutor extends SCommandExecutor {
             super(player);
             this.arenaEntity = entity;
         }
-
 
         @Override
         public boolean playerPreChatEnter(String text) {
@@ -2226,7 +2285,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
                     this.player.sendMessage(Language.PREFIX + "Disabled glowing.");
             } else if (number == 2) {
                 this.player.sendMessage(Language.PREFIX + "Enter the amount of seconds a player should be glowing:");
-            }  else if (number == 3) {
+            } else if (number == 3) {
                 this.open(this.player, this.getLastInstance());
             }
         }

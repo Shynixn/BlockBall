@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.business.logic.arena;
 
+import com.github.shynixn.blockball.api.entities.DoubleJumpMeta;
 import com.github.shynixn.blockball.api.entities.IPosition;
 import com.github.shynixn.blockball.lib.*;
 import com.github.shynixn.blockball.api.entities.TeamMeta;
@@ -17,9 +18,12 @@ import java.util.Map;
 
 class TeamMetaEntity implements TeamMeta, Serializable {
     private static final long serialVersionUID = 1L;
+
+    private DoubleJumpMetaEntity doubleJumpMetaEntity = new DoubleJumpMetaEntity();
+
     private String redTeamName = "&cTeam Red";
     private String blueTeamName = "&9Team Blue";
-    private int teamMaxSize = 5;
+    private int teamMaxSize = 10;
     private int teamMinSize;
     private String redColor = "&c";
     private String blueColor = "&9";
@@ -55,9 +59,7 @@ class TeamMetaEntity implements TeamMeta, Serializable {
     private boolean fastJoin;
     private boolean emptyReset;
 
-    private boolean allowDoubleJump = true;
-    private LightParticle doubleJumpParticle = new SParticle(ParticleEffect.EXPLOSION_NORMAL, 4, 0.0002, 2, 2, 2);
-    private LightSound doubleJumpSound = new FastSound("GHAST_FIREBALL", 100.0, 1.0);
+    private boolean forceEvenTeams;
 
     private IPosition blueSpawnPoint;
     private IPosition redSpawnPoint;
@@ -87,11 +89,13 @@ class TeamMetaEntity implements TeamMeta, Serializable {
 
     TeamMetaEntity(Map<String, Object> items) throws Exception {
         super();
+        if(items.containsKey("generic.force-even-teams"))
+             this.forceEvenTeams = (boolean) items.get("generic.force-even-teams");
         this.maxScore = (int) items.get("generic.max-score");
         this.autoTeamJoin = (boolean) items.get("generic.auto-team-join");
         this.fastJoin = (boolean) items.get("generic.instant-join");
         this.emptyReset = (boolean) items.get("generic.reset-on-empty");
-        this.allowDoubleJump = (boolean) items.get("generic.double-jump");
+        this.doubleJumpMetaEntity.setEnabled((boolean) items.get("generic.double-jump"));
         this.teamMinSize = (int) items.get("generic.min-size");
         this.teamMaxSize = (int) items.get("generic.max-size");
         this.disableDamage = !(boolean) items.get("generic.take-damage");
@@ -144,8 +148,12 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         this.bluewinnerTitleMessage = (String) items.get("messages.blue-win-title");
         this.bluewinnerSubtitleMessage = (String) items.get("messages.blue-win-subtitle");
 
-        this.doubleJumpParticle = new SParticle(((MemorySection) items.get("double-jump.particle")).getValues(true));
-        this.doubleJumpSound = new FastSound(((MemorySection) items.get("double-jump.sound")).getValues(true));
+        this.doubleJumpMetaEntity.setParticle(new SParticle(((MemorySection) items.get("double-jump.particle")).getValues(true)));
+        this.doubleJumpMetaEntity.setSound(new FastSound(((MemorySection) items.get("double-jump.sound")).getValues(true)));
+        if(items.containsKey("double-jump.vertical-strength"))
+              this.doubleJumpMetaEntity.setVerticalStrength((Double) items.get("double-jump.vertical-strength"));
+        if(items.containsKey("double-jump.horizontal-strength"))
+             this.doubleJumpMetaEntity.setHorizontalStrength((Double) items.get("double-jump.horizontal-strength"));
 
         this.rewardGoals = (int) items.get("dependencies.vault.rewards-per-goal");
         this.rewardGames = (int) items.get("dependencies.vault.rewards-per-game");
@@ -207,9 +215,11 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         entity.maxScore = this.maxScore;
         entity.autoTeamJoin = this.autoTeamJoin;
 
-        entity.allowDoubleJump = this.allowDoubleJump;
-        entity.doubleJumpParticle = this.doubleJumpParticle.copy();
-        entity.doubleJumpSound = this.doubleJumpSound.copy();
+        entity.doubleJumpMetaEntity.setEnabled(this.doubleJumpMetaEntity.isEnabled());
+        entity.doubleJumpMetaEntity.setHorizontalStrength(this.doubleJumpMetaEntity.getHorizontalStrength());
+        entity.doubleJumpMetaEntity.setVerticalStrength(this.doubleJumpMetaEntity.getVerticalStrength());
+        entity.doubleJumpMetaEntity.setSound(this.doubleJumpMetaEntity.getSoundEffect().copy());
+        entity.doubleJumpMetaEntity.setParticle(this.doubleJumpMetaEntity.getParticleEffect().copy());
     }
 
     @Override
@@ -405,6 +415,26 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         this.bluewinnerSubtitleMessage = bluewinnerSubtitleMessage;
     }
 
+    /**
+     * Forces even teams on both sides. Red and blue team amount has to be the same
+     *
+     * @param enabled enabled
+     */
+    @Override
+    public void setForceEvenTeams(boolean enabled) {
+        this.forceEvenTeams = enabled;
+    }
+
+    /**
+     * Returns if even teams on both sides is enabled. Red and blue team amount has to be the same to start
+     *
+     * @return enabled
+     */
+    @Override
+    public boolean isForceEvenTeamsEnabled() {
+        return this.forceEvenTeams;
+    }
+
     @Override
     public int getMaxScore() {
         return this.maxScore;
@@ -415,24 +445,38 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         this.maxScore = maxScore;
     }
 
+    @Deprecated
     @Override
     public LightParticle getDoubleJumpParticle() {
-        return this.doubleJumpParticle;
+        return this.doubleJumpMetaEntity.getParticleEffect();
     }
 
+    @Deprecated
     @Override
     public void setDoubleJumpParticle(LightParticle doubleJumpParticle) {
-        this.doubleJumpParticle = doubleJumpParticle;
+        this.doubleJumpMetaEntity.setParticle(doubleJumpParticle);
     }
 
+    @Deprecated
     @Override
     public LightSound getDoubleJumpSound() {
-        return this.doubleJumpSound;
+        return this.doubleJumpMetaEntity.getSoundEffect();
     }
 
+    @Deprecated
     @Override
     public void setDoubleJumpSound(LightSound doubleJumpSound) {
-        this.doubleJumpSound = doubleJumpSound;
+        this.doubleJumpMetaEntity.setSound(doubleJumpSound);
+    }
+
+    /**
+     * Returns the settings for the double jump
+     *
+     * @return doubleJumpMeta
+     */
+    @Override
+    public DoubleJumpMeta getDoubleJumpMeta() {
+        return this.doubleJumpMetaEntity;
     }
 
     @Override
@@ -629,13 +673,15 @@ class TeamMetaEntity implements TeamMeta, Serializable {
     }
 
     @Override
+    @Deprecated
     public boolean isAllowDoubleJump() {
-        return this.allowDoubleJump;
+        return this.doubleJumpMetaEntity.isEnabled();
     }
 
     @Override
+    @Deprecated
     public void setAllowDoubleJump(boolean allowDoubleJump) {
-        this.allowDoubleJump = allowDoubleJump;
+        this.doubleJumpMetaEntity.setEnabled(allowDoubleJump);
     }
 
     @Override
@@ -756,7 +802,7 @@ class TeamMetaEntity implements TeamMeta, Serializable {
 
     @Override
     public Map<String, Object> serialize() {
-        final Map<String, Object> map = new LinkedHashMap<>();
+        final Map<String, Object> map = new LinkedHashMap<>(); //Should be replaced by YamlSerializer
         final Map<String, Object> tmp1 = new LinkedHashMap<>();
         final Map<String, Object> tmp2 = new LinkedHashMap<>();
         final Map<String, Object> tmp3 = new LinkedHashMap<>();
@@ -774,10 +820,11 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         final Map<String, Object> tmp0 = new LinkedHashMap<>();
 
         tmp1.put("max-score", this.maxScore);
+        tmp1.put("force-even-teams", this.forceEvenTeams);
         tmp1.put("auto-team-join", this.autoTeamJoin);
         tmp1.put("instant-join", this.fastJoin);
         tmp1.put("reset-on-empty", this.emptyReset);
-        tmp1.put("double-jump", this.allowDoubleJump);
+        tmp1.put("double-jump", this.doubleJumpMetaEntity.isEnabled());
         tmp1.put("min-size", this.teamMinSize);
         tmp1.put("max-size", this.teamMaxSize);
         tmp1.put("take-damage", !this.disableDamage);
@@ -842,8 +889,10 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         tmp3.put("armor", this.blueItems);
         map.put("blue", tmp3);
 
-        tmp12.put("particle", SFileUtils.serialize(this.doubleJumpParticle));
-        tmp12.put("sound", SFileUtils.serialize(this.doubleJumpSound));
+        tmp12.put("horizontal-strength", this.doubleJumpMetaEntity.getHorizontalStrength());
+        tmp12.put("vertical-strength", this.doubleJumpMetaEntity.getVerticalStrength());
+        tmp12.put("particle", SFileUtils.serialize(this.doubleJumpMetaEntity.getParticleEffect()));
+        tmp12.put("sound", SFileUtils.serialize(this.doubleJumpMetaEntity.getSoundEffect()));
         map.put("double-jump", tmp12);
 
         tmp14.put("enabled", this.hologramEnabled);
