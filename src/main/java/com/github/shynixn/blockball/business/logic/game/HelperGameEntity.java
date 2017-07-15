@@ -206,7 +206,9 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                 }
             }
             if (this.stage == GameStage.ENABLED) {
-                if (!this.lobby.isEmpty() && this.lobby.size() >= this.arena.getLobbyMeta().getMinPlayers()) {
+                if (!this.lobby.isEmpty()
+                        && this.lobby.size() >= this.arena.getLobbyMeta().getMinPlayers()
+                        && (!this.arena.getTeamMeta().isForceEvenTeamsEnabled() || this.lobby.size() % 2 == 0)) {
                     if (!this.isStarting) {
                         this.isStarting = true;
                     } else {
@@ -239,6 +241,10 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                     if (this.isStarting) {
                         this.countdown = this.arena.getLobbyMeta().getCountDown();
                         this.isStarting = false;
+                        for (final Player player : this.lobby) {
+                            player.setLevel(0);
+                            player.setExp(0.0F);
+                        }
                     }
                 }
             }
@@ -252,7 +258,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
     }
 
     boolean isLobbyFull() {
-        return this.arena.getLobbyMeta().getMaxPlayers() <= this.lobby.size();
+        return (this.arena.getLobbyMeta().getMaxPlayers()*2) <= this.lobby.size();
     }
 
     boolean isInLobby(Player player) {

@@ -118,7 +118,7 @@ class ArenaFileManager {
                 }
                 configuration.save(file);
             } catch (IOException | InvalidConfigurationException ex) {
-                Bukkit.getLogger().log(Level.WARNING, ex.getMessage());
+                Bukkit.getLogger().log(Level.WARNING,"Cannot save arena." ,ex.getMessage());
             }
         }
         return true;
@@ -132,7 +132,7 @@ class ArenaFileManager {
                     throw new IllegalStateException("Cannot delete file!");
             }
         } catch (final Exception ex) {
-            Bukkit.getLogger().log(Level.WARNING, ex.getMessage());
+            Bukkit.getLogger().log(Level.WARNING, "Cannot delete arena file.", ex);
         }
         return false;
     }
@@ -151,7 +151,7 @@ class ArenaFileManager {
                     items.add(arenaEntity);
                 }
             } catch (final Exception ex) {
-                Bukkit.getLogger().log(Level.WARNING, ex.getMessage());
+                Bukkit.getLogger().log(Level.WARNING, "Cannot read arena file " + s + ".", ex);
             }
         }
         return items.toArray(A);

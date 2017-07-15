@@ -118,7 +118,7 @@ public class BungeeCordController implements BungeeCordProvider.CallBack {
     }
 
     private String replaceSign(String line, ServerInfo info) {
-        line = line.replace("<maxplayers>", String.valueOf(info.getMaxPlayerAmount()));
+        line = line.replace("<maxplayers>", String.valueOf(info.getMaxPlayerAmount()*2));
         line = line.replace("<players>", String.valueOf(info.getPlayerAmount()));
         line = line.replace("<server>", info.getServerName());
         if (info.getState() == ServerInfo.State.INGAME)

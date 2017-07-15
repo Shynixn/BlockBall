@@ -15,10 +15,8 @@ class BungeeCordCommandExecutor extends BukkitCommand {
     private final BungeeCordController controller;
 
     BungeeCordCommandExecutor(BungeeCordController controller) {
-        super(BungeeCord.COMMAND_COMMAND);
+        super(BungeeCord.COMMAND_COMMAND,BungeeCord.COMMAND_DESCRIPTION,BungeeCord.COMMAND_USEAGE,new ArrayList<>());
         this.controller = controller;
-        this.description = BungeeCord.COMMAND_DESCRIPTION;
-        this.usageMessage = BungeeCord.COMMAND_USEAGE;
         this.setPermission(BungeeCord.COMMAND_PERMISSION);
         this.setPermissionMessage(BungeeCord.COMMAND_PERMISSION_MESSAGE);
         this.setAliases(new ArrayList<>());

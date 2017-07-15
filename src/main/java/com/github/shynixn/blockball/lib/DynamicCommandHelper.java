@@ -12,10 +12,8 @@ public abstract class DynamicCommandHelper extends BukkitCommand {
     private final Config.CommandContainer c;
 
     public DynamicCommandHelper(Config.CommandContainer c) {
-        super(c.getCommand());
+        super(c.getCommand(),c.getDescription(),c.getUseage(), new ArrayList<>());
         this.c = c;
-        this.description = c.getDescription();
-        this.usageMessage = c.getUseage();
         this.setPermission(c.getPermission());
         this.setAliases(new ArrayList<>());
         NMSRegistry.registerDynamicCommand(c.getCommand(), this);
