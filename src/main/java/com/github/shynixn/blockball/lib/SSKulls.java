@@ -15,6 +15,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
+@Deprecated
 public final class SSKulls {
     public static ItemStack getSkull(String skin) {
         final ItemStack itemStack = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);

@@ -7,6 +7,7 @@ com.github.shynixn.blockball.business.bukkit
 com.github.shynixn.blockball.business.bukkit.dependencies.bossbar
 com.github.shynixn.blockball.business.bukkit.dependencies.placeholderapi
 com.github.shynixn.blockball.business.bukkit.dependencies.vault
+com.github.shynixn.blockball.business.bukkit.dependencies.worldedit
 com.github.shynixn.blockball.business.bukkit.dependencies.worldguard
 com.github.shynixn.blockball.business.bukkit.nms
 com.github.shynixn.blockball.business.bukkit.nms.v1_10_R1

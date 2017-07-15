@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.lib;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+@Deprecated
 public class Interpreter19 {
     public static ItemStack getItemInHand19(Player player, boolean offHand) {
         if (!ReflectionLib.getServerVersion().equals("1_9_R1")

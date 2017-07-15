@@ -11,18 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+@Deprecated
 public final class SFileUtils {
-    public static File createFile(File file) {
-        try {
-            if (file.exists())
-                file.delete();
-            file.createNewFile();
-            return file;
-        } catch (final Exception e) {
-            Bukkit.getLogger().log(Level.INFO, "Failed to create file.", e);
-        }
-        return null;
-    }
 
     public static Map<String, Object> serialize(ConfigurationSerializable serializable) {
         if (serializable == null)
@@ -82,47 +72,5 @@ public final class SFileUtils {
 
     public static boolean writeAllLines(File file, List<String> text) {
         return writeAllLines(file, text.toArray(new String[text.size()]));
-    }
-
-    public static boolean deleteAll(File folder) {
-        try {
-            if (folder.isDirectory()) {
-                if (folder.list().length != 0) {
-                    for (final String s : folder.list()) {
-                        final File file = new File(folder, s);
-                        if (file.isDirectory()) {
-                            deleteAll(file);
-                        } else {
-                            file.delete();
-                        }
-                    }
-                    deleteAll(folder);
-                } else {
-                    folder.delete();
-                }
-            }
-        } catch (final Exception e) {
-            Bukkit.getLogger().log(Level.INFO, "Failed to delete directory.", e);
-        }
-        return true;
-    }
-
-    public static boolean copyResourceFile(InputStream in, File file) {
-        try (OutputStream out = new FileOutputStream(file)) {
-            final byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-        } catch (final Exception e) {
-            Bukkit.getLogger().log(Level.INFO, "Failed to copy resource.", e);
-            return false;
-        }
-        try {
-            in.close();
-        } catch (final IOException e) {
-            Bukkit.getLogger().log(Level.INFO, "Failed to copy resource.", e);
-        }
-        return true;
     }
 }

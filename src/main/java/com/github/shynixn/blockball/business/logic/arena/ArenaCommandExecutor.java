@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.entities.items.BoostItem;
 import com.github.shynixn.blockball.api.entities.items.Spawnrate;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
+import com.github.shynixn.blockball.business.bukkit.dependencies.worldedit.WorldEditConnection;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.business.logic.items.ItemSpawner;
 import com.github.shynixn.blockball.lib.*;
@@ -157,22 +158,22 @@ class ArenaCommandExecutor extends SCommandExecutor {
         @Override
         public void onPlayerSelect(int number) {
             if (number == 1) {
-                if (SWorldEdit.hasSelections(this.player)) {
-                    this.arenaEntity.setCornerLocations(SWorldEdit.getLeftSelection(this.player), SWorldEdit.getRightSelection(this.player));
+                if (WorldEditConnection.hasSelections(this.player)) {
+                    this.arenaEntity.setCornerLocations(WorldEditConnection.getLeftSelection(this.player), WorldEditConnection.getRightSelection(this.player));
                 } else {
                     this.player.sendMessage(Language.PREFIX + "Please select an arena via worldedit.");
                 }
                 this.show();
             } else if (number == 2) {
-                if (SWorldEdit.hasSelections(this.player)) {
-                    this.arenaEntity.setGoal(Team.RED, SWorldEdit.getLeftSelection(this.player), SWorldEdit.getRightSelection(this.player));
+                if (WorldEditConnection.hasSelections(this.player)) {
+                    this.arenaEntity.setGoal(Team.RED, WorldEditConnection.getLeftSelection(this.player), WorldEditConnection.getRightSelection(this.player));
                 } else {
                     this.player.sendMessage(Language.PREFIX + "Please select a goal via worldedit.");
                 }
                 this.show();
             } else if (number == 3) {
-                if (SWorldEdit.hasSelections(this.player)) {
-                    this.arenaEntity.setGoal(Team.BLUE, SWorldEdit.getLeftSelection(this.player), SWorldEdit.getRightSelection(this.player));
+                if (WorldEditConnection.hasSelections(this.player)) {
+                    this.arenaEntity.setGoal(Team.BLUE, WorldEditConnection.getLeftSelection(this.player), WorldEditConnection.getRightSelection(this.player));
                 } else {
                     this.player.sendMessage(Language.PREFIX + "Please select a goal via worldedit.");
                 }

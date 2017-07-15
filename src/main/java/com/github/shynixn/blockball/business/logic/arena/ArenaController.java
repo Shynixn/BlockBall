@@ -20,7 +20,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.*;
 
 public final class ArenaController {
-    private final JavaPlugin plugin;
     private static final String[] A = new String[0];
     private static final int MAX_AMOUNT_ARENA = 10000000;
     private final ArenaFileManager fileManager;
@@ -30,8 +29,7 @@ public final class ArenaController {
 
     private ArenaController(GameController manager) {
         super();
-        this.plugin = JavaPlugin.getPlugin(BlockBallPlugin.class);
-        this.fileManager = new ArenaFileManager(this.plugin);
+        this.fileManager = new ArenaFileManager(JavaPlugin.getPlugin(BlockBallPlugin.class));
         this.manager = manager;
         new ArenaCommandExecutor(this);
         new BlockBallCommandExecutor();
