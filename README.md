@@ -36,7 +36,7 @@ Spigot plugin to simulate a football/soccer game in minecraft.
 <dependency>
      <groupId>com.github.shynixn</groupId>
      <artifactId>blockball</artifactId>
-     <version>4.0.0</version>
+     <version>4.0.1</version>
 </dependency>
 ```
 
