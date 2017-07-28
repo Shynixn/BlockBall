@@ -2,24 +2,25 @@ package com.github.shynixn.blockball.business.logic.arena;
 
 import com.github.shynixn.blockball.api.entities.DoubleJumpMeta;
 import com.github.shynixn.blockball.api.entities.IPosition;
-import com.github.shynixn.blockball.lib.*;
 import com.github.shynixn.blockball.api.entities.TeamMeta;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import com.github.shynixn.blockball.lib.*;
+import org.bukkit.*;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 class TeamMetaEntity implements TeamMeta, Serializable {
     private static final long serialVersionUID = 1L;
 
-    private DoubleJumpMetaEntity doubleJumpMetaEntity = new DoubleJumpMetaEntity();
+    private final DoubleJumpMetaEntity doubleJumpMetaEntity = new DoubleJumpMetaEntity();
 
     private String redTeamName = "&cTeam Red";
     private String blueTeamName = "&9Team Blue";
@@ -89,8 +90,8 @@ class TeamMetaEntity implements TeamMeta, Serializable {
 
     TeamMetaEntity(Map<String, Object> items) throws Exception {
         super();
-        if(items.containsKey("generic.force-even-teams"))
-             this.forceEvenTeams = (boolean) items.get("generic.force-even-teams");
+        if (items.containsKey("generic.force-even-teams"))
+            this.forceEvenTeams = (boolean) items.get("generic.force-even-teams");
         this.maxScore = (int) items.get("generic.max-score");
         this.autoTeamJoin = (boolean) items.get("generic.auto-team-join");
         this.fastJoin = (boolean) items.get("generic.instant-join");
@@ -150,10 +151,10 @@ class TeamMetaEntity implements TeamMeta, Serializable {
 
         this.doubleJumpMetaEntity.setParticle(new SParticle(((MemorySection) items.get("double-jump.particle")).getValues(true)));
         this.doubleJumpMetaEntity.setSound(new FastSound(((MemorySection) items.get("double-jump.sound")).getValues(true)));
-        if(items.containsKey("double-jump.vertical-strength"))
-              this.doubleJumpMetaEntity.setVerticalStrength((Double) items.get("double-jump.vertical-strength"));
-        if(items.containsKey("double-jump.horizontal-strength"))
-             this.doubleJumpMetaEntity.setHorizontalStrength((Double) items.get("double-jump.horizontal-strength"));
+        if (items.containsKey("double-jump.vertical-strength"))
+            this.doubleJumpMetaEntity.setVerticalStrength((Double) items.get("double-jump.vertical-strength"));
+        if (items.containsKey("double-jump.horizontal-strength"))
+            this.doubleJumpMetaEntity.setHorizontalStrength((Double) items.get("double-jump.horizontal-strength"));
 
         this.rewardGoals = (int) items.get("dependencies.vault.rewards-per-goal");
         this.rewardGames = (int) items.get("dependencies.vault.rewards-per-game");
@@ -176,9 +177,9 @@ class TeamMetaEntity implements TeamMeta, Serializable {
 
     private static String[] initalize(Color color) {
         final String[] itemStacks = new String[4];
-        itemStacks[0] = SItemStackUtils.serialize(SItemStackUtils.setColor(new ItemStack(Material.LEATHER_BOOTS), color));
-        itemStacks[1] = SItemStackUtils.serialize(SItemStackUtils.setColor(new ItemStack(Material.LEATHER_LEGGINGS), color));
-        itemStacks[2] = SItemStackUtils.serialize(SItemStackUtils.setColor(new ItemStack(Material.LEATHER_CHESTPLATE), color));
+        itemStacks[0] = serialize(new ItemStackBuilder(Material.LEATHER_BOOTS).setColor(color));
+        itemStacks[1] = serialize(new ItemStackBuilder(Material.LEATHER_LEGGINGS).setColor(color));
+        itemStacks[2] = serialize(new ItemStackBuilder(Material.LEATHER_CHESTPLATE).setColor(color));
         return itemStacks;
     }
 
@@ -597,10 +598,10 @@ class TeamMetaEntity implements TeamMeta, Serializable {
     @Override
     public ItemStack[] getBlueItems() {
         final ItemStack[] itemStack = new ItemStack[4];
-        itemStack[0] = SItemStackUtils.deserialize(this.blueItems[0]);
-        itemStack[1] = SItemStackUtils.deserialize(this.blueItems[1]);
-        itemStack[2] = SItemStackUtils.deserialize(this.blueItems[2]);
-        itemStack[3] = SItemStackUtils.deserialize(this.blueItems[3]);
+        itemStack[0] = deserialize(this.blueItems[0]);
+        itemStack[1] = deserialize(this.blueItems[1]);
+        itemStack[2] = deserialize(this.blueItems[2]);
+        itemStack[3] = deserialize(this.blueItems[3]);
         return itemStack;
     }
 
@@ -617,29 +618,29 @@ class TeamMetaEntity implements TeamMeta, Serializable {
     @Override
     public void setBlueItems(ItemStack[] itemStacks) {
         this.blueItems = new String[4];
-        this.blueItems[0] = SItemStackUtils.serialize(itemStacks[0]);
-        this.blueItems[1] = SItemStackUtils.serialize(itemStacks[1]);
-        this.blueItems[2] = SItemStackUtils.serialize(itemStacks[2]);
-        this.blueItems[3] = SItemStackUtils.serialize(itemStacks[3]);
+        this.blueItems[0] = serialize(itemStacks[0]);
+        this.blueItems[1] = serialize(itemStacks[1]);
+        this.blueItems[2] = serialize(itemStacks[2]);
+        this.blueItems[3] = serialize(itemStacks[3]);
     }
 
     @Override
     public ItemStack[] getRedItems() {
         final ItemStack[] itemStack = new ItemStack[4];
-        itemStack[0] = SItemStackUtils.deserialize(this.redItems[0]);
-        itemStack[1] = SItemStackUtils.deserialize(this.redItems[1]);
-        itemStack[2] = SItemStackUtils.deserialize(this.redItems[2]);
-        itemStack[3] = SItemStackUtils.deserialize(this.redItems[3]);
+        itemStack[0] = deserialize(this.redItems[0]);
+        itemStack[1] = deserialize(this.redItems[1]);
+        itemStack[2] = deserialize(this.redItems[2]);
+        itemStack[3] = deserialize(this.redItems[3]);
         return itemStack;
     }
 
     @Override
     public void setRedItems(ItemStack[] itemStacks) {
         this.redItems = new String[4];
-        this.redItems[0] = SItemStackUtils.serialize(itemStacks[0]);
-        this.redItems[1] = SItemStackUtils.serialize(itemStacks[1]);
-        this.redItems[2] = SItemStackUtils.serialize(itemStacks[2]);
-        this.redItems[3] = SItemStackUtils.serialize(itemStacks[3]);
+        this.redItems[0] = serialize(itemStacks[0]);
+        this.redItems[1] = serialize(itemStacks[1]);
+        this.redItems[2] = serialize(itemStacks[2]);
+        this.redItems[3] = serialize(itemStacks[3]);
     }
 
     @Override
@@ -798,6 +799,28 @@ class TeamMetaEntity implements TeamMeta, Serializable {
 
     public void setBossBarLight(LightBossBar bossBarLight) {
         this.bossBarLight = bossBarLight;
+    }
+
+    private static String serialize(ItemStack itemStack) {
+        if (itemStack != null) {
+            final FileConfiguration configuration = new YamlConfiguration();
+            configuration.set("dummy", itemStack);
+            return configuration.saveToString();
+        }
+        return null;
+    }
+
+    private static ItemStack deserialize(String text) {
+        if (text != null) {
+            final FileConfiguration configuration = new YamlConfiguration();
+            try {
+                configuration.loadFromString(text);
+            } catch (final InvalidConfigurationException e) {
+                Bukkit.getLogger().log(Level.WARNING, "Cannot deserialize itemsstack.", e);
+            }
+            return configuration.getItemStack("dummy");
+        }
+        return null;
     }
 
     @Override

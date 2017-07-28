@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Deprecated
 public class SParticle implements Serializable, LightParticle {
     private static final long serialVersionUID = 1L;
     private ParticleEffect effect;

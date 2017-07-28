@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.lib;
 
 import java.util.*;
 
+@Deprecated
 public final class SMathUtils {
     public static boolean tryPInt(String value) {
         try {

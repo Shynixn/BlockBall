@@ -58,7 +58,7 @@ public final class SSKulls {
                 field.set(real, getNonPlayerProfile(skinUrl));
                 meta = SkullMeta.class.cast(real);
                 itemStack.setItemMeta(meta);
-                itemStack = SItemStackUtils.setDisplayName(itemStack, "TMP");
+                itemStack = new ItemStackBuilder(itemStack).setDisplayName("TMP");
             } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
                 Bukkit.getLogger().log(Level.WARNING, "Failed to set url of itemstack.", e);
             }

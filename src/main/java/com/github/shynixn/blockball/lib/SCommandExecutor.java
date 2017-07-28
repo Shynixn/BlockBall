@@ -15,6 +15,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Deprecated
 public class SCommandExecutor implements CommandExecutor {
     protected JavaPlugin plugin;
 

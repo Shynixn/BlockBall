@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.io.Serializable;
 
+@Deprecated
 public interface LightSound extends Serializable, ConfigurationSerializable {
     LightSound copy();
 

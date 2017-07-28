@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Deprecated
 public class SLanguage {
 
     public static void reload(Class<?> cls) {

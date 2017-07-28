@@ -11,6 +11,7 @@ import org.bukkit.util.Vector;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class SLocation implements IPosition {
     private static final long serialVersionUID = 1L;
     private String world;

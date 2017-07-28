@@ -5,6 +5,7 @@ import org.bukkit.entity.LivingEntity;
 
 import java.io.Serializable;
 
+@Deprecated
 public interface LightPotioneffect extends Serializable, ConfigurationSerializable {
     LightPotioneffect setType(int type);
 
