@@ -38,6 +38,8 @@ public final class Config {
     private String thirdplaceprefix;
     private String otherprefix;
 
+    private boolean useEngineV2 = false;
+
     private CommandContainer globalJoinCommand;
     private CommandContainer chatNavigateCommand;
     private CommandContainer globalLeaveCommand;
@@ -96,10 +98,20 @@ public final class Config {
 
             this.particleVisibleForAll = this.c.getBoolean("particles.visible-for-all");
             this.particlePermission = this.c.getString("particles.visible-permission");
+            this.useEngineV2 = this.c.getBoolean("blockball.use-engine-v2");
         } catch (final Exception ex) {
             SConsoleUtils.sendColoredMessage("Please delete your config file to fix this problem.", ChatColor.GREEN, BlockBallPlugin.PREFIX_CONSOLE);
-            Bukkit.getLogger().log(Level.WARNING, "Cannot setup config." , ex);
+            Bukkit.getLogger().log(Level.WARNING, "Cannot setup config.", ex);
         }
+    }
+
+    /**
+     * Returns if BlockBall should be using engine v2
+     *
+     * @return engineV2
+     */
+    public boolean isUseEngineV2() {
+        return this.useEngineV2;
     }
 
     public CommandContainer getEventContainerCommand() {
@@ -316,11 +328,11 @@ public final class Config {
             for (final String s : new String[]{this.line1, this.line2, this.line3, this.line4}) {
                 if (game.getPlayers().size() < players.size()) {
                     sign.setLine(i, this.replace(s, game.getArena(), null, true).replace("<players>", String.valueOf(players.size()))
-                            .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers()*2))
+                            .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers() * 2))
                             .replace("<state>", stage));
                 } else {
                     sign.setLine(i, this.replace(s, game.getArena(), null, true).replace("<players>", String.valueOf(game.getPlayers().size()))
-                            .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers()*2))
+                            .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers() * 2))
                             .replace("<state>", stage));
                 }
 

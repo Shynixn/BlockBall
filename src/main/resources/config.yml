@@ -11,6 +11,22 @@
 # Where is the arena configuration?
 # Join your server, it can be configured ingame!
 
+#Engine settings
+
+blockball:
+ use-engine-v2: true
+
+#Storage settings
+#Database configuration to store data of players. Arenas will get stored in yml files.
+
+sql:
+  enabled: false
+  host: localhost
+  port: 3306
+  database: ''
+  username: ''
+  password: ''
+
 #Commands settings
 #Choose your wanted command (dynamic command engine)
 
