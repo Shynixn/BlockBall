@@ -46,6 +46,28 @@ class LobbyMetaEntity implements LobbyMeta {
         this.gameSubTitleMessage = (String) items.get("messages.countdown-subtitle");
     }
 
+    /**
+     * Returns the positions of each sign
+     *
+     * @return positions
+     */
+    @Override
+    public List<IPosition> getSignPositions() {
+        return Collections.unmodifiableList(this.signLocations);
+    }
+
+    /**
+     * Removes the sign-position
+     *
+     * @param position position
+     */
+    @Override
+    public void removeSignPosition(IPosition position) {
+        if (this.signLocations.contains(position)) {
+            this.signLocations.remove(position);
+        }
+    }
+
     @Override
     public List<Location> getSignLocations() {
         final List<Location> locations = new ArrayList<>();
@@ -87,6 +109,28 @@ class LobbyMetaEntity implements LobbyMeta {
         }
     }
 
+    /**
+     * Returns the positions of each sign
+     *
+     * @return positions
+     */
+    @Override
+    public List<IPosition> getRedTeamSignPositions() {
+        return Collections.unmodifiableList(this.redTeamSignLocations);
+    }
+
+    /**
+     * Removes the sign-position
+     *
+     * @param position position
+     */
+    @Override
+    public void removeRedTeamSignPosition(IPosition position) {
+        if (this.redTeamSignLocations.contains(position)) {
+            this.redTeamSignLocations.remove(position);
+        }
+    }
+
     @Override
     public List<Location> getRedTeamSignLocations() {
         this.saveTy();
@@ -108,6 +152,28 @@ class LobbyMetaEntity implements LobbyMeta {
         this.saveTy();
         if (location != null) {
             this.redTeamSignLocations.add(new SLocation(location));
+        }
+    }
+
+    /**
+     * Returns the positions of each sign
+     *
+     * @return positions
+     */
+    @Override
+    public List<IPosition> getBlueTeamSignPositions() {
+        return Collections.unmodifiableList(this.blueTeamSignLocations);
+    }
+
+    /**
+     * Removes the sign-position
+     *
+     * @param position position
+     */
+    @Override
+    public void removeBlueTeamSignPosition(IPosition position) {
+        if (this.blueTeamSignLocations.contains(position)) {
+            this.blueTeamSignLocations.remove(position);
         }
     }
 

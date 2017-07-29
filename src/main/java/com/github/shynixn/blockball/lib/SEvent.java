@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.lib;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-@Deprecated
 public class SEvent extends Event {
     private final static HandlerList handlers = new HandlerList();
 

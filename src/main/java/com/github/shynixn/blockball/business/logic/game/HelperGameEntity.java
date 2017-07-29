@@ -1,10 +1,7 @@
 package com.github.shynixn.blockball.business.logic.game;
 
+import com.github.shynixn.blockball.api.entities.*;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.api.entities.GameStage;
-import com.github.shynixn.blockball.api.entities.MiniGame;
-import com.github.shynixn.blockball.api.entities.Team;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
@@ -258,7 +255,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
     }
 
     boolean isLobbyFull() {
-        return (this.arena.getLobbyMeta().getMaxPlayers()*2) <= this.lobby.size();
+        return (this.arena.getLobbyMeta().getMaxPlayers() * 2) <= this.lobby.size();
     }
 
     boolean isInLobby(Player player) {
@@ -290,31 +287,31 @@ class HelperGameEntity extends GameEntity implements MiniGame {
     }
 
     private void updateSigns() {
-        Location[] locations = this.arena.getLobbyMeta().getSignLocations().toArray(new Location[this.arena.getLobbyMeta().getSignLocations().size()]);
-        for (int i = 0; i < locations.length; i++) {
-            final Location location = locations[i];
+        final IPosition[] signPositions = this.arena.getLobbyMeta().getSignPositions().toArray(new IPosition[this.arena.getLobbyMeta().getSignPositions().size()]);
+        for (final IPosition position : signPositions) {
+            final Location location = position.toLocation();
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
                 Config.getInstance().getMinigameSign().updateJoinSignConsideringMaxPlayers((Sign) location.getBlock().getState(), this, this.lobby);
             } else {
-                this.arena.getLobbyMeta().removeSignLocation(i);
+                this.arena.getLobbyMeta().removeSignPosition(position);
             }
         }
-        locations = this.arena.getLobbyMeta().getRedTeamSignLocations().toArray(new Location[this.arena.getLobbyMeta().getRedTeamSignLocations().size()]);
-        for (int i = 0; i < locations.length; i++) {
-            final Location location = locations[i];
+        final IPosition[] redSignPositions = this.arena.getLobbyMeta().getRedTeamSignPositions().toArray(new IPosition[this.arena.getLobbyMeta().getRedTeamSignPositions().size()]);
+        for (final IPosition position : redSignPositions) {
+            final Location location = position.toLocation();
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
                 Config.getInstance().getTeamSign().updateTeamSignConsideringMinigame((Sign) location.getBlock().getState(), this, Team.RED, this.preSelection);
             } else {
-                this.arena.getLobbyMeta().removeRedTeamSignLocation(i);
+                this.arena.getLobbyMeta().removeRedTeamSignPosition(position);
             }
         }
-        locations = this.arena.getLobbyMeta().getBlueTeamSignLocations().toArray(new Location[this.arena.getLobbyMeta().getBlueTeamSignLocations().size()]);
-        for (int i = 0; i < locations.length; i++) {
-            final Location location = locations[i];
+        final IPosition[] blueSignPositions = this.arena.getLobbyMeta().getBlueTeamSignPositions().toArray(new IPosition[this.arena.getLobbyMeta().getBlueTeamSignPositions().size()]);
+        for (final IPosition position : blueSignPositions) {
+            final Location location = position.toLocation();
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
                 Config.getInstance().getTeamSign().updateTeamSignConsideringMinigame((Sign) location.getBlock().getState(), this, Team.BLUE, this.preSelection);
             } else {
-                this.arena.getLobbyMeta().removeBlueTeamSignLocation(i);
+                this.arena.getLobbyMeta().removeBlueTeamSignPosition(position);
             }
         }
     }

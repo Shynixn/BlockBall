@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.entities.Ball;
 import com.github.shynixn.blockball.api.events.BallDeathEvent;
 import com.github.shynixn.blockball.api.events.BallKickEvent;
 import com.github.shynixn.blockball.api.events.BallMoveEvent;
+import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.lib.SConsoleUtils;
 import com.github.shynixn.blockball.lib.SEntityCompareable;
@@ -83,37 +84,42 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball, SE
                             }
                         }
                     }
-                    if (this.counter <= 0) {
-                        for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
-                            if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {
-                                final BallKickEvent event = new BallKickEvent(player, this);
-                                Bukkit.getPluginManager().callEvent(new BallKickEvent(player, this));
-                                if (!event.isCancelled()) {
-                                    this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(this.hstrength);
-                                    this.startVector.setY(this.vstrength);
-                                    try {
-                                        this.slime.getSpigotEntity().setVelocity(this.startVector.clone());
-                                    } catch (final IllegalArgumentException ex) {
+                    if (Config.getInstance().isUseEngineV2()) {
+                        System.out.println("VERSION 2");
 
-                                    }
-                                    if (this.isRotating)
-                                        this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
-                                    final Random random = new Random();
-                                    this.rvalue = random.nextInt(5) + 5;
-                                    this.jumps = random.nextInt(5) + 2;
-                                    break;
-                                }
-
-                            }
-                        }
-                        this.counter = 2;
                     } else {
-                        this.counter--;
-                    }
-                    if (this.slime.getSpigotEntity().isOnGround() && this.jumps > 0 && this.startVector != null) {
-                        this.slime.getSpigotEntity().setVelocity(this.startVector.multiply(0.1 * this.jumps));
-                        this.startVector.setY(0.1 * this.jumps);
-                        this.jumps--;
+                        if (this.counter <= 0) {
+                            for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
+                                if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {
+                                    final BallKickEvent event = new BallKickEvent(player, this);
+                                    Bukkit.getPluginManager().callEvent(new BallKickEvent(player, this));
+                                    if (!event.isCancelled()) {
+                                        this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(this.hstrength);
+                                        this.startVector.setY(this.vstrength);
+                                        try {
+                                            this.slime.getSpigotEntity().setVelocity(this.startVector.clone());
+                                        } catch (final IllegalArgumentException ex) {
+
+                                        }
+                                        if (this.isRotating)
+                                            this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
+                                        final Random random = new Random();
+                                        this.rvalue = random.nextInt(5) + 5;
+                                        this.jumps = random.nextInt(5) + 2;
+                                        break;
+                                    }
+
+                                }
+                            }
+                            this.counter = 2;
+                        } else {
+                            this.counter--;
+                        }
+                        if (this.slime.getSpigotEntity().isOnGround() && this.jumps > 0 && this.startVector != null) {
+                            this.slime.getSpigotEntity().setVelocity(this.startVector.multiply(0.1 * this.jumps));
+                            this.startVector.setY(0.1 * this.jumps);
+                            this.jumps--;
+                        }
                     }
                 }
                 this.getBukkitEntity().setFireTicks(0);
