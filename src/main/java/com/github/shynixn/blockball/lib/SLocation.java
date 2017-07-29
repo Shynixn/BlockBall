@@ -31,6 +31,12 @@ public class SLocation implements IPosition {
         this.pitch = pitch;
     }
 
+    public SLocation(EulerAngle eulerAngle) {
+        this.x = eulerAngle.getX();
+        this.y = eulerAngle.getY();
+        this.z = eulerAngle.getZ();
+    }
+
     public SLocation(Map<String, Object> keys) {
         super();
         this.x = (double) keys.get("x");

@@ -12,9 +12,10 @@
 # Join your server, it can be configured ingame!
 
 #Engine settings
+# Engine v2 is still in Alpha and may be changed! I recommend to try it out and give feedback on the plugin comment section.
 
 blockball:
- use-engine-v2: true
+ use-engine-v2: false
 
 #Storage settings
 #Database configuration to store data of players. Arenas will get stored in yml files.

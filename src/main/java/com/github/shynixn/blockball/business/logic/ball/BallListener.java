@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.business.logic.ball;
 
 import com.github.shynixn.blockball.api.entities.Ball;
 import com.github.shynixn.blockball.api.events.BallDeathEvent;
+import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.lib.SEntityCompareable;
 import com.github.shynixn.blockball.lib.SimpleListener;
@@ -11,6 +12,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
@@ -29,6 +31,10 @@ class BallListener extends SimpleListener {
     @EventHandler
     public void entityRightClickEvent(final PlayerInteractAtEntityEvent event) {
         if (this.isBall(event.getRightClicked())) {
+            if (Config.getInstance().isUseEngineV2()) {
+                final Ball ball = this.getBall(event.getRightClicked());
+                ball.pass(event.getPlayer());
+            }
             event.setCancelled(true);
         } else if (this.isDeadBall(event.getRightClicked())) {
             event.setCancelled(true);
@@ -38,6 +44,16 @@ class BallListener extends SimpleListener {
     @EventHandler
     public void onBallDeathEvent(BallDeathEvent event) {
         this.manager.removeBall(event.getBall());
+    }
+
+    @EventHandler
+    public void onPlayerDamageBallEvent(EntityDamageByEntityEvent event) {
+        if (Config.getInstance().isUseEngineV2()) {
+            if (this.isBall(event.getEntity())) {
+                final Ball ball = this.getBall(event.getEntity());
+                ball.kick(event.getDamager());
+            }
+        }
     }
 
     @EventHandler
