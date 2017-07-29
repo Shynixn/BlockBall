@@ -125,7 +125,7 @@ public class ItemStackBuilder extends ItemStack {
      * @param color color
      * @return itemStack
      */
-    public ItemStack setColor(Color color) {
+    public ItemStackBuilder setColor(Color color) {
         if (this.getItemMeta() instanceof LeatherArmorMeta) {
             final LeatherArmorMeta meta = (LeatherArmorMeta) this.getItemMeta();
             meta.setColor(color);
@@ -238,5 +238,19 @@ public class ItemStackBuilder extends ItemStack {
         itemMeta.setLore(data);
         this.setItemMeta(itemMeta);
         return this;
+    }
+
+    /**
+     * Creates a new itemStack from this
+     *
+     * @return itemStack
+     */
+    public ItemStack build() {
+        final ItemStack itemStack = new ItemStack(this.getType());
+        itemStack.setAmount(this.getAmount());
+        itemStack.setData(this.getData());
+        itemStack.setDurability(this.getDurability());
+        itemStack.setItemMeta(this.getItemMeta());
+        return itemStack;
     }
 }

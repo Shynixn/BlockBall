@@ -5,3 +5,14 @@ CREATE TABLE IF NOT EXISTS SHY_PLAYER
   name VARCHAR(16) NOT NULL,
   CONSTRAINT unique_uuid_cs UNIQUE (uuid)
 );
+
+CREATE TABLE IF NOT EXISTS SHY_BLOCKBALL_STATS
+(
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  shy_player_id INTEGER,
+  wins INTEGER,
+  games INTEGER,
+  goals INTEGER,
+  FOREIGN KEY (shy_player_id) REFERENCES SHY_PLAYER(id),
+  CONSTRAINT wins_small_games_cs CHECK (wins <= games)
+);

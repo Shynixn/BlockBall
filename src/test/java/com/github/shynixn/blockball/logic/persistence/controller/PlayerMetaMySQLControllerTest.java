@@ -45,7 +45,7 @@ public class PlayerMetaMySQLControllerTest {
         when(server.getLogger()).thenReturn(Logger.getGlobal());
         if(Bukkit.getServer() == null)
             Bukkit.setServer(server);
-        new File("BlockBall.db").delete();
+        new File("BlockBall/BlockBall.db").delete();
         when(plugin.getDataFolder()).thenReturn(new File("BlockBall"));
         when(plugin.getConfig()).thenReturn(configuration);
         when(plugin.getResource(any(String.class))).thenAnswer(invocationOnMock -> {

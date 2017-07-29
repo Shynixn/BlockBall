@@ -177,9 +177,9 @@ class TeamMetaEntity implements TeamMeta, Serializable {
 
     private static String[] initalize(Color color) {
         final String[] itemStacks = new String[4];
-        itemStacks[0] = serialize(new ItemStackBuilder(Material.LEATHER_BOOTS).setColor(color));
-        itemStacks[1] = serialize(new ItemStackBuilder(Material.LEATHER_LEGGINGS).setColor(color));
-        itemStacks[2] = serialize(new ItemStackBuilder(Material.LEATHER_CHESTPLATE).setColor(color));
+        itemStacks[0] = serialize(new ItemStackBuilder(Material.LEATHER_BOOTS).setColor(color).build());
+        itemStacks[1] = serialize(new ItemStackBuilder(Material.LEATHER_LEGGINGS).setColor(color).build());
+        itemStacks[2] = serialize(new ItemStackBuilder(Material.LEATHER_CHESTPLATE).setColor(color).build());
         return itemStacks;
     }
 

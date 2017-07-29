@@ -153,7 +153,11 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball, SE
                 this.getBukkitEntity().setFireTicks(0);
                 this.slime.getSpigotEntity().setFireTicks(0);
                 Bukkit.getPluginManager().callEvent(new BallMoveEvent(this));
-            } catch (final Exception e) {
+            }
+            catch (final IllegalArgumentException e) {
+
+            }
+            catch (final Exception e) {
                 SConsoleUtils.sendColoredMessage(ChatColor.RED + "Critical EntityHackError happend! Shynixn catcher algorithm prevented server crash!");
                 SConsoleUtils.sendColoredMessage(ChatColor.RED + "Report this bug to the author Shynixn!");
                 Bukkit.getLogger().log(Level.WARNING, "Critical error.", e);

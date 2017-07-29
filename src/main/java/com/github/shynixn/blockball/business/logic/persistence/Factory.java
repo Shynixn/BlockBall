@@ -1,7 +1,9 @@
 package com.github.shynixn.blockball.business.logic.persistence;
 
 import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaController;
+import com.github.shynixn.blockball.api.persistence.controller.StatsController;
 import com.github.shynixn.blockball.business.logic.persistence.controller.PlayerDataRepository;
+import com.github.shynixn.blockball.business.logic.persistence.controller.StatsRepository;
 import com.github.shynixn.blockball.lib.ExtensionHikariConnectionContext;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
@@ -22,6 +24,10 @@ public class Factory {
 
     public static PlayerMetaController createPlayerDataController() {
         return new PlayerDataRepository(connectionContext);
+    }
+
+    public static StatsController createStatsController() {
+        return new StatsRepository(connectionContext);
     }
 
     public static void disable() {
