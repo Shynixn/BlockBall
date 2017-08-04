@@ -4,8 +4,8 @@ import com.github.shynixn.blockball.api.entities.*;
 import com.github.shynixn.blockball.api.entities.items.BoostItemHandler;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.logic.items.ItemSpawner;
-import com.github.shynixn.blockball.lib.SConsoleUtils;
 import com.github.shynixn.blockball.lib.SLocation;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -218,7 +218,7 @@ class ArenaEntity extends SelectedArea implements Arena {
             }
             maxRounds++;
             if (maxRounds > 10) {
-                SConsoleUtils.sendColoredMessage("Warning! The item spawner " + this.getId() + " takes too long to calculate a valid position!", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
+                Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Warning! The item spawner " + this.getId() + " takes too long to calculate a valid position!");
                 throw new RuntimeException("Cannot calculate item position!");
             }
         } while (!accepted);

@@ -101,17 +101,6 @@ public final class NMSRegistry {
         }
     }
 
-    public static boolean isVersionValid() {
-        return ReflectionLib.getServerVersion().equals("v1_8_R1") ||
-                ReflectionLib.getServerVersion().equals("v1_8_R2") ||
-                ReflectionLib.getServerVersion().equals("v1_8_R3") ||
-                ReflectionLib.getServerVersion().equals("v1_9_R1") ||
-                ReflectionLib.getServerVersion().equals("v1_9_R2") ||
-                ReflectionLib.getServerVersion().equals("v1_10_R1") ||
-                ReflectionLib.getServerVersion().equals("v1_11_R1") ||
-                ReflectionLib.getServerVersion().equals("v1_12_R1");
-    }
-
     public static void unregisterAll() {
         LightRegistry.unregister();
     }

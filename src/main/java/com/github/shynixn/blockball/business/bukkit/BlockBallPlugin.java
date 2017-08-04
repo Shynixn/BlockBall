@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.BlockBallApi;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
+import com.github.shynixn.blockball.business.bukkit.nms.VersionSupport;
 import com.github.shynixn.blockball.business.bungee.game.BungeeCord;
 import com.github.shynixn.blockball.business.metrics.Metrics;
 import com.github.shynixn.blockball.lib.*;
@@ -18,6 +19,7 @@ import java.util.logging.Level;
  * @author Shynixn
  */
 public final class BlockBallPlugin extends JavaPlugin {
+    public static final String PLUGIN_NAME = "BlockBall";
     public static final String PREFIX_CONSOLE = ChatColor.BLUE + "[BlockBall] ";
     private static final long TICK_TIME = 20L;
     private boolean enabled = true;
@@ -41,25 +43,20 @@ public final class BlockBallPlugin extends JavaPlugin {
     }
 
     private void reload() {
-        if (!NMSRegistry.isVersionValid()) {
-            SConsoleUtils.sendColoredMessage("================================================", ChatColor.RED, PREFIX_CONSOLE);
-            SConsoleUtils.sendColoredMessage("BlockBall does not support your server version", ChatColor.RED, PREFIX_CONSOLE);
-            SConsoleUtils.sendColoredMessage("Install v1.8.0 - v1.12.0", ChatColor.RED, PREFIX_CONSOLE);
-            SConsoleUtils.sendColoredMessage("Plugin gets now disabled!", ChatColor.RED, PREFIX_CONSOLE);
-            SConsoleUtils.sendColoredMessage("================================================", ChatColor.RED, PREFIX_CONSOLE);
+        if (!VersionSupport.isServerVersionSupported(PLUGIN_NAME, PREFIX_CONSOLE)) {
             this.enabled = false;
             Bukkit.getPluginManager().disablePlugin(BlockBallPlugin.this);
         } else {
-            SConsoleUtils.sendColoredMessage("Loading BlockBall ...", ChatColor.GREEN, PREFIX_CONSOLE);
+            Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...");
             this.saveDefaultConfig();
             Config.getInstance().reload();
             if (Config.getInstance().isMetrics()) {
-                Metrics metrics = new Metrics(this);
+                new Metrics(this);
             }
             BungeeCord.reload(this, PREFIX_CONSOLE, "bbbungee", "[BlockBall]");
             if (BungeeCord.isSignModeEnabled()) {
                 this.enabled = false;
-                SConsoleUtils.sendColoredMessage("Enabled BlockBallBungeeConnector " + this.getDescription().getVersion() + " by Shynixn", ChatColor.GREEN, PREFIX_CONSOLE);
+                Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBallBungeeConnector " + this.getDescription().getVersion() + " by Shynixn");
             } else {
                 try {
                     ReflectionUtils.invokeMethodByClass(BlockBallApi.class, "initialize", new Class[0], new Object[0]);
@@ -69,7 +66,7 @@ public final class BlockBallPlugin extends JavaPlugin {
 
                 NMSRegistry.registerAll();
                 SLanguage.reload(Language.class);
-                SConsoleUtils.sendColoredMessage("Enabled BlockBall " + this.getDescription().getVersion() + " by Shynixn", ChatColor.GREEN, PREFIX_CONSOLE);
+                Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.getDescription().getVersion() + " by Shynixn");
             }
         }
     }

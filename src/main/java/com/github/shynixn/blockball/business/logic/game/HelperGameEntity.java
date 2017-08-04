@@ -6,10 +6,7 @@ import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.lib.*;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -178,7 +175,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                     try {
                         this.blingsound.play(this.getPlayers().toArray(new Player[this.getPlayers().size()]));
                     } catch (final InterPreter19Exception e) {
-                        SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [BlingSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
+                        Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BlingSound]");
                     }
                 }
                 if (this.countdown == 0) {
@@ -223,7 +220,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                             try {
                                 this.blingsound.play(this.lobby.toArray(new Player[this.lobby.size()]));
                             } catch (final InterPreter19Exception e) {
-                                SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [BlingSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
+                                Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BlingSound]");
                             }
                         }
                         if (this.countdown <= 0) {

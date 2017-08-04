@@ -381,7 +381,7 @@ class GameListener extends SimpleListener {
                     try {
                         game.getArena().getTeamMeta().getDoubleJumpSound().play(player.getLocation());
                     } catch (final InterPreter19Exception e) {
-                        SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [DoubleJumpSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
+                        Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [DoubleJumpSound]");
                     }
                     game.getArena().getTeamMeta().getDoubleJumpParticle().play(player.getLocation());
                 }

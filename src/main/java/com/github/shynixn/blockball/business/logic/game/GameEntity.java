@@ -204,7 +204,7 @@ public abstract class GameEntity implements Game {
             try {
                 this.arena.getBallMeta().getGenericHitSound().play(this.ball.getLocation());
             } catch (final InterPreter19Exception e) {
-                SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [GenericHitSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
+                Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [GenericHitSound]");
             }
             this.buffer = 10;
         }
@@ -214,7 +214,6 @@ public abstract class GameEntity implements Game {
             this.lastHitTeam = Team.RED;
         this.lastHit = player;
     }
-
 
     final void fixCachedRangePlayers() {
         for (final Player player : this.playData.toArray(new Player[this.playData.size()])) {
@@ -281,7 +280,7 @@ public abstract class GameEntity implements Game {
                 try {
                     this.arena.getBallMeta().getBallSpawnSound().play(this.ball.getLocation());
                 } catch (final InterPreter19Exception e) {
-                    SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [BallSpawnSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
+                    Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BallSpawnSound]");
                 }
             }
         } else if ((this.ball == null || this.ball.isDead()) && (!this.redTeam.isEmpty() || !this.blueTeam.isEmpty()) && this.getPlayers().size() >= this.arena.getTeamMeta().getTeamMinSize()) {
@@ -312,7 +311,7 @@ public abstract class GameEntity implements Game {
             try {
                 this.arena.getBallMeta().getBallGoalSound().play(this.ball.getLocation());
             } catch (final InterPreter19Exception e) {
-                SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [BallGoalSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
+                Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BallGoalSound]");
             }
             this.ball.despawn();
             if (team == Team.RED) {
@@ -456,10 +455,10 @@ public abstract class GameEntity implements Game {
     }
 
     void sendErrorMessage() {
-        SConsoleUtils.sendColoredMessage(ChatColor.YELLOW + "[BlockBall] " + ChatColor.GREEN + "Found invalid score configuration.");
+        Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Found invalid score configuration.");
         this.arena.getTeamMeta().reset();
         BlockBallApi.save(this.arena);
-        SConsoleUtils.sendColoredMessage(ChatColor.YELLOW + "[BlockBall] " + ChatColor.GREEN + "Fix finished. Games are getting restarted.");
+        Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Fix finished. Games are getting restarted.");
         BlockBallApi.reloadGames();
     }
 

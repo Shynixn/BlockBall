@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.events.BallDeathEvent;
 import com.github.shynixn.blockball.api.events.BallKickEvent;
 import com.github.shynixn.blockball.api.events.BallMoveEvent;
 import com.github.shynixn.blockball.business.Config;
+import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.lib.SConsoleUtils;
 import com.github.shynixn.blockball.lib.SEntityCompareable;
@@ -164,8 +165,8 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball, SE
 
             }
             catch (final Exception e) {
-                SConsoleUtils.sendColoredMessage(ChatColor.RED + "Critical EntityHackError happend! Shynixn catcher algorithm prevented server crash!");
-                SConsoleUtils.sendColoredMessage(ChatColor.RED + "Report this bug to the author Shynixn!");
+                Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Critical EntityHackError happend! Shynixn catcher algorithm prevented server crash!");
+                Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Report this bug to the author Shynixn!");
                 Bukkit.getLogger().log(Level.WARNING, "Critical error.", e);
             }
         }

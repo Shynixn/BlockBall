@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.business;
 
 import com.github.shynixn.blockball.api.entities.*;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.lib.SConsoleUtils;
 import com.github.shynixn.blockball.lib.SLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -67,6 +66,9 @@ public final class Config {
         return this.metrics;
     }
 
+    /**
+     * Reloads the config.yml
+     */
     public void reload() {
         try {
             this.plugin.reloadConfig();
@@ -106,7 +108,7 @@ public final class Config {
             this.particlePermission = this.c.getString("particles.visible-permission");
             this.useEngineV2 = this.c.getBoolean("blockball.use-engine-v2");
         } catch (final Exception ex) {
-            SConsoleUtils.sendColoredMessage("Please delete your config file to fix this problem.", ChatColor.GREEN, BlockBallPlugin.PREFIX_CONSOLE);
+            Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Please delete your config file to fix this problem.");
             Bukkit.getLogger().log(Level.WARNING, "Cannot setup config.", ex);
         }
     }
