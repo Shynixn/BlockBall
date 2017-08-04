@@ -2,8 +2,10 @@ package com.github.shynixn.blockball.business.logic.game;
 
 import com.github.shynixn.blockball.api.entities.Arena;
 import com.github.shynixn.blockball.api.entities.Team;
+import com.github.shynixn.blockball.api.events.GameJoinEvent;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -21,10 +23,11 @@ class HubGameEntity extends GameEntity {
     public synchronized boolean join(Player player, Team team) {
         this.leave(player, false);
         if (team == null) {
-            if (this.redTeam.size() > this.blueTeam.size())
+            if (this.redTeam.size() > this.blueTeam.size()) {
                 team = Team.BLUE;
-            else
+            } else {
                 team = Team.RED;
+            }
         }
         if (team == Team.RED && this.redTeam.size() <= this.arena.getTeamMeta().getTeamMaxSize() && (!this.arena.getTeamMeta().isTeamAutoJoin() || this.redTeam.size() <= this.blueTeam.size())) {
             this.storeTemporaryInventory(player);
@@ -39,6 +42,7 @@ class HubGameEntity extends GameEntity {
                 this.getHologram().setText(this.decryptText(this.arena.getTeamMeta().getHologramText()));
                 this.getHologram().show(player);
             }
+            Bukkit.getPluginManager().callEvent(new GameJoinEvent(this, player));
             return true;
         } else if (team == Team.BLUE && this.blueTeam.size() <= this.arena.getTeamMeta().getTeamMaxSize() && (!this.arena.getTeamMeta().isTeamAutoJoin() || this.blueTeam.size() <= this.redTeam.size())) {
             this.storeTemporaryInventory(player);
@@ -53,6 +57,7 @@ class HubGameEntity extends GameEntity {
                 this.getHologram().setText(this.decryptText(this.arena.getTeamMeta().getHologramText()));
                 this.getHologram().show(player);
             }
+            Bukkit.getPluginManager().callEvent(new GameJoinEvent(this, player));
             return true;
         }
         return false;

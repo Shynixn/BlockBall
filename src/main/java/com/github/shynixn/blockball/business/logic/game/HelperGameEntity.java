@@ -1,6 +1,8 @@
 package com.github.shynixn.blockball.business.logic.game;
 
 import com.github.shynixn.blockball.api.entities.*;
+import com.github.shynixn.blockball.api.events.GameJoinEvent;
+import com.github.shynixn.blockball.api.events.GameWinEvent;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
@@ -74,6 +76,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
             if (this.getHologram() != null) {
                 this.getHologram().show(player);
             }
+            Bukkit.getPluginManager().callEvent(new GameJoinEvent(this, player));
             return true;
         } else if (team == Team.BLUE) {
             this.blueTeam.add(player);
@@ -84,6 +87,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
             if (this.getHologram() != null) {
                 this.getHologram().show(player);
             }
+            Bukkit.getPluginManager().callEvent(new GameJoinEvent(this, player));
             return true;
         }
         return false;
@@ -186,11 +190,13 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                     if (this.redGoals > this.blueGoals) {
                         this.executeCommand(this.arena.getTeamMeta().getWinCommand(), this.redTeam);
                         NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardWinning(), this.redTeam.toArray(new Player[this.redTeam.size()]));
+                        Bukkit.getPluginManager().callEvent(new GameWinEvent(this.redTeam, this));
                         this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getRedwinnerTitleMessage()), this.decryptText(this.arena.getTeamMeta().getRedwinnerSubtitleMessage()));
                         this.endGame();
                     } else if (this.redGoals < this.blueGoals) {
                         this.executeCommand(this.arena.getTeamMeta().getWinCommand(), this.blueTeam);
                         NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardWinning(), this.blueTeam.toArray(new Player[this.blueTeam.size()]));
+                        Bukkit.getPluginManager().callEvent(new GameWinEvent(this.blueTeam, this));
                         this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getBluewinnerTitleMessage()), this.decryptText(this.arena.getTeamMeta().getBluewinnerSubtitleMessage()));
                         this.endGame();
                     } else {

@@ -84,12 +84,12 @@ public final class Config {
                     .setCoordinates(this.c.getDouble("join-spawnpoint.coordinates.x"), this.c.getDouble("join-spawnpoint.coordinates.y"), this.c.getDouble("join-spawnpoint.coordinates.z"))
                     .setRotation(this.c.getDouble("join-spawnpoint.coordinates.yaw"), this.c.getDouble("join-spawnpoint.coordinates.pitch"));
 
-            this.enableGoalsScoreboard = this.c.getBoolean("goals-scoreboard.enabled");
+        /*    this.enableGoalsScoreboard = this.c.getBoolean("goals-scoreboard.enabled");
             this.scoreboardTitle = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.scoreboard-title"));
             this.firstplaceprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.firstplace-prefix"));
             this.secondplaceprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.secondplace-prefix"));
             this.thirdplaceprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.thirdplace-prefix"));
-            this.otherprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.other-prefix"));
+            this.otherprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.other-prefix"));*/
 
             this.globalLeaveCommand = new CommandContainer("global-leave");
             this.globalJoinCommand = new CommandContainer("global-join");

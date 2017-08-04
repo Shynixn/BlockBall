@@ -7,7 +7,6 @@ import com.github.shynixn.blockball.api.events.BallMoveEvent;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
-import com.github.shynixn.blockball.lib.SConsoleUtils;
 import com.github.shynixn.blockball.lib.SEntityCompareable;
 import com.github.shynixn.blockball.lib.SSKulls;
 import net.minecraft.server.v1_9_R1.EntityArmorStand;

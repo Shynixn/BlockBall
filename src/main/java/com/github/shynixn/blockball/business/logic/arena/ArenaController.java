@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.entities.Arena;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.logic.game.GameController;
+import com.github.shynixn.blockball.business.logic.persistence.Factory;
 import com.github.shynixn.blockball.lib.*;
 import com.github.shynixn.blockball.api.events.GoalShootEvent;
 import org.bukkit.Bukkit;
@@ -33,6 +34,7 @@ public final class ArenaController {
         this.manager = manager;
         new ArenaCommandExecutor(this);
         new BlockBallCommandExecutor();
+        Factory.initialize(JavaPlugin.getPlugin(BlockBallPlugin.class));
         if (Config.getInstance().isEnableGoalsScoreboard())
             new ArenaShortListener();
     }

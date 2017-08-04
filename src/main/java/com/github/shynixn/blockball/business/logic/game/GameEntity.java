@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.business.logic.game;
 
 import com.github.shynixn.blockball.api.BlockBallApi;
 import com.github.shynixn.blockball.api.entities.*;
+import com.github.shynixn.blockball.api.events.GameWinEvent;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
@@ -328,6 +329,7 @@ public abstract class GameEntity implements Game {
 
                     this.executeCommand(this.arena.getTeamMeta().getGamendCommand(), this.getPlayers());
                     this.executeCommand(this.arena.getTeamMeta().getWinCommand(), this.redTeam);
+                    Bukkit.getPluginManager().callEvent(new GameWinEvent(this.redTeam, this));
 
                     this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getRedwinnerTitleMessage()), this.decryptText(this.arena.getTeamMeta().getRedwinnerSubtitleMessage()));
                     this.reset();
@@ -346,7 +348,7 @@ public abstract class GameEntity implements Game {
 
                     this.executeCommand(this.arena.getTeamMeta().getGamendCommand(), this.getPlayers());
                     this.executeCommand(this.arena.getTeamMeta().getWinCommand(), this.blueTeam);
-
+                    Bukkit.getPluginManager().callEvent(new GameWinEvent(this.blueTeam, this));
                     this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getBluewinnerTitleMessage()), this.decryptText(this.arena.getTeamMeta().getBluewinnerSubtitleMessage()));
                     this.reset();
                 }

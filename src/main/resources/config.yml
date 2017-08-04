@@ -136,12 +136,11 @@ plugin-start-delay:
  enabled: false
  time-seconds: 20
 
-#Goals settings
-#Enable this to show a scoreboard of the top goals on your server
-goals-scoreboard:
+#Stats settings
+#Enable this to show a scoreboard of the player stats on your server
+stats-scoreboard:
  enabled: false
  scoreboard-title: '&6Top Goals'
- firstplace-prefix: '&c'
- secondplace-prefix: '&9'
- thirdplace-prefix: '&a'
- other-prefix: '&7'
+ played-games-prefix: '&2'
+ win-rate-prefix: '&3'
+ goals-per-game-prefix: '&7'

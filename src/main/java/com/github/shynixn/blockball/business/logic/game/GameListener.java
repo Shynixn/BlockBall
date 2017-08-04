@@ -4,15 +4,17 @@ import com.github.shynixn.blockball.api.entities.Arena;
 import com.github.shynixn.blockball.api.entities.Game;
 import com.github.shynixn.blockball.api.entities.GameType;
 import com.github.shynixn.blockball.api.entities.Team;
-import com.github.shynixn.blockball.api.events.BallKickEvent;
-import com.github.shynixn.blockball.api.events.BallMoveEvent;
+import com.github.shynixn.blockball.api.events.*;
+import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaController;
+import com.github.shynixn.blockball.api.persistence.controller.StatsController;
+import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
+import com.github.shynixn.blockball.api.persistence.entity.Stats;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
+import com.github.shynixn.blockball.business.logic.persistence.Factory;
 import com.github.shynixn.blockball.lib.*;
 import com.github.shynixn.blockball.api.entities.items.BoostItem;
-import com.github.shynixn.blockball.api.events.BallHitWallEvent;
-import com.github.shynixn.blockball.api.events.PlaceHolderRequestEvent;
 import org.bukkit.*;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
@@ -45,10 +47,14 @@ class GameListener extends SimpleListener {
     private final List<Player> toggledPlayers = new ArrayList<>();
     private final Map<Player, Integer> moveCounter = new HashMap<>();
     private final GameController controller;
+    private final StatsController statsController;
+    private final PlayerMetaController playerMetaController;
 
     GameListener(final GameController controller) {
         super(JavaPlugin.getPlugin(BlockBallPlugin.class));
         this.controller = controller;
+        this.playerMetaController = Factory.createPlayerDataController();
+        this.statsController = Factory.createStatsController();
         if (Config.getInstance().getForcefieldHelperCommand().isEnabled()) {
             new DynamicCommandHelper(Config.getInstance().getForcefieldHelperCommand()) {
                 @Override
@@ -64,6 +70,56 @@ class GameListener extends SimpleListener {
                 }
             };
         }
+    }
+
+    /**
+     * Gets called when a player shoots a goal
+     *
+     * @param shootEvent shootEvent
+     */
+    @EventHandler
+    public void onPlayerShootGoalEvent(GoalShootEvent shootEvent) {
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            synchronized (this.statsController) {
+                final Stats stats = GameListener.this.statsController.getByPlayer(shootEvent.getPlayer());
+                stats.setAmountOfGoals(stats.getAmountOfGoals() + 1);
+                this.statsController.store(stats);
+            }
+        });
+    }
+
+    /**
+     * Gets called when a player joins the match
+     *
+     * @param event event
+     */
+    @EventHandler
+    public void onPlayerJoinGameEvent(GameJoinEvent event) {
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            synchronized (this.statsController) {
+                final Stats stats = GameListener.this.statsController.getByPlayer(event.getPlayer());
+                stats.setAmountOfGamesPlayed(stats.getAmountOfGamesPlayed() + 1);
+                this.statsController.store(stats);
+            }
+        });
+    }
+
+    /**
+     * Gets called when a game gets won
+     *
+     * @param event event
+     */
+    @EventHandler
+    public void onPlayerShootGoalEvent(GameWinEvent event) {
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            synchronized (this.statsController) {
+                for (final Player player : event.getWinningTeam()) {
+                    final Stats stats = GameListener.this.statsController.getByPlayer(player);
+                    stats.setAmountOfWins(stats.getAmountOfWins() + 1);
+                    this.statsController.store(stats);
+                }
+            }
+        });
     }
 
     @EventHandler
@@ -111,6 +167,7 @@ class GameListener extends SimpleListener {
 
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
+        this.prepareDatabaseStats(event.getPlayer());
         for (final Game game : this.controller.games) {
             if (game instanceof BungeeGameEntity) {
                 if (!game.getArena().isEnabled())
@@ -128,6 +185,7 @@ class GameListener extends SimpleListener {
                 }
             }
         }
+
     }
 
     private Game getGameFromSign(Sign sign) {
@@ -472,7 +530,7 @@ class GameListener extends SimpleListener {
             if (this.connectedGames.containsKey(player)) {
                 event.setCancelled(true);
             }
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> GameListener.this.handleChatMessage(player, message), 1L);
+            this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> GameListener.this.handleChatMessage(player, message), 1L);
         }
     }
 
@@ -508,8 +566,28 @@ class GameListener extends SimpleListener {
             if (this.connectedGames.containsKey(player)) {
                 event.setCancelled(true);
             }
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> GameListener.this.handleChatMessage(player, message), 1L);
+            this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> GameListener.this.handleChatMessage(player, message), 1L);
         }
+    }
+
+    /**
+     * Prepares the stats collector
+     *
+     * @param player player
+     */
+    private void prepareDatabaseStats(Player player) {
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            if (this.statsController.getByPlayer(player) == null) {
+                PlayerMeta meta;
+                if ((meta = this.playerMetaController.getByUUID(player.getUniqueId())) == null) {
+                    meta = this.playerMetaController.create(player);
+                    this.playerMetaController.store(meta);
+                }
+                final Stats stats = this.statsController.create();
+                stats.setPlayerId(meta.getId());
+                this.statsController.store(stats);
+            }
+        });
     }
 
     private void handleChatMessage(Player player, String message) {
