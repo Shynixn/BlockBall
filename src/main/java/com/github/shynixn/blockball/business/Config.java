@@ -23,10 +23,11 @@ import java.util.logging.Level;
 public final class Config {
     private static Config instance;
     private FileConfiguration c;
-    private Plugin plugin;
+    private final Plugin plugin;
 
     private boolean asyncChat = true;
     private boolean highpriority = true;
+    private boolean metrics = true;
 
     private IPosition joiningSpawnpoint;
     private boolean joiningSpawnpointEnabled;
@@ -38,7 +39,7 @@ public final class Config {
     private String thirdplaceprefix;
     private String otherprefix;
 
-    private boolean useEngineV2 = false;
+    private boolean useEngineV2;
 
     private CommandContainer globalJoinCommand;
     private CommandContainer chatNavigateCommand;
@@ -62,13 +63,18 @@ public final class Config {
         return instance;
     }
 
+    public boolean isMetrics() {
+        return this.metrics;
+    }
+
     public void reload() {
         try {
-            plugin.reloadConfig();
-            this.c = plugin.getConfig();
+            this.plugin.reloadConfig();
+            this.c = this.plugin.getConfig();
 
             this.asyncChat = this.c.getBoolean("async-chat");
             this.highpriority = this.c.getBoolean("highest-priority");
+            this.metrics = this.c.getBoolean("metrics");
 
             this.joiningSpawnpointEnabled = this.c.getBoolean("join-spawnpoint.enabled");
             this.joiningSpawnpoint = new SLocation()

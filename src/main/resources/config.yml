@@ -11,6 +11,11 @@
 # Where is the arena configuration?
 # Join your server, it can be configured ingame!
 
+# Sends anonymous stats to https://bstats.org/plugin/bukkit/BlockBall.
+# As this does not have an impact on your BlockBall experience at all I would like you to set it on true as knowing that my
+# plugin gets used by many server helps me focusing on new updates ;)
+metrics: true
+
 #Engine settings
 # Engine v2 is still in Alpha and may be changed! I recommend to try it out and give feedback on the plugin comment section.
 

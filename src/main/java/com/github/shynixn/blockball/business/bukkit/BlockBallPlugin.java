@@ -5,8 +5,7 @@ import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.business.bungee.game.BungeeCord;
-import com.github.shynixn.blockball.business.logic.arena.ArenaController;
-import com.github.shynixn.blockball.business.logic.game.GameEntity;
+import com.github.shynixn.blockball.business.metrics.Metrics;
 import com.github.shynixn.blockball.lib.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -53,6 +52,10 @@ public final class BlockBallPlugin extends JavaPlugin {
         } else {
             SConsoleUtils.sendColoredMessage("Loading BlockBall ...", ChatColor.GREEN, PREFIX_CONSOLE);
             this.saveDefaultConfig();
+            Config.getInstance().reload();
+            if (Config.getInstance().isMetrics()) {
+                Metrics metrics = new Metrics(this);
+            }
             BungeeCord.reload(this, PREFIX_CONSOLE, "bbbungee", "[BlockBall]");
             if (BungeeCord.isSignModeEnabled()) {
                 this.enabled = false;
@@ -63,7 +66,7 @@ public final class BlockBallPlugin extends JavaPlugin {
                 } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                     Bukkit.getLogger().log(Level.WARNING, "Failed to init BlockBall.", e);
                 }
-                Config.getInstance().reload();
+
                 NMSRegistry.registerAll();
                 SLanguage.reload(Language.class);
                 SConsoleUtils.sendColoredMessage("Enabled BlockBall " + this.getDescription().getVersion() + " by Shynixn", ChatColor.GREEN, PREFIX_CONSOLE);
