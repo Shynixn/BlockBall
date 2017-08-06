@@ -158,6 +158,7 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
                 }
             }
         } catch (final SQLException e) {
+            e.printStackTrace();
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
         return statsList;
@@ -177,6 +178,7 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
                     item.getAmountOfGoals(),
                     item.getId());
         } catch (final SQLException e) {
+            e.printStackTrace();
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
     }
@@ -192,6 +194,7 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
             this.dbContext.executeStoredUpdate("stats/delete", connection,
                     item.getId());
         } catch (final SQLException e) {
+            e.printStackTrace();
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
     }
@@ -211,6 +214,7 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
                     item.getAmountOfGoals());
             ((StatsData) item).setId(id);
         } catch (final SQLException e) {
+            e.printStackTrace();
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
     }
