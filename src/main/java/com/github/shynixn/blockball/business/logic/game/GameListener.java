@@ -324,7 +324,7 @@ class GameListener extends SimpleListener {
                                     this.moveCounter.put(event.getPlayer(), this.moveCounter.get(event.getPlayer()) + 1);
                                 if (this.moveCounter.get(event.getPlayer()) > 20) {
                                     event.getPlayer().setVelocity(Config.getInstance().getPlayerLaunchUpProtectionVelocity());
-                                } else {
+                                } else if(!this.controller.games[i].arena.getTeamMeta().isTeamAutoJoin()) {
                                     final Vector knockback = this.lastLocation.get(event.getPlayer()).getLocation().toVector().subtract(event.getPlayer().getLocation().toVector());
                                     event.getPlayer().getLocation().setDirection(knockback);
                                     event.getPlayer().setVelocity(knockback);
