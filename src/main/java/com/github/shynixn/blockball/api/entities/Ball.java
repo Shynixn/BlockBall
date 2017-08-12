@@ -77,4 +77,6 @@ public interface Ball {
     boolean isRotating();
 
     void setRotating(boolean isRotating);
+
+    boolean isSameEntity(Entity entity);
 }

@@ -7,7 +7,6 @@ import com.github.shynixn.blockball.api.events.BallMoveEvent;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
-import com.github.shynixn.blockball.lib.SEntityCompareable;
 import com.github.shynixn.blockball.lib.SSKulls;
 import net.minecraft.server.v1_9_R1.EntityArmorStand;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
@@ -29,7 +28,7 @@ import org.bukkit.util.Vector;
 import java.util.Random;
 import java.util.logging.Level;
 
-public final class CustomArmorstand extends EntityArmorStand implements Ball, SEntityCompareable {
+public final class CustomArmorstand extends EntityArmorStand implements Ball {
     private boolean isSpecial;
     private CustomRabbit slime;
 
