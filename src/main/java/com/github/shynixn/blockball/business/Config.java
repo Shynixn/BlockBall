@@ -31,12 +31,9 @@ public final class Config {
     private IPosition joiningSpawnpoint;
     private boolean joiningSpawnpointEnabled;
 
-    private boolean enableGoalsScoreboard;
-    private String scoreboardTitle = ChatColor.GOLD + "Top Goals";
-    private String firstplaceprefix;
-    private String secondplaceprefix;
-    private String thirdplaceprefix;
-    private String otherprefix;
+    private String scoreboardPlayerStatsTitle = ChatColor.GOLD + "BlockBall Stats";
+    private boolean scoreboardPlayerStatsEnabled;
+    private String[] scoreboardPlayerStatsLines;
 
     private boolean useEngineV2;
 
@@ -84,12 +81,9 @@ public final class Config {
                     .setCoordinates(this.c.getDouble("join-spawnpoint.coordinates.x"), this.c.getDouble("join-spawnpoint.coordinates.y"), this.c.getDouble("join-spawnpoint.coordinates.z"))
                     .setRotation(this.c.getDouble("join-spawnpoint.coordinates.yaw"), this.c.getDouble("join-spawnpoint.coordinates.pitch"));
 
-        /*    this.enableGoalsScoreboard = this.c.getBoolean("goals-scoreboard.enabled");
-            this.scoreboardTitle = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.scoreboard-title"));
-            this.firstplaceprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.firstplace-prefix"));
-            this.secondplaceprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.secondplace-prefix"));
-            this.thirdplaceprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.thirdplace-prefix"));
-            this.otherprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.other-prefix"));*/
+            this.scoreboardPlayerStatsEnabled = this.c.getBoolean("stats-scoreboard.enabled");
+            this.scoreboardPlayerStatsTitle = ChatColor.translateAlternateColorCodes('&', this.c.getString("stats-scoreboard.title"));
+            this.scoreboardPlayerStatsLines = this.c.getStringList("stats-scoreboard.lines").toArray(new String[0]);
 
             this.globalLeaveCommand = new CommandContainer("global-leave");
             this.globalJoinCommand = new CommandContainer("global-join");
@@ -168,28 +162,31 @@ public final class Config {
         return this.globalLeaveCommand;
     }
 
-    public boolean isEnableGoalsScoreboard() {
-        return this.enableGoalsScoreboard;
+    /**
+     * Returns the title of the playerStats scoreboard
+     *
+     * @return title
+     */
+    public String getScoreboardPlayerStatsTitle() {
+        return this.scoreboardPlayerStatsTitle;
     }
 
-    public String getOtherprefix() {
-        return this.otherprefix;
+    /**
+     * Returns if the playerStatsScoreboard is enabled
+     *
+     * @return enabled
+     */
+    public boolean isScoreboardPlayerStatsEnabled() {
+        return this.scoreboardPlayerStatsEnabled;
     }
 
-    public String getScoreboardTitle() {
-        return this.scoreboardTitle;
-    }
-
-    public String getFirstplaceprefix() {
-        return this.firstplaceprefix;
-    }
-
-    public String getSecondplaceprefix() {
-        return this.secondplaceprefix;
-    }
-
-    public String getThirdplaceprefix() {
-        return this.thirdplaceprefix;
+    /**
+     * Returns the lines of the scoreboardPlayerStats
+     *
+     * @return lines
+     */
+    public String[] getScoreboardPlayerStatsLines() {
+        return this.scoreboardPlayerStatsLines;
     }
 
     public boolean isHighpriority() {

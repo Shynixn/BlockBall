@@ -137,10 +137,24 @@ plugin-start-delay:
  time-seconds: 20
 
 #Stats settings
-#Enable this to show a scoreboard of the player stats on your server
+#Enable this to show a scoreboard of the player stats on your server. You can add as many lines the scoreboard can use.
+# <player> - Name of the player
+# <winrate> - Winrate of the player
+# <playedgames> - Amount of played games
+# <goalspergame> - Amount of goals per game
 stats-scoreboard:
  enabled: false
- scoreboard-title: '&6Top Goals'
- played-games-prefix: '&2'
- win-rate-prefix: '&3'
- goals-per-game-prefix: '&7'
+ title: '&f&lBlockBall Stats'
+ lines: #All lines have to be different otherwise it won't be shown (Simply add a invisible &r)
+   - '&r'
+   - '&e<player>'
+   - '&r&m           '
+   - '&bWinrate: '
+   - '&f&l<winrate> '
+   - '&r&r'
+   - '&6Goals per game: '
+   - '&f&l<goalspergame>'
+   - '&r&r&r'
+   - '&aPlayed games:'
+   - '&f&l<playedgames>'
+   - '&m           '

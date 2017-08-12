@@ -5,19 +5,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
 class ArenaFileManager {
-    private static final Arena[] A = new Arena[0];
     private final JavaPlugin plugin;
 
     ArenaFileManager(JavaPlugin plugin) {
@@ -36,70 +33,7 @@ class ArenaFileManager {
         return file;
     }
 
-    void save(Player player, int number) {
-        try {
-            final File file = new File(this.plugin.getDataFolder(), "goals.yml");
-            if (!file.exists()) {
-                if (!file.createNewFile())
-                    throw new IllegalStateException("Cannot create file!");
-            }
-            final FileConfiguration config = new YamlConfiguration();
-            config.load(file);
-            config.set("players." + player.getUniqueId() + ".name", player.getName());
-            config.set("players." + player.getUniqueId() + ".amount", number);
-            config.save(file);
-        } catch (final Exception ex) {
-            Bukkit.getLogger().log(Level.WARNING, ex.getMessage());
-        }
-    }
-
-    Map<String, Integer> getTopTenPlayers() {
-        try {
-            final File file = new File(this.plugin.getDataFolder(), "goals.yml");
-            if (!file.exists()) {
-                if (!file.createNewFile())
-                    throw new IllegalStateException("Cannot create file!");
-            }
-            final FileConfiguration config = new YamlConfiguration();
-            config.load(file);
-            final Map<String, Integer> map = new HashMap<>();
-            if (config.getConfigurationSection("players") == null)
-                return map;
-            for (final String item : config.getConfigurationSection("players").getKeys(false)) {
-                map.put(config.getString("players." + item + ".name"), config.getInt("players." + item + ".amount"));
-            }
-            final List<Map.Entry<String, Integer>> map2 = new ArrayList<>();
-            final Map<String, Integer> resultMap = new HashMap<>();
-            int i = 0;
-            for (final Map.Entry<String, Integer> s : map2) {
-                if (i < 10)
-                    resultMap.put(s.getKey(), s.getValue());
-                i++;
-            }
-            return resultMap;
-        } catch (final Exception ex) {
-            Bukkit.getLogger().log(Level.WARNING, ex.getMessage());
-        }
-        return null;
-    }
-
-    Integer getNumber(Player player) {
-        try {
-            final File file = new File(this.plugin.getDataFolder(), "goals.yml");
-            if (!file.exists()) {
-                if (!file.createNewFile())
-                    throw new IllegalStateException("Cannot create file!");
-            }
-            final FileConfiguration config = new YamlConfiguration();
-            config.load(file);
-            return config.getInt("players." + player.getUniqueId().toString() + ".amount");
-        } catch (final Exception ex) {
-            Bukkit.getLogger().log(Level.WARNING, ex.getMessage());
-        }
-        return null;
-    }
-
-    boolean save(Arena item) {
+    void save(Arena item) {
         if (item != null && item.getName() != null) {
             try {
                 final FileConfiguration configuration = new YamlConfiguration();
@@ -120,10 +54,9 @@ class ArenaFileManager {
                 Bukkit.getLogger().log(Level.WARNING,"Cannot save arena." ,ex.getMessage());
             }
         }
-        return true;
     }
 
-    boolean delete(Arena item) {
+    void delete(Arena item) {
         try {
             final File file = new File(this.getFolder(), "arena_" + item.getName() + ".yml");
             if (file.exists()) {
@@ -133,7 +66,6 @@ class ArenaFileManager {
         } catch (final Exception ex) {
             Bukkit.getLogger().log(Level.WARNING, "Cannot delete arena file.", ex);
         }
-        return false;
     }
 
     Arena[] load() {
@@ -153,6 +85,6 @@ class ArenaFileManager {
                 Bukkit.getLogger().log(Level.WARNING, "Cannot read arena file " + s + ".", ex);
             }
         }
-        return items.toArray(A);
+        return items.toArray(new Arena[items.size()]);
     }
 }
