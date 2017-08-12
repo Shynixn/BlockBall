@@ -39,6 +39,7 @@ public class StatsSQLiteControllerTest {
         when(server.getLogger()).thenReturn(Logger.getGlobal());
         if (Bukkit.getServer() == null)
             Bukkit.setServer(server);
+        Factory.disable();
         new File("BlockBall/BlockBall.db").delete();
         when(plugin.getDataFolder()).thenReturn(new File("BlockBall"));
         when(plugin.getConfig()).thenReturn(configuration);
