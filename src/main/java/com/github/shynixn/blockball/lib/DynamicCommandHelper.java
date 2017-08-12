@@ -42,4 +42,22 @@ public abstract class DynamicCommandHelper extends BukkitCommand {
         }
         return s;
     }
+
+    public static boolean tryPInt(String value) {
+        try {
+            Integer.parseInt(value);
+        } catch (final NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean tryPDouble(String value) {
+        try {
+            Double.parseDouble(value);
+        } catch (final NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
 }

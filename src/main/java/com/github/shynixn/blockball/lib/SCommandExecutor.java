@@ -77,4 +77,22 @@ public class SCommandExecutor implements CommandExecutor {
     @Target(ElementType.METHOD)
     public @interface ConsoleCommand {
     }
+
+    public static boolean tryPInt(String value) {
+        try {
+            Integer.parseInt(value);
+        } catch (final NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean tryPDouble(String value) {
+        try {
+            Double.parseDouble(value);
+        } catch (final NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
 }

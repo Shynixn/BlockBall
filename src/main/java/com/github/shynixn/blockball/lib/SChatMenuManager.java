@@ -45,7 +45,7 @@ public final class SChatMenuManager extends SimpleListener {
             return;
         final boolean wasFalse = this.pages.get(player).playerPreChatEnter(message);
         this.pages.get(player).lastNumber = -1;
-        if (SMathUtils.tryPInt(message) && wasFalse) {
+        if (tryPInt(message) && wasFalse) {
             this.pages.get(player).setLastNumber(Integer.parseInt(message));
             this.pages.get(player).onPlayerSelect(Integer.parseInt(message));
         } else if (message.equalsIgnoreCase("e")) {
@@ -121,5 +121,14 @@ public final class SChatMenuManager extends SimpleListener {
         page.setLastInstance(instance);
         this.pages.put(player, page);
         this.pages.get(player).show();
+    }
+
+    public static boolean tryPInt(String value) {
+        try {
+            Integer.parseInt(value);
+        } catch (final NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 }

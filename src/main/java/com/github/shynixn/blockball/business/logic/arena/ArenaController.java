@@ -150,7 +150,7 @@ public final class ArenaController {
         }
 
         List<Map.Entry<String, Integer>> getTopTen() {
-            return SMathUtils.entriesSortedByValues(this.topTenNumbers);
+            return new ArrayList<>();
         }
 
         @EventHandler

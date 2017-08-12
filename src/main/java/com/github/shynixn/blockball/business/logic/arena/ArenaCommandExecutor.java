@@ -393,11 +393,11 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
         @Override
         public boolean playerPreChatEnter(String text) {
-            if (this.lastNumber == 1 && SMathUtils.tryPInt(text) && Integer.parseInt(text) > 0)
+            if (this.lastNumber == 1 && tryPInt(text) && Integer.parseInt(text) > 0)
                 this.arenaEntity.getTeamMeta().setMaxScore(Integer.parseInt(text));
-            else if (this.lastNumber == 2 && SMathUtils.tryPInt(text) && Integer.parseInt(text) > 0)
+            else if (this.lastNumber == 2 && tryPInt(text) && Integer.parseInt(text) > 0)
                 this.arenaEntity.getTeamMeta().setTeamMaxSize(Integer.parseInt(text));
-            else if (this.lastNumber == 3 && SMathUtils.tryPInt(text) && Integer.parseInt(text) >= 0)
+            else if (this.lastNumber == 3 && tryPInt(text) && Integer.parseInt(text) >= 0)
                 this.arenaEntity.getTeamMeta().setTeamMinSize(Integer.parseInt(text));
             else
                 return true;
@@ -565,9 +565,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
         @Override
         public boolean playerPreChatEnter(String text) {
-            if (this.lastNumber == 1 && SMathUtils.tryPInt(text) && Integer.parseInt(text) > 0)
+            if (this.lastNumber == 1 && tryPInt(text) && Integer.parseInt(text) > 0)
                 this.arenaEntity.getLobbyMeta().setGameTime(Integer.parseInt(text));
-            else if (this.lastNumber == 2 && SMathUtils.tryPInt(text) && Integer.parseInt(text) >= 0)
+            else if (this.lastNumber == 2 && tryPInt(text) && Integer.parseInt(text) >= 0)
                 this.arenaEntity.getLobbyMeta().setCountDown(Integer.parseInt(text));
             else if (this.lastNumber == 8)
                 this.arenaEntity.getLobbyMeta().setGameTitleMessage(text);
@@ -898,11 +898,11 @@ class ArenaCommandExecutor extends SCommandExecutor {
         public boolean playerPreChatEnter(String text) {
             if (this.lastNumber == 1)
                 this.arenaEntity.getBallMeta().setBallSkin(text);
-            else if (this.lastNumber == 2 && SMathUtils.tryPDouble(text) && Double.parseDouble(text) >= 0 && Double.parseDouble(text) < 10)
+            else if (this.lastNumber == 2 && tryPDouble(text) && Double.parseDouble(text) >= 0 && Double.parseDouble(text) < 10)
                 this.arenaEntity.getBallMeta().setHorizontalStrength(Double.parseDouble(text));
-            else if (this.lastNumber == 3 && SMathUtils.tryPDouble(text) && Double.parseDouble(text) >= 0 && Double.parseDouble(text) < 10)
+            else if (this.lastNumber == 3 && tryPDouble(text) && Double.parseDouble(text) >= 0 && Double.parseDouble(text) < 10)
                 this.arenaEntity.getBallMeta().setVerticalStrength(Double.parseDouble(text));
-            else if (this.lastNumber == 4 && SMathUtils.tryPInt(text) && Integer.parseInt(text) >= 0)
+            else if (this.lastNumber == 4 && tryPInt(text) && Integer.parseInt(text) >= 0)
                 this.arenaEntity.getBallMeta().setBallSpawnTime(Integer.parseInt(text));
             else
                 return true;
@@ -1107,9 +1107,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
         @Override
         public boolean playerPreChatEnter(String text) {
-            if (this.lastNumber == 2 && SMathUtils.tryPDouble(text))
+            if (this.lastNumber == 2 && tryPDouble(text))
                 this.arenaEntity.getTeamMeta().getDoubleJumpMeta().setHorizontalStrength(Double.parseDouble(text));
-            else if (this.lastNumber == 3 && SMathUtils.tryPDouble(text))
+            else if (this.lastNumber == 3 && tryPDouble(text))
                 this.arenaEntity.getTeamMeta().getDoubleJumpMeta().setVerticalStrength(Double.parseDouble(text));
             else
                 return true;
@@ -1181,16 +1181,16 @@ class ArenaCommandExecutor extends SCommandExecutor {
         public boolean playerPreChatEnter(String text) {
             if (this.lastNumber == 1 && SParticle.getParticleEffectFromName(text) != null)
                 this.particle.setEffect(SParticle.getParticleEffectFromName(text));
-            else if (this.lastNumber == 2 && SMathUtils.tryPInt(text) && Integer.parseInt(text) > 0)
+            else if (this.lastNumber == 2 && tryPInt(text) && Integer.parseInt(text) > 0)
                 this.particle.setAmount(Integer.parseInt(text));
-            else if (this.lastNumber == 3 && SMathUtils.tryPDouble(text) && Double.parseDouble(text) > 0)
+            else if (this.lastNumber == 3 && tryPDouble(text) && Double.parseDouble(text) > 0)
                 this.particle.setSpeed(Double.parseDouble(text));
 
-            else if (this.lastNumber == 4 && SMathUtils.tryPDouble(text) && Double.parseDouble(text) > 0)
+            else if (this.lastNumber == 4 && tryPDouble(text) && Double.parseDouble(text) > 0)
                 this.particle.setX(Double.parseDouble(text));
-            else if (this.lastNumber == 5 && SMathUtils.tryPDouble(text) && Double.parseDouble(text) > 0)
+            else if (this.lastNumber == 5 && tryPDouble(text) && Double.parseDouble(text) > 0)
                 this.particle.setY(Double.parseDouble(text));
-            else if (this.lastNumber == 6 && SMathUtils.tryPDouble(text) && Double.parseDouble(text) > 0)
+            else if (this.lastNumber == 6 && tryPDouble(text) && Double.parseDouble(text) > 0)
                 this.particle.setZ(Double.parseDouble(text));
             else
                 return true;
@@ -1273,17 +1273,17 @@ class ArenaCommandExecutor extends SCommandExecutor {
         @Override
         public boolean playerPreChatEnter(String text) {
             if (this.type == 1) {
-                if (this.lastNumber == 1 && SMathUtils.tryPInt(text))
+                if (this.lastNumber == 1 && tryPInt(text))
                     this.particle.setRed(Integer.parseInt(text));
-                else if (this.lastNumber == 2 && SMathUtils.tryPInt(text))
+                else if (this.lastNumber == 2 && tryPInt(text))
                     this.particle.setGreen(Integer.parseInt(text));
-                else if (this.lastNumber == 3 && SMathUtils.tryPInt(text))
+                else if (this.lastNumber == 3 && tryPInt(text))
                     this.particle.setBlue(Integer.parseInt(text));
                 else
                     return true;
                 return false;
             } else {
-                if (this.lastNumber == 1 && SMathUtils.tryPInt(text) && Integer.parseInt(text) >= 0 && Integer.parseInt(text) <= 24) {
+                if (this.lastNumber == 1 && tryPInt(text) && Integer.parseInt(text) >= 0 && Integer.parseInt(text) <= 24) {
                     this.particle.setRed(Integer.parseInt(text));
                     this.particle.setBlue(0);
                     this.particle.setGreen(0);
@@ -1348,9 +1348,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
         @Override
         public boolean playerPreChatEnter(String text) {
-            if (this.lastNumber == 1 && SMathUtils.tryPInt(text) && Material.getMaterial(Integer.parseInt(text)) != null)
+            if (this.lastNumber == 1 && tryPInt(text) && Material.getMaterial(Integer.parseInt(text)) != null)
                 this.particle.setMaterial(Material.getMaterial(Integer.parseInt(text)));
-            else if (this.lastNumber == 2 && SMathUtils.tryPInt(text))
+            else if (this.lastNumber == 2 && tryPInt(text))
                 this.particle.setData((byte) Integer.parseInt(text));
             else
                 return true;
@@ -1399,9 +1399,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
         public boolean playerPreChatEnter(String text) {
             if (this.lastNumber == 1 && FastSound.getSoundFromName(text) != null)
                 this.sound.setSound(text);
-            else if (this.lastNumber == 2 && SMathUtils.tryPDouble(text) && Double.parseDouble(text) > 0)
+            else if (this.lastNumber == 2 && tryPDouble(text) && Double.parseDouble(text) > 0)
                 this.sound.setVolume(Double.parseDouble(text));
-            else if (this.lastNumber == 3 && SMathUtils.tryPDouble(text) && Double.parseDouble(text) > 0)
+            else if (this.lastNumber == 3 && tryPDouble(text) && Double.parseDouble(text) > 0)
                 this.sound.setPitch(Double.parseDouble(text));
             else
                 return true;
@@ -1549,11 +1549,11 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
         @Override
         public boolean playerPreChatEnter(String text) {
-            if (this.lastNumber == 1 && SMathUtils.tryPInt(text)) {
+            if (this.lastNumber == 1 && tryPInt(text)) {
                 this.arenaEntity.getTeamMeta().setRewardGoals(Integer.parseInt(text));
-            } else if (this.lastNumber == 2 && SMathUtils.tryPInt(text)) {
+            } else if (this.lastNumber == 2 && tryPInt(text)) {
                 this.arenaEntity.getTeamMeta().setRewardGames(Integer.parseInt(text));
-            } else if (this.lastNumber == 3 && SMathUtils.tryPInt(text)) {
+            } else if (this.lastNumber == 3 && tryPInt(text)) {
                 this.arenaEntity.getTeamMeta().setRewardWinning(Integer.parseInt(text));
             } else
                 return true;
@@ -1636,7 +1636,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
         @Override
         public boolean playerPreChatEnter(String text) {
-            if (this.lastNumber == 2 && SMathUtils.tryPInt(text)) {
+            if (this.lastNumber == 2 && tryPInt(text)) {
                 this.arenaEntity.getTeamMeta().setSpecatorradius(Integer.parseInt(text));
             } else
                 return true;
@@ -1913,9 +1913,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
         @Override
         public boolean playerPreChatEnter(String text) {
-            if (this.lastNumber == 1 && SMathUtils.tryPInt(text)) {
+            if (this.lastNumber == 1 && tryPInt(text)) {
                 this.boostItem.setId(Integer.parseInt(text));
-            } else if (this.lastNumber == 2 && SMathUtils.tryPInt(text)) {
+            } else if (this.lastNumber == 2 && tryPInt(text)) {
                 this.boostItem.setDamage(Integer.parseInt(text));
             } else if (this.lastNumber == 3) {
                 this.boostItem.setOwner(text);
@@ -2017,9 +2017,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
                     this.player.sendMessage(Language.PREFIX + "This type does not exist.");
                 else
                     this.lightPotioneffect.setType(FastPotioneffect.getPotionEffectFromName(text).getId());
-            } else if (this.lastNumber == 2 && SMathUtils.tryPInt(text)) {
+            } else if (this.lastNumber == 2 && tryPInt(text)) {
                 this.lightPotioneffect.setSeconds(Integer.parseInt(text));
-            } else if (this.lastNumber == 3 && SMathUtils.tryPInt(text)) {
+            } else if (this.lastNumber == 3 && tryPInt(text)) {
                 this.lightPotioneffect.setStrength(Integer.parseInt(text));
             } else
                 return true;
@@ -2134,7 +2134,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
             if (this.lastNumber == 1) {
                 this.arena.getEventMeta().setReferee(text);
                 this.player.sendMessage(Language.PREFIX + "Referee: " + this.arena.getEventMeta().getReferee());
-            } else if (this.lastNumber == 2 && SMathUtils.tryPInt(text)) {
+            } else if (this.lastNumber == 2 && tryPInt(text)) {
                 this.arena.getLobbyMeta().setGameTime(Integer.parseInt(text));
             } else if (this.lastNumber == 3) {
                 this.arena.getEventMeta().addRegisteredRedPlayer(text);
@@ -2268,7 +2268,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
         @Override
         public boolean playerPreChatEnter(String text) {
-            if (this.lastNumber == 2 && SMathUtils.tryPInt(text)) {
+            if (this.lastNumber == 2 && tryPInt(text)) {
                 this.arena.getTeamMeta().setGoalShooterGlowingSeconds(Integer.parseInt(text));
                 this.player.sendMessage(Language.PREFIX + "Changed amount of glowing seconds.");
             } else
@@ -2317,9 +2317,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
         @Override
         public boolean playerPreChatEnter(String text) {
-            if (this.lastNumber == 1 && SMathUtils.tryPInt(text) && Integer.parseInt(text) > 0)
+            if (this.lastNumber == 1 && tryPInt(text) && Integer.parseInt(text) > 0)
                 this.arenaEntity.getLobbyMeta().setGameTime(Integer.parseInt(text));
-            else if (this.lastNumber == 2 && SMathUtils.tryPInt(text) && Integer.parseInt(text) >= 0)
+            else if (this.lastNumber == 2 && tryPInt(text) && Integer.parseInt(text) >= 0)
                 this.arenaEntity.getLobbyMeta().setCountDown(Integer.parseInt(text));
             else if (this.lastNumber == 7)
                 this.arenaEntity.getLobbyMeta().setGameTitleMessage(text);

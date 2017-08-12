@@ -26,7 +26,7 @@ class EventCommandExecutor extends DynamicCommandHelper {
         if (sender instanceof Player) {
             final Player player = (Player) sender;
             final Game game;
-            if (args.length == 1 && SMathUtils.tryPInt(args[0]) && ((game = this.controller.getGameFromArenaId(Integer.parseInt(args[0]))) != null)) {
+            if (args.length == 1 && tryPInt(args[0]) && ((game = this.controller.getGameFromArenaId(Integer.parseInt(args[0]))) != null)) {
                 if (game.getArena().getGameType() == GameType.EVENT && game.getArena().getEventMeta().getReferee() != null && game.getArena().getEventMeta().getReferee().equalsIgnoreCase(player.getName())) {
                     SChatMenuManager.getInstance().open(player, new ControllerPage(player, game));
                 } else {

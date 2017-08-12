@@ -22,14 +22,27 @@ public class Factory {
 
     private static ExtensionHikariConnectionContext connectionContext;
 
+    /**
+     * Creates a new playerMetaController to the database
+     *
+     * @return controller
+     */
     public static PlayerMetaController createPlayerDataController() {
         return new PlayerDataRepository(connectionContext);
     }
 
+    /**
+     * Creates a new statsController to the database
+     *
+     * @return controller
+     */
     public static StatsController createStatsController() {
         return new StatsRepository(connectionContext);
     }
 
+    /**
+     * Disables the factory
+     */
     public static void disable() {
         if (connectionContext == null)
             return;
@@ -37,6 +50,11 @@ public class Factory {
         connectionContext = null;
     }
 
+    /**
+     * Initializes the factory with the given plugin
+     *
+     * @param plugin plugin
+     */
     public synchronized static void initialize(Plugin plugin) {
         if (connectionContext != null)
             return;

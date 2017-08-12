@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.business.logic.arena;
 
 import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.lib.SMathUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -69,7 +68,7 @@ class ArenaFileManager {
             for (final String item : config.getConfigurationSection("players").getKeys(false)) {
                 map.put(config.getString("players." + item + ".name"), config.getInt("players." + item + ".amount"));
             }
-            final List<Map.Entry<String, Integer>> map2 = SMathUtils.entriesSortedByValues(map);
+            final List<Map.Entry<String, Integer>> map2 = new ArrayList<>();
             final Map<String, Integer> resultMap = new HashMap<>();
             int i = 0;
             for (final Map.Entry<String, Integer> s : map2) {

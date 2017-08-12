@@ -16,14 +16,43 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 
 /**
- * @author Shynixn
+ * Copyright 2017 Shynixn
+ * <p>
+ * Do not remove this header!
+ * <p>
+ * Version 1.0
+ * <p>
+ * MIT License
+ * <p>
+ * Copyright (c) 2017
+ * <p>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p>
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * <p>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 public final class BlockBallPlugin extends JavaPlugin {
-    public static final String PLUGIN_NAME = "BlockBall";
+    private static final String PLUGIN_NAME = "BlockBall";
     public static final String PREFIX_CONSOLE = ChatColor.BLUE + "[BlockBall] ";
     private static final long TICK_TIME = 20L;
     private boolean enabled = true;
 
+    /**
+     * Enables the BlockBall plugin
+     */
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
@@ -34,6 +63,9 @@ public final class BlockBallPlugin extends JavaPlugin {
         }
     }
 
+    /**
+     * Disables the BlockBall plugin
+     */
     @Override
     public void onDisable() {
         if (this.enabled) {
@@ -42,6 +74,9 @@ public final class BlockBallPlugin extends JavaPlugin {
         }
     }
 
+    /**
+     * Reloads the BlockBall plugin
+     */
     private void reload() {
         if (!VersionSupport.isServerVersionSupported(PLUGIN_NAME, PREFIX_CONSOLE)) {
             this.enabled = false;
