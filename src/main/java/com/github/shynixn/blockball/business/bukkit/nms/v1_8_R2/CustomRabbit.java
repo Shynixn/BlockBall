@@ -121,7 +121,7 @@ public final class CustomRabbit extends EntityRabbit {
             double d6 = d0;
             final double d7 = d1;
             double d8 = d2;
-            final boolean flag = this.onGround && this.isSneaking() && false;
+            final boolean flag = false;
             if (flag) {
                 final double d9;
                 for (d9 = 0.05D; d0 != 0.0D && this.world.getCubes(this, this.getBoundingBox().c(d0, -1.0D, 0.0D)).isEmpty(); d6 = d0) {

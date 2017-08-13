@@ -566,7 +566,7 @@ public enum ParticleEffect {
         private static final long serialVersionUID = 3203085387160737484L;
 
 
-        public ParticleDataException(String message) {
+        private ParticleDataException(String message) {
             super(message);
         }
     }
@@ -576,7 +576,7 @@ public enum ParticleEffect {
         private static final long serialVersionUID = 3203085387160737484L;
 
 
-        public ParticleColorException(String message) {
+        private ParticleColorException(String message) {
             super(message);
         }
     }
@@ -586,7 +586,7 @@ public enum ParticleEffect {
         private static final long serialVersionUID = 3203085387160737484L;
 
 
-        public ParticleVersionException(String message) {
+        private ParticleVersionException(String message) {
             super(message);
         }
     }
@@ -750,7 +750,7 @@ public enum ParticleEffect {
             private static final long serialVersionUID = 3203085387160737484L;
 
 
-            public VersionIncompatibleException(String message, Throwable cause) {
+            VersionIncompatibleException(String message, Throwable cause) {
                 super(message, cause);
             }
         }
@@ -760,7 +760,7 @@ public enum ParticleEffect {
             private static final long serialVersionUID = 3203085387160737484L;
 
 
-            public PacketInstantiationException(String message, Throwable cause) {
+            PacketInstantiationException(String message, Throwable cause) {
                 super(message, cause);
             }
         }
@@ -770,7 +770,7 @@ public enum ParticleEffect {
             private static final long serialVersionUID = 3203085387160737484L;
 
 
-            public PacketSendingException(String message, Throwable cause) {
+            PacketSendingException(String message, Throwable cause) {
                 super(message, cause);
             }
         }

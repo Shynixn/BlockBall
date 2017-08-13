@@ -4,10 +4,11 @@ import com.github.shynixn.blockball.api.BlockBallApi;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
+import com.github.shynixn.blockball.business.bukkit.nms.VersionSupport;
 import com.github.shynixn.blockball.business.bungee.game.BungeeCord;
-import com.github.shynixn.blockball.business.logic.arena.ArenaController;
-import com.github.shynixn.blockball.business.logic.game.GameEntity;
-import com.github.shynixn.blockball.lib.*;
+import com.github.shynixn.blockball.business.metrics.Metrics;
+import com.github.shynixn.blockball.lib.ReflectionUtils;
+import com.github.shynixn.blockball.lib.SLanguage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,13 +17,43 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 
 /**
- * @author Shynixn
+ * Copyright 2017 Shynixn
+ * <p>
+ * Do not remove this header!
+ * <p>
+ * Version 1.0
+ * <p>
+ * MIT License
+ * <p>
+ * Copyright (c) 2017
+ * <p>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p>
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * <p>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 public final class BlockBallPlugin extends JavaPlugin {
+    private static final String PLUGIN_NAME = "BlockBall";
     public static final String PREFIX_CONSOLE = ChatColor.BLUE + "[BlockBall] ";
     private static final long TICK_TIME = 20L;
     private boolean enabled = true;
 
+    /**
+     * Enables the BlockBall plugin
+     */
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
@@ -33,6 +64,9 @@ public final class BlockBallPlugin extends JavaPlugin {
         }
     }
 
+    /**
+     * Disables the BlockBall plugin
+     */
     @Override
     public void onDisable() {
         if (this.enabled) {
@@ -41,32 +75,34 @@ public final class BlockBallPlugin extends JavaPlugin {
         }
     }
 
+    /**
+     * Reloads the BlockBall plugin
+     */
     private void reload() {
-        if (!NMSRegistry.isVersionValid()) {
-            SConsoleUtils.sendColoredMessage("================================================", ChatColor.RED, PREFIX_CONSOLE);
-            SConsoleUtils.sendColoredMessage("BlockBall does not support your server version", ChatColor.RED, PREFIX_CONSOLE);
-            SConsoleUtils.sendColoredMessage("Install v1.8.0 - v1.12.0", ChatColor.RED, PREFIX_CONSOLE);
-            SConsoleUtils.sendColoredMessage("Plugin gets now disabled!", ChatColor.RED, PREFIX_CONSOLE);
-            SConsoleUtils.sendColoredMessage("================================================", ChatColor.RED, PREFIX_CONSOLE);
+        if (!VersionSupport.isServerVersionSupported(PLUGIN_NAME, PREFIX_CONSOLE)) {
             this.enabled = false;
             Bukkit.getPluginManager().disablePlugin(BlockBallPlugin.this);
         } else {
-            SConsoleUtils.sendColoredMessage("Loading BlockBall ...", ChatColor.GREEN, PREFIX_CONSOLE);
+            Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...");
             this.saveDefaultConfig();
+            Config.getInstance().reload();
+            if (Config.getInstance().isMetrics()) {
+                new Metrics(this);
+            }
             BungeeCord.reload(this, PREFIX_CONSOLE, "bbbungee", "[BlockBall]");
             if (BungeeCord.isSignModeEnabled()) {
                 this.enabled = false;
-                SConsoleUtils.sendColoredMessage("Enabled BlockBallBungeeConnector " + this.getDescription().getVersion() + " by Shynixn", ChatColor.GREEN, PREFIX_CONSOLE);
+                Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBallBungeeConnector " + this.getDescription().getVersion() + " by Shynixn");
             } else {
                 try {
                     ReflectionUtils.invokeMethodByClass(BlockBallApi.class, "initialize", new Class[0], new Object[0]);
                 } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                     Bukkit.getLogger().log(Level.WARNING, "Failed to init BlockBall.", e);
                 }
-                Config.getInstance().reload();
+
                 NMSRegistry.registerAll();
                 SLanguage.reload(Language.class);
-                SConsoleUtils.sendColoredMessage("Enabled BlockBall " + this.getDescription().getVersion() + " by Shynixn", ChatColor.GREEN, PREFIX_CONSOLE);
+                Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.getDescription().getVersion() + " by Shynixn");
             }
         }
     }

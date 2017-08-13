@@ -4,8 +4,8 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import com.github.shynixn.blockball.api.events.BallDeathEvent;
-import com.github.shynixn.blockball.lib.SConsoleUtils;
-import com.github.shynixn.blockball.lib.SEntityCompareable;
+import com.github.shynixn.blockball.business.Config;
+import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.lib.SSKulls;
 import net.minecraft.server.v1_8_R1.*;
 
@@ -27,7 +27,7 @@ import com.github.shynixn.blockball.api.events.BallKickEvent;
 import com.github.shynixn.blockball.api.events.BallMoveEvent;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 
-public final class CustomArmorstand extends EntityArmorStand implements Ball, SEntityCompareable {
+public final class CustomArmorstand extends EntityArmorStand implements Ball {
     private boolean isSpecial;
     private CustomRabbit slime;
 
@@ -76,47 +76,166 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball, SE
                             } else if (this.rvalue - a.getX() > this.rvalue * 0.1) {
                                 this.getSpigotEntity().setHeadPose(new EulerAngle(a.getX() + 0.012, a.getY() + 0.025, a.getZ() + 0.035));
                             }
-                        }
-                    }
-                    if (this.counter <= 0) {
-                        for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
-                            if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {
-                                final BallKickEvent event = new BallKickEvent(player, this);
-                                Bukkit.getPluginManager().callEvent(new BallKickEvent(player, this));
-                                if (!event.isCancelled()) {
-                                    this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(this.hstrength);
-                                    this.startVector.setY(this.vstrength);
-                                    this.slime.getSpigotEntity().setVelocity(this.startVector.clone());
-                                    if (this.isRotating)
-                                        this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
-                                    final Random random = new Random();
-                                    this.rvalue = random.nextInt(5) + 5;
-                                    this.jumps = random.nextInt(5) + 2;
-                                    break;
+                            if (Config.getInstance().isUseEngineV2()) {
+                                if (this.slime.getSpigotEntity().getVelocity().getY() < 0.2
+                                        && this.slime.getSpigotEntity().getVelocity().getX() < 0.03
+                                        && this.slime.getSpigotEntity().getVelocity().getZ() < 0.03) {
+                                    final int rollingDistance = 3;
+                                    for (int i = 0; i < rollingDistance; i++) {
+                                        this.slime.getSpigotEntity()
+                                                .setVelocity(this.slime.getSpigotEntity().getVelocity()
+                                                        .add(this.slime.getSpigotEntity().getVelocity().normalize().multiply(0.05))); //New
+                                    }
                                 }
-
                             }
                         }
-                        this.counter = 2;
-                    } else {
-                        this.counter--;
                     }
-                    if (this.slime.getSpigotEntity().isOnGround() && this.jumps > 0 && this.startVector != null) {
-                        this.slime.getSpigotEntity().setVelocity(this.startVector.multiply(0.1 * this.jumps));
-                        this.startVector.setY(0.1 * this.jumps);
-                        this.jumps--;
+                    if (Config.getInstance().isUseEngineV2()) {
+                        if (this.counter <= 0) {
+                            for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
+                                if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {
+                                    this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(this.hstrength);
+                                    this.rvalue = this.random.nextInt(5) + 8;
+                                    this.jumps = this.random.nextInt(5) + 3;
+                                    this.startVector.setY(0.1 * this.jumps);
+                                    try {
+                                        this.slime.getSpigotEntity().setVelocity(this.startVector.multiply(0.1 * this.jumps));
+                                    } catch (final IllegalArgumentException ex) {
+
+                                    }
+                                    if (this.isRotating) {
+                                        this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
+
+                                    }
+                                }
+                            }
+                            this.counter = 2;
+                        } else {
+                            this.counter--;
+                        }
+                    } else {
+                        if (this.counter <= 0) {
+                            for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
+                                if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {
+                                    final BallKickEvent event = new BallKickEvent(player, this);
+                                    Bukkit.getPluginManager().callEvent(new BallKickEvent(player, this));
+                                    if (!event.isCancelled()) {
+                                        this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(this.hstrength);
+                                        this.startVector.setY(this.vstrength);
+                                        this.slime.getSpigotEntity().setVelocity(this.startVector.clone());
+                                        if (this.isRotating)
+                                            this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
+                                        final Random random = new Random();
+                                        this.rvalue = random.nextInt(5) + 5;
+                                        this.jumps = random.nextInt(5) + 2;
+                                        break;
+                                    }
+
+                                }
+                            }
+                            this.counter = 2;
+                        } else {
+                            this.counter--;
+                        }
+                        if (this.slime.getSpigotEntity().isOnGround() && this.jumps > 0 && this.startVector != null) {
+                            this.slime.getSpigotEntity().setVelocity(this.startVector.multiply(0.1 * this.jumps));
+                            this.startVector.setY(0.1 * this.jumps);
+                            this.jumps--;
+                        }
                     }
                 }
                 this.getBukkitEntity().setFireTicks(0);
                 this.slime.getSpigotEntity().setFireTicks(0);
                 Bukkit.getPluginManager().callEvent(new BallMoveEvent(this));
-            } catch (final Exception e) {
-                SConsoleUtils.sendColoredMessage(ChatColor.RED + "Critical EntityHackError happend! Shynixn catcher algorithm prevented server crash!");
-                SConsoleUtils.sendColoredMessage(ChatColor.RED + "Report this bug to the author Shynixn!");
+            }
+            catch (final IllegalArgumentException e) {
+
+            }
+            catch (final Exception e) {
+                Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Critical EntityHackError happend! Shynixn catcher algorithm prevented server crash!");
+                Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Report this bug to the author Shynixn!");
                 Bukkit.getLogger().log(Level.WARNING, "Critical error.", e);
             }
         }
         super.doTick();
+    }
+
+    /**
+     * Kicks the ball with the given strength parameters
+     *
+     * @param entity             entity
+     * @param horizontalStrength horizontalStrength
+     * @param verticalStrength   verticalStrength
+     */
+    @Override
+    public void kick(Entity entity, double horizontalStrength, double verticalStrength) {
+        BallKickEvent event = null;
+        if (entity instanceof Player) {
+            event = new BallKickEvent((Player) entity, this);
+            Bukkit.getPluginManager().callEvent(new BallKickEvent((Player) entity, this));
+        }
+        if (event == null || !event.isCancelled()) {
+            this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(entity.getLocation().toVector()).normalize().multiply(horizontalStrength);
+            this.startVector.setY(verticalStrength);
+            try {
+                this.slime.getSpigotEntity().setVelocity(this.startVector.clone());
+            } catch (final IllegalArgumentException ex) {
+
+            }
+            if (this.isRotating)
+                this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
+            this.rvalue = this.random.nextInt(5) + 9;
+            this.jumps = this.random.nextInt(5) + 5;
+        }
+    }
+
+    /**
+     * Kicks the ball with the defaullt strength values
+     *
+     * @param entity entity
+     */
+    @Override
+    public void kick(Entity entity) {
+        this.kick(entity, this.hstrength, this.vstrength);
+    }
+
+    /**
+     * Passes the ball with the given strength parameters
+     *
+     * @param entity             entity
+     * @param horizontalStrength horizontalStrength
+     * @param verticalStrength   verticalStrength
+     */
+    @Override
+    public void pass(Entity entity, double horizontalStrength, double verticalStrength) {
+        BallKickEvent event = null;
+        if (entity instanceof Player) {
+            event = new BallKickEvent((Player) entity, this);
+            Bukkit.getPluginManager().callEvent(new BallKickEvent((Player) entity, this));
+        }
+        if (event == null || !event.isCancelled()) {
+            this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(entity.getLocation().toVector()).normalize().multiply(horizontalStrength * 0.8);
+            this.startVector.setY(verticalStrength * 0.5);
+            try {
+                this.slime.getSpigotEntity().setVelocity(this.startVector.clone());
+            } catch (final IllegalArgumentException ex) {
+
+            }
+            if (this.isRotating)
+                this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
+            this.rvalue = this.random.nextInt(5) + 9;
+            this.jumps = this.random.nextInt(5) + 5;
+        }
+    }
+
+    /**
+     * Passes the ball with the default strength values
+     *
+     * @param entity entity
+     */
+    @Override
+    public void pass(Entity entity) {
+        this.pass(entity, this.hstrength, this.vstrength);
     }
 
     @Override

@@ -1,0 +1,1 @@
+UPDATE SHY_PLAYER SET uuid=?, name=? WHERE id=?

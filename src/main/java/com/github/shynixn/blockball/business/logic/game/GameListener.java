@@ -4,15 +4,17 @@ import com.github.shynixn.blockball.api.entities.Arena;
 import com.github.shynixn.blockball.api.entities.Game;
 import com.github.shynixn.blockball.api.entities.GameType;
 import com.github.shynixn.blockball.api.entities.Team;
-import com.github.shynixn.blockball.api.events.BallKickEvent;
-import com.github.shynixn.blockball.api.events.BallMoveEvent;
+import com.github.shynixn.blockball.api.events.*;
+import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaController;
+import com.github.shynixn.blockball.api.persistence.controller.StatsController;
+import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
+import com.github.shynixn.blockball.api.persistence.entity.Stats;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
+import com.github.shynixn.blockball.business.logic.persistence.Factory;
 import com.github.shynixn.blockball.lib.*;
 import com.github.shynixn.blockball.api.entities.items.BoostItem;
-import com.github.shynixn.blockball.api.events.BallHitWallEvent;
-import com.github.shynixn.blockball.api.events.PlaceHolderRequestEvent;
 import org.bukkit.*;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
@@ -44,11 +46,25 @@ class GameListener extends SimpleListener {
     private final Map<Player, Game> connectedGames = new HashMap<>();
     private final List<Player> toggledPlayers = new ArrayList<>();
     private final Map<Player, Integer> moveCounter = new HashMap<>();
+    private Map<Player, StatsScoreboard> statsScoreboards;
     private final GameController controller;
+    private final StatsController statsController;
+    private final PlayerMetaController playerMetaController;
 
     GameListener(final GameController controller) {
         super(JavaPlugin.getPlugin(BlockBallPlugin.class));
         this.controller = controller;
+        this.playerMetaController = Factory.createPlayerDataController();
+        this.statsController = Factory.createStatsController();
+        if (Config.getInstance().isScoreboardPlayerStatsEnabled()) {
+            this.statsScoreboards = new HashMap<>();
+            this.updateStatsScoreboard();
+        }
+        for (final World world : Bukkit.getWorlds()) {
+            for (final Player player : world.getPlayers()) {
+                this.enableJoinStats(player);
+            }
+        }
         if (Config.getInstance().getForcefieldHelperCommand().isEnabled()) {
             new DynamicCommandHelper(Config.getInstance().getForcefieldHelperCommand()) {
                 @Override
@@ -64,6 +80,59 @@ class GameListener extends SimpleListener {
                 }
             };
         }
+    }
+
+    /**
+     * Gets called when a player shoots a goal
+     *
+     * @param shootEvent shootEvent
+     */
+    @EventHandler
+    public void onPlayerShootGoalEvent(GoalShootEvent shootEvent) {
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            synchronized (this.statsController) {
+                final Stats stats = GameListener.this.statsController.getByPlayer(shootEvent.getPlayer());
+                stats.setAmountOfGoals(stats.getAmountOfGoals() + 1);
+                this.updateStats(shootEvent.getPlayer(), stats);
+                this.statsController.store(stats);
+            }
+        });
+    }
+
+    /**
+     * Gets called when a player joins the match
+     *
+     * @param event event
+     */
+    @EventHandler
+    public void onPlayerJoinGameEvent(GameJoinEvent event) {
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            synchronized (this.statsController) {
+                final Stats stats = GameListener.this.statsController.getByPlayer(event.getPlayer());
+                stats.setAmountOfGamesPlayed(stats.getAmountOfGamesPlayed() + 1);
+                this.statsController.store(stats);
+                this.updateStats(event.getPlayer(), stats);
+            }
+        });
+    }
+
+    /**
+     * Gets called when a game gets won
+     *
+     * @param event event
+     */
+    @EventHandler
+    public void onPlayerShootGoalEvent(GameWinEvent event) {
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            synchronized (this.statsController) {
+                for (final Player player : event.getWinningTeam()) {
+                    final Stats stats = GameListener.this.statsController.getByPlayer(player);
+                    stats.setAmountOfWins(stats.getAmountOfWins() + 1);
+                    this.statsController.store(stats);
+                    this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> this.updateStats(player, stats), 40L);
+                }
+            }
+        });
     }
 
     @EventHandler
@@ -111,6 +180,8 @@ class GameListener extends SimpleListener {
 
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
+        this.prepareDatabaseStats(event.getPlayer());
+        this.enableJoinStats(event.getPlayer());
         for (final Game game : this.controller.games) {
             if (game instanceof BungeeGameEntity) {
                 if (!game.getArena().isEnabled())
@@ -266,7 +337,7 @@ class GameListener extends SimpleListener {
                                     this.moveCounter.put(event.getPlayer(), this.moveCounter.get(event.getPlayer()) + 1);
                                 if (this.moveCounter.get(event.getPlayer()) > 20) {
                                     event.getPlayer().setVelocity(Config.getInstance().getPlayerLaunchUpProtectionVelocity());
-                                } else {
+                                } else if (!this.controller.games[i].arena.getTeamMeta().isTeamAutoJoin()) {
                                     final Vector knockback = this.lastLocation.get(event.getPlayer()).getLocation().toVector().subtract(event.getPlayer().getLocation().toVector());
                                     event.getPlayer().getLocation().setDirection(knockback);
                                     event.getPlayer().setVelocity(knockback);
@@ -381,7 +452,7 @@ class GameListener extends SimpleListener {
                     try {
                         game.getArena().getTeamMeta().getDoubleJumpSound().play(player.getLocation());
                     } catch (final InterPreter19Exception e) {
-                        SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [DoubleJumpSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
+                        Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [DoubleJumpSound]");
                     }
                     game.getArena().getTeamMeta().getDoubleJumpParticle().play(player.getLocation());
                 }
@@ -390,7 +461,7 @@ class GameListener extends SimpleListener {
     }
 
     @EventHandler
-    public void playerQuitEvent(PlayerQuitEvent event) {
+    public void playerQuitEvent(PlayerQuitEvent event) throws Exception {
         Game game;
         if (this.lastLocation.containsKey(event.getPlayer()))
             this.lastLocation.remove(event.getPlayer());
@@ -398,6 +469,11 @@ class GameListener extends SimpleListener {
             game.leave(event.getPlayer());
         if ((game = this.controller.isInGameLobby(event.getPlayer())) != null)
             game.leave(event.getPlayer());
+        if (this.statsScoreboards != null && this.statsScoreboards.containsKey(event.getPlayer())) {
+            final StatsScoreboard scoreboard = this.statsScoreboards.get(event.getPlayer());
+            scoreboard.close();
+            this.statsScoreboards.remove(event.getPlayer());
+        }
     }
 
     @EventHandler
@@ -472,7 +548,7 @@ class GameListener extends SimpleListener {
             if (this.connectedGames.containsKey(player)) {
                 event.setCancelled(true);
             }
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> GameListener.this.handleChatMessage(player, message), 1L);
+            this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> GameListener.this.handleChatMessage(player, message), 1L);
         }
     }
 
@@ -508,7 +584,73 @@ class GameListener extends SimpleListener {
             if (this.connectedGames.containsKey(player)) {
                 event.setCancelled(true);
             }
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> GameListener.this.handleChatMessage(player, message), 1L);
+            this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> GameListener.this.handleChatMessage(player, message), 1L);
+        }
+    }
+
+    /**
+     * Updates the stats for a player
+     *
+     * @param player player
+     * @param stats  stats
+     */
+    private void updateStats(Player player, Stats stats) {
+        if (this.statsScoreboards != null) {
+            GameListener.this.statsScoreboards.get(player).updateStats(player, stats);
+        }
+    }
+
+    /**
+     * Updates the StatsScoreabord
+     */
+    private void updateStatsScoreboard() {
+        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(this.plugin, () -> {
+            for (final Player player : GameListener.this.statsScoreboards.keySet()) {
+                final Stats stats = GameListener.this.statsController.getByPlayer(player);
+                GameListener.this.updateStats(player, stats);
+            }
+        }, 0, 20L * 60);
+    }
+
+    /**
+     * Prepares the stats collector
+     *
+     * @param player player
+     */
+    private void prepareDatabaseStats(Player player) {
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            synchronized (this.statsController) {
+                if (this.statsController.getByPlayer(player) == null) {
+                    PlayerMeta meta;
+                    if ((meta = this.playerMetaController.getByUUID(player.getUniqueId())) == null) {
+                        meta = this.playerMetaController.create(player);
+                        this.playerMetaController.store(meta);
+                    }
+                    final Stats stats = this.statsController.create();
+                    stats.setPlayerId(meta.getId());
+                    this.statsController.store(stats);
+                }
+            }
+        });
+    }
+
+    /**
+     * Enables the join stats
+     *
+     * @param player player
+     */
+    private void enableJoinStats(Player player) {
+        if (Config.getInstance().isScoreboardPlayerStatsEnabled()) {
+            final StatsScoreboard scoreboard = new StatsScoreboard(player);
+            this.statsScoreboards.put(player, scoreboard);
+            this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(this.plugin, () -> {
+                synchronized (this.statsController) {
+                    final Stats stats = this.statsController.getByPlayer(player);
+                    if (stats != null) {
+                        scoreboard.updateStats(player, stats);
+                    }
+                }
+            }, 20 * 2L);
         }
     }
 

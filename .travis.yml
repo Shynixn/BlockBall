@@ -4,6 +4,8 @@ install:
     - cd /home/travis/build/Shynixn/BlockBall/
     - mkdir lib
     - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar -P /home/travis/build/Shynixn/BlockBall/lib/
+before_script:
+  - sudo /etc/init.d/mysql stop
 script:
     - cd /home/travis/build/Shynixn/BlockBall/lib/
     - java -jar BuildTools.jar --rev 1.8 > /dev/null
@@ -13,7 +15,7 @@ script:
     - java -jar BuildTools.jar --rev 1.9.4 > /dev/null
     - java -jar BuildTools.jar --rev 1.10 > /dev/null
     - java -jar BuildTools.jar --rev 1.11 > /dev/null
-    - java -jar BuildTools.jar --rev 1.12
+    - java -jar BuildTools.jar --rev 1.12 > /dev/null
     - cd -
     - mvn compile test
 jdk:

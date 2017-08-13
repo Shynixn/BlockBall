@@ -5,7 +5,6 @@ import com.github.shynixn.blockball.api.entities.Team;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.lib.DynamicCommandHelper;
-import com.github.shynixn.blockball.lib.SMathUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,7 +36,7 @@ class GlobalJoinCommandExecutor extends DynamicCommandHelper {
                 args = new String[]{args[0], s};
             }
             if (args.length == 2 &&
-                    ((SMathUtils.tryPInt(args[0]) && (game = this.controller.getGameFromArenaId(Integer.parseInt(args[0]))) != null) ||
+                    ((tryPInt(args[0]) && (game = this.controller.getGameFromArenaId(Integer.parseInt(args[0]))) != null) ||
                             ((game = this.controller.getGameFromAlias(args[0])) != null))) {
                 if (ChatColor.stripColor(game.getArena().getTeamMeta().getRedTeamName()).equalsIgnoreCase(ChatColor.stripColor(args[1]))) {
                     if (game instanceof MiniGameEntity) {
@@ -62,7 +61,7 @@ class GlobalJoinCommandExecutor extends DynamicCommandHelper {
                         }
                     }
                 }
-            } else if (args.length == 1 && ((SMathUtils.tryPInt(args[0]) && (game = this.controller.getGameFromArenaId(Integer.parseInt(args[0]))) != null) || ((game = this.controller.getGameFromAlias(args[0])) != null))) {
+            } else if (args.length == 1 && ((tryPInt(args[0]) && (game = this.controller.getGameFromArenaId(Integer.parseInt(args[0]))) != null) || ((game = this.controller.getGameFromAlias(args[0])) != null))) {
                 if (game instanceof MiniGameEntity) {
                     if ((((MiniGameEntity) game)).isLobbyFull())
                         player.sendMessage(Language.PREFIX + Language.ARENA_LOBBYFULL_MESSAGE);

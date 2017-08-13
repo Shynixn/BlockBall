@@ -1,18 +1,14 @@
 package com.github.shynixn.blockball.business.logic.game;
 
+import com.github.shynixn.blockball.api.entities.*;
+import com.github.shynixn.blockball.api.events.GameJoinEvent;
+import com.github.shynixn.blockball.api.events.GameWinEvent;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.api.entities.GameStage;
-import com.github.shynixn.blockball.api.entities.MiniGame;
-import com.github.shynixn.blockball.api.entities.Team;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.lib.*;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -80,6 +76,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
             if (this.getHologram() != null) {
                 this.getHologram().show(player);
             }
+            Bukkit.getPluginManager().callEvent(new GameJoinEvent(this, player));
             return true;
         } else if (team == Team.BLUE) {
             this.blueTeam.add(player);
@@ -90,6 +87,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
             if (this.getHologram() != null) {
                 this.getHologram().show(player);
             }
+            Bukkit.getPluginManager().callEvent(new GameJoinEvent(this, player));
             return true;
         }
         return false;
@@ -142,7 +140,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
 
     public void endGame() {
         this.endgame = true;
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> {
             HelperGameEntity.this.reset();
             HelperGameEntity.this.endgame = false;
         }, 20 * 5);
@@ -181,7 +179,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                     try {
                         this.blingsound.play(this.getPlayers().toArray(new Player[this.getPlayers().size()]));
                     } catch (final InterPreter19Exception e) {
-                        SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [BlingSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
+                        Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BlingSound]");
                     }
                 }
                 if (this.countdown == 0) {
@@ -192,11 +190,13 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                     if (this.redGoals > this.blueGoals) {
                         this.executeCommand(this.arena.getTeamMeta().getWinCommand(), this.redTeam);
                         NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardWinning(), this.redTeam.toArray(new Player[this.redTeam.size()]));
+                        Bukkit.getPluginManager().callEvent(new GameWinEvent(this.redTeam, this));
                         this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getRedwinnerTitleMessage()), this.decryptText(this.arena.getTeamMeta().getRedwinnerSubtitleMessage()));
                         this.endGame();
                     } else if (this.redGoals < this.blueGoals) {
                         this.executeCommand(this.arena.getTeamMeta().getWinCommand(), this.blueTeam);
                         NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardWinning(), this.blueTeam.toArray(new Player[this.blueTeam.size()]));
+                        Bukkit.getPluginManager().callEvent(new GameWinEvent(this.blueTeam, this));
                         this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getBluewinnerTitleMessage()), this.decryptText(this.arena.getTeamMeta().getBluewinnerSubtitleMessage()));
                         this.endGame();
                     } else {
@@ -226,7 +226,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                             try {
                                 this.blingsound.play(this.lobby.toArray(new Player[this.lobby.size()]));
                             } catch (final InterPreter19Exception e) {
-                                SConsoleUtils.sendColoredMessage("Invalid 1.8/1.9 sound. [BlingSound]", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
+                                Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BlingSound]");
                             }
                         }
                         if (this.countdown <= 0) {
@@ -258,7 +258,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
     }
 
     boolean isLobbyFull() {
-        return (this.arena.getLobbyMeta().getMaxPlayers()*2) <= this.lobby.size();
+        return (this.arena.getLobbyMeta().getMaxPlayers() * 2) <= this.lobby.size();
     }
 
     boolean isInLobby(Player player) {
@@ -290,31 +290,31 @@ class HelperGameEntity extends GameEntity implements MiniGame {
     }
 
     private void updateSigns() {
-        Location[] locations = this.arena.getLobbyMeta().getSignLocations().toArray(new Location[this.arena.getLobbyMeta().getSignLocations().size()]);
-        for (int i = 0; i < locations.length; i++) {
-            final Location location = locations[i];
+        final IPosition[] signPositions = this.arena.getLobbyMeta().getSignPositions().toArray(new IPosition[this.arena.getLobbyMeta().getSignPositions().size()]);
+        for (final IPosition position : signPositions) {
+            final Location location = position.toLocation();
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
                 Config.getInstance().getMinigameSign().updateJoinSignConsideringMaxPlayers((Sign) location.getBlock().getState(), this, this.lobby);
             } else {
-                this.arena.getLobbyMeta().removeSignLocation(i);
+                this.arena.getLobbyMeta().removeSignPosition(position);
             }
         }
-        locations = this.arena.getLobbyMeta().getRedTeamSignLocations().toArray(new Location[this.arena.getLobbyMeta().getRedTeamSignLocations().size()]);
-        for (int i = 0; i < locations.length; i++) {
-            final Location location = locations[i];
+        final IPosition[] redSignPositions = this.arena.getLobbyMeta().getRedTeamSignPositions().toArray(new IPosition[this.arena.getLobbyMeta().getRedTeamSignPositions().size()]);
+        for (final IPosition position : redSignPositions) {
+            final Location location = position.toLocation();
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
                 Config.getInstance().getTeamSign().updateTeamSignConsideringMinigame((Sign) location.getBlock().getState(), this, Team.RED, this.preSelection);
             } else {
-                this.arena.getLobbyMeta().removeRedTeamSignLocation(i);
+                this.arena.getLobbyMeta().removeRedTeamSignPosition(position);
             }
         }
-        locations = this.arena.getLobbyMeta().getBlueTeamSignLocations().toArray(new Location[this.arena.getLobbyMeta().getBlueTeamSignLocations().size()]);
-        for (int i = 0; i < locations.length; i++) {
-            final Location location = locations[i];
+        final IPosition[] blueSignPositions = this.arena.getLobbyMeta().getBlueTeamSignPositions().toArray(new IPosition[this.arena.getLobbyMeta().getBlueTeamSignPositions().size()]);
+        for (final IPosition position : blueSignPositions) {
+            final Location location = position.toLocation();
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
                 Config.getInstance().getTeamSign().updateTeamSignConsideringMinigame((Sign) location.getBlock().getState(), this, Team.BLUE, this.preSelection);
             } else {
-                this.arena.getLobbyMeta().removeBlueTeamSignLocation(i);
+                this.arena.getLobbyMeta().removeBlueTeamSignPosition(position);
             }
         }
     }

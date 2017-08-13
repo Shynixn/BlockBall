@@ -6,20 +6,66 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import java.util.List;
 
 public interface LobbyMeta extends ConfigurationSerializable {
+
+    /**
+     * Returns the positions of each sign
+     *
+     * @return positions
+     */
+    List<IPosition> getSignPositions();
+
+    /**
+     * Removes the sign-position
+     *
+     * @param position position
+     */
+    void removeSignPosition(IPosition position);
+
     List<Location> getSignLocations();
 
+    @Deprecated
     void removeSignLocation(int positon);
 
     void addSignLocation(Location location);
 
+    /**
+     * Returns the positions of each sign
+     *
+     * @return positions
+     */
+    List<IPosition> getRedTeamSignPositions();
+
+    /**
+     * Removes the sign-position
+     *
+     * @param position position
+     */
+    void removeRedTeamSignPosition(IPosition position);
+
     List<Location> getRedTeamSignLocations();
 
+    @Deprecated
     void removeRedTeamSignLocation(int positon);
 
     void addRedTeamSignLocation(Location location);
 
+    /**
+     * Returns the positions of each sign
+     *
+     * @return positions
+     */
+    List<IPosition> getBlueTeamSignPositions();
+
+    /**
+     * Removes the sign-position
+     *
+     * @param position position
+     */
+    void removeBlueTeamSignPosition(IPosition position);
+
     List<Location> getBlueTeamSignLocations();
 
+    @Deprecated
     void removeBlueTeamSignLocation(int positon);
 
     void addBlueTeamSignLocation(Location location);

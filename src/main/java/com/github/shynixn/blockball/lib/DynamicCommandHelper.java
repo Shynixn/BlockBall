@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
+@Deprecated
 public abstract class DynamicCommandHelper extends BukkitCommand {
     private final Config.CommandContainer c;
 
@@ -40,5 +41,23 @@ public abstract class DynamicCommandHelper extends BukkitCommand {
             s += k;
         }
         return s;
+    }
+
+    public static boolean tryPInt(String value) {
+        try {
+            Integer.parseInt(value);
+        } catch (final NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean tryPDouble(String value) {
+        try {
+            Double.parseDouble(value);
+        } catch (final NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 }

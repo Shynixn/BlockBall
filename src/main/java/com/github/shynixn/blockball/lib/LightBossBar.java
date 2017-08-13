@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import java.io.Serializable;
 import java.util.List;
 
+@Deprecated
 public interface LightBossBar extends Serializable {
     void stopPlay(Object bossBar, Player player);
 

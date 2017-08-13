@@ -11,6 +11,7 @@ import org.bukkit.util.Vector;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class SLocation implements IPosition {
     private static final long serialVersionUID = 1L;
     private String world;
@@ -28,6 +29,13 @@ public class SLocation implements IPosition {
         this.z = z;
         this.yaw = yaw;
         this.pitch = pitch;
+    }
+
+    public SLocation(EulerAngle eulerAngle) {
+        super();
+        this.x = eulerAngle.getX();
+        this.y = eulerAngle.getY();
+        this.z = eulerAngle.getZ();
     }
 
     public SLocation(Map<String, Object> keys) {

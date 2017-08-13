@@ -12,10 +12,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Deprecated
 public class SLanguage {
 
     public static void reload(Class<?> cls) {
-        Plugin plugin = JavaPlugin.getPlugin(BlockBallPlugin.class);
+        final Plugin plugin = JavaPlugin.getPlugin(BlockBallPlugin.class);
         if (plugin == null)
             throw new IllegalArgumentException("Pluginloader failed to load " + SLanguage.class.getSimpleName() + '.');
         final File file = new File(plugin.getDataFolder(), "lang.yml");

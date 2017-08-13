@@ -103,7 +103,7 @@ public final class YamlSerializer {
      * @throws IllegalAccessException exception
      */
     public static Map<String, Object> serializeMap(Map<?, ?> objects) throws IllegalAccessException {
-        final Map<String, Object> data = new LinkedHashMap<String, Object>();
+        final Map<String, Object> data = new LinkedHashMap<>();
         for (final Object key : objects.keySet()) {
             if (!isPrimitive(key.getClass()))
                 throw new IllegalArgumentException("Cannot map non simple Map.");
@@ -131,7 +131,7 @@ public final class YamlSerializer {
      * @throws IllegalAccessException exception
      */
     public static Map<String, Object> serializeCollection(Collection<?> objects) throws IllegalAccessException {
-        final Map<String, Object> data = new LinkedHashMap<String, Object>();
+        final Map<String, Object> data = new LinkedHashMap<>();
         int i = 1;
         for (final Object object : objects) {
             data.put(String.valueOf(i), serializeObject(object));
@@ -148,7 +148,7 @@ public final class YamlSerializer {
      * @throws IllegalAccessException exception
      */
     public static Map<String, Object> serializeObject(Object object) throws IllegalAccessException {
-        final Map<String, Object> data = new LinkedHashMap<String, Object>();
+        final Map<String, Object> data = new LinkedHashMap<>();
         for (final AnnotationWrapper annotationWrapper : getOrderedAnnotations(object.getClass())) {
             final Field field = annotationWrapper.field;
             final YamlSerialize yamlAnnotation = annotationWrapper.annotation;
@@ -185,7 +185,7 @@ public final class YamlSerializer {
         Class<?> instanceClass = mapClazz;
         if (instanceClass == Map.class)
             instanceClass = HashMap.class;
-        T map = (T) instanceClass.newInstance();
+        final T map = (T) instanceClass.newInstance();
         for (final String key : data.keySet()) {
             map.put(key, deserializeObject(clazz, ((MemorySection) data.get(key)).getValues(false)));
         }
@@ -203,7 +203,7 @@ public final class YamlSerializer {
      * @throws IllegalAccessException exception
      */
     public static <T> T[] deserializeArray(Class<T> clazz, Object dataSource) throws InstantiationException, IllegalAccessException {
-        Map<String, Object> data = getDataFromSource(dataSource);
+        final Map<String, Object> data = getDataFromSource(dataSource);
         final T[] objects = (T[]) Array.newInstance(clazz, data.size());
         int i = 0;
         for (final String key : data.keySet()) {
@@ -232,7 +232,7 @@ public final class YamlSerializer {
             instanceClass = ArrayList.class;
         else if (instanceClass == Set.class)
             instanceClass = HashSet.class;
-        T collection = (T) instanceClass.newInstance();
+        final T collection = (T) instanceClass.newInstance();
         for (final String key : data.keySet()) {
             collection.add(deserializeObject(clazz, ((MemorySection) data.get(key)).getValues(false)));
         }
@@ -287,7 +287,7 @@ public final class YamlSerializer {
      * @return annotationWrappers
      */
     private static List<AnnotationWrapper> getOrderedAnnotations(Class<?> sourceClass) {
-        final List<AnnotationWrapper> annotationWrappers = new ArrayList<AnnotationWrapper>();
+        final List<AnnotationWrapper> annotationWrappers = new ArrayList<>();
         Class<?> clazz = sourceClass;
         while (clazz != null) {
             for (final Field field : clazz.getDeclaredFields()) {
@@ -299,14 +299,12 @@ public final class YamlSerializer {
             }
             clazz = clazz.getSuperclass();
         }
-        Collections.sort(annotationWrappers, new Comparator<AnnotationWrapper>() {
-            public int compare(AnnotationWrapper o1, AnnotationWrapper o2) {
-                if (o1.annotation.orderNumber() > o2.annotation.orderNumber())
-                    return 1;
-                else if (o1.annotation.orderNumber() < o2.annotation.orderNumber())
-                    return -1;
-                return 0;
-            }
+        annotationWrappers.sort((o1, o2) -> {
+            if (o1.annotation.orderNumber() > o2.annotation.orderNumber())
+                return 1;
+            else if (o1.annotation.orderNumber() < o2.annotation.orderNumber())
+                return -1;
+            return 0;
         });
         return annotationWrappers;
     }

@@ -15,6 +15,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Deprecated
 public class SCommandExecutor implements CommandExecutor {
     protected JavaPlugin plugin;
 
@@ -75,5 +76,23 @@ public class SCommandExecutor implements CommandExecutor {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     public @interface ConsoleCommand {
+    }
+
+    public static boolean tryPInt(String value) {
+        try {
+            Integer.parseInt(value);
+        } catch (final NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean tryPDouble(String value) {
+        try {
+            Double.parseDouble(value);
+        } catch (final NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 }

@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.business;
 
 import com.github.shynixn.blockball.api.entities.*;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.lib.SConsoleUtils;
 import com.github.shynixn.blockball.lib.SLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,20 +22,20 @@ import java.util.logging.Level;
 public final class Config {
     private static Config instance;
     private FileConfiguration c;
-    private Plugin plugin;
+    private final Plugin plugin;
 
     private boolean asyncChat = true;
     private boolean highpriority = true;
+    private boolean metrics = true;
 
     private IPosition joiningSpawnpoint;
     private boolean joiningSpawnpointEnabled;
 
-    private boolean enableGoalsScoreboard;
-    private String scoreboardTitle = ChatColor.GOLD + "Top Goals";
-    private String firstplaceprefix;
-    private String secondplaceprefix;
-    private String thirdplaceprefix;
-    private String otherprefix;
+    private String scoreboardPlayerStatsTitle = ChatColor.GOLD + "BlockBall Stats";
+    private boolean scoreboardPlayerStatsEnabled;
+    private String[] scoreboardPlayerStatsLines;
+
+    private boolean useEngineV2;
 
     private CommandContainer globalJoinCommand;
     private CommandContainer chatNavigateCommand;
@@ -60,13 +59,21 @@ public final class Config {
         return instance;
     }
 
+    public boolean isMetrics() {
+        return this.metrics;
+    }
+
+    /**
+     * Reloads the config.yml
+     */
     public void reload() {
         try {
-            plugin.reloadConfig();
-            this.c = plugin.getConfig();
+            this.plugin.reloadConfig();
+            this.c = this.plugin.getConfig();
 
             this.asyncChat = this.c.getBoolean("async-chat");
             this.highpriority = this.c.getBoolean("highest-priority");
+            this.metrics = this.c.getBoolean("metrics");
 
             this.joiningSpawnpointEnabled = this.c.getBoolean("join-spawnpoint.enabled");
             this.joiningSpawnpoint = new SLocation()
@@ -74,12 +81,9 @@ public final class Config {
                     .setCoordinates(this.c.getDouble("join-spawnpoint.coordinates.x"), this.c.getDouble("join-spawnpoint.coordinates.y"), this.c.getDouble("join-spawnpoint.coordinates.z"))
                     .setRotation(this.c.getDouble("join-spawnpoint.coordinates.yaw"), this.c.getDouble("join-spawnpoint.coordinates.pitch"));
 
-            this.enableGoalsScoreboard = this.c.getBoolean("goals-scoreboard.enabled");
-            this.scoreboardTitle = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.scoreboard-title"));
-            this.firstplaceprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.firstplace-prefix"));
-            this.secondplaceprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.secondplace-prefix"));
-            this.thirdplaceprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.thirdplace-prefix"));
-            this.otherprefix = ChatColor.translateAlternateColorCodes('&', this.c.getString("goals-scoreboard.other-prefix"));
+            this.scoreboardPlayerStatsEnabled = this.c.getBoolean("stats-scoreboard.enabled");
+            this.scoreboardPlayerStatsTitle = ChatColor.translateAlternateColorCodes('&', this.c.getString("stats-scoreboard.title"));
+            this.scoreboardPlayerStatsLines = this.c.getStringList("stats-scoreboard.lines").toArray(new String[0]);
 
             this.globalLeaveCommand = new CommandContainer("global-leave");
             this.globalJoinCommand = new CommandContainer("global-join");
@@ -96,10 +100,20 @@ public final class Config {
 
             this.particleVisibleForAll = this.c.getBoolean("particles.visible-for-all");
             this.particlePermission = this.c.getString("particles.visible-permission");
+            this.useEngineV2 = this.c.getBoolean("blockball.use-engine-v2");
         } catch (final Exception ex) {
-            SConsoleUtils.sendColoredMessage("Please delete your config file to fix this problem.", ChatColor.GREEN, BlockBallPlugin.PREFIX_CONSOLE);
-            Bukkit.getLogger().log(Level.WARNING, "Cannot setup config." , ex);
+            Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Please delete your config file to fix this problem.");
+            Bukkit.getLogger().log(Level.WARNING, "Cannot setup config.", ex);
         }
+    }
+
+    /**
+     * Returns if BlockBall should be using engine v2
+     *
+     * @return engineV2
+     */
+    public boolean isUseEngineV2() {
+        return this.useEngineV2;
     }
 
     public CommandContainer getEventContainerCommand() {
@@ -148,28 +162,31 @@ public final class Config {
         return this.globalLeaveCommand;
     }
 
-    public boolean isEnableGoalsScoreboard() {
-        return this.enableGoalsScoreboard;
+    /**
+     * Returns the title of the playerStats scoreboard
+     *
+     * @return title
+     */
+    public String getScoreboardPlayerStatsTitle() {
+        return this.scoreboardPlayerStatsTitle;
     }
 
-    public String getOtherprefix() {
-        return this.otherprefix;
+    /**
+     * Returns if the playerStatsScoreboard is enabled
+     *
+     * @return enabled
+     */
+    public boolean isScoreboardPlayerStatsEnabled() {
+        return this.scoreboardPlayerStatsEnabled;
     }
 
-    public String getScoreboardTitle() {
-        return this.scoreboardTitle;
-    }
-
-    public String getFirstplaceprefix() {
-        return this.firstplaceprefix;
-    }
-
-    public String getSecondplaceprefix() {
-        return this.secondplaceprefix;
-    }
-
-    public String getThirdplaceprefix() {
-        return this.thirdplaceprefix;
+    /**
+     * Returns the lines of the scoreboardPlayerStats
+     *
+     * @return lines
+     */
+    public String[] getScoreboardPlayerStatsLines() {
+        return this.scoreboardPlayerStatsLines;
     }
 
     public boolean isHighpriority() {
@@ -316,11 +333,11 @@ public final class Config {
             for (final String s : new String[]{this.line1, this.line2, this.line3, this.line4}) {
                 if (game.getPlayers().size() < players.size()) {
                     sign.setLine(i, this.replace(s, game.getArena(), null, true).replace("<players>", String.valueOf(players.size()))
-                            .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers()*2))
+                            .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers() * 2))
                             .replace("<state>", stage));
                 } else {
                     sign.setLine(i, this.replace(s, game.getArena(), null, true).replace("<players>", String.valueOf(game.getPlayers().size()))
-                            .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers()*2))
+                            .replace("<maxplayers>", String.valueOf(game.getArena().getLobbyMeta().getMaxPlayers() * 2))
                             .replace("<state>", stage));
                 }
 

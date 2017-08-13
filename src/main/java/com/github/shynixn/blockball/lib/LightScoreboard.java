@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import java.io.Serializable;
 import java.util.List;
 
+@Deprecated
 public interface LightScoreboard extends Serializable {
     void remove(Player player);
 

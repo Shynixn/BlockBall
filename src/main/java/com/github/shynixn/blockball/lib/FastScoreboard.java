@@ -11,6 +11,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.List;
 import java.util.logging.Level;
 
+@Deprecated
 public class FastScoreboard implements LightScoreboard {
     private transient Scoreboard scoreboard;
     private transient Objective objective;
@@ -70,7 +71,7 @@ public class FastScoreboard implements LightScoreboard {
             if (bluegoals != null)
                 this.objective.getScore(this.blueTeam).setScore(bluegoals);
         } catch (final Exception ex) {
-            SConsoleUtils.sendColoredMessage("Scoreboard crashed. Check if the text is short enough for the scoreboard!", ChatColor.RED, BlockBallPlugin.PREFIX_CONSOLE);
+            Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Scoreboard crashed. Check if the text is short enough for the scoreboard!");
             Bukkit.getLogger().log(Level.WARNING, "Cannot set scoreboard.", ex);
             this.scoreboard = null;
             this.objective = null;
