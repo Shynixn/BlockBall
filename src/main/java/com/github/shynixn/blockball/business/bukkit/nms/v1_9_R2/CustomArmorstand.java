@@ -100,8 +100,8 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
                             for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
                                 if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {
                                     this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(this.hstrength);
-                                    this.rvalue = random.nextInt(5) + 8;
-                                    this.jumps = random.nextInt(5) + 3;
+                                    this.rvalue = this.random.nextInt(5) + 8;
+                                    this.jumps = this.random.nextInt(5) + 3;
                                     this.startVector.setY(0.1 * this.jumps);
                                     try {
                                         this.slime.getSpigotEntity().setVelocity(this.startVector.multiply(0.1 * this.jumps));
@@ -189,8 +189,8 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
             }
             if (this.isRotating)
                 this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
-            this.rvalue = random.nextInt(5) + 9;
-            this.jumps = random.nextInt(5) + 5;
+            this.rvalue = this.random.nextInt(5) + 9;
+            this.jumps = this.random.nextInt(5) + 5;
         }
     }
 
@@ -228,8 +228,8 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
             }
             if (this.isRotating)
                 this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
-            this.rvalue = random.nextInt(5) + 9;
-            this.jumps = random.nextInt(5) + 5;
+            this.rvalue = this.random.nextInt(5) + 9;
+            this.jumps = this.random.nextInt(5) + 5;
         }
     }
 

@@ -40,16 +40,17 @@ import java.util.List;
  */
 public class GameWinEvent extends SEvent {
 
-    private List<Player> winningTeam = new ArrayList<>();
-    private Game game;
+    private final List<Player> winningTeam = new ArrayList<>();
+    private final Game game;
 
     public GameWinEvent(Collection<Player> winningTeam, Game game) {
+        super();
         this.winningTeam.addAll(winningTeam);
         this.game = game;
     }
 
     public List<Player> getWinningTeam() {
-        return this.winningTeam;
+        return Collections.unmodifiableList(this.winningTeam);
     }
 
     public Game getGame() {

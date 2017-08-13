@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.business;
 import org.bukkit.ChatColor;
 
 public class Language {
-    public static String PREFIX = ChatColor.BLACK + "" + ChatColor.BOLD + "["
+    public static String PREFIX = ChatColor.BLACK + "" + ChatColor.BOLD + '['
             + ChatColor.WHITE + ChatColor.BOLD + "Ball" + ChatColor.BLACK + "" + ChatColor.BOLD + "] " + ChatColor.GRAY;
 
     public static String NO_PERMISSION = ChatColor.RED + "You don't have permission to join the game.";

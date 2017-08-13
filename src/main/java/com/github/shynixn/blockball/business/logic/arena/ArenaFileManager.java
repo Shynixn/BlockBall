@@ -82,7 +82,7 @@ class ArenaFileManager {
                     items.add(arenaEntity);
                 }
             } catch (final Exception ex) {
-                Bukkit.getLogger().log(Level.WARNING, "Cannot read arena file " + s + ".", ex);
+                Bukkit.getLogger().log(Level.WARNING, "Cannot read arena file " + s + '.', ex);
             }
         }
         return items.toArray(new Arena[items.size()]);

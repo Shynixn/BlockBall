@@ -32,6 +32,7 @@ public class SLocation implements IPosition {
     }
 
     public SLocation(EulerAngle eulerAngle) {
+        super();
         this.x = eulerAngle.getX();
         this.y = eulerAngle.getY();
         this.z = eulerAngle.getZ();

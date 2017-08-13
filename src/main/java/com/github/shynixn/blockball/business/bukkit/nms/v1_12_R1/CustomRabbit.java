@@ -123,7 +123,7 @@ public final class CustomRabbit extends EntityRabbit {
             double d6 = d0;
             final double d7 = d1;
             double d8 = d2;
-            final boolean flag = this.onGround && this.isSneaking() && false;
+            final boolean flag = false;
             if ((enummovetype == EnumMoveType.SELF || enummovetype == EnumMoveType.PLAYER) && flag) {
                 for (; d0 != 0.0D && this.world.getCubes(this, this.getBoundingBox().d(d0, (double) (-this.P), 0.0D)).isEmpty(); d6 = d0) {
                     if (d0 < 0.05D && d0 >= -0.05D) {

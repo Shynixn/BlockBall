@@ -363,7 +363,7 @@ public abstract class GameEntity implements Game {
         if (this.arena.getTeamMeta().isGoalShooterGlowing() && (!ReflectionLib.getServerVersion().contains("1_8")) && this.lastHit != null) {
             final Player player = this.lastHit;
             Interpreter19.setGlowing(player, true);
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> Interpreter19.setGlowing(player, false), 20L * this.arena.getTeamMeta().getGoalShooterGlowingSeconds());
+            this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> Interpreter19.setGlowing(player, false), 20L * this.arena.getTeamMeta().getGoalShooterGlowingSeconds());
         }
     }
 

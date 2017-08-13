@@ -89,7 +89,6 @@ public class Factory {
                     connectionContext.executeUpdate(data, connection);
                 }
             } catch (final Exception e) {
-                e.printStackTrace();
                 Bukkit.getLogger().log(Level.WARNING, "Cannot execute creation.", e);
             }
         } else {
@@ -120,7 +119,6 @@ public class Factory {
                 connectionContext = null;
                 plugin.getConfig().set("sql.enabled", false);
                 Factory.initialize(plugin);
-                return;
             }
         }
     }

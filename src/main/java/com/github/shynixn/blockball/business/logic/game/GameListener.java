@@ -129,7 +129,7 @@ class GameListener extends SimpleListener {
                     final Stats stats = GameListener.this.statsController.getByPlayer(player);
                     stats.setAmountOfWins(stats.getAmountOfWins() + 1);
                     this.statsController.store(stats);
-                    this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> updateStats(player, stats), 40L);
+                    this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> this.updateStats(player, stats), 40L);
                 }
             }
         });
@@ -604,13 +604,10 @@ class GameListener extends SimpleListener {
      * Updates the StatsScoreabord
      */
     private void updateStatsScoreboard() {
-        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(this.plugin, new Runnable() {
-            @Override
-            public void run() {
-                for (final Player player : GameListener.this.statsScoreboards.keySet()) {
-                    final Stats stats = GameListener.this.statsController.getByPlayer(player);
-                    GameListener.this.updateStats(player, stats);
-                }
+        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(this.plugin, () -> {
+            for (final Player player : GameListener.this.statsScoreboards.keySet()) {
+                final Stats stats = GameListener.this.statsController.getByPlayer(player);
+                GameListener.this.updateStats(player, stats);
             }
         }, 0, 20L * 60);
     }

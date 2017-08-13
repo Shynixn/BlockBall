@@ -48,6 +48,8 @@ public interface IController<T> extends AutoCloseable {
 
     /**
      * Returns the amount of items in the repository
+     *
+     * @return size
      */
     int size();
 

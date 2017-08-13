@@ -97,6 +97,7 @@ public class ItemStackBuilder extends ItemStack {
      * Sets the displayName of the itemStack
      *
      * @param name name
+     * @return builder
      */
     public ItemStackBuilder setDisplayName(String name) {
         final ItemMeta itemMeta = this.getItemMeta();
@@ -109,6 +110,7 @@ public class ItemStackBuilder extends ItemStack {
      * Sets the skin of the itemStack. Only works on playerHeads
      *
      * @param skin skin
+     * @return builder
      */
     public ItemStackBuilder setSkin(String skin) {
         if (this.getItemMeta() instanceof SkullMeta) {
@@ -138,6 +140,7 @@ public class ItemStackBuilder extends ItemStack {
      * Sets the lore of the itemStack
      *
      * @param lore lore
+     * @return builder
      */
     public ItemStackBuilder setLore(String... lore) {
         final List<String> data = new ArrayList<>();
@@ -154,6 +157,7 @@ public class ItemStackBuilder extends ItemStack {
      * Adds lore to the end of the itemstack lore
      *
      * @param lore lore
+     * @return builder
      */
     public ItemStackBuilder addLore(String... lore) {
         final ItemMeta itemMeta = this.getItemMeta();
@@ -171,6 +175,7 @@ public class ItemStackBuilder extends ItemStack {
      *
      * @param index index
      * @param lore  lore
+     * @return builder
      */
     public ItemStackBuilder addLore(int index, String... lore) {
         final ItemMeta itemMeta = this.getItemMeta();
@@ -190,6 +195,7 @@ public class ItemStackBuilder extends ItemStack {
 
     /**
      * Clears all lore from the itemStack
+     * @return builder
      */
     public ItemStackBuilder clearLore() {
         final ItemMeta itemMeta = this.getItemMeta();
@@ -202,6 +208,7 @@ public class ItemStackBuilder extends ItemStack {
      * Removes the lore matching the lines
      *
      * @param lore lore
+     * @return builder
      */
     public ItemStackBuilder removeLore(String... lore) {
         final ItemMeta itemMeta = this.getItemMeta();
@@ -226,6 +233,7 @@ public class ItemStackBuilder extends ItemStack {
      * Removes the lore from the specific index
      *
      * @param index index
+     * @return builder
      */
     public ItemStackBuilder removeLore(int index) {
         final List<String> data = new ArrayList<>();

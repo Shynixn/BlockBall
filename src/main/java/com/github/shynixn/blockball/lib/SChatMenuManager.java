@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.lib;
 
-import java.util.HashMap;
-
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import org.bukkit.ChatColor;
@@ -13,8 +11,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
 
 @SuppressWarnings("deprecation")
 public final class SChatMenuManager extends SimpleListener {
@@ -75,7 +74,7 @@ public final class SChatMenuManager extends SimpleListener {
                 event.setCancelled(true);
                 final String message = ChatColor.stripColor(event.getMessage());
                 final Player player = event.getPlayer();
-                plugin.getServer().getScheduler().runTaskLater(plugin, () -> SChatMenuManager.this.handleChatMessage(player, message), 1L);
+                this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> SChatMenuManager.this.handleChatMessage(player, message), 1L);
             }
         }
     }
@@ -98,7 +97,7 @@ public final class SChatMenuManager extends SimpleListener {
                 event.setCancelled(true);
                 final String message = ChatColor.stripColor(event.getMessage());
                 final Player player = event.getPlayer();
-                plugin.getServer().getScheduler().runTaskLater(plugin, () -> SChatMenuManager.this.handleChatMessage(player, message), 1L);
+                this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> SChatMenuManager.this.handleChatMessage(player, message), 1L);
             }
         }
     }

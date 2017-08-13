@@ -67,8 +67,8 @@ public class ExtensionHikariConnectionContext implements AutoCloseable {
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        if(driver.equals(SQLITE_DRIVER))
-             config.setMaximumPoolSize(1);
+        if (driver.equals(SQLITE_DRIVER))
+            config.setMaximumPoolSize(1);
         else
             config.setMaximumPoolSize(10);
         this.ds = new HikariDataSource(config);
@@ -282,8 +282,8 @@ public class ExtensionHikariConnectionContext implements AutoCloseable {
     /**
      * Opens a new DatabaseContext for the given url
      *
-     * @param driver driver
-     * @param url    url
+     * @param driver    driver
+     * @param url       url
      * @param retriever retriever
      * @return DbConnectionContext
      * @throws IOException exception
@@ -293,7 +293,7 @@ public class ExtensionHikariConnectionContext implements AutoCloseable {
             throw new IllegalArgumentException("Driver cannot be null!");
         if (url == null)
             throw new IllegalArgumentException("Database cannot be null!");
-        if(retriever == null)
+        if (retriever == null)
             throw new IllegalArgumentException("Retriever cannot be null!");
         try {
             Class.forName(driver);
@@ -310,12 +310,13 @@ public class ExtensionHikariConnectionContext implements AutoCloseable {
     /**
      * Opens a new DatabaseContext for the given ip, port, database, username and password
      *
-     * @param driver   driver
-     * @param ip       ip
-     * @param port     port
-     * @param database database
-     * @param userName userName
-     * @param password password
+     * @param driver    driver
+     * @param ip        ip
+     * @param port      port
+     * @param urlPrefix prefix
+     * @param database  database
+     * @param userName  userName
+     * @param password  password
      * @param retriever retriever
      * @return DbConnectionContext
      * @throws IOException exception
@@ -331,7 +332,7 @@ public class ExtensionHikariConnectionContext implements AutoCloseable {
             throw new IllegalArgumentException("Username cannot be null!");
         if (password == null)
             throw new IllegalArgumentException("Password cannot be null!");
-        if(retriever == null)
+        if (retriever == null)
             throw new IllegalArgumentException("Retriever cannot be null!");
         try {
             Class.forName(driver);

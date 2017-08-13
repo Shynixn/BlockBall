@@ -16,7 +16,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.util.ChatPaginator;
 
 @SuppressWarnings("deprecation")
 @SCommandExecutor.Command(command = "blockball")
@@ -2124,7 +2123,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
     private static class EventMetaSettingsPage extends SChatpage {
         private final ArenaEntity arena;
 
-        public EventMetaSettingsPage(Player player, ArenaEntity arena) {
+        EventMetaSettingsPage(Player player, ArenaEntity arena) {
             super(player);
             this.arena = arena;
         }
@@ -2208,7 +2207,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
     private static class HologramSettingsPage extends SChatpage {
         private final ArenaEntity arena;
 
-        public HologramSettingsPage(Player player, ArenaEntity arena) {
+        HologramSettingsPage(Player player, ArenaEntity arena) {
             super(player);
             this.arena = arena;
         }
@@ -2261,7 +2260,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
     private static class GlowingSettingsPage extends SChatpage {
         private final ArenaEntity arena;
 
-        public GlowingSettingsPage(Player player, ArenaEntity arena) {
+        GlowingSettingsPage(Player player, ArenaEntity arena) {
             super(player);
             this.arena = arena;
         }

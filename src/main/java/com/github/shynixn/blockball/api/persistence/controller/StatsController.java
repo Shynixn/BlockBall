@@ -1,10 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.controller;
 
-import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 /**
  * Copyright 2017 Shynixn

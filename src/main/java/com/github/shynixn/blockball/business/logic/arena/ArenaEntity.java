@@ -229,6 +229,7 @@ class ArenaEntity extends SelectedArea implements Arena {
         this.name = name;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }

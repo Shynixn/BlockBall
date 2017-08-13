@@ -140,7 +140,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
 
     public void endGame() {
         this.endgame = true;
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> {
             HelperGameEntity.this.reset();
             HelperGameEntity.this.endgame = false;
         }, 20 * 5);
