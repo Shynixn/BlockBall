@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.business.bukkit.nms.v1_11_R1;
 
 import com.github.shynixn.blockball.api.events.BallDeathEvent;
+import com.github.shynixn.blockball.api.events.BallInteractEvent;
 import com.github.shynixn.blockball.api.events.BallKickEvent;
 import com.github.shynixn.blockball.api.events.BallMoveEvent;
 import com.github.shynixn.blockball.business.Config;
@@ -99,18 +100,21 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
                         if (this.counter <= 0) {
                             for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
                                 if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {
-                                    this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(this.hstrength);
-                                    this.rvalue = this.random.nextInt(5) + 8;
-                                    this.jumps = this.random.nextInt(5) + 3;
-                                    this.startVector.setY(0.1 * this.jumps);
-                                    try {
-                                        this.slime.getSpigotEntity().setVelocity(this.startVector.multiply(0.1 * this.jumps));
-                                    } catch (final IllegalArgumentException ex) {
+                                    final BallInteractEvent event = new BallInteractEvent(player, this);
+                                    Bukkit.getPluginManager().callEvent(event);
+                                    if (!event.isCancelled()) {
+                                        this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(this.hstrength);
+                                        this.rvalue = this.random.nextInt(5) + 8;
+                                        this.jumps = this.random.nextInt(5) + 3;
+                                        this.startVector.setY(0.1 * this.jumps);
+                                        try {
+                                            this.slime.getSpigotEntity().setVelocity(this.startVector.multiply(0.1 * this.jumps));
+                                        } catch (final IllegalArgumentException ex) {
 
-                                    }
-                                    if (this.isRotating) {
-                                        this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
-
+                                        }
+                                        if (this.isRotating) {
+                                            this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
+                                        }
                                     }
                                 }
                             }
@@ -152,11 +156,9 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
                 this.getBukkitEntity().setFireTicks(0);
                 this.slime.getSpigotEntity().setFireTicks(0);
                 Bukkit.getPluginManager().callEvent(new BallMoveEvent(this));
-            }
-            catch (final IllegalArgumentException e) {
+            } catch (final IllegalArgumentException e) {
 
-            }
-            catch (final Exception e) {
+            } catch (final Exception e) {
                 Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Critical EntityHackError happend! Shynixn catcher algorithm prevented server crash!");
                 Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Report this bug to the author Shynixn!");
                 Bukkit.getLogger().log(Level.WARNING, "Critical error.", e);

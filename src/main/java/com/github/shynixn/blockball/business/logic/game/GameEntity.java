@@ -63,8 +63,8 @@ public abstract class GameEntity implements Game {
     /**
      * HitCounter
      */
-    private Team lastHitTeam;
-    private Player lastHit;
+    Team lastHitTeam;
+    Player lastHit;
 
     /**
      * BossBar
@@ -209,11 +209,6 @@ public abstract class GameEntity implements Game {
             }
             this.buffer = 10;
         }
-        if (this.blueTeam.contains(player))
-            this.lastHitTeam = Team.BLUE;
-        else
-            this.lastHitTeam = Team.RED;
-        this.lastHit = player;
     }
 
     final void fixCachedRangePlayers() {
