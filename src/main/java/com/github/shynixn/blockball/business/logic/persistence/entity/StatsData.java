@@ -45,6 +45,8 @@ public class StatsData extends PersistenceObject implements Stats {
      */
     @Override
     public double getWinRate() {
+        if (this.amountGames == 0)
+            return 0;
         return ((double) this.amountWins) / ((double) this.amountGames);
     }
 
@@ -55,6 +57,8 @@ public class StatsData extends PersistenceObject implements Stats {
      */
     @Override
     public double getGoalsPerGame() {
+        if (this.amountGames == 0)
+            return 0;
         return ((double) this.amountGoals) / ((double) this.amountGames);
     }
 
