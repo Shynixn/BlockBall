@@ -28,7 +28,7 @@ Spigot plugin to simulate a football/soccer game in minecraft.
 ## API
 
 * Reference the BlockBall.jar in your own projects.
-* If you are using maven you can add it from the central maven repository
+* If you are using maven or gradle you can add it from the central maven repository
 
 ### Maven
 
