@@ -98,6 +98,7 @@ public final class NMSRegistry {
             }
         } catch (final Error ex) {
             Bukkit.getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.DARK_RED + "Failed to register the last dependency.");
+            ex.printStackTrace();
         }
     }
 
