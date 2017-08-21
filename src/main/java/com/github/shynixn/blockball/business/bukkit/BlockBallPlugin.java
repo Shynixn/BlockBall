@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.business.bukkit;
 
-import com.avaje.ebean.Update;
 import com.github.shynixn.blockball.api.BlockBallApi;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;

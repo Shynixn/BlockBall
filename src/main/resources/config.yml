@@ -101,7 +101,7 @@ lobbygame-sign:
  line-3: '<team>'
  line-4: '<players>/<maxplayers>'
 #Chat settings
-#Enable this to handle chat messages asynchronly
+#Enable this to handle chat messages asynchronously
 async-chat: true
 highest-priority: true
 

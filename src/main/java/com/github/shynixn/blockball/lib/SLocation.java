@@ -137,7 +137,8 @@ public class SLocation implements IPosition {
 
     @Override
     public IPosition setPitch(double pitch) {
-        return null;
+        this.pitch = pitch;
+        return this;
     }
 
     @Override

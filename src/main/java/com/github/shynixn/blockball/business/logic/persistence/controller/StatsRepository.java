@@ -8,7 +8,6 @@ import com.github.shynixn.blockball.lib.ExtensionHikariConnectionContext;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -83,8 +83,6 @@ interface ServerInfo {
                 for (; i < data.length(); i++) {
                     if (data.charAt(i) == '§')
                         started = true;
-                    else if (data.charAt(i) == '§')
-                        break;
                     else if (started)
                         motd += data.charAt(i);
                 }

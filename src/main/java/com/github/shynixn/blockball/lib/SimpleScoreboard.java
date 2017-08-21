@@ -9,7 +9,6 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.io.Closeable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class GameEntity implements Game {
-    protected Plugin plugin;
+    protected final Plugin plugin;
 
     /**
      * Static arena
@@ -36,7 +36,7 @@ public abstract class GameEntity implements Game {
     /**
      * Temporary Storage
      */
-    Map<Player, TemporaryPlayerStorage> temporaryStorage = new HashMap<>();
+    final Map<Player, TemporaryPlayerStorage> temporaryStorage = new HashMap<>();
 
     /**
      * Teams and goals per team

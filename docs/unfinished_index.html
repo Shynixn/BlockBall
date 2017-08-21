@@ -10,7 +10,8 @@
     <div class="nav-wrapper container"><a id="logo-container" href="unfinished_index.html" class="brand-logo">BlockBall</a>
         <ul class="right hide-on-med-and-down">
             <li><a href="unfinished_index.html">Home</a></li>
-            <li><a href="#" onclick="loadHTML('quick-start.html')">Setup</a></li>
+            <li><a href="#" onclick="loadHTML('quick-start.html')">Quick Start</a></li>
+            <li><a href="#" onclick="loadHTML('overview.html')">Setup</a></li>
         </ul>
         <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
@@ -78,10 +79,14 @@
         })
     })(jQuery);
 
+    function loadHTMLinto(fileName, targetId) {
+        $("#" + targetId).load(fileName);
+    }
+
     function loadHTML(fileName) {
         $("#page-content").load(fileName);
     }
-    loadHTML("simple.html");
+    loadHTML("overview.html");
 </script>
 
 </body>
