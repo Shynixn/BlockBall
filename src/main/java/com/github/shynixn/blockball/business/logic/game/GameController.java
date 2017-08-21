@@ -14,7 +14,7 @@ import com.github.shynixn.blockball.business.logic.arena.ArenaController;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class GameController extends SimpleListener {
-    ArenaController arenaManager;
+    final ArenaController arenaManager;
     GameEntity[] games;
 
     public GameController() {

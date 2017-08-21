@@ -490,11 +490,15 @@ class GameListener extends SimpleListener {
         }
     }
 
+    /**
+     * Gets called when a player interacts with a ball
+     *
+     * @param event event
+     */
     @EventHandler
-    public void ballKickEvent(BallKickEvent event) {
+    public void ballInteractEvent(BallInteractEvent event) {
         final Game game;
         if ((game = this.controller.getGameFromBall(event.getBall())) != null) {
-            game.playBallKickEffects(event.getPlayer());
             final GameEntity entity = (GameEntity) game;
             if (entity.ballPreviousCacheLocation != null && entity.ballPreviousCacheLocation.distance(event.getBall().getLocation().toVector()) < 2) {
                 entity.ballCornerBumper++;
@@ -513,6 +517,25 @@ class GameListener extends SimpleListener {
                 entity.ballCornerBumper = 0;
             }
             entity.ballPreviousCacheLocation = event.getBall().getLocation().toVector();
+            if (entity.blueTeam.contains(event.getPlayer())) {
+                entity.lastHitTeam = Team.BLUE;
+            } else {
+                entity.lastHitTeam = Team.RED;
+            }
+            entity.lastHit = event.getPlayer();
+        }
+    }
+
+    /**
+     * Gets called when a player kicks the ball
+     *
+     * @param event event
+     */
+    @EventHandler
+    public void ballKickEvent(BallKickEvent event) {
+        final Game game;
+        if ((game = this.controller.getGameFromBall(event.getBall())) != null) {
+            game.playBallKickEffects(event.getPlayer());
         }
     }
 

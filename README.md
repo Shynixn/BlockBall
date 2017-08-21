@@ -22,13 +22,13 @@ Spigot plugin to simulate a football/soccer game in minecraft.
 * [Download the plugin BlockBall](https://github.com/Shynixn/BlockBall/releases)
 * Put the plugin into your plugin folder
 * Install the plugin Worldedit
-* Start the server (1.8.0 - 1.12.0, Java 8)
+* Start the server (1.8.0 - 1.12.1, Java 8)
 * Join and play :)
 
 ## API
 
 * Reference the BlockBall.jar in your own projects.
-* If you are using maven you can add it from the central maven repository
+* If you are using maven or gradle you can add it from the central maven repository
 
 ### Maven
 
@@ -36,8 +36,16 @@ Spigot plugin to simulate a football/soccer game in minecraft.
 <dependency>
      <groupId>com.github.shynixn</groupId>
      <artifactId>blockball</artifactId>
-     <version>4.0.1</version>
+     <version>4.1.1</version>
 </dependency>
+```
+
+### Gradle
+
+```xml
+dependencies {
+    compileOnly 'com.github.shynixn:blockball:4.1.1'
+}
 ```
 
 ## How to use the it

@@ -10,10 +10,11 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class PlaceHolderApiConnection {
+
+
     public static void init(JavaPlugin plugin) {
         final PlaceHolderScoreHooker hooker = new PlaceHolderScoreHooker(plugin);
         hooker.hook();
-        throw new NoSuchMethodError();
     }
 
     private static class PlaceHolderScoreHooker extends EZPlaceholderHook {

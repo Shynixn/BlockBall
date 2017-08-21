@@ -60,8 +60,8 @@ public final class YamlSerializer {
      * Internal handler class
      */
     private static class AnnotationWrapper {
-        YamlSerialize annotation;
-        Field field;
+        final YamlSerialize annotation;
+        final Field field;
 
         /**
          * Initializes a new annotationWrapper

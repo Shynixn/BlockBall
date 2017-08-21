@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class GameEntity implements Game {
-    protected Plugin plugin;
+    protected final Plugin plugin;
 
     /**
      * Static arena
@@ -36,7 +36,7 @@ public abstract class GameEntity implements Game {
     /**
      * Temporary Storage
      */
-    Map<Player, TemporaryPlayerStorage> temporaryStorage = new HashMap<>();
+    final Map<Player, TemporaryPlayerStorage> temporaryStorage = new HashMap<>();
 
     /**
      * Teams and goals per team
@@ -63,8 +63,8 @@ public abstract class GameEntity implements Game {
     /**
      * HitCounter
      */
-    private Team lastHitTeam;
-    private Player lastHit;
+    Team lastHitTeam;
+    Player lastHit;
 
     /**
      * BossBar
@@ -209,11 +209,6 @@ public abstract class GameEntity implements Game {
             }
             this.buffer = 10;
         }
-        if (this.blueTeam.contains(player))
-            this.lastHitTeam = Team.BLUE;
-        else
-            this.lastHitTeam = Team.RED;
-        this.lastHit = player;
     }
 
     final void fixCachedRangePlayers() {

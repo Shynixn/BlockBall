@@ -66,7 +66,7 @@ class TeamMetaEntity implements TeamMeta, Serializable {
     private IPosition redSpawnPoint;
 
     private boolean specatormessages;
-    private int specatorradius;
+    private int specatorradius = 100;
 
     private int rewardGoals;
     private int rewardGames;

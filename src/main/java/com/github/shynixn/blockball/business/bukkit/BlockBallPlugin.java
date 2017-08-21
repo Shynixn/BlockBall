@@ -9,10 +9,12 @@ import com.github.shynixn.blockball.business.bungee.game.BungeeCord;
 import com.github.shynixn.blockball.business.metrics.Metrics;
 import com.github.shynixn.blockball.lib.ReflectionUtils;
 import com.github.shynixn.blockball.lib.SLanguage;
+import com.github.shynixn.blockball.lib.UpdateUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 
@@ -47,6 +49,7 @@ import java.util.logging.Level;
  */
 public final class BlockBallPlugin extends JavaPlugin {
     private static final String PLUGIN_NAME = "BlockBall";
+    private static final long SPIGOT_RESOURCEID = 15320;
     public static final String PREFIX_CONSOLE = ChatColor.BLUE + "[BlockBall] ";
     private static final long TICK_TIME = 20L;
     private boolean enabled = true;
@@ -89,6 +92,13 @@ public final class BlockBallPlugin extends JavaPlugin {
             if (Config.getInstance().isMetrics()) {
                 new Metrics(this);
             }
+            this.getServer().getScheduler().runTaskAsynchronously(this, () -> {
+                try {
+                    UpdateUtils.checkPluginUpToDateAndPrintMessage(SPIGOT_RESOURCEID, PREFIX_CONSOLE, PLUGIN_NAME, BlockBallPlugin.this);
+                } catch (final IOException e) {
+                   Bukkit.getLogger().log(Level.WARNING, "Failed to check for updates.");
+                }
+            });
             BungeeCord.reload(this, PREFIX_CONSOLE, "bbbungee", "[BlockBall]");
             if (BungeeCord.isSignModeEnabled()) {
                 this.enabled = false;

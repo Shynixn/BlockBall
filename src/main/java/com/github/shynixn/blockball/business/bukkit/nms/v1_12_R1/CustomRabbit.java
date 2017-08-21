@@ -123,48 +123,6 @@ public final class CustomRabbit extends EntityRabbit {
             double d6 = d0;
             final double d7 = d1;
             double d8 = d2;
-            final boolean flag = false;
-            if ((enummovetype == EnumMoveType.SELF || enummovetype == EnumMoveType.PLAYER) && flag) {
-                for (; d0 != 0.0D && this.world.getCubes(this, this.getBoundingBox().d(d0, (double) (-this.P), 0.0D)).isEmpty(); d6 = d0) {
-                    if (d0 < 0.05D && d0 >= -0.05D) {
-                        d0 = 0.0D;
-                    } else if (d0 > 0.0D) {
-                        d0 -= 0.05D;
-                    } else {
-                        d0 += 0.05D;
-                    }
-                }
-
-                for (; d2 != 0.0D && this.world.getCubes(this, this.getBoundingBox().d(0.0D, (double) (-this.P), d2)).isEmpty(); d8 = d2) {
-                    if (d2 < 0.05D && d2 >= -0.05D) {
-                        d2 = 0.0D;
-                    } else if (d2 > 0.0D) {
-                        d2 -= 0.05D;
-                    } else {
-                        d2 += 0.05D;
-                    }
-                }
-
-                for (; d0 != 0.0D && d2 != 0.0D && this.world.getCubes(this, this.getBoundingBox().d(d0, (double) (-this.P), d2)).isEmpty(); d8 = d2) {
-                    if (d0 < 0.05D && d0 >= -0.05D) {
-                        d0 = 0.0D;
-                    } else if (d0 > 0.0D) {
-                        d0 -= 0.05D;
-                    } else {
-                        d0 += 0.05D;
-                    }
-
-                    d6 = d0;
-                    if (d2 < 0.05D && d2 >= -0.05D) {
-                        d2 = 0.0D;
-                    } else if (d2 > 0.0D) {
-                        d2 -= 0.05D;
-                    } else {
-                        d2 += 0.05D;
-                    }
-                }
-            }
-
             final List list = this.world.getCubes(this, this.getBoundingBox().b(d0, d1, d2));
             final AxisAlignedBB axisalignedbb = this.getBoundingBox();
             int i;

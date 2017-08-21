@@ -4,7 +4,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public abstract class SChatpage {
-    protected Player player;
+    protected final Player player;
     protected int lastNumber = -1;
     private SChatpage lastInstance;
 
