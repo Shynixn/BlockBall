@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 @SuppressWarnings("unused")
+@Deprecated
 public enum LightRegistry {
     RABBIT(101, "RABBIT", "Rabbit", "rabbit", "EntityRabbit"),
     ZOMBIE(54, "ZOMBIE", "Zombie", "zombie", "EntityZombie");
