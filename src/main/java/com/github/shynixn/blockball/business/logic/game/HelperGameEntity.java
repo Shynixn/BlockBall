@@ -76,6 +76,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
             if (this.getHologram() != null) {
                 this.getHologram().show(player);
             }
+            this.addPlayerToScoreboard(player);
             Bukkit.getPluginManager().callEvent(new GameJoinEvent(this, player));
             return true;
         } else if (team == Team.BLUE) {
@@ -87,6 +88,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
             if (this.getHologram() != null) {
                 this.getHologram().show(player);
             }
+            this.addPlayerToScoreboard(player);
             Bukkit.getPluginManager().callEvent(new GameJoinEvent(this, player));
             return true;
         }
@@ -166,14 +168,8 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                 for (final Player player : this.getPlayers()) {
                     player.setLevel(this.countdown);
                 }
-                if (this.arena.getTeamMeta().isSpectatorMessagesEnabled()) {
-                    for (final Player player : this.getPlayersInRange()) {
-                        if (!this.playData.contains(player))
-                            this.playData.add(player);
-                    }
-                    this.arena.getTeamMeta().getScoreboard().play(this.countdown, this.redGoals, this.blueGoals, this.getPlayersInRange());
-                } else {
-                    this.arena.getTeamMeta().getScoreboard().play(this.countdown, this.redGoals, this.blueGoals, this.getPlayers());
+                if (this.gameScoreboard != null) {
+                    this.gameScoreboard.update(this);
                 }
                 if (this.countdown <= 10 && !this.endgame) {
                     try {
@@ -186,7 +182,6 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                     NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardGames(), this.blueTeam.toArray(new Player[this.blueTeam.size()]));
                     NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardGames(), this.redTeam.toArray(new Player[this.redTeam.size()]));
                     this.executeCommand(this.arena.getTeamMeta().getGamendCommand(), this.getPlayers());
-                    this.getArena().getTeamMeta().getScoreboard().remove();
                     if (this.redGoals > this.blueGoals) {
                         this.executeCommand(this.arena.getTeamMeta().getWinCommand(), this.redTeam);
                         NMSRegistry.addMoney(this.arena.getTeamMeta().getRewardWinning(), this.redTeam.toArray(new Player[this.redTeam.size()]));

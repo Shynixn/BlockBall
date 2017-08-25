@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +76,10 @@ class TeamMetaEntity implements TeamMeta, Serializable {
     private String winCommand;
     private String gamendCommand;
 
-    private LightScoreboard scoreboard;
+    //Scoreboard
+    private String scoreboardTitle = "&a&lBlockBall";
+    private boolean scoreboardEnabled;
+    private String[] scoreboardLines = new String[]{"", "&eTime:", ":countdown", "&m           ", ":red", "&6vs", ":blue", "&m           ", "&aScore:", ":redcolor:redscore &r: :bluecolor:bluescore", "&m           "};
 
     private String hologramText = "[ :redcolor:redscore : :bluecolor:bluescore ]";
     private IPosition hologramPosition;
@@ -124,11 +128,11 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         this.bossBarLight.setStyle((Integer) items.get("bossbar.style"));
         this.bossBarLight.setFlag((Integer) items.get("bossbar.flag"));
 
-        this.getScoreboard().setEnabled((Boolean) items.get("scoreboard.enabled"));
-        this.getScoreboard().setTitle((String) items.get("scoreboard.title"));
-        this.getScoreboard().setTeamRed((String) items.get("scoreboard.items.red"));
-        this.getScoreboard().setTeamBlue((String) items.get("scoreboard.items.blue"));
-        this.getScoreboard().setTime((String) items.get("scoreboard.items.time"));
+        this.scoreboardTitle = (String) items.get("scoreboard.title");
+        this.scoreboardEnabled = (boolean) items.get("scoreboard.enabled");
+        if (items.containsKey("scoreboard.lines")) {
+            this.scoreboardLines = ((List<String>) items.get("scoreboard.lines")).toArray(new String[0]);
+        }
 
         this.joinMessage = (String) items.get("messages.join");
         this.leaveMessage = (String) items.get("messages.leave");
@@ -183,7 +187,7 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         return itemStacks;
     }
 
-    public void copy(TeamMetaEntity entity) {
+    public void copy(TeamMetaEntity entity){
         entity.redTeamName = this.redTeamName;
         entity.blueTeamName = this.blueTeamName;
         entity.teamMaxSize = this.teamMaxSize;
@@ -197,6 +201,10 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         entity.leaveMessage = this.leaveMessage;
         entity.howToJoinMessage = this.howToJoinMessage;
         entity.teamFullMessage = this.teamFullMessage;
+
+        entity.scoreboardTitle = this.scoreboardTitle;
+        entity.scoreboardEnabled = this.scoreboardEnabled;
+        entity.scoreboardLines = this.scoreboardLines.clone();
 
         entity.redtitleScoreMessage = this.redtitleScoreMessage;
         entity.redsubtitleMessage = this.redsubtitleMessage;
@@ -770,11 +778,68 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         return this.bossBarLight;
     }
 
+    /**
+     * Sets the title of the scoreboard
+     *
+     * @param scoreboardTitle scoreboardTitle
+     */
     @Override
-    public LightScoreboard getScoreboard() {
-        if (this.scoreboard == null)
-            this.scoreboard = new FastScoreboard();
-        return this.scoreboard;
+    public void setScoreboardTitle(String scoreboardTitle) {
+        this.scoreboardTitle = scoreboardTitle;
+    }
+
+    /**
+     * Returns the title of the scoreboard
+     *
+     * @return title
+     */
+    @Override
+    public String getScoreboardTitle() {
+        if (this.scoreboardTitle == null)
+            return null;
+        return ChatColor.translateAlternateColorCodes('&', this.scoreboardTitle);
+    }
+
+    /**
+     * Enables or disables the scoreboard
+     *
+     * @param enabled scoreboard
+     */
+    @Override
+    public void setScoreboardEnabled(boolean enabled) {
+        this.scoreboardEnabled = enabled;
+    }
+
+    /**
+     * Returns if the scoreboard is enabled
+     *
+     * @return enabled
+     */
+    @Override
+    public boolean isScoreboardEnabled() {
+        return this.scoreboardEnabled;
+    }
+
+    /**
+     * Sets the lines of the scoreboard
+     *
+     * @param scoreboardLines scoreboardLines
+     */
+    @Override
+    public void setScoreboardLines(String[] scoreboardLines) {
+        this.scoreboardLines = scoreboardLines.clone();
+    }
+
+    /**
+     * Returns the lines of the scoreboard
+     *
+     * @return lines
+     */
+    @Override
+    public String[] getScoreboardLines() {
+        if (this.scoreboardLines == null)
+            return null;
+        return this.scoreboardLines.clone();
     }
 
     @Override
@@ -836,7 +901,6 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         final Map<String, Object> tmp8 = new LinkedHashMap<>();
         final Map<String, Object> tmp9 = new LinkedHashMap<>();
         final Map<String, Object> tmp10 = new LinkedHashMap<>();
-        final Map<String, Object> tmp11 = new LinkedHashMap<>();
         final Map<String, Object> tmp12 = new LinkedHashMap<>();
         final Map<String, Object> tmp14 = new LinkedHashMap<>();
         final Map<String, Object> tmp15 = new LinkedHashMap<>();
@@ -869,12 +933,9 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         tmp5.put("flag", this.bossBarLight.getFlag());
         map.put("bossbar", tmp5);
 
-        tmp6.put("enabled", this.getScoreboard().isEnabled());
-        tmp6.put("title", this.getScoreboard().getTitle());
-        tmp11.put("red", this.getScoreboard().getTeamRed());
-        tmp11.put("blue", this.getScoreboard().getTeamBlue());
-        tmp11.put("time", this.getScoreboard().getTime());
-        tmp6.put("items", tmp11);
+        tmp6.put("enabled", this.scoreboardEnabled);
+        tmp6.put("title", this.scoreboardTitle);
+        tmp6.put("lines", this.scoreboardLines);
         map.put("scoreboard", tmp6);
 
         tmp7.put("join", this.joinMessage);

@@ -17,6 +17,10 @@ import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @SuppressWarnings("deprecation")
 @SCommandExecutor.Command(command = "blockball")
 class ArenaCommandExecutor extends SCommandExecutor {
@@ -1043,15 +1047,13 @@ class ArenaCommandExecutor extends SCommandExecutor {
                     this.player.sendMessage(Language.PREFIX + "Enabled damage.");
                 else
                     this.player.sendMessage(Language.PREFIX + "Disabled damage.");
-            }
-            else if (number == 2) {
+            } else if (number == 2) {
                 this.arenaEntity.getTeamMeta().setForceEvenTeams(!this.arenaEntity.getTeamMeta().isForceEvenTeamsEnabled());
                 if (this.arenaEntity.getTeamMeta().isForceEvenTeamsEnabled())
                     this.player.sendMessage(Language.PREFIX + "Enabled force-even-teams.");
                 else
                     this.player.sendMessage(Language.PREFIX + "Disabled force-even-teams.");
-            }
-            else if (number == 3) {
+            } else if (number == 3) {
                 this.open(this.player, new EditDoubleJumpPage(this.player, this.arenaEntity));
             } else if (number == 4) {
                 this.open(this.player, new HologramSettingsPage(this.player, this.arenaEntity));
@@ -1742,13 +1744,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         @Override
         public boolean playerPreChatEnter(String text) {
             if (this.lastNumber == 2) {
-                this.arenaEntity.getTeamMeta().getScoreboard().setTitle(text);
-            } else if (this.lastNumber == 3) {
-                this.arenaEntity.getTeamMeta().getScoreboard().setTeamRed(text);
-            } else if (this.lastNumber == 4) {
-                this.arenaEntity.getTeamMeta().getScoreboard().setTeamBlue(text);
-            } else if (this.lastNumber == 5) {
-                this.arenaEntity.getTeamMeta().getScoreboard().setTime(text);
+                this.arenaEntity.getTeamMeta().setScoreboardTitle(text);
             } else
                 return true;
             return false;
@@ -1757,8 +1753,8 @@ class ArenaCommandExecutor extends SCommandExecutor {
         @Override
         public void onPlayerSelect(int number) {
             if (number == 1) {
-                this.arenaEntity.getTeamMeta().getScoreboard().setEnabled(!this.arenaEntity.getTeamMeta().getScoreboard().isEnabled());
-                if (this.arenaEntity.getTeamMeta().getScoreboard().isEnabled())
+                this.arenaEntity.getTeamMeta().setScoreboardEnabled(!this.arenaEntity.getTeamMeta().isScoreboardEnabled());
+                if (this.arenaEntity.getTeamMeta().isScoreboardEnabled())
                     this.player.sendMessage(Language.PREFIX + "Enabled the scoreboard.");
                 else
                     this.player.sendMessage(Language.PREFIX + "Disabled the scoreboard.");
@@ -1766,22 +1762,19 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 this.player.sendMessage(Language.PREFIX + "Enter the title of the scoreboard:");
                 this.player.sendMessage(Language.PREFIX + "Example: '&a&lBlockBall'");
             } else if (number == 3) {
-                this.player.sendMessage(Language.PREFIX + "Enter the team red for the scoreboard:");
-                this.player.sendMessage(Language.PREFIX + "Example: '&cTeam Red'");
+                this.open(this.player, new ScoreboardLinesPage(this.player, this.arenaEntity));
             } else if (number == 4) {
-                this.player.sendMessage(Language.PREFIX + "Enter the team blue for the scoreboard:");
-                this.player.sendMessage(Language.PREFIX + "Example: '&9Team Blue'");
+                this.player.sendMessage(Language.PREFIX + "Scoreboard lines: ");
+                final String[] lines = this.arenaEntity.getTeamMeta().getScoreboardLines();
+                for (int i = 0; i < lines.length; i++) {
+                    this.player.sendMessage((i + 1) + " - " + ChatColor.translateAlternateColorCodes('&', lines[i]));
+                }
             } else if (number == 5) {
-                this.player.sendMessage(Language.PREFIX + "Enter the time for the scoreboard:");
-                this.player.sendMessage(Language.PREFIX + "Example: '&eTime'");
-            } else if (number == 6) {
-                this.arenaEntity.getTeamMeta().getScoreboard().setTeamRed(ChatColor.RED + "Team Red");
-                this.arenaEntity.getTeamMeta().getScoreboard().setTeamBlue(ChatColor.BLUE + "Team Blue");
-                this.arenaEntity.getTeamMeta().getScoreboard().setTime(ChatColor.YELLOW + "Time");
-                this.arenaEntity.getTeamMeta().getScoreboard().setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "BlockBall");
-                this.arenaEntity.getTeamMeta().getScoreboard().setEnabled(false);
+                this.arenaEntity.getTeamMeta().setScoreboardEnabled(true);
+                this.arenaEntity.getTeamMeta().setScoreboardTitle("&a&lBlockBall");
+                this.arenaEntity.getTeamMeta().setScoreboardLines(new String[]{"", "&eTime:", ":countdown", "&m           ", ":red", "&6vs", ":blue", "&m           ", "&aScore:", ":redcolor:redscore &r: :bluecolor:bluescore", "&m           "});
                 this.player.sendMessage(Language.PREFIX + "Reset this page.");
-            } else if (number == 7) {
+            } else if (number == 6) {
                 this.open(this.player, new AnnouncementSettingsPage(this.player, this.arenaEntity));
             }
         }
@@ -1793,11 +1786,77 @@ class ArenaCommandExecutor extends SCommandExecutor {
             this.player.sendMessage("");
             this.player.sendMessage(Language.PREFIX + "1 - Toggle scoreboard");
             this.player.sendMessage(Language.PREFIX + "2 - Set title");
-            this.player.sendMessage(Language.PREFIX + "3 - Set team red");
-            this.player.sendMessage(Language.PREFIX + "4 - Set team blue");
-            this.player.sendMessage(Language.PREFIX + "5 - Set time left");
-            this.player.sendMessage(Language.PREFIX + "6 - Reset this page");
-            this.player.sendMessage(Language.PREFIX + "7 - Save scoreboard");
+            this.player.sendMessage(Language.PREFIX + "3 - Edit lines");
+            this.player.sendMessage(Language.PREFIX + "4 - Show lines");
+            this.player.sendMessage(Language.PREFIX + "5 - Reset this page");
+            this.player.sendMessage(Language.PREFIX + "6 - Save scoreboard");
+            this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + MENU_BACK);
+            this.player.sendMessage(Language.PREFIX + ChatColor.RED + MENU_EXIT);
+            this.player.sendMessage("");
+            this.player.sendMessage(FOOTER_STANDARD);
+            this.player.sendMessage("");
+        }
+    }
+
+    private class ScoreboardLinesPage extends SChatpage {
+        private final ArenaEntity arenaEntity;
+        private int selectedLineNumber = 1;
+
+        ScoreboardLinesPage(Player player, ArenaEntity entity) {
+            super(player);
+            this.arenaEntity = entity;
+        }
+
+        @Override
+        public boolean playerPreChatEnter(String text) {
+            if (this.lastNumber == 1 && tryPInt(text) && Integer.parseInt(text) > 0) {
+                this.selectedLineNumber = Integer.parseInt(text);
+            } else if (this.lastNumber == 2) {
+                final int lineNumber = this.selectedLineNumber - 1;
+                final List<String> lines = new ArrayList<>(Arrays.asList(this.arenaEntity.getTeamMeta().getScoreboardLines()));
+                while (lineNumber >= lines.size()) {
+                    lines.add("");
+                }
+                final String[] finalLines = lines.toArray(new String[lines.size()]);
+                finalLines[lineNumber] = text;
+                this.arenaEntity.getTeamMeta().setScoreboardLines(finalLines);
+            } else
+                return true;
+            return false;
+        }
+
+        @Override
+        public void onPlayerSelect(int number) {
+            if (number == 1) {
+                this.player.sendMessage(Language.PREFIX + "Enter the number of the line you want to edit:");
+            } else if (number == 2) {
+                this.player.sendMessage(Language.PREFIX + "Enter the text of this line:");
+                this.player.sendMessage(Language.PREFIX + "Example :red/:blue or :redscore/:bluescore");
+            } else if (number == 3) {
+                final int lineNumber = this.selectedLineNumber - 1;
+                final List<String> lines = new ArrayList<>(Arrays.asList(this.arenaEntity.getTeamMeta().getScoreboardLines()));
+                if (lineNumber < lines.size()) {
+                    lines.remove(lineNumber);
+                    this.arenaEntity.getTeamMeta().setScoreboardLines(lines.toArray(new String[lines.size()]));
+                    this.player.sendMessage(Language.PREFIX + "Deleted line.");
+                } else {
+                    this.player.sendMessage(Language.PREFIX + "This line is already deleted.");
+                }
+            } else if (number == 4) {
+                this.open(this.player, new ScoreboardPage(this.player, this.arenaEntity));
+            }
+        }
+
+        @Override
+        public void show() {
+            this.player.sendMessage("");
+            this.player.sendMessage(HEADER_STANDARD);
+            this.player.sendMessage("");
+            this.player.sendMessage(Language.PREFIX + "Selected line: " + this.selectedLineNumber);
+            this.player.sendMessage(Language.PREFIX + "1 - Select line");
+            this.player.sendMessage(Language.PREFIX + "2 - Set text");
+            this.player.sendMessage(Language.PREFIX + "3 - Delete");
+            this.player.sendMessage(Language.PREFIX + "4 - Save lines");
             this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + MENU_BACK);
             this.player.sendMessage(Language.PREFIX + ChatColor.RED + MENU_EXIT);
             this.player.sendMessage("");

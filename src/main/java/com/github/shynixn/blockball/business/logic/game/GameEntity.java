@@ -76,10 +76,18 @@ public abstract class GameEntity implements Game {
      */
     private LightHologram hologram;
 
+    /**
+     * Scoreboard
+     */
+    GameScoreboard gameScoreboard;
+
     GameEntity(Arena arena) {
         super();
         this.plugin = JavaPlugin.getPlugin(BlockBallPlugin.class);
         this.arena = arena;
+        if (arena.getTeamMeta().isScoreboardEnabled()) {
+            this.gameScoreboard = new GameScoreboard(arena);
+        }
     }
 
     /**
@@ -141,7 +149,7 @@ public abstract class GameEntity implements Game {
         if (player.isOnline() && message)
             player.sendMessage(Language.PREFIX + this.arena.getTeamMeta().getLeaveMessage());
         this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
-        this.arena.getTeamMeta().getScoreboard().remove(player);
+        this.removePlayerFromScoreboard(player);
         if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
             NMSRegistry.setBossBar(player, null);
         }
@@ -179,6 +187,9 @@ public abstract class GameEntity implements Game {
             this.ball.despawn();
         if (this.hologram != null)
             this.hologram.remove(SFileUtils.getOnlinePlayers().toArray(new Player[SFileUtils.getOnlinePlayers().size()]));
+        if (this.arena.getTeamMeta().isScoreboardEnabled()) {
+            this.gameScoreboard = new GameScoreboard(this.arena);
+        }
         this.redTeam.clear();
         this.blueTeam.clear();
         this.playData.clear();
@@ -215,7 +226,7 @@ public abstract class GameEntity implements Game {
         for (final Player player : this.playData.toArray(new Player[this.playData.size()])) {
             if (player.getLocation().getWorld().getName().equals(this.arena.getBallSpawnLocation().getWorld().getName())) {
                 if (player.getLocation().distance(this.arena.getCenter()) > this.arena.getTeamMeta().getSpecatorradius()) {
-                    this.arena.getTeamMeta().getScoreboard().remove(player);
+                    this.removePlayerFromScoreboard(player);
                     this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
                     if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
                         NMSRegistry.setBossBar(player, null);
@@ -223,7 +234,7 @@ public abstract class GameEntity implements Game {
                     this.playData.remove(player);
                 }
             } else {
-                this.arena.getTeamMeta().getScoreboard().remove(player);
+                this.removePlayerFromScoreboard(player);
                 this.arena.getTeamMeta().getBossBar().stopPlay(this.bossBar, player);
                 if (this.arena.getTeamMeta().isBossBarPluginEnabled()) {
                     NMSRegistry.setBossBar(player, null);
@@ -351,6 +362,9 @@ public abstract class GameEntity implements Game {
             if (this.getHologram() != null) {
                 this.getHologram().setText(this.decryptText(this.arena.getTeamMeta().getHologramText()));
             }
+            if (this.gameScoreboard != null) {
+                this.gameScoreboard.update(this);
+            }
         }
     }
 
@@ -429,6 +443,7 @@ public abstract class GameEntity implements Game {
         try {
             if (this.lastHit == null) {
                 return ChatColor.translateAlternateColorCodes('&', text
+                        .replace(":countdown", "∞")
                         .replace(":redscore", String.valueOf(this.redGoals))
                         .replace(":bluescore", String.valueOf(this.blueGoals))
                         .replace(":redcolor", this.arena.getTeamMeta().getRedColor())
@@ -437,6 +452,7 @@ public abstract class GameEntity implements Game {
                         .replace(":blue", this.arena.getTeamMeta().getBlueTeamName()));
             } else {
                 return ChatColor.translateAlternateColorCodes('&', text
+                        .replace(":countdown", "∞")
                         .replace(":redscore", String.valueOf(this.redGoals))
                         .replace(":bluescore", String.valueOf(this.blueGoals))
                         .replace(":redcolor", this.arena.getTeamMeta().getRedColor())
@@ -496,6 +512,19 @@ public abstract class GameEntity implements Game {
             this.hologram = new LightHologram.Builder(this.arena.getTeamMeta().getHologramLocation());
         }
         return this.hologram;
+    }
+
+    void removePlayerFromScoreboard(Player player) {
+        if (this.arena.getTeamMeta().isScoreboardEnabled()) {
+            this.gameScoreboard.removePlayer(player);
+        }
+    }
+
+    void addPlayerToScoreboard(Player player) {
+        if (this.arena.getTeamMeta().isScoreboardEnabled()) {
+            this.gameScoreboard.addPlayer(player);
+            this.gameScoreboard.update(this);
+        }
     }
 
     static class TemporaryPlayerStorage {

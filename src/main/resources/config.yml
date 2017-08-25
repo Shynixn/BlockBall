@@ -145,16 +145,16 @@ plugin-start-delay:
 stats-scoreboard:
  enabled: false
  title: '&f&lBlockBall Stats'
- lines: #All lines have to be different otherwise it won't be shown (Simply add a invisible &r)
-   - '&r'
+ lines:
+   - ''
    - '&e<player>'
-   - '&r&m           '
+   - '&m           '
    - '&bWinrate: '
    - '&f&l<winrate> '
-   - '&r&r'
+   - ''
    - '&6Goals per game: '
    - '&f&l<goalspergame>'
-   - '&r&r&r'
+   - ''
    - '&aPlayed games:'
    - '&f&l<playedgames>'
    - '&m           '

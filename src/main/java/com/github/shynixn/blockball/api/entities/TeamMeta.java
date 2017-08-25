@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.api.entities;
 import com.github.shynixn.blockball.lib.LightBossBar;
 import com.github.shynixn.blockball.lib.LightParticle;
 import com.github.shynixn.blockball.lib.LightSound;
-import com.github.shynixn.blockball.lib.LightScoreboard;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
@@ -12,12 +11,14 @@ public interface TeamMeta extends ConfigurationSerializable {
 
     /**
      * Forces even teams on both sides. Red and blue team amount has to be the same
+     *
      * @param enabled enabled
      */
     void setForceEvenTeams(boolean enabled);
 
     /**
      * Returns if even teams on both sides is enabled. Red and blue team amount has to be the same to start
+     *
      * @return enabled
      */
     boolean isForceEvenTeamsEnabled();
@@ -36,8 +37,6 @@ public interface TeamMeta extends ConfigurationSerializable {
 
     void setHologramText(String text);
 
-
-
     void setHologramEnabled(boolean enabled);
 
     boolean isHologramEnabled();
@@ -47,7 +46,6 @@ public interface TeamMeta extends ConfigurationSerializable {
     Location getRedSpawnPoint();
 
     void setRedSpawnPoint(Location redSpawnPoint);
-
 
     boolean isFastJoin();
 
@@ -201,9 +199,52 @@ public interface TeamMeta extends ConfigurationSerializable {
 
     /**
      * Returns the settings for the double jump
+     *
      * @return doubleJumpMeta
      */
     DoubleJumpMeta getDoubleJumpMeta();
+
+    /**
+     * Sets the title of the scoreboard
+     *
+     * @param scoreboardTitle scoreboardTitle
+     */
+    void setScoreboardTitle(String scoreboardTitle);
+
+    /**
+     * Returns the title of the scoreboard
+     *
+     * @return title
+     */
+    String getScoreboardTitle();
+
+    /**
+     * Enables or disables the scoreboard
+     *
+     * @param enabled scoreboard
+     */
+    void setScoreboardEnabled(boolean enabled);
+
+    /**
+     * Returns if the scoreboard is enabled
+     *
+     * @return enabled
+     */
+    boolean isScoreboardEnabled();
+
+    /**
+     * Sets the lines of the scoreboard
+     *
+     * @param scoreboardLines scoreboardLines
+     */
+    void setScoreboardLines(String[] scoreboardLines);
+
+    /**
+     * Returns the lines of the scoreboard
+     *
+     * @return lines
+     */
+    String[] getScoreboardLines();
 
     String getBossBarPluginMessage();
 
@@ -213,9 +254,8 @@ public interface TeamMeta extends ConfigurationSerializable {
 
     void setBossBarPluginEnabled(boolean enable);
 
+    @Deprecated
     LightBossBar getBossBar();
-
-    LightScoreboard getScoreboard();
 
     void setGoalShooterGlowing(boolean enable);
 

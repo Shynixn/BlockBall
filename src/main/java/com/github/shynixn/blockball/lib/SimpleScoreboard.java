@@ -157,6 +157,7 @@ public class SimpleScoreboard implements AutoCloseable {
      * @return scoreboard
      */
     public SimpleScoreboard setLine(String objectiveName, int line, String text) {
+
         final Objective objective = this.getObjective(objectiveName);
         final Objective bufferObjective;
         if (objective.getName().endsWith("_buf")) {
@@ -168,10 +169,14 @@ public class SimpleScoreboard implements AutoCloseable {
             final Score score = objective.getScore(s);
             if (score.getScore() != 0 && score.getScore() != line) {
                 bufferObjective.getScore(s).setScore(score.getScore());
+            } else {
+                this.scoreboard.resetScores(s);
             }
         }
         if (text != null) {
-            bufferObjective.getScore(ChatColor.translateAlternateColorCodes('&', text)).setScore(line);
+            String finalText = ChatColor.translateAlternateColorCodes('&', text);
+            finalText = this.duplicateTextFinder(finalText, this.scoreboard.getEntries());
+            bufferObjective.getScore(finalText).setScore(line);
         }
         bufferObjective.setDisplayName(objective.getDisplayName());
         bufferObjective.setDisplaySlot(objective.getDisplaySlot());
@@ -325,10 +330,29 @@ public class SimpleScoreboard implements AutoCloseable {
 
     /**
      * Returns the scoreboard
+     *
      * @return scoreboard
      */
     public Scoreboard getScoreboard() {
         return this.scoreboard;
+    }
+
+    /**
+     * Avoids duplicates
+     *
+     * @param text  text
+     * @param lines lines
+     * @return text
+     */
+    private String duplicateTextFinder(String text, Collection<String> lines) {
+        for (final String s : lines) {
+            if (text.equals(s)) {
+                text += ChatColor.translateAlternateColorCodes('&', "&r");
+                text = this.duplicateTextFinder(text, lines);
+                return text;
+            }
+        }
+        return text;
     }
 
     /**
@@ -351,6 +375,7 @@ public class SimpleScoreboard implements AutoCloseable {
      * Closes this resource, relinquishing any underlying resources.
      * This method is invoked automatically on objects managed by the
      * {@code try}-with-resources statement.
+     *
      * @throws Exception if this resource cannot be closed
      */
     @Override

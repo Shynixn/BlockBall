@@ -42,6 +42,7 @@ class HubGameEntity extends GameEntity {
                 this.getHologram().setText(this.decryptText(this.arena.getTeamMeta().getHologramText()));
                 this.getHologram().show(player);
             }
+            this.addPlayerToScoreboard(player);
             Bukkit.getPluginManager().callEvent(new GameJoinEvent(this, player));
             return true;
         } else if (team == Team.BLUE && this.blueTeam.size() <= this.arena.getTeamMeta().getTeamMaxSize() && (!this.arena.getTeamMeta().isTeamAutoJoin() || this.blueTeam.size() <= this.redTeam.size())) {
@@ -57,6 +58,7 @@ class HubGameEntity extends GameEntity {
                 this.getHologram().setText(this.decryptText(this.arena.getTeamMeta().getHologramText()));
                 this.getHologram().show(player);
             }
+            this.addPlayerToScoreboard(player);
             Bukkit.getPluginManager().callEvent(new GameJoinEvent(this, player));
             return true;
         }
@@ -80,15 +82,6 @@ class HubGameEntity extends GameEntity {
             }
             this.updateSigns();
             this.fixCachedRangePlayers();
-            if (this.arena.getTeamMeta().isSpectatorMessagesEnabled()) {
-                for (final Player player : this.getPlayersInRange()) {
-                    if (!this.playData.contains(player))
-                        this.playData.add(player);
-                }
-                this.arena.getTeamMeta().getScoreboard().play(null, this.redGoals, this.blueGoals, this.getPlayersInRange());
-            } else {
-                this.arena.getTeamMeta().getScoreboard().play(null, this.redGoals, this.blueGoals, this.getPlayers());
-            }
             this.timer = 20;
         }
         super.run();
