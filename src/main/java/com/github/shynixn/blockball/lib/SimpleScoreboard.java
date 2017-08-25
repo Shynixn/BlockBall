@@ -157,7 +157,6 @@ public class SimpleScoreboard implements AutoCloseable {
      * @return scoreboard
      */
     public SimpleScoreboard setLine(String objectiveName, int line, String text) {
-
         final Objective objective = this.getObjective(objectiveName);
         final Objective bufferObjective;
         if (objective.getName().endsWith("_buf")) {
