@@ -88,6 +88,8 @@ class TeamMetaEntity implements TeamMeta, Serializable {
     private boolean scoreGlowing;
     private int scoreGlowingSeconds = 3;
 
+    private float walkingSpeed = 0.2F;
+
     TeamMetaEntity() {
         super();
     }
@@ -104,8 +106,12 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         this.teamMinSize = (int) items.get("generic.min-size");
         this.teamMaxSize = (int) items.get("generic.max-size");
         this.disableDamage = !(boolean) items.get("generic.take-damage");
-        if (items.get("generic.leave-spawnpoint") != null)
+        if (items.get("generic.leave-spawnpoint") != null) {
             this.leaveSpawnpoint = new SLocation(((MemorySection) items.get("generic.leave-spawnpoint")).getValues(true));
+        }
+        if (items.containsKey("generic.walking-speed")) {
+            this.walkingSpeed = new Float((Double) items.get("generic.walking-speed"));
+        }
 
         this.redTeamName = (String) items.get("red.name");
         this.redColor = (String) items.get("red.color");
@@ -187,7 +193,7 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         return itemStacks;
     }
 
-    public void copy(TeamMetaEntity entity){
+    public void copy(TeamMetaEntity entity) {
         entity.redTeamName = this.redTeamName;
         entity.blueTeamName = this.blueTeamName;
         entity.teamMaxSize = this.teamMaxSize;
@@ -442,6 +448,26 @@ class TeamMetaEntity implements TeamMeta, Serializable {
     @Override
     public boolean isForceEvenTeamsEnabled() {
         return this.forceEvenTeams;
+    }
+
+    /**
+     * Returns the walkingSpeed of the players
+     *
+     * @return speed
+     */
+    @Override
+    public float getWalkingSpeed() {
+        return this.walkingSpeed;
+    }
+
+    /**
+     * Sets the amount of speed for the players
+     *
+     * @param amount amount
+     */
+    @Override
+    public void setWalkingSpeed(float amount) {
+        this.walkingSpeed = amount;
     }
 
     @Override
@@ -915,6 +941,7 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         tmp1.put("min-size", this.teamMinSize);
         tmp1.put("max-size", this.teamMaxSize);
         tmp1.put("take-damage", !this.disableDamage);
+        tmp1.put("walking-speed", this.walkingSpeed);
         tmp1.put("leave-spawnpoint", SFileUtils.serialize(this.leaveSpawnpoint));
         map.put("generic", tmp1);
 

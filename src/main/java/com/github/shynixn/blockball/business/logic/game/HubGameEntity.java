@@ -42,6 +42,7 @@ class HubGameEntity extends GameEntity {
                 this.getHologram().setText(this.decryptText(this.arena.getTeamMeta().getHologramText()));
                 this.getHologram().show(player);
             }
+            player.setWalkSpeed(this.arena.getTeamMeta().getWalkingSpeed());
             this.addPlayerToScoreboard(player);
             Bukkit.getPluginManager().callEvent(new GameJoinEvent(this, player));
             return true;
@@ -58,6 +59,7 @@ class HubGameEntity extends GameEntity {
                 this.getHologram().setText(this.decryptText(this.arena.getTeamMeta().getHologramText()));
                 this.getHologram().show(player);
             }
+            player.setWalkSpeed(this.arena.getTeamMeta().getWalkingSpeed());
             this.addPlayerToScoreboard(player);
             Bukkit.getPluginManager().callEvent(new GameJoinEvent(this, player));
             return true;
@@ -112,6 +114,7 @@ class HubGameEntity extends GameEntity {
         final TemporaryPlayerStorage storage = new TemporaryPlayerStorage();
         storage.armorContent = player.getInventory().getArmorContents().clone();
         storage.isFlying = player.getAllowFlight();
+        storage.walkingSpeed = player.getWalkSpeed();
         storage.scoreboard = player.getScoreboard();
         this.temporaryStorage.put(player, storage);
     }

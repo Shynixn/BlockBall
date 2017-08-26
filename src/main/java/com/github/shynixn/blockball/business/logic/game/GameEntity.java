@@ -141,6 +141,7 @@ public abstract class GameEntity implements Game {
             if (storage.scoreboard != null) {
                 player.setScoreboard(storage.scoreboard);
             }
+            player.setWalkSpeed(storage.walkingSpeed);
             player.setFlying(false);
             player.setAllowFlight(storage.isFlying);
             player.updateInventory();
@@ -537,5 +538,6 @@ public abstract class GameEntity implements Game {
         Integer foodLevel;
         Double health;
         Scoreboard scoreboard;
+        float walkingSpeed = 0.2F;
     }
 }

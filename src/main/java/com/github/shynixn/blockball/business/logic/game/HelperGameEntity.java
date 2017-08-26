@@ -135,6 +135,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
         } else {
             player.getInventory().setArmorContents(this.arena.getTeamMeta().getBlueItems());
         }
+        player.setWalkSpeed(this.arena.getTeamMeta().getWalkingSpeed());
         this.preSelection.put(player, team);
     }
 
@@ -325,6 +326,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
         storage.health = player.getHealth();
         storage.foodLevel = player.getFoodLevel();
         storage.scoreboard = player.getScoreboard();
+        storage.walkingSpeed = player.getWalkSpeed();
         this.temporaryStorage.put(player, storage);
     }
 

@@ -23,6 +23,20 @@ public interface TeamMeta extends ConfigurationSerializable {
      */
     boolean isForceEvenTeamsEnabled();
 
+    /**
+     * Returns the walkingSpeed of the players
+     *
+     * @return speed
+     */
+    float getWalkingSpeed();
+
+    /**
+     * Sets the amount of speed for the players
+     *
+     * @param amount amount
+     */
+    void setWalkingSpeed(float amount);
+
     int getMaxScore();
 
     void setMaxScore(int maxScore);
