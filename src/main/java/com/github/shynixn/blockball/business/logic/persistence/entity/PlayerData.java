@@ -43,6 +43,8 @@ public class PlayerData extends PersistenceObject<PlayerMeta> implements PlayerM
      */
     @Override
     public UUID getUUID() {
+        if (this.uuid == null)
+            return null;
         return UUID.fromString(this.uuid);
     }
 
