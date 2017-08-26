@@ -1,26 +1,28 @@
 package com.github.shynixn.blockball.business.logic.arena;
 
-import com.github.shynixn.blockball.lib.*;
-import com.github.shynixn.blockball.api.entities.BallMeta;
+import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
+import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
+import com.github.shynixn.blockball.business.logic.persistence.entity.SoundBuilder;
+import com.github.shynixn.blockball.lib.LightParticle;
+import com.github.shynixn.blockball.lib.ParticleEffect;
+import com.github.shynixn.blockball.lib.SParticle;
 import org.bukkit.configuration.MemorySection;
 
-import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-class BallMetaEntity implements Serializable, BallMeta {
-    private static final long serialVersionUID = 1L;
+class BallMetaEntity implements BallMeta {
     private String ballSkin = "http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d";
 
     private LightParticle playerTeamBlueHitParticle = new SParticle(ParticleEffect.REDSTONE, 1, 1, 0, 0, 1).setColors(0, 0, 255);
     private LightParticle playerTeamRedHitParticle = new SParticle(ParticleEffect.REDSTONE, 1, 1, 0, 0, 0).setColors(255, 0, 0);
 
     private LightParticle ballSpawnParticle = new SParticle(ParticleEffect.SMOKE_LARGE, 4, 0.0002, 2, 2, 2);
-    private LightSound ballSpawnSound = new FastSound("NOTE_BASS", 1.0, 1.0);
+    private SoundMeta ballSpawnSound = new SoundBuilder("NOTE_BASS", 1.0, 1.0);
     private LightParticle ballGoalParticle = new SParticle(ParticleEffect.NOTE, 4, 0.0002, 2, 2, 2).setNoteColor(2);
-    private LightSound ballGoalSound = new FastSound("NOTE_PLING", 1.0, 2.0);
+    private SoundMeta ballGoalSound = new SoundBuilder("NOTE_PLING", 1.0, 2.0);
 
-    private LightSound genericHitSound = new FastSound("ZOMBIE_WOOD", 1.0, 1.0);
+    private SoundMeta genericHitSound = new SoundBuilder("ZOMBIE_WOOD", 1.0, 1.0);
     private LightParticle genericHitParticle = new SParticle(ParticleEffect.EXPLOSION_HUGE, 1, 0.0002, 0.01, 0.01, 0.01);
 
     private int ballSpawnTime = 3;
@@ -44,25 +46,9 @@ class BallMetaEntity implements Serializable, BallMeta {
         this.playerTeamBlueHitParticle = new SParticle(((MemorySection) items.get("particles.blue-hit")).getValues(true));
         this.ballSpawnParticle = new SParticle(((MemorySection) items.get("particles.spawn")).getValues(true));
         this.ballGoalParticle = new SParticle(((MemorySection) items.get("particles.goal")).getValues(true));
-        this.genericHitSound = new FastSound(((MemorySection) items.get("sounds.generic-hit")).getValues(true));
-        this.ballSpawnSound = new FastSound(((MemorySection) items.get("sounds.spawn")).getValues(true));
-        this.ballGoalSound = new FastSound(((MemorySection) items.get("sounds.goal")).getValues(true));
-    }
-
-    void copy(BallMetaEntity entity) {
-        entity.ballSkin = this.ballSkin;
-        entity.playerTeamBlueHitParticle = this.playerTeamBlueHitParticle.copy();
-        entity.playerTeamRedHitParticle = this.playerTeamRedHitParticle.copy();
-        entity.ballSpawnParticle = this.ballSpawnParticle.copy();
-        entity.ballSpawnSound = this.ballSpawnSound.copy();
-        entity.ballGoalParticle = this.ballGoalParticle.copy();
-        entity.ballGoalSound = this.ballGoalSound.copy();
-        entity.genericHitParticle = this.genericHitParticle.copy();
-        entity.genericHitSound = this.genericHitSound.copy();
-        entity.ballSpawnTime = this.ballSpawnTime;
-        entity.verticalStrength = this.verticalStrength;
-        entity.horizontalStrength = this.horizontalStrength;
-        entity.rotating = this.rotating;
+        this.genericHitSound = new SoundBuilder(((MemorySection) items.get("sounds.generic-hit")).getValues(true));
+        this.ballSpawnSound = new SoundBuilder(((MemorySection) items.get("sounds.spawn")).getValues(true));
+        this.ballGoalSound = new SoundBuilder(((MemorySection) items.get("sounds.goal")).getValues(true));
     }
 
     @Override
@@ -136,12 +122,12 @@ class BallMetaEntity implements Serializable, BallMeta {
     }
 
     @Override
-    public LightSound getBallSpawnSound() {
+    public SoundMeta getBallSpawnSound() {
         return this.ballSpawnSound;
     }
 
     @Override
-    public void setBallSpawnSound(LightSound ballSpawnSound) {
+    public void setBallSpawnSound(SoundMeta ballSpawnSound) {
         this.ballSpawnSound = ballSpawnSound;
     }
 
@@ -156,22 +142,22 @@ class BallMetaEntity implements Serializable, BallMeta {
     }
 
     @Override
-    public LightSound getBallGoalSound() {
+    public SoundMeta getBallGoalSound() {
         return this.ballGoalSound;
     }
 
     @Override
-    public void setBallGoalSound(LightSound ballGoalSound) {
+    public void setBallGoalSound(SoundMeta ballGoalSound) {
         this.ballGoalSound = ballGoalSound;
     }
 
     @Override
-    public LightSound getGenericHitSound() {
+    public SoundMeta getGenericHitSound() {
         return this.genericHitSound;
     }
 
     @Override
-    public void setGenericHitSound(LightSound genericHitSound) {
+    public void setGenericHitSound(SoundMeta genericHitSound) {
         this.genericHitSound = genericHitSound;
     }
 
@@ -218,5 +204,79 @@ class BallMetaEntity implements Serializable, BallMeta {
         tmp2.put("goal", this.ballGoalSound.serialize());
         map.put("sounds", tmp2);
         return map;
+    }
+
+    /**
+     * Sets if the ball rotation is enabled
+     *
+     * @param enabled enabled
+     */
+    @Override
+    public void setRotationEnabled(boolean enabled) {
+        this.rotating = !enabled;
+    }
+
+    /**
+     * Returns if the ball rotation is enabled
+     *
+     * @return enabled
+     */
+    @Override
+    public boolean isRotationEnabled() {
+        return !this.rotating;
+    }
+
+    /**
+     * Returns the sound played when the ball spawns
+     *
+     * @return meta
+     */
+    @Override
+    public SoundMeta getSpawnSound() {
+        return this.ballSpawnSound;
+    }
+
+    /**
+     * Sets the skin of the ball. Can be a skinUrl or the name of the skin owner
+     *
+     * @param skin skin
+     */
+    @Override
+    public void setSkin(String skin) {
+        this.ballSkin = skin;
+    }
+
+    /**
+     * Returns the skin of the ball
+     *
+     * @return skin
+     */
+    @Override
+    public String getSkin() {
+        return this.ballSkin;
+    }
+
+    /**
+     * Returns the id of the object
+     *
+     * @return id
+     */
+    @Override
+    public long getId() {
+        return this.hashCode();
+    }
+
+    /**
+     * Clones the current object
+     *
+     * @return meta
+     */
+    @Override
+    public BallMeta clone() {
+        try {
+            return new BallMetaEntity(this.serialize());
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

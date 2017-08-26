@@ -13,6 +13,7 @@ import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.logic.persistence.Factory;
+import com.github.shynixn.blockball.business.logic.persistence.entity.SoundBuilder;
 import com.github.shynixn.blockball.lib.*;
 import com.github.shynixn.blockball.api.entities.items.BoostItem;
 import org.bukkit.*;
@@ -40,7 +41,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("deprecation")
 class GameListener extends SimpleListener {
     private final Map<Player, SLocation> lastLocation = new HashMap<>();
     private final Map<Player, Game> connectedGames = new HashMap<>();
@@ -143,8 +143,8 @@ class GameListener extends SimpleListener {
                 final BoostItem boostItem;
                 if (item.equals(event.getItem()) && ((boostItem = game.getArena().getBoostItemHandler().getBoostFromItem(item)) != null)) {
                     try {
-                        new FastSound("NOTE_PLING", 2.0, 2.0).play(event.getPlayer().getLocation(), event.getPlayer());
-                    } catch (final InterPreter19Exception e) {
+                        new SoundBuilder("NOTE_PLING", 2.0, 2.0).apply(event.getPlayer().getLocation(), event.getPlayer());
+                    } catch (final Exception e) {
                         Bukkit.getLogger().log(Level.WARNING, "Failed to play sound.", e);
                     }
                     game.getArena().getBoostItemHandler().removeItem(event.getItem());
@@ -450,8 +450,8 @@ class GameListener extends SimpleListener {
                             .multiply(game.getArena().getTeamMeta().getDoubleJumpMeta().getHorizontalStrength())
                             .setY(game.getArena().getTeamMeta().getDoubleJumpMeta().getVerticalStrength()));
                     try {
-                        game.getArena().getTeamMeta().getDoubleJumpSound().play(player.getLocation());
-                    } catch (final InterPreter19Exception e) {
+                        game.getArena().getTeamMeta().getDoubleJumpMeta().getSoundEffect().apply(player.getLocation());
+                    }catch (final Exception e) {
                         Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [DoubleJumpSound]");
                     }
                     game.getArena().getTeamMeta().getDoubleJumpParticle().play(player.getLocation());

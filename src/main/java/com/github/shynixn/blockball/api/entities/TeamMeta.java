@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.api.entities;
 
 import com.github.shynixn.blockball.lib.LightBossBar;
 import com.github.shynixn.blockball.lib.LightParticle;
-import com.github.shynixn.blockball.lib.LightSound;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
@@ -204,12 +203,6 @@ public interface TeamMeta extends ConfigurationSerializable {
 
     @Deprecated
     void setDoubleJumpParticle(LightParticle doubleJumpParticle);
-
-    @Deprecated
-    LightSound getDoubleJumpSound();
-
-    @Deprecated
-    void setDoubleJumpSound(LightSound doubleJumpSound);
 
     /**
      * Returns the settings for the double jump

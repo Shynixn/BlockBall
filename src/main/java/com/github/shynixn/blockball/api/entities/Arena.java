@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.api.entities;
 
 import com.github.shynixn.blockball.api.entities.items.BoostItemHandler;
+import com.github.shynixn.blockball.api.persistence.entity.*;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
@@ -8,7 +9,12 @@ import java.util.List;
 import java.util.Random;
 
 public interface Arena extends ConfigurationSerializable {
-    BallMeta getBallMeta();
+    /**
+     * Returns the ball settings for this arena
+     *
+     * @return ballMeta
+     */
+    com.github.shynixn.blockball.api.persistence.entity.BallMeta getBallMeta();
 
     boolean isEnabled();
 

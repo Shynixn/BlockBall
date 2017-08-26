@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public interface PlayerMeta extends Persistenceable{
+public interface PlayerMeta extends Persistenceable<PlayerMeta> {
 
     /**
      * Returns the name of the playerData

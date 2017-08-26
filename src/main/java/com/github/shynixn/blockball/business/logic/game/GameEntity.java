@@ -7,8 +7,8 @@ import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.business.logic.items.ItemSpawner;
-import com.github.shynixn.blockball.lib.*;
 import com.github.shynixn.blockball.api.events.GoalShootEvent;
+import com.github.shynixn.blockball.lib.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -215,8 +215,8 @@ public abstract class GameEntity implements Game {
         if (this.buffer == 0) {
             this.arena.getBallMeta().getGenericHitParticle().play(this.ball.getLocation());
             try {
-                this.arena.getBallMeta().getGenericHitSound().play(this.ball.getLocation());
-            } catch (final InterPreter19Exception e) {
+                this.arena.getBallMeta().getGenericHitSound().apply(this.ball.getLocation());
+            } catch (final Exception e) {
                 Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [GenericHitSound]");
             }
             this.buffer = 10;
@@ -286,8 +286,8 @@ public abstract class GameEntity implements Game {
                 this.counter = 0;
                 this.arena.getBallMeta().getBallSpawnParticle().play(this.ball.getLocation());
                 try {
-                    this.arena.getBallMeta().getBallSpawnSound().play(this.ball.getLocation());
-                } catch (final InterPreter19Exception e) {
+                    this.arena.getBallMeta().getSpawnSound().apply(this.ball.getLocation());
+                } catch (final Exception e) {
                     Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BallSpawnSound]");
                 }
             }
@@ -317,8 +317,8 @@ public abstract class GameEntity implements Game {
             this.useLastHitGlowing();
             this.arena.getBallMeta().getBallGoalParticle().play(this.ball.getLocation());
             try {
-                this.arena.getBallMeta().getBallGoalSound().play(this.ball.getLocation());
-            } catch (final InterPreter19Exception e) {
+                this.arena.getBallMeta().getBallGoalSound().apply(this.ball.getLocation());
+            }catch (final Exception e) {
                 Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BallGoalSound]");
             }
             this.ball.despawn();

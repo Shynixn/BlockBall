@@ -1,8 +1,10 @@
 package com.github.shynixn.blockball.business.logic.game;
 
 import com.github.shynixn.blockball.api.entities.Team;
+import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
+import com.github.shynixn.blockball.business.logic.persistence.entity.SoundBuilder;
 import com.github.shynixn.blockball.lib.*;
 import com.github.shynixn.blockball.api.entities.Arena;
 import com.github.shynixn.blockball.api.entities.GameStage;
@@ -27,7 +29,7 @@ class EventGameEntity extends GameEntity {
     private final Map<Player, Integer> bumpers = new HashMap<>();
     private boolean interruptgame = true;
 
-    private final LightSound blingsound = new FastSound("NOTE_PLING", 1.0, 2.0);
+    private final SoundMeta blingsound = new SoundBuilder("NOTE_PLING", 1.0, 2.0);
 
     EventGameEntity(Arena arena) {
         super(arena);
@@ -122,8 +124,8 @@ class EventGameEntity extends GameEntity {
                     this.countdown++;
                 else {
                     try {
-                        this.blingsound.play(this.referee);
-                    } catch (final InterPreter19Exception e) {
+                        this.blingsound.apply(this.referee);
+                    } catch (final Exception e) {
                         Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BlingSound]");
                     }
                     this.referee.setLevel(this.countdown);

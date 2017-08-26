@@ -29,74 +29,40 @@ package com.github.shynixn.blockball.api.persistence.entity;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface Stats extends Persistenceable<Stats> {
-    /**
-     * Returns the winRate of the player
-     *
-     * @return winRate
-     */
-    double getWinRate();
+public interface BallMeta extends com.github.shynixn.blockball.api.entities.BallMeta, Persistenceable<BallMeta> {
 
     /**
-     * Returns the goals Per Game
+     * Sets if the ball rotation is enabled
      *
-     * @return goalsPer Game
+     * @param enabled enabled
      */
-    double getGoalsPerGame();
+    void setRotationEnabled(boolean enabled);
 
     /**
-     * Sets the amount of wins of the player
+     * Returns if the ball rotation is enabled
      *
-     * @param amount amount
+     * @return enabled
      */
-    void setAmountOfWins(int amount);
+    boolean isRotationEnabled();
 
     /**
-     * Returns the amount of wins of the player
+     * Returns the sound played when the ball spawns
      *
-     * @return amount amount
+     * @return meta
      */
-    int getAmountOfWins();
+    SoundMeta getSpawnSound();
 
     /**
-     * Sets the amount of games played by the player
+     * Sets the skin of the ball. Can be a skinUrl or the name of the skin owner
      *
-     * @param amount amount
+     * @param skin skin
      */
-    void setAmountOfGamesPlayed(int amount);
+    void setSkin(String skin);
 
     /**
-     * Returns the amount of games player by the player
+     * Returns the skin of the ball
      *
-     * @return amount of game played
+     * @return skin
      */
-    int getAmountOfGamesPlayed();
-
-    /**
-     * Sets the amount of goals of the player
-     *
-     * @param amount amount
-     */
-    void setAmountOfGoals(int amount);
-
-    /**
-     * Returns the amount of goals of the player
-     *
-     * @return player
-     */
-    int getAmountOfGoals();
-
-    /**
-     * Returns the playerId
-     *
-     * @return playerId
-     */
-    long getPlayerId();
-
-    /**
-     * Sets the playerId
-     *
-     * @param id id
-     */
-    void setPlayerId(long id);
+    String getSkin();
 }

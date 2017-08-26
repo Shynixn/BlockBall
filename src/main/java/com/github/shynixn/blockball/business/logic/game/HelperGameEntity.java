@@ -3,10 +3,12 @@ package com.github.shynixn.blockball.business.logic.game;
 import com.github.shynixn.blockball.api.entities.*;
 import com.github.shynixn.blockball.api.events.GameJoinEvent;
 import com.github.shynixn.blockball.api.events.GameWinEvent;
+import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
+import com.github.shynixn.blockball.business.logic.persistence.entity.SoundBuilder;
 import com.github.shynixn.blockball.lib.*;
 import org.bukkit.*;
 import org.bukkit.block.Sign;
@@ -25,7 +27,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
     private int countdown;
     private boolean isStarting;
     private final Map<Player, Team> preSelection = new HashMap<>();
-    private final LightSound blingsound = new FastSound("NOTE_PLING", 1.0, 2.0);
+    private final SoundMeta blingsound = new SoundBuilder("NOTE_PLING", 1.0, 2.0);
 
     private int bumeper = 40;
     private int secondbumper = 20;
@@ -174,8 +176,8 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                 }
                 if (this.countdown <= 10 && !this.endgame) {
                     try {
-                        this.blingsound.play(this.getPlayers().toArray(new Player[this.getPlayers().size()]));
-                    } catch (final InterPreter19Exception e) {
+                        this.blingsound.apply(this.getPlayers());
+                    } catch (final Exception e) {
                         Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BlingSound]");
                     }
                 }
@@ -220,8 +222,8 @@ class HelperGameEntity extends GameEntity implements MiniGame {
                         }
                         if (this.countdown <= 5) {
                             try {
-                                this.blingsound.play(this.lobby.toArray(new Player[this.lobby.size()]));
-                            } catch (final InterPreter19Exception e) {
+                                this.blingsound.apply(this.lobby);
+                            }catch (final Exception e) {
                                 Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BlingSound]");
                             }
                         }

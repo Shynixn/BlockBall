@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.business.logic.arena;
 import com.github.shynixn.blockball.api.entities.DoubleJumpMeta;
 import com.github.shynixn.blockball.api.entities.IPosition;
 import com.github.shynixn.blockball.api.entities.TeamMeta;
+import com.github.shynixn.blockball.business.logic.persistence.entity.SoundBuilder;
 import com.github.shynixn.blockball.lib.*;
 import org.bukkit.*;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -160,7 +161,8 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         this.bluewinnerSubtitleMessage = (String) items.get("messages.blue-win-subtitle");
 
         this.doubleJumpMetaEntity.setParticle(new SParticle(((MemorySection) items.get("double-jump.particle")).getValues(true)));
-        this.doubleJumpMetaEntity.setSound(new FastSound(((MemorySection) items.get("double-jump.sound")).getValues(true)));
+        this.doubleJumpMetaEntity.setSoundEffect(new SoundBuilder(((MemorySection) items.get("double-jump.sound")).getValues(true)));
+
         if (items.containsKey("double-jump.vertical-strength"))
             this.doubleJumpMetaEntity.setVerticalStrength((Double) items.get("double-jump.vertical-strength"));
         if (items.containsKey("double-jump.horizontal-strength"))
@@ -193,7 +195,7 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         return itemStacks;
     }
 
-    public void copy(TeamMetaEntity entity) {
+    public void copy(TeamMetaEntity entity) throws Exception {
         entity.redTeamName = this.redTeamName;
         entity.blueTeamName = this.blueTeamName;
         entity.teamMaxSize = this.teamMaxSize;
@@ -230,10 +232,12 @@ class TeamMetaEntity implements TeamMeta, Serializable {
         entity.maxScore = this.maxScore;
         entity.autoTeamJoin = this.autoTeamJoin;
 
+        entity.walkingSpeed = this.walkingSpeed;
+
         entity.doubleJumpMetaEntity.setEnabled(this.doubleJumpMetaEntity.isEnabled());
         entity.doubleJumpMetaEntity.setHorizontalStrength(this.doubleJumpMetaEntity.getHorizontalStrength());
         entity.doubleJumpMetaEntity.setVerticalStrength(this.doubleJumpMetaEntity.getVerticalStrength());
-        entity.doubleJumpMetaEntity.setSound(this.doubleJumpMetaEntity.getSoundEffect().copy());
+        entity.doubleJumpMetaEntity.setSoundEffect(new SoundBuilder(this.doubleJumpMetaEntity.getSoundEffect().serialize()));
         entity.doubleJumpMetaEntity.setParticle(this.doubleJumpMetaEntity.getParticleEffect().copy());
     }
 
@@ -490,18 +494,6 @@ class TeamMetaEntity implements TeamMeta, Serializable {
     @Override
     public void setDoubleJumpParticle(LightParticle doubleJumpParticle) {
         this.doubleJumpMetaEntity.setParticle(doubleJumpParticle);
-    }
-
-    @Deprecated
-    @Override
-    public LightSound getDoubleJumpSound() {
-        return this.doubleJumpMetaEntity.getSoundEffect();
-    }
-
-    @Deprecated
-    @Override
-    public void setDoubleJumpSound(LightSound doubleJumpSound) {
-        this.doubleJumpMetaEntity.setSound(doubleJumpSound);
     }
 
     /**

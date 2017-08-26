@@ -2,6 +2,8 @@ package com.github.shynixn.blockball.business.logic.arena;
 
 import com.github.shynixn.blockball.api.entities.*;
 import com.github.shynixn.blockball.api.entities.items.BoostItemHandler;
+import com.github.shynixn.blockball.api.persistence.entity.*;
+import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.logic.items.ItemSpawner;
 import com.github.shynixn.blockball.lib.SLocation;
@@ -61,6 +63,11 @@ class ArenaEntity extends SelectedArea implements Arena {
             this.boostItemHandler = new ItemSpawner(((MemorySection) data.get("boost-items")).getValues(true));
     }
 
+    public void setBallMeta(BallMetaEntity meta)
+    {
+        this.properties = meta;
+    }
+
     @Override
     public void addBounceType(String type) {
         if (!this.getBounce_types().contains(type))
@@ -85,7 +92,7 @@ class ArenaEntity extends SelectedArea implements Arena {
     }
 
     @Override
-    public BallMeta getBallMeta() {
+    public com.github.shynixn.blockball.api.persistence.entity.BallMeta getBallMeta() {
         return this.properties;
     }
 

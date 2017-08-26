@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.business.logic.persistence.entity;
 
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
-public class PersistenceObject implements Persistenceable {
+public abstract class PersistenceObject<T> implements Persistenceable<T> {
     long id;
     /**
      * Returns the id of the object
@@ -21,4 +21,12 @@ public class PersistenceObject implements Persistenceable {
     public void setId(long id) {
         this.id = id;
     }
+
+    /**
+     * Clones the current object
+     *
+     * @return object
+     */
+    @Override
+    public abstract T clone();
 }

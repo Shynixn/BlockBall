@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.entities;
 
+import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
 import com.github.shynixn.blockball.lib.LightParticle;
-import com.github.shynixn.blockball.lib.LightSound;
 
 /**
  * Copyright 2017 Shynixn
@@ -88,5 +88,5 @@ public interface DoubleJumpMeta {
      *
      * @return soundEffect
      */
-    LightSound getSoundEffect();
+    SoundMeta getSoundEffect();
 }

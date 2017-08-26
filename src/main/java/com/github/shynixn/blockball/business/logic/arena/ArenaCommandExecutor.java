@@ -1,14 +1,17 @@
 package com.github.shynixn.blockball.business.logic.arena;
 
+import com.github.shynixn.blockball.api.entities.DoubleJumpMeta;
 import com.github.shynixn.blockball.api.entities.GameType;
 import com.github.shynixn.blockball.api.entities.Team;
 import com.github.shynixn.blockball.api.entities.items.BoostItem;
 import com.github.shynixn.blockball.api.entities.items.Spawnrate;
+import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.dependencies.worldedit.WorldEditConnection;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.business.logic.items.ItemSpawner;
+import com.github.shynixn.blockball.business.logic.persistence.entity.SoundBuilder;
 import com.github.shynixn.blockball.lib.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -111,9 +114,12 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 if (ArenaCommandExecutor.this.manager.contains(number)) {
                     final ArenaEntity arenaEntity = (ArenaEntity) ArenaCommandExecutor.this.manager.getArenaFromName(String.valueOf(number));
                     final ArenaEntity newentity = ArenaCommandExecutor.this.manager.createNewArenaEntity();
-
-                    ((BallMetaEntity) arenaEntity.getBallMeta()).copy((BallMetaEntity) newentity.getBallMeta());
-                    ((TeamMetaEntity) arenaEntity.getTeamMeta()).copy((TeamMetaEntity) newentity.getTeamMeta());
+                    newentity.setBallMeta((BallMetaEntity) arenaEntity.getBallMeta().clone());
+                    try {
+                        ((TeamMetaEntity) arenaEntity.getTeamMeta()).copy((TeamMetaEntity) newentity.getTeamMeta());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
 
                     this.open(this.player, new EditArenaPage(this.player, newentity));
                 }
@@ -993,14 +999,14 @@ class ArenaCommandExecutor extends SCommandExecutor {
             else if (number == 8)
                 this.open(this.player, new EditSoundPage(this.player, this.arenaEntity.getBallMeta().getBallGoalSound(), this.arenaEntity));
             else if (number == 9) {
-                this.arenaEntity.getBallMeta().setGenericHitSound(new FastSound("ZOMBIE_WOOD", 1.0, 1.0));
+                this.arenaEntity.getBallMeta().setGenericHitSound(new SoundBuilder("ZOMBIE_WOOD", 1.0, 1.0));
                 this.arenaEntity.getBallMeta().setGenericHitParticle(new SParticle(ParticleEffect.EXPLOSION_HUGE, 1, 0.0002, 0.01, 0.01, 0.01));
                 this.arenaEntity.getBallMeta().setPlayerTeamRedHitParticle(new SParticle(ParticleEffect.REDSTONE, 1, 1, 0, 0, 0).setColors(255, 0, 0));
                 this.arenaEntity.getBallMeta().setPlayerTeamBlueHitParticle(new SParticle(ParticleEffect.REDSTONE, 1, 1, -1, -1, 1).setColors(0, 0, 255));
                 this.arenaEntity.getBallMeta().setBallSpawnParticle(new SParticle(ParticleEffect.SMOKE_LARGE, 4, 0.0002, 2, 2, 2));
-                this.arenaEntity.getBallMeta().setBallSpawnSound(new FastSound("NOTE_BASS", 1.0, 1.0));
+                this.arenaEntity.getBallMeta().setBallSpawnSound(new SoundBuilder("NOTE_BASS", 1.0, 1.0));
                 this.arenaEntity.getBallMeta().setBallGoalParticle(new SParticle(ParticleEffect.NOTE, 4, 0.0002, 2, 2, 2).setNoteColor(2));
-                this.arenaEntity.getBallMeta().setBallGoalSound(new FastSound("NOTE_PLING", 1.0, 2.0));
+                this.arenaEntity.getBallMeta().setBallGoalSound(new SoundBuilder("NOTE_PLING", 1.0, 2.0));
                 this.player.sendMessage(Language.PREFIX + "Reset this page.");
             } else if (number == 10) {
                 this.player.sendMessage(Language.PREFIX + "Saved settings.");
@@ -1040,6 +1046,15 @@ class ArenaCommandExecutor extends SCommandExecutor {
         }
 
         @Override
+        public boolean playerPreChatEnter(String text) {
+            if (this.lastNumber == 2 && tryPDouble(text))
+                this.arenaEntity.getTeamMeta().setWalkingSpeed(Float.parseFloat(text));
+            else
+                return true;
+            return false;
+        }
+
+        @Override
         public void onPlayerSelect(int number) {
             if (number == 1) {
                 this.arenaEntity.getTeamMeta().setDamage(!this.arenaEntity.getTeamMeta().isDamageEnabled());
@@ -1048,29 +1063,32 @@ class ArenaCommandExecutor extends SCommandExecutor {
                 else
                     this.player.sendMessage(Language.PREFIX + "Disabled damage.");
             } else if (number == 2) {
+                this.player.sendMessage(Language.PREFIX + "Enter the walking-speed (default 0.2): ");
+            } else if (number == 3) {
                 this.arenaEntity.getTeamMeta().setForceEvenTeams(!this.arenaEntity.getTeamMeta().isForceEvenTeamsEnabled());
                 if (this.arenaEntity.getTeamMeta().isForceEvenTeamsEnabled())
                     this.player.sendMessage(Language.PREFIX + "Enabled force-even-teams.");
                 else
                     this.player.sendMessage(Language.PREFIX + "Disabled force-even-teams.");
-            } else if (number == 3) {
-                this.open(this.player, new EditDoubleJumpPage(this.player, this.arenaEntity));
             } else if (number == 4) {
-                this.open(this.player, new HologramSettingsPage(this.player, this.arenaEntity));
+                this.open(this.player, new EditDoubleJumpPage(this.player, this.arenaEntity));
             } else if (number == 5) {
+                this.open(this.player, new HologramSettingsPage(this.player, this.arenaEntity));
+            } else if (number == 6) {
                 if (NMSRegistry.getCurrencyName() == null)
                     this.player.sendMessage(Language.PREFIX + "Cannot find valid currency name. Did you install/setup Vault and an economy plugin?");
                 else
                     this.open(this.player, new VaultSettings(this.player, this.arenaEntity));
-            } else if (number == 6) {
-                this.open(this.player, new SpawnerItems(this.player, this.arenaEntity));
             } else if (number == 7) {
-                this.open(this.player, new GlowingSettingsPage(this.player, this.arenaEntity));
+                this.open(this.player, new SpawnerItems(this.player, this.arenaEntity));
             } else if (number == 8) {
+                this.open(this.player, new GlowingSettingsPage(this.player, this.arenaEntity));
+            } else if (number == 9) {
                 this.arenaEntity.getTeamMeta().setForceEvenTeams(false);
                 this.arenaEntity.getTeamMeta().setDamage(true);
+                this.arenaEntity.getTeamMeta().setWalkingSpeed(0.2F);
                 this.player.sendMessage(Language.PREFIX + "Reset this page.");
-            } else if (number == 9) {
+            } else if (number == 10) {
                 this.player.sendMessage(Language.PREFIX + "Saved settings.");
                 this.open(this.player, new MainSettingsPage(this.player, this.arenaEntity));
             }
@@ -1083,13 +1101,14 @@ class ArenaCommandExecutor extends SCommandExecutor {
             this.player.sendMessage("");
             this.player.sendMessage(Language.PREFIX + "1 - Enable/Disable damage");
             this.player.sendMessage(Language.PREFIX + "2 - Enable/Disable force-even-teams");
-            this.player.sendMessage(Language.PREFIX + "3 - Set DoubleJump");
-            this.player.sendMessage(Language.PREFIX + "4 - Set Hologram");
-            this.player.sendMessage(Language.PREFIX + "5 - [Vault] Set rewards");
-            this.player.sendMessage(Language.PREFIX + "6 - Item Spawner");
-            this.player.sendMessage(Language.PREFIX + "7 - ScoreGlowing 1.9+");
-            this.player.sendMessage(Language.PREFIX + "8 - Reset this page");
-            this.player.sendMessage(Language.PREFIX + "9 - Save settings");
+            this.player.sendMessage(Language.PREFIX + "3 - Set walking-speed");
+            this.player.sendMessage(Language.PREFIX + "4 - Set DoubleJump");
+            this.player.sendMessage(Language.PREFIX + "5 - Set Hologram");
+            this.player.sendMessage(Language.PREFIX + "6 - [Vault] Set rewards");
+            this.player.sendMessage(Language.PREFIX + "7 - Item Spawner");
+            this.player.sendMessage(Language.PREFIX + "8 - ScoreGlowing 1.9+");
+            this.player.sendMessage(Language.PREFIX + "9 - Reset this page");
+            this.player.sendMessage(Language.PREFIX + "10 - Save settings");
             this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + MENU_BACK);
             this.player.sendMessage(Language.PREFIX + ChatColor.RED + MENU_EXIT);
             this.player.sendMessage("");
@@ -1132,11 +1151,16 @@ class ArenaCommandExecutor extends SCommandExecutor {
             } else if (number == 4) {
                 this.open(this.player, new EditParticlePage(this.player, this.arenaEntity.getTeamMeta().getDoubleJumpParticle(), this.arenaEntity));
             } else if (number == 5) {
-                this.open(this.player, new EditSoundPage(this.player, this.arenaEntity.getTeamMeta().getDoubleJumpSound(), this.arenaEntity));
+                this.open(this.player, new EditSoundPage(this.player, this.arenaEntity.getTeamMeta().getDoubleJumpMeta().getSoundEffect(), this.arenaEntity));
             } else if (number == 6) {
                 this.arenaEntity.getTeamMeta().setAllowDoubleJump(true);
                 this.arenaEntity.getTeamMeta().setDoubleJumpParticle(new SParticle(ParticleEffect.EXPLOSION_NORMAL, 4, 0.0002, 2, 2, 2));
-                this.arenaEntity.getTeamMeta().setDoubleJumpSound(new FastSound("GHAST_FIREBALL", 100.0, 1.0));
+                this.arenaEntity.getTeamMeta()
+                        .getDoubleJumpMeta()
+                        .getSoundEffect()
+                        .setName("GHAST_FIREBALL")
+                        .setVolume(100)
+                        .setPitch(1.0);
                 this.arenaEntity.getTeamMeta().getDoubleJumpMeta().setHorizontalStrength(2.6);
                 this.arenaEntity.getTeamMeta().getDoubleJumpMeta().setVerticalStrength(1.0);
                 this.player.sendMessage(Language.PREFIX + "Reset this page.");
@@ -1387,10 +1411,10 @@ class ArenaCommandExecutor extends SCommandExecutor {
     }
 
     private class EditSoundPage extends SChatpage {
-        private final LightSound sound;
+        private final SoundMeta sound;
         private final ArenaEntity entity;
 
-        EditSoundPage(Player player, LightSound sound, ArenaEntity entity) {
+        EditSoundPage(Player player, SoundMeta sound, ArenaEntity entity) {
             super(player);
             this.sound = sound;
             this.entity = entity;
@@ -1398,8 +1422,8 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
         @Override
         public boolean playerPreChatEnter(String text) {
-            if (this.lastNumber == 1 && FastSound.getSoundFromName(text) != null)
-                this.sound.setSound(text);
+            if (this.lastNumber == 1 && SoundBuilder.getSoundFromName(text) != null)
+                this.sound.setName(text);
             else if (this.lastNumber == 2 && tryPDouble(text) && Double.parseDouble(text) > 0)
                 this.sound.setVolume(Double.parseDouble(text));
             else if (this.lastNumber == 3 && tryPDouble(text) && Double.parseDouble(text) > 0)
@@ -1413,7 +1437,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         public void onPlayerSelect(int number) {
             if (number == 1) {
                 this.player.sendMessage(Language.PREFIX + "Enter the name of the sound:");
-                this.player.sendMessage(Language.PREFIX + "Names: " + FastSound.getSoundsText());
+                this.player.sendMessage(Language.PREFIX + "Names: " + SoundBuilder.getAvailableSounds());
             } else if (number == 2)
                 this.player.sendMessage(Language.PREFIX + "Enter the volume of the sound:");
             else if (number == 3)

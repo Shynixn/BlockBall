@@ -1,6 +1,9 @@
 package com.github.shynixn.blockball.business.logic.persistence.entity;
 
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
+import com.github.shynixn.blockball.lib.YamlSerializer;
+
+import java.util.Map;
 
 /**
  * Copyright 2017 Shynixn
@@ -31,12 +34,16 @@ import com.github.shynixn.blockball.api.persistence.entity.Stats;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class StatsData extends PersistenceObject implements Stats {
+public class StatsData extends PersistenceObject<Stats> implements Stats {
 
-    private int amountWins;
-    private int amountGames;
-    private int amountGoals;
+    @YamlSerializer.YamlSerialize(value = "playerId", orderNumber = 1)
     private long playerId;
+    @YamlSerializer.YamlSerialize(value = "amount-wins", orderNumber = 2)
+    private int amountWins;
+    @YamlSerializer.YamlSerialize(value = "amount-games", orderNumber = 3)
+    private int amountGames;
+    @YamlSerializer.YamlSerialize(value = "amount-goals", orderNumber = 4)
+    private int amountGoals;
 
     /**
      * Returns the winRate of the player
@@ -140,5 +147,33 @@ public class StatsData extends PersistenceObject implements Stats {
     @Override
     public void setPlayerId(long id) {
         this.playerId = id;
+    }
+
+    /**
+     * Clones the current object
+     *
+     * @return object
+     */
+    @Override
+    public Stats clone() {
+        try {
+            return YamlSerializer.deserializeObject(StatsData.class, this.serialize());
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Serializes the statsData
+     *
+     * @return serializedContent
+     */
+    @Override
+    public Map<String, Object> serialize() {
+        try {
+            return YamlSerializer.serialize(this);
+        } catch (final IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -1,7 +1,11 @@
 package com.github.shynixn.blockball.business.logic.arena;
 
 import com.github.shynixn.blockball.api.entities.DoubleJumpMeta;
-import com.github.shynixn.blockball.lib.*;
+import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
+import com.github.shynixn.blockball.business.logic.persistence.entity.SoundBuilder;
+import com.github.shynixn.blockball.lib.LightParticle;
+import com.github.shynixn.blockball.lib.ParticleEffect;
+import com.github.shynixn.blockball.lib.SParticle;
 
 /**
  * Copyright 2017 Shynixn
@@ -39,7 +43,7 @@ class DoubleJumpMetaEntity implements DoubleJumpMeta {
     private double verticalStrength = 1.0D;
 
     private LightParticle particle = new SParticle(ParticleEffect.EXPLOSION_NORMAL, 4, 0.0002, 2, 2, 2);
-    private LightSound sound = new FastSound("GHAST_FIREBALL", 100.0, 1.0);
+    private SoundMeta soundEffect = new SoundBuilder("GHAST_FIREBALL", 100.0, 1.0);
 
     /**
      * Enables the double jump
@@ -117,8 +121,17 @@ class DoubleJumpMetaEntity implements DoubleJumpMeta {
      * @return soundEffect
      */
     @Override
-    public LightSound getSoundEffect() {
-        return this.sound;
+    public SoundMeta getSoundEffect() {
+        return this.soundEffect;
+    }
+
+    /**
+     * Sets the soundEffect of the double jump
+     *
+     * @param meta meta
+     */
+    void setSoundEffect(SoundMeta meta) {
+        this.soundEffect = meta;
     }
 
     /**
@@ -128,14 +141,5 @@ class DoubleJumpMetaEntity implements DoubleJumpMeta {
      */
     void setParticle(LightParticle particle) {
         this.particle = particle;
-    }
-
-    /**
-     * Sets the sound of the double jump
-     *
-     * @param sound sound
-     */
-    void setSound(LightSound sound) {
-        this.sound = sound;
     }
 }
