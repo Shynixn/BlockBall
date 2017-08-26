@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.api.entities.items;
 
+@Deprecated
 public enum Spawnrate {
     NONE(0, 0),
     LITTLE(20, 2),
