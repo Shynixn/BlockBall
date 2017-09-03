@@ -5,12 +5,14 @@ import com.github.shynixn.blockball.api.entities.GameType;
 import com.github.shynixn.blockball.api.entities.Team;
 import com.github.shynixn.blockball.api.entities.items.BoostItem;
 import com.github.shynixn.blockball.api.entities.items.Spawnrate;
+import com.github.shynixn.blockball.api.persistence.entity.PotionEffectMeta;
 import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.dependencies.worldedit.WorldEditConnection;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.business.logic.items.ItemSpawner;
+import com.github.shynixn.blockball.business.logic.persistence.entity.PotionEffectBuilder;
 import com.github.shynixn.blockball.business.logic.persistence.entity.SoundBuilder;
 import com.github.shynixn.blockball.lib.*;
 import org.bukkit.ChatColor;
@@ -2009,15 +2011,15 @@ class ArenaCommandExecutor extends SCommandExecutor {
             } else if (this.lastNumber == 5) {
                 this.boostItem.setDisplayName(text);
             } else if (this.lastNumber == 7) {
-                if (FastPotioneffect.getPotionEffectFromName(text) == null || this.boostItem.getPotionEffect(FastPotioneffect.getPotionEffectFromName(text)) == null)
+                if (PotionEffectBuilder.getPotionEffectFromName(text) == null || this.boostItem.getPotionEffect(PotionEffectBuilder.getPotionEffectFromName(text)) == null)
                     this.player.sendMessage(Language.PREFIX + "This type does not exist.");
                 else
-                    this.open(this.player, new EditPotionEffect(this.player, this.arenaEntity, this.boostItem.getPotionEffect(FastPotioneffect.getPotionEffectFromName(text))));
+                    this.open(this.player, new EditPotionEffect(this.player, this.arenaEntity, this.boostItem.getPotionEffect(PotionEffectBuilder.getPotionEffectFromName(text))));
             } else if (this.lastNumber == 8) {
-                if (FastPotioneffect.getPotionEffectFromName(text) == null || this.boostItem.getPotionEffect(FastPotioneffect.getPotionEffectFromName(text)) == null)
+                if (PotionEffectBuilder.getPotionEffectFromName(text) == null || this.boostItem.getPotionEffect(PotionEffectBuilder.getPotionEffectFromName(text)) == null)
                     this.player.sendMessage(Language.PREFIX + "This type does not exist.");
                 else
-                    this.boostItem.removePotionEffect(FastPotioneffect.getPotionEffectFromName(text));
+                    this.boostItem.removePotionEffect(PotionEffectBuilder.getPotionEffectFromName(text));
             } else
                 return true;
             return false;
@@ -2037,21 +2039,21 @@ class ArenaCommandExecutor extends SCommandExecutor {
             } else if (number == 5) {
                 this.player.sendMessage(Language.PREFIX + "Enter the displayname of the item:");
             } else if (number == 6) {
-                final LightPotioneffect potioneffect = new FastPotioneffect();
+                final PotionEffectMeta potioneffect = new PotionEffectBuilder();
                 this.boostItem.setPotionEffect(potioneffect);
                 this.open(this.player, new EditPotionEffect(this.player, this.arenaEntity, potioneffect));
             } else if (number == 7) {
                 this.player.sendMessage(Language.PREFIX + "Type the name to edit the potioneffect:");
-                for (final LightPotioneffect lightPotioneffect : this.boostItem.getPotionEffects()) {
+                for (final PotionEffectMeta lightPotioneffect : this.boostItem.getPotionEffects()) {
                     this.player.sendMessage(Language.PREFIX + lightPotioneffect.getType());
                 }
             } else if (number == 8) {
                 this.player.sendMessage(Language.PREFIX + "Type the name to remove the potioneffect:");
-                for (final LightPotioneffect lightPotioneffect : this.boostItem.getPotionEffects()) {
+                for (final PotionEffectMeta lightPotioneffect : this.boostItem.getPotionEffects()) {
                     this.player.sendMessage(Language.PREFIX + lightPotioneffect.getType());
                 }
             } else if (number == 9) {
-                for (final LightPotioneffect lightPotioneffect : this.boostItem.getPotionEffects()) {
+                for (final PotionEffectMeta lightPotioneffect : this.boostItem.getPotionEffects()) {
                     this.player.sendMessage(Language.PREFIX + lightPotioneffect.getType());
                 }
             } else if (number == 10) {
@@ -2084,9 +2086,9 @@ class ArenaCommandExecutor extends SCommandExecutor {
 
     private static class EditPotionEffect extends SChatpage {
         private final ArenaEntity arenaEntity;
-        private final LightPotioneffect lightPotioneffect;
+        private final PotionEffectMeta lightPotioneffect;
 
-        EditPotionEffect(Player player, ArenaEntity entity, LightPotioneffect lightPotioneffect) {
+        EditPotionEffect(Player player, ArenaEntity entity, PotionEffectMeta lightPotioneffect) {
             super(player);
             this.arenaEntity = entity;
             this.lightPotioneffect = lightPotioneffect;
@@ -2095,10 +2097,10 @@ class ArenaCommandExecutor extends SCommandExecutor {
         @Override
         public boolean playerPreChatEnter(String text) {
             if (this.lastNumber == 1) {
-                if (FastPotioneffect.getPotionEffectFromName(text) == null)
+                if (PotionEffectBuilder.getPotionEffectFromName(text) == null)
                     this.player.sendMessage(Language.PREFIX + "This type does not exist.");
                 else
-                    this.lightPotioneffect.setType(FastPotioneffect.getPotionEffectFromName(text).getId());
+                    this.lightPotioneffect.setTypeId(PotionEffectBuilder.getPotionEffectFromName(text).getId());
             } else if (this.lastNumber == 2 && tryPInt(text)) {
                 this.lightPotioneffect.setSeconds(Integer.parseInt(text));
             } else if (this.lastNumber == 3 && tryPInt(text)) {
@@ -2112,7 +2114,7 @@ class ArenaCommandExecutor extends SCommandExecutor {
         public void onPlayerSelect(int number) {
             if (number == 1) {
                 this.player.sendMessage(Language.PREFIX + "Enter the type of the potioneffect:");
-                this.player.sendMessage(Language.PREFIX + FastPotioneffect.getPotionEffectsText());
+                this.player.sendMessage(Language.PREFIX + PotionEffectBuilder.getPotionEffectsText());
             } else if (number == 2) {
                 this.player.sendMessage(Language.PREFIX + "Enter the duration (seconds) of the potioneffect:");
             } else if (number == 3) {

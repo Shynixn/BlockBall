@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.api.persistence.entity;
 
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;

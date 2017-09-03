@@ -1,10 +1,10 @@
 package com.github.shynixn.blockball.business.logic.items;
 
 import com.github.shynixn.blockball.api.entities.items.Spawnrate;
-import com.github.shynixn.blockball.lib.FastPotioneffect;
+import com.github.shynixn.blockball.api.persistence.entity.PotionEffectMeta;
+import com.github.shynixn.blockball.business.logic.persistence.entity.PotionEffectBuilder;
 import com.github.shynixn.blockball.lib.SSKulls;
 import com.github.shynixn.blockball.api.entities.items.BoostItem;
-import com.github.shynixn.blockball.lib.LightPotioneffect;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.MemorySection;
@@ -22,7 +22,7 @@ class SpawnItem implements BoostItem {
     private String owner;
     private Spawnrate spawnrate = Spawnrate.MEDIUM;
     private String displayName;
-    private final Map<Integer, LightPotioneffect> potioneffectList = new HashMap<>();
+    private final Map<Integer, PotionEffectMeta> potioneffectList = new HashMap<>();
 
     SpawnItem() {
         super();
@@ -37,7 +37,7 @@ class SpawnItem implements BoostItem {
         this.spawnrate = Spawnrate.getSpawnrateFromName((String) items.get("rate"));
         for (final PotionEffectType potionEffectType : PotionEffectType.values()) {
             if (potionEffectType != null && items.containsKey("potioneffects." + potionEffectType.getId())) {
-                this.potioneffectList.put(potionEffectType.getId(), new FastPotioneffect(((MemorySection) items.get("potioneffects." + potionEffectType.getId())).getValues(true)));
+                this.potioneffectList.put(potionEffectType.getId(), new PotionEffectBuilder(((MemorySection) items.get("potioneffects." + potionEffectType.getId())).getValues(true)));
             }
         }
     }
@@ -67,14 +67,14 @@ class SpawnItem implements BoostItem {
 
     @Override
     public void apply(Player player) {
-        for (final LightPotioneffect lightPotioneffect : this.potioneffectList.values()) {
+        for (final PotionEffectMeta lightPotioneffect : this.potioneffectList.values()) {
             lightPotioneffect.apply(player);
         }
     }
 
     @Override
-    public void setPotionEffect(LightPotioneffect lightPotioneffect) {
-        this.potioneffectList.put(lightPotioneffect.getType(), lightPotioneffect);
+    public void setPotionEffect(PotionEffectMeta lightPotioneffect) {
+        this.potioneffectList.put(lightPotioneffect.getTypeId(), lightPotioneffect);
     }
 
     @Override
@@ -84,15 +84,15 @@ class SpawnItem implements BoostItem {
     }
 
     @Override
-    public LightPotioneffect getPotionEffect(PotionEffectType type) {
+    public PotionEffectMeta getPotionEffect(PotionEffectType type) {
         if (this.potioneffectList.containsKey(type.getId()))
             return this.potioneffectList.get(type.getId());
         return null;
     }
 
     @Override
-    public LightPotioneffect[] getPotionEffects() {
-        return this.potioneffectList.values().toArray(new LightPotioneffect[this.potioneffectList.size()]);
+    public PotionEffectMeta[] getPotionEffects() {
+        return this.potioneffectList.values().toArray(new PotionEffectMeta[this.potioneffectList.size()]);
     }
 
     @Override

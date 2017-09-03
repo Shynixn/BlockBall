@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.entities.items;
 
-import com.github.shynixn.blockball.lib.LightPotioneffect;
+import com.github.shynixn.blockball.api.persistence.entity.PotionEffectMeta;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -9,13 +9,13 @@ import org.bukkit.potion.PotionEffectType;
 import java.io.Serializable;
 
 public interface BoostItem extends Serializable, ConfigurationSerializable {
-    LightPotioneffect[] getPotionEffects();
+    PotionEffectMeta[] getPotionEffects();
 
-    void setPotionEffect(LightPotioneffect potionEffect);
+    void setPotionEffect(PotionEffectMeta potionEffect);
 
     void removePotionEffect(PotionEffectType type);
 
-    LightPotioneffect getPotionEffect(PotionEffectType type);
+    PotionEffectMeta getPotionEffect(PotionEffectType type);
 
     String getDisplayName();
 
