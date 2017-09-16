@@ -7,7 +7,8 @@
 </head>
 <body>
 <nav class="lighten-1 green" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="unfinished_index.html" class="brand-logo">BlockBall</a>
+    <div class="nav-wrapper container"><a id="logo-container" href="unfinished_index.html"
+                                          class="brand-logo">BlockBall</a>
         <ul class="right hide-on-med-and-down">
             <li><a href="unfinished_index.html">Home</a></li>
             <li><a href="#" onclick="loadHTML('quick-start.html')">Quick Start</a></li>
@@ -17,11 +18,9 @@
     </div>
 </nav>
 
-
 <div id="page-content">
     <h1 align="center">This page is still under construction!</h1>
 </div>
-
 
 <footer class="page-footer green">
     <div class="container">
@@ -78,15 +77,17 @@
             $('.parallax').parallax();
         })
     })(jQuery);
-
     function loadHTMLinto(fileName, targetId) {
         $("#" + targetId).load(fileName);
     }
-
+    function loadHTMLAndMoveToId(fileName, targetId) {
+        $("#page-content").load(fileName);
+        window.location.hash = '#' + targetId;
+    }
     function loadHTML(fileName) {
         $("#page-content").load(fileName);
     }
-    loadHTML("overview.html");
+    loadHTML("pages/troubleshooting.html");
 </script>
 
 </body>
