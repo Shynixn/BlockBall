@@ -8,14 +8,24 @@
                     </div>
                     <p class="caption"><a href="#cust-section-joinglobalcommand">1. Join a game by the global join command</a></p>
                     <p class="caption"><a href="#cust-section-joinforcefieldcommand">1. Join a game by the forcefield command</a></p>
+                    <p class="caption"><a href="#cust-section-joinautomatically">1. Join automatically without typing anything</a></p>
+                    <p class="caption"><a href="#cust-section-joinsignhubcommand">2. Join via signs [Hubgame]</a></p>
                     <p class="caption"><a href="#cust-section-dynamiccommands">2. Change the name of a command</a></p>
                 </div>
-                <div class="row col s12" id="cust-section-joinglobalcommand">
+
+                <div class="row col s12" id="cust-section-joinsignhubcommand">
+
+                </div>
+                <div class="row col s12" id="cust-section-joinautomatically">
+
+                </div>
+               <div class="row col s12" id="cust-section-joinglobalcommand">
 
                 </div>
                 <div class="row col s12" id="cust-section-joinforcefieldcommand">
 
                 </div>
+
                 <div class="row col s12" id="cust-section-dynamiccommands">
 
                 </div>
@@ -24,6 +34,10 @@
     </div>
 </div>
 <script>
+
+
+    loadHTMLinto("descriptions/cust-joinsignshubgame.html", "cust-section-joinsignhubcommand");
+    loadHTMLinto("descriptions/cust-joinautomatically.html", "cust-section-joinautomatically");
     loadHTMLinto("descriptions/cust-joinviaforcefieldcommand.html", "cust-section-joinforcefieldcommand");
     loadHTMLinto("descriptions/cust-dynamiccommands.html", "cust-section-dynamiccommands");
     loadHTMLinto("descriptions/cust-joinviaglobalcommand.html", "cust-section-joinglobalcommand");
