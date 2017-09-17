@@ -1,0 +1,73 @@
+<h5>Scoreboard for goals</h5>
+
+<p>After this setup your players will obtain a scoreboard during a game where they can find the time left and amount of goals each team has scored.</p>
+
+<div class="row">
+    <div class="col s12 m8">
+        <div class="card">
+            <div class="card-image">
+                <img src="images/scoreboard_1.JPG">
+            </div>
+            <div class="card-content">
+                <ul class="collection">
+                    <li class="collection-item">1. Open your arena menu</li>
+                    <li class="collection-item">2. Move to <b>/Settings/Annoucements/Set scoreboard</b></li>
+                    <li class="collection-item">3. Use <b>Toggle scoreboard</b> to enable the scoreboard for your game</li>
+                    <li class="collection-item">4. [Optional] Change the title by using <b>Set title</b> and entering a custom title</li>
+                    <li class="collection-item">5. [Optional] To change a specific line use <b>Edit lines/Select line</b> and enter the number of the line you want to edit
+                        <p>Use <b>Set Text</b> and enter your wanted text. The following placeholders are available:</p>
+                        <ul>
+                            <li><b>:countdown</b> - Time left</li>
+                            <li><b>:red</b> - Name of teamred</li>
+                            <li><b>:blue</b> - Name of teamblue</li>
+                            <li><b>:redcolor</b> - Color of teamred</li>
+                            <li><b>:bluecolor</b> - Color of teamblue</li>
+                            <li><b>:redscore</b> - Score of teamred</li>
+                            <li><b>:bluescore</b> - Score of teamblue</li>
+                        </ul>
+
+                    </li>
+                    <li class="collection-item">6. Save your arena <b>/Save arena</b>
+                    <li class="collection-item">7. Join the game and check if the scoreboard pops up
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<h5>Scoreboard for stats</h5>
+
+<p>After this setup your players will obtain a scoreboard when the join the server which displays certain stats.</p>
+
+<div class="row">
+    <div class="col s12 m8">
+        <div class="card">
+            <div class="card-image">
+                <img src="images/scoreboard_2.JPG">
+            </div>
+            <div class="card-content">
+                <ul class="collection">
+                    <li class="collection-item">1. Open the BlockBall config.yml</li>
+                    <li class="collection-item">2. Move to <b>stats-scoreboard</b></li>
+                    <li class="collection-item">3. Set <b>enabled to true</b> and modify the other settings if necessary
+                        <p>
+                            The following placeholders are available:</p>
+                        <ul>
+                            <li><b>&ltplayer&gt</b> - Name of the player</li>
+                            <li><b>&ltwinrate&gt</b> - Winrate of the player</li>
+                            <li><b>&ltplayedgames&gt</b> - Amount of played games</li>
+                            <li><b>&ltgoalspergame&gt</b> - Amount of goals per game</li>
+                        </ul>
+                    </li>
+                    <li class="collection-item">3. Restart your server. This setting <b>cannot</b> be applied via the
+                                                blockballreload command
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>
+
