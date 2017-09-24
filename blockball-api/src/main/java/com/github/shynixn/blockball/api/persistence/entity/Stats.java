@@ -85,18 +85,4 @@ public interface Stats extends Persistenceable<Stats> {
      * @return player
      */
     int getAmountOfGoals();
-
-    /**
-     * Returns the playerId
-     *
-     * @return playerId
-     */
-    long getPlayerId();
-
-    /**
-     * Sets the playerId
-     *
-     * @param id id
-     */
-    void setPlayerId(long id);
 }

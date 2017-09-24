@@ -1,13 +1,11 @@
 package com.github.shynixn.blockball.business.logic.ball;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import com.github.shynixn.blockball.api.business.controller.BallController;
 import com.github.shynixn.blockball.api.entities.Ball;
-import com.github.shynixn.blockball.api.persistence.controller.IController;
 import com.github.shynixn.blockball.business.bukkit.nms.NMSRegistry;
 import org.bukkit.World;
 

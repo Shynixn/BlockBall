@@ -1,13 +1,8 @@
-package com.github.shynixn.blockball.api.events;
+package com.github.shynixn.blockball.api.bukkit.event;
 
 import com.github.shynixn.blockball.api.entities.Game;
 import com.github.shynixn.blockball.lib.SEvent;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Copyright 2017 Shynixn
@@ -38,22 +33,38 @@ import java.util.List;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class GameWinEvent extends SEvent {
+public class GameJoinEvent extends SEvent{
 
-    private final List<Player> winningTeam = new ArrayList<>();
     private final Game game;
+    private final Player player;
 
-    public GameWinEvent(Collection<Player> winningTeam, Game game) {
+    /**
+     * Initializes the gameJoinEvent
+     *
+     * @param game    game
+     * @param player player
+     */
+    public GameJoinEvent(Game game, Player player) {
         super();
-        this.winningTeam.addAll(winningTeam);
         this.game = game;
+        this.player = player;
     }
 
-    public List<Player> getWinningTeam() {
-        return Collections.unmodifiableList(this.winningTeam);
-    }
-
+    /**
+     * Returns the game
+     *
+     * @return game
+     */
     public Game getGame() {
         return this.game;
+    }
+
+    /**
+     * Returns the joined player
+     *
+     * @return player
+     */
+    public Player getPlayer() {
+        return this.player;
     }
 }

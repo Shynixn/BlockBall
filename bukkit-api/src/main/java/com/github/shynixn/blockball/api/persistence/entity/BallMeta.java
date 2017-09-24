@@ -29,7 +29,7 @@ package com.github.shynixn.blockball.api.persistence.entity;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BallMeta extends com.github.shynixn.blockball.api.entities.BallMeta, Persistenceable<BallMeta> {
+public interface BallMeta extends BallMeta, Persistenceable<BallMeta> {
 
     /**
      * Sets if the ball rotation is enabled

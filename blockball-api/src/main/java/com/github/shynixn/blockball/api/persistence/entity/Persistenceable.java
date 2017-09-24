@@ -1,8 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity;
 
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-
-public interface Persistenceable<T> extends ConfigurationSerializable{
+public interface Persistenceable<T> {
 
     /**
      * Returns the id of the object

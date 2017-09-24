@@ -4,7 +4,6 @@ import com.github.shynixn.blockball.api.entities.Arena;
 import com.github.shynixn.blockball.api.entities.Game;
 import com.github.shynixn.blockball.api.entities.GameType;
 import com.github.shynixn.blockball.api.entities.Team;
-import com.github.shynixn.blockball.api.events.*;
 import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaController;
 import com.github.shynixn.blockball.api.persistence.controller.StatsController;
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;

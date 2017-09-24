@@ -35,6 +35,8 @@
         <module>bukkit-api</module>
         <module>bukkit-lib</module>
         <module>bukkit-plugin</module>
+        <module>blockball-api</module>
+        <module>blockball-bukkit-api</module>
     </modules>
 
     <build>

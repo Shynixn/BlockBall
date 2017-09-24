@@ -1,9 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity;
 
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
 import java.util.Collection;
 
 /**
@@ -41,22 +37,7 @@ public interface PotionEffectMeta extends Persistenceable<PotionEffectMeta> {
      *
      * @param entities entities
      */
-    void apply(Collection<LivingEntity> entities);
-
-    /**
-     * Applies the potioneffect to living entities
-     *
-     * @param entities entities
-     */
-    void apply(LivingEntity... entities);
-
-    /**
-     * Sets the type of the potioneffect
-     *
-     * @param type type
-     * @return builder
-     */
-    PotionEffectMeta setType(PotionEffectType type);
+    void apply(Collection<Object> entities);
 
     /**
      * Sets the type of the potioneffect
@@ -122,13 +103,6 @@ public interface PotionEffectMeta extends Persistenceable<PotionEffectMeta> {
     int getTypeId();
 
     /**
-     * Returns the type of the potioneffect
-     *
-     * @return type
-     */
-    PotionEffectType getType();
-
-    /**
      * Returns the duration of the potioneffect
      *
      * @return duration
@@ -162,11 +136,4 @@ public interface PotionEffectMeta extends Persistenceable<PotionEffectMeta> {
      * @return particle
      */
     boolean isParticleVisible();
-
-    /**
-     * Converts the builder to a bukkitPotionEffect
-     *
-     * @return bukkitPotionEffect
-     */
-    PotionEffect build();
 }
