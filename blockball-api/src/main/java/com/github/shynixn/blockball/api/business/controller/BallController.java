@@ -1,8 +1,8 @@
-package com.github.shynixn.blockball.business.logic.game;
+package com.github.shynixn.blockball.api.business.controller;
 
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.lib.SimpleScoreboard;
-import org.bukkit.scoreboard.DisplaySlot;
+import com.github.shynixn.blockball.api.business.entity.Ball;
+import com.github.shynixn.blockball.api.persistence.controller.IController;
+import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 
 /**
  * Copyright 2017 Shynixn
@@ -33,28 +33,14 @@ import org.bukkit.scoreboard.DisplaySlot;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameScoreboard extends SimpleScoreboard {
+public interface BallController extends IController<Ball> {
 
     /**
-     * Initializes a fresh new Scoreboard
-     */
-    GameScoreboard(Arena arena) {
-        super();
-        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE);
-        this.setDefaultTitle(arena.getTeamMeta().getScoreboardTitle());
-        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR);
-    }
-
-    /**
-     * Updates the scoreboard for all added players
+     * Creates a new ball at the given location and meta
      *
-     * @param gameEntity gameEntity
+     * @param location location
+     * @param ballMeta metaData
+     * @return ball
      */
-    void update(GameEntity gameEntity) {
-        final String[] lines = gameEntity.getArena().getTeamMeta().getScoreboardLines();
-        for (int i = 0, j = lines.length; i < lines.length; i++, j--) {
-            final String line = lines[i];
-            this.setDefaultLine(j, gameEntity.decryptText(line));
-        }
-    }
+    Ball create(Object location, BallMeta ballMeta);
 }

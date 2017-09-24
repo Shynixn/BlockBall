@@ -1,8 +1,6 @@
-package com.github.shynixn.blockball.business.logic.game;
+package com.github.shynixn.blockball.api.business.enumeration;
 
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.lib.SimpleScoreboard;
-import org.bukkit.scoreboard.DisplaySlot;
+import java.util.Optional;
 
 /**
  * Copyright 2017 Shynixn
@@ -33,28 +31,54 @@ import org.bukkit.scoreboard.DisplaySlot;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameScoreboard extends SimpleScoreboard {
+public enum Spawnrate {
+    NONE(0, 0),
+    LITTLE(20, 2),
+    MEDIUM(40, 4),
+    HIGH(60, 6),
+    HIGHEST(80, 10);
+
+    private final int spawnChance;
+    private final int maxAmount;
 
     /**
-     * Initializes a fresh new Scoreboard
+     * Initializes a new spawnRate
+     *
+     * @param spawnChance spawnRate
+     * @param maxAmount   maxAmount
      */
-    GameScoreboard(Arena arena) {
-        super();
-        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE);
-        this.setDefaultTitle(arena.getTeamMeta().getScoreboardTitle());
-        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR);
+    Spawnrate(int spawnChance, int maxAmount) {
+        this.spawnChance = spawnChance;
+        this.maxAmount = maxAmount;
     }
 
     /**
-     * Updates the scoreboard for all added players
+     * Returns the chance in percent if a item can spawn every second
      *
-     * @param gameEntity gameEntity
+     * @return percent
      */
-    void update(GameEntity gameEntity) {
-        final String[] lines = gameEntity.getArena().getTeamMeta().getScoreboardLines();
-        for (int i = 0, j = lines.length; i < lines.length; i++, j--) {
-            final String line = lines[i];
-            this.setDefaultLine(j, gameEntity.decryptText(line));
+    public int getSpawnChance() {
+        return this.spawnChance;
+    }
+
+    /**
+     * Returns the max amount of items which can be spawned at once
+     * @return
+     */
+    public int getMaxAmount() {
+        return this.maxAmount;
+    }
+
+    /**
+     * Returns the spawnRate from the given name if present
+     * @param name name
+     * @return spawnRate
+     */
+    public static Optional<Spawnrate> getSpawnrateFromName(String name) {
+        for (final Spawnrate type : Spawnrate.values()) {
+            if (type.name().equalsIgnoreCase(name))
+                return Optional.of(type);
         }
+        return Optional.empty();
     }
 }

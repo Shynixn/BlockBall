@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.business.logic.arena;
 
-import com.github.shynixn.blockball.api.BlockBallApi;
+import com.github.shynixn.blockball.lib.BlockBallApi;
 import com.github.shynixn.blockball.business.Config;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.lib.SCommandExecutor;

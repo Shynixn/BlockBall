@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity;
 
-public interface BallMeta {
+public interface BallMeta extends Persistenceable<BallMeta>{
 
     /**
      * Returns the sound played when the ball gets hit
@@ -8,6 +8,13 @@ public interface BallMeta {
      * @return meta
      */
     SoundMeta getGenericHitSound();
+
+    /**
+     * Returns the sound played when the ball spawns
+     *
+     * @return meta
+     */
+    SoundMeta getSpawnSound();
 
     /**
      * Returns the horizontal strength the ball is going to fly

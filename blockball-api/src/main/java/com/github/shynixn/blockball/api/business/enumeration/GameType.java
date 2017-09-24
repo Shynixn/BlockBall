@@ -1,8 +1,6 @@
-package com.github.shynixn.blockball.business.logic.game;
+package com.github.shynixn.blockball.api.business.enumeration;
 
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.lib.SimpleScoreboard;
-import org.bukkit.scoreboard.DisplaySlot;
+import java.util.Optional;
 
 /**
  * Copyright 2017 Shynixn
@@ -33,28 +31,23 @@ import org.bukkit.scoreboard.DisplaySlot;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameScoreboard extends SimpleScoreboard {
+public enum GameType {
+    LOBBY,
+    MINIGAME,
+    BUNGEE,
+    EVENT;
 
     /**
-     * Initializes a fresh new Scoreboard
-     */
-    GameScoreboard(Arena arena) {
-        super();
-        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE);
-        this.setDefaultTitle(arena.getTeamMeta().getScoreboardTitle());
-        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR);
-    }
-
-    /**
-     * Updates the scoreboard for all added players
+     * Returns the gameType from the given name if present
      *
-     * @param gameEntity gameEntity
+     * @param name name
+     * @return gameType
      */
-    void update(GameEntity gameEntity) {
-        final String[] lines = gameEntity.getArena().getTeamMeta().getScoreboardLines();
-        for (int i = 0, j = lines.length; i < lines.length; i++, j--) {
-            final String line = lines[i];
-            this.setDefaultLine(j, gameEntity.decryptText(line));
+    public static Optional<GameType> getGameTypeFromName(String name) {
+        for (final GameType gameType : GameType.values()) {
+            if (gameType.name().equalsIgnoreCase(name))
+                return Optional.of(gameType);
         }
+        return Optional.empty();
     }
 }

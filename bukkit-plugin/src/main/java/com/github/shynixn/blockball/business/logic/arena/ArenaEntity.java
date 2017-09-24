@@ -2,8 +2,6 @@ package com.github.shynixn.blockball.business.logic.arena;
 
 import com.github.shynixn.blockball.api.entities.*;
 import com.github.shynixn.blockball.api.entities.items.BoostItemHandler;
-import com.github.shynixn.blockball.api.persistence.entity.*;
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.business.logic.items.ItemSpawner;
 import com.github.shynixn.blockball.lib.SLocation;

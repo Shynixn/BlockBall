@@ -1,8 +1,9 @@
-package com.github.shynixn.blockball.business.logic.game;
+package com.github.shynixn.blockball.api.business.controller;
 
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.lib.SimpleScoreboard;
-import org.bukkit.scoreboard.DisplaySlot;
+import com.github.shynixn.blockball.api.business.entity.Game;
+import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
+import com.github.shynixn.blockball.api.persistence.controller.IController;
+import com.github.shynixn.blockball.api.persistence.controller.IFileController;
 
 /**
  * Copyright 2017 Shynixn
@@ -33,28 +34,12 @@ import org.bukkit.scoreboard.DisplaySlot;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameScoreboard extends SimpleScoreboard {
+public interface GameController extends IFileController<Game> {
 
     /**
-     * Initializes a fresh new Scoreboard
-     */
-    GameScoreboard(Arena arena) {
-        super();
-        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE);
-        this.setDefaultTitle(arena.getTeamMeta().getScoreboardTitle());
-        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR);
-    }
-
-    /**
-     * Updates the scoreboard for all added players
+     * Returns the controller of the arenas
      *
-     * @param gameEntity gameEntity
+     * @return controller
      */
-    void update(GameEntity gameEntity) {
-        final String[] lines = gameEntity.getArena().getTeamMeta().getScoreboardLines();
-        for (int i = 0, j = lines.length; i < lines.length; i++, j--) {
-            final String line = lines[i];
-            this.setDefaultLine(j, gameEntity.decryptText(line));
-        }
-    }
+    ArenaController getArenaController();
 }

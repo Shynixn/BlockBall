@@ -1,8 +1,6 @@
-package com.github.shynixn.blockball.business.logic.game;
+package com.github.shynixn.blockball.api.persistence.entity;
 
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.lib.SimpleScoreboard;
-import org.bukkit.scoreboard.DisplaySlot;
+import java.util.Optional;
 
 /**
  * Copyright 2017 Shynixn
@@ -33,28 +31,61 @@ import org.bukkit.scoreboard.DisplaySlot;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameScoreboard extends SimpleScoreboard {
+public interface EventMeta {
 
     /**
-     * Initializes a fresh new Scoreboard
-     */
-    GameScoreboard(Arena arena) {
-        super();
-        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE);
-        this.setDefaultTitle(arena.getTeamMeta().getScoreboardTitle());
-        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR);
-    }
-
-    /**
-     * Updates the scoreboard for all added players
+     * Adds the name of a player for the redTeam
      *
-     * @param gameEntity gameEntity
+     * @param name name
      */
-    void update(GameEntity gameEntity) {
-        final String[] lines = gameEntity.getArena().getTeamMeta().getScoreboardLines();
-        for (int i = 0, j = lines.length; i < lines.length; i++, j--) {
-            final String line = lines[i];
-            this.setDefaultLine(j, gameEntity.decryptText(line));
-        }
-    }
+    void addRedName(String name);
+
+    /**
+     * Removes the name of a player of the redTeam
+     *
+     * @param name name
+     */
+    void removeRedName(String name);
+
+    /**
+     * Returns all names of the redPlayers
+     *
+     * @return names
+     */
+    String[] getRedPlayerNames();
+
+    /**
+     * Adds the name of a player for the blueTeam
+     *
+     * @param name name
+     */
+    void addBlueName(String name);
+
+    /**
+     * Removes the name of a player of the blueTeam
+     *
+     * @param name name
+     */
+    void removeBlueName(String name);
+
+    /**
+     * Returns all names of the bluePlayers
+     *
+     * @return names
+     */
+    String[] getBluePlayerNames();
+
+    /**
+     * Returns the name of the referee if present
+     *
+     * @return referee
+     */
+    Optional<String> getRefereeName();
+
+    /**
+     * Sets the name of the referee
+     *
+     * @param name name
+     */
+    void setRefereeName(String name);
 }

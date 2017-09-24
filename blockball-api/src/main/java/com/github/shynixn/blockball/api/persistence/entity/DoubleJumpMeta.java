@@ -1,8 +1,4 @@
-package com.github.shynixn.blockball.business.logic.game;
-
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.lib.SimpleScoreboard;
-import org.bukkit.scoreboard.DisplaySlot;
+package com.github.shynixn.blockball.api.persistence.entity;
 
 /**
  * Copyright 2017 Shynixn
@@ -33,28 +29,61 @@ import org.bukkit.scoreboard.DisplaySlot;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameScoreboard extends SimpleScoreboard {
+public interface DoubleJumpMeta {
 
     /**
-     * Initializes a fresh new Scoreboard
-     */
-    GameScoreboard(Arena arena) {
-        super();
-        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE);
-        this.setDefaultTitle(arena.getTeamMeta().getScoreboardTitle());
-        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR);
-    }
-
-    /**
-     * Updates the scoreboard for all added players
+     * Enables the double jump
      *
-     * @param gameEntity gameEntity
+     * @param enabled enabled
      */
-    void update(GameEntity gameEntity) {
-        final String[] lines = gameEntity.getArena().getTeamMeta().getScoreboardLines();
-        for (int i = 0, j = lines.length; i < lines.length; i++, j--) {
-            final String line = lines[i];
-            this.setDefaultLine(j, gameEntity.decryptText(line));
-        }
-    }
+    void setEnabled(boolean enabled);
+
+    /**
+     * Checks if the double jump is enabled
+     *
+     * @return enabled
+     */
+    boolean isEnabled();
+
+    /**
+     * Sets the horizontal strength of the double jump
+     *
+     * @param strength strength
+     */
+    void setHorizontalStrength(double strength);
+
+    /**
+     * Returns the horizontal strength of the double jump
+     *
+     * @return strength
+     */
+    double getHorizontalStrength();
+
+    /**
+     * Sets the vertical strength of the double jump
+     *
+     * @param strength strength
+     */
+    void setVerticalStrength(double strength);
+
+    /**
+     * Returns the vertical strength of the double jump
+     *
+     * @return strength
+     */
+    double getVerticalStrength();
+
+    /**
+     * Returns the particleEffect of the double jump
+     *
+     * @return particleEffect
+     */
+    ParticleEffectMeta getParticleEffect();
+
+    /**
+     * Returns the soundEffect of the double jump
+     *
+     * @return soundEffect
+     */
+    SoundMeta getSoundEffect();
 }

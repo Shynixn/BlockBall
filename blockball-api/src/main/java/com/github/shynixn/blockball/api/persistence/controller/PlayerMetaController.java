@@ -1,8 +1,8 @@
-package com.github.shynixn.blockball.business.logic.game;
+package com.github.shynixn.blockball.api.persistence.controller;
 
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.lib.SimpleScoreboard;
-import org.bukkit.scoreboard.DisplaySlot;
+import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
+
+import java.util.UUID;
 
 /**
  * Copyright 2017 Shynixn
@@ -33,28 +33,19 @@ import org.bukkit.scoreboard.DisplaySlot;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameScoreboard extends SimpleScoreboard {
+public interface PlayerMetaController extends IDatabaseController<PlayerMeta> {
 
     /**
-     * Initializes a fresh new Scoreboard
+     * Creates a new playerData from the given player
+     * @param player player
+     * @return playerData
      */
-    GameScoreboard(Arena arena) {
-        super();
-        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE);
-        this.setDefaultTitle(arena.getTeamMeta().getScoreboardTitle());
-        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR);
-    }
+    PlayerMeta create(Object player);
 
     /**
-     * Updates the scoreboard for all added players
-     *
-     * @param gameEntity gameEntity
+     * Returns the playerMeta of the given uuid
+     * @param uuid uuid
+     * @return playerMeta
      */
-    void update(GameEntity gameEntity) {
-        final String[] lines = gameEntity.getArena().getTeamMeta().getScoreboardLines();
-        for (int i = 0, j = lines.length; i < lines.length; i++, j--) {
-            final String line = lines[i];
-            this.setDefaultLine(j, gameEntity.decryptText(line));
-        }
-    }
+    PlayerMeta getByUUID(UUID uuid);
 }

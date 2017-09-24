@@ -1,8 +1,7 @@
-package com.github.shynixn.blockball.business.logic.game;
+package com.github.shynixn.blockball.api.bukkit.event.ball;
 
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.lib.SimpleScoreboard;
-import org.bukkit.scoreboard.DisplaySlot;
+import com.github.shynixn.blockball.api.bukkit.event.BlockBallCancelAbleEvent;
+import com.github.shynixn.blockball.api.business.entity.Ball;
 
 /**
  * Copyright 2017 Shynixn
@@ -33,28 +32,26 @@ import org.bukkit.scoreboard.DisplaySlot;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameScoreboard extends SimpleScoreboard {
+public class BallEvent extends BlockBallCancelAbleEvent {
+
+    private final Ball ball;
 
     /**
-     * Initializes a fresh new Scoreboard
+     * Initializes a new ball event
+     *
+     * @param ball ball
      */
-    GameScoreboard(Arena arena) {
+    public BallEvent(Ball ball) {
         super();
-        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE);
-        this.setDefaultTitle(arena.getTeamMeta().getScoreboardTitle());
-        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR);
+        this.ball = ball;
     }
 
     /**
-     * Updates the scoreboard for all added players
+     * Returns the ball of the event
      *
-     * @param gameEntity gameEntity
+     * @return ball
      */
-    void update(GameEntity gameEntity) {
-        final String[] lines = gameEntity.getArena().getTeamMeta().getScoreboardLines();
-        for (int i = 0, j = lines.length; i < lines.length; i++, j--) {
-            final String line = lines[i];
-            this.setDefaultLine(j, gameEntity.decryptText(line));
-        }
+    public Ball getBall() {
+        return this.ball;
     }
 }

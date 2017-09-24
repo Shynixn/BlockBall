@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.business.logic.game;
 
-import com.github.shynixn.blockball.api.BlockBallApi;
-import com.github.shynixn.blockball.api.entities.*;
+import com.github.shynixn.blockball.PlaceHolderType;
+import com.github.shynixn.blockball.lib.BlockBallApi;
 import com.github.shynixn.blockball.api.events.GameWinEvent;
 import com.github.shynixn.blockball.business.Language;
 import com.github.shynixn.blockball.business.bukkit.BlockBallPlugin;

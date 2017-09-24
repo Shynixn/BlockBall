@@ -1,8 +1,7 @@
-package com.github.shynixn.blockball.business.logic.game;
+package com.github.shynixn.blockball.api.bukkit.event.ball;
 
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.lib.SimpleScoreboard;
-import org.bukkit.scoreboard.DisplaySlot;
+import com.github.shynixn.blockball.api.business.entity.Ball;
+import org.bukkit.entity.Entity;
 
 /**
  * Copyright 2017 Shynixn
@@ -33,28 +32,27 @@ import org.bukkit.scoreboard.DisplaySlot;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameScoreboard extends SimpleScoreboard {
+public class BallInteractWithEntityEvent extends BallEvent {
+
+    private final Entity entity;
 
     /**
-     * Initializes a fresh new Scoreboard
+     * Initializes a new ball interact event
+     *
+     * @param ball   ball
+     * @param entity entity
      */
-    GameScoreboard(Arena arena) {
-        super();
-        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE);
-        this.setDefaultTitle(arena.getTeamMeta().getScoreboardTitle());
-        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR);
+    public BallInteractWithEntityEvent(Ball ball, Entity entity) {
+        super(ball);
+        this.entity = entity;
     }
 
     /**
-     * Updates the scoreboard for all added players
+     * Returns the entity being interacted with
      *
-     * @param gameEntity gameEntity
+     * @return entity
      */
-    void update(GameEntity gameEntity) {
-        final String[] lines = gameEntity.getArena().getTeamMeta().getScoreboardLines();
-        for (int i = 0, j = lines.length; i < lines.length; i++, j--) {
-            final String line = lines[i];
-            this.setDefaultLine(j, gameEntity.decryptText(line));
-        }
+    public Entity getEntity() {
+        return this.entity;
     }
 }

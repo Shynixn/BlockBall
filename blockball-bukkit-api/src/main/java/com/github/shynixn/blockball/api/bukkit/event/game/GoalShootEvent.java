@@ -1,8 +1,8 @@
-package com.github.shynixn.blockball.business.logic.game;
+package com.github.shynixn.blockball.api.bukkit.event.game;
 
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.lib.SimpleScoreboard;
-import org.bukkit.scoreboard.DisplaySlot;
+import com.github.shynixn.blockball.api.business.entity.Game;
+import com.github.shynixn.blockball.api.business.enumeration.Team;
+import org.bukkit.entity.Player;
 
 /**
  * Copyright 2017 Shynixn
@@ -33,28 +33,38 @@ import org.bukkit.scoreboard.DisplaySlot;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameScoreboard extends SimpleScoreboard {
+public class GoalShootEvent extends GameEvent {
+    private final Player player;
+    private final Team team;
 
     /**
-     * Initializes a fresh new Scoreboard
+     * Initializes  a new goalShootEvent
+     *
+     * @param game   game
+     * @param player player
+     * @param team   team
      */
-    GameScoreboard(Arena arena) {
-        super();
-        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE);
-        this.setDefaultTitle(arena.getTeamMeta().getScoreboardTitle());
-        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR);
+    public GoalShootEvent(Game game, Player player, Team team) {
+        super(game);
+        this.player = player;
+        this.team = team;
     }
 
     /**
-     * Updates the scoreboard for all added players
+     * Returns the player who scorred a goal
      *
-     * @param gameEntity gameEntity
+     * @return player
      */
-    void update(GameEntity gameEntity) {
-        final String[] lines = gameEntity.getArena().getTeamMeta().getScoreboardLines();
-        for (int i = 0, j = lines.length; i < lines.length; i++, j--) {
-            final String line = lines[i];
-            this.setDefaultLine(j, gameEntity.decryptText(line));
-        }
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    /**
+     * Returns the team of the player
+     *
+     * @return player
+     */
+    public Team getTeam() {
+        return this.team;
     }
 }

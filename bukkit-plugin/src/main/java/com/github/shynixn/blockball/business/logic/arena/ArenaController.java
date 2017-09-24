@@ -6,7 +6,6 @@ import com.github.shynixn.blockball.business.logic.game.GameController;
 import com.github.shynixn.blockball.business.logic.persistence.Factory;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.business.bukkit.dependencies.placeholderapi;
 
-import com.github.shynixn.blockball.api.entities.PlaceHolderType;
+import com.github.shynixn.blockball.PlaceHolderType;
 import com.github.shynixn.blockball.api.events.PlaceHolderRequestEvent;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 import org.bukkit.Bukkit;
