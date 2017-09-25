@@ -2,6 +2,8 @@ package com.github.shynixn.blockball.api.persistence.controller;
 
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 
+import java.util.Optional;
+
 /**
  * Copyright 2017 Shynixn
  * <p>
@@ -32,4 +34,19 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena;
  * SOFTWARE.
  */
 public interface ArenaController extends IFileController<Arena> {
+
+    /**
+     * Creates a new arena with a unique id of this instance
+     *
+     * @return id
+     */
+    Arena create();
+
+    /**
+     * Returns the arena by the given id if present
+     *
+     * @param id id
+     * @return arena
+     */
+    Optional<Arena> getById(String id);
 }

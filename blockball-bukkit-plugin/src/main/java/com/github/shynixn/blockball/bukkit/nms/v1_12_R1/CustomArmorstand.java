@@ -5,7 +5,7 @@ import com.github.shynixn.blockball.api.events.BallDeathEvent;
 import com.github.shynixn.blockball.api.events.BallInteractEvent;
 import com.github.shynixn.blockball.api.events.BallKickEvent;
 import com.github.shynixn.blockball.api.events.BallMoveEvent;
-import com.github.shynixn.blockball.bukkit.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.lib.SSKulls;

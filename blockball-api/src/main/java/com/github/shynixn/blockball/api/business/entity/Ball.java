@@ -44,6 +44,13 @@ public interface Ball {
     void spawn(Object location);
 
     /**
+     * Damages the ball entity with the given amount
+     *
+     * @param amount amount
+     */
+    void damage(double amount);
+
+    /**
      * Removes the entity
      */
     void remove();

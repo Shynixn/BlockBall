@@ -93,10 +93,10 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
      * @return stats
      */
     @Override
-    public Stats getByPlayer(Player player) {
+    public Stats getByPlayer(Object player) {
         try (Connection connection = this.dbContext.getConnection()) {
             try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("stats/selectbyplayer", connection,
-                    player.getUniqueId().toString())) {
+                    ((Player)player).getUniqueId().toString())) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
                         return this.from(resultSet);
@@ -203,7 +203,7 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
     protected void insert(Stats item) {
         try (Connection connection = this.dbContext.getConnection()) {
             final long id = this.dbContext.executeStoredInsert("stats/insert", connection,
-                    item.getPlayerId(),
+                    ((StatsData)item).getPlayerId(),
                     item.getAmountOfWins(),
                     item.getAmountOfGamesPlayed(),
                     item.getAmountOfGoals());

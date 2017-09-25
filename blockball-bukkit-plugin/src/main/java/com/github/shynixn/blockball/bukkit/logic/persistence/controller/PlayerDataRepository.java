@@ -16,9 +16,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
-/**
- * Created by Shynixn
- */
 public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> implements PlayerMetaController {
 
     private ExtensionHikariConnectionContext dbContext;
@@ -36,8 +33,8 @@ public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> impleme
      * @return playerData
      */
     @Override
-    public PlayerMeta create(Player player) {
-        return PlayerData.from(player);
+    public PlayerMeta create(Object player) {
+        return PlayerData.from((Player) player);
     }
 
     /**

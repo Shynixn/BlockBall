@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.nms;
 
-import com.github.shynixn.blockball.api.entities.Ball;
+import com.github.shynixn.blockball.api.business.entity.Ball;
+import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.dependencies.bossbar.BossBarConnection;
 import com.github.shynixn.blockball.bukkit.dependencies.placeholderapi.PlaceHolderApiConnection;
@@ -8,15 +9,12 @@ import com.github.shynixn.blockball.bukkit.dependencies.vault.VaultConnection;
 import com.github.shynixn.blockball.bukkit.dependencies.worldguard.WorldGuardConnection5;
 import com.github.shynixn.blockball.bukkit.dependencies.worldguard.WorldGuardConnection6;
 import com.github.shynixn.blockball.lib.LightRegistry;
-import com.github.shynixn.blockball.lib.ReflectionLib;
 import com.github.shynixn.blockball.lib.RegisterHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -26,7 +24,7 @@ public final class NMSRegistry {
         super();
     }
 
-    public static Ball createBall(World world) {
+    public static Ball createBall(Location location, BallMeta meta) {
         return (Ball) ReflectionLib.invokeConstructor(ReflectionLib.getClassFromName("com.github.shynixn.blockball.business.bukkit.nms.VERSION.CustomArmorstand"), world, true);
     }
 

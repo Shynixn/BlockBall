@@ -4,7 +4,7 @@ import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaControl
 import com.github.shynixn.blockball.api.persistence.controller.StatsController;
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
-import com.github.shynixn.blockball.bukkit.logic.persistence.Factory;
+import com.github.shynixn.blockball.bukkit.logic.Factory;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -5,7 +5,7 @@ import java.util.logging.Level;
 
 import com.github.shynixn.blockball.api.events.BallDeathEvent;
 import com.github.shynixn.blockball.api.events.BallInteractEvent;
-import com.github.shynixn.blockball.bukkit.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.lib.SSKulls;
 import net.minecraft.server.v1_8_R1.*;

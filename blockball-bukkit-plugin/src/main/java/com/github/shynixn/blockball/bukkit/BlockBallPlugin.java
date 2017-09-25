@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.bukkit;
 
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import com.github.shynixn.blockball.lib.BlockBallApi;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.bukkit.nms.VersionSupport;
