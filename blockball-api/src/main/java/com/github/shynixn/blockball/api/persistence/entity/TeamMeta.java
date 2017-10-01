@@ -12,7 +12,7 @@ public interface TeamMeta {
     void setForceEvenTeams(boolean enabled);
 
     /**
-     * Returns if even teams on both sides is enabled. Red and blue team amount has to be the same to start
+     * Returns if even teams on both sides is enabled. Red and blue team amount has to be the same to start.
      *
      * @return enabled
      */
