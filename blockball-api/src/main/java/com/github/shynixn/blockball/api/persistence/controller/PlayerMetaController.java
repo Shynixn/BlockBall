@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.api.persistence.controller;
 
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -47,5 +48,5 @@ public interface PlayerMetaController extends IDatabaseController<PlayerMeta> {
      * @param uuid uuid
      * @return playerMeta
      */
-    PlayerMeta getByUUID(UUID uuid);
+    Optional<PlayerMeta> getByUUID(UUID uuid);
 }

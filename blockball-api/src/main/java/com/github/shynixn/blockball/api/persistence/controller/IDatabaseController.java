@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.controller;
 
+import java.util.Optional;
+
 /**
  * Copyright 2017 Shynixn
  * <p>
@@ -36,5 +38,5 @@ public interface IDatabaseController<T> extends IController<T> {
      * @param id id
      * @return item
      */
-    T getById(long id);
+    Optional<T> getById(long id);
 }

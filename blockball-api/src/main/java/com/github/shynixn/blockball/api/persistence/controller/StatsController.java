@@ -2,6 +2,8 @@ package com.github.shynixn.blockball.api.persistence.controller;
 
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
 
+import java.util.Optional;
+
 /**
  * Copyright 2017 Shynixn
  * <p>
@@ -46,5 +48,5 @@ public interface StatsController extends IDatabaseController<Stats> {
      * @param player player
      * @return stats
      */
-    Stats getByPlayer(Object player);
+    Optional<Stats> getByPlayer(Object player);
 }
