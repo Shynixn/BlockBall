@@ -7,7 +7,6 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -436,7 +435,7 @@ public class SimpleHologram implements AutoCloseable {
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
      * SOFTWARE.
      */
-    public class HologramBuilder implements ConfigurationSerializable {
+    public class HologramBuilder implements ConfigurationSerializable, HologramMeta {
         private List<String> lines = new ArrayList<>();
         private boolean enabled;
         private Location location;
@@ -464,6 +463,7 @@ public class SimpleHologram implements AutoCloseable {
          * @param text text
          * @return line
          */
+        @Override
         public HologramBuilder addLine(String text) {
             if (text == null)
                 throw new IllegalArgumentException("Text cannot be null!");
@@ -477,6 +477,7 @@ public class SimpleHologram implements AutoCloseable {
          * @param position position
          * @return instance
          */
+        @Override
         public HologramBuilder removeLine(int position) {
             if (position >= this.lines.size() || position < 0)
                 return this;
@@ -490,6 +491,7 @@ public class SimpleHologram implements AutoCloseable {
          * @param text
          * @return instance
          */
+        @Override
         public HologramBuilder removeLine(String text) {
             if (text == null)
                 throw new IllegalArgumentException("Text cannot be null!");
@@ -504,6 +506,7 @@ public class SimpleHologram implements AutoCloseable {
          * @param text     text
          * @return instance
          */
+        @Override
         public HologramBuilder setLine(int position, String text) {
             if (text == null)
                 throw new IllegalArgumentException("Text cannot be null!");
@@ -517,6 +520,7 @@ public class SimpleHologram implements AutoCloseable {
          * @param position position
          * @return line
          */
+        @Override
         public Optional<String> getLine(int position) {
             if (position >= this.lines.size() || position < 0)
                 return Optional.empty();
@@ -528,6 +532,7 @@ public class SimpleHologram implements AutoCloseable {
          *
          * @return lines
          */
+        @Override
         public List<String> getLines() {
             return Collections.unmodifiableList(this.lines);
         }
@@ -537,6 +542,7 @@ public class SimpleHologram implements AutoCloseable {
          *
          * @return enabled
          */
+        @Override
         public boolean isEnabled() {
             return this.enabled;
         }
@@ -547,6 +553,7 @@ public class SimpleHologram implements AutoCloseable {
          * @param enabled enabled
          * @return instance
          */
+        @Override
         public HologramBuilder setEnabled(boolean enabled) {
             this.enabled = enabled;
             return this;
@@ -557,6 +564,7 @@ public class SimpleHologram implements AutoCloseable {
          *
          * @return location
          */
+        @Override
         public Optional<Object> getLocation() {
             if (this.location == null) {
                 return Optional.empty();
@@ -570,6 +578,7 @@ public class SimpleHologram implements AutoCloseable {
          * @param location location
          * @return instance
          */
+        @Override
         public HologramBuilder setLocation(Object location) {
             this.location = ((Location) location).clone();
             return this;

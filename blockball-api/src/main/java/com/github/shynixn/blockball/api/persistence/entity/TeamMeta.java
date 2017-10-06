@@ -2,254 +2,116 @@ package com.github.shynixn.blockball.api.persistence.entity;
 
 import java.util.Optional;
 
-public interface TeamMeta {
-
+public interface TeamMeta extends Persistenceable<TeamMeta> {
     /**
-     * Forces even teams on both sides. Red and blue team amount has to be the same
+     * Sets the spawnpoint of the team.
      *
-     * @param enabled enabled
+     * @param location location
      */
-    void setForceEvenTeams(boolean enabled);
+    void setSpawnPoint(Object location);
 
     /**
-     * Returns if even teams on both sides is enabled. Red and blue team amount has to be the same to start.
+     * Returns the spawnpoint of the team.
      *
-     * @return enabled
+     * @return location
      */
-    boolean isForceEvenTeamsEnabled();
+    Optional<Object> getSpawnPoint();
 
     /**
-     * Returns the walkingSpeed of the players
+     * Sets the title of the message getting played when a player scores a goal.
      *
-     * @return speed
+     * @param title title
      */
-    float getWalkingSpeed();
+    void setScoreMessageTitle(String title);
 
     /**
-     * Sets the amount of speed for the players
-     *
-     * @param amount amount
-     */
-    void setWalkingSpeed(float amount);
-
-    int getMaxScore();
-
-    void setMaxScore(int maxScore);
-
-    Optional<Object> getBlueSpawnPoint();
-
-    Optional<Object> getHologramLocation();
-
-    void setHologramLocation(Object location);
-
-    String getHologramText();
-
-    void setHologramText(String text);
-
-    void setHologramEnabled(boolean enabled);
-
-    boolean isHologramEnabled();
-
-    void setBlueSpawnPoint(Object blueSpawnPoint);
-
-    Optional<Object> getRedSpawnPoint();
-
-    void setRedSpawnPoint(Object redSpawnPoint);
-
-    boolean isFastJoin();
-
-    int getRewardGoals();
-
-    String getWinCommand();
-
-    void setWinCommand(String winCommand);
-
-    String getGamendCommand();
-
-    void setGamendCommand(String gamendCommand);
-
-    boolean isSpectatorMessagesEnabled();
-
-    void setSpecatorMessages(boolean enabled);
-
-    int getSpecatorradius();
-
-    void setSpecatorradius(int specatorradius);
-
-    void setRewardGoals(int rewardGoals);
-
-    int getRewardGames();
-
-    void setRewardGames(int rewardGames);
-
-    int getRewardWinning();
-
-    void setRewardWinning(int rewardWinning);
-
-    void setFastJoin(boolean enable);
-
-    String getRedtitleScoreMessage();
-
-    void setRedtitleScoreMessage(String redtitleScoreMessage);
-
-    String getRedsubtitleMessage();
-
-    void setRedsubtitleMessage(String redsubtitleMessage);
-
-    String getBluetitleScoreMessage();
-
-    void setBluetitleScoreMessage(String bluetitleScoreMessage);
-
-    String getBluesubtitleMessage();
-
-    void setBluesubtitleMessage(String bluesubtitleMessage);
-
-    String getRedwinnerTitleMessage();
-
-    void setRedwinnerTitleMessage(String redwinnerTitleMessage);
-
-    String getBluewinnerTitleMessage();
-
-    void setBluewinnerTitleMessage(String bluewinnerTitleMessage);
-
-    String getRedwinnerSubtitleMessage();
-
-    void setRedwinnerSubtitleMessage(String redwinnerSubtitleMessage);
-
-    String getBluewinnerSubtitleMessage();
-
-    void setBluewinnerSubtitleMessage(String bluewinnerSubtitleMessage);
-
-    void reset();
-
-    boolean isTeamAutoJoin();
-
-    void setTeamAutoJoin(boolean autoJoin);
-
-    String getTeamFullMessage();
-
-    void setTeamFullMessage(String teamFullMessage);
-
-    void resetArmor();
-
-    Optional<Object> getGameEndSpawnpoint();
-
-    void setGameEndSpawnpoint(Object location);
-
-    String getRedTeamName();
-
-    void setRedTeamName(String redTeamName);
-
-    String getBlueTeamName();
-
-    void setBlueTeamName(String blueTeamName);
-
-    int getTeamMaxSize();
-
-    void setTeamMaxSize(int teamMaxSize);
-
-    int getTeamMinSize();
-
-    void setTeamMinSize(int teamMinSize);
-
-    String getRedColor();
-
-    boolean isEmtptyReset();
-
-    void setEmptyReset(boolean enabled);
-
-    void setRedColor(String redColor);
-
-    String getBlueColor();
-
-    void setBlueColor(String blueColor);
-
-    Object[] getBlueItems();
-
-    boolean isDamageEnabled();
-
-    void setDamage(boolean enabled);
-
-    void setBlueItems(Object[] itemStacks);
-
-    Object[] getRedItems();
-
-    void setRedItems(Object[] redItems);
-
-    String getJoinMessage();
-
-    void setJoinMessage(String joinMessage);
-
-    String getLeaveMessage();
-
-    void setLeaveMessage(String leaveMessage);
-
-    void setHowToJoinMessage(String message);
-
-    String getHowToJoinMessage();
-
-    /**
-     * Returns the settings for the double jump
-     *
-     * @return doubleJumpMeta
-     */
-    DoubleJumpMeta getDoubleJumpMeta();
-
-    /**
-     * Sets the title of the scoreboard
-     *
-     * @param scoreboardTitle scoreboardTitle
-     */
-    void setScoreboardTitle(String scoreboardTitle);
-
-    /**
-     * Returns the title of the scoreboard
+     * Returns the title of the message getting played when a player scores a goal.
      *
      * @return title
      */
-    String getScoreboardTitle();
+    Optional<String> getScoreMessageTitle();
 
     /**
-     * Enables or disables the scoreboard
+     * Sets the subTitle of the message getting played when a player scores a goal
      *
-     * @param enabled scoreboard
+     * @param subtitle subtitle
      */
-    void setScoreboardEnabled(boolean enabled);
+    void setScoreMessageSubtitle(String subtitle);
 
     /**
-     * Returns if the scoreboard is enabled
+     * Returns the subTitle of the message getting played when a player scores a goal
      *
-     * @return enabled
+     * @return title
      */
-    boolean isScoreboardEnabled();
+    Optional<String> getScoreMessageSubtitle();
 
     /**
-     * Sets the lines of the scoreboard
+     * Sets the title of the message getting played when the team wins a match.
      *
-     * @param scoreboardLines scoreboardLines
+     * @param title title
      */
-    void setScoreboardLines(String[] scoreboardLines);
+    void setWinningMessageTitle(String title);
 
     /**
-     * Returns the lines of the scoreboard
+     * Returns the title of the message getting played when the team wins a match.
      *
-     * @return lines
+     * @return title
      */
-    String[] getScoreboardLines();
+    Optional<String> getWinningMessageTitle();
 
-    String getBossBarPluginMessage();
+    /**
+     * Sets the subTitle of the message getting played when the team wins a match.
+     *
+     * @param subtitle subtitle
+     */
+    void setWinningMessageSubtitle(String subtitle);
 
-    boolean isBossBarPluginEnabled();
+    /**
+     * Returns the subTitle of the message getting played when the team wins a match.
+     *
+     * @return title
+     */
+    Optional<String> getWinningMessageSubtitle();
 
-    void setBossBarPluginMessage(String message);
+    /**
+     * Sets the name of the team which gets displayed by the placeholder :red or :blue.
+     *
+     * @param name name
+     */
+    void setDisplayName(String name);
 
-    void setBossBarPluginEnabled(boolean enable);
+    /**
+     * Returns he name of the team which gets displayed by the placeholder :red or :blue.
+     *
+     * @return name
+     */
+    String getDisplayName();
 
-    void setGoalShooterGlowing(boolean enable);
+    /**
+     * Sets the prefix of the team which gets displayed by the placeholder :redcolor or :bluecolor.
+     *
+     * @param prefix prefix
+     */
+    void setPrefix(String prefix);
 
-    boolean isGoalShooterGlowing();
+    /**
+     * Returns the prefix of the team which gets displayed by the placeholder :redcolor or :bluecolor.
+     *
+     * @return prefix
+     */
+    String getPrefix();
 
-    void setGoalShooterGlowingSeconds(int seconds);
+    /**
+     * Returns the armor items of the team.
+     *
+     * @return armor
+     */
+    Object[] getArmorContents();
 
-    int getGoalShooterGlowingSeconds();
+    /**
+     * Sets the armor items of the team.
+     *
+     * @param itemStacks armor
+     */
+    void setArmorContents(Object[] itemStacks);
 }

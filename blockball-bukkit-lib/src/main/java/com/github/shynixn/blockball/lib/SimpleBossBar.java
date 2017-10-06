@@ -408,7 +408,7 @@ public class SimpleBossBar implements AutoCloseable{
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
      * SOFTWARE.
      */
-    public static class BossbarBuilder implements ConfigurationSerializable {
+    public static class BossbarBuilder implements ConfigurationSerializable, BossBarMeta {
         private Style style = Style.SOLID;
         private Color color = Color.PURPLE;
         private final Set<Flag> flags = new HashSet<>();
@@ -446,6 +446,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @return percentage
          */
+        @Override
         public double getPercentage() {
             return this.percentage;
         }
@@ -455,6 +456,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @param percentage percentage
          */
+        @Override
         public void setPercentage(double percentage) {
             this.percentage = percentage;
         }
@@ -464,6 +466,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @return style
          */
+        @Override
         public Style getStyle() {
             return this.style;
         }
@@ -473,6 +476,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @param style style
          */
+        @Override
         public BossbarBuilder setStyle(Style style) {
             if (style == null)
                 throw new IllegalArgumentException("Style cannot be null!");
@@ -485,6 +489,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @return color
          */
+        @Override
         public Color getColor() {
             return this.color;
         }
@@ -494,6 +499,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @param color color
          */
+        @Override
         public BossbarBuilder setColor(Color color) {
             if (color == null)
                 throw new IllegalArgumentException("Color cannot be null!");
@@ -506,6 +512,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @return flags
          */
+        @Override
         public Set<Flag> getFlags() {
             return Collections.unmodifiableSet(this.flags);
         }
@@ -515,6 +522,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @param flag flag
          */
+        @Override
         public void addFlag(Flag flag) {
             if (flag == null)
                 throw new IllegalArgumentException("Flag cannot be null!");
@@ -526,6 +534,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @param flag flag
          */
+        @Override
         public void removeFlag(Flag flag) {
             if (flag == null)
                 throw new IllegalArgumentException("Flag cannot be null!");
@@ -539,6 +548,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @return enabled
          */
+        @Override
         public boolean isEnabled() {
             return this.enabled;
         }
@@ -548,6 +558,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @param enabled enabled
          */
+        @Override
         public BossbarBuilder setEnabled(boolean enabled) {
             this.enabled = enabled;
             return this;
@@ -558,6 +569,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @return message
          */
+        @Override
         public Optional<String> getMessage() {
             return Optional.ofNullable(this.message);
         }
@@ -567,6 +579,7 @@ public class SimpleBossBar implements AutoCloseable{
          *
          * @param message message
          */
+        @Override
         public BossbarBuilder setMessage(String message) {
             this.message = message;
             return this;
@@ -604,219 +617,5 @@ public class SimpleBossBar implements AutoCloseable{
         return version.equalsIgnoreCase("v1_8_R1")
                 || version.equalsIgnoreCase("v1_8_R2")
                 || version.equalsIgnoreCase("v1_8_R3");
-    }
-
-    /**
-     * Bossbar styles.
-     * <p>
-     * Version 1.1
-     * <p>
-     * MIT License
-     * <p>
-     * Copyright (c) 2017 by Shynixn
-     * <p>
-     * Permission is hereby granted, free of charge, to any person obtaining a copy
-     * of this software and associated documentation files (the "Software"), to deal
-     * in the Software without restriction, including without limitation the rights
-     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-     * copies of the Software, and to permit persons to whom the Software is
-     * furnished to do so, subject to the following conditions:
-     * <p>
-     * The above copyright notice and this permission notice shall be included in all
-     * copies or substantial portions of the Software.
-     * <p>
-     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-     * SOFTWARE.
-     */
-    public enum Style {
-        SEGMENTED_6,
-        SEGMENETED_10,
-        SEGMENTED_12,
-        SEGEMENTED_20,
-        SOLID;
-
-        /**
-         * Returns the names of all styles
-         *
-         * @return names
-         */
-        public String[] getNames() {
-            if (isServerVersionBelowv1_9_R1()) {
-                return new String[]{SOLID.name().toUpperCase()};
-            }
-            String[] names = new String[Style.values().length];
-            for (int i = 0; i < Style.values().length; i++) {
-                names[i] = Style.values()[i].name().toUpperCase();
-            }
-            return names;
-        }
-
-        /**
-         * Returns a style of the given name
-         *
-         * @param name name
-         * @return style
-         */
-        public static Optional<Style> getFromName(String name) {
-            if (isServerVersionBelowv1_9_R1()) {
-                if (name.equalsIgnoreCase(SOLID.name())) {
-                    return Optional.of(Style.SOLID);
-                }
-                return Optional.empty();
-            }
-            for (Style style : Style.values()) {
-                if (style.name().equalsIgnoreCase(name))
-                    return Optional.of(style);
-            }
-            return Optional.empty();
-        }
-    }
-
-    /**
-     * Bossbar colors.
-     * <p>
-     * Version 1.1
-     * <p>
-     * MIT License
-     * <p>
-     * Copyright (c) 2017 by Shynixn
-     * <p>
-     * Permission is hereby granted, free of charge, to any person obtaining a copy
-     * of this software and associated documentation files (the "Software"), to deal
-     * in the Software without restriction, including without limitation the rights
-     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-     * copies of the Software, and to permit persons to whom the Software is
-     * furnished to do so, subject to the following conditions:
-     * <p>
-     * The above copyright notice and this permission notice shall be included in all
-     * copies or substantial portions of the Software.
-     * <p>
-     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-     * SOFTWARE.
-     */
-    public enum Color {
-        PINK,
-        BLUE,
-        RED,
-        GREEN,
-        YELLOW,
-        PURPLE,
-        WHITE;
-
-        /**
-         * Returns the names of all colors.
-         *
-         * @return names
-         */
-        public String[] getNames() {
-            if (isServerVersionBelowv1_9_R1()) {
-                return new String[]{PURPLE.name().toUpperCase()};
-            }
-            String[] names = new String[Color.values().length];
-            for (int i = 0; i < Color.values().length; i++) {
-                names[i] = Color.values()[i].name().toUpperCase();
-            }
-            return names;
-        }
-
-        /**
-         * Returns a color from the given name.
-         *
-         * @param name name
-         * @return color
-         */
-        public static Optional<Color> getFromName(String name) {
-            if (isServerVersionBelowv1_9_R1()) {
-                if (name.equalsIgnoreCase(Color.PURPLE.name())) {
-                    return Optional.of(Color.PURPLE);
-                }
-                return Optional.empty();
-            }
-            for (Color color : Color.values()) {
-                if (color.name().equalsIgnoreCase(name))
-                    return Optional.of(color);
-            }
-            return Optional.empty();
-        }
-    }
-
-    /**
-     * Bossbar flags.
-     * <p>
-     * Version 1.1
-     * <p>
-     * MIT License
-     * <p>
-     * Copyright (c) 2017 by Shynixn
-     * <p>
-     * Permission is hereby granted, free of charge, to any person obtaining a copy
-     * of this software and associated documentation files (the "Software"), to deal
-     * in the Software without restriction, including without limitation the rights
-     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-     * copies of the Software, and to permit persons to whom the Software is
-     * furnished to do so, subject to the following conditions:
-     * <p>
-     * The above copyright notice and this permission notice shall be included in all
-     * copies or substantial portions of the Software.
-     * <p>
-     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-     * SOFTWARE.
-     */
-    public enum Flag {
-        NONE,
-        CREATE_FOG,
-        DARKEN_SKY,
-        PLAY_BOSS_MUSIC;
-
-        /**
-         * Returns the names of all flags.
-         *
-         * @return names
-         */
-        public String[] getNames() {
-            if (isServerVersionBelowv1_9_R1()) {
-                return new String[]{NONE.name().toUpperCase()};
-            }
-            final String[] names = new String[Flag.values().length];
-            for (int i = 0; i < Flag.values().length; i++) {
-                names[i] = Flag.values()[i].name().toUpperCase();
-            }
-            return names;
-        }
-
-        /**
-         * Returns a flag from the given name.
-         *
-         * @param name name
-         * @return flag
-         */
-        public static Optional<Flag> getFromName(String name) {
-            if (isServerVersionBelowv1_9_R1()) {
-                if (name.equalsIgnoreCase(Flag.NONE.name())) {
-                    return Optional.of(Flag.NONE);
-                }
-                return Optional.empty();
-            }
-            for (final Flag flag : Flag.values()) {
-                if (flag.name().equalsIgnoreCase(name))
-                    return Optional.of(flag);
-            }
-            return Optional.empty();
-        }
     }
 }

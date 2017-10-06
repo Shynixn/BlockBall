@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.api.persistence.entity;
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -63,11 +64,81 @@ public interface Arena extends Persistenceable<Arena> {
     EventMeta getEventMeta();
 
     /**
+     * Returns the meta data for the bossbar.
+     *
+     * @return bossbar
+     */
+    BossBarMeta getBossBarMeta();
+
+    /**
+     * Returns the meta data for the scoreboard.
+     *
+     * @return scoreboard
+     */
+    ScoreboardMeta getScoreboardMeta();
+
+    /**
+     * Returns the meta data for the double jump.
+     *
+     * @return doubleJumpMeta
+     */
+    DoubleJumpMeta getDoubleJumpMeta();
+
+    /**
+     * Adds a new hologram to the arena.
+     *
+     * @param hologramMeta hologram
+     */
+    void addHologram(HologramMeta hologramMeta);
+
+    /**
+     * Removes a hologram from the arena.
+     *
+     * @param hologramMeta hologram
+     */
+    void removeHologram(HologramMeta hologramMeta);
+
+    /**
+     * Returns all holograms from the arena
+     *
+     * @return holograms
+     */
+    List<HologramMeta> getHolograms();
+
+    /**
+     * Returns the max amount the score can reach on the scoreboard.
+     *
+     * @return score
+     */
+    int getMaxScore();
+
+    /**
+     * Sets the max amount the score can reach on the scoreboard.
+     *
+     * @param amount amoun
+     */
+    void setMaxScore(int amount);
+
+    /**
      * Returns the unique name of the arena
      *
      * @return name
      */
     String getName();
+
+    /**
+     * Enables or disables auto reset when the arena is empty.
+     *
+     * @param enable enable
+     */
+    void setAutoEmptyResetEnabled(boolean enable);
+
+    /**
+     * Returns if auto reset when the arena is empty is enabled.
+     *
+     * @return enabled
+     */
+    boolean isAutoEmptyResetEnabled();
 
     /**
      * Returns if the arena is enabled

@@ -15,4 +15,9 @@ public interface Persistenceable<T> {
      * @return object
      */
     T clone();
+
+    /**
+     * Resets the object to the default values
+     */
+    void reset();
 }

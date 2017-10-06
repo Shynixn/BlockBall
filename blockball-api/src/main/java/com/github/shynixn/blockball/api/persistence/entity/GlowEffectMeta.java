@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity;
 
-import java.util.UUID;
-
 /**
  * Created by Shynixn 2017.
  * <p>
@@ -29,40 +27,33 @@ import java.util.UUID;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface PlayerMeta extends Persistenceable<PlayerMeta> {
+public interface GlowEffectMeta extends Persistenceable<GlowEffectMeta> {
 
     /**
-     * Returns the name of the playerData
+     * Sets the amount of seconds a player is glowing.
      *
-     * @return playerData
+     * @param amount amount
      */
-    String getName();
+    void setAmountOfSeconds(int amount);
 
     /**
-     * Sets the name of the playerData
+     * Returns the amount of seconds a player is glowing.
      *
-     * @param name name
+     * @return amount
      */
-    void setName(String name);
+    int getAmountOfSeconds();
 
     /**
-     * Returns the uuid of the playerData
+     * Toggles the effect.
      *
-     * @return uuid
+     * @param enabled enabled
      */
-    UUID getUUID();
+    void setEnabled(boolean enabled);
 
     /**
-     * Sets the uuid of the playerData
+     * Returns if the effect is enabled
      *
-     * @param uuid uuid
+     * @return enabled
      */
-    void setUuid(UUID uuid);
-
-    /**
-     * Returns the player of the playerData
-     *
-     * @return player
-     */
-    Object getPlayer();
+    boolean isEnabled();
 }

@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity;
 
-import java.util.UUID;
-
 /**
  * Created by Shynixn 2017.
  * <p>
@@ -29,40 +27,46 @@ import java.util.UUID;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface PlayerMeta extends Persistenceable<PlayerMeta> {
+public interface ScoreboardMeta {
+    /**
+     * Sets the title of the scoreboard.
+     *
+     * @param title title
+     */
+    void setTitle(String title);
 
     /**
-     * Returns the name of the playerData
+     * Returns the title of the scoreboard.
      *
-     * @return playerData
+     * @return title
      */
-    String getName();
+    String getTitle();
 
     /**
-     * Sets the name of the playerData
+     * Enables or disables the scoreboard.
      *
-     * @param name name
+     * @param enabled scoreboard
      */
-    void setName(String name);
+    void setEnabled(boolean enabled);
 
     /**
-     * Returns the uuid of the playerData
+     * Returns if the scoreboard is enabled.
      *
-     * @return uuid
+     * @return enabled
      */
-    UUID getUUID();
+    boolean isEnabled();
 
     /**
-     * Sets the uuid of the playerData
+     * Sets the lines of the scoreboard.
      *
-     * @param uuid uuid
+     * @param scoreboardLines scoreboardLines
      */
-    void setUuid(UUID uuid);
+    void setScoreboardLines(String[] scoreboardLines);
 
     /**
-     * Returns the player of the playerData
+     * Returns the lines of the scoreboard.
      *
-     * @return player
+     * @return lines
      */
-    Object getPlayer();
+    String[] getScoreboardLines();
 }
