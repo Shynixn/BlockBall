@@ -51,7 +51,7 @@ public final class SSKulls {
         if (itemStack.getType() == Material.SKULL_ITEM) {
             SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
             try {
-                final Class<?> cls = ReflectionUtils.invokeClass().getClassFromName("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull");
+                final Class<?> cls = createClass("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull");
                 final Object real = cls.cast(meta);
                 final Field field = real.getClass().getDeclaredField("profile");
                 field.setAccessible(true);
@@ -59,7 +59,7 @@ public final class SSKulls {
                 meta = SkullMeta.class.cast(real);
                 itemStack.setItemMeta(meta);
                 itemStack = new ItemStackBuilder(itemStack).setDisplayName("TMP");
-            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException | ClassNotFoundException e) {
                 Bukkit.getLogger().log(Level.WARNING, "Failed to set url of itemstack.", e);
             }
         }
@@ -85,7 +85,7 @@ public final class SSKulls {
     public static String getURLFromItemStack(ItemStack itemStack) {
         final SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
         try {
-            final Class<?> cls = ReflectionLib.getClassFromName("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull");
+            final Class<?> cls = createClass("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull");
             final Object real = cls.cast(meta);
             final Field field = real.getClass().getDeclaredField("profile");
             field.setAccessible(true);
@@ -106,10 +106,15 @@ public final class SSKulls {
                     return s;
                 }
             }
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException | ClassNotFoundException e) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to get url from itemstack.", e);
         }
         return null;
+    }
+
+    private static Class<?> createClass(String path) throws ClassNotFoundException {
+        final String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        return Class.forName(path.replace("VERSION", version));
     }
 
     private static GameProfile getNonPlayerProfile(String skinUrl) {

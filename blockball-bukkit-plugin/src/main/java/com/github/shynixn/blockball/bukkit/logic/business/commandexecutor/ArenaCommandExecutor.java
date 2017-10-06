@@ -15,6 +15,7 @@ import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.lib.FastBossBar;
 import com.github.shynixn.blockball.lib.SFileUtils;
 import com.github.shynixn.blockball.lib.SimpleCommandExecutor;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,6 +27,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
 class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
     private static final String HEADER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Balls                      ";
@@ -234,12 +236,20 @@ class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                         for (final Player player : SFileUtils.getOnlinePlayers()) {
                             player.kickPlayer(Language.PREFIX + "Server is restarting for BlockBall bungee mode!");
                         }
-                        SFileUtils.restartServer();
+                        restartServer();
                     }
                     this.open(this.player, new FirstPage(this.player));
                 } else {
                     this.player.sendMessage(Language.PREFIX + ChatColor.RED + "Cannot save arena. More options are required.");
                 }
+            }
+        }
+
+        void restartServer() {
+            try {
+                Bukkit.getServer().shutdown();
+            } catch (final Exception ex) {
+                Bukkit.getLogger().log(Level.INFO, "Failed shutdown server.", ex);
             }
         }
 
