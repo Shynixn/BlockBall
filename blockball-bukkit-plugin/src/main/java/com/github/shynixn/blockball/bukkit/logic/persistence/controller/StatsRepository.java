@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -60,20 +61,20 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
      * @return item
      */
     @Override
-    public Stats getById(long id) {
+    public Optional<Stats> getById(long id) {
         try (Connection connection = this.dbContext.getConnection()) {
             try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("stats/selectbyid", connection,
                     id)) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
-                        return this.from(resultSet);
+                        return Optional.of(this.from(resultSet));
                     }
                 }
             }
         } catch (final SQLException e) {
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
-        return null;
+        return Optional.empty();
     }
 
     /**
@@ -93,20 +94,20 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
      * @return stats
      */
     @Override
-    public Stats getByPlayer(Object player) {
+    public Optional<Stats> getByPlayer(Object player) {
         try (Connection connection = this.dbContext.getConnection()) {
             try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("stats/selectbyplayer", connection,
                     ((Player)player).getUniqueId().toString())) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
-                        return this.from(resultSet);
+                        return Optional.of(this.from(resultSet));
                     }
                 }
             }
         } catch (final SQLException e) {
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
-        return null;
+        return Optional.empty();
     }
 
     /**

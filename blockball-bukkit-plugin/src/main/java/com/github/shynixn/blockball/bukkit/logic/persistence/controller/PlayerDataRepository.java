@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -44,20 +45,20 @@ public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> impleme
      * @return playerMeta
      */
     @Override
-    public PlayerMeta getByUUID(UUID uuid) {
+    public Optional<PlayerMeta> getByUUID(UUID uuid) {
         try (Connection connection = this.dbContext.getConnection()) {
             try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("player/selectbyuuid", connection,
                     uuid.toString())) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
-                        return this.from(resultSet);
+                        return Optional.of(this.from(resultSet));
                     }
                 }
             }
         } catch (final SQLException e) {
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
-        return null;
+        return Optional.empty();
     }
 
     /**
@@ -67,20 +68,20 @@ public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> impleme
      * @return item
      */
     @Override
-    public PlayerMeta getById(long id) {
+    public Optional<PlayerMeta> getById(long id) {
         try (Connection connection = this.dbContext.getConnection()) {
             try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("player/selectbyid", connection,
                     id)) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
-                        return this.from(resultSet);
+                        return Optional.of(this.from(resultSet));
                     }
                 }
             }
         } catch (final SQLException e) {
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
-        return null;
+        return Optional.empty();
     }
 
     /**
