@@ -1,7 +1,12 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+import com.github.shynixn.blockball.api.persistence.entity.CommandMeta;
+import com.github.shynixn.blockball.api.persistence.entity.RewardMeta;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
+import com.github.shynixn.blockball.lib.YamlSerializer;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,110 +36,176 @@ import java.util.List;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface RewardMeta extends Persistenceable<RewardMeta> {
+public class RewardProperties extends PersistenceObject<RewardMeta> implements RewardMeta {
+
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "money.per-goal")
+    private int pergoal;
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "money.per-win")
+    private int perWin;
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "money.per-match")
+    private int perMatch;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "commands.goal")
+    private final List<CommandMeta> goalCommands = new ArrayList<>();
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "commands.win")
+    private final List<CommandMeta> winCommands = new ArrayList<>();
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "commands.match")
+    private final List<CommandMeta> matchCommands = new ArrayList<>();
 
     /**
      * Sets the amount of money the player receives per goal.
      *
      * @param amount amount
      */
-    void setPerGoal(int amount);
+    @Override
+    public void setPerGoal(int amount) {
+        this.pergoal = amount;
+    }
 
     /**
      * Returns the amount of money the player receives per goal.
      *
      * @return amount
      */
-    int getPerGoal();
+    @Override
+    public int getPerGoal() {
+        return this.pergoal;
+    }
 
     /**
      * Sets the amount of money the player receives per win.
      *
      * @param amount amount
      */
-    void setPerWin(int amount);
+    @Override
+    public void setPerWin(int amount) {
+        this.perWin = amount;
+    }
 
     /**
      * Returns the amount of money the player receives per win.
      *
      * @return amount
      */
-    int getPerWin();
+    @Override
+    public int getPerWin() {
+        return this.perWin;
+    }
 
     /**
      * Sets the amount of money the player receives by playing a full match regardless if he wins or not.
      *
      * @param amount amount
      */
-    void setPerMatch(int amount);
+    @Override
+    public void setPerMatch(int amount) {
+        this.perMatch = amount;
+    }
 
     /**
      * Returns the amount of money the player receives by playing a full match regardless if he wins or not.
      *
      * @return amount
      */
-    int getPerMatch();
+    @Override
+    public int getPerMatch() {
+        return this.perMatch;
+    }
 
     /**
      * Adds a command which get executed by every single goal.
      *
      * @param commandMeta command
      */
-    void addPerGoalCommand(CommandMeta commandMeta);
+    @Override
+    public void addPerGoalCommand(CommandMeta commandMeta) {
+        this.goalCommands.add(commandMeta);
+    }
 
     /**
      * Removes a command which get executed by every single goal.
      *
      * @param commandMeta command
      */
-    void removePerGoalCommand(CommandMeta commandMeta);
+    @Override
+    public void removePerGoalCommand(CommandMeta commandMeta) {
+        if (this.goalCommands.contains(commandMeta)) {
+            this.goalCommands.remove(commandMeta);
+        }
+    }
 
     /**
      * Returns the commands which get executed by every single goal.
      *
      * @return commands
      */
-    List<CommandMeta> getPerGoalCommands();
+    @Override
+    public List<CommandMeta> getPerGoalCommands() {
+        return Collections.unmodifiableList(this.goalCommands);
+    }
 
     /**
      * Adds a commands which gets executed for the winning team.
      *
      * @param commandMeta command
      */
-    void addPerWinCommand(CommandMeta commandMeta);
+    @Override
+    public void addPerWinCommand(CommandMeta commandMeta) {
+        this.winCommands.add(commandMeta);
+    }
 
     /**
      * Removes the command which gets executed for the winning team.
      *
      * @param commandMeta command
      */
-    void removePerWinCommand(CommandMeta commandMeta);
+    @Override
+    public void removePerWinCommand(CommandMeta commandMeta) {
+        if (this.winCommands.contains(commandMeta)) {
+            this.winCommands.remove(commandMeta);
+        }
+    }
 
     /**
      * Returns the commands which gets executed for the winning team.
      *
      * @return commands
      */
-    List<CommandMeta> getPerWinCommands();
+    @Override
+    public List<CommandMeta> getPerWinCommands() {
+        return Collections.unmodifiableList(this.winCommands);
+    }
 
     /**
      * Adds a command which gets played after a full match regardless if the team wins or not
      *
      * @param commandMeta command
      */
-    void addPerMatchCommand(CommandMeta commandMeta);
+    @Override
+    public void addPerMatchCommand(CommandMeta commandMeta) {
+        this.matchCommands.add(commandMeta);
+    }
 
     /**
      * Removes the command which gets played after a full match regardless if the team wins or not
      *
      * @param commandMeta command
      */
-    void removePerMatchCommand(CommandMeta commandMeta);
+    @Override
+    public void removePerMatchCommand(CommandMeta commandMeta) {
+        if(this.matchCommands.contains(commandMeta))
+        {
+            this.matchCommands.remove(commandMeta);
+        }
+    }
 
     /**
      * Returns the commands which gets played after a full match regardless if the team wins or not.
      *
      * @return commands
      */
-    List<CommandMeta> getPerMatchCommands();
+    @Override
+    public List<CommandMeta> getPerMatchCommands() {
+        return Collections.unmodifiableList(this.matchCommands);
+    }
 }

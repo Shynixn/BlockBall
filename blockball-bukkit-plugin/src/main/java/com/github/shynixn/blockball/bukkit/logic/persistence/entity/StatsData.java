@@ -3,8 +3,6 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
 import com.github.shynixn.blockball.lib.YamlSerializer;
 
-import java.util.Map;
-
 /**
  * Copyright 2017 Shynixn
  * <p>
@@ -134,7 +132,6 @@ public class StatsData extends PersistenceObject<Stats> implements Stats {
      *
      * @return playerId
      */
-    @Override
     public long getPlayerId() {
         return this.playerId;
     }
@@ -144,36 +141,7 @@ public class StatsData extends PersistenceObject<Stats> implements Stats {
      *
      * @param id id
      */
-    @Override
     public void setPlayerId(long id) {
         this.playerId = id;
-    }
-
-    /**
-     * Clones the current object
-     *
-     * @return object
-     */
-    @Override
-    public Stats clone() {
-        try {
-            return YamlSerializer.deserializeObject(StatsData.class, this.serialize());
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Serializes the statsData
-     *
-     * @return serializedContent
-     */
-    @Override
-    public Map<String, Object> serialize() {
-        try {
-            return YamlSerializer.serialize(this);
-        } catch (final IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

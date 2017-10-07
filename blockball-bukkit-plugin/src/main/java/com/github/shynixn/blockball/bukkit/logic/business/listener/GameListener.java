@@ -14,7 +14,7 @@ import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.Factory;
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameController;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.GameEntity;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.SoundBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
 import com.github.shynixn.blockball.lib.*;
 import com.github.shynixn.blockball.api.entities.items.BoostItem;
 import org.bukkit.*;

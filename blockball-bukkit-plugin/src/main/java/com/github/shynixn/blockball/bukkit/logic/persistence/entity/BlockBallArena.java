@@ -1,20 +1,21 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType;
+import com.github.shynixn.blockball.api.persistence.entity.*;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties.BallProperties;
+import com.github.shynixn.blockball.lib.YamlSerializer;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2017.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.1
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2017 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,195 +35,302 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface Arena extends Persistenceable<Arena> {
+public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
+
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "ball")
+    private final BallMeta ballMeta = new BallProperties();
+
+
+    private GoalEntity redGoal;
+    private GoalEntity blueGoal;
+    private SLocation ballSpawnLocation;
+    private final BallMetaEntity2 properties = new BallMetaEntity2();
+    private final TeamMetaEntity properties2 = new TeamMetaEntity();
+    private final EventMetaEntity properties3 = new EventMetaEntity();
+
+    private final LobbyMetaEntity lobbyMetaEntity = new LobbyMetaEntity();
+    private final GameType gameType = GameType.LOBBY;
+
+    private final boolean isEnabled = true;
+    private String alias;
+
+    private BoostItemHandler boostItemHandler;
+    private List<String> bounce_types;
+
+
+
+
+
+
     /**
      * Returns the ball settings for this arena
      *
      * @return ballMeta
      */
-    BallMeta getBallMeta();
+    @Override
+    public BallMeta getBallMeta() {
+        return this.ballMeta;
+    }
 
     /**
      * Returns the meta data for lobbies
      *
      * @return lobbyMeta
      */
-    LobbyMeta getLobbyMeta();
+    @Override
+    public LobbyMeta getLobbyMeta() {
+        return null;
+    }
 
     /**
      * Returns the meta data for teams
      *
      * @return teamMeta
      */
-    TeamMeta getTeamMeta();
+    @Override
+    public TeamMeta getTeamMeta() {
+        return null;
+    }
 
     /**
      * Returns the meta data for events
      *
      * @return event
      */
-    EventMeta getEventMeta();
+    @Override
+    public EventMeta getEventMeta() {
+        return null;
+    }
 
     /**
      * Returns the meta data for the bossbar.
      *
      * @return bossbar
      */
-    BossBarMeta getBossBarMeta();
+    @Override
+    public BossBarMeta getBossBarMeta() {
+        return null;
+    }
 
     /**
      * Returns the meta data for the scoreboard.
      *
      * @return scoreboard
      */
-    ScoreboardMeta getScoreboardMeta();
+    @Override
+    public ScoreboardMeta getScoreboardMeta() {
+        return null;
+    }
 
     /**
      * Returns the meta data for the double jump.
      *
      * @return doubleJumpMeta
      */
-    DoubleJumpMeta getDoubleJumpMeta();
+    @Override
+    public DoubleJumpMeta getDoubleJumpMeta() {
+        return null;
+    }
 
     /**
      * Returns the meta data of glowing when scoring.
      *
      * @return glowing
      */
-    GlowEffectMeta getScoreGlowingMeta();
+    @Override
+    public GlowEffectMeta getScoreGlowingMeta() {
+        return null;
+    }
 
     /**
      * Returns the meta data of the red team
      *
      * @return meta
      */
-    TeamMeta getRedTeamMeta();
+    @Override
+    public TeamMeta getRedTeamMeta() {
+        return null;
+    }
 
     /**
      * Returns the meta data of the blue team
      *
      * @return meta
      */
-    TeamMeta getBlueTeamMeta();
+    @Override
+    public TeamMeta getBlueTeamMeta() {
+        return null;
+    }
 
     /**
      * Adds a new hologram to the arena.
      *
      * @param hologramMeta hologram
      */
-    void addHologram(HologramMeta hologramMeta);
+    @Override
+    public void addHologram(HologramMeta hologramMeta) {
+
+    }
 
     /**
      * Removes a hologram from the arena.
      *
      * @param hologramMeta hologram
      */
-    void removeHologram(HologramMeta hologramMeta);
+    @Override
+    public void removeHologram(HologramMeta hologramMeta) {
+
+    }
 
     /**
      * Returns all holograms from the arena
      *
      * @return holograms
      */
-    List<HologramMeta> getHolograms();
+    @Override
+    public List<HologramMeta> getHolograms() {
+        return null;
+    }
 
     /**
      * Returns the max amount the score can reach on the scoreboard.
      *
      * @return score
      */
-    int getMaxScore();
+    @Override
+    public int getMaxScore() {
+        return 0;
+    }
 
     /**
      * Sets the max amount the score can reach on the scoreboard.
      *
      * @param amount amoun
      */
-    void setMaxScore(int amount);
+    @Override
+    public void setMaxScore(int amount) {
+
+    }
 
     /**
      * Returns the unique name of the arena
      *
      * @return name
      */
-    String getName();
+    @Override
+    public String getName() {
+        return null;
+    }
 
     /**
      * Enables or disables auto reset when the arena is empty.
      *
      * @param enable enable
      */
-    void setAutoEmptyResetEnabled(boolean enable);
+    @Override
+    public void setAutoEmptyResetEnabled(boolean enable) {
+
+    }
 
     /**
      * Returns if auto reset when the arena is empty is enabled.
      *
      * @return enabled
      */
-    boolean isAutoEmptyResetEnabled();
+    @Override
+    public boolean isAutoEmptyResetEnabled() {
+        return false;
+    }
 
     /**
      * Returns if the arena is enabled
      *
      * @return enabled
      */
-    boolean isEnabled();
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 
     /**
      * Sets the arena enabled
      *
      * @param enabled enabled
      */
-    void setEnabled(boolean enabled);
+    @Override
+    public void setEnabled(boolean enabled) {
+
+    }
 
     /**
      * Returns the displayName of the arena if present
      *
      * @return displayName
      */
-    Optional<String> getDisplayName();
+    @Override
+    public Optional<String> getDisplayName() {
+        return null;
+    }
 
     /**
      * Sets the displayName of the arena
      *
      * @param displayName displayName
      */
-    void setDisplayName(String displayName);
+    @Override
+    public void setDisplayName(String displayName) {
+
+    }
 
     /**
      * Returns the gameType of the arena
      *
      * @return gameType
      */
-    GameType getGameType();
+    @Override
+    public GameType getGameType() {
+        return null;
+    }
 
     /**
      * Sets the gameType of the arena
      *
      * @param type type
      */
-    void setGameType(GameType type);
+    @Override
+    public void setGameType(GameType type) {
+
+    }
 
     /**
      * Returns the center of the arena
      *
      * @return center
      */
-    Object getCenter();
+    @Override
+    public Object getCenter() {
+        return null;
+    }
 
     /**
      * Returns the spawnpoint of the ball
      *
      * @return ballSpawnpoint
      */
-    Object getBallSpawnLocation();
+    @Override
+    public Object getBallSpawnLocation() {
+        return null;
+    }
 
     /**
      * Sets the spawnpoint of the ball
      *
      * @param location location
      */
-    void setBallSpawnLocation(Object location);
+    @Override
+    public void setBallSpawnLocation(Object location) {
+
+    }
 
     /**
      * Returns if the given location is inside of this arena
@@ -230,5 +338,16 @@ public interface Arena extends Persistenceable<Arena> {
      * @param location location
      * @return isInside
      */
-    boolean isLocationInArena(Object location);
+    @Override
+    public boolean isLocationInArena(Object location) {
+        return false;
+    }
+
+    /**
+     * Resets the object to the default values
+     */
+    @Override
+    public void reset() {
+
+    }
 }

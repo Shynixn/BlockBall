@@ -1,10 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity;
 
 import com.github.shynixn.blockball.api.entities.Team;
-import com.github.shynixn.blockball.api.persistence.entity.meta.SoundMeta;
+import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.SoundBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
 import com.github.shynixn.blockball.api.entities.Arena;
 import com.github.shynixn.blockball.api.entities.GameStage;
 import org.bukkit.Bukkit;

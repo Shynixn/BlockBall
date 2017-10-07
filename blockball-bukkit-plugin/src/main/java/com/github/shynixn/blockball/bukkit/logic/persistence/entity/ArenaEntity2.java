@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 
 
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
-import com.github.shynixn.blockball.api.persistence.entity.meta.BallMeta;
+import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,14 +11,14 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class ArenaEntity extends SelectedArea implements Arena {
+public class ArenaEntity2 extends SelectedArea implements Arena {
     private static final String[] A = new String[0];
 
     private String name;
     private GoalEntity redGoal;
     private GoalEntity blueGoal;
     private SLocation ballSpawnLocation;
-    private BallMetaEntity properties = new BallMetaEntity();
+    private BallMetaEntity2 properties = new BallMetaEntity2();
     private TeamMetaEntity properties2 = new TeamMetaEntity();
     private EventMetaEntity properties3 = new EventMetaEntity();
 
@@ -31,11 +31,13 @@ public class ArenaEntity extends SelectedArea implements Arena {
     private BoostItemHandler boostItemHandler;
     private List<String> bounce_types;
 
-    public ArenaEntity() {
+    private LightParticle playerTeamBlueHitParticle = new SParticle(ParticleEffect.REDSTONE, 1, 1, 0, 0, 1).setColors(0, 0, 255);
+    private LightParticle playerTeamRedHitParticle = new SParticle(ParticleEffect.REDSTONE, 1, 1, 0, 0, 0).setColors(255, 0, 0);
+    public ArenaEntity2() {
         super();
     }
 
-    public ArenaEntity(Map<String, Object> items, List<String> wallBouncing) throws Exception {
+    public ArenaEntity2(Map<String, Object> items, List<String> wallBouncing) throws Exception {
         super();
         this.setName(String.valueOf(items.get("id")));
         this.setCornerLocations(new SLocation(((MemorySection) items.get("corner-1")).getValues(true)).toLocation(), new SLocation(((MemorySection) items.get("corner-2")).getValues(true)).toLocation());
@@ -45,7 +47,7 @@ public class ArenaEntity extends SelectedArea implements Arena {
         this.redGoal = new GoalEntity(((MemorySection) items.get("goals.red")).getValues(true));
         this.blueGoal = new GoalEntity(((MemorySection) items.get("goals.blue")).getValues(true));
         this.ballSpawnLocation = new SLocation(((MemorySection) items.get("ball.spawn")).getValues(true));
-        this.properties = new BallMetaEntity(((MemorySection) items.get("ball.properties")).getValues(true));
+        this.properties = new BallMetaEntity2(((MemorySection) items.get("ball.properties")).getValues(true));
         this.lobbyMetaEntity = new LobbyMetaEntity(((MemorySection) items.get("lobby")).getValues(true));
         if (items.get("event") != null)
             this.properties3 = new EventMetaEntity(((MemorySection) items.get("event")).getValues(true));
@@ -58,7 +60,7 @@ public class ArenaEntity extends SelectedArea implements Arena {
             this.boostItemHandler = new ItemSpawner(((MemorySection) data.get("boost-items")).getValues(true));
     }
 
-    public void setBallMeta(BallMetaEntity meta)
+    public void setBallMeta(BallMetaEntity2 meta)
     {
         this.properties = meta;
     }

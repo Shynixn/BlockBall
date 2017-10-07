@@ -1,6 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 
-import com.github.shynixn.blockball.lib.SLocation;
+import com.github.shynixn.blockball.api.persistence.entity.IPosition;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.LocationBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 /**
@@ -33,15 +35,15 @@ import org.bukkit.Location;
  * SOFTWARE.
  */
 class SelectedArea {
-    private SLocation downCorner;
-    private SLocation upCorner;
+    private LocationBuilder downCorner;
+    private LocationBuilder upCorner;
 
     /**
      * Returns the upCorner
      *
      * @return upCorner
      */
-    SLocation getUpCornerLocation() {
+    IPosition getUpCornerLocation() {
         return this.upCorner;
     }
 
@@ -50,7 +52,7 @@ class SelectedArea {
      *
      * @return downCorner
      */
-    SLocation getDownCornerLocation() {
+    IPosition getDownCornerLocation() {
         return this.downCorner;
     }
 
@@ -99,7 +101,7 @@ class SelectedArea {
      */
     public Location getCenter() {
         if (this.getDownCornerLocation() != null) {
-            return new Location(this.getDownCornerLocation().getWorld(), this.getDownCornerLocation().getBlockX() + this.getXWidth() / 2, this.getDownCornerLocation().getBlockY() + this.getYWidth() / 2, this.getDownCornerLocation().getBlockZ() + this.getZWidth() / 2);
+            return new Location(Bukkit.getWorld(this.getDownCornerLocation().getWorldName()), this.getDownCornerLocation().getBlockX() + this.getXWidth() / 2, this.getDownCornerLocation().getBlockY() + this.getYWidth() / 2, this.getDownCornerLocation().getBlockZ() + this.getZWidth() / 2);
         }
         return null;
     }
@@ -148,7 +150,7 @@ class SelectedArea {
         } else {
             z = corner2.getBlockZ();
         }
-        this.upCorner = new SLocation(new Location(corner1.getWorld(), x, y, z));
+        this.upCorner = new LocationBuilder(new Location(corner1.getWorld(), x, y, z));
     }
 
     /**
@@ -176,6 +178,6 @@ class SelectedArea {
         } else {
             z = corner2.getBlockZ();
         }
-        this.downCorner = new SLocation(new Location(corner1.getWorld(), x, y, z));
+        this.downCorner = new LocationBuilder(new Location(corner1.getWorld(), x, y, z));
     }
 }

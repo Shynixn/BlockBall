@@ -1,13 +1,14 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
 
 import com.github.shynixn.blockball.api.persistence.entity.IPosition;
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+import com.github.shynixn.blockball.api.persistence.entity.LobbyMeta;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Metadata for a match-lobby.
+ * Created by Shynixn 2017.
  * <p>
  * Version 1.1
  * <p>
@@ -33,124 +34,174 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface LobbyMeta extends Persistenceable<LobbyMeta> {
-
+public class LobbyProperties extends PersistenceObject<LobbyMeta> implements LobbyMeta {
     /**
      * Returns the positions of each sign
      *
      * @return positions
      */
-    List<IPosition> getSignPositions();
+    @Override
+    public List<IPosition> getSignPositions() {
+        return null;
+    }
 
     /**
      * Removes the sign-position
      *
      * @param position position
      */
-    void removeSignPosition(IPosition position);
+    @Override
+    public void removeSignPosition(IPosition position) {
+
+    }
 
     /**
      * Returns the positions of each sign
      *
      * @return positions
      */
-    List<IPosition> getRedTeamSignPositions();
+    @Override
+    public List<IPosition> getRedTeamSignPositions() {
+        return null;
+    }
 
     /**
      * Removes the sign-position
      *
      * @param position position
      */
-    void removeRedTeamSignPosition(IPosition position);
+    @Override
+    public void removeRedTeamSignPosition(IPosition position) {
+
+    }
 
     /**
      * Adds a redTeamSignLocation
      *
      * @param position position
      */
-    void addRedTeamSignLocation(IPosition position);
+    @Override
+    public void addRedTeamSignLocation(IPosition position) {
+
+    }
 
     /**
      * Returns the positions of each sign
      *
      * @return positions
      */
-    List<IPosition> getBlueTeamSignPositions();
+    @Override
+    public List<IPosition> getBlueTeamSignPositions() {
+        return null;
+    }
 
     /**
      * Removes the sign-position
      *
      * @param position position
      */
-    void removeBlueTeamSignPosition(IPosition position);
+    @Override
+    public void removeBlueTeamSignPosition(IPosition position) {
+
+    }
 
     /**
      * Sets the min amount of players required for a match to start.
      *
      * @param amount amount
      */
-    void setMinAmountOfPlayers(int amount);
+    @Override
+    public void setMinAmountOfPlayers(int amount) {
+
+    }
 
     /**
      * Returns the min amount of players required for a match to start.
      *
      * @return amount
      */
-    int getMinAmountOfPlayers();
+    @Override
+    public int getMinAmountOfPlayers() {
+        return 0;
+    }
 
     /**
      * Sets the match duration in seconds.
      *
      * @param amountOfSeconds amountOfSeconds
      */
-    void setMatchDuration(int amountOfSeconds);
+    @Override
+    public void setMatchDuration(int amountOfSeconds) {
+
+    }
 
     /**
      * Returns the match duration in seconds.
      *
      * @return matchDuration
      */
-    int getMatchDuration();
+    @Override
+    public int getMatchDuration() {
+        return 0;
+    }
 
     /**
      * Sets the spawnpoint in the lobby
      *
      * @param location location
      */
-    void setLobbySpawnpoint(Object location);
+    @Override
+    public void setLobbySpawnpoint(Object location) {
+
+    }
 
     /**
      * Returns the spawnpoint in the lobby.
      *
      * @return location
      */
-    Optional<Object> getLobbySpawnpoint();
+    @Override
+    public Optional<Object> getLobbySpawnpoint() {
+        return null;
+    }
 
     /**
      * Sets the spawnpoint when someone leaves the lobby.
      *
      * @param location location
      */
-    void setLobbyLeftSpawnpoint(Object location);
+    @Override
+    public void setLobbyLeftSpawnpoint(Object location) {
+
+    }
 
     /**
      * Returns the spawnpoint when someone leaves the lobby.
      *
      * @return location
      */
-    Optional<Object> getLobbyLeftSpawnpoint();
+    @Override
+    public Optional<Object> getLobbyLeftSpawnpoint() {
+        return null;
+    }
 
     /**
      * Sets the amount of seconds the lobby countdown lasts.
      *
      * @param amountOfSeconds amountofSeconds
      */
-    void setLobbyDuration(int amountOfSeconds);
+    @Override
+    public void setLobbyDuration(int amountOfSeconds) {
+
+    }
 
     /**
      * Returns the amount of seconds the lobby countdown lasts.
      *
      * @return amountOfSeconds
      */
-    int getAmountOfSeconds();
+    @Override
+    public int getAmountOfSeconds() {
+        return 0;
+    }
 }

@@ -1,6 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta;
-
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+package com.github.shynixn.blockball.api.persistence.entity;
 
 /**
  * Created by Shynixn 2017.
@@ -29,33 +27,46 @@ import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface GlowEffectMeta extends Persistenceable<GlowEffectMeta> {
-
+public interface ScoreboardMeta extends Persistenceable<ScoreboardMeta> {
     /**
-     * Sets the amount of seconds a player is glowing.
+     * Sets the title of the scoreboard.
      *
-     * @param amount amount
+     * @param title title
      */
-    void setAmountOfSeconds(int amount);
+    void setTitle(String title);
 
     /**
-     * Returns the amount of seconds a player is glowing.
+     * Returns the title of the scoreboard.
      *
-     * @return amount
+     * @return title
      */
-    int getAmountOfSeconds();
+    String getTitle();
 
     /**
-     * Toggles the effect.
+     * Enables or disables the scoreboard.
      *
-     * @param enabled enabled
+     * @param enabled scoreboard
      */
     void setEnabled(boolean enabled);
 
     /**
-     * Returns if the effect is enabled
+     * Returns if the scoreboard is enabled.
      *
      * @return enabled
      */
     boolean isEnabled();
+
+    /**
+     * Sets the lines of the scoreboard.
+     *
+     * @param scoreboardLines scoreboardLines
+     */
+    void setScoreboardLines(String[] scoreboardLines);
+
+    /**
+     * Returns the lines of the scoreboard.
+     *
+     * @return lines
+     */
+    String[] getScoreboardLines();
 }

@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ArenaEntity;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ArenaEntity2;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -36,7 +36,7 @@ public final class ArenaRepository implements ArenaController {
      */
     @Override
     public Arena create() {
-        final ArenaEntity arenaEntity = new ArenaEntity();
+        final ArenaEntity2 arenaEntity = new ArenaEntity2();
         arenaEntity.setName(String.valueOf(this.getNewId()));
         return arenaEntity;
     }
@@ -145,7 +145,7 @@ public final class ArenaRepository implements ArenaController {
                     final File file = new File(this.getFolder(), s);
                     configuration.load(file);
                     final Map<String, Object> data = configuration.getConfigurationSection("arena").getValues(true);
-                    final Arena arenaEntity = new ArenaEntity(data, configuration.getStringList("arena.properties.wall-bouncing"));
+                    final Arena arenaEntity = new ArenaEntity2(data, configuration.getStringList("arena.properties.wall-bouncing"));
                     this.arenas.add(arenaEntity);
                 }
             } catch (final Exception ex) {

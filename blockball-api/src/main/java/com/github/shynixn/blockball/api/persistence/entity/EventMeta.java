@@ -1,6 +1,7 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta;
+package com.github.shynixn.blockball.api.persistence.entity;
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Copyright 2017 Shynixn
@@ -31,61 +32,61 @@ import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface DoubleJumpMeta extends Persistenceable<DoubleJumpMeta>{
+public interface EventMeta extends Persistenceable<EventMeta>{
 
     /**
-     * Enables the double jump
+     * Adds the name of a player for the redTeam
      *
-     * @param enabled enabled
+     * @param name name
      */
-    void setEnabled(boolean enabled);
+    void addRedName(String name);
 
     /**
-     * Checks if the double jump is enabled
+     * Removes the name of a player of the redTeam
      *
-     * @return enabled
+     * @param name name
      */
-    boolean isEnabled();
+    void removeRedName(String name);
 
     /**
-     * Sets the horizontal strength of the double jump
+     * Returns all names of the redPlayers
      *
-     * @param strength strength
+     * @return names
      */
-    void setHorizontalStrength(double strength);
+    List<String> getRedPlayerNames();
 
     /**
-     * Returns the horizontal strength of the double jump
+     * Adds the name of a player for the blueTeam
      *
-     * @return strength
+     * @param name name
      */
-    double getHorizontalStrength();
+    void addBlueName(String name);
 
     /**
-     * Sets the vertical strength of the double jump
+     * Removes the name of a player of the blueTeam
      *
-     * @param strength strength
+     * @param name name
      */
-    void setVerticalStrength(double strength);
+    void removeBlueName(String name);
 
     /**
-     * Returns the vertical strength of the double jump
+     * Returns all names of the bluePlayers
      *
-     * @return strength
+     * @return names
      */
-    double getVerticalStrength();
+    List<String> getBluePlayerNames();
 
     /**
-     * Returns the particleEffect of the double jump
+     * Returns the name of the referee if present
      *
-     * @return particleEffect
+     * @return referee
      */
-    ParticleEffectMeta getParticleEffect();
+    Optional<String> getRefereeName();
 
     /**
-     * Returns the soundEffect of the double jump
+     * Sets the name of the referee
      *
-     * @return soundEffect
+     * @param name name
      */
-    SoundMeta getSoundEffect();
+    void setRefereeName(String name);
 }

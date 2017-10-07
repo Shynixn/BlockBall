@@ -1,6 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta;
-
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+package com.github.shynixn.blockball.api.persistence.entity;
 
 import java.util.Collection;
 

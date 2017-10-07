@@ -1,21 +1,13 @@
-package com.github.shynixn.blockball.api.business.controller;
-
-import com.github.shynixn.blockball.api.business.entity.Ball;
-import com.github.shynixn.blockball.api.persistence.controller.IController;
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
-
-import java.util.Optional;
+package com.github.shynixn.blockball.api.persistence.entity;
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2017.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.1
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2017 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,22 +27,33 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BallController extends IController<Ball> {
+public interface GlowEffectMeta extends Persistenceable<GlowEffectMeta> {
 
     /**
-     * Creates a new ball at the given location and meta
+     * Sets the amount of seconds a player is glowing.
      *
-     * @param location location
-     * @param ballMeta metaData
-     * @return ball
+     * @param amount amount
      */
-    Ball create(Object location, BallMeta ballMeta);
+    void setAmountOfSeconds(int amount);
 
     /**
-     * Returns a ball from the given entity
+     * Returns the amount of seconds a player is glowing.
      *
-     * @param entity entity
-     * @return ball
+     * @return amount
      */
-    Optional<Ball> findByBallByEntity(Object entity);
+    int getAmountOfSeconds();
+
+    /**
+     * Toggles the effect.
+     *
+     * @param enabled enabled
+     */
+    void setEnabled(boolean enabled);
+
+    /**
+     * Returns if the effect is enabled
+     *
+     * @return enabled
+     */
+    boolean isEnabled();
 }

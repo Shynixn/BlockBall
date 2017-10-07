@@ -80,32 +80,4 @@ public class PlayerData extends PersistenceObject<PlayerMeta> implements PlayerM
         playerStats.setUuid(player.getUniqueId());
         return playerStats;
     }
-
-    /**
-     * Clones the current object
-     *
-     * @return object
-     */
-    @Override
-    public PlayerMeta clone() {
-        try {
-            return YamlSerializer.deserializeObject(PlayerData.class, this.serialize());
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Serializes the playerData
-     *
-     * @return serializedContent
-     */
-    @Override
-    public Map<String, Object> serialize() {
-        try {
-            return YamlSerializer.serialize(this);
-        } catch (final IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

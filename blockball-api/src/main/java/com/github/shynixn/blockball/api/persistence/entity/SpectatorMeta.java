@@ -1,6 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta;
+package com.github.shynixn.blockball.api.persistence.entity;
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+import java.util.Optional;
 
 /**
  * Created by Shynixn 2017.
@@ -57,7 +57,7 @@ public interface SpectatorMeta extends Persistenceable<SpectatorMeta> {
      *
      * @return location
      */
-    Object getSpawnpoint();
+    Optional<Object> getSpawnpoint();
 
     /**
      * Sets the location the spectators get teleported when disabling the spectator mode.
@@ -71,7 +71,7 @@ public interface SpectatorMeta extends Persistenceable<SpectatorMeta> {
      *
      * @return location
      */
-    Object getLeftSpawnpoint();
+    Optional<Object> getLeftSpawnpoint();
 
     /**
      * Enables or disables if nearby players should be notified by scorring messages even if they are not in specator mode.
@@ -100,18 +100,4 @@ public interface SpectatorMeta extends Persistenceable<SpectatorMeta> {
      * @return radius
      */
     int getNotifyNearbyPlayersRadius();
-
-    /**
-     * Sets the spectator mode enabled.
-     *
-     * @param enabled enabled
-     */
-    void setEnabled(boolean enabled);
-
-    /**
-     * Returns if the specator mode is enabled,
-     *
-     * @return enabled
-     */
-    boolean isEnabled();
 }

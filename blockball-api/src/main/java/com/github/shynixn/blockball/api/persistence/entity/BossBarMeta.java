@@ -1,6 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta;
-
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+package com.github.shynixn.blockball.api.persistence.entity;
 
 import java.util.Optional;
 import java.util.Set;
@@ -52,7 +50,7 @@ public interface BossBarMeta extends Persistenceable<BossBarMeta> {
      *
      * @return style
      */
-    BossBarMeta getStyle();
+    Style getStyle();
 
     /**
      * Sets the style of the bossbar.

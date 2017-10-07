@@ -19,5 +19,5 @@ public interface Persistenceable<T> {
     /**
      * Resets the object to the default values
      */
-    void reset();
+    void reset(T object);
 }

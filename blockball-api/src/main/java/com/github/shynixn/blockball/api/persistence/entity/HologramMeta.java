@@ -1,6 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta;
-
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+package com.github.shynixn.blockball.api.persistence.entity;
 
 import java.util.List;
 import java.util.Optional;
@@ -80,21 +78,6 @@ public interface HologramMeta extends Persistenceable<HologramMeta> {
      * @return lines
      */
     List<String> getLines();
-
-    /**
-     * Returns if the hologram is enabled
-     *
-     * @return enabled
-     */
-    boolean isEnabled();
-
-    /**
-     * Sets the hologram enabled
-     *
-     * @param enabled enabled
-     * @return instance
-     */
-    HologramMeta setEnabled(boolean enabled);
 
     /**
      * Returns the location of the hologram.

@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.business.entity;
 
-import com.github.shynixn.blockball.api.persistence.entity.meta.BallMeta;
+import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 
 public interface Ball {
 

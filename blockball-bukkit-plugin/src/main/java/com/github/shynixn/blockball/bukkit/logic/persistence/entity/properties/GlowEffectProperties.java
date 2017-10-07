@@ -1,6 +1,8 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+import com.github.shynixn.blockball.api.persistence.entity.GlowEffectMeta;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
+import com.github.shynixn.blockball.lib.YamlSerializer;
 
 /**
  * Created by Shynixn 2017.
@@ -29,46 +31,51 @@ import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface ScoreboardMeta extends Persistenceable<ScoreboardMeta> {
-    /**
-     * Sets the title of the scoreboard.
-     *
-     * @param title title
-     */
-    void setTitle(String title);
+public class GlowEffectProperties extends PersistenceObject<GlowEffectMeta> implements GlowEffectMeta {
+
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "enabled")
+    private boolean enabled;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "duration")
+    private int duration;
 
     /**
-     * Returns the title of the scoreboard.
+     * Sets the amount of seconds a player is glowing.
      *
-     * @return title
+     * @param amount amount
      */
-    String getTitle();
+    @Override
+    public void setAmountOfSeconds(int amount) {
+        this.duration = amount;
+    }
 
     /**
-     * Enables or disables the scoreboard.
+     * Returns the amount of seconds a player is glowing.
      *
-     * @param enabled scoreboard
+     * @return amount
      */
-    void setEnabled(boolean enabled);
+    @Override
+    public int getAmountOfSeconds() {
+        return this.duration;
+    }
 
     /**
-     * Returns if the scoreboard is enabled.
+     * Toggles the effect.
+     *
+     * @param enabled enabled
+     */
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    /**
+     * Returns if the effect is enabled
      *
      * @return enabled
      */
-    boolean isEnabled();
-
-    /**
-     * Sets the lines of the scoreboard.
-     *
-     * @param scoreboardLines scoreboardLines
-     */
-    void setScoreboardLines(String[] scoreboardLines);
-
-    /**
-     * Returns the lines of the scoreboard.
-     *
-     * @return lines
-     */
-    String[] getScoreboardLines();
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
 }

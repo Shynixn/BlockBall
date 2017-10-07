@@ -1,6 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta;
-
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+package com.github.shynixn.blockball.api.persistence.entity;
 
 import java.util.Optional;
 
@@ -145,20 +143,6 @@ public interface TeamMeta extends Persistenceable<TeamMeta> {
      * @return amount
      */
     int getMaxAmountOfPlayers();
-
-    /**
-     * Returns the meta data of the command which gets executed by the console with console permissions.
-     *
-     * @return meta
-     */
-    CommandMeta getConsoleCommand();
-
-    /**
-     * Returns the meta data of the command which gets executed by the player itself with player permissions.
-     *
-     * @return meta
-     */
-    CommandMeta getPlayerCommand();
 
     /**
      * Returns the armor items of the team.

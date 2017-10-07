@@ -1,9 +1,11 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder;
 
-import com.github.shynixn.blockball.api.persistence.entity.meta.SoundMeta;
+import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.bukkit.nms.VersionSupport;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -40,7 +42,6 @@ import java.util.Map;
  * SOFTWARE.
  */
 public class SoundBuilder extends PersistenceObject<SoundMeta> implements SoundMeta {
-
     private String text;
     private float volume;
     private float pitch;
@@ -85,7 +86,6 @@ public class SoundBuilder extends PersistenceObject<SoundMeta> implements SoundM
      * @param players players
      * @throws Exception exception
      */
-    @Override
     public void apply(Collection<Player> players) throws Exception {
         this.apply(players.toArray(new Player[players.size()]));
     }
@@ -96,7 +96,6 @@ public class SoundBuilder extends PersistenceObject<SoundMeta> implements SoundM
      * @param players players
      * @throws Exception exception
      */
-    @Override
     public void apply(Player... players) throws Exception {
         this.convertSounds();
         for (final Player player : players) {
@@ -110,7 +109,6 @@ public class SoundBuilder extends PersistenceObject<SoundMeta> implements SoundM
      * @param location location
      * @throws Exception exception
      */
-    @Override
     public void apply(Location location) throws Exception {
         this.convertSounds();
         for (final Player player : location.getWorld().getPlayers()) {
@@ -125,7 +123,6 @@ public class SoundBuilder extends PersistenceObject<SoundMeta> implements SoundM
      * @param players  players
      * @throws Exception exception
      */
-    @Override
     public void apply(Location location, Collection<Player> players) throws Exception {
         this.apply(location, players.toArray(new Player[players.size()]));
     }
@@ -137,12 +134,33 @@ public class SoundBuilder extends PersistenceObject<SoundMeta> implements SoundM
      * @param players  players
      * @throws Exception exception
      */
-    @Override
     public void apply(Location location, Player... players) throws Exception {
         this.convertSounds();
         for (final Player player : players) {
             player.playSound(location, Sound.valueOf(this.text),this.volume, this.pitch);
         }
+    }
+
+    /**
+     * Applies the sound at the given location
+     *
+     * @param location location
+     * @throws Exception ex
+     */
+    @Override
+    public void applyToLocation(Object location) throws Exception {
+        this.apply((Location)location);
+    }
+
+    /**
+     * Applies the sound to the given player
+     *
+     * @param players players
+     * @throws Exception ex
+     */
+    @Override
+    public void applyToPlayers(Object... players) throws Exception {
+        this.apply((Player[]) players);
     }
 
     /**
@@ -173,7 +191,6 @@ public class SoundBuilder extends PersistenceObject<SoundMeta> implements SoundM
      * @return sound
      * @throws Exception exception
      */
-    @Override
     public Sound getSound() throws Exception {
         return Sound.valueOf(this.text);
     }
@@ -184,8 +201,7 @@ public class SoundBuilder extends PersistenceObject<SoundMeta> implements SoundM
      * @param sound sound
      * @return builder
      */
-    @Override
-    public SoundBuilder setSound(Sound sound) {
+    public SoundMeta setSound(Sound sound) {
         this.text = sound.name();
         return this;
     }
@@ -235,17 +251,13 @@ public class SoundBuilder extends PersistenceObject<SoundMeta> implements SoundM
     }
 
     /**
-     * Clones the current object
-     *
-     * @return meta
+     * Resets the object to the default values
      */
     @Override
-    public SoundMeta clone() {
-        try {
-            return new SoundBuilder(this.serialize());
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
+    public void reset(SoundMeta object) {
+        this.text = object.getName();
+        this.setPitch(object.getPitch());
+        this.setVolume(object.getVolume());
     }
 
     /**

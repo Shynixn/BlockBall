@@ -1,6 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta;
-
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+package com.github.shynixn.blockball.api.persistence.entity;
 
 import java.util.Optional;
 
@@ -60,20 +58,6 @@ public interface CommandMeta extends Persistenceable<CommandMeta> {
      * @return command
      */
     Optional<String> getCommand();
-
-    /**
-     * Enables or disables the command.
-     *
-     * @param enabled enabled
-     */
-    void setEnabled(boolean enabled);
-
-    /**
-     * Enables or disables the command.
-     *
-     * @return enabled
-     */
-    boolean isEnabled();
 
     /**
      * Created by Shynixn 2017.

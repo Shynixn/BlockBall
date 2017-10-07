@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
-import com.github.shynixn.blockball.api.persistence.entity.meta.PotionEffectMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.SoundMeta;
+import com.github.shynixn.blockball.api.persistence.entity.PotionEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
 import com.github.shynixn.blockball.bukkit.dependencies.worldedit.WorldEditConnection;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
@@ -9,8 +9,8 @@ import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.SChatMenuManager;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.SChatpage;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.ItemSpawner;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PotionEffectBuilder;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.SoundBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.PotionEffectBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.lib.FastBossBar;
 import com.github.shynixn.blockball.lib.SFileUtils;

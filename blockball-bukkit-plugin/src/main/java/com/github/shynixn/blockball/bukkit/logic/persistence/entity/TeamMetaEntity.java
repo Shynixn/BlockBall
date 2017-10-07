@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.entities.DoubleJumpMeta;
 import com.github.shynixn.blockball.api.entities.IPosition;
 import com.github.shynixn.blockball.api.entities.LightParticle;
 import com.github.shynixn.blockball.api.entities.TeamMeta;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
 import com.github.shynixn.blockball.lib.*;
 import org.bukkit.*;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -25,15 +26,10 @@ class TeamMetaEntity implements TeamMeta, Serializable {
 
     private String redTeamName = "&cTeam Red";
     private String blueTeamName = "&9Team Blue";
-    private int teamMaxSize = 10;
-    private int teamMinSize;
     private String redColor = "&c";
     private String blueColor = "&9";
 
     private boolean disableDamage;
-
-    private String[] blueItems = initalize(Color.BLUE);
-    private String[] redItems = initalize(Color.RED);
 
     private String joinMessage = "You joined the game.";
     private String leaveMessage = "You left the game.";

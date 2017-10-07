@@ -1,7 +1,9 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder;
 
-import com.github.shynixn.blockball.api.persistence.entity.meta.PotionEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.PotionEffectMeta;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -125,19 +127,6 @@ public class PotionEffectBuilder extends PersistenceObject<PotionEffectMeta> imp
      *
      * @param entities entities
      */
-    @Override
-    public void apply(Collection<LivingEntity> entities) {
-        if (entities == null)
-            throw new IllegalArgumentException("Entities cannot be null!");
-        this.apply(entities.toArray(new LivingEntity[entities.size()]));
-    }
-
-    /**
-     * Applies the potioneffect to living entities
-     *
-     * @param entities entities
-     */
-    @Override
     public void apply(LivingEntity... entities) {
         if (entities == null)
             throw new IllegalArgumentException("Entities cannot be null!");
@@ -155,12 +144,21 @@ public class PotionEffectBuilder extends PersistenceObject<PotionEffectMeta> imp
      * @param type type
      * @return builder
      */
-    @Override
     public PotionEffectBuilder setType(PotionEffectType type) {
         if (type == null)
             throw new IllegalArgumentException("Type cannot be null!");
         this.type = type.getId();
         return this;
+    }
+
+    /**
+     * Applies the potioneffect to living entities
+     *
+     * @param entities entities
+     */
+    @Override
+    public void apply(Collection<Object> entities) {
+        this.apply(entities.toArray(new LivingEntity[entities.size()]));
     }
 
     /**
@@ -266,7 +264,6 @@ public class PotionEffectBuilder extends PersistenceObject<PotionEffectMeta> imp
      *
      * @return type
      */
-    @Override
     public PotionEffectType getType() {
         return this.getFromId();
     }
@@ -326,7 +323,6 @@ public class PotionEffectBuilder extends PersistenceObject<PotionEffectMeta> imp
      *
      * @return bukkitPotionEffect
      */
-    @Override
     public PotionEffect build() {
         return new PotionEffect(PotionEffectType.getById(this.type), this.duration, this.strength, this.ambient, this.particles);
     }

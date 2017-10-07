@@ -1,21 +1,22 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
 
-import com.github.shynixn.blockball.api.entities.DoubleJumpMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.SoundMeta;
-import com.github.shynixn.blockball.api.entities.LightParticle;
-import com.github.shynixn.blockball.lib.ParticleEffect;
-import com.github.shynixn.blockball.lib.SParticle;
+import com.github.shynixn.blockball.api.persistence.entity.DoubleJumpMeta;
+import com.github.shynixn.blockball.api.persistence.entity.ParticleEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.ParticleEffectBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
+import com.github.shynixn.blockball.lib.YamlSerializer;
+import org.bukkit.Sound;
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2017.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.1
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2017 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,14 +36,28 @@ import com.github.shynixn.blockball.lib.SParticle;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class DoubleJumpMetaEntity implements DoubleJumpMeta {
+public class DoubleJumpProperties extends PersistenceObject<DoubleJumpMeta> implements DoubleJumpMeta {
 
-    private boolean allowJump = true;
-    private double horizontalStrength = 2.6D;
-    private double verticalStrength = 1.0D;
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "enabled")
+    private boolean enabled = true;
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "strength.horizontal")
+    private double horizontalStrength = 2.6;
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "strength.vertical")
+    private double verticalStrength = 1.0;
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "cooldown")
+    private int cooldown;
 
-    private LightParticle particle = new SParticle(ParticleEffect.EXPLOSION_NORMAL, 4, 0.0002, 2, 2, 2);
-    private SoundMeta soundEffect = new SoundBuilder("GHAST_FIREBALL", 100.0, 1.0);
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "sound")
+    private final SoundMeta soundMeta = new SoundBuilder()
+            .setName("GHAST_FIREBALL")
+            .setVolume(100)
+            .setPitch(1.0);
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "particleEffect")
+    private final ParticleEffectMeta particleEffectMeta = new ParticleEffectBuilder()
+    .setEffectType(ParticleEffectMeta.ParticleEffectType.EXPLOSION_NORMAL)
+    .setAmount(4)
+    .setSpeed(0.0002)
+    .setOffset(2, 2, 2);
 
     /**
      * Enables the double jump
@@ -51,7 +66,7 @@ class DoubleJumpMetaEntity implements DoubleJumpMeta {
      */
     @Override
     public void setEnabled(boolean enabled) {
-        this.allowJump = enabled;
+        this.enabled = enabled;
     }
 
     /**
@@ -61,7 +76,7 @@ class DoubleJumpMetaEntity implements DoubleJumpMeta {
      */
     @Override
     public boolean isEnabled() {
-        return this.allowJump;
+        return this.enabled;
     }
 
     /**
@@ -82,6 +97,26 @@ class DoubleJumpMetaEntity implements DoubleJumpMeta {
     @Override
     public double getHorizontalStrength() {
         return this.horizontalStrength;
+    }
+
+    /**
+     * Sets the cooldown in seconds between each jump.
+     *
+     * @param amount amount
+     */
+    @Override
+    public void setCooldownInSeconds(int amount) {
+        this.cooldown = amount;
+    }
+
+    /**
+     * Returns the cooldown in seconds between each jump.
+     *
+     * @return amount
+     */
+    @Override
+    public int getCooldownInSeconds() {
+        return this.cooldown;
     }
 
     /**
@@ -110,8 +145,8 @@ class DoubleJumpMetaEntity implements DoubleJumpMeta {
      * @return particleEffect
      */
     @Override
-    public LightParticle getParticleEffect() {
-        return this.particle;
+    public ParticleEffectMeta getParticleEffect() {
+        return this.particleEffectMeta;
     }
 
     /**
@@ -121,24 +156,6 @@ class DoubleJumpMetaEntity implements DoubleJumpMeta {
      */
     @Override
     public SoundMeta getSoundEffect() {
-        return this.soundEffect;
-    }
-
-    /**
-     * Sets the soundEffect of the double jump
-     *
-     * @param meta meta
-     */
-    void setSoundEffect(SoundMeta meta) {
-        this.soundEffect = meta;
-    }
-
-    /**
-     * Sets the particleEffect of the double jump
-     *
-     * @param particle particleEffect
-     */
-    void setParticle(LightParticle particle) {
-        this.particle = particle;
+        return this.soundMeta;
     }
 }
