@@ -1,4 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.api.persistence.entity.meta;
+
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
 import java.util.Optional;
 
@@ -100,6 +102,63 @@ public interface TeamMeta extends Persistenceable<TeamMeta> {
      * @return prefix
      */
     String getPrefix();
+
+
+    /**
+     * Sets the amount of speed for the players.
+     *
+     * @param amount amount
+     */
+    void setWalkingSpeed(float amount);
+
+    /**
+     * Returns the walkingSpeed of the players.
+     *
+     * @return speed
+     */
+    float getWalkingSpeed();
+
+    /**
+     * Sets the min amount of players in each team.
+     *
+     * @param amount amount
+     */
+    void setMinAmountOfPlayers(int amount);
+
+    /**
+     * Returns the min amount of players in each team.
+     *
+     * @return amount
+     */
+    int getMinAmountOfPlayers();
+
+    /**
+     * Sets the max amount of players in team.
+     *
+     * @param amount amount
+     */
+    void setMaxAmountOfPlayers(int amount);
+
+    /**
+     * Returns the max amount of players in team.
+     *
+     * @return amount
+     */
+    int getMaxAmountOfPlayers();
+
+    /**
+     * Returns the meta data of the command which gets executed by the console with console permissions.
+     *
+     * @return meta
+     */
+    CommandMeta getConsoleCommand();
+
+    /**
+     * Returns the meta data of the command which gets executed by the player itself with player permissions.
+     *
+     * @return meta
+     */
+    CommandMeta getPlayerCommand();
 
     /**
      * Returns the armor items of the team.

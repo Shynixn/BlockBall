@@ -1,8 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 
 import com.github.shynixn.blockball.api.entities.DoubleJumpMeta;
-import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.SoundBuilder;
+import com.github.shynixn.blockball.api.persistence.entity.meta.SoundMeta;
 import com.github.shynixn.blockball.api.entities.LightParticle;
 import com.github.shynixn.blockball.lib.ParticleEffect;
 import com.github.shynixn.blockball.lib.SParticle;

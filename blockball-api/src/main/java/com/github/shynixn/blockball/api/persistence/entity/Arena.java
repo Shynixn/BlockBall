@@ -1,6 +1,10 @@
 package com.github.shynixn.blockball.api.persistence.entity;
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType;
+import com.github.shynixn.blockball.api.persistence.entity.meta.*;
+import com.github.shynixn.blockball.api.persistence.entity.meta.BossBarMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.GlowEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.HologramMeta;
 
 import java.util.List;
 import java.util.Optional;
@@ -83,6 +87,27 @@ public interface Arena extends Persistenceable<Arena> {
      * @return doubleJumpMeta
      */
     DoubleJumpMeta getDoubleJumpMeta();
+
+    /**
+     * Returns the meta data of glowing when scoring.
+     *
+     * @return glowing
+     */
+    GlowEffectMeta getScoreGlowingMeta();
+
+    /**
+     * Returns the meta data of the red team
+     *
+     * @return meta
+     */
+    TeamMeta getRedTeamMeta();
+
+    /**
+     * Returns the meta data of the blue team
+     *
+     * @return meta
+     */
+    TeamMeta getBlueTeamMeta();
 
     /**
      * Adds a new hologram to the arena.

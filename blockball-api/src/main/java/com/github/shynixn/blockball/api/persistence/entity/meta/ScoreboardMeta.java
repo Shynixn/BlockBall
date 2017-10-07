@@ -1,4 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.api.persistence.entity.meta;
+
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
 /**
  * Created by Shynixn 2017.
@@ -27,7 +29,7 @@ package com.github.shynixn.blockball.api.persistence.entity;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface ScoreboardMeta {
+public interface ScoreboardMeta extends Persistenceable<ScoreboardMeta> {
     /**
      * Sets the title of the scoreboard.
      *

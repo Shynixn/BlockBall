@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
-import com.github.shynixn.blockball.api.persistence.entity.PotionEffectMeta;
-import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.PotionEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.SoundMeta;
 import com.github.shynixn.blockball.bukkit.dependencies.worldedit.WorldEditConnection;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;

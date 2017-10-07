@@ -1,4 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.api.persistence.entity.meta;
+
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -30,7 +32,7 @@ import java.util.Set;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BossBarMeta {
+public interface BossBarMeta extends Persistenceable<BossBarMeta> {
     /**
      * Returns the percentage of the bossbar.
      *

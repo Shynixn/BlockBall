@@ -1,6 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.api.persistence.entity.meta;
 
-import java.util.Optional;
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
 /**
  * Copyright 2017 Shynixn
@@ -31,61 +31,66 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface EventMeta {
+public interface SoundMeta extends Persistenceable<SoundMeta> {
 
     /**
-     * Adds the name of a player for the redTeam
+     * Applies the sound at the given location
+     *
+     * @param location location
+     * @throws Exception ex
+     */
+    void applyToLocation(Object location) throws Exception;
+
+    /**
+     * Applies the sound to the given player
+     *
+     * @param players players
+     * @throws Exception ex
+     */
+    void applyToPlayers(Object... players) throws Exception;
+
+    /**
+     * Returns the name of the sound
+     *
+     * @return name
+     */
+    String getName();
+
+    /**
+     * Sets the name of the sound
      *
      * @param name name
+     * @return builder
      */
-    void addRedName(String name);
+    SoundMeta setName(String name);
 
     /**
-     * Removes the name of a player of the redTeam
+     * Returns the volume of the sound
      *
-     * @param name name
+     * @return volume
      */
-    void removeRedName(String name);
+    double getVolume();
 
     /**
-     * Returns all names of the redPlayers
+     * Sets the volume of the sound
      *
-     * @return names
+     * @param volume volume
+     * @return builder
      */
-    String[] getRedPlayerNames();
+    SoundMeta setVolume(double volume);
 
     /**
-     * Adds the name of a player for the blueTeam
+     * Returns the pitch of the sound
      *
-     * @param name name
+     * @return pitch
      */
-    void addBlueName(String name);
+    double getPitch();
 
     /**
-     * Removes the name of a player of the blueTeam
+     * Sets the pitch of the sound
      *
-     * @param name name
+     * @param pitch pitch
+     * @return builder
      */
-    void removeBlueName(String name);
-
-    /**
-     * Returns all names of the bluePlayers
-     *
-     * @return names
-     */
-    String[] getBluePlayerNames();
-
-    /**
-     * Returns the name of the referee if present
-     *
-     * @return referee
-     */
-    Optional<String> getRefereeName();
-
-    /**
-     * Sets the name of the referee
-     *
-     * @param name name
-     */
-    void setRefereeName(String name);
+    SoundMeta setPitch(double pitch);
 }

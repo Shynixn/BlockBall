@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.nms;
 
 import com.github.shynixn.blockball.api.business.entity.Ball;
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.BallMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.dependencies.bossbar.BossBarConnection;
 import com.github.shynixn.blockball.bukkit.dependencies.placeholderapi.PlaceHolderApiConnection;

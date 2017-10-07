@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity;
 
 import com.github.shynixn.blockball.api.entities.items.Spawnrate;
-import com.github.shynixn.blockball.api.persistence.entity.PotionEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.PotionEffectMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PotionEffectBuilder;
 import com.github.shynixn.blockball.lib.SSKulls;
 import com.github.shynixn.blockball.api.entities.items.BoostItem;

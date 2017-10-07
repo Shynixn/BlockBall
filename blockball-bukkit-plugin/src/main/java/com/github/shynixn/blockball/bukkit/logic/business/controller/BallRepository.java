@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.controller;
 
 import com.github.shynixn.blockball.api.business.controller.BallController;
 import com.github.shynixn.blockball.api.business.entity.Ball;
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.BallMeta;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;

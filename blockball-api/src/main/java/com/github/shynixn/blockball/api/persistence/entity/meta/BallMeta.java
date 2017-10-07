@@ -1,15 +1,15 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.api.persistence.entity.meta;
+
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2017.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.1
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2017 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,61 +29,75 @@ package com.github.shynixn.blockball.api.persistence.entity;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface DoubleJumpMeta {
+public interface BallMeta extends Persistenceable<BallMeta> {
 
     /**
-     * Enables the double jump
+     * Returns the sound played when the ball gets hit
      *
-     * @param enabled enabled
+     * @return meta
      */
-    void setEnabled(boolean enabled);
+    SoundMeta getGenericHitSound();
 
     /**
-     * Checks if the double jump is enabled
+     * Returns the sound played when the ball spawns
      *
-     * @return enabled
+     * @return meta
      */
-    boolean isEnabled();
+    SoundMeta getSpawnSound();
 
     /**
-     * Sets the horizontal strength of the double jump
-     *
-     * @param strength strength
-     */
-    void setHorizontalStrength(double strength);
-
-    /**
-     * Returns the horizontal strength of the double jump
+     * Returns the horizontal strength the ball is going to fly
      *
      * @return strength
      */
     double getHorizontalStrength();
 
     /**
-     * Sets the vertical strength of the double jump
+     * Sets the horizontal strength of the ball  is going to fly
      *
      * @param strength strength
      */
-    void setVerticalStrength(double strength);
+    void setHorizontalStrength(double strength);
 
     /**
-     * Returns the vertical strength of the double jump
+     * Returns the vertical strength the ball is going to fly
      *
      * @return strength
      */
     double getVerticalStrength();
 
     /**
-     * Returns the particleEffect of the double jump
+     * Sets the vertical strength the ball is going to fly
      *
-     * @return particleEffect
+     * @param strength strength
      */
-    ParticleEffectMeta getParticleEffect();
+    void setVerticalStrength(double strength);
 
     /**
-     * Returns the soundEffect of the double jump
+     * Sets if rotating is enabled
      *
-     * @return soundEffect
+     * @param enabled enabled
      */
-    SoundMeta getSoundEffect();
+    void setRotatingEnabled(boolean enabled);
+
+    /**
+     * Returns if rotating is enabled
+     *
+     * @return enabled
+     */
+    boolean isRotatingEnabled();
+
+    /**
+     * Changes the skin of the ball. Has to be a skin-URL or name of a player
+     *
+     * @param skin skin
+     */
+    void setSkin(String skin);
+
+    /**
+     * Returns the skin of the ball
+     *
+     * @return skin
+     */
+    String getSkin();
 }

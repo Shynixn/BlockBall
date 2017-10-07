@@ -1,4 +1,8 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.api.persistence.entity.meta;
+
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+
+import java.util.Optional;
 
 /**
  * Created by Shynixn 2017.
@@ -27,8 +31,7 @@ package com.github.shynixn.blockball.api.persistence.entity;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@Deprecated
-public interface TeamsMeta {
+public interface CustomizingMeta extends Persistenceable<CustomizingMeta> {
 
     /**
      * Forces even teams on both sides. Red and blue team amount has to be the same to start.
@@ -43,20 +46,6 @@ public interface TeamsMeta {
      * @return enabled
      */
     boolean isForceEvenTeamsEnabled();
-
-    /**
-     * Sets the amount of speed for the players.
-     *
-     * @param amount amount
-     */
-    void setWalkingSpeed(float amount);
-
-    /**
-     * Returns the walkingSpeed of the players.
-     *
-     * @return speed
-     */
-    float getWalkingSpeed();
 
     /**
      * Enables or disables player to be allowed hitting each other.
@@ -101,87 +90,58 @@ public interface TeamsMeta {
     boolean isFastJoiningEnabled();
 
     /**
-     * Sets the max amount of players in each team.
+     * Returns the join message which gets played when a player joins a match.
      *
-     * @param amount amount
+     * @return message
      */
-    void setMaxAmountOfPlayers(int amount);
+    Optional<String> getJoinMessage();
 
     /**
-     * Returns the max amount of players in each team.
+     * Sets the join message which gets played when a player joins a match.
      *
-     * @return amount
+     * @param message message
      */
-    int getMaxAmountOfPlayers();
+    void setJoinMessage(String message);
 
     /**
-     * Sets the min amount of players in each team.
+     * Returns the leave message which gets played when a player leaves a match.
      *
-     * @param amount amount
+     * @return message
      */
-    void setMinAmountOfPlayers(int amount);
+    Optional<String> getLeaveMessage();
 
     /**
-     * Returns the min amount of players in each team.
+     * Sets the the leave message which gets played when a player leaves a match.
      *
-     * @return amount
+     * @param message message
      */
-    int getMinAmountOfPlayers();
+    void setLeaveMessage(String message);
 
     /**
-     * Returns the meta data of the red team
+     * Sets the how to join message which gets played when a player tries to join a match.
      *
-     * @return meta
+     * @param message message
      */
-    TeamMeta getRedTeamMeta();
-
-    /**
-     * Returns the meta data of the blue team
-     *
-     * @return meta
-     */
-    TeamMeta getBlueTeamMeta();
-
-    /**
-     * Returns the meta data of glowing when scoring.
-     *
-     * @return glowing
-     */
-    GlowEffectMeta getScoreGlowingMeta();
-
-    String getJoinMessage();
-
-    void setJoinMessage(String joinMessage);
-
-    String getLeaveMessage();
-
-    void setLeaveMessage(String leaveMessage);
-
     void setHowToJoinMessage(String message);
 
-    String getHowToJoinMessage();
+    /**
+     * Returns the how to join message which gets played when a player tries to join a match.
+     *
+     * @return message
+     */
+    Optional<String> getHowToJoinMessage();
 
-    int getRewardGoals();
+    /**
+     * Sets the team full message which gets played when a player tries to join a match but the team is already full.
+     *
+     * @param message message
+     */
+    void setTeamFullMessage(String message);
 
-    String getWinCommand();
-
-    void setWinCommand(String winCommand);
-
-    String getGamendCommand();
-
-    void setGamendCommand(String gamendCommand);
-
-    String getTeamFullMessage();
-
-    void setTeamFullMessage(String teamFullMessage);
-
-    void setRewardGoals(int rewardGoals);
-
-    int getRewardGames();
-
-    void setRewardGames(int rewardGames);
-
-    int getRewardWinning();
-
-    void setRewardWinning(int rewardWinning);
+    /**
+     * Returns the team full message which gets played when a player tries to join a match but the team is already full.
+     *
+     * @return message
+     */
+    Optional<String> getTeamFullMessage();
 }

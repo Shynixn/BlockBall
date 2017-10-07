@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity;
 import com.github.shynixn.blockball.api.entities.*;
 import com.github.shynixn.blockball.api.events.GameJoinEvent;
 import com.github.shynixn.blockball.api.events.GameWinEvent;
-import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.SoundMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;

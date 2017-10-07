@@ -1,8 +1,6 @@
-package com.github.shynixn.blockball.api.business.controller;
+package com.github.shynixn.blockball.api.persistence.entity.meta;
 
-import com.github.shynixn.blockball.api.business.entity.Ball;
-import com.github.shynixn.blockball.api.persistence.controller.IController;
-import com.github.shynixn.blockball.api.persistence.entity.meta.BallMeta;
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
 import java.util.Optional;
 
@@ -35,22 +33,61 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BallController extends IController<Ball> {
+public interface EventMeta extends Persistenceable<EventMeta>{
 
     /**
-     * Creates a new ball at the given location and meta
+     * Adds the name of a player for the redTeam
      *
-     * @param location location
-     * @param ballMeta metaData
-     * @return ball
+     * @param name name
      */
-    Ball create(Object location, BallMeta ballMeta);
+    void addRedName(String name);
 
     /**
-     * Returns a ball from the given entity
+     * Removes the name of a player of the redTeam
      *
-     * @param entity entity
-     * @return ball
+     * @param name name
      */
-    Optional<Ball> findByBallByEntity(Object entity);
+    void removeRedName(String name);
+
+    /**
+     * Returns all names of the redPlayers
+     *
+     * @return names
+     */
+    String[] getRedPlayerNames();
+
+    /**
+     * Adds the name of a player for the blueTeam
+     *
+     * @param name name
+     */
+    void addBlueName(String name);
+
+    /**
+     * Removes the name of a player of the blueTeam
+     *
+     * @param name name
+     */
+    void removeBlueName(String name);
+
+    /**
+     * Returns all names of the bluePlayers
+     *
+     * @return names
+     */
+    String[] getBluePlayerNames();
+
+    /**
+     * Returns the name of the referee if present
+     *
+     * @return referee
+     */
+    Optional<String> getRefereeName();
+
+    /**
+     * Sets the name of the referee
+     *
+     * @param name name
+     */
+    void setRefereeName(String name);
 }

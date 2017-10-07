@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 
 
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
+import com.github.shynixn.blockball.api.persistence.entity.meta.BallMeta;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -86,7 +87,7 @@ public class ArenaEntity extends SelectedArea implements Arena {
     }
 
     @Override
-    public com.github.shynixn.blockball.api.persistence.entity.BallMeta getBallMeta() {
+    public BallMeta getBallMeta() {
         return this.properties;
     }
 

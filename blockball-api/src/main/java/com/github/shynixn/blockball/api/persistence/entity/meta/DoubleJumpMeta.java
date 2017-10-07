@@ -1,4 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.api.persistence.entity.meta;
+
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
 /**
  * Copyright 2017 Shynixn
@@ -29,66 +31,61 @@ package com.github.shynixn.blockball.api.persistence.entity;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface SoundMeta extends Persistenceable {
+public interface DoubleJumpMeta extends Persistenceable<DoubleJumpMeta>{
 
     /**
-     * Applies the sound at the given location
+     * Enables the double jump
      *
-     * @param location location
-     * @throws Exception ex
+     * @param enabled enabled
      */
-    void applyToLocation(Object location) throws Exception;
+    void setEnabled(boolean enabled);
 
     /**
-     * Applies the sound to the given player
+     * Checks if the double jump is enabled
      *
-     * @param players players
-     * @throws Exception ex
+     * @return enabled
      */
-    void applyToPlayers(Object... players) throws Exception;
+    boolean isEnabled();
 
     /**
-     * Returns the name of the sound
+     * Sets the horizontal strength of the double jump
      *
-     * @return name
+     * @param strength strength
      */
-    String getName();
+    void setHorizontalStrength(double strength);
 
     /**
-     * Sets the name of the sound
+     * Returns the horizontal strength of the double jump
      *
-     * @param name name
-     * @return builder
+     * @return strength
      */
-    SoundMeta setName(String name);
+    double getHorizontalStrength();
 
     /**
-     * Returns the volume of the sound
+     * Sets the vertical strength of the double jump
      *
-     * @return volume
+     * @param strength strength
      */
-    double getVolume();
+    void setVerticalStrength(double strength);
 
     /**
-     * Sets the volume of the sound
+     * Returns the vertical strength of the double jump
      *
-     * @param volume volume
-     * @return builder
+     * @return strength
      */
-    SoundMeta setVolume(double volume);
+    double getVerticalStrength();
 
     /**
-     * Returns the pitch of the sound
+     * Returns the particleEffect of the double jump
      *
-     * @return pitch
+     * @return particleEffect
      */
-    double getPitch();
+    ParticleEffectMeta getParticleEffect();
 
     /**
-     * Sets the pitch of the sound
+     * Returns the soundEffect of the double jump
      *
-     * @param pitch pitch
-     * @return builder
+     * @return soundEffect
      */
-    SoundMeta setPitch(double pitch);
+    SoundMeta getSoundEffect();
 }
