@@ -4,7 +4,7 @@ import com.github.shynixn.blockball.api.events.BallDeathEvent;
 import com.github.shynixn.blockball.api.events.BallInteractEvent;
 import com.github.shynixn.blockball.api.events.BallKickEvent;
 import com.github.shynixn.blockball.api.events.BallMoveEvent;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.lib.SSKulls;
@@ -82,7 +82,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
                             } else if (this.rvalue - a.getX() > this.rvalue * 0.1) {
                                 this.getSpigotEntity().setHeadPose(new EulerAngle(a.getX() + 0.012, a.getY() + 0.025, a.getZ() + 0.035));
                             }
-                            if (Config.getInstance().isUseEngineV2()) {
+                            if (ConfigOld.getInstance().isUseEngineV2()) {
                                 if (this.slime.getSpigotEntity().getVelocity().getY() < 0.2
                                         && this.slime.getSpigotEntity().getVelocity().getX() < 0.03
                                         && this.slime.getSpigotEntity().getVelocity().getZ() < 0.03) {
@@ -96,7 +96,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
                             }
                         }
                     }
-                    if (Config.getInstance().isUseEngineV2()) {
+                    if (ConfigOld.getInstance().isUseEngineV2()) {
                         if (this.counter <= 0) {
                             for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
                                 if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {

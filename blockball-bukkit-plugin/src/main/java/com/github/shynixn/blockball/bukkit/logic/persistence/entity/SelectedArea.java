@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 
-import com.github.shynixn.blockball.api.persistence.entity.IPosition;
+import com.github.shynixn.blockball.api.persistence.entity.AreaSelection;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.LocationBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -34,64 +34,50 @@ import org.bukkit.Location;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class SelectedArea {
+class SelectedArea extends PersistenceObject<AreaSelection> implements AreaSelection {
     private LocationBuilder downCorner;
     private LocationBuilder upCorner;
 
     /**
-     * Returns the upCorner
-     *
-     * @return upCorner
+     * Initializes a new selected area
+     * @param corner1 corner1
+     * @param corner2 corner2
      */
-    IPosition getUpCornerLocation() {
-        return this.upCorner;
+    SelectedArea(Location corner1, Location corner2) {
+        super();
+        this.setCorners(corner1, corner2);
     }
 
     /**
-     * Returns the downCorner
+     * Returns the upper corner depending on the coordinates.
      *
-     * @return downCorner
+     * @return location
      */
-    IPosition getDownCornerLocation() {
-        return this.downCorner;
+    @Override
+    public Object getUpperCorner() {
+        return this.upCorner.toLocation();
     }
 
     /**
-     * Returns the width of the x axe
+     * Returns the lower corner depending on the coordinates.
      *
-     * @return width
+     * @return location
      */
-    int getXWidth() {
-        return this.upCorner.getBlockX() - this.downCorner.getBlockX() + 1;
+    @Override
+    public Object getLowerCorner() {
+        return this.downCorner.toLocation();
     }
 
     /**
-     * Returns the width of the y axe
-     *
-     * @return width
-     */
-    int getYWidth() {
-        return this.upCorner.getBlockY() - this.downCorner.getBlockY() + 1;
-    }
-
-    /**
-     * Returns the width of the z axe
-     *
-     * @return width
-     */
-    int getZWidth() {
-        return this.upCorner.getBlockZ() - this.downCorner.getBlockZ();
-    }
-
-    /**
-     * Sets the corner locations
+     * Sets the upper and lower corner depending on the given 2 corners.
      *
      * @param corner1 corner1
      * @param corner2 corner2
      */
-    void setCornerLocations(Location corner1, Location corner2) {
-        this.calculateDownLocation(corner1, corner2);
-        this.calculateUpLocation(corner1, corner2);
+    @Override
+    public void setCorners(Object corner1, Object corner2) {
+        this.calculateDownLocation((Location)corner1, (Location)corner2);
+        this.calculateUpLocation((Location)corner1, (Location)corner2);
     }
 
     /**
@@ -99,20 +85,23 @@ class SelectedArea {
      *
      * @return center
      */
+    @Override
     public Location getCenter() {
-        if (this.getDownCornerLocation() != null) {
-            return new Location(Bukkit.getWorld(this.getDownCornerLocation().getWorldName()), this.getDownCornerLocation().getBlockX() + this.getXWidth() / 2, this.getDownCornerLocation().getBlockY() + this.getYWidth() / 2, this.getDownCornerLocation().getBlockZ() + this.getZWidth() / 2);
-        }
-        return null;
+        return new Location(Bukkit.getWorld(this.downCorner.getWorldName()), this.downCorner.getBlockX()
+                + this.getOffsetX() / 2, this.downCorner.getBlockY()
+                + this.getOffsetY() / 2, this.downCorner.getBlockZ()
+                + this.getOffsetZ() / 2);
     }
 
     /**
-     * Returns if the given location is in this area
+     * Returns if the given location is inside of this area selection.
      *
-     * @param location location
-     * @return isThere
+     * @param mLocation location
+     * @return isInside
      */
-    public boolean isLocationInArea(Location location) {
+    @Override
+    public boolean isLocationInSelection(Object mLocation) {
+        final Location location = (Location) mLocation;
         if (location.getWorld().getName().equals(this.upCorner.getWorldName())) {
             if ((this.upCorner.getX() >= location.getX()) && (this.downCorner.getX() <= location.getX())) {
                 if ((this.upCorner.getY() >= location.getY() + 1) && (this.downCorner.getY() <= location.getY() + 1)) {
@@ -123,6 +112,36 @@ class SelectedArea {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the length of the x axe.
+     *
+     * @return width
+     */
+    @Override
+    public int getOffsetX() {
+        return this.upCorner.getBlockX() - this.downCorner.getBlockX() + 1;
+    }
+
+    /**
+     * Returns the length of the y axe.
+     *
+     * @return width
+     */
+    @Override
+    public int getOffsetY() {
+        return this.upCorner.getBlockY() - this.downCorner.getBlockY() + 1;
+    }
+
+    /**
+     * Returns the length of the z axe.
+     *
+     * @return width
+     */
+    @Override
+    public int getOffsetZ() {
+        return this.upCorner.getBlockZ() - this.downCorner.getBlockZ();
     }
 
     /**

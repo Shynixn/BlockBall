@@ -1,6 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.configuration;
-
-import java.util.List;
+package com.github.shynixn.blockball.api.persistence.entity;
 
 /**
  * Created by Shynixn 2017.
@@ -29,51 +27,62 @@ import java.util.List;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class Config extends SimpleConfig {
-    private static final Config instance = new Config();
+public interface AreaSelection extends Persistenceable<AreaSelection> {
+    /**
+     * Returns the upper corner depending on the coordinates.
+     *
+     * @return location
+     */
+    Object getUpperCorner();
 
     /**
-     * Returns the plugin prefix
+     * Returns the lower corner depending on the coordinates.
      *
-     * @return prefix
+     * @return location
      */
-    public String getPrefix() {
-        return this.getData("messages.prefix");
-    }
+    Object getLowerCorner();
 
     /**
-     * Returns the config instance.
+     * Sets the upper and lower corner depending on the given 2 corners.
      *
-     * @return config
+     * @param corner1 corner1
+     * @param corner2 corner2
      */
-    public static Config getInstance() {
-        return instance;
-    }
+    void setCorners(Object corner1, Object corner2);
 
     /**
-     * Returns if the stats scoreboard is enabled.
+     * Returns the center of the selected area.
      *
-     * @return isEnabled
+     * @return location;
      */
-    public boolean isStatsScoreboardEnabled() {
-        return this.getData("stats-scoreboard.enabled");
-    }
+    Object getCenter();
 
     /**
-     * Returns the stats scoreboard title.
+     * Returns if the given location is inside of this area selection.
      *
-     * @return title
+     * @param location location
+     * @return isInside
      */
-    public String getStatsScoreboardTitle() {
-        return this.getData("stats-scoreboard.title");
-    }
+    boolean isLocationInSelection(Object location);
 
     /**
-     * Returns the stats scoreboard lines.
+     * Returns the length of the x axe.
      *
-     * @return lines
+     * @return width
      */
-    public List<String> getStatsScoreboardLines() {
-        return this.getData("stats-scoreboard.lines");
-    }
+    int getOffsetX();
+
+    /**
+     * Returns the length of the y axe.
+     *
+     * @return width
+     */
+    int getOffsetY();
+
+    /**
+     * Returns the length of the z axe.
+     *
+     * @return width
+     */
+    int getOffsetZ();
 }

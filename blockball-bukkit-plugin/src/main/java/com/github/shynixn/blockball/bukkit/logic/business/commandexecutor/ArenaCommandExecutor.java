@@ -4,7 +4,7 @@ import com.github.shynixn.blockball.api.persistence.entity.PotionEffectMeta;
 import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
 import com.github.shynixn.blockball.bukkit.dependencies.worldedit.WorldEditConnection;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.SChatMenuManager;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.SChatpage;
@@ -41,8 +41,8 @@ class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
     ArenaCommandExecutor(BlockBallManager manager, Plugin plugin) {
         super("blockball", (JavaPlugin) plugin);
         this.manager = manager;
-        if (Config.getInstance().getChatNavigateCommand().isEnabled()) {
-            final Config.CommandContainer c = Config.getInstance().getChatNavigateCommand();
+        if (ConfigOld.getInstance().getChatNavigateCommand().isEnabled()) {
+            final ConfigOld.CommandContainer c = ConfigOld.getInstance().getChatNavigateCommand();
             new SimpleCommandExecutor.UnRegistered(c.getCommand(), c.getUseage(), c.getDescription(), c.getPermission(), c.getPermissionMessage(), (JavaPlugin) plugin) {
                 /**
                  * Can be overwritten to listen to player executed commands
@@ -506,10 +506,10 @@ class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
         public void hitBlockEvent(Block block) {
             if (this.lastNumber == 5 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
                 final Sign sign = (Sign) block.getState();
-                sign.setLine(0, Config.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.RED));
-                sign.setLine(1, Config.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.RED));
-                sign.setLine(2, Config.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.RED));
-                sign.setLine(3, Config.getInstance().getTeamSign().getLine4(this.arenaEntity, Team.RED));
+                sign.setLine(0, ConfigOld.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.RED));
+                sign.setLine(1, ConfigOld.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.RED));
+                sign.setLine(2, ConfigOld.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.RED));
+                sign.setLine(3, ConfigOld.getInstance().getTeamSign().getLine4(this.arenaEntity, Team.RED));
                 sign.update();
                 this.lastNumber = -1;
                 this.arenaEntity.getLobbyMeta().addRedTeamSignLocation(block.getLocation());
@@ -517,10 +517,10 @@ class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
             }
             if (this.lastNumber == 6 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
                 final Sign sign = (Sign) block.getState();
-                sign.setLine(0, Config.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.BLUE));
-                sign.setLine(1, Config.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.BLUE));
-                sign.setLine(2, Config.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.BLUE));
-                sign.setLine(3, Config.getInstance().getTeamSign().getLine4(this.arenaEntity, Team.BLUE));
+                sign.setLine(0, ConfigOld.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.BLUE));
+                sign.setLine(1, ConfigOld.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.BLUE));
+                sign.setLine(2, ConfigOld.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.BLUE));
+                sign.setLine(3, ConfigOld.getInstance().getTeamSign().getLine4(this.arenaEntity, Team.BLUE));
                 sign.update();
                 this.lastNumber = -1;
                 this.arenaEntity.getLobbyMeta().addBlueTeamSignLocation(block.getLocation());
@@ -616,10 +616,10 @@ class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
         public void hitBlockEvent(Block block) {
             if (this.lastNumber == 5 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
                 final Sign sign = (Sign) block.getState();
-                sign.setLine(0, Config.getInstance().getMinigameSign().getLine1(this.arenaEntity, null));
-                sign.setLine(1, Config.getInstance().getMinigameSign().getLine2(this.arenaEntity, null));
-                sign.setLine(2, Config.getInstance().getMinigameSign().getLine3(this.arenaEntity, null));
-                sign.setLine(3, Config.getInstance().getMinigameSign().getLine4(this.arenaEntity, null));
+                sign.setLine(0, ConfigOld.getInstance().getMinigameSign().getLine1(this.arenaEntity, null));
+                sign.setLine(1, ConfigOld.getInstance().getMinigameSign().getLine2(this.arenaEntity, null));
+                sign.setLine(2, ConfigOld.getInstance().getMinigameSign().getLine3(this.arenaEntity, null));
+                sign.setLine(3, ConfigOld.getInstance().getMinigameSign().getLine4(this.arenaEntity, null));
                 sign.update();
                 this.arenaEntity.getLobbyMeta().addSignLocation(block.getLocation());
                 this.lastNumber = -1;
@@ -627,10 +627,10 @@ class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
             }
             if (this.lastNumber == 6 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
                 final Sign sign = (Sign) block.getState();
-                sign.setLine(0, Config.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.RED));
-                sign.setLine(1, Config.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.RED));
-                sign.setLine(2, Config.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.RED));
-                sign.setLine(3, Config.getInstance().getTeamSign().getLine4(this.arenaEntity, Team.RED));
+                sign.setLine(0, ConfigOld.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.RED));
+                sign.setLine(1, ConfigOld.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.RED));
+                sign.setLine(2, ConfigOld.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.RED));
+                sign.setLine(3, ConfigOld.getInstance().getTeamSign().getLine4(this.arenaEntity, Team.RED));
                 sign.update();
                 this.lastNumber = -1;
                 this.arenaEntity.getLobbyMeta().addRedTeamSignLocation(block.getLocation());
@@ -638,10 +638,10 @@ class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
             }
             if (this.lastNumber == 7 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
                 final Sign sign = (Sign) block.getState();
-                sign.setLine(0, Config.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.BLUE));
-                sign.setLine(1, Config.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.BLUE));
-                sign.setLine(2, Config.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.BLUE));
-                sign.setLine(3, Config.getInstance().getTeamSign().getLine4(this.arenaEntity, Team.BLUE));
+                sign.setLine(0, ConfigOld.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.BLUE));
+                sign.setLine(1, ConfigOld.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.BLUE));
+                sign.setLine(2, ConfigOld.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.BLUE));
+                sign.setLine(3, ConfigOld.getInstance().getTeamSign().getLine4(this.arenaEntity, Team.BLUE));
                 sign.update();
                 this.lastNumber = -1;
                 this.arenaEntity.getLobbyMeta().addBlueTeamSignLocation(block.getLocation());
@@ -649,10 +649,10 @@ class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
             }
             if (this.lastNumber == 8 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
                 final Sign sign = (Sign) block.getState();
-                sign.setLine(0, Config.getInstance().getLeaveSign().getLine1(this.arenaEntity, null));
-                sign.setLine(1, Config.getInstance().getLeaveSign().getLine2(this.arenaEntity, null));
-                sign.setLine(2, Config.getInstance().getLeaveSign().getLine3(this.arenaEntity, null));
-                sign.setLine(3, Config.getInstance().getLeaveSign().getLine4(this.arenaEntity, null));
+                sign.setLine(0, ConfigOld.getInstance().getLeaveSign().getLine1(this.arenaEntity, null));
+                sign.setLine(1, ConfigOld.getInstance().getLeaveSign().getLine2(this.arenaEntity, null));
+                sign.setLine(2, ConfigOld.getInstance().getLeaveSign().getLine3(this.arenaEntity, null));
+                sign.setLine(3, ConfigOld.getInstance().getLeaveSign().getLine4(this.arenaEntity, null));
                 sign.update();
                 this.lastNumber = -1;
                 this.arenaEntity.getLobbyMeta().addLeaveignLocation(block.getLocation());
@@ -2441,10 +2441,10 @@ class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
         public void hitBlockEvent(Block block) {
             if (this.lastNumber == 4 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
                 final Sign sign = (Sign) block.getState();
-                sign.setLine(0, Config.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.RED));
-                sign.setLine(1, Config.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.RED));
-                sign.setLine(2, Config.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.RED));
-                sign.setLine(3, Config.getInstance().getTeamSign().getLine4(this.arenaEntity, Team.RED));
+                sign.setLine(0, ConfigOld.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.RED));
+                sign.setLine(1, ConfigOld.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.RED));
+                sign.setLine(2, ConfigOld.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.RED));
+                sign.setLine(3, ConfigOld.getInstance().getTeamSign().getLine4(this.arenaEntity, Team.RED));
                 sign.update();
                 this.lastNumber = -1;
                 this.arenaEntity.getLobbyMeta().addRedTeamSignLocation(block.getLocation());
@@ -2452,10 +2452,10 @@ class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
             }
             if (this.lastNumber == 5 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
                 final Sign sign = (Sign) block.getState();
-                sign.setLine(0, Config.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.BLUE));
-                sign.setLine(1, Config.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.BLUE));
-                sign.setLine(2, Config.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.BLUE));
-                sign.setLine(3, Config.getInstance().getTeamSign().getLine4(this.arenaEntity, Team.BLUE));
+                sign.setLine(0, ConfigOld.getInstance().getTeamSign().getLine1(this.arenaEntity, Team.BLUE));
+                sign.setLine(1, ConfigOld.getInstance().getTeamSign().getLine2(this.arenaEntity, Team.BLUE));
+                sign.setLine(2, ConfigOld.getInstance().getTeamSign().getLine3(this.arenaEntity, Team.BLUE));
+                sign.setLine(3, ConfigOld.getInstance().getTeamSign().getLine4(this.arenaEntity, Team.BLUE));
                 sign.update();
                 this.lastNumber = -1;
                 this.arenaEntity.getLobbyMeta().addBlueTeamSignLocation(block.getLocation());
@@ -2463,10 +2463,10 @@ class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
             }
             if (this.lastNumber == 6 && (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN)) {
                 final Sign sign = (Sign) block.getState();
-                sign.setLine(0, Config.getInstance().getLeaveSign().getLine1(this.arenaEntity, null));
-                sign.setLine(1, Config.getInstance().getLeaveSign().getLine2(this.arenaEntity, null));
-                sign.setLine(2, Config.getInstance().getLeaveSign().getLine3(this.arenaEntity, null));
-                sign.setLine(3, Config.getInstance().getLeaveSign().getLine4(this.arenaEntity, null));
+                sign.setLine(0, ConfigOld.getInstance().getLeaveSign().getLine1(this.arenaEntity, null));
+                sign.setLine(1, ConfigOld.getInstance().getLeaveSign().getLine2(this.arenaEntity, null));
+                sign.setLine(2, ConfigOld.getInstance().getLeaveSign().getLine3(this.arenaEntity, null));
+                sign.setLine(3, ConfigOld.getInstance().getLeaveSign().getLine4(this.arenaEntity, null));
                 sign.update();
                 this.lastNumber = -1;
                 this.arenaEntity.getLobbyMeta().addLeaveignLocation(block.getLocation());

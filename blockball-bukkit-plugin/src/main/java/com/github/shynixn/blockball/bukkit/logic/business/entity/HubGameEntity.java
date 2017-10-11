@@ -1,9 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity;
 
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.api.entities.Team;
-import com.github.shynixn.blockball.api.events.GameJoinEvent;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.api.persistence.entity.Arena;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,10 +10,10 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
-class HubGameEntity extends GameEntity {
+public class HubGameEntity extends GameEntity {
     private int timer;
 
-    HubGameEntity(Arena arena) {
+    public HubGameEntity(Arena arena) {
         super(arena);
     }
 
@@ -76,7 +74,7 @@ class HubGameEntity extends GameEntity {
             for (final Entity entity : this.arena.getBallSpawnLocation().getWorld().getEntities()) {
                 if (!(entity instanceof Player) && !(entity instanceof Rabbit) && !(entity instanceof ArmorStand) && !this.isCustomDrop(entity)) {
                     if (this.arena.isLocationInArea(entity.getLocation())) {
-                        final Vector vector = Config.getInstance().getEntityProtectionVelocity();
+                        final Vector vector = ConfigOld.getInstance().getEntityProtectionVelocity();
                         entity.getLocation().setDirection(vector);
                         entity.setVelocity(vector);
                     }
@@ -94,7 +92,7 @@ class HubGameEntity extends GameEntity {
         for (int i = 0; i < locations.length; i++) {
             final Location location = locations[i];
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
-                Config.getInstance().getTeamSign().updateTeamSignConsideringMaxPlayers((Sign) location.getBlock().getState(), this, Team.RED, this.redTeam);
+                ConfigOld.getInstance().getTeamSign().updateTeamSignConsideringMaxPlayers((Sign) location.getBlock().getState(), this, Team.RED, this.redTeam);
             } else {
                 this.arena.getLobbyMeta().removeRedTeamSignLocation(i);
             }
@@ -103,7 +101,7 @@ class HubGameEntity extends GameEntity {
         for (int i = 0; i < locations.length; i++) {
             final Location location = locations[i];
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
-                Config.getInstance().getTeamSign().updateTeamSignConsideringMaxPlayers((Sign) location.getBlock().getState(), this, Team.BLUE, this.blueTeam);
+                ConfigOld.getInstance().getTeamSign().updateTeamSignConsideringMaxPlayers((Sign) location.getBlock().getState(), this, Team.BLUE, this.blueTeam);
             } else {
                 this.arena.getLobbyMeta().removeBlueTeamSignLocation(i);
             }

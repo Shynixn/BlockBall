@@ -106,6 +106,13 @@ public interface Arena extends Persistenceable<Arena> {
     TeamMeta getBlueTeamMeta();
 
     /**
+     * Returns the customizing meta
+     *
+     * @return meta
+     */
+    CustomizingMeta getCustomizingMeta();
+
+    /**
      * Adds a new hologram to the arena.
      *
      * @param hologramMeta hologram

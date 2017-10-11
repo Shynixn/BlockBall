@@ -3,7 +3,8 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ArenaEntity2;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena;
+import com.github.shynixn.blockball.lib.YamlSerializer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -24,7 +25,7 @@ public final class ArenaRepository implements ArenaController {
      *
      * @param plugin plugin
      */
-    private ArenaRepository(Plugin plugin) {
+    public ArenaRepository(Plugin plugin) {
         super();
         this.plugin = plugin;
     }
@@ -36,8 +37,8 @@ public final class ArenaRepository implements ArenaController {
      */
     @Override
     public Arena create() {
-        final ArenaEntity2 arenaEntity = new ArenaEntity2();
-        arenaEntity.setName(String.valueOf(this.getNewId()));
+        final BlockBallArena arenaEntity = new BlockBallArena();
+        arenaEntity.setId(this.getNewId());
         return arenaEntity;
     }
 
@@ -145,7 +146,7 @@ public final class ArenaRepository implements ArenaController {
                     final File file = new File(this.getFolder(), s);
                     configuration.load(file);
                     final Map<String, Object> data = configuration.getConfigurationSection("arena").getValues(true);
-                    final Arena arenaEntity = new ArenaEntity2(data, configuration.getStringList("arena.properties.wall-bouncing"));
+                    final BlockBallArena arenaEntity = YamlSerializer.deserializeObject(BlockBallArena.class, data);
                     this.arenas.add(arenaEntity);
                 }
             } catch (final Exception ex) {
@@ -183,6 +184,15 @@ public final class ArenaRepository implements ArenaController {
                 throw new IllegalStateException("Cannot create folder!");
         }
         return file;
+    }
+
+    /**
+     * Returns the owning plugin
+     *
+     * @return plugin
+     */
+    public Plugin getPlugin() {
+        return this.plugin;
     }
 
     /**

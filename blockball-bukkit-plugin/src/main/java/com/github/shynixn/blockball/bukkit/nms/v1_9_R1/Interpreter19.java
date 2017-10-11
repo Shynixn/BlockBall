@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.configuration;
+package com.github.shynixn.blockball.bukkit.nms.v1_9_R1;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

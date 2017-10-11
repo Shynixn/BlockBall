@@ -1,10 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity;
 
-import com.github.shynixn.blockball.api.entities.Arena;
+import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import org.bukkit.entity.Player;
 
-class MiniGameEntity extends HelperGameEntity {
-    MiniGameEntity(Arena arena) {
+public class MiniGameEntity extends HelperGameEntity {
+   public MiniGameEntity(Arena arena) {
         super(arena);
     }
 

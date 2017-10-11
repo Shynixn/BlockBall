@@ -41,27 +41,6 @@ public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
     private final BallMeta ballMeta = new BallProperties();
 
 
-    private GoalEntity redGoal;
-    private GoalEntity blueGoal;
-    private SLocation ballSpawnLocation;
-    private final BallMetaEntity2 properties = new BallMetaEntity2();
-    private final TeamMetaEntity properties2 = new TeamMetaEntity();
-    private final EventMetaEntity properties3 = new EventMetaEntity();
-
-    private final LobbyMetaEntity lobbyMetaEntity = new LobbyMetaEntity();
-    private final GameType gameType = GameType.LOBBY;
-
-    private final boolean isEnabled = true;
-    private String alias;
-
-    private BoostItemHandler boostItemHandler;
-    private List<String> bounce_types;
-
-
-
-
-
-
     /**
      * Returns the ball settings for this arena
      *
@@ -341,13 +320,5 @@ public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
     @Override
     public boolean isLocationInArena(Object location) {
         return false;
-    }
-
-    /**
-     * Resets the object to the default values
-     */
-    @Override
-    public void reset() {
-
     }
 }

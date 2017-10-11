@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
 import com.github.shynixn.blockball.api.entities.Game;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameController;
 import com.github.shynixn.blockball.lib.DynamicCommandHelper;
 import org.bukkit.command.CommandSender;
@@ -11,7 +11,7 @@ class GlobalLeaveCommandExecutor extends DynamicCommandHelper {
     private final GameController controller;
 
     GlobalLeaveCommandExecutor(GameController controller) {
-        super(Config.getInstance().getGlobalLeaveCommand());
+        super(ConfigOld.getInstance().getGlobalLeaveCommand());
         this.controller = controller;
     }
 

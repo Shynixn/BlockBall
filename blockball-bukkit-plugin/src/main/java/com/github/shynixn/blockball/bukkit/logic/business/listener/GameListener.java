@@ -8,7 +8,7 @@ import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaControl
 import com.github.shynixn.blockball.api.persistence.controller.StatsController;
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.Factory;
@@ -57,7 +57,7 @@ class GameListener extends SimpleListener {
         this.controller = controller;
         this.playerMetaController = Factory.createPlayerDataController();
         this.statsController = Factory.createStatsController();
-        if (Config.getInstance().isScoreboardPlayerStatsEnabled()) {
+        if (ConfigOld.getInstance().isScoreboardPlayerStatsEnabled()) {
             this.statsScoreboards = new HashMap<>();
             this.updateStatsScoreboard();
         }
@@ -66,8 +66,8 @@ class GameListener extends SimpleListener {
                 this.enableJoinStats(player);
             }
         }
-        if (Config.getInstance().getForcefieldHelperCommand().isEnabled()) {
-            new DynamicCommandHelper(Config.getInstance().getForcefieldHelperCommand()) {
+        if (ConfigOld.getInstance().getForcefieldHelperCommand().isEnabled()) {
+            new DynamicCommandHelper(ConfigOld.getInstance().getForcefieldHelperCommand()) {
                 @Override
                 public void onCommandSend(CommandSender sender, String[] args) {
                     if (sender instanceof Player) {
@@ -192,10 +192,10 @@ class GameListener extends SimpleListener {
                 }
             }
         }
-        if (Config.getInstance().isJoiningSpawnpointEnabled() && Config.getInstance().getJoinSpawnpoint() != null) {
+        if (ConfigOld.getInstance().isJoiningSpawnpointEnabled() && ConfigOld.getInstance().getJoinSpawnpoint() != null) {
             for (final Arena arena : this.controller.arenaManager.getArenas()) {
                 if (event.getPlayer().getLocation().getWorld().getName().equals(arena.getBallSpawnLocation().getWorld().getName()) && arena.isLocationInArea(event.getPlayer().getLocation())) {
-                    event.getPlayer().teleport(Config.getInstance().getJoinSpawnpoint());
+                    event.getPlayer().teleport(ConfigOld.getInstance().getJoinSpawnpoint());
                     return;
                 }
             }
@@ -204,7 +204,7 @@ class GameListener extends SimpleListener {
 
     private Game getGameFromSign(Sign sign) {
         try {
-            final String line = sign.getLine(Config.getInstance().getTeamSign().getGameLine());
+            final String line = sign.getLine(ConfigOld.getInstance().getTeamSign().getGameLine());
             for (final Game game : this.controller.getAll()) {
                 if (String.valueOf(game.getArena().getId()).equals(line) || (game.getArena().getAlias() != null && ChatColor.stripColor(game.getArena().getAlias()).equals(ChatColor.stripColor(line)))) {
                     return game;
@@ -331,14 +331,14 @@ class GameListener extends SimpleListener {
                             isNeverInArena = false;
                             isInArena = true;
                             if (!this.lastLocation.containsKey(event.getPlayer())) {
-                                event.getPlayer().setVelocity(Config.getInstance().getPlayerLaunchUpProtectionVelocity());
+                                event.getPlayer().setVelocity(ConfigOld.getInstance().getPlayerLaunchUpProtectionVelocity());
                             } else {
                                 if (!this.moveCounter.containsKey(event.getPlayer()))
                                     this.moveCounter.put(event.getPlayer(), 1);
                                 else if (this.moveCounter.get(event.getPlayer()) < 50)
                                     this.moveCounter.put(event.getPlayer(), this.moveCounter.get(event.getPlayer()) + 1);
                                 if (this.moveCounter.get(event.getPlayer()) > 20) {
-                                    event.getPlayer().setVelocity(Config.getInstance().getPlayerLaunchUpProtectionVelocity());
+                                    event.getPlayer().setVelocity(ConfigOld.getInstance().getPlayerLaunchUpProtectionVelocity());
                                 } else if (!selectedGame.arena.getTeamMeta().isTeamAutoJoin()) {
                                     final Vector knockback = this.lastLocation.get(event.getPlayer()).getLocation().toVector().subtract(event.getPlayer().getLocation().toVector());
                                     event.getPlayer().getLocation().setDirection(knockback);
@@ -543,7 +543,7 @@ class GameListener extends SimpleListener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerAsyncChatEvent(PlayerChatEvent event) {
-        if (Config.getInstance().isHighpriority() && !Config.getInstance().isAsyncChat()) {
+        if (ConfigOld.getInstance().isHighpriority() && !ConfigOld.getInstance().isAsyncChat()) {
             final String message = ChatColor.stripColor(event.getMessage());
             final Player player = event.getPlayer();
             if (this.controller.getGameFromPlayer(player) != null) {
@@ -561,7 +561,7 @@ class GameListener extends SimpleListener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerChatEvent(AsyncPlayerChatEvent event) {
-        if (Config.getInstance().isHighpriority() && Config.getInstance().isAsyncChat()) {
+        if (ConfigOld.getInstance().isHighpriority() && ConfigOld.getInstance().isAsyncChat()) {
             final String message = ChatColor.stripColor(event.getMessage());
             final Player player = event.getPlayer();
             if (this.controller.getGameFromPlayer(player) != null) {
@@ -579,7 +579,7 @@ class GameListener extends SimpleListener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerAsyncChatEvent2(PlayerChatEvent event) {
-        if (!Config.getInstance().isHighpriority() && !Config.getInstance().isAsyncChat()) {
+        if (!ConfigOld.getInstance().isHighpriority() && !ConfigOld.getInstance().isAsyncChat()) {
             final String message = ChatColor.stripColor(event.getMessage());
             final Player player = event.getPlayer();
             if (this.controller.getGameFromPlayer(player) != null) {
@@ -597,7 +597,7 @@ class GameListener extends SimpleListener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChatEvent4(AsyncPlayerChatEvent event) {
-        if (!Config.getInstance().isHighpriority() && Config.getInstance().isAsyncChat()) {
+        if (!ConfigOld.getInstance().isHighpriority() && ConfigOld.getInstance().isAsyncChat()) {
             final String message = ChatColor.stripColor(event.getMessage());
             final Player player = event.getPlayer();
             if (this.controller.getGameFromPlayer(player) != null) {
@@ -665,7 +665,7 @@ class GameListener extends SimpleListener {
      * @param player player
      */
     private void enableJoinStats(Player player) {
-        if (Config.getInstance().isScoreboardPlayerStatsEnabled()) {
+        if (ConfigOld.getInstance().isScoreboardPlayerStatsEnabled()) {
             final StatsScoreboard scoreboard = new StatsScoreboard(player);
             this.statsScoreboards.put(player, scoreboard);
             this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(this.plugin, () -> {
@@ -697,7 +697,7 @@ class GameListener extends SimpleListener {
 
     private boolean isValidNotLeave(String message) {
         try {
-            return !message.split(Pattern.quote(":"))[0].equalsIgnoreCase('/' + Config.getInstance().getGlobalLeaveCommand().getCommand());
+            return !message.split(Pattern.quote(":"))[0].equalsIgnoreCase('/' + ConfigOld.getInstance().getGlobalLeaveCommand().getCommand());
         } catch (final Exception ex) {
             return true;
         }

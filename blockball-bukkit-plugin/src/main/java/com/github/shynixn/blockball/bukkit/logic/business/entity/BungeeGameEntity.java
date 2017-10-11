@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity;
 
-import com.github.shynixn.blockball.api.entities.Arena;
+import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.bungeecord.game.BungeeCord;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -36,13 +36,13 @@ import java.util.logging.Level;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BungeeGameEntity extends HelperGameEntity {
+public class BungeeGameEntity extends HelperGameEntity {
     /**
      * Initializes a new bungee game
      *
      * @param arena arena
      */
-    BungeeGameEntity(Arena arena) {
+    public BungeeGameEntity(Arena arena) {
         super(arena);
         BungeeCord.setModt(BungeeCord.MOD_WAITING_FOR_PLAYERS);
     }

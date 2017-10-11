@@ -1,12 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity;
 
-import com.github.shynixn.blockball.api.entities.Team;
+import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
-import com.github.shynixn.blockball.api.entities.Arena;
-import com.github.shynixn.blockball.api.entities.GameStage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,7 +13,7 @@ import org.bukkit.util.Vector;
 import java.util.HashMap;
 import java.util.Map;
 
-class EventGameEntity extends GameEntity {
+public class EventGameEntity extends GameEntity {
     Player referee;
     private int countdown;
 
@@ -30,7 +28,7 @@ class EventGameEntity extends GameEntity {
 
     private final SoundMeta blingsound = new SoundBuilder("NOTE_PLING", 1.0, 2.0);
 
-    EventGameEntity(Arena arena) {
+    public EventGameEntity(Arena arena) {
         super(arena);
     }
 

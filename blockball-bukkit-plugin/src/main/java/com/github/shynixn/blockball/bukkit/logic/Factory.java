@@ -1,9 +1,13 @@
 package com.github.shynixn.blockball.bukkit.logic;
 
 import com.github.shynixn.blockball.api.business.controller.BallController;
+import com.github.shynixn.blockball.api.business.controller.GameController;
+import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
 import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaController;
 import com.github.shynixn.blockball.api.persistence.controller.StatsController;
 import com.github.shynixn.blockball.bukkit.logic.business.controller.BallRepository;
+import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository;
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.PlayerDataRepository;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.StatsRepository;
 import com.github.shynixn.blockball.lib.ExtensionHikariConnectionContext;
@@ -49,6 +53,26 @@ public class Factory {
      */
     public static StatsController createStatsController() {
         return new StatsRepository(connectionContext);
+    }
+
+    /**
+     * Creates a new arena controller to manage persistence cycle of arenas.
+     *
+     * @param plugin plugin owner of the arenas
+     * @return controller
+     */
+    public static ArenaController createArenaController(Plugin plugin) {
+        return new ArenaRepository(plugin);
+    }
+
+    /**
+     * Creates a new game controller to manage starting and running games.
+     *
+     * @param controller arenas to be used by the game controller
+     * @return controller
+     */
+    public static GameController createGameController(ArenaController controller) {
+        return new GameRepository(controller);
     }
 
     /**

@@ -35,13 +35,14 @@ import java.util.Optional;
  * SOFTWARE.
  */
 public class LobbyProperties extends PersistenceObject<LobbyMeta> implements LobbyMeta {
+
     /**
      * Returns the positions of each sign
      *
      * @return positions
      */
     @Override
-    public List<IPosition> getSignPositions() {
+    public List<IPosition> getJoinSignPositions() {
         return null;
     }
 
@@ -51,7 +52,7 @@ public class LobbyProperties extends PersistenceObject<LobbyMeta> implements Lob
      * @param position position
      */
     @Override
-    public void removeSignPosition(IPosition position) {
+    public void removeJoinSignPosition(IPosition position) {
 
     }
 

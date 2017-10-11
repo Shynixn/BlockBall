@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
 import com.github.shynixn.blockball.api.entities.GameType;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import com.github.shynixn.blockball.api.entities.Game;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.EventGameEntity;
@@ -18,7 +18,7 @@ class EventCommandExecutor extends DynamicCommandHelper {
     private final GameController controller;
 
     EventCommandExecutor(GameController controller) {
-        super(Config.getInstance().getEventContainerCommand());
+        super(ConfigOld.getInstance().getEventContainerCommand());
         this.controller = controller;
     }
 
@@ -34,7 +34,7 @@ class EventCommandExecutor extends DynamicCommandHelper {
                     player.sendMessage(Language.PREFIX + "Your are not the referee of this game.");
                 }
             } else {
-                player.sendMessage(Language.PREFIX + "This arena does not exist. /" + Config.getInstance().getEventContainerCommand().getCommand() + " <id>");
+                player.sendMessage(Language.PREFIX + "This arena does not exist. /" + ConfigOld.getInstance().getEventContainerCommand().getCommand() + " <id>");
             }
         }
     }

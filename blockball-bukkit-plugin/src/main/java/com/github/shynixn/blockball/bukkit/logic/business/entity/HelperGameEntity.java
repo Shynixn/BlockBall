@@ -5,7 +5,7 @@ import com.github.shynixn.blockball.api.events.GameJoinEvent;
 import com.github.shynixn.blockball.api.events.GameWinEvent;
 import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
@@ -291,7 +291,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
         for (final IPosition position : signPositions) {
             final Location location = position.toLocation();
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
-                Config.getInstance().getMinigameSign().updateJoinSignConsideringMaxPlayers((Sign) location.getBlock().getState(), this, this.lobby);
+                ConfigOld.getInstance().getMinigameSign().updateJoinSignConsideringMaxPlayers((Sign) location.getBlock().getState(), this, this.lobby);
             } else {
                 this.arena.getLobbyMeta().removeSignPosition(position);
             }
@@ -300,7 +300,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
         for (final IPosition position : redSignPositions) {
             final Location location = position.toLocation();
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
-                Config.getInstance().getTeamSign().updateTeamSignConsideringMinigame((Sign) location.getBlock().getState(), this, Team.RED, this.preSelection);
+                ConfigOld.getInstance().getTeamSign().updateTeamSignConsideringMinigame((Sign) location.getBlock().getState(), this, Team.RED, this.preSelection);
             } else {
                 this.arena.getLobbyMeta().removeRedTeamSignPosition(position);
             }
@@ -309,7 +309,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
         for (final IPosition position : blueSignPositions) {
             final Location location = position.toLocation();
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
-                Config.getInstance().getTeamSign().updateTeamSignConsideringMinigame((Sign) location.getBlock().getState(), this, Team.BLUE, this.preSelection);
+                ConfigOld.getInstance().getTeamSign().updateTeamSignConsideringMinigame((Sign) location.getBlock().getState(), this, Team.BLUE, this.preSelection);
             } else {
                 this.arena.getLobbyMeta().removeBlueTeamSignPosition(position);
             }

@@ -5,7 +5,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena;
 
 import java.util.List;
 
-public interface Game {
+public interface Game extends AutoCloseable, Runnable {
 
     /**
      * Returns the arena of the game

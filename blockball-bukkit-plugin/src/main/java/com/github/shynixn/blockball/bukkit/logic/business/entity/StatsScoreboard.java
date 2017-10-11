@@ -6,6 +6,8 @@ import com.github.shynixn.blockball.lib.SimpleScoreboard;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 
+import java.util.List;
+
 /**
  * Copyright 2017 Shynixn
  * <p>
@@ -38,27 +40,29 @@ import org.bukkit.scoreboard.DisplaySlot;
 class StatsScoreboard extends SimpleScoreboard {
 
     /**
-     * Initializes a fresh new Scoreboard
+     * Initializes a fresh new Scoreboard.
      */
     StatsScoreboard(Player player) {
         super();
         this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE);
-        this.setDefaultTitle(Config.getInstance().getScoreboardPlayerStatsTitle());
+        this.setDefaultTitle(Config.getInstance().getStatsScoreboardTitle());
         this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR);
         this.addPlayer(player);
     }
+
     /**
-     * Updates the stats
+     * Updates the stats on the scoreboard.
      *
      * @param stats stats
      */
     void updateStats(Player player, Stats stats) {
-        for (int i = 0, j = Config.getInstance().getScoreboardPlayerStatsLines().length; i < Config.getInstance().getScoreboardPlayerStatsLines().length; i++, j--) {
-            final String line = Config.getInstance().getScoreboardPlayerStatsLines()[i]
+        final List<String> lines = Config.getInstance().getStatsScoreboardLines();
+        for (int i = 0, j = lines.size(); i < lines.size(); i++, j--) {
+            final String line = lines.get(i)
                     .replace("<player>", player.getName())
-                    .replace("<winrate>", String.format("%.2f",stats.getWinRate()))
+                    .replace("<winrate>", String.format("%.2f", stats.getWinRate()))
                     .replace("<playedgames>", String.valueOf(stats.getAmountOfGamesPlayed()))
-                    .replace("<goalspergame>", String.format("%.2f",stats.getGoalsPerGame()));
+                    .replace("<goalspergame>", String.format("%.2f", stats.getGoalsPerGame()));
             this.setDefaultLine(j, line);
         }
     }

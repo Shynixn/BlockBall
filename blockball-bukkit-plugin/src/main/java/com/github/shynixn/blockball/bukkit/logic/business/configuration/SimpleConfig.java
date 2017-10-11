@@ -1,15 +1,20 @@
 package com.github.shynixn.blockball.bukkit.logic.business.configuration;
 
-import java.util.List;
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Created by Shynixn 2017.
+ * Copyright 2017 Shynixn
  * <p>
- * Version 1.1
+ * Do not remove this header!
+ * <p>
+ * Version 1.0
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2017
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,51 +34,28 @@ import java.util.List;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class Config extends SimpleConfig {
-    private static final Config instance = new Config();
+public class SimpleConfig {
+    Plugin plugin;
 
     /**
-     * Returns the plugin prefix
-     *
-     * @return prefix
+     * Reloads the config
      */
-    public String getPrefix() {
-        return this.getData("messages.prefix");
+    public void reload() {
+        this.plugin = JavaPlugin.getPlugin(BlockBallPlugin.class);
+        this.plugin.reloadConfig();
     }
 
     /**
-     * Returns the config instance.
+     * Returns data
      *
-     * @return config
+     * @param path path
+     * @return data
      */
-    public static Config getInstance() {
-        return instance;
-    }
-
-    /**
-     * Returns if the stats scoreboard is enabled.
-     *
-     * @return isEnabled
-     */
-    public boolean isStatsScoreboardEnabled() {
-        return this.getData("stats-scoreboard.enabled");
-    }
-
-    /**
-     * Returns the stats scoreboard title.
-     *
-     * @return title
-     */
-    public String getStatsScoreboardTitle() {
-        return this.getData("stats-scoreboard.title");
-    }
-
-    /**
-     * Returns the stats scoreboard lines.
-     *
-     * @return lines
-     */
-    public List<String> getStatsScoreboardLines() {
-        return this.getData("stats-scoreboard.lines");
+    <T> T getData(String path) {
+        Object data = this.plugin.getConfig().get(path);
+        if (data instanceof String) {
+            data = ChatColor.translateAlternateColorCodes('&', (String) data);
+        }
+        return (T) data;
     }
 }

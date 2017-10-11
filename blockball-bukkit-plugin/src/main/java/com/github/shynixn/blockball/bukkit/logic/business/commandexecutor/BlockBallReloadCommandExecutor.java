@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import com.github.shynixn.blockball.lib.SimpleCommandExecutor;
 import org.bukkit.ChatColor;
@@ -60,7 +60,7 @@ public class BlockBallReloadCommandExecutor extends SimpleCommandExecutor.Regist
      */
     @Override
     public void onCommandSenderExecuteCommand(CommandSender sender, String[] args) {
-        Config.getInstance().reload();
+        ConfigOld.getInstance().reload();
         this.manager.getGameController().reload();
         sender.sendMessage(Language.PREFIX + ChatColor.GREEN + "Reloaded BlockBall.");
     }

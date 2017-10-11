@@ -22,6 +22,23 @@ metrics: true
 blockball:
  use-engine-v2: false
 
+
+############################
+
+# Messages settings
+
+# Settings to adjust the messages
+
+############################
+
+messages:
+  prefix: '&0&l[&f&lBall&0&l]&7 '
+  sign-enabled: '&2&lENABLED'
+  sign-disabled: '&4&lDISABLED'
+  sign-running: '&1&lRUNNING'
+  lobby-full: '&cLobby is full. You cannot join!'
+  no-perms: '&cYou do not have permissions.'
+
 #Storage settings
 #Database configuration to store data of players. Arenas will get stored in yml files.
 
@@ -136,12 +153,26 @@ plugin-start-delay:
  enabled: false
  time-seconds: 20
 
-#Stats settings
-#Enable this to show a scoreboard of the player stats on your server. You can add as many lines the scoreboard can use.
+
+############################
+
+# Stats settings
+
+# Settings to adjust the scoreboard which displays certain player stats of BlockBall.
+
+# enabled: Should scoreboard be displayed when a player joins your server?
+# title: Title of the scoreboard.
+# lines: Add or remove lines which are converted into the scoreboard lines.
+
+# placeholders:
+# <player> - Name of the player
 # <player> - Name of the player
 # <winrate> - Winrate of the player
 # <playedgames> - Amount of played games
 # <goalspergame> - Amount of goals per game
+
+############################
+
 stats-scoreboard:
  enabled: false
  title: '&f&lBlockBall Stats'

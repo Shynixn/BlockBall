@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit;
 
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import com.github.shynixn.blockball.lib.BlockBallApi;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
@@ -91,8 +91,8 @@ public final class BlockBallPlugin extends JavaPlugin {
         } else {
             Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...");
             this.saveDefaultConfig();
-            Config.getInstance().reload();
-            if (Config.getInstance().isMetrics()) {
+            ConfigOld.getInstance().reload();
+            if (ConfigOld.getInstance().isMetrics()) {
                 new Metrics(this);
             }
             this.getServer().getScheduler().runTaskAsynchronously(this, () -> {

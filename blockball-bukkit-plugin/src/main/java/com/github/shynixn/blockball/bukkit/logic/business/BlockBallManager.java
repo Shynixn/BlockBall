@@ -37,36 +37,35 @@ import org.bukkit.plugin.Plugin;
  * SOFTWARE.
  */
 public class BlockBallManager implements AutoCloseable {
-
     private final BallController ballController;
-    private GameController gameController;
+    private final GameController gameController;
 
     /**
-     * Initializes a new blockBall manager
+     * Initializes a new blockBall manager.
      *
      * @param plugin plugin
      */
     public BlockBallManager(Plugin plugin) {
         this.ballController = Factory.createBallController();
+        this.gameController = Factory.createGameController(Factory.createArenaController(plugin));
+
         new BallListener(this, plugin);
         new BlockBallReloadCommandExecutor(this, plugin);
 
-        new ArenaCommandExecutor(this);
-        new BlockBallCommandExecutor();
-        Factory.initialize(JavaPlugin.getPlugin(BlockBallPlugin.class));
+        Factory.initialize(plugin);
     }
 
     /**
-     * Returns the gameController
+     * Returns the gameController.
      *
      * @return gameController
      */
     public GameController getGameController() {
-        return gameController;
+        return this.gameController;
     }
 
     /**
-     * Returns the ballController
+     * Returns the ballController.
      *
      * @return controller
      */
@@ -83,5 +82,6 @@ public class BlockBallManager implements AutoCloseable {
     @Override
     public void close() throws Exception {
         this.ballController.close();
+        this.gameController.close();
     }
 }
