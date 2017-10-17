@@ -8,20 +8,39 @@
 # user       Access to join a blockball game				blockball.user
 # admin      Access to the /blockball command 				blockball.admin
 
-# Where is the arena configuration?
-# Join your server, it can be configured ingame!
+############################
 
-# Sends anonymous stats to https://bstats.org/plugin/bukkit/BlockBall.
+# Data-collecting settings
+
+# Settings to send anonymous stats to https://bstats.org/plugin/bukkit/BlockBall.
 # As this does not have an impact on your BlockBall experience at all I would like you to set it on true as knowing that my
 # plugin gets used by many server helps me focusing on new updates ;)
+
+############################
+
 metrics: true
 
-#Engine settings
-# Engine v2 is still in Alpha and may be changed! I recommend to try it out and give feedback on the plugin comment section.
+############################
+
+# Arena configuration settings
+
+# Join your server and create an arena via the ingame commands.
+# You can edit the automatically created arena_x.yml files afterwards.
+
+############################
+
+############################
+
+# Engine settings
+
+# BlockBall uses a complex entity engine combining the power of armorstands and rabbits into
+# ball movements. There are currently 2 available engines, however engine 2 is still in alpha
+# and might cause issues during games.
+
+############################
 
 blockball:
  use-engine-v2: false
-
 
 ############################
 
@@ -39,8 +58,15 @@ messages:
   lobby-full: '&cLobby is full. You cannot join!'
   no-perms: '&cYou do not have permissions.'
 
-#Storage settings
-#Database configuration to store data of players. Arenas will get stored in yml files.
+############################
+
+# Database settings
+
+# All player stats are stored in a local file by default.
+# It is recommend to edit these settings when you are using a MySQL database
+# and have got a bigger player-base.
+
+############################
 
 sql:
   enabled: false
@@ -50,12 +76,18 @@ sql:
   username: ''
   password: ''
 
-#Commands settings
-#Choose your wanted command (dynamic command engine)
+############################
 
-# <command> = selected command
-# <game> = arena alias or arena id
-# <team> = team name
+# Command settings
+
+# Instead of setting the commands inside of the plugin.yml, I believe you should be able to customize
+# the whole command by yourself. Name, description, permission customize it to your needs.
+
+# global-join: Settings for the command to join games from any world on your server.
+# global-leave: Settings for the command to leave games from any world on your server.
+# global-leave: Settings for the command to adjust event games.
+
+############################
 
 global-join:
   enabled: true
@@ -71,20 +103,6 @@ global-leave:
   description: Leaves current game.
   permission: blockball.user
   permission-message: You don't have permission
-navigate-chatmenu:
-  enabled: false
-  command: bbc
-  useage: /<command>
-  description: Helps navigating through the chamenu.
-  permission: blockball.admin
-  permission-message: You don't have permission
-forcefield-join:
-  enabled: false
-  command: bb
-  useage: /<command> <team>
-  description: Join the current game.
-  permission: blockball.user
-  permission-message: You don't have permission
 referee-game:
   enabled: false
   command: bbreferee
@@ -92,7 +110,13 @@ referee-game:
   description: Opens the configuration game section.
   permission: blockball.admin
   permission-message: You don't have permission
-#Sign settings
+
+
+############################
+
+# Sign settings
+
+# Change the template of the signs. The available placeholders are listed below.
 
 # <game> = arena alias or arena id
 # <team> = team name
@@ -100,7 +124,7 @@ referee-game:
 # <players> = amount of players on the team or in the arena
 # <maxplayers> = max amount of players on the team or in the arena
 
-#Warning! One line has to be '<game>' in order to make the sign working!
+############################
 
 minigame-sign:
  line-1: '&l[Blockball]'
@@ -117,13 +141,30 @@ lobbygame-sign:
  line-2: '<game>'
  line-3: '<team>'
  line-4: '<players>/<maxplayers>'
-#Chat settings
-#Enable this to handle chat messages asynchronously
-async-chat: true
-highest-priority: true
 
-#Spawnpoint settings
-#Set this to add a spawnpoint for players who try to respawn in an blockball field
+############################
+
+# Loading settings
+
+# Settings to adjust the time after the plugin should be loaded. If there are
+# not any issues when starting the server, leave it as it is.
+
+############################
+
+plugin-start-delay:
+ enabled: false
+ time-seconds: 20
+
+
+############################
+
+# Spawnpoint settings
+
+# Settings to adjust the spawnpoints of players when the try to spawn in a blockball field
+# after they have left the server.
+
+############################
+
 join-spawnpoint:
  enabled: false
  world: 'world'
@@ -133,12 +174,27 @@ join-spawnpoint:
   z: 0.0
   yaw: 0.0
   pitch: 0.0
-#Particles settings
+
+############################
+
+# Particles settings
+
+# Settings to adjust the visibility of particles on low performance server.
+
+############################
+
 particles:
  visible-for-all: true
  visible-permission: ''
 
-#Knockback settings
+############################
+
+# Particles settings
+
+# Settings to adjust the knockback when a player or entity hits the forcefield.
+
+############################
+
 entity-velocity-protection:
  x: 5.0
  y: 2.0
@@ -147,12 +203,6 @@ player-launch-up-protection:
  x: 0.0
  y: 2.0
  z: 0.0
-
-#Delays the start of the plugin
-plugin-start-delay:
- enabled: false
- time-seconds: 20
-
 
 ############################
 

@@ -1,21 +1,32 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
-import com.github.shynixn.blockball.api.entities.GameType;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
-import com.github.shynixn.blockball.api.entities.Game;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.EventGameEntity;
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameController;
+import com.github.shynixn.blockball.lib.SimpleCommandExecutor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
-class EventCommandExecutor extends DynamicCommandHelper {
+class EventCommandExecutor extends SimpleCommandExecutor.UnRegistered {
     private static final String HEADER_STANDARD = ChatColor.WHITE + "" +  ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Event                      ";
     private static final String FOOTER_STANDARD = ChatColor.WHITE + "" +  ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           1/1                            ";
     private static final String MENU_BACK = "b - Go back";
     private static final String MENU_EXIT = "e - Close chat menu";
     private final GameController controller;
+
+    /**
+     * Initializes a new commandExecutor by all required parameters.
+     *
+     * @param command           command
+     * @param useAge            useAge
+     * @param description       description
+     * @param permission        permission
+     * @param permissionMessage permissionMessage
+     * @param plugin            plugin
+     */
+    public EventCommandExecutor() {
+        super(command, useAge, description, permission, permissionMessage, plugin);
+        this.controller = controller;
+    }
 
     EventCommandExecutor(GameController controller) {
         super(ConfigOld.getInstance().getEventContainerCommand());
