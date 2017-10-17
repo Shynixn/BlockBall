@@ -50,6 +50,78 @@ public class Config extends SimpleConfig {
         return instance;
     }
 
+    public boolean isRefereeCommandEnabled() {
+        return this.getData("referee-game.enabled");
+    }
+
+    public String getRefereeCommandName() {
+        return this.getData("referee-game.command");
+    }
+
+    public String getRefereeCommandUseag() {
+        return this.getData("referee-game.useage");
+    }
+
+    public String getRefereeCommandDescription() {
+        return this.getData("referee-game.description");
+    }
+
+    public String getRefereeCommandPermission() {
+        return this.getData("referee-game.permission");
+    }
+
+    public String getRefereeCommandPermissionMessage() {
+        return this.getData("referee-game.permission-message");
+    }
+
+    public boolean isLeaveCommandEnabled() {
+        return this.getData("global-leave.enabled");
+    }
+
+    public String getLeaveCommandName() {
+        return this.getData("global-leave.command");
+    }
+
+    public String getLeaveCommandUseag() {
+        return this.getData("global-leave.useage");
+    }
+
+    public String getLeaveCommandDescription() {
+        return this.getData("global-leave.description");
+    }
+
+    public String getLeaveCommandPermission() {
+        return this.getData("global-leave.permission");
+    }
+
+    public String getLeaveCommandPermissionMessage() {
+        return this.getData("global-leave.permission-message");
+    }
+
+    public boolean isJoinCommandEnabled() {
+        return this.getData("global-join.enabled");
+    }
+
+    public String getJoinCommandName() {
+        return this.getData("global-join.command");
+    }
+
+    public String getJoinCommandUseag() {
+        return this.getData("global-join.useage");
+    }
+
+    public String getJoinCommandDescription() {
+        return this.getData("global-join.description");
+    }
+
+    public String getJoinCommandPermission() {
+        return this.getData("global-join.permission");
+    }
+
+    public String getJoinCommandPermissionMessage() {
+        return this.getData("global-join.permission-message");
+    }
+
     /**
      * Returns if the stats scoreboard is enabled.
      *

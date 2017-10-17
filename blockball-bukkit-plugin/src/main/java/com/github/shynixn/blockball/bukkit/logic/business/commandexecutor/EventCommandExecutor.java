@@ -1,118 +1,138 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
+import com.github.shynixn.blockball.api.business.controller.GameController;
+import com.github.shynixn.blockball.api.business.enumeration.GameType;
+import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.entity.EventGameEntity;
+import com.github.shynixn.blockball.lib.ChatBuilder;
+import com.github.shynixn.blockball.lib.MathUtils;
 import com.github.shynixn.blockball.lib.SimpleCommandExecutor;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-class EventCommandExecutor extends SimpleCommandExecutor.UnRegistered {
-    private static final String HEADER_STANDARD = ChatColor.WHITE + "" +  ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Event                      ";
-    private static final String FOOTER_STANDARD = ChatColor.WHITE + "" +  ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           1/1                            ";
-    private static final String MENU_BACK = "b - Go back";
-    private static final String MENU_EXIT = "e - Close chat menu";
-    private final GameController controller;
+public final class EventCommandExecutor extends SimpleCommandExecutor.UnRegistered {
+    private static final String HEADER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Event                      ";
+    private static final String FOOTER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           1/1                            ";
+    private final GameController gameController;
 
     /**
      * Initializes a new commandExecutor by all required parameters.
      *
-     * @param command           command
-     * @param useAge            useAge
-     * @param description       description
-     * @param permission        permission
-     * @param permissionMessage permissionMessage
-     * @param plugin            plugin
+     * @param plugin plugin
      */
-    public EventCommandExecutor() {
-        super(command, useAge, description, permission, permissionMessage, plugin);
-        this.controller = controller;
+    public EventCommandExecutor(BlockBallManager blockBallManager, Plugin plugin) {
+        super(Config.getInstance().getRefereeCommandName(), Config.getInstance().getRefereeCommandUseag(),
+                Config.getInstance().getRefereeCommandDescription(), Config.getInstance().getRefereeCommandPermission(),
+                Config.getInstance().getRefereeCommandPermissionMessage(), (JavaPlugin) plugin);
+        this.gameController = blockBallManager.getGameController();
     }
 
-    EventCommandExecutor(GameController controller) {
-        super(ConfigOld.getInstance().getEventContainerCommand());
-        this.controller = controller;
-    }
-
+    /**
+     * Can be overwritten to listen to player executed commands
+     *
+     * @param player player
+     * @param args   args
+     */
     @Override
-    public void onCommandSend(CommandSender sender, String[] args) {
-        if (sender instanceof Player) {
-            final Player player = (Player) sender;
-            final Game game;
-            if (args.length == 1 && tryPInt(args[0]) && ((game = this.controller.getGameFromArenaId(Integer.parseInt(args[0]))) != null)) {
-                if (game.getArena().getGameType() == GameType.EVENT && game.getArena().getEventMeta().getReferee() != null && game.getArena().getEventMeta().getReferee().equalsIgnoreCase(player.getName())) {
-                    SChatMenuManager.getInstance().open(player, new ControllerPage(player, game));
-                } else {
-                    player.sendMessage(Language.PREFIX + "Your are not the referee of this game.");
+    public void onPlayerExecuteCommand(Player player, String[] args) {
+        super.onPlayerExecuteCommand(player, args);
+        final EventGameEntity game;
+        if (args.length >= 1 && MathUtils.tryParseInteger(args[0]) && ((game = (EventGameEntity) this.gameController.getGameFromArenaId(Integer.parseInt(args[0]))) != null)) {
+            if (game.getArena().getGameType() == GameType.EVENT
+                    && game.getArena().getEventMeta().getRefereeName().isPresent()
+                    && game.getArena().getEventMeta().getRefereeName().get().equalsIgnoreCase(player.getName())) {
+                player.sendMessage(HEADER_STANDARD);
+                if (args.length == 2) {
+                    this.executeActions(player, args, game);
                 }
+                this.printOptions(args[0]);
+                player.sendMessage(FOOTER_STANDARD);
             } else {
-                player.sendMessage(Language.PREFIX + "This arena does not exist. /" + ConfigOld.getInstance().getEventContainerCommand().getCommand() + " <id>");
+                player.sendMessage(Config.getInstance().getPrefix() + "Your are not the referee of this game.");
+            }
+        } else {
+            player.sendMessage(Config.getInstance().getPrefix() + "This arena does not exist. /" + Config.getInstance().getRefereeCommandName() + " <id>");
+        }
+    }
+
+    /**
+     * Executes the actions behind the options.
+     *
+     * @param player players
+     * @param args   args
+     * @param game   game
+     */
+    private void executeActions(Player player, String[] args, EventGameEntity game) {
+        if (args[1].equalsIgnoreCase("acg")) {
+            game.executeJoinAllCommand();
+        } else if (this.isText(args, "tif")) {
+            game.innerForcefield = !game.innerForcefield;
+            if (game.innerForcefield) {
+                player.sendMessage(Config.getInstance().getPrefix() + "Enabled inner forcefield.");
+            } else {
+                player.sendMessage(Config.getInstance().getPrefix() + "Disabled inner forcefield.");
+            }
+        } else if (this.isText(args, "tsf")) {
+            game.visitorForceField = !game.visitorForceField;
+            if (game.visitorForceField) {
+                player.sendMessage(Config.getInstance().getPrefix() + "Enabled visitor forcefield.");
+            } else {
+                player.sendMessage(Config.getInstance().getPrefix() + "Disabled visitor forcefield.");
+            }
+        } else if (this.isText(args, "in")) {
+            game.executeInterrupt();
+            player.sendMessage(Config.getInstance().getPrefix() + "Enabled interrupt");
+        } else if (this.isText(args, "sc")) {
+            game.executeContinue();
+            player.sendMessage(Config.getInstance().getPrefix() + "Continue game.");
+        } else if (this.isText(args, "sto")) {
+            game.executeEndGame();
+            player.sendMessage(Config.getInstance().getPrefix() + "End game.");
+        } else if (this.isText(args, "dg")) {
+            game.reset();
+            player.sendMessage(Config.getInstance().getPrefix() + "Disable game.");
+        } else if (this.isText(args, "tpb")) {
+            if (game.getBall() != null) {
+                game.getBall().teleport(player.getLocation().add(0, 1, 0));
             }
         }
     }
 
-    private static class ControllerPage extends SChatpage {
-        private final EventGameEntity game;
+    /**
+     * Prints all available options.
+     *
+     * @param arg arg
+     */
+    private void printOptions(String arg) {
+        new ChatBuilder().component("Activate game").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, Config.getInstance().getRefereeCommandName() + ' ' + arg + "acg");
+        new ChatBuilder().component("Toggle Player Forcefield").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, Config.getInstance().getRefereeCommandName() + ' ' + arg + "tif");
+        new ChatBuilder().component("Toggle Spectator Forcefield").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, Config.getInstance().getRefereeCommandName() + ' ' + arg + "tsf");
+        new ChatBuilder().component("Interrupt").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, Config.getInstance().getRefereeCommandName() + ' ' + arg + "in");
+        new ChatBuilder().component("Start/Continue").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, Config.getInstance().getRefereeCommandName() + ' ' + arg + "sc");
+        new ChatBuilder().component("Stop").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, Config.getInstance().getRefereeCommandName() + ' ' + arg + "sto");
+        new ChatBuilder().component("Deactivate game").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, Config.getInstance().getRefereeCommandName() + ' ' + arg + "dg");
+        new ChatBuilder().component("Teleport ball").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, Config.getInstance().getRefereeCommandName() + ' ' + arg + "tpb");
+    }
 
-        ControllerPage(Player player, Game game) {
-            super(player);
-            this.game = (EventGameEntity) game;
-            ((EventGameEntity) game).referee = player;
-        }
-
-        @Override
-        public void onPlayerSelect(int number) {
-            if (number == 1) {
-                this.game.executeJoinAllCommand();
-            } else if (number == 2) {
-                this.game.innerForcefield = !this.game.innerForcefield;
-                if (this.game.innerForcefield) {
-                    this.player.sendMessage(Language.PREFIX + "Enabled inner forcefield.");
-                } else {
-                    this.player.sendMessage(Language.PREFIX + "Disabled inner forcefield.");
-                }
-            } else if (number == 3) {
-                this.game.visitorForceField = !this.game.visitorForceField;
-                if (this.game.visitorForceField) {
-                    this.player.sendMessage(Language.PREFIX + "Enabled visitor forcefield.");
-                } else {
-                    this.player.sendMessage(Language.PREFIX + "Disabled visitor forcefield.");
-                }
-            } else if (number == 4) {
-                this.game.executeInterrupt();
-                this.player.sendMessage(Language.PREFIX + "Enabled interrupt");
-            } else if (number == 5) {
-                this.game.executeContinue();
-                this.player.sendMessage(Language.PREFIX + "Continue game.");
-            } else if (number == 6) {
-                this.game.executeEndGame();
-                this.player.sendMessage(Language.PREFIX + "End game.");
-            } else if (number == 7) {
-                this.game.reset();
-                this.player.sendMessage(Language.PREFIX + "Disable game.");
-            } else if (number == 8) {
-                if (this.game.getBall() != null)
-                    this.game.getBall().teleport(this.player.getLocation().add(0, 1, 0));
-            }
-        }
-
-        @Override
-        public void show() {
-            this.player.sendMessage("");
-            this.player.sendMessage(HEADER_STANDARD);
-            this.player.sendMessage("");
-            this.player.sendMessage(Language.PREFIX + "1 - Activate game");
-            this.player.sendMessage(Language.PREFIX + "2 - Toggle Player Forcefield");
-            this.player.sendMessage(Language.PREFIX + "3 - Toggle Spectator Forcefield");
-            this.player.sendMessage(Language.PREFIX + "4 - Interrupt");
-            this.player.sendMessage(Language.PREFIX + "5 - Start/Continue");
-            this.player.sendMessage(Language.PREFIX + "6 - Stop");
-            this.player.sendMessage(Language.PREFIX + "7 - Deactivate game");
-            this.player.sendMessage(Language.PREFIX + "8 - Teleport ball");
-            this.player.sendMessage(Language.PREFIX + ChatColor.GREEN + MENU_BACK);
-            this.player.sendMessage(Language.PREFIX + ChatColor.RED + MENU_EXIT);
-            this.player.sendMessage("");
-            this.player.sendMessage(FOOTER_STANDARD);
-            this.player.sendMessage("");
-        }
+    /**
+     * Checks if the given text is present at args[1]
+     *
+     * @param args args
+     * @param text text
+     * @return isPresent
+     */
+    private boolean isText(String[] args, String text) {
+        return args[1].equalsIgnoreCase(text);
     }
 }

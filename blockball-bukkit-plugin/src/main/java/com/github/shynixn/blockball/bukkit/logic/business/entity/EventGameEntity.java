@@ -17,9 +17,9 @@ public class EventGameEntity extends GameEntity {
     Player referee;
     private int countdown;
 
-    boolean innerForcefield;
-    boolean visitorForceField;
-    private int secondbumper = 20;
+    public boolean innerForcefield;
+    public boolean visitorForceField;
+    public private int secondbumper = 20;
 
     private GameStage gameStage = GameStage.DISABLED;
     private int bumeper = 40;
@@ -32,7 +32,7 @@ public class EventGameEntity extends GameEntity {
         super(arena);
     }
 
-    void executeJoinAllCommand() {
+    public void executeJoinAllCommand() {
         for (final String s : this.arena.getEventMeta().getRegisteredRedPlayers()) {
             Player splayer = null;
             for (final Player player : SFileUtils.getOnlinePlayers()) {
@@ -64,18 +64,18 @@ public class EventGameEntity extends GameEntity {
         this.visitorForceField = true;
     }
 
-    void executeInterrupt() {
+    public void executeInterrupt() {
         this.interruptgame = true;
     }
 
-    void executeContinue() {
+    public void executeContinue() {
         if (this.gameStage == GameStage.DISABLED) {
             this.gameStage = GameStage.RUNNING;
         }
         this.interruptgame = false;
     }
 
-    void executeEndGame() {
+    public void executeEndGame() {
         if (this.redGoals > this.blueGoals) {
             this.sendMessageToPlayers(this.decryptText(this.arena.getTeamMeta().getRedwinnerTitleMessage()), this.decryptText(this.arena.getTeamMeta().getRedwinnerSubtitleMessage()));
         } else if (this.redGoals < this.blueGoals) {

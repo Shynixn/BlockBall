@@ -1,22 +1,13 @@
-package com.github.shynixn.blockball.api.business.controller;
-
-import com.github.shynixn.blockball.api.business.entity.Game;
-import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
-import com.github.shynixn.blockball.api.persistence.controller.IController;
-import com.github.shynixn.blockball.api.persistence.controller.IFileController;
-
-import java.util.Optional;
+package com.github.shynixn.blockball.lib;
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2017.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.1
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2017 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,18 +27,20 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface GameController extends IFileController<Game> {
+public class MathUtils {
 
     /**
-     * Returns the controller of the arenas
+     * Returns true if the text is parsable to int.
      *
-     * @return controller
+     * @param text text
+     * @return parsable
      */
-    ArenaController getArenaController();
-
-    Optional<Game>  getGameFromArenaId(int i);
-
-    Optional<Game> getGameFromPlayer(Object player);
-
-    Optional<Game> getGameFromAlias(String arg);
+    public static boolean tryParseInteger(String text) {
+        try {
+            Integer.parseInt(text);
+            return true;
+        } catch (final Exception ex) {
+            return false;
+        }
+    }
 }
