@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.bukkit.nms;
 
 import com.github.shynixn.blockball.api.business.entity.Ball;
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.dependencies.bossbar.BossBarConnection;
 import com.github.shynixn.blockball.bukkit.dependencies.placeholderapi.PlaceHolderApiConnection;
@@ -9,38 +8,48 @@ import com.github.shynixn.blockball.bukkit.dependencies.vault.VaultConnection;
 import com.github.shynixn.blockball.bukkit.dependencies.worldguard.WorldGuardConnection5;
 import com.github.shynixn.blockball.bukkit.dependencies.worldguard.WorldGuardConnection6;
 import com.github.shynixn.blockball.lib.LightRegistry;
+import com.github.shynixn.blockball.lib.ReflectionUtils;
 import com.github.shynixn.blockball.lib.RegisterHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 
 public final class NMSRegistry {
+    /**
+     * Initializes a new registry.
+     */
     private NMSRegistry() {
         super();
     }
 
-    public static Ball createBall(Location location, BallMeta meta) {
-        return (Ball) ReflectionLib.invokeConstructor(ReflectionLib.getClassFromName("com.github.shynixn.blockball.business.bukkit.nms.VERSION.CustomArmorstand"), world, true);
-    }
-
-    public static void registerDynamicCommand(String command, BukkitCommand clazz) {
-        Object obj = ReflectionLib.getClassFromName("org.bukkit.craftbukkit.VERSION.CraftServer").cast(Bukkit.getServer());
-        obj = ReflectionLib.invokeMethodByObject(obj, "getCommandMap");
-        ReflectionLib.invokeMethodByObject(obj, "register", command, clazz);
+    /**
+     * Creates a new ball at the given location.
+     *
+     * @param location location
+     * @return ball
+     */
+    public static Ball createBall(Location location) {
+        try {
+            final Class<?> clazz = ReflectionUtils.invokeClass("com.github.shynixn.blockball.business.bukkit.nms.VERSION.CustomArmorstand".replace("VERSION", VersionSupport.getServerVersion().getVersionText()));
+            return ReflectionUtils.invokeConstructor(clazz, new Class[]{World.class, boolean.class}, new Object[]{location.getWorld(), true});
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            BlockBallPlugin.logger().log(Level.WARNING, "Failed to create ball.", e);
+            throw new RuntimeException(e);
+        }
     }
 
     public static void accessWorldGuardSpawn(Location location) {
         if (RegisterHelper.isRegistered("WorldGuard")) {
             try {
                 if (RegisterHelper.isRegistered("WorldGuard", '6'))
-                    WorldGuardConnection6.allowSpawn(location, getWorldGuard());
+                    WorldGuardConnection6.setSpawningAllowedAt(location);
                 else if (RegisterHelper.isRegistered("WorldGuard", '5'))
-                    WorldGuardConnection5.allowSpawn(location, getWorldGuard());
+                    WorldGuardConnection5.setSpawningAllowedAt(location);
             } catch (final Exception e) {
                 Bukkit.getLogger().log(Level.WARNING, "Cannot access worldguard.", e);
             }
@@ -92,7 +101,7 @@ public final class NMSRegistry {
             RegisterHelper.register("BossBarAPI");
             RegisterHelper.register("Vault");
             if (RegisterHelper.register("PlaceholderAPI")) {
-                PlaceHolderApiConnection.initializeHook((JavaPlugin) Bukkit.getPluginManager().getPlugin("BlockBall"));
+                PlaceHolderApiConnection.initializeHook(Bukkit.getPluginManager().getPlugin("BlockBall"));
             }
         } catch (final Error ex) {
             Bukkit.getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.DARK_RED + "Failed to register the last dependency.");
@@ -102,6 +111,4 @@ public final class NMSRegistry {
     public static void unregisterAll() {
         LightRegistry.unregister();
     }
-
-
 }

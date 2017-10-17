@@ -1,15 +1,14 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
-import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
+import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager;
 import com.github.shynixn.blockball.lib.SimpleCommandExecutor;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Created by Shynixn 2017.
+ * Handles the sign creation command for bungeecord.
  * <p>
  * Version 1.1
  * <p>
@@ -35,30 +34,32 @@ import org.bukkit.plugin.java.JavaPlugin;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BlockBallReloadCommandExecutor extends SimpleCommandExecutor.Registered {
-    private final BlockBallManager manager;
+public class BungeeCordCommandExecutor extends SimpleCommandExecutor.UnRegistered {
+    private final BlockBallBungeeCordManager manager;
 
     /**
-     * Initializes a new commandExecutor by command, plugin.
+     * Initializes a new bungeeCord command Executor.
      *
-     * @param manager manager
-     * @param plugin  plugin
+     * @param manager controller
      */
-    public BlockBallReloadCommandExecutor(BlockBallManager manager, Plugin plugin) {
-        super("blockballreload", (JavaPlugin) plugin);
+    public BungeeCordCommandExecutor(BlockBallBungeeCordManager manager) {
+        super(BlockBallBungeeCordManager.COMMAND_COMMAND, BlockBallBungeeCordManager.COMMAND_USEAGE
+                , BlockBallBungeeCordManager.COMMAND_DESCRIPTION, BlockBallBungeeCordManager.COMMAND_PERMISSION,
+                BlockBallBungeeCordManager.COMMAND_PERMISSION_MESSAGE, JavaPlugin.getPlugin(BlockBallPlugin.class));
         this.manager = manager;
     }
 
     /**
-     * Can be overwritten to listener to all executed commands.
+     * Can be overwritten to listen to player executed commands.
      *
-     * @param sender sender
+     * @param player player
      * @param args   args
      */
     @Override
-    public void onCommandSenderExecuteCommand(CommandSender sender, String[] args) {
-        Config.getInstance().reload();
-        this.manager.getGameController().reload();
-        sender.sendMessage(Config.getInstance().getPrefix() + ChatColor.GREEN + "Reloaded BlockBall.");
+    public void onPlayerExecuteCommand(Player player, String[] args) {
+        if (args.length == 1) {
+            this.manager.signPlacementCache.put(player, args[0]);
+            player.sendMessage(ChatColor.YELLOW + "Rightclick on a sign to convert it into a server sign.");
+        }
     }
 }

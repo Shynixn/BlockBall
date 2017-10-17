@@ -1,11 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
-import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.lib.ChatBuilder;
 import com.github.shynixn.blockball.lib.SimpleCommandExecutor;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -35,30 +33,45 @@ import org.bukkit.plugin.java.JavaPlugin;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BlockBallReloadCommandExecutor extends SimpleCommandExecutor.Registered {
-    private final BlockBallManager manager;
+public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
+    private static final String HEADER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Balls                      ";
+    private static final String FOOTER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           ┌1/1┐                            ";
 
     /**
      * Initializes a new commandExecutor by command, plugin.
      *
-     * @param manager manager
-     * @param plugin  plugin
+     * @param plugin plugin
      */
-    public BlockBallReloadCommandExecutor(BlockBallManager manager, Plugin plugin) {
-        super("blockballreload", (JavaPlugin) plugin);
-        this.manager = manager;
+    public NewArenaCommandExecutor(JavaPlugin plugin) {
+        super("blockball", plugin);
     }
 
     /**
-     * Can be overwritten to listener to all executed commands.
+     * Can be overwritten to listen to player executed commands
      *
-     * @param sender sender
+     * @param player player
      * @param args   args
      */
     @Override
-    public void onCommandSenderExecuteCommand(CommandSender sender, String[] args) {
-        Config.getInstance().reload();
-        this.manager.getGameController().reload();
-        sender.sendMessage(Config.getInstance().getPrefix() + ChatColor.GREEN + "Reloaded BlockBall.");
+    public void onPlayerExecuteCommand(Player player, String[] args) {
+        player.sendMessage(HEADER_STANDARD);
+        if (args.length == 0) {
+            printFirstPage();
+        } else if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("crna")) {
+                printArenaPage();
+            }
+
+        }
+
+        player.sendMessage(FOOTER_STANDARD);
+    }
+
+    private void printArenaPage() {
+        new ChatBuilder().component(">>Set arena<<").setColor(ChatColor.YELLOW).setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "blockball crna");
+    }
+
+    private void printFirstPage() {
+        new ChatBuilder().component(">>Create arena<<").setColor(ChatColor.YELLOW).setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "blockball crna");
     }
 }

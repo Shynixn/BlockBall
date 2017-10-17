@@ -1,19 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
-import com.github.shynixn.blockball.api.persistence.entity.PotionEffectMeta;
-import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
-import com.github.shynixn.blockball.bukkit.dependencies.worldedit.WorldEditConnection;
-import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.SChatMenuManager;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.SChatpage;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.ItemSpawner;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.PotionEffectBuilder;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
-import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
-import com.github.shynixn.blockball.lib.FastBossBar;
-import com.github.shynixn.blockball.lib.SFileUtils;
+
 import com.github.shynixn.blockball.lib.SimpleCommandExecutor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,37 +16,36 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
-class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
-    private static final String HEADER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Balls                      ";
+class ArenaCommandExecutor {
+   /* private static final String HEADER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Balls                      ";
     private static final String FOOTER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           ┌1/1┐                            ";
 
     private static final String MENU_BACK = "b - Go back";
     private static final String MENU_EXIT = "e - Close chat menu";
 
-    private final BlockBallManager manager;
+    /**
+     * Initializes a new commandExecutor by command, plugin
+     *
+     * @param command command
+     * @param plugin  plugin
 
-    ArenaCommandExecutor(BlockBallManager manager, Plugin plugin) {
-        super("blockball", (JavaPlugin) plugin);
-        this.manager = manager;
-        if (ConfigOld.getInstance().getChatNavigateCommand().isEnabled()) {
-            final ConfigOld.CommandContainer c = ConfigOld.getInstance().getChatNavigateCommand();
-            new SimpleCommandExecutor.UnRegistered(c.getCommand(), c.getUseage(), c.getDescription(), c.getPermission(), c.getPermissionMessage(), (JavaPlugin) plugin) {
-                /**
-                 * Can be overwritten to listen to player executed commands
-                 *
-                 * @param player player
-                 * @param args   args
-                 */
+    public ArenaCommandExecutor(String command, Plugin pl) {
+        super(command, plugin);
+    }
+
+    /* ArenaCommandExecutor(BlockBallManager manager, Plugin plugin) {
+         super("blockball", (JavaPlugin) plugin);
+         this.manager = manager;
+         if (ConfigOld.getInstance().getChatNavigateCommand().isEnabled()) {
+             final ConfigOld.CommandContainer c = ConfigOld.getInstance().getChatNavigateCommand();
+             new SimpleCommandExecutor.UnRegistered(c.getCommand(), c.getUseage(), c.getDescription(), c.getPermission(), c.getPermissionMessage(), (JavaPlugin) plugin) {
+
                 @Override
                 public void onPlayerExecuteCommand(Player player, String[] args) {
                     SChatMenuManager.getInstance().handleChatMessage(player, ChatColor.stripColor(this.getText(args)));
                 }
 
-                /**
-                 * Returns the text
-                 * @param args args
-                 * @return text
-                 */
+
                 private String getText(String[] args) {
                     final StringBuilder b = new StringBuilder();
                     for (final String s : args) {
@@ -2530,5 +2516,5 @@ class ArenaCommandExecutor extends SimpleCommandExecutor.Registered {
             this.player.sendMessage(FOOTER_STANDARD);
             this.player.sendMessage("");
         }
-    }
+    }*/
 }
