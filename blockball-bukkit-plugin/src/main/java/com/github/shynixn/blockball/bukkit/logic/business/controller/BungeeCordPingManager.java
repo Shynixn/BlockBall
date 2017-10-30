@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.controller;
 import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController;
 import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus;
 import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState;
-import com.github.shynixn.blockball.api.persistence.entity.meta.bungeecord.BungeeCordSign;
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.BungeeCordServerStats;

@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarM
 import com.github.shynixn.blockball.api.persistence.entity.meta.effect.GlowEffectMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CustomizingMeta;
 
 import java.util.List;
 
@@ -36,6 +37,13 @@ import java.util.List;
  * SOFTWARE.
  */
 public interface BlockBallMeta {
+
+    /**
+     * Returns the customizing meta
+     *
+     * @return meta
+     */
+    CustomizingMeta getCustomizingMeta();
 
     /**
      * Returns the meta data for the bossbar.

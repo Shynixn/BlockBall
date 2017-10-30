@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.business.controller;
 
 import com.github.shynixn.blockball.api.persistence.controller.IFileController;
-import com.github.shynixn.blockball.api.persistence.entity.meta.bungeecord.BungeeCordSign;
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
 
 import java.util.Set;
 

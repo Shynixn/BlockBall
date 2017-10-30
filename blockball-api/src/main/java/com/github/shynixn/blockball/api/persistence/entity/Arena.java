@@ -48,7 +48,7 @@ public interface Arena extends Persistenceable<Arena> {
      *
      * @return lobbyMeta
      */
-    HubLobbyMeta getLobbyMeta();
+    <T extends HubLobbyMeta> T getLobbyMeta();
 
     /**
      * Returns the meta data for teams
@@ -79,47 +79,11 @@ public interface Arena extends Persistenceable<Arena> {
     TeamMeta getBlueTeamMeta();
 
     /**
-     * Returns the customizing meta
-     *
-     * @return meta
-     */
-    CustomizingMeta getCustomizingMeta();
-
-
-    /**
-     * Returns the max amount the score can reach on the scoreboard.
-     *
-     * @return score
-     */
-    int getMaxScore();
-
-    /**
-     * Sets the max amount the score can reach on the scoreboard.
-     *
-     * @param amount amoun
-     */
-    void setMaxScore(int amount);
-
-    /**
      * Returns the unique name of the arena
      *
      * @return name
      */
     String getName();
-
-    /**
-     * Enables or disables auto reset when the arena is empty.
-     *
-     * @param enable enable
-     */
-    void setAutoEmptyResetEnabled(boolean enable);
-
-    /**
-     * Returns if auto reset when the arena is empty is enabled.
-     *
-     * @return enabled
-     */
-    boolean isAutoEmptyResetEnabled();
 
     /**
      * Returns if the arena is enabled

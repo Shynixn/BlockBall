@@ -33,6 +33,35 @@ import java.util.Optional;
  */
 public interface CustomizingMeta extends Persistenceable<CustomizingMeta> {
 
+
+
+    /**
+     * Enables or disables auto reset when the arena is empty.
+     *
+     * @param enable enable
+     */
+    void setAutoEmptyResetEnabled(boolean enable);
+
+    /**
+     * Returns if auto reset when the arena is empty is enabled.
+     *
+     * @return enabled
+     */
+    boolean isAutoEmptyResetEnabled();
+    /**
+     * Returns the max amount the score can reach on the scoreboard.
+     *
+     * @return score
+     */
+    int getMaxScore();
+
+    /**
+     * Sets the max amount the score can reach on the scoreboard.
+     *
+     * @param amount amount
+     */
+    void setMaxScore(int amount);
+
     /**
      * Forces even teams on both sides. Red and blue team amount has to be the same to start.
      *

@@ -1,6 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.bungeecord;
-
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+package com.github.shynixn.blockball.api.persistence.entity;
 
 /**
  * Created by Shynixn 2017.
