@@ -1,9 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder;
 
-import com.github.shynixn.blockball.api.persistence.entity.HologramMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import org.bukkit.Location;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.*;
 

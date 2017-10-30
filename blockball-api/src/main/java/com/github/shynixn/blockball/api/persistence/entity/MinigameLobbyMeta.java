@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Metadata for a match-lobby.
+ * Created by Shynixn 2017.
  * <p>
  * Version 1.1
  * <p>
@@ -30,70 +30,27 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface LobbyMeta extends Persistenceable<LobbyMeta> {
-
+public interface MinigameLobbyMeta extends HubLobbyMeta {
     /**
-     * Returns the positions of each sign
+     * Returns the positions of each sign.
      *
      * @return positions
      */
     List<IPosition> getJoinSignPositions();
 
     /**
-     * Removes the sign-position
+     * Removes the sign-position.
      *
      * @param position position
      */
     void removeJoinSignPosition(IPosition position);
 
     /**
-     * Returns the positions of each sign
-     *
-     * @return positions
-     */
-    List<IPosition> getRedTeamSignPositions();
-
-    /**
-     * Removes the sign-position
+     * Adds a new join sign position.
      *
      * @param position position
      */
-    void removeRedTeamSignPosition(IPosition position);
-
-    /**
-     * Adds a redTeamSignLocation
-     *
-     * @param position position
-     */
-    void addRedTeamSignLocation(IPosition position);
-
-    /**
-     * Returns the positions of each sign
-     *
-     * @return positions
-     */
-    List<IPosition> getBlueTeamSignPositions();
-
-    /**
-     * Removes the sign-position
-     *
-     * @param position position
-     */
-    void removeBlueTeamSignPosition(IPosition position);
-
-    /**
-     * Sets the min amount of players required for a match to start.
-     *
-     * @param amount amount
-     */
-    void setMinAmountOfPlayers(int amount);
-
-    /**
-     * Returns the min amount of players required for a match to start.
-     *
-     * @return amount
-     */
-    int getMinAmountOfPlayers();
+    void addJoinSignPosition(IPosition position);
 
     /**
      * Sets the match duration in seconds.
@@ -122,32 +79,4 @@ public interface LobbyMeta extends Persistenceable<LobbyMeta> {
      * @return location
      */
     Optional<Object> getLobbySpawnpoint();
-
-    /**
-     * Sets the spawnpoint when someone leaves the lobby.
-     *
-     * @param location location
-     */
-    void setLobbyLeftSpawnpoint(Object location);
-
-    /**
-     * Returns the spawnpoint when someone leaves the lobby.
-     *
-     * @return location
-     */
-    Optional<Object> getLobbyLeftSpawnpoint();
-
-    /**
-     * Sets the amount of seconds the lobby countdown lasts.
-     *
-     * @param amountOfSeconds amountofSeconds
-     */
-    void setLobbyDuration(int amountOfSeconds);
-
-    /**
-     * Returns the amount of seconds the lobby countdown lasts.
-     *
-     * @return amountOfSeconds
-     */
-    int getAmountOfSeconds();
 }

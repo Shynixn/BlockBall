@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity;
 
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
-import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
@@ -26,7 +26,7 @@ public class EventGameEntity extends GameEntity {
     private final Map<Player, Integer> bumpers = new HashMap<>();
     private boolean interruptgame = true;
 
-    private final SoundMeta blingsound = new SoundBuilder("NOTE_PLING", 1.0, 2.0);
+    private final SoundEffectMeta blingsound = new SoundBuilder("NOTE_PLING", 1.0, 2.0);
 
     public EventGameEntity(Arena arena) {
         super(arena);

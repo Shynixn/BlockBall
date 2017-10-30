@@ -1,12 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder;
 
-import com.github.shynixn.blockball.api.persistence.entity.ParticleEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;

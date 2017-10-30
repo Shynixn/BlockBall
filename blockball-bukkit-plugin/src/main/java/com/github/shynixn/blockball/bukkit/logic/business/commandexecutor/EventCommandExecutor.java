@@ -23,10 +23,8 @@ public final class EventCommandExecutor extends SimpleCommandExecutor.UnRegister
      *
      * @param plugin plugin
      */
-    public EventCommandExecutor(BlockBallManager blockBallManager, Plugin plugin) {
-        super(Config.getInstance().getRefereeCommandName(), Config.getInstance().getRefereeCommandUseag(),
-                Config.getInstance().getRefereeCommandDescription(), Config.getInstance().getRefereeCommandPermission(),
-                Config.getInstance().getRefereeCommandPermissionMessage(), (JavaPlugin) plugin);
+    public EventCommandExecutor(BlockBallManager blockBallManager, Plugin plugin) throws Exception {
+        super(plugin.getConfig().get("referee-game"), (JavaPlugin) plugin);
         this.gameController = blockBallManager.getGameController();
     }
 

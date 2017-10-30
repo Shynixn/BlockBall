@@ -1,8 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder;
 
-import com.github.shynixn.blockball.api.persistence.entity.BossBarMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.*;
 

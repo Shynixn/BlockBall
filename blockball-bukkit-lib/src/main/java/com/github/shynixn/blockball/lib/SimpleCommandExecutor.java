@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,15 +15,13 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * Copyright 2017 Shynixn
+ * Holds the different types of commandExecutors.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.1
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2016
+ * Copyright (c) 2017 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,21 +43,59 @@ import java.util.logging.Level;
  */
 public class SimpleCommandExecutor {
 
+    /**
+     * Creates a new commandExecutor from preDefined commands in the plugin.yml.
+     * <p>
+     * Version 1.1
+     * <p>
+     * MIT License
+     * <p>
+     * Copyright (c) 2017 by Shynixn
+     * <p>
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     * <p>
+     * The above copyright notice and this permission notice shall be included in all
+     * copies or substantial portions of the Software.
+     * <p>
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+     * SOFTWARE.
+     */
     public static class Registered implements CommandExecutor {
         final protected JavaPlugin plugin;
 
         /**
-         * Initializes a new commandExecutor by command, pluginName
+         * Initializes a new commandExecutor by command and pluginName.
          *
-         * @param command command
-         * @param plugin  plugin
+         * @param command    command
+         * @param pluginName pluginName
          */
-        public Registered(String command, String plugin) {
-            this(command, (JavaPlugin) Bukkit.getPluginManager().getPlugin(plugin));
+        public Registered(String command, String pluginName) {
+            this(command, (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName));
         }
 
         /**
-         * Initializes a new commandExecutor by command, plugin
+         * Initializes a new commandExecutor by command and pluginClass.
+         *
+         * @param command     command
+         * @param pluginClass pluginClass
+         * @param <T>         pluginClassType
+         */
+        public <T extends JavaPlugin> Registered(String command, Class<T> pluginClass) {
+            this(command, JavaPlugin.getPlugin(pluginClass));
+        }
+
+        /**
+         * Initializes a new commandExecutor by command and plugin.
          *
          * @param command command
          * @param plugin  plugin
@@ -74,7 +111,7 @@ public class SimpleCommandExecutor {
         }
 
         /**
-         * Gets called when the user enters a command and redirects on onPlayerExecute or onCommandSenderExecuteCommand
+         * Gets called when the user enters a command and redirects on onPlayerExecute or onCommandSenderExecuteCommand.
          *
          * @param commandSender commandSender
          * @param command       command
@@ -92,7 +129,7 @@ public class SimpleCommandExecutor {
         }
 
         /**
-         * Can be overwritten to listen to player executed commands
+         * Can be overwritten to listen to player executed commands.
          *
          * @param player player
          * @param args   args
@@ -102,7 +139,7 @@ public class SimpleCommandExecutor {
         }
 
         /**
-         * Can be overwritten to listener to all executed commands
+         * Can be overwritten to listener to all executed commands.
          *
          * @param sender sender
          * @param args   args
@@ -112,36 +149,59 @@ public class SimpleCommandExecutor {
         }
     }
 
+    /**
+     * Creates a new independent commandExecutor from the given constructor parameters.
+     * <p>
+     * Version 1.1
+     * <p>
+     * MIT License
+     * <p>
+     * Copyright (c) 2017 by Shynixn
+     * <p>
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     * <p>
+     * The above copyright notice and this permission notice shall be included in all
+     * copies or substantial portions of the Software.
+     * <p>
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+     * SOFTWARE.
+     */
     public static class UnRegistered extends BukkitCommand {
         final protected JavaPlugin plugin;
 
         /**
-         * Initializes a new commandExecutor by testing parameters
+         * Initializes a new commandExecutor by testing parameters and pluginName.
          *
-         * @param command command
-         * @param plugin  plugin
+         * @param command    command
+         * @param pluginName plugin
          */
-        public UnRegistered(String command, String plugin) {
-            this(command,(JavaPlugin) Bukkit.getPluginManager().getPlugin(plugin));
+        public UnRegistered(String command, String pluginName) {
+            this(command, (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName));
         }
 
         /**
-         * Initializes a new commandExecutor by using the config configuration
-         * @param configuration configuration
-         * @param plugin plugin
-         * @throws Exception exception
+         * Initializes a new commandExecutor by testing parameters and pluginClass.
+         *
+         * @param command     command
+         * @param pluginClass pluginClass
+         * @param <T>         pluginClassType
          */
-        public UnRegistered(Map<String, Object> configuration, JavaPlugin plugin) throws Exception
-        {
-            this((String)configuration.get("command")
-                    ,(String) configuration.get("useage")
-                    ,(String) configuration.get("description")
-                    , (String)configuration.get("permission")
-                    , (String)configuration.get("permission-message"), plugin);
+        public <T extends JavaPlugin> UnRegistered(String command, Class<T> pluginClass) {
+            this(command, JavaPlugin.getPlugin(pluginClass));
         }
 
         /**
-         * Initializes a new commandExecutor by testing parameters
+         * Initializes a new commandExecutor by testing parameters and plugin.
          *
          * @param command command
          * @param plugin  plugin
@@ -152,21 +212,78 @@ public class SimpleCommandExecutor {
         }
 
         /**
-         * Initializes a new commandExecutor by all required parameters
+         * Initializes a new commandExecutor by using the given config configuration and pluginName.
+         *
+         * @param configuration configuration
+         * @param pluginName    pluginName
+         * @throws Exception exception
+         */
+        public UnRegistered(Object configuration, String pluginName) throws Exception {
+            this(configuration, (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName));
+        }
+
+        /**
+         * Initializes a new commandExecutor by using the given config configuration and pluginClass.
+         *
+         * @param configuration configuration
+         * @param pluginClass   pluginClass
+         * @param <T>           pluginClassType
+         * @throws Exception exception
+         */
+        public <T extends JavaPlugin> UnRegistered(Object configuration, Class<T> pluginClass) throws Exception {
+            this(configuration, JavaPlugin.getPlugin(pluginClass));
+        }
+
+        /**
+         * Initializes a new commandExecutor by using the given config configuration and plugin.
+         *
+         * @param configuration configuration
+         * @param plugin        plugin
+         * @throws Exception exception
+         */
+        public UnRegistered(Object configuration, JavaPlugin plugin) throws Exception {
+            super((String) getConfigValues(configuration).get("command"));
+            final Map<String, Object> configurationMap = getConfigValues(configuration);
+            this.plugin = plugin;
+            this.setDescription((String) configurationMap.get("description"));
+            this.setUsage((String) configurationMap.get("useage"));
+            this.setPermission((String) configurationMap.get("permission"));
+            this.setPermissionMessage((String) configurationMap.get("permission-message"));
+            this.setAliases(new ArrayList<>());
+            this.registerDynamicCommand((String) configurationMap.get("command"));
+        }
+
+        /**
+         * Initializes a new commandExecutor by all required parameters and pluginName.
          *
          * @param command           command
          * @param useAge            useAge
          * @param description       description
          * @param permission        permission
          * @param permissionMessage permissionMessage
-         * @param plugin            plugin
+         * @param pluginName        pluginName
          */
-        public UnRegistered(String command, String useAge, String description, String permission, String permissionMessage, String plugin) {
-            this(command, useAge, description, permission, permissionMessage, (JavaPlugin) Bukkit.getPluginManager().getPlugin(plugin));
+        public UnRegistered(String command, String useAge, String description, String permission, String permissionMessage, String pluginName) {
+            this(command, useAge, description, permission, permissionMessage, (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName));
         }
 
         /**
-         * Initializes a new commandExecutor by all required parameters
+         * Initializes a new commandExecutor by all required parameters and pluginClass.
+         *
+         * @param command           command
+         * @param useAge            useAge
+         * @param description       description
+         * @param permission        permission
+         * @param permissionMessage permissionMessage
+         * @param pluginClass       plugin
+         * @param <T>               pluginClassType
+         */
+        public <T extends JavaPlugin> UnRegistered(String command, String useAge, String description, String permission, String permissionMessage, Class<T> pluginClass) {
+            this(command, useAge, description, permission, permissionMessage, JavaPlugin.getPlugin(pluginClass));
+        }
+
+        /**
+         * Initializes a new commandExecutor by all required parameters and plugin.
          *
          * @param command           command
          * @param useAge            useAge
@@ -187,9 +304,9 @@ public class SimpleCommandExecutor {
                 throw new IllegalArgumentException("PermissionMessage cannot be null!");
             if (plugin == null)
                 throw new IllegalArgumentException("Plugin cannot be null!");
-            this.description = description;
-            this.usageMessage = useAge;
             this.plugin = plugin;
+            this.setDescription(description);
+            this.setUsage(useAge);
             this.setPermission(permission);
             this.setPermissionMessage(permissionMessage);
             this.setAliases(new ArrayList<>());
@@ -197,7 +314,7 @@ public class SimpleCommandExecutor {
         }
 
         /**
-         * Gets called when the user enters a command and redirects on onPlayerExecute or onCommandSenderExecuteCommand
+         * Gets called when the user enters a command and redirects on onPlayerExecute or onCommandSenderExecuteCommand.
          *
          * @param sender sender
          * @param alias  alias
@@ -218,7 +335,7 @@ public class SimpleCommandExecutor {
         }
 
         /**
-         * Can be overwritten to listen to player executed commands
+         * Can be overwritten to listen to player executed commands.
          *
          * @param player player
          * @param args   args
@@ -228,7 +345,7 @@ public class SimpleCommandExecutor {
         }
 
         /**
-         * Can be overwritten to listener to all executed commands
+         * Can be overwritten to listener to all executed commands.
          *
          * @param sender sender
          * @param args   args
@@ -238,7 +355,25 @@ public class SimpleCommandExecutor {
         }
 
         /**
-         * Registers the dynamic command
+         * Returns the configuration values.
+         *
+         * @param configuration configuration
+         * @return values
+         */
+        @SuppressWarnings("unchecked")
+        private static Map<String, Object> getConfigValues(Object configuration) {
+            final Map<String, Object> configurationMap;
+            if (!(configuration instanceof Map)) {
+                final MemorySection section = (MemorySection) configuration;
+                configurationMap = section.getValues(true);
+            } else {
+                configurationMap = (Map<String, Object>) configuration;
+            }
+            return configurationMap;
+        }
+
+        /**
+         * Registers the dynamic command.
          *
          * @param command command
          */

@@ -1,4 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.api.persistence.entity.meta.bungeecord;
+
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
 /**
  * Created by Shynixn 2017.
@@ -27,33 +29,19 @@ package com.github.shynixn.blockball.api.persistence.entity;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface GlowEffectMeta extends Persistenceable<GlowEffectMeta> {
+public interface BungeeCordSign extends Persistenceable<BungeeCordSign> {
 
     /**
-     * Sets the amount of seconds a player is glowing.
+     * Returns the server linking to.
      *
-     * @param amount amount
+     * @return server
      */
-    void setAmountOfSeconds(int amount);
+    String getServer();
 
     /**
-     * Returns the amount of seconds a player is glowing.
+     * Returns the location of the sign.
      *
-     * @return amount
+     * @return location
      */
-    int getAmountOfSeconds();
-
-    /**
-     * Toggles the effect.
-     *
-     * @param enabled enabled
-     */
-    void setEnabled(boolean enabled);
-
-    /**
-     * Returns if the effect is enabled
-     *
-     * @return enabled
-     */
-    boolean isEnabled();
+    Object getLocation();
 }

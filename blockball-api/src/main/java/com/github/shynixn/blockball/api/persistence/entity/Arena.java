@@ -1,8 +1,9 @@
 package com.github.shynixn.blockball.api.persistence.entity;
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType;
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CustomizingMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -47,7 +48,7 @@ public interface Arena extends Persistenceable<Arena> {
      *
      * @return lobbyMeta
      */
-    LobbyMeta getLobbyMeta();
+    HubLobbyMeta getLobbyMeta();
 
     /**
      * Returns the meta data for teams
@@ -62,34 +63,6 @@ public interface Arena extends Persistenceable<Arena> {
      * @return event
      */
     EventMeta getEventMeta();
-
-    /**
-     * Returns the meta data for the bossbar.
-     *
-     * @return bossbar
-     */
-    BossBarMeta getBossBarMeta();
-
-    /**
-     * Returns the meta data for the scoreboard.
-     *
-     * @return scoreboard
-     */
-    ScoreboardMeta getScoreboardMeta();
-
-    /**
-     * Returns the meta data for the double jump.
-     *
-     * @return doubleJumpMeta
-     */
-    DoubleJumpMeta getDoubleJumpMeta();
-
-    /**
-     * Returns the meta data of glowing when scoring.
-     *
-     * @return glowing
-     */
-    GlowEffectMeta getScoreGlowingMeta();
 
     /**
      * Returns the meta data of the red team
@@ -112,26 +85,6 @@ public interface Arena extends Persistenceable<Arena> {
      */
     CustomizingMeta getCustomizingMeta();
 
-    /**
-     * Adds a new hologram to the arena.
-     *
-     * @param hologramMeta hologram
-     */
-    void addHologram(HologramMeta hologramMeta);
-
-    /**
-     * Removes a hologram from the arena.
-     *
-     * @param hologramMeta hologram
-     */
-    void removeHologram(HologramMeta hologramMeta);
-
-    /**
-     * Returns all holograms from the arena
-     *
-     * @return holograms
-     */
-    List<HologramMeta> getHolograms();
 
     /**
      * Returns the max amount the score can reach on the scoreboard.

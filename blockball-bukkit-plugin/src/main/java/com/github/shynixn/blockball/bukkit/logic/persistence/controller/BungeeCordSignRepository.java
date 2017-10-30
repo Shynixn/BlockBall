@@ -1,12 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 
 import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController;
-import com.github.shynixn.blockball.api.persistence.controller.IFileController;
-import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
+import com.github.shynixn.blockball.api.persistence.entity.meta.bungeecord.BungeeCordSign;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BungeeCordSignData;
-import com.github.shynixn.blockball.bungeecord.connector.BungeeCordController;
-import com.github.shynixn.blockball.bungeecord.game.BungeeCord;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,7 +12,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -151,7 +147,7 @@ public class BungeeCordSignRepository implements BungeeCordSignController {
      * Stores the signs asynchronly to the fileSystem.
      */
     private void saveSignsAsynchronly() {
-        BungeeCordSign[] signs = this.getAll().toArray(new BungeeCordSign[this.signs.size()]);
+        final BungeeCordSign[] signs = this.getAll().toArray(new BungeeCordSign[this.signs.size()]);
         Bukkit.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
             try {
                 final FileConfiguration configuration = new YamlConfiguration();

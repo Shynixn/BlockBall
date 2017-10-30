@@ -2,6 +2,13 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType;
 import com.github.shynixn.blockball.api.persistence.entity.*;
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.GlowEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.gadgets.DoubleJumpMeta;
+import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties.BallProperties;
 import com.github.shynixn.blockball.lib.YamlSerializer;
 
@@ -57,7 +64,7 @@ public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
      * @return lobbyMeta
      */
     @Override
-    public LobbyMeta getLobbyMeta() {
+    public HubLobbyMeta getLobbyMeta() {
         return null;
     }
 

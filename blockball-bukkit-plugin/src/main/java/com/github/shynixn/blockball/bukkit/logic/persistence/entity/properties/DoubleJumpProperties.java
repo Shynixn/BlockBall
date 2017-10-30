@@ -1,13 +1,12 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
 
-import com.github.shynixn.blockball.api.persistence.entity.DoubleJumpMeta;
-import com.github.shynixn.blockball.api.persistence.entity.ParticleEffectMeta;
-import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.gadgets.DoubleJumpMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.ParticleEffectBuilder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
 import com.github.shynixn.blockball.lib.YamlSerializer;
-import org.bukkit.Sound;
 
 /**
  * Created by Shynixn 2017.
@@ -48,7 +47,7 @@ public class DoubleJumpProperties extends PersistenceObject<DoubleJumpMeta> impl
     private int cooldown;
 
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "sound")
-    private final SoundMeta soundMeta = new SoundBuilder()
+    private final SoundEffectMeta soundMeta = new SoundBuilder()
             .setName("GHAST_FIREBALL")
             .setVolume(100)
             .setPitch(1.0);
@@ -155,7 +154,7 @@ public class DoubleJumpProperties extends PersistenceObject<DoubleJumpMeta> impl
      * @return soundEffect
      */
     @Override
-    public SoundMeta getSoundEffect() {
+    public SoundEffectMeta getSoundEffect() {
         return this.soundMeta;
     }
 }

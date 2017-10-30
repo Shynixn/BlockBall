@@ -1,7 +1,12 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.api.persistence.entity.meta;
+
+import com.github.shynixn.blockball.api.persistence.entity.meta.gadgets.DoubleJumpMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.GlowEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by Shynixn 2017.
@@ -30,67 +35,55 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface HologramMeta extends Persistenceable<HologramMeta> {
-    /**
-     * Adds a line to the end of a hologram.
-     *
-     * @param text text
-     * @return line
-     */
-    HologramMeta addLine(String text);
+public interface BlockBallMeta {
 
     /**
-     * Removes the line at the position.
+     * Returns the meta data for the bossbar.
      *
-     * @param position position
-     * @return instance
+     * @return bossbar
      */
-    HologramMeta removeLine(int position);
+    BossBarMeta getBossBarMeta();
 
     /**
-     * Removes all matching lines from the hologram.
+     * Adds a new hologram to the arena.
      *
-     * @param text text
-     * @return instance
+     * @param hologramMeta hologram
      */
-    HologramMeta removeLine(String text);
+    void addHologram(HologramMeta hologramMeta);
 
     /**
-     * Sets a text at the given position.
+     * Removes a hologram from the arena.
      *
-     * @param position position
-     * @param text     text
-     * @return instance
+     * @param hologramMeta hologram
      */
-    HologramMeta setLine(int position, String text);
+    void removeHologram(HologramMeta hologramMeta);
 
     /**
-     * Returns a line at the given position.
+     * Returns all holograms from the arena
      *
-     * @param position position
-     * @return line
+     * @return holograms
      */
-    Optional<String> getLine(int position);
+    List<HologramMeta> getHolograms();
 
     /**
-     * Returns all lines in an unmodifiable list.
+     * Returns the meta data for the scoreboard.
      *
-     * @return lines
+     * @return scoreboard
      */
-    List<String> getLines();
+    ScoreboardMeta getScoreboardMeta();
 
     /**
-     * Returns the location of the hologram.
+     * Returns the meta data for the double jump.
      *
-     * @return location
+     * @return doubleJumpMeta
      */
-    Optional<Object> getLocation();
+    DoubleJumpMeta getDoubleJumpMeta();
 
     /**
-     * Sets the location of the hologram
+     * Returns the meta data of glowing when scoring.
      *
-     * @param location location
-     * @return instance
+     * @return glowing
      */
-    HologramMeta setLocation(Object location);
+    GlowEffectMeta getScoreGlowingMeta();
+
 }

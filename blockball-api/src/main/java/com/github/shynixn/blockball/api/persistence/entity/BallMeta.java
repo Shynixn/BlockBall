@@ -1,5 +1,8 @@
 package com.github.shynixn.blockball.api.persistence.entity;
 
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
+
 /**
  * Created by Shynixn 2017.
  * <p>
@@ -34,14 +37,14 @@ public interface BallMeta extends Persistenceable<BallMeta> {
      *
      * @return meta
      */
-    SoundMeta getGenericHitSound();
+    SoundEffectMeta getGenericHitSound();
 
     /**
      * Returns the sound played when the ball spawns
      *
      * @return meta
      */
-    SoundMeta getSpawnSound();
+    SoundEffectMeta getSpawnSound();
 
     /**
      * Returns the particleEffect played when the ball gets hit.

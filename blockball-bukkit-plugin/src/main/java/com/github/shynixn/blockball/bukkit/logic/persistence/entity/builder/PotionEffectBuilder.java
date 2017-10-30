@@ -1,9 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder;
 
-import com.github.shynixn.blockball.api.persistence.entity.PotionEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.PotionEffectMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;

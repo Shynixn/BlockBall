@@ -1,4 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.api.persistence.entity.meta.display;
+
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
 /**
  * Created by Shynixn 2017.

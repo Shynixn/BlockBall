@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
 
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
-import com.github.shynixn.blockball.api.persistence.entity.ParticleEffectMeta;
-import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.ParticleEffectBuilder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
@@ -51,13 +51,13 @@ public class BallProperties extends PersistenceObject<BallMeta> implements BallM
     private double horizontalStrength = 1.8;
 
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "sounds.generic")
-    private final SoundMeta genericHitSound = new SoundBuilder()
+    private final SoundEffectMeta genericHitSound = new SoundBuilder()
             .setName("ZOMBIE_WOOD")
             .setPitch(1.0)
             .setVolume(1.0);
 
     @YamlSerializer.YamlSerialize(orderNumber = 6, value = "sounds.spawn")
-    private final SoundMeta spawnSound = new SoundBuilder()
+    private final SoundEffectMeta spawnSound = new SoundBuilder()
             .setName("NOTE_BASS")
             .setPitch(1.0)
             .setVolume(1.0);
@@ -82,7 +82,7 @@ public class BallProperties extends PersistenceObject<BallMeta> implements BallM
      * @return meta
      */
     @Override
-    public SoundMeta getGenericHitSound() {
+    public SoundEffectMeta getGenericHitSound() {
         return this.genericHitSound;
     }
 
@@ -92,7 +92,7 @@ public class BallProperties extends PersistenceObject<BallMeta> implements BallM
      * @return meta
      */
     @Override
-    public SoundMeta getSpawnSound() {
+    public SoundEffectMeta getSpawnSound() {
         return this.spawnSound;
     }
 

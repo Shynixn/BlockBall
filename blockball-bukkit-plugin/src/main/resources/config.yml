@@ -78,6 +78,39 @@ sql:
 
 ############################
 
+# BungeeCord settings
+
+# bungeecord-linking: Enable this to allow linking between other servers with BlockBall installed and linking enabled.
+# bungeecord-low-resources: Enable this to only use the BlockBall signs to join on different servers.
+#                           BlockBall will not be possible to play on this server if you enable this.
+# bungeecord-mods: Mods which will be shown in the client server list and be used for linking players.
+#                  All mods on all servers which have set linking to enabled HAVE TO set the exact same mods!!!
+#
+
+# HINT! Do not forget to enable the 'bungeecord-server-change' command below!
+
+############################
+
+bungeecord:
+ linking: false
+ low-resources: false
+ mods:
+   restarting-server: '&cRestarting...'
+   waiting-for-players: '&aWaiting for players...'
+   during-match: '&9Ingame'
+ signs:
+   states:
+     restarting-server: '&c&lRestarting'
+     waiting-for-players: '&a&lJoin'
+     during-match: '&9&lIngame'
+   lines:
+     - '&l[BlockBall]'
+     - '<server>'
+     - '<state>'
+     - '<players>/<maxplayers>'
+
+############################
+
 # Command settings
 
 # Instead of setting the commands inside of the plugin.yml, I believe you should be able to customize
@@ -108,6 +141,13 @@ referee-game:
   command: bbreferee
   useage: /<command>
   description: Opens the configuration game section.
+  permission: blockball.admin
+  permission-message: You don't have permission
+bungeecord-server-change:
+  enabled: false
+  command: bbbungee
+  useage: /<command> <server>
+  description: Creates blockball signs for joining different bungeecord servers.
   permission: blockball.admin
   permission-message: You don't have permission
 

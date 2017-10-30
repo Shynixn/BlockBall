@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener;
 
 import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController;
-import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
+import com.github.shynixn.blockball.api.persistence.entity.meta.bungeecord.BungeeCordSign;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager;
 import com.github.shynixn.blockball.bungeecord.connector.ServerInfo;
 import com.github.shynixn.blockball.lib.SimpleListener;
@@ -11,7 +11,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.util.logging.Level;
 

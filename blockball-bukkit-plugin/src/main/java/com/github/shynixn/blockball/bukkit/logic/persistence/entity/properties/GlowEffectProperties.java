@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
 
-import com.github.shynixn.blockball.api.persistence.entity.GlowEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.GlowEffectMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.lib.YamlSerializer;
 

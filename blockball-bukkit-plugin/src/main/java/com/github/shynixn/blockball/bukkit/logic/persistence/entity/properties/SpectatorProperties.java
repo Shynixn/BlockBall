@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
 
 import com.github.shynixn.blockball.api.persistence.entity.IPosition;
-import com.github.shynixn.blockball.api.persistence.entity.SpectatorMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.gadgets.SpectatorMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.LocationBuilder;
 import com.github.shynixn.blockball.lib.YamlSerializer;

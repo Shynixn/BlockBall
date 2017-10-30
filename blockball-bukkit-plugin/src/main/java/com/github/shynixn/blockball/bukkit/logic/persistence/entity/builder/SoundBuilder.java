@@ -1,11 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder;
 
-import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.bukkit.nms.VersionSupport;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -41,7 +40,7 @@ import java.util.Map;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class SoundBuilder extends PersistenceObject<SoundMeta> implements SoundMeta {
+public class SoundBuilder extends PersistenceObject<SoundEffectMeta> implements SoundEffectMeta {
     private String text;
     private float volume;
     private float pitch;
@@ -201,7 +200,7 @@ public class SoundBuilder extends PersistenceObject<SoundMeta> implements SoundM
      * @param sound sound
      * @return builder
      */
-    public SoundMeta setSound(Sound sound) {
+    public SoundEffectMeta setSound(Sound sound) {
         this.text = sound.name();
         return this;
     }
@@ -254,7 +253,7 @@ public class SoundBuilder extends PersistenceObject<SoundMeta> implements SoundM
      * Resets the object to the default values
      */
     @Override
-    public void reset(SoundMeta object) {
+    public void reset(SoundEffectMeta object) {
         this.text = object.getName();
         this.setPitch(object.getPitch());
         this.setVolume(object.getVolume());

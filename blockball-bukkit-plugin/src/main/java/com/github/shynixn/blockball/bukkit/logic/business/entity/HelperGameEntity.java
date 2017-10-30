@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity;
 import com.github.shynixn.blockball.api.entities.*;
 import com.github.shynixn.blockball.api.events.GameJoinEvent;
 import com.github.shynixn.blockball.api.events.GameWinEvent;
-import com.github.shynixn.blockball.api.persistence.entity.SoundMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
@@ -26,7 +26,7 @@ class HelperGameEntity extends GameEntity implements MiniGame {
     private int countdown;
     private boolean isStarting;
     private final Map<Player, Team> preSelection = new HashMap<>();
-    private final SoundMeta blingsound = new SoundBuilder("NOTE_PLING", 1.0, 2.0);
+    private final SoundEffectMeta blingsound = new SoundBuilder("NOTE_PLING", 1.0, 2.0);
 
     private int bumeper = 40;
     private int secondbumper = 20;
