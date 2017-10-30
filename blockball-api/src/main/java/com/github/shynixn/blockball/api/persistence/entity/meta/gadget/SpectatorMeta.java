@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.gadgets;
+package com.github.shynixn.blockball.api.persistence.entity.meta.gadget;
 
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 

@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 
 import com.github.shynixn.blockball.api.persistence.entity.EventMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;

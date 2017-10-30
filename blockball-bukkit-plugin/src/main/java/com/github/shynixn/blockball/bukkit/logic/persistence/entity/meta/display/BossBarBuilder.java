@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display;
 
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;

@@ -2,13 +2,10 @@ package com.github.shynixn.blockball.bukkit.logic.business.controller;
 
 import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController;
 import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus;
-import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState;
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.BungeeCordServerStats;
-import com.github.shynixn.blockball.bungeecord.connector.BungeeCordController;
-import com.github.shynixn.blockball.bungeecord.game.BungeeCord;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -148,10 +145,10 @@ public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMes
                 final Location location = (Location) signInfo.getLocation();
                 if (location.getBlock().getState() instanceof Sign) {
                     final Sign sign = (Sign) location.getBlock().getState();
-                    sign.setLine(0, this.replaceSign(BungeeCord.SIGN_LINE_1, status));
+               /*     sign.setLine(0, this.replaceSign(BungeeCord.SIGN_LINE_1, status));
                     sign.setLine(1, this.replaceSign(BungeeCord.SIGN_LINE_2, status));
                     sign.setLine(2, this.replaceSign(BungeeCord.SIGN_LINE_3, status));
-                    sign.setLine(3, this.replaceSign(BungeeCord.SIGN_LINE_4, status));
+                    sign.setLine(3, this.replaceSign(BungeeCord.SIGN_LINE_4, status));*/
                     sign.update();
                 } else {
                     this.signController.remove(signInfo);
@@ -197,14 +194,14 @@ public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMes
         String customLine = line.replace("<maxplayers>", String.valueOf(info.getMaxPlayerAmount() * 2))
                 .replace("<players>", String.valueOf(info.getPlayerAmount()))
                 .replace("<server>", info.getServerName());
-        if (info.getStatus() == BungeeCordServerState.INGAME)
+    /*    if (info.getStatus() == BungeeCordServerState.INGAME)
             customLine = customLine.replace("<state>", BungeeCord.SIGN_INGAME);
         else if (info.getStatus() == BungeeCordServerState.RESTARTING)
             customLine = customLine.replace("<state>", BungeeCord.SIGN_RESTARTING);
         else if (info.getStatus() == BungeeCordServerState.WAITING_FOR_PLAYERS)
             customLine = customLine.replace("<state>", BungeeCord.SIGN_WAITING_FOR_PLAYERS);
         else if (info.getStatus() == BungeeCordServerState.UNKNOWN)
-            customLine = customLine.replace("<state>", "UNKNOWN");
+            customLine = customLine.replace("<state>", "UNKNOWN");*/
         return customLine;
     }
 

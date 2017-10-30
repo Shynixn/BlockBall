@@ -2,17 +2,13 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType;
 import com.github.shynixn.blockball.api.persistence.entity.*;
-import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.effect.GlowEffectMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.gadgets.DoubleJumpMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.MetaDataTransaction;
 import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties.BallProperties;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.BlockBallMetaCollection;
 import com.github.shynixn.blockball.lib.YamlSerializer;
+import org.bukkit.Location;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -42,160 +38,40 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
+public class BlockBallArena extends SelectedArea<Arena> implements Arena {
 
-    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "ball")
-    private final BallMeta ballMeta = new BallProperties();
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "name")
+    private String name;
 
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "displayname")
+    private String displayName;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "enabled")
+    private boolean enabled;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "gamemode")
+    private GameType gameType;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "ball-spawnpoint")
+    private IPosition ballSpawnLocation;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "meta")
+    private final MetaDataTransaction transaction = new BlockBallMetaCollection();
 
     /**
-     * Returns the ball settings for this arena
-     *
-     * @return ballMeta
+     * Default constructor
      */
-    @Override
-    public BallMeta getBallMeta() {
-        return this.ballMeta;
+    public BlockBallArena() {
     }
 
     /**
-     * Returns the meta data for lobbies
+     * Returns the meta data transaction for finding meta data of blockball.
      *
-     * @return lobbyMeta
+     * @return metaData
      */
     @Override
-    public HubLobbyMeta getLobbyMeta() {
-        return null;
-    }
-
-    /**
-     * Returns the meta data for teams
-     *
-     * @return teamMeta
-     */
-    @Override
-    public TeamMeta getTeamMeta() {
-        return null;
-    }
-
-    /**
-     * Returns the meta data for events
-     *
-     * @return event
-     */
-    @Override
-    public EventMeta getEventMeta() {
-        return null;
-    }
-
-    /**
-     * Returns the meta data for the bossbar.
-     *
-     * @return bossbar
-     */
-    @Override
-    public BossBarMeta getBossBarMeta() {
-        return null;
-    }
-
-    /**
-     * Returns the meta data for the scoreboard.
-     *
-     * @return scoreboard
-     */
-    @Override
-    public ScoreboardMeta getScoreboardMeta() {
-        return null;
-    }
-
-    /**
-     * Returns the meta data for the double jump.
-     *
-     * @return doubleJumpMeta
-     */
-    @Override
-    public DoubleJumpMeta getDoubleJumpMeta() {
-        return null;
-    }
-
-    /**
-     * Returns the meta data of glowing when scoring.
-     *
-     * @return glowing
-     */
-    @Override
-    public GlowEffectMeta getScoreGlowingMeta() {
-        return null;
-    }
-
-    /**
-     * Returns the meta data of the red team
-     *
-     * @return meta
-     */
-    @Override
-    public TeamMeta getRedTeamMeta() {
-        return null;
-    }
-
-    /**
-     * Returns the meta data of the blue team
-     *
-     * @return meta
-     */
-    @Override
-    public TeamMeta getBlueTeamMeta() {
-        return null;
-    }
-
-    /**
-     * Adds a new hologram to the arena.
-     *
-     * @param hologramMeta hologram
-     */
-    @Override
-    public void addHologram(HologramMeta hologramMeta) {
-
-    }
-
-    /**
-     * Removes a hologram from the arena.
-     *
-     * @param hologramMeta hologram
-     */
-    @Override
-    public void removeHologram(HologramMeta hologramMeta) {
-
-    }
-
-    /**
-     * Returns all holograms from the arena
-     *
-     * @return holograms
-     */
-    @Override
-    public List<HologramMeta> getHolograms() {
-        return null;
-    }
-
-    /**
-     * Returns the max amount the score can reach on the scoreboard.
-     *
-     * @return score
-     */
-    @Override
-    public int getMaxScore() {
-        return 0;
-    }
-
-    /**
-     * Sets the max amount the score can reach on the scoreboard.
-     *
-     * @param amount amoun
-     */
-    @Override
-    public void setMaxScore(int amount) {
-
+    public MetaDataTransaction getMeta() {
+        return this.transaction;
     }
 
     /**
@@ -205,27 +81,7 @@ public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
      */
     @Override
     public String getName() {
-        return null;
-    }
-
-    /**
-     * Enables or disables auto reset when the arena is empty.
-     *
-     * @param enable enable
-     */
-    @Override
-    public void setAutoEmptyResetEnabled(boolean enable) {
-
-    }
-
-    /**
-     * Returns if auto reset when the arena is empty is enabled.
-     *
-     * @return enabled
-     */
-    @Override
-    public boolean isAutoEmptyResetEnabled() {
-        return false;
+        return this.name;
     }
 
     /**
@@ -235,7 +91,7 @@ public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
      */
     @Override
     public boolean isEnabled() {
-        return false;
+        return this.enabled;
     }
 
     /**
@@ -245,7 +101,7 @@ public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
      */
     @Override
     public void setEnabled(boolean enabled) {
-
+        this.enabled = enabled;
     }
 
     /**
@@ -255,7 +111,7 @@ public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
      */
     @Override
     public Optional<String> getDisplayName() {
-        return null;
+        return Optional.ofNullable(this.displayName);
     }
 
     /**
@@ -265,7 +121,7 @@ public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
      */
     @Override
     public void setDisplayName(String displayName) {
-
+        this.displayName = displayName;
     }
 
     /**
@@ -275,7 +131,7 @@ public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
      */
     @Override
     public GameType getGameType() {
-        return null;
+        return this.gameType;
     }
 
     /**
@@ -285,17 +141,7 @@ public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
      */
     @Override
     public void setGameType(GameType type) {
-
-    }
-
-    /**
-     * Returns the center of the arena
-     *
-     * @return center
-     */
-    @Override
-    public Object getCenter() {
-        return null;
+        this.gameType = type;
     }
 
     /**
@@ -305,7 +151,7 @@ public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
      */
     @Override
     public Object getBallSpawnLocation() {
-        return null;
+        return ((LocationBuilder) this.ballSpawnLocation).toLocation();
     }
 
     /**
@@ -315,17 +161,8 @@ public class BlockBallArena extends PersistenceObject<Arena> implements Arena{
      */
     @Override
     public void setBallSpawnLocation(Object location) {
-
-    }
-
-    /**
-     * Returns if the given location is inside of this arena
-     *
-     * @param location location
-     * @return isInside
-     */
-    @Override
-    public boolean isLocationInArena(Object location) {
-        return false;
+        if (location != null) {
+            this.ballSpawnLocation = new LocationBuilder((Location) location);
+        }
     }
 }

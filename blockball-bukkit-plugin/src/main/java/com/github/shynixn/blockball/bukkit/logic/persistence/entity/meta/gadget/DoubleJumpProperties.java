@@ -1,11 +1,11 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.gadget;
 
-import com.github.shynixn.blockball.api.persistence.entity.meta.gadgets.DoubleJumpMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.gadget.DoubleJumpMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.ParticleEffectBuilder;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.ParticleEffectBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.SoundBuilder;
 import com.github.shynixn.blockball.lib.YamlSerializer;
 
 /**

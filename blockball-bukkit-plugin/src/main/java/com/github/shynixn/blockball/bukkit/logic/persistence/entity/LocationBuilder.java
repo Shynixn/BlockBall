@@ -1,11 +1,9 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 
 import com.github.shynixn.blockball.api.persistence.entity.IPosition;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 

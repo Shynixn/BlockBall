@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc;
 
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta;

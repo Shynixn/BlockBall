@@ -1,8 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity;
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType;
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CustomizingMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.MetaDataTransaction;
 
 import java.util.Optional;
 
@@ -35,48 +34,14 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface Arena extends Persistenceable<Arena> {
-    /**
-     * Returns the ball settings for this arena
-     *
-     * @return ballMeta
-     */
-    BallMeta getBallMeta();
+public interface Arena extends AreaSelection<Arena> {
 
     /**
-     * Returns the meta data for lobbies
+     * Returns the meta data transaction for finding meta data of blockball.
      *
-     * @return lobbyMeta
+     * @return metaData
      */
-    <T extends HubLobbyMeta> T getLobbyMeta();
-
-    /**
-     * Returns the meta data for teams
-     *
-     * @return teamMeta
-     */
-    TeamMeta getTeamMeta();
-
-    /**
-     * Returns the meta data for events
-     *
-     * @return event
-     */
-    EventMeta getEventMeta();
-
-    /**
-     * Returns the meta data of the red team
-     *
-     * @return meta
-     */
-    TeamMeta getRedTeamMeta();
-
-    /**
-     * Returns the meta data of the blue team
-     *
-     * @return meta
-     */
-    TeamMeta getBlueTeamMeta();
+    MetaDataTransaction getMeta();
 
     /**
      * Returns the unique name of the arena
@@ -147,12 +112,4 @@ public interface Arena extends Persistenceable<Arena> {
      * @param location location
      */
     void setBallSpawnLocation(Object location);
-
-    /**
-     * Returns if the given location is inside of this arena
-     *
-     * @param location location
-     * @return isInside
-     */
-    boolean isLocationInArena(Object location);
 }

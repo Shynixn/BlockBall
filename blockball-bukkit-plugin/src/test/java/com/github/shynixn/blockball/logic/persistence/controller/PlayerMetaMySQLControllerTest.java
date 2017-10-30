@@ -5,7 +5,7 @@ import ch.vorburger.mariadb4j.DB;
 import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaController;
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
 import com.github.shynixn.blockball.bukkit.logic.Factory;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PlayerData;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;

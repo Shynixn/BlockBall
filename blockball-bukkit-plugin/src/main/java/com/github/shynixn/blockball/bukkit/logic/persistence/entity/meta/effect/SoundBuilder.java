@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect;
 
 import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;

@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener;
 import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController;
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager;
-import com.github.shynixn.blockball.bungeecord.connector.ServerInfo;
 import com.github.shynixn.blockball.lib.SimpleListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -41,15 +40,15 @@ import java.util.logging.Level;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BungeeCordSignListener extends SimpleListener {
-    private final BlockBallBungeeCordManager manager;
+public class BungeeCordSignListener  {
+  /*  private final BlockBallBungeeCordManager manager;
     private BungeeCordSignController signController;
 
     /**
      * Initializes a new listener by plugin
      * @param controller controller
      * @param plugin plugin
-     */
+
     public BungeeCordSignListener(BlockBallBungeeCordManager Plugin plugin) {
         super(plugin);
         this.controller = controller;
@@ -95,5 +94,5 @@ public class BungeeCordSignListener extends SimpleListener {
             }
         }
         return null;
-    }
+    }*/
 }

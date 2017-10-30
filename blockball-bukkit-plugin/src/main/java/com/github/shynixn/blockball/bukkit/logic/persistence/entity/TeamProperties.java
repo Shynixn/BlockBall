@@ -1,10 +1,11 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 
 import com.github.shynixn.blockball.api.persistence.entity.IPosition;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.LocationBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder;
+import com.github.shynixn.blockball.lib.YamlSerializer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -42,21 +43,37 @@ import java.util.logging.Level;
  */
 public class TeamProperties extends PersistenceObject<TeamMeta> implements TeamMeta {
 
+    @YamlSerializer.YamlSerialize(orderNumber = 1,value = "spawnpoint-location")
     private IPosition spawnpoint;
 
+    @YamlSerializer.YamlSerialize(orderNumber = 2,value = "score.title")
     private String scoreTitle;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 3,value = "score.subtitle")
     private String scoreSubTitle;
 
+    @YamlSerializer.YamlSerialize(orderNumber = 4,value = "win.title")
     private String winTitle;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 5,value = "win.subtitle")
     private String winSubTitle;
 
+    @YamlSerializer.YamlSerialize(orderNumber = 6,value = "displayname")
     private String displayName;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 7,value = "prefix")
     private String prefix;
 
+    @YamlSerializer.YamlSerialize(orderNumber = 8,value = "walkingspeed")
     private float walkingSpeed = 0.2F;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 9,value = "min-amount")
     private int minAmount;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 10,value = "max-amount")
     private int maxAmount = 10;
 
+    @YamlSerializer.YamlSerialize(orderNumber =11,value = "armor")
     private String[] armor;
 
     /**

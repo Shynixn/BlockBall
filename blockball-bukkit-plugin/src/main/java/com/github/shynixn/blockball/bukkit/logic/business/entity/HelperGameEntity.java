@@ -8,7 +8,7 @@ import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.SoundBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.SoundBuilder;
 import org.bukkit.*;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;

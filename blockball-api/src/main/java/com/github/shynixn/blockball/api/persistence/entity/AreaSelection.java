@@ -27,7 +27,7 @@ package com.github.shynixn.blockball.api.persistence.entity;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface AreaSelection extends Persistenceable<AreaSelection> {
+public interface AreaSelection<T extends AreaSelection> extends Persistenceable<T> {
     /**
      * Returns the upper corner depending on the coordinates.
      *

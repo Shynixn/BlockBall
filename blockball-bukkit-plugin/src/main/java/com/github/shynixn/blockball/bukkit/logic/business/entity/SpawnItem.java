@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity;
 
 import com.github.shynixn.blockball.api.entities.items.Spawnrate;
 import com.github.shynixn.blockball.api.persistence.entity.meta.effect.PotionEffectMeta;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.PotionEffectBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.PotionEffectBuilder;
 import com.github.shynixn.blockball.lib.SSKulls;
 import com.github.shynixn.blockball.api.entities.items.BoostItem;
 import org.bukkit.ChatColor;

@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 
 import com.github.shynixn.blockball.api.persistence.entity.AreaSelection;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.builder.LocationBuilder;
+import com.github.shynixn.blockball.lib.YamlSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -34,9 +34,18 @@ import org.bukkit.Location;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class SelectedArea extends PersistenceObject<AreaSelection> implements AreaSelection {
+class SelectedArea<T extends AreaSelection> extends PersistenceObject<T> implements AreaSelection<T> {
+    @YamlSerializer.YamlSerialize(orderNumber = 5,value = "down-corner-location")
     private LocationBuilder downCorner;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 6,value = "up-corner-location")
     private LocationBuilder upCorner;
+
+    /**
+     * Default constructor
+     */
+    public SelectedArea() {
+    }
 
     /**
      * Initializes a new selected area

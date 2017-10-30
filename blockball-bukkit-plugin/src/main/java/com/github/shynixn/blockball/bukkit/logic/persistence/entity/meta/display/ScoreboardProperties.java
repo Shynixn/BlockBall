@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity.properties;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display;
 
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;

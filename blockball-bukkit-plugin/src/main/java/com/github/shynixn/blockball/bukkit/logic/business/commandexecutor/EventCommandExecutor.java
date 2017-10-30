@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedInputStream;
+
 public final class EventCommandExecutor extends SimpleCommandExecutor.UnRegistered {
     private static final String HEADER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Event                      ";
     private static final String FOOTER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           1/1                            ";
@@ -54,6 +56,8 @@ public final class EventCommandExecutor extends SimpleCommandExecutor.UnRegister
         } else {
             player.sendMessage(Config.getInstance().getPrefix() + "This arena does not exist. /" + Config.getInstance().getRefereeCommandName() + " <id>");
         }
+
+        BufferedInputStream
     }
 
     /**

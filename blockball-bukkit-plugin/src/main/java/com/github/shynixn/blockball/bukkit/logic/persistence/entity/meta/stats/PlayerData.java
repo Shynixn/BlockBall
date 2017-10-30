@@ -1,11 +1,11 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats;
 
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.lib.YamlSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.Map;
 import java.util.UUID;
 
 public class PlayerData extends PersistenceObject<PlayerMeta> implements PlayerMeta {
