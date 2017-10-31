@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener;
 
 import com.github.shynixn.blockball.api.bukkit.event.ball.BallDeathEvent;
 import com.github.shynixn.blockball.api.business.entity.Ball;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
 import com.github.shynixn.blockball.lib.SimpleListener;
 import org.bukkit.Bukkit;
@@ -81,7 +81,7 @@ public class BallListener extends SimpleListener {
     public void entityRightClickEvent(final PlayerInteractAtEntityEvent event) {
         final Optional<Ball> optBall = this.manager.getBallController().findByBallByEntity(event.getRightClicked());
         if (optBall.isPresent()) {
-            if (ConfigOld.getInstance().isUseEngineV2()) {
+            if (Config.getInstance().isEngineV2Enabled()) {
                 final Ball ball = optBall.get();
                 ball.pass(event.getPlayer());
             }
@@ -109,7 +109,7 @@ public class BallListener extends SimpleListener {
     @EventHandler
     public void onPlayerDamageBallEvent(EntityDamageByEntityEvent event) {
         final Optional<Ball> optBall = this.manager.getBallController().findByBallByEntity(event.getEntity());
-        if (ConfigOld.getInstance().isUseEngineV2()) {
+        if (Config.getInstance().isEngineV2Enabled()) {
             if (optBall.isPresent()) {
                 final Ball ball = optBall.get();
                 ball.kick(event.getDamager());

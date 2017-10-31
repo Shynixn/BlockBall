@@ -1,8 +1,10 @@
-package com.github.shynixn.blockball.bukkit.logic.business.entity;
+package com.github.shynixn.blockball.bukkit.logic.business.entity.game;
 
+/*
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
+import com.github.shynixn.blockball.bukkit.logic.business.entity.TemporaryPlayerStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -125,3 +127,4 @@ public class HubGameEntity extends GameEntity {
         return false;
     }
 }
+*/

@@ -1,20 +1,16 @@
 package com.github.shynixn.blockball.bukkit.nms.v1_9_R2;
 
-import com.github.shynixn.blockball.api.events.BallDeathEvent;
-import com.github.shynixn.blockball.api.events.BallInteractEvent;
-import com.github.shynixn.blockball.api.events.BallKickEvent;
-import com.github.shynixn.blockball.api.events.BallMoveEvent;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
+import com.github.shynixn.blockball.api.business.entity.Ball;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.lib.SSKulls;
-import com.github.shynixn.blockball.api.entities.Ball;
 import net.minecraft.server.v1_9_R2.EntityArmorStand;
 import net.minecraft.server.v1_9_R2.NBTTagCompound;
 import net.minecraft.server.v1_9_R2.PacketPlayOutAnimation;
 import net.minecraft.server.v1_9_R2.World;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_9_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
@@ -28,6 +24,7 @@ import org.bukkit.util.Vector;
 
 import java.util.Random;
 import java.util.logging.Level;
+/*
 
 public final class CustomArmorstand extends EntityArmorStand implements Ball {
     private boolean isSpecial;
@@ -173,7 +170,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
      * @param entity             entity
      * @param horizontalStrength horizontalStrength
      * @param verticalStrength   verticalStrength
-     */
+
     @Override
     public void kick(Entity entity, double horizontalStrength, double verticalStrength) {
         BallKickEvent event = null;
@@ -194,13 +191,13 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
             this.rvalue = this.random.nextInt(5) + 9;
             this.jumps = this.random.nextInt(5) + 5;
         }
-    }
+    }*
 
     /**
      * Kicks the ball with the defaullt strength values
      *
      * @param entity entity
-     */
+
     @Override
     public void kick(Entity entity) {
         this.kick(entity, this.hstrength, this.vstrength);
@@ -212,7 +209,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
      * @param entity             entity
      * @param horizontalStrength horizontalStrength
      * @param verticalStrength   verticalStrength
-     */
+
     @Override
     public void pass(Entity entity, double horizontalStrength, double verticalStrength) {
         BallKickEvent event = null;
@@ -239,7 +236,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
      * Passes the ball with the default strength values
      *
      * @param entity entity
-     */
+
     @Override
     public void pass(Entity entity) {
         this.pass(entity, this.hstrength, this.vstrength);
@@ -250,7 +247,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
         return this.getSpigotEntity();
     }
 
-    @Override
+
     public Rabbit getMovementEntity() {
         return this.slime.getSpigotEntity();
     }
@@ -402,3 +399,4 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
         this.isRotating = isRotating;
     }
 }
+*/

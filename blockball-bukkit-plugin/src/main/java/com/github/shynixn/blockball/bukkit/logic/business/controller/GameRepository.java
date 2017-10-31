@@ -2,20 +2,16 @@ package com.github.shynixn.blockball.bukkit.logic.business.controller;
 
 import com.github.shynixn.blockball.api.business.controller.GameController;
 import com.github.shynixn.blockball.api.business.entity.Game;
-import com.github.shynixn.blockball.api.business.enumeration.GameType;
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.BungeeGameEntity;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.EventGameEntity;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.HubGameEntity;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.MiniGameEntity;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -73,6 +69,21 @@ public class GameRepository implements GameController, Runnable {
         return this.arenaController;
     }
 
+    @Override
+    public Optional<Game> getGameFromArenaId(int i) {
+        return null;
+    }
+
+    @Override
+    public Optional<Game> getGameFromPlayer(Object player) {
+        return null;
+    }
+
+    @Override
+    public Optional<Game> getGameFromAlias(String arg) {
+        return null;
+    }
+
     /**
      * Reloads the content from the fileSystem.
      */
@@ -88,7 +99,7 @@ public class GameRepository implements GameController, Runnable {
         }
         this.games.clear();
         for (final Arena arena : this.getArenaController().getAll()) {
-            if (arena.getGameType() == GameType.BUNGEE) {
+        /*    if (arena.getGameType() == GameType.BUNGEE) {
                 this.games.add(new BungeeGameEntity(arena));
             } else if (arena.getGameType() == GameType.LOBBY) {
                 this.games.add(new HubGameEntity(arena));
@@ -96,7 +107,7 @@ public class GameRepository implements GameController, Runnable {
                 this.games.add(new MiniGameEntity(arena));
             } else if (arena.getGameType() == GameType.EVENT) {
                 this.games.add(new EventGameEntity(arena));
-            }
+            }*/
         }
     }
 

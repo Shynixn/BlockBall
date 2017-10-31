@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener;
 
+/*
 import com.github.shynixn.blockball.api.entities.Arena;
 import com.github.shynixn.blockball.api.entities.Game;
 import com.github.shynixn.blockball.api.entities.GameType;
@@ -13,7 +14,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.Factory;
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameController;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.GameEntity;
+import com.github.shynixn.blockball.bukkit.logic.business.entity.game.GameEntity;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.SoundBuilder;
 import com.github.shynixn.blockball.lib.*;
 import com.github.shynixn.blockball.api.entities.items.BoostItem;
@@ -87,7 +88,7 @@ class GameListener extends SimpleListener {
      * Gets called when a player shoots a goal
      *
      * @param shootEvent shootEvent
-     */
+
     @EventHandler
     public void onPlayerShootGoalEvent(GoalShootEvent shootEvent) {
         this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
@@ -104,7 +105,7 @@ class GameListener extends SimpleListener {
      * Gets called when a player joins the match
      *
      * @param event event
-     */
+
     @EventHandler
     public void onPlayerJoinGameEvent(GameJoinEvent event) {
         this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
@@ -121,7 +122,7 @@ class GameListener extends SimpleListener {
      * Gets called when a game gets won
      *
      * @param event event
-     */
+
     @EventHandler
     public void onPlayerShootGoalEvent(GameWinEvent event) {
         this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
@@ -496,7 +497,7 @@ class GameListener extends SimpleListener {
      * Gets called when a player interacts with a ball
      *
      * @param event event
-     */
+
     @EventHandler
     public void ballInteractEvent(BallInteractEvent event) {
         final Game game;
@@ -528,11 +529,11 @@ class GameListener extends SimpleListener {
         }
     }
 
-    /**
+
      * Gets called when a player kicks the ball
      *
      * @param event event
-     */
+
     @EventHandler
     public void ballKickEvent(BallKickEvent event) {
         final Game game;
@@ -613,21 +614,21 @@ class GameListener extends SimpleListener {
         }
     }
 
-    /**
+
      * Updates the stats for a player
      *
      * @param player player
      * @param stats  stats
-     */
+
     private void updateStats(Player player, Stats stats) {
         if (this.statsScoreboards != null) {
             GameListener.this.statsScoreboards.get(player).updateStats(player, stats);
         }
     }
 
-    /**
+
      * Updates the StatsScoreabord
-     */
+
     private void updateStatsScoreboard() {
         this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(this.plugin, () -> {
             for (final Player player : GameListener.this.statsScoreboards.keySet()) {
@@ -637,11 +638,11 @@ class GameListener extends SimpleListener {
         }, 0, 20L * 60);
     }
 
-    /**
+
      * Prepares the stats collector
      *
      * @param player player
-     */
+
     private void prepareDatabaseStats(Player player) {
         this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
             synchronized (this.statsController) {
@@ -659,11 +660,11 @@ class GameListener extends SimpleListener {
         });
     }
 
-    /**
+
      * Enables the join stats
      *
      * @param player player
-     */
+
     private void enableJoinStats(Player player) {
         if (ConfigOld.getInstance().isScoreboardPlayerStatsEnabled()) {
             final StatsScoreboard scoreboard = new StatsScoreboard(player);
@@ -703,3 +704,4 @@ class GameListener extends SimpleListener {
         }
     }
 }
+*/

@@ -1,9 +1,11 @@
-package com.github.shynixn.blockball.bukkit.logic.business.entity;
+package com.github.shynixn.blockball.bukkit.logic.business.entity.game;
 
+/*
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Language;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
+import com.github.shynixn.blockball.bukkit.logic.business.entity.TemporaryPlayerStorage;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.SoundBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -226,3 +228,4 @@ public class EventGameEntity extends GameEntity {
         this.temporaryStorage.put(player, storage);
     }
 }
+*/

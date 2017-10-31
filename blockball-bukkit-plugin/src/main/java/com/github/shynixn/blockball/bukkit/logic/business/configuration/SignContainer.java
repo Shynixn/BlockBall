@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.configuration;
 
+/*
 public class SignContainer {
         private final String line1;
         private final String line2;
@@ -133,4 +134,4 @@ public class SignContainer {
         public String getLine4(Arena arena, Team team) {
             return this.replace(this.line4, arena, team, false);
         }
-    }
+    }*/

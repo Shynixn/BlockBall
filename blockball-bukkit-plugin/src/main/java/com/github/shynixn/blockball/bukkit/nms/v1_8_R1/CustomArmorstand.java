@@ -1,17 +1,17 @@
 package com.github.shynixn.blockball.bukkit.nms.v1_8_R1;
 
-import java.io.BufferedReader;
-import java.util.Random;
-import java.util.logging.Level;
-
+import com.github.shynixn.blockball.api.bukkit.event.ball.BallDeathEvent;
+import com.github.shynixn.blockball.api.bukkit.event.ball.BallInteractWithEntityEvent;
+import com.github.shynixn.blockball.api.bukkit.event.ball.BallMoveEvent;
 import com.github.shynixn.blockball.api.business.entity.Ball;
-import com.github.shynixn.blockball.api.events.BallDeathEvent;
-import com.github.shynixn.blockball.api.events.BallInteractEvent;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.ConfigOld;
+import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.lib.SSKulls;
-import net.minecraft.server.v1_8_R1.*;
-
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
+import net.minecraft.server.v1_8_R1.EntityArmorStand;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.PacketPlayOutAnimation;
+import net.minecraft.server.v1_8_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -25,30 +25,29 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
-import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
+import java.util.Random;
+import java.util.logging.Level;
 
 public final class CustomArmorstand extends EntityArmorStand implements Ball {
     private boolean isSpecial;
     private CustomRabbit slime;
+    private BallMeta ballMeta;
 
     private int counter = 20;
     private int rvalue = 5;
     private Vector startVector;
     private int jumps;
 
-    private double hstrength = 2.8; //1.8
-    private double vstrength = 0.8; //0.8
-
-    private boolean isRotating = true;
+    private final boolean isRotating = true;
 
     public CustomArmorstand(World world) {
         super(world);
     }
 
-    public CustomArmorstand(org.bukkit.World world, boolean special) {
+    public CustomArmorstand(org.bukkit.World world, BallMeta meta) {
         super(((CraftWorld) world).getHandle());
         this.isSpecial = true;
-        BufferedReader
+        this.ballMeta = meta;
     }
 
     public CustomArmorstand(World world, double d0, double d1, double d2) {
@@ -77,7 +76,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
                             } else if (this.rvalue - a.getX() > this.rvalue * 0.1) {
                                 this.getSpigotEntity().setHeadPose(new EulerAngle(a.getX() + 0.012, a.getY() + 0.025, a.getZ() + 0.035));
                             }
-                            if (ConfigOld.getInstance().isUseEngineV2()) {
+                            if (Config.getInstance().isEngineV2Enabled()) {
                                 if (this.slime.getSpigotEntity().getVelocity().getY() < 0.2
                                         && this.slime.getSpigotEntity().getVelocity().getX() < 0.03
                                         && this.slime.getSpigotEntity().getVelocity().getZ() < 0.03) {
@@ -91,62 +90,10 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
                             }
                         }
                     }
-                    if (ConfigOld.getInstance().isUseEngineV2()) {
-                        if (this.counter <= 0) {
-                            for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
-                                if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {
-                                    final BallInteractEvent event = new BallInteractEvent(player, this);
-                                    Bukkit.getPluginManager().callEvent(event);
-                                    if (!event.isCancelled()) {
-                                        this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(this.hstrength);
-                                        this.rvalue = this.random.nextInt(5) + 8;
-                                        this.jumps = this.random.nextInt(5) + 3;
-                                        this.startVector.setY(0.1 * this.jumps);
-                                        try {
-                                            this.slime.getSpigotEntity().setVelocity(this.startVector.multiply(0.1 * this.jumps));
-                                        } catch (final IllegalArgumentException ex) {
-
-                                        }
-                                        if (this.isRotating) {
-                                            this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
-
-                                        }
-                                    }
-                                }
-                            }
-                            this.counter = 2;
-                        } else {
-                            this.counter--;
-                        }
+                    if (Config.getInstance().isEngineV2Enabled()) {
+                        this.manageEngineV2Dribbling();
                     } else {
-                        if (this.counter <= 0) {
-                            for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
-                                if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {
-                                    final BallKickEvent event = new BallKickEvent(player, this);
-                                    Bukkit.getPluginManager().callEvent(new BallKickEvent(player, this));
-                                    if (!event.isCancelled()) {
-                                        this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(this.hstrength);
-                                        this.startVector.setY(this.vstrength);
-                                        this.slime.getSpigotEntity().setVelocity(this.startVector.clone());
-                                        if (this.isRotating)
-                                            this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
-                                        final Random random = new Random();
-                                        this.rvalue = random.nextInt(5) + 5;
-                                        this.jumps = random.nextInt(5) + 2;
-                                        break;
-                                    }
-
-                                }
-                            }
-                            this.counter = 2;
-                        } else {
-                            this.counter--;
-                        }
-                        if (this.slime.getSpigotEntity().isOnGround() && this.jumps > 0 && this.startVector != null) {
-                            this.slime.getSpigotEntity().setVelocity(this.startVector.multiply(0.1 * this.jumps));
-                            this.startVector.setY(0.1 * this.jumps);
-                            this.jumps--;
-                        }
+                        this.manageEngineV1Dribbling();
                     }
                 }
                 this.getBukkitEntity().setFireTicks(0);
@@ -155,7 +102,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
             } catch (final IllegalArgumentException e) {
 
             } catch (final Exception e) {
-                Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Critical EntityHackError happend! Shynixn catcher algorithm prevented server crash!");
+                Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Critical EntityHackError happened! Shynixn catcher algorithm prevented server crash!");
                 Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Report this bug to the author Shynixn!");
                 Bukkit.getLogger().log(Level.WARNING, "Critical error.", e);
             }
@@ -163,22 +110,131 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
         super.doTick();
     }
 
+    private void manageEngineV1Dribbling() {
+        if (this.counter <= 0) {
+            for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
+                if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {
+                    final BallInteractWithEntityEvent event = new BallInteractWithEntityEvent(this, player);
+                    Bukkit.getPluginManager().callEvent(event);
+                    if (!event.isCancelled()) {
+                        this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(this.getMeta().getHorizontalStrength());
+                        this.startVector.setY(this.getMeta().getVerticalStrength());
+                        this.slime.getSpigotEntity().setVelocity(this.startVector.clone());
+                        if (this.isRotating)
+                            this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
+                        final Random random = new Random();
+                        this.rvalue = random.nextInt(5) + 5;
+                        this.jumps = random.nextInt(5) + 2;
+                        break;
+                    }
+
+                }
+            }
+            this.counter = 2;
+        } else {
+            this.counter--;
+        }
+        if (this.slime.getSpigotEntity().isOnGround() && this.jumps > 0 && this.startVector != null) {
+            this.slime.getSpigotEntity().setVelocity(this.startVector.multiply(0.1 * this.jumps));
+            this.startVector.setY(0.1 * this.jumps);
+            this.jumps--;
+        }
+    }
+
+    private void manageEngineV2Dribbling() {
+        if (this.counter <= 0) {
+            for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
+                if (player.getLocation().distance(this.slime.getSpigotEntity().getLocation()) < 2) {
+                    final BallInteractWithEntityEvent event = new BallInteractWithEntityEvent(this, player);
+                    Bukkit.getPluginManager().callEvent(event);
+                    if (!event.isCancelled()) {
+                        this.startVector = this.slime.getSpigotEntity()
+                                .getLocation()
+                                .toVector()
+                                .subtract(player.getLocation().toVector())
+                                .normalize()
+                                .multiply(this.getMeta().getHorizontalStrength());
+                        this.rvalue = this.random.nextInt(5) + 8;
+                        this.jumps = this.random.nextInt(5) + 3;
+                        this.startVector.setY(0.1 * this.jumps);
+                        try {
+                            this.slime.getSpigotEntity().setVelocity(this.startVector.multiply(0.1 * this.jumps));
+                        } catch (final IllegalArgumentException ex) {
+
+                        }
+                        if (this.isRotating) {
+                            this.getSpigotEntity().setHeadPose(new EulerAngle(1, this.getSpigotEntity().getHeadPose().getY(), this.getSpigotEntity().getHeadPose().getZ()));
+
+                        }
+                    }
+                }
+            }
+            this.counter = 2;
+        } else {
+            this.counter--;
+        }
+    }
+
     /**
-     * Kicks the ball with the given strength parameters
+     * Returns the entity who is responsible for the hitbox.
+     *
+     * @return entity
+     */
+    @Override
+    public Rabbit getHitboxEntity() {
+        return this.slime.getSpigotEntity();
+    }
+
+    /**
+     * Returns the metaData of the entity.
+     *
+     * @return meta
+     */
+    @Override
+    public BallMeta getMeta() {
+        return ballMeta;
+    }
+
+    public ArmorStand getSpigotEntity() {
+        return (ArmorStand) this.getDesignEntity();
+    }
+
+    /**
+     * Comparison.
+     * @param object object
+     * @return isSame
+     */
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof CustomArmorstand) {
+            final CustomArmorstand stander = (CustomArmorstand) object;
+            if (stander.getSpigotEntity().getEntityId() == this.getSpigotEntity().getEntityId())
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Kicks the ball with the given strength parameters.
      *
      * @param entity             entity
      * @param horizontalStrength horizontalStrength
      * @param verticalStrength   verticalStrength
      */
     @Override
-    public void kick(Entity entity, double horizontalStrength, double verticalStrength) {
-        BallKickEvent event = null;
+    public void kick(Object entity, double horizontalStrength, double verticalStrength) {
+        BallInteractWithEntityEvent event = null;
         if (entity instanceof Player) {
-            event = new BallKickEvent((Player) entity, this);
-            Bukkit.getPluginManager().callEvent(new BallKickEvent((Player) entity, this));
+            event = new BallInteractWithEntityEvent(this, (Entity) entity);
+            Bukkit.getPluginManager().callEvent(event);
         }
         if (event == null || !event.isCancelled()) {
-            this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(entity.getLocation().toVector()).normalize().multiply(horizontalStrength);
+            this.startVector = this.slime.getSpigotEntity()
+                    .getLocation()
+                    .toVector()
+                    .subtract(((Entity)entity).getLocation().toVector())
+                    .normalize()
+                    .multiply(horizontalStrength);
             this.startVector.setY(verticalStrength);
             try {
                 this.slime.getSpigotEntity().setVelocity(this.startVector.clone());
@@ -193,31 +249,31 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
     }
 
     /**
-     * Kicks the ball with the defaullt strength values
+     * Kicks the ball with the default strength values.
      *
      * @param entity entity
      */
     @Override
-    public void kick(Entity entity) {
-        this.kick(entity, this.hstrength, this.vstrength);
+    public void kick(Object entity) {
+        this.kick(entity, this.getMeta().getHorizontalStrength(), this.getMeta().getVerticalStrength());
     }
 
     /**
-     * Passes the ball with the given strength parameters
+     * Passes the ball with the given strength parameters.
      *
      * @param entity             entity
      * @param horizontalStrength horizontalStrength
      * @param verticalStrength   verticalStrength
      */
     @Override
-    public void pass(Entity entity, double horizontalStrength, double verticalStrength) {
-        BallKickEvent event = null;
+    public void pass(Object entity, double horizontalStrength, double verticalStrength) {
+        BallInteractWithEntityEvent event = null;
         if (entity instanceof Player) {
-            event = new BallKickEvent((Player) entity, this);
-            Bukkit.getPluginManager().callEvent(new BallKickEvent((Player) entity, this));
+            event = new BallInteractWithEntityEvent(this, (Entity) entity);
+            Bukkit.getPluginManager().callEvent(event);
         }
         if (event == null || !event.isCancelled()) {
-            this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(entity.getLocation().toVector()).normalize().multiply(horizontalStrength * 0.8);
+            this.startVector = this.slime.getSpigotEntity().getLocation().toVector().subtract(((Entity)entity).getLocation().toVector()).normalize().multiply(horizontalStrength * 0.8);
             this.startVector.setY(verticalStrength * 0.5);
             try {
                 this.slime.getSpigotEntity().setVelocity(this.startVector.clone());
@@ -232,17 +288,46 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
     }
 
     /**
-     * Passes the ball with the default strength values
+     * Passes the ball with the default strength values.
      *
      * @param entity entity
      */
     @Override
-    public void pass(Entity entity) {
-        this.pass(entity, this.hstrength, this.vstrength);
+    public void pass(Object entity) {
+        this.pass(entity, this.getMeta().getHorizontalStrength(), this.getMeta().getVerticalStrength());
     }
 
+    /**
+     * Shoots the ball in the during vector direction with the default strength values.
+     *
+     * @param vector vector
+     */
     @Override
-    public void spawn(Location location) {
+    public void setVelocity(Object vector) {
+        this.slime.getSpigotEntity().setVelocity((Vector) vector);
+    }
+
+    /**
+     * Returns the velocity the ball is flying after a kick/pass or velocity manipulation.
+     *
+     * @return velocity
+     */
+    @Override
+    public Object getVelocity() {
+        return this.slime.getSpigotEntity().getVelocity();
+    }
+
+    /**
+     * Respawns the entity at the given location and applies everything from the ballMeta.
+     *
+     * @param mLocation location
+     */
+    @Override
+    public void spawn(Object mLocation) {
+        final Location location = (Location) mLocation;
+        if (!this.isDead()) {
+            this.remove();
+        }
         NMSRegistry.accessWorldGuardSpawn(location);
         final net.minecraft.server.v1_8_R1.World mcWorld = ((CraftWorld) location.getWorld()).getHandle();
         this.setPosition(location.getX(), location.getY(), location.getZ());
@@ -253,7 +338,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
         compound.setBoolean("PersistenceRequired", true);
         compound.setBoolean("NoBasePlate", true);
         this.a(compound);
-        this.slime = new CustomRabbit(location.getWorld(), true, this);
+        this.slime = new CustomRabbit(location.getWorld(),this);
         this.slime.spawn(location);
         this.getSpigotEntity().setHeadPose(new EulerAngle(0, 0, 0));
         this.getSpigotEntity().setBodyPose(new EulerAngle(0, 0, 2778));
@@ -261,87 +346,13 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
         NMSRegistry.rollbackWorldGuardSpawn(location);
     }
 
+    /**
+     * Damages the ball entity with the given amount.
+     *
+     * @param amount amount
+     */
     @Override
-    public ArmorStand getDesignEntity() {
-        return this.getSpigotEntity();
-    }
-
-    @Override
-    public Rabbit getMovementEntity() {
-        return this.slime.getSpigotEntity();
-    }
-
-    public ArmorStand getSpigotEntity() {
-        return (ArmorStand) super.getBukkitEntity();
-    }
-
-    @Override
-    public void setSkin(String skin) {
-        if (!this.getSpigotEntity().isDead())
-            this.getSpigotEntity().setHelmet(SSKulls.getSkull(skin));
-    }
-
-    @Override
-    public void setSmall(boolean flag) {
-        if (!this.getSpigotEntity().isDead())
-            super.setSmall(flag);
-    }
-
-    @Override
-    public int getEntityId() {
-        if (!this.getSpigotEntity().isDead())
-            return this.getSpigotEntity().getEntityId();
-        return -1;
-    }
-
-    @Override
-    public String getSkin() {
-        if (!this.getSpigotEntity().isDead()) {
-            if (SSKulls.getNameFromItemStack(this.getSpigotEntity().getHelmet()) == null)
-                return SSKulls.getURLFromItemStack(this.getSpigotEntity().getHelmet());
-            return SSKulls.getNameFromItemStack(this.getSpigotEntity().getHelmet());
-        }
-        return null;
-    }
-
-    @Override
-    public Vector getVelocity() {
-        return this.slime.getSpigotEntity().getVelocity();
-    }
-
-    @Override
-    public void setKickStrengthHorizontal(double strength) {
-        if (strength > 0 && strength < 10)
-            this.hstrength = strength;
-    }
-
-    @Override
-    public void setKickStrengthVertical(double strength) {
-        if (strength > 0 && strength < 10)
-            this.vstrength = strength;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (object instanceof CustomArmorstand) {
-            final CustomArmorstand stander = (CustomArmorstand) object;
-            if (stander.getEntityId() == this.getEntityId())
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean isSameEntity(Entity entity) {
-        if (!this.getSpigotEntity().isDead()) {
-            if (this.getBukkitEntity().getEntityId() == entity.getEntityId() || this.slime.getSpigotEntity().getEntityId() == entity.getEntityId())
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void damage() {
+    public void damage(double amount) {
         if (!this.getSpigotEntity().isDead()) {
             final PacketPlayOutAnimation animation = new PacketPlayOutAnimation(this, 1);
             for (final Player player : this.getSpigotEntity().getWorld().getPlayers()) {
@@ -350,51 +361,57 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
         }
     }
 
+    /**
+     * Removes the entity.
+     */
     @Override
-    public void despawn() {
+    public void remove() {
         if (!this.getSpigotEntity().isDead()) {
             Bukkit.getPluginManager().callEvent(new BallDeathEvent(this));
             this.getSpigotEntity().remove();
         }
     }
 
+    /**
+     * Teleports the ball to the given location.
+     *
+     * @param location location
+     */
     @Override
-    public Location getLocation() {
+    public void teleport(Object location) {
+        this.slime.getSpigotEntity().teleport((Location) location);
+        this.getSpigotEntity().teleport((Location) location);
+    }
+
+    /**
+     * Returns the location of the ball.
+     *
+     * @return location
+     */
+    @Override
+    public Object getLocation() {
         if (this.slime != null)
             this.slime.getSpigotEntity().getLocation();
         return this.getSpigotEntity().getLocation();
     }
 
-    @Override
-    public void teleport(Location location) {
-        this.slime.getSpigotEntity().teleport(location);
-        this.getSpigotEntity().teleport(location);
-    }
-
-    @Override
-    public void setVelocity(Vector vector) {
-        if (this.slime != null) {
-            this.slime.getSpigotEntity().setVelocity(vector);
-        }
-    }
-
+    /**
+     * Returns if the ball entity is Dead.
+     *
+     * @return isDead
+     */
     @Override
     public boolean isDead() {
         return this.getSpigotEntity().isDead();
     }
 
+    /**
+     * Returns the entity who is responsible for the ball design and skin.
+     *
+     * @return entity
+     */
     @Override
-    public void resetSkin() {
-        this.setSkin("http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d");
-    }
-
-    @Override
-    public boolean isRotating() {
-        return this.isRotating;
-    }
-
-    @Override
-    public void setRotating(boolean isRotating) {
-        this.isRotating = isRotating;
+    public Object getDesignEntity() {
+        return super.getBukkitEntity();
     }
 }

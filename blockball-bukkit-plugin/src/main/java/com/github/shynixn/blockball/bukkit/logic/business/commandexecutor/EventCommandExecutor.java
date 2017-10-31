@@ -1,19 +1,14 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
 import com.github.shynixn.blockball.api.business.controller.GameController;
-import com.github.shynixn.blockball.api.business.enumeration.GameType;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.EventGameEntity;
 import com.github.shynixn.blockball.lib.ChatBuilder;
-import com.github.shynixn.blockball.lib.MathUtils;
 import com.github.shynixn.blockball.lib.SimpleCommandExecutor;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.BufferedInputStream;
 
 public final class EventCommandExecutor extends SimpleCommandExecutor.UnRegistered {
     private static final String HEADER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Event                      ";
@@ -39,8 +34,8 @@ public final class EventCommandExecutor extends SimpleCommandExecutor.UnRegister
     @Override
     public void onPlayerExecuteCommand(Player player, String[] args) {
         super.onPlayerExecuteCommand(player, args);
-        final EventGameEntity game;
-        if (args.length >= 1 && MathUtils.tryParseInteger(args[0]) && ((game = (EventGameEntity) this.gameController.getGameFromArenaId(Integer.parseInt(args[0]))) != null)) {
+     /*   final Optional<EventGameEntity> game;
+        if (args.length >= 1 && MathUtils.tryParseInteger(args[0]) && ((game = (EventGameEntity) this.gameController.getGameFromArenaId(Integer.parseInt(args[0]))).is)) {
             if (game.getArena().getGameType() == GameType.EVENT
                     && game.getArena().getEventMeta().getRefereeName().isPresent()
                     && game.getArena().getEventMeta().getRefereeName().get().equalsIgnoreCase(player.getName())) {
@@ -57,7 +52,7 @@ public final class EventCommandExecutor extends SimpleCommandExecutor.UnRegister
             player.sendMessage(Config.getInstance().getPrefix() + "This arena does not exist. /" + Config.getInstance().getRefereeCommandName() + " <id>");
         }
 
-        BufferedInputStream
+        BufferedInputStream*/
     }
 
     /**
@@ -67,8 +62,8 @@ public final class EventCommandExecutor extends SimpleCommandExecutor.UnRegister
      * @param args   args
      * @param game   game
      */
-    private void executeActions(Player player, String[] args, EventGameEntity game) {
-        if (args[1].equalsIgnoreCase("acg")) {
+    private void executeActions(Player player, String[] args, Object game) {
+     /*   if (args[1].equalsIgnoreCase("acg")) {
             game.executeJoinAllCommand();
         } else if (this.isText(args, "tif")) {
             game.innerForcefield = !game.innerForcefield;
@@ -100,7 +95,7 @@ public final class EventCommandExecutor extends SimpleCommandExecutor.UnRegister
             if (game.getBall() != null) {
                 game.getBall().teleport(player.getLocation().add(0, 1, 0));
             }
-        }
+        }*/
     }
 
     /**

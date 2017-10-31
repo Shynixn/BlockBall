@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordMan
 import com.github.shynixn.blockball.lib.SimpleCommandExecutor;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -42,10 +43,8 @@ public class BungeeCordCommandExecutor extends SimpleCommandExecutor.UnRegistere
      *
      * @param manager controller
      */
-    public BungeeCordCommandExecutor(BlockBallBungeeCordManager manager) {
-        super(BlockBallBungeeCordManager.COMMAND_COMMAND, BlockBallBungeeCordManager.COMMAND_USEAGE
-                , BlockBallBungeeCordManager.COMMAND_DESCRIPTION, BlockBallBungeeCordManager.COMMAND_PERMISSION,
-                BlockBallBungeeCordManager.COMMAND_PERMISSION_MESSAGE, JavaPlugin.getPlugin(BlockBallPlugin.class));
+    public BungeeCordCommandExecutor(BlockBallBungeeCordManager manager, Plugin plugin) throws Exception {
+        super(plugin.getConfig().get("bungeecord-server-change"), (JavaPlugin) plugin);
         this.manager = manager;
     }
 

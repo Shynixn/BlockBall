@@ -50,6 +50,15 @@ public class Config extends SimpleConfig {
         return instance;
     }
 
+    /**
+     * Returns if engine v2 is enabled.
+     *
+     * @return enabled
+     */
+    public boolean isEngineV2Enabled() {
+        return this.getData("blockball.use-engine-v2");
+    }
+
     public boolean isRefereeCommandEnabled() {
         return this.getData("referee-game.enabled");
     }
@@ -147,5 +156,10 @@ public class Config extends SimpleConfig {
      */
     public List<String> getStatsScoreboardLines() {
         return this.getData("stats-scoreboard.lines");
+    }
+
+
+    public boolean isMetricsEnabled() {
+        return this.getData("metrics");
     }
 }

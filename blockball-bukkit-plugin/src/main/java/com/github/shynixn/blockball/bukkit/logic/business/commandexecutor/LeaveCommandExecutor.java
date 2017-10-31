@@ -46,12 +46,8 @@ public final class LeaveCommandExecutor extends SimpleCommandExecutor.UnRegister
      *
      * @param plugin plugin
      */
-    public LeaveCommandExecutor(GameController gameController, Plugin plugin) {
-        super(Config.getInstance().getLeaveCommandName()
-                , Config.getInstance().getLeaveCommandUseag()
-                , Config.getInstance().getLeaveCommandDescription()
-                , Config.getInstance().getLeaveCommandPermission()
-                , Config.getInstance().getLeaveCommandPermissionMessage(), (JavaPlugin) plugin);
+    public LeaveCommandExecutor(GameController gameController, Plugin plugin) throws Exception {
+        super(plugin.getConfig().get("global-leave"), (JavaPlugin) plugin);
         this.gameController = gameController;
     }
 

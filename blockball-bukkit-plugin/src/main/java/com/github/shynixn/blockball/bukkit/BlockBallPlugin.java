@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit;
 
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.metrics.Metrics;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.bukkit.nms.VersionSupport;
@@ -50,9 +51,10 @@ public final class BlockBallPlugin extends JavaPlugin {
     private static final long TICK_TIME = 20L;
     private boolean enabled = true;
     private static Logger logger;
+    public static final String DEFAULT_BALL_SKIN = "http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d";
 
     /**
-     * Enables the BlockBall plugin
+     * Enables the BlockBall plugin.
      */
     @Override
     public void onEnable() {
@@ -66,12 +68,11 @@ public final class BlockBallPlugin extends JavaPlugin {
     }
 
     /**
-     * Disables the BlockBall plugin
+     * Disables the BlockBall plugin.
      */
     @Override
     public void onDisable() {
         if (this.enabled) {
-            BlockBallApi.closeGames();
             NMSRegistry.unregisterAll();
         }
     }
@@ -86,8 +87,8 @@ public final class BlockBallPlugin extends JavaPlugin {
         } else {
             Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...");
             this.saveDefaultConfig();
-            ConfigOld.getInstance().reload();
-            if (ConfigOld.getInstance().isMetrics()) {
+            Config.getInstance().reload();
+            if (Config.getInstance().isMetricsEnabled()) {
                 new Metrics(this);
             }
             this.getServer().getScheduler().runTaskAsynchronously(this, () -> {
@@ -97,7 +98,7 @@ public final class BlockBallPlugin extends JavaPlugin {
                    Bukkit.getLogger().log(Level.WARNING, "Failed to check for updates.");
                 }
             });
-            BungeeCord.reload(this, PREFIX_CONSOLE, "bbbungee", "[BlockBall]");
+        /*    BungeeCord.reload(this, PREFIX_CONSOLE, "bbbungee", "[BlockBall]");
             if (BungeeCord.isSignModeEnabled()) {
                 this.enabled = false;
                 Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBallBungeeConnector " + this.getDescription().getVersion() + " by Shynixn");
@@ -111,13 +112,13 @@ public final class BlockBallPlugin extends JavaPlugin {
                 NMSRegistry.registerAll();
                 SLanguage.reload(Language.class);
                 Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.getDescription().getVersion() + " by Shynixn");
-            }
+            }*/
         }
     }
 
 
     /**
-     * Returns the logger of the petblocks plugin
+     * Returns the logger of the petblocks plugin.
      *
      * @return logger
      */

@@ -1,8 +1,10 @@
-package com.github.shynixn.blockball.bukkit.logic.business.entity;
+package com.github.shynixn.blockball.bukkit.logic.business.entity.game;
 
+import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import org.bukkit.entity.Player;
 
+/*
 public class MiniGameEntity extends HelperGameEntity {
    public MiniGameEntity(Arena arena) {
         super(arena);
@@ -11,7 +13,7 @@ public class MiniGameEntity extends HelperGameEntity {
     @Override
     public synchronized boolean leave(Player player) {
         final boolean isSuccess = super.leave(player);
-        player.teleport(this.arena.getLobbyMeta().getLobbyLeave());
+      //  player.teleport(this.arena.getLobbyMeta().getLobbyLeave());
         return isSuccess;
     }
 
@@ -22,4 +24,17 @@ public class MiniGameEntity extends HelperGameEntity {
         }
         return super.joinLobby(player);
     }
+
+    /**
+     * Adds a player to the game returns false if he doesn't meet the required options.
+     *
+     * @param player player - @NotNull
+     * @param team   team - @Nullable, team gets automatically selection
+     * @return success
+
+    @Override
+    public boolean join(Object player, Team team) {
+        return false;
+    }
 }
+ */

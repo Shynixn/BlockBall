@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.nms.v1_11_R1;
 
+/*
 import com.github.shynixn.blockball.api.events.BallDeathEvent;
 import com.github.shynixn.blockball.api.events.BallInteractEvent;
 import com.github.shynixn.blockball.api.events.BallKickEvent;
@@ -183,7 +184,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
      * @param entity             entity
      * @param horizontalStrength horizontalStrength
      * @param verticalStrength   verticalStrength
-     */
+
     @Override
     public void kick(Entity entity, double horizontalStrength, double verticalStrength) {
         BallKickEvent event = null;
@@ -210,7 +211,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
      * Kicks the ball with the defaullt strength values
      *
      * @param entity entity
-     */
+
     @Override
     public void kick(Entity entity) {
         this.kick(entity, this.hstrength, this.vstrength);
@@ -222,7 +223,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
      * @param entity             entity
      * @param horizontalStrength horizontalStrength
      * @param verticalStrength   verticalStrength
-     */
+
     @Override
     public void pass(Entity entity, double horizontalStrength, double verticalStrength) {
         BallKickEvent event = null;
@@ -249,7 +250,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
      * Passes the ball with the default strength values
      *
      * @param entity entity
-     */
+
     @Override
     public void pass(Entity entity) {
         this.pass(entity, this.hstrength, this.vstrength);
@@ -402,3 +403,4 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
         this.isRotating = isRotating;
     }
 }
+*/

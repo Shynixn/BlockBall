@@ -88,7 +88,7 @@ class TemporaryPlayerStorage implements AutoCloseable{
      */
     @Override
     public void close() throws Exception {
-        if (storage.inventory != null) {
+    /*    if (storage.inventory != null) {
             player.getInventory().setContents(storage.inventory);
         }
         if (storage.armorContent != null) {
@@ -127,6 +127,6 @@ class TemporaryPlayerStorage implements AutoCloseable{
         player.setFlying(false);
         player.setAllowFlight(storage.isFlying);
         player.updateInventory();
-        this.temporaryStorage.remove(player);
+        this.temporaryStorage.remove(player);*/
     }
 }

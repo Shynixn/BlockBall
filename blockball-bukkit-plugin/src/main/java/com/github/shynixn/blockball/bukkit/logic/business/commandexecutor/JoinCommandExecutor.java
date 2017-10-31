@@ -48,12 +48,8 @@ public class JoinCommandExecutor extends SimpleCommandExecutor.UnRegistered {
      *
      * @param plugin plugin
      */
-    public JoinCommandExecutor(GameController gameController, Plugin plugin) {
-        super(Config.getInstance().getJoinCommandName()
-                , Config.getInstance().getJoinCommandUseag()
-                , Config.getInstance().getJoinCommandDescription()
-                , Config.getInstance().getJoinCommandPermission()
-                , Config.getInstance().getJoinCommandPermissionMessage(), (JavaPlugin) plugin);
+    public JoinCommandExecutor(GameController gameController, Plugin plugin) throws Exception {
+        super(plugin.getConfig().get("global-join"), (JavaPlugin) plugin);
         this.gameController = gameController;
     }
 
@@ -70,6 +66,7 @@ public class JoinCommandExecutor extends SimpleCommandExecutor.UnRegistered {
         if (args.length >= 3) {
             args = this.mergeArguments(args);
         }
+        /*
         if (args.length == 2 && ((MathUtils.tryParseInteger(args[0])
                 && (gameOpt = this.gameController.getGameFromArenaId(Integer.parseInt(args[0]))).isPresent())
                 || ((gameOpt = this.gameController.getGameFromAlias(args[0])).isPresent()))) {
@@ -106,7 +103,7 @@ public class JoinCommandExecutor extends SimpleCommandExecutor.UnRegistered {
                 else
                     ((MiniGameEntity) game).joinLobby(player);
             }
-        }
+        }*/
     }
 
     /**

@@ -1,5 +1,7 @@
-package com.github.shynixn.blockball.bukkit.logic.business.entity;
+package com.github.shynixn.blockball.bukkit.logic.business.entity.game;
 
+/*
+import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.bungeecord.game.BungeeCord;
 import org.bukkit.Bukkit;
@@ -7,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import java.util.logging.Level;
 
-/**
+
  * Copyright 2017 Shynixn
  * <p>
  * Do not remove this header!
@@ -35,13 +37,13 @@ import java.util.logging.Level;
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */
+
 public class BungeeGameEntity extends HelperGameEntity {
     /**
      * Initializes a new bungee game
      *
      * @param arena arena
-     */
+
     public BungeeGameEntity(Arena arena) {
         super(arena);
         BungeeCord.setModt(BungeeCord.MOD_WAITING_FOR_PLAYERS);
@@ -49,7 +51,7 @@ public class BungeeGameEntity extends HelperGameEntity {
 
     /**
      * Starts the game
-     */
+
     @Override
     public void startGame() {
         BungeeCord.setModt(BungeeCord.MOD_INGAME);
@@ -61,7 +63,7 @@ public class BungeeGameEntity extends HelperGameEntity {
      *
      * @param player player
      * @return success
-     */
+
     @Override
     public synchronized boolean leave(Player player) {
         final boolean success = super.leave(player);
@@ -70,8 +72,20 @@ public class BungeeGameEntity extends HelperGameEntity {
     }
 
     /**
+     * Adds a player to the game returns false if he doesn't meet the required options.
+     *
+     * @param player player - @NotNull
+     * @param team   team - @Nullable, team gets automatically selection
+     * @return success
+
+    @Override
+    public boolean join(Object player, Team team) {
+        return false;
+    }
+
+    /**
      * Resets the game and restarts the server
-     */
+
     @Override
     public void reset() {
         BungeeCord.setModt(BungeeCord.MOD_RESTARTING);
@@ -83,7 +97,7 @@ public class BungeeGameEntity extends HelperGameEntity {
 
     /**
      * Restarts the server
-     */
+
     private void restartServer() {
         try {
             Bukkit.getServer().shutdown();
@@ -92,3 +106,4 @@ public class BungeeGameEntity extends HelperGameEntity {
         }
     }
 }
+*/

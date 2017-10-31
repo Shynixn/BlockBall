@@ -1,11 +1,15 @@
-package com.github.shynixn.blockball.bukkit.logic.business.entity;
+package com.github.shynixn.blockball.bukkit.logic.business.entity.game;
 
+/*
 import com.github.shynixn.blockball.api.business.entity.Ball;
 import com.github.shynixn.blockball.api.business.entity.Game;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.entity.GameScoreboard;
+import com.github.shynixn.blockball.bukkit.logic.business.entity.ItemSpawner;
+import com.github.shynixn.blockball.bukkit.logic.business.entity.TemporaryPlayerStorage;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.lib.ScreenUtils;
 import jdk.nashorn.internal.ir.Block;
@@ -30,7 +34,7 @@ public class GameEntity implements Game {
 
     /**
      * Ball calculations
-     */
+
     private Ball ball;
     private Location lastBallLocation;
     private int bumper = 20;
@@ -44,7 +48,7 @@ public class GameEntity implements Game {
 
     /**
      * HitCounter
-     */
+
     Team lastHitTeam;
     Player lastHit;
 
@@ -60,7 +64,7 @@ public class GameEntity implements Game {
      * @param player player - @NotNull
      * @param team   team - @Nullable, team gets automatically selection
      * @return success
-     */
+
     @Override
     public abstract boolean join(Object player, Team team);
 
@@ -69,7 +73,7 @@ public class GameEntity implements Game {
      *
      * @param mPlayer player - @NotNull
      * @return joined the match
-     */
+
     @Override
     public boolean hasJoined(Object mPlayer) {
         final Player player = (Player) mPlayer;
@@ -81,7 +85,7 @@ public class GameEntity implements Game {
      *
      * @param mPlayer player - @NotNull
      * @return success
-     */
+
     @Override
     public boolean leave(Object mPlayer) {
         final Player player = (Player) mPlayer;
@@ -385,7 +389,7 @@ public class GameEntity implements Game {
      * to make their {@code close} methods idempotent.
      *
      * @throws Exception if this resource cannot be closed
-     */
+
     @Override
     public void close() throws Exception {
 
@@ -401,7 +405,7 @@ public class GameEntity implements Game {
      * take any action whatsoever.
      *
      * @see Thread#run()
-     */
+
     @Override
     public void run() {
         this.getArena().getBoostItemHandler().run(this);
@@ -527,3 +531,4 @@ public class GameEntity implements Game {
         }
     }
 }
+*/

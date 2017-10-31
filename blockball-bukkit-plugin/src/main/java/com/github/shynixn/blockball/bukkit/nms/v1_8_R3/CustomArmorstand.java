@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.nms.v1_8_R3;
 
+/*
 import java.util.Random;
 import java.util.logging.Level;
 
@@ -172,7 +173,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
      * @param entity             entity
      * @param horizontalStrength horizontalStrength
      * @param verticalStrength   verticalStrength
-     */
+
     @Override
     public void kick(Entity entity, double horizontalStrength, double verticalStrength) {
         BallKickEvent event = null;
@@ -199,7 +200,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
      * Kicks the ball with the defaullt strength values
      *
      * @param entity entity
-     */
+
     @Override
     public void kick(Entity entity) {
         this.kick(entity, this.hstrength, this.vstrength);
@@ -211,7 +212,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
      * @param entity             entity
      * @param horizontalStrength horizontalStrength
      * @param verticalStrength   verticalStrength
-     */
+
     @Override
     public void pass(Entity entity, double horizontalStrength, double verticalStrength) {
         BallKickEvent event = null;
@@ -238,7 +239,7 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
      * Passes the ball with the default strength values
      *
      * @param entity entity
-     */
+
     @Override
     public void pass(Entity entity) {
         this.pass(entity, this.hstrength, this.vstrength);
@@ -401,3 +402,4 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
         this.isRotating = isRotating;
     }
 }
+*/

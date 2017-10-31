@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity;
 
 import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus;
 import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState;
-import com.github.shynixn.blockball.bungeecord.game.BungeeCord;
 import org.bukkit.ChatColor;
 
 /**
@@ -119,12 +118,12 @@ public class BungeeCordServerStats implements BungeeCordServerStatus {
             }
             try {
                 motd = ChatColor.translateAlternateColorCodes('&', motdBuilder.toString()).substring(0, motdBuilder.length() - 2);
-                if (motd.equalsIgnoreCase(BungeeCord.MOD_INGAME))
+              /* if (motd.equalsIgnoreCase(BungeeCord.MOD_INGAME))
                     state = BungeeCordServerState.INGAME;
                 else if (motd.equalsIgnoreCase(BungeeCord.MOD_RESTARTING))
                     state = BungeeCordServerState.RESTARTING;
                 else if (motd.equalsIgnoreCase(BungeeCord.MOD_WAITING_FOR_PLAYERS))
-                    state = BungeeCordServerState.WAITING_FOR_PLAYERS;
+                    state = BungeeCordServerState.WAITING_FOR_PLAYERS;*/
             } catch (final Exception ex) {
                 state = BungeeCordServerState.RESTARTING;
             }

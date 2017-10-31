@@ -1,10 +1,11 @@
 package com.github.shynixn.blockball.bukkit.nms.v1_10_R1;
 
+import com.github.shynixn.blockball.api.bukkit.event.ball.BallHitWallEvent;
+import com.github.shynixn.blockball.api.business.entity.Ball;
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
+import com.github.shynixn.blockball.lib.ReflectionUtils;
 import com.google.common.collect.Sets;
-import com.github.shynixn.blockball.api.entities.Ball;
-import com.github.shynixn.blockball.api.events.BallHitWallEvent;
-import com.github.shynixn.blockball.lib.ReflectionLib;
 import net.minecraft.server.v1_10_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,10 +17,38 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.logging.Level;
 
+/**
+ * Rabbit hitbox implementation for minecraft 1.10.0-1.10.2.
+ * <p>
+ * Version 1.1
+ * <p>
+ * MIT License
+ * <p>
+ * Copyright (c) 2017 by Shynixn
+ * <p>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p>
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * <p>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 public final class CustomRabbit extends EntityRabbit {
     private Ball ball;
 
@@ -27,7 +56,7 @@ public final class CustomRabbit extends EntityRabbit {
         super(world);
     }
 
-    public CustomRabbit(org.bukkit.World world, boolean special, Ball ball) {
+    public CustomRabbit(org.bukkit.World world, Ball ball) {
         super(((CraftWorld) world).getHandle());
         this.setSilent(true);
         try {
@@ -77,11 +106,16 @@ public final class CustomRabbit extends EntityRabbit {
 
         }
         if (clazz != null) {
-            final Object moveTimer = ReflectionLib.getValueFromFieldByClazz("entityMoveTimer", clazz);
-            if (started) {
-                ReflectionLib.invokeMethodByObject(moveTimer, "startTiming");
-            } else {
-                ReflectionLib.invokeMethodByObject(moveTimer, "stopTiming");
+            final Object moveTimer;
+            try {
+                moveTimer = ReflectionUtils.invokeFieldByClass(clazz, "entityMoveTimer");
+                if (started) {
+                    ReflectionUtils.invokeMethodByObject(moveTimer, "startTiming", new Class[]{}, new Object[]{});
+                } else {
+                    ReflectionUtils.invokeMethodByObject(moveTimer, "stopTiming", new Class[]{}, new Object[]{});
+                }
+            } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                BlockBallPlugin.logger().log(Level.WARNING, "Failed to invoke entityMoveTimer.");
             }
         }
     }

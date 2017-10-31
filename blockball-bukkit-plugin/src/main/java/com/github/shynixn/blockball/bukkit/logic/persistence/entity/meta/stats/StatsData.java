@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats;
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.lib.YamlSerializer;
+import org.bukkit.entity.Entity;
 
 /**
  * Copyright 2017 Shynixn
