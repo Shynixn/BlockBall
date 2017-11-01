@@ -38,7 +38,7 @@ import java.util.Optional;
 public interface BallController extends IController<Ball> {
 
     /**
-     * Creates a new ball at the given location and meta
+     * Creates a new ball at the given location and meta.
      *
      * @param location location
      * @param ballMeta metaData
@@ -47,7 +47,7 @@ public interface BallController extends IController<Ball> {
     Ball create(Object location, BallMeta ballMeta);
 
     /**
-     * Returns a ball from the given entity
+     * Returns a ball from the given entity.
      *
      * @param entity entity
      * @return ball

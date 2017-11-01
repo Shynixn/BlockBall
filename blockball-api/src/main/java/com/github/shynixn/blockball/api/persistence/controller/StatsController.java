@@ -36,14 +36,14 @@ import java.util.Optional;
 public interface StatsController extends IDatabaseController<Stats> {
 
     /**
-     * Create a new player Stats
+     * Create a new player Stats.
      *
      * @return stats
      */
     Stats create();
 
     /**
-     * Returns the stats of the player
+     * Returns the stats of the player.
      *
      * @param player player
      * @return stats

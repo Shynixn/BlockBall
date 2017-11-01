@@ -31,7 +31,7 @@ package com.github.shynixn.blockball.api.persistence.controller;
  */
 public interface IFileController<T> extends IController<T> {
     /**
-     * Reloads the content from the fileSystem
+     * Reloads the content from the fileSystem.
      */
     void reload();
 }

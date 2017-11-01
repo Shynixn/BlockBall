@@ -39,15 +39,33 @@ import java.util.Optional;
 public interface GameController extends IFileController<Game> {
 
     /**
-     * Returns the controller of the arenas
+     * Returns the controller of the arenas.
      *
      * @return controller
      */
     ArenaController getArenaController();
 
-    Optional<Game>  getGameFromArenaId(int i);
+    /**
+     * Returns the game from the given unique arena name.
+     *
+     * @param name name
+     * @return game
+     */
+    Optional<Game> getGameFromArenaName(String name);
 
+    /**
+     * Returns the game where the given player is currently part of.
+     *
+     * @param player player
+     * @return game
+     */
     Optional<Game> getGameFromPlayer(Object player);
 
-    Optional<Game> getGameFromAlias(String arg);
+    /**
+     * Returns the game from the displayName. Prints a warning if there are more than one with this displayName.
+     *
+     * @param arg arg
+     * @return game
+     */
+    Optional<Game> getGameFromDisplayName(String arg);
 }

@@ -8,14 +8,14 @@ import java.util.List;
 public interface Game extends AutoCloseable, Runnable {
 
     /**
-     * Returns the arena of the game
+     * Returns the arena of the game.
      *
      * @return arena
      */
     Arena getArena();
 
     /**
-     * Returns the ball of the game
+     * Returns the ball of the game.
      *
      * @return ball
      */
@@ -31,7 +31,7 @@ public interface Game extends AutoCloseable, Runnable {
     boolean join(Object player, Team team);
 
     /**
-     * Returns if the given player has joined the match
+     * Returns if the given player has joined the match.
      *
      * @param player player - @NotNull
      * @return joined the match
@@ -39,7 +39,7 @@ public interface Game extends AutoCloseable, Runnable {
     boolean hasJoined(Object player);
 
     /**
-     * Removes a player from the given game returns false if it did not work
+     * Removes a player from the given game returns false if it did not work.
      *
      * @param player player - @NotNull
      * @return success
@@ -47,21 +47,21 @@ public interface Game extends AutoCloseable, Runnable {
     boolean leave(Object player);
 
     /**
-     * Returns the players who a players in the blue team
+     * Returns the players who a players in the blue team.
      *
      * @return player
      */
     Object[] getBlueTeamPlayers();
 
     /**
-     * Returns the players who a players in the red team
+     * Returns the players who a players in the red team.
      *
      * @return player
      */
     Object[] getRedTeamPlayers();
 
     /**
-     * Returns a list of players who are in this game
+     * Returns a list of players who are in this game.
      *
      * @return playerList
      */

@@ -34,7 +34,7 @@ public final class NMSRegistry {
      * @param location location
      * @return ball
      */
-    public static Ball createBall(Location location, BallMeta ballMeta) {
+    public static Ball createBall(Location location, BallMeta ballMetauh) {
         try {
             final Class<?> clazz = ReflectionUtils.invokeClass("com.github.shynixn.blockball.business.bukkit.nms.VERSION.CustomArmorstand".replace("VERSION", VersionSupport.getServerVersion().getVersionText()));
             return ReflectionUtils.invokeConstructor(clazz, new Class[]{World.class, boolean.class}, new Object[]{location.getWorld(), true});

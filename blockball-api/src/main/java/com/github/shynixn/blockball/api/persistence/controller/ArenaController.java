@@ -36,14 +36,14 @@ import java.util.Optional;
 public interface ArenaController extends IFileController<Arena> {
 
     /**
-     * Creates a new arena with a unique id of this instance
+     * Creates a new arena with a unique id of this instance.
      *
      * @return id
      */
     Arena create();
 
     /**
-     * Returns the arena by the given id if present
+     * Returns the arena by the given id if present.
      *
      * @param id id
      * @return arena

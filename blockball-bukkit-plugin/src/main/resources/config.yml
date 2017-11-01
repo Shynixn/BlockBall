@@ -5,7 +5,8 @@
 
 # Permission:
 # LEVEL		 DESCRIPTION									PERMISSION
-# user       Access to join a blockball game				blockball.user
+# user       Access to join a blockball game				blockball.user.<game-id>
+# user       Access to join every blockball game			blockball.user.all
 # admin      Access to the /blockball command 				blockball.admin
 
 ############################

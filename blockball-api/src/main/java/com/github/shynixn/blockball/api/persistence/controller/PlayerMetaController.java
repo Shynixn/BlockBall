@@ -37,14 +37,14 @@ import java.util.UUID;
 public interface PlayerMetaController extends IDatabaseController<PlayerMeta> {
 
     /**
-     * Creates a new playerData from the given player
+     * Creates a new playerData from the given player.
      * @param player player
      * @return playerData
      */
     PlayerMeta create(Object player);
 
     /**
-     * Returns the playerMeta of the given uuid
+     * Returns the playerMeta of the given uuid.
      * @param uuid uuid
      * @return playerMeta
      */

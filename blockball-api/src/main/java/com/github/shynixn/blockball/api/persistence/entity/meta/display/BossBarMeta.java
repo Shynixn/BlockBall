@@ -83,14 +83,14 @@ public interface BossBarMeta extends Persistenceable<BossBarMeta> {
     Set<Flag> getFlags();
 
     /**
-     * Adds a flag to list
+     * Adds a flag to list.
      *
      * @param flag flag
      */
     void addFlag(Flag flag);
 
     /**
-     * Removes flag from the list
+     * Removes flag from the list.
      *
      * @param flag flag
      */
@@ -111,14 +111,14 @@ public interface BossBarMeta extends Persistenceable<BossBarMeta> {
     BossBarMeta setEnabled(boolean enabled);
 
     /**
-     * Returns the message of the bossbar
+     * Returns the message of the bossbar.
      *
      * @return message
      */
     Optional<String> getMessage();
 
     /**
-     * Sets the message of the bossbar
+     * Sets the message of the bossbar.
      *
      * @param message message
      */

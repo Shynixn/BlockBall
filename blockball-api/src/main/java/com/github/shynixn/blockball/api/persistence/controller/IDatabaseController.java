@@ -33,7 +33,7 @@ import java.util.Optional;
  */
 public interface IDatabaseController<T> extends IController<T> {
     /**
-     * Returns the item of the given id
+     * Returns the item of the given id.
      *
      * @param id id
      * @return item

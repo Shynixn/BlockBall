@@ -53,7 +53,7 @@ public interface GlowEffectMeta extends Persistenceable<GlowEffectMeta> {
     void setEnabled(boolean enabled);
 
     /**
-     * Returns if the effect is enabled
+     * Returns if the effect is enabled.
      *
      * @return enabled
      */
