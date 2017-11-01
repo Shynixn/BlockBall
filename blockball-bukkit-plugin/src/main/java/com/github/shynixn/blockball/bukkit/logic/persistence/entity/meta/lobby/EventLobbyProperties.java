@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby;
 
 import com.github.shynixn.blockball.api.persistence.entity.EventMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
@@ -36,7 +36,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class EventProperties extends PersistenceObject<EventMeta> implements EventMeta {
+public class EventLobbyProperties extends PersistenceObject<EventMeta> implements EventMeta {
 
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "referee")
     private String referee;

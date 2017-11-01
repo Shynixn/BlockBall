@@ -32,12 +32,13 @@ public final class NMSRegistry {
      * Creates a new ball at the given location.
      *
      * @param location location
+     * @param ballMeta ballMeta
      * @return ball
      */
-    public static Ball createBall(Location location, BallMeta ballMetauh) {
+    public static Ball createBall(Location location, BallMeta ballMeta) {
         try {
             final Class<?> clazz = ReflectionUtils.invokeClass("com.github.shynixn.blockball.business.bukkit.nms.VERSION.CustomArmorstand".replace("VERSION", VersionSupport.getServerVersion().getVersionText()));
-            return ReflectionUtils.invokeConstructor(clazz, new Class[]{World.class, boolean.class}, new Object[]{location.getWorld(), true});
+            return ReflectionUtils.invokeConstructor(clazz, new Class[]{World.class, BallMeta.class}, new Object[]{location.getWorld(), ballMeta});
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             BlockBallPlugin.logger().log(Level.WARNING, "Failed to create ball.", e);
             throw new RuntimeException(e);

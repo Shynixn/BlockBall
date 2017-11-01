@@ -1,7 +1,8 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby;
 
 import com.github.shynixn.blockball.api.persistence.entity.IPosition;
 import com.github.shynixn.blockball.api.persistence.entity.MinigameLobbyMeta;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder;
 import com.github.shynixn.blockball.lib.YamlSerializer;
 import org.bukkit.Location;
 
