@@ -1,8 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business;
 
+import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectController;
 import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.io.Closeable;
 import java.util.HashMap;
@@ -35,8 +37,48 @@ import java.util.Map;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BlockBallBungeeCordManager {
+public class BlockBallBungeeCordManager implements AutoCloseable{
     public Map<Player, String> signPlacementCache = new HashMap<>();
+
+
+    private BungeeCordSignController signController;
+    private BungeeCordConnectController connectController;
+
+    public BlockBallBungeeCordManager(Plugin plugin)
+    {
+
+    }
+
+    /**
+     * Closes this resource, relinquishing any underlying resources.
+     * This method is invoked automatically on objects managed by the
+     * {@code try}-with-resources statement.
+     * @throws Exception if this resource cannot be closed
+     */
+    @Override
+    public void close() throws Exception {
+        this.signController.close();
+    }
+
+    /**
+     * Returns the bungeeCord sign Controller.
+     * @return controller
+     */
+    public BungeeCordSignController getBungeeCordSignController() {
+        return this.signController;
+    }
+
+    /**
+     * Returns the bungeeCordConnectController.
+     * @return controller
+     */
+    public BungeeCordConnectController getBungeeCordConnectController() {
+        return this.connectController;
+    }
+
+
+
+
 /*
     void setMotd(String motd) {
         try {

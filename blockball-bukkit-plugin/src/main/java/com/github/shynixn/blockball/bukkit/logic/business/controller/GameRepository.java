@@ -69,19 +69,39 @@ public class GameRepository implements GameController, Runnable {
         return this.arenaController;
     }
 
+    /**
+     * Returns the game from the given unique arena name.
+     *
+     * @param name name
+     * @return game
+     */
     @Override
-    public Optional<Game> getGameFromArenaId(int i) {
-        return null;
+    public Optional<Game> getGameFromArenaName(String name) {
+        return this.games.stream().filter(p -> p.getArena().getName().equalsIgnoreCase(name)).findFirst();
     }
 
+    /**
+     * Returns the game where the given player is currently part of.
+     *
+     * @param player player
+     * @return game
+     */
     @Override
     public Optional<Game> getGameFromPlayer(Object player) {
-        return null;
+        return this.games.stream().filter(p -> p.hasJoined(player)).findFirst();
     }
 
+    /**
+     * Returns the game from the displayName. Prints a warning if there are more than one with this displayName.
+     *
+     * @param name name
+     * @return game
+     */
     @Override
-    public Optional<Game> getGameFromAlias(String arg) {
-        return null;
+    public Optional<Game> getGameFromDisplayName(String name) {
+        return this.games.stream()
+                .filter(p -> p.getArena().getDisplayName().isPresent()
+                        && p.getArena().getDisplayName().get().equalsIgnoreCase(name)).findFirst();
     }
 
     /**

@@ -1,5 +1,12 @@
 package com.github.shynixn.blockball.bukkit;
 
+import com.github.shynixn.blockball.api.BlockBallApi;
+import com.github.shynixn.blockball.api.business.controller.BallController;
+import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectController;
+import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController;
+import com.github.shynixn.blockball.api.business.controller.GameController;
+import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager;
+import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.metrics.Metrics;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
@@ -9,6 +16,7 @@ import com.github.shynixn.blockball.lib.UpdateUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -45,13 +53,15 @@ import java.util.logging.Logger;
  * SOFTWARE.
  */
 public final class BlockBallPlugin extends JavaPlugin {
+    public static final String PREFIX_CONSOLE = ChatColor.BLUE + "[BlockBall] ";
     private static final String PLUGIN_NAME = "BlockBall";
     private static final long SPIGOT_RESOURCEID = 15320;
-    public static final String PREFIX_CONSOLE = ChatColor.BLUE + "[BlockBall] ";
     private static final long TICK_TIME = 20L;
     private boolean enabled = true;
     private static Logger logger;
-    public static final String DEFAULT_BALL_SKIN = "http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d";
+
+    private BlockBallManager blockBallManager;
+    private BlockBallBungeeCordManager blockBallBungeeCordManager;
 
     /**
      * Enables the BlockBall plugin.
@@ -74,11 +84,21 @@ public final class BlockBallPlugin extends JavaPlugin {
     public void onDisable() {
         if (this.enabled) {
             NMSRegistry.unregisterAll();
+            try {
+                if (this.blockBallBungeeCordManager != null) {
+                    this.blockBallBungeeCordManager.close();
+                }
+                if (this.blockBallManager != null) {
+                    this.blockBallManager.close();
+                }
+            } catch (final Exception e) {
+                BlockBallPlugin.logger().log(Level.WARNING, "Failed to disable BlockBall.", e);
+            }
         }
     }
 
     /**
-     * Reloads the BlockBall plugin
+     * Reloads the BlockBall plugin.
      */
     private void reload() {
         if (!VersionSupport.isServerVersionSupported(PLUGIN_NAME, PREFIX_CONSOLE)) {
@@ -95,30 +115,42 @@ public final class BlockBallPlugin extends JavaPlugin {
                 try {
                     UpdateUtils.checkPluginUpToDateAndPrintMessage(SPIGOT_RESOURCEID, PREFIX_CONSOLE, PLUGIN_NAME, BlockBallPlugin.this);
                 } catch (final IOException e) {
-                   Bukkit.getLogger().log(Level.WARNING, "Failed to check for updates.");
+                    Bukkit.getLogger().log(Level.WARNING, "Failed to check for updates.");
                 }
             });
-        /*    BungeeCord.reload(this, PREFIX_CONSOLE, "bbbungee", "[BlockBall]");
-            if (BungeeCord.isSignModeEnabled()) {
-                this.enabled = false;
-                Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBallBungeeConnector " + this.getDescription().getVersion() + " by Shynixn");
-            } else {
+            if (Config.getInstance().isBungeeCordLinkingEnabled()) {
+                Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + "Starting BungeeCord linking....");
                 try {
-                    ReflectionUtils.invokeMethodByClass(BlockBallApi.class, "initialize", new Class[0], new Object[0]);
+                    this.blockBallBungeeCordManager = new BlockBallBungeeCordManager(this);
+                    ReflectionUtils.invokeMethodByClass(BlockBallApi.class, "initializeBungeeCord"
+                            , new Class[]{BungeeCordSignController.class, BungeeCordConnectController.class}
+                            , new Object[]{this.blockBallBungeeCordManager.getBungeeCordSignController()
+                                    , this.blockBallBungeeCordManager.getBungeeCordConnectController()});
+                    Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + "Server [" + Bukkit.getServer().getServerName() + " is now available via BlockBall-Bungeecord.");
                 } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                    Bukkit.getLogger().log(Level.WARNING, "Failed to initializeHook BlockBall.", e);
+                    logger().log(Level.WARNING, "Failed to enable plugin.", e);
                 }
-
+            }
+            if (!Config.getInstance().isOnlyBungeeCordLinkingEnabled()) {
                 NMSRegistry.registerAll();
-                SLanguage.reload(Language.class);
+                try {
+                    this.blockBallManager = new BlockBallManager(this);
+                    ReflectionUtils.invokeMethodByClass(BlockBallApi.class, "initializeBlockBall"
+                            , new Class[]{BallController.class, GameController.class}
+                            , new Object[]{this.blockBallManager.getBallController()
+                                    , this.blockBallManager.getGameController()});
+                    Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.getDescription().getVersion() + " by Shynixn");
+                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                    logger().log(Level.WARNING, "Failed to enable plugin.", e);
+                }
+            } else {
                 Bukkit.getServer().getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.getDescription().getVersion() + " by Shynixn");
-            }*/
+            }
         }
     }
 
-
     /**
-     * Returns the logger of the petblocks plugin.
+     * Returns the logger of the blockball plugin.
      *
      * @return logger
      */

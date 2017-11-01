@@ -59,6 +59,24 @@ public class Config extends SimpleConfig {
         return this.getData("blockball.use-engine-v2");
     }
 
+    /**
+     * Returns if bungeeCord linking and low resources is enabled.
+     *
+     * @return enabled
+     */
+    public boolean isOnlyBungeeCordLinkingEnabled() {
+        return (boolean) this.getData("bungeecord.low-resources") && (boolean) this.getData("bungeecord.linking");
+    }
+
+    /**
+     * Returns if bungeeCord linking is enabled.
+     *
+     * @return enabled
+     */
+    public boolean isBungeeCordLinkingEnabled() {
+        return this.getData("bungeecord.linking");
+    }
+
     public boolean isRefereeCommandEnabled() {
         return this.getData("referee-game.enabled");
     }
@@ -157,7 +175,6 @@ public class Config extends SimpleConfig {
     public List<String> getStatsScoreboardLines() {
         return this.getData("stats-scoreboard.lines");
     }
-
 
     public boolean isMetricsEnabled() {
         return this.getData("metrics");
