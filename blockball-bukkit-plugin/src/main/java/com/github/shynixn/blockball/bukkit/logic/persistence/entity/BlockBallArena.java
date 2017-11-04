@@ -49,18 +49,40 @@ public class BlockBallArena extends SelectedArea<Arena> implements Arena {
     private boolean enabled;
 
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "gamemode")
-    private GameType gameType;
+    private GameType gameType = GameType.LOBBY;
 
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "ball-spawnpoint")
-    private IPosition ballSpawnLocation;
+    private LocationBuilder ballSpawnLocation;
 
-    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "meta")
-    private final MetaDataTransaction transaction = new BlockBallMetaCollection();
+    @YamlSerializer.YamlSerialize(orderNumber = 7, value = "meta")
+    private final BlockBallMetaCollection transaction = new BlockBallMetaCollection();
 
     /**
      * Default constructor
      */
     public BlockBallArena() {
+    }
+
+    /**
+     * Returns the id of the object
+     *
+     * @return id
+     */
+    @Override
+    public long getId() {
+        return Long.parseLong(this.name);
+    }
+
+    /**
+     * Sets the id of the object
+     *
+     * @param id id
+     */
+    @Override
+    public void setId(long id) {
+        super.setId(id);
+        this.name = String.valueOf(id);
+        this.displayName = "Arena " + id;
     }
 
     /**
@@ -150,7 +172,9 @@ public class BlockBallArena extends SelectedArea<Arena> implements Arena {
      */
     @Override
     public Object getBallSpawnLocation() {
-        return ((LocationBuilder) this.ballSpawnLocation).toLocation();
+        if (this.ballSpawnLocation == null)
+            return null;
+        return this.ballSpawnLocation.toLocation();
     }
 
     /**

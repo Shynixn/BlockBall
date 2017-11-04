@@ -1,11 +1,10 @@
 package com.github.shynixn.blockball.lib;
 
 import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.lang.annotation.*;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -148,19 +147,26 @@ public final class YamlSerializer {
      * @throws IllegalAccessException exception
      */
     public static Map<String, Object> serializeObject(Object object) throws IllegalAccessException {
+        if (object == null)
+            return null;
         final Map<String, Object> data = new LinkedHashMap<>();
         for (final AnnotationWrapper annotationWrapper : getOrderedAnnotations(object.getClass())) {
             final Field field = annotationWrapper.field;
             final YamlSerialize yamlAnnotation = annotationWrapper.annotation;
             field.setAccessible(true);
-            if (isPrimitive(field.getType())) {
+            if (field.get(object) == null) {
+            } else if (isPrimitive(field.getType())) {
                 data.put(yamlAnnotation.value(), field.get(object));
+            } else if (field.getType().isEnum()) {
+                data.put(yamlAnnotation.value(), ((Enum) field.get(object)).name().toUpperCase());
             } else if (field.getType().isArray()) {
                 data.put(yamlAnnotation.value(), serializeArray((Object[]) field.get(object)));
             } else if (Collection.class.isAssignableFrom(field.getType())) {
                 data.put(yamlAnnotation.value(), serializeCollection((Collection<?>) field.get(object)));
             } else if (Map.class.isAssignableFrom(field.getType())) {
                 data.put(yamlAnnotation.value(), serializeMap((Map<?, ?>) field.get(object)));
+            } else if (field.get(object) != null && ConfigurationSerializable.class.isAssignableFrom(field.get(object).getClass())) {
+                data.put(yamlAnnotation.value(), ((ConfigurationSerializable) field.get(object)).serialize());
             } else {
                 data.put(yamlAnnotation.value(), serializeObject(field.get(object)));
             }
@@ -250,8 +256,20 @@ public final class YamlSerializer {
      * @throws InstantiationException exception
      */
     public static <T> T deserializeObject(Class<T> clazz, Object dataSource) throws IllegalAccessException, InstantiationException {
+        if (clazz.isInterface()) {
+            throw new IllegalArgumentException("Cannot instantiate interface. Change your object fields!");
+        }
         final Map<String, Object> data = getDataFromSource(dataSource);
-        final T object = clazz.newInstance();
+        try {
+            final Constructor map = clazz.getConstructor(Map.class);
+            return (T) map.newInstance(data);
+        } catch (NoSuchMethodException | InvocationTargetException e) {
+            final T object = clazz.newInstance();
+            return heavyDeserialize(object, clazz, data);
+        }
+    }
+
+    private static <T> T heavyDeserialize(T object, Class<?> clazz, Map<String, Object> data) throws IllegalAccessException, InstantiationException {
         Class<?> clazzQuery = clazz;
         while (clazzQuery != null) {
             for (final Field field : clazzQuery.getDeclaredFields()) {
@@ -262,6 +280,8 @@ public final class YamlSerializer {
                         if (data.containsKey(yamlAnnotation.value())) {
                             if (isPrimitive(field.getType())) {
                                 field.set(object, data.get(yamlAnnotation.value()));
+                            } else if (field.getType().isEnum()) {
+                                field.set(object, Enum.valueOf((Class) field.getType(), data.get(yamlAnnotation.value()).toString()));
                             } else if (field.getType().isArray()) {
                                 field.set(object, deserializeArray(clazzQuery, ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                             } else if (Collection.class.isAssignableFrom(field.getType())) {
@@ -269,7 +289,11 @@ public final class YamlSerializer {
                             } else if (Map.class.isAssignableFrom(field.getType())) {
                                 field.set(object, deserializeMap(getTypeFromHeavyField(field, 1), (Class<Map>) field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                             } else {
-                                field.set(object, deserializeObject(clazzQuery, ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                if (field.get(object) != null) {
+                                    heavyDeserialize(field.get(object), field.getType(), getDataFromSource(((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                } else {
+                                    field.set(object, deserializeObject(field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                }
                             }
                         }
                     }

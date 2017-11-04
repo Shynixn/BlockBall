@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta;
 
+import com.github.shynixn.blockball.api.business.enumeration.Team;
+
 import java.util.Optional;
 
 /**
@@ -39,4 +41,13 @@ public interface MetaDataTransaction {
      * @return optMeta
      */
     <T> Optional<T> find(Class<T> metaClass);
+
+    /**
+     * Searches for the given MetaData class and team
+     *
+     * @param metaClass metaClass
+     * @param team      team
+     * @return meta
+     */
+    <T> Optional<T> findByTeam(Class<T[]> metaClass, Team team);
 }

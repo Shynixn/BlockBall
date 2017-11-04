@@ -96,7 +96,7 @@ public final class NMSRegistry {
 
     public static void registerAll() {
         try {
-            LightRegistry.RABBIT.register("com.github.shynixn.blockball.business.bukkit.nms.VERSION.CustomRabbit");
+            LightRegistry.RABBIT.register("com.github.shynixn.blockball.bukkit.nms.VERSION.CustomRabbit");
             RegisterHelper.PREFIX = BlockBallPlugin.PREFIX_CONSOLE;
             RegisterHelper.register("WorldGuard", "com.sk89q.worldguard.protection.ApplicableRegionSet", '5');
             RegisterHelper.register("WorldGuard", "com.sk89q.worldguard.protection.ApplicableRegionSet", '6');

@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class PlayerMetaMySQLControllerTest {
+public class PlayerMetaMySQLControllerIT {
 
     private static Plugin mockPlugin() {
         final YamlConfiguration configuration = new YamlConfiguration();
@@ -64,7 +64,7 @@ public class PlayerMetaMySQLControllerTest {
         try {
             database.stop();
         } catch (final ManagedProcessException e) {
-            Logger.getLogger(PlayerMetaMySQLControllerTest.class.getSimpleName()).log(Level.WARNING, "Failed to stop mariadb.", e);
+            Logger.getLogger(PlayerMetaMySQLControllerIT.class.getSimpleName()).log(Level.WARNING, "Failed to stop mariadb.", e);
         }
     }
 
@@ -80,7 +80,7 @@ public class PlayerMetaMySQLControllerTest {
                 }
             }
         } catch (SQLException | ManagedProcessException e) {
-            Logger.getLogger(PlayerMetaMySQLControllerTest.class.getSimpleName()).log(Level.WARNING, "Failed to start mariadb.", e);
+            Logger.getLogger(PlayerMetaMySQLControllerIT.class.getSimpleName()).log(Level.WARNING, "Failed to start mariadb.", e);
         }
     }
 
@@ -106,7 +106,7 @@ public class PlayerMetaMySQLControllerTest {
             playerMeta.setName("Sample");
             controller.store(playerMeta);
             assertEquals(1, controller.size());
-            assertEquals(uuid, controller.getById(playerMeta.getId()).getUUID());
+            assertEquals(uuid, controller.getById(playerMeta.getId()).get().getUUID());
         } catch (final Exception e) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.WARNING, "Failed to run test.", e);
             Assert.fail();

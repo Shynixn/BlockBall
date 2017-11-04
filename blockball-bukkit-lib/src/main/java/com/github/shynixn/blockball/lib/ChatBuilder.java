@@ -84,6 +84,16 @@ public class ChatBuilder {
     }
 
     /**
+     * NextLine
+     *
+     * @return instance
+     */
+    public ChatBuilder nextLine() {
+        this.components.add("\n");
+        return this;
+    }
+
+    /**
      * Sets the text italic
      *
      * @return instance

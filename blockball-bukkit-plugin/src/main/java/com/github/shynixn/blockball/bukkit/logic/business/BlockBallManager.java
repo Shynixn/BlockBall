@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.business.controller.BallController;
 import com.github.shynixn.blockball.api.business.controller.GameController;
 import com.github.shynixn.blockball.bukkit.logic.Factory;
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BlockBallReloadCommandExecutor;
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.NewArenaCommandExecutor;
 import com.github.shynixn.blockball.bukkit.logic.business.listener.BallListener;
 import org.bukkit.plugin.Plugin;
 
@@ -50,9 +51,12 @@ public class BlockBallManager implements AutoCloseable {
         this.gameController = Factory.createGameController(Factory.createArenaController(plugin));
 
         new BallListener(this, plugin);
+        new NewArenaCommandExecutor(this, plugin);
         new BlockBallReloadCommandExecutor(this, plugin);
 
         Factory.initialize(plugin);
+
+        this.gameController.reload();
     }
 
     /**

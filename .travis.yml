@@ -17,7 +17,7 @@ script:
     - java -jar BuildTools.jar --rev 1.11 > /dev/null
     - java -jar BuildTools.jar --rev 1.12 > /dev/null
     - cd -
-    - mvn compile test
+    - mvn install
 jdk:
   - oraclejdk8
 #jdk

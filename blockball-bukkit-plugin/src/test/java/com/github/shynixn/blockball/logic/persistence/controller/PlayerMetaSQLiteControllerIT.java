@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class PlayerMetaSQLiteControllerTest {
+public class PlayerMetaSQLiteControllerIT {
 
     private static Plugin mockPlugin() {
         final YamlConfiguration configuration = new YamlConfiguration();
@@ -73,7 +73,7 @@ public class PlayerMetaSQLiteControllerTest {
             playerMeta.setName("Sample");
             controller.store(playerMeta);
             assertEquals(1, controller.size());
-            assertEquals(uuid, controller.getById(playerMeta.getId()).getUUID());
+            assertEquals(uuid, controller.getById(playerMeta.getId()).get().getUUID());
         } catch (final Exception e) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.WARNING, "Failed to run test.", e);
             Assertions.fail(e);

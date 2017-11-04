@@ -36,11 +36,11 @@ import org.bukkit.Location;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class SelectedArea<T extends AreaSelection> extends PersistenceObject<T> implements AreaSelection<T> {
-    @YamlSerializer.YamlSerialize(orderNumber = 5,value = "down-corner-location")
+public class SelectedArea<T extends AreaSelection> extends PersistenceObject<T> implements AreaSelection<T> {
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "down-corner-location")
     private LocationBuilder downCorner;
 
-    @YamlSerializer.YamlSerialize(orderNumber = 6,value = "up-corner-location")
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "up-corner-location")
     private LocationBuilder upCorner;
 
     /**
@@ -51,6 +51,7 @@ class SelectedArea<T extends AreaSelection> extends PersistenceObject<T> impleme
 
     /**
      * Initializes a new selected area
+     *
      * @param corner1 corner1
      * @param corner2 corner2
      */
@@ -66,6 +67,8 @@ class SelectedArea<T extends AreaSelection> extends PersistenceObject<T> impleme
      */
     @Override
     public Object getUpperCorner() {
+        if (this.upCorner == null)
+            return null;
         return this.upCorner.toLocation();
     }
 
@@ -76,6 +79,8 @@ class SelectedArea<T extends AreaSelection> extends PersistenceObject<T> impleme
      */
     @Override
     public Object getLowerCorner() {
+        if (this.downCorner == null)
+            return null;
         return this.downCorner.toLocation();
     }
 
@@ -87,8 +92,8 @@ class SelectedArea<T extends AreaSelection> extends PersistenceObject<T> impleme
      */
     @Override
     public void setCorners(Object corner1, Object corner2) {
-        this.calculateDownLocation((Location)corner1, (Location)corner2);
-        this.calculateUpLocation((Location)corner1, (Location)corner2);
+        this.calculateDownLocation((Location) corner1, (Location) corner2);
+        this.calculateUpLocation((Location) corner1, (Location) corner2);
     }
 
     /**
@@ -98,6 +103,8 @@ class SelectedArea<T extends AreaSelection> extends PersistenceObject<T> impleme
      */
     @Override
     public Location getCenter() {
+        if (downCorner == null)
+            return null;
         return new Location(Bukkit.getWorld(this.downCorner.getWorldName()), this.downCorner.getBlockX()
                 + this.getOffsetX() / 2, this.downCorner.getBlockY()
                 + this.getOffsetY() / 2, this.downCorner.getBlockZ()

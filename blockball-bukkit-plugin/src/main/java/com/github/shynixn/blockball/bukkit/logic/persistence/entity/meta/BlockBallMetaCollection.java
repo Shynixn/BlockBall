@@ -1,11 +1,15 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta;
 
+import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 import com.github.shynixn.blockball.api.persistence.entity.meta.MetaDataTransaction;
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallProperties;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.RewardProperties;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.TeamProperties;
+import com.github.shynixn.blockball.lib.YamlSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,12 +42,44 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BlockBallMetaCollection implements MetaDataTransaction{
+public class BlockBallMetaCollection implements MetaDataTransaction {
 
-    private final Map<Class<?>, Persistenceable<?>> metaCollection = new HashMap<>();
+    private final Map<Class<?>, Object> metaCollection = new HashMap<>();
+
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "ball-meta")
+    private BallProperties ballProperties = new BallProperties();
+
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "red-team-meta")
+    private TeamProperties redTeamProperties = new TeamProperties();
+
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "blue-team-meta")
+    private TeamProperties blueTeamProperties = new TeamProperties();
 
     public BlockBallMetaCollection() {
-        this.metaCollection.put(BallMeta.class, new BallProperties());
+        this.metaCollection.put(BallMeta.class, this.ballProperties);
+        this.metaCollection.put(TeamMeta[].class, new TeamMeta[]{this.redTeamProperties, this.blueTeamProperties});
+    }
+
+    /**
+     * Searches for the given MetaData class.
+     *
+     * @param metaClass metaDataClass
+     * @return optMeta
+     */
+    @Override
+    public <T> Optional<T> findByTeam(Class<T[]> metaClass, Team team) {
+        if (this.metaCollection.containsKey(metaClass)) {
+            final Object data = this.metaCollection.get(metaClass);
+            if (data.getClass().isArray()) {
+                final Object[] dataArray = (Object[]) data;
+                if (team == Team.RED) {
+                    return Optional.of((T) dataArray[0]);
+                } else {
+                    return Optional.of((T) dataArray[1]);
+                }
+            }
+        }
+        return Optional.empty();
     }
 
     /**

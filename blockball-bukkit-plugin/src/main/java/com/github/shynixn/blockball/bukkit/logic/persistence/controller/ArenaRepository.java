@@ -51,7 +51,7 @@ public final class ArenaRepository implements ArenaController {
     @Override
     public Optional<Arena> getById(String id) {
         for (final Arena arena : this.arenas) {
-            if (arena.getName().equals(id)) {
+            if ((arena.getName().equalsIgnoreCase(id))) {
                 return Optional.of(arena);
             }
         }
@@ -69,7 +69,13 @@ public final class ArenaRepository implements ArenaController {
             if (!this.arenas.contains(item)) {
                 this.arenas.add(item);
             }
-            if (item != null && item.getName() != null) {
+            if (item != null) {
+                if (item.getName() == null
+                        || item.getUpperCorner() == null
+                        || item.getLowerCorner() == null
+                        || item.getBallSpawnLocation() == null) {
+                    throw new IllegalStateException("Arena does not have the required content.");
+                }
                 try {
                     final FileConfiguration configuration = new YamlConfiguration();
                     final File file = new File(this.getFolder(), "arena_" + item.getName() + ".yml");
@@ -161,9 +167,9 @@ public final class ArenaRepository implements ArenaController {
      * @return id
      */
     private int getNewId() {
-        for (int i = 0; i < Integer.MAX_VALUE; i++) {
+        for (int i = 1; i < Integer.MAX_VALUE; i++) {
             final String s = String.valueOf(i);
-            if (this.getById(s) == null) {
+            if (!this.getById(s).isPresent()) {
                 return i;
             }
         }

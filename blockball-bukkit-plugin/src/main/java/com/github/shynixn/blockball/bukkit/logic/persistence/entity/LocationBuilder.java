@@ -356,8 +356,6 @@ public class LocationBuilder extends PersistenceObject<IPosition> implements IPo
      * @return bukkitLocation
      */
     public Location toLocation() {
-        if (Bukkit.getWorld(this.world) == null)
-            return null;
         return new Location(Bukkit.getWorld(this.world), this.x, this.y, this.z, (float) this.yaw, (float) this.pitch);
     }
 

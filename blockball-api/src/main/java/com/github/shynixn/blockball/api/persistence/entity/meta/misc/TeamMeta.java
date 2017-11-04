@@ -1,10 +1,19 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.misc;
 
+import com.github.shynixn.blockball.api.persistence.entity.AreaSelection;
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
 import java.util.Optional;
 
 public interface TeamMeta extends Persistenceable<TeamMeta> {
+
+    /**
+     * Returns the goal of the team.
+     *
+     * @return goal
+     */
+    AreaSelection getGoal();
+
     /**
      * Sets the spawnpoint of the team.
      *
@@ -102,7 +111,6 @@ public interface TeamMeta extends Persistenceable<TeamMeta> {
      * @return prefix
      */
     String getPrefix();
-
 
     /**
      * Sets the amount of speed for the players.
