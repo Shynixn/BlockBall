@@ -133,7 +133,11 @@ public final class YamlSerializer {
         final Map<String, Object> data = new LinkedHashMap<>();
         int i = 1;
         for (final Object object : objects) {
-            data.put(String.valueOf(i), serializeObject(object));
+            if (ConfigurationSerializable.class.isAssignableFrom(object.getClass())) {
+                data.put(String.valueOf(i), ((ConfigurationSerializable) object).serialize());
+            } else {
+                data.put(String.valueOf(i), serializeObject(object));
+            }
             i++;
         }
         return data;
@@ -162,7 +166,11 @@ public final class YamlSerializer {
             } else if (field.getType().isArray()) {
                 data.put(yamlAnnotation.value(), serializeArray((Object[]) field.get(object)));
             } else if (Collection.class.isAssignableFrom(field.getType())) {
-                data.put(yamlAnnotation.value(), serializeCollection((Collection<?>) field.get(object)));
+                if (getTypeFromHeavyField(field, 0) == String.class) {
+                    data.put(yamlAnnotation.value(), field.get(object));
+                } else {
+                    data.put(yamlAnnotation.value(), serializeCollection((Collection<?>) field.get(object)));
+                }
             } else if (Map.class.isAssignableFrom(field.getType())) {
                 data.put(yamlAnnotation.value(), serializeMap((Map<?, ?>) field.get(object)));
             } else if (field.get(object) != null && ConfigurationSerializable.class.isAssignableFrom(field.get(object).getClass())) {
@@ -232,16 +240,22 @@ public final class YamlSerializer {
      * @throws InstantiationException exception
      */
     public static <T extends Collection, E> T deserializeCollection(Class<E> clazz, Class<T> collectionClazz, Object dataSource) throws IllegalAccessException, InstantiationException {
-        final Map<String, Object> data = getDataFromSource(dataSource);
         Class<?> instanceClass = collectionClazz;
         if (instanceClass == List.class)
             instanceClass = ArrayList.class;
         else if (instanceClass == Set.class)
             instanceClass = HashSet.class;
         final T collection = (T) instanceClass.newInstance();
+        return deserializeHeavyCollection(clazz, collection, dataSource);
+    }
+
+    private static <T extends Collection, E> T deserializeHeavyCollection(Class<E> clazz, T collection, Object dataSource) throws InstantiationException, IllegalAccessException {
+        final Map<String, Object> data = getDataFromSource(dataSource);
         for (final String key : data.keySet()) {
+            System.out.println("COLLECTION ADD: " + key + ". " + ((MemorySection) data.get(key)).getValues(false));
             collection.add(deserializeObject(clazz, ((MemorySection) data.get(key)).getValues(false)));
         }
+        System.out.println("SIER: " + collection.size() + collection);
         return collection;
     }
 
@@ -285,7 +299,16 @@ public final class YamlSerializer {
                             } else if (field.getType().isArray()) {
                                 field.set(object, deserializeArray(clazzQuery, ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                             } else if (Collection.class.isAssignableFrom(field.getType())) {
-                                field.set(object, deserializeCollection(getTypeFromHeavyField(field, 0), (Class<Collection>) field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                if (field.get(object) != null) {
+                                    ((Collection) field.get(object)).clear();
+                                    if (data.get(yamlAnnotation.value()) instanceof Collection) {
+                                        ((Collection) field.get(object)).addAll((Collection) data.get(yamlAnnotation.value()));
+                                    } else {
+                                        deserializeHeavyCollection(getTypeFromHeavyField(field, 0), ((Collection) field.get(object)), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false));
+                                    }
+                                } else {
+                                    field.set(object, deserializeCollection(getTypeFromHeavyField(field, 0), (Class<Collection>) field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                }
                             } else if (Map.class.isAssignableFrom(field.getType())) {
                                 field.set(object, deserializeMap(getTypeFromHeavyField(field, 1), (Class<Map>) field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                             } else {

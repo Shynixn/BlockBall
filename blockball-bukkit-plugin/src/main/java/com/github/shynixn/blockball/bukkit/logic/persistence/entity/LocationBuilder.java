@@ -110,7 +110,7 @@ public class LocationBuilder extends PersistenceObject<IPosition> implements IPo
         this.z = (double) items.get("z");
         this.yaw = (double) items.get("yaw");
         this.pitch = (double) items.get("pitch");
-        this.world = (String) items.get("worldname");
+        this.world = (String) items.get("world");
     }
 
     /**
@@ -447,7 +447,7 @@ public class LocationBuilder extends PersistenceObject<IPosition> implements IPo
         map.put("z", this.z);
         map.put("yaw", this.yaw);
         map.put("pitch", this.pitch);
-        map.put("worldname", this.world);
+        map.put("world", this.world);
         return map;
     }
 

@@ -4,16 +4,18 @@ import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 import com.github.shynixn.blockball.api.persistence.entity.meta.MetaDataTransaction;
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallProperties;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.HologramBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.ScoreboardProperties;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.RewardProperties;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.TeamProperties;
 import com.github.shynixn.blockball.lib.YamlSerializer;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by Shynixn 2017.
@@ -47,17 +49,40 @@ public class BlockBallMetaCollection implements MetaDataTransaction {
     private final Map<Class<?>, Object> metaCollection = new HashMap<>();
 
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "ball-meta")
-    private BallProperties ballProperties = new BallProperties();
+    private final BallProperties ballProperties = new BallProperties();
 
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "red-team-meta")
-    private TeamProperties redTeamProperties = new TeamProperties();
+    private final TeamProperties redTeamProperties = new TeamProperties();
 
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "blue-team-meta")
-    private TeamProperties blueTeamProperties = new TeamProperties();
+    private final TeamProperties blueTeamProperties = new TeamProperties();
+
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "holograms")
+    private final List<HologramBuilder> holograms = new ArrayList<>();
+
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "scoreboard-meta")
+    private final ScoreboardProperties gameScoreboard = new ScoreboardProperties("title", new String[] {"easy"});
 
     public BlockBallMetaCollection() {
         this.metaCollection.put(BallMeta.class, this.ballProperties);
         this.metaCollection.put(TeamMeta[].class, new TeamMeta[]{this.redTeamProperties, this.blueTeamProperties});
+        this.metaCollection.put(HologramMeta.class, this.holograms);
+        this.metaCollection.put(ScoreboardMeta.class, this.gameScoreboard);
+    }
+
+    /**
+     * Returns the meta data list
+     *
+     * @param metaClass metaclass
+     * @param <T>       t
+     * @return optMeta
+     */
+    @Override
+    public <T> Optional<List<T>> findList(Class<T> metaClass) {
+        if (this.metaCollection.containsKey(metaClass)) {
+            return Optional.of((List<T>) this.metaCollection.get(metaClass));
+        }
+        return Optional.empty();
     }
 
     /**

@@ -4,6 +4,10 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.display.Scoreboa
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.lib.YamlSerializer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Shynixn 2017.
  * <p>
@@ -40,7 +44,10 @@ public class ScoreboardProperties extends PersistenceObject<ScoreboardMeta> impl
     private String title;
 
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "lines")
-    private String[] lines;
+    private List<String> lines = new ArrayList<>();
+
+    public ScoreboardProperties() {
+    }
 
     /**
      * Initializes new scoreboard properties
@@ -54,7 +61,7 @@ public class ScoreboardProperties extends PersistenceObject<ScoreboardMeta> impl
         if (lines == null)
             throw new IllegalArgumentException("Lines cannot be null!");
         this.title = title;
-        this.lines = lines.clone();
+        this.lines.addAll(Arrays.asList(lines));
     }
 
     /**
@@ -108,7 +115,8 @@ public class ScoreboardProperties extends PersistenceObject<ScoreboardMeta> impl
     public void setScoreboardLines(String[] scoreboardLines) {
         if (scoreboardLines == null)
             throw new IllegalArgumentException("Lines cannot be null!");
-        this.lines = scoreboardLines.clone();
+        this.lines.clear();
+        this.lines.addAll(Arrays.asList(scoreboardLines));
     }
 
     /**
@@ -118,6 +126,6 @@ public class ScoreboardProperties extends PersistenceObject<ScoreboardMeta> impl
      */
     @Override
     public String[] getScoreboardLines() {
-        return this.lines.clone();
+        return this.lines.toArray(new String[0]);
     }
 }

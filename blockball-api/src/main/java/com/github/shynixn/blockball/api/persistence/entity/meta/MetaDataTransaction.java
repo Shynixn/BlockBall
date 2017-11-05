@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.api.persistence.entity.meta;
 
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -32,6 +33,8 @@ import java.util.Optional;
  * SOFTWARE.
  */
 public interface MetaDataTransaction {
+
+    <T> Optional<List<T>> findList(Class<T> metaClass);
 
     /**
      * Searches for the given MetaData class

@@ -1,7 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display;
 
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
+import com.github.shynixn.blockball.lib.YamlSerializer;
 import org.bukkit.Location;
 
 import java.util.*;
@@ -33,24 +35,17 @@ import java.util.*;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class HologramBuilder extends PersistenceObject<HologramMeta> implements HologramMeta{
+public class HologramBuilder extends PersistenceObject<HologramMeta> implements HologramMeta {
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "lines")
     private List<String> lines = new ArrayList<>();
-    private Location location;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "location")
+    private LocationBuilder location;
 
     /**
      * Initialize.
      */
     public HologramBuilder() {
-    }
-
-    /**
-     * Initializes a new hologram builder from the given data.
-     *
-     * @param data data
-     */
-    public HologramBuilder(Map<String, Object> data) {
-        this.location = Location.deserialize((Map<String, Object>) data.get("location"));
-        this.lines = new ArrayList<>((Collection<String>) data.get("lines"));
     }
 
     /**
@@ -143,7 +138,7 @@ public class HologramBuilder extends PersistenceObject<HologramMeta> implements 
         if (this.location == null) {
             return Optional.empty();
         }
-        return Optional.of(this.location.clone());
+        return Optional.of(this.location.toLocation());
     }
 
     /**
@@ -154,20 +149,7 @@ public class HologramBuilder extends PersistenceObject<HologramMeta> implements 
      */
     @Override
     public HologramBuilder setLocation(Object location) {
-        this.location = ((Location) location).clone();
+        this.location = new LocationBuilder((Location) location);
         return this;
-    }
-
-    /**
-     * Serializes this data
-     *
-     * @return serializedContent
-     */
-    @Override
-    public Map<String, Object> serialize() {
-        final Map<String, Object> data = new LinkedHashMap<>();
-        data.put("location", this.location.serialize());
-        data.put("lines", this.lines.toArray(new String[this.lines.size()]));
-        return data;
     }
 }

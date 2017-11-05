@@ -5,21 +5,24 @@ import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
 import com.github.shynixn.blockball.api.persistence.entity.AreaSelection;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.Factory;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.HologramBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,7 +95,7 @@ public class ArenaPersistenceTest {
 
     @Test
     public void storeAndRestoreMinRequiredPropertiesArena() {
-        final Plugin plugin = mock(Plugin.class);
+     final Plugin plugin = mock(Plugin.class);
         when(plugin.getDataFolder()).thenReturn(new File("BlockBall"));
         final World world = Bukkit.getWorld("");
 
@@ -130,5 +133,58 @@ public class ArenaPersistenceTest {
         assertEquals(200, ((Location) redGoal.getUpperCorner()).getBlockY());
         final AreaSelection blueGoal = arena.getMeta().findByTeam(TeamMeta[].class, Team.BLUE).get().getGoal();
         assertEquals(400, ((Location) blueGoal.getUpperCorner()).getBlockY());
+    }
+
+    @Test
+    public void storeAndRestoreHologramArena() {
+        final Plugin plugin = mock(Plugin.class);
+        when(plugin.getDataFolder()).thenReturn(new File("BlockBall"));
+        final World world = Bukkit.getWorld("");
+
+        final ArenaController controller = Factory.createArenaController(plugin);
+        final Arena item = controller.create();
+        ((BlockBallArena)item).setId(2);
+        item.setCorners(new Location(world, 2, 3, 5.2), new Location(world, 7, 2.1, 8));
+        item.setBallSpawnLocation(new Location(world, 8, 9, 2));
+        item.getMeta().findByTeam(TeamMeta[].class, Team.RED).get().getGoal()
+                .setCorners(new Location(world, 2, 100, 5.2), new Location(world, 7, 200, 8));
+        item.getMeta().findByTeam(TeamMeta[].class, Team.BLUE).get().getGoal()
+                .setCorners(new Location(world, 2, 400, 5.2), new Location(world, 7, 300, 8));
+
+        List<HologramMeta> meta = item.getMeta().findList(HologramMeta.class).get();
+
+        meta.add(new HologramBuilder().addLine("simple text")
+                .setLocation(new Location(world, 520, 281, 92.20))
+        .addLine("another text"));
+        meta.add(new HologramBuilder().addLine("and")
+                .setLocation(new Location(world, 300, 100, 92.20))
+                .addLine("petblocks"));
+
+        try {
+            controller.store(item);
+            controller.reload();
+        } catch (IllegalStateException | NullPointerException ex) {
+            ex.printStackTrace();
+            Assertions.fail("Arena should be valid.");
+        }
+
+
+        final Arena arena = controller.getAll().get(1);
+        assertNotNull(arena);
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        meta = arena.getMeta().findList(HologramMeta.class).get();
+        assertEquals(2, meta.size());
+
+        assertEquals("simple text", meta.get(0).getLine(0).get());
+        assertEquals("another text", meta.get(0).getLine(1).get());
+        assertEquals("petblocks", meta.get(1).getLine(1).get());
+        assertEquals(520, ((Location)meta.get(0).getLocation().get()).getX());
+        assertEquals(92.20, ((Location)meta.get(0).getLocation().get()).getZ());
     }
 }
