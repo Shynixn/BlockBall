@@ -74,6 +74,18 @@ public class ChatBuilder {
     }
 
     /**
+     * Adds an existing component to the builder .
+     *
+     * @param component component
+     * @return builder
+     */
+    public ChatBuilder.Component addComponent(Component component) {
+        component.builder = this;
+        this.components.add(component);
+        return component;
+    }
+
+    /**
      * Sets the text bold
      *
      * @return instance
@@ -300,7 +312,7 @@ public class ChatBuilder {
         private boolean italic;
         private boolean underlined;
         private boolean strikethrough;
-        private final ChatBuilder builder;
+        private ChatBuilder builder;
 
         private ClickAction clickAction;
         private String clickActionData;
@@ -313,7 +325,7 @@ public class ChatBuilder {
          * @param builder builder
          * @param text    text
          */
-        Component(ChatBuilder builder, String text) {
+        public Component(ChatBuilder builder, String text) {
             this(builder, text, null);
         }
 
@@ -326,8 +338,6 @@ public class ChatBuilder {
          */
         Component(ChatBuilder builder, String text, Component component) {
             super();
-            if (builder == null)
-                throw new IllegalArgumentException("Builder cannot be null!");
             if (text == null)
                 throw new IllegalArgumentException("Text cannot be null!");
             this.builder = builder;

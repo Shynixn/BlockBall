@@ -7,19 +7,36 @@ import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.dependencies.worldedit.WorldEditConnection;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.*;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.lib.ChatBuilder;
+import com.github.shynixn.blockball.lib.ItemStackBuilder;
 import com.github.shynixn.blockball.lib.SimpleCommandExecutor;
+import net.milkbowl.vault.chat.Chat;
+import net.minecraft.server.v1_12_R1.EntityArmorStand;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.PacketPlayOutMount;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftZombie;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.EulerAngle;
+import org.bukkit.util.Vector;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by Shynixn 2017.
@@ -49,11 +66,13 @@ import java.util.Optional;
  * SOFTWARE.
  */
 public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
-    private static final String HEADER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                        Balls                         ";
+    private static final String HEADER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                          BlockBall                         ";
     private static final String FOOTER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           ┌1/1┐                            ";
 
     private final BlockBallManager blockBallManager;
-    private final Map<Player, Arena> cache = new HashMap<>();
+    private final Map<Player, Object[]> cache = new HashMap<>();
+
+    private final List<Page> pages = new ArrayList<>();
 
     /**
      * Initializes a new commandExecutor by command, plugin.
@@ -63,6 +82,9 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
     public NewArenaCommandExecutor(BlockBallManager blockBallManager, Plugin plugin) {
         super("blockball", (JavaPlugin) plugin);
         this.blockBallManager = blockBallManager;
+
+        this.pages.add(new OpenPage());
+        this.pages.add(new MainConfigurationPage());
     }
 
     /**
@@ -77,7 +99,68 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
             player.sendMessage("");
         }
         player.sendMessage(HEADER_STANDARD);
-        if (args.length == 0) {
+        player.sendMessage("\n");
+        Object[] cache = null;
+        if (!this.cache.containsKey(player)) {
+            this.cache.put(player, new Object[2]);
+        }
+        cache = this.cache.get(player);
+        final BlockBallCommand command = BlockBallCommand.from(args);
+        System.out.println("COMMAND: " + command);
+        if (command == null)
+            throw new IllegalArgumentException("Command is not registered!");
+        Page usedPage = null;
+        for (final Page page : this.pages) {
+            if (page.getCommandKey() != null && page.getCommandKey() == command.getKey()) {
+                usedPage = page;
+                if (command == BlockBallCommand.BACK) {
+                    final Page newPage = this.getPageById(Integer.parseInt(args[2]));
+                    this.sendMessage(player, newPage.buildPage(cache));
+                } else {
+                    final CommandResult result = page.execute(player, command, cache, args);
+                    if (result == CommandResult.BACK) {
+                        player.performCommand("blockball back" + " " + usedPage.getPreviousId());
+                        return;
+                    }
+                    System.out.println("1");
+                    if (result != CommandResult.SUCCESS && result != CommandResult.CANCEL_MESSAGE) {
+                        new ChatBuilder()
+                                .component(ChatColor.WHITE + "" + ChatColor.BOLD + "[" + ChatColor.RED + ChatColor.BOLD + "!" + ChatColor.WHITE + ChatColor.BOLD + "]")
+                                .setHoverText(result.getMessage()).builder().sendMessage(player);
+                    }
+                    if (result != CommandResult.CANCEL_MESSAGE) {
+                        this.sendMessage(player, page.buildPage(cache));
+                    }
+                    System.out.println("2");
+                }
+                break;
+            }
+        }
+        new ChatBuilder()
+                .text(ChatColor.STRIKETHROUGH + "----------------------------------------------------").nextLine()
+                .component(" >>Save<< ")
+                .setColor(ChatColor.GREEN)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ARENA_SAVE.getCommand())
+                .setHoverText("Saves the current arena if possible.")
+                .builder()
+                .component(">>Back<<")
+                .setColor(ChatColor.RED)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.getCommand() + " " + usedPage.getPreviousId())
+                .setHoverText("Opens the blockball arena configuration.")
+                .builder().sendMessage(player);
+
+        player.sendMessage(FOOTER_STANDARD);
+
+
+
+
+
+
+
+
+
+
+     /*   if (args.length == 0) {
             this.printFirstPage(player);
         } else if (args.length == 1) {
             if (args[0].equalsIgnoreCase("crna")) {
@@ -87,12 +170,9 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
 
                 this.cache.put(player, arena);
                 this.printArenaPage(player);
-            }
-            else if(args[0].equalsIgnoreCase("cna"))
-            {
+            } else if (args[0].equalsIgnoreCase("cna")) {
                 this.printArenaPage(player);
-            }
-            else if (args[0].equalsIgnoreCase("set-wecorners") && this.cache.containsKey(player)) {
+            } else if (args[0].equalsIgnoreCase("set-wecorners") && this.cache.containsKey(player)) {
                 final Location left = WorldEditConnection.getLeftSelection(player);
                 final Location right = WorldEditConnection.getRightSelection(player);
                 if (left != null && right != null) {
@@ -120,23 +200,41 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                 final Arena arena = this.cache.get(player);
                 this.blockBallManager.getGameController().getArenaController().store(arena);
                 player.sendMessage("Arena was saved.");
-                onPlayerExecuteCommand(player, new String[] {args[1]});
+                this.onPlayerExecuteCommand(player, new String[]{args[1]});
+            }
+        }*/
+
+    }
+
+    private String fullCommand(String[] args) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("/blockball");
+        for (String s : args) {
+            builder.append(" ");
+            builder.append(s);
+        }
+        return builder.toString();
+    }
+
+    private Page getPageById(int id) {
+        for (Page page : this.pages) {
+            if (page.getId() == id) {
+                return page;
             }
         }
-
-        player.sendMessage(FOOTER_STANDARD);
+        throw new RuntimeException("Page does not exist!");
     }
 
     private void setGoal(Player player, Team team) {
-        final Location left = WorldEditConnection.getLeftSelection(player);
+      /*  final Location left = WorldEditConnection.getLeftSelection(player);
         final Location right = WorldEditConnection.getRightSelection(player);
         if (left != null && right != null) {
             this.getTeamMeta(player, team).getGoal().setCorners(left, right);
         }
-        this.printArenaPage(player);
+        this.printArenaPage(player);*/
     }
 
-    private void printSettingsSelectionPage(Player player) {
+    private void printHologramEditingPage(Player player) {
         if (!this.cache.containsKey(player))
             return;
 
@@ -159,108 +257,32 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball crna")
                 .setHoverText("Closes the current page.")
         );
-
     }
 
-    private void printArenaPage(Player player) {
+    private void printSettingsSelectionPage(Player player) {
         if (!this.cache.containsKey(player))
             return;
-        final Arena arena = this.cache.get(player);
-        String display = "BlockBall arena " + arena.getId();
-        if (arena.getDisplayName().isPresent()) {
-            display = arena.getDisplayName().get();
-        }
-        String corners = "none";
-        String goal1 = "none";
-        String goal2 = "none";
-        String ballSpawn = "none";
-        if (arena.getUpperCorner() != null && arena.getLowerCorner() != null) {
-            corners = this.printLocation(arena.getCenter());
-        }
-        if (this.getTeamMeta(player, Team.RED).getGoal().getLowerCorner() != null) {
-            goal1 = this.printLocation(this.getTeamMeta(player, Team.RED).getGoal().getCenter());
-        }
-        if (this.getTeamMeta(player, Team.BLUE).getGoal().getLowerCorner() != null) {
-            goal2 = this.printLocation(this.getTeamMeta(player, Team.BLUE).getGoal().getCenter());
-        }
-        if (arena.getBallSpawnLocation() != null) {
-            ballSpawn = this.printLocation(arena.getBallSpawnLocation());
-        }
+
         this.sendMessage(player, new ChatBuilder()
                 .nextLine()
-                .component("- Id: " + arena.getId())
-                .setColor(ChatColor.GRAY)
-                .builder()
-                .component(", " + display).builder()
+                .component("- Add line of text:").builder()
                 .component(" [edit..]").setColor(ChatColor.GREEN)
-                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, "/blockball set-displayname ")
-                .setHoverText("Edit the name of the arena.")
-                .builder().nextLine()
-                .component("- Center: " + corners).builder()
-                .component(" [worldedit..]").setColor(ChatColor.GOLD)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball set-wecorners")
-                .setHoverText("Uses the selected worldedit blocks to span the field of the arena.")
-                .builder().nextLine()
-                .component("- Goal 1: " + goal1).builder()
-                .component(" [worldedit..]").setColor(ChatColor.GOLD)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball set-goalred")
-                .setHoverText("Uses the selected worldedit blocks to span the goal for the red team.")
-                .builder().nextLine()
-                .component("- Goal 2: " + goal2).builder()
-                .component(" [worldedit..]").setColor(ChatColor.GOLD)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball set-goalblue")
-                .setHoverText("Uses the selected worldedit blocks to span the goal for the blue team.")
-                .builder().nextLine()
-                .component("- Ball spawnpoint: " + ballSpawn).builder()
-                .component(" [location..]").setColor(ChatColor.BLUE)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball set-ballspawn")
-                .setHoverText("Uses your current location to set the spawnpoint of the ball.")
-                .builder().nextLine()
-                .component("- Settings:").builder()
-                .component(" [page..]").setColor(ChatColor.YELLOW)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball page-settings")
-                .setHoverText("Opens the settings page.")
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball add-holo-text")
+                .setHoverText("Add a line of text to the hologram")
                 .builder().nextLine()
                 .text(ChatColor.STRIKETHROUGH + "--------------------")
                 .nextLine()
                 .component(">>Save<<")
                 .setColor(ChatColor.GREEN)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball save cna")
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball save")
                 .setHoverText("Saves the arena.")
                 .builder().text(" ")
                 .component(">>Back<<")
                 .setColor(ChatColor.RED)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball")
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball crna")
                 .setHoverText("Closes the current page.")
         );
-    }
 
-    private void printFirstPage(Player player) {
-        this.sendMessage(player, new ChatBuilder()
-                .component(">>Create arena<<")
-                .setColor(ChatColor.YELLOW)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball crna")
-                .setHoverText("Creates a new blockball arena.")
-                .builder().nextLine()
-                .component(">>Edit arena<<")
-                .setColor(ChatColor.YELLOW)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball eda")
-                .setHoverText("Opens the blockball arena configuration.")
-                .builder().nextLine()
-                .component(">>Remove arena<<")
-                .setColor(ChatColor.YELLOW)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball rma")
-                .setHoverText("Deletes a blockball arena.")
-                .builder().nextLine()
-        );
-    }
-
-    private BallMeta getBallMeta(Player player) {
-        return this.cache.get(player).getMeta().find(BallMeta.class).get();
-    }
-
-    private TeamMeta getTeamMeta(Player player, Team team) {
-        return this.cache.get(player).getMeta().findByTeam(TeamMeta[].class, team).get();
     }
 
     private Optional<Arena> getArena(String id) {
@@ -275,18 +297,4 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
         this.sendMessage(player, builder.builder());
     }
 
-    private String printLocation(Object mlocation) {
-        final Location location = (Location) mlocation;
-        return location.getWorld().getName() + " " + location.getBlockX() + "x " + location.getBlockY() + "y " + location.getBlockZ() + "z";
-    }
-
-    private String mergeArgs(int starting, String[] args) {
-        final StringBuilder builder = new StringBuilder();
-        for (int i = starting; i < args.length; i++) {
-            if (builder.length() != 0)
-                builder.append(' ');
-            builder.append(args[i]);
-        }
-        return builder.toString();
-    }
 }
