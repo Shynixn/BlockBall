@@ -252,10 +252,8 @@ public final class YamlSerializer {
     private static <T extends Collection, E> T deserializeHeavyCollection(Class<E> clazz, T collection, Object dataSource) throws InstantiationException, IllegalAccessException {
         final Map<String, Object> data = getDataFromSource(dataSource);
         for (final String key : data.keySet()) {
-            System.out.println("COLLECTION ADD: " + key + ". " + ((MemorySection) data.get(key)).getValues(false));
             collection.add(deserializeObject(clazz, ((MemorySection) data.get(key)).getValues(false)));
         }
-        System.out.println("SIER: " + collection.size() + collection);
         return collection;
     }
 

@@ -106,7 +106,6 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
         }
         cache = this.cache.get(player);
         final BlockBallCommand command = BlockBallCommand.from(args);
-        System.out.println("COMMAND: " + command);
         if (command == null)
             throw new IllegalArgumentException("Command is not registered!");
         Page usedPage = null;
@@ -122,7 +121,6 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                         player.performCommand("blockball back" + " " + usedPage.getPreviousId());
                         return;
                     }
-                    System.out.println("1");
                     if (result != CommandResult.SUCCESS && result != CommandResult.CANCEL_MESSAGE) {
                         new ChatBuilder()
                                 .component(ChatColor.WHITE + "" + ChatColor.BOLD + "[" + ChatColor.RED + ChatColor.BOLD + "!" + ChatColor.WHITE + ChatColor.BOLD + "]")
@@ -131,7 +129,6 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                     if (result != CommandResult.CANCEL_MESSAGE) {
                         this.sendMessage(player, page.buildPage(cache));
                     }
-                    System.out.println("2");
                 }
                 break;
             }
