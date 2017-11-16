@@ -32,7 +32,7 @@ import java.util.Optional;
  * SOFTWARE.
  */
 public enum GameType {
-    LOBBY,
+    HUBGAME,
     MINIGAME,
     BUNGEE,
     EVENT;

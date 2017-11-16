@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.logging.Level;
 
 /**
@@ -86,6 +87,21 @@ public class ScreenUtils {
                 return false;
         }
         return true;
+    }
+
+    /**
+     * Sets the title and subtitle for the given players for a given time with fadeIn, stay and fadeOut animations
+     *
+     * @param title    title
+     * @param subTitle subTitle
+     * @param fadeIn   fadeIn
+     * @param stay     stay
+     * @param fadeOut  fadeOut
+     * @param players  players
+     * @return hasBeenSend
+     */
+    public static boolean setTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut, Collection<Player> players) {
+        return setTitle(title, subTitle, fadeIn, stay, fadeOut, players.toArray(new Player[players.size()]));
     }
 
     /**

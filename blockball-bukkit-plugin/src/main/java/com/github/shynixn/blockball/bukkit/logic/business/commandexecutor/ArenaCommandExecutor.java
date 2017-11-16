@@ -349,7 +349,7 @@ class ArenaCommandExecutor {
                 this.arenaEntity.setGameType(GameType.MINIGAME);
                 this.player.sendMessage(Language.PREFIX + "Enabled minigame mode.");
             } else if (number == 2) {
-                this.arenaEntity.setGameType(GameType.LOBBY);
+                this.arenaEntity.setGameType(GameType.HUBGAME);
                 this.player.sendMessage(Language.PREFIX + "Enabled lobbygame mode.");
             } else if (number == 3) {
                 this.arenaEntity.setGameType(GameType.BUNGEE);

@@ -167,21 +167,22 @@ bungeecord-server-change:
 
 ############################
 
-minigame-sign:
- line-1: '&l[Blockball]'
- line-2: '<game>'
- line-3: '<state>'
- line-4: '<players>/<maxplayers>'
-leave-sign:
- line-1: '&l[Blockball]'
- line-2: 'Leave game'
- line-3: ''
- line-4: ''
-lobbygame-sign:
- line-1: '&l[Blockball]'
- line-2: '<game>'
- line-3: '<team>'
- line-4: '<players>/<maxplayers>'
+signs:
+  hubgame:
+   - '&l[Blockball]'
+   - '<game>'
+   - '<state>'
+   - '<players>/<maxplayers>'
+  minigame:
+   - '&l[Blockball]'
+   - '<game>'
+   - '<state>'
+   - '<players>/<maxplayers>'
+  leave:
+   - '&l[Blockball]'
+   - 'Leave game'
+   - ''
+   - ''
 
 ############################
 
@@ -230,9 +231,12 @@ particles:
 
 ############################
 
-# Particles settings
+# Protection settings
 
-# Settings to adjust the knockback when a player or entity hits the forcefield.
+# entity-velocity-protection: Velocity the entities get launched away from
+# the blockball arena if they try to walk in it.
+# player-launch-up-protection: Velocity player get launched away from
+# the blockball arena if they try to be there without joining.
 
 ############################
 

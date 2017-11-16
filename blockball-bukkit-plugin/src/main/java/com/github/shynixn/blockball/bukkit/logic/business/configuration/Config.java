@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.configuration;
 
+import org.bukkit.util.Vector;
+
 import java.util.List;
 
 /**
@@ -66,6 +68,64 @@ public class Config extends SimpleConfig {
      */
     public boolean isOnlyBungeeCordLinkingEnabled() {
         return (boolean) this.getData("bungeecord.low-resources") && (boolean) this.getData("bungeecord.linking");
+    }
+
+    /**
+     * Returns the entity protection velocity.
+     *
+     * @return velocity
+     */
+    public Vector getEntityProtectionVelocity() {
+        return new Vector(this.getData("entity-velocity-protection.x")
+                , this.getData("entity-velocity-protection.y")
+                , this.getData("entity-velocity-protection.z"));
+    }
+
+    /**
+     * Returns the player protection velocity.
+     *
+     * @return velocity
+     */
+    public Vector getPlayerrotectionVelocity() {
+        return new Vector(this.getData("player-launch-up-protection.x")
+                , this.getData("player-launch-up-protection.y")
+                , this.getData("player-launch-up-protection.z"));
+    }
+
+    /**
+     * Returns the sign meta value of the red team sign.
+     *
+     * @return redTeamSign
+     */
+    public String[] getHubGameSign() {
+        return ((List<String>) this.getData("signs.hubgame")).toArray(new String[0]);
+    }
+
+    /**
+     * Returns the message sign enabled.
+     *
+     * @return message
+     */
+    public String getMessageSignEnabled() {
+        return this.getData("messages.sign-enabled");
+    }
+
+    /**
+     * Returns the message sign disabled.
+     *
+     * @return message
+     */
+    public String getMessageSignDisabled() {
+        return this.getData("messages.sign-disabled");
+    }
+
+    /**
+     * Returns the message sign running.
+     *
+     * @return message
+     */
+    public String getMessageSignRunning() {
+        return this.getData("messages.sign-running");
     }
 
     /**

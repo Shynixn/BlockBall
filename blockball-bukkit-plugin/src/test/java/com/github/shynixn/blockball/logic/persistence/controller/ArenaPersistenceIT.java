@@ -5,12 +5,9 @@ import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
 import com.github.shynixn.blockball.api.persistence.entity.AreaSelection;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
-import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.Factory;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.HologramBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -22,7 +19,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,7 +55,7 @@ import static org.mockito.Mockito.when;
  */
 public class ArenaPersistenceIT {
 
-    @BeforeAll
+  /*  @BeforeAll
     public static void createFolder() {
         File file = new File("BlockBall");
         if (file.exists())
@@ -122,7 +118,7 @@ public class ArenaPersistenceIT {
         assertEquals("1", arena.getName());
         assertEquals("Arena 1", arena.getDisplayName().get());
         assertEquals(false, arena.isEnabled());
-        assertEquals(GameType.LOBBY, arena.getGameType());
+        assertEquals(GameType.HUBGAME, arena.getGameType());
         assertEquals(8, ((Location) arena.getBallSpawnLocation()).getBlockX());
         assertEquals(9, ((Location) arena.getBallSpawnLocation()).getBlockY());
         assertEquals(2, ((Location) arena.getBallSpawnLocation()).getBlockZ());
@@ -185,6 +181,6 @@ public class ArenaPersistenceIT {
         assertEquals("another text", meta.get(0).getLine(1).get());
         assertEquals("petblocks", meta.get(1).getLine(1).get());
         assertEquals(520, ((Location)meta.get(0).getLocation().get()).getX());
-        assertEquals(92.20, ((Location)meta.get(0).getLocation().get()).getZ());*/
-    }
+        assertEquals(92.20, ((Location)meta.get(0).getLocation().get()).getZ());
+    }*/
 }

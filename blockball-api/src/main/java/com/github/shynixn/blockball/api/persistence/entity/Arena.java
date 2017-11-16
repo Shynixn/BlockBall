@@ -2,6 +2,8 @@ package com.github.shynixn.blockball.api.persistence.entity;
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType;
 import com.github.shynixn.blockball.api.persistence.entity.meta.MetaDataTransaction;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 
 import java.util.Optional;
 
@@ -112,4 +114,22 @@ public interface Arena extends AreaSelection<Arena> {
      * @param location location
      */
     void setBallSpawnLocation(Object location);
+
+    /**
+     * Returns the ball spawn delay in seconds.
+     *
+     * @return delay
+     */
+    int getBallSpawnDelay();
+
+    /**
+     * Sets the ball spawn delay in seconds.
+     *
+     * @param delayInSeconds delay
+     */
+    void setBallSpawnDelay(int delayInSeconds);
+
+    ParticleEffectMeta getBallGoalParticle();
+
+    SoundEffectMeta getBallGoalSound();
 }

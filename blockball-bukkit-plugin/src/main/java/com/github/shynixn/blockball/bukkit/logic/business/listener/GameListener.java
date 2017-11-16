@@ -370,7 +370,7 @@ class GameListener extends SimpleListener {
                         }
                         if (!arena.isLocationInArea(event.getPlayer().getLocation()) && selectedGame.isInGame(event.getPlayer())) {
                             isInArena = true;
-                            if (arena.getGameType() == GameType.LOBBY)
+                            if (arena.getGameType() == GameType.HUBGAME)
                                 selectedGame.leave(event.getPlayer());
                         }
                     }

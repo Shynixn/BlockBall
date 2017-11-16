@@ -49,7 +49,7 @@ public class BlockBallArena extends SelectedArea<Arena> implements Arena {
     private boolean enabled;
 
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "gamemode")
-    private GameType gameType = GameType.LOBBY;
+    private GameType gameType = GameType.HUBGAME;
 
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "ball-spawnpoint")
     private LocationBuilder ballSpawnLocation;

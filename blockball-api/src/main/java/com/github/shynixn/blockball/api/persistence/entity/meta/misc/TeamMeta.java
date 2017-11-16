@@ -167,4 +167,16 @@ public interface TeamMeta extends Persistenceable<TeamMeta> {
      * @param itemStacks armor
      */
     void setArmorContents(Object[] itemStacks);
+
+    /**
+     * Returns the message being sent when a player joins a match.
+     * @return message
+     */
+    String getJoinMessage();
+
+    /**
+     * Sets the message being sent when a player joins a match.
+     * @param message message
+     */
+    void setJoinMessage(String message);
 }

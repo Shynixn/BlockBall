@@ -2,9 +2,11 @@ package com.github.shynixn.blockball.bukkit.logic.business.controller;
 
 import com.github.shynixn.blockball.api.business.controller.GameController;
 import com.github.shynixn.blockball.api.business.entity.Game;
+import com.github.shynixn.blockball.api.business.enumeration.GameType;
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
+import com.github.shynixn.blockball.bukkit.logic.business.entity.game.HubGame;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -119,9 +121,16 @@ public class GameRepository implements GameController, Runnable {
         }
         this.games.clear();
         for (final Arena arena : this.getArenaController().getAll()) {
+            if(arena.getGameType() == GameType.HUBGAME)
+            {
+                this.games.add(new HubGame(arena));
+            }
+
+
+
         /*    if (arena.getGameType() == GameType.BUNGEE) {
                 this.games.add(new BungeeGameEntity(arena));
-            } else if (arena.getGameType() == GameType.LOBBY) {
+            } else if (arena.getGameType() == GameType.HUBGAME) {
                 this.games.add(new HubGameEntity(arena));
             } else if (arena.getGameType() == GameType.MINIGAME) {
                 this.games.add(new MiniGameEntity(arena));

@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.api.bukkit.event.game;
 
 import com.github.shynixn.blockball.api.bukkit.event.BlockBallCancelAbleEvent;
+import com.github.shynixn.blockball.api.bukkit.event.BlockBallEvent;
 import com.github.shynixn.blockball.api.business.entity.Game;
 
 /**
@@ -32,7 +33,7 @@ import com.github.shynixn.blockball.api.business.entity.Game;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class GameEvent extends BlockBallCancelAbleEvent {
+public class GameEvent extends BlockBallEvent {
     private final Game game;
 
     /**

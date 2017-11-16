@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Game extends AutoCloseable, Runnable {
 
@@ -19,7 +20,7 @@ public interface Game extends AutoCloseable, Runnable {
      *
      * @return ball
      */
-    Ball getBall();
+    Optional<Ball> getBall();
 
     /**
      * Adds a player to the game returns false if he doesn't meet the required options.
@@ -39,7 +40,7 @@ public interface Game extends AutoCloseable, Runnable {
     boolean hasJoined(Object player);
 
     /**
-     * Removes a player from the given game returns false if it did not work.
+     * Removes a player from the given game returns false if the player is not in this game.
      *
      * @param player player - @NotNull
      * @return success
