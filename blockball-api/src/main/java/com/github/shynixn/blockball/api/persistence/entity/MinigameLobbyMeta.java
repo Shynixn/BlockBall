@@ -79,4 +79,6 @@ public interface MinigameLobbyMeta extends HubLobbyMeta {
      * @return location
      */
     Optional<Object> getLobbySpawnpoint();
+
+    String getJoinMessage();
 }

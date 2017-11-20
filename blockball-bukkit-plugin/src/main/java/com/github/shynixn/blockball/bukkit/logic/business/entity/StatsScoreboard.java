@@ -37,12 +37,12 @@ import java.util.List;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class StatsScoreboard extends SimpleScoreboard {
+public class StatsScoreboard extends SimpleScoreboard {
 
     /**
      * Initializes a fresh new Scoreboard.
      */
-    StatsScoreboard(Player player) {
+    public StatsScoreboard(Player player) {
         super();
         this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE);
         this.setDefaultTitle(Config.getInstance().getStatsScoreboardTitle());
@@ -55,7 +55,7 @@ class StatsScoreboard extends SimpleScoreboard {
      *
      * @param stats stats
      */
-    void updateStats(Player player, Stats stats) {
+    public void updateStats(Player player, Stats stats) {
         final List<String> lines = Config.getInstance().getStatsScoreboardLines();
         for (int i = 0, j = lines.size(); i < lines.size(); i++, j--) {
             final String line = lines.get(i)

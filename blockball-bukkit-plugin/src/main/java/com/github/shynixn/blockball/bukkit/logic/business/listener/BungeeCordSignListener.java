@@ -10,6 +10,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.Plugin;
 
 import java.util.logging.Level;
 
@@ -40,59 +41,65 @@ import java.util.logging.Level;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BungeeCordSignListener  {
-  /*  private final BlockBallBungeeCordManager manager;
-    private BungeeCordSignController signController;
+public class BungeeCordSignListener extends SimpleListener {
+
+    private final BlockBallBungeeCordManager manager;
 
     /**
-     * Initializes a new listener by plugin
-     * @param controller controller
+     * Initializes a new listener by plugin.
+     *
      * @param plugin plugin
-
-    public BungeeCordSignListener(BlockBallBungeeCordManager Plugin plugin) {
+     */
+    public BungeeCordSignListener(Plugin plugin, BlockBallBungeeCordManager manager) {
         super(plugin);
-        this.controller = controller;
+        if (manager == null)
+            throw new IllegalArgumentException("Manager cannot be null!");
+        this.manager = manager;
     }
 
+    /**
+     * Handles click on signs to create new server signs or to connect players to the server
+     * written on the sign.
+     *
+     * @param event event
+     */
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (event.getClickedBlock().getState() instanceof Sign) {
-                if (this.manager.signPlacementCache.containsKey(event.getPlayer())) {
-                    final String server = this.manager.signPlacementCache.get(event.getPlayer());
-                    this.manager.signPlacementCache.remove(event.getPlayer());
-                    final Sign sign = (Sign) event.getClickedBlock().getState();
-                    final BungeeCordSign bungeeCordSign = this.signController.create(server, sign.getLocation());
-                    this.signController.store(bungeeCordSign);
-
-                    this.signController.add(server, sign.getLocation());
-                    this.controller.updateSign(sign, new ServerInfo.Container(server, 0, 0));
-                } else {
-                    final Sign sign = (Sign) event.getClickedBlock().getState();
-                    try {
-                        final BungeeCordSignInfo signInfo;
-                        if ((signInfo = this.getBungeeCordSignInfo(sign.getLocation())) != null) {
-                            this.controller.connect(event.getPlayer(), signInfo.getServer());
-                        }
-                    } catch (final Exception ex) {
-                        Bukkit.getLogger().log(Level.WARNING, "Cannot connect player to server.", ex);
-                    }
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return;
+        if (!(event.getClickedBlock().getState() instanceof Sign))
+            return;
+        if (this.manager.signPlacementCache.containsKey(event.getPlayer())) {
+            final String server = this.manager.signPlacementCache.get(event.getPlayer());
+            this.manager.signPlacementCache.remove(event.getPlayer());
+            final BungeeCordSignController signController = this.manager.getBungeeCordSignController();
+            final BungeeCordSign sign = signController.create(server, event.getClickedBlock().getLocation());
+            signController.store(sign);
+            this.manager.getBungeeCordConnectController().pingServers();
+        } else {
+            final Sign sign = (Sign) event.getClickedBlock().getState();
+            try {
+                final BungeeCordSign signInfo;
+                if ((signInfo = this.getBungeeCordSignFromLocation(sign.getLocation())) != null) {
+                    this.manager.getBungeeCordConnectController().connectToServer(event.getPlayer(), signInfo.getServer());
                 }
+            } catch (final Exception ex) {
+                Bukkit.getLogger().log(Level.WARNING, "Cannot connect player to server.", ex);
             }
         }
     }
 
-    private BungeeCordSignInfo getBungeeCordSignInfo(Location location2) {
-        for (final BungeeCordSignInfo info : this.controller.signs.toArray(new BungeeCordSignInfo[this.controller.signs.size()])) {
-            final Location location1 = info.getLocation();
-            if (location1.getBlockX() == location2.getBlockX()) {
-                if (location1.getBlockY() == location2.getBlockY()) {
-                    if (location1.getBlockZ() == location2.getBlockZ()) {
-                        return info;
+    private BungeeCordSign getBungeeCordSignFromLocation(Location signLocation) {
+        for (final BungeeCordSign sign : this.manager.getBungeeCordSignController().getAll()) {
+            final Location l = (Location) sign.getLocation();
+            if (signLocation.getBlockX() == l.getBlockX()) {
+                if (signLocation.getBlockY() == l.getBlockY()) {
+                    if (signLocation.getBlockZ() == l.getBlockZ()) {
+                        return sign;
                     }
                 }
             }
         }
         return null;
-    }*/
+    }
 }

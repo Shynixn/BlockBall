@@ -3,6 +3,8 @@ package com.github.shynixn.blockball.api.persistence.entity;
 import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 
+import java.util.Map;
+
 /**
  * Created by Shynixn 2017.
  * <p>
@@ -108,6 +110,13 @@ public interface BallMeta extends Persistenceable<BallMeta> {
      * @param skin skin
      */
     void setSkin(String skin);
+
+    /**
+     * Returns the bounce materials in id, datavalue array.
+     *
+     * @return bounce materials.
+     */
+    Map<Integer, Short> getBounceMaterials();
 
     /**
      * Returns the skin of the ball

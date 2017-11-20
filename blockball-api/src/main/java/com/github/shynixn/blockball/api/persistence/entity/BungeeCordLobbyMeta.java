@@ -1,4 +1,6 @@
-package com.github.shynixn.blockball.api.business.controller;
+package com.github.shynixn.blockball.api.persistence.entity;
+
+import java.util.Optional;
 
 /**
  * Created by Shynixn 2017.
@@ -27,18 +29,18 @@ package com.github.shynixn.blockball.api.business.controller;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BungeeCordConnectController {
-
+public interface BungeeCordLobbyMeta {
     /**
-     * Connects the given player to the given server.
+     * Returns the kick message when a player tries to join a full server.
      *
-     * @param player     player
-     * @param serverName serverName
+     * @return message
      */
-   void connectToServer(Object player, String serverName);
+    Optional<String> getKickMessage();
 
     /**
-     * Pings all servers which are present in the sub sign controller.
+     * Sets the kick message when a player tries to join a full server.
+     *
+     * @param message message
      */
-    void pingServers();
+    void setKickMessage(String message);
 }

@@ -57,6 +57,7 @@ public class TeamProperties extends PersistenceObject<TeamMeta> implements TeamM
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "score.subtitle")
     private String scoreSubTitle;
 
+
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "win.title")
     private String winTitle;
 
@@ -65,6 +66,9 @@ public class TeamProperties extends PersistenceObject<TeamMeta> implements TeamM
 
     @YamlSerializer.YamlSerialize(orderNumber = 6, value = "displayname")
     private String displayName;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "message.join")
+    private String joinMessage;
 
     @YamlSerializer.YamlSerialize(orderNumber = 7, value = "prefix")
     private String prefix;
@@ -348,5 +352,25 @@ public class TeamProperties extends PersistenceObject<TeamMeta> implements TeamM
                 this.armor[i] = configuration.saveToString();
             }
         }
+    }
+
+    /**
+     * Returns the message being sent when a player joins a match.
+     *
+     * @return message
+     */
+    @Override
+    public String getJoinMessage() {
+        return null;
+    }
+
+    /**
+     * Sets the message being sent when a player joins a match.
+     *
+     * @param message message
+     */
+    @Override
+    public void setJoinMessage(String message) {
+
     }
 }

@@ -298,6 +298,27 @@ public final class CustomArmorstand extends EntityArmorStand implements Ball {
     }
 
     /**
+     * Bounces the ball back to it's previous location.
+     */
+    @Override
+    public void bounceBack() {
+        private void bumpBallBack() {
+            if (this.lastBallLocation != null) {
+                final Vector knockback = this.lastBallLocation.toVector().subtract(this.ball.getLocation().toVector());
+                this.ball.getLocation().setDirection(knockback);
+                this.ball.setVelocity(knockback);
+                final Vector direction = this.arena.getBallSpawnLocation().toVector().subtract(this.ball.getLocation().toVector());
+                this.ball.setVelocity(direction.multiply(0.1));
+                this.bumper = 40;
+                this.bumperCounter++;
+                if (this.bumperCounter == 5) {
+                    this.ball.teleport(this.arena.getBallSpawnLocation());
+                }
+            }
+        }
+    }
+
+    /**
      * Shoots the ball in the during vector direction with the default strength values.
      *
      * @param vector vector

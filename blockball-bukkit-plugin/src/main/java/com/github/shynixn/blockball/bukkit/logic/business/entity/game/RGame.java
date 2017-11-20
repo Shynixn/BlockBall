@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.enumeration.GameStatus;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.BoosItemMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CustomizingMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
@@ -15,15 +16,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Rabbit;
+import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -72,6 +68,7 @@ public abstract class RGame implements Game {
     private int ballSpawnCounter;
     private int bumper;
     private int bumperCounter;
+    public int ballCornerBumper;
 
     final TeamMeta redTeamMeta;
     final TeamMeta blueTeamMeta;
@@ -79,7 +76,11 @@ public abstract class RGame implements Game {
     final CustomizingMeta customizingMeta;
 
     private Location lastBallLocation;
-    private Player lastHit;
+    public Player lastHit;
+    public Team lastHitTeam;
+
+    private final Map<Item, BoosItemMeta> boostItemsLyingAround = new HashMap<>();
+    public Vector ballPreviousCacheLocation;
 
     public RGame(Arena arena) {
         this.arena = arena;
@@ -212,6 +213,16 @@ public abstract class RGame implements Game {
         return players;
     }
 
+    /**
+     * Returns all boost items lying on the ground.
+     *
+     * @return boostItems
+     */
+    @Override
+    public Map<Object, BoosItemMeta> getGroundItems() {
+        return Collections.unmodifiableMap(this.boostItemsLyingAround);
+    }
+
     @Override
     public final void close() throws Exception {
         for (final GamePlayer gamePlayer : this.gamePlayers) {
@@ -231,6 +242,41 @@ public abstract class RGame implements Game {
     @Override
     public final boolean hasJoined(Object player) {
         return this.getGamePlayerByPlayer((Player) player).isPresent();
+    }
+
+    /**
+     * Returns a value for the given place holder. Returns empty string if not found.
+     *
+     * @param type type
+     * @return value
+     */
+    @Override
+    public String getValueForPlaceHolder(PlaceHolderType type) {
+        switch (type) {
+            case BLUESCORE:
+                return String.valueOf(this.blueGoals);
+            case BLUEAMOUNT:
+                return String.valueOf(this.blueTeamPlayers.size());
+            case BLUECOLOR:
+                return this.blueTeamMeta.getPrefix();
+            case BLUENAME:
+                return this.blueTeamMeta.getDisplayName();
+            case REDSCORE:
+                return String.valueOf(this.redGoals);
+            case REDAMOUNT:
+                return String.valueOf(this.redTeamPlayers.size());
+            case REDCOLOR:
+                return this.redTeamMeta.getPrefix();
+            case REDNAME:
+                return this.redTeamMeta.getDisplayName();
+            case LASTHITPLAYERNAME: {
+                if (this.lastHit != null) {
+                    return this.lastHit.getName();
+                }
+            }
+            default:
+                return "";
+        }
     }
 
     final Optional<GamePlayer> getGamePlayerByPlayer(Player player) {

@@ -1,9 +1,13 @@
 package com.github.shynixn.blockball.api.business.entity;
 
+import com.github.shynixn.blockball.api.business.enumeration.GameStatus;
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolderType;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.BoosItemMeta;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface Game extends AutoCloseable, Runnable {
@@ -21,6 +25,13 @@ public interface Game extends AutoCloseable, Runnable {
      * @return ball
      */
     Optional<Ball> getBall();
+
+    /**
+     * Returns the status of a game.
+     *
+     * @return status
+     */
+    GameStatus getStatus();
 
     /**
      * Adds a player to the game returns false if he doesn't meet the required options.
@@ -62,9 +73,39 @@ public interface Game extends AutoCloseable, Runnable {
     Object[] getRedTeamPlayers();
 
     /**
+     * Returns the team by the given player. Returns null if player is not in this game.
+     *
+     * @param player player
+     * @return team
+     */
+    Team getTeamFromPlayer(Object player);
+
+    /**
      * Returns a list of players who are in this game.
      *
      * @return playerList
      */
     List<Object> getPlayers();
+
+    /**
+     * Returns all boost items lying on the ground.
+     *
+     * @return boostItems
+     */
+    Map<Object, BoosItemMeta> getGroundItems();
+
+    /**
+     * Removes the ground item.
+     *
+     * @param item item
+     */
+    void removeGroundItem(Object item);
+
+    /**
+     * Returns a value for the given place holder. Returns empty string if not found.
+     *
+     * @param type type
+     * @return value
+     */
+    String getValueForPlaceHolder(Object type);
 }

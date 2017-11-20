@@ -3,6 +3,8 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 import com.github.shynixn.blockball.api.business.enumeration.GameType;
 import com.github.shynixn.blockball.api.persistence.entity.*;
 import com.github.shynixn.blockball.api.persistence.entity.meta.MetaDataTransaction;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.BlockBallMetaCollection;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.area.SelectedArea;
 import com.github.shynixn.blockball.lib.YamlSerializer;
@@ -54,8 +56,19 @@ public class BlockBallArena extends SelectedArea<Arena> implements Arena {
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "ball-spawnpoint")
     private LocationBuilder ballSpawnLocation;
 
-    @YamlSerializer.YamlSerialize(orderNumber = 7, value = "meta")
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "ball-spawn-delay")
+    private int ballSpawnDelay;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 7, value = "ball-goal-particle")
+    private ParticleEffectMeta ballGoalParticle;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 8, value = "ball-goal-sound")
+    private SoundEffectMeta ballGoalSound;
+
+    @YamlSerializer.YamlSerialize(orderNumber = 11, value = "meta")
     private final BlockBallMetaCollection transaction = new BlockBallMetaCollection();
+
+
 
     /**
      * Default constructor
@@ -187,5 +200,35 @@ public class BlockBallArena extends SelectedArea<Arena> implements Arena {
         if (location != null) {
             this.ballSpawnLocation = new LocationBuilder((Location) location);
         }
+    }
+
+    /**
+     * Returns the ball spawn delay in seconds.
+     *
+     * @return delay
+     */
+    @Override
+    public int getBallSpawnDelay() {
+        return this.ballSpawnDelay;
+    }
+
+    /**
+     * Sets the ball spawn delay in seconds.
+     *
+     * @param delayInSeconds delay
+     */
+    @Override
+    public void setBallSpawnDelay(int delayInSeconds) {
+        this.ballSpawnDelay = delayInSeconds;
+    }
+
+    @Override
+    public ParticleEffectMeta getBallGoalParticle() {
+        return this.ballGoalParticle;
+    }
+
+    @Override
+    public SoundEffectMeta getBallGoalSound() {
+        return this.ballGoalSound;
     }
 }

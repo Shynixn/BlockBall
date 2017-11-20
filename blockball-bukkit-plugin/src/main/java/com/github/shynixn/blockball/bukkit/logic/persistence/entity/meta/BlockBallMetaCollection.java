@@ -2,15 +2,21 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta;
 
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordLobbyMeta;
+import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta;
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 import com.github.shynixn.blockball.api.persistence.entity.meta.MetaDataTransaction;
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CustomizingMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallProperties;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.HologramBuilder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.ScoreboardProperties;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.BungeeCordLobbyProperties;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.CustomizingProperties;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.RewardProperties;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.TeamProperties;
 import com.github.shynixn.blockball.lib.YamlSerializer;
@@ -60,14 +66,26 @@ public class BlockBallMetaCollection implements MetaDataTransaction {
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "holograms")
     private final List<HologramBuilder> holograms = new ArrayList<>();
 
-    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "scoreboard-meta")
-    private final ScoreboardProperties gameScoreboard = new ScoreboardProperties("title", new String[] {"easy"});
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "hubmeta")
+    private final HubLobbyMeta hubLobbyMeta = new HubLobbyProperties();
+
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "bungeecordlobby")
+    private final BungeeCordLobbyMeta bungeeCordLobbyMeta = new BungeeCordLobbyProperties();
+
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "customizing")
+    private final CustomizingMeta customizingMeta = new CustomizingProperties();
+
+    @YamlSerializer.YamlSerialize(orderNumber = 7, value = "scoreboard-meta")
+    private final ScoreboardProperties gameScoreboard = new ScoreboardProperties("title", new String[]{"easy"});
 
     public BlockBallMetaCollection() {
         this.metaCollection.put(BallMeta.class, this.ballProperties);
         this.metaCollection.put(TeamMeta[].class, new TeamMeta[]{this.redTeamProperties, this.blueTeamProperties});
         this.metaCollection.put(HologramMeta.class, this.holograms);
+        this.metaCollection.put(CustomizingMeta.class, customizingMeta);
         this.metaCollection.put(ScoreboardMeta.class, this.gameScoreboard);
+        this.metaCollection.put(HubLobbyMeta.class, this.hubLobbyMeta);
+        this.metaCollection.put(BungeeCordLobbyMeta.class, this.bungeeCordLobbyMeta);
     }
 
     /**

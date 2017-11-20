@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.BlockBallApi;
 import com.github.shynixn.blockball.api.bukkit.event.game.GameJoinEvent;
 import com.github.shynixn.blockball.api.bukkit.event.game.GameLeaveEvent;
 import com.github.shynixn.blockball.api.business.entity.Game;
+import com.github.shynixn.blockball.api.business.enumeration.GameStatus;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta;
@@ -54,7 +55,7 @@ import java.util.logging.Level;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class HubGame extends RGame {
+public class HubGame extends RGame implements com.github.shynixn.blockball.api.business.entity.HubGame {
 
     private final String[] hubGameSign;
 
@@ -64,6 +65,16 @@ public class HubGame extends RGame {
         super(arena);
         this.hubLobbyMeta = arena.getMeta().find(HubLobbyMeta.class).get();
         this.hubGameSign = Config.getInstance().getHubGameSign();
+    }
+
+    /**
+     * Returns the status of a game.
+     *
+     * @return status
+     */
+    @Override
+    public GameStatus getStatus() {
+        return null;
     }
 
     /**
@@ -133,6 +144,16 @@ public class HubGame extends RGame {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Removes the ground item.
+     *
+     * @param item item
+     */
+    @Override
+    public void removeGroundItem(Object item) {
+
     }
 
     /**
@@ -213,5 +234,22 @@ public class HubGame extends RGame {
         }
 
         player.sendMessage(Config.getInstance().getPrefix() + teamMeta.getJoinMessage());
+    }
+
+    /**
+     * Returns all positions of signs of the given team.
+     *
+     * @param team team
+     * @return signs
+     */
+    @Override
+    public IPosition getTeamSignPositions(Team team) {
+        if (team == null) {
+            throw new IllegalArgumentException("Team cannot be null!");
+        } else if (team == Team.BLUE) {
+            return this.hubLobbyMeta.getBlueTeamSignPositions();
+        } else {
+            return this.hubLobbyMeta.getRedTeamSignPositions();
+        }
     }
 }

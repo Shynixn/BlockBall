@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener;
 
 import com.github.shynixn.blockball.api.bukkit.event.ball.BallDeathEvent;
+import com.github.shynixn.blockball.api.bukkit.event.ball.BallHitWallEvent;
 import com.github.shynixn.blockball.api.business.entity.Ball;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
@@ -136,13 +137,30 @@ public class BallListener extends SimpleListener {
     /**
      * Gets called when a player tries to leah a ball and cancels all of it
      *
-     * @param event
+     * @param event event
      */
     @EventHandler
     public void entityLeashEvent(PlayerLeashEntityEvent event) {
         final Optional<Ball> optBall = this.manager.getBallController().findByBallByEntity(event.getEntity());
         if (optBall.isPresent()) {
             event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Lets the ball bounce back when he hits a wall.
+     *
+     * @param event event
+     */
+    @EventHandler
+    public void onBallHitWallEvent(BallHitWallEvent event) {
+        for (final Integer id : event.getBall().getMeta().getBounceMaterials().keySet()) {
+            if (event.getBlock() != null) {
+                if (event.getBlock().getType().getId() == id
+                        && event.getBlock().getData() == event.getBall().getMeta().getBounceMaterials().get(id)) {
+                    event.getBall().bounceBack();
+                }
+            }
         }
     }
 

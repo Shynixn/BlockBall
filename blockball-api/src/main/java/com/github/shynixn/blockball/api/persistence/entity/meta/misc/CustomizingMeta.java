@@ -1,7 +1,9 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.misc;
 
+import com.github.shynixn.blockball.api.persistence.entity.IPosition;
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -48,19 +50,6 @@ public interface CustomizingMeta extends Persistenceable<CustomizingMeta> {
      * @return enabled
      */
     boolean isAutoEmptyResetEnabled();
-    /**
-     * Returns the max amount the score can reach on the scoreboard.
-     *
-     * @return score
-     */
-    int getMaxScore();
-
-    /**
-     * Sets the max amount the score can reach on the scoreboard.
-     *
-     * @param amount amount
-     */
-    void setMaxScore(int amount);
 
     /**
      * Forces even teams on both sides. Red and blue team amount has to be the same to start.
@@ -119,20 +108,6 @@ public interface CustomizingMeta extends Persistenceable<CustomizingMeta> {
     boolean isFastJoiningEnabled();
 
     /**
-     * Returns the join message which gets played when a player joins a match.
-     *
-     * @return message
-     */
-    Optional<String> getJoinMessage();
-
-    /**
-     * Sets the join message which gets played when a player joins a match.
-     *
-     * @param message message
-     */
-    void setJoinMessage(String message);
-
-    /**
      * Returns the leave message which gets played when a player leaves a match.
      *
      * @return message
@@ -173,4 +148,6 @@ public interface CustomizingMeta extends Persistenceable<CustomizingMeta> {
      * @return message
      */
     Optional<String> getTeamFullMessage();
+
+    List<IPosition> getLeaveSigns();
 }

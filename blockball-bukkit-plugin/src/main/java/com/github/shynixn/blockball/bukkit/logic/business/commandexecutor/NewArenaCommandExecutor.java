@@ -144,6 +144,11 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                 .setColor(ChatColor.RED)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.getCommand() + " " + usedPage.getPreviousId())
                 .setHoverText("Opens the blockball arena configuration.")
+                .builder()
+                .component(">>Save and reload<<")
+                .setColor(ChatColor.BLUE)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.OPEN_RELOAD.getCommand())
+                .setHoverText("Opens the blockball arena configuration.")
                 .builder().sendMessage(player);
 
         player.sendMessage(FOOTER_STANDARD);

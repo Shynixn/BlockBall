@@ -59,7 +59,9 @@ public class OpenPage extends Page {
      */
     @Override
     public CommandResult execute(Player player, BlockBallCommand command, Object[] cache, String[] args) {
-        if (command == BlockBallCommand.OPEN_EDIT_ARENA) {
+        if (command == BlockBallCommand.OPEN_RELOAD) {
+            BlockBallApi.getDefaultGameController().reload();
+        } else if (command == BlockBallCommand.OPEN_EDIT_ARENA) {
             ChatBuilder builder = null;
             for (final Arena arena : BlockBallApi.getDefaultGameController().getArenaController().getAll()) {
                 if (builder == null) {

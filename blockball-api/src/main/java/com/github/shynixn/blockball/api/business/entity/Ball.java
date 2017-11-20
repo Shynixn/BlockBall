@@ -37,6 +37,11 @@ public interface Ball {
     void pass(Object entity);
 
     /**
+     * Bounces the ball back to it's previous location.
+     */
+    void bounceBack();
+
+    /**
      * Shoots the ball in the during vector direction.
      *
      * @param vector vector

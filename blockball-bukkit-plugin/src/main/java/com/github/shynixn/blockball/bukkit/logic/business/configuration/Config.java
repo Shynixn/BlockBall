@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.configuration;
 
+import com.github.shynixn.blockball.api.persistence.entity.IPosition;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -90,6 +92,29 @@ public class Config extends SimpleConfig {
         return new Vector(this.getData("player-launch-up-protection.x")
                 , this.getData("player-launch-up-protection.y")
                 , this.getData("player-launch-up-protection.z"));
+    }
+
+    /**
+     * Returns the rescue spawnpoint.
+     *
+     * @return spawnpoint
+     */
+    public IPosition getRescueJoinSpawnpoint() {
+        return new LocationBuilder(this.getData("join-spawnpoint.world")
+                , this.getData("join-spawnpoint.x")
+                , this.getData("join-spawnpoint.y")
+                , this.getData("join-spawnpoint.z")
+                , this.getData("join-spawnpoint.yaw")
+                , this.getData("join-spawnpoint.pitch"));
+    }
+
+    /**
+     * Returns if the rescue spawnpoint is enabled.
+     *
+     * @return enabled
+     */
+    public boolean isRescueJoinSpawnpointEnabled() {
+        return this.getData("join-spawnpoint.enabled");
     }
 
     /**

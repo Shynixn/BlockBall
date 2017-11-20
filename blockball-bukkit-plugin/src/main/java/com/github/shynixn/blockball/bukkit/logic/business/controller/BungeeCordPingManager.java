@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.controller;
 
+import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectController;
 import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController;
 import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus;
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
@@ -50,14 +51,18 @@ import java.util.logging.Level;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMessageListener {
+public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMessageListener, BungeeCordConnectController {
     private final BukkitTask task;
-    private Plugin plugin;
-    private BlockBallBungeeCordManager blockBallBungeeCordManager;
+    private final Plugin plugin;
     private final BungeeCordSignController signController;
 
     public BungeeCordPingManager(BungeeCordSignController signController, Plugin plugin) {
+        if(signController == null)
+            throw new IllegalArgumentException("Signcontroller cannot be null!");
+        if(plugin == null)
+            throw new IllegalArgumentException("Plugin cannot be nulL!");
         this.signController = signController;
+        this.plugin = plugin;
         this.task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, this, 0L, 10L);
         plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
         plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin, "BungeeCord", this);
@@ -85,16 +90,18 @@ public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMes
      * @param player     player
      * @param serverName serverName
      */
-    public void connectToServer(Player player, String serverName) {
+    @Override
+    public void connectToServer(Object player, String serverName) {
         final ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
         out.writeUTF(serverName);
-        player.sendPluginMessage(this.plugin, "BungeeCord", out.toByteArray());
+        ((Player)player).sendPluginMessage(this.plugin, "BungeeCord", out.toByteArray());
     }
 
     /**
      * Pings all servers which are present inside the signController.
      */
+    @Override
     public void pingServers() {
         final Player player = this.getFirstPlayer();
         if (player == null)

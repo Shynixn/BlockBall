@@ -37,10 +37,10 @@ import org.bukkit.Location;
  * SOFTWARE.
  */
 public class SelectedArea<T extends AreaSelection> extends PersistenceObject<T> implements AreaSelection<T> {
-    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "down-corner-location")
+    @YamlSerializer.YamlSerialize(orderNumber = 9, value = "down-corner-location")
     private LocationBuilder downCorner;
 
-    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "up-corner-location")
+    @YamlSerializer.YamlSerialize(orderNumber = 10, value = "up-corner-location")
     private LocationBuilder upCorner;
 
     /**

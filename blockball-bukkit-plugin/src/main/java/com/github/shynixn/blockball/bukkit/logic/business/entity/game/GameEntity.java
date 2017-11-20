@@ -290,27 +290,7 @@ public class GameEntity implements Game {
         return this.redTeam.toArray(new Player[this.redTeam.size()]);
     }
 
-    final String getPlaceHolder(PlaceHolderType type) {
-        if (type == PlaceHolderType.BLUESCORE)
-            return String.valueOf(this.blueGoals);
-        else if (type == PlaceHolderType.BLUEAMOUNT)
-            return String.valueOf(this.blueTeam.size());
-        else if (type == PlaceHolderType.BLUECOLOR)
-            return String.valueOf(this.arena.getTeamMeta().getBlueColor());
-        else if (type == PlaceHolderType.BLUENAME)
-            return String.valueOf(this.arena.getTeamMeta().getBlueTeamName());
-        else if (this.lastHit != null && type == PlaceHolderType.LASTHITPLAYERNAME)
-            return this.lastHit.getName();
-        else if (type == PlaceHolderType.REDSCORE)
-            return String.valueOf(this.redGoals);
-        else if (type == PlaceHolderType.REDAMOUNT)
-            return String.valueOf(this.redTeam.size());
-        else if (type == PlaceHolderType.REDCOLOR)
-            return String.valueOf(this.arena.getTeamMeta().getRedColor());
-        else if (type == PlaceHolderType.REDNAME)
-            return String.valueOf(this.arena.getTeamMeta().getRedTeamName());
-        return "";
-    }
+
 
     final LightHologram getHologram() {
         if (this.hologram == null && this.arena.getTeamMeta().isHologramEnabled() && this.arena.getTeamMeta().getHologramLocation() != null) {

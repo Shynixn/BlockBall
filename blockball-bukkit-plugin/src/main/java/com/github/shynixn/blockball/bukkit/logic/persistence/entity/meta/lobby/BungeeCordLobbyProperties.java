@@ -1,4 +1,10 @@
-package com.github.shynixn.blockball.api.business.controller;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby;
+
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordLobbyMeta;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
+import com.github.shynixn.blockball.lib.YamlSerializer;
+
+import java.util.Optional;
 
 /**
  * Created by Shynixn 2017.
@@ -27,18 +33,28 @@ package com.github.shynixn.blockball.api.business.controller;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BungeeCordConnectController {
+public class BungeeCordLobbyProperties extends PersistenceObject<BungeeCordLobbyMeta> implements BungeeCordLobbyMeta {
+
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "message.kick")
+    private String kickMessage = "Server is full!";
 
     /**
-     * Connects the given player to the given server.
+     * Returns the kick message when a player tries to join a full server.
      *
-     * @param player     player
-     * @param serverName serverName
+     * @return message
      */
-   void connectToServer(Object player, String serverName);
+    @Override
+    public Optional<String> getKickMessage() {
+        return Optional.ofNullable(kickMessage);
+    }
 
     /**
-     * Pings all servers which are present in the sub sign controller.
+     * Sets the kick message when a player tries to join a full server.
+     *
+     * @param message message
      */
-    void pingServers();
+    @Override
+    public void setKickMessage(String message) {
+        this.kickMessage = kickMessage;
+    }
 }

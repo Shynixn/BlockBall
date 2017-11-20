@@ -159,6 +159,7 @@ public final class ArenaRepository implements ArenaController {
                 BlockBallPlugin.logger().log(Level.WARNING, "Cannot read arena file " + s + '.', ex);
             }
         }
+        BlockBallPlugin.logger().log(Level.INFO, "Reloaded [" + arenas.size() + "] games.");
     }
 
     /**

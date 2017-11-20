@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.business.controller;
+package com.github.shynixn.blockball.api.persistence.entity.meta.misc;
 
 /**
  * Created by Shynixn 2017.
@@ -27,18 +27,11 @@ package com.github.shynixn.blockball.api.business.controller;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BungeeCordConnectController {
+public interface BoosItemMeta {
 
     /**
-     * Connects the given player to the given server.
-     *
-     * @param player     player
-     * @param serverName serverName
+     * Applies the boost effect to the given players.
+     * @param players players
      */
-   void connectToServer(Object player, String serverName);
-
-    /**
-     * Pings all servers which are present in the sub sign controller.
-     */
-    void pingServers();
+    void apply(Object... players);
 }

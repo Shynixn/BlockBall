@@ -2,11 +2,18 @@ package com.github.shynixn.blockball.bukkit.logic.business;
 
 import com.github.shynixn.blockball.api.business.controller.BallController;
 import com.github.shynixn.blockball.api.business.controller.GameController;
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.Factory;
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BlockBallReloadCommandExecutor;
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.NewArenaCommandExecutor;
+import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.logic.business.listener.BallListener;
+import com.github.shynixn.blockball.bukkit.logic.business.listener.StatsListener;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+
+import java.util.HashMap;
+import java.util.logging.Level;
 
 /**
  * Copyright 2017 Shynixn
@@ -57,6 +64,10 @@ public class BlockBallManager implements AutoCloseable {
         Factory.initialize(plugin);
 
         this.gameController.reload();
+
+        if (Config.getInstance().isStatsScoreboardEnabled()) {
+            new StatsListener(plugin);
+        }
     }
 
     /**
