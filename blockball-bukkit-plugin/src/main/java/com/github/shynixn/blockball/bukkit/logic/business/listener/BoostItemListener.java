@@ -6,8 +6,6 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffe
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.BoosItemMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.SoundBuilder;
-import com.github.shynixn.blockball.lib.SimpleListener;
-import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;

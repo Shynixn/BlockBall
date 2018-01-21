@@ -2,8 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
 
 import com.github.shynixn.blockball.api.BlockBallApi;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
-import com.github.shynixn.blockball.lib.ChatBuilder;
-import jdk.nashorn.internal.ir.Block;
+import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

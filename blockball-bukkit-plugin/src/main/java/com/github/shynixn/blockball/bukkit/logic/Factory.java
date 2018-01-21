@@ -10,7 +10,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.controller.GameReposit
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.PlayerDataRepository;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.StatsRepository;
-import com.github.shynixn.blockball.lib.ExtensionHikariConnectionContext;
+import com.github.shynixn.blockball.bukkit.logic.persistence.helper.ExtensionHikariConnectionContext;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;

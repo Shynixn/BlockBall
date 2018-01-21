@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity;
 
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
-import com.github.shynixn.blockball.lib.SimpleScoreboard;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 

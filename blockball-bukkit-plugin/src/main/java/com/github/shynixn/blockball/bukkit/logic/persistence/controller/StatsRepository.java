@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 import com.github.shynixn.blockball.api.persistence.controller.StatsController;
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.StatsData;
-import com.github.shynixn.blockball.lib.ExtensionHikariConnectionContext;
+import com.github.shynixn.blockball.bukkit.logic.persistence.helper.ExtensionHikariConnectionContext;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

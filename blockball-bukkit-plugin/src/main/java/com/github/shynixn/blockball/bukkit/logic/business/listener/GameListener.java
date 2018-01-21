@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener;
 
 import com.github.shynixn.blockball.api.bukkit.event.ball.BallInteractWithEntityEvent;
-import com.github.shynixn.blockball.api.bukkit.event.misc.PlaceHolderRequestEvent;
+import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent;
 import com.github.shynixn.blockball.api.business.controller.GameController;
 import com.github.shynixn.blockball.api.business.entity.Game;
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus;
@@ -13,8 +13,6 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.RGame;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder;
-import com.github.shynixn.blockball.lib.SimpleListener;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;

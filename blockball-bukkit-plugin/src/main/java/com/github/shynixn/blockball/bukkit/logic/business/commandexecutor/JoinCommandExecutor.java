@@ -2,10 +2,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
 import com.github.shynixn.blockball.api.business.controller.GameController;
 import com.github.shynixn.blockball.api.business.entity.Game;
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
-import com.github.shynixn.blockball.lib.MathUtils;
-import com.github.shynixn.blockball.lib.SimpleCommandExecutor;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;

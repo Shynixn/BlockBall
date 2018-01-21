@@ -1,9 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc;
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CustomizingMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
-import com.github.shynixn.blockball.lib.YamlSerializer;
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer;
 
 import java.util.Optional;
 

@@ -3,10 +3,9 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.ParticleEffectBuilder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.SoundBuilder;
-import com.github.shynixn.blockball.lib.YamlSerializer;
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer;
 
 /**
  * Created by Shynixn 2017.

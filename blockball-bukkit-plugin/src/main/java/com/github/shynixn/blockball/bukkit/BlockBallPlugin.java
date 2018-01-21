@@ -11,12 +11,11 @@ import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.metrics.Metrics;
 import com.github.shynixn.blockball.bukkit.nms.NMSRegistry;
 import com.github.shynixn.blockball.bukkit.nms.VersionSupport;
-import com.github.shynixn.blockball.lib.ReflectionUtils;
-import com.github.shynixn.blockball.lib.UpdateUtils;
+import com.github.shynixn.blockball.bukkit.logic.business.helper.ReflectionUtils;
+import com.github.shynixn.blockball.bukkit.logic.business.helper.UpdateUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

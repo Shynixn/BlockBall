@@ -9,8 +9,8 @@ import com.github.shynixn.blockball.bukkit.dependencies.vault.VaultConnection;
 import com.github.shynixn.blockball.bukkit.dependencies.worldguard.WorldGuardConnection5;
 import com.github.shynixn.blockball.bukkit.dependencies.worldguard.WorldGuardConnection6;
 import com.github.shynixn.blockball.lib.LightRegistry;
-import com.github.shynixn.blockball.lib.ReflectionUtils;
-import com.github.shynixn.blockball.lib.RegisterHelper;
+import com.github.shynixn.blockball.bukkit.logic.business.helper.ReflectionUtils;
+import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -42,19 +42,6 @@ public final class NMSRegistry {
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             BlockBallPlugin.logger().log(Level.WARNING, "Failed to create ball.", e);
             throw new RuntimeException(e);
-        }
-    }
-
-    public static void accessWorldGuardSpawn(Location location) {
-        if (RegisterHelper.isRegistered("WorldGuard")) {
-            try {
-                if (RegisterHelper.isRegistered("WorldGuard", '6'))
-                    WorldGuardConnection6.setSpawningAllowedAt(location);
-                else if (RegisterHelper.isRegistered("WorldGuard", '5'))
-                    WorldGuardConnection5.setSpawningAllowedAt(location);
-            } catch (final Exception e) {
-                Bukkit.getLogger().log(Level.WARNING, "Cannot access worldguard.", e);
-            }
         }
     }
 
@@ -96,7 +83,6 @@ public final class NMSRegistry {
 
     public static void registerAll() {
         try {
-            LightRegistry.RABBIT.register("com.github.shynixn.blockball.bukkit.nms.VERSION.CustomRabbit");
             RegisterHelper.PREFIX = BlockBallPlugin.PREFIX_CONSOLE;
             RegisterHelper.register("WorldGuard", "com.sk89q.worldguard.protection.ApplicableRegionSet", '5');
             RegisterHelper.register("WorldGuard", "com.sk89q.worldguard.protection.ApplicableRegionSet", '6');
@@ -108,9 +94,5 @@ public final class NMSRegistry {
         } catch (final Error ex) {
             Bukkit.getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.DARK_RED + "Failed to register the last dependency.");
         }
-    }
-
-    public static void unregisterAll() {
-        LightRegistry.unregister();
     }
 }

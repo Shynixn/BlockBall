@@ -5,7 +5,6 @@ import com.github.shynixn.blockball.api.bukkit.event.ball.BallHitWallEvent;
 import com.github.shynixn.blockball.api.business.entity.Ball;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
-import com.github.shynixn.blockball.lib.SimpleListener;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;

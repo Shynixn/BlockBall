@@ -3,12 +3,9 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
-import com.github.shynixn.blockball.bukkit.dependencies.worldedit.WorldEditConnection;
-import com.github.shynixn.blockball.lib.ChatBuilder;
+import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 /**
  * Created by Shynixn 2017.

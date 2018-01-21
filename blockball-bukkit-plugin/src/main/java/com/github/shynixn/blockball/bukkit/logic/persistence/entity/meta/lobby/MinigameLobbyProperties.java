@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby;
 import com.github.shynixn.blockball.api.persistence.entity.IPosition;
 import com.github.shynixn.blockball.api.persistence.entity.MinigameLobbyMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder;
-import com.github.shynixn.blockball.lib.YamlSerializer;
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer;
 import org.bukkit.Location;
 
 import java.util.ArrayList;

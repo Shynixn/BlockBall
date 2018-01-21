@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
-import com.github.shynixn.blockball.lib.SimpleCommandExecutor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;

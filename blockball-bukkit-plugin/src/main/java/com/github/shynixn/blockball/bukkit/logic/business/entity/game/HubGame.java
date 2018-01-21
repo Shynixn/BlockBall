@@ -1,20 +1,17 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game;
 
-import com.github.shynixn.blockball.api.BlockBallApi;
-import com.github.shynixn.blockball.api.bukkit.event.game.GameJoinEvent;
-import com.github.shynixn.blockball.api.bukkit.event.game.GameLeaveEvent;
-import com.github.shynixn.blockball.api.business.entity.Game;
+import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent;
+import com.github.shynixn.blockball.api.bukkit.event.GameLeaveEvent;
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta;
 import com.github.shynixn.blockball.api.persistence.entity.IPosition;
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CustomizingMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder;
-import com.github.shynixn.blockball.lib.ScreenUtils;
+import com.github.shynixn.blockball.bukkit.logic.business.helper.ScreenUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,11 +19,9 @@ import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 
 /**
  * Created by Shynixn 2017.

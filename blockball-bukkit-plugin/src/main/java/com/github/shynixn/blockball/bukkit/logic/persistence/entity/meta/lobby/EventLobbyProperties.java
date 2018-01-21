@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby;
 
 import com.github.shynixn.blockball.api.persistence.entity.EventMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
-import com.github.shynixn.blockball.lib.YamlSerializer;
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.dependencies.worldedit;
 
-import com.github.shynixn.blockball.lib.ReflectionUtils;
+import com.github.shynixn.blockball.bukkit.logic.business.helper.ReflectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

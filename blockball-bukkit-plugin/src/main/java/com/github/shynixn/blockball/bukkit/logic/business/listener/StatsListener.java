@@ -1,9 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener;
 
-import com.github.shynixn.blockball.api.bukkit.event.game.GameJoinEvent;
-import com.github.shynixn.blockball.api.bukkit.event.game.GameWinEvent;
-import com.github.shynixn.blockball.api.bukkit.event.game.GoalShootEvent;
-import com.github.shynixn.blockball.api.business.entity.Game;
+import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent;
+import com.github.shynixn.blockball.api.bukkit.event.GameWinEvent;
+import com.github.shynixn.blockball.api.bukkit.event.GoalShootEvent;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaController;
 import com.github.shynixn.blockball.api.persistence.controller.StatsController;
@@ -12,7 +11,6 @@ import com.github.shynixn.blockball.api.persistence.entity.Stats;
 import com.github.shynixn.blockball.bukkit.logic.Factory;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.StatsScoreboard;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.StatsData;
-import com.github.shynixn.blockball.lib.SimpleListener;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
