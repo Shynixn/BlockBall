@@ -5,11 +5,12 @@ import com.github.shynixn.blockball.api.business.controller.BungeeCordSignContro
 import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus;
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.BungeeCordServerStats;
+import com.github.shynixn.blockball.bukkit.logic.business.entity.bungeecord.BungeeCordServerStats;
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.BungeeCordSignRepository;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.google.inject.Inject;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -23,6 +24,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Shynixn 2017.
@@ -56,7 +58,11 @@ public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMes
     private final Plugin plugin;
     private final BungeeCordSignController signController;
 
-    public BungeeCordPingManager(BungeeCordSignController signController, Plugin plugin) {
+    @Inject
+    private Logger logger;
+
+    @Inject
+    public BungeeCordPingManager(BungeeCordSignRepository signController, Plugin plugin) {
         if(signController == null)
             throw new IllegalArgumentException("Signcontroller cannot be null!");
         if(plugin == null)
@@ -192,7 +198,7 @@ public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMes
                 }
             }
         } catch (final Exception e) {
-            BlockBallPlugin.logger().log(Level.WARNING, "Failed to reach server " + serverName + " (" + hostname + ':' + port + ").");
+            logger.log(Level.WARNING, "Failed to reach server " + serverName + " (" + hostname + ':' + port + ").");
         }
         return data;
     }

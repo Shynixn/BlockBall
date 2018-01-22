@@ -127,4 +127,9 @@ public class MinigameLobbyProperties extends HubLobbyProperties implements Minig
         }
         return Optional.of(((LocationBuilder) this.joinSpawnpoint).toLocation());
     }
+
+    @Override
+    public String getJoinMessage() {
+        return null;
+    }
 }

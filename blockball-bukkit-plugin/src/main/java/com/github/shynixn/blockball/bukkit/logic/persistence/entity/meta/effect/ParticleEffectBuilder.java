@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect;
 
+import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config;
 import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
@@ -604,7 +605,7 @@ public class ParticleEffectBuilder extends PersistenceObject<ParticleEffectMeta>
                 sendPacket(player, packet);
             }
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-            BlockBallPlugin.logger().log(Level.WARNING, "Failed to send packet.", e);
+            Config.INSTANCE.getLogger().log(Level.WARNING, "Failed to send packet.", e);
         }
     }
 

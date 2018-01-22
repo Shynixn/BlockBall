@@ -1,13 +1,13 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc;
 
+import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config;
 import com.github.shynixn.blockball.api.persistence.entity.AreaSelection;
 import com.github.shynixn.blockball.api.persistence.entity.IPosition;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.area.SelectedArea;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.area.SelectedArea;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -53,7 +53,6 @@ public class TeamProperties extends PersistenceObject<TeamMeta> implements TeamM
 
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "score.subtitle")
     private String scoreSubTitle;
-
 
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "win.title")
     private String winTitle;
@@ -324,8 +323,8 @@ public class TeamProperties extends PersistenceObject<TeamMeta> implements TeamM
                 try {
                     configuration.loadFromString(this.armor[i]);
                     itemStacks[i] = configuration.getItemStack("item");
-                } catch (InvalidConfigurationException e) {
-                    BlockBallPlugin.logger().log(Level.WARNING, "Failed to deserialize armor.", e);
+                } catch (final InvalidConfigurationException e) {
+                    Config.INSTANCE.getLogger().log(Level.WARNING, "Failed to deserialize armor.", e);
                 }
             }
         }

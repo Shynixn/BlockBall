@@ -4,7 +4,6 @@ import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaControl
 import com.github.shynixn.blockball.api.persistence.controller.StatsController;
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
-import com.github.shynixn.blockball.bukkit.logic.Factory;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.StatsData;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 public class StatsSQLiteControllerIT {
 
-    private static Plugin mockPlugin() {
+   /* private static Plugin mockPlugin() {
         final YamlConfiguration configuration = new YamlConfiguration();
         configuration.set("sql.enabled", false);
         configuration.set("sql.host", "localhost");
@@ -128,5 +127,5 @@ public class StatsSQLiteControllerIT {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.WARNING, "Failed to run test.", e);
             Assertions.fail(e);
         }
-    }
+    }*/
 }

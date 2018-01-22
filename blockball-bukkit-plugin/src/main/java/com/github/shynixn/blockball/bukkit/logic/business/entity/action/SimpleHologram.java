@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.entity;
+package com.github.shynixn.blockball.bukkit.logic.business.entity.action;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

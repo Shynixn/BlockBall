@@ -1,31 +1,5 @@
 package com.github.shynixn.blockball.logic.persistence.controller;
 
-import com.github.shynixn.blockball.api.business.enumeration.GameType;
-import com.github.shynixn.blockball.api.business.enumeration.Team;
-import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
-import com.github.shynixn.blockball.api.persistence.entity.AreaSelection;
-import com.github.shynixn.blockball.api.persistence.entity.Arena;
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.bukkit.logic.Factory;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.plugin.Plugin;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.logging.Logger;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 /**
  * Created by Shynixn 2017.
  * <p>

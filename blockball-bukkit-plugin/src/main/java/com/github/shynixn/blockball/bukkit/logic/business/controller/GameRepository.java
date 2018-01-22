@@ -5,9 +5,9 @@ import com.github.shynixn.blockball.api.business.entity.Game;
 import com.github.shynixn.blockball.api.business.enumeration.GameType;
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.HubGame;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
+import com.google.inject.Inject;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Shynixn 2017.
@@ -48,17 +49,21 @@ public class GameRepository implements GameController, Runnable {
     private final List<Game> games = new ArrayList<>();
     private final BukkitTask task;
 
+    @Inject
+    private Logger logger;
+
     /**
      * Initializes a new game repository.
      *
      * @param arenaController controller
      */
-    public GameRepository(ArenaController arenaController) {
+    @Inject
+    public GameRepository(ArenaRepository arenaController) {
         super();
         this.arenaController = arenaController;
-        this.task = ((ArenaRepository) arenaController).getPlugin().getServer()
+        this.task = arenaController.getPlugin().getServer()
                 .getScheduler()
-                .runTaskTimer(((ArenaRepository) arenaController).getPlugin(), this, 0L, 1L);
+                .runTaskTimer(arenaController.getPlugin(), this, 0L, 1L);
     }
 
     /**
@@ -116,7 +121,7 @@ public class GameRepository implements GameController, Runnable {
             try {
                 game.close();
             } catch (final Exception e) {
-                BlockBallPlugin.logger().log(Level.WARNING, "Failed to dispose game.", e);
+                logger.log(Level.WARNING, "Failed to dispose game.", e);
             }
         }
         this.games.clear();

@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener;
 
-import com.github.shynixn.blockball.api.bukkit.event.ball.BallInteractWithEntityEvent;
+import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent;
 import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent;
 import com.github.shynixn.blockball.api.business.controller.GameController;
 import com.github.shynixn.blockball.api.business.entity.Game;
@@ -291,12 +291,12 @@ public class GameListener extends SimpleListener {
      * @param event event
      */
     @EventHandler
-    public void ballInteractEvent(BallInteractWithEntityEvent event) {
+    public void ballInteractEvent(BallInteractEvent event) {
         final Optional<Game> optGame = this.gameController.getGameFromPlayer(event.getEntity());
         if (!optGame.isPresent())
             return;
         final RGame entity = (RGame) optGame.get();
-        final Location ballLocation = (Location) event.getBall().getLocation();
+        final Location ballLocation = null;
 
         if (entity.ballPreviousCacheLocation != null && entity.ballPreviousCacheLocation.distance(ballLocation.toVector()) < 2) {
             entity.ballCornerBumper++;
@@ -311,7 +311,7 @@ public class GameListener extends SimpleListener {
                 x = -1;
             if (direction.getZ() < 0)
                 z = -1;
-            event.getBall().teleport(new Location(ballLocation.getWorld(), ballLocation.getX() + x, ballLocation.getY(), ballLocation.getZ() + z));
+          //  event.getBall().teleport(new Location(ballLocation.getWorld(), ballLocation.getX() + x, ballLocation.getY(), ballLocation.getZ() + z));
             entity.ballCornerBumper = 0;
         }
         entity.ballPreviousCacheLocation = ballLocation.toVector();

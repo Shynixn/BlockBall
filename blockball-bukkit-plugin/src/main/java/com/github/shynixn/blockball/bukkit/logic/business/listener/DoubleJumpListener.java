@@ -4,6 +4,8 @@ import com.github.shynixn.blockball.api.business.controller.GameController;
 import com.github.shynixn.blockball.api.business.entity.Game;
 import com.github.shynixn.blockball.api.persistence.entity.meta.gadget.DoubleJumpMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
+import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository;
+import com.google.inject.Inject;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +15,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Optional;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Shynixn 2017.
@@ -45,16 +48,17 @@ public class DoubleJumpListener extends SimpleListener {
 
     private GameController gameController;
 
+    @Inject
+    private Logger logger;
+
     /**
      * Initializes a new listener by plugin.
      *
      * @param plugin plugin
      */
-    public DoubleJumpListener(Plugin plugin, GameController gameController) {
+    @Inject
+    public DoubleJumpListener(Plugin plugin, GameRepository gameController) {
         super(plugin);
-        if (gameController == null) {
-            throw new IllegalArgumentException("Gamecontroller cannot be null!");
-        }
         this.gameController = gameController;
     }
 
@@ -98,7 +102,7 @@ public class DoubleJumpListener extends SimpleListener {
                     doubleJumpMeta.getSoundEffect().applyToLocation(player.getLocation());
                     doubleJumpMeta.getParticleEffect().apply(player.getLocation());
                 } catch (final Exception e) {
-                    BlockBallPlugin.logger().log(Level.WARNING, "Invalid 1.8/1.9 sound. [DoubleJumpSound]", e);
+                    logger.log(Level.WARNING, "Invalid 1.8/1.9 sound. [DoubleJumpSound]", e);
                 }
             }
         }

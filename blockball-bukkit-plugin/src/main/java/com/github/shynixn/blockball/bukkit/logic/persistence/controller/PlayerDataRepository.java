@@ -3,7 +3,8 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaController;
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.PlayerData;
-import com.github.shynixn.blockball.bukkit.logic.persistence.helper.ExtensionHikariConnectionContext;
+import com.github.shynixn.blockball.bukkit.logic.business.service.ConnectionContextService;
+import com.google.inject.Inject;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -19,9 +20,10 @@ import java.util.logging.Level;
 
 public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> implements PlayerMetaController {
 
-    private ExtensionHikariConnectionContext dbContext;
+    private ConnectionContextService dbContext;
 
-    public PlayerDataRepository(ExtensionHikariConnectionContext connectionContext) {
+    @Inject
+    public PlayerDataRepository(ConnectionContextService connectionContext) {
         super();
         this.dbContext = connectionContext;
     }

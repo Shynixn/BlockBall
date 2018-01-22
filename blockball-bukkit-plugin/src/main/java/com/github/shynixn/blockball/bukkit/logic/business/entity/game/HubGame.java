@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity.game;
 
 import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent;
 import com.github.shynixn.blockball.api.bukkit.event.GameLeaveEvent;
+import com.github.shynixn.blockball.api.business.entity.BlockBallPlayer;
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
@@ -62,6 +63,11 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
         this.hubGameSign = Config.getInstance().getHubGameSign();
     }
 
+    @Override
+    public Optional<BlockBallPlayer> getBlockBallPlayerFromPlayer(Object player) {
+        return null;
+    }
+
     /**
      * Returns the status of a game.
      *
@@ -120,7 +126,7 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
      */
     @Override
     public boolean leave(Object player) {
-        final Optional<GamePlayer> optPlayer = this.getGamePlayerByPlayer((Player) player);
+     /*   final Optional<GamePlayer> optPlayer = this.getGamePlayerByPlayer((Player) player);
         if (optPlayer.isPresent()) {
             final GamePlayer gamePlayer = optPlayer.get();
             if (gamePlayer.team == Team.BLUE) {
@@ -137,8 +143,19 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
             final GameLeaveEvent gameLeaveEvent = new GameLeaveEvent(this, (Player) player);
             Bukkit.getPluginManager().callEvent(gameLeaveEvent);
             return true;
-        }
+        }*/
         return false;
+    }
+
+    /**
+     * Returns the team by the given player. Returns null if player is not in this game.
+     *
+     * @param player player
+     * @return team
+     */
+    @Override
+    public Team getTeamFromPlayer(Object player) {
+        return null;
     }
 
     /**
@@ -149,6 +166,17 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
     @Override
     public void removeGroundItem(Object item) {
 
+    }
+
+    /**
+     * Returns a value for the given place holder. Returns empty string if not found.
+     *
+     * @param type type
+     * @return value
+     */
+    @Override
+    public String getValueForPlaceHolder(Object type) {
+        return null;
     }
 
     /**
@@ -179,7 +207,7 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
             this.arena.getBallGoalParticle().apply(this.ball.getLocation());
             this.arena.getBallGoalSound().applyToLocation(this.ball.getLocation());
         } catch (final Exception e) {
-            Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BallGoalSound]");
+            Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.Companion.getPREFIX_CONSOLE() + ChatColor.RED + "Invalid 1.8/1.9 sound. [BallGoalSound]");
         }
         ScreenUtils.setTitle(this.replaceMessagePlaceholders(teamMeta.getScoreMessageTitle().get())
                 , teamMeta.getScoreMessageSubtitle().get()
@@ -214,10 +242,10 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
     }
 
     private void preparePlayerForGame(Player player, Team team, TeamMeta teamMeta) {
-        final GamePlayer gamePlayer = new GamePlayer(player);
+      /*  final GamePlayer gamePlayer = new GamePlayer(player);
         this.gamePlayers.add(gamePlayer);
         gamePlayer.storeForHubGame();
-        gamePlayer.team = team;
+        gamePlayer.team = team;*/
 
         player.setWalkSpeed(teamMeta.getWalkingSpeed());
         player.getInventory().setArmorContents((ItemStack[]) teamMeta.getArmorContents());
@@ -237,7 +265,7 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
      * @param team team
      * @return signs
      */
-    @Override
+   /* @Override
     public IPosition getTeamSignPositions(Team team) {
         if (team == null) {
             throw new IllegalArgumentException("Team cannot be null!");
@@ -246,5 +274,5 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
         } else {
             return this.hubLobbyMeta.getRedTeamSignPositions();
         }
-    }
+    }*/
 }

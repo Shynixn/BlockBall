@@ -2,9 +2,10 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
-import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.*;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
+import com.google.inject.Inject;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -43,20 +44,21 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
     private static final String HEADER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                          BlockBall                         ";
     private static final String FOOTER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           ┌1/1┐                            ";
 
-    private final BlockBallManager blockBallManager;
     private final Map<Player, Object[]> cache = new HashMap<>();
 
     private final List<Page> pages = new ArrayList<>();
+
+    @Inject
+    private ArenaRepository arenaController;
 
     /**
      * Initializes a new commandExecutor by command, plugin.
      *
      * @param plugin plugin
      */
-    public NewArenaCommandExecutor(BlockBallManager blockBallManager, Plugin plugin) {
+    @Inject
+    public NewArenaCommandExecutor(Plugin plugin) {
         super("blockball", (JavaPlugin) plugin);
-        this.blockBallManager = blockBallManager;
-
         this.pages.add(new OpenPage());
         this.pages.add(new MainConfigurationPage());
     }
@@ -262,7 +264,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
     }
 
     private Optional<Arena> getArena(String id) {
-        return this.blockBallManager.getGameController().getArenaController().getById(id);
+        return arenaController.getById(id);
     }
 
     private void sendMessage(Player player, ChatBuilder builder) {

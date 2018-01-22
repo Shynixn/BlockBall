@@ -103,7 +103,7 @@ public class SelectedArea<T extends AreaSelection> extends PersistenceObject<T> 
      */
     @Override
     public Location getCenter() {
-        if (downCorner == null)
+        if (this.downCorner == null)
             return null;
         return new Location(Bukkit.getWorld(this.downCorner.getWorldName()), this.downCorner.getBlockX()
                 + this.getOffsetX() / 2, this.downCorner.getBlockY()

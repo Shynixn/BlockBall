@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.entity;
+package com.github.shynixn.blockball.bukkit.logic.business.entity.bungeecord;
 
 import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus;
 import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState;

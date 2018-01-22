@@ -4,6 +4,8 @@ import com.github.shynixn.blockball.api.business.controller.BungeeCordSignContro
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BungeeCordSignData;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Shynixn 2017.
@@ -45,19 +48,15 @@ import java.util.logging.Level;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+@Singleton
 public class BungeeCordSignRepository implements BungeeCordSignController {
     private final List<BungeeCordSign> signs = new ArrayList<>();
-    private final Plugin plugin;
 
-    /**
-     * Initializes a new repository for signs.
-     *
-     * @param plugin plugin
-     */
-    public BungeeCordSignRepository(Plugin plugin) {
-        super();
-        this.plugin = plugin;
-    }
+    @Inject
+    private Plugin plugin;
+
+    @Inject
+    private Logger logger;
 
     /**
      * Creates a new bungeecord sign from the given server and location.
@@ -177,7 +176,7 @@ public class BungeeCordSignRepository implements BungeeCordSignController {
             final File file = new File(this.plugin.getDataFolder(), "bungeecord_signs.yml");
             if (!file.exists()) {
                 if (!file.createNewFile()) {
-                    BlockBallPlugin.logger().log(Level.WARNING, "File cannot get created.");
+                    logger.log(Level.WARNING, "File cannot get created.");
                 }
             }
             configuration.load(file);
@@ -188,7 +187,7 @@ public class BungeeCordSignRepository implements BungeeCordSignController {
                 }
             }
         } catch (IOException | InvalidConfigurationException e) {
-            BlockBallPlugin.logger().log(Level.WARNING, "Save load location.", e);
+           logger.log(Level.WARNING, "Save load location.", e);
         }
     }
 }

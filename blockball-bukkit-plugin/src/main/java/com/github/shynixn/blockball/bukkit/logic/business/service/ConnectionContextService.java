@@ -1,14 +1,23 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.helper;
+package com.github.shynixn.blockball.bukkit.logic.business.service;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.io.IOUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Copyright 2017 Shynixn
@@ -39,22 +48,88 @@ import java.util.logging.Logger;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class ExtensionHikariConnectionContext implements AutoCloseable {
+@Singleton
+public class ConnectionContextService implements AutoCloseable {
     public static final String SQLITE_DRIVER = "org.sqlite.JDBC";
     public static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
     private HikariDataSource ds;
-    private final SQlRetriever retriever;
+    private SQlRetriever retriever;
     private Map<String, String> cache = new HashMap<>();
 
-    /**
-     * Initializes a new databaseConnectionContext for the given url, userName and password
-     *
-     * @param url      url
-     * @param userName userName
-     * @param password password
-     */
-    private ExtensionHikariConnectionContext(String driver, String url, String userName, String password, SQlRetriever retriever) {
-        super();
+    @Inject
+    public ConnectionContextService(Plugin plugin) {
+        if (plugin == null)
+            throw new IllegalArgumentException("Plugin cannot be null!");
+        this.retriever = fileName -> {
+            try (InputStream stream = plugin.getResource("sql/" + fileName + ".sql")) {
+                return IOUtils.toString(stream, "UTF-8");
+            } catch (final IOException e) {
+                Bukkit.getLogger().log(Level.WARNING, "Cannot read file.", fileName);
+                throw new RuntimeException(e);
+            }
+        };
+        this.connectInternal(plugin);
+    }
+
+    private void connectInternal(Plugin plugin) {
+        if (!plugin.getConfig().getBoolean("sql.enabled")) {
+            try {
+                if (!plugin.getDataFolder().exists())
+                    plugin.getDataFolder().mkdir();
+                final File file = new File(plugin.getDataFolder(), "BlockBall.db");
+                if (!file.exists())
+                    file.createNewFile();
+                this.enableData(ConnectionContextService.SQLITE_DRIVER, "jdbc:sqlite:" + file.getAbsolutePath(), null, null, this.retriever);
+                try (Connection connection = this.getConnection()) {
+                    this.execute("PRAGMA foreign_keys=ON", connection);
+                }
+            } catch (final SQLException e) {
+                Bukkit.getLogger().log(Level.WARNING, "Cannot execute statement.", e);
+            } catch (final IOException e) {
+                Bukkit.getLogger().log(Level.WARNING, "Cannot read file.", e);
+            }
+            try (Connection connection = this.getConnection()) {
+                for (final String data : this.getStringFromFile("create-sqlite").split(Pattern.quote(";"))) {
+                    this.executeUpdate(data, connection);
+                }
+            } catch (final Exception e) {
+                Bukkit.getLogger().log(Level.WARNING, "Cannot execute creation.", e);
+            }
+        } else {
+            final FileConfiguration c = plugin.getConfig();
+            try {
+                this.enableData(ConnectionContextService.MYSQL_DRIVER, "jdbc:mysql://"
+                        , c.getString("sql.host")
+                        , c.getInt("sql.port")
+                        , c.getString("sql.database")
+                        , c.getString("sql.username")
+                        , c.getString("sql.password")
+                        , this.retriever);
+            } catch (final IOException e) {
+                Bukkit.getLogger().log(Level.WARNING, "Cannot connect to MySQL database!", e);
+                Bukkit.getLogger().log(Level.WARNING, "Trying to connect to SQLite database....", e);
+                plugin.getConfig().set("sql.enabled", false);
+                this.connectInternal(plugin);
+                return;
+            }
+            try (Connection connection = this.getConnection()) {
+                for (final String data : this.getStringFromFile("create-mysql").split(Pattern.quote(";"))) {
+                    this.executeUpdate(data, connection);
+                }
+            } catch (final Exception e) {
+                Bukkit.getLogger().log(Level.WARNING, "Cannot execute creation.", e);
+                Bukkit.getLogger().log(Level.WARNING, "Trying to connect to SQLite database....", e);
+                plugin.getConfig().set("sql.enabled", false);
+                this.connectInternal(plugin);
+            }
+        }
+    }
+
+    private void enableData(String driver, String urlPrefix, String ip, int port, String database, String userName, String password, SQlRetriever retriever) throws IOException {
+        this.enableData(driver, urlPrefix + ip + ':' + port + '/' + database, userName, password, retriever);
+    }
+
+    private void enableData(String driver, String url, String userName, String password, SQlRetriever retriever) throws IOException {
         this.retriever = retriever;
         final HikariConfig config = new HikariConfig();
         config.setDriverClassName(driver);
@@ -270,80 +345,13 @@ public class ExtensionHikariConnectionContext implements AutoCloseable {
      * @param statementName statementName
      * @return sqlStatement
      */
-    public String getStringFromFile(String statementName) {
+    private String getStringFromFile(String statementName) {
         if (statementName == null)
             throw new IllegalArgumentException("Statement cannot be null!");
         if (!this.cache.containsKey(statementName)) {
             this.cache.put(statementName, this.retriever.loadSqlStatement(statementName));
         }
         return this.cache.get(statementName);
-    }
-
-    /**
-     * Opens a new DatabaseContext for the given url
-     *
-     * @param driver    driver
-     * @param url       url
-     * @param retriever retriever
-     * @return DbConnectionContext
-     * @throws IOException exception
-     */
-    public static ExtensionHikariConnectionContext from(String driver, String url, SQlRetriever retriever) throws IOException {
-        if (driver == null)
-            throw new IllegalArgumentException("Driver cannot be null!");
-        if (url == null)
-            throw new IllegalArgumentException("Database cannot be null!");
-        if (retriever == null)
-            throw new IllegalArgumentException("Retriever cannot be null!");
-        try {
-            Class.forName(driver);
-            return new ExtensionHikariConnectionContext(driver, url, null, null, retriever);
-        } catch (final ClassNotFoundException ex) {
-            Logger.getLogger(ExtensionHikariConnectionContext.class.getSimpleName()).log(Level.WARNING, "JDBC Driver not found!");
-            throw new IOException(ex);
-        } catch (final Exception ex) {
-            Logger.getLogger(ExtensionHikariConnectionContext.class.getSimpleName()).log(Level.WARNING, "Cannot connect to database!");
-            throw new IOException(ex);
-        }
-    }
-
-    /**
-     * Opens a new DatabaseContext for the given ip, port, database, username and password
-     *
-     * @param driver    driver
-     * @param ip        ip
-     * @param port      port
-     * @param urlPrefix prefix
-     * @param database  database
-     * @param userName  userName
-     * @param password  password
-     * @param retriever retriever
-     * @return DbConnectionContext
-     * @throws IOException exception
-     */
-    public static ExtensionHikariConnectionContext from(String driver, String urlPrefix, String ip, int port, String database, String userName, String password, SQlRetriever retriever) throws IOException {
-        if (driver == null)
-            throw new IllegalArgumentException("Driver cannot be null!");
-        if (ip == null)
-            throw new IllegalArgumentException("Ip cannot be null!");
-        if (database == null)
-            throw new IllegalArgumentException("Database cannot be null!");
-        if (userName == null)
-            throw new IllegalArgumentException("Username cannot be null!");
-        if (password == null)
-            throw new IllegalArgumentException("Password cannot be null!");
-        if (retriever == null)
-            throw new IllegalArgumentException("Retriever cannot be null!");
-        try {
-            Class.forName(driver);
-            return new ExtensionHikariConnectionContext(driver, urlPrefix + ip + ':' + port + '/' + database, userName, password, retriever);
-        } catch (final ClassNotFoundException ex) {
-            Logger.getLogger(ExtensionHikariConnectionContext.class.getSimpleName()).log(Level.WARNING, "JDBC Driver not found!");
-            throw new IOException(ex);
-        } catch (final Exception ex) {
-            Logger.getLogger(ExtensionHikariConnectionContext.class.getSimpleName()).log(Level.WARNING, "Cannot connect to database!");
-            throw new IOException(ex);
-        }
     }
 
     @FunctionalInterface

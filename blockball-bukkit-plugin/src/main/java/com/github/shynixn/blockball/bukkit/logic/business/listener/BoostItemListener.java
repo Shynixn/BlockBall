@@ -5,7 +5,9 @@ import com.github.shynixn.blockball.api.business.entity.Game;
 import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.BoosItemMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
+import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.SoundBuilder;
+import com.google.inject.Inject;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -14,6 +16,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Shynixn 2017.
@@ -47,12 +50,16 @@ public class BoostItemListener extends SimpleListener {
     private static final SoundEffectMeta itemPickUpSound = new SoundBuilder("NOTE_PLING", 2.0, 2.0);
     private GameController gameController;
 
+    @Inject
+    private Logger logger;
+
     /**
      * Initializes a new listener by plugin
      *
      * @param plugin plugin
      */
-    public BoostItemListener(Plugin plugin, GameController gameController) {
+    @Inject
+    public BoostItemListener(Plugin plugin, GameRepository gameController) {
         super(plugin);
         if (gameController == null) {
             throw new IllegalArgumentException("Gamecontroller cannot be null!");
@@ -75,7 +82,7 @@ public class BoostItemListener extends SimpleListener {
                     try {
                         itemPickUpSound.applyToPlayers(event.getPlayer());
                     } catch (final Exception e) {
-                        BlockBallPlugin.logger().log(Level.WARNING, "Failed to play sound.", e);
+                        logger.log(Level.WARNING, "Failed to play sound.", e);
                     }
                     final BoosItemMeta boosItemMeta = groundItems.get(item);
                     boosItemMeta.apply(event.getPlayer());

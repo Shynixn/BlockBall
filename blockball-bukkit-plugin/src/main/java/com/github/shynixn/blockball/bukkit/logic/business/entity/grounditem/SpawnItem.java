@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.entity;
+package com.github.shynixn.blockball.bukkit.logic.business.entity.grounditem;
 
 /*
 import com.github.shynixn.blockball.api.entities.items.Spawnrate;

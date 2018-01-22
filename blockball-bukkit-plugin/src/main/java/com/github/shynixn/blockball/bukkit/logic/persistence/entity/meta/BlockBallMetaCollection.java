@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta;
 
+import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.BallData;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordLobbyMeta;
@@ -9,7 +10,6 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.display.Hologram
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CustomizingMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallProperties;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.HologramBuilder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.ScoreboardProperties;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.BungeeCordLobbyProperties;
@@ -52,7 +52,7 @@ public class BlockBallMetaCollection implements MetaDataTransaction {
     private final Map<Class<?>, Object> metaCollection = new HashMap<>();
 
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "ball-meta")
-    private final BallProperties ballProperties = new BallProperties();
+    private final BallData ballProperties = new BallData("Shynixn");
 
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "red-team-meta")
     private final TeamProperties redTeamProperties = new TeamProperties();

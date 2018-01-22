@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
+package com.github.shynixn.blockball.api.business.entity;
 
 /**
  * Created by Shynixn 2018.
@@ -27,5 +27,5 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class s {
+public interface BlockBallPlayer {
 }

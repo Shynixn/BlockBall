@@ -8,9 +8,11 @@ import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaControl
 import com.github.shynixn.blockball.api.persistence.controller.StatsController;
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
-import com.github.shynixn.blockball.bukkit.logic.Factory;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.StatsScoreboard;
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.StatsScoreboard;
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.PlayerDataRepository;
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.StatsRepository;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.StatsData;
+import com.google.inject.Inject;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -61,10 +63,11 @@ public class StatsListener extends SimpleListener implements Runnable {
      *
      * @param plugin plugin
      */
-    public StatsListener(Plugin plugin) {
+    @Inject
+    public StatsListener(Plugin plugin, StatsRepository statsController, PlayerDataRepository playerDataRepository) {
         super(plugin);
-        this.statsController = Factory.createStatsController();
-        this.playerMetaController = Factory.createPlayerDataController();
+        this.statsController = statsController;
+        this.playerMetaController = playerDataRepository;
         this.setStatsForAllOnlinePlayers();
         this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(this.plugin, this, 0, 20L * 60);
     }
@@ -114,6 +117,7 @@ public class StatsListener extends SimpleListener implements Runnable {
 
     /**
      * Updates the goals of a player when he shoots a goal.
+     *
      * @param event event
      */
     @EventHandler

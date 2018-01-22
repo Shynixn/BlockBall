@@ -60,7 +60,6 @@
     <modules>
         <module>blockball-api</module>
         <module>blockball-bukkit-api</module>
-        <module>blockball-bukkit-lib</module>
         <module>blockball-bukkit-plugin</module>
     </modules>
 

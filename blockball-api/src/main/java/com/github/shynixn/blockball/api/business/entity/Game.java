@@ -25,6 +25,8 @@ public interface Game extends AutoCloseable, Runnable {
      */
     Optional<Ball> getBall();
 
+    Optional<BlockBallPlayer> getBlockBallPlayerFromPlayer(Object player);
+
     /**
      * Returns the status of a game.
      *

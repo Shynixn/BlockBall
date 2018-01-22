@@ -2,9 +2,10 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,20 +16,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
+@Singleton
 public final class ArenaRepository implements ArenaController {
     private final List<Arena> arenas = new ArrayList<>();
+
+    @Inject
     private Plugin plugin;
 
-    /**
-     * Initializes a new arena Repository
-     *
-     * @param plugin plugin
-     */
-    public ArenaRepository(Plugin plugin) {
-        super();
-        this.plugin = plugin;
-    }
+    @Inject
+    private Logger logger;
 
     /**
      * Creates a new arena with a unique id of this instance
@@ -93,7 +91,7 @@ public final class ArenaRepository implements ArenaController {
                     }
                     configuration.save(file);
                 } catch (IOException | InvalidConfigurationException ex) {
-                    BlockBallPlugin.logger().log(Level.WARNING, "Cannot save arena.", ex);
+                    logger.log(Level.WARNING, "Cannot save arena.", ex);
                 }
             }
         }
@@ -113,7 +111,7 @@ public final class ArenaRepository implements ArenaController {
                     throw new IllegalStateException("Cannot delete file!");
             }
         } catch (final Exception ex) {
-            BlockBallPlugin.logger().log(Level.WARNING, "Cannot delete arena file.", ex);
+            logger.log(Level.WARNING, "Cannot delete arena file.", ex);
         }
         this.reload();
     }
@@ -156,10 +154,10 @@ public final class ArenaRepository implements ArenaController {
                     this.arenas.add(arenaEntity);
                 }
             } catch (final Exception ex) {
-                BlockBallPlugin.logger().log(Level.WARNING, "Cannot read arena file " + s + '.', ex);
+                logger.log(Level.WARNING, "Cannot read arena file " + s + '.', ex);
             }
         }
-        BlockBallPlugin.logger().log(Level.INFO, "Reloaded [" + arenas.size() + "] games.");
+        logger.log(Level.INFO, "Reloaded [" + arenas.size() + "] games.");
     }
 
     /**

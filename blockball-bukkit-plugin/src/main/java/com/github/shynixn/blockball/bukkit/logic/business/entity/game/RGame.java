@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity.game;
 
 import com.github.shynixn.blockball.api.BlockBallApi;
 import com.github.shynixn.blockball.api.business.entity.Ball;
+import com.github.shynixn.blockball.api.business.entity.BlockBallPlayer;
 import com.github.shynixn.blockball.api.business.entity.Game;
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
@@ -12,6 +13,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.misc.Customizing
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.entity.container.PlayerStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -51,7 +53,7 @@ import java.util.logging.Level;
  */
 public abstract class RGame implements Game {
 
-    final List<GamePlayer> gamePlayers = new ArrayList<>();
+    final List<PlayerStorage> gamePlayers = new ArrayList<>();
     final List<Player> redTeamPlayers = new ArrayList<>();
     final List<Player> blueTeamPlayers = new ArrayList<>();
 
@@ -82,6 +84,11 @@ public abstract class RGame implements Game {
     private final Map<Item, BoosItemMeta> boostItemsLyingAround = new HashMap<>();
     public Vector ballPreviousCacheLocation;
 
+    private Map<Player, PlayerStorage> playerStorage = new HashMap<>();
+
+
+
+
     public RGame(Arena arena) {
         this.arena = arena;
         if (this.arena.isEnabled()) {
@@ -92,6 +99,12 @@ public abstract class RGame implements Game {
         this.ballMeta = arena.getMeta().find(BallMeta.class).get();
         this.customizingMeta = arena.getMeta().find(CustomizingMeta.class).get();
     }
+
+
+    public PlayerStorage playerStorage(Player player){
+        return playerStorage.get(player);
+    }
+
 
     /**
      * Returns the arena of the game.
@@ -207,8 +220,8 @@ public abstract class RGame implements Game {
     @Override
     public final List<Object> getPlayers() {
         final List<Object> players = new ArrayList<>();
-        for (final GamePlayer player : this.gamePlayers) {
-            players.add(player.player);
+        for (final BlockBallPlayer player : this.gamePlayers) {
+          //  players.add(player.player);
         }
         return players;
     }
@@ -225,9 +238,9 @@ public abstract class RGame implements Game {
 
     @Override
     public final void close() throws Exception {
-        for (final GamePlayer gamePlayer : this.gamePlayers) {
-            this.leave(gamePlayer);
-        }
+     //   for (final GamePlayer gamePlayer : this.gamePlayers) {
+        //    this.leave(gamePlayer);
+      //  }
         this.gamePlayers.clear();
         this.redTeamPlayers.clear();
         this.blueTeamPlayers.clear();
@@ -241,16 +254,17 @@ public abstract class RGame implements Game {
      */
     @Override
     public final boolean hasJoined(Object player) {
-        return this.getGamePlayerByPlayer((Player) player).isPresent();
+      //  return this.getGamePlayerByPlayer((Player) player).isPresent();
+        return  false;
     }
 
     /**
      * Returns a value for the given place holder. Returns empty string if not found.
      *
-     * @param type type
+     * @param
      * @return value
      */
-    @Override
+ /*   @Override
     public String getValueForPlaceHolder(PlaceHolderType type) {
         switch (type) {
             case BLUESCORE:
@@ -286,7 +300,7 @@ public abstract class RGame implements Game {
             }
         }
         return Optional.empty();
-    }
+    }*/
 
     private void kickUnwantedEntitiesOutOfForcefield() {
         for (final Entity entity : ((Location) this.arena.getBallSpawnLocation()).getWorld().getEntities()) {
@@ -326,7 +340,7 @@ public abstract class RGame implements Game {
     }
 
     private void checkBallInGoal() {
-        if (this.redTeamMeta.getGoal().isLocationInSelection(this.ball.getLocation())) {
+      /*  if (this.redTeamMeta.getGoal().isLocationInSelection(this.ball.getLocation())) {
             this.redGoals++;
             this.ball.remove();
             this.onScore(this.redTeamMeta);
@@ -340,7 +354,7 @@ public abstract class RGame implements Game {
             if (this.blueGoals >= this.customizingMeta.getMaxScore()) {
                 this.onWin(this.blueTeamMeta);
             }
-        }
+        }*/
     }
 
     private void fixBallPositionSpawn() {
@@ -372,7 +386,7 @@ public abstract class RGame implements Game {
                     this.ballMeta.getSpawnParticleEffect().apply(this.ball.getLocation());
                     this.ballMeta.getSpawnSound().applyToLocation(this.ball.getLocation());
                 } catch (final Exception e) {
-                    Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BallSpawnSound]");
+                    Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.Companion.getPREFIX_CONSOLE() + ChatColor.RED + "Invalid 1.8/1.9 sound. [BallSpawnSound]");
                 }
             }
         } else if ((this.ball == null || this.ball.isDead())
@@ -422,7 +436,7 @@ public abstract class RGame implements Game {
                         .replace(":blue", this.blueTeamMeta.getDisplayName()));
             }
         } catch (final Exception e) {
-            BlockBallPlugin.logger().log(Level.WARNING, "Error while parsing.", e);
+          //  Config..log(Level.WARNING, "Error while parsing.", e);
         }
         throw new RuntimeException("The following error has already been fixed. Please wait for the games to get restarted...");
     }

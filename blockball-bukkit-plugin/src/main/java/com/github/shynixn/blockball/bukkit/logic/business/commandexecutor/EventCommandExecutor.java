@@ -1,9 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
 import com.github.shynixn.blockball.api.business.controller.GameController;
-import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder;
+import com.google.inject.Inject;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -12,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class EventCommandExecutor extends SimpleCommandExecutor.UnRegistered {
     private static final String HEADER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                         Event                      ";
     private static final String FOOTER_STANDARD = ChatColor.WHITE + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           1/1                            ";
+
     private final GameController gameController;
 
     /**
@@ -19,9 +21,10 @@ public final class EventCommandExecutor extends SimpleCommandExecutor.UnRegister
      *
      * @param plugin plugin
      */
-    public EventCommandExecutor(BlockBallManager blockBallManager, Plugin plugin) throws Exception {
+    @Inject
+    public EventCommandExecutor(GameRepository gameRepository, Plugin plugin) throws Exception {
         super(plugin.getConfig().get("referee-game"), (JavaPlugin) plugin);
-        this.gameController = blockBallManager.getGameController();
+        this.gameController = gameRepository;
     }
 
     /**

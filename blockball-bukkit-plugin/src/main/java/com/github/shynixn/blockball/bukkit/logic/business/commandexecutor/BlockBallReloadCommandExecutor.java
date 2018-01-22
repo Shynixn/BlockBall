@@ -1,7 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
-import com.github.shynixn.blockball.bukkit.logic.business.BlockBallManager;
+import com.github.shynixn.blockball.api.business.controller.GameController;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
+import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository;
+import com.google.inject.Inject;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -35,17 +37,17 @@ import org.bukkit.plugin.java.JavaPlugin;
  * SOFTWARE.
  */
 public class BlockBallReloadCommandExecutor extends SimpleCommandExecutor.Registered {
-    private final BlockBallManager manager;
+    private final GameController gameController;
 
     /**
      * Initializes a new commandExecutor by command, plugin.
      *
-     * @param manager manager
      * @param plugin  plugin
      */
-    public BlockBallReloadCommandExecutor(BlockBallManager manager, Plugin plugin) {
+    @Inject
+    public BlockBallReloadCommandExecutor(GameRepository gameController, Plugin plugin) {
         super("blockballreload", (JavaPlugin) plugin);
-        this.manager = manager;
+        this.gameController = gameController;
     }
 
     /**
@@ -57,7 +59,7 @@ public class BlockBallReloadCommandExecutor extends SimpleCommandExecutor.Regist
     @Override
     public void onCommandSenderExecuteCommand(CommandSender sender, String[] args) {
         Config.getInstance().reload();
-        this.manager.getGameController().reload();
+        this.gameController.reload();
         sender.sendMessage(Config.getInstance().getPrefix() + ChatColor.GREEN + "Reloaded BlockBall.");
     }
 }
