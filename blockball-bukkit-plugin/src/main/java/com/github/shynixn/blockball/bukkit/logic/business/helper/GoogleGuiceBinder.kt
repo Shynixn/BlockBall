@@ -11,6 +11,7 @@ import org.bukkit.plugin.messaging.Messenger
 import org.bukkit.scheduler.BukkitScheduler
 import org.bukkit.scoreboard.ScoreboardManager
 import java.util.logging.Logger
+import kotlin.math.log
 
 
 /**
@@ -52,7 +53,5 @@ class GoogleGuiceBinder(private val plugin: Plugin) : AbstractModule() {
                 .toInstance(Bukkit.getServer().scheduler)
         bind(Plugin::class.java)
                 .toInstance(plugin)
-        bind(Logger::class.java)
-                .toInstance(plugin.logger)
     }
 }

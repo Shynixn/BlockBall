@@ -111,7 +111,7 @@ abstract class DataBaseRepository<T> implements IDatabaseController<T> {
      *
      * @param resultSet resultSet
      * @return entity
-     * @throws java.sql.SQLException exception
+     * @throws SQLException exception
      */
     protected abstract T from(ResultSet resultSet) throws SQLException;
 }

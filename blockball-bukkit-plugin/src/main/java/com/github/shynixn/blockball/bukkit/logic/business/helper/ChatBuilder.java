@@ -79,7 +79,7 @@ public class ChatBuilder {
      * @param component component
      * @return builder
      */
-    public ChatBuilder.Component addComponent(Component component) {
+    public Component addComponent(Component component) {
         component.builder = this;
         this.components.add(component);
         return component;
