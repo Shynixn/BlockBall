@@ -35,9 +35,6 @@ public class GoogleGuiceTest {
     @Test
     public void onTest()
     {
-        BlockBallPlugin ballPlugin = new BlockBallPlugin();
-        ballPlugin.onEnable();
-
 
     }
 }

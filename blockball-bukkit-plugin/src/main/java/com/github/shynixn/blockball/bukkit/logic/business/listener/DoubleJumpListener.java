@@ -93,7 +93,7 @@ public class DoubleJumpListener extends SimpleListener {
             player.setAllowFlight(false);
             player.setFlying(false);
             event.setCancelled(true);
-            final DoubleJumpMeta doubleJumpMeta = game.getArena().getMeta().find(DoubleJumpMeta.class).get();
+          /*  final DoubleJumpMeta doubleJumpMeta = game.getArena().getMeta().find(DoubleJumpMeta.class).get();
             if (doubleJumpMeta.isEnabled()) {
                 player.setVelocity(player.getLocation().getDirection()
                         .multiply(doubleJumpMeta.getHorizontalStrength())
@@ -104,7 +104,7 @@ public class DoubleJumpListener extends SimpleListener {
                 } catch (final Exception e) {
                     logger.log(Level.WARNING, "Invalid 1.8/1.9 sound. [DoubleJumpSound]", e);
                 }
-            }
+            }*/
         }
     }
 }

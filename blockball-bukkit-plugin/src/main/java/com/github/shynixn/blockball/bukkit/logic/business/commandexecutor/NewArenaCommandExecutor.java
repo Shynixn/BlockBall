@@ -263,9 +263,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
 
     }
 
-    private Optional<Arena> getArena(String id) {
-        return arenaController.getById(id);
-    }
+
 
     private void sendMessage(Player player, ChatBuilder builder) {
         builder.sendMessage(player);

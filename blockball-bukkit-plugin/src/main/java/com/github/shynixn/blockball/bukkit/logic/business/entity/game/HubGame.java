@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game;
 
 import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent;
-import com.github.shynixn.blockball.api.bukkit.event.GameLeaveEvent;
 import com.github.shynixn.blockball.api.business.entity.BlockBallPlayer;
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
@@ -53,14 +52,14 @@ import java.util.Optional;
  */
 public class HubGame extends RGame implements com.github.shynixn.blockball.api.business.entity.HubGame {
 
-    private final String[] hubGameSign;
+    private final String[] hubGameSign = null;
 
-    private final HubLobbyMeta hubLobbyMeta;
+    private final HubLobbyMeta hubLobbyMeta = null;
 
     public HubGame(Arena arena) {
-        super(arena);
-        this.hubLobbyMeta = arena.getMeta().find(HubLobbyMeta.class).get();
-        this.hubGameSign = Config.getInstance().getHubGameSign();
+      //  super(arena);
+      //  this.hubLobbyMeta = arena.getMeta().find(HubLobbyMeta.class).get();
+       // this.hubGameSign = Config.getInstance().getHubGameSign();
     }
 
     @Override
@@ -204,8 +203,8 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
     @Override
     public void onScore(TeamMeta teamMeta) {
         try {
-            this.arena.getBallGoalParticle().apply(this.ball.getLocation());
-            this.arena.getBallGoalSound().applyToLocation(this.ball.getLocation());
+         //   this.arena.getBallGoalParticle().apply(this.ball.getLocation());
+          //  this.arena.getBallGoalSound().applyToLocation(this.ball.getLocation());
         } catch (final Exception e) {
             Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.Companion.getPREFIX_CONSOLE() + ChatColor.RED + "Invalid 1.8/1.9 sound. [BallGoalSound]");
         }
@@ -253,7 +252,7 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
         if (teamMeta.getSpawnPoint().isPresent()) {
             player.teleport((Location) teamMeta.getSpawnPoint().get());
         } else {
-            player.teleport((Location) this.getArena().getBallSpawnLocation());
+          //  player.teleport((Location) this.getArena().getBallSpawnLocation());
         }
 
         player.sendMessage(Config.getInstance().getPrefix() + teamMeta.getJoinMessage());

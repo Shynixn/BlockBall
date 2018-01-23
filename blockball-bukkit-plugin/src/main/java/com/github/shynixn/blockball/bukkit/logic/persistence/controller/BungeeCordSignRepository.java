@@ -114,11 +114,7 @@ public class BungeeCordSignRepository implements BungeeCordSignController {
      * Returns the amount of items in the repository
      *
      * @return size
-     */
-    @Override
-    public int size() {
-        return this.signs.size();
-    }
+
 
     /**
      * Returns all items from the repository as unmodifiableList
@@ -137,7 +133,7 @@ public class BungeeCordSignRepository implements BungeeCordSignController {
      *
      * @throws Exception if this resource cannot be closed
      */
-    @Override
+
     public void close() throws Exception {
         this.signs.clear();
     }
@@ -189,5 +185,10 @@ public class BungeeCordSignRepository implements BungeeCordSignController {
         } catch (IOException | InvalidConfigurationException e) {
            logger.log(Level.WARNING, "Save load location.", e);
         }
+    }
+
+    @Override
+    public int getCount() {
+        return 0;
     }
 }

@@ -57,7 +57,7 @@ public class BlockBallBungeeCordManager implements AutoCloseable{
      */
     @Override
     public void close() throws Exception {
-        this.signController.close();
+      //  this.signController.close();
     }
 
     /**

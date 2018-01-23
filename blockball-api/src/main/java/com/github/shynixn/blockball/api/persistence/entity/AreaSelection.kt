@@ -1,21 +1,13 @@
-package com.github.shynixn.blockball.api.business.controller;
-
-import com.github.shynixn.blockball.api.business.entity.Ball;
-import com.github.shynixn.blockball.api.persistence.controller.Controller;
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
-
-import java.util.Optional;
+package com.github.shynixn.blockball.api.persistence.entity
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2018.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,22 +27,29 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BallController extends Controller<Ball> {
+interface AreaSelection<Location, PersistenceObject> : Persistenceable<PersistenceObject> {
 
-    /**
-     * Creates a new ball at the given location and meta.
-     *
-     * @param location location
-     * @param ballMeta metaData
-     * @return ball
-     */
-    Ball create(Object location, BallMeta ballMeta);
+    /** [upperCorner] of the selected square arena. */
+    val upperCorner: IPosition?
 
-    /**
-     * Returns a ball from the given entity.
-     *
-     * @param entity entity
-     * @return ball
-     */
-    Optional<Ball> findByBallByEntity(Object entity);
+    /** [lowerCorner] of the selected square arena. */
+    val lowerCorner: IPosition?
+
+    /** [center] of the arena */
+    val center: Location?
+
+    /** Length of the x axe. */
+    val offsetX: Int
+
+    /** Length of the y axe. */
+    val offsetY: Int
+
+    /** Length of the z axe. */
+    val offsetZ: Int
+
+    /** Sets the corners between [corner1] and [corner2]. Automatically sets lowerCorner and upperCorner. */
+    fun setCorners(corner1: Location, corner2: Location)
+
+    /** Returns if the given [location] is inside of this area selection. */
+    fun isLocationInSelection(location: Location): Boolean
 }

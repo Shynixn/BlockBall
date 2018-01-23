@@ -1,5 +1,33 @@
 package com.github.shynixn.blockball.logic.persistence.controller;
 
+import com.github.shynixn.blockball.api.bukkit.event.controller.BukkitArenaController;
+import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena;
+import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
+import com.github.shynixn.blockball.api.persistence.entity.Arena;
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
+import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import jdk.nashorn.internal.runtime.regexp.JoniRegExp;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.lang.reflect.Field;
+import java.util.logging.Logger;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 /**
  * Created by Shynixn 2017.
  * <p>
@@ -27,43 +55,45 @@ package com.github.shynixn.blockball.logic.persistence.controller;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class ArenaPersistenceIT {
+public class ArenaPersistenceTest {
 
-  /*  @BeforeAll
+  @BeforeAll
     public static void createFolder() {
         File file = new File("BlockBall");
         if (file.exists())
             file.delete();
         file.mkdir();
 
-        Server server = mock(Server.class);
+        final Server server = mock(Server.class);
         when(server.getLogger()).thenReturn(Logger.getAnonymousLogger());
         Bukkit.setServer(server);
+
+
         World world = mock(World.class);
+        when(server.getScheduler()).thenReturn(mock(BukkitScheduler.class));
         when(world.getName()).thenReturn("TestWorld");
         when(server.getWorld(any(String.class))).thenReturn(world);
-
-        try {
-            Field field = BlockBallPlugin.class.getDeclaredField("logger");
-            field.setAccessible(true);
-            field.set(null, Logger.getGlobal());
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
     public void noPropertiesArena() {
         Plugin plugin = mock(Plugin.class);
+        when(plugin.getLogger()).thenReturn(Logger.getGlobal());
+
         when(plugin.getDataFolder()).thenReturn(new File("BlockBall"));
 
-        ArenaController controller = Factory.createArenaController(plugin);
-        Arena item = controller.create();
+        Injector injector = Guice.createInjector(new GoogleGuiceBinder(plugin));
 
-        assertThrows(IllegalStateException.class, () -> controller.store(item));
+        final BukkitArenaController arenaController = injector.getInstance(Key.get(ArenaRepository.class));
+        BukkitArena arena = arenaController.create("custom1", new Location(plugin.getServer().getWorld(""), 2, 2,2), new Location(plugin.getServer().getWorld(""), 2, 2,2));
+        arenaController.store(arena);
+
+
+
+
     }
 
-    @Test
+/*    @Test
     public void storeAndRestoreMinRequiredPropertiesArena() {
      final Plugin plugin = mock(Plugin.class);
         when(plugin.getDataFolder()).thenReturn(new File("BlockBall"));
@@ -107,7 +137,7 @@ public class ArenaPersistenceIT {
 
     @Test
     public void storeAndRestoreHologramArena() {
-      /*  final Plugin plugin = mock(Plugin.class);
+       final Plugin plugin = mock(Plugin.class);
         when(plugin.getDataFolder()).thenReturn(new File("BlockBall"));
         final World world = Bukkit.getWorld("");
 

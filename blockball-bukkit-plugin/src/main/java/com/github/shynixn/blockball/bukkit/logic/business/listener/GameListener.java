@@ -172,11 +172,11 @@ public class GameListener extends SimpleListener {
         final Player player = (Player) event.getEntity();
         final Optional<Game> optGame = this.gameController.getGameFromPlayer(player);
         if (optGame.isPresent()) {
-            if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+           /* if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 event.setCancelled(true);
             } else if (!optGame.get().getArena().getMeta().find(CustomizingMeta.class).get().isDamagingPlayersEnabled()) {
                 event.setCancelled(true);
-            }
+            }*/
         }
     }
 
@@ -220,14 +220,14 @@ public class GameListener extends SimpleListener {
         final IPosition signPosition = new LocationBuilder(event.getClickedBlock().getLocation());
         if (optGame.isPresent()) { //Joining
             if (optGame.get().getArena().getGameType() == GameType.HUBGAME) {
-                this.tryJoinGame(event.getPlayer(), optGame.get(), Team.RED, signPosition, optGame.get().getArena().getMeta().find(HubLobbyMeta.class).get().getRedTeamSignPositions(), true);
-                this.tryJoinGame(event.getPlayer(), optGame.get(), Team.BLUE, signPosition, optGame.get().getArena().getMeta().find(HubLobbyMeta.class).get().getBlueTeamSignPositions(), true);
+           //     this.tryJoinGame(event.getPlayer(), optGame.get(), Team.RED, signPosition, optGame.get().getArena().getMeta().find(HubLobbyMeta.class).get().getRedTeamSignPositions(), true);
+             //   this.tryJoinGame(event.getPlayer(), optGame.get(), Team.BLUE, signPosition, optGame.get().getArena().getMeta().find(HubLobbyMeta.class).get().getBlueTeamSignPositions(), true);
             } else if (optGame.get().getArena().getGameType() == GameType.MINIGAME) {
-                this.tryJoinGame(event.getPlayer(), optGame.get(), null, signPosition, optGame.get().getArena().getMeta().find(MinigameLobbyMeta.class).get().getJoinSignPositions(), true);
+            //    this.tryJoinGame(event.getPlayer(), optGame.get(), null, signPosition, optGame.get().getArena().getMeta().find(MinigameLobbyMeta.class).get().getJoinSignPositions(), true);
             }
         } else { //Leaving
             final Optional<Game> optPGame = this.gameController.getGameFromPlayer(event.getPlayer());
-            optPGame.ifPresent(game -> this.tryJoinGame(event.getPlayer(), game, null, signPosition, optGame.get().getArena().getMeta().find(CustomizingMeta.class).get().getLeaveSigns(), true));
+          //  optPGame.ifPresent(game -> this.tryJoinGame(event.getPlayer(), game, null, signPosition, optGame.get().getArena().getMeta().find(CustomizingMeta.class).get().getLeaveSigns(), true));
         }
     }
 
@@ -238,7 +238,7 @@ public class GameListener extends SimpleListener {
         if (this.gameController.getGameFromPlayer(event.getPlayer()).isPresent())
             return;
         for (final Game game : this.gameController.getAll()) {
-            if (game.getArena().isEnabled() && game.getArena().getGameType() == GameType.HUBGAME) {
+            if (game.getArena().getEnabled() && game.getArena().getGameType() == GameType.HUBGAME) {
                 if (game.getArena().isLocationInSelection(event.getTo())) {
                     if (!this.lastLocation.containsKey(event.getPlayer())) {
                         event.getPlayer().setVelocity(Config.getInstance().getPlayerrotectionVelocity());
@@ -247,22 +247,22 @@ public class GameListener extends SimpleListener {
                             this.moveCounter.put(event.getPlayer(), 1);
                         else if (this.moveCounter.get(event.getPlayer()) < 50)
                             this.moveCounter.put(event.getPlayer(), this.moveCounter.get(event.getPlayer()) + 1);
-                        if (this.moveCounter.get(event.getPlayer()) > 20) {
+                       /* if (this.moveCounter.get(event.getPlayer()) > 20) {
                             event.getPlayer().setVelocity(Config.getInstance().getPlayerrotectionVelocity());
-                        } else if (!game.getArena().getMeta().find(CustomizingMeta.class).get().isFastJoiningEnabled()) {
+                        } else if (!game.getArena().getMeta(null, null).find(CustomizingMeta.class).get().isFastJoiningEnabled()) {
                             final Vector knockback = this.lastLocation.get(event.getPlayer()).toVector().subtract(event.getPlayer().getLocation().toVector());
                             event.getPlayer().getLocation().setDirection(knockback);
                             event.getPlayer().setVelocity(knockback);
                             event.getPlayer().setAllowFlight(true);
                             this.toggledPlayers.add(event.getPlayer());
-                        }
+                        }*/
                     }
                     if (event.getPlayer().hasPermission("blockball.user")) {
-                        if (game.getArena().getMeta().find(CustomizingMeta.class).get().isFastJoiningEnabled()) {
+                       /* if (game.getArena().getMeta().find(CustomizingMeta.class).get().isFastJoiningEnabled()) {
                             this.joinGame(event.getPlayer(), null, game);
                         } else {
                             event.getPlayer().sendMessage("TYPE THIS TO JOIN!");
-                        }
+                        }*/
                     } else {
                         event.getPlayer().sendMessage(Config.getInstance().getPrefix() + Config.getInstance().getJoinCommandPermissionMessage());
                     }
@@ -304,7 +304,7 @@ public class GameListener extends SimpleListener {
             entity.ballCornerBumper = 0;
         }
         if (entity.ballCornerBumper >= 3) {
-            final Vector direction = ((Location) entity.getArena().getBallSpawnLocation()).toVector().subtract(ballLocation.toVector());
+         /*   final Vector direction = ((Location) entity.getArena().getBallSpawnLocation()).toVector().subtract(ballLocation.toVector());
             int x = 1;
             int z = 1;
             if (direction.getX() < 0)
@@ -312,7 +312,7 @@ public class GameListener extends SimpleListener {
             if (direction.getZ() < 0)
                 z = -1;
           //  event.getBall().teleport(new Location(ballLocation.getWorld(), ballLocation.getX() + x, ballLocation.getY(), ballLocation.getZ() + z));
-            entity.ballCornerBumper = 0;
+            entity.ballCornerBumper = 0;*/
         }
         entity.ballPreviousCacheLocation = ballLocation.toVector();
         entity.lastHitTeam = entity.getTeamFromPlayer(event.getEntity());
@@ -333,7 +333,7 @@ public class GameListener extends SimpleListener {
     }
 
     private void joinGame(Player player, Team team, Game game) {
-        final TeamMeta teamMeta = game.getArena().getMeta().findByTeam(TeamMeta[].class, team).get();
+      /*  final TeamMeta teamMeta = game.getArena().getMeta().findByTeam(TeamMeta[].class, team).get();
         final boolean result = game.join(player, team);
         if (result) {
             if (teamMeta == null) {
@@ -343,7 +343,7 @@ public class GameListener extends SimpleListener {
             }
         } else {
             player.sendMessage(Config.getInstance().getPrefix() + game.getArena().getMeta().find(CustomizingMeta.class).get().getTeamFullMessage());
-        }
+        }*/
     }
 
     private boolean isNotLeaveMessage(String message) {
@@ -357,25 +357,25 @@ public class GameListener extends SimpleListener {
     private void fixPlayersJoiningInArena(Player player) {
         if (Config.getInstance().isRescueJoinSpawnpointEnabled()) {
             final Location spawnpoint = ((LocationBuilder) Config.getInstance().getRescueJoinSpawnpoint()).toLocation();
-            for (final Arena arena : this.gameController.getArenaController().getAll()) {
+          /*  for (final Arena arena : this.gameController.getArenaController().getAll()) {
                 if (player.getLocation().getWorld().getName().equals(((Location) arena.getBallSpawnLocation()).getWorld().getName())
                         && arena.isLocationInSelection(player.getLocation())) {
                     player.teleport(spawnpoint);
                     return;
                 }
-            }
+            }*/
         }
     }
 
     private void joinBungeeCordGame(Player player, Game game) {
         final boolean result = !game.join(player, null);
         if (result) {
-            final BungeeCordLobbyMeta bungeeCordLobbyMeta = game.getArena().getMeta().find(BungeeCordLobbyMeta.class).get();
+       /*     final BungeeCordLobbyMeta bungeeCordLobbyMeta = game.getArena().getMeta().find(BungeeCordLobbyMeta.class).get();
             if (bungeeCordLobbyMeta.getKickMessage().isPresent()) {
                 player.kickPlayer(bungeeCordLobbyMeta.getKickMessage().get());
             } else {
                 player.kickPlayer(null);
-            }
+            }*/
         }
     }
 
@@ -403,7 +403,7 @@ public class GameListener extends SimpleListener {
 
     private Optional<Game> getBungeeCordGame() {
         for (final Game game : this.gameController.getAll()) {
-            if (game.getArena().getGameType() == GameType.BUNGEE && game.getArena().isEnabled()) {
+            if (game.getArena().getGameType() == GameType.BUNGEE && game.getArena().getEnabled()) {
                 return Optional.of(game);
             }
         }

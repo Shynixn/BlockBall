@@ -2,8 +2,7 @@ package com.github.shynixn.blockball.api.business.controller;
 
 import com.github.shynixn.blockball.api.business.entity.Game;
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
-import com.github.shynixn.blockball.api.persistence.controller.IController;
-import com.github.shynixn.blockball.api.persistence.controller.IFileController;
+import com.github.shynixn.blockball.api.persistence.controller.ReloadableController;
 
 import java.util.Optional;
 
@@ -36,7 +35,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface GameController extends IFileController<Game> {
+public interface GameController extends ReloadableController<Game> {
 
     /**
      * Returns the controller of the arenas.

@@ -1,15 +1,13 @@
-package com.github.shynixn.blockball.api.persistence.controller;
+package com.github.shynixn.blockball.api.persistence.controller
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2018.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +27,17 @@ package com.github.shynixn.blockball.api.persistence.controller;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface IFileController<T> extends IController<T> {
-    /**
-     * Reloads the content from the fileSystem.
-     */
-    void reload();
+interface Controller<T : Any> {
+
+    /** Stores a new item into the repository. */
+    fun store(item: T)
+
+    /** Removes an item from the repository. */
+    fun remove(item: T)
+
+    /** Returns all items from the repository. */
+    fun getAll(): List<T>
+
+    /** Returns the amount of items in the repository. */
+    val count: Int
 }

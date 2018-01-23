@@ -252,7 +252,7 @@ public class SoundBuilder extends PersistenceObject<SoundEffectMeta> implements 
     /**
      * Resets the object to the default values
      */
-    @Override
+
     public void reset(SoundEffectMeta object) {
         this.text = object.getName();
         this.setPitch(object.getPitch());

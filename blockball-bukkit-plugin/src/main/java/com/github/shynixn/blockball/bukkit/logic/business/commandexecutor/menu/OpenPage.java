@@ -62,7 +62,7 @@ public class OpenPage extends Page {
             BlockBallApi.getDefaultGameController().reload();
         } else if (command == BlockBallCommand.OPEN_EDIT_ARENA) {
             ChatBuilder builder = null;
-            for (final Arena arena : BlockBallApi.getDefaultGameController().getArenaController().getAll()) {
+         /*   for (final Arena arena : BlockBallApi.getDefaultGameController().getArenaController().getAll()) {
                 if (builder == null) {
                     builder = new ChatBuilder();
                 }
@@ -87,7 +87,7 @@ public class OpenPage extends Page {
                         .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
                                 , BlockBallCommand.ARENA_DELETE.getCommand() + " " + arena.getName())
                         .setHoverText("Deletes the arena with the id " + arena.getId() + ".").builder().nextLine();
-            }
+            }*/
             if (builder != null) {
                 builder.sendMessage(player);
             }

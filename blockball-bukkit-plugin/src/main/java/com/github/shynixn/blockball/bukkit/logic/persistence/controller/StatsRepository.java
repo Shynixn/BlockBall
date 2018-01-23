@@ -112,23 +112,6 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
         return Optional.empty();
     }
 
-    /**
-     * Returns the amount of items in the repository
-     */
-    @Override
-    public int size() {
-        try (Connection connection = this.dbContext.getConnection()) {
-            try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("stats/count", connection)) {
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    resultSet.next();
-                    return resultSet.getInt(1);
-                }
-            }
-        } catch (final SQLException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
-        }
-        return 0;
-    }
 
     /**
      * Checks if the item has got an valid databaseId
@@ -210,7 +193,7 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
                     item.getAmountOfWins(),
                     item.getAmountOfGamesPlayed(),
                     item.getAmountOfGoals());
-            ((StatsData) item).setId(id);
+            //((StatsData) item).setId(id);
         } catch (final SQLException e) {
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
@@ -226,7 +209,7 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
     @Override
     protected Stats from(ResultSet resultSet) throws SQLException {
         final StatsData stats = new StatsData();
-        stats.setId(resultSet.getLong("id"));
+      //  stats.setId(resultSet.getLong("id"));
         stats.setPlayerId(resultSet.getLong("shy_player_id"));
         stats.setAmountOfWins(resultSet.getInt("wins"));
         stats.setAmountOfGamesPlayed(resultSet.getInt("games"));
@@ -234,15 +217,19 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
         return stats;
     }
 
-    /**
-     * Closes this resource, relinquishing any underlying resources.
-     * This method is invoked automatically on objects managed by the
-     * {@code try}-with-resources statement.
-     *
-     * @throws Exception if this resource cannot be closed
-     */
+
     @Override
-    public void close() throws Exception {
-        this.dbContext = null;
+    public int getCount() {
+        try (Connection connection = this.dbContext.getConnection()) {
+            try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("stats/count", connection)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    resultSet.next();
+                    return resultSet.getInt(1);
+                }
+            }
+        } catch (final SQLException e) {
+            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
+        }
+        return 0;
     }
 }

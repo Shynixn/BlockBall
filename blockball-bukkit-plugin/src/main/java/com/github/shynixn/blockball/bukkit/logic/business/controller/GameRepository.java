@@ -2,10 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.controller;
 
 import com.github.shynixn.blockball.api.business.controller.GameController;
 import com.github.shynixn.blockball.api.business.entity.Game;
-import com.github.shynixn.blockball.api.business.enumeration.GameType;
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController;
-import com.github.shynixn.blockball.api.persistence.entity.Arena;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.game.HubGame;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
 import com.google.inject.Inject;
 import org.bukkit.scheduler.BukkitTask;
@@ -47,7 +44,7 @@ import java.util.logging.Logger;
 public class GameRepository implements GameController, Runnable {
     private final ArenaController arenaController;
     private final List<Game> games = new ArrayList<>();
-    private final BukkitTask task;
+    private final BukkitTask task = null;
 
     @Inject
     private Logger logger;
@@ -61,9 +58,9 @@ public class GameRepository implements GameController, Runnable {
     public GameRepository(ArenaRepository arenaController) {
         super();
         this.arenaController = arenaController;
-        this.task = arenaController.getPlugin().getServer()
+       /* this.task = arenaController.getPlugin().getServer()
                 .getScheduler()
-                .runTaskTimer(arenaController.getPlugin(), this, 0L, 1L);
+                .runTaskTimer(arenaController.getPlugin(), this, 0L, 1L);*/
     }
 
     /**
@@ -106,9 +103,10 @@ public class GameRepository implements GameController, Runnable {
      */
     @Override
     public Optional<Game> getGameFromDisplayName(String name) {
-        return this.games.stream()
+       /* return this.games.stream()
                 .filter(p -> p.getArena().getDisplayName().isPresent()
-                        && p.getArena().getDisplayName().get().equalsIgnoreCase(name)).findFirst();
+                        && p.getArena().getDisplayName().get().equalsIgnoreCase(name)).findFirst();*/
+        return null;
     }
 
     /**
@@ -125,7 +123,7 @@ public class GameRepository implements GameController, Runnable {
             }
         }
         this.games.clear();
-        for (final Arena arena : this.getArenaController().getAll()) {
+       /* for (final Arena arena : this.getArenaController().getAll()) {
             if(arena.getGameType() == GameType.HUBGAME)
             {
                 this.games.add(new HubGame(arena));
@@ -143,7 +141,7 @@ public class GameRepository implements GameController, Runnable {
                 this.games.add(new EventGameEntity(arena));
             }*/
         }
-    }
+
 
     /**
      * Stores a new a item in the repository.
@@ -169,15 +167,6 @@ public class GameRepository implements GameController, Runnable {
         }
     }
 
-    /**
-     * Returns the amount of items in the repository.
-     *
-     * @return size
-     */
-    @Override
-    public int size() {
-        return this.games.size();
-    }
 
     /**
      * Returns all items from the repository as unmodifiableList.
@@ -196,9 +185,8 @@ public class GameRepository implements GameController, Runnable {
      *
      * @throws Exception if this resource cannot be closed
      */
-    @Override
     public void close() throws Exception {
-        this.arenaController.close();
+      //  this.arenaController.close();
         this.task.cancel();
         for (final Game game : this.games) {
             game.close();
@@ -222,5 +210,10 @@ public class GameRepository implements GameController, Runnable {
         for (final Game game : this.games) {
             game.run();
         }
+    }
+
+    @Override
+    public int getCount() {
+        return this.games.size();
     }
 }

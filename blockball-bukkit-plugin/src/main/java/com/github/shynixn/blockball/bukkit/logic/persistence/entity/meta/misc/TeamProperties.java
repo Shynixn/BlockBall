@@ -82,7 +82,7 @@ public class TeamProperties extends PersistenceObject<TeamMeta> implements TeamM
     private String[] armor;
 
     @YamlSerializer.YamlSerialize(orderNumber = 12, value = "goal")
-    private final SelectedArea goal = new SelectedArea();
+    private final SelectedArea goal = null;
 
     public TeamProperties() {
     }

@@ -1,19 +1,13 @@
-package com.github.shynixn.blockball.api.persistence.controller;
-
-import com.github.shynixn.blockball.api.persistence.entity.Arena;
-
-import java.util.Optional;
+package com.github.shynixn.blockball.api.persistence.entity
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2018.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,20 +27,11 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface ArenaController extends IFileController<Arena> {
+interface Persistenceable<PersistenceObject> {
 
-    /**
-     * Creates a new arena with a unique id of this instance.
-     *
-     * @return id
-     */
-    Arena create();
+    /** Returns the id of the object. */
+    val id: Long
 
-    /**
-     * Returns the arena by the given id if present.
-     *
-     * @param id id
-     * @return arena
-     */
-    Optional<Arena> getById(String id);
+    /** Clones the current object. */
+    fun clone(): PersistenceObject
 }

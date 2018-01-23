@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.business.controller;
 
-import com.github.shynixn.blockball.api.persistence.controller.IFileController;
+import com.github.shynixn.blockball.api.persistence.controller.ReloadableController;
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
 
 import java.util.Set;
@@ -32,7 +32,7 @@ import java.util.Set;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BungeeCordSignController extends IFileController<BungeeCordSign> {
+public interface BungeeCordSignController extends ReloadableController<BungeeCordSign> {
 
     /**
      * Creates a new bungeecord sign from the given server and location.

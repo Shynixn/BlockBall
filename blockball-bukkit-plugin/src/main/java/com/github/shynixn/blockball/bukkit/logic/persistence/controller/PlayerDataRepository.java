@@ -164,7 +164,7 @@ public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> impleme
                 throw new IllegalArgumentException("UUId cannot be null!");
             final long id = this.dbContext.executeStoredInsert("player/insert", connection,
                     item.getName(), item.getUUID().toString());
-            ((PlayerData)item).setId(id);
+           // ((PlayerData)item).setId(id);
         } catch (final SQLException e) {
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
@@ -179,17 +179,14 @@ public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> impleme
     @Override
     public PlayerData from(ResultSet resultSet) throws SQLException {
         final PlayerData playerStats = new PlayerData();
-        playerStats.setId(resultSet.getLong("id"));
+    //    playerStats.setId(resultSet.getLong("id"));
         playerStats.setName(resultSet.getString("name"));
         playerStats.setUuid(UUID.fromString(resultSet.getString("uuid")));
         return playerStats;
     }
 
-    /**
-     * Returns the amount of items in the repository
-     */
     @Override
-    public int size() {
+    public int getCount() {
         try (Connection connection = this.dbContext.getConnection()) {
             try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("player/count", connection)) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -201,16 +198,5 @@ public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> impleme
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
         return 0;
-    }
-
-    /**
-     * Closes this resource, relinquishing any underlying resources.
-     * This method is invoked automatically on objects managed by the
-     * {@code try}-with-resources statement.
-     * @throws Exception if this resource cannot be closed
-     */
-    @Override
-    public void close() throws Exception {
-        this.dbContext = null;
     }
 }

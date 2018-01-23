@@ -62,8 +62,8 @@ public class MainConfigurationPage extends Page {
      */
     @Override
     public CommandResult execute(Player player, BlockBallCommand command, Object[] cache, String[] args) {
-        if (command == BlockBallCommand.ARENA_CREATE) {
-            cache[0] = BlockBallApi.getDefaultGameController().getArenaController().create();
+    /*    if (command == BlockBallCommand.ARENA_CREATE) {
+           // cache[0] = BlockBallApi.getDefaultGameController().getArenaController().create();
         } else if (command == BlockBallCommand.ARENA_EDIT) {
             cache[0] = BlockBallApi.getDefaultGameController().getArenaController().getById(args[2]).get();
         } else if (command == BlockBallCommand.ARENA_DELETE) {
@@ -101,7 +101,7 @@ public class MainConfigurationPage extends Page {
             final Location left = WorldEditConnection.getLeftSelection(player);
             final Location right = WorldEditConnection.getRightSelection(player);
             if (left != null && right != null) {
-                arena.getMeta().findByTeam(TeamMeta[].class, Team.BLUE).get()
+            /*    arena.getMeta().findByTeam(TeamMeta[].class, Team.BLUE).get()
                         .getGoal()
                         .setCorners(left, right);
             } else {
@@ -109,7 +109,7 @@ public class MainConfigurationPage extends Page {
             }
         } else if (command == BlockBallCommand.ARENA_SAVE) {
             final Arena arena = (Arena) cache[0];
-            if (arena.getLowerCorner() != null
+          /*  if (arena.getLowerCorner() != null
                     && arena.getMeta().findByTeam(TeamMeta[].class, Team.BLUE).get().getGoal().getLowerCorner() != null
                     && arena.getMeta().findByTeam(TeamMeta[].class, Team.RED).get().getGoal().getLowerCorner() != null
                     && arena.getBallSpawnLocation() != null
@@ -120,7 +120,8 @@ public class MainConfigurationPage extends Page {
                 return CommandResult.ARENA_NOTVALID;
             }
         }
-        return super.execute(player, command, cache, args);
+        return super.execute(player, command, cache, args);*/
+    return null;
     }
 
     /**
@@ -144,14 +145,11 @@ public class MainConfigurationPage extends Page {
         if (this.getTeamMeta(arena, Team.BLUE).getGoal().getLowerCorner() != null) {
             goal2 = this.printLocation(this.getTeamMeta(arena, Team.BLUE).getGoal().getCenter());
         }
-        if (arena.getBallSpawnLocation() != null) {
-            ballSpawn = this.printLocation(arena.getBallSpawnLocation());
-        }
         return new ChatBuilder()
                 .component("- Id: " + arena.getId())
                 .setColor(ChatColor.GRAY)
                 .builder()
-                .component(", " + arena.getDisplayName().get()).builder()
+                .component(", " + arena.getDisplayName()).builder()
                 .addComponent(ClickableComponent.EDIT.getComponent())
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.ARENA_SETDISPLAYNAME.getCommand())
                 .setHoverText("Edit the name of the arena.")

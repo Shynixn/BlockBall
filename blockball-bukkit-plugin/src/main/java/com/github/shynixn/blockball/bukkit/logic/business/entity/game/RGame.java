@@ -57,7 +57,7 @@ public abstract class RGame implements Game {
     final List<Player> redTeamPlayers = new ArrayList<>();
     final List<Player> blueTeamPlayers = new ArrayList<>();
 
-    final Arena arena;
+    final Arena arena = null;
     Ball ball;
     private GameStatus gameStatus = GameStatus.DISABLED;
 
@@ -72,10 +72,10 @@ public abstract class RGame implements Game {
     private int bumperCounter;
     public int ballCornerBumper;
 
-    final TeamMeta redTeamMeta;
-    final TeamMeta blueTeamMeta;
-    final BallMeta ballMeta;
-    final CustomizingMeta customizingMeta;
+    final TeamMeta redTeamMeta = null;
+    final TeamMeta blueTeamMeta = null;
+    final BallMeta ballMeta = null;
+    final CustomizingMeta customizingMeta = null;
 
     private Location lastBallLocation;
     public Player lastHit;
@@ -89,7 +89,7 @@ public abstract class RGame implements Game {
 
 
 
-    public RGame(Arena arena) {
+   /* public RGame(Arena arena) {
         this.arena = arena;
         if (this.arena.isEnabled()) {
             this.gameStatus = GameStatus.ENABLED;
@@ -178,9 +178,9 @@ public abstract class RGame implements Game {
      */
     @Override
     public void run() {
-        if (!this.arena.isEnabled()) {
-            return;
-        }
+      //  if (!this.arena.isEnabled()) {
+       //     return;
+    //    }
         if (this.haveTwentyTicksPassed()) {
             this.kickUnwantedEntitiesOutOfForcefield();
             this.onUpdateSigns();
@@ -303,7 +303,7 @@ public abstract class RGame implements Game {
     }*/
 
     private void kickUnwantedEntitiesOutOfForcefield() {
-        for (final Entity entity : ((Location) this.arena.getBallSpawnLocation()).getWorld().getEntities()) {
+        /*or (final Entity entity : ((Location) this.arena.getBallSpawnLocation()).getWorld().getEntities()) {
             if (!(entity instanceof Player) &&
                     !(entity instanceof Rabbit)
                     && !(entity instanceof ArmorStand)
@@ -314,11 +314,11 @@ public abstract class RGame implements Game {
                     entity.setVelocity(vector);
                 }
             }
-        }
+        }*/
     }
 
     final void replacePlaceTextOnSign(Sign sign, String[] text, TeamMeta teamMeta, int players, int maxPlayers) {
-        for (int i = 0; i < 4; i++) {
+    /*    for (int i = 0; i < 4; i++) {
             String modifiedText = text[i];
             if (this.arena.getDisplayName().isPresent()) {
                 modifiedText = modifiedText.replace("<game>", String.valueOf(this.arena.getDisplayName().get()));
@@ -336,7 +336,7 @@ public abstract class RGame implements Game {
                     .replace("<players>", String.valueOf(players))
                     .replace("<maxplayers>", String.valueOf(maxPlayers));
             sign.setLine(i, modifiedText);
-        }
+        }*/
     }
 
     private void checkBallInGoal() {
@@ -375,7 +375,7 @@ public abstract class RGame implements Game {
     }
 
     private void handleBallSpawning() {
-        if (this.isBallSpawning) {
+     /*   if (this.isBallSpawning) {
             this.ballSpawnCounter--;
             if (this.ballSpawnCounter <= 0) {
                 this.ball = BlockBallApi.getDefaultBallController().create(this.arena.getBallSpawnLocation(), this.ballMeta);
@@ -394,7 +394,7 @@ public abstract class RGame implements Game {
                 && (this.redTeamPlayers.size() >= this.redTeamMeta.getMinAmountOfPlayers() && this.blueTeamPlayers.size() >= this.blueTeamMeta.getMinAmountOfPlayers())) {
             this.isBallSpawning = true;
             this.ballSpawnCounter = this.arena.getBallSpawnDelay() * 20;
-        }
+        }*/
     }
 
     private void rescueBall() {
@@ -403,12 +403,12 @@ public abstract class RGame implements Game {
             final Vector knockback = this.lastBallLocation.toVector().subtract(ballLocation.toVector());
             ballLocation.setDirection(knockback);
             this.ball.setVelocity(knockback);
-            final Vector direction = ((Location) this.arena.getBallSpawnLocation()).toVector().subtract(ballLocation.toVector());
-            this.ball.setVelocity(direction.multiply(0.1));
+         //   final Vector direction = ((Location) this.arena.getBallSpawnLocation()).toVector().subtract(ballLocation.toVector());
+           // this.ball.setVelocity(direction.multiply(0.1));
             this.bumper = 40;
             this.bumperCounter++;
             if (this.bumperCounter == 5) {
-                this.ball.teleport(this.arena.getBallSpawnLocation());
+           //     this.ball.teleport(this.arena.getBallSpawnLocation());
             }
         }
     }

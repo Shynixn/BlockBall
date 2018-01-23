@@ -40,7 +40,7 @@ import java.util.logging.Logger
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GoogleGuiceBinder(private val plugin: BlockBallPlugin) : AbstractModule() {
+class GoogleGuiceBinder(private val plugin: Plugin) : AbstractModule() {
 
 
 
@@ -50,7 +50,7 @@ class GoogleGuiceBinder(private val plugin: BlockBallPlugin) : AbstractModule() 
                 .toInstance(Bukkit.getServer())
         bind(BukkitScheduler::class.java)
                 .toInstance(Bukkit.getServer().scheduler)
-        bind(BlockBallPlugin::class.java)
+        bind(Plugin::class.java)
                 .toInstance(plugin)
         bind(Logger::class.java)
                 .toInstance(plugin.logger)

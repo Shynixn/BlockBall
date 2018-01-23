@@ -1,21 +1,17 @@
-package com.github.shynixn.blockball.api.business.controller;
+package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.business.entity.Ball;
-import com.github.shynixn.blockball.api.persistence.controller.Controller;
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
-
-import java.util.Optional;
+import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.MetaInfo
+import com.github.shynixn.blockball.api.business.enumeration.Team
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2018.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,22 +31,20 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BallController extends Controller<Ball> {
+interface Arena<Location, PersistenceObject> : AreaSelection<Location, PersistenceObject> {
 
-    /**
-     * Creates a new ball at the given location and meta.
-     *
-     * @param location location
-     * @param ballMeta metaData
-     * @return ball
-     */
-    Ball create(Object location, BallMeta ballMeta);
+    /** Unique [name] of the arena. */
+    val name: String
 
-    /**
-     * Returns a ball from the given entity.
-     *
-     * @param entity entity
-     * @return ball
-     */
-    Optional<Ball> findByBallByEntity(Object entity);
+    /** Is the arena ready to be placed. */
+    var enabled: Boolean
+
+    /** [displayName]of the arena on signs or messages. */
+    var displayName: String
+
+    /** [gameType] of the arena */
+    var gameType: GameType
+
+    /** Returns the meta data of [type]. */
+    fun getMeta(type: MetaInfo, team : Team = Team.RED): Any
 }

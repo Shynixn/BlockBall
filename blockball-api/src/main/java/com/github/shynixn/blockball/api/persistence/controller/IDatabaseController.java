@@ -31,7 +31,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface IDatabaseController<T> extends IController<T> {
+public interface IDatabaseController<T> extends Controller<T> {
     /**
      * Returns the item of the given id.
      *

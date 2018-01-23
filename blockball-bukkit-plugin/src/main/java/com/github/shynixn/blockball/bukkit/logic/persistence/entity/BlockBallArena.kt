@@ -1,0 +1,77 @@
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity
+
+import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
+import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.MetaInfo
+import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.area.SelectedArea
+import org.bukkit.Location
+
+/**
+ * Created by Shynixn 2018.
+ * <p>
+ * Version 1.2
+ * <p>
+ * MIT License
+ * <p>
+ * Copyright (c) 2018 by Shynixn
+ * <p>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p>
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * <p>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+class BlockBallArena(
+        /** Unique [name] of the arena. */
+        @YamlSerializer.YamlSerialize(orderNumber = 1, value = "name")
+        override val name: String, corner1: Location, corner2: Location, customId: Long = 0) : SelectedArea<BukkitArena>(corner1, corner2), BukkitArena {
+
+    init {
+        this.id = customId
+    }
+
+    /** [displayName] of the arena on signs or messages. */
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "displayname")
+    override var displayName: String = name
+
+    /** Is the arena ready to be placed. */
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "enabled")
+    override var enabled: Boolean = false
+
+    /** [gameType] of the arena */
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "gamemode")
+    override var gameType: GameType = GameType.HUBGAME
+
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "meta")
+    private val metaData: MutableMap<String, Any> = HashMap()
+
+    /** Returns the meta data of [type]. */
+    override fun getMeta(type: MetaInfo, team: Team): Any {
+        if (metaData.containsKey(type.name)) {
+            val data: Any = metaData[type.name]!!
+            if (data.javaClass.isArray) {
+                return if (team == Team.RED) {
+                    (data as Array<*>)[0]!!
+                } else {
+                    (data as Array<*>)[1]!!
+                }
+            }
+            return data
+        }
+        throw IllegalArgumentException("Meta data not found!")
+    }
+}

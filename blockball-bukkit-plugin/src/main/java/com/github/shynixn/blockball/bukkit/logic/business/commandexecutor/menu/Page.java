@@ -79,7 +79,7 @@ public abstract class Page {
     }
 
     TeamMeta getTeamMeta(Arena arena, Team team) {
-        return arena.getMeta().findByTeam(TeamMeta[].class, team).get();
+        return null;
     }
 
     String mergeArgs(int starting, String[] args) {
