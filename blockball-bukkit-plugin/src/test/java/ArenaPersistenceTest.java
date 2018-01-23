@@ -1,5 +1,3 @@
-package com.github.shynixn.blockball.logic.persistence.controller;
-
 import com.github.shynixn.blockball.api.bukkit.event.controller.BukkitArenaController;
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder;
@@ -7,6 +5,7 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRep
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -18,8 +17,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Logger;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -53,17 +55,16 @@ import static org.mockito.Mockito.when;
  */
 public class ArenaPersistenceTest {
 
-  @BeforeAll
-    public static void createFolder() {
+    @BeforeAll
+    public static void createFolder() throws IOException {
         File file = new File("BlockBall");
         if (file.exists())
-            file.delete();
+            FileUtils.deleteDirectory(file);
         file.mkdir();
 
         final Server server = mock(Server.class);
         when(server.getLogger()).thenReturn(Logger.getAnonymousLogger());
         Bukkit.setServer(server);
-
 
         World world = mock(World.class);
         when(server.getScheduler()).thenReturn(mock(BukkitScheduler.class));
@@ -71,23 +72,90 @@ public class ArenaPersistenceTest {
         when(server.getWorld(any(String.class))).thenReturn(world);
     }
 
-    @Test
-    public void noPropertiesArena() {
+    private static Plugin initPlugin() {
         Plugin plugin = mock(Plugin.class);
         when(plugin.getLogger()).thenReturn(Logger.getGlobal());
         when(plugin.getServer()).thenReturn(Bukkit.getServer());
 
         when(plugin.getDataFolder()).thenReturn(new File("BlockBall"));
+        return plugin;
+    }
 
-        Injector injector = Guice.createInjector(new GoogleGuiceBinder(plugin));
+    @Test
+    public void googleGuiceContainerTest() {
+        final Plugin plugin = initPlugin();
+        final Injector injector = Guice.createInjector(new GoogleGuiceBinder(plugin));
 
         final BukkitArenaController arenaController = injector.getInstance(Key.get(ArenaRepository.class));
-        System.out.println("AREANA: "+ arenaController);
-        BukkitArena arena = arenaController.create("custom1", new Location(plugin.getServer().getWorld(""), 2, 2,2), new Location(plugin.getServer().getWorld(""), 2, 2,2));
-        arenaController.store(arena);
-
-
+        assertNotNull(arenaController);
     }
+
+    @Test
+    public void storeStandardArenaTest() {
+        final Plugin plugin = initPlugin();
+        final Injector injector = Guice.createInjector(new GoogleGuiceBinder(plugin));
+
+        final Location location = new Location(plugin.getServer().getWorld(""), 2,5,3);
+        final BukkitArenaController arenaController = injector.getInstance(Key.get(ArenaRepository.class));
+
+        final BukkitArena bukkitArena = arenaController.create("name1", location, location);
+        assertNotNull(bukkitArena);
+
+        arenaController.store(bukkitArena);
+        assertEquals(1,arenaController.getCount());
+        arenaController.store(bukkitArena);
+        assertEquals(1,arenaController.getCount());
+
+        arenaController.reload();
+        assertEquals(1, arenaController.getCount());
+
+        BukkitArena newBukktiArena = arenaController.getArenaByName("name1");
+        assertNotNull(newBukktiArena);
+
+        assertEquals("name1", newBukktiArena.getDisplayName());
+        assertEquals(false,newBukktiArena.getEnabled());
+
+        newBukktiArena.setDisplayName("name2");
+        newBukktiArena.setEnabled(true);
+
+        arenaController.store(newBukktiArena);
+        assertEquals(1, arenaController.getCount());
+
+        arenaController.reload();
+
+        BukkitArena finalBukkitArena = arenaController.getArenaByName("name1");
+        assertEquals("name2", finalBukkitArena.getDisplayName());
+        assertEquals(true, finalBukkitArena.getEnabled());
+    }
+
+
+    @Test
+    public void storeRestoreSelectionTest() {
+        final Plugin plugin = initPlugin();
+        final Injector injector = Guice.createInjector(new GoogleGuiceBinder(plugin));
+
+        final Location location1 = new Location(plugin.getServer().getWorld(""), 2,5,3, 40.2F, 73.2F);
+        final Location location2 = new Location(plugin.getServer().getWorld(""), 40,50,3, 0.53F, 23.2F);
+
+        final BukkitArenaController arenaController = injector.getInstance(Key.get(ArenaRepository.class));
+
+        final BukkitArena bukkitArena = arenaController.create("cheese", location1, location2);
+        arenaController.store(bukkitArena);
+        arenaController.reload();
+
+        final BukkitArena loadedArena = arenaController.getArenaByName("cheese");
+        assertEquals(2, loadedArena.getLowerCorner().getX());
+        assertEquals(5, loadedArena.getLowerCorner().getY());
+        assertEquals(3, loadedArena.getLowerCorner().getZ());
+
+        assertEquals(40, loadedArena.getUpperCorner().getX());
+        assertEquals(50, loadedArena.getUpperCorner().getY());
+        assertEquals(3, loadedArena.getUpperCorner().getZ());
+    }
+
+
+
+
 
 /*    @Test
     public void storeAndRestoreMinRequiredPropertiesArena() {

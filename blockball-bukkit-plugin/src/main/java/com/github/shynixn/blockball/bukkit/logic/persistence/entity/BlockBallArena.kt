@@ -35,18 +35,21 @@ import org.bukkit.Location
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockBallArena(
-        /** Unique [name] of the arena. */
-        @YamlSerializer.YamlSerialize(orderNumber = 1, value = "name")
-        override val name: String, corner1: Location, corner2: Location, customId: Long = 0) : SelectedArea<BukkitArena>(corner1, corner2), BukkitArena {
+class BlockBallArena() : SelectedArea<BukkitArena>(), BukkitArena {
 
-    init {
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "name")
+    override var name: String = ""
+
+    constructor(name: String, corner1: Location, corner2: Location, customId: Long = 0) : this() {
         this.id = customId
+        this.name = name
+        this.displayName = name;
+        setCorners(corner1, corner2)
     }
 
     /** [displayName] of the arena on signs or messages. */
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "displayname")
-    override var displayName: String = name
+    override var displayName: String = ""
 
     /** Is the arena ready to be placed. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "enabled")
@@ -56,7 +59,7 @@ class BlockBallArena(
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "gamemode")
     override var gameType: GameType = GameType.HUBGAME
 
-    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "meta")
+    @YamlSerializer.YamlSerialize(orderNumber = 7, value = "meta")
     private val metaData: MutableMap<String, Any> = HashMap()
 
     /** Returns the meta data of [type]. */

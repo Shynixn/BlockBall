@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.area
 
 import com.github.shynixn.blockball.api.persistence.entity.AreaSelection
 import com.github.shynixn.blockball.api.persistence.entity.IPosition
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 import org.bukkit.Bukkit
@@ -34,20 +35,18 @@ import org.bukkit.Location
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-open class SelectedArea<PersistenceEntity>(corner1: Location, corner2: Location) : PersistenceObject<PersistenceEntity>(), AreaSelection<Location, PersistenceEntity> {
-
-    init {
-        this.setCorners(corner1, corner2)
-    }
+open class SelectedArea<PersistenceEntity> : PersistenceObject<PersistenceEntity>(), AreaSelection<Location, PersistenceEntity> {
 
     /** [upperCorner] of the selected square arena. */
-    final override var upperCorner: IPosition? = null
+    @YamlSerializer.YamlSerialize(value = "corner-1", orderNumber = 5)
+    final override var upperCorner: LocationBuilder? = null
         private set(value) {
             field = value
         }
 
     /** [lowerCorner] of the selected square arena. */
-    final override var lowerCorner: IPosition? = null
+    @YamlSerializer.YamlSerialize(value = "corner-2", orderNumber = 6)
+    final override var lowerCorner: LocationBuilder? = null
         private set(value) {
             field = value
         }
