@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.api.persistence.entity
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.MetaInfo
 import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
 
 /**
  * Created by Shynixn 2018.
@@ -45,6 +46,6 @@ interface Arena<Location, PersistenceObject> : AreaSelection<Location, Persisten
     /** [gameType] of the arena */
     var gameType: GameType
 
-    /** Returns the meta data of [type]. */
-    fun getMeta(type: MetaInfo, team : Team = Team.RED): Any
+    /** Collection of the arena meta data. */
+    val meta: ArenaMeta
 }

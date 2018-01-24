@@ -1,4 +1,8 @@
-package com.github.shynixn.blockball.api.business.enumeration
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta
+
+import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties
 
 /**
  * Created by Shynixn 2018.
@@ -27,10 +31,8 @@ package com.github.shynixn.blockball.api.business.enumeration
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-enum class MetaInfo {
-    /** Ball Information */
-    BALL,
-
-    /** Hub Lobby Information */
-    HUBLOBBY
+class BlockBallMetaCollection : ArenaMeta {
+    /** Meta data of the hublobby. */
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "hubgame")
+    override var hubLobbyMeta: HubLobbyProperties = HubLobbyProperties()
 }

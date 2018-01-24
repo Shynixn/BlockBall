@@ -1,7 +1,11 @@
 import com.github.shynixn.blockball.api.bukkit.event.controller.BukkitArenaController;
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena;
+import com.github.shynixn.blockball.api.business.enumeration.MetaInfo;
+import com.github.shynixn.blockball.api.business.enumeration.Team;
+import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -153,7 +157,36 @@ public class ArenaPersistenceTest {
         assertEquals(3, loadedArena.getUpperCorner().getZ());
     }
 
+    @Test
+    public void storeRestoreHubLobbyTest() {
+        final Plugin plugin = initPlugin();
+        final Injector injector = Guice.createInjector(new GoogleGuiceBinder(plugin));
 
+        final Location location1 = new Location(plugin.getServer().getWorld(""), 2,5,3, 40.2F, 73.2F);
+        final Location location2 = new Location(plugin.getServer().getWorld(""), 40,50,3, 0.53F, 23.2F);
+
+        final BukkitArenaController arenaController = injector.getInstance(Key.get(ArenaRepository.class));
+
+        final BukkitArena bukkitArena = arenaController.create("cheese", location1, location2);
+        HubLobbyMeta hubLobbyMeta = bukkitArena.getMeta().getHubLobbyMeta();
+        hubLobbyMeta.getRedTeamSigns().add(new LocationBuilder("world1", 5,2,3,0,0));
+        hubLobbyMeta.getBlueTeamSigns().add(new LocationBuilder("world2", 45,2.2,35,0,0));
+        hubLobbyMeta.getLeaveSigns().add(new LocationBuilder("world3", 45,450,90,0,0));
+
+        arenaController.store(bukkitArena);
+        arenaController.reload();
+
+        final BukkitArena loadedArena = arenaController.getArenaByName("cheese");
+        HubLobbyMeta newMeta = loadedArena.getMeta().getHubLobbyMeta();
+
+        assertEquals(45, newMeta.getBlueTeamSigns().get(0).getX());
+        assertEquals(2.2, newMeta.getBlueTeamSigns().get(0).getY());
+        assertEquals(35, newMeta.getBlueTeamSigns().get(0).getZ());
+
+        assertEquals(1, newMeta.getBlueTeamSigns().size());
+        assertEquals(1, newMeta.getRedTeamSigns().size());
+        assertEquals(1, newMeta.getLeaveSigns().size());
+    }
 
 
 

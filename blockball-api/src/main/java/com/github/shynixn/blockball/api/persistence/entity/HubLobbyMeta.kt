@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.business.enumeration
+package com.github.shynixn.blockball.api.persistence.entity
 
 /**
  * Created by Shynixn 2018.
@@ -27,10 +27,16 @@ package com.github.shynixn.blockball.api.business.enumeration
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-enum class MetaInfo {
-    /** Ball Information */
-    BALL,
+interface HubLobbyMeta {
+    /** List of signs which can be clicked to join the red team.*/
+    val redTeamSigns: MutableList<IPosition>
 
-    /** Hub Lobby Information */
-    HUBLOBBY
+    /** List of signs which can be clicked to join the red team.*/
+    val blueTeamSigns: MutableList<IPosition>
+
+    /** List of signs which can be clicked to leave the game. */
+    val leaveSigns: MutableList<IPosition>
+
+    /** Spawnpoint when someone leaves the hub game. */
+    val leaveSpawnpoint: IPosition?
 }

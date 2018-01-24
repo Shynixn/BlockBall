@@ -1,18 +1,15 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta;
+package com.github.shynixn.blockball.api.persistence.entity.meta
 
-import com.github.shynixn.blockball.api.business.enumeration.Team;
-
-import java.util.List;
-import java.util.Optional;
+import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,25 +29,8 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface MetaDataTransaction {
+interface ArenaMeta {
 
-    <T> Optional<List<T>> findList(Class<T> metaClass);
-
-    /**
-     * Searches for the given MetaData class
-     *
-     * @param metaClass metaDataClass
-     * @param <T>       class
-     * @return optMeta
-     */
-    <T> Optional<T> find(Class<T> metaClass);
-
-    /**
-     * Searches for the given MetaData class and team
-     *
-     * @param metaClass metaClass
-     * @param team      team
-     * @return meta
-     */
-    <T> Optional<T> findByTeam(Class<T[]> metaClass, Team team);
+    /** Meta data of the hublobby. */
+    val hubLobbyMeta: HubLobbyMeta
 }

@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display;
 
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer;
 import org.bukkit.Location;

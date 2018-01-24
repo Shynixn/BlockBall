@@ -6,17 +6,13 @@ import com.github.shynixn.blockball.api.business.enumeration.GameStatus;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta;
-import com.github.shynixn.blockball.api.persistence.entity.IPosition;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ScreenUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -218,7 +214,7 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
      */
     @Override
     public void onUpdateSigns() {
-        for (int i = 0; i < this.hubLobbyMeta.getRedTeamSignPositions().size(); i++) {
+        /*for (int i = 0; i < this.hubLobbyMeta.getRedTeamSignPositions().size(); i++) {
             final IPosition position = this.hubLobbyMeta.getRedTeamSignPositions().get(i);
             final Location location = ((LocationBuilder) position).toLocation();
             if (location.getBlock().getType() == Material.SIGN_POST || location.getBlock().getType() == Material.WALL_SIGN) {
@@ -237,7 +233,7 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
             } else {
                 this.hubLobbyMeta.removeBlueTeamSignPosition(position);
             }
-        }
+        }*/
     }
 
     private void preparePlayerForGame(Player player, Team team, TeamMeta teamMeta) {

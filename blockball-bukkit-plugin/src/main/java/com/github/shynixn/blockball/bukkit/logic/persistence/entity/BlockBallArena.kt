@@ -2,9 +2,9 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.business.enumeration.MetaInfo
-import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.BlockBallMetaCollection
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.area.SelectedArea
 import org.bukkit.Location
 
@@ -37,15 +37,16 @@ import org.bukkit.Location
  */
 class BlockBallArena() : SelectedArea<BukkitArena>(), BukkitArena {
 
-    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "name")
-    override var name: String = ""
-
     constructor(name: String, corner1: Location, corner2: Location, customId: Long = 0) : this() {
         this.id = customId
         this.name = name
-        this.displayName = name;
+        this.displayName = name
         setCorners(corner1, corner2)
     }
+
+    /** Unique [name] of the arena. */
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "name")
+    override var name: String = ""
 
     /** [displayName] of the arena on signs or messages. */
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "displayname")
@@ -59,22 +60,7 @@ class BlockBallArena() : SelectedArea<BukkitArena>(), BukkitArena {
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "gamemode")
     override var gameType: GameType = GameType.HUBGAME
 
+    /** Collection of the arena meta data. */
     @YamlSerializer.YamlSerialize(orderNumber = 7, value = "meta")
-    private val metaData: MutableMap<String, Any> = HashMap()
-
-    /** Returns the meta data of [type]. */
-    override fun getMeta(type: MetaInfo, team: Team): Any {
-        if (metaData.containsKey(type.name)) {
-            val data: Any = metaData[type.name]!!
-            if (data.javaClass.isArray) {
-                return if (team == Team.RED) {
-                    (data as Array<*>)[0]!!
-                } else {
-                    (data as Array<*>)[1]!!
-                }
-            }
-            return data
-        }
-        throw IllegalArgumentException("Meta data not found!")
-    }
+    override val meta: BlockBallMetaCollection = BlockBallMetaCollection()
 }
