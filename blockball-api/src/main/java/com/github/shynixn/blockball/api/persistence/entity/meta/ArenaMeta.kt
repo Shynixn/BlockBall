@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta
 
 import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 
 /**
  * Created by Shynixn 2018.
@@ -29,8 +30,14 @@ import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaMeta {
+interface ArenaMeta<Location, AreaSelectionEntity, ItemStack> {
 
     /** Meta data of the hublobby. */
     val hubLobbyMeta: HubLobbyMeta
+
+    /** Meta data of the redTeam. */
+    val redTeamMeta: TeamMeta<Location, AreaSelectionEntity, ItemStack>
+
+    /** Meta data of the blueTeam. */
+    val blueTeamMeta: TeamMeta<Location, AreaSelectionEntity, ItemStack>
 }

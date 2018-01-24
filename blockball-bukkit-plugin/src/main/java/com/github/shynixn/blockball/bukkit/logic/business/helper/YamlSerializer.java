@@ -133,10 +133,13 @@ public final class YamlSerializer {
         final Map<String, Object> data = new LinkedHashMap<>();
         int i = 1;
         for (final Object object : objects) {
-            if (ConfigurationSerializable.class.isAssignableFrom(object.getClass())) {
-                data.put(String.valueOf(i), ((ConfigurationSerializable) object).serialize());
-            } else {
-                data.put(String.valueOf(i), serializeObject(object));
+            if(object != null)
+            {
+                if (ConfigurationSerializable.class.isAssignableFrom(object.getClass())) {
+                    data.put(String.valueOf(i), ((ConfigurationSerializable) object).serialize());
+                } else {
+                    data.put(String.valueOf(i), serializeObject(object));
+                }
             }
             i++;
         }

@@ -91,7 +91,7 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
                 joiningTeam = Team.BLUE;
             }
         }
-        if (joiningTeam == Team.RED && this.redTeamPlayers.size() < this.redTeamMeta.getMaxAmountOfPlayers()) {
+        /*if (joiningTeam == Team.RED && this.redTeamPlayers.size() < this.redTeamMeta.getMaxAmountOfPlayers()) {
             final GameJoinEvent event = new GameJoinEvent(this, (Player) player);
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
@@ -109,7 +109,7 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
                 return true;
             }
             return false;
-        }
+        }*/
         return false;
     }
 
@@ -181,14 +181,14 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
      */
     @Override
     public void onWin(TeamMeta teamMeta) {
-        ScreenUtils.setTitle(this.replaceMessagePlaceholders(teamMeta.getWinningMessageTitle().get())
+       /* ScreenUtils.setTitle(this.replaceMessagePlaceholders(teamMeta.getWinningMessageTitle().get())
                 , teamMeta.getWinningMessageSubtitle().get()
                 , 0, 20 * 3, 10, (List<Player>) (Object) this.getPlayers());
         try {
             this.close();
         } catch (final Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     /**
@@ -204,9 +204,9 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
         } catch (final Exception e) {
             Bukkit.getServer().getConsoleSender().sendMessage(BlockBallPlugin.Companion.getPREFIX_CONSOLE() + ChatColor.RED + "Invalid 1.8/1.9 sound. [BallGoalSound]");
         }
-        ScreenUtils.setTitle(this.replaceMessagePlaceholders(teamMeta.getScoreMessageTitle().get())
+     /*   ScreenUtils.setTitle(this.replaceMessagePlaceholders(teamMeta.getScoreMessageTitle().get())
                 , teamMeta.getScoreMessageSubtitle().get()
-                , 0, 20 * 3, 10, (List<Player>) (Object) this.getPlayers());
+                , 0, 20 * 3, 10, (List<Player>) (Object) this.getPlayers());*/
     }
 
     /**
@@ -242,7 +242,7 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
         gamePlayer.storeForHubGame();
         gamePlayer.team = team;*/
 
-        player.setWalkSpeed(teamMeta.getWalkingSpeed());
+    /*    player.setWalkSpeed(teamMeta.getWalkingSpeed());
         player.getInventory().setArmorContents((ItemStack[]) teamMeta.getArmorContents());
 
         if (teamMeta.getSpawnPoint().isPresent()) {
@@ -270,4 +270,5 @@ public class HubGame extends RGame implements com.github.shynixn.blockball.api.b
             return this.hubLobbyMeta.getRedTeamSignPositions();
         }
     }*/
+    }
 }

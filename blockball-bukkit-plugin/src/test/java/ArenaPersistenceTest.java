@@ -3,9 +3,12 @@ import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena;
 import com.github.shynixn.blockball.api.business.enumeration.MetaInfo;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.area.SelectedArea;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -14,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -187,6 +191,29 @@ public class ArenaPersistenceTest {
         assertEquals(1, newMeta.getRedTeamSigns().size());
         assertEquals(1, newMeta.getLeaveSigns().size());
     }
+
+    @Test
+    public void storeRestoreTeamPropertiesTest() {
+        final Plugin plugin = initPlugin();
+        final Injector injector = Guice.createInjector(new GoogleGuiceBinder(plugin));
+
+        final Location location1 = new Location(plugin.getServer().getWorld(""), 2,5,3, 40.2F, 73.2F);
+        final Location location2 = new Location(plugin.getServer().getWorld(""), 40,50,3, 0.53F, 23.2F);
+
+        final BukkitArenaController arenaController = injector.getInstance(Key.get(ArenaRepository.class));
+
+        final BukkitArena bukkitArena = arenaController.create("cheese", location1, location2);
+        TeamMeta arenaMeta = bukkitArena.getMeta().getBlueTeamMeta();
+
+        arenaController.store(bukkitArena);
+        arenaController.reload();
+
+        final BukkitArena loadedArena = arenaController.getArenaByName("cheese");
+        HubLobbyMeta newMeta = loadedArena.getMeta().getHubLobbyMeta();
+
+       //TODO!
+    }
+
 
 
 

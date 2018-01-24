@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.api.bukkit.event.entity
 
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import org.bukkit.Location
+import org.bukkit.inventory.ItemStack
 
 /**
  * Created by Shynixn 2018.
@@ -30,4 +31,4 @@ import org.bukkit.Location
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitArena : Arena<Location, BukkitArena>
+interface BukkitArena : Arena<Location, ItemStack,BukkitArena>
