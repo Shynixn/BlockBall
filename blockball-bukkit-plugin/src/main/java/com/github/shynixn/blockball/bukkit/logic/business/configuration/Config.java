@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.configuration;
 
+import com.github.shynixn.ball.bukkit.logic.persistence.configuration.SimpleConfig;
 import com.github.shynixn.blockball.api.persistence.entity.IPosition;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
 import org.bukkit.util.Vector;

@@ -44,11 +44,6 @@ public class BlockBallBungeeCordManager implements AutoCloseable{
     private BungeeCordSignController signController;
     private BungeeCordConnectController connectController;
 
-    public BlockBallBungeeCordManager(Plugin plugin)
-    {
-
-    }
-
     /**
      * Closes this resource, relinquishing any underlying resources.
      * This method is invoked automatically on objects managed by the

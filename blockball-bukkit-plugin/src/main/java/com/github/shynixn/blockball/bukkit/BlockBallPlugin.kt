@@ -2,12 +2,15 @@ package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.controller.BallController
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectController
 import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController
+import com.github.shynixn.blockball.api.business.controller.GameController
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BlockBallReloadCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.NewArenaCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config
+import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ReflectionUtils
 import com.github.shynixn.blockball.bukkit.logic.business.helper.UpdateUtils
@@ -64,6 +67,9 @@ class BlockBallPlugin : JavaPlugin() {
     private var blockBallBungeeCordManager: BlockBallBungeeCordManager? = null
 
     @Inject
+    private var gameController: GameRepository? = null;
+
+    @Inject
     private var arenaCommandexecutor: NewArenaCommandExecutor? = null
 
     @Inject
@@ -74,6 +80,7 @@ class BlockBallPlugin : JavaPlugin() {
 
     override fun onEnable() {
         this.saveDefaultConfig()
+        Config.getInstance().reload()
         Guice.createInjector(GoogleGuiceBinder(this))
         if (!VersionSupport.isServerVersionSupported(PLUGIN_NAME, PREFIX_CONSOLE)) {
             this.isnEnabled = false
@@ -94,6 +101,9 @@ class BlockBallPlugin : JavaPlugin() {
         success = false
         if (!Config.getInstance().isOnlyBungeeCordLinkingEnabled) {
             try {
+                ReflectionUtils.invokeMethodByClass<Any>(BlockBallApi::class.java, "initializeBlockBall"
+                        , arrayOf(BallController::class.java, GameController::class.java)
+                        , arrayOf(this.blockBallBungeeCordManager!!.bungeeCordSignController, this.gameController))
                 success = true
             } catch (e: Exception) {
                 logger.log(Level.WARNING, "Failed to enable plugin.", e)
@@ -110,7 +120,6 @@ class BlockBallPlugin : JavaPlugin() {
         if (Config.getInstance().isBungeeCordLinkingEnabled) {
             Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + "Starting BungeeCord linking....")
             try {
-                this.blockBallBungeeCordManager = BlockBallBungeeCordManager(this)
                 ReflectionUtils.invokeMethodByClass<Any>(BlockBallApi::class.java, "initializeBungeeCord"
                         , arrayOf(BungeeCordSignController::class.java, BungeeCordConnectController::class.java)
                         , arrayOf(this.blockBallBungeeCordManager!!.bungeeCordSignController, this.blockBallBungeeCordManager!!.bungeeCordConnectController))

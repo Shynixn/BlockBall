@@ -105,6 +105,9 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                     if (result != CommandResult.CANCEL_MESSAGE) {
                         this.sendMessage(player, page.buildPage(cache));
                     }
+                    if (result == CommandResult.ARENA_NOTVALID) {
+              //          this.sendMessage(player, CommandResult.ARENA_NOTVALID.getMessage());
+                    }
                 }
                 break;
             }
@@ -121,7 +124,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.getCommand() + " " + usedPage.getPreviousId())
                 .setHoverText("Opens the blockball arena configuration.")
                 .builder()
-                .component(">>Save and reload<<")
+                .component(" >>Save and reload<<")
                 .setColor(ChatColor.BLUE)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.OPEN_RELOAD.getCommand())
                 .setHoverText("Opens the blockball arena configuration.")

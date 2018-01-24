@@ -62,17 +62,17 @@ public class MainConfigurationPage extends Page {
      */
     @Override
     public CommandResult execute(Player player, BlockBallCommand command, Object[] cache, String[] args) {
-    /*    if (command == BlockBallCommand.ARENA_CREATE) {
+          if (command == BlockBallCommand.ARENA_CREATE) {
            // cache[0] = BlockBallApi.getDefaultGameController().getArenaController().create();
         } else if (command == BlockBallCommand.ARENA_EDIT) {
-            cache[0] = BlockBallApi.getDefaultGameController().getArenaController().getById(args[2]).get();
+           // cache[0] = BlockBallApi.getDefaultGameController().getArenaController().getById(args[2]).get();
         } else if (command == BlockBallCommand.ARENA_DELETE) {
-            final Arena arena = BlockBallApi.getDefaultGameController().getArenaController().getById(args[2]).get();
-            BlockBallApi.getDefaultGameController().getArenaController().remove(arena);
+         //   final Arena arena = BlockBallApi.getDefaultGameController().getArenaController().getById(args[2]).get();
+          //  BlockBallApi.getDefaultGameController().getArenaController().remove(arena);
             return CommandResult.BACK;
         } else if (command == BlockBallCommand.ARENA_SETBALLSPAWNPOINT) {
             final Arena arena = (Arena) cache[0];
-            arena.setBallSpawnLocation(player.getLocation());
+          //  arena.setBallSpawnLocation(player.getLocation());
         } else if (command == BlockBallCommand.ARENA_SETDISPLAYNAME) {
             final Arena arena = (Arena) cache[0];
             arena.setDisplayName(this.mergeArgs(2, args));
@@ -90,9 +90,9 @@ public class MainConfigurationPage extends Page {
             final Location left = WorldEditConnection.getLeftSelection(player);
             final Location right = WorldEditConnection.getRightSelection(player);
             if (left != null && right != null) {
-                arena.getMeta().findByTeam(TeamMeta[].class, Team.RED).get()
-                        .getGoal()
-                        .setCorners(left, right);
+               // arena.getMeta().findByTeam(TeamMeta[].class, Team.RED).get()
+                //        .getGoal()
+                 //       .setCorners(left, right);
             } else {
                 return CommandResult.WESELECTION_MISSING;
             }
@@ -101,27 +101,24 @@ public class MainConfigurationPage extends Page {
             final Location left = WorldEditConnection.getLeftSelection(player);
             final Location right = WorldEditConnection.getRightSelection(player);
             if (left != null && right != null) {
-            /*    arena.getMeta().findByTeam(TeamMeta[].class, Team.BLUE).get()
-                        .getGoal()
-                        .setCorners(left, right);
+           //   arena.getMeta().findByTeam(TeamMeta[].class, Team.BLUE).get()
+           //             .getGoal()
+           //             .setCorners(left, right);
             } else {
                 return CommandResult.WESELECTION_MISSING;
             }
         } else if (command == BlockBallCommand.ARENA_SAVE) {
             final Arena arena = (Arena) cache[0];
-          /*  if (arena.getLowerCorner() != null
-                    && arena.getMeta().findByTeam(TeamMeta[].class, Team.BLUE).get().getGoal().getLowerCorner() != null
-                    && arena.getMeta().findByTeam(TeamMeta[].class, Team.RED).get().getGoal().getLowerCorner() != null
-                    && arena.getBallSpawnLocation() != null
+           if (arena != null && arena.getLowerCorner() != null && arena.getMeta().getBlueTeamMeta().getGoal().getLowerCorner() != null
+                   && arena.getMeta().getRedTeamMeta().getGoal().getLowerCorner() != null
                     ) {
                 BlockBallApi.getDefaultGameController()
                         .getArenaController().store(arena);
             } else {
                 return CommandResult.ARENA_NOTVALID;
-            }
+            }//
         }
-        return super.execute(player, command, cache, args);*/
-    return null;
+        return super.execute(player, command, cache, args);
     }
 
     /**

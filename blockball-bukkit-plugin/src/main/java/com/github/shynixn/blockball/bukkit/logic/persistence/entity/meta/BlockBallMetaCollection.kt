@@ -42,7 +42,7 @@ import org.bukkit.inventory.ItemStack
 class BlockBallMetaCollection : ArenaMeta<Location, AreaSelection<Location, BukkitArena>, ItemStack> {
     /** Meta data of the blueTeam. */
     override val blueTeamMeta: TeamProperties
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+            = TeamProperties("Team Blue", "&c", "<bluecolor><player>", "scored for <blue>.", "<bluecolor><blue>", "<bluecolor> has won the match");
     /** Meta data of the hublobby. */
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "hubgame")
     override var hubLobbyMeta: HubLobbyProperties = HubLobbyProperties()

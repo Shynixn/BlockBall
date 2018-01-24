@@ -43,6 +43,7 @@ open internal class SimpleConfig {
      */
     open fun reload() {
         this.plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
+        println("PLUGIN: " + plugin)
         this.plugin?.reloadConfig()
     }
 
@@ -52,7 +53,7 @@ open internal class SimpleConfig {
      * @param path path
      * @return data
      */
-    internal fun <T> getData(path: String): T? {
+    fun <T> getData(path: String): T? {
         var data = this.plugin?.config?.get(path)
         if (data != null && data is String) {
             data = ChatColor.translateAlternateColorCodes('&', data)
