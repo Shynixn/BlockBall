@@ -104,7 +104,7 @@ class TeamProperties(
             for (i in value.indices) {
                 if (value[i] != null) {
                     val configuration = YamlConfiguration()
-                    configuration.set("item", value[i])
+                    configuration.set("item", value[i] as ItemStack)
                     this.internalArmorContents[i] = configuration.saveToString()
                 }
             }

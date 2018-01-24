@@ -41,13 +41,13 @@ import org.bukkit.inventory.ItemStack
  */
 class BlockBallMetaCollection : ArenaMeta<Location, AreaSelection<Location, BukkitArena>, ItemStack> {
     /** Meta data of the blueTeam. */
-    override val blueTeamMeta: TeamMeta<Location, AreaSelection<Location, BukkitArena>, ItemStack>
+    override val blueTeamMeta: TeamProperties
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
     /** Meta data of the hublobby. */
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "hubgame")
     override var hubLobbyMeta: HubLobbyProperties = HubLobbyProperties()
     /** Meta data of the redTeam. */
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "team-red")
-    override val redTeamMeta: TeamMeta<Location, AreaSelection<Location, BukkitArena>, ItemStack>
+    override val redTeamMeta: TeamProperties
             = TeamProperties("Team Red", "&c", "<redcolor><player>", "scored for <red>.", "<redcolor><red>", "<redcolor> has won the match");
 }

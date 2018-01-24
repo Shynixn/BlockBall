@@ -298,7 +298,7 @@ public final class YamlSerializer {
                             } else if (field.getType().isEnum()) {
                                 field.set(object, Enum.valueOf((Class) field.getType(), data.get(yamlAnnotation.value()).toString()));
                             } else if (field.getType().isArray()) {
-                                field.set(object, deserializeArray(clazzQuery, ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                field.set(object, deserializeArray(field.getType().getComponentType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                             } else if (Collection.class.isAssignableFrom(field.getType())) {
                                 if (field.get(object) != null) {
                                     ((Collection) field.get(object)).clear();

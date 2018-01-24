@@ -1,14 +1,10 @@
 import com.github.shynixn.blockball.api.bukkit.event.controller.BukkitArenaController;
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena;
-import com.github.shynixn.blockball.api.business.enumeration.MetaInfo;
-import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.area.SelectedArea;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -17,10 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -78,6 +72,7 @@ public class ArenaPersistenceTest {
         when(server.getScheduler()).thenReturn(mock(BukkitScheduler.class));
         when(world.getName()).thenReturn("TestWorld");
         when(server.getWorld(any(String.class))).thenReturn(world);
+
     }
 
     private static Plugin initPlugin() {
@@ -203,15 +198,23 @@ public class ArenaPersistenceTest {
         final BukkitArenaController arenaController = injector.getInstance(Key.get(ArenaRepository.class));
 
         final BukkitArena bukkitArena = arenaController.create("cheese", location1, location2);
-        TeamMeta arenaMeta = bukkitArena.getMeta().getBlueTeamMeta();
+        TeamMeta arenaMeta = bukkitArena.getMeta().getRedTeamMeta();
 
+
+        arenaMeta.setMinAmount(3);
+        arenaMeta.setJoinMessage("Not only.");
         arenaController.store(bukkitArena);
         arenaController.reload();
 
         final BukkitArena loadedArena = arenaController.getArenaByName("cheese");
-        HubLobbyMeta newMeta = loadedArena.getMeta().getHubLobbyMeta();
+        TeamMeta newMeta= loadedArena.getMeta().getRedTeamMeta();
 
-       //TODO!
+
+        assertEquals("Team Red", newMeta.getDisplayName());
+        assertEquals("&c", newMeta.getPrefix());
+        assertEquals("Not only.", newMeta.getJoinMessage());
+        assertEquals(3, newMeta.getMinAmount());
+        assertEquals(10, newMeta.getMaxAmount());
     }
 
 
