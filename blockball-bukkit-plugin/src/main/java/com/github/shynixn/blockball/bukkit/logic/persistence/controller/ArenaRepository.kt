@@ -56,7 +56,16 @@ class ArenaRepository(private val items: MutableList<BukkitArena> = ArrayList())
 
     /** Creates a new arena with the given properties. */
     override fun create(name: String, corner1: Location, corner2: Location): BukkitArena {
-        return BlockBallArena(name, corner1, corner2)
+        val arena = BlockBallArena(name, corner1, corner2)
+        arena.name = getNewId()
+        return arena
+    }
+
+    internal fun create(): BukkitArena {
+        val arena = BlockBallArena()
+        arena.name = getNewId()
+        arena.displayName = "Arena: " + arena.name
+        return arena
     }
 
     /** Stores a new item into the repository. */
@@ -143,6 +152,15 @@ class ArenaRepository(private val items: MutableList<BukkitArena> = ArrayList())
         } catch (ex: InvalidConfigurationException) {
             logger!!.log(Level.WARNING, "Cannot save arena.", ex)
         }
+    }
+
+    private fun getNewId(): String {
+        for (i in 1 until Integer.MAX_VALUE) {
+            if (getArenaByName(i.toString()) == null) {
+                return i.toString()
+            }
+        }
+        throw RuntimeException("Failed to gather id.")
     }
 
     private fun getFolder(): File {

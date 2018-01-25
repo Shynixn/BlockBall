@@ -67,6 +67,8 @@ abstract class DataBaseRepository<T> implements IDatabaseController<T> {
      */
     @Override
     public List<T> getAll() {
+
+
         return Collections.unmodifiableList(this.select());
     }
 

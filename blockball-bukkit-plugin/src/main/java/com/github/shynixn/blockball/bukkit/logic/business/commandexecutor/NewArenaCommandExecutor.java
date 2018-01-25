@@ -46,7 +46,11 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
 
     private final Map<Player, Object[]> cache = new HashMap<>();
 
-    private final List<Page> pages = new ArrayList<>();
+    @Inject
+    private OpenPage openPage;
+
+    @Inject
+    private MainConfigurationPage mainConfigurationPage;
 
     @Inject
     private ArenaRepository arenaController;
@@ -59,8 +63,6 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
     @Inject
     public NewArenaCommandExecutor(Plugin plugin) {
         super("blockball", (JavaPlugin) plugin);
-        this.pages.add(new OpenPage());
-        this.pages.add(new MainConfigurationPage());
     }
 
     /**
@@ -85,7 +87,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
         if (command == null)
             throw new IllegalArgumentException("Command is not registered!");
         Page usedPage = null;
-        for (final Page page : this.pages) {
+        for (final Page page : this.getPageCache()) {
             if (page.getCommandKey() != null && page.getCommandKey() == command.getKey()) {
                 usedPage = page;
                 if (command == BlockBallCommand.BACK) {
@@ -94,7 +96,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                 } else {
                     final CommandResult result = page.execute(player, command, cache, args);
                     if (result == CommandResult.BACK) {
-                        player.performCommand("blockball back" + " " + usedPage.getPreviousId());
+                        player.performCommand( "blockball open back " + usedPage.getPreviousId());
                         return;
                     }
                     if (result != CommandResult.SUCCESS && result != CommandResult.CANCEL_MESSAGE) {
@@ -106,7 +108,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                         this.sendMessage(player, page.buildPage(cache));
                     }
                     if (result == CommandResult.ARENA_NOTVALID) {
-              //          this.sendMessage(player, CommandResult.ARENA_NOTVALID.getMessage());
+                        //          this.sendMessage(player, CommandResult.ARENA_NOTVALID.getMessage());
                     }
                 }
                 break;
@@ -187,6 +189,17 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
 
     }
 
+    private List<Page> pagecache = null;
+
+    private List<Page> getPageCache() {
+        if (this.pagecache == null) {
+            this.pagecache = new ArrayList<>();
+            this.pagecache.add(this.openPage);
+            this.pagecache.add(this.mainConfigurationPage);
+        }
+        return this.pagecache;
+    }
+
     private String fullCommand(String[] args) {
         StringBuilder builder = new StringBuilder();
         builder.append("/blockball");
@@ -198,7 +211,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
     }
 
     private Page getPageById(int id) {
-        for (Page page : this.pages) {
+        for (Page page : this.getPageCache()) {
             if (page.getId() == id) {
                 return page;
             }
@@ -265,8 +278,6 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
         );
 
     }
-
-
 
     private void sendMessage(Player player, ChatBuilder builder) {
         builder.sendMessage(player);

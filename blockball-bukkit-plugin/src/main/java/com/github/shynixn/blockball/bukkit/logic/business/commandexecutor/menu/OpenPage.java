@@ -1,8 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
 
 import com.github.shynixn.blockball.api.BlockBallApi;
+import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
+import com.google.inject.Inject;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -40,6 +43,9 @@ public class OpenPage extends Page {
         super(OpenPage.ID, OpenPage.ID);
     }
 
+    @Inject
+    private ArenaRepository arenaRepository;
+
     /**
      * Returns the key of the command when this page should be executed.
      *
@@ -62,11 +68,11 @@ public class OpenPage extends Page {
             BlockBallApi.getDefaultGameController().reload();
         } else if (command == BlockBallCommand.OPEN_EDIT_ARENA) {
             ChatBuilder builder = null;
-         /*   for (final Arena arena : BlockBallApi.getDefaultGameController().getArenaController().getAll()) {
+            for (final BukkitArena arena : this.arenaRepository.getAll()) {
                 if (builder == null) {
                     builder = new ChatBuilder();
                 }
-                builder.component("- Arena: Id: " + arena.getName() + " Name: " + arena.getDisplayName().get()).builder()
+                builder.component("- Arena: Id: " + arena.getName() + " Name: " + arena.getDisplayName()).builder()
                         .component(" [page..]").setColor(ChatColor.YELLOW)
                         .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
                                 , BlockBallCommand.ARENA_EDIT.getCommand() + " " + arena.getName())
@@ -78,16 +84,16 @@ public class OpenPage extends Page {
             return CommandResult.CANCEL_MESSAGE;
         } else if (command == BlockBallCommand.OPEN_DELETE_ARENA) {
             ChatBuilder builder = null;
-            for (final Arena arena : BlockBallApi.getDefaultGameController().getArenaController().getAll()) {
+            for (final Arena arena : this.arenaRepository.getAll()) {
                 if (builder == null) {
                     builder = new ChatBuilder();
                 }
-                builder.component("- Arena: Id: " + arena.getName() + " Name: " + arena.getDisplayName().get()).builder()
+                builder.component("- Arena: Id: " + arena.getName() + " Name: " + arena.getDisplayName()).builder()
                         .component(" [delete..]").setColor(ChatColor.DARK_RED)
                         .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
                                 , BlockBallCommand.ARENA_DELETE.getCommand() + " " + arena.getName())
                         .setHoverText("Deletes the arena with the id " + arena.getId() + ".").builder().nextLine();
-            }*/
+            }
             if (builder != null) {
                 builder.sendMessage(player);
             }
@@ -99,7 +105,7 @@ public class OpenPage extends Page {
     /**
      * Builds this page for the player.
      *
-     * @param cache
+     * @param cache cache.
      * @return page
      */
     @Override

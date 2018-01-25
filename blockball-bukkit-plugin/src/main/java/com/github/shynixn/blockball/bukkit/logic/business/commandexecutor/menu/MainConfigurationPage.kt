@@ -2,12 +2,11 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
-import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.bukkit.dependencies.worldedit.WorldEditConnection
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
+import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
@@ -44,6 +43,9 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
         val ID = 2
     }
 
+    @Inject
+    private var arenaRepository: ArenaRepository? = null
+
     /**
      * Returns the key of the command when this page should be executed.
      *
@@ -61,12 +63,12 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.ARENA_CREATE) {
-            cache[0] = BlockBallArena()
+            cache[0] = arenaRepository!!.create()
         } else if (command == BlockBallCommand.ARENA_EDIT) {
-            // cache[0] = BlockBallApi.getDefaultGameController().getArenaController().getById(args[2]).get();
+            cache[0] = arenaRepository?.getArenaByName(args[2])!!
         } else if (command == BlockBallCommand.ARENA_DELETE) {
-            //   final Arena arena = BlockBallApi.getDefaultGameController().getArenaController().getById(args[2]).get();
-            //  BlockBallApi.getDefaultGameController().getArenaController().remove(arena);
+            val arena = arenaRepository?.getArenaByName(args[2])!!;
+            arenaRepository!!.remove(arena);
             return CommandResult.BACK
         } else if (command == BlockBallCommand.ARENA_SETBALLSPAWNPOINT) {
             val arena = cache[0] as BukkitArena
@@ -102,14 +104,14 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
                 return CommandResult.WESELECTION_MISSING
             }
         } else if (command == BlockBallCommand.ARENA_SAVE) {
-            val arena = cache[0] as Arena<*, *>
-            if (arena != null && arena.lowerCorner != null && arena.meta.blueTeamMeta.goal.lowerCorner != null
-                    && arena.meta.redTeamMeta.goal.lowerCorner != null) {
+            val arena = cache[0] as BukkitArena
+            if (arena.lowerCorner != null && arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.lowerCorner != null
+                    && arena.meta.ballMeta.spawnpoint != null) {
                 BlockBallApi.getDefaultGameController()
                         .arenaController.store(arena)
             } else {
                 return CommandResult.ARENA_NOTVALID
-            }//
+            }
         }
         return super.execute(player, command, cache, args)
     }
@@ -120,7 +122,7 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
      * @return page
      */
     override fun buildPage(cache: Array<Any>): ChatBuilder? {
-        val arena = cache[0] as Arena<*, *>
+        val arena = cache[0] as BukkitArena
         var corners = "none"
         var goal1 = "none"
         var goal2 = "none"
@@ -138,7 +140,7 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
             ballSpawn = this.printLocation(arena.meta.ballMeta.spawnpoint)
         }
         return ChatBuilder()
-                .component("- Id: " + arena.id)
+                .component("- Id: " + arena.name)
                 .setColor(ChatColor.GRAY)
                 .builder()
                 .component(", " + arena.displayName).builder()
