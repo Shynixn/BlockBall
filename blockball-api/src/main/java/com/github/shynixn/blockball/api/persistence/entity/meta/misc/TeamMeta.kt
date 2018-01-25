@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.misc
 
 import com.github.shynixn.blockball.api.persistence.entity.AreaSelection
-import com.github.shynixn.blockball.api.persistence.entity.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 
 /**
  * Created by Shynixn 2018.
@@ -30,10 +30,10 @@ import com.github.shynixn.blockball.api.persistence.entity.IPosition
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface TeamMeta<Location, AreaSelectionEntity, ItemStack> {
+interface TeamMeta<Location, ItemStack> {
 
     /** Goal properties of the team. */
-    val goal: AreaSelection<Location, AreaSelectionEntity>
+    val goal: AreaSelection<Location>
 
     /** Spawnpoint of the team inside of the arena. */
     var spawnpoint: IPosition?

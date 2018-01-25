@@ -33,7 +33,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BungeeCordLobbyProperties extends PersistenceObject<BungeeCordLobbyMeta> implements BungeeCordLobbyMeta {
+public class BungeeCordLobbyProperties extends PersistenceObject implements BungeeCordLobbyMeta {
 
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "message.kick")
     private String kickMessage = "Server is full!";

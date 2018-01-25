@@ -1,4 +1,7 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display
+
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
 /**
  * Created by Shynixn 2018.
@@ -27,16 +30,11 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface HubLobbyMeta {
-    /** List of signs which can be clicked to join the red team.*/
-    val redTeamSigns: MutableList<IPosition>
-
-    /** List of signs which can be clicked to join the red team.*/
-    val blueTeamSigns: MutableList<IPosition>
-
-    /** List of signs which can be clicked to leave the game. */
-    val leaveSigns: MutableList<IPosition>
-
-    /** Spawnpoint when someone leaves the hub game. */
-    val leaveSpawnpoint: IPosition?
+class ScoreboardBuilder : PersistenceObject(), ScoreboardMeta {
+    /** Title of the scoreboard. */
+    override var title: String = "&aBlockBall"
+    /** Is the scoreboard visible. */
+    override var enabled: Boolean = false;
+    /** Lines of the scoreboard being rendered. */
+    override val lines: MutableList<String> = ArrayList();
 }

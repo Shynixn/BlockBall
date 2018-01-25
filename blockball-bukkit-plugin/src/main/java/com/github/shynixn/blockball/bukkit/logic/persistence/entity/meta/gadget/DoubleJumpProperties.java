@@ -1,12 +1,12 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.gadget;
 
+import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta;
+import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta;
+import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.ParticleEffectData;
+import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.SoundBuilder;
 import com.github.shynixn.blockball.api.persistence.entity.meta.gadget.DoubleJumpMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.ParticleEffectBuilder;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.SoundBuilder;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 
 /**
  * Created by Shynixn 2017.
@@ -35,7 +35,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class DoubleJumpProperties extends PersistenceObject<DoubleJumpMeta> implements DoubleJumpMeta {
+public class DoubleJumpProperties extends PersistenceObject implements DoubleJumpMeta {
 
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "enabled")
     private boolean enabled = true;
@@ -52,7 +52,7 @@ public class DoubleJumpProperties extends PersistenceObject<DoubleJumpMeta> impl
             .setVolume(100)
             .setPitch(1.0);
     @YamlSerializer.YamlSerialize(orderNumber = 6, value = "particleEffect")
-    private final ParticleEffectMeta particleEffectMeta = new ParticleEffectBuilder()
+    private final ParticleEffectMeta particleEffectMeta = new ParticleEffectData()
     .setEffectType(ParticleEffectMeta.ParticleEffectType.EXPLOSION_NORMAL)
     .setAmount(4)
     .setSpeed(0.0002)

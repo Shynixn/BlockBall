@@ -7,7 +7,7 @@ import com.github.shynixn.blockball.api.business.entity.Game;
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus;
 import com.github.shynixn.blockball.api.business.enumeration.GameType;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
-import com.github.shynixn.blockball.api.persistence.entity.*;
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.RGame;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;

@@ -31,34 +31,13 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-open class PersistenceObject<PersistenceEntity> : BukkitPersistenceable<PersistenceEntity> {
+open class PersistenceObject : BukkitPersistenceable {
 
     /** Returns the id of the object. */
     override var id: Long = 0
         internal set(value) {
             field = value
         }
-
-    /** Clones the current object. */
-    override fun clone(): PersistenceEntity {
-        try {
-            val item = this.javaClass.newInstance() as PersistenceEntity
-            var clazz: Class<*>? = this.javaClass
-            while (clazz != null) {
-                for (field in clazz.declaredFields) {
-                    field.isAccessible = true
-                    field.set(item, field.get(this))
-                }
-                clazz = clazz.superclass
-            }
-            return item
-        } catch (e: InstantiationException) {
-            throw RuntimeException(e)
-        } catch (e: IllegalAccessException) {
-            throw RuntimeException(e)
-        }
-
-    }
 
     /** Serializes the given object. */
     override fun serialize(): MutableMap<String, Any> {

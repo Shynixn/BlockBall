@@ -2,10 +2,12 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta
 
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
 import com.github.shynixn.blockball.api.persistence.entity.AreaSelection
+import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallData
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.TeamProperties
@@ -39,7 +41,9 @@ import org.bukkit.inventory.ItemStack
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockBallMetaCollection : ArenaMeta<Location, AreaSelection<Location, BukkitArena>, ItemStack> {
+class BlockBallMetaCollection : ArenaMeta<Location, ItemStack> {
+    /** Meta data of the ball. */
+    override val ballMeta: BallMeta<*, *, *> = BallData("Shynixn")
     /** Meta data of the blueTeam. */
     override val blueTeamMeta: TeamProperties
             = TeamProperties("Team Blue", "&c", "<bluecolor><player>", "scored for <blue>.", "<bluecolor><blue>", "<bluecolor> has won the match");

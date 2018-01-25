@@ -33,7 +33,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class StatsData extends PersistenceObject<Stats> implements Stats {
+public class StatsData extends PersistenceObject implements Stats {
 
     @YamlSerializer.YamlSerialize(value = "playerId", orderNumber = 1)
     private long playerId;

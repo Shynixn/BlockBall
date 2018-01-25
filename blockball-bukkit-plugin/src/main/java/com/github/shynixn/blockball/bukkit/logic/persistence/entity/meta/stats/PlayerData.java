@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class PlayerData extends PersistenceObject<PlayerMeta> implements PlayerMeta {
+public class PlayerData extends PersistenceObject implements PlayerMeta {
     @YamlSerializer.YamlSerialize(value = "name", orderNumber = 1)
     private String name;
     @YamlSerializer.YamlSerialize(value = "uuid", orderNumber = 2)

@@ -1,10 +1,5 @@
 package com.github.shynixn.blockball.api.business.entity;
 
-import com.github.shynixn.blockball.api.business.enumeration.Team;
-import com.github.shynixn.blockball.api.persistence.entity.IPosition;
-
-import java.util.List;
-
 /**
  * Created by Shynixn 2017.
  * <p>

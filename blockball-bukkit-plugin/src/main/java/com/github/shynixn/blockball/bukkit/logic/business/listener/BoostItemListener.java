@@ -1,12 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener;
 
+import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta;
+import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.SoundBuilder;
 import com.github.shynixn.blockball.api.business.controller.GameController;
 import com.github.shynixn.blockball.api.business.entity.Game;
-import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.BoosItemMeta;
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.effect.SoundBuilder;
 import com.google.inject.Inject;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.ItemDespawnEvent;
@@ -80,7 +79,7 @@ public class BoostItemListener extends SimpleListener {
             for (final Object item : groundItems.keySet()) {
                 if (item.equals(event.getItem())) {
                     try {
-                        itemPickUpSound.applyToPlayers(event.getPlayer());
+                        itemPickUpSound.apply(event.getPlayer());
                     } catch (final Exception e) {
                         logger.log(Level.WARNING, "Failed to play sound.", e);
                     }

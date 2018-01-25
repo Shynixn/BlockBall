@@ -1,13 +1,15 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
+
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,19 +29,16 @@ package com.github.shynixn.blockball.api.persistence.entity;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BungeeCordSign extends Persistenceable<BungeeCordSign> {
+interface HubLobbyMeta {
+    /** List of signs which can be clicked to join the red team.*/
+    val redTeamSigns: MutableList<IPosition>
 
-    /**
-     * Returns the server linking to.
-     *
-     * @return server
-     */
-    String getServer();
+    /** List of signs which can be clicked to join the red team.*/
+    val blueTeamSigns: MutableList<IPosition>
 
-    /**
-     * Returns the location of the sign.
-     *
-     * @return location
-     */
-    Object getLocation();
+    /** List of signs which can be clicked to leave the game. */
+    val leaveSigns: MutableList<IPosition>
+
+    /** Spawnpoint when someone leaves the hub game. */
+    val leaveSpawnpoint: IPosition?
 }

@@ -4,8 +4,8 @@ import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.controller.BallController
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectController
-import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController
 import com.github.shynixn.blockball.api.business.controller.GameController
+import com.github.shynixn.blockball.api.persistence.controller.LinkSignController
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BlockBallReloadCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.NewArenaCommandExecutor
@@ -121,7 +121,7 @@ class BlockBallPlugin : JavaPlugin() {
             Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + "Starting BungeeCord linking....")
             try {
                 ReflectionUtils.invokeMethodByClass<Any>(BlockBallApi::class.java, "initializeBungeeCord"
-                        , arrayOf(BungeeCordSignController::class.java, BungeeCordConnectController::class.java)
+                        , arrayOf(LinkSignController::class.java, BungeeCordConnectController::class.java)
                         , arrayOf(this.blockBallBungeeCordManager!!.bungeeCordSignController, this.blockBallBungeeCordManager!!.bungeeCordConnectController))
                 Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + "Server [" + Bukkit.getServer().serverName + " is now available via BlockBall-Bungeecord.")
             } catch (e: NoSuchMethodException) {

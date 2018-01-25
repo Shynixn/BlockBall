@@ -32,7 +32,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface EventMeta extends Persistenceable<EventMeta>{
+public interface EventMeta extends Persistenceable{
 
     /**
      * Adds the name of a player for the redTeam

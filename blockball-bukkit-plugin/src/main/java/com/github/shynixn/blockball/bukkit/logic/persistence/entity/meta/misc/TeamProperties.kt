@@ -1,12 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc
 
 import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
 import com.github.shynixn.blockball.api.persistence.entity.AreaSelection
-import com.github.shynixn.blockball.api.persistence.entity.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.BlockBallMetaCollection
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.area.SelectedArea
 import org.bukkit.Location
 import org.bukkit.configuration.InvalidConfigurationException
@@ -59,7 +57,7 @@ class TeamProperties(
         override var winMessageTitle: String,
         /** Subtitle of the message getting played when this team wins a match. */
         @YamlSerializer.YamlSerialize(orderNumber = 14, value = "win-message-subtitle")
-        override var winMessageSubTitle: String) : TeamMeta<Location, AreaSelection<Location, BukkitArena>, ItemStack> {
+        override var winMessageSubTitle: String) : TeamMeta<Location,ItemStack> {
 
     /** Min amount of players in this team to start the match for this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "min-amount")
@@ -72,7 +70,7 @@ class TeamProperties(
     override var spawnpoint: IPosition? = null
     /** Goal properties of the team. */
     @YamlSerializer.YamlSerialize(orderNumber = 7, value = "goal")
-    override val goal: AreaSelection<Location, AreaSelection<Location,BukkitArena>> = SelectedArea()
+    override val goal: AreaSelection<Location> = SelectedArea()
     /** Walkingspeed of the players in this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "walking-speed")
     override var walkingSpeed: Double = 0.2

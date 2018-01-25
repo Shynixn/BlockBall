@@ -4,6 +4,8 @@ import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.entity.BlockBallPlayer
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
@@ -51,6 +53,29 @@ internal fun Player.compSetGlowing(enabled: Boolean) {
         } catch (e: Exception) {
             Config.Logger!!.log(Level.WARNING, "Failed to set player glowing.", e)
         }
+    }
+}
+
+internal fun BossBarMeta.Style.getNames(): Array<String?> {
+   return arrayOfNulls<String>(5);
+}
+
+internal fun <T> Persistenceable.clone(): T where T : Persistenceable {
+    try {
+        val item = this.javaClass.newInstance() as Persistenceable
+        var clazz: Class<*>? = this.javaClass
+        while (clazz != null) {
+            for (field in clazz.declaredFields) {
+                field.isAccessible = true
+                field.set(item, field.get(this))
+            }
+            clazz = clazz.superclass
+        }
+        return item as T
+    } catch (e: InstantiationException) {
+        throw RuntimeException(e)
+    } catch (e: IllegalAccessException) {
+        throw RuntimeException(e)
     }
 }
 

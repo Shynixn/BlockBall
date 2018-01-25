@@ -33,7 +33,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class CommandProperties extends PersistenceObject<CommandMeta> implements CommandMeta {
+public class CommandProperties extends PersistenceObject implements CommandMeta {
 
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "mode")
     private CommandMode mode;

@@ -36,7 +36,7 @@ import java.util.List;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class RewardProperties extends PersistenceObject<RewardMeta> implements RewardMeta {
+public class RewardProperties extends PersistenceObject implements RewardMeta {
 
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "money.per-goal")
     private int pergoal;

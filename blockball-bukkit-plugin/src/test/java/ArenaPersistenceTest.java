@@ -1,6 +1,6 @@
 import com.github.shynixn.blockball.api.bukkit.event.controller.BukkitArenaController;
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena;
-import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;

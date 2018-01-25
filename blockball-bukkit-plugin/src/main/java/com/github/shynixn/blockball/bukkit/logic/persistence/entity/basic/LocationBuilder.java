@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic;
 
-import com.github.shynixn.blockball.api.persistence.entity.IPosition;
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -40,7 +40,7 @@ import java.util.Map;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class LocationBuilder extends PersistenceObject<IPosition> implements IPosition {
+public class LocationBuilder extends PersistenceObject implements IPosition {
     private String world;
     private double x;
     private double y;

@@ -31,7 +31,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface SpectatorMeta extends Persistenceable<SpectatorMeta> {
+public interface SpectatorMeta extends Persistenceable {
 
     /**
      * Sets the minecraft gamemode when being in the spectator mode

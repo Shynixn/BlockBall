@@ -1,9 +1,8 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.gadget;
 
+import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta;
+import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
-import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
-
 /**
  * Copyright 2017 Shynixn
  * <p>
@@ -33,7 +32,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleE
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface DoubleJumpMeta extends Persistenceable<DoubleJumpMeta> {
+public interface DoubleJumpMeta extends Persistenceable {
 
     /**
      * Enables the double jump.

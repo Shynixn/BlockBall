@@ -35,7 +35,7 @@ import org.bukkit.Location
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockBallArena() : SelectedArea<BukkitArena>(), BukkitArena {
+class BlockBallArena() : SelectedArea(), BukkitArena {
 
     constructor(name: String, corner1: Location, corner2: Location, customId: Long = 0) : this() {
         this.id = customId

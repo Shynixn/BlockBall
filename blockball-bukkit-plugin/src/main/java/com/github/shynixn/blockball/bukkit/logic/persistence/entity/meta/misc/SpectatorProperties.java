@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc;
 
-import com.github.shynixn.blockball.api.persistence.entity.IPosition;
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
 import com.github.shynixn.blockball.api.persistence.entity.meta.gadget.SpectatorMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
@@ -35,7 +35,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class SpectatorProperties extends PersistenceObject<SpectatorMeta> implements SpectatorMeta {
+public class SpectatorProperties extends PersistenceObject implements SpectatorMeta {
 
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "gamemode")
     private int gameMode;

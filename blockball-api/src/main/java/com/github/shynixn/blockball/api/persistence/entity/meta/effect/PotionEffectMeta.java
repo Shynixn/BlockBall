@@ -33,7 +33,7 @@ import java.util.Collection;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface PotionEffectMeta extends Persistenceable<PotionEffectMeta> {
+public interface PotionEffectMeta extends Persistenceable {
     /**
      * Applies the potioneffect to living entities
      *

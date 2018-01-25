@@ -30,4 +30,4 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitPersistenceable<PersistenceObject> : Persistenceable<PersistenceObject>, ConfigurationSerializable
+interface BukkitPersistenceable : Persistenceable, ConfigurationSerializable

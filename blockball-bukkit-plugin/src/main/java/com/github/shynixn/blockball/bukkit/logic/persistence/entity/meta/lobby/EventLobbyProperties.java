@@ -36,7 +36,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class EventLobbyProperties extends PersistenceObject<EventMeta> implements EventMeta {
+public class EventLobbyProperties extends PersistenceObject implements EventMeta {
 
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "referee")
     private String referee;

@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.dependencies.worldedit.WorldEditConnection;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -62,17 +63,17 @@ public class MainConfigurationPage extends Page {
      */
     @Override
     public CommandResult execute(Player player, BlockBallCommand command, Object[] cache, String[] args) {
-          if (command == BlockBallCommand.ARENA_CREATE) {
-           // cache[0] = BlockBallApi.getDefaultGameController().getArenaController().create();
+        if (command == BlockBallCommand.ARENA_CREATE) {
+            cache[0] = new BlockBallArena();
         } else if (command == BlockBallCommand.ARENA_EDIT) {
-           // cache[0] = BlockBallApi.getDefaultGameController().getArenaController().getById(args[2]).get();
+            // cache[0] = BlockBallApi.getDefaultGameController().getArenaController().getById(args[2]).get();
         } else if (command == BlockBallCommand.ARENA_DELETE) {
-         //   final Arena arena = BlockBallApi.getDefaultGameController().getArenaController().getById(args[2]).get();
-          //  BlockBallApi.getDefaultGameController().getArenaController().remove(arena);
+            //   final Arena arena = BlockBallApi.getDefaultGameController().getArenaController().getById(args[2]).get();
+            //  BlockBallApi.getDefaultGameController().getArenaController().remove(arena);
             return CommandResult.BACK;
         } else if (command == BlockBallCommand.ARENA_SETBALLSPAWNPOINT) {
             final Arena arena = (Arena) cache[0];
-          //  arena.setBallSpawnLocation(player.getLocation());
+            //  arena.setBallSpawnLocation(player.getLocation());
         } else if (command == BlockBallCommand.ARENA_SETDISPLAYNAME) {
             final Arena arena = (Arena) cache[0];
             arena.setDisplayName(this.mergeArgs(2, args));
@@ -90,9 +91,9 @@ public class MainConfigurationPage extends Page {
             final Location left = WorldEditConnection.getLeftSelection(player);
             final Location right = WorldEditConnection.getRightSelection(player);
             if (left != null && right != null) {
-               // arena.getMeta().findByTeam(TeamMeta[].class, Team.RED).get()
+                // arena.getMeta().findByTeam(TeamMeta[].class, Team.RED).get()
                 //        .getGoal()
-                 //       .setCorners(left, right);
+                //       .setCorners(left, right);
             } else {
                 return CommandResult.WESELECTION_MISSING;
             }
@@ -101,16 +102,16 @@ public class MainConfigurationPage extends Page {
             final Location left = WorldEditConnection.getLeftSelection(player);
             final Location right = WorldEditConnection.getRightSelection(player);
             if (left != null && right != null) {
-           //   arena.getMeta().findByTeam(TeamMeta[].class, Team.BLUE).get()
-           //             .getGoal()
-           //             .setCorners(left, right);
+                //   arena.getMeta().findByTeam(TeamMeta[].class, Team.BLUE).get()
+                //             .getGoal()
+                //             .setCorners(left, right);
             } else {
                 return CommandResult.WESELECTION_MISSING;
             }
         } else if (command == BlockBallCommand.ARENA_SAVE) {
             final Arena arena = (Arena) cache[0];
-           if (arena != null && arena.getLowerCorner() != null && arena.getMeta().getBlueTeamMeta().getGoal().getLowerCorner() != null
-                   && arena.getMeta().getRedTeamMeta().getGoal().getLowerCorner() != null
+            if (arena != null && arena.getLowerCorner() != null && arena.getMeta().getBlueTeamMeta().getGoal().getLowerCorner() != null
+                    && arena.getMeta().getRedTeamMeta().getGoal().getLowerCorner() != null
                     ) {
                 BlockBallApi.getDefaultGameController()
                         .getArenaController().store(arena);
@@ -136,11 +137,11 @@ public class MainConfigurationPage extends Page {
         if (arena.getUpperCorner() != null && arena.getLowerCorner() != null) {
             corners = this.printLocation(arena.getCenter());
         }
-        if (this.getTeamMeta(arena, Team.RED).getGoal().getLowerCorner() != null) {
-            goal1 = this.printLocation(this.getTeamMeta(arena, Team.RED).getGoal().getCenter());
+        if (arena.getMeta().getRedTeamMeta().getGoal().getLowerCorner() != null) {
+            goal1 = this.printLocation(arena.getMeta().getRedTeamMeta().getGoal().getCenter());
         }
-        if (this.getTeamMeta(arena, Team.BLUE).getGoal().getLowerCorner() != null) {
-            goal2 = this.printLocation(this.getTeamMeta(arena, Team.BLUE).getGoal().getCenter());
+        if (arena.getMeta().getBlueTeamMeta().getGoal().getLowerCorner() != null) {
+            goal2 = this.printLocation(arena.getMeta().getBlueTeamMeta().getGoal().getCenter());
         }
         return new ChatBuilder()
                 .component("- Id: " + arena.getId())

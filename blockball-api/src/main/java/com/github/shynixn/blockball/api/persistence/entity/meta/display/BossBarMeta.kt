@@ -1,8 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta
+package com.github.shynixn.blockball.api.persistence.entity.meta.display
 
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
 
 /**
  * Created by Shynixn 2018.
@@ -31,17 +29,48 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaMeta<Location, ItemStack> {
+interface BossBarMeta : Persistenceable {
 
-    /** Meta data of the hublobby. */
-    val hubLobbyMeta: HubLobbyMeta
+    /** Is bossbar visible. */
+    var enabled: Boolean
 
-    /** Meta data of the redTeam. */
-    val redTeamMeta: TeamMeta<Location, ItemStack>
+    /** Displaying message. */
+    var message: String
 
-    /** Meta data of the blueTeam. */
-    val blueTeamMeta: TeamMeta<Location, ItemStack>
+    /** Percentage filled in the bossbar. */
+    var percentage: Double
 
-    /** Meta data of the ball. */
-    val ballMeta: BallMeta<*,*,*>
+    /** Color of the bossbar. */
+    var style: Style
+
+    /** Flags of the bossbar. */
+    val flags: MutableList<Flag>
+
+    /** Style of the bossbar. */
+    enum class Style {
+        SEGMENTED_6,
+        SEGMENETED_10,
+        SEGMENTED_12,
+        SEGEMENTED_20,
+        SOLID;
+    }
+
+    /** Color of the bossbar. */
+    enum class Color {
+        PINK,
+        BLUE,
+        RED,
+        GREEN,
+        YELLOW,
+        PURPLE,
+        WHITE;
+    }
+
+    /** Flag of the bossbar. */
+    enum class Flag {
+        NONE,
+        CREATE_FOG,
+        DARKEN_SKY,
+        PLAY_BOSS_MUSIC
+    }
 }

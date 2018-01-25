@@ -43,7 +43,7 @@ import java.util.logging.Level;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class PotionEffectBuilder extends PersistenceObject<PotionEffectMeta> implements PotionEffectMeta {
+public class PotionEffectBuilder extends PersistenceObject implements PotionEffectMeta {
     private int type = PotionEffectType.ABSORPTION.getId();
     private int duration;
     private int strength;

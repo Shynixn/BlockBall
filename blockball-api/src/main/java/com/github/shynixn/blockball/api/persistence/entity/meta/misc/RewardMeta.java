@@ -31,7 +31,7 @@ import java.util.List;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface RewardMeta extends Persistenceable<RewardMeta> {
+public interface RewardMeta extends Persistenceable {
 
     /**
      * Sets the amount of money the player receives per goal.

@@ -1,12 +1,12 @@
 package com.github.shynixn.blockball.bukkit.logic.business.controller;
 
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectController;
-import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController;
 import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus;
-import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
+import com.github.shynixn.blockball.api.persistence.controller.LinkSignController;
+import com.github.shynixn.blockball.api.persistence.entity.bungeecord.LinkSign;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.bungeecord.BungeeCordServerStats;
-import com.github.shynixn.blockball.bukkit.logic.persistence.controller.BungeeCordSignRepository;
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.NetworkSignRepository;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -56,13 +56,13 @@ import java.util.logging.Logger;
 public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMessageListener, BungeeCordConnectController {
     private final BukkitTask task;
     private final Plugin plugin;
-    private final BungeeCordSignController signController;
+    private final LinkSignController<Location> signController;
 
     @Inject
     private Logger logger;
 
     @Inject
-    public BungeeCordPingManager(BungeeCordSignRepository signController, Plugin plugin) {
+    public BungeeCordPingManager(NetworkSignRepository signController, Plugin plugin) {
         if(signController == null)
             throw new IllegalArgumentException("Signcontroller cannot be null!");
         if(plugin == null)
@@ -112,7 +112,7 @@ public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMes
         final Player player = this.getFirstPlayer();
         if (player == null)
             return;
-        for (final String s : this.signController.getAllServers()) {
+        for (final String s : this.signController.getLinkedServers()) {
             final ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("ServerIP");
             out.writeUTF(s);
@@ -153,9 +153,9 @@ public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMes
     }
 
     private void updateSigns(BungeeCordServerStatus status) {
-        for (final BungeeCordSign signInfo : this.signController.getAll()) {
+        for (final LinkSign signInfo : this.signController.getAll()) {
             if (signInfo.getServer().equals(status.getServerName())) {
-                final Location location = (Location) signInfo.getLocation();
+                final Location location = ((LocationBuilder)signInfo.getPosition()).toLocation();
                 if (location.getBlock().getState() instanceof Sign) {
                     final Sign sign = (Sign) location.getBlock().getState();
                /*     sign.setLine(0, this.replaceSign(BungeeCord.SIGN_LINE_1, status));

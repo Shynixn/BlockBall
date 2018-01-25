@@ -34,7 +34,7 @@ import org.bukkit.Location
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-open class SelectedArea<PersistenceEntity> : PersistenceObject<PersistenceEntity>(), AreaSelection<Location, PersistenceEntity> {
+open class SelectedArea : PersistenceObject(), AreaSelection<Location> {
 
     /** [upperCorner] of the selected square arena. */
     @YamlSerializer.YamlSerialize(value = "corner-1", orderNumber = 5)

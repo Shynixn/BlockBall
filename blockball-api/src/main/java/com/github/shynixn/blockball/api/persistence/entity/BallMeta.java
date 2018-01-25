@@ -1,10 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity;
 
-import com.github.shynixn.blockball.api.persistence.entity.meta.effect.ParticleEffectMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.effect.SoundEffectMeta;
-
-import java.util.Map;
-
 /**
  * Created by Shynixn 2017.
  * <p>
@@ -32,96 +27,25 @@ import java.util.Map;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BallMeta extends Persistenceable<BallMeta> {
+
+import com.github.shynixn.ball.api.persistence.controller.BounceController;
+import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta;
+import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
+
+public interface BallMeta<T extends ParticleEffectMeta, K extends SoundEffectMeta, P extends BounceController> extends Persistenceable, com.github.shynixn.ball.api.persistence.BallMeta<T, K, P> {
 
     /**
-     * Returns the sound played when the ball gets hit
+     * Sets the spawnpoint of the ball.
      *
-     * @return meta
+     * @param position position
      */
-    SoundEffectMeta getGenericHitSound();
+    void setSpawnpoint(IPosition position);
 
     /**
-     * Returns the sound played when the ball spawns
+     * Returns the spawnpoint of the ball.
      *
-     * @return meta
+     * @return spawnpoint
      */
-    SoundEffectMeta getSpawnSound();
-
-    /**
-     * Returns the particleEffect played when the ball gets hit.
-     *
-     * @return particle
-     */
-    ParticleEffectMeta getGenericHitParticleEffect();
-
-    /**
-     * Returns the particleEffect played when the ball spawns.
-     *
-     * @return particle
-     */
-    ParticleEffectMeta getSpawnParticleEffect();
-
-    /**
-     * Returns the horizontal strength the ball is going to fly
-     *
-     * @return strength
-     */
-    double getHorizontalStrength();
-
-    /**
-     * Sets the horizontal strength of the ball  is going to fly
-     *
-     * @param strength strength
-     */
-    void setHorizontalStrength(double strength);
-
-    /**
-     * Returns the vertical strength the ball is going to fly
-     *
-     * @return strength
-     */
-    double getVerticalStrength();
-
-    /**
-     * Sets the vertical strength the ball is going to fly
-     *
-     * @param strength strength
-     */
-    void setVerticalStrength(double strength);
-
-    /**
-     * Sets if rotating is enabled
-     *
-     * @param enabled enabled
-     */
-    void setRotatingEnabled(boolean enabled);
-
-    /**
-     * Returns if rotating is enabled
-     *
-     * @return enabled
-     */
-    boolean isRotatingEnabled();
-
-    /**
-     * Changes the skin of the ball. Has to be a skin-URL or name of a player
-     *
-     * @param skin skin
-     */
-    void setSkin(String skin);
-
-    /**
-     * Returns the bounce materials in id, datavalue array.
-     *
-     * @return bounce materials.
-     */
-    Map<Integer, Short> getBounceMaterials();
-
-    /**
-     * Returns the skin of the ball
-     *
-     * @return skin
-     */
-    String getSkin();
+    IPosition getSpawnpoint();
 }

@@ -1,15 +1,15 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.display;
+package com.github.shynixn.blockball.api.persistence.controller
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+import com.github.shynixn.blockball.api.persistence.entity.bungeecord.LinkSign
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,46 +29,11 @@ import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface ScoreboardMeta extends Persistenceable<ScoreboardMeta> {
-    /**
-     * Sets the title of the scoreboard.
-     *
-     * @param title title
-     */
-    void setTitle(String title);
+interface LinkSignController<in Location> : ReloadableController<LinkSign> {
 
-    /**
-     * Returns the title of the scoreboard.
-     *
-     * @return title
-     */
-    String getTitle();
+    /** Creates a new linking sign. */
+    fun create(server: String, location: Location): LinkSign
 
-    /**
-     * Enables or disables the scoreboard.
-     *
-     * @param enabled scoreboard
-     */
-    void setEnabled(boolean enabled);
-
-    /**
-     * Returns if the scoreboard is enabled.
-     *
-     * @return enabled
-     */
-    boolean isEnabled();
-
-    /**
-     * Sets the lines of the scoreboard.
-     *
-     * @param scoreboardLines scoreboardLines
-     */
-    void setScoreboardLines(String[] scoreboardLines);
-
-    /**
-     * Returns the lines of the scoreboard.
-     *
-     * @return lines
-     */
-    String[] getScoreboardLines();
+    /** All servers which are linked via signs. */
+    val linkedServers: Set<String>
 }

@@ -29,7 +29,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface GlowEffectMeta extends Persistenceable<GlowEffectMeta> {
+public interface GlowEffectMeta extends Persistenceable {
 
     /**
      * Sets the amount of seconds a player is glowing.

@@ -1,12 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business;
 
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectController;
-import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController;
-import org.bukkit.ChatColor;
+import com.github.shynixn.blockball.api.persistence.controller.LinkSignController;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
-import java.io.Closeable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +38,7 @@ public class BlockBallBungeeCordManager implements AutoCloseable{
     public Map<Player, String> signPlacementCache = new HashMap<>();
 
 
-    private BungeeCordSignController signController;
+    private LinkSignController signController;
     private BungeeCordConnectController connectController;
 
     /**
@@ -59,7 +56,7 @@ public class BlockBallBungeeCordManager implements AutoCloseable{
      * Returns the bungeeCord sign Controller.
      * @return controller
      */
-    public BungeeCordSignController getBungeeCordSignController() {
+    public LinkSignController getBungeeCordSignController() {
         return this.signController;
     }
 

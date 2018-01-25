@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc;
 
-import com.github.shynixn.blockball.api.persistence.entity.IPosition;
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CustomizingMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer;
@@ -35,7 +35,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class CustomizingProperties extends PersistenceObject<CustomizingMeta> implements CustomizingMeta {
+public class CustomizingProperties extends PersistenceObject implements CustomizingMeta {
 
     @YamlSerializer.YamlSerialize(value = "auto-empty-reset", orderNumber = 1)
     private boolean emptyReset;

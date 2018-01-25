@@ -1,8 +1,7 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta
+package com.github.shynixn.blockball.api.persistence.entity.meta.display
 
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
 
 /**
  * Created by Shynixn 2018.
@@ -31,17 +30,11 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaMeta<Location, ItemStack> {
+interface HologramMeta : Persistenceable {
 
-    /** Meta data of the hublobby. */
-    val hubLobbyMeta: HubLobbyMeta
+    /** Position of the hologram. */
+    var position: IPosition?
 
-    /** Meta data of the redTeam. */
-    val redTeamMeta: TeamMeta<Location, ItemStack>
-
-    /** Meta data of the blueTeam. */
-    val blueTeamMeta: TeamMeta<Location, ItemStack>
-
-    /** Meta data of the ball. */
-    val ballMeta: BallMeta<*,*,*>
+    /** Lines of the hologram being rendered. */
+    val lines: MutableList<String>
 }

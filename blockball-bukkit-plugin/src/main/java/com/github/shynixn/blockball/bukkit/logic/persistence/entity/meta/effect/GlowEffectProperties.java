@@ -31,7 +31,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class GlowEffectProperties extends PersistenceObject<GlowEffectMeta> implements GlowEffectMeta {
+public class GlowEffectProperties extends PersistenceObject implements GlowEffectMeta {
 
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "enabled")
     private boolean enabled;

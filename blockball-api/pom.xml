@@ -12,4 +12,12 @@
     <artifactId>blockball-api</artifactId>
     <version>4.2.0-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.shynixn.balls</groupId>
+            <artifactId>balls-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 </project>

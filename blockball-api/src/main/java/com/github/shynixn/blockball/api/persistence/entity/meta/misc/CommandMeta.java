@@ -31,7 +31,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface CommandMeta extends Persistenceable<CommandMeta> {
+public interface CommandMeta extends Persistenceable {
 
     /**
      * Returns the mode of the command.

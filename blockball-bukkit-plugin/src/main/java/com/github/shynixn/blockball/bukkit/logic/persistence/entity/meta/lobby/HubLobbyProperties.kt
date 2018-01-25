@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby
 
-import com.github.shynixn.blockball.api.persistence.entity.HubLobbyMeta
-import com.github.shynixn.blockball.api.persistence.entity.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
@@ -33,7 +33,7 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-open class HubLobbyProperties : PersistenceObject<HubLobbyMeta>(), HubLobbyMeta {
+open class HubLobbyProperties : PersistenceObject(), HubLobbyMeta {
     /** List of signs which can be clicked to join the red team.*/
     override val redTeamSigns: MutableList<IPosition>
         get() = sign.redTeamSigns as MutableList<IPosition>

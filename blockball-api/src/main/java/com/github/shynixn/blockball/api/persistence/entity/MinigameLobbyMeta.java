@@ -1,5 +1,8 @@
 package com.github.shynixn.blockball.api.persistence.entity;
 
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
+import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta;
+
 import java.util.List;
 import java.util.Optional;
 

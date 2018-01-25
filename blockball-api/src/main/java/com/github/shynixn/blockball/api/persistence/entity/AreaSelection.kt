@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -27,7 +29,7 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface AreaSelection<Location, PersistenceObject> : Persistenceable<PersistenceObject> {
+interface AreaSelection<Location> : Persistenceable {
 
     /** [upperCorner] of the selected square arena. */
     val upperCorner: IPosition?

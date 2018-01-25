@@ -1,8 +1,8 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display
 
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
 /**
  * Created by Shynixn 2018.
@@ -31,17 +31,20 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaMeta<Location, ItemStack> {
-
-    /** Meta data of the hublobby. */
-    val hubLobbyMeta: HubLobbyMeta
-
-    /** Meta data of the redTeam. */
-    val redTeamMeta: TeamMeta<Location, ItemStack>
-
-    /** Meta data of the blueTeam. */
-    val blueTeamMeta: TeamMeta<Location, ItemStack>
-
-    /** Meta data of the ball. */
-    val ballMeta: BallMeta<*,*,*>
+class BossBarBuilder : PersistenceObject(), BossBarMeta {
+    /** Is bossbar visible. */
+    @YamlSerializer.YamlSerialize("enabled", orderNumber = 1)
+    override var enabled: Boolean = false
+    /** Displaying message. */
+    @YamlSerializer.YamlSerialize("text", orderNumber = 1)
+    override var message: String = "<bluecolor><blue> : <redcolor><red>"
+    /** Percentage filled in the bossbar. */
+    @YamlSerializer.YamlSerialize("percentage", orderNumber = 1)
+    override var percentage: Double = 100.0
+    /** Color of the bossbar. */
+    @YamlSerializer.YamlSerialize("style", orderNumber = 1)
+    override var style: BossBarMeta.Style = BossBarMeta.Style.SOLID
+    /** Flags of the bossbar. */
+    @YamlSerializer.YamlSerialize("flags", orderNumber = 1)
+    override val flags: MutableList<BossBarMeta.Flag> = ArrayList()
 }

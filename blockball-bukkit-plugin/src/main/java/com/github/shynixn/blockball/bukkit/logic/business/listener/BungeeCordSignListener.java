@@ -1,8 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener;
 
-import com.github.shynixn.blockball.api.business.controller.BungeeCordSignController;
-import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
+import com.github.shynixn.blockball.api.persistence.controller.LinkSignController;
+import com.github.shynixn.blockball.api.persistence.entity.bungeecord.LinkSign;
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -71,14 +72,14 @@ public class BungeeCordSignListener extends SimpleListener {
         if (this.manager.signPlacementCache.containsKey(event.getPlayer())) {
             final String server = this.manager.signPlacementCache.get(event.getPlayer());
             this.manager.signPlacementCache.remove(event.getPlayer());
-            final BungeeCordSignController signController = this.manager.getBungeeCordSignController();
-            final BungeeCordSign sign = signController.create(server, event.getClickedBlock().getLocation());
+            final LinkSignController signController = this.manager.getBungeeCordSignController();
+            final LinkSign sign = signController.create(server, event.getClickedBlock().getLocation());
             signController.store(sign);
             this.manager.getBungeeCordConnectController().pingServers();
         } else {
             final Sign sign = (Sign) event.getClickedBlock().getState();
             try {
-                final BungeeCordSign signInfo;
+                final LinkSign signInfo;
                 if ((signInfo = this.getBungeeCordSignFromLocation(sign.getLocation())) != null) {
                     this.manager.getBungeeCordConnectController().connectToServer(event.getPlayer(), signInfo.getServer());
                 }
@@ -88,9 +89,10 @@ public class BungeeCordSignListener extends SimpleListener {
         }
     }
 
-    private BungeeCordSign getBungeeCordSignFromLocation(Location signLocation) {
-        for (final BungeeCordSign sign : this.manager.getBungeeCordSignController().getAll()) {
-            final Location l = (Location) sign.getLocation();
+    private LinkSign getBungeeCordSignFromLocation(Location signLocation) {
+        for (final Object sign1 : this.manager.getBungeeCordSignController().getAll()) {
+            LinkSign sign = (LinkSign) sign1;
+            final Location l = (Location) ((LocationBuilder)sign.getPosition()).toLocation();
             if (signLocation.getBlockX() == l.getBlockX()) {
                 if (signLocation.getBlockY() == l.getBlockY()) {
                     if (signLocation.getBlockZ() == l.getBlockZ()) {

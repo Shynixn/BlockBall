@@ -29,7 +29,7 @@ import java.util.UUID;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface PlayerMeta extends Persistenceable<PlayerMeta> {
+public interface PlayerMeta extends Persistenceable {
 
     /**
      * Returns the name of the playerData

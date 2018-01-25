@@ -31,4 +31,4 @@ import org.bukkit.inventory.ItemStack
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitArena : Arena<Location, ItemStack,BukkitArena>
+interface BukkitArena : Arena<Location, ItemStack>

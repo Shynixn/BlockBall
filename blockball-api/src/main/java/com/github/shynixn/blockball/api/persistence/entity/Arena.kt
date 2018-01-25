@@ -30,7 +30,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Arena<Location, ItemStack, PersistenceObject> : AreaSelection<Location, PersistenceObject> {
+interface Arena<Location, ItemStack> : AreaSelection<Location> {
 
     /** Unique [name] of the arena. */
     val name: String
@@ -45,5 +45,5 @@ interface Arena<Location, ItemStack, PersistenceObject> : AreaSelection<Location
     var gameType: GameType
 
     /** Collection of the arena meta data. */
-    val meta: ArenaMeta<Location, AreaSelection<Location,PersistenceObject>,ItemStack>
+    val meta: ArenaMeta<Location, ItemStack>
 }

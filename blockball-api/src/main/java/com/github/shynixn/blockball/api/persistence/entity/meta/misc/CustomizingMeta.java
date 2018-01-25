@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.misc;
 
-import com.github.shynixn.blockball.api.persistence.entity.IPosition;
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
 
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface CustomizingMeta extends Persistenceable<CustomizingMeta> {
+public interface CustomizingMeta extends Persistenceable {
 
 
 

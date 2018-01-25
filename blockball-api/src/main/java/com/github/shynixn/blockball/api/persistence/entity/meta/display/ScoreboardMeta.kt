@@ -1,18 +1,15 @@
-package com.github.shynixn.blockball.api.business.controller;
+package com.github.shynixn.blockball.api.persistence.entity.meta.display
 
-import com.github.shynixn.blockball.api.persistence.controller.ReloadableController;
-import com.github.shynixn.blockball.api.persistence.entity.BungeeCordSign;
-
-import java.util.Set;
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,21 +29,13 @@ import java.util.Set;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BungeeCordSignController extends ReloadableController<BungeeCordSign> {
+interface ScoreboardMeta  : Persistenceable{
+    /** Title of the scoreboard. */
+    var title : String
 
-    /**
-     * Creates a new bungeecord sign from the given server and location.
-     *
-     * @param server   server
-     * @param location location
-     * @return bungeeCordSign
-     */
-    BungeeCordSign create(String server, Object location);
+    /** Is the scoreboard visible. */
+    var enabled : Boolean
 
-    /**
-     * Returns a set of all servers mentioned on signs.
-     *
-     * @return servers
-     */
-    Set<String> getAllServers();
+    /** Lines of the scoreboard being rendered. */
+    val lines : MutableList<String>
 }

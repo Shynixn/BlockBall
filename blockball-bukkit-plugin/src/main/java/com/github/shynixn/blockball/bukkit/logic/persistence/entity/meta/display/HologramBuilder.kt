@@ -1,8 +1,9 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display
 
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
 /**
  * Created by Shynixn 2018.
@@ -31,17 +32,11 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaMeta<Location, ItemStack> {
-
-    /** Meta data of the hublobby. */
-    val hubLobbyMeta: HubLobbyMeta
-
-    /** Meta data of the redTeam. */
-    val redTeamMeta: TeamMeta<Location, ItemStack>
-
-    /** Meta data of the blueTeam. */
-    val blueTeamMeta: TeamMeta<Location, ItemStack>
-
-    /** Meta data of the ball. */
-    val ballMeta: BallMeta<*,*,*>
+class HologramBuilder : PersistenceObject(), HologramMeta {
+    /** Position of the hologram. */
+    @YamlSerializer.YamlSerialize("location", orderNumber = 1)
+    override var position: IPosition? = null;
+    /** Lines of the hologram being rendered. */
+    @YamlSerializer.YamlSerialize("lines", orderNumber = 1)
+    override val lines: MutableList<String> = ArrayList();
 }

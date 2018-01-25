@@ -78,10 +78,6 @@ public abstract class Page {
         return CommandResult.SUCCESS;
     }
 
-    TeamMeta getTeamMeta(Arena arena, Team team) {
-        return null;
-    }
-
     String mergeArgs(int starting, String[] args) {
         final StringBuilder builder = new StringBuilder();
         for (int i = starting; i < args.length; i++) {
