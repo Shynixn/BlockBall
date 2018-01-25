@@ -5,7 +5,10 @@ import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.entity.BlockBallPlayer
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
@@ -46,6 +49,10 @@ internal fun ItemStack.setSkin(skin: String) {
     }
 }
 
+internal fun Location.toPosition(): IPosition {
+    return LocationBuilder(this)
+}
+
 internal fun Player.compSetGlowing(enabled: Boolean) {
     if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
         try {
@@ -57,7 +64,7 @@ internal fun Player.compSetGlowing(enabled: Boolean) {
 }
 
 internal fun BossBarMeta.Style.getNames(): Array<String?> {
-   return arrayOfNulls<String>(5);
+    return arrayOfNulls<String>(5)
 }
 
 internal fun <T> Persistenceable.clone(): T where T : Persistenceable {
@@ -125,7 +132,7 @@ internal fun Player.compGetItemInHand(offHand: Boolean): ItemStack? {
 
 
 internal fun Player.isInGame(): Boolean {
-    return BlockBallApi.getDefaultGameController().getGameFromPlayer(player).isPresent;
+    return BlockBallApi.getDefaultGameController().getGameFromPlayer(player).isPresent
 }
 
 internal fun Player.game(): BlockBallPlayer? {

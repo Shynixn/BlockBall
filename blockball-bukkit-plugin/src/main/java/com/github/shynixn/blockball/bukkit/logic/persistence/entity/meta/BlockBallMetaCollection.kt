@@ -43,15 +43,17 @@ import org.bukkit.inventory.ItemStack
  */
 class BlockBallMetaCollection : ArenaMeta<Location, ItemStack> {
     /** Meta data of the ball. */
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "ball")
     override val ballMeta: BallMeta<*, *, *> = BallData("Shynixn")
     /** Meta data of the blueTeam. */
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "team-blue")
     override val blueTeamMeta: TeamProperties
             = TeamProperties("Team Blue", "&c", "<bluecolor><player>", "scored for <blue>.", "<bluecolor><blue>", "<bluecolor> has won the match");
     /** Meta data of the hublobby. */
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "hubgame")
     override var hubLobbyMeta: HubLobbyProperties = HubLobbyProperties()
     /** Meta data of the redTeam. */
-    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "team-red")
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "team-red")
     override val redTeamMeta: TeamProperties
             = TeamProperties("Team Red", "&c", "<redcolor><player>", "scored for <red>.", "<redcolor><red>", "<redcolor> has won the match");
 }
