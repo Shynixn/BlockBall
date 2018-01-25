@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */
+ 
 public class DoubleJumpListener extends SimpleListener {
 
     private GameController gameController;
@@ -55,7 +55,7 @@ public class DoubleJumpListener extends SimpleListener {
      * Initializes a new listener by plugin.
      *
      * @param plugin plugin
-     */
+     
     @Inject
     public DoubleJumpListener(Plugin plugin, GameRepository gameController) {
         super(plugin);
@@ -66,7 +66,7 @@ public class DoubleJumpListener extends SimpleListener {
      * Allows double jump for players in games.
      *
      * @param event event
-     */
+     
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
         if (event.getPlayer().isOnGround()) {
@@ -81,7 +81,7 @@ public class DoubleJumpListener extends SimpleListener {
      * Handles double jump pressing in games.
      *
      * @param event event
-     */
+     
     @EventHandler
     public void onToggleFlightEvent(PlayerToggleFlightEvent event) {
         if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
@@ -104,7 +104,7 @@ public class DoubleJumpListener extends SimpleListener {
                 } catch (final Exception e) {
                     logger.log(Level.WARNING, "Invalid 1.8/1.9 sound. [DoubleJumpSound]", e);
                 }
-            }*/
+            }
         }
     }
-}
+}*/

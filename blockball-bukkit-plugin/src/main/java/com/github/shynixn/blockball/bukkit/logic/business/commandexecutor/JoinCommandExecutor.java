@@ -57,11 +57,11 @@ public class JoinCommandExecutor extends SimpleCommandExecutor.UnRegistered {
      */
     @Override
     public void onPlayerExecuteCommand(Player player, String[] args) {
-        Optional<Game> gameOpt = this.gameController.getGameFromPlayer(player);
-        gameOpt.ifPresent(game -> game.leave(player));
-        if (args.length >= 3) {
-            args = this.mergeArguments(args);
-        }
+      //  Optional<Game> gameOpt = this.gameController.getGameFromPlayer(player);
+      //  gameOpt.ifPresent(game -> game.leave(player));
+      //  if (args.length >= 3) {
+      //      args = this.mergeArguments(args);
+      //  }
         /*
         if (args.length == 2 && ((MathUtils.tryParseInteger(args[0])
                 && (gameOpt = this.gameController.getGameFromArenaId(Integer.parseInt(args[0]))).isPresent())

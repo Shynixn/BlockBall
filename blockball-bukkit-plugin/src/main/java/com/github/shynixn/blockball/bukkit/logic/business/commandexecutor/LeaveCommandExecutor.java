@@ -57,7 +57,7 @@ public final class LeaveCommandExecutor extends SimpleCommandExecutor.UnRegister
      */
     @Override
     public void onPlayerExecuteCommand(Player player, String[] args) {
-        final Optional<Game> gameOpt = this.gameController.getGameFromPlayer(player);
-        gameOpt.ifPresent(game -> game.leave(player));
+      //  final Optional<Game> gameOpt = this.gameController.getGameFromPlayer(player);
+       // gameOpt.ifPresent(game -> game.leave(player));
     }
 }

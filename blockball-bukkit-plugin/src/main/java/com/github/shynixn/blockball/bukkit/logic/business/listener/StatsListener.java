@@ -162,7 +162,7 @@ public class StatsListener extends SimpleListener implements Runnable {
      */
     @EventHandler
     public void onTeamWinEvent(GameWinEvent event) {
-        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+       /* this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
             synchronized (this.statsController) {
                 Object[] winningPlayers = event.getGame().getRedTeamPlayers();
                 if (event.getTeam() == Team.BLUE) {
@@ -178,7 +178,7 @@ public class StatsListener extends SimpleListener implements Runnable {
                     }
                 }
             }
-        });
+        });*/
     }
 
     private void updateStats(Player player, Stats stats) {

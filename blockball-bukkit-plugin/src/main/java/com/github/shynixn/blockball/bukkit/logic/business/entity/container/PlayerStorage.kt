@@ -1,6 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.container
 
-import com.github.shynixn.blockball.api.business.entity.BlockBallPlayer
+import com.github.shynixn.blockball.api.business.entity.InGameStats
+import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.Team
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scoreboard.Scoreboard
@@ -32,32 +34,40 @@ import org.bukkit.scoreboard.Scoreboard
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class PlayerStorage(val player : Player) : BlockBallPlayer {
+class PlayerStorage(
+        /** Player of the storage. */
+        val player: Player,
+        /** Team of the player. */
+                    override val team: Team) : InGameStats {
     private var armorContents: Array<ItemStack>? = null
     private var flying: Boolean = false
     private var allowFlying: Boolean = false
     private var walkingSpeed: Float = 0.toFloat()
     private var scoreboard: Scoreboard? = null
+    private var gameType: GameType = GameType.HUBGAME;
 
     /**
      * Stores the metadata for a [player] joining a hubgame.
      */
-    fun storeForHubGame() {
-        this.armorContents = player.inventory?.armorContents?.clone()
-        this.flying = player.isFlying
-        this.allowFlying = player.allowFlight
-        this.walkingSpeed = player.walkSpeed
-        this.scoreboard = player.scoreboard
+    fun storeForType(gameType: GameType) {
+        this.gameType = gameType;
+        if (gameType == GameType.HUBGAME) {
+            this.armorContents = player.inventory?.armorContents?.clone()
+            this.flying = player.isFlying
+            this.allowFlying = player.allowFlight
+            this.walkingSpeed = player.walkSpeed
+            this.scoreboard = player.scoreboard
+        }
     }
 
-    /**
-     * Restores the metadata for a [player] leaving a hubgame.
-     */
-    fun restoreFromHubGame() {
-        player.inventory.armorContents = this.armorContents
-        player.isFlying = this.flying
-        player.allowFlight = this.allowFlying
-        player.walkSpeed = this.walkingSpeed
-        player.scoreboard = this.scoreboard
+    /** Resets the players state before joining. */
+    override fun resetState() {
+        if (gameType == GameType.HUBGAME) {
+            player.inventory.armorContents = this.armorContents
+            player.isFlying = this.flying
+            player.allowFlight = this.allowFlying
+            player.walkSpeed = this.walkingSpeed
+            player.scoreboard = this.scoreboard
+        }
     }
 }

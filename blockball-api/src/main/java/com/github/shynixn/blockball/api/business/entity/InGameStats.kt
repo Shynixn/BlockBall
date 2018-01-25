@@ -1,15 +1,15 @@
-package com.github.shynixn.blockball.bukkit.logic.business.helper;
+package com.github.shynixn.blockball.api.business.entity
 
-import org.bukkit.entity.Player;
+import com.github.shynixn.blockball.api.business.enumeration.Team
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,21 +29,11 @@ import org.bukkit.entity.Player;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class MathUtils {
+interface InGameStats {
 
-    /**
-     * Returns true if the text is parsable to int.
-     *
-     * @param text text
-     * @return parsable
-     */
-    public static boolean tryParseInteger(String text) {
-        try {
+    /** Team of the player. */
+    val team : Team
 
-            Integer.parseInt(text);
-            return true;
-        } catch (final Exception ex) {
-            return false;
-        }
-    }
+    /** Resets the players state before joining. */
+    fun resetState()
 }

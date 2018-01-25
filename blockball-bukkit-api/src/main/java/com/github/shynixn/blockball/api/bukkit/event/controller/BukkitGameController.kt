@@ -1,13 +1,20 @@
-package com.github.shynixn.blockball.api.business.entity;
+package com.github.shynixn.blockball.api.bukkit.event.controller
+
+import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
+import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
+import com.github.shynixn.blockball.api.business.controller.GameController
+import org.bukkit.Location
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +34,4 @@ package com.github.shynixn.blockball.api.business.entity;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface HubGame extends Game {
-
-
-}
+interface BukkitGameController : GameController<Location, Player, ItemStack, BukkitArena, BukkitGame>

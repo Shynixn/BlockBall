@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.listener;
+/*package com.github.shynixn.blockball.bukkit.logic.business.listener;
 
 import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent;
 import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent;
@@ -9,7 +9,6 @@ import com.github.shynixn.blockball.api.business.enumeration.GameType;
 import com.github.shynixn.blockball.api.business.enumeration.Team;
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
 import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.game.RGame;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -54,7 +53,7 @@ import java.util.regex.Pattern;
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */
+ 
 public class GameListener extends SimpleListener {
 
     private final GameController gameController;
@@ -67,7 +66,7 @@ public class GameListener extends SimpleListener {
      * Initializes a new listener by plugin.
      *
      * @param plugin plugin
-     */
+ 
     public GameListener(Plugin plugin, GameController controller) {
         super(plugin);
         if (controller == null) {
@@ -81,7 +80,7 @@ public class GameListener extends SimpleListener {
      * when a player tries to spawn in an arena.
      *
      * @param event event
-     */
+     
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         final Optional<Game> optGame = this.getBungeeCordGame();
@@ -93,7 +92,7 @@ public class GameListener extends SimpleListener {
      * Leaves a game if the player is currently inside of one.
      *
      * @param event event
-     */
+   
     @EventHandler
     public void playerQuitEvent(PlayerQuitEvent event) {
         final Optional<Game> optGame = this.gameController.getGameFromPlayer(event.getPlayer());
@@ -104,7 +103,7 @@ public class GameListener extends SimpleListener {
      * Cancels hunger for players in games.
      *
      * @param event event
-     */
+     
     @EventHandler
     public void onHunger(FoodLevelChangeEvent event) {
         final Optional<Game> optGame = this.gameController.getGameFromPlayer(event.getEntity());
@@ -117,7 +116,7 @@ public class GameListener extends SimpleListener {
      * Cancels inventory actions for players in games.
      *
      * @param event event
-     */
+     
     @EventHandler
     public void onPlayerClickInventoryEvent(InventoryClickEvent event) {
         final Optional<Game> optGame = this.gameController.getGameFromPlayer(event.getWhoClicked());
@@ -131,7 +130,7 @@ public class GameListener extends SimpleListener {
      * Cancels inventory actions for players in games.
      *
      * @param event event
-     */
+     
     @EventHandler
     public void onPlayerOpenInventoryEvent(InventoryOpenEvent event) {
         final Optional<Game> optGame = this.gameController.getGameFromPlayer(event.getPlayer());
@@ -144,7 +143,7 @@ public class GameListener extends SimpleListener {
      * Cancels world interactions for players in minigame-lobbies.
      *
      * @param event event
-     */
+     
     @EventHandler
     public void playerInteractEvent(PlayerInteractEvent event) {
         final Optional<Game> optGame = this.gameController.getGameFromPlayer(event.getPlayer());
@@ -161,7 +160,7 @@ public class GameListener extends SimpleListener {
      * Cancels all fall damage for players in games and all damage if enabled in the arena configuration.
      *
      * @param event event
-     */
+     
     @EventHandler
     public void onPlayerDamageEvent(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player))
@@ -173,7 +172,7 @@ public class GameListener extends SimpleListener {
                 event.setCancelled(true);
             } else if (!optGame.get().getArena().getMeta().find(CustomizingMeta.class).get().isDamagingPlayersEnabled()) {
                 event.setCancelled(true);
-            }*/
+            }
         }
     }
 
@@ -181,7 +180,7 @@ public class GameListener extends SimpleListener {
      * Cancels command executions in minigame games.
      *
      * @param event event
-     */
+     
     @EventHandler
     public void onPlayerExecuteCommand(PlayerCommandPreprocessEvent event) {
         final Optional<Game> optGame = this.gameController.getGameFromPlayer(event.getPlayer());
@@ -252,14 +251,14 @@ public class GameListener extends SimpleListener {
                             event.getPlayer().setVelocity(knockback);
                             event.getPlayer().setAllowFlight(true);
                             this.toggledPlayers.add(event.getPlayer());
-                        }*/
+                        }
                     }
                     if (event.getPlayer().hasPermission("blockball.user")) {
                        /* if (game.getArena().getMeta().find(CustomizingMeta.class).get().isFastJoiningEnabled()) {
                             this.joinGame(event.getPlayer(), null, game);
                         } else {
                             event.getPlayer().sendMessage("TYPE THIS TO JOIN!");
-                        }*/
+                        }
                     } else {
                         event.getPlayer().sendMessage(Config.getInstance().getPrefix() + Config.getInstance().getJoinCommandPermissionMessage());
                     }
@@ -286,7 +285,7 @@ public class GameListener extends SimpleListener {
      * Gets called when a player interacts with a ball which is in a game.
      *
      * @param event event
-     */
+     
     @EventHandler
     public void ballInteractEvent(BallInteractEvent event) {
         final Optional<Game> optGame = this.gameController.getGameFromPlayer(event.getEntity());
@@ -309,7 +308,7 @@ public class GameListener extends SimpleListener {
             if (direction.getZ() < 0)
                 z = -1;
           //  event.getBall().teleport(new Location(ballLocation.getWorld(), ballLocation.getX() + x, ballLocation.getY(), ballLocation.getZ() + z));
-            entity.ballCornerBumper = 0;*/
+            entity.ballCornerBumper = 0;
         }
         entity.ballPreviousCacheLocation = ballLocation.toVector();
         entity.lastHitTeam = entity.getTeamFromPlayer(event.getEntity());
@@ -340,7 +339,7 @@ public class GameListener extends SimpleListener {
             }
         } else {
             player.sendMessage(Config.getInstance().getPrefix() + game.getArena().getMeta().find(CustomizingMeta.class).get().getTeamFullMessage());
-        }*/
+        }
     }
 
     private boolean isNotLeaveMessage(String message) {
@@ -360,7 +359,7 @@ public class GameListener extends SimpleListener {
                     player.teleport(spawnpoint);
                     return;
                 }
-            }*/
+            }
         }
     }
 
@@ -372,7 +371,7 @@ public class GameListener extends SimpleListener {
                 player.kickPlayer(bungeeCordLobbyMeta.getKickMessage().get());
             } else {
                 player.kickPlayer(null);
-            }*/
+            }
         }
     }
 
@@ -407,3 +406,4 @@ public class GameListener extends SimpleListener {
         return Optional.empty();
     }
 }
+*/

@@ -53,6 +53,10 @@ internal fun Location.toPosition(): IPosition {
     return LocationBuilder(this)
 }
 
+internal fun IPosition.toBukkitLocation(): Location {
+    return (this as LocationBuilder).toLocation()
+}
+
 internal fun Player.compSetGlowing(enabled: Boolean) {
     if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
         try {
@@ -128,18 +132,5 @@ internal fun Player.compGetItemInHand(offHand: Boolean): ItemStack? {
             throw RuntimeException(e)
         }
     }
-}
-
-
-internal fun Player.isInGame(): Boolean {
-    return BlockBallApi.getDefaultGameController().getGameFromPlayer(player).isPresent
-}
-
-internal fun Player.game(): BlockBallPlayer? {
-    val game = BlockBallApi.getDefaultGameController().getGameFromPlayer(player)
-    if (game.isPresent) {
-        return game.get().getBlockBallPlayerFromPlayer(player).get()
-    }
-    return null
 }
 

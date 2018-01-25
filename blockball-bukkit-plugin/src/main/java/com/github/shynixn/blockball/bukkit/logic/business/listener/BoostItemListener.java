@@ -73,7 +73,7 @@ public class BoostItemListener extends SimpleListener {
      */
     @EventHandler
     public void onItemPickUpEvent(PlayerPickupItemEvent event) {
-        final Optional<Game> optGame = this.gameController.getGameFromPlayer(event.getPlayer());
+       /* final Optional<Game> optGame = this.gameController.getGameFromPlayer(event.getPlayer());
         if (optGame.isPresent()) {
             final Map<Object, BoosItemMeta> groundItems = optGame.get().getGroundItems();
             for (final Object item : groundItems.keySet()) {
@@ -89,7 +89,7 @@ public class BoostItemListener extends SimpleListener {
                     event.getItem().remove();
                 }
             }
-        }
+        }*/
     }
 
     /**
@@ -99,12 +99,12 @@ public class BoostItemListener extends SimpleListener {
      */
     @EventHandler
     public void onItemDespawnEvent(ItemDespawnEvent event) {
-        for (final Game game : this.gameController.getAll()) {
+      /*  for (final Game game : this.gameController.getAll()) {
             if (game.getArena().isLocationInSelection(event.getLocation())) {
                 if (game.getGroundItems().containsKey(event.getEntity())) {
                     game.removeGroundItem(event.getEntity());
                 }
             }
-        }
+        }*/
     }
 }

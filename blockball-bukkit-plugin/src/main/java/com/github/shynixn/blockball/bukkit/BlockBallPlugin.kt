@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.business.controller.BallController
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectController
 import com.github.shynixn.blockball.api.business.controller.GameController
 import com.github.shynixn.blockball.api.persistence.controller.LinkSignController
@@ -103,8 +102,8 @@ class BlockBallPlugin : JavaPlugin() {
             try {
                 gameController!!.arenaController.reload();
                 ReflectionUtils.invokeMethodByClass<Any>(BlockBallApi::class.java, "initializeBlockBall"
-                        , arrayOf(BallController::class.java, GameController::class.java)
-                        , arrayOf(this.blockBallBungeeCordManager!!.bungeeCordSignController, this.gameController))
+                        , arrayOf(GameController::class.java)
+                        , arrayOf(this.gameController))
                 success = true
             } catch (e: Exception) {
                 logger.log(Level.WARNING, "Failed to enable plugin.", e)
