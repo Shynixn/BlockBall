@@ -1,9 +1,4 @@
-package com.github.shynixn.blockball.api.bukkit.event.entity
-
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import org.bukkit.Location
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
+package com.github.shynixn.blockball.api.persistence.entity.meta.misc
 
 /**
  * Created by Shynixn 2018.
@@ -32,4 +27,17 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitArena : Arena<Location, ItemStack, Vector>
+interface ArenaProtectionMeta<Vector> {
+
+    /** Velocity being applied when an entity enters the arena which is not an player or armorstand. */
+    var entityProtection: Vector
+
+    /** Should a velocity be applied to entities which are not an player or armorstand. */
+    var entityProtectionEnabled: Boolean
+
+    /** Velocity being applied when a player rejoins the server into a field of an arena. */
+    var rejoinProtection: Vector
+
+    /** Should a velocity be applied to players which rejoin on the field of the arena. */
+    var rejoinProtectionEnabled: Boolean
+}

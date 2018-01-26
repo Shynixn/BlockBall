@@ -2,6 +2,8 @@ package com.github.shynixn.ball.bukkit.logic.persistence.configuration
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.bukkit.configuration.MemorySection
+import org.bukkit.util.Vector
 import java.util.logging.Logger
 
 /**
@@ -35,7 +37,7 @@ import java.util.logging.Logger
 internal object Config : SimpleConfig() {
 
     @Inject
-    var Logger : Logger? = null
+    var Logger: Logger? = null
 
 
     val guiTitle: String?
@@ -61,6 +63,21 @@ internal object Config : SimpleConfig() {
     val metrics: Boolean?
         get() {
             return this.getData<Boolean>("metrics")
+        }
+
+    val stateSignEnabled: String?
+        get() {
+            return this.getData<String>("state-sign-enabled")
+        }
+
+    val stateSignDisabled: String?
+        get() {
+            return this.getData<String>("state-sign-disabled")
+        }
+
+    val stateSignRunning: String?
+        get() {
+            return this.getData<String>("state-sign-running")
         }
 
     /**

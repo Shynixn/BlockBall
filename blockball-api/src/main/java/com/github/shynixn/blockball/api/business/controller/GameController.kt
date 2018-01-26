@@ -33,8 +33,8 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface GameController<Location : Any, Player, ItemStack, ArenaEntity, GameEntity : Game<ArenaEntity, Player, Location, ItemStack>>
-    : ReloadableController<GameEntity> where ArenaEntity : Arena<Location, ItemStack> {
+interface GameController<Location : Any,Vector, Player, ItemStack, ArenaEntity, GameEntity : Game<ArenaEntity, Player, Location, ItemStack, Vector>>
+    : ReloadableController<GameEntity> where ArenaEntity : Arena<Location, ItemStack, Vector> {
 
     /** ArenaController of the gameController. */
     val arenaController: ArenaController<Location, ArenaEntity>

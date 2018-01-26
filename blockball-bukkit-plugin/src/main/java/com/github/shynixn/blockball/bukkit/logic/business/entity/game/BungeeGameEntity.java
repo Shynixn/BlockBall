@@ -313,26 +313,7 @@ private void kickUnwantedEntitiesOutOfForcefield() {
         }
         }
 
-final void replacePlaceTextOnSign(Sign sign, String[] text, TeamMeta teamMeta, int players, int maxPlayers) {
-    /*    for (int i = 0; i < 4; i++) {
-            String modifiedText = text[i];
-            if (this.arena.getDisplayName().isPresent()) {
-                modifiedText = modifiedText.replace("<game>", String.valueOf(this.arena.getDisplayName().get()));
-            } else {
-                modifiedText = modifiedText.replace("<game>", String.valueOf(this.arena.getName()));
-            }
-            if (this.gameStatus == GameStatus.RUNNING) {
-                modifiedText = modifiedText.replace("<state>", Config.getInstance().getMessageSignRunning());
-            } else if (this.gameStatus == GameStatus.ENABLED) {
-                modifiedText = modifiedText.replace("<state>", Config.getInstance().getMessageSignEnabled());
-            } else {
-                modifiedText = modifiedText.replace("<state>", Config.getInstance().getMessageSignDisabled());
-            }
-            modifiedText = modifiedText.replace("<team>", teamMeta.getDisplayName())
-                    .replace("<players>", String.valueOf(players))
-                    .replace("<maxplayers>", String.valueOf(maxPlayers));
-            sign.setLine(i, modifiedText);
-        }
+
         }
 
 private void checkBallInGoal() {
@@ -437,14 +418,6 @@ final String replaceMessagePlaceholders(String text) {
         throw new RuntimeException("The following error has already been fixed. Please wait for the games to get restarted...");
         }
 
-private boolean haveTwentyTicksPassed() {
-        this.bumperTimer--;
-        if (this.bumperTimer <= 0) {
-        this.bumperTimer = 20;
-        return true;
-        }
-        return false;
-        }
 
     /**
      * Starts the game

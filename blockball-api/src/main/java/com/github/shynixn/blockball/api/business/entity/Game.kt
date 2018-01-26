@@ -31,7 +31,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Game<out ArenaEntity, Player, Location, ItemStack> :  java.lang.AutoCloseable where ArenaEntity : Arena<Location, ItemStack> {
+interface Game<out ArenaEntity, Player, Location, ItemStack, Vector> :  java.lang.AutoCloseable where ArenaEntity : Arena<Location, ItemStack, Vector> {
 
     /** Arena of the game. */
     val arena: ArenaEntity

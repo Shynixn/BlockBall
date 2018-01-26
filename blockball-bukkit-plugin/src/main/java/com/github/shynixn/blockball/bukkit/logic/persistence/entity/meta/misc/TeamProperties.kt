@@ -81,6 +81,9 @@ class TeamProperties(
     /** Message getting played when a player leave a match.*/
     @YamlSerializer.YamlSerialize(orderNumber = 10, value = "leave-message")
     override var leaveMessage: String = "You have left the game."
+    /** Lines displayed on the sign for joining the team. */
+    @YamlSerializer.YamlSerialize(orderNumber = 11, value = "lines")
+    override var signLines: Array<String> = arrayOf("&lBlockBall", "<game>", "<state>", "<players>/<maxplayers>")
     /** Armor wearing this team. */
     override var armorContents: Array<ItemStack?>
         get() {

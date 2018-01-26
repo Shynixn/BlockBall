@@ -5,14 +5,17 @@ import com.github.shynixn.blockball.api.persistence.entity.AreaSelection
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallData
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.ProtectionData
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.TeamProperties
 import org.bukkit.Location
 import org.bukkit.inventory.ItemStack
+import org.bukkit.util.Vector
 
 /**
  * Created by Shynixn 2018.
@@ -41,7 +44,10 @@ import org.bukkit.inventory.ItemStack
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockBallMetaCollection : ArenaMeta<Location, ItemStack> {
+class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector> {
+    /** Meta data of proection. */
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "protection")
+    override val protectionMeta: ArenaProtectionMeta<Vector> = ProtectionData();
     /** Meta data of the ball. */
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "ball")
     override val ballMeta: BallMeta<*, *, *> = BallData("Shynixn")
@@ -56,4 +62,6 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack> {
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "team-red")
     override val redTeamMeta: TeamProperties
             = TeamProperties("Team Red", "&c", "<redcolor><player>", "scored for <red>.", "<redcolor><red>", "<redcolor> has won the match");
+
+
 }

@@ -53,9 +53,9 @@ blockball:
 
 messages:
   prefix: '&0&l[&f&lBall&0&l]&7 '
-  sign-enabled: '&2&lENABLED'
-  sign-disabled: '&4&lDISABLED'
-  sign-running: '&1&lRUNNING'
+  state-sign-enabled: '&2&lENABLED'
+  state-sign-disabled: '&4&lDISABLED'
+  state-sign-running: '&1&lRUNNING'
   lobby-full: '&cLobby is full. You cannot join!'
   no-perms: '&cYou do not have permissions.'
 
@@ -152,38 +152,6 @@ bungeecord-server-change:
   permission: blockball.admin
   permission-message: You don't have permission
 
-
-############################
-
-# Sign settings
-
-# Change the template of the signs. The available placeholders are listed below.
-
-# <game> = arena alias or arena id
-# <team> = team name
-# <state> = status of the arena
-# <players> = amount of players on the team or in the arena
-# <maxplayers> = max amount of players on the team or in the arena
-
-############################
-
-signs:
-  hubgame:
-   - '&l[Blockball]'
-   - '<game>'
-   - '<state>'
-   - '<players>/<maxplayers>'
-  minigame:
-   - '&l[Blockball]'
-   - '<game>'
-   - '<state>'
-   - '<players>/<maxplayers>'
-  leave:
-   - '&l[Blockball]'
-   - 'Leave game'
-   - ''
-   - ''
-
 ############################
 
 # Loading settings
@@ -228,26 +196,6 @@ join-spawnpoint:
 particles:
  visible-for-all: true
  visible-permission: ''
-
-############################
-
-# Protection settings
-
-# entity-velocity-protection: Velocity the entities get launched away from
-# the blockball arena if they try to walk in it.
-# player-launch-up-protection: Velocity player get launched away from
-# the blockball arena if they try to be there without joining.
-
-############################
-
-entity-velocity-protection:
- x: 5.0
- y: 2.0
- z: 5.0
-player-launch-up-protection:
- x: 0.0
- y: 2.0
- z: 0.0
 
 ############################
 

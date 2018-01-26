@@ -41,4 +41,7 @@ interface HubLobbyMeta {
 
     /** Spawnpoint when someone leaves the hub game. */
     val leaveSpawnpoint: IPosition?
+
+    /** Lines displayed on the sign for leaving the match. */
+    var leaveSignLines: Array<String>
 }

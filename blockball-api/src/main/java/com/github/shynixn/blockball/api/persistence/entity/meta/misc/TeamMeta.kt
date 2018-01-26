@@ -73,4 +73,7 @@ interface TeamMeta<Location, ItemStack> {
 
     /** Message getting played when a player leave a match.*/
     var leaveMessage: String
+
+    /** Lines displayed on the sign for joining the team. */
+    var signLines: Array<String>
 }

@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.business.entity.Game
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.util.Vector
 
 /**
  * Created by Shynixn 2018.
@@ -32,4 +33,4 @@ import org.bukkit.inventory.ItemStack
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack>
+interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack, Vector>

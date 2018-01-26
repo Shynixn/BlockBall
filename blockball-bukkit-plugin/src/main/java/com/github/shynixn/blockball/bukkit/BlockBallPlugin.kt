@@ -100,7 +100,7 @@ class BlockBallPlugin : JavaPlugin() {
         success = false
         if (!Config.getInstance().isOnlyBungeeCordLinkingEnabled) {
             try {
-                gameController!!.arenaController.reload();
+                gameController!!.reload()
                 ReflectionUtils.invokeMethodByClass<Any>(BlockBallApi::class.java, "initializeBlockBall"
                         , arrayOf(GameController::class.java)
                         , arrayOf(this.gameController))

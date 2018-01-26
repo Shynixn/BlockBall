@@ -34,6 +34,9 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  * SOFTWARE.
  */
 open class HubLobbyProperties : PersistenceObject(), HubLobbyMeta {
+    /** Lines displayed on the sign for leaving the match. */
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leave-sign-lines")
+    override var leaveSignLines: Array<String> = arrayOf("&lBlockBall", "Leave")
     /** List of signs which can be clicked to join the red team.*/
     override val redTeamSigns: MutableList<IPosition>
         get() = sign.redTeamSigns as MutableList<IPosition>
