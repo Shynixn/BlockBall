@@ -93,10 +93,17 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                 if (command == BlockBallCommand.BACK) {
                     final Page newPage = this.getPageById(Integer.parseInt(args[2]));
                     this.sendMessage(player, newPage.buildPage(cache));
-                } else {
+                }
+                else if (command == BlockBallCommand.CLOSE) {
+                    this.cache.remove(player);
+                    for (int i = 0; i < 20; i++) {
+                        player.sendMessage("");
+                    }
+                }
+                else {
                     final CommandResult result = page.execute(player, command, cache, args);
                     if (result == CommandResult.BACK) {
-                        player.performCommand( "blockball open back " + usedPage.getPreviousId());
+                        player.performCommand("blockball open back " + usedPage.getPreviousId());
                         return;
                     }
                     if (result != CommandResult.SUCCESS && result != CommandResult.CANCEL_MESSAGE) {
@@ -114,19 +121,28 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                 break;
             }
         }
-        new ChatBuilder()
+        ChatBuilder builder = new ChatBuilder()
                 .text(ChatColor.STRIKETHROUGH + "----------------------------------------------------").nextLine()
                 .component(" >>Save<< ")
                 .setColor(ChatColor.GREEN)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ARENA_SAVE.getCommand())
                 .setHoverText("Saves the current arena if possible.")
-                .builder()
-                .component(">>Back<<")
-                .setColor(ChatColor.RED)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.getCommand() + " " + usedPage.getPreviousId())
-                .setHoverText("Opens the blockball arena configuration.")
-                .builder()
-                .component(" >>Save and reload<<")
+                .builder();
+        if (usedPage instanceof OpenPage) {
+            builder.component(">>Close<<")
+                    .setColor(ChatColor.RED)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.getCommand() + " " + usedPage.getPreviousId())
+                    .setHoverText("Opens the blockball arena configuration.")
+                    .builder();
+        }
+        else {
+            builder.component(">>Back<<")
+                    .setColor(ChatColor.RED)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.CLOSE.getCommand())
+                    .setHoverText("Opens the blockball arena configuration.")
+                    .builder();
+        }
+        builder.component(" >>Save and reload<<")
                 .setColor(ChatColor.BLUE)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.OPEN_RELOAD.getCommand())
                 .setHoverText("Opens the blockball arena configuration.")

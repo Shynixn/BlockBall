@@ -53,7 +53,7 @@ class BlockBallArena() : SelectedArea(), BukkitArena {
 
     /** Is the arena ready to be placed. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "enabled")
-    override var enabled: Boolean = false
+    override var enabled: Boolean = true
 
     /** [gameType] of the arena */
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "gamemode")

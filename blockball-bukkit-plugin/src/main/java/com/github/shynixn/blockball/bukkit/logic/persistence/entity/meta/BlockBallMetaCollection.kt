@@ -49,8 +49,8 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector> {
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "protection")
     override val protectionMeta: ArenaProtectionMeta<Vector> = ProtectionData();
     /** Meta data of the ball. */
-    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "ball")
-    override val ballMeta: BallMeta<*, *, *> = BallData("Shynixn")
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "ball", classicSerialize = true)
+    override val ballMeta: BallData = BallData("Shynixn")
     /** Meta data of the blueTeam. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "team-blue")
     override val blueTeamMeta: TeamProperties

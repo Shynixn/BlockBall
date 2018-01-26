@@ -6,6 +6,7 @@ import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMe
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
+import org.bukkit.configuration.MemorySection;
 
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public class BallData extends com.github.shynixn.ball.bukkit.core.logic.persiste
      */
     public BallData(Map<String, Object> data) throws Exception {
         super(data);
-        this.spawnpoint = new LocationBuilder((Map<String, Object>) data.get("spawnpoint"));
+        this.spawnpoint = new LocationBuilder(((MemorySection) data.get("spawnpoint")).getValues(false));
     }
 
     /**

@@ -40,7 +40,6 @@ import org.bukkit.inventory.ItemStack
  */
 class HubGame(arena: BukkitArena) : LowLevelGame(arena) {
 
-
     /** Join the game. */
     override fun join(player: Player, team: Team): Boolean {
         this.leave(player)

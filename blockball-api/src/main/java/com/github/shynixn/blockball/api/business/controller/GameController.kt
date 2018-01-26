@@ -37,7 +37,7 @@ interface GameController<Location : Any,Vector, Player, ItemStack, ArenaEntity, 
     : ReloadableController<GameEntity> where ArenaEntity : Arena<Location, ItemStack, Vector> {
 
     /** ArenaController of the gameController. */
-    val arenaController: ArenaController<Location, ArenaEntity>
+    val arenaController: ArenaController<Location, ArenaEntity>?
 
     /** Returns the game with the given arena name. */
     fun getGameFromArenaName(name: String): GameEntity?

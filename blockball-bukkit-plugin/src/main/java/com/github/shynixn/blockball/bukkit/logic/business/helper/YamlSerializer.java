@@ -53,6 +53,8 @@ public final class YamlSerializer {
         String value();
 
         int orderNumber() default 0;
+
+        boolean classicSerialize() default false;
     }
 
     /**
@@ -133,8 +135,7 @@ public final class YamlSerializer {
         final Map<String, Object> data = new LinkedHashMap<>();
         int i = 1;
         for (final Object object : objects) {
-            if(object != null)
-            {
+            if (object != null) {
                 if (ConfigurationSerializable.class.isAssignableFrom(object.getClass())) {
                     data.put(String.valueOf(i), ((ConfigurationSerializable) object).serialize());
                 } else {
@@ -197,7 +198,7 @@ public final class YamlSerializer {
      * @throws InstantiationException exception
      * @throws IllegalAccessException exception
      */
-    public static <T extends Map, E> T deserializeMap(Class<E> clazz, Class<T> mapClazz, Object dataSource) throws InstantiationException, IllegalAccessException {
+    public static <T extends Map, E> T deserializeMap(Class<E> clazz, Class<T> mapClazz, Object dataSource) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         final Map<String, Object> data = getDataFromSource(dataSource);
         Class<?> instanceClass = mapClazz;
         if (instanceClass == Map.class)
@@ -219,7 +220,7 @@ public final class YamlSerializer {
      * @throws InstantiationException exception
      * @throws IllegalAccessException exception
      */
-    public static <T> T[] deserializeArray(Class<T> clazz, Object dataSource) throws InstantiationException, IllegalAccessException {
+    public static <T> T[] deserializeArray(Class<T> clazz, Object dataSource) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         final Map<String, Object> data = getDataFromSource(dataSource);
         final T[] objects = (T[]) Array.newInstance(clazz, data.size());
         int i = 0;
@@ -242,7 +243,7 @@ public final class YamlSerializer {
      * @throws IllegalAccessException exception
      * @throws InstantiationException exception
      */
-    public static <T extends Collection, E> T deserializeCollection(Class<E> clazz, Class<T> collectionClazz, Object dataSource) throws IllegalAccessException, InstantiationException {
+    public static <T extends Collection, E> T deserializeCollection(Class<E> clazz, Class<T> collectionClazz, Object dataSource) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         Class<?> instanceClass = collectionClazz;
         if (instanceClass == List.class)
             instanceClass = ArrayList.class;
@@ -252,7 +253,7 @@ public final class YamlSerializer {
         return deserializeHeavyCollection(clazz, collection, dataSource);
     }
 
-    private static <T extends Collection, E> T deserializeHeavyCollection(Class<E> clazz, T collection, Object dataSource) throws InstantiationException, IllegalAccessException {
+    private static <T extends Collection, E> T deserializeHeavyCollection(Class<E> clazz, T collection, Object dataSource) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         final Map<String, Object> data = getDataFromSource(dataSource);
         for (final String key : data.keySet()) {
             collection.add(deserializeObject(clazz, ((MemorySection) data.get(key)).getValues(false)));
@@ -270,7 +271,7 @@ public final class YamlSerializer {
      * @throws IllegalAccessException exception
      * @throws InstantiationException exception
      */
-    public static <T> T deserializeObject(Class<T> clazz, Object dataSource) throws IllegalAccessException, InstantiationException {
+    public static <T> T deserializeObject(Class<T> clazz, Object dataSource) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         if (clazz.isInterface()) {
             throw new IllegalArgumentException("Cannot instantiate interface. Change your object fields!");
         }
@@ -284,7 +285,7 @@ public final class YamlSerializer {
         }
     }
 
-    private static <T> T heavyDeserialize(T object, Class<?> clazz, Map<String, Object> data) throws IllegalAccessException, InstantiationException {
+    private static <T> T heavyDeserialize(T object, Class<?> clazz, Map<String, Object> data) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         Class<?> clazzQuery = clazz;
         while (clazzQuery != null) {
             for (final Field field : clazzQuery.getDeclaredFields()) {
@@ -313,10 +314,14 @@ public final class YamlSerializer {
                             } else if (Map.class.isAssignableFrom(field.getType())) {
                                 field.set(object, deserializeMap(getTypeFromHeavyField(field, 1), (Class<Map>) field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                             } else {
-                                if (field.get(object) != null) {
-                                    heavyDeserialize(field.get(object), field.getType(), getDataFromSource(((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                if (yamlAnnotation.classicSerialize()) {
+                                    field.set(object, deserializeObjectClassic(field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                                 } else {
-                                    field.set(object, deserializeObject(field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                    if (field.get(object) != null) {
+                                        heavyDeserialize(field.get(object), field.getType(), getDataFromSource(((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                    } else {
+                                        field.set(object, deserializeObject(field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                    }
                                 }
                             }
                         }
@@ -326,6 +331,13 @@ public final class YamlSerializer {
             clazzQuery = clazzQuery.getSuperclass();
         }
         return object;
+    }
+
+    private static Object deserializeObjectClassic(Class<?> clazz, Map<String, Object> internal) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Constructor constructor = clazz.getConstructor(Map.class);
+        if (constructor == null)
+            throw new IllegalArgumentException("Constructor Map<String,Object> not found for classic deserialization.");
+        return constructor.newInstance(internal);
     }
 
     /**

@@ -108,7 +108,7 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
             if (arena.lowerCorner != null && arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.lowerCorner != null
                     && arena.meta.ballMeta.spawnpoint != null) {
                 BlockBallApi.getDefaultGameController()
-                        .arenaController.store(arena)
+                        .arenaController!!.store(arena)
             } else {
                 return CommandResult.ARENA_NOTVALID
             }

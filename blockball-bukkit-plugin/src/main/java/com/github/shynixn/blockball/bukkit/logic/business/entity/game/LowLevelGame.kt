@@ -73,7 +73,7 @@ abstract class LowLevelGame(
             return
         if (this.haveTwentyTicksPassed()) {
             this.kickUnwantedEntitiesOutOfForcefield()
-            //    this.onUpdateSigns()
+            this.onUpdateSigns()
         }
         //  this.handleBallSpawning()
         // if (this.ball != null && !this.ball.isDead()) {
@@ -81,6 +81,8 @@ abstract class LowLevelGame(
         //    this.checkBallInGoal()
         //  }
     }
+
+
 
 
     /** Checks if the player has joined the game. */

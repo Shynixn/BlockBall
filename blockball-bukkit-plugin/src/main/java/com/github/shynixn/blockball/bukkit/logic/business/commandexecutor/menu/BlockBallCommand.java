@@ -29,6 +29,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
  */
 public enum BlockBallCommand {
     BACK(PageKey.OPEN, "back"),
+    CLOSE(PageKey.OPEN, "close"),
     OPEN(PageKey.OPEN, null),
     OPEN_RELOAD(PageKey.OPEN, "reload"),
     OPEN_EDIT_ARENA(PageKey.OPEN, "edit-arenas"),

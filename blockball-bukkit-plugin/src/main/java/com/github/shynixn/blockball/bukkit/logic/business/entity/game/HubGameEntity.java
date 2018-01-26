@@ -73,15 +73,7 @@ public class HubGameEntity extends GameEntity {
             return;
         this.timer--;
         if (this.timer <= 0) {
-            for (final Entity entity : this.arena.getBallSpawnLocation().getWorld().getEntities()) {
-                if (!(entity instanceof Player) && !(entity instanceof Rabbit) && !(entity instanceof ArmorStand) && !this.isCustomDrop(entity)) {
-                    if (this.arena.isLocationInArea(entity.getLocation())) {
-                        final Vector vector = ConfigOld.getInstance().getEntityProtectionVelocity();
-                        entity.getLocation().setDirection(vector);
-                        entity.setVelocity(vector);
-                    }
-                }
-            }
+
             this.updateSigns();
             this.fixCachedRangePlayers();
             this.timer = 20;

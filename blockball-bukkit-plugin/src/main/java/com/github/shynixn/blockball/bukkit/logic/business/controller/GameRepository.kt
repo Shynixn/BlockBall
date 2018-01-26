@@ -7,11 +7,15 @@ import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.HubGame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
+import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.Inject
+import com.google.inject.Singleton
 import com.sk89q.worldedit.WorldEdit.logger
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import org.bukkit.scheduler.BukkitTask
 import java.util.*
 import java.util.logging.Level
 
@@ -42,17 +46,21 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameRepository(
-        /** ArenaController. */
-        @Inject
-        override val arenaController: ArenaController<Location, BukkitArena>,
-        /** Games. */
-        val games: ArrayList<BukkitGame> = ArrayList()
-        , @Inject private var plugin: Plugin?) : BukkitGameController, Runnable {
+@Singleton
+class GameRepository : BukkitGameController, Runnable {
 
-    init {
-        plugin!!.server.scheduler.runTaskTimer(plugin, this, 0L, 1L)
-    }
+    /** ArenaController. */
+    @Inject
+    override var arenaController: ArenaRepository? = null
+
+    @Inject private var plugin: Plugin? = null;
+
+    @Inject
+    private var gameListener : GameListener? = null;
+
+    /** Games. */
+    val games: ArrayList<BukkitGame> = ArrayList()
+    private var task: BukkitTask? = null;
 
     /**
      * The general contract of the method `run` is that it may
@@ -119,7 +127,10 @@ class GameRepository(
 
     /** Reloads the contents in the cache of the controller. */
     override fun reload() {
-        this.arenaController.reload()
+        if (task == null) {
+            task = plugin!!.server.scheduler.runTaskTimer(plugin, this, 0L, 1L)
+        }
+        this.arenaController!!.reload()
         for (game in this.games) {
             try {
                 game.close()
@@ -128,7 +139,7 @@ class GameRepository(
             }
         }
         this.games.clear()
-        this.arenaController.getAll().forEach { p ->
+        this.arenaController!!.getAll().forEach { p ->
             if (p.gameType == GameType.HUBGAME) {
                 this.store(HubGame(p))
             }
