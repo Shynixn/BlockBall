@@ -43,7 +43,6 @@ open internal class SimpleConfig {
      */
     open fun reload() {
         this.plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
-        println("PLUGIN: " + plugin)
         this.plugin?.reloadConfig()
     }
 

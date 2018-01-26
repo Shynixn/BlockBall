@@ -8,9 +8,12 @@ import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
+import org.bukkit.ChatColor
+import org.bukkit.Color
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.SkullMeta
 import java.util.logging.Level
 
@@ -47,6 +50,23 @@ internal fun ItemStack.setSkin(skin: String) {
         skullMeta.owner = skin
         this.itemMeta = skullMeta
     }
+}
+
+internal fun ItemStack.setColor(color: Color): ItemStack {
+    if (this.itemMeta is LeatherArmorMeta) {
+        val leatherMeta = this.itemMeta as LeatherArmorMeta
+        leatherMeta.color = color
+        this.itemMeta = leatherMeta
+    }
+    return this
+}
+
+internal fun String.stripChatColors(): String {
+    return ChatColor.stripColor(this)
+}
+
+internal fun String.convertChatColors(): String {
+    return ChatColor.translateAlternateColorCodes('&', this);
 }
 
 internal fun Location.toPosition(): IPosition {

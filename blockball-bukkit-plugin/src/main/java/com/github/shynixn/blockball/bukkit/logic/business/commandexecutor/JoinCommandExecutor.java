@@ -35,7 +35,7 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class JoinCommandExecutor extends SimpleCommandExecutor.UnRegistered {
+/*public class JoinCommandExecutor extends SimpleCommandExecutor.UnRegistered {
 
     private final GameController gameController;
 
@@ -43,7 +43,7 @@ public class JoinCommandExecutor extends SimpleCommandExecutor.UnRegistered {
      * Initializes a new commandExecutor by all required parameters
      *
      * @param plugin plugin
-     */
+
     public JoinCommandExecutor(GameController gameController, Plugin plugin) throws Exception {
         super(plugin.getConfig().get("global-join"), (JavaPlugin) plugin);
         this.gameController = gameController;
@@ -54,7 +54,7 @@ public class JoinCommandExecutor extends SimpleCommandExecutor.UnRegistered {
      *
      * @param player player
      * @param args   args
-     */
+
     @Override
     public void onPlayerExecuteCommand(Player player, String[] args) {
       //  Optional<Game> gameOpt = this.gameController.getGameFromPlayer(player);
@@ -99,7 +99,7 @@ public class JoinCommandExecutor extends SimpleCommandExecutor.UnRegistered {
                 else
                     ((MiniGameEntity) game).joinLobby(player);
             }
-        }*/
+        }
     }
 
     /**
@@ -107,7 +107,7 @@ public class JoinCommandExecutor extends SimpleCommandExecutor.UnRegistered {
      *
      * @param args args
      * @return mergedArguments
-     */
+
     private String[] mergeArguments(String[] args) {
         final StringBuilder s = new StringBuilder();
         for (int i = 1; i < args.length; i++) {
@@ -119,3 +119,4 @@ public class JoinCommandExecutor extends SimpleCommandExecutor.UnRegistered {
         return new String[]{args[0], s.toString()};
     }
 }
+*/

@@ -354,6 +354,18 @@ public class SimpleCommandExecutor {
 
         }
 
+        protected final String mergeArgs(int starting, int amount, String[] args) {
+            final StringBuilder builder = new StringBuilder();
+            int counter = 0;
+            for (int i = starting; counter < amount; i++) {
+                if (builder.length() != 0)
+                    builder.append(' ');
+                builder.append(args[i]);
+                counter++;
+            }
+            return builder.toString();
+        }
+
         /**
          * Returns the configuration values.
          *

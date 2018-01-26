@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.helper;
 
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.annotation.*;
 import java.lang.reflect.*;
@@ -54,7 +55,13 @@ public final class YamlSerializer {
 
         int orderNumber() default 0;
 
-        boolean classicSerialize() default false;
+        ManualSerialization classicSerialize() default ManualSerialization.NONE;
+    }
+
+    public enum ManualSerialization {
+        NONE,
+        CONSTRUCTOR,
+        DESERIALIZE_FUNCTION
     }
 
     /**
@@ -136,7 +143,9 @@ public final class YamlSerializer {
         int i = 1;
         for (final Object object : objects) {
             if (object != null) {
-                if (ConfigurationSerializable.class.isAssignableFrom(object.getClass())) {
+                if (isPrimitive(object.getClass())) {
+                    data.put(String.valueOf(i), object);
+                } else if (ConfigurationSerializable.class.isAssignableFrom(object.getClass())) {
                     data.put(String.valueOf(i), ((ConfigurationSerializable) object).serialize());
                 } else {
                     data.put(String.valueOf(i), serializeObject(object));
@@ -220,12 +229,21 @@ public final class YamlSerializer {
      * @throws InstantiationException exception
      * @throws IllegalAccessException exception
      */
-    public static <T> T[] deserializeArray(Class<T> clazz, Object dataSource) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public static <T> T[] deserializeArray(Class<T> clazz, YamlSerialize annotation, Object dataSource) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         final Map<String, Object> data = getDataFromSource(dataSource);
         final T[] objects = (T[]) Array.newInstance(clazz, data.size());
         int i = 0;
         for (final String key : data.keySet()) {
-            objects[i] = deserializeObject(clazz, ((MemorySection) data.get(key)).getValues(false));
+            System.out.println(key);
+
+            System.out.println(annotation.value());
+            if (annotation.classicSerialize() == ManualSerialization.DESERIALIZE_FUNCTION) {
+                objects[i] = (T) deserializeObjectBukkit(clazz, ((MemorySection) data.get(key)).getValues(false));
+            } else if (isPrimitive(data.get(key).getClass())) {
+                objects[i] = (T) data.get(key);
+            } else {
+                objects[i] = deserializeObject(clazz, ((MemorySection) data.get(key)).getValues(false));
+            }
             i++;
         }
         return objects;
@@ -299,7 +317,7 @@ public final class YamlSerializer {
                             } else if (field.getType().isEnum()) {
                                 field.set(object, Enum.valueOf((Class) field.getType(), data.get(yamlAnnotation.value()).toString()));
                             } else if (field.getType().isArray()) {
-                                field.set(object, deserializeArray(field.getType().getComponentType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                field.set(object, deserializeArray(field.getType().getComponentType(), yamlAnnotation, ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                             } else if (Collection.class.isAssignableFrom(field.getType())) {
                                 if (field.get(object) != null) {
                                     ((Collection) field.get(object)).clear();
@@ -314,8 +332,10 @@ public final class YamlSerializer {
                             } else if (Map.class.isAssignableFrom(field.getType())) {
                                 field.set(object, deserializeMap(getTypeFromHeavyField(field, 1), (Class<Map>) field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                             } else {
-                                if (yamlAnnotation.classicSerialize()) {
+                                if (yamlAnnotation.classicSerialize() == ManualSerialization.CONSTRUCTOR) {
                                     field.set(object, deserializeObjectClassic(field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                } else if (yamlAnnotation.classicSerialize() == ManualSerialization.DESERIALIZE_FUNCTION) {
+                                    field.set(object, deserializeObjectBukkit(field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                                 } else {
                                     if (field.get(object) != null) {
                                         heavyDeserialize(field.get(object), field.getType(), getDataFromSource(((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
@@ -331,6 +351,13 @@ public final class YamlSerializer {
             clazzQuery = clazzQuery.getSuperclass();
         }
         return object;
+    }
+
+    private static Object deserializeObjectBukkit(Class<?> clazz, Map<String, Object> internal) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Method method = clazz.getMethod("deserialize", Map.class);
+        if (method == null)
+            throw new IllegalArgumentException("static deserialize(Map) not found for bukkit deserialization.");
+        return method.invoke(null, internal);
     }
 
     private static Object deserializeObjectClassic(Class<?> clazz, Map<String, Object> internal) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {

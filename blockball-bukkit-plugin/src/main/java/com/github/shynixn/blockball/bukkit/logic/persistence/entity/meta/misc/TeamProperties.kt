@@ -85,33 +85,6 @@ class TeamProperties(
     @YamlSerializer.YamlSerialize(orderNumber = 11, value = "lines")
     override var signLines: Array<String> = arrayOf("&lBlockBall", "<game>", "<state>", "<players>/<maxplayers>")
     /** Armor wearing this team. */
-    override var armorContents: Array<ItemStack?>
-        get() {
-            val itemStacks = arrayOfNulls<ItemStack>(4)
-            val configuration = YamlConfiguration()
-            itemStacks.indices
-                    .filter { this.internalArmorContents[it] != null }
-                    .forEach {
-                        try {
-                            configuration.loadFromString(this.internalArmorContents[it])
-                            itemStacks[it] = configuration.getItemStack("item")
-                        } catch (e: InvalidConfigurationException) {
-                            Config.Logger!!.log(Level.WARNING, "Failed to deserialize armor.", e)
-                        }
-                    }
-            return itemStacks
-        }
-        set(value) {
-            this.internalArmorContents = arrayOfNulls(4)
-            for (i in value.indices) {
-                if (value[i] != null) {
-                    val configuration = YamlConfiguration()
-                    configuration.set("item", value[i] as ItemStack)
-                    this.internalArmorContents[i] = configuration.saveToString()
-                }
-            }
-        }
-
-    @YamlSerializer.YamlSerialize(orderNumber = 8, value = "armor")
-    private var internalArmorContents: Array<String?> = arrayOfNulls(4)
+    @YamlSerializer.YamlSerialize(orderNumber = 8, value = "armor", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION)
+    override var armorContents: Array<ItemStack?>  = arrayOfNulls(4)
 }

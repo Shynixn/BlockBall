@@ -44,4 +44,6 @@ interface HubLobbyMeta {
 
     /** Lines displayed on the sign for leaving the match. */
     var leaveSignLines: Array<String>
+    /** Join asking message. */
+    var joinMesssage: Array<String>
 }

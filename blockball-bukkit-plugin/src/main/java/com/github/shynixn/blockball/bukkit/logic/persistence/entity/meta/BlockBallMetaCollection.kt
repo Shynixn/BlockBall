@@ -8,12 +8,15 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.business.helper.setColor
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallData
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.ProtectionData
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.TeamProperties
+import org.bukkit.Color
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 
@@ -49,7 +52,7 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector> {
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "protection")
     override val protectionMeta: ArenaProtectionMeta<Vector> = ProtectionData();
     /** Meta data of the ball. */
-    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "ball", classicSerialize = true)
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "ball", classicSerialize = YamlSerializer.ManualSerialization.CONSTRUCTOR)
     override val ballMeta: BallData = BallData("Shynixn")
     /** Meta data of the blueTeam. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "team-blue")
@@ -63,5 +66,10 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector> {
     override val redTeamMeta: TeamProperties
             = TeamProperties("Team Red", "&c", "<redcolor><player>", "scored for <red>.", "<redcolor><red>", "<redcolor> has won the match");
 
-
+    init {
+        redTeamMeta.armorContents = arrayOf(ItemStack(Material.LEATHER_BOOTS).setColor(Color.RED)
+                , ItemStack(Material.LEATHER_LEGGINGS).setColor(Color.RED),  ItemStack(Material.LEATHER_CHESTPLATE).setColor(Color.RED), null)
+        blueTeamMeta.armorContents = arrayOf(ItemStack(Material.LEATHER_BOOTS).setColor(Color.BLUE)
+                , ItemStack(Material.LEATHER_LEGGINGS).setColor(Color.BLUE),  ItemStack(Material.LEATHER_CHESTPLATE).setColor(Color.BLUE), null)
+    }
 }

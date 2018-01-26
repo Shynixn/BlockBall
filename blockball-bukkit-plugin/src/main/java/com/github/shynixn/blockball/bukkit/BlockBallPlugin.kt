@@ -1,14 +1,15 @@
 package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
+import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectController
 import com.github.shynixn.blockball.api.business.controller.GameController
 import com.github.shynixn.blockball.api.persistence.controller.LinkSignController
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BlockBallReloadCommandExecutor
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.JoinCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.NewArenaCommandExecutor
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ReflectionUtils
@@ -75,21 +76,25 @@ class BlockBallPlugin : JavaPlugin() {
     private var blockBallReloadCommandExecutor: BlockBallReloadCommandExecutor? = null
 
     @Inject
+    private var joinCommandExecutor : JoinCommandExecutor? = null;
+
+    @Inject
     private var statsListener: StatsListener? = null
 
     override fun onEnable() {
         this.saveDefaultConfig()
-        Config.getInstance().reload()
+        com.github.shynixn.blockball.bukkit.logic.business.configuration.Config.getInstance().reload()
+
         Guice.createInjector(GoogleGuiceBinder(this))
         if (!VersionSupport.isServerVersionSupported(PLUGIN_NAME, PREFIX_CONSOLE)) {
             this.isnEnabled = false
             Bukkit.getPluginManager().disablePlugin(this)
         } else {
             Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
-            Config.getInstance().reload()
-            if (Config.getInstance().isMetricsEnabled) {
+            Config.reload()
+           // if (Config.isMetricsEnabled) {
                 //  new Metrics(this);
-            }
+         //   }
             checkForUpdates()
             startBungeecordLinking()
             startPlugin()
@@ -98,7 +103,7 @@ class BlockBallPlugin : JavaPlugin() {
 
     private fun startPlugin() {
         success = false
-        if (!Config.getInstance().isOnlyBungeeCordLinkingEnabled) {
+        if (true) {
             try {
                 gameController!!.reload()
                 ReflectionUtils.invokeMethodByClass<Any>(BlockBallApi::class.java, "initializeBlockBall"
@@ -117,7 +122,7 @@ class BlockBallPlugin : JavaPlugin() {
     }
 
     private fun startBungeecordLinking() {
-        if (Config.getInstance().isBungeeCordLinkingEnabled) {
+        if (false) {
             Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + "Starting BungeeCord linking....")
             try {
                 ReflectionUtils.invokeMethodByClass<Any>(BlockBallApi::class.java, "initializeBungeeCord"

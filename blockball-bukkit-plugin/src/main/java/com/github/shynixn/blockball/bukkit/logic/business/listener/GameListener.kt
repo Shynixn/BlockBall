@@ -1,7 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
+import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
+import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
+import com.github.shynixn.blockball.bukkit.logic.business.helper.stripChatColors
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import com.google.inject.Inject
 import org.bukkit.entity.Player
@@ -42,8 +46,8 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
     private var gameController: GameRepository? = null
 
     private val lastLocation: MutableMap<Player, LocationBuilder> = HashMap()
-    private val toggledPlayers: MutableList<Player> = ArrayList()
     private val moveCounter: MutableMap<Player, Int> = HashMap()
+    private val togglePlayers: MutableSet<Player> = HashSet()
 
     /** Handles the forcefield of hubGames. */
     @EventHandler
@@ -67,15 +71,26 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
                         this.moveCounter.put(player, this.moveCounter[player]!! + 1)
                     if (this.moveCounter[player]!! > 20) {
                         player.velocity = game.arena.meta.protectionMeta.rejoinProtection
-                        print("JOIN")
 
                     } else {
-                        print("KNOCKBACK")
                         val knockback = this.lastLocation[player]!!.toVector().subtract(player.location.toVector())
                         player.location.direction = knockback
                         player.velocity = knockback
                         player.allowFlight = true
-                        this.toggledPlayers.add(player)
+                        if (!togglePlayers.contains(player)) {
+                            ChatBuilder().text(Config.prefix + game.arena.meta.hubLobbyMeta.joinMesssage[0].convertChatColors())
+                                    .nextLine()
+                                    .component(game.arena.meta.hubLobbyMeta.joinMesssage[1].convertChatColors())
+                                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
+                                            , "/" + plugin.config.getString("global-join.command") + " " + game.arena.meta.redTeamMeta.displayName.stripChatColors() + " " + game.arena.name)
+                                    .setHoverText(" ")
+                                    .builder().text(" ").component(game.arena.meta.hubLobbyMeta.joinMesssage[2].convertChatColors())
+                                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
+                                            , "/" + plugin.config.getString("global-join.command") + " " + game.arena.meta.blueTeamMeta.displayName.stripChatColors() + " " + game.arena.name)
+                                    .setHoverText(" ")
+                                    .builder().sendMessage(player)
+                            togglePlayers.add(player)
+                        }
                     }
                     print(moveCounter[player])
                 }
@@ -84,6 +99,9 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
         if (!inArea) {
             if (this.moveCounter.containsKey(event.player)) {
                 this.moveCounter.remove(event.player);
+            }
+            if (togglePlayers.contains(player)) {
+                togglePlayers.remove(player);
             }
         }
         this.lastLocation.put(player, LocationBuilder(event.player.location))

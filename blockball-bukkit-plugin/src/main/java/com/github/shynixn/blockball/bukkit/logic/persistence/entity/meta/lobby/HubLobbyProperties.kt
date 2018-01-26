@@ -34,6 +34,8 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  * SOFTWARE.
  */
 open class HubLobbyProperties : PersistenceObject(), HubLobbyMeta {
+    /** Join asking message. */
+    override var joinMesssage: Array<String> = arrayOf("Click on the team to join the match.","&c[Team Red]", "&9[Team Blue]")
     /** Lines displayed on the sign for leaving the match. */
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leave-sign-lines")
     override var leaveSignLines: Array<String> = arrayOf("&lBlockBall", "Leave")
