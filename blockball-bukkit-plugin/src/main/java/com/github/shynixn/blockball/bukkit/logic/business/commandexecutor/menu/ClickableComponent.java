@@ -32,7 +32,8 @@ import org.bukkit.ChatColor;
  */
 public enum ClickableComponent {
     WORLDEDIT(" [worldedit..]", ChatColor.GOLD),
-    EDIT(" [edit..]", ChatColor.GREEN)
+    EDIT(" [edit..]", ChatColor.GREEN),
+    TOGGLE(" [toggle..]", ChatColor.LIGHT_PURPLE)
     ;
     private ChatBuilder.Component component;
 

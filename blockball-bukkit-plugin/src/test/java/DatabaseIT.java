@@ -1,4 +1,3 @@
-package com.github.shynixn.blockball.logic.persistence.controller;
 
 import ch.vorburger.mariadb4j.DB;
 import com.zaxxer.hikari.HikariConfig;

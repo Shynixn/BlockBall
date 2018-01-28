@@ -47,6 +47,8 @@ open class SelectedArea : PersistenceObject(), AreaSelection<Location> {
     @YamlSerializer.YamlSerialize(value = "corner-2", orderNumber = 6)
     final override var lowerCorner: LocationBuilder? = null
         private set(value) {
+            print("INITIALIEED LOWERCORNER: " + value)
+
             field = value
         }
 

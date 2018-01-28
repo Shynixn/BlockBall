@@ -1,5 +1,3 @@
-package com.github.shynixn.blockball.logic.persistence.controller;
-
 import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaController;
 import com.github.shynixn.blockball.api.persistence.controller.StatsController;
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;

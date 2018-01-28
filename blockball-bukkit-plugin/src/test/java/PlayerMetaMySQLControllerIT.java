@@ -1,4 +1,3 @@
-package com.github.shynixn.blockball.logic.persistence.controller;
 
 public class PlayerMetaMySQLControllerIT {
 /*

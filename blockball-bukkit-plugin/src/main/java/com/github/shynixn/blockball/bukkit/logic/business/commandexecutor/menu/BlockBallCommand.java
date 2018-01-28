@@ -31,7 +31,7 @@ public enum BlockBallCommand {
     BACK(PageKey.OPEN, "back"),
     CLOSE(PageKey.OPEN, "close"),
     OPEN(PageKey.OPEN, null),
-    OPEN_RELOAD(PageKey.OPEN, "reload"),
+    ARENA_RELOAD(PageKey.MAINCONFIGURATION, "reload"),
     OPEN_EDIT_ARENA(PageKey.OPEN, "edit-arenas"),
     OPEN_DELETE_ARENA(PageKey.OPEN, "delete-arenas"),
 
@@ -41,6 +41,7 @@ public enum BlockBallCommand {
 
     ARENA_MAINCONFIGURATION(PageKey.MAINCONFIGURATION, "main-configuration"),
     ARENA_SETDISPLAYNAME(PageKey.MAINCONFIGURATION, "set-displayname"),
+    ARENA_ENABLE(PageKey.MAINCONFIGURATION, "set-enable"),
     ARENA_SETBALLSPAWNPOINT(PageKey.MAINCONFIGURATION, "set-ballspawnpoint"),
 
     ARENA_SETAREA(PageKey.MAINCONFIGURATION, "set-area"),

@@ -108,7 +108,7 @@ class GameRepository : BukkitGameController, Runnable {
     /** Returns the game with the [player] inside. */
     override fun getGameFromPlayer(player: Player): BukkitGame? {
         games.forEach { p ->
-            if (p.getPlayers().contains(player)) {
+            if (p.hasJoined(player)) {
                 return p
             }
         }

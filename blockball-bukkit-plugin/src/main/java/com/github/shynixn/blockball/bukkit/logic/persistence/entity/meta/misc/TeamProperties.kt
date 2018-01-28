@@ -71,7 +71,7 @@ class TeamProperties(
     override var spawnpoint: IPosition? = null
     /** Goal properties of the team. */
     @YamlSerializer.YamlSerialize(orderNumber = 7, value = "goal")
-    override val goal: AreaSelection<Location> = SelectedArea()
+    override val goal: SelectedArea = SelectedArea()
     /** Walkingspeed of the players in this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "walking-speed")
     override var walkingSpeed: Double = 0.2

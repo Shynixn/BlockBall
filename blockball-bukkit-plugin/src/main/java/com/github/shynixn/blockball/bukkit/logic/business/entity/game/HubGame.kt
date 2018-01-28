@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
+import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.Team
@@ -38,7 +39,20 @@ import org.bukkit.inventory.ItemStack
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class HubGame(arena: BukkitArena) : LowLevelGame(arena) {
+class HubGame(arena: BukkitArena) : SoccerGame(arena) {
+    /**
+     * Gets called when a player scores a point for the given team.
+     */
+    override fun onScore(player: Player, teamMeta: TeamMeta<Location, ItemStack>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    /**
+     * Gets called when a team wins the game.
+     */
+    override fun onWin(teamMeta: TeamMeta<Location, ItemStack>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     /** Join the game. */
     override fun join(player: Player, team: Team): Boolean {
@@ -59,16 +73,18 @@ class HubGame(arena: BukkitArena) : LowLevelGame(arena) {
             return
         val stats = ingameStats[player] ?: return
         if (stats.team == Team.RED) {
-            player.sendMessage(arena.meta.redTeamMeta.leaveMessage)
+            player.sendMessage(Config.prefix + arena.meta.redTeamMeta.leaveMessage)
             this.redTeam.remove(player)
         } else if (stats.team == Team.BLUE) {
-            player.sendMessage(arena.meta.blueTeamMeta.leaveMessage)
+            player.sendMessage(Config.prefix + arena.meta.blueTeamMeta.leaveMessage)
             this.blueTeam.remove(player)
         }
         ingameStats.remove(player)
         stats.resetState()
 
-        player.teleport(arena.meta.hubLobbyMeta.leaveSpawnpoint?.toBukkitLocation())
+        if (arena.meta.hubLobbyMeta.leaveSpawnpoint != null) {
+            player.teleport(arena.meta.hubLobbyMeta.leaveSpawnpoint?.toBukkitLocation())
+        }
     }
 
     override fun onUpdateSigns() {
@@ -95,7 +111,7 @@ class HubGame(arena: BukkitArena) : LowLevelGame(arena) {
     private fun prepareStatsForPlayer(player: Player, team: Team, teamMeta: TeamMeta<Location, ItemStack>) {
         val stats = PlayerStorage(player, team)
         stats.storeForType(GameType.HUBGAME)
-        this.ingameStats.put(player, stats)
+        this.ingameStats[player] = stats
 
         player.allowFlight = false
         player.isFlying = false
@@ -104,11 +120,11 @@ class HubGame(arena: BukkitArena) : LowLevelGame(arena) {
         player.updateInventory()
 
         if (teamMeta.spawnpoint == null) {
-            player.teleport(arena.center)
+            player.teleport(arena.meta.ballMeta.spawnpoint!!.toBukkitLocation())
         } else {
             player.teleport(teamMeta.spawnpoint!!.toBukkitLocation())
         }
 
-        player.sendMessage(teamMeta.joinMessage)
+        player.sendMessage(Config.prefix + teamMeta.joinMessage)
     }
 }

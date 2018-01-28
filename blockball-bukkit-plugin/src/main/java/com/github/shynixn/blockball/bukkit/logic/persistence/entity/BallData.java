@@ -40,6 +40,7 @@ import java.util.Map;
 public class BallData extends com.github.shynixn.ball.bukkit.core.logic.persistence.entity.BallData implements BallMeta<BukkitParticleEffectMeta, BukkitSoundEffectMeta, BukkitBounceController> {
     private long id;
     private IPosition spawnpoint;
+    private int spawnDelayTicks = 5;
 
     /**
      * Deserializes a ballData.
@@ -48,7 +49,24 @@ public class BallData extends com.github.shynixn.ball.bukkit.core.logic.persiste
      */
     public BallData(Map<String, Object> data) throws Exception {
         super(data);
+        this.spawnDelayTicks = (int) data.get("spawn-delay");
         this.spawnpoint = new LocationBuilder(((MemorySection) data.get("spawnpoint")).getValues(false));
+    }
+
+    /**
+     * Returns the spawndelay ticks.
+     * @return ticks
+     */
+    public int getSpawnDelayTicks() {
+        return this.spawnDelayTicks;
+    }
+
+    /**
+     * Sets the spawndelay ticks.
+     * @param spawnDelayTicks spawnDelay
+     */
+    public void setSpawnDelayTicks(int spawnDelayTicks) {
+        this.spawnDelayTicks = spawnDelayTicks;
     }
 
     /**
@@ -97,6 +115,7 @@ public class BallData extends com.github.shynixn.ball.bukkit.core.logic.persiste
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> data = super.serialize();
+        data.put("spawn-delay", this.spawnDelayTicks);
         data.put("spawnpoint", ((LocationBuilder) this.spawnpoint).serialize());
         return data;
     }

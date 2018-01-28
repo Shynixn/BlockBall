@@ -7,7 +7,6 @@ import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectCon
 import com.github.shynixn.blockball.api.business.controller.GameController
 import com.github.shynixn.blockball.api.persistence.controller.LinkSignController
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager
-import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BlockBallReloadCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.JoinCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.NewArenaCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
@@ -71,9 +70,6 @@ class BlockBallPlugin : JavaPlugin() {
 
     @Inject
     private var arenaCommandexecutor: NewArenaCommandExecutor? = null
-
-    @Inject
-    private var blockBallReloadCommandExecutor: BlockBallReloadCommandExecutor? = null
 
     @Inject
     private var joinCommandExecutor : JoinCommandExecutor? = null;

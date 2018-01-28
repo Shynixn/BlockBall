@@ -70,7 +70,6 @@ public abstract class Page {
     public ChatBuilder buildPage(Object[] cache) {
         return null;
     }
-
     /**
      * Executes actions for this page.
      *

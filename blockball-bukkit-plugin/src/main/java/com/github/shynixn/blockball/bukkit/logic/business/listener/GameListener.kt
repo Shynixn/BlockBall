@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
+import com.github.shynixn.blockball.api.business.entity.Game
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
@@ -55,7 +56,13 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
         val player = event.player
         if (event.to.distance(event.from) <= 0)
             return
-        if (gameController!!.getGameFromPlayer(player) != null) {
+        var game = gameController!!.getGameFromPlayer(player);
+        if (game != null)
+        {
+            if(game.arena.gameType == GameType.HUBGAME && !game.arena.isLocationInSelection(player.location))
+            {
+                game.leave(player)
+            }
             return
         }
         var inArea: Boolean = false;

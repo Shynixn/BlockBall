@@ -93,12 +93,14 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                 if (command == BlockBallCommand.BACK) {
                     final Page newPage = this.getPageById(Integer.parseInt(args[2]));
                     this.sendMessage(player, newPage.buildPage(cache));
+                    System.out.println("BACK");
                 }
                 else if (command == BlockBallCommand.CLOSE) {
                     this.cache.remove(player);
                     for (int i = 0; i < 20; i++) {
                         player.sendMessage("");
                     }
+                    return;
                 }
                 else {
                     final CommandResult result = page.execute(player, command, cache, args);
@@ -131,20 +133,20 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
         if (usedPage instanceof OpenPage) {
             builder.component(">>Close<<")
                     .setColor(ChatColor.RED)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.getCommand() + " " + usedPage.getPreviousId())
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.CLOSE.getCommand())
                     .setHoverText("Opens the blockball arena configuration.")
                     .builder();
         }
         else {
             builder.component(">>Back<<")
                     .setColor(ChatColor.RED)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.CLOSE.getCommand())
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.getCommand() + " " + usedPage.getPreviousId())
                     .setHoverText("Opens the blockball arena configuration.")
                     .builder();
         }
         builder.component(" >>Save and reload<<")
                 .setColor(ChatColor.BLUE)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.OPEN_RELOAD.getCommand())
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ARENA_RELOAD.getCommand())
                 .setHoverText("Opens the blockball arena configuration.")
                 .builder().sendMessage(player);
 

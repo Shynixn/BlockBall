@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
+import com.github.shynixn.ball.api.BallsApi
+import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
 import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
@@ -49,8 +51,6 @@ abstract class LowLevelGame(
         override val arena: BukkitArena) : BukkitGame, Runnable {
     /** Ingame stats of the players. */
     override val ingameStats: MutableMap<Player, InGameStats> = HashMap()
-    /** Ball of the game. */
-    override var ball: Ball? = null
     /** Status of the game. */
     override var status: GameStatus = GameStatus.ENABLED
     /** List of players in the redTeam. */
@@ -58,6 +58,8 @@ abstract class LowLevelGame(
     /** List of players in the blueTeam. */
     override val blueTeam: MutableList<Player> = ArrayList()
 
+    protected var redGoals = 0
+    protected var blueGoals = 0
 
     private var bumperTimer = 20L
 
@@ -69,20 +71,25 @@ abstract class LowLevelGame(
      * @see java.lang.Thread.run
      */
     override fun run() {
-        if (!this.arena.enabled)
-            return
+        if (!this.arena.enabled) {
+            if (!this.ingameStats.isEmpty()) {
+                close()
+            }
+        }
+
         if (this.haveTwentyTicksPassed()) {
             this.kickUnwantedEntitiesOutOfForcefield()
             this.onUpdateSigns()
         }
-        //  this.handleBallSpawning()
+
+
+
+
         // if (this.ball != null && !this.ball.isDead()) {
         //   this.fixBallPositionSpawn()
         //    this.checkBallInGoal()
         //  }
     }
-
-
 
 
     /** Checks if the player has joined the game. */
@@ -119,7 +126,7 @@ abstract class LowLevelGame(
                 else -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignDisabled!!)
             }
             if (teamMeta != null) {
-                text = text.replace(PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, teamMeta.displayName);
+                text = text.replace(PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, teamMeta.displayName)
             }
             text = text.replace(PlaceHolder.ARENA_CURRENTPLAYERS.placeHolder, players.toString())
                     .replace(PlaceHolder.ARENA_MAXPLAYERS.placeHolder, maxPlayers.toString())

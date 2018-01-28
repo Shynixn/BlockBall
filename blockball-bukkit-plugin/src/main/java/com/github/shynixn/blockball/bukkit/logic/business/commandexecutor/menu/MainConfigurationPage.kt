@@ -70,7 +70,12 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
             val arena = arenaRepository?.getArenaByName(args[2])!!;
             arenaRepository!!.remove(arena);
             return CommandResult.BACK
-        } else if (command == BlockBallCommand.ARENA_SETBALLSPAWNPOINT) {
+        }
+        else if (command == BlockBallCommand.ARENA_ENABLE) {
+            val arena = cache[0] as BukkitArena
+            arena.enabled = !arena.enabled
+        }
+        else if (command == BlockBallCommand.ARENA_SETBALLSPAWNPOINT) {
             val arena = cache[0] as BukkitArena
             arena.meta.ballMeta.spawnpoint = player.location.toPosition()
         } else if (command == BlockBallCommand.ARENA_SETDISPLAYNAME) {
@@ -113,6 +118,27 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
                 return CommandResult.ARENA_NOTVALID
             }
         }
+        else if (command == BlockBallCommand.ARENA_SAVE) {
+            val arena = cache[0] as BukkitArena
+            if (arena.lowerCorner != null && arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.lowerCorner != null
+                    && arena.meta.ballMeta.spawnpoint != null) {
+                BlockBallApi.getDefaultGameController()
+                        .arenaController!!.store(arena)
+            } else {
+                return CommandResult.ARENA_NOTVALID
+            }
+        }
+        else if (command == BlockBallCommand.ARENA_RELOAD){
+            val arena = cache[0] as BukkitArena
+            if (arena.lowerCorner != null && arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.lowerCorner != null
+                    && arena.meta.ballMeta.spawnpoint != null) {
+                BlockBallApi.getDefaultGameController()
+                        .arenaController!!.store(arena)
+                BlockBallApi.getDefaultGameController().reload()
+            } else {
+                return CommandResult.ARENA_NOTVALID
+            }
+        }
         return super.execute(player, command, cache, args)
     }
 
@@ -147,6 +173,11 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
                 .addComponent(ClickableComponent.EDIT.component)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.ARENA_SETDISPLAYNAME.command)
                 .setHoverText("Edit the name of the arena.")
+                .builder().nextLine()
+                .component("- Enabled: " + arena.enabled).builder()
+                .addComponent(ClickableComponent.TOGGLE.component)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ARENA_ENABLE.command)
+                .setHoverText("Toggle the arena.")
                 .builder().nextLine()
                 .component("- Center: " + corners).builder()
                 .component(" [worldedit..]").setColor(ChatColor.GOLD)

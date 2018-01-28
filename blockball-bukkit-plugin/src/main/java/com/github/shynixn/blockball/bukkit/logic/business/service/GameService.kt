@@ -1,6 +1,9 @@
+package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
-import org.junit.jupiter.api.Test;
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.ReloadCommandExecutor
+import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
+import com.google.inject.Inject
+import com.google.inject.Singleton
 
 /**
  * Created by Shynixn 2018.
@@ -29,11 +32,17 @@ import org.junit.jupiter.api.Test;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class GoogleGuiceTest {
+@Singleton
+class GameService {
 
-    @Test
-    public void onTest()
-    {
+    @Inject
+    private var reloadCommandExecutor : ReloadCommandExecutor? = null
 
+    @Inject
+    private var gameController: GameRepository? = null
+
+    /** Reloads all games. */
+    fun reloadGames() {
+        gameController!!.reload()
     }
 }
