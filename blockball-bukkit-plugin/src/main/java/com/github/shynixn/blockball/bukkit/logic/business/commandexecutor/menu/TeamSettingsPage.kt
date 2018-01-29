@@ -61,9 +61,49 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
         if (command == BlockBallCommand.TEAM_RED_CONFIGURE) {
             cache!![2] = 0
         }
-        if (command == BlockBallCommand.TEAM_SPAWNPOINT) {
-            val teamMeta = getTeamMeta(cache);
+        if (command == BlockBallCommand.TEAM_BLUE_CONFIGURE) {
+            cache!![2] = 1
+        }
+        else if (command == BlockBallCommand.TEAM_SPAWNPOINT) {
+            val teamMeta = getTeamMeta(cache)
             teamMeta.spawnpoint = player!!.location.toPosition()
+        } else if (command == BlockBallCommand.TEAM_NAME) {
+            val teamMeta = getTeamMeta(cache)
+            val name = mergeArgs(2, args)
+            teamMeta.displayName = name
+        } else if (command == BlockBallCommand.TEAM_PREFIX) {
+            val teamMeta = getTeamMeta(cache)
+            val name = mergeArgs(2, args)
+            teamMeta.prefix = name
+        } else if (command == BlockBallCommand.TEAM_MINAMOUNT) {
+            val teamMeta = getTeamMeta(cache)
+            val amount = args!![2].toIntOrNull()
+            if (amount != null) {
+                if (amount > teamMeta.maxAmount) {
+                    return CommandResult.MAX_PLAYERS
+                }
+                teamMeta.minAmount = amount
+            }
+        } else if (command == BlockBallCommand.TEAM_MAXAMOUNT) {
+            val teamMeta = getTeamMeta(cache)
+            val amount = args!![2].toIntOrNull()
+            if (amount != null) {
+                if (amount < teamMeta.minAmount) {
+                    return CommandResult.MINPLAYERS
+                }
+                teamMeta.maxAmount = amount
+            }
+        }
+        else if (command == BlockBallCommand.TEAM_WALKSPEED) {
+            val teamMeta = getTeamMeta(cache)
+            val amount = args!![2].toDoubleOrNull()
+            if (amount != null) {
+                teamMeta.walkingSpeed = amount
+            }
+        }
+        else if (command == BlockBallCommand.TEAM_ARMOR) {
+            val teamMeta = getTeamMeta(cache)
+            teamMeta.armorContents = player!!.inventory.armorContents.clone()
         }
         return super.execute(player, command, cache, args)
     }
@@ -77,25 +117,46 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
     override fun buildPage(cache: Array<Any>?): ChatBuilder {
         var spawnpoint = "none"
         val arena = cache!![0] as BukkitArena
-        val teamMeta = getTeamMeta(cache);
+        val teamMeta = getTeamMeta(cache)
         if (teamMeta.spawnpoint != null) {
             spawnpoint = this.printLocation(teamMeta.spawnpoint)
         }
         return ChatBuilder()
                 .component("- Name: " + teamMeta.displayName).builder()
-                .addComponent(ClickableComponent.EDIT.component)
-                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.ARENA_SETDISPLAYNAME.command)
-                .setHoverText("Edit the name of the arena.")
+                .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.TEAM_NAME.command)
+                .setHoverText("Edit the name of the team.")
+                .builder().nextLine()
+                .component("- Color: " + teamMeta.prefix + "Color").builder()
+                .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.TEAM_PREFIX.command)
+                .setHoverText("Edit the prefix of the team.")
+                .builder().nextLine()
+                .component("- Min amount: " + teamMeta.minAmount).builder()
+                .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.TEAM_MINAMOUNT.command)
+                .setHoverText("Edit the min amount of players required to start a match.")
+                .builder().nextLine()
+                .component("- Max amount: " + teamMeta.maxAmount).builder()
+                .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.TEAM_MAXAMOUNT.command)
+                .setHoverText("Edit the max amount of players which can join this team.")
+                .builder().nextLine()
+                .component("- Armor").builder()
+                .component(ClickableComponent.COPY_ARMOR.text).setColor(ClickableComponent.COPY_ARMOR.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_ARMOR.command)
+                .setHoverText("Copies your current equipped armor to the team's armor.")
+                .builder().nextLine()
+                .component("- Walking Speed: " + teamMeta.walkingSpeed).builder()
+                .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.TEAM_WALKSPEED.command)
+                .setHoverText("Edit the speed each player of this team is going to walk. (default: 0.2)")
                 .builder().nextLine()
                 .component("- Spawnpoint: " + spawnpoint).builder()
                 .component(" [location..]").setColor(ChatColor.BLUE)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_SPAWNPOINT.command)
-                .setHoverText("Uses your current location to set the spawnpoint of the ball.")
+                .setHoverText("If this spawnpoint is set the team will spawn at this location instead of the spawning location of the ball.")
                 .builder().nextLine()
-                .component("- Settings:").builder()
-                .component(" [page..]").setColor(ChatColor.YELLOW)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SETTINGS_OPEN.command)
-                .setHoverText("Opens the settings page.").builder()
     }
 
     private fun getTeamMeta(cache: Array<Any>?): TeamMeta<Location, ItemStack> {

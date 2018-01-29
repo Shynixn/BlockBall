@@ -85,6 +85,11 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 .component("- Team Red:").builder()
                 .component(" [page..]").setColor(ChatColor.YELLOW)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_RED_CONFIGURE.command)
-                .setHoverText("Opens the settings page.").builder()
+                .setHoverText("Opens the settings page for the red team.")
+                .builder().nextLine()
+                .component("- Team Blue:").builder()
+                .component(" [page..]").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_BLUE_CONFIGURE.command)
+                .setHoverText("Opens the settings page for the blue team.").builder()
     }
 }

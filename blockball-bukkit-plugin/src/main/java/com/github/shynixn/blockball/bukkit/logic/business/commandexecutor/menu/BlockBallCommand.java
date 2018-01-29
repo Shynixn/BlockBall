@@ -51,9 +51,30 @@ public enum BlockBallCommand {
 
     SETTINGS_OPEN(PageKey.MAINSETTING, "open_settings"),
 
-    TEAM_RED_CONFIGURE(PageKey.TEAMMETA, "team_red"),
-    TEAM_SPAWNPOINT(PageKey.TEAMMETA, "spawnpoint"),
 
+
+
+    TEAM_RED_CONFIGURE(PageKey.TEAMMETA, "team_red"),
+    TEAM_BLUE_CONFIGURE(PageKey.TEAMMETA, "team_blue"),
+
+
+    TEAM_NAME(PageKey.TEAMMETA, "name"),
+    TEAM_PREFIX(PageKey.TEAMMETA, "prefix"),
+    TEAM_SPAWNPOINT(PageKey.TEAMMETA, "spawnpoint"),
+    TEAM_MINAMOUNT(PageKey.TEAMMETA, "mina"),
+    TEAM_MAXAMOUNT(PageKey.TEAMMETA, "maxa"),
+    TEAM_ARMOR(PageKey.TEAMMETA, "armor"),
+    TEAM_WALKSPEED(PageKey.TEAMMETA, "wspeed"),
+
+    TEAM_SIGN(PageKey.TEAMMETA, "sign"),
+
+    TEAM_MSGLEAVE(PageKey.TEAMMETA, "mleave"),
+    TEAM_MSGJOIN(PageKey.TEAMMETA, "mjoin"),
+
+    TEAM_SCORETITLE(PageKey.TEAMMETA, "sct"),
+    TEAM_SCORESUBTITLE(PageKey.TEAMMETA, "scst"),
+    TEAM_WINTITLE(PageKey.TEAMMETA, "wct"),
+    TEAM_WINSUBTITLE(PageKey.TEAMMETA, "wcst"),
 
 
     LIST_GAMETYPES(PageKey.LISTABLE, "show_gametypes"),;

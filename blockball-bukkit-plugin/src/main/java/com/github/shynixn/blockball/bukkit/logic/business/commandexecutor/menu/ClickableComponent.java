@@ -33,15 +33,26 @@ import org.bukkit.ChatColor;
 public enum ClickableComponent {
     WORLDEDIT(" [worldedit..]", ChatColor.GOLD),
     EDIT(" [edit..]", ChatColor.GREEN),
+    COPY_ARMOR(" [copy armor..]", ChatColor.GOLD),
     TOGGLE(" [toggle..]", ChatColor.LIGHT_PURPLE)
     ;
-    private ChatBuilder.Component component;
+    private String text;
+    private ChatColor color;
 
     ClickableComponent(String text, ChatColor color) {
-        this.component = new ChatBuilder.Component(null,text).setColor(color);
+      this.text = text;
+      this.color = color;
     }
 
-    public ChatBuilder.Component getComponent() {
-        return this.component;
+    public String getText() {
+        return this.text;
+    }
+
+    public ChatColor getColor() {
+        return this.color;
+    }
+
+    public ChatBuilder.Component addComponent(ChatBuilder builder)  {
+        return builder.component(this.text).setColor(color);
     }
 }
