@@ -59,6 +59,10 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
     private ListablePage listablePage;
 
     @Inject
+    private TeamSettingsPage teamSettingsPage;
+
+
+    @Inject
     private ArenaRepository arenaController;
 
     /**
@@ -228,6 +232,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
             this.pagecache.add(this.mainConfigurationPage);
             this.pagecache.add(this.mainSettingsPage);
             this.pagecache.add(listablePage);
+            this.pagecache.add(teamSettingsPage);
         }
         return this.pagecache;
     }

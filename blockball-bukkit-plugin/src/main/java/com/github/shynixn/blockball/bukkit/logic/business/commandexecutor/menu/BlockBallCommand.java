@@ -51,6 +51,11 @@ public enum BlockBallCommand {
 
     SETTINGS_OPEN(PageKey.MAINSETTING, "open_settings"),
 
+    TEAM_RED_CONFIGURE(PageKey.TEAMMETA, "team_red"),
+    TEAM_SPAWNPOINT(PageKey.TEAMMETA, "spawnpoint"),
+
+
+
     LIST_GAMETYPES(PageKey.LISTABLE, "show_gametypes"),;
 
     private PageKey key;

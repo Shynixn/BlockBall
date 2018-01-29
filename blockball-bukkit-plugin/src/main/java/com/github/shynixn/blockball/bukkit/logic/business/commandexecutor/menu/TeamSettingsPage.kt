@@ -1,10 +1,13 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
-import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
 import org.bukkit.ChatColor
+import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 /**
  * Created by Shynixn 2018.
@@ -33,11 +36,11 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
+class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
 
     companion object {
         /** Id of the page. */
-        val ID = 3
+        val ID = 5
     }
 
     /**
@@ -46,7 +49,7 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @return key
      */
     override fun getCommandKey(): PageKey {
-        return PageKey.MAINSETTING
+        return PageKey.TEAMMETA
     }
 
     /**
@@ -54,16 +57,14 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      *
      * @param cache cache
      */
-    override fun execute(player: Player?, command: BlockBallCommand?, cache: Array<out Any>?, args: Array<out String>?): CommandResult {
-        if(command == BlockBallCommand.SETTINGS_OPEN && args!!.size == 3)
-        {
-            var arena = cache!![0] as BukkitArena
-            arena.gameType = GameType.valueOf(args[2]);
-            println("POWER")
+    override fun execute(player: Player?, command: BlockBallCommand?, cache: Array<Any>?, args: Array<out String>?): CommandResult {
+        if (command == BlockBallCommand.TEAM_RED_CONFIGURE) {
+            cache!![2] = 0
         }
-
-
-
+        if (command == BlockBallCommand.TEAM_SPAWNPOINT) {
+            val teamMeta = getTeamMeta(cache);
+            teamMeta.spawnpoint = player!!.location.toPosition()
+        }
         return super.execute(player, command, cache, args)
     }
 
@@ -73,18 +74,38 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @param cache cache
      * @return content
      */
-    override fun buildPage(cache: Array<out Any>?): ChatBuilder {
+    override fun buildPage(cache: Array<Any>?): ChatBuilder {
+        var spawnpoint = "none"
         val arena = cache!![0] as BukkitArena
+        val teamMeta = getTeamMeta(cache);
+        if (teamMeta.spawnpoint != null) {
+            spawnpoint = this.printLocation(teamMeta.spawnpoint)
+        }
         return ChatBuilder()
-                .component("- GameType: " + arena.gameType.name).builder()
-                .component(" [select..]")
-                .setColor(ChatColor.AQUA)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_GAMETYPES.command)
-                .setHoverText("Opens the selectionbox for game modes.")
+                .component("- Name: " + teamMeta.displayName).builder()
+                .addComponent(ClickableComponent.EDIT.component)
+                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.ARENA_SETDISPLAYNAME.command)
+                .setHoverText("Edit the name of the arena.")
                 .builder().nextLine()
-                .component("- Team Red:").builder()
+                .component("- Spawnpoint: " + spawnpoint).builder()
+                .component(" [location..]").setColor(ChatColor.BLUE)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_SPAWNPOINT.command)
+                .setHoverText("Uses your current location to set the spawnpoint of the ball.")
+                .builder().nextLine()
+                .component("- Settings:").builder()
                 .component(" [page..]").setColor(ChatColor.YELLOW)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_RED_CONFIGURE.command)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SETTINGS_OPEN.command)
                 .setHoverText("Opens the settings page.").builder()
     }
+
+    private fun getTeamMeta(cache: Array<Any>?): TeamMeta<Location, ItemStack> {
+        val arena = cache!![0] as BukkitArena
+        val type = cache[2] as Int
+        return if (type == 0) {
+            arena.meta.redTeamMeta
+        } else {
+            arena.meta.blueTeamMeta
+        }
+    }
+
 }

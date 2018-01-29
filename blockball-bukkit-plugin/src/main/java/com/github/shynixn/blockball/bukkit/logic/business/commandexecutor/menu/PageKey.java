@@ -31,6 +31,7 @@ public enum PageKey {
     OPEN("open"),
     MAINSETTING("mset"),
     LISTABLE("labl"),
+    TEAMMETA("tma"),
     MAINCONFIGURATION("mcf");
 
     private String key;
