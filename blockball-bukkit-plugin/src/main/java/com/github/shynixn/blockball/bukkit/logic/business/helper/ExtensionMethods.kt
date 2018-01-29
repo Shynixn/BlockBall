@@ -52,6 +52,11 @@ internal fun ItemStack.setSkin(skin: String) {
     }
 }
 
+internal fun Player.sendScreenMessage(title: String, subTitle: String) {
+    ScreenUtils.setTitle(title, subTitle, 20, 20 * 3, 20, this)
+}
+
+
 internal fun ItemStack.setColor(color: Color): ItemStack {
     if (this.itemMeta is LeatherArmorMeta) {
         val leatherMeta = this.itemMeta as LeatherArmorMeta
@@ -66,7 +71,7 @@ internal fun String.stripChatColors(): String {
 }
 
 internal fun String.convertChatColors(): String {
-    return ChatColor.translateAlternateColorCodes('&', this);
+    return ChatColor.translateAlternateColorCodes('&', this)
 }
 
 internal fun Location.toPosition(): IPosition {

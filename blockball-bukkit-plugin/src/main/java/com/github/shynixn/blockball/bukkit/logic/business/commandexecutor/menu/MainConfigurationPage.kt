@@ -201,7 +201,7 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
                 .builder().nextLine()
                 .component("- Settings:").builder()
                 .component(" [page..]").setColor(ChatColor.YELLOW)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball page-settings")
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SETTINGS_OPEN.command)
                 .setHoverText("Opens the settings page.").builder()
 
     }

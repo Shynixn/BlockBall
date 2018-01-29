@@ -47,7 +47,11 @@ public enum BlockBallCommand {
     ARENA_SETAREA(PageKey.MAINCONFIGURATION, "set-area"),
     ARENA_SETGOALRED(PageKey.MAINCONFIGURATION, "set-goalred"),
     ARENA_SETGOALBLUE(PageKey.MAINCONFIGURATION, "set-goalblue"),
-    ARENA_SAVE(PageKey.MAINCONFIGURATION, "save-arena"),;
+    ARENA_SAVE(PageKey.MAINCONFIGURATION, "save-arena"),
+
+    SETTINGS_OPEN(PageKey.MAINSETTING, "open_settings"),
+
+    LIST_GAMETYPES(PageKey.LISTABLE, "show_gametypes"),;
 
     private PageKey key;
     private String command;

@@ -234,9 +234,6 @@ public final class YamlSerializer {
         final T[] objects = (T[]) Array.newInstance(clazz, data.size());
         int i = 0;
         for (final String key : data.keySet()) {
-            System.out.println(key);
-
-            System.out.println(annotation.value());
             if (annotation.classicSerialize() == ManualSerialization.DESERIALIZE_FUNCTION) {
                 objects[i] = (T) deserializeObjectBukkit(clazz, ((MemorySection) data.get(key)).getValues(false));
             } else if (isPrimitive(data.get(key).getClass())) {

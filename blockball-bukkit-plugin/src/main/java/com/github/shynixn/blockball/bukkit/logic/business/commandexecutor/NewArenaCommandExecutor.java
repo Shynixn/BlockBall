@@ -53,6 +53,12 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
     private MainConfigurationPage mainConfigurationPage;
 
     @Inject
+    private MainSettingsPage mainSettingsPage;
+
+    @Inject
+    private ListablePage listablePage;
+
+    @Inject
     private ArenaRepository arenaController;
 
     /**
@@ -80,7 +86,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
         player.sendMessage("\n");
         Object[] cache = null;
         if (!this.cache.containsKey(player)) {
-            this.cache.put(player, new Object[2]);
+            this.cache.put(player, new Object[4]);
         }
         cache = this.cache.get(player);
         final BlockBallCommand command = BlockBallCommand.from(args);
@@ -93,7 +99,6 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                 if (command == BlockBallCommand.BACK) {
                     final Page newPage = this.getPageById(Integer.parseInt(args[2]));
                     this.sendMessage(player, newPage.buildPage(cache));
-                    System.out.println("BACK");
                 }
                 else if (command == BlockBallCommand.CLOSE) {
                     this.cache.remove(player);
@@ -135,6 +140,13 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                     .setColor(ChatColor.RED)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.CLOSE.getCommand())
                     .setHoverText("Opens the blockball arena configuration.")
+                    .builder();
+        }
+        else if(usedPage instanceof ListablePage) {
+            builder.component(">>Back<<")
+                    .setColor(ChatColor.RED)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, ((BlockBallCommand)cache[3]).getCommand())
+                    .setHoverText("Back.")
                     .builder();
         }
         else {
@@ -214,6 +226,8 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
             this.pagecache = new ArrayList<>();
             this.pagecache.add(this.openPage);
             this.pagecache.add(this.mainConfigurationPage);
+            this.pagecache.add(this.mainSettingsPage);
+            this.pagecache.add(listablePage);
         }
         return this.pagecache;
     }

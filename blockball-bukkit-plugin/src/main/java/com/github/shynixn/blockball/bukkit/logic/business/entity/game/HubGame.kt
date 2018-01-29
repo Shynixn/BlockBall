@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.container.PlayerStorage
+import com.github.shynixn.blockball.bukkit.logic.business.helper.sendScreenMessage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -44,14 +45,18 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
      * Gets called when a player scores a point for the given team.
      */
     override fun onScore(player: Player, teamMeta: TeamMeta<Location, ItemStack>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val scoreMessageTitle = teamMeta.scoreMessageTitle
+        val scoreMessageSubTitle = teamMeta.scoreMessageTitle
+        this.getPlayers().forEach{ p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle)}
     }
 
     /**
      * Gets called when a team wins the game.
      */
     override fun onWin(teamMeta: TeamMeta<Location, ItemStack>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val winMessageTitle = teamMeta.winMessageTitle
+        val winMessageSubTitle = teamMeta.winMessageTitle
+        this.getPlayers().forEach{ p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle)}
     }
 
     /** Join the game. */

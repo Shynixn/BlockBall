@@ -29,6 +29,8 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
  */
 public enum PageKey {
     OPEN("open"),
+    MAINSETTING("mset"),
+    LISTABLE("labl"),
     MAINCONFIGURATION("mcf");
 
     private String key;

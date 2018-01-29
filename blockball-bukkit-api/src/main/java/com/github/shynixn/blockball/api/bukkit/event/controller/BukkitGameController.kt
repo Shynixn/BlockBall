@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.api.bukkit.event.controller
 
+import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.controller.GameController
@@ -35,4 +36,4 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGameController : GameController<Location, Vector,Player, ItemStack, BukkitArena, BukkitGame>
+interface BukkitGameController : GameController<Location, Vector,Player, ItemStack, BukkitArena,BukkitBall, BukkitGame>
