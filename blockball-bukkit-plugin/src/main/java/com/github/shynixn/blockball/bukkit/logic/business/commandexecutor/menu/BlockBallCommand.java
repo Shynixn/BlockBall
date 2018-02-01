@@ -93,9 +93,13 @@ public enum BlockBallCommand {
     SCOREBOARD_TOGGLE(PageKey.SCOREBOARD, "tgl"),
     SCOREBOARD_TITLE(PageKey.SCOREBOARD, "title"),
 
-
+    BOSSBAR_OPEN(PageKey.BOSSBAR, "open"),
+    BOSSBAR_MESSAGE(PageKey.BOSSBAR, "msg"),
+    BOSSBAR_PERCENT(PageKey.BOSSBAR, "prc"),
+    BOSSBAR_TOGGLE(PageKey.BOSSBAR, "tgl"),
 
     LIST_LINES(PageKey.LISTABLE, "show_lines"),
+    LIST_BOSSBARSTYLES(PageKey.LISTABLE, "show_bossbarstyles"),
     LIST_GAMETYPES(PageKey.LISTABLE, "show_gametypes"),;
 
     private PageKey key;

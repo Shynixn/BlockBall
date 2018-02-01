@@ -77,7 +77,7 @@ class EffectsSettingsPage : Page(EffectsSettingsPage.ID, MainSettingsPage.ID) {
                 .builder().nextLine()
                 .component("- Bossbar:").builder()
                 .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_PREFIX.command)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BOSSBAR_OPEN.command)
                 .setHoverText("Configure the bossbar for players.")
                 .builder().nextLine()
                 .component("- Holograms:").builder()

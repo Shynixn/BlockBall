@@ -34,6 +34,7 @@ public enum PageKey {
     TEAMMETA("tma"),
     EFFECTS("ef"),
     SCOREBOARD("scor"),
+    BOSSBAR("boss"),
     MULTIPLELINES("mlin"),
     MAINCONFIGURATION("mcf");
 

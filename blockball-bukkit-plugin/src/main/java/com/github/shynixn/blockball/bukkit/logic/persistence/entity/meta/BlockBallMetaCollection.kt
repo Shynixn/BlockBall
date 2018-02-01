@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.persistence.entity.AreaSelection
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
@@ -12,6 +13,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.business.helper.setColor
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallData
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.BossBarBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.ScoreboardBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.ProtectionData
@@ -50,6 +52,9 @@ import org.bukkit.util.Vector
  * SOFTWARE.
  */
 class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector> {
+    /** Meta data of the bossbar. */
+    @YamlSerializer.YamlSerialize(orderNumber = 7, value = "bossbar")
+    override val bossBarMeta: BossBarMeta = BossBarBuilder()
     /** Meta data of the scoreboard. */
     @YamlSerializer.YamlSerialize(orderNumber = 6, value = "scoreboard")
     override val scoreboardMeta: ScoreboardBuilder = ScoreboardBuilder()
