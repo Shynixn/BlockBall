@@ -52,6 +52,16 @@ internal fun ItemStack.setSkin(skin: String) {
     }
 }
 
+internal fun ArrayList<String>.toSingleLine(): String {
+    val builder = StringBuilder()
+    this.forEachIndexed{ index, p ->
+        builder.append(org.bukkit.ChatColor.translateAlternateColorCodes('&',p));
+        if(index +1 != this.size)
+            builder.append('\n');
+        builder.append(org.bukkit.ChatColor.RESET)}
+    return builder.toString()
+}
+
 internal fun Player.sendScreenMessage(title: String, subTitle: String) {
     ScreenUtils.setTitle(title, subTitle, 20, 20 * 3, 20, this)
 }

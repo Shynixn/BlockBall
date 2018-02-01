@@ -76,7 +76,26 @@ public enum BlockBallCommand {
     TEAM_WINTITLE(PageKey.TEAMMETA, "wct"),
     TEAM_WINSUBTITLE(PageKey.TEAMMETA, "wcst"),
 
+    EFFECTS_OPEN(PageKey.EFFECTS, "general"),
+    EFFECTS_BOSSBAR(PageKey.EFFECTS, "bossbar"),
+    EFFECTS_HOLOGRAMS(PageKey.EFFECTS, "holograms"),
+    EFFECTS_SCOREBOARD(PageKey.EFFECTS, "scoreboard"),
 
+
+    MULTILINES_ANY(PageKey.MULTIPLELINES, "any"),
+    MULTILINES_ADD(PageKey.MULTIPLELINES, "add"),
+    MULTILINES_SET(PageKey.MULTIPLELINES, "set"),
+    MULTILINES_REMOVE(PageKey.MULTIPLELINES, "rmv"),
+    MULTILINES_SCOREBOARD(PageKey.MULTIPLELINES, "show_scoreboard"),
+
+
+    SCOREBOARD_OPEN(PageKey.SCOREBOARD, "open"),
+    SCOREBOARD_TOGGLE(PageKey.SCOREBOARD, "tgl"),
+    SCOREBOARD_TITLE(PageKey.SCOREBOARD, "title"),
+
+
+
+    LIST_LINES(PageKey.LISTABLE, "show_lines"),
     LIST_GAMETYPES(PageKey.LISTABLE, "show_gametypes"),;
 
     private PageKey key;

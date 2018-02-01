@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta
 
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
@@ -48,4 +49,7 @@ interface ArenaMeta<Location, ItemStack, Vector> {
 
     /** Meta data of proection. */
     val protectionMeta: ArenaProtectionMeta<Vector>
+
+    /** Meta data of the scoreboard. */
+    val scoreboardMeta : ScoreboardMeta
 }

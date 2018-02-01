@@ -32,6 +32,9 @@ public enum PageKey {
     MAINSETTING("mset"),
     LISTABLE("labl"),
     TEAMMETA("tma"),
+    EFFECTS("ef"),
+    SCOREBOARD("scor"),
+    MULTIPLELINES("mlin"),
     MAINCONFIGURATION("mcf");
 
     private String key;

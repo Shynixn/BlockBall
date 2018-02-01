@@ -1,6 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display
 
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
 /**
@@ -32,9 +34,24 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  */
 class ScoreboardBuilder : PersistenceObject(), ScoreboardMeta {
     /** Title of the scoreboard. */
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "title")
     override var title: String = "&aBlockBall"
     /** Is the scoreboard visible. */
-    override var enabled: Boolean = false;
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "enabled")
+    override var enabled: Boolean = false
     /** Lines of the scoreboard being rendered. */
-    override val lines: MutableList<String> = ArrayList();
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "lines")
+    override val lines: ArrayList<String> = arrayListOf(
+            ""
+            , "Time: "
+            , PlaceHolder.TIME.placeHolder
+            , ""
+            , "&m           &r"
+            , PlaceHolder.RED_COLOR.concate(PlaceHolder.TEAM_RED)
+            , PlaceHolder.RED_GOALS.placeHolder
+            , ""
+            , PlaceHolder.BLUE_COLOR.concate(PlaceHolder.TEAM_BLUE)
+            , PlaceHolder.BLUE_GOALS.placeHolder
+            , "&m           &r"
+    )
 }

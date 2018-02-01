@@ -1,9 +1,13 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
 import org.bukkit.ChatColor
+import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 /**
  * Created by Shynixn 2018.
@@ -32,14 +36,20 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
+class EffectsSettingsPage : Page(EffectsSettingsPage.ID, MainSettingsPage.ID) {
+
+    companion object {
+        /** Id of the page. */
+        const val ID = 7
+    }
+
     /**
      * Returns the key of the command when this page should be executed.
      *
      * @return key
      */
     override fun getCommandKey(): PageKey {
-        return PageKey.LISTABLE
+        return PageKey.EFFECTS;
     }
 
     /**
@@ -48,12 +58,7 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player?, command: BlockBallCommand?, cache: Array<Any>?, args: Array<out String>?): CommandResult {
-        if (command == BlockBallCommand.LIST_GAMETYPES) {
-            cache!![2] = GameType.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.SETTINGS_OPEN
-        } else if (command == BlockBallCommand.LIST_LINES) {
-            cache!![3] = BlockBallCommand.MULTILINES_ANY
-        }
+
         return super.execute(player, command, cache, args)
     }
 
@@ -64,19 +69,21 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any>?): ChatBuilder {
-        var infoList = cache!![2] as ArrayList<String>
-        var callBackCommand = cache!![3] as BlockBallCommand
-        val builder = ChatBuilder()
-        if (infoList.size == 0) {
-            builder.text(" No data found.")
-        } else {
-            infoList!!.forEachIndexed { index, p ->
-                builder.component((index + 1).toString() + ": [$p]")
-                        .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, callBackCommand!!.command + " " + index)
-                        .setHoverText("").builder().nextLine()
-            }
-
-        }
-        return builder;
+        return ChatBuilder()
+                .component("- Scoreboard:").builder()
+                .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SCOREBOARD_OPEN.command)
+                .setHoverText("Configure the scoreboard of players.")
+                .builder().nextLine()
+                .component("- Bossbar:").builder()
+                .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_PREFIX.command)
+                .setHoverText("Configure the bossbar for players.")
+                .builder().nextLine()
+                .component("- Holograms:").builder()
+                .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_MINAMOUNT.command)
+                .setHoverText("Configure the holograms for players.")
+                .builder().nextLine()
     }
 }

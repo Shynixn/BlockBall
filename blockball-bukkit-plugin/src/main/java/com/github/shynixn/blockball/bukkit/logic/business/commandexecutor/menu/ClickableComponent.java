@@ -34,6 +34,12 @@ public enum ClickableComponent {
     WORLDEDIT(" [worldedit..]", ChatColor.GOLD),
     EDIT(" [edit..]", ChatColor.GREEN),
     COPY_ARMOR(" [copy armor..]", ChatColor.GOLD),
+    PAGE(" [page..]", ChatColor.YELLOW),
+    PREVIEW(" [preview..]", ChatColor.GRAY),
+    ADD(" [add..]", ChatColor.BLUE),
+    DELETE(" [delete..]", ChatColor.DARK_RED),
+    SELECT(" [select..]", ChatColor.AQUA),
+
     TOGGLE(" [toggle..]", ChatColor.LIGHT_PURPLE)
     ;
     private String text;

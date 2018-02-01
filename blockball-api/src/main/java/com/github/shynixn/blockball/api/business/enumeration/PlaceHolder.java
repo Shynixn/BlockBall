@@ -27,13 +27,26 @@ package com.github.shynixn.blockball.api.business.enumeration;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public enum PlaceHolder{
+public enum PlaceHolder {
 
     ARENA_DISPLAYNAME("<game>"),
     ARENA_MAXPLAYERS("<maxplayers>"),
     ARENA_CURRENTPLAYERS("<players>"),
     ARENA_TEAMDISPLAYNAME("<team>"),
-    ARENA_STATE("<state>");
+    ARENA_STATE("<state>"),
+
+    RED_GOALS("<redgoals>"),
+    BLUE_GOALS("<bluegoals>"),
+    TEAM_RED("<red>"),
+    TEAM_BLUE("<blue>"),
+    RED_COLOR("<redcolor>"),
+
+    TIME("<time>"),
+    BLUE_COLOR("<bluecolor>");
+
+    public String concate(PlaceHolder placeHolder) {
+        return this.placeHolder + placeHolder.placeHolder;
+    }
 
     private String placeHolder;
 

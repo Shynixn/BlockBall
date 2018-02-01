@@ -63,6 +63,16 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
 
 
     @Inject
+    private EffectsSettingsPage effectsSettingsPage;
+
+    @Inject
+    private MultipleLinesPage multipleLinesPage;
+
+    @Inject
+    private ScoreboardPage scoreboardPage;
+
+
+    @Inject
     private ArenaRepository arenaController;
 
     /**
@@ -90,7 +100,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
         player.sendMessage("\n");
         Object[] cache = null;
         if (!this.cache.containsKey(player)) {
-            this.cache.put(player, new Object[4]);
+            this.cache.put(player, new Object[5]);
         }
         cache = this.cache.get(player);
         final BlockBallCommand command = BlockBallCommand.from(args);
@@ -114,7 +124,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                 else {
                     final CommandResult result = page.execute(player, command, cache, args);
                     if (result == CommandResult.BACK) {
-                        player.performCommand("blockball open back " + usedPage.getPreviousId());
+                        player.performCommand("blockball open back " + usedPage.getPreviousId(cache));
                         return;
                     }
                     if (result != CommandResult.SUCCESS && result != CommandResult.CANCEL_MESSAGE) {
@@ -132,6 +142,8 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                 break;
             }
         }
+        if(usedPage == null)
+            throw new IllegalArgumentException("Cannot find page with key " + command.getKey());
         ChatBuilder builder = new ChatBuilder()
                 .text(ChatColor.STRIKETHROUGH + "----------------------------------------------------").nextLine()
                 .component(" >>Save<< ")
@@ -139,14 +151,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ARENA_SAVE.getCommand())
                 .setHoverText("Saves the current arena if possible.")
                 .builder();
-        if (usedPage instanceof OpenPage) {
-            builder.component(">>Close<<")
-                    .setColor(ChatColor.RED)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.CLOSE.getCommand())
-                    .setHoverText("Opens the blockball arena configuration.")
-                    .builder();
-        }
-        else if(usedPage instanceof ListablePage) {
+        if(usedPage instanceof ListablePage) {
             builder.component(">>Back<<")
                     .setColor(ChatColor.RED)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, ((BlockBallCommand)cache[3]).getCommand())
@@ -156,7 +161,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
         else {
             builder.component(">>Back<<")
                     .setColor(ChatColor.RED)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.getCommand() + " " + usedPage.getPreviousId())
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.getCommand() + " " + usedPage.getPreviousId(cache))
                     .setHoverText("Opens the blockball arena configuration.")
                     .builder();
         }
@@ -233,6 +238,9 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
             this.pagecache.add(this.mainSettingsPage);
             this.pagecache.add(listablePage);
             this.pagecache.add(teamSettingsPage);
+            this.pagecache.add(effectsSettingsPage);
+            this.pagecache.add(scoreboardPage);
+            this.pagecache.add(multipleLinesPage);
         }
         return this.pagecache;
     }

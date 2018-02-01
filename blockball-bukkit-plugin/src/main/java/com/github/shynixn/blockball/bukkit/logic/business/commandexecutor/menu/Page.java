@@ -46,7 +46,7 @@ public abstract class Page {
         this.previousId = previousId;
     }
 
-    public int getPreviousId() {
+    public int getPreviousId(Object[] cache) {
         return this.previousId;
     }
 
