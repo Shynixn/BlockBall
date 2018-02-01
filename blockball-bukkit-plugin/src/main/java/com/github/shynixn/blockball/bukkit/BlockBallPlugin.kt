@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit
 
+import com.github.shynixn.ball.bukkit.core.logic.business.CoreManager
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.BlockBallApi
@@ -77,6 +78,8 @@ class BlockBallPlugin : JavaPlugin() {
     @Inject
     private var statsListener: StatsListener? = null
 
+    private var coreManager : CoreManager? = null;
+
     override fun onEnable() {
         this.saveDefaultConfig()
         com.github.shynixn.blockball.bukkit.logic.business.configuration.Config.getInstance().reload()
@@ -94,6 +97,7 @@ class BlockBallPlugin : JavaPlugin() {
             checkForUpdates()
             startBungeecordLinking()
             startPlugin()
+            coreManager = CoreManager(this, "storage.yml", "ball.yml")
         }
     }
 

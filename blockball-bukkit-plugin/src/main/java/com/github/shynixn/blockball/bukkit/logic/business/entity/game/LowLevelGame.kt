@@ -11,6 +11,7 @@ import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.GameScoreboard
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import org.bukkit.Location
 import org.bukkit.Material
@@ -63,6 +64,15 @@ abstract class LowLevelGame(
 
     private var bumperTimer = 20L
 
+    private var scoreboard: GameScoreboard? = null
+
+    /** Amount of points the blue team has scored. */
+    override val bluePoints: Int
+        get() = blueGoals
+    /** Amount of points the red team has scored.  */
+    override val redPoints: Int
+        get() = redGoals
+
     /**
      *
      * The general contract of the method `run` is that it may
@@ -76,21 +86,21 @@ abstract class LowLevelGame(
                 close()
             }
         }
-
         if (this.haveTwentyTicksPassed()) {
             this.kickUnwantedEntitiesOutOfForcefield()
             this.onUpdateSigns()
+            this.updateScoreboard()
         }
-
-
-
-
-        // if (this.ball != null && !this.ball.isDead()) {
-        //   this.fixBallPositionSpawn()
-        //    this.checkBallInGoal()
-        //  }
     }
 
+    private fun updateScoreboard() {
+        if (scoreboard == null && arena.meta.scoreboardMeta.enabled) {
+            scoreboard = GameScoreboard(this)
+        }
+        if (scoreboard != null) {
+            getPlayers().forEach { p -> scoreboard!!.updateScoreboard(p) }
+        }
+    }
 
     /** Checks if the player has joined the game. */
     override fun hasJoined(player: Player): Boolean {
@@ -166,6 +176,7 @@ abstract class LowLevelGame(
      * @throws Exception if this resource cannot be closed
      */
     override fun close() {
+        scoreboard?.close()
         ingameStats.keys.forEach { p -> leave(p); }
         ingameStats.clear()
         ball?.remove()

@@ -1,6 +1,9 @@
-package com.github.shynixn.blockball.api.business.enumeration;
+package com.github.shynixn.blockball.bukkit.logic.business.entity.action
 
-import com.github.shynixn.blockball.api.business.entity.Game;
+import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
+import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
+import org.bukkit.entity.Player
+import org.bukkit.scoreboard.DisplaySlot
 
 /**
  * Created by Shynixn 2018.
@@ -29,34 +32,27 @@ import com.github.shynixn.blockball.api.business.entity.Game;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public enum PlaceHolder {
+class GameScoreboard(private val game: BukkitGame) : SimpleScoreboard() {
 
-    ARENA_DISPLAYNAME("<game>"),
-    ARENA_MAXPLAYERS("<maxplayers>"),
-    ARENA_CURRENTPLAYERS("<players>"),
-    ARENA_TEAMDISPLAYNAME("<team>"),
-    ARENA_STATE("<state>"),
-
-    RED_GOALS("<redscore>"),
-    BLUE_GOALS("<bluescore>"),
-    TEAM_RED("<red>"),
-    TEAM_BLUE("<blue>"),
-    RED_COLOR("<redcolor>"),
-
-    TIME("<time>"),
-    BLUE_COLOR("<bluecolor>");
-
-    public String concate(PlaceHolder placeHolder) {
-        return this.placeHolder + placeHolder.placeHolder;
+    init {
+        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE)
+        this.setDefaultTitle(game.arena.meta.scoreboardMeta.title)
+        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR)
     }
 
-    private String placeHolder;
-
-    PlaceHolder(String placeholder) {
-        this.placeHolder = placeholder;
-    }
-
-    public String getPlaceHolder() {
-        return this.placeHolder;
+    /** Updates the scoreboard for the given player **/
+    fun updateScoreboard(player: Player) {
+        if (!this.containsPlayer(player)) {
+            this.addPlayer(player)
+        }
+        val lines = game.arena.meta.scoreboardMeta.lines
+        var i = 0
+        var j = lines.size
+        while (i < lines.size) {
+            val line = lines[i].replaceGamePlaceholder(game)
+            this.setDefaultLine(j, line)
+            i++
+            j--
+        }
     }
 }

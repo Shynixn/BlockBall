@@ -51,6 +51,12 @@ interface Game<out ArenaEntity, Player, Location, ItemStack, Vector, BallEntity>
     /** Ingame stats of the players. */
     val ingameStats : Map<Player, InGameStats>
 
+    /** Amount of points the blue team has scored. */
+    val bluePoints : Int
+
+    /** Amount of points the red team has scored.  */
+    val redPoints : Int
+
     /** Join the game. */
     fun join(player: Player, team: Team): Boolean
 

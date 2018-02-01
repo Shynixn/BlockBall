@@ -3,7 +3,10 @@ package com.github.shynixn.blockball.bukkit.logic.business.helper
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.entity.BlockBallPlayer
+import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
@@ -54,12 +57,27 @@ internal fun ItemStack.setSkin(skin: String) {
 
 internal fun ArrayList<String>.toSingleLine(): String {
     val builder = StringBuilder()
-    this.forEachIndexed{ index, p ->
-        builder.append(org.bukkit.ChatColor.translateAlternateColorCodes('&',p));
-        if(index +1 != this.size)
-            builder.append('\n');
-        builder.append(org.bukkit.ChatColor.RESET)}
+    this.forEachIndexed { index, p ->
+        builder.append(org.bukkit.ChatColor.translateAlternateColorCodes('&', p))
+        if (index + 1 != this.size)
+            builder.append('\n')
+        builder.append(org.bukkit.ChatColor.RESET)
+    }
     return builder.toString()
+}
+
+internal fun String.replaceGamePlaceholder(game: BukkitGame): String {
+    var cache = this.replace(PlaceHolder.TEAM_RED.placeHolder, game.arena.meta.redTeamMeta.displayName)
+            .replace(PlaceHolder.TEAM_BLUE.placeHolder, game.arena.meta.blueTeamMeta.displayName)
+            .replace(PlaceHolder.RED_COLOR.placeHolder, game.arena.meta.redTeamMeta.prefix)
+            .replace(PlaceHolder.BLUE_COLOR.placeHolder, game.arena.meta.blueTeamMeta.prefix)
+            .replace(PlaceHolder.RED_GOALS.placeHolder, game.redPoints.toString())
+            .replace(PlaceHolder.BLUE_GOALS.placeHolder, game.bluePoints.toString())
+
+    if (game.arena.gameType == GameType.HUBGAME) {
+        cache = cache.replace(PlaceHolder.TIME.placeHolder, "∞")
+    }
+    return cache;
 }
 
 internal fun Player.sendScreenMessage(title: String, subTitle: String) {

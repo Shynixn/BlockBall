@@ -43,15 +43,15 @@ class ScoreboardBuilder : PersistenceObject(), ScoreboardMeta {
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "lines")
     override val lines: ArrayList<String> = arrayListOf(
             ""
-            , "Time: "
+            , "&6Time: "
             , PlaceHolder.TIME.placeHolder
             , ""
             , "&m           &r"
-            , PlaceHolder.RED_COLOR.concate(PlaceHolder.TEAM_RED)
-            , PlaceHolder.RED_GOALS.placeHolder
+            , PlaceHolder.RED_COLOR.concate(PlaceHolder.TEAM_RED) + ":"
+            , "&l" + PlaceHolder.RED_GOALS.placeHolder
             , ""
-            , PlaceHolder.BLUE_COLOR.concate(PlaceHolder.TEAM_BLUE)
-            , PlaceHolder.BLUE_GOALS.placeHolder
+            , PlaceHolder.BLUE_COLOR.concate(PlaceHolder.TEAM_BLUE) + ":"
+            , "&l" + PlaceHolder.BLUE_GOALS.placeHolder
             , "&m           &r"
     )
 }

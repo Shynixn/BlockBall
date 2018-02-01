@@ -72,7 +72,7 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector> {
     override var hubLobbyMeta: HubLobbyProperties = HubLobbyProperties()
     /** Meta data of the redTeam. */
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "team-red")
-    override val redTeamMeta: TeamProperties = TeamProperties("Team Red", "&c", "<redcolor><player>", "scored for <red>.", "<redcolor><red>", "<redcolor> has won the match")
+    override val redTeamMeta: TeamProperties = TeamProperties("Team Red", "&9", "<redcolor><player>", "scored for <red>.", "<redcolor><red>", "<redcolor> has won the match")
 
     init {
         redTeamMeta.armorContents = arrayOf(ItemStack(Material.LEATHER_BOOTS).setColor(Color.RED)

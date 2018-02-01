@@ -283,6 +283,10 @@ public class SimpleScoreboard implements AutoCloseable {
         return this;
     }
 
+    public boolean containsPlayer(Player player) {
+        return player.getScoreboard() != null && this.scoreboard.equals(player.getScoreboard());
+    }
+
     /**
      * Adds players to the scoreboard
      *
@@ -306,16 +310,16 @@ public class SimpleScoreboard implements AutoCloseable {
     }
 
     /**
-     * Removes players from the scoreboard
+     * Removes players from the scoreboard.
      *
      * @param players players
      */
     public void removePlayer(Collection<Player> players) {
-        this.addPlayer(players.toArray(new Player[players.size()]));
+        this.removePlayer(players.toArray(new Player[players.size()]));
     }
 
     /**
-     * Removes players from the scoreboard
+     * Removes players from the scoreboard.
      *
      * @param players players
      */

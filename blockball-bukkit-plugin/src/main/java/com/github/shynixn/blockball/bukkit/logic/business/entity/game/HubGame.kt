@@ -64,9 +64,11 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         this.leave(player)
         if (team == Team.RED && this.redTeam.size < this.arena.meta.redTeamMeta.maxAmount) {
             this.prepareStatsForPlayer(player, team, this.arena.meta.redTeamMeta)
+            this.redTeam.add(player)
             return true
         } else if (team == Team.BLUE && this.blueTeam.size < this.arena.meta.blueTeamMeta.maxAmount) {
             this.prepareStatsForPlayer(player, team, this.arena.meta.blueTeamMeta)
+            this.blueTeam.add(player)
             return true
         }
         return false

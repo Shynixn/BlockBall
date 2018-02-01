@@ -56,6 +56,7 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
      */
     override fun run() {
         super.run()
+        print("TICK")
         this.fixBallPositionSpawn()
         this.checkBallInGoal()
         this.handleBallSpawning()
@@ -127,16 +128,23 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
     }
 
     private fun handleBallSpawning() {
+
+        println("CHECK " + (this.ball == null || this.ball!!.isDead) + "-" + (!this.redTeam.isEmpty() || !this.blueTeam.isEmpty()) + " " +
+               (this.redTeam.size >= this.arena.meta.redTeamMeta.minAmount && this.blueTeam.size >= this.arena.meta.blueTeamMeta.minAmount))
+
         if (this.ballSpawning) {
             this.ballSpawnCounter--
             if (this.ballSpawnCounter <= 0) {
-                this.ball = BallsApi.spawnTemporaryBall(this.arena.meta.ballMeta.spawnpoint, this.arena.meta.ballMeta)
+                this.ball = BallsApi.spawnTemporaryBall(this.arena.meta.ballMeta.spawnpoint.toBukkitLocation(), this.arena.meta.ballMeta)
                 this.ballSpawning = false
                 this.ballSpawnCounter = 0
             }
         } else if ((this.ball == null || this.ball!!.isDead)
                 && (!this.redTeam.isEmpty() || !this.blueTeam.isEmpty())
                 && (this.redTeam.size >= this.arena.meta.redTeamMeta.minAmount && this.blueTeam.size >= this.arena.meta.blueTeamMeta.minAmount)) {
+
+            println("NOW SPAWN")
+
             this.ballSpawning = true
             this.ballSpawnCounter = this.arena.meta.ballMeta.spawnDelayTicks
         }
