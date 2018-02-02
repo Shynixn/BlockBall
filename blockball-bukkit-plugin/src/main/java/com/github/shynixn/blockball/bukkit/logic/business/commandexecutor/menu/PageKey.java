@@ -36,6 +36,7 @@ public enum PageKey {
     SCOREBOARD("scor"),
     BOSSBAR("boss"),
     MULTIPLELINES("mlin"),
+    MULTIPLEITEMS("mitem"),
     MAINCONFIGURATION("mcf");
 
     private String key;

@@ -60,8 +60,13 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
     override fun execute(player: Player?, command: BlockBallCommand?, cache: Array<Any>?, args: Array<out String>?): CommandResult {
         val arena = cache!![0] as BukkitArena
         val bossbar = arena.meta.bossBarMeta
+        cache[5] = bossbar.flags.map {  p -> p.name }
         if (command == BlockBallCommand.BOSSBAR_OPEN && args!!.size == 3) {
-            bossbar.style = BossBarMeta.Style.values()[args[2] as Int]
+            bossbar.style = BossBarMeta.Style.values()[args[2].toInt()]
+        }
+        else if (command == BlockBallCommand.BOSSBAR_CALLBACKFLAGS && args!!.size == 3) {
+            bossbar.flags.clear()
+            bossbar.flags.add(BossBarMeta.Flag.values()[args[2].toInt()])
         }
         else if (command == BlockBallCommand.BOSSBAR_MESSAGE) {
             bossbar.message = this.mergeArgs(2, args)
@@ -85,6 +90,8 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
     override fun buildPage(cache: Array<Any>?): ChatBuilder {
         val arena = cache!![0] as BukkitArena
         val bossbar = arena.meta.bossBarMeta
+        if(bossbar.flags.isEmpty())
+            bossbar.flags.add(BossBarMeta.Flag.NONE)
         return ChatBuilder()
                 .component("- Message: " + bossbar.message).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
@@ -105,6 +112,11 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
                 .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARSTYLES.command)
                 .setHoverText("Opens the selectionbox for styles.")
+                .builder().nextLine()
+                .component("- Style: " + bossbar.flags[0]).builder()
+                .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARFLAGS.command)
+                .setHoverText("Opens the selectionbox for flags.")
                 .builder().nextLine()
     }
 }

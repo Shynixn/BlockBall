@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
 /**
@@ -57,6 +56,10 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         } else if (command == BlockBallCommand.LIST_BOSSBARSTYLES) {
             cache!![2] = BossBarMeta.Style.values().map { p -> p.name }
             cache[3] = BlockBallCommand.BOSSBAR_OPEN
+        }
+        else if (command == BlockBallCommand.LIST_BOSSBARFLAGS) {
+            cache!![2] = BossBarMeta.Flag.values().map { p -> p.name }
+            cache[3] = BlockBallCommand.BOSSBAR_CALLBACKFLAGS
         }
         return super.execute(player, command, cache, args)
     }

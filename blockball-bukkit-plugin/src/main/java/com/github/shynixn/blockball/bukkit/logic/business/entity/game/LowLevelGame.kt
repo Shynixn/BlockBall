@@ -10,8 +10,11 @@ import com.github.shynixn.blockball.api.business.entity.InGameStats
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.GameScoreboard
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleBossBar
+import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import org.bukkit.Location
 import org.bukkit.Material
@@ -66,6 +69,8 @@ abstract class LowLevelGame(
 
     private var scoreboard: GameScoreboard? = null
 
+    private var bossbar: SimpleBossBar? = null
+
     /** Amount of points the blue team has scored. */
     override val bluePoints: Int
         get() = blueGoals
@@ -90,6 +95,18 @@ abstract class LowLevelGame(
             this.kickUnwantedEntitiesOutOfForcefield()
             this.onUpdateSigns()
             this.updateScoreboard()
+            this.updateBossBar()
+        }
+    }
+
+    private fun updateBossBar() {
+        val meta = arena.meta.bossBarMeta;
+        if (bossbar == null && arena.meta.bossBarMeta.enabled) {
+            bossbar = SimpleBossBar.from(meta.message, BossBarMeta.Color.BLUE.name, meta.style.name, meta.flags[0].name)
+        }
+        if (bossbar != null) {
+            bossbar!!.addPlayer(getPlayers())
+            bossbar!!.message = meta.message.replaceGamePlaceholder(this)
         }
     }
 

@@ -102,7 +102,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
         player.sendMessage("\n");
         Object[] cache = null;
         if (!this.cache.containsKey(player)) {
-            this.cache.put(player, new Object[5]);
+            this.cache.put(player, new Object[8]);
         }
         cache = this.cache.get(player);
         final BlockBallCommand command = BlockBallCommand.from(args);

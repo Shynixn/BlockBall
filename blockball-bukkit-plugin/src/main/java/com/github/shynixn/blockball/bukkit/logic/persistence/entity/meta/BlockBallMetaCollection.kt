@@ -54,7 +54,7 @@ import org.bukkit.util.Vector
 class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector> {
     /** Meta data of the bossbar. */
     @YamlSerializer.YamlSerialize(orderNumber = 7, value = "bossbar")
-    override val bossBarMeta: BossBarMeta = BossBarBuilder()
+    override val bossBarMeta: BossBarBuilder = BossBarBuilder()
     /** Meta data of the scoreboard. */
     @YamlSerializer.YamlSerialize(orderNumber = 6, value = "scoreboard")
     override val scoreboardMeta: ScoreboardBuilder = ScoreboardBuilder()

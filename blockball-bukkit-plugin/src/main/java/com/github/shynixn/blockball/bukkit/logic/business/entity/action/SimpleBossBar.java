@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity.action;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -55,14 +56,14 @@ public class SimpleBossBar implements AutoCloseable {
     private SimpleBossBar(String message, String color, String style, String... flags) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         super();
         final Method method = (Method) reflectionCache[19];
-        final List<Object> rFlags = new ArrayList<>();
-        for (final String flag : flags) {
-            rFlags.add(getEnumBarFlag(flag));
+        Object[] componentFlag = (Object[]) Array.newInstance(Class.forName("org.bukkit.boss.BarFlag"), flags.length);
+        for (int i = 0; i < flags.length; i++) {
+            componentFlag[i] = getEnumBarFlag(flags[i]);
         }
         this.bossBar = method.invoke(null, message
                 , getEnumBarColor(color)
                 , getEnumBarStyle(style)
-                , rFlags);
+                , componentFlag);
     }
 
     /**
@@ -236,24 +237,6 @@ public class SimpleBossBar implements AutoCloseable {
     }
 
     /**
-     * Returns all flags from the bossbar.
-     *
-     * @return flags
-     */
-    public List<String> getFlags() {
-        try {
-            final Method method = (Method) reflectionCache[18];
-            final List<String> flags = new ArrayList<>();
-            for (final Object flag : ((Object[]) method.invoke(this.bossBar))) {
-                flags.add(((Enum) flag).name());
-            }
-            return flags;
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
      * Adds players which should see the bossbar.
      *
      * @param players players
@@ -379,11 +362,11 @@ public class SimpleBossBar implements AutoCloseable {
         reflectionCache[15] = getBossBarMethod("getTitle");
         reflectionCache[16] = getBossBarMethod("addFlag", Class.forName("org.bukkit.boss.BarFlag"));
         reflectionCache[17] = getBossBarMethod("removeFlag", Class.forName("org.bukkit.boss.BarFlag"));
-        reflectionCache[18] = getBossBarMethod("getFlags", List.class);
+        //   reflectionCache[18] = getBossBarMethod("getFlags", List.class);
         reflectionCache[19] = Bukkit.class.getDeclaredMethod("createBossBar", String.class
                 , Class.forName("org.bukkit.boss.BarColor")
                 , Class.forName("org.bukkit.boss.BarStyle")
-                , Class.forName("org.bukkit.boss.BarFlag"));
+                , Class.forName("[Lorg.bukkit.boss.BarFlag;"));
     }
 
     /**

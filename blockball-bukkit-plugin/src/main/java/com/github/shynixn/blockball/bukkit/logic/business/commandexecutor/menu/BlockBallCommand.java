@@ -88,6 +88,9 @@ public enum BlockBallCommand {
     MULTILINES_REMOVE(PageKey.MULTIPLELINES, "rmv"),
     MULTILINES_SCOREBOARD(PageKey.MULTIPLELINES, "show_scoreboard"),
 
+    MULTIPLEITEMS_BOSSBAR(PageKey.MULTIPLEITEMS, "show_bossbar"),
+    MULTIPLEITEMS_OPEN(PageKey.MULTIPLEITEMS, "open"),
+    MULTIPLEITEMS_REMOVE(PageKey.MULTIPLEITEMS, "rmv"),
 
     SCOREBOARD_OPEN(PageKey.SCOREBOARD, "open"),
     SCOREBOARD_TOGGLE(PageKey.SCOREBOARD, "tgl"),
@@ -97,8 +100,10 @@ public enum BlockBallCommand {
     BOSSBAR_MESSAGE(PageKey.BOSSBAR, "msg"),
     BOSSBAR_PERCENT(PageKey.BOSSBAR, "prc"),
     BOSSBAR_TOGGLE(PageKey.BOSSBAR, "tgl"),
+    BOSSBAR_CALLBACKFLAGS(PageKey.BOSSBAR, "fla"),
 
     LIST_LINES(PageKey.LISTABLE, "show_lines"),
+    LIST_BOSSBARFLAGS(PageKey.LISTABLE, "show_bossbarflags"),
     LIST_BOSSBARSTYLES(PageKey.LISTABLE, "show_bossbarstyles"),
     LIST_GAMETYPES(PageKey.LISTABLE, "show_gametypes"),;
 

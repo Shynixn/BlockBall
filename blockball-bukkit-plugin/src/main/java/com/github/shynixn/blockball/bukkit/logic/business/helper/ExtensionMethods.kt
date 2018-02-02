@@ -73,11 +73,10 @@ internal fun String.replaceGamePlaceholder(game: BukkitGame): String {
             .replace(PlaceHolder.BLUE_COLOR.placeHolder, game.arena.meta.blueTeamMeta.prefix)
             .replace(PlaceHolder.RED_GOALS.placeHolder, game.redPoints.toString())
             .replace(PlaceHolder.BLUE_GOALS.placeHolder, game.bluePoints.toString())
-
     if (game.arena.gameType == GameType.HUBGAME) {
         cache = cache.replace(PlaceHolder.TIME.placeHolder, "∞")
     }
-    return cache;
+    return cache.convertChatColors();
 }
 
 internal fun Player.sendScreenMessage(title: String, subTitle: String) {

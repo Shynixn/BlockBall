@@ -58,11 +58,7 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         if (command == BlockBallCommand.SETTINGS_OPEN && args!!.size == 3) {
             var arena = cache!![0] as BukkitArena
             arena.gameType = GameType.values()[args[2] as Int];
-            println("POWER")
         }
-
-
-
         return super.execute(player, command, cache, args)
     }
 

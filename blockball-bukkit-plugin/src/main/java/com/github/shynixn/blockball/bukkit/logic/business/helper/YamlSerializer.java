@@ -147,6 +147,8 @@ public final class YamlSerializer {
                     data.put(String.valueOf(i), object);
                 } else if (ConfigurationSerializable.class.isAssignableFrom(object.getClass())) {
                     data.put(String.valueOf(i), ((ConfigurationSerializable) object).serialize());
+                } else if (object.getClass().isEnum()) {
+                    data.put(String.valueOf(i), ((Enum) object).name());
                 } else {
                     data.put(String.valueOf(i), serializeObject(object));
                 }
@@ -271,7 +273,12 @@ public final class YamlSerializer {
     private static <T extends Collection, E> T deserializeHeavyCollection(Class<E> clazz, T collection, Object dataSource) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         final Map<String, Object> data = getDataFromSource(dataSource);
         for (final String key : data.keySet()) {
-            collection.add(deserializeObject(clazz, ((MemorySection) data.get(key)).getValues(false)));
+            Object item = data.get(key);
+            if (item instanceof MemorySection) {
+                collection.add(deserializeObject(clazz, ((MemorySection) item).getValues(false)));
+            } else if (clazz.isEnum()) {
+                collection.add(Enum.valueOf((Class)clazz,(String) item));
+            }
         }
         return collection;
     }
