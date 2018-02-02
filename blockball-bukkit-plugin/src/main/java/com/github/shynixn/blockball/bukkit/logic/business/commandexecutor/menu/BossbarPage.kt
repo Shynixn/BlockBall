@@ -60,15 +60,15 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
     override fun execute(player: Player?, command: BlockBallCommand?, cache: Array<Any>?, args: Array<out String>?): CommandResult {
         val arena = cache!![0] as BukkitArena
         val bossbar = arena.meta.bossBarMeta
-        cache[5] = bossbar.flags.map {  p -> p.name }
+        cache[5] = bossbar.flags.map { p -> p.name }
         if (command == BlockBallCommand.BOSSBAR_OPEN && args!!.size == 3) {
             bossbar.style = BossBarMeta.Style.values()[args[2].toInt()]
-        }
-        else if (command == BlockBallCommand.BOSSBAR_CALLBACKFLAGS && args!!.size == 3) {
+        } else if (command == BlockBallCommand.BOSSBAR_CALLBACKCOLORS && args!!.size == 3) {
+            bossbar.color = BossBarMeta.Color.values()[args[2].toInt()]
+        } else if (command == BlockBallCommand.BOSSBAR_CALLBACKFLAGS && args!!.size == 3) {
             bossbar.flags.clear()
             bossbar.flags.add(BossBarMeta.Flag.values()[args[2].toInt()])
-        }
-        else if (command == BlockBallCommand.BOSSBAR_MESSAGE) {
+        } else if (command == BlockBallCommand.BOSSBAR_MESSAGE) {
             bossbar.message = this.mergeArgs(2, args)
         } else if (command == BlockBallCommand.BOSSBAR_TOGGLE) {
             bossbar.enabled = !bossbar.enabled
@@ -90,7 +90,7 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
     override fun buildPage(cache: Array<Any>?): ChatBuilder {
         val arena = cache!![0] as BukkitArena
         val bossbar = arena.meta.bossBarMeta
-        if(bossbar.flags.isEmpty())
+        if (bossbar.flags.isEmpty())
             bossbar.flags.add(BossBarMeta.Flag.NONE)
         return ChatBuilder()
                 .component("- Message: " + bossbar.message).builder()
@@ -108,12 +108,17 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BOSSBAR_PERCENT.command)
                 .setHoverText("Edit the amount of percentage the bossbar is filled.")
                 .builder().nextLine()
+                .component("- Color: " + bossbar.color).builder()
+                .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARCOLORS.command)
+                .setHoverText("Opens the selectionbox for colors.")
+                .builder().nextLine()
                 .component("- Style: " + bossbar.style).builder()
                 .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARSTYLES.command)
                 .setHoverText("Opens the selectionbox for styles.")
                 .builder().nextLine()
-                .component("- Style: " + bossbar.flags[0]).builder()
+                .component("- Flags: " + bossbar.flags[0]).builder()
                 .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARFLAGS.command)
                 .setHoverText("Opens the selectionbox for flags.")

@@ -57,13 +57,25 @@ public class SimpleBossBar implements AutoCloseable {
         super();
         final Method method = (Method) reflectionCache[19];
         Object[] componentFlag = (Object[]) Array.newInstance(Class.forName("org.bukkit.boss.BarFlag"), flags.length);
+        int amount = 0;
         for (int i = 0; i < flags.length; i++) {
-            componentFlag[i] = getEnumBarFlag(flags[i]);
+            if (!flags[i].equalsIgnoreCase("none")) {
+                componentFlag[i] = getEnumBarFlag(flags[i]);
+                amount++;
+            }//
         }
-        this.bossBar = method.invoke(null, message
-                , getEnumBarColor(color)
-                , getEnumBarStyle(style)
-                , componentFlag);
+        if(amount == 0)
+        {
+            this.bossBar = method.invoke(null, message
+                    , getEnumBarColor(color)
+                    , getEnumBarStyle(style),Array.newInstance(Class.forName("org.bukkit.boss.BarFlag"), 0));
+        }
+        else {
+            this.bossBar = method.invoke(null, message
+                    , getEnumBarColor(color)
+                    , getEnumBarStyle(style)
+                    , componentFlag);
+        }
     }
 
     /**

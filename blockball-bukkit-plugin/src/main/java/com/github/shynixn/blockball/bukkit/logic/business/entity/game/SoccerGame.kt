@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import org.bukkit.Location
+import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -46,6 +47,7 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
     private var bumperCounter = 0
     private var bumper = 20
     private var lastBallLocation: Location? = null
+    var lastInteractedEntity: Entity? = null
 
     /**
      *
@@ -64,7 +66,7 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
     /**
      * Gets called when a player scores a point for the given team.
      */
-    protected abstract fun onScore(player: Player, teamMeta: TeamMeta<Location, ItemStack>)
+    protected abstract fun onScore(teamMeta: TeamMeta<Location, ItemStack>)
 
     /**
      * Gets called when a team wins the game.
@@ -110,18 +112,18 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
         if (ball == null || ball!!.isDead)
             return
         if (this.arena.meta.redTeamMeta.goal.isLocationInSelection(this.ball!!.location)) {
-            this.redGoals++
-            this.ball!!.remove()
-            this.onScore(ball!!.lastInteractionEntity as Player, this.arena.meta.redTeamMeta)
-            if (this.redGoals >= 20) {
-                this.onWin(this.arena.meta.redTeamMeta)
-            }
-        } else if (this.arena.meta.blueTeamMeta.goal.isLocationInSelection(this.ball!!.location)) {
             this.blueGoals++
             this.ball!!.remove()
-            this.onScore(ball!!.lastInteractionEntity as Player, this.arena.meta.blueTeamMeta)
-            if (this.blueGoals >= 20L) {
+            this.onScore(this.arena.meta.blueTeamMeta)
+            if (this.blueGoals >= 20) {
                 this.onWin(this.arena.meta.blueTeamMeta)
+            }
+        } else if (this.arena.meta.blueTeamMeta.goal.isLocationInSelection(this.ball!!.location)) {
+            this.redGoals++
+            this.ball!!.remove()
+            this.onScore(this.arena.meta.redTeamMeta)
+            if (this.redGoals >= 20L) {
+                this.onWin(this.arena.meta.redTeamMeta)
             }
         }
     }

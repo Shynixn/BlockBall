@@ -40,8 +40,11 @@ interface BossBarMeta : Persistenceable {
     /** Percentage filled in the bossbar. */
     var percentage: Double
 
-    /** Color of the bossbar. */
+    /** Style of the bossbar. */
     var style: Style
+
+    /** Color of the bossbar. */
+    var color : Color
 
     /** Flags of the bossbar. */
     val flags: MutableList<Flag>
@@ -49,9 +52,9 @@ interface BossBarMeta : Persistenceable {
     /** Style of the bossbar. */
     enum class Style {
         SEGMENTED_6,
-        SEGMENETED_10,
+        SEGMENTED_10,
         SEGMENTED_12,
-        SEGEMENTED_20,
+        SEGMENTED_20,
         SOLID;
     }
 

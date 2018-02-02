@@ -63,21 +63,26 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector> {
     override val protectionMeta: ArenaProtectionMeta<Vector> = ProtectionData()
     /** Meta data of the ball. */
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "ball", classicSerialize = YamlSerializer.ManualSerialization.CONSTRUCTOR)
-    override val ballMeta: BallData = BallData("Shynixn")
+    override val ballMeta: BallData = BallData("http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d")
     /** Meta data of the blueTeam. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "team-blue")
-    override val blueTeamMeta: TeamProperties = TeamProperties("Team Blue", "&c", "<bluecolor><player>", "scored for <blue>.", "<bluecolor><blue>", "<bluecolor> has won the match")
+    override val blueTeamMeta: TeamProperties = TeamProperties("Team Blue", "&9", "<bluecolor><bluescore> : <redcolor><redscore>", "<bluecolor><player> scored for <blue>", "<bluecolor><blue>", "<blue>&a has won the match")
     /** Meta data of the hublobby. */
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "hubgame")
     override var hubLobbyMeta: HubLobbyProperties = HubLobbyProperties()
     /** Meta data of the redTeam. */
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "team-red")
-    override val redTeamMeta: TeamProperties = TeamProperties("Team Red", "&9", "<redcolor><player>", "scored for <red>.", "<redcolor><red>", "<redcolor> has won the match")
+    override val redTeamMeta: TeamProperties = TeamProperties("Team Red", "&c", "<redcolor><redscore> : <bluecolor><bluescore>", "<redcolor><player> scored for <red>", "<redcolor><red>", "<red>&a has won the match")
 
     init {
         redTeamMeta.armorContents = arrayOf(ItemStack(Material.LEATHER_BOOTS).setColor(Color.RED)
                 , ItemStack(Material.LEATHER_LEGGINGS).setColor(Color.RED), ItemStack(Material.LEATHER_CHESTPLATE).setColor(Color.RED), null)
         blueTeamMeta.armorContents = arrayOf(ItemStack(Material.LEATHER_BOOTS).setColor(Color.BLUE)
                 , ItemStack(Material.LEATHER_LEGGINGS).setColor(Color.BLUE), ItemStack(Material.LEATHER_CHESTPLATE).setColor(Color.BLUE), null)
+
+        ballMeta.isAlwaysBounceBack = true
+        ballMeta.hitBoxSize = 3.0
+        ballMeta.modifiers.verticalKickStrengthModifier = 1.5;
+        ballMeta.modifiers.horizontalKickStrengthModifier = 1.5;
     }
 }

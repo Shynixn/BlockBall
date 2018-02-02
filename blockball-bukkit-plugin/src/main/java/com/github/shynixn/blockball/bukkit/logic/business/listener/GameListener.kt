@@ -1,9 +1,13 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
+import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
+import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent
 import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
+import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.entity.Game
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
+import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.helper.stripChatColors
@@ -57,10 +61,8 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
         if (event.to.distance(event.from) <= 0)
             return
         var game = gameController!!.getGameFromPlayer(player);
-        if (game != null)
-        {
-            if(game.arena.gameType == GameType.HUBGAME && !game.arena.isLocationInSelection(player.location))
-            {
+        if (game != null) {
+            if (game.arena.gameType == GameType.HUBGAME && !game.arena.isLocationInSelection(player.location)) {
                 game.leave(player)
             }
             return
@@ -112,5 +114,18 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
             }
         }
         this.lastLocation.put(player, LocationBuilder(event.player.location))
+    }
+
+
+    @EventHandler
+    fun onBallInteractEvent(event: BallInteractEvent) {
+        val game = getGameFromBall(event.ball)
+        if (game is SoccerGame) {
+            game.lastInteractedEntity = event.entity
+        }
+    }
+
+    private fun getGameFromBall(ball: BukkitBall): BukkitGame {
+        return gameController!!.games.find { p -> p.ball != null && p.ball!! == ball }!!
     }
 }

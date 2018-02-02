@@ -32,16 +32,18 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  * SOFTWARE.
  */
 class BossBarBuilder : PersistenceObject(), BossBarMeta {
+    /** Color of the bossbar. */
+    override var color: BossBarMeta.Color = BossBarMeta.Color.WHITE
     /** Is bossbar visible. */
     @YamlSerializer.YamlSerialize("enabled", orderNumber = 1)
     override var enabled: Boolean = false
     /** Displaying message. */
     @YamlSerializer.YamlSerialize("text", orderNumber = 1)
-    override var message: String = "<bluecolor><blue> : <redcolor><red>"
+    override var message: String = "<redcolor><red> <redscore> : <bluecolor><bluescore> <blue>"
     /** Percentage filled in the bossbar. */
     @YamlSerializer.YamlSerialize("percentage", orderNumber = 1)
     override var percentage: Double = 100.0
-    /** Color of the bossbar. */
+    /** Style of the bossbar. */
     @YamlSerializer.YamlSerialize("style", orderNumber = 1)
     override var style: BossBarMeta.Style = BossBarMeta.Style.SOLID
     /** Flags of the bossbar. */

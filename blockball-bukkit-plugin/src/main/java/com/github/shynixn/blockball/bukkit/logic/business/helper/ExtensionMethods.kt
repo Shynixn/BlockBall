@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
+import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import org.bukkit.ChatColor
 import org.bukkit.Color
@@ -76,11 +77,17 @@ internal fun String.replaceGamePlaceholder(game: BukkitGame): String {
     if (game.arena.gameType == GameType.HUBGAME) {
         cache = cache.replace(PlaceHolder.TIME.placeHolder, "∞")
     }
+    if (game is SoccerGame) {
+        if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
+            cache = cache.replace(PlaceHolder.LASTHITBALL.placeHolder, (game.lastInteractedEntity as Player).name)
+        }
+    }
+
     return cache.convertChatColors();
 }
-//
-internal fun Player.sendScreenMessage(title: String, subTitle: String) {
-    ScreenUtils.setTitle(title, subTitle, 20, 20 * 3, 20, this)
+
+internal fun Player.sendScreenMessage(title: String, subTitle: String, game: BukkitGame) {
+    ScreenUtils.setTitle(title.replaceGamePlaceholder(game), subTitle.replaceGamePlaceholder(game), 20, 20 * 3, 20, this)
 }
 
 

@@ -56,10 +56,12 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         } else if (command == BlockBallCommand.LIST_BOSSBARSTYLES) {
             cache!![2] = BossBarMeta.Style.values().map { p -> p.name }
             cache[3] = BlockBallCommand.BOSSBAR_OPEN
-        }
-        else if (command == BlockBallCommand.LIST_BOSSBARFLAGS) {
+        } else if (command == BlockBallCommand.LIST_BOSSBARFLAGS) {
             cache!![2] = BossBarMeta.Flag.values().map { p -> p.name }
             cache[3] = BlockBallCommand.BOSSBAR_CALLBACKFLAGS
+        } else if (command == BlockBallCommand.LIST_BOSSBARCOLORS) {
+            cache!![2] = BossBarMeta.Color.values().map { p -> p.name }
+            cache[3] = BlockBallCommand.BOSSBAR_CALLBACKCOLORS
         }
         return super.execute(player, command, cache, args)
     }

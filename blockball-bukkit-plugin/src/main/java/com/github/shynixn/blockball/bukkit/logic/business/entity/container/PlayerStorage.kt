@@ -64,8 +64,8 @@ class PlayerStorage(
     override fun resetState() {
         if (gameType == GameType.HUBGAME) {
             player.inventory.armorContents = this.armorContents
-            player.isFlying = this.flying
             player.allowFlight = this.allowFlying
+            player.isFlying = this.flying
             player.walkSpeed = this.walkingSpeed
             player.scoreboard = this.scoreboard
         }

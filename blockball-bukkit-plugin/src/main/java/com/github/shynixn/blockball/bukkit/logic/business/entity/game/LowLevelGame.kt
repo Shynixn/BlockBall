@@ -102,7 +102,7 @@ abstract class LowLevelGame(
     private fun updateBossBar() {
         val meta = arena.meta.bossBarMeta;
         if (bossbar == null && arena.meta.bossBarMeta.enabled) {
-            bossbar = SimpleBossBar.from(meta.message, BossBarMeta.Color.BLUE.name, meta.style.name, meta.flags[0].name)
+            bossbar = SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, meta.flags[0].name)
         }
         if (bossbar != null) {
             bossbar!!.addPlayer(getPlayers())

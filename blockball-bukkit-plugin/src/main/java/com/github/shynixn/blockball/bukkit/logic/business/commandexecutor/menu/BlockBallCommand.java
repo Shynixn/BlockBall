@@ -101,10 +101,12 @@ public enum BlockBallCommand {
     BOSSBAR_PERCENT(PageKey.BOSSBAR, "prc"),
     BOSSBAR_TOGGLE(PageKey.BOSSBAR, "tgl"),
     BOSSBAR_CALLBACKFLAGS(PageKey.BOSSBAR, "fla"),
+    BOSSBAR_CALLBACKCOLORS(PageKey.BOSSBAR, "colo"),
 
     LIST_LINES(PageKey.LISTABLE, "show_lines"),
     LIST_BOSSBARFLAGS(PageKey.LISTABLE, "show_bossbarflags"),
     LIST_BOSSBARSTYLES(PageKey.LISTABLE, "show_bossbarstyles"),
+    LIST_BOSSBARCOLORS(PageKey.LISTABLE, "show_bossbarcolors"),
     LIST_GAMETYPES(PageKey.LISTABLE, "show_gametypes"),;
 
     private PageKey key;

@@ -44,6 +44,9 @@ public enum PlaceHolder {
     RED_COLOR("<redcolor>"),
 
     TIME("<time>"),
+
+    LASTHITBALL("<player>"),
+
     BLUE_COLOR("<bluecolor>");
 
     public String concate(PlaceHolder placeHolder) {

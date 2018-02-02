@@ -62,7 +62,7 @@ class TeamProperties(
 
     /** Min amount of players in this team to start the match for this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "min-amount")
-    override var minAmount: Int = 1
+    override var minAmount: Int = 0
     /** Max amount of players in this team to start the match for this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "max-amount")
     override var maxAmount: Int = 10

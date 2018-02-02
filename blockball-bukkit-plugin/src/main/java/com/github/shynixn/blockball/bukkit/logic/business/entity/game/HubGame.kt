@@ -44,10 +44,10 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
     /**
      * Gets called when a player scores a point for the given team.
      */
-    override fun onScore(player: Player, teamMeta: TeamMeta<Location, ItemStack>) {
+    override fun onScore(teamMeta: TeamMeta<Location, ItemStack>) {
         val scoreMessageTitle = teamMeta.scoreMessageTitle
-        val scoreMessageSubTitle = teamMeta.scoreMessageTitle
-        this.getPlayers().forEach{ p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle)}
+        val scoreMessageSubTitle = teamMeta.scoreMessageSubTitle
+        this.getPlayers().forEach{ p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this)}
     }
 
     /**
@@ -55,8 +55,8 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
      */
     override fun onWin(teamMeta: TeamMeta<Location, ItemStack>) {
         val winMessageTitle = teamMeta.winMessageTitle
-        val winMessageSubTitle = teamMeta.winMessageTitle
-        this.getPlayers().forEach{ p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle)}
+        val winMessageSubTitle = teamMeta.winMessageSubTitle
+        this.getPlayers().forEach{ p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle, this)}
     }
 
     /** Join the game. */
