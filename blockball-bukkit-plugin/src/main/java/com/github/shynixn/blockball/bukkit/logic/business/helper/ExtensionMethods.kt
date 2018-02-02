@@ -78,7 +78,7 @@ internal fun String.replaceGamePlaceholder(game: BukkitGame): String {
     }
     return cache.convertChatColors();
 }
-
+//
 internal fun Player.sendScreenMessage(title: String, subTitle: String) {
     ScreenUtils.setTitle(title, subTitle, 20, 20 * 3, 20, this)
 }
