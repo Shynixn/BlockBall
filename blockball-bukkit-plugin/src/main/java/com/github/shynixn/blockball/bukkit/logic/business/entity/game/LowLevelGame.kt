@@ -14,6 +14,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarM
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.GameScoreboard
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleBossBar
+import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import org.bukkit.Location
@@ -154,11 +155,13 @@ abstract class LowLevelGame(
             }
             if (teamMeta != null) {
                 text = text.replace(PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, teamMeta.displayName)
+                        .replace(PlaceHolder.ARENA_TEAMCOLOR.placeHolder, teamMeta.prefix)
             }
             text = text.replace(PlaceHolder.ARENA_CURRENTPLAYERS.placeHolder, players.toString())
                     .replace(PlaceHolder.ARENA_MAXPLAYERS.placeHolder, maxPlayers.toString())
-            sign.setLine(i, text)
+            sign.setLine(i, text.convertChatColors())
         }
+        sign.update(true)
         return true
     }
 

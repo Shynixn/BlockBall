@@ -90,6 +90,10 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 .component("- Effects:").builder()
                 .component(" [page..]").setColor(ChatColor.YELLOW)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.EFFECTS_OPEN.command)
-                .setHoverText("Opens the settings page for effects like scoreboard, bossbar and holograms.").builder()
+                .setHoverText("Opens the settings page for effects like scoreboard, bossbar and holograms.").builder().nextLine()
+                .component("- Signs:").builder()
+                .component(" [page..]").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SIGNS_OPEN.command)
+                .setHoverText("Configure all signs for this gamemode.").builder()
     }
 }

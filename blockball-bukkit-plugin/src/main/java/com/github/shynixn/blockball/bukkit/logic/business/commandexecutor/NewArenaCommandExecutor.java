@@ -75,6 +75,9 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
     private BossbarPage bossbarPage;
 
     @Inject
+    private SignSettingsPage signSettingsPage;
+
+    @Inject
     private ArenaRepository arenaController;
 
     /**
@@ -244,6 +247,7 @@ public class NewArenaCommandExecutor extends SimpleCommandExecutor.Registered {
             this.pagecache.add(scoreboardPage);
             this.pagecache.add(multipleLinesPage);
             this.pagecache.add(bossbarPage);
+            this.pagecache.add(signSettingsPage);
         }
         return this.pagecache;
     }

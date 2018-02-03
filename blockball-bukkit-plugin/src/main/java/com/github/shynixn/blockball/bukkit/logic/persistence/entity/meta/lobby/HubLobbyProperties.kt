@@ -34,11 +34,16 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  * SOFTWARE.
  */
 open class HubLobbyProperties : PersistenceObject(), HubLobbyMeta {
+    /** List of signs which can be clicked to join the game. */
+    override val joinSigns: MutableList<IPosition>
+        get() = sign.joinSigns as MutableList<IPosition>
+    /** Lines displayed on the sign for leaving the match. */
+    override var joinSignLines: Array<String> = arrayOf("&lBlockBall", "<game>", "<state>", "")
     /** Join asking message. */
-    override var joinMesssage: Array<String> = arrayOf("Click on the team to join the match.","&c[Team Red]", "&9[Team Blue]")
+    override var joinMesssage: Array<String> = arrayOf("Click on the team to join the match.", "&c[Team Red]", "&9[Team Blue]")
     /** Lines displayed on the sign for leaving the match. */
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leave-sign-lines")
-    override var leaveSignLines: Array<String> = arrayOf("&lBlockBall", "Leave")
+    override var leaveSignLines: Array<String> = arrayOf("&lBlockBall","<game>", "Leave", "")
     /** List of signs which can be clicked to join the red team.*/
     override val redTeamSigns: MutableList<IPosition>
         get() = sign.redTeamSigns as MutableList<IPosition>
@@ -63,8 +68,11 @@ open class HubLobbyProperties : PersistenceObject(), HubLobbyMeta {
         /** List of signs which can be clicked to join the red team.*/
         @YamlSerializer.YamlSerialize(orderNumber = 2, value = "blue-team")
         val blueTeamSigns: MutableList<LocationBuilder> = ArrayList()
+        /** List of signs which can be clicked to join the game. */
+        @YamlSerializer.YamlSerialize(orderNumber = 3, value = "joining")
+        val joinSigns: MutableList<LocationBuilder> = ArrayList()
         /** List of signs which can be clicked to leave the game. */
-        @YamlSerializer.YamlSerialize(orderNumber = 3, value = "leaving")
+        @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leaving")
         val leaveSigns: MutableList<LocationBuilder> = ArrayList()
     }
 }

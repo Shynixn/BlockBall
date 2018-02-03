@@ -1,6 +1,15 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
+package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
+import com.google.inject.Inject
+import com.google.inject.Singleton
+import org.bukkit.Material
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.block.Action
+import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.plugin.Plugin
 
 /**
  * Created by Shynixn 2018.
@@ -29,28 +38,24 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface HubLobbyMeta {
-    /** List of signs which can be clicked to join the red team.*/
-    val redTeamSigns: MutableList<IPosition>
+@Singleton
+class SignPlacementListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
 
-    /** List of signs which can be clicked to join the red team.*/
-    val blueTeamSigns: MutableList<IPosition>
+    var placementCallBack: MutableMap<Player,CallBack> = HashMap()
 
-    /** List of signs which can be clicked to leave the game. */
-    val leaveSigns: MutableList<IPosition>
+    @EventHandler
+    fun onClickOnPlacedSign(event: PlayerInteractEvent) {
+        if (event.action != Action.RIGHT_CLICK_BLOCK)
+            return
+        if (event.clickedBlock.type != Material.SIGN_POST && event.clickedBlock.type != Material.WALL_SIGN)
+            return
+        if (placementCallBack.containsKey(event.player)) {
+            placementCallBack[event.player]!!.run(event.clickedBlock.location.toPosition())
+            placementCallBack.remove(event.player)
+        }
+    }
 
-    /** List of signs which can be clicked to join the game. */
-    val joinSigns: MutableList<IPosition>
-
-    /** Spawnpoint when someone leaves the hub game. */
-    val leaveSpawnpoint: IPosition?
-
-    /** Lines displayed on the sign for leaving the match. */
-    var joinSignLines: Array<String>
-
-    /** Lines displayed on the sign for leaving the match. */
-    var leaveSignLines: Array<String>
-
-    /** Join asking message. */
-    var joinMesssage: Array<String>
+    interface CallBack {
+        fun run(position: IPosition)
+    }
 }

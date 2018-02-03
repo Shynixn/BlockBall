@@ -107,6 +107,12 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
                 this.arena.meta.hubLobbyMeta.blueTeamSigns.removeAt(i)
             }
         }
+        for (i in this.arena.meta.hubLobbyMeta.joinSigns.indices) {
+            val position = this.arena.meta.hubLobbyMeta.joinSigns[i]
+            if (!replaceTextOnSign(position, arena.meta.hubLobbyMeta.joinSignLines, null)) {
+                this.arena.meta.hubLobbyMeta.joinSigns.removeAt(i)
+            }
+        }
         for (i in this.arena.meta.hubLobbyMeta.leaveSigns.indices) {
             val position = this.arena.meta.hubLobbyMeta.leaveSigns[i]
             if (!replaceTextOnSign(position, arena.meta.hubLobbyMeta.leaveSignLines, null)) {

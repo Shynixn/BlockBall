@@ -35,6 +35,7 @@ public enum PageKey {
     EFFECTS("ef"),
     SCOREBOARD("scor"),
     BOSSBAR("boss"),
+    SIGNS("sign"),
     MULTIPLELINES("mlin"),
     MULTIPLEITEMS("mitem"),
     MAINCONFIGURATION("mcf");

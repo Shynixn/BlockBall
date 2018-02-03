@@ -56,7 +56,7 @@ internal fun ItemStack.setSkin(skin: String) {
     }
 }
 
-internal fun ArrayList<String>.toSingleLine(): String {
+internal fun List<String>.toSingleLine(): String {
     val builder = StringBuilder()
     this.forEachIndexed { index, p ->
         builder.append(org.bukkit.ChatColor.translateAlternateColorCodes('&', p))

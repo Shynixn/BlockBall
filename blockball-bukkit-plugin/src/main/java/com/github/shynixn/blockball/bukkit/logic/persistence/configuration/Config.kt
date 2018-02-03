@@ -67,17 +67,17 @@ internal object Config : SimpleConfig() {
 
     val stateSignEnabled: String?
         get() {
-            return this.getData<String>("state-sign-enabled")
+            return this.getData<String>("messages.state-sign-enabled")
         }
 
     val stateSignDisabled: String?
         get() {
-            return this.getData<String>("state-sign-disabled")
+            return this.getData<String>("messages.state-sign-disabled")
         }
 
     val stateSignRunning: String?
         get() {
-            return this.getData<String>("state-sign-running")
+            return this.getData<String>("messages.state-sign-running")
         }
 
     /**

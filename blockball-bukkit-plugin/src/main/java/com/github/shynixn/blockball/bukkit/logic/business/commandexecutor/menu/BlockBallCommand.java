@@ -103,6 +103,12 @@ public enum BlockBallCommand {
     BOSSBAR_CALLBACKFLAGS(PageKey.BOSSBAR, "fla"),
     BOSSBAR_CALLBACKCOLORS(PageKey.BOSSBAR, "colo"),
 
+    SIGNS_OPEN(PageKey.SIGNS, "open"),
+    SIGNS_ADDTEAMRED(PageKey.SIGNS, "adteamr"),
+    SIGNS_ADDJOINANY(PageKey.SIGNS, "addjoin"),
+    SIGNS_LEAVE(PageKey.SIGNS, "leave"),
+    SIGNS_ADDTEAMBLUE(PageKey.SIGNS, "adteamb"),
+
     LIST_LINES(PageKey.LISTABLE, "show_lines"),
     LIST_BOSSBARFLAGS(PageKey.LISTABLE, "show_bossbarflags"),
     LIST_BOSSBARSTYLES(PageKey.LISTABLE, "show_bossbarstyles"),

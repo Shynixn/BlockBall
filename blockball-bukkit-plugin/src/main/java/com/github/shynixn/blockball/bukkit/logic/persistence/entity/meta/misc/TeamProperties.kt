@@ -1,17 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc
 
-import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
-import com.github.shynixn.blockball.api.persistence.entity.AreaSelection
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.area.SelectedArea
 import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.configuration.InvalidConfigurationException
-import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.inventory.ItemStack
-import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -83,7 +77,7 @@ class TeamProperties(
     override var leaveMessage: String = "You have left the game."
     /** Lines displayed on the sign for joining the team. */
     @YamlSerializer.YamlSerialize(orderNumber = 11, value = "lines")
-    override var signLines: Array<String> = arrayOf("&lBlockBall", "<game>", "<state>", "<players>/<maxplayers>")
+    override var signLines: Array<String> = arrayOf("&lBlockBall", "<game>", "<teamcolor><team>", "<players>/<maxplayers>")
     /** Armor wearing this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 8, value = "armor", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION)
     override var armorContents: Array<ItemStack?>  = arrayOfNulls(4)
