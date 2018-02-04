@@ -1,13 +1,16 @@
-package com.github.shynixn.blockball.api.business.controller;
+package com.github.shynixn.blockball.api.persistence.controller
+
+import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta
+import java.util.*
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,18 +30,11 @@ package com.github.shynixn.blockball.api.business.controller;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BungeeCordConnectController {
+interface PlayerMetaController<in Player> : DatabaseController<PlayerMeta> {
 
-    /**
-     * Connects the given player to the given server.
-     *
-     * @param player     player
-     * @param serverName serverName
-     */
-   void connectToServer(Object player, String serverName);
+    /** Creates a new playerMeta from the given player.**/
+    fun create(player: Player): PlayerMeta
 
-    /**
-     * Pings all servers which are present in the sub sign controller.
-     */
-    void pingServers();
+    /** Returns the playerMeta of the given uuid. **/
+    fun getByUUID(uuid: UUID): Optional<PlayerMeta>
 }

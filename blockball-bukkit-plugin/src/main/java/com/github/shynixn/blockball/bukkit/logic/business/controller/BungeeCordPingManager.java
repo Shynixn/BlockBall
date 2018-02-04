@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.controller;
 
-import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectController;
+import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController;
 import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus;
 import com.github.shynixn.blockball.api.persistence.controller.LinkSignController;
 import com.github.shynixn.blockball.api.persistence.entity.bungeecord.LinkSign;
@@ -53,7 +53,7 @@ import java.util.logging.Logger;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMessageListener, BungeeCordConnectController {
+public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMessageListener, BungeeCordConnectionController {
     private final BukkitTask task;
     private final Plugin plugin;
     private final LinkSignController<Location> signController;
@@ -204,7 +204,7 @@ public class BungeeCordPingManager implements Runnable, AutoCloseable, PluginMes
     }
 
     private String replaceSign(String line, BungeeCordServerStatus info) {
-        String customLine = line.replace("<maxplayers>", String.valueOf(info.getMaxPlayerAmount() * 2))
+        String customLine = line.replace("<maxplayers>", String.valueOf(info.getPlayerMaxAmount() * 2))
                 .replace("<players>", String.valueOf(info.getPlayerAmount()))
                 .replace("<server>", info.getServerName());
     /*    if (info.getStatus() == BungeeCordServerState.INGAME)

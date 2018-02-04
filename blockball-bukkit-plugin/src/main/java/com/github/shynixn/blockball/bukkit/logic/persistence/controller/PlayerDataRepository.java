@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.service.ConnectionCont
 import com.google.inject.Inject;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,7 +19,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
 
-public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> implements PlayerMetaController {
+public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> implements PlayerMetaController<Player> {
 
     private ConnectionContextService dbContext;
 
@@ -29,16 +30,6 @@ public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> impleme
     }
 
 
-    /**
-     * Creates a new playerData from the given player
-     *
-     * @param player player
-     * @return playerData
-     */
-    @Override
-    public PlayerMeta create(Object player) {
-        return PlayerData.from((Player) player);
-    }
 
     /**
      * Returns the playerMeta of the given uuid
@@ -63,28 +54,6 @@ public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> impleme
         return Optional.empty();
     }
 
-    /**
-     * Returns the item of the given id
-     *
-     * @param id id
-     * @return item
-     */
-    @Override
-    public Optional<PlayerMeta> getById(long id) {
-        try (Connection connection = this.dbContext.getConnection()) {
-            try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("player/selectbyid", connection,
-                    id)) {
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return Optional.of(this.from(resultSet));
-                    }
-                }
-            }
-        } catch (final SQLException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
-        }
-        return Optional.empty();
-    }
 
     /**
      * Checks if the item has got an valid databaseId
@@ -198,5 +167,29 @@ public class PlayerDataRepository extends DataBaseRepository<PlayerMeta> impleme
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
         return 0;
+    }
+
+    @NotNull
+    @Override
+    public PlayerMeta create(Player player) {
+        return PlayerData.from(player);
+    }
+
+    @NotNull
+    @Override
+    public Optional<PlayerMeta> getById(int id) {
+        try (Connection connection = this.dbContext.getConnection()) {
+            try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("player/selectbyid", connection,
+                    id)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return Optional.of(this.from(resultSet));
+                    }
+                }
+            }
+        } catch (final SQLException e) {
+            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
+        }
+        return Optional.empty();
     }
 }

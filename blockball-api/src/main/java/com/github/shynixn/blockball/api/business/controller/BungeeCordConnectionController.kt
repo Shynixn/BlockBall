@@ -1,15 +1,13 @@
-package com.github.shynixn.blockball.api.business.entity;
-
-import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState;
+package com.github.shynixn.blockball.api.business.controller
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,33 +27,11 @@ import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerSta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BungeeCordServerStatus {
+interface BungeeCordConnectionController<in Player> {
 
-    /**
-     * Returns the amount of players on the server.
-     *
-     * @return amount
-     */
-    int getPlayerAmount();
+    /** Connects the given player to the given server.**/
+    fun connectToServer(player: Player, serverName: String)
 
-    /**
-     * Returns the max-amount of players on the server.
-     *
-     * @return amount
-     */
-    int getMaxPlayerAmount();
-
-    /**
-     * Returns the status of the bungeecord server.
-     *
-     * @return status
-     */
-    BungeeCordServerState getStatus();
-
-    /**
-     * Returns the name of the server.
-     *
-     * @return name
-     */
-    String getServerName();
+    /** Pings all servers which are present in the sub sign controller. **/
+    fun pingServers()
 }

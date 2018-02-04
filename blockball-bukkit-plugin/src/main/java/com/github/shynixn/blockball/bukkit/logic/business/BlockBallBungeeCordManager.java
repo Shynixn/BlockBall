@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business;
 
-import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectController;
+import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController;
 import com.github.shynixn.blockball.api.persistence.controller.LinkSignController;
 import org.bukkit.entity.Player;
 
@@ -39,7 +39,7 @@ public class BlockBallBungeeCordManager implements AutoCloseable{
 
 
     private LinkSignController signController;
-    private BungeeCordConnectController connectController;
+    private BungeeCordConnectionController connectController;
 
     /**
      * Closes this resource, relinquishing any underlying resources.
@@ -64,7 +64,7 @@ public class BlockBallBungeeCordManager implements AutoCloseable{
      * Returns the bungeeCordConnectController.
      * @return controller
      */
-    public BungeeCordConnectController getBungeeCordConnectController() {
+    public BungeeCordConnectionController getBungeeCordConnectController() {
         return this.connectController;
     }
 

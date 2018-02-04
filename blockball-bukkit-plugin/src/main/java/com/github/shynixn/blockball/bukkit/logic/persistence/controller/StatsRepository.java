@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.service.ConnectionCont
 import com.google.inject.Inject;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,7 +47,7 @@ import java.util.logging.Level;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class StatsRepository extends DataBaseRepository<Stats> implements StatsController {
+public class StatsRepository extends DataBaseRepository<Stats> implements StatsController<Player> {
 
     private ConnectionContextService dbContext;
 
@@ -56,28 +57,6 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
         this.dbContext = connectionContext;
     }
 
-    /**
-     * Returns the item of the given id
-     *
-     * @param id id
-     * @return item
-     */
-    @Override
-    public Optional<Stats> getById(long id) {
-        try (Connection connection = this.dbContext.getConnection()) {
-            try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("stats/selectbyid", connection,
-                    id)) {
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return Optional.of(this.from(resultSet));
-                    }
-                }
-            }
-        } catch (final SQLException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
-        }
-        return Optional.empty();
-    }
 
     /**
      * Create a new player Stats
@@ -87,29 +66,6 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
     @Override
     public Stats create() {
         return new StatsData();
-    }
-
-    /**
-     * Returns the stats of the player
-     *
-     * @param player player
-     * @return stats
-     */
-    @Override
-    public Optional<Stats> getByPlayer(Object player) {
-        try (Connection connection = this.dbContext.getConnection()) {
-            try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("stats/selectbyplayer", connection,
-                    ((Player)player).getUniqueId().toString())) {
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return Optional.of(this.from(resultSet));
-                    }
-                }
-            }
-        } catch (final SQLException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
-        }
-        return Optional.empty();
     }
 
 
@@ -231,5 +187,41 @@ public class StatsRepository extends DataBaseRepository<Stats> implements StatsC
             Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
         }
         return 0;
+    }
+
+    @NotNull
+    @Override
+    public Optional<Stats> getById(int id) {
+        try (Connection connection = this.dbContext.getConnection()) {
+            try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("stats/selectbyid", connection,
+                    id)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return Optional.of(this.from(resultSet));
+                    }
+                }
+            }
+        } catch (final SQLException e) {
+            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
+        }
+        return Optional.empty();
+    }
+
+    @NotNull
+    @Override
+    public Optional<Stats> getByPlayer(Player player) {
+        try (Connection connection = this.dbContext.getConnection()) {
+            try (PreparedStatement preparedStatement = this.dbContext.executeStoredQuery("stats/selectbyplayer", connection,
+                    player.getUniqueId().toString())) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return Optional.of(this.from(resultSet));
+                    }
+                }
+            }
+        } catch (final SQLException e) {
+            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e);
+        }
+        return Optional.empty();
     }
 }

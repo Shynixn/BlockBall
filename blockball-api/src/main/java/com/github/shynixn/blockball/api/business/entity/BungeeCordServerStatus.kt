@@ -1,20 +1,15 @@
-package com.github.shynixn.blockball.api.persistence.controller;
+package com.github.shynixn.blockball.api.business.entity
 
-import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
-
-import java.util.Optional;
-import java.util.UUID;
+import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2018.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,19 +29,17 @@ import java.util.UUID;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface PlayerMetaController extends IDatabaseController<PlayerMeta> {
+interface BungeeCordServerStatus {
 
-    /**
-     * Creates a new playerData from the given player.
-     * @param player player
-     * @return playerData
-     */
-    PlayerMeta create(Object player);
+    /** State of the server. **/
+    val status: BungeeCordServerState
 
-    /**
-     * Returns the playerMeta of the given uuid.
-     * @param uuid uuid
-     * @return playerMeta
-     */
-    Optional<PlayerMeta> getByUUID(UUID uuid);
+    /** Amount of players on the server. **/
+    val playerAmount: Int
+
+    /** MaxAmount of players on the server. **/
+    val playerMaxAmount: Int
+
+    /** Name of the server. **/
+    val serverName: String
 }

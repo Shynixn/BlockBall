@@ -4,7 +4,6 @@ import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
-import com.github.shynixn.blockball.api.business.entity.BlockBallPlayer
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.Persistenceable

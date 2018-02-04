@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api;
 
-import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectController;
+import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController;
 import com.github.shynixn.blockball.api.business.controller.GameController;
 import com.github.shynixn.blockball.api.persistence.controller.LinkSignController;
 
@@ -34,7 +34,7 @@ import com.github.shynixn.blockball.api.persistence.controller.LinkSignControlle
 public class BlockBallApi {
 
     private static LinkSignController bungeeCordSignController;
-    private static BungeeCordConnectController bungeeCordConnectController;
+    private static BungeeCordConnectionController bungeeCordConnectController;
 
     private static GameController gameController;
 
@@ -44,7 +44,7 @@ public class BlockBallApi {
      * @param signController    signController
      * @param connectController connectController
      */
-    private static void initializeBungeeCord(LinkSignController signController, BungeeCordConnectController connectController) {
+    private static void initializeBungeeCord(LinkSignController signController, BungeeCordConnectionController connectController) {
         BlockBallApi.bungeeCordSignController = signController;
         BlockBallApi.bungeeCordConnectController = connectController;
     }
@@ -72,7 +72,7 @@ public class BlockBallApi {
      *
      * @return controller
      */
-    public static BungeeCordConnectController getDefaultBungeeCordConnectController() {
+    public static  BungeeCordConnectionController  getDefaultBungeeCordConnectController() {
         return bungeeCordConnectController;
     }
 

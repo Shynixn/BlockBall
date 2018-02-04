@@ -1,19 +1,15 @@
-package com.github.shynixn.blockball.api.persistence.controller;
+package com.github.shynixn.blockball.api.persistence.controller
 
-import com.github.shynixn.blockball.api.persistence.entity.Stats;
-
-import java.util.Optional;
+import java.util.*
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2018.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,20 +29,8 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface StatsController extends IDatabaseController<Stats> {
+interface DatabaseController<T : Any> : Controller<T> {
 
-    /**
-     * Create a new player Stats.
-     *
-     * @return stats
-     */
-    Stats create();
-
-    /**
-     * Returns the stats of the player.
-     *
-     * @param player player
-     * @return stats
-     */
-    Optional<Stats> getByPlayer(Object player);
+    /** Returns the item by the given database id. */
+    fun getById(id: Int): Optional<T>
 }

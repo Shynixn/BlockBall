@@ -63,15 +63,6 @@ public class BungeeCordServerStats implements BungeeCordServerStatus {
         return this.playerAmount;
     }
 
-    /**
-     * Returns the max-amount of players on the server.
-     *
-     * @return amount
-     */
-    @Override
-    public int getMaxPlayerAmount() {
-        return this.maxPlayerAmount;
-    }
 
     /**
      * Returns the status of the bungeecord server.
@@ -154,5 +145,10 @@ public class BungeeCordServerStats implements BungeeCordServerStatus {
         } catch (final Exception ex) {
             return new BungeeCordServerStats(serverName, 0, 0, BungeeCordServerState.RESTARTING);
         }
+    }
+
+    @Override
+    public int getPlayerMaxAmount() {
+        return this.maxPlayerAmount;
     }
 }

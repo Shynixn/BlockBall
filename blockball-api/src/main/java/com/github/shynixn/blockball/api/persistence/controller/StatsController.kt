@@ -1,4 +1,8 @@
-package com.github.shynixn.blockball.api.business.entity;
+package com.github.shynixn.blockball.api.persistence.controller
+
+import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta
+import com.github.shynixn.blockball.api.persistence.entity.Stats
+import java.util.*
 
 /**
  * Created by Shynixn 2018.
@@ -27,5 +31,11 @@ package com.github.shynixn.blockball.api.business.entity;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BlockBallPlayer {
+interface StatsController<in Player> : DatabaseController<Stats> {
+
+    /** Creates a new empty stats instance. **/
+    fun create(): Stats
+
+    /** Returns the stats from the given player **/
+    fun getByPlayer(player: Player): Optional<Stats>
 }

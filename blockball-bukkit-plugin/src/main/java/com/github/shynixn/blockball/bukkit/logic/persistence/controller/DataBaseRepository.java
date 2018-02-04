@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 
-import com.github.shynixn.blockball.api.persistence.controller.IDatabaseController;
+import com.github.shynixn.blockball.api.persistence.controller.DatabaseController;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,7 +36,7 @@ import java.util.List;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-abstract class DataBaseRepository<T> implements IDatabaseController<T> {
+abstract class DataBaseRepository<T> implements DatabaseController<T> {
     /**
      * Stores a new a item in the repository
      *
@@ -67,8 +67,6 @@ abstract class DataBaseRepository<T> implements IDatabaseController<T> {
      */
     @Override
     public List<T> getAll() {
-
-
         return Collections.unmodifiableList(this.select());
     }
 
