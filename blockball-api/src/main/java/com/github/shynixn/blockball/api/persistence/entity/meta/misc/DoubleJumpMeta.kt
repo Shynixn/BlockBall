@@ -1,12 +1,7 @@
-package com.github.shynixn.blockball.api.bukkit.event.entity
+package com.github.shynixn.blockball.api.persistence.entity.meta.misc
 
-import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
-import com.github.shynixn.blockball.api.business.entity.Game
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
+import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
+import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 
 /**
  * Created by Shynixn 2018.
@@ -35,4 +30,23 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack, Vector, Material,BukkitBall>
+interface DoubleJumpMeta<Location, Player, Material> {
+
+    /** Is the effect enabled or disabled?*/
+    var enabled: Boolean
+
+    /** Cooldown between activating this effect.*/
+    var cooldown: Int
+
+    /** Vertical strength modifier.*/
+    var verticalStrength: Double
+
+    /** Horizontal strength modifier.*/
+    var horizontalStrength: Double
+
+    /** ParticleEffect being played when activating this.*/
+    val particleEffect: ParticleEffectMeta<Location, Player, Material>
+
+    /** SoundEffect being played when activating this.*/
+    val soundEffect: SoundEffectMeta<Location, Player>
+}

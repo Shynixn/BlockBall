@@ -2,20 +2,17 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
 import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent
-import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
-import com.github.shynixn.blockball.api.business.entity.Game
-import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
-import com.github.shynixn.blockball.bukkit.logic.business.helper.stripChatColors
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.FoodLevelChangeEvent
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.Plugin
 
 /**
@@ -46,86 +43,74 @@ import org.bukkit.plugin.Plugin
  * SOFTWARE.
  */
 class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
-
     @Inject
     private var gameController: GameRepository? = null
 
-    private val lastLocation: MutableMap<Player, LocationBuilder> = HashMap()
-    private val moveCounter: MutableMap<Player, Int> = HashMap()
-    private val togglePlayers: MutableSet<Player> = HashSet()
-
-    /** Handles the forcefield of hubGames. */
+    /**
+     * Gets called when a player leaves the server and the game.
+     */
     @EventHandler
-    fun onPlayerMoveAgainstHubForceField(event: PlayerMoveEvent) {
-        val player = event.player
-        if (event.to.distance(event.from) <= 0)
-            return
-        var game = gameController!!.getGameFromPlayer(player);
-        if (game != null) {
-            if (game.arena.gameType == GameType.HUBGAME && !game.arena.isLocationInSelection(player.location)) {
-                game.leave(player)
-            }
-            return
-        }
-        var inArea: Boolean = false;
-        gameController!!.games.forEach { game ->
-            if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(event.to)) {
-                inArea = true;
-                if (!this.lastLocation.containsKey(player)) {
-                    player.velocity = game.arena.meta.protectionMeta.rejoinProtection
-                } else {
-                    if (!this.moveCounter.containsKey(player))
-                        this.moveCounter.put(player, 1)
-                    else if (this.moveCounter[player]!! < 50)
-                        this.moveCounter.put(player, this.moveCounter[player]!! + 1)
-                    if (this.moveCounter[player]!! > 20) {
-                        player.velocity = game.arena.meta.protectionMeta.rejoinProtection
-
-                    } else {
-                        val knockback = this.lastLocation[player]!!.toVector().subtract(player.location.toVector())
-                        player.location.direction = knockback
-                        player.velocity = knockback
-                        player.allowFlight = true
-                        if (!togglePlayers.contains(player)) {
-                            ChatBuilder().text(Config.prefix + game.arena.meta.hubLobbyMeta.joinMesssage[0].convertChatColors())
-                                    .nextLine()
-                                    .component(game.arena.meta.hubLobbyMeta.joinMesssage[1].convertChatColors())
-                                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
-                                            , "/" + plugin.config.getString("global-join.command") + " " + game.arena.meta.redTeamMeta.displayName.stripChatColors() + " " + game.arena.name)
-                                    .setHoverText(" ")
-                                    .builder().text(" ").component(game.arena.meta.hubLobbyMeta.joinMesssage[2].convertChatColors())
-                                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
-                                            , "/" + plugin.config.getString("global-join.command") + " " + game.arena.meta.blueTeamMeta.displayName.stripChatColors() + " " + game.arena.name)
-                                    .setHoverText(" ")
-                                    .builder().sendMessage(player)
-                            togglePlayers.add(player)
-                        }
-                    }
-                    print(moveCounter[player])
-                }
-            }
-        }
-        if (!inArea) {
-            if (this.moveCounter.containsKey(event.player)) {
-                this.moveCounter.remove(event.player);
-            }
-            if (togglePlayers.contains(player)) {
-                togglePlayers.remove(player);
-            }
-        }
-        this.lastLocation.put(player, LocationBuilder(event.player.location))
+    fun onPlayerQuitEvent(event: PlayerQuitEvent) {
+        gameController!!.getGameFromPlayer(event.player)?.leave(event.player)
     }
 
 
+    /**
+     * Gets called when the foodLevel changes and cancels it if the player is inside of a game.
+     */
+    @EventHandler
+    fun onPlayerHungerEvent(event: FoodLevelChangeEvent) {
+        val game = gameController!!.getGameFromPlayer(event.entity as Player)
+        if (game != null) {
+            event.isCancelled = true
+        }
+    }
+
+    /**
+     * Gets called when the player interacts with his inventory and cancels it.
+     */
+    @EventHandler
+    fun onPlayerClickInventoryEvent(event: InventoryClickEvent) {
+        val game = gameController!!.getGameFromPlayer(event.whoClicked as Player)
+        if (game != null) {
+            event.isCancelled = true
+            event.whoClicked.closeInventory()
+        }
+    }
+
+    /**
+     * Gets called when a player opens his inventory and cancels the action.
+     */
+    @EventHandler
+    fun onPlayerOpenInventoryEvent(event: InventoryOpenEvent) {
+        val game = gameController!!.getGameFromPlayer(event.player as Player)
+        if (game != null) {
+            event.isCancelled = true
+        }
+    }
+
+    /**
+     * Cancels all fall damage in the games.
+     */
+    @EventHandler
+    fun onPlayerDamageEvent(event: EntityDamageEvent) {
+        if (event.entity !is Player)
+            return
+        val player = event.entity as Player
+        val game = gameController!!.getGameFromPlayer(player)
+        if (game != null && event.cause == EntityDamageEvent.DamageCause.FALL) {
+            event.isCancelled = true
+        }
+    }
+
+    /**
+     * Caches the last interacting entity with the ball.
+     */
     @EventHandler
     fun onBallInteractEvent(event: BallInteractEvent) {
-        val game = getGameFromBall(event.ball)
-        if (game is SoccerGame) {
+        val game = gameController!!.games.find { p -> p.ball != null && p.ball!! == event.ball }
+        if (game != null && game is SoccerGame) {
             game.lastInteractedEntity = event.entity
         }
-    }
-
-    private fun getGameFromBall(ball: BukkitBall): BukkitGame {
-        return gameController!!.games.find { p -> p.ball != null && p.ball!! == ball }!!
     }
 }

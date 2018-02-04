@@ -31,7 +31,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Game<out ArenaEntity, Player, Location, ItemStack, Vector, BallEntity> :  java.lang.AutoCloseable where ArenaEntity : Arena<Location, ItemStack, Vector> {
+interface Game<out ArenaEntity, Player, Location, ItemStack, Vector, Material, BallEntity> :  java.lang.AutoCloseable where ArenaEntity : Arena<Location, ItemStack, Vector, Player, Material> {
 
     /** Arena of the game. */
     val arena: ArenaEntity
@@ -58,7 +58,7 @@ interface Game<out ArenaEntity, Player, Location, ItemStack, Vector, BallEntity>
     val redPoints : Int
 
     /** Join the game. */
-    fun join(player: Player, team: Team): Boolean
+    fun join(player: Player, team: Team? = null): Boolean
 
     /** Leave the game. */
     fun leave(player: Player)

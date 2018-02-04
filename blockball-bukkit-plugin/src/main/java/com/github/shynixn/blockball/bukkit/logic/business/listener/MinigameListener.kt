@@ -1,17 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
-import com.github.shynixn.blockball.api.business.entity.Game
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
 import com.google.inject.Inject
-import com.google.inject.Singleton
-import org.bukkit.Material
-import org.bukkit.block.Sign
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.block.Action
+import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.plugin.Plugin
 
@@ -42,42 +35,29 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@Singleton
-class SignPlacementListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
-
-    var placementCallBack: MutableMap<Player,CallBack> = HashMap()
-
-    /**
-     * Repository.
-     */
+class MinigameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
     @Inject
     private var gameController: GameRepository? = null
 
+    /**
+     * Cancels actions in minigame and bungeecord games to restrict destroying the arena.
+     */
     @EventHandler
-    fun onClickOnPlacedSign(event: PlayerInteractEvent) {
-        if (event.action != Action.RIGHT_CLICK_BLOCK)
-            return
-        if (event.clickedBlock.type != Material.SIGN_POST && event.clickedBlock.type != Material.WALL_SIGN)
-            return
-        if (placementCallBack.containsKey(event.player)) {
-            placementCallBack[event.player]!!.run(event.clickedBlock.location.toPosition())
-            placementCallBack.remove(event.player)
-        }
-        val game = this.getGameFromSign(event.clickedBlock.state as Sign)
-        if(game != null)
-        {
-            //CHECK DIFFERENT SIGNS
+    fun onPlayerInteractEvent(event: PlayerInteractEvent) {
+        val game = gameController!!.getGameFromPlayer(event.player)
+        if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE)) {
+            event.isCancelled = true
         }
     }
 
-
-    private fun getGameFromSign(sign : Sign) : BukkitGame? {
-        val lineIndex = - 1
-        //DOS SOMETHING TRY CATCH
-        return null
-    }
-
-    interface CallBack {
-        fun run(position: IPosition)
+    /**
+     * Cancels commands in minigame and bungeecord games to restrict destroying the arena.
+     */
+    @EventHandler
+    fun onPlayerExecuteCommand(event: PlayerCommandPreprocessEvent) {
+        val game = gameController!!.getGameFromPlayer(event.player)
+        if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE)) {
+            event.isCancelled = true
+        }
     }
 }

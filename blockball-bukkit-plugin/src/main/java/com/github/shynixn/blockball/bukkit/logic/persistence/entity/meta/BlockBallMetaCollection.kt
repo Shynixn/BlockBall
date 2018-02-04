@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.DoubleJumpMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.business.helper.setColor
@@ -16,11 +17,13 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.BossBarBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.ScoreboardBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.DoubleJumpProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.ProtectionData
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.TeamProperties
 import org.bukkit.Color
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 
@@ -51,7 +54,10 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector> {
+class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, Material> {
+    /** Meta data of the doubleJump. */
+    @YamlSerializer.YamlSerialize(orderNumber = 8, value = "double-jump")
+    override val doubleJumpMeta: DoubleJumpProperties = DoubleJumpProperties()
     /** Meta data of the bossbar. */
     @YamlSerializer.YamlSerialize(orderNumber = 7, value = "bossbar")
     override val bossBarMeta: BossBarBuilder = BossBarBuilder()

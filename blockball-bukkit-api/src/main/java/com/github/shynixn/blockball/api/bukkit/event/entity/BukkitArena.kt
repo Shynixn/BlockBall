@@ -2,6 +2,8 @@ package com.github.shynixn.blockball.api.bukkit.event.entity
 
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 
@@ -32,4 +34,4 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitArena : Arena<Location, ItemStack, Vector>
+interface BukkitArena : Arena<Location, ItemStack, Vector, Player, Material>

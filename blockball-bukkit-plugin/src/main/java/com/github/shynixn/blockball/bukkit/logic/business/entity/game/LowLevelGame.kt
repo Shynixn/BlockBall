@@ -65,6 +65,7 @@ abstract class LowLevelGame(
 
     protected var redGoals = 0
     protected var blueGoals = 0
+    var doubleJumpCooldownPlayers: MutableMap<Player, Int> = HashMap()
 
     private var bumperTimer = 20L
 
@@ -97,17 +98,30 @@ abstract class LowLevelGame(
             this.onUpdateSigns()
             this.updateScoreboard()
             this.updateBossBar()
+            this.updateDoubleJumpCooldown()
         }
     }
 
     private fun updateBossBar() {
-        val meta = arena.meta.bossBarMeta;
+        val meta = arena.meta.bossBarMeta
         if (bossbar == null && arena.meta.bossBarMeta.enabled) {
             bossbar = SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, meta.flags[0].name)
         }
         if (bossbar != null) {
             bossbar!!.addPlayer(getPlayers())
             bossbar!!.message = meta.message.replaceGamePlaceholder(this)
+        }
+    }
+
+    private fun updateDoubleJumpCooldown() {
+        doubleJumpCooldownPlayers.keys.forEach { p ->
+            var time = doubleJumpCooldownPlayers[p]!!
+            time -= 1
+            if (time <= 0) {
+                doubleJumpCooldownPlayers.remove(p)
+            } else {
+                doubleJumpCooldownPlayers[p] = time
+            }
         }
     }
 

@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarM
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.DoubleJumpMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 
 /**
@@ -34,7 +35,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaMeta<Location, ItemStack, Vector> {
+interface ArenaMeta<Location, ItemStack, Vector, Player, Material> {
 
     /** Meta data of the hublobby. */
     val hubLobbyMeta: HubLobbyMeta
@@ -52,8 +53,11 @@ interface ArenaMeta<Location, ItemStack, Vector> {
     val protectionMeta: ArenaProtectionMeta<Vector>
 
     /** Meta data of the scoreboard. */
-    val scoreboardMeta : ScoreboardMeta
+    val scoreboardMeta: ScoreboardMeta
 
     /** Meta data of the bossbar. */
-    val bossBarMeta : BossBarMeta
+    val bossBarMeta: BossBarMeta
+
+    /** Meta data of the doubleJump. */
+    val doubleJumpMeta: DoubleJumpMeta<Location, Player, Material>
 }
