@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.controller
 
-import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta
 import java.util.*
 
 /**

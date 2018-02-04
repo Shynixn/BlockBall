@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity;
+package com.github.shynixn.blockball.api.persistence.entity.meta.lobby;
 
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta;

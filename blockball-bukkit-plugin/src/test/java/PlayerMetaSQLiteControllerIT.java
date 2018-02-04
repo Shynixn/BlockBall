@@ -1,25 +1,7 @@
-
-import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaController;
-import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.PlayerData;
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class PlayerMetaSQLiteControllerIT {
 

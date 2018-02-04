@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.misc
 
-import com.github.shynixn.blockball.api.persistence.entity.AreaSelection
+import com.github.shynixn.blockball.api.persistence.entity.meta.area.AreaSelection
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 
 /**

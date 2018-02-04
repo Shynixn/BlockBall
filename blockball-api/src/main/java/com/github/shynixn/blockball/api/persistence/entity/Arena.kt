@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.api.persistence.entity
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.area.AreaSelection
 
 /**
  * Created by Shynixn 2018.

@@ -53,7 +53,8 @@ class GameRepository : BukkitGameController, Runnable {
     @Inject
     override var arenaController: ArenaRepository? = null
 
-    @Inject private var plugin: Plugin? = null;
+    @Inject
+    private var plugin: Plugin? = null;
 
     @Inject
     private var gameListener : GameListener? = null;
