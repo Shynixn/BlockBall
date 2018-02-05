@@ -1,11 +1,14 @@
 package com.github.shynixn.blockball.api.bukkit.event.controller
 
 import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
+import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitParticleEffectMeta
+import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.controller.GameController
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
@@ -37,4 +40,4 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGameController : GameController<Location, Vector,Player, ItemStack, BukkitArena,BukkitBall, Material,BukkitGame>
+interface BukkitGameController : GameController<Location, Vector,Player, ItemStack, BukkitArena,BukkitBall, Material, Block,BukkitGame, BukkitParticleEffectMeta, BukkitSoundEffectMeta>

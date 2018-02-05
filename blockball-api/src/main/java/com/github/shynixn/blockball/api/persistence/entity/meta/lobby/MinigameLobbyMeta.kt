@@ -1,13 +1,16 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.misc;
+package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
+
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,11 +30,11 @@ package com.github.shynixn.blockball.api.persistence.entity.meta.misc;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BoosItemMeta {
+interface MinigameLobbyMeta : Persistenceable {
 
-    /**
-     * Applies the boost effect to the given players.
-     * @param players players
-     */
-    void apply(Object... players);
+    /** Duration the match will max last. */
+    var matchDuration: Int
+
+    /** Spawnpoint of the player in the lobby. */
+    var lobbySpawnpoint: IPosition?
 }

@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.business.controller
 
+import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
+import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.blockball.api.business.entity.Game
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController
 import com.github.shynixn.blockball.api.persistence.controller.Controller
@@ -33,8 +35,9 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface GameController<Location : Any,Vector, Player, ItemStack, ArenaEntity, BallEntity, Material, GameEntity : Game<ArenaEntity, Player, Location, ItemStack, Vector,  Material,BallEntity>>
-    : ReloadableController<GameEntity> where ArenaEntity : Arena<Location, ItemStack, Vector, Player, Material> {
+interface GameController<Location : Any,Vector, Player, ItemStack, ArenaEntity, BallEntity, Material, Block,GameEntity : Game<ArenaEntity, Player, Location, ItemStack, Vector,  Material,Block,BallEntity, ParticleEffectEntity, SoundEffectEntity>
+        ,ParticleEffectEntity : ParticleEffectMeta<Location, Player, Material>, SoundEffectEntity : SoundEffectMeta<Location, Player>>
+    : ReloadableController<GameEntity> where ArenaEntity : Arena<Location, ItemStack, Vector, Player, Material, Block,ParticleEffectEntity, SoundEffectEntity>  {
 
     /** ArenaController of the gameController. */
     val arenaController: ArenaController<Location, ArenaEntity>?

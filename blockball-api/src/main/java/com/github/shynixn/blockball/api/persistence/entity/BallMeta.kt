@@ -1,14 +1,9 @@
-package com.github.shynixn.blockball.api.bukkit.event.entity
+package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
-import com.github.shynixn.blockball.api.business.entity.Game
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.block.Block
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
+import com.github.shynixn.ball.api.persistence.controller.BounceController
+import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
+import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 
 /**
  * Created by Shynixn 2018.
@@ -37,4 +32,12 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack, Vector, Material, Block,BukkitBall, BukkitParticleEffect, BukkitSoundEffectMeta>
+interface BallMeta<Location, Material, Player, Block, T : ParticleEffectMeta<Location, Player, Material>, K : SoundEffectMeta<Location, Player>>
+    : Persistenceable, com.github.shynixn.ball.api.persistence.BallMeta<T, K, BounceController<Block, Material>> {
+
+    /** Delay for spawning. **/
+    var spawnDelayTicks: Int
+
+    /** Spawnpoint of the ball. **/
+    var spawnpoint: IPosition
+}

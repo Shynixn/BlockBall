@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta
 
+import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
+import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
@@ -35,7 +37,8 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaMeta<Location, ItemStack, Vector, Player, Material> {
+interface ArenaMeta<Location, ItemStack, Vector, Player, Material, Block
+        , ParticleEffectEntity : ParticleEffectMeta<Location, Player, Material>, SoundEffectEntity : SoundEffectMeta<Location, Player>> {
 
     /** Meta data of the hublobby. */
     val hubLobbyMeta: HubLobbyMeta
@@ -47,7 +50,7 @@ interface ArenaMeta<Location, ItemStack, Vector, Player, Material> {
     val blueTeamMeta: TeamMeta<Location, ItemStack>
 
     /** Meta data of the ball. */
-    val ballMeta: BallMeta<*, *, *>
+    val ballMeta: BallMeta<Location, Material, Player, Block, ParticleEffectEntity, SoundEffectEntity>
 
     /** Meta data of proection. */
     val protectionMeta: ArenaProtectionMeta<Vector>

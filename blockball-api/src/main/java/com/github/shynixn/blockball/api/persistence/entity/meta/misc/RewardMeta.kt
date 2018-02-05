@@ -1,15 +1,15 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.lobby;
+package com.github.shynixn.blockball.api.persistence.entity.meta.misc
 
-import java.util.Optional;
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,18 +29,18 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BungeeCordLobbyMeta {
-    /**
-     * Returns the kick message when a player tries to join a full server.
-     *
-     * @return message
-     */
-    Optional<String> getKickMessage();
+interface RewardMeta : Persistenceable {
 
-    /**
-     * Sets the kick message when a player tries to join a full server.
-     *
-     * @param message message
-     */
-    void setKickMessage(String message);
+    /** Money which gets added via Vault when a player does a rewarded action. */
+    var moneyReward: MutableMap<RewardedAction, Int>
+
+    /** Commands which get executed when a player does a rewarded action. */
+    var commandReward: MutableMap<RewardedAction, CommandMeta>
+
+    enum class RewardedAction {
+        WIN_MATCH,
+        LOOSING_MATCH,
+        SHOOT_GOAL,
+        PARTICIPATE_MATCH,
+    }
 }

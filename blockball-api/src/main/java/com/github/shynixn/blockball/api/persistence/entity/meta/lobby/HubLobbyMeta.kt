@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
 
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
 
 /**
  * Created by Shynixn 2018.
@@ -29,28 +29,10 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface HubLobbyMeta {
-    /** List of signs which can be clicked to join the red team.*/
-    val redTeamSigns: MutableList<IPosition>
+interface HubLobbyMeta : Persistenceable{
+    /** Allows to instantly play in games by running into the forcefield.*/
+    var instantForcefieldJoin: Boolean
 
-    /** List of signs which can be clicked to join the red team.*/
-    val blueTeamSigns: MutableList<IPosition>
-
-    /** List of signs which can be clicked to leave the game. */
-    val leaveSigns: MutableList<IPosition>
-
-    /** List of signs which can be clicked to join the game. */
-    val joinSigns: MutableList<IPosition>
-
-    /** Spawnpoint when someone leaves the hub game. */
-    val leaveSpawnpoint: IPosition?
-
-    /** Lines displayed on the sign for leaving the match. */
-    var joinSignLines: Array<String>
-
-    /** Lines displayed on the sign for leaving the match. */
-    var leaveSignLines: Array<String>
-
-    /** Join asking message. */
-    var joinMesssage: Array<String>
+    /** Should the arena be reset when nobody is playing? */
+    var resetArenaOnEmpty: Boolean
 }

@@ -1,14 +1,8 @@
 package com.github.shynixn.blockball.api.bukkit.event.entity
 
-import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
-import com.github.shynixn.blockball.api.business.entity.Game
+import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.block.Block
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
 
 /**
  * Created by Shynixn 2018.
@@ -37,4 +31,4 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack, Vector, Material, Block,BukkitBall, BukkitParticleEffect, BukkitSoundEffectMeta>
+interface BukkitSoundEffect : SoundEffectMeta<Location, Player>

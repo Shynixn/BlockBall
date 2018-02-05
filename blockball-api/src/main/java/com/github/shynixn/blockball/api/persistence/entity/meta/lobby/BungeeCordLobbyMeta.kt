@@ -1,14 +1,4 @@
-package com.github.shynixn.blockball.api.bukkit.event.entity
-
-import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
-import com.github.shynixn.blockball.api.business.entity.Game
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.block.Block
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
+package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
 
 /**
  * Created by Shynixn 2018.
@@ -37,4 +27,8 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack, Vector, Material, Block,BukkitBall, BukkitParticleEffect, BukkitSoundEffectMeta>
+interface BungeeCordLobbyMeta : MinigameLobbyMeta {
+
+    /** Message being played when a player cannot join the server because of too many players.*/
+    var kickMessage: String
+}

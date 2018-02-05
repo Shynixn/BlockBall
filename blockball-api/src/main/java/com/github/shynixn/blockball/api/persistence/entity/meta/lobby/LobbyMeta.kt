@@ -1,14 +1,7 @@
-package com.github.shynixn.blockball.api.bukkit.event.entity
+package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
 
-import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
-import com.github.shynixn.blockball.api.business.entity.Game
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.block.Block
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 
 /**
  * Created by Shynixn 2018.
@@ -37,4 +30,28 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack, Vector, Material, Block,BukkitBall, BukkitParticleEffect, BukkitSoundEffectMeta>
+interface LobbyMeta : Persistenceable {
+    /** List of signs which can be clicked to join the red team.*/
+    val redTeamSigns: MutableList<IPosition>
+
+    /** List of signs which can be clicked to join the red team.*/
+    val blueTeamSigns: MutableList<IPosition>
+
+    /** List of signs which can be clicked to leave the game. */
+    val leaveSigns: MutableList<IPosition>
+
+    /** List of signs which can be clicked to join the game. */
+    val joinSigns: MutableList<IPosition>
+
+    /** Spawnpoint when someone leaves the hub game. */
+    val leaveSpawnpoint: IPosition?
+
+    /** Lines displayed on the sign for leaving the match. */
+    var joinSignLines: Array<String>
+
+    /** Lines displayed on the sign for leaving the match. */
+    var leaveSignLines: Array<String>
+
+    /** Join asking message. */
+    var joinMesssage: Array<String>
+}

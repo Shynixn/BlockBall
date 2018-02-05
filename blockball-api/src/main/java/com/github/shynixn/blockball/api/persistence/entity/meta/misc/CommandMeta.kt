@@ -1,15 +1,15 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.effect;
+package com.github.shynixn.blockball.api.persistence.entity.meta.misc
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,33 +29,17 @@ import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface GlowEffectMeta extends Persistenceable {
+interface CommandMeta : Persistenceable {
 
-    /**
-     * Sets the amount of seconds a player is glowing.
-     *
-     * @param amount amount
-     */
-    void setAmountOfSeconds(int amount);
+    /** Mode how the command gets executed. */
+    var mode: CommandMode
 
-    /**
-     * Returns the amount of seconds a player is glowing.
-     *
-     * @return amount
-     */
-    int getAmountOfSeconds();
+    /** Command to be executed. */
+    var command: String?
 
-    /**
-     * Toggles the effect.
-     *
-     * @param enabled enabled
-     */
-    void setEnabled(boolean enabled);
-
-    /**
-     * Returns if the effect is enabled.
-     *
-     * @return enabled
-     */
-    boolean isEnabled();
+    enum class CommandMode {
+        CONSOLE_SINGLE,
+        CONSOLE_PER_PLAYER,
+        PER_PLAYER
+    }
 }
