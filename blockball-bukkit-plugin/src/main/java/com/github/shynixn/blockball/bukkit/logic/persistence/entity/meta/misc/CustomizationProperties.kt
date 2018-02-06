@@ -1,17 +1,8 @@
-package com.github.shynixn.blockball.api.bukkit.event.controller
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc
 
-import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitParticleEffectMeta
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
-import com.github.shynixn.blockball.api.business.controller.GameController
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.block.Block
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CustomizationMeta
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
 /**
  * Created by Shynixn 2018.
@@ -40,4 +31,11 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGameController : GameController<Location, Player, BukkitGame, BukkitArena>
+class CustomizationProperties : PersistenceObject(), CustomizationMeta {
+    /** Should players automatically join the other team to even out them?*/
+    @YamlSerializer.YamlSerialize(value = "even-teams", orderNumber = 1)
+    override var onlyAllowEventTeams: Boolean = false
+    /** Can players damage other players during a game?*/
+    @YamlSerializer.YamlSerialize(value = "damage-enabled", orderNumber = 2)
+    override var damageEnabled: Boolean = false
+}

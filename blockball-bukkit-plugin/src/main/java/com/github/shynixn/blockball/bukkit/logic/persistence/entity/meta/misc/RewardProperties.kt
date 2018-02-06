@@ -1,9 +1,9 @@
-package com.github.shynixn.blockball.api.bukkit.event.entity
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.entity.Player
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
 /**
  * Created by Shynixn 2018.
@@ -32,4 +32,11 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitParticleEffect : ParticleEffectMeta<Location, Player, Material>
+class RewardProperties : PersistenceObject(), RewardMeta {
+    /** Money which gets added via Vault when a player does a rewarded action. */
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "money-reward")
+    override var moneyReward: MutableMap<RewardMeta.RewardedAction, Int> = HashMap()
+    /** Commands which get executed when a player does a rewarded action. */
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "command-reward")
+    override var commandReward: MutableMap<RewardMeta.RewardedAction, CommandMeta> = HashMap()
+}

@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.ball.bukkit.core.logic.business.CoreManager
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
-import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController
 import com.github.shynixn.blockball.api.business.controller.GameController
@@ -82,8 +82,6 @@ class BlockBallPlugin : JavaPlugin() {
 
     override fun onEnable() {
         this.saveDefaultConfig()
-        com.github.shynixn.blockball.bukkit.logic.business.configuration.Config.getInstance().reload()
-
         Guice.createInjector(GoogleGuiceBinder(this))
         if (!VersionSupport.isServerVersionSupported(PLUGIN_NAME, PREFIX_CONSOLE)) {
             this.isnEnabled = false

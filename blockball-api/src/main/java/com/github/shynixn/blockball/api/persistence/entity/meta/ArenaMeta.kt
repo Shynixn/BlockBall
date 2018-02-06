@@ -1,11 +1,15 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta
 
+import com.github.shynixn.ball.api.persistence.controller.BounceController
 import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
 import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.BungeeCordLobbyMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.LobbyMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.MinigameLobbyMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.DoubleJumpMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
@@ -40,8 +44,17 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 interface ArenaMeta<Location, ItemStack, Vector, Player, Material, Block
         , ParticleEffectEntity : ParticleEffectMeta<Location, Player, Material>, SoundEffectEntity : SoundEffectMeta<Location, Player>> {
 
-    /** Meta data of the hublobby. */
+    /** Meta data of the hub lobby. */
     val hubLobbyMeta: HubLobbyMeta
+
+    /** Meta data of a generic lobby. */
+    val lobbyMeta: LobbyMeta
+
+    /** Meta data of the minigame lobby. */
+    val minigameMeta: MinigameLobbyMeta
+
+    /** Meta data of the bungeecord lobby. */
+    val bungeeCordMeta: BungeeCordLobbyMeta
 
     /** Meta data of the redTeam. */
     val redTeamMeta: TeamMeta<Location, ItemStack>
@@ -50,9 +63,9 @@ interface ArenaMeta<Location, ItemStack, Vector, Player, Material, Block
     val blueTeamMeta: TeamMeta<Location, ItemStack>
 
     /** Meta data of the ball. */
-    val ballMeta: BallMeta<Location, Material, Player, Block, ParticleEffectEntity, SoundEffectEntity>
+    val ballMeta: BallMeta<*,*,*>
 
-    /** Meta data of proection. */
+    /** Meta data of protection. */
     val protectionMeta: ArenaProtectionMeta<Vector>
 
     /** Meta data of the scoreboard. */

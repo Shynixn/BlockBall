@@ -1,9 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby
 
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
 /**
@@ -33,46 +31,11 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-open class HubLobbyProperties : PersistenceObject(), HubLobbyMeta {
-    /** List of signs which can be clicked to join the game. */
-    override val joinSigns: MutableList<IPosition>
-        get() = sign.joinSigns as MutableList<IPosition>
-    /** Lines displayed on the sign for leaving the match. */
-    override var joinSignLines: Array<String> = arrayOf("&lBlockBall", "<game>", "<state>", "")
-    /** Join asking message. */
-    override var joinMesssage: Array<String> = arrayOf("Click on the team to join the match.", "&c[Team Red]", "&9[Team Blue]")
-    /** Lines displayed on the sign for leaving the match. */
-    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leave-sign-lines")
-    override var leaveSignLines: Array<String> = arrayOf("&lBlockBall","<game>", "Leave", "")
-    /** List of signs which can be clicked to join the red team.*/
-    override val redTeamSigns: MutableList<IPosition>
-        get() = sign.redTeamSigns as MutableList<IPosition>
-    /** List of signs which can be clicked to join the red team.*/
-    override val blueTeamSigns: MutableList<IPosition>
-        get() = sign.blueTeamSigns as MutableList<IPosition>
-    /** List of signs which can be clicked to leave the game. */
-    override val leaveSigns: MutableList<IPosition>
-        get() = sign.leaveSigns as MutableList<IPosition>
-    /** Spawnpoint when someone leaves the hub game. */
-    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "leave-spawnpoint")
-    override var leaveSpawnpoint: LocationBuilder? = null
-
-    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "signs")
-    private val sign: SignCollection = SignCollection()
-
-    /** Helper class to wrap signs. */
-    private class SignCollection {
-        /** List of signs which can be clicked to join the red team.*/
-        @YamlSerializer.YamlSerialize(orderNumber = 1, value = "red-team")
-        val redTeamSigns: MutableList<LocationBuilder> = ArrayList()
-        /** List of signs which can be clicked to join the red team.*/
-        @YamlSerializer.YamlSerialize(orderNumber = 2, value = "blue-team")
-        val blueTeamSigns: MutableList<LocationBuilder> = ArrayList()
-        /** List of signs which can be clicked to join the game. */
-        @YamlSerializer.YamlSerialize(orderNumber = 3, value = "joining")
-        val joinSigns: MutableList<LocationBuilder> = ArrayList()
-        /** List of signs which can be clicked to leave the game. */
-        @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leaving")
-        val leaveSigns: MutableList<LocationBuilder> = ArrayList()
-    }
+class HubLobbyProperties : PersistenceObject(), HubLobbyMeta {
+    /** Allows to instantly play in games by running into the forcefield.*/
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "instant-forcefield-join")
+    override var instantForcefieldJoin: Boolean = false
+    /** Should the arena be reset when nobody is playing? */
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "reset-arena-on-empty")
+    override var resetArenaOnEmpty: Boolean = false
 }

@@ -1,9 +1,8 @@
-package com.github.shynixn.ball.bukkit.logic.persistence.configuration
+package com.github.shynixn.blockball.bukkit.logic.persistence.configuration
 
+import com.github.shynixn.ball.bukkit.logic.persistence.configuration.SimpleConfig
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.bukkit.configuration.MemorySection
-import org.bukkit.util.Vector
 import java.util.logging.Logger
 
 /**
@@ -38,7 +37,6 @@ internal object Config : SimpleConfig() {
 
     @Inject
     var Logger: Logger? = null
-
 
     val guiTitle: String?
         get() {
@@ -78,6 +76,22 @@ internal object Config : SimpleConfig() {
     val stateSignRunning: String?
         get() {
             return this.getData<String>("messages.state-sign-running")
+        }
+
+    val statsScoreboardTitle: String?
+        get() {
+            return this.getData<String>("stats-scoreboard.title")
+        }
+
+
+    val statsScoreboardEnabled: Boolean?
+        get() {
+            return this.getData<Boolean>("stats-scoreboard.enabled")
+        }
+
+    val statsScoreboardLines: List<String>?
+        get() {
+            return this.getData<List<String>>("stats-scoreboard.lines")
         }
 
     /**

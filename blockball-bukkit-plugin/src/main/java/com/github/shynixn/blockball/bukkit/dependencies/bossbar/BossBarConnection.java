@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.bukkit.dependencies.bossbar;
 
-import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config;
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ReflectionUtils;
 import org.bukkit.entity.Player;
 

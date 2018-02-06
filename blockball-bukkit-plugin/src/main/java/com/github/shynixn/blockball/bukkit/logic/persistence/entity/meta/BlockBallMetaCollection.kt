@@ -1,28 +1,25 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta
 
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
-import com.github.shynixn.blockball.api.persistence.entity.meta.area.AreaSelection
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
+import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitParticleEffectMeta
+import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.DoubleJumpMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.business.helper.setColor
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallData
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.BossBarBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.ScoreboardBuilder
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.BungeeCordLobbyProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.LobbyProperties
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.MinigameLobbyProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.DoubleJumpProperties
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.ProtectionData
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.ArenaProtectionData
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.TeamProperties
 import org.bukkit.Color
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
@@ -54,7 +51,19 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, Material> {
+class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, Material, Block, BukkitParticleEffectMeta, BukkitSoundEffectMeta> {
+    /** Meta data of a generic lobby. */
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "meta")
+    override val lobbyMeta: LobbyProperties  = LobbyProperties()
+    /** Meta data of the hub lobby. */
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "hubgame-meta")
+    override var hubLobbyMeta: HubLobbyProperties = HubLobbyProperties()
+    /** Meta data of the minigame lobby. */
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "minigame-meta")
+    override val minigameMeta: MinigameLobbyProperties = MinigameLobbyProperties()
+    /** Meta data of the bungeecord lobby. */
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "bungeecord-meta")
+    override val bungeeCordMeta: BungeeCordLobbyProperties = BungeeCordLobbyProperties()
     /** Meta data of the doubleJump. */
     @YamlSerializer.YamlSerialize(orderNumber = 8, value = "double-jump")
     override val doubleJumpMeta: DoubleJumpProperties = DoubleJumpProperties()
@@ -66,16 +75,14 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, M
     override val scoreboardMeta: ScoreboardBuilder = ScoreboardBuilder()
     /** Meta data of proection. */
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "protection")
-    override val protectionMeta: ArenaProtectionMeta<Vector> = ProtectionData()
+    override val protectionMeta: ArenaProtectionMeta<Vector> = ArenaProtectionData()
     /** Meta data of the ball. */
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "ball", classicSerialize = YamlSerializer.ManualSerialization.CONSTRUCTOR)
     override val ballMeta: BallData = BallData("http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d")
     /** Meta data of the blueTeam. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "team-blue")
     override val blueTeamMeta: TeamProperties = TeamProperties("Team Blue", "&9", "<bluecolor><bluescore> : <redcolor><redscore>", "<bluecolor><player> scored for <blue>", "<bluecolor><blue>", "<blue>&a has won the match")
-    /** Meta data of the hublobby. */
-    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "hubgame")
-    override var hubLobbyMeta: HubLobbyProperties = HubLobbyProperties()
+
     /** Meta data of the redTeam. */
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "team-red")
     override val redTeamMeta: TeamProperties = TeamProperties("Team Red", "&c", "<redcolor><redscore> : <bluecolor><bluescore>", "<redcolor><player> scored for <red>", "<redcolor><red>", "<red>&a has won the match")
@@ -88,7 +95,7 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, M
 
         ballMeta.isAlwaysBounceBack = true
         ballMeta.hitBoxSize = 3.0
-        ballMeta.modifiers.verticalKickStrengthModifier = 1.5;
-        ballMeta.modifiers.horizontalKickStrengthModifier = 1.5;
+        ballMeta.modifiers.verticalKickStrengthModifier = 1.5
+        ballMeta.modifiers.horizontalKickStrengthModifier = 1.5
     }
 }

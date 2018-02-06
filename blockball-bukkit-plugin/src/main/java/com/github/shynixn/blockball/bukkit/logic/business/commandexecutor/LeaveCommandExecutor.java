@@ -1,12 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
 import com.github.shynixn.blockball.api.business.controller.GameController;
-import com.github.shynixn.blockball.api.business.entity.Game;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Optional;
 
 /**
  * Created by Shynixn 2017.

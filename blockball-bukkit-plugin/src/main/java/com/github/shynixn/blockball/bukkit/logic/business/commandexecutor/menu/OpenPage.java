@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
 
-import com.github.shynixn.blockball.api.BlockBallApi;
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena;
 import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder;

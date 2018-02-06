@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.helper;
 
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.inventory.ItemStack;
 
 import java.lang.annotation.*;
 import java.lang.reflect.*;

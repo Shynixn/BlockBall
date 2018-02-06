@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.business.enumeration;
 
-import com.github.shynixn.blockball.api.business.entity.Game;
-
 /**
  * Created by Shynixn 2018.
  * <p>

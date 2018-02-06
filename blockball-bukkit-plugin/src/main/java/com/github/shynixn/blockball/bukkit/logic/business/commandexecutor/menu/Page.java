@@ -1,9 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
 
-import com.github.shynixn.blockball.api.business.enumeration.Team;
-import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
 import org.bukkit.Location;

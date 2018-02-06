@@ -31,7 +31,7 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ProtectionData : ArenaProtectionMeta<Vector> {
+class ArenaProtectionData : ArenaProtectionMeta<Vector> {
     /** Velocity being applied when an entity enters the arena which is not an player or armorstand. */
     @YamlSerializer.YamlSerialize(value = "entity-protection", orderNumber = 2)
     override var entityProtection: Vector = Vector(5, 2, 5)

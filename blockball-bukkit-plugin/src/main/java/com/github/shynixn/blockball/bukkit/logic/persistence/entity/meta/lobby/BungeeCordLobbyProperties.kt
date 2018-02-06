@@ -1,9 +1,8 @@
-package com.github.shynixn.blockball.bukkit.logic.business.service
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby
 
-import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.ReloadCommandExecutor
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
-import com.google.inject.Inject
-import com.google.inject.Singleton
+import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.BungeeCordLobbyMeta
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
 /**
  * Created by Shynixn 2018.
@@ -32,17 +31,8 @@ import com.google.inject.Singleton
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@Singleton
-class GameService {
-
-    @Inject
-    private var reloadCommandExecutor : ReloadCommandExecutor? = null
-
-    @Inject
-    private var gameController: GameRepository? = null
-
-    /** Reloads all games. */
-    fun reloadGames() {
-        gameController!!.reload()
-    }
+class BungeeCordLobbyProperties : PersistenceObject(), BungeeCordLobbyMeta {
+    /** Message being played when a player cannot join the server because of too many players.*/
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "kick-message")
+    override var kickMessage: String = "Server is already full."
 }

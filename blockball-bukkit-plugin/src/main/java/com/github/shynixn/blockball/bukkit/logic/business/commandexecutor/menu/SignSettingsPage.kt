@@ -1,15 +1,13 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
-import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
 import com.github.shynixn.blockball.bukkit.logic.business.listener.SignPlacementListener
 import com.google.inject.Inject
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
@@ -71,14 +69,14 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
             player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
             listener!!.placementCallBack[player!!] = (object : SignPlacementListener.CallBack {
                 override fun run(position: IPosition) {
-                    arena.meta.hubLobbyMeta.redTeamSigns.add(position)
+                    arena.meta.lobbyMeta.redTeamSigns.add(position)
                 }
             })
         } else if (command == BlockBallCommand.SIGNS_ADDTEAMBLUE) {
             player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
             listener!!.placementCallBack[player!!] = (object : SignPlacementListener.CallBack {
                 override fun run(position: IPosition) {
-                    arena.meta.hubLobbyMeta.blueTeamSigns.add(position)
+                    arena.meta.lobbyMeta.blueTeamSigns.add(position)
                 }
             })
         }
@@ -86,7 +84,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
             player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
             listener!!.placementCallBack[player!!] = (object : SignPlacementListener.CallBack {
                 override fun run(position: IPosition) {
-                    arena.meta.hubLobbyMeta.joinSigns.add(position)
+                    arena.meta.lobbyMeta.joinSigns.add(position)
                 }
             })
         }
@@ -94,7 +92,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
             player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
             listener!!.placementCallBack[player!!] = (object : SignPlacementListener.CallBack {
                 override fun run(position: IPosition) {
-                    arena.meta.hubLobbyMeta.leaveSigns.add(position)
+                    arena.meta.lobbyMeta.leaveSigns.add(position)
                 }
             })
         }
@@ -110,10 +108,10 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
     override fun buildPage(cache: Array<Any>?): ChatBuilder {
         val arena = cache!![0] as BukkitArena
 
-        val teamSignsRed = arena.meta.hubLobbyMeta.redTeamSigns.map { p -> this.printLocation(p) }
-        val teamSignsBlue = arena.meta.hubLobbyMeta.blueTeamSigns.map { p -> this.printLocation(p) }
-        val joinSigns = arena.meta.hubLobbyMeta.joinSigns.map { p -> this.printLocation(p) }
-        val leaveSigns = arena.meta.hubLobbyMeta.leaveSigns.map { p -> this.printLocation(p) }
+        val teamSignsRed = arena.meta.lobbyMeta.redTeamSigns.map { p -> this.printLocation(p) }
+        val teamSignsBlue = arena.meta.lobbyMeta.blueTeamSigns.map { p -> this.printLocation(p) }
+        val joinSigns = arena.meta.lobbyMeta.joinSigns.map { p -> this.printLocation(p) }
+        val leaveSigns = arena.meta.lobbyMeta.leaveSigns.map { p -> this.printLocation(p) }
 
         if (arena.gameType == GameType.HUBGAME) {
             return ChatBuilder()

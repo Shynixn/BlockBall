@@ -1,10 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
-import com.github.shynixn.ball.bukkit.logic.persistence.configuration.Config
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.container.PlayerStorage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.sendScreenMessage
@@ -89,34 +88,34 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         ingameStats.remove(player)
         stats.resetState()
 
-        if (arena.meta.hubLobbyMeta.leaveSpawnpoint != null) {
-            player.teleport(arena.meta.hubLobbyMeta.leaveSpawnpoint?.toBukkitLocation())
+        if (arena.meta.lobbyMeta.leaveSpawnpoint != null) {
+            player.teleport(arena.meta.lobbyMeta.leaveSpawnpoint?.toBukkitLocation())
         }
     }
 
     override fun onUpdateSigns() {
-        for (i in this.arena.meta.hubLobbyMeta.redTeamSigns.indices) {
-            val position = this.arena.meta.hubLobbyMeta.redTeamSigns[i]
+        for (i in this.arena.meta.lobbyMeta.redTeamSigns.indices) {
+            val position = this.arena.meta.lobbyMeta.redTeamSigns[i]
             if (!replaceTextOnSign(position, arena.meta.redTeamMeta.signLines, arena.meta.redTeamMeta)) {
-                this.arena.meta.hubLobbyMeta.redTeamSigns.removeAt(i)
+                this.arena.meta.lobbyMeta.redTeamSigns.removeAt(i)
             }
         }
-        for (i in this.arena.meta.hubLobbyMeta.blueTeamSigns.indices) {
-            val position = this.arena.meta.hubLobbyMeta.blueTeamSigns[i]
+        for (i in this.arena.meta.lobbyMeta.blueTeamSigns.indices) {
+            val position = this.arena.meta.lobbyMeta.blueTeamSigns[i]
             if (!replaceTextOnSign(position, arena.meta.blueTeamMeta.signLines, arena.meta.blueTeamMeta)) {
-                this.arena.meta.hubLobbyMeta.blueTeamSigns.removeAt(i)
+                this.arena.meta.lobbyMeta.blueTeamSigns.removeAt(i)
             }
         }
-        for (i in this.arena.meta.hubLobbyMeta.joinSigns.indices) {
-            val position = this.arena.meta.hubLobbyMeta.joinSigns[i]
-            if (!replaceTextOnSign(position, arena.meta.hubLobbyMeta.joinSignLines, null)) {
-                this.arena.meta.hubLobbyMeta.joinSigns.removeAt(i)
+        for (i in this.arena.meta.lobbyMeta.joinSigns.indices) {
+            val position = this.arena.meta.lobbyMeta.joinSigns[i]
+            if (!replaceTextOnSign(position, arena.meta.lobbyMeta.joinSignLines, null)) {
+                this.arena.meta.lobbyMeta.joinSigns.removeAt(i)
             }
         }
-        for (i in this.arena.meta.hubLobbyMeta.leaveSigns.indices) {
-            val position = this.arena.meta.hubLobbyMeta.leaveSigns[i]
-            if (!replaceTextOnSign(position, arena.meta.hubLobbyMeta.leaveSignLines, null)) {
-                this.arena.meta.hubLobbyMeta.leaveSigns.removeAt(i)
+        for (i in this.arena.meta.lobbyMeta.leaveSigns.indices) {
+            val position = this.arena.meta.lobbyMeta.leaveSigns[i]
+            if (!replaceTextOnSign(position, arena.meta.lobbyMeta.leaveSignLines, null)) {
+                this.arena.meta.lobbyMeta.leaveSigns.removeAt(i)
             }
         }
     }
@@ -133,7 +132,7 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         player.updateInventory()
 
         if (teamMeta.spawnpoint == null) {
-            player.teleport(arena.meta.ballMeta.spawnpoint!!.toBukkitLocation())
+            player.teleport(arena.meta.ballMeta.spawnpoint.toBukkitLocation())
         } else {
             player.teleport(teamMeta.spawnpoint!!.toBukkitLocation())
         }

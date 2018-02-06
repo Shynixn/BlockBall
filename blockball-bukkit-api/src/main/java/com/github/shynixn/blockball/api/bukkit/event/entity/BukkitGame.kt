@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.api.bukkit.event.entity
 
 import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
+import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitParticleEffectMeta
 import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
 import com.github.shynixn.blockball.api.business.entity.Game
 import org.bukkit.Location
@@ -37,4 +38,4 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack, Vector, Material, Block,BukkitBall, BukkitParticleEffect, BukkitSoundEffectMeta>
+interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack, Vector, Material, Block,BukkitBall, BukkitParticleEffectMeta, BukkitSoundEffectMeta>

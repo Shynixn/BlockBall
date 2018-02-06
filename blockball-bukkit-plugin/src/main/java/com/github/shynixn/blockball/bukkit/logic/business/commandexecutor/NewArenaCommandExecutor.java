@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
 
 import com.github.shynixn.blockball.api.business.enumeration.Team;
-import com.github.shynixn.blockball.api.persistence.entity.Arena;
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.*;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository;
@@ -11,7 +10,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Shynixn 2017.

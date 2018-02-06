@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.action
 
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
-import com.github.shynixn.blockball.bukkit.logic.business.configuration.Config
 import org.bukkit.entity.Player
 import org.bukkit.scoreboard.DisplaySlot
 
@@ -36,7 +36,7 @@ class StatsScoreboard(val player: Player) : SimpleScoreboard() {
 
     init {
         this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE)
-        this.setDefaultTitle(Config.getInstance().statsScoreboardTitle)
+        this.setDefaultTitle(Config.statsScoreboardTitle)
         this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR)
         this.addPlayer(player)
     }
@@ -47,9 +47,9 @@ class StatsScoreboard(val player: Player) : SimpleScoreboard() {
      * @param stats stats
      */
     fun updateStats(player: Player, stats: Stats) {
-        val lines = Config.getInstance().statsScoreboardLines
+        val lines = Config.statsScoreboardLines
         var i = 0
-        var j = lines.size
+        var j = lines!!.size
         while (i < lines.size) {
             val line = lines[i]
                     .replace("<player>", player.name)

@@ -1,5 +1,3 @@
-
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import org.junit.jupiter.api.Test;
 
 /**

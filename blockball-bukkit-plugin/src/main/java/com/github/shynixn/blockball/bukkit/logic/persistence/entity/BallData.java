@@ -37,7 +37,7 @@ import java.util.Map;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BallData extends com.github.shynixn.ball.bukkit.core.logic.persistence.entity.BallData implements BallMeta<BukkitParticleEffectMeta, BukkitSoundEffectMeta, BukkitBounceController> {
+public class BallData extends com.github.shynixn.ball.bukkit.core.logic.persistence.entity.BallData implements BallMeta<BukkitParticleEffectMeta,BukkitSoundEffectMeta, BukkitBounceController>{
     private long id;
     private IPosition spawnpoint;
     private int spawnDelayTicks = 5;

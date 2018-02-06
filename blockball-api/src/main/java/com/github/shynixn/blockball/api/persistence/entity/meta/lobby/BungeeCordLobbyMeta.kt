@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
 
+import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -27,7 +29,7 @@ package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BungeeCordLobbyMeta : MinigameLobbyMeta {
+interface BungeeCordLobbyMeta : Persistenceable{
 
     /** Message being played when a player cannot join the server because of too many players.*/
     var kickMessage: String

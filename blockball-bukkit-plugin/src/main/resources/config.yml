@@ -32,19 +32,6 @@ metrics: true
 
 ############################
 
-# Engine settings
-
-# BlockBall uses a complex entity engine combining the power of armorstands and rabbits into
-# ball movements. There are currently 2 available engines, however engine 2 is still in alpha
-# and might cause issues during games.
-
-############################
-
-blockball:
- use-engine-v2: false
-
-############################
-
 # Messages settings
 
 # Settings to adjust the messages
@@ -86,9 +73,6 @@ sql:
 #                           BlockBall will not be possible to play on this server if you enable this.
 # bungeecord-mods: Mods which will be shown in the client server list and be used for linking players.
 #                  All mods on all servers which have set linking to enabled HAVE TO set the exact same mods!!!
-#
-
-# HINT! Do not forget to enable the 'bungeecord-server-change' command below!
 
 ############################
 
@@ -119,7 +103,6 @@ bungeecord:
 
 # global-join: Settings for the command to join games from any world on your server.
 # global-leave: Settings for the command to leave games from any world on your server.
-# global-leave: Settings for the command to adjust event games.
 
 ############################
 
@@ -137,65 +120,25 @@ global-leave:
   description: Leaves current game.
   permission: blockball.user
   permission-message: You don't have permission
-referee-game:
-  enabled: false
-  command: bbreferee
-  useage: /<command>
-  description: Opens the configuration game section.
-  permission: blockball.admin
-  permission-message: You don't have permission
-bungeecord-server-change:
-  enabled: false
-  command: bbbungee
-  useage: /<command> <server>
-  description: Creates blockball signs for joining different bungeecord servers.
-  permission: blockball.admin
-  permission-message: You don't have permission
 
 ############################
 
-# Loading settings
+# Security settings
 
-# Settings to adjust the time after the plugin should be loaded. If there are
-# not any issues when starting the server, leave it as it is.
-
-############################
-
-plugin-start-delay:
- enabled: false
- time-seconds: 20
-
+# Settings to adjust the position of players.
+# fallback-spawnpoint: Spawnpoint for players who try to spawn in an blockball field.
 
 ############################
 
-# Spawnpoint settings
-
-# Settings to adjust the spawnpoints of players when the try to spawn in a blockball field
-# after they have left the server.
-
-############################
-
-join-spawnpoint:
- enabled: false
- world: 'world'
- x: 0.0
- y: 0.0
- z: 0.0
- yaw: 0.0
- pitch: 0.0
-
-
-############################
-
-# Particles settings
-
-# Settings to adjust the visibility of particles on low performance server.
-
-############################
-
-particles:
- visible-for-all: true
- visible-permission: ''
+security:
+  fallback-spawnpoint:
+    enabled: false
+    world: 'world'
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    yaw: 0.0
+    pitch: 0.0
 
 ############################
 
@@ -208,7 +151,6 @@ particles:
 # lines: Add or remove lines which are converted into the scoreboard lines.
 
 # placeholders:
-# <player> - Name of the player
 # <player> - Name of the player
 # <winrate> - Winrate of the player
 # <playedgames> - Amount of played games

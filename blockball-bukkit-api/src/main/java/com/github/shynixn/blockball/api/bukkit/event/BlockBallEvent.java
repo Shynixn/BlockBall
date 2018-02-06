@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.api.bukkit.event;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

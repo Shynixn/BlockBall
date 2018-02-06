@@ -32,7 +32,7 @@ import org.bukkit.entity.Player;
  */
 public class GameLeaveEvent extends GameEvent {
 
-    private Player player;
+    private final Player player;
 
     /**
      * Initializes a game event

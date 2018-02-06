@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.bukkit.logic.business.helper;
 
-import org.bukkit.entity.Player;
-
 /**
  * Created by Shynixn 2017.
  * <p>

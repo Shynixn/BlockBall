@@ -1,8 +1,8 @@
-package com.github.shynixn.blockball.api.bukkit.event.entity
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc
 
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
-import org.bukkit.Location
-import org.bukkit.entity.Player
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
 /**
  * Created by Shynixn 2018.
@@ -31,4 +31,11 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitSoundEffect : SoundEffectMeta<Location, Player>
+class CommandProperties : PersistenceObject(), CommandMeta {
+    /** Mode how the command gets executed. */
+    @YamlSerializer.YamlSerialize(value = "mode", orderNumber = 1)
+    override var mode: CommandMeta.CommandMode = CommandMeta.CommandMode.CONSOLE_PER_PLAYER
+    /** Command to be executed. */
+    @YamlSerializer.YamlSerialize(value = "command", orderNumber = 2)
+    override var command: String? = null
+}

@@ -1,17 +1,9 @@
-package com.github.shynixn.blockball.api.bukkit.event.controller
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby
 
-import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitParticleEffectMeta
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
-import com.github.shynixn.blockball.api.business.controller.GameController
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.block.Block
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
+import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.MinigameLobbyMeta
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
 /**
  * Created by Shynixn 2018.
@@ -40,4 +32,11 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGameController : GameController<Location, Player, BukkitGame, BukkitArena>
+class MinigameLobbyProperties : PersistenceObject(), MinigameLobbyMeta {
+    /** Duration the match will max last. */
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "match-duration")
+    override var matchDuration: Int = 300
+    /** Spawnpoint of the player in the lobby. */
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "lobby-spawnpoint")
+    override var lobbySpawnpoint: IPosition? = null
+}
