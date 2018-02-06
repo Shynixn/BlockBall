@@ -1,6 +1,6 @@
 Playing
 =======
 
-Congrats the only thing you need to is to join your server and type **/petblock** in the chat. The GUI will pop up.
+Congrats you are now ready to start your server and type **/blockball** in the chat. The UI will pop up.
 
-Of course, there might be issues to the other plugins or other settings which can cause issues. Simply check out the `FAQ <../faq/index.html>`_.
+Let's now continue with creating your first game.

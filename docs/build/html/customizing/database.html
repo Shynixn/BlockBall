@@ -38,7 +38,7 @@
     <link rel="top" title="PetBlocks 5.0.0 documentation" href="../index.html"/>
         <link rel="up" title="Customizing" href="index.html"/>
         <link rel="next" title="Commands" href="commands.html"/>
-        <link rel="prev" title="Change the block skin" href="guiblockskin.html"/> 
+        <link rel="prev" title="GUI" href="gui.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -107,7 +107,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../commands/index.html">Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing to PetBlock</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing to BlockBall</a></li>
 </ul>
 
             
@@ -177,10 +177,11 @@
             
   <div class="section" id="database-and-storage">
 <h1>Database and Storage<a class="headerlink" href="#database-and-storage" title="Permalink to this headline">¶</a></h1>
-<p>PetBlocks uses a SQLite database per default which is the file called PetBlocks.db inside of the PetBlocks plugin folder.</p>
+<p>BlockBall uses .yaml files to store meta information about your configured arenas.</p>
+<p>Also, BlockBall uses a SQLite database per default which is the file called BlockBall.db to store stats for your players like winrate, amount of participation in games.</p>
 <p>If you rename or delete the file it gets automatically regenerated but all of your saves are lost. So it might be
-useful to copy the PetBlocks.db file from time to time in order to create backups.</p>
-<p>One option you should consider is using a MySQL database instead of a SQLite database, the advantages and how to set it up
+useful to copy the BlockBall plugin folder from time to time in order to create backups.</p>
+<p>One option you should consider is using a MySQL database instead of a SQLite database for stats, the advantages and how to set it up
 are listed <a class="reference external" href="../faq/howmysql.html">here.</a></p>
 </div>
 
@@ -197,7 +198,7 @@ are listed <a class="reference external" href="../faq/howmysql.html">here.</a></
         <a href="commands.html" class="btn btn-neutral float-right" title="Commands" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="guiblockskin.html" class="btn btn-neutral" title="Change the block skin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="gui.html" class="btn btn-neutral" title="GUI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
