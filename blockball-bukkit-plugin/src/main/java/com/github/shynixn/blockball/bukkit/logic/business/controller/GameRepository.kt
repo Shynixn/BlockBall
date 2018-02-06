@@ -1,10 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.controller
 
-import com.github.shynixn.blockball.api.bukkit.event.controller.BukkitGameController
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
+import com.github.shynixn.blockball.api.bukkit.business.controller.BukkitGameController
+import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.persistence.controller.ArenaController
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.HubGame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
 import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
@@ -12,7 +10,6 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRep
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.sk89q.worldedit.WorldEdit.logger
-import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitTask

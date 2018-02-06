@@ -1,7 +1,6 @@
-package com.github.shynixn.blockball.api.bukkit.event;
+package com.github.shynixn.blockball.api.bukkit.business.event;
 
 import com.github.shynixn.blockball.api.business.entity.Game;
-import org.bukkit.entity.Player;
 
 /**
  * Copyright 2017 Shynixn
@@ -32,27 +31,24 @@ import org.bukkit.entity.Player;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class GameJoinEvent extends GameCancelableEvent {
-
-    private final Player player;
+public class GameEvent extends BlockBallEvent {
+    private final Game game;
 
     /**
-     * Initializes a new join event
+     * Initializes a game event
      *
-     * @param game   game
-     * @param player player
+     * @param game game
      */
-    public GameJoinEvent(Game game, Player player) {
-        super(game);
-        this.player = player;
+    public GameEvent(Game game) {
+        this.game = game;
     }
 
     /**
-     * Returns the joined player
+     * Returns the game
      *
-     * @return player
+     * @return game
      */
-    public Player getPlayer() {
-        return this.player;
+    public Game getGame() {
+        return this.game;
     }
 }

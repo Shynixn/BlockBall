@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
-import com.github.shynixn.blockball.api.business.entity.Game
+import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition

@@ -1,19 +1,18 @@
-package com.github.shynixn.blockball.api.bukkit.event;
+package com.github.shynixn.blockball.api.bukkit.persistence.entity
 
-import com.github.shynixn.blockball.api.business.entity.Game;
-import com.github.shynixn.blockball.api.business.enumeration.Team;
-import org.bukkit.entity.Player;
+import com.github.shynixn.ball.api.bukkit.persistence.controller.BukkitBounceController
+import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitParticleEffectMeta
+import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
+import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2018.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,38 +32,5 @@ import org.bukkit.entity.Player;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class GoalShootEvent extends GameEvent {
-    private final Player player;
-    private final Team team;
-
-    /**
-     * Initializes  a new goalShootEvent
-     *
-     * @param game   game
-     * @param player player
-     * @param team   team
-     */
-    public GoalShootEvent(Game game, Player player, Team team) {
-        super(game);
-        this.player = player;
-        this.team = team;
-    }
-
-    /**
-     * Returns the player who scorred a goal
-     *
-     * @return player
-     */
-    public Player getPlayer() {
-        return this.player;
-    }
-
-    /**
-     * Returns the team of the player
-     *
-     * @return player
-     */
-    public Team getTeam() {
-        return this.team;
-    }
+interface BukkitBallMeta : BallMeta<BukkitParticleEffectMeta, BukkitSoundEffectMeta, BukkitBounceController> {
 }

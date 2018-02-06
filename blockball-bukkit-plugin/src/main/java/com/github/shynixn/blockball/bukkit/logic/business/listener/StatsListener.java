@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener;
 
-import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent;
-import com.github.shynixn.blockball.api.bukkit.event.GameWinEvent;
-import com.github.shynixn.blockball.api.bukkit.event.GoalShootEvent;
+import com.github.shynixn.blockball.api.bukkit.business.event.GameJoinEvent;
+import com.github.shynixn.blockball.api.bukkit.business.event.GameWinEvent;
+import com.github.shynixn.blockball.api.bukkit.business.event.GoalShootEvent;
 import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaController;
 import com.github.shynixn.blockball.api.persistence.controller.StatsController;
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta;

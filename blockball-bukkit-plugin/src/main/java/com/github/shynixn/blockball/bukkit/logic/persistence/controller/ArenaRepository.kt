@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.controller
 
-import com.github.shynixn.blockball.api.bukkit.event.controller.BukkitArenaController
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
+import com.github.shynixn.blockball.api.bukkit.persistence.controller.BukkitArenaController
+import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena
 import com.google.inject.Inject

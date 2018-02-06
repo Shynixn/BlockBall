@@ -1,13 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
-import org.bukkit.ChatColor
-import org.bukkit.Location
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 
 /**
  * Created by Shynixn 2018.

@@ -1,17 +1,15 @@
-package com.github.shynixn.blockball.api.bukkit.event.controller
-
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
-import com.github.shynixn.blockball.api.persistence.controller.ArenaController
-import org.bukkit.Location
+package com.github.shynixn.blockball.api.bukkit.business.event;
 
 /**
- * Created by Shynixn 2018.
+ * Copyright 2017 Shynixn
  * <p>
- * Version 1.2
+ * Do not remove this header!
+ * <p>
+ * Version 1.0
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2017
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,4 +29,23 @@ import org.bukkit.Location
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitArenaController : ArenaController<Location, BukkitArena>
+public class BlockBallCancelAbleEvent extends BlockBallEvent {
+    private boolean isCancelled;
+    /**
+     * Returns if the event is cancelled
+     *
+     * @return isCancelled
+     */
+    public boolean isCancelled() {
+        return this.isCancelled;
+    }
+
+    /**
+     * Sets the event cancelled
+     *
+     * @param isCanceled cancelled
+     */
+    public void setCancelled(boolean isCanceled) {
+        this.isCancelled = isCanceled;
+    }
+}

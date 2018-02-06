@@ -1,6 +1,5 @@
-package com.github.shynixn.blockball.api.bukkit.event;
+package com.github.shynixn.blockball.api.bukkit.business.event;
 
-import com.github.shynixn.blockball.api.bukkit.event.BlockBallCancelAbleEvent;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;

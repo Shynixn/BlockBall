@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
+import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
+import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.entity.InGameStats
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder

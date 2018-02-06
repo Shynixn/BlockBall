@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.dependencies.placeholderapi;
 
-import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent;
+import com.github.shynixn.blockball.api.bukkit.business.event.PlaceHolderRequestEvent;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

@@ -1,18 +1,18 @@
-package com.github.shynixn.blockball.bukkit.logic.business.entity.action
+package com.github.shynixn.blockball.api.bukkit.business.event;
 
-import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
-import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
-import org.bukkit.entity.Player
-import org.bukkit.scoreboard.DisplaySlot
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
- * Created by Shynixn 2018.
+ * Copyright 2017 Shynixn
  * <p>
- * Version 1.2
+ * Do not remove this header!
+ * <p>
+ * Version 1.0
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2017
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,27 +32,27 @@ import org.bukkit.scoreboard.DisplaySlot
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameScoreboard(private val game: BukkitGame) : SimpleScoreboard() {
+public class BlockBallEvent extends Event {
 
-    init {
-        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE)
-        this.setDefaultTitle(game.arena.meta.scoreboardMeta.title)
-        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR)
+    private final static HandlerList handlers = new HandlerList();
+
+    /**
+     * Bukkit implementation
+     *
+     * @return handler
+     */
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
-    /** Updates the scoreboard for the given player **/
-    fun updateScoreboard(player: Player) {
-        if (!this.containsPlayer(player)) {
-            this.addPlayer(player)
-        }
-        val lines = game.arena.meta.scoreboardMeta.lines
-        var i = 0
-        var j = lines.size
-        while (i < lines.size) {
-            val line = lines[i].replaceGamePlaceholder(game)
-            this.setDefaultLine(j, line)
-            i++
-            j--
-        }
+    /**
+     * Bukkit implementation
+     *
+     * @return handlerList
+     */
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
+
 }

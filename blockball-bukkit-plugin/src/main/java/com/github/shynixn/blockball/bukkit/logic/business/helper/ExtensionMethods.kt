@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.helper
 
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
+import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble

@@ -1,8 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
-import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
 import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
 import com.google.inject.Inject

@@ -1,26 +1,18 @@
-package com.github.shynixn.blockball.api.bukkit.event.controller
+package com.github.shynixn.blockball.api.bukkit.business.event;
 
-import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitParticleEffectMeta
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
-import com.github.shynixn.blockball.api.business.controller.GameController
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.block.Block
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
+import com.github.shynixn.blockball.api.business.entity.Game;
+import org.bukkit.entity.Player;
 
 /**
- * Created by Shynixn 2018.
+ * Copyright 2017 Shynixn
  * <p>
- * Version 1.2
+ * Do not remove this header!
+ * <p>
+ * Version 1.0
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2017
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,4 +32,27 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGameController : GameController<Location, Player, BukkitGame, BukkitArena>
+public class GameJoinEvent extends GameCancelableEvent {
+
+    private final Player player;
+
+    /**
+     * Initializes a new join event
+     *
+     * @param game   game
+     * @param player player
+     */
+    public GameJoinEvent(Game game, Player player) {
+        super(game);
+        this.player = player;
+    }
+
+    /**
+     * Returns the joined player
+     *
+     * @return player
+     */
+    public Player getPlayer() {
+        return this.player;
+    }
+}

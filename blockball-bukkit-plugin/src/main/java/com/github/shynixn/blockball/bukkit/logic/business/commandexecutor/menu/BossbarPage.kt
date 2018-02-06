@@ -1,11 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
-import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
 /**

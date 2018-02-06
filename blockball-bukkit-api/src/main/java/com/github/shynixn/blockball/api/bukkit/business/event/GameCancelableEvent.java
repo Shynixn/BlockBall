@@ -1,15 +1,15 @@
-package com.github.shynixn.blockball.api.bukkit.event;
+package com.github.shynixn.blockball.api.bukkit.business.event;
+
+import com.github.shynixn.blockball.api.business.entity.Game;
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2017.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.1
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2017 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,8 +29,18 @@ package com.github.shynixn.blockball.api.bukkit.event;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BlockBallCancelAbleEvent extends BlockBallEvent {
+public class GameCancelableEvent extends GameEvent {
     private boolean isCancelled;
+
+    /**
+     * Initializes a game event
+     *
+     * @param game game
+     */
+    public GameCancelableEvent(Game game) {
+        super(game);
+    }
+
     /**
      * Returns if the event is cancelled
      *

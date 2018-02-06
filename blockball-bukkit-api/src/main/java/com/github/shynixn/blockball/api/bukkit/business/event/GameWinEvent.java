@@ -1,16 +1,18 @@
-package com.github.shynixn.blockball.api.bukkit.event;
+package com.github.shynixn.blockball.api.bukkit.business.event;
 
 import com.github.shynixn.blockball.api.business.entity.Game;
-import org.bukkit.entity.Player;
+import com.github.shynixn.blockball.api.business.enumeration.Team;
 
 /**
- * Created by Shynixn 2017.
+ * Copyright 2017 Shynixn
  * <p>
- * Version 1.1
+ * Do not remove this header!
+ * <p>
+ * Version 1.0
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2017
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,21 +32,26 @@ import org.bukkit.entity.Player;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class GameLeaveEvent extends GameEvent {
-
-    private final Player player;
+public class GameWinEvent extends GameEvent {
+    private final Team team;
 
     /**
-     * Initializes a game event
+     * Initializes a new gameWin event
      *
      * @param game game
+     * @param team team
      */
-    public GameLeaveEvent(Game game, Player player) {
+    public GameWinEvent(Game game, Team team) {
         super(game);
-        this.player = player;
+        this.team = team;
     }
 
-    public Player getPlayer() {
-        return this.player;
+    /**
+     * Returns the winning team
+     *
+     * @return team
+     */
+    public Team getTeam() {
+        return this.team;
     }
 }

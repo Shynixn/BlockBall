@@ -1,18 +1,22 @@
-package com.github.shynixn.blockball.api.bukkit.event;
+package com.github.shynixn.blockball.api.bukkit.business.entity
 
-import com.github.shynixn.blockball.api.business.entity.Game;
-import com.github.shynixn.blockball.api.business.enumeration.Team;
+import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
+import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
+import com.github.shynixn.blockball.api.business.entity.Game
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import org.bukkit.util.Vector
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2018.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,26 +36,4 @@ import com.github.shynixn.blockball.api.business.enumeration.Team;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class GameWinEvent extends GameEvent {
-    private final Team team;
-
-    /**
-     * Initializes a new gameWin event
-     *
-     * @param game game
-     * @param team team
-     */
-    public GameWinEvent(Game game, Team team) {
-        super(game);
-        this.team = team;
-    }
-
-    /**
-     * Returns the winning team
-     *
-     * @return team
-     */
-    public Team getTeam() {
-        return this.team;
-    }
-}
+interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack, Vector, Material,BukkitBall>

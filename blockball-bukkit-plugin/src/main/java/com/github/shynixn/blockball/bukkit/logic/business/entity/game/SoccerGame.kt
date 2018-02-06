@@ -2,12 +2,11 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
 import com.github.shynixn.ball.api.BallsApi
 import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
-import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitArena
+import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import org.bukkit.Location
 import org.bukkit.entity.Entity
-import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 /**
