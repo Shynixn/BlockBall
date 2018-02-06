@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.misc
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
+import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
 
 /**
  * Created by Shynixn 2018.
@@ -29,7 +29,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface RewardMeta : Persistenceable {
+interface RewardMeta : PersistenceAble {
 
     /** Money which gets added via Vault when a player does a rewarded action. */
     var moneyReward: MutableMap<RewardedAction, Int>

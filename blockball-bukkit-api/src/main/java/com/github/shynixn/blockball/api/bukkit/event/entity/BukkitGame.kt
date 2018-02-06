@@ -38,4 +38,4 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack, Vector, Material, Block,BukkitBall, BukkitParticleEffectMeta, BukkitSoundEffectMeta>
+interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack, Vector, Material,BukkitBall>

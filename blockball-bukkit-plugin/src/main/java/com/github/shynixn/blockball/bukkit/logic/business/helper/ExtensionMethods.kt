@@ -5,7 +5,7 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Confi
 import com.github.shynixn.blockball.api.bukkit.event.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
+import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
@@ -128,9 +128,9 @@ internal fun BossBarMeta.Style.getNames(): Array<String?> {
     return arrayOfNulls<String>(5)
 }
 
-internal fun <T> Persistenceable.clone(): T where T : Persistenceable {
+internal fun <T> PersistenceAble.clone(): T where T : PersistenceAble {
     try {
-        val item = this.javaClass.newInstance() as Persistenceable
+        val item = this.javaClass.newInstance() as PersistenceAble
         var clazz: Class<*>? = this.javaClass
         while (clazz != null) {
             for (field in clazz.declaredFields) {

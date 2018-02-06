@@ -40,7 +40,7 @@ class LobbyProperties : PersistenceObject(), LobbyMeta {
     /** Lines displayed on the sign for leaving the match. */
     override var joinSignLines: Array<String> = arrayOf("&lBlockBall", "<game>", "<state>", "")
     /** Join asking message. */
-    override var joinMesssage: Array<String> = arrayOf("Click on the team to join the match.", "&c[Team Red]", "&9[Team Blue]")
+    override var joinMessage: Array<String> = arrayOf("Click on the team to join the match.", "&c[Team Red]", "&9[Team Blue]")
     /** Lines displayed on the sign for leaving the match. */
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leave-sign-lines")
     override var leaveSignLines: Array<String> = arrayOf("&lBlockBall", "<game>", "Leave", "")

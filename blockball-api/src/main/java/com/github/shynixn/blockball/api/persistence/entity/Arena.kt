@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.area.AreaSelection
@@ -33,9 +31,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.area.AreaSelecti
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Arena<Location, ItemStack, Vector, Player, Material, Block
-        , ParticleEffectEntity : ParticleEffectMeta<Location, Player, Material>
-        , SoundEffectEntity : SoundEffectMeta<Location, Player>> : AreaSelection<Location> {
+interface Arena<Location, ItemStack, Vector, Player, Material> : AreaSelection<Location>{
 
     /** Unique [name] of the arena. */
     val name: String
@@ -50,5 +46,5 @@ interface Arena<Location, ItemStack, Vector, Player, Material, Block
     var gameType: GameType
 
     /** Collection of the arena meta data. */
-    val meta: ArenaMeta<Location, ItemStack, Vector, Player, Material, Block, ParticleEffectEntity, SoundEffectEntity>
+    val meta: ArenaMeta<Location, ItemStack, Vector, Player, Material>
 }

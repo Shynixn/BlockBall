@@ -48,11 +48,11 @@ public enum PlaceHolder {
 
     BLUE_COLOR("<bluecolor>");
 
-    public String concate(PlaceHolder placeHolder) {
+    public String concat(PlaceHolder placeHolder) {
         return this.placeHolder + placeHolder.placeHolder;
     }
 
-    private String placeHolder;
+    private final String placeHolder;
 
     PlaceHolder(String placeholder) {
         this.placeHolder = placeholder;

@@ -36,18 +36,4 @@ public enum GameType {
     MINIGAME,
     BUNGEE,
     EVENT;
-
-    /**
-     * Returns the gameType from the given name if present
-     *
-     * @param name name
-     * @return gameType
-     */
-    public static Optional<GameType> getGameTypeFromName(String name) {
-        for (final GameType gameType : GameType.values()) {
-            if (gameType.name().equalsIgnoreCase(name))
-                return Optional.of(gameType);
-        }
-        return Optional.empty();
-    }
 }

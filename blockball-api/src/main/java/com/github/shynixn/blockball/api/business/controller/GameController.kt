@@ -1,12 +1,7 @@
 package com.github.shynixn.blockball.api.business.controller
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
-import com.github.shynixn.blockball.api.business.entity.Game
 import com.github.shynixn.blockball.api.persistence.controller.ArenaController
-import com.github.shynixn.blockball.api.persistence.controller.Controller
 import com.github.shynixn.blockball.api.persistence.controller.ReloadableController
-import com.github.shynixn.blockball.api.persistence.entity.Arena
 
 /**
  * Created by Shynixn 2018.
@@ -35,7 +30,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface GameController<Location : Any, Player, GameEntity : Any, ArenaEntity : Any> : ReloadableController<GameEntity> {
+interface GameController<in Location : Any, in Player, GameEntity : Any, ArenaEntity : Any> : ReloadableController<GameEntity> {
 
     /** ArenaController of the gameController. */
     val arenaController: ArenaController<Location, ArenaEntity>?

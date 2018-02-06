@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.controller
 
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-
 /**
  * Created by Shynixn 2018.
  * <p>

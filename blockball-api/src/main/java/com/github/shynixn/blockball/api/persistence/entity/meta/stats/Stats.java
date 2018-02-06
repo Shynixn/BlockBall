@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.stats;
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble;
 
 /**
  * Copyright 2017 Shynixn
@@ -31,7 +31,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface Stats extends Persistenceable {
+public interface Stats extends PersistenceAble {
     /**
      * Returns the winRate of the player
      *

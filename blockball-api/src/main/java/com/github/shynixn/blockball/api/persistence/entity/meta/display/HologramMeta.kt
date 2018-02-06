@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.display
 
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
+import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
 
 /**
  * Created by Shynixn 2018.
@@ -30,7 +30,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface HologramMeta : Persistenceable {
+interface HologramMeta : PersistenceAble {
 
     /** Position of the hologram. */
     var position: IPosition?

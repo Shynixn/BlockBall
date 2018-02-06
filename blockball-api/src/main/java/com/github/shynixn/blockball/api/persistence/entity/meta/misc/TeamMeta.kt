@@ -50,7 +50,7 @@ interface TeamMeta<Location, ItemStack> {
     /** Max amount of players in this team to start the match for this team. */
     var maxAmount: Int
 
-    /** Walkingspeed of the players in this team. */
+    /** WalkingSpeed of the players in this team. */
     var walkingSpeed: Double
 
     /** Armor wearing this team. */

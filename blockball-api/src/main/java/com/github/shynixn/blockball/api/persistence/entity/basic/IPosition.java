@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity.basic;
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble;
 
 /**
  * Copyright 2017 Shynixn
@@ -31,7 +31,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface IPosition extends Persistenceable {
+public interface IPosition extends PersistenceAble {
     /**
      * Sets the coordinates x, y, z
      *

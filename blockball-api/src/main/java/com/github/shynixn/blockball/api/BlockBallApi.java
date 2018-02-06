@@ -38,6 +38,10 @@ public class BlockBallApi {
 
     private static GameController gameController;
 
+    private BlockBallApi() {
+        super();
+    }
+
     /**
      * Initializes the bungeecord api.
      *
@@ -72,7 +76,7 @@ public class BlockBallApi {
      *
      * @return controller
      */
-    public static  BungeeCordConnectionController  getDefaultBungeeCordConnectController() {
+    public static BungeeCordConnectionController getDefaultBungeeCordConnectController() {
         return bungeeCordConnectController;
     }
 

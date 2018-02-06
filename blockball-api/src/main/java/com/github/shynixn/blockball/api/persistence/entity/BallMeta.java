@@ -5,16 +5,16 @@ import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta;
 import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta;
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
 
-public interface BallMeta<T extends ParticleEffectMeta, K extends SoundEffectMeta, P extends BounceController> extends Persistenceable, com.github.shynixn.ball.api.persistence.BallMeta<T, K, P> {
+public interface BallMeta<T extends ParticleEffectMeta, K extends SoundEffectMeta, P extends BounceController> extends PersistenceAble, com.github.shynixn.ball.api.persistence.BallMeta<T, K, P> {
 
     /**
-     * Returns the spawndelay ticks.
+     * Returns the spawnDelay ticks.
      * @return ticks
      */
     int getSpawnDelayTicks();
 
     /**
-     * Sets the spawndelay ticks.
+     * Sets the spawnDelay ticks.
      * @param spawnDelayTicks spawnDelay
      */
     void setSpawnDelayTicks(int spawnDelayTicks);

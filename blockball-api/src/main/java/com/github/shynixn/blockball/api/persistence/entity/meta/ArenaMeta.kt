@@ -1,8 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta
 
-import com.github.shynixn.ball.api.persistence.controller.BounceController
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
@@ -41,8 +38,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaMeta<Location, ItemStack, Vector, Player, Material, Block
-        , ParticleEffectEntity : ParticleEffectMeta<Location, Player, Material>, SoundEffectEntity : SoundEffectMeta<Location, Player>> {
+interface ArenaMeta<Location, ItemStack, Vector, Player, Material> {
 
     /** Meta data of the hub lobby. */
     val hubLobbyMeta: HubLobbyMeta

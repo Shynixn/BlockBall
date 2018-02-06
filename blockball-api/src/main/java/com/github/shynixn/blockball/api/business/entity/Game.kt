@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.business.entity
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.Arena
@@ -33,8 +31,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Game<out ArenaEntity, Player, Location, ItemStack, Vector, Material,Block, BallEntity
-        , ParticleEffectEntity : ParticleEffectMeta<Location, Player, Material>, SoundEffectEntity : SoundEffectMeta<Location, Player>> :  java.lang.AutoCloseable where ArenaEntity : Arena<Location, ItemStack, Vector, Player, Material,Block,ParticleEffectEntity, SoundEffectEntity> {
+interface Game<out ArenaEntity, Player, Location, ItemStack, Vector, Material, out BallEntity> :  java.lang.AutoCloseable where ArenaEntity : Arena<Location, ItemStack, Vector, Player, Material> {
 
     /** Arena of the game. */
     val arena: ArenaEntity

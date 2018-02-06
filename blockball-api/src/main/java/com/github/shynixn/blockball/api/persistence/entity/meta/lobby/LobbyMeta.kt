@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
+import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 
 /**
@@ -30,7 +30,7 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface LobbyMeta : Persistenceable {
+interface LobbyMeta : PersistenceAble {
     /** List of signs which can be clicked to join the red team.*/
     val redTeamSigns: MutableList<IPosition>
 
@@ -53,5 +53,5 @@ interface LobbyMeta : Persistenceable {
     var leaveSignLines: Array<String>
 
     /** Join asking message. */
-    var joinMesssage: Array<String>
+    var joinMessage: Array<String>
 }

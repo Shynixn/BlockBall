@@ -27,7 +27,7 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Persistenceable {
+interface PersistenceAble {
 
     /** Returns the id of the object. */
     val id: Long

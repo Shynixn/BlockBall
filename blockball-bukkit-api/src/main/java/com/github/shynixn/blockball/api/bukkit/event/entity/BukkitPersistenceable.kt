@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.bukkit.event.entity
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable
+import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
 import org.bukkit.configuration.serialization.ConfigurationSerializable
 
 /**
@@ -30,4 +30,4 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitPersistenceable : Persistenceable, ConfigurationSerializable
+interface BukkitPersistenceable : PersistenceAble, ConfigurationSerializable

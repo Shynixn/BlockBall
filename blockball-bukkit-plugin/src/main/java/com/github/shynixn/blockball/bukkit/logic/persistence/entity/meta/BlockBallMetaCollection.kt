@@ -51,7 +51,7 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, Material, Block, BukkitParticleEffectMeta, BukkitSoundEffectMeta> {
+class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, Material> {
     /** Meta data of a generic lobby. */
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "meta")
     override val lobbyMeta: LobbyProperties  = LobbyProperties()

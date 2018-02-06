@@ -47,10 +47,10 @@ class ScoreboardBuilder : PersistenceObject(), ScoreboardMeta {
             , PlaceHolder.TIME.placeHolder
             , ""
             , "&m           &r"
-            , PlaceHolder.RED_COLOR.concate(PlaceHolder.TEAM_RED) + ":"
+            , PlaceHolder.RED_COLOR.concat(PlaceHolder.TEAM_RED) + ":"
             , "&l" + PlaceHolder.RED_GOALS.placeHolder
             , ""
-            , PlaceHolder.BLUE_COLOR.concate(PlaceHolder.TEAM_BLUE) + ":"
+            , PlaceHolder.BLUE_COLOR.concat(PlaceHolder.TEAM_BLUE) + ":"
             , "&l" + PlaceHolder.BLUE_GOALS.placeHolder
             , "&m           &r"
     )

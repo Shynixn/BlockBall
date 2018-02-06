@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.stats;
 
-import com.github.shynixn.blockball.api.persistence.entity.Persistenceable;
+import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble;
 
 import java.util.UUID;
 
@@ -31,7 +31,7 @@ import java.util.UUID;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface PlayerMeta extends Persistenceable {
+public interface PlayerMeta extends PersistenceAble {
 
     /**
      * Returns the name of the playerData
