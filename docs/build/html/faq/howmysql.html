@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>How to use the MySQL database? &mdash; PetBlocks 5.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="PetBlocks 5.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="FAQ" href="index.html"/>
+        <link rel="next" title="How to use the same pets on multiple servers?" href="howbungee.html"/>
+        <link rel="prev" title="How to use a custom skin URL?" href="howcustomskin.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> PetBlocks
+          
+
+          
+            
+            <img src="../_static/BlockBall.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../gettingstarted/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../updating/index.html">Updating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customizing/index.html">Customizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/index.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Developer API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">FAQ</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="notspawning.html">The petblock does not spawn?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selling.html">How can you sell costumes/skins?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support.html">Can you support Minecraft 1.7.x or below?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howcustomskin.html">How to use a custom skin URL?</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">How to use the MySQL database?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howbungee.html">How to use the same pets on multiple servers?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="canpetwal.html">Can the pet walk instead of hopping like a rabbit?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="playerheadnotshown.html">The player head is not visible in the GUI or when the Pet spawns?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="caniusereload.html">Can I use the /reload command?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing to PetBlock</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PetBlocks</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">FAQ</a> &raquo;</li>
+        
+      <li>How to use the MySQL database?</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/Shynixn/PetBlocks/tree/master/docs/source/faq/howmysql.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="how-to-use-the-mysql-database">
+<h1>How to use the MySQL database?<a class="headerlink" href="#how-to-use-the-mysql-database" title="Permalink to this headline">¶</a></h1>
+<p>First of all, make sure you thought about the reason why you want to use this option.</p>
+<p>It is recommend to use the MySQL support if:</p>
+<ul class="simple">
+<li>You have got a large playerbase (performance) ✔</li>
+<li>You want players to have the same pets on different servers (bungeecord) ✔</li>
+<li>You have already got a MySQL server and want to keep all saves at one places (backups) ✔</li>
+</ul>
+<p><strong>before</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">############################</span>
+
+<span class="c1"># Database settings</span>
+
+<span class="c1"># All petblocks are stored in a local file by default.</span>
+<span class="c1"># It is recommend to edit these settings when you are using a MySQL database</span>
+<span class="c1"># and have got a bigger player-base. Also if you want to use the same pets</span>
+<span class="c1"># cross servers. (BungeeCord)</span>
+
+<span class="c1">############################</span>
+
+<span class="n">sql</span><span class="p">:</span>
+  <span class="n">enabled</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">host</span><span class="p">:</span> <span class="n">localhost</span>
+  <span class="n">port</span><span class="p">:</span> <span class="mi">3306</span>
+  <span class="n">database</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
+  <span class="n">username</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
+  <span class="n">password</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
+</pre></div>
+</div>
+<p>You can get the data from your MySQL database host.</p>
+<p><strong>after</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">############################</span>
+
+<span class="c1"># Database settings</span>
+
+<span class="c1"># All petblocks are stored in a local file by default.</span>
+<span class="c1"># It is recommend to edit these settings when you are using a MySQL database</span>
+<span class="c1"># and have got a bigger player-base. Also if you want to use the same pets</span>
+<span class="c1"># cross servers. (BungeeCord)</span>
+
+<span class="c1">############################</span>
+
+<span class="n">sql</span><span class="p">:</span>
+  <span class="n">enabled</span><span class="p">:</span> <span class="n">true</span>
+  <span class="n">host</span><span class="p">:</span> <span class="s1">&#39;your_db_host_address&#39;</span>
+  <span class="n">port</span><span class="p">:</span> <span class="mi">3306</span>
+  <span class="n">database</span><span class="p">:</span> <span class="s1">&#39;your_db_name&#39;</span>
+  <span class="n">username</span><span class="p">:</span> <span class="s1">&#39;your_db_login_username&#39;</span>
+  <span class="n">password</span><span class="p">:</span> <span class="s1">&#39;your_db_login_password&#39;</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="howbungee.html" class="btn btn-neutral float-right" title="How to use the same pets on multiple servers?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="howcustomskin.html" class="btn btn-neutral" title="How to use a custom skin URL?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015 - 2018, Shynixn.
+
+    </p>
+  </div>
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'5.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111364476-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111364476-1');
+</script>
+
+
+</body>
+</html>

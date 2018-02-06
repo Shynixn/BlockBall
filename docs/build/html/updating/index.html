@@ -1,0 +1,421 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Updating &mdash; PetBlocks 5.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="PetBlocks 5.0.0 documentation" href="../index.html"/>
+        <link rel="next" title="Customizing" href="../customizing/index.html"/>
+        <link rel="prev" title="Playing" href="../gettingstarted/playing.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> PetBlocks
+          
+
+          
+            
+            <img src="../_static/BlockBall.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../gettingstarted/index.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Updating</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#general">General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#upgrading-from-the-previous-to-next-version">Upgrading from the previous to next version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#upgrading-from-any-version-to-the-latest-version">Upgrading from any version to the latest version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#upgrading-to-the-new-permissions">Upgrading to the new permissions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../customizing/index.html">Customizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/index.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing to BlockBall</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PetBlocks</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Updating</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/Shynixn/PetBlocks/tree/master/docs/source/updating/index.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="updating">
+<h1>Updating<a class="headerlink" href="#updating" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<p>Please <strong>carefully</strong> read the update log on github before you download a new version of PetBlocks!</p>
+<p>The most messages and issues I receive are from players who forgot to read them, <strong>do not become such a person as this holds me back from fixing actual issues</strong>!</p>
+</div>
+<div class="section" id="upgrading-from-the-previous-to-next-version">
+<h2>Upgrading from the previous to next version<a class="headerlink" href="#upgrading-from-the-previous-to-next-version" title="Permalink to this headline">¶</a></h2>
+<p>This is a screenshot from the update log on github. Can you see the config.yml section? This means the config.yml has changed so it is
+your duty to copy these lines at the correct place into your config.yml.</p>
+<p>If you are not capable of this you have to delete your old config.yml
+in the PetBlocks folder.</p>
+<img alt="updating\../_static/images/up1.jpg" src="updating\../_static/images/up1.jpg" />
+</div>
+<div class="section" id="upgrading-from-any-version-to-the-latest-version">
+<h2>Upgrading from any version to the latest version<a class="headerlink" href="#upgrading-from-any-version-to-the-latest-version" title="Permalink to this headline">¶</a></h2>
+<p>It is highly recommend to read and apply <strong>every update log</strong> from the version you are currently using to the
+version you want to use.</p>
+<p>For example if you you are using PetBlocks v6.2.3 and want to use PetBlocks v6.3.1 you need to read the update log of
+PetBlocks v6.3.0 and PetBlocks v6.3.1 and apply all changes.</p>
+<p>If you do not care about your saves or your config the easiest way is to simple delete the PetBlocks folder.</p>
+</div>
+<div class="section" id="upgrading-to-the-new-permissions">
+<h2>Upgrading to the new permissions<a class="headerlink" href="#upgrading-to-the-new-permissions" title="Permalink to this headline">¶</a></h2>
+<p>As the new options from 2017 do not share the same names with the origin permission, it was necessary to rename them.
+You can find a list with the old and the new names below.</p>
+<p><strong>Permissions for commands</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="47%" />
+<col width="31%" />
+<col width="22%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Old</th>
+<th class="head">New</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Allows to use the /petblock command</td>
+<td>petblocks.use</td>
+<td>petblocks.command.use</td>
+</tr>
+<tr class="row-odd"><td>Allows to use the /petblocks administration command</td>
+<td>petblocks.commands</td>
+<td>petblocks.command.admin</td>
+</tr>
+<tr class="row-even"><td>Allows to use the /petblockreload command</td>
+<td>petblocks.reload</td>
+<td>petblocks.command.reload</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Permissions for actions</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="46%" />
+<col width="30%" />
+<col width="24%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Old</th>
+<th class="head">New</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Allows to rename your pet</td>
+<td>petblocks.pet.rename</td>
+<td>petblocks.action.rename</td>
+</tr>
+<tr class="row-odd"><td>Allows to use any skin what a player enters in chat</td>
+<td>petblocks.pet.skin</td>
+<td>petblocks.action.customskin</td>
+</tr>
+<tr class="row-even"><td>Allows to ride your pet</td>
+<td>petblocks.pet.ride</td>
+<td>petblocks.action.ride</td>
+</tr>
+<tr class="row-odd"><td>Allows to wear your pet</td>
+<td>petblocks.pet.wear</td>
+<td>petblocks.action.wear</td>
+</tr>
+<tr class="row-even"><td>Allows to shoot your pet</td>
+<td>petblocks.pet.cannon</td>
+<td>petblocks.action.cannon</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Permissions for selections</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="34%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Old</th>
+<th class="head">New</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Allows to use all pet engines</td>
+<td>petblocks.pet.type.all</td>
+<td>petblocks.selection.engines.all</td>
+</tr>
+<tr class="row-odd"><td>Allows to use a single pet engine</td>
+<td>petblocks.pet.type.&lt;number&gt;</td>
+<td>petblocks.selection.engines.&lt;number&gt;</td>
+</tr>
+<tr class="row-even"><td>Allows to use all simple block costumes</td>
+<td>petblocks.pet.defaultcostumes.all</td>
+<td>petblocks.selection.simpleblockcostumes.all</td>
+</tr>
+<tr class="row-odd"><td>Allows to use a single simple block costume</td>
+<td>petblocks.pet.defaultcostumes.&lt;number&gt;</td>
+<td>petblocks.selection.simpleblockcostumes.&lt;number&gt;</td>
+</tr>
+<tr class="row-even"><td>Allows to use all colored block costumes</td>
+<td>petblocks.pet.colorcostumes.all</td>
+<td>petblocks.selection.coloredblockcostumes.all</td>
+</tr>
+<tr class="row-odd"><td>Allows to use a single colored block costume</td>
+<td>petblocks.pet.colorcostumes.&lt;number&gt;</td>
+<td>petblocks.selection.coloredblockcostumes.&lt;number&gt;</td>
+</tr>
+<tr class="row-even"><td>Allows to use all player head costumes</td>
+<td>petblocks.pet.customcostumes.all</td>
+<td>petblocks.selection.playerheadcostumes.all</td>
+</tr>
+<tr class="row-odd"><td>Allows to use a single player head costume</td>
+<td>petblocks.pet.customcostumes.&lt;number&gt;</td>
+<td>petblocks.selection.playerheadcostumes.&lt;number&gt;</td>
+</tr>
+<tr class="row-even"><td>Allows to use all pet costumes</td>
+<td>petblocks.pet.minecraft-heads-costumes.all</td>
+<td>petblocks.selection.petcostumes.all</td>
+</tr>
+<tr class="row-odd"><td>Allows to use a single pet costume</td>
+<td>petblocks.pet.minecraft-heads-costumes.&lt;number&gt;</td>
+<td>petblocks.selection.petcostumes.&lt;number&gt;</td>
+</tr>
+<tr class="row-even"><td>Allows to use all particles</td>
+<td>petblocks.pet.particles.all</td>
+<td>petblocks.selection.particles.all</td>
+</tr>
+<tr class="row-odd"><td>Allows to use a single particle</td>
+<td>petblocks.pet.particles.&lt;number&gt;</td>
+<td>petblocks.selection.particles.&lt;number&gt;</td>
+</tr>
+<tr class="row-even"><td>Allows to use all head database costumes</td>
+<td>petblocks.pet.head-database-costumes.all</td>
+<td>petblocks.selection.headdatabasecostumes.all</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../customizing/index.html" class="btn btn-neutral float-right" title="Customizing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../gettingstarted/playing.html" class="btn btn-neutral" title="Playing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015 - 2018, Shynixn.
+
+    </p>
+  </div>
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'5.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111364476-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111364476-1');
+</script>
+
+
+</body>
+</html>
