@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.dependencies.placeholderapi;
 
 import com.github.shynixn.blockball.api.bukkit.business.event.PlaceHolderRequestEvent;
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -88,7 +89,7 @@ public final class PlaceHolderApiConnection {
             if (player == null)
                 return "";
             try {
-                if (PlaceHolderRequestEvent.PlaceHolderType.getTypeFromName(s) != null) {
+                /*if (PlaceHolder.getTypeFromName(s) != null) {
                     final PlaceHolderRequestEvent event;
                     final Optional<PlaceHolderRequestEvent.PlaceHolderType> optType = PlaceHolderRequestEvent.PlaceHolderType.getTypeFromName(s);
                     if (optType.isPresent()) {
@@ -101,7 +102,7 @@ public final class PlaceHolderApiConnection {
                         return ChatColor.translateAlternateColorCodes('&', event.getResult());
                     }
                     return null;
-                }
+                }*/
 
             } catch (final Exception ignored) {
             }

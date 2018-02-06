@@ -37,7 +37,7 @@ public class GameJoinEvent extends GameCancelableEvent {
     private final Player player;
 
     /**
-     * Initializes a new join event
+     * Initializes a new join event.
      *
      * @param game   game
      * @param player player
@@ -48,7 +48,7 @@ public class GameJoinEvent extends GameCancelableEvent {
     }
 
     /**
-     * Returns the joined player
+     * Returns the joined player.
      *
      * @return player
      */

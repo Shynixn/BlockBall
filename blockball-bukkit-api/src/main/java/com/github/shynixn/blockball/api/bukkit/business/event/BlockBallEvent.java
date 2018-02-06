@@ -37,7 +37,7 @@ public class BlockBallEvent extends Event {
     private final static HandlerList handlers = new HandlerList();
 
     /**
-     * Bukkit implementation
+     * Bukkit implementation.
      *
      * @return handler
      */
@@ -47,7 +47,7 @@ public class BlockBallEvent extends Event {
     }
 
     /**
-     * Bukkit implementation
+     * Bukkit implementation.
      *
      * @return handlerList
      */

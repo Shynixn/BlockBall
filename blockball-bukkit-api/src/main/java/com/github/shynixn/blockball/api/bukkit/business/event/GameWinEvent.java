@@ -36,7 +36,7 @@ public class GameWinEvent extends GameEvent {
     private final Team team;
 
     /**
-     * Initializes a new gameWin event
+     * Initializes a new gameWin event.
      *
      * @param game game
      * @param team team
@@ -47,7 +47,7 @@ public class GameWinEvent extends GameEvent {
     }
 
     /**
-     * Returns the winning team
+     * Returns the winning team.
      *
      * @return team
      */

@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitPersistenceable
+import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitPersistenceAble
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 
 /**
@@ -30,7 +30,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-open class PersistenceObject : BukkitPersistenceable {
+open class PersistenceObject : BukkitPersistenceAble {
 
     /** Returns the id of the object. */
     override var id: Long = 0

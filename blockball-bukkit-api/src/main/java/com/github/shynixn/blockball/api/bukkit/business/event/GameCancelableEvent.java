@@ -33,7 +33,7 @@ public class GameCancelableEvent extends GameEvent {
     private boolean isCancelled;
 
     /**
-     * Initializes a game event
+     * Initializes a game event.
      *
      * @param game game
      */
@@ -42,7 +42,7 @@ public class GameCancelableEvent extends GameEvent {
     }
 
     /**
-     * Returns if the event is cancelled
+     * Returns if the event is cancelled.
      *
      * @return isCancelled
      */
@@ -51,7 +51,7 @@ public class GameCancelableEvent extends GameEvent {
     }
 
     /**
-     * Sets the event cancelled
+     * Sets the event cancelled.
      *
      * @param isCanceled cancelled
      */

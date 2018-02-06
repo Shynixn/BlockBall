@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.business.enumeration;
 
-import java.util.Optional;
-
 /**
  * Copyright 2017 Shynixn
  * <p>
@@ -35,5 +33,5 @@ public enum GameType {
     HUBGAME,
     MINIGAME,
     BUNGEE,
-    EVENT;
+    EVENT
 }

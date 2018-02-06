@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.api.bukkit.business.event;
 
+import com.github.shynixn.blockball.api.business.entity.Game;
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder;
 import org.bukkit.entity.Player;
-
-import java.util.Optional;
 
 /**
  * Copyright 2017 Shynixn
@@ -33,28 +33,26 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class PlaceHolderRequestEvent extends BlockBallCancelAbleEvent {
+public class PlaceHolderRequestEvent extends GameCancelableEvent {
     private String result;
     private final Player player;
-    private final PlaceHolderType type;
-    private final int game;
+    private final PlaceHolder type;
 
     /**
-     * Initializes a new placeHolderRequest
+     * Initializes a new placeHolderRequest.
      *
      * @param player player
      * @param type   type
      * @param game   game
      */
-    public PlaceHolderRequestEvent(Player player, PlaceHolderType type, int game) {
-        super();
+    public PlaceHolderRequestEvent(Player player, PlaceHolder type, Game game) {
+        super(game);
         this.player = player;
-        this.game = game;
         this.type = type;
     }
 
     /**
-     * Returns the game of the player
+     * Returns the game of the player.
      *
      * @return player
      */
@@ -63,25 +61,16 @@ public class PlaceHolderRequestEvent extends BlockBallCancelAbleEvent {
     }
 
     /**
-     * Returns the id of the gam
-     *
-     * @return gameId
-     */
-    public int getGameId() {
-        return this.game;
-    }
-
-    /**
-     * Returns the type
+     * Returns the type.
      *
      * @return type
      */
-    public PlaceHolderType getType() {
+    public PlaceHolder getType() {
         return this.type;
     }
 
     /**
-     * Returns the result
+     * Returns the result.
      *
      * @return result
      */
@@ -90,42 +79,11 @@ public class PlaceHolderRequestEvent extends BlockBallCancelAbleEvent {
     }
 
     /**
-     * Sets the result of the request
+     * Sets the result of the request.
      *
      * @param result result
      */
     public void setResult(String result) {
         this.result = result;
-    }
-
-    /**
-     * Type
-     */
-    public enum PlaceHolderType {
-        REDSCORE,
-        REDAMOUNT,
-        REDCOLOR,
-        REDNAME,
-
-        BLUESCORE,
-        BLUEAMOUNT,
-        BLUECOLOR,
-        BLUENAME,
-
-        LASTHITPLAYERNAME;
-
-        /**
-         * Returns the type from the name
-         *
-         * @param name name
-         * @return type
-         */
-        public static Optional<PlaceHolderType> getTypeFromName(String name) {
-            for (final PlaceHolderType type : PlaceHolderType.values()) {
-                if (name.toUpperCase().contains(type.name().toUpperCase()))
-                    return Optional.of(type);
-            }
-            return Optional.empty();
-        }
     }
 }

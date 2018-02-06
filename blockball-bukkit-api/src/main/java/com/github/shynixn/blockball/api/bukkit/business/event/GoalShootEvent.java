@@ -38,7 +38,7 @@ public class GoalShootEvent extends GameEvent {
     private final Team team;
 
     /**
-     * Initializes  a new goalShootEvent
+     * Initializes  a new goalShootEvent.
      *
      * @param game   game
      * @param player player
@@ -51,7 +51,7 @@ public class GoalShootEvent extends GameEvent {
     }
 
     /**
-     * Returns the player who scorred a goal
+     * Returns the player who scored a goal.
      *
      * @return player
      */
@@ -60,7 +60,7 @@ public class GoalShootEvent extends GameEvent {
     }
 
     /**
-     * Returns the team of the player
+     * Returns the team of the player.
      *
      * @return player
      */

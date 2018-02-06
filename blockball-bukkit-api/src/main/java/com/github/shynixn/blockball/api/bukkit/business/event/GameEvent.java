@@ -35,16 +35,17 @@ public class GameEvent extends BlockBallEvent {
     private final Game game;
 
     /**
-     * Initializes a game event
+     * Initializes a game event.
      *
      * @param game game
      */
     public GameEvent(Game game) {
+        super();
         this.game = game;
     }
 
     /**
-     * Returns the game
+     * Returns the game.
      *
      * @return game
      */

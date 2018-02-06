@@ -35,7 +35,7 @@ public class GameLeaveEvent extends GameEvent {
     private final Player player;
 
     /**
-     * Initializes a game event
+     * Initializes a game event.
      *
      * @param game game
      */
@@ -44,6 +44,10 @@ public class GameLeaveEvent extends GameEvent {
         this.player = player;
     }
 
+    /**
+     * Returns the left player.
+     * @return player
+     */
     public Player getPlayer() {
         return this.player;
     }
