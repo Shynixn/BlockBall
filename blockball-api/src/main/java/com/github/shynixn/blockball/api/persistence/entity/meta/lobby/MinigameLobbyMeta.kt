@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
 
 import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 
 /**
  * Created by Shynixn 2018.
@@ -36,5 +36,5 @@ interface MinigameLobbyMeta : PersistenceAble {
     var matchDuration: Int
 
     /** Spawnpoint of the player in the lobby. */
-    var lobbySpawnpoint: IPosition?
+    var lobbySpawnpoint: StorageLocation?
 }

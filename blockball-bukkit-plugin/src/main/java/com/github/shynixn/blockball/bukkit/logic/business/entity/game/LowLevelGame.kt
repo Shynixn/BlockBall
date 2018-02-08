@@ -6,7 +6,7 @@ import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.entity.InGameStats
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.GameScoreboard
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleBossBar
@@ -145,7 +145,7 @@ abstract class LowLevelGame(
 
     protected abstract fun onUpdateSigns()
 
-    protected fun replaceTextOnSign(signPosition: IPosition, lines: Array<String>, teamMeta: TeamMeta<Location, ItemStack>?): Boolean {
+    protected fun replaceTextOnSign(signPosition: StorageLocation, lines: Array<String>, teamMeta: TeamMeta<Location, ItemStack>?): Boolean {
         val maxPlayers = teamMeta?.maxAmount
         var players = redTeam.size
         if (arena.meta.blueTeamMeta == teamMeta) {

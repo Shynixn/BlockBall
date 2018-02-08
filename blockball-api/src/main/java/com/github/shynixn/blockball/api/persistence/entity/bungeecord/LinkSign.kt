@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.bungeecord
 
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 
 /**
  * Created by Shynixn 2018.
@@ -33,7 +33,7 @@ import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
 interface LinkSign : PersistenceAble {
 
     /** Position of the link sign in the server. */
-    var position: IPosition?
+    var position: StorageLocation?
 
     /** Server linking to. */
     var server: String?

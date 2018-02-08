@@ -1,17 +1,16 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.stats;
+package com.github.shynixn.blockball.api
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble;
-
-import java.util.UUID;
+import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController
+import com.github.shynixn.blockball.api.business.controller.GameController
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,40 +30,27 @@ import java.util.UUID;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface PlayerMeta extends PersistenceAble {
+object BlockBallApi {
+    private var bungeeCordConnectController: BungeeCordConnectionController<*>? = null
+
+    private var gameController: GameController<*, *, *, *>? = null
+
+    private fun initializeBlockBall(gameController: GameController<*, *, *, *>, bungeeCordConnectionController: BungeeCordConnectionController<*>) {
+        this.gameController = gameController
+        this.bungeeCordConnectController = bungeeCordConnectionController
+    }
 
     /**
-     * Returns the name of the playerData
-     *
-     * @return playerData
+     * Returns the default game controller.
      */
-    String getName();
+    fun <T : GameController<*, *, *, *>> getDefaultGameController(): T {
+        return gameController as T
+    }
 
     /**
-     * Sets the name of the playerData
-     *
-     * @param name name
+     * Returns the default bungeecord controller.
      */
-    void setName(String name);
-
-    /**
-     * Returns the uuid of the playerData
-     *
-     * @return uuid
-     */
-    UUID getUUID();
-
-    /**
-     * Sets the uuid of the playerData
-     *
-     * @param uuid uuid
-     */
-    void setUuid(UUID uuid);
-
-    /**
-     * Returns the player of the playerData
-     *
-     * @return player
-     */
-    Object getPlayer();
+    fun <T : BungeeCordConnectionController<*>> getDefaultBungeeCordController(): T {
+        return bungeeCordConnectController as T
+    }
 }

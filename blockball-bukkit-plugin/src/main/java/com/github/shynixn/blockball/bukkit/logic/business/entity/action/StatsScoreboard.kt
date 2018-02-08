@@ -54,7 +54,7 @@ class StatsScoreboard(val player: Player) : SimpleScoreboard() {
             val line = lines[i]
                     .replace("<player>", player.name)
                     .replace("<winrate>", String.format("%.2f", stats.winRate))
-                    .replace("<playedgames>", stats.amountOfGamesPlayed.toString())
+                    .replace("<playedgames>", stats.amountOfPlayedGames.toString())
                     .replace("<goalspergame>", String.format("%.2f", stats.goalsPerGame))
             this.setDefaultLine(j, line)
             i++

@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
 
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
 import org.bukkit.Location;
@@ -88,7 +88,7 @@ public abstract class Page {
 
     String printLocation(Object mlocation) {
         Location location;
-        if (mlocation instanceof IPosition) {
+        if (mlocation instanceof StorageLocation) {
             location = ((LocationBuilder) mlocation).toLocation();
         } else {
             location = (Location) mlocation;

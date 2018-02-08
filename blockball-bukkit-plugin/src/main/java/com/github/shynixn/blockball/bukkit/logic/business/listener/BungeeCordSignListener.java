@@ -92,7 +92,7 @@ public class BungeeCordSignListener extends SimpleListener {
     private LinkSign getBungeeCordSignFromLocation(Location signLocation) {
         for (final Object sign1 : this.manager.getBungeeCordSignController().getAll()) {
             LinkSign sign = (LinkSign) sign1;
-            final Location l = (Location) ((LocationBuilder)sign.getPosition()).toLocation();
+            final Location l = ((LocationBuilder)sign.getPosition()).toLocation();
             if (signLocation.getBlockX() == l.getBlockX()) {
                 if (signLocation.getBlockY() == l.getBlockY()) {
                     if (signLocation.getBlockZ() == l.getBlockZ()) {

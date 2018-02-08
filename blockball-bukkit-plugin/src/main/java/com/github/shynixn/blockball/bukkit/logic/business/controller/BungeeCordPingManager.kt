@@ -128,7 +128,7 @@ class BungeeCordPingManager : BungeeCordConnectionController<Player>, Runnable, 
         try {
             if (data == null)
                 return
-            val serverInfo = BungeeCordServerStats.from(serverName, data)
+            val serverInfo = BungeeCordServerStats(serverName, data)
             this.plugin.server.scheduler.runTask(this.plugin) { this.updateSigns(serverInfo) }
         } catch (e: Exception) {
             Bukkit.getLogger().log(Level.WARNING, "Cannot parse result from server.", e)
@@ -166,7 +166,7 @@ class BungeeCordPingManager : BungeeCordConnectionController<Player>, Runnable, 
             customLine = customLine.replace("<state>", "UNKNOWN");*/
         return line.replace("<maxplayers>", (info.playerMaxAmount * 2).toString())
                 .replace("<players>", info.playerAmount.toString())
-                .replace("<server>", info.serverName)
+                .replace("<server>", info.serverName!!)
     }
 
     /**

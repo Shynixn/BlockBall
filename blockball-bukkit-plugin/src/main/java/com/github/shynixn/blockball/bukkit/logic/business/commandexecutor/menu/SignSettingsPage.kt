@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
 import com.github.shynixn.blockball.bukkit.logic.business.listener.SignPlacementListener
@@ -68,14 +68,14 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
         if (command == BlockBallCommand.SIGNS_ADDTEAMRED) {
             player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
             listener!!.placementCallBack[player!!] = (object : SignPlacementListener.CallBack {
-                override fun run(position: IPosition) {
+                override fun run(position: StorageLocation) {
                     arena.meta.lobbyMeta.redTeamSigns.add(position)
                 }
             })
         } else if (command == BlockBallCommand.SIGNS_ADDTEAMBLUE) {
             player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
             listener!!.placementCallBack[player!!] = (object : SignPlacementListener.CallBack {
-                override fun run(position: IPosition) {
+                override fun run(position: StorageLocation) {
                     arena.meta.lobbyMeta.blueTeamSigns.add(position)
                 }
             })
@@ -83,7 +83,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
         else if (command == BlockBallCommand.SIGNS_ADDJOINANY) {
             player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
             listener!!.placementCallBack[player!!] = (object : SignPlacementListener.CallBack {
-                override fun run(position: IPosition) {
+                override fun run(position: StorageLocation) {
                     arena.meta.lobbyMeta.joinSigns.add(position)
                 }
             })
@@ -91,7 +91,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
         else if (command == BlockBallCommand.SIGNS_LEAVE) {
             player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
             listener!!.placementCallBack[player!!] = (object : SignPlacementListener.CallBack {
-                override fun run(position: IPosition) {
+                override fun run(position: StorageLocation) {
                     arena.meta.lobbyMeta.leaveSigns.add(position)
                 }
             })

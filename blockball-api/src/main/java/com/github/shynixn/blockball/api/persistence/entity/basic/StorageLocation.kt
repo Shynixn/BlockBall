@@ -1,7 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
+package com.github.shynixn.blockball.api.persistence.entity.basic
 
 import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 
 /**
  * Created by Shynixn 2018.
@@ -30,28 +29,42 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface LobbyMeta : PersistenceAble {
-    /** List of signs which can be clicked to join the red team.*/
-    val redTeamSigns: MutableList<StorageLocation>
+interface StorageLocation : PersistenceAble {
 
-    /** List of signs which can be clicked to join the red team.*/
-    val blueTeamSigns: MutableList<StorageLocation>
+    /**
+     * Sets the coordinates x, y, z.
+     *
+     * @param x x
+     * @param y y
+     * @param z z
+     * @return builder
+     */
+    fun setCoordinates(x: Double, y: Double, z: Double): StorageLocation
 
-    /** List of signs which can be clicked to leave the game. */
-    val leaveSigns: MutableList<StorageLocation>
+    /** [worldName] which world the location is. */
+    var worldName: String?
 
-    /** List of signs which can be clicked to join the game. */
-    val joinSigns: MutableList<StorageLocation>
+    /** [x] coordinate. */
+    var x: Double
 
-    /** Spawnpoint when someone leaves the hub game. */
-    val leaveSpawnpoint: StorageLocation?
+    /** [y] coordinate. */
+    var y: Double
 
-    /** Lines displayed on the sign for leaving the match. */
-    var joinSignLines: Array<String>
+    /** [z] coordinate. */
+    var z: Double
 
-    /** Lines displayed on the sign for leaving the match. */
-    var leaveSignLines: Array<String>
+    /** [yaw] rotation yaw. */
+    var yaw: Double
 
-    /** Join asking message. */
-    var joinMessage: Array<String>
+    /** [pitch] rotation pitch. */
+    var pitch: Double
+
+    /** [blockX] coordinate as Int. */
+    val blockX: Int
+
+    /** [blockY] coordinate as Int. */
+    val blockY: Int
+
+    /** [blockZ] coordinate as Int. */
+    val blockZ: Int
 }

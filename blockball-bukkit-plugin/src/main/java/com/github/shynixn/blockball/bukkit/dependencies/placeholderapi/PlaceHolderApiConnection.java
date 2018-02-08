@@ -11,7 +11,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.Optional;
 
 
-/**
+/*
  * Copyright 2017 Shynixn
  * <p>
  * Do not remove this header!

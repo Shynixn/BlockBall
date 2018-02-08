@@ -41,5 +41,5 @@ interface BungeeCordServerStatus {
     val playerMaxAmount: Int
 
     /** Name of the server. **/
-    val serverName: String
+    val serverName: String?
 }

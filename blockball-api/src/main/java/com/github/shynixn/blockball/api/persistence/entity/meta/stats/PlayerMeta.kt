@@ -1,7 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
+package com.github.shynixn.blockball.api.persistence.entity.meta.stats
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
+import java.util.*
 
 /**
  * Created by Shynixn 2018.
@@ -30,28 +29,14 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface LobbyMeta : PersistenceAble {
-    /** List of signs which can be clicked to join the red team.*/
-    val redTeamSigns: MutableList<StorageLocation>
+interface PlayerMeta<out Player> {
 
-    /** List of signs which can be clicked to join the red team.*/
-    val blueTeamSigns: MutableList<StorageLocation>
+    /** [name] of the player. */
+    var name: String?
 
-    /** List of signs which can be clicked to leave the game. */
-    val leaveSigns: MutableList<StorageLocation>
+    /** [uuid] of the player. */
+    var uuid: UUID
 
-    /** List of signs which can be clicked to join the game. */
-    val joinSigns: MutableList<StorageLocation>
-
-    /** Spawnpoint when someone leaves the hub game. */
-    val leaveSpawnpoint: StorageLocation?
-
-    /** Lines displayed on the sign for leaving the match. */
-    var joinSignLines: Array<String>
-
-    /** Lines displayed on the sign for leaving the match. */
-    var leaveSignLines: Array<String>
-
-    /** Join asking message. */
-    var joinMessage: Array<String>
+    /** [player] instance. */
+    val player: Player
 }

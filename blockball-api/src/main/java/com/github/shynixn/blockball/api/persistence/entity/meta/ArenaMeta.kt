@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta
 
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta
+import com.github.shynixn.blockball.api.persistence.entity.BallExtensionMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.BungeeCordLobbyMeta
@@ -59,7 +59,7 @@ interface ArenaMeta<Location, ItemStack, Vector, Player, Material> {
     val blueTeamMeta: TeamMeta<Location, ItemStack>
 
     /** Meta data of the ball. */
-    val ballMeta: BallMeta<*,*,*>
+    val ballMeta: BallExtensionMeta<*,*,*>
 
     /** Meta data of protection. */
     val protectionMeta: ArenaProtectionMeta<Vector>

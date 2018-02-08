@@ -203,7 +203,7 @@ public class StatsListener extends SimpleListener implements Runnable {
                         meta = optPlayerMeta.get();
                     }
                     stats = this.statsController.create();
-                    ((StatsData) stats).setPlayerId(meta.getId());
+                    ((StatsData) stats).set(meta.getId());
                     this.statsController.store(stats);
                 } else {
                     stats = optStats.get();

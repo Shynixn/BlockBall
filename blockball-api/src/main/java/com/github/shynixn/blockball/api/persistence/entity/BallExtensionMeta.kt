@@ -1,6 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
+package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
+import com.github.shynixn.ball.api.persistence.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 
 /**
@@ -30,28 +30,11 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface LobbyMeta : PersistenceAble {
-    /** List of signs which can be clicked to join the red team.*/
-    val redTeamSigns: MutableList<StorageLocation>
+interface BallExtensionMeta: PersistenceAble, BallMeta{
 
-    /** List of signs which can be clicked to join the red team.*/
-    val blueTeamSigns: MutableList<StorageLocation>
+    /** Spawning delay. */
+    var delayInTicks: Int
 
-    /** List of signs which can be clicked to leave the game. */
-    val leaveSigns: MutableList<StorageLocation>
-
-    /** List of signs which can be clicked to join the game. */
-    val joinSigns: MutableList<StorageLocation>
-
-    /** Spawnpoint when someone leaves the hub game. */
-    val leaveSpawnpoint: StorageLocation?
-
-    /** Lines displayed on the sign for leaving the match. */
-    var joinSignLines: Array<String>
-
-    /** Lines displayed on the sign for leaving the match. */
-    var leaveSignLines: Array<String>
-
-    /** Join asking message. */
-    var joinMessage: Array<String>
+    /** Spawnpoint of the ball. */
+    var spawnpoint: StorageLocation
 }

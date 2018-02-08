@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby
 
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.LobbyMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
@@ -35,8 +35,8 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.Locati
  */
 class LobbyProperties : PersistenceObject(), LobbyMeta {
     /** List of signs which can be clicked to join the game. */
-    override val joinSigns: MutableList<IPosition>
-        get() = sign.joinSigns as MutableList<IPosition>
+    override val joinSigns: MutableList<StorageLocation>
+        get() = sign.joinSigns as MutableList<StorageLocation>
     /** Lines displayed on the sign for leaving the match. */
     override var joinSignLines: Array<String> = arrayOf("&lBlockBall", "<game>", "<state>", "")
     /** Join asking message. */
@@ -45,14 +45,14 @@ class LobbyProperties : PersistenceObject(), LobbyMeta {
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leave-sign-lines")
     override var leaveSignLines: Array<String> = arrayOf("&lBlockBall", "<game>", "Leave", "")
     /** List of signs which can be clicked to join the red team.*/
-    override val redTeamSigns: MutableList<IPosition>
-        get() = sign.redTeamSigns as MutableList<IPosition>
+    override val redTeamSigns: MutableList<StorageLocation>
+        get() = sign.redTeamSigns as MutableList<StorageLocation>
     /** List of signs which can be clicked to join the red team.*/
-    override val blueTeamSigns: MutableList<IPosition>
-        get() = sign.blueTeamSigns as MutableList<IPosition>
+    override val blueTeamSigns: MutableList<StorageLocation>
+        get() = sign.blueTeamSigns as MutableList<StorageLocation>
     /** List of signs which can be clicked to leave the game. */
-    override val leaveSigns: MutableList<IPosition>
-        get() = sign.leaveSigns as MutableList<IPosition>
+    override val leaveSigns: MutableList<StorageLocation>
+        get() = sign.leaveSigns as MutableList<StorageLocation>
     /** Spawnpoint when someone leaves the hub game. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "leave-spawnpoint")
     override var leaveSpawnpoint: LocationBuilder? = null

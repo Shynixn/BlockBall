@@ -30,11 +30,11 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface PlayerMetaController<in Player> : DatabaseController<PlayerMeta> {
+interface PlayerMetaController<Player> : DatabaseController<PlayerMeta<Player>> {
 
     /** Creates a new playerMeta from the given player.**/
-    fun create(player: Player): PlayerMeta
+    fun create(player: Player): PlayerMeta<Player>
 
     /** Returns the playerMeta of the given uuid. **/
-    fun getByUUID(uuid: UUID): Optional<PlayerMeta>
+    fun getByUUID(uuid: UUID): Optional<PlayerMeta<Player>>
 }

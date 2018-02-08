@@ -1,7 +1,6 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats
 
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
-import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
@@ -32,11 +31,31 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class HologramBuilder : PersistenceObject(), HologramMeta {
-    /** Position of the hologram. */
-    @YamlSerializer.YamlSerialize("location", orderNumber = 1)
-    override var position: StorageLocation? = null;
-    /** Lines of the hologram being rendered. */
-    @YamlSerializer.YamlSerialize("lines", orderNumber = 1)
-    override val lines: MutableList<String> = ArrayList();
+class StatsData : PersistenceObject(), Stats {
+    /** [amountOfGoals] the player has shot. */
+    @YamlSerializer.YamlSerialize(value = "amount-goals", orderNumber = 4)
+    override var amountOfGoals: Int = 0
+    /** [amountOfPlayedGames] of the player. */
+    @YamlSerializer.YamlSerialize(value = "amount-games", orderNumber = 3)
+    override var amountOfPlayedGames: Int = 0
+    /** [amountOfWins] of the player. */
+    @YamlSerializer.YamlSerialize(value = "amount-wins", orderNumber = 2)
+    override var amountOfWins: Int = 0
+    /** [winRate] of the player. */
+    override val winRate: Double
+        get() {
+            if (this.amountOfPlayedGames == 0)
+                return 0.0
+            return (this.amountOfWins.toDouble()) / (this.amountOfPlayedGames.toDouble())
+        }
+    /** [goalsPerGame] of the player. */
+    override val goalsPerGame: Double
+        get() {
+            if (this.amountOfPlayedGames == 0)
+                return 0.0
+            return (this.amountOfGoals.toDouble()) / (this.amountOfPlayedGames.toDouble())
+        }
+
+    @YamlSerializer.YamlSerialize(value = "playerId", orderNumber = 1)
+    internal var playerId: Long = 0
 }

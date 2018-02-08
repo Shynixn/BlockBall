@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
 import com.google.inject.Inject
@@ -77,6 +77,6 @@ class SignPlacementListener @Inject constructor(plugin: Plugin) : SimpleListener
     }
 
     interface CallBack {
-        fun run(position: IPosition)
+        fun run(position: StorageLocation)
     }
 }

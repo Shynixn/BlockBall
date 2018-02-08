@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby
 
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.MinigameLobbyMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
@@ -38,5 +38,5 @@ class MinigameLobbyProperties : PersistenceObject(), MinigameLobbyMeta {
     override var matchDuration: Int = 300
     /** Spawnpoint of the player in the lobby. */
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "lobby-spawnpoint")
-    override var lobbySpawnpoint: IPosition? = null
+    override var lobbySpawnpoint: StorageLocation? = null
 }

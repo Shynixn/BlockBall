@@ -3,10 +3,13 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity;
 import com.github.shynixn.ball.api.bukkit.persistence.controller.BukkitBounceController;
 import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitParticleEffectMeta;
 import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta;
+import com.github.shynixn.blockball.api.persistence.entity.BallExtensionMeta;
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta;
 import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition;
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder;
 import org.bukkit.configuration.MemorySection;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -37,9 +40,9 @@ import java.util.Map;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BallData extends com.github.shynixn.ball.bukkit.core.logic.persistence.entity.BallData implements BallMeta<BukkitParticleEffectMeta,BukkitSoundEffectMeta, BukkitBounceController>{
+public class BallData extends com.github.shynixn.ball.bukkit.core.logic.persistence.entity.BallData implements BallExtensionMeta<BukkitParticleEffectMeta,BukkitSoundEffectMeta, BukkitBounceController> {
     private long id;
-    private IPosition spawnpoint;
+    private StorageLocation spawnpoint;
     private int spawnDelayTicks = 5;
 
     /**
@@ -58,7 +61,7 @@ public class BallData extends com.github.shynixn.ball.bukkit.core.logic.persiste
      * @return ticks
      */
     public int getSpawnDelayTicks() {
-        return this.spawnDelayTicks;
+
     }
 
     /**
@@ -66,7 +69,7 @@ public class BallData extends com.github.shynixn.ball.bukkit.core.logic.persiste
      * @param spawnDelayTicks spawnDelay
      */
     public void setSpawnDelayTicks(int spawnDelayTicks) {
-        this.spawnDelayTicks = spawnDelayTicks;
+
     }
 
     /**
@@ -79,22 +82,12 @@ public class BallData extends com.github.shynixn.ball.bukkit.core.logic.persiste
     }
 
     /**
-     * Sets the spawnpoint of the ball.
-     *
-     * @param position position
-     */
-    @Override
-    public void setSpawnpoint(IPosition position) {
-        this.spawnpoint = position;
-    }
-
-    /**
      * Returns the spawnpoint of the ball.
      *
      * @return spawnpoint
      */
     @Override
-    public IPosition getSpawnpoint() {
+    public StorageLocation getSpawnpoint() {
         return this.spawnpoint;
     }
 
@@ -118,5 +111,20 @@ public class BallData extends com.github.shynixn.ball.bukkit.core.logic.persiste
         data.put("spawn-delay", this.spawnDelayTicks);
         data.put("spawnpoint", ((LocationBuilder) this.spawnpoint).serialize());
         return data;
+    }
+
+    @Override
+    public int getDelayInTicks() {
+        return this.spawnDelayTicks;
+    }
+
+    @Override
+    public void setDelayInTicks(int i) {
+        this.spawnDelayTicks = i;
+    }
+
+    @Override
+    public void setSpawnpoint(@NotNull StorageLocation storageLocation) {
+        this.spawnpoint = storageLocation;
     }
 }

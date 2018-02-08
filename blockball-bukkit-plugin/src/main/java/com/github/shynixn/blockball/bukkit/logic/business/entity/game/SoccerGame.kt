@@ -139,7 +139,7 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
                 && (!this.redTeam.isEmpty() || !this.blueTeam.isEmpty())
                 && (this.redTeam.size >= this.arena.meta.redTeamMeta.minAmount && this.blueTeam.size >= this.arena.meta.blueTeamMeta.minAmount)) {
             this.ballSpawning = true
-            this.ballSpawnCounter = this.arena.meta.ballMeta.spawnDelayTicks
+            this.ballSpawnCounter = this.arena.meta.ballMeta.delayInTicks
         }
     }
 }

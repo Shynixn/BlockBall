@@ -1,7 +1,11 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.lobby
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
+import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
+import java.util.*
 
 /**
  * Created by Shynixn 2018.
@@ -30,28 +34,29 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface LobbyMeta : PersistenceAble {
-    /** List of signs which can be clicked to join the red team.*/
-    val redTeamSigns: MutableList<StorageLocation>
+class PlayerData() : PersistenceObject(), PlayerMeta<Player> {
+    /** [name] of the player. */
+    @YamlSerializer.YamlSerialize(value = "name", orderNumber = 1)
+    override var name: String? = null
 
-    /** List of signs which can be clicked to join the red team.*/
-    val blueTeamSigns: MutableList<StorageLocation>
+    @YamlSerializer.YamlSerialize(value = "uuid", orderNumber = 2)
+    private var uuidText: String? = null
 
-    /** List of signs which can be clicked to leave the game. */
-    val leaveSigns: MutableList<StorageLocation>
+    constructor(player: Player) : this() {
+        this.name = player.name
+        this.uuid = player.uniqueId
+    }
 
-    /** List of signs which can be clicked to join the game. */
-    val joinSigns: MutableList<StorageLocation>
+    /** [uuid] of the player. */
+    override var uuid: UUID
+        get() = UUID.fromString(uuidText)
+        set(value) {
+            uuidText = value.toString()
+        }
 
-    /** Spawnpoint when someone leaves the hub game. */
-    val leaveSpawnpoint: StorageLocation?
-
-    /** Lines displayed on the sign for leaving the match. */
-    var joinSignLines: Array<String>
-
-    /** Lines displayed on the sign for leaving the match. */
-    var leaveSignLines: Array<String>
-
-    /** Join asking message. */
-    var joinMessage: Array<String>
+    /** [player] instance. */
+    override val player: Player
+        get() {
+            return Bukkit.getPlayer(uuid)
+        }
 }

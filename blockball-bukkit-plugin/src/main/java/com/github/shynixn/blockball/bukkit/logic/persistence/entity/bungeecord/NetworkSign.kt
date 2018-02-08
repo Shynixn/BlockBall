@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.bungeecord
 
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.bungeecord.LinkSign
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
@@ -38,5 +38,5 @@ class NetworkSign : PersistenceObject(), LinkSign {
     override var server: String? = null
     /** Position of the link sign in the server. */
     @YamlSerializer.YamlSerialize(value = "location", orderNumber = 2)
-    override var position: IPosition? = null
+    override var position: StorageLocation? = null
 }

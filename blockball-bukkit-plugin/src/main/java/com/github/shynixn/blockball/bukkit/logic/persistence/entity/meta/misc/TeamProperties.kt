@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc
 
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.area.SelectedArea
@@ -62,11 +62,11 @@ class TeamProperties(
     override var maxAmount: Int = 10
     /** Spawnpoint of the team inside of the arena. */
     @YamlSerializer.YamlSerialize(orderNumber = 6, value = "spawnpoint")
-    override var spawnpoint: IPosition? = null
+    override var spawnpoint: StorageLocation? = null
     /** Goal properties of the team. */
     @YamlSerializer.YamlSerialize(orderNumber = 7, value = "goal")
     override val goal: SelectedArea = SelectedArea()
-    /** Walkingspeed of the players in this team. */
+    /** WalkingSpeed of the players in this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "walking-speed")
     override var walkingSpeed: Double = 0.2
     /** Message getting played when a player joins a match.*/

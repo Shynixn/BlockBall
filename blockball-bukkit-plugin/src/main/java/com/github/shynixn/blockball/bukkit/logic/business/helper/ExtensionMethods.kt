@@ -6,7 +6,7 @@ import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
@@ -106,11 +106,11 @@ internal fun String.convertChatColors(): String {
     return ChatColor.translateAlternateColorCodes('&', this)
 }
 
-internal fun Location.toPosition(): IPosition {
+internal fun Location.toPosition(): StorageLocation {
     return LocationBuilder(this)
 }
 
-internal fun IPosition.toBukkitLocation(): Location {
+internal fun StorageLocation.toBukkitLocation(): Location {
     return (this as LocationBuilder).toLocation()
 }
 

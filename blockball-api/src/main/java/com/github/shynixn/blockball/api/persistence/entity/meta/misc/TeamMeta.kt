@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.misc
 
 import com.github.shynixn.blockball.api.persistence.entity.meta.area.AreaSelection
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 
 /**
  * Created by Shynixn 2018.
@@ -36,7 +36,7 @@ interface TeamMeta<Location, ItemStack> {
     val goal: AreaSelection<Location>
 
     /** Spawnpoint of the team inside of the arena. */
-    var spawnpoint: IPosition?
+    var spawnpoint: StorageLocation?
 
     /** DisplayName of the team which gets used in the placeholder <red> or <blue>. */
     var displayName: String

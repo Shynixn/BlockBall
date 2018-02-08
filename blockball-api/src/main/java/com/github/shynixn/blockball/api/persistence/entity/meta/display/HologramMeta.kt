@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.display
 
-import com.github.shynixn.blockball.api.persistence.entity.basic.IPosition
 import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 
 /**
  * Created by Shynixn 2018.
@@ -33,7 +33,7 @@ import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
 interface HologramMeta : PersistenceAble {
 
     /** Position of the hologram. */
-    var position: IPosition?
+    var position: StorageLocation?
 
     /** Lines of the hologram being rendered. */
     val lines: MutableList<String>
