@@ -1,0 +1,5 @@
+Effects
+=======
+
+.. toctree::
+   bossbar

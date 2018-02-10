@@ -2,7 +2,7 @@ Customizing
 ===========
 
 .. toctree::
-   gui
+   effects
    database
    commands
    datacollecting
