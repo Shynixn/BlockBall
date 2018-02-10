@@ -48,13 +48,12 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
         return PageKey.BOSSBAR
     }
 
-
     /**
      * Executes actions for this page.
      *
      * @param cache cache
      */
-    override fun execute(player: Player?, command: BlockBallCommand?, cache: Array<Any>?, args: Array<out String>?): CommandResult {
+    override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         val arena = cache!![0] as BukkitArena
         val bossbar = arena.meta.bossBarMeta
         cache[5] = bossbar.flags.map { p -> p.name }
@@ -84,7 +83,7 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
      * @param cache cache
      * @return content
      */
-    override fun buildPage(cache: Array<Any>?): ChatBuilder {
+    override fun buildPage(cache: Array<Any?>): ChatBuilder {
         val arena = cache!![0] as BukkitArena
         val bossbar = arena.meta.bossBarMeta
         if (bossbar.flags.isEmpty())

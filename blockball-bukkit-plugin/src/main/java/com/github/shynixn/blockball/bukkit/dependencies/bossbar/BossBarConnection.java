@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.dependencies.bossbar;
 
-import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config;
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ReflectionUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -54,7 +54,7 @@ public final class BossBarConnection {
         try {
             ReflectionUtils.invokeMethodByClass(ReflectionUtils.invokeClass("org.inventivetalent.bossbar.BossBarAPI"), "setMessage", new Class[]{Player.class, String.class}, new Object[]{player, message});
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
-            Config.INSTANCE.getLogger().log(Level.WARNING, "Failed to update Bossbar.", e);
+            Bukkit.getLogger().log(Level.WARNING, "Failed to update Bossbar.", e);
         }
     }
 
@@ -70,7 +70,7 @@ public final class BossBarConnection {
                 ReflectionUtils.invokeMethodByClass(clazz, "removeBar", new Class[]{Player.class}, new Object[]{player});
             }
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
-            Config.INSTANCE.getLogger().log(Level.WARNING, "Failed to remove Bossbar.", e);
+            Bukkit.getLogger().log(Level.WARNING, "Failed to remove Bossbar.", e);
         }
     }
 }

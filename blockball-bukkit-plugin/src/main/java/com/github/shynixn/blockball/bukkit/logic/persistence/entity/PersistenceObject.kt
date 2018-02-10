@@ -34,7 +34,7 @@ open class PersistenceObject : BukkitPersistenceAble {
 
     /** Returns the id of the object. */
     override var id: Long = 0
-        internal set(value) {
+        public set(value) {
             field = value
         }
 

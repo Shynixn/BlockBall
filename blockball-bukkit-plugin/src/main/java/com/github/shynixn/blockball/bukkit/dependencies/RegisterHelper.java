@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.bukkit.dependencies;
 
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import com.github.shynixn.blockball.bukkit.dependencies.bossbar.BossBarConnection;
 import com.github.shynixn.blockball.bukkit.dependencies.placeholderapi.PlaceHolderApiConnection;
 import com.github.shynixn.blockball.bukkit.dependencies.vault.VaultConnection;
@@ -18,6 +17,8 @@ import java.util.logging.Level;
 @Deprecated
 public final class RegisterHelper {
     public static String PREFIX;
+    private static String PREFIX_CONSOLE = ChatColor.BLUE.toString() + "[BlockBall] ";
+
     private static final HashMap<String, String> registered = new HashMap<>();
 
     public static boolean register(String pluginName) {
@@ -84,7 +85,7 @@ public final class RegisterHelper {
 
     public static void registerAll() {
         try {
-            RegisterHelper.PREFIX = BlockBallPlugin.Companion.getPREFIX_CONSOLE();
+            RegisterHelper.PREFIX = PREFIX_CONSOLE;
             RegisterHelper.register("WorldGuard", "com.sk89q.worldguard.protection.ApplicableRegionSet", '5');
             RegisterHelper.register("WorldGuard", "com.sk89q.worldguard.protection.ApplicableRegionSet", '6');
             RegisterHelper.register("BossBarAPI");
@@ -93,7 +94,7 @@ public final class RegisterHelper {
                 PlaceHolderApiConnection.initializeHook(Bukkit.getPluginManager().getPlugin("BlockBall"));
             }
         } catch (final Error ex) {
-            Bukkit.getConsoleSender().sendMessage(BlockBallPlugin.Companion.getPREFIX_CONSOLE() + ChatColor.DARK_RED + "Failed to register the last dependency.");
+            Bukkit.getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.DARK_RED + "Failed to register the last dependency.");
         }
     }
 

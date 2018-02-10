@@ -53,7 +53,7 @@ class ScoreboardPage : Page(ScoreboardPage.ID, EffectsSettingsPage.ID) {
      *
      * @param cache cache
      */
-    override fun execute(player: Player?, command: BlockBallCommand?, cache: Array<Any>?, args: Array<out String>?): CommandResult {
+    override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         val arena = cache!![0] as BukkitArena
         val scoreboard = arena.meta.scoreboardMeta
         cache[2] = scoreboard.lines;
@@ -71,7 +71,7 @@ class ScoreboardPage : Page(ScoreboardPage.ID, EffectsSettingsPage.ID) {
      * @param cache cache
      * @return content
      */
-    override fun buildPage(cache: Array<Any>?): ChatBuilder {
+    override fun buildPage(cache: Array<Any?>): ChatBuilder {
         val arena = cache!![0] as BukkitArena
         val scoreboard = arena.meta.scoreboardMeta
         return ChatBuilder()

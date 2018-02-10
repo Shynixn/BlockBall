@@ -1,14 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
-import com.github.shynixn.ball.api.bukkit.persistence.controller.BukkitBounceController
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitParticleEffectMeta
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
-import com.github.shynixn.ball.api.persistence.controller.BounceController
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.BallData
 import com.github.shynixn.blockball.api.persistence.entity.BallExtensionMeta
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
+import org.bukkit.configuration.MemorySection
 
 /**
  * Created by Shynixn 2018.
@@ -37,7 +33,7 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallData(skin : String) : BallData(skin), BallExtensionMeta {
+class BallData : BallData, BallExtensionMeta {
     /** Spawning delay. */
     override var delayInTicks: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
@@ -50,12 +46,27 @@ class BallData(skin : String) : BallData(skin), BallExtensionMeta {
     override val id: Long
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
+    constructor(skin : String) : super(skin)
+
     /**
-     * Returns a controller for all bounce Objects.
+     * Deserializes a ballData.
      *
-     * @return list
+     * @param data data
      */
-    override fun getBounceObjectController(): BukkitBounceController {
-        return super.getBounceObjectController()
+    constructor(data: Map<String, Any>) : super(data) {
+        this.delayInTicks = data["spawn-delay"] as Int
+        this.spawnpoint = LocationBuilder((data["spawnpoint"] as MemorySection).getValues(false))
+    }
+
+    /**
+     * Serializes the given content.
+     *
+     * @return serializedContent
+     */
+    override fun serialize(): Map<String, Any> {
+        val data = super.serialize()
+        data["spawn-delay"] = this.delayInTicks
+        data["spawnpoint"] = (this.spawnpoint as LocationBuilder).serialize()
+        return data
     }
 }

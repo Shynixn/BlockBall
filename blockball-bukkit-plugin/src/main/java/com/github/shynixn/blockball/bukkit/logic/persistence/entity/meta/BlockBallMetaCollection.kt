@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta
 
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitParticleEffectMeta
-import com.github.shynixn.ball.api.bukkit.persistence.entity.BukkitSoundEffectMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
@@ -13,13 +11,12 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.B
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.LobbyProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.MinigameLobbyProperties
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.DoubleJumpProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.ArenaProtectionData
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.DoubleJumpProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.TeamProperties
 import org.bukkit.Color
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector

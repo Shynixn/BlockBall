@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.stats
 
+import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -27,7 +29,7 @@ package com.github.shynixn.blockball.api.persistence.entity.meta.stats
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Stats {
+interface Stats  :PersistenceAble{
 
     /** [amountOfGoals] the player has shot. */
     var amountOfGoals: Int

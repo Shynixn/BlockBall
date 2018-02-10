@@ -57,7 +57,7 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
      *
      * @param cache cache
      */
-    override fun execute(player: Player?, command: BlockBallCommand?, cache: Array<Any>?, args: Array<out String>?): CommandResult {
+    override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.TEAM_RED_CONFIGURE) {
             cache!![2] = 0
         }
@@ -114,12 +114,12 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
      * @param cache cache
      * @return content
      */
-    override fun buildPage(cache: Array<Any>?): ChatBuilder {
+    override fun buildPage(cache: Array<Any?>): ChatBuilder {
         var spawnpoint = "none"
         val arena = cache!![0] as BukkitArena
         val teamMeta = getTeamMeta(cache)
         if (teamMeta.spawnpoint != null) {
-            spawnpoint = this.printLocation(teamMeta.spawnpoint)
+            spawnpoint = this.printLocation(teamMeta.spawnpoint!!)
         }
         return ChatBuilder()
                 .component("- Name: " + teamMeta.displayName).builder()
@@ -159,7 +159,7 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
                 .builder().nextLine()
     }
 
-    private fun getTeamMeta(cache: Array<Any>?): TeamMeta<Location, ItemStack> {
+    private fun getTeamMeta(cache: Array<Any?>?): TeamMeta<Location, ItemStack> {
         val arena = cache!![0] as BukkitArena
         val type = cache[2] as Int
         return if (type == 0) {

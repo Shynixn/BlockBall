@@ -62,7 +62,7 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
      * @param cache cache
      * @param args
      */
-    override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any>, args: Array<String>): CommandResult {
+    override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.ARENA_CREATE) {
             cache[0] = arenaRepository!!.create()
         } else if (command == BlockBallCommand.ARENA_EDIT) {
@@ -148,20 +148,20 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
      *
      * @return page
      */
-    override fun buildPage(cache: Array<Any>): ChatBuilder? {
+    override fun buildPage(cache: Array<Any?>): ChatBuilder? {
         val arena = cache[0] as BukkitArena
         var corners = "none"
         var goal1 = "none"
         var goal2 = "none"
         var ballSpawn = "none"
         if (arena.upperCorner != null && arena.lowerCorner != null) {
-            corners = this.printLocation(arena.center)
+            corners = this.printLocation(arena.center!!)
         }
         if (arena.meta.redTeamMeta.goal.lowerCorner != null) {
-            goal1 = this.printLocation(arena.meta.redTeamMeta.goal.center)
+            goal1 = this.printLocation(arena.meta.redTeamMeta.goal.center!!)
         }
         if (arena.meta.blueTeamMeta.goal.lowerCorner != null) {
-            goal2 = this.printLocation(arena.meta.blueTeamMeta.goal.center)
+            goal2 = this.printLocation(arena.meta.blueTeamMeta.goal.center!!)
         }
         if (arena.meta.ballMeta.spawnpoint != null) {
             ballSpawn = this.printLocation(arena.meta.ballMeta.spawnpoint)

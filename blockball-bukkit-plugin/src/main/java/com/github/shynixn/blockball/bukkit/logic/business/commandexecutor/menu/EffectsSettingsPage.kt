@@ -51,7 +51,7 @@ class EffectsSettingsPage : Page(EffectsSettingsPage.ID, MainSettingsPage.ID) {
      *
      * @param cache cache
      */
-    override fun execute(player: Player?, command: BlockBallCommand?, cache: Array<Any>?, args: Array<out String>?): CommandResult {
+    override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
 
         return super.execute(player, command, cache, args)
     }
@@ -62,7 +62,7 @@ class EffectsSettingsPage : Page(EffectsSettingsPage.ID, MainSettingsPage.ID) {
      * @param cache cache
      * @return content
      */
-    override fun buildPage(cache: Array<Any>?): ChatBuilder {
+    override fun buildPage(cache: Array<Any?>): ChatBuilder {
         return ChatBuilder()
                 .component("- Scoreboard:").builder()
                 .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)

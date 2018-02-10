@@ -29,7 +29,7 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface DatabaseController<T : Any> : Controller<T> {
+interface DatabaseController<T> : Controller<T> {
 
     /** Returns the item by the given database id. */
     fun getById(id: Int): Optional<T>

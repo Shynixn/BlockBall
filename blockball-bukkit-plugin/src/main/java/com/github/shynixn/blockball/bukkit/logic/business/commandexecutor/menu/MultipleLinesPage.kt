@@ -44,7 +44,7 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         return PageKey.MULTIPLELINES
     }
 
-    override fun getPreviousId(cache: Array<out Any>?): Int {
+    override fun getPreviousIdFrom(cache: Array<Any?>): Int {
         return cache!![4] as Int
     }
 
@@ -53,7 +53,7 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      *
      * @param cache cache
      */
-    override fun execute(player: Player?, command: BlockBallCommand?, cache: Array<Any>?, args: Array<out String>?): CommandResult {
+    override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         val dataList = cache!![2] as ArrayList<String>
         if (command == BlockBallCommand.MULTILINES_SCOREBOARD) {
             cache[4] = ScoreboardPage.ID
@@ -90,7 +90,7 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @param cache cache
      * @return content
      */
-    override fun buildPage(cache: Array<Any>?): ChatBuilder {
+    override fun buildPage(cache: Array<Any?>): ChatBuilder {
         val infoList = cache!![2] as ArrayList<String>
         var selectedLine = "none"
         val index = cache[3] as Int

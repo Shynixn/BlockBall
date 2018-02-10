@@ -59,7 +59,7 @@ interface ArenaMeta<Location, ItemStack, Vector, Player, Material> {
     val blueTeamMeta: TeamMeta<Location, ItemStack>
 
     /** Meta data of the ball. */
-    val ballMeta: BallExtensionMeta<*,*,*>
+    val ballMeta: BallExtensionMeta
 
     /** Meta data of protection. */
     val protectionMeta: ArenaProtectionMeta<Vector>

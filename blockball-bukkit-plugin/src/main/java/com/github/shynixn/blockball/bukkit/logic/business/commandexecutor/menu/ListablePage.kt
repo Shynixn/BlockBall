@@ -47,7 +47,7 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      *
      * @param cache cache
      */
-    override fun execute(player: Player?, command: BlockBallCommand?, cache: Array<Any>?, args: Array<out String>?): CommandResult {
+    override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.LIST_GAMETYPES) {
             cache!![2] = GameType.values().map { p -> p.name }
             cache[3] = BlockBallCommand.SETTINGS_OPEN
@@ -72,7 +72,7 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @param cache cache
      * @return content
      */
-    override fun buildPage(cache: Array<Any>?): ChatBuilder {
+    override fun buildPage(cache: Array<Any?>): ChatBuilder {
         var infoList = cache!![2] as ArrayList<String>
         var callBackCommand = cache!![3] as BlockBallCommand
         val builder = ChatBuilder()

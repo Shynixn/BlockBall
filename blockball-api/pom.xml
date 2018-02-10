@@ -14,9 +14,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.shynixn.balls</groupId>
-            <artifactId>balls-api</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <groupId>com.github.shynixn.ball</groupId>
+            <artifactId>ball-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

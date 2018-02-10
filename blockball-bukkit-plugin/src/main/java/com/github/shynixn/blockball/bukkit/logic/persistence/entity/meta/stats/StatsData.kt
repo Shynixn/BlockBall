@@ -57,5 +57,5 @@ class StatsData : PersistenceObject(), Stats {
         }
 
     @YamlSerializer.YamlSerialize(value = "playerId", orderNumber = 1)
-    internal var playerId: Long = 0
+    public var playerId: Long = 0
 }

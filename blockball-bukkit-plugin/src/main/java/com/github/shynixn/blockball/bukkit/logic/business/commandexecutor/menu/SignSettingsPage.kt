@@ -63,7 +63,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
      *
      * @param cache cache
      */
-    override fun execute(player: Player?, command: BlockBallCommand?, cache: Array<Any>?, args: Array<out String>?): CommandResult {
+    override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         val arena = cache!![0] as BukkitArena
         if (command == BlockBallCommand.SIGNS_ADDTEAMRED) {
             player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
@@ -99,13 +99,14 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
         return super.execute(player, command, cache, args)
     }
 
+
     /**
      * Builds the page content.
      *
      * @param cache cache
      * @return content
      */
-    override fun buildPage(cache: Array<Any>?): ChatBuilder {
+    override fun buildPage(cache: Array<Any?>): ChatBuilder {
         val arena = cache!![0] as BukkitArena
 
         val teamSignsRed = arena.meta.lobbyMeta.redTeamSigns.map { p -> this.printLocation(p) }
