@@ -3,3 +3,4 @@ Effects
 
 .. toctree::
    bossbar
+   scoreboard
