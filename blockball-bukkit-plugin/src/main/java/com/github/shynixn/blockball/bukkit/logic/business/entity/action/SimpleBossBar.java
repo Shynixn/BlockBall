@@ -65,11 +65,14 @@ public class SimpleBossBar implements AutoCloseable {
         }
         if(amount == 0)
         {
+            System.out.println(color);
             this.bossBar = method.invoke(null, message
                     , getEnumBarColor(color)
                     , getEnumBarStyle(style),Array.newInstance(Class.forName("org.bukkit.boss.BarFlag"), 0));
         }
         else {
+            System.out.println(color);
+
             this.bossBar = method.invoke(null, message
                     , getEnumBarColor(color)
                     , getEnumBarStyle(style)

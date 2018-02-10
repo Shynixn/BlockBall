@@ -98,10 +98,18 @@ abstract class LowLevelGame(
         }
     }
 
+    /** Leave the game. */
+    override fun leave(player: Player) {
+        if (bossbar != null) {
+            bossbar!!.removePlayer(player)
+        }
+    }
+
     private fun updateBossBar() {
         val meta = arena.meta.bossBarMeta
         if (bossbar == null && arena.meta.bossBarMeta.enabled) {
             bossbar = SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, meta.flags[0].name)
+            bossbar!!.percentage = meta.percentage.toDouble()/100.0;
         }
         if (bossbar != null) {
             bossbar!!.addPlayer(getPlayers())

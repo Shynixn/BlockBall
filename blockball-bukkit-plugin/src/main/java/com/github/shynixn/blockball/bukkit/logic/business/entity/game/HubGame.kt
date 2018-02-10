@@ -75,6 +75,7 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
 
     /** Leave the game. */
     override fun leave(player: Player) {
+        super.leave(player);
         if (!this.ingameStats.containsKey(player))
             return
         val stats = ingameStats[player] ?: return

@@ -53,14 +53,14 @@ class DoubleJumpProperties : PersistenceObject(), DoubleJumpMeta<Location, Playe
     override var horizontalStrength: Double = 1.0
     /** ParticleEffect being played when activating this.*/
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "particle-effect", classicSerialize = YamlSerializer.ManualSerialization.CONSTRUCTOR)
-    override val particleEffect: ParticleEffectMeta<Location, Player, Material> = ParticleEffectData()
+    override val particleEffect: ParticleEffectData = ParticleEffectData()
             .setEffectType<ParticleEffectMeta<Location, Player, Material>>(ParticleEffectMeta.ParticleEffectType.EXPLOSION_NORMAL)
             .setAmount<ParticleEffectMeta<Location, Player, Material>>(4)
             .setSpeed<ParticleEffectMeta<Location, Player, Material>>(0.0002)
             .setOffset(2.0, 2.0, 2.0)
     /** SoundEffect being played when activating this.*/
     @YamlSerializer.YamlSerialize(orderNumber = 6, value = "sound-effect", classicSerialize = YamlSerializer.ManualSerialization.CONSTRUCTOR)
-    override val soundEffect: SoundEffectMeta<Location, Player> = SoundBuilder()
+    override val soundEffect: SoundBuilder = SoundBuilder()
             .setName("GHAST_FIREBALL")
             .setVolume(100.0)
             .setPitch(1.0)
