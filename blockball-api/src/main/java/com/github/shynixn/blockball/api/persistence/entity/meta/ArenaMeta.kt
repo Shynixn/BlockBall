@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.api.persistence.entity.meta
 
 import com.github.shynixn.blockball.api.persistence.entity.BallExtensionMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.BungeeCordLobbyMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta
@@ -57,6 +58,9 @@ interface ArenaMeta<Location, ItemStack, Vector, Player, Material> {
 
     /** Meta data of the blueTeam. */
     val blueTeamMeta: TeamMeta<Location, ItemStack>
+
+    /** Meta data of all holograms. */
+    val hologramMetas : MutableList<HologramMeta>
 
     /** Meta data of the ball. */
     val ballMeta: BallExtensionMeta

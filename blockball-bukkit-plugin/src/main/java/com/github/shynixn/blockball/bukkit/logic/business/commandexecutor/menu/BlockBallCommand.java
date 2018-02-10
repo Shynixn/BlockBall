@@ -87,6 +87,7 @@ public enum BlockBallCommand {
     MULTILINES_SET(PageKey.MULTIPLELINES, "set"),
     MULTILINES_REMOVE(PageKey.MULTIPLELINES, "rmv"),
     MULTILINES_SCOREBOARD(PageKey.MULTIPLELINES, "show_scoreboard"),
+    MULTILINES_HOLOGRAM(PageKey.MULTIPLELINES, "show_hologram"),
 
     MULTIPLEITEMS_BOSSBAR(PageKey.MULTIPLEITEMS, "show_bossbar"),
     MULTIPLEITEMS_OPEN(PageKey.MULTIPLEITEMS, "open"),
@@ -95,6 +96,9 @@ public enum BlockBallCommand {
     SCOREBOARD_OPEN(PageKey.SCOREBOARD, "open"),
     SCOREBOARD_TOGGLE(PageKey.SCOREBOARD, "tgl"),
     SCOREBOARD_TITLE(PageKey.SCOREBOARD, "title"),
+
+    HOLOGRAM_OPEN(PageKey.HOLOGRAM, "open"),
+    HOLOGRAM_TOGGLE(PageKey.HOLOGRAM, "tgl"),
 
     BOSSBAR_OPEN(PageKey.BOSSBAR, "open"),
     BOSSBAR_MESSAGE(PageKey.BOSSBAR, "msg"),

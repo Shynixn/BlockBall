@@ -72,6 +72,9 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
     private val multipleLinesPage: MultipleLinesPage? = null
 
     @Inject
+    private val hologramsPage: HologramPage? = null
+
+    @Inject
     private val scoreboardPage: ScoreboardPage? = null
 
     @Inject
@@ -242,6 +245,7 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
             this.pagecache!!.add(multipleLinesPage!!)
             this.pagecache!!.add(bossbarPage!!)
             this.pagecache!!.add(signSettingsPage!!)
+            this.pagecache!!.add(hologramsPage!!);
         }
         return this.pagecache!!
     }

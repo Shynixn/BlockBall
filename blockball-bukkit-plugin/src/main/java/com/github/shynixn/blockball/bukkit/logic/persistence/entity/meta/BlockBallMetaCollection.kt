@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta
 
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.business.helper.setColor
@@ -49,6 +50,9 @@ import org.bukkit.util.Vector
  * SOFTWARE.
  */
 class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, Material> {
+    /** Meta data of all holograms. */
+    @YamlSerializer.YamlSerialize(orderNumber = 9, value = "holograms")
+    override val hologramMetas: ArrayList<HologramMeta> = ArrayList()
     /** Meta data of a generic lobby. */
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "meta")
     override val lobbyMeta: LobbyProperties  = LobbyProperties()

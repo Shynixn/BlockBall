@@ -76,7 +76,7 @@ class EffectsSettingsPage : Page(EffectsSettingsPage.ID, MainSettingsPage.ID) {
                 .builder().nextLine()
                 .component("- Holograms:").builder()
                 .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_MINAMOUNT.command)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.HOLOGRAM_OPEN.command)
                 .setHoverText("Configure the holograms for players.")
                 .builder().nextLine()
     }

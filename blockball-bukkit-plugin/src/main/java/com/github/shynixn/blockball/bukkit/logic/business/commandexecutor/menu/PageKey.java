@@ -35,6 +35,7 @@ public enum PageKey {
     EFFECTS("ef"),
     SCOREBOARD("scor"),
     BOSSBAR("boss"),
+    HOLOGRAM("holog"),
     SIGNS("sign"),
     MULTIPLELINES("mlin"),
     MULTIPLEITEMS("mitem"),
