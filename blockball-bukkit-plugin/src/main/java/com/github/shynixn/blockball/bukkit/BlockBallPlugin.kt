@@ -9,7 +9,9 @@ import com.github.shynixn.blockball.api.business.controller.GameController
 import com.github.shynixn.blockball.api.persistence.controller.LinkSignController
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.JoinCommandExecutor
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.LeaveCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.NewArenaCommandExecutor
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.ReloadCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder
@@ -71,18 +73,24 @@ class BlockBallPlugin : JavaPlugin() {
     private var bungeeCordController: BungeeCordPingManager? = null
 
     @Inject
-    private var gameController: GameRepository? = null;
+    private var gameController: GameRepository? = null
 
     @Inject
     private var arenaCommandexecutor: NewArenaCommandExecutor? = null
 
     @Inject
-    private var joinCommandExecutor : JoinCommandExecutor? = null;
+    private var reloadCommandExecutor : ReloadCommandExecutor? = null
+
+    @Inject
+    private var joinCommandExecutor : JoinCommandExecutor? = null
+
+    @Inject
+    private var leaveCommandExecutor : LeaveCommandExecutor? = null
 
     @Inject
     private var statsListener: StatsListener? = null
 
-    private var coreManager : CoreManager? = null;
+    private var coreManager : CoreManager? = null
 
     override fun onEnable() {
         this.saveDefaultConfig()
@@ -142,6 +150,9 @@ class BlockBallPlugin : JavaPlugin() {
         }
     }
 
+    /**
+     * Checks if new updates are available on spigotmc.org.
+     */
     private fun checkForUpdates() {
         this.server.scheduler.runTaskAsynchronously(this) {
             try {

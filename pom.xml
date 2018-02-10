@@ -7,7 +7,7 @@
     <groupId>com.github.shynixn.blockball</groupId>
     <artifactId>root</artifactId>
     <packaging>pom</packaging>
-    <version>4.2.0-SNAPSHOT</version>
+    <version>2018.2.1-SNAPSHOT</version>
 
     <name>root</name>
     <description>Spigot plugin to simulate a football/soccer game in minecraft.</description>

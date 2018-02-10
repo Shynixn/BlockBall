@@ -1,19 +1,19 @@
-package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor;
+package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
-import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
+import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
+import com.google.inject.Inject
+import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
+import org.bukkit.plugin.java.JavaPlugin
 
 /**
- * Handles the sign creation command for bungeecord.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,18 +33,10 @@ import org.bukkit.plugin.java.JavaPlugin;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class BungeeCordCommandExecutor extends SimpleCommandExecutor.UnRegistered {
-    private final BlockBallBungeeCordManager manager;
+class LeaveCommandExecutor  @Inject constructor(plugin: Plugin) : SimpleCommandExecutor.UnRegistered(plugin.config.get("global-leave"), plugin as JavaPlugin) {
 
-    /**
-     * Initializes a new bungeeCord command Executor.
-     *
-     * @param manager controller
-     */
-    public BungeeCordCommandExecutor(BlockBallBungeeCordManager manager, Plugin plugin) throws Exception {
-        super(plugin.getConfig().get("bungeecord-server-change"), (JavaPlugin) plugin);
-        this.manager = manager;
-    }
+    @Inject
+    private var gameController: GameRepository? = null
 
     /**
      * Can be overwritten to listen to player executed commands.
@@ -52,11 +44,7 @@ public class BungeeCordCommandExecutor extends SimpleCommandExecutor.UnRegistere
      * @param player player
      * @param args   args
      */
-    @Override
-    public void onPlayerExecuteCommand(Player player, String[] args) {
-        if (args.length == 1) {
-            this.manager.signPlacementCache.put(player, args[0]);
-            player.sendMessage(ChatColor.YELLOW + "Rightclick on a sign to convert it into a server sign.");
-        }
+    override fun onPlayerExecuteCommand(player: Player, args: Array<out String>) {
+        gameController!!.getGameFromPlayer(player)?.leave(player)
     }
 }

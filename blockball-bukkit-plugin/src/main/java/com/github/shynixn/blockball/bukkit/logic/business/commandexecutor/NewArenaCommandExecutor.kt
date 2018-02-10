@@ -1,11 +1,13 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.*
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.Inject
 import org.bukkit.ChatColor
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
@@ -38,7 +40,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class NewArenaCommandExecutor @Inject constructor(plugin : Plugin) : SimpleCommandExecutor.Registered("blockball", plugin as JavaPlugin) {
+class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExecutor.Registered("blockball", plugin as JavaPlugin) {
     companion object {
         private val HEADER_STANDARD = ChatColor.WHITE.toString() + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                          BlockBall                         "
         private val FOOTER_STANDARD = ChatColor.WHITE.toString() + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           ┌1/1┐                            "
@@ -81,6 +83,19 @@ class NewArenaCommandExecutor @Inject constructor(plugin : Plugin) : SimpleComma
     @Inject
     private val arenaController: ArenaRepository? = null
 
+
+    /**
+     * Can be overwritten to listener to all executed commands.
+     *
+     * @param sender sender
+     * @param args   args
+     */
+    override fun onCommandSenderExecuteCommand(sender: CommandSender, args: Array<out String>) {
+        super.onCommandSenderExecuteCommand(sender, args)
+        if (sender !is Player) {
+            sender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "This command does not support console or command blocks.")
+        }
+    }
 
     /**
      * Can be overwritten to listen to player executed commands.

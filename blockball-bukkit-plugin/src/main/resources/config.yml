@@ -111,14 +111,14 @@ global-join:
   command: bbjoin
   useage: /<command> <game> <team>
   description: Join a game.
-  permission: blockball.user
+  permission: blockball.command.use
   permission-message: You don't have permission
 global-leave:
   enabled: true
   command: bbleave
   useage: /<command>
   description: Leaves current game.
-  permission: blockball.user
+  permission: blockball.command.use
   permission-message: You don't have permission
 
 ############################

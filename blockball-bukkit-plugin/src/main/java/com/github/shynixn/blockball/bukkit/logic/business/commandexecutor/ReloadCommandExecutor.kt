@@ -1,10 +1,12 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -37,14 +39,19 @@ import org.bukkit.plugin.java.JavaPlugin
  */
 class ReloadCommandExecutor @Inject constructor(plugin: Plugin, private val gameController: GameRepository) : SimpleCommandExecutor.Registered("blockballreload", plugin as JavaPlugin) {
     /**
-     * Can be overwritten to listener to all executed commands.
+     * Reloads the config and the games when executed.
      *
      * @param sender sender
      * @param args   args
      */
-    override fun onCommandSenderExecuteCommand(sender: CommandSender?, args: Array<out String>?) {
+    override fun onCommandSenderExecuteCommand(sender: CommandSender, args: Array<out String>) {
         Config.reload()
         this.gameController.reload()
-        sender!!.sendMessage(Config.prefix + ChatColor.GREEN + "Reloaded BlockBall.")
+        if (sender is Player) {
+            sender.sendMessage(Config.prefix + ChatColor.GREEN + "Reloaded BlockBall.")
+        } else {
+            sender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Reloaded BlockBall.")
+        }
+
     }
 }
