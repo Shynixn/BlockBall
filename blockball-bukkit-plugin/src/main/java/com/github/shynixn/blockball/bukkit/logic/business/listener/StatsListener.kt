@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 import com.github.shynixn.blockball.api.bukkit.business.event.GameJoinEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.GameWinEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.GoalShootEvent
+import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.StatsScoreboard
@@ -45,9 +46,10 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class StatsListener @Inject constructor(plugin: Plugin, private val statsController: StatsRepository, private val playerMetaController : PlayerInfoController)  : SimpleListener(plugin), Runnable{
+class StatsListener @Inject constructor(plugin: Plugin, private val statsController: StatsRepository, private val playerMetaController: PlayerInfoController) : SimpleListener(plugin), Runnable {
 
     private val statsScoreboards = HashMap<Player, StatsScoreboard>()
+
     init {
         this.setStatsForAllOnlinePlayers()
         this.plugin.server.scheduler.runTaskTimerAsynchronously(this.plugin, this, 0, 20L * 60)
@@ -92,7 +94,7 @@ class StatsListener @Inject constructor(plugin: Plugin, private val statsControl
     @Throws(Exception::class)
     fun playerQuitEvent(event: PlayerQuitEvent) {
         if (this.statsScoreboards.containsKey(event.player)) {
-            val scoreboard = this.statsScoreboards.get(event.player)
+            val scoreboard = this.statsScoreboards[event.player]
             this.statsScoreboards.remove(event.player)
             scoreboard!!.close()
         }
@@ -108,7 +110,7 @@ class StatsListener @Inject constructor(plugin: Plugin, private val statsControl
         this.plugin.server.scheduler.runTaskAsynchronously(this.plugin) {
             synchronized(this.statsController) {
                 val optStats = this@StatsListener.statsController.getByPlayer(event.player)
-                if (optStats.isPresent()) {
+                if (optStats.isPresent) {
                     val stats = optStats.get()
                     stats.amountOfGoals = stats.amountOfGoals + 1
                     this.updateStats(event.player, stats)
@@ -128,7 +130,7 @@ class StatsListener @Inject constructor(plugin: Plugin, private val statsControl
         this.plugin.server.scheduler.runTaskAsynchronously(this.plugin) {
             synchronized(this.statsController) {
                 val optStats = this@StatsListener.statsController.getByPlayer(event.player)
-                if (optStats.isPresent()) {
+                if (optStats.isPresent) {
                     val stats = optStats.get()
                     stats.amountOfPlayedGames = stats.amountOfPlayedGames + 1
                     this.statsController.store(stats)
@@ -145,42 +147,42 @@ class StatsListener @Inject constructor(plugin: Plugin, private val statsControl
      */
     @EventHandler
     fun onTeamWinEvent(event: GameWinEvent) {
-        /* this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
-            synchronized (this.statsController) {
-                Object[] winningPlayers = event.getGame().getRedTeamPlayers();
-                if (event.getTeam() == Team.BLUE) {
-                    winningPlayers = event.getGame().getBlueTeamPlayers();
+        this.plugin.server.scheduler.runTaskAsynchronously(this.plugin, {
+            synchronized(this.statsController) {
+                var winningPlayers = event.game.redTeam
+                if (event.team == Team.BLUE) {
+                    winningPlayers = event.game.blueTeam
                 }
-                for (final Object player : winningPlayers) {
-                    final Optional<Stats> optStats = StatsListener.this.statsController.getByPlayer(player);
-                    if (optStats.isPresent()) {
-                        final Stats stats = optStats.get();
-                        stats.setAmountOfWins(stats.getAmountOfWins() + 1);
-                        this.statsController.store(stats);
-                        this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> this.updateStats((Player) player, stats), 40L);
+                winningPlayers.forEach { p ->
+                    val optStats = statsController.getByPlayer(p as Player)
+                    if (optStats.isPresent) {
+                        val stats = optStats.get()
+                        stats.amountOfWins = (stats.amountOfWins + 1)
+                        this.statsController.store(stats)
+                        this.plugin.server.scheduler.runTaskLater(plugin, {
+                            this.updateStats(p, stats)
+                        }, 40L)
                     }
                 }
             }
-        });*/
+        })
     }
 
     private fun updateStats(player: Player, stats: Stats) {
-        if (this.statsScoreboards != null) {
-            this.statsScoreboards.get(player)!!.updateStats(player, stats)
-        }
+        this.statsScoreboards[player]!!.updateStats(player, stats)
     }
 
     private fun setStatsForPlayer(player: Player) {
         val scoreboard = StatsScoreboard(player)
-        this.statsScoreboards.put(player, scoreboard)
+        this.statsScoreboards[player] = scoreboard
         this.plugin.server.scheduler.runTaskLaterAsynchronously(this.plugin, {
             synchronized(this.statsController) {
                 val optStats = this@StatsListener.statsController.getByPlayer(player)
                 val stats: Stats
-                if (!optStats.isPresent()) {
+                if (!optStats.isPresent) {
                     val optPlayerMeta = this.playerMetaController.getByUUID(player.uniqueId)
                     val meta: PlayerMeta<*>
-                    if (!optPlayerMeta.isPresent()) {
+                    if (!optPlayerMeta.isPresent) {
                         meta = this.playerMetaController.create(player)
                         this.playerMetaController.store(meta)
                     } else {
@@ -198,10 +200,8 @@ class StatsListener @Inject constructor(plugin: Plugin, private val statsControl
     }
 
     private fun setStatsForAllOnlinePlayers() {
-        for (world in Bukkit.getWorlds()) {
-            for (player in world.players) {
-                this.setStatsForPlayer(player)
-            }
-        }
+        Bukkit.getWorlds()
+                .flatMap { it.players }
+                .forEach { this.setStatsForPlayer(it) }
     }
 }

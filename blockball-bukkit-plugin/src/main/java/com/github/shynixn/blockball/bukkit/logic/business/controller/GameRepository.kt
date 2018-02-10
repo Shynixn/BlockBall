@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.HubGame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
 import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
+import com.github.shynixn.blockball.bukkit.logic.business.listener.HubGameListener
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -55,6 +56,9 @@ class GameRepository : BukkitGameController, Runnable {
 
     @Inject
     private var gameListener : GameListener? = null;
+
+    @Inject
+    private var hubGameListener : HubGameListener? = null;
 
     /** Games. */
     val games: ArrayList<BukkitGame> = ArrayList()

@@ -35,6 +35,7 @@ import org.bukkit.scoreboard.DisplaySlot
 class StatsScoreboard(val player: Player) : SimpleScoreboard() {
 
     init {
+        Config.reload()
         this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE)
         this.setDefaultTitle(Config.statsScoreboardTitle)
         this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR)
