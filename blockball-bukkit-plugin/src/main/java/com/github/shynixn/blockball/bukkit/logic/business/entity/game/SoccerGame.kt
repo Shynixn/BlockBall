@@ -97,12 +97,12 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
             val knockback = this.lastBallLocation!!.toVector().subtract(ballLocation.toVector())
             ballLocation.direction = knockback
             this.ball!!.hitBox.velocity = knockback
-            val direction = this.arena.meta.ballMeta.spawnpoint.toBukkitLocation().toVector().subtract(ballLocation.toVector())
+            val direction = this.arena.meta.ballMeta.spawnpoint!!.toBukkitLocation().toVector().subtract(ballLocation.toVector())
             this.ball!!.hitBox.velocity = direction.multiply(0.1)
             this.bumper = 40
             this.bumperCounter++
             if (this.bumperCounter == 5) {
-                this.ball!!.teleport(this.arena.meta.ballMeta.spawnpoint.toBukkitLocation())
+                this.ball!!.teleport(this.arena.meta.ballMeta.spawnpoint!!.toBukkitLocation())
             }
         }
     }
@@ -131,7 +131,7 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
         if (this.ballSpawning) {
             this.ballSpawnCounter--
             if (this.ballSpawnCounter <= 0) {
-                this.ball = BallsApi.spawnTemporaryBall(this.arena.meta.ballMeta.spawnpoint.toBukkitLocation(), this.arena.meta.ballMeta)
+                this.ball = BallsApi.spawnTemporaryBall(this.arena.meta.ballMeta.spawnpoint!!.toBukkitLocation(), this.arena.meta.ballMeta)
                 this.ballSpawning = false
                 this.ballSpawnCounter = 0
             }

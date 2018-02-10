@@ -35,16 +35,11 @@ import org.bukkit.configuration.MemorySection
  */
 class BallData : BallData, BallExtensionMeta {
     /** Spawning delay. */
-    override var delayInTicks: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+    override var delayInTicks: Int = 0
     /** Spawnpoint of the ball. */
-    override var spawnpoint: StorageLocation
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+    override var spawnpoint: StorageLocation? = null
     /** Returns the id of the object. */
-    override val id: Long
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+    override val id: Long = 0;
 
     constructor(skin : String) : super(skin)
 

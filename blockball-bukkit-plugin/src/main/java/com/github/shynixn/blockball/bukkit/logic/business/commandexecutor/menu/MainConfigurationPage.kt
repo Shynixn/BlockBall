@@ -164,7 +164,7 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
             goal2 = this.printLocation(arena.meta.blueTeamMeta.goal.center!!)
         }
         if (arena.meta.ballMeta.spawnpoint != null) {
-            ballSpawn = this.printLocation(arena.meta.ballMeta.spawnpoint)
+            ballSpawn = this.printLocation(arena.meta.ballMeta.spawnpoint!!)
         }
         return ChatBuilder()
                 .component("- Id: " + arena.name)

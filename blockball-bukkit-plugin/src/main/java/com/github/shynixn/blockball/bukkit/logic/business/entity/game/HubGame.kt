@@ -132,7 +132,7 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         player.updateInventory()
 
         if (teamMeta.spawnpoint == null) {
-            player.teleport(arena.meta.ballMeta.spawnpoint.toBukkitLocation())
+            player.teleport(arena.meta.ballMeta.spawnpoint!!.toBukkitLocation())
         } else {
             player.teleport(teamMeta.spawnpoint!!.toBukkitLocation())
         }

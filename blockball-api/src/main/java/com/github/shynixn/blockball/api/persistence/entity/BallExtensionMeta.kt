@@ -36,5 +36,5 @@ interface BallExtensionMeta: PersistenceAble, BallMeta{
     var delayInTicks: Int
 
     /** Spawnpoint of the ball. */
-    var spawnpoint: StorageLocation
+    var spawnpoint: StorageLocation?
 }

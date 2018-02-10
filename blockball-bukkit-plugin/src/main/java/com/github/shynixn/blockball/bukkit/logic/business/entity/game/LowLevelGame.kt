@@ -177,7 +177,7 @@ abstract class LowLevelGame(
 
     private fun kickUnwantedEntitiesOutOfForcefield() {
         if (arena.meta.protectionMeta.entityProtectionEnabled) {
-            this.arena.meta.ballMeta.spawnpoint.toBukkitLocation().world.entities.forEach { p ->
+            this.arena.meta.ballMeta.spawnpoint!!.toBukkitLocation().world.entities.forEach { p ->
                 if (p !is Player && p !is ArmorStand) {
                     if (this.arena.isLocationInSelection(p.location)) {
                         val vector = arena.meta.protectionMeta.entityProtection

@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.api.persistence.controller.LinkSignControlle
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.JoinCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.NewArenaCommandExecutor
+import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ReflectionUtils
@@ -67,6 +68,9 @@ class BlockBallPlugin : JavaPlugin() {
     private var blockBallBungeeCordManager: BlockBallBungeeCordManager? = null
 
     @Inject
+    private var bungeeCordController: BungeeCordPingManager? = null
+
+    @Inject
     private var gameController: GameRepository? = null;
 
     @Inject
@@ -103,10 +107,10 @@ class BlockBallPlugin : JavaPlugin() {
         success = false
         if (true) {
             try {
+
+
                 gameController!!.reload()
-                ReflectionUtils.invokeMethodByClass<Any>(BlockBallApi::class.java, "initializeBlockBall"
-                        , arrayOf(GameController::class.java)
-                        , arrayOf(this.gameController))
+                ReflectionUtils.invokeMethodByKotlinClass<Void>(BlockBallApi::class.java, "initializeBlockBall", arrayOf(Any::class.java, Any::class.java), arrayOf(this.gameController,bungeeCordController))
                 success = true
             } catch (e: Exception) {
                 logger.log(Level.WARNING, "Failed to enable plugin.", e)
@@ -124,7 +128,7 @@ class BlockBallPlugin : JavaPlugin() {
             Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + "Starting BungeeCord linking....")
             try {
                 ReflectionUtils.invokeMethodByClass<Any>(BlockBallApi::class.java, "initializeBungeeCord"
-                        , arrayOf(LinkSignController::class.java, BungeeCordConnectionController::class.java)
+                        , arrayOf(Any::class.java, Any::class.java)
                         , arrayOf(this.blockBallBungeeCordManager!!.bungeeCordSignController, this.blockBallBungeeCordManager!!.bungeeCordConnectController))
                 Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + "Server [" + Bukkit.getServer().serverName + " is now available via BlockBall-Bungeecord.")
             } catch (e: NoSuchMethodException) {

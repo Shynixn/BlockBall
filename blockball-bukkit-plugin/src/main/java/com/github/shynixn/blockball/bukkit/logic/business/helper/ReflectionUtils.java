@@ -124,6 +124,35 @@ public final class ReflectionUtils {
     }
 
     /**
+     * Invokes the static method of the given clazz, name, paramTypes, params
+     *
+     * @param clazz      clazz
+     * @param name       name
+     * @param paramTypes paramTypes
+     * @param params     params
+     * @param <T>        returnType
+     * @return returnValue
+     * @throws NoSuchMethodException     exception
+     * @throws InvocationTargetException exception
+     * @throws IllegalAccessException    exception
+     */
+    public static <T> T invokeMethodByKotlinClass(Class<?> clazz, String name, Class<?>[] paramTypes, Object[] params) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
+        if (clazz == null)
+            throw new IllegalArgumentException("Class cannot be null!");
+        if (name == null)
+            throw new IllegalArgumentException("Name cannot be null!");
+        if (paramTypes == null)
+            throw new IllegalArgumentException("ParamTypes cannot be null");
+        if (params == null)
+            throw new IllegalArgumentException("Params cannot be null!");
+        final Method method = clazz.getDeclaredMethod(name, paramTypes);
+        method.setAccessible(true);
+        final Field field = clazz.getDeclaredField("INSTANCE");
+        final Object instance = field.get(null);
+        return (T) method.invoke(instance, params);
+    }
+
+    /**
      * Invokes the method of the given instance, name, paramTypes, params
      *
      * @param instance   instance
@@ -196,9 +225,9 @@ public final class ReflectionUtils {
      * @param instance instance
      * @param name     name
      * @param <T>      returnType
-     * @throws NoSuchFieldException exception
-     * @throws IllegalAccessException exceptionInstance
      * @return returnValue
+     * @throws NoSuchFieldException   exception
+     * @throws IllegalAccessException exceptionInstance
      */
     public static <T> T invokeFieldByObject(Object instance, String name) throws NoSuchFieldException, IllegalAccessException {
         return invokeFieldByObject(instance, name, instance.getClass());
@@ -211,9 +240,9 @@ public final class ReflectionUtils {
      * @param name     name
      * @param clazz    clazz
      * @param <T>      returnType
-     * @throws NoSuchFieldException exception
-     * @throws IllegalAccessException exceptionInstance
      * @return returnValue
+     * @throws NoSuchFieldException   exception
+     * @throws IllegalAccessException exceptionInstance
      */
     public static <T> T invokeFieldByObject(Object instance, String name, Class<?> clazz) throws NoSuchFieldException, IllegalAccessException {
         if (instance == null)

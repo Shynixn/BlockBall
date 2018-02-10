@@ -35,9 +35,9 @@ object BlockBallApi {
 
     private var gameController: GameController<*, *, *, *>? = null
 
-    private fun initializeBlockBall(gameController: GameController<*, *, *, *>, bungeeCordConnectionController: BungeeCordConnectionController<*>) {
-        this.gameController = gameController
-        this.bungeeCordConnectController = bungeeCordConnectionController
+    private fun initializeBlockBall(gameController: Any, bungeeCordConnectionController: Any) {
+        this.gameController = gameController as GameController<*, *, *, *>
+        this.bungeeCordConnectController = bungeeCordConnectionController as BungeeCordConnectionController<*>
     }
 
     /**
