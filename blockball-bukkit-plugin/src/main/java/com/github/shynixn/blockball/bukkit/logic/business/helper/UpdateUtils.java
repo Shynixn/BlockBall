@@ -70,7 +70,7 @@ public class UpdateUtils {
             if (plugin.getDescription().getVersion().endsWith("SNAPSHOT")) {
                 Bukkit.getServer().getConsoleSender().sendMessage(prefix + ChatColor.YELLOW + "================================================");
                 Bukkit.getServer().getConsoleSender().sendMessage(prefix + ChatColor.YELLOW + "You are using a snapshot of " + pluginName);
-                Bukkit.getServer().getConsoleSender().sendMessage(prefix + ChatColor.YELLOW + "Please check regularly if there is a new version");
+                Bukkit.getServer().getConsoleSender().sendMessage(prefix + ChatColor.YELLOW + "Please check if there is a new version available");
                 Bukkit.getServer().getConsoleSender().sendMessage(prefix + ChatColor.YELLOW + "================================================");
             } else {
                 Bukkit.getServer().getConsoleSender().sendMessage(prefix + ChatColor.YELLOW + "================================================");
