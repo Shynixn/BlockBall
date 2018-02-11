@@ -55,24 +55,19 @@ public class SimpleBossBar implements AutoCloseable {
     private SimpleBossBar(String message, String color, String style, String... flags) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         super();
         final Method method = (Method) reflectionCache[19];
-        Object[] componentFlag = (Object[]) Array.newInstance(Class.forName("org.bukkit.boss.BarFlag"), flags.length);
+        final Object[] componentFlag = (Object[]) Array.newInstance(Class.forName("org.bukkit.boss.BarFlag"), flags.length);
         int amount = 0;
         for (int i = 0; i < flags.length; i++) {
             if (!flags[i].equalsIgnoreCase("none")) {
                 componentFlag[i] = getEnumBarFlag(flags[i]);
                 amount++;
-            }//
+            }
         }
-        if(amount == 0)
-        {
-            System.out.println(color);
+        if (amount == 0) {
             this.bossBar = method.invoke(null, message
                     , getEnumBarColor(color)
-                    , getEnumBarStyle(style),Array.newInstance(Class.forName("org.bukkit.boss.BarFlag"), 0));
-        }
-        else {
-            System.out.println(color);
-
+                    , getEnumBarStyle(style), Array.newInstance(Class.forName("org.bukkit.boss.BarFlag"), 0));
+        } else {
             this.bossBar = method.invoke(null, message
                     , getEnumBarColor(color)
                     , getEnumBarStyle(style)

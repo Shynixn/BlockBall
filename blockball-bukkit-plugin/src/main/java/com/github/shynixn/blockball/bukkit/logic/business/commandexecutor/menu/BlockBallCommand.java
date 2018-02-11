@@ -101,6 +101,7 @@ public enum BlockBallCommand {
     HOLOGRAM_CALLBACK(PageKey.HOLOGRAM, "callback"),
     HOLOGRAM_CREATE(PageKey.HOLOGRAM, "create"),
     HOLOGRAM_DELETE(PageKey.HOLOGRAM, "del"),
+    HOLOGRAM_LOCATION(PageKey.HOLOGRAM, "loc"),
     HOLOGRAM_TOGGLE(PageKey.HOLOGRAM, "tgl"),
 
     BOSSBAR_OPEN(PageKey.BOSSBAR, "open"),

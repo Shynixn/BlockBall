@@ -47,6 +47,7 @@ import java.util.logging.Level
 @Singleton
 class GameRepository : BukkitGameController, Runnable {
 
+
     /** ArenaController. */
     @Inject
     override var arenaController: ArenaRepository? = null
@@ -55,10 +56,10 @@ class GameRepository : BukkitGameController, Runnable {
     private var plugin: Plugin? = null;
 
     @Inject
-    private var gameListener : GameListener? = null;
+    private var gameListener: GameListener? = null;
 
     @Inject
-    private var hubGameListener : HubGameListener? = null;
+    private var hubGameListener: HubGameListener? = null;
 
     /** Games. */
     val games: ArrayList<BukkitGame> = ArrayList()
@@ -146,5 +147,21 @@ class GameRepository : BukkitGameController, Runnable {
                 this.store(HubGame(p))
             }
         }
+    }
+
+    /**
+     * Closes this resource, relinquishing any underlying resources.
+     * This method is invoked automatically on objects managed by the
+     * `try`-with-resources statement.
+     * However, implementers of this interface are strongly encouraged
+     * to make their `close` methods idempotent.
+     *
+     * @throws Exception if this resource cannot be closed
+     */
+    override fun close() {
+        games.forEach { p ->
+            p.close()
+        }
+        games.clear()
     }
 }

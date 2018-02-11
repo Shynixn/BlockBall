@@ -110,6 +110,11 @@ abstract class LowLevelGame(
         if (bossbar != null) {
             bossbar!!.removePlayer(player)
         }
+        this.holograms.forEachIndexed { i, holo ->
+            if (holo.containsPlayer(player)) {
+                holo.removePlayer(player)
+            }
+        }
     }
 
     private fun updateHolograms() {
@@ -118,14 +123,19 @@ abstract class LowLevelGame(
             cleanHolograms()
             this.arena.meta.hologramMetas.indices
                     .map { arena.meta.hologramMetas[it] }
-                    .forEach { holograms.add(SimpleHologram.from(plugin, it.position!!.toBukkitLocation(), it.lines)) }
+                    .forEach { holograms.add(SimpleHologram(plugin, it.position!!.toBukkitLocation(), it.lines)) }
         }
-        this.holograms.forEach { holo ->
+        this.holograms.forEachIndexed { i, holo ->
             this.getPlayers().forEach { p ->
-                if (!holo.players.contains(p)) {
+                if (!holo.containsPlayer(p)) {
                     holo.addPlayer(p)
                 }
             }
+            val lines = ArrayList(this.arena.meta.hologramMetas[i].lines);
+            for (i in lines.indices) {
+                lines[i] = lines[i].replaceGamePlaceholder(this)
+            }
+            holo.setLines(lines);
         }
     }
 
@@ -249,5 +259,7 @@ abstract class LowLevelGame(
         ball?.remove()
         redTeam.clear()
         blueTeam.clear()
+        holograms.forEach { h -> h.close() }
+        holograms.clear()
     }
 }

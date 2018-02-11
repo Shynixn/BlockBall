@@ -30,7 +30,7 @@ import com.github.shynixn.blockball.api.persistence.controller.ReloadableControl
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface GameController<in Location : Any, in Player, GameEntity : Any, ArenaEntity : Any> : ReloadableController<GameEntity> {
+interface GameController<in Location : Any, in Player, GameEntity : Any, ArenaEntity : Any> : ReloadableController<GameEntity>, AutoCloseable {
 
     /** ArenaController of the gameController. */
     val arenaController: ArenaController<Location, ArenaEntity>?

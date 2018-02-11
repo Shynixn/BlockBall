@@ -81,6 +81,10 @@ class HologramPage : Page(HologramPage.ID, EffectsSettingsPage.ID) {
             holograms.remove(cache[5])
             cache[5] = null
         }
+        if (command == BlockBallCommand.HOLOGRAM_LOCATION) {
+            val hologram = cache[5] as HologramMeta
+            hologram.position = player.location.toPosition()
+        }
         cache[2] = holograms.map { p -> printLocation(p.position!!) }
         return super.execute(player, command, cache, args)
     }
@@ -122,6 +126,11 @@ class HologramPage : Page(HologramPage.ID, EffectsSettingsPage.ID) {
                     .component(ClickableComponent.DELETE.text).setColor(ClickableComponent.DELETE.color)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.HOLOGRAM_DELETE.command)
                     .setHoverText("Deletes the selected hologram.")
+                    .builder().nextLine()
+                    .component("- Location: " + selectedHologramText).builder()
+                    .component(" [location..]").setColor(ChatColor.BLUE)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.HOLOGRAM_LOCATION.command)
+                    .setHoverText("Sets the location of the hologram to your current location.")
                     .builder().nextLine()
                     .component("- Lines:").builder()
                     .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)

@@ -111,6 +111,11 @@ class BlockBallPlugin : JavaPlugin() {
         }
     }
 
+    override fun onDisable() {
+        super.onDisable()
+        gameController!!.close();
+    }
+
     private fun startPlugin() {
         success = false
         if (true) {
