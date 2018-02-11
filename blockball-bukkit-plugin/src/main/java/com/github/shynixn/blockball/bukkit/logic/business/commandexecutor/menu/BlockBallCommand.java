@@ -98,6 +98,9 @@ public enum BlockBallCommand {
     SCOREBOARD_TITLE(PageKey.SCOREBOARD, "title"),
 
     HOLOGRAM_OPEN(PageKey.HOLOGRAM, "open"),
+    HOLOGRAM_CALLBACK(PageKey.HOLOGRAM, "callback"),
+    HOLOGRAM_CREATE(PageKey.HOLOGRAM, "create"),
+    HOLOGRAM_DELETE(PageKey.HOLOGRAM, "del"),
     HOLOGRAM_TOGGLE(PageKey.HOLOGRAM, "tgl"),
 
     BOSSBAR_OPEN(PageKey.BOSSBAR, "open"),
@@ -117,6 +120,7 @@ public enum BlockBallCommand {
     LIST_BOSSBARFLAGS(PageKey.LISTABLE, "show_bossbarflags"),
     LIST_BOSSBARSTYLES(PageKey.LISTABLE, "show_bossbarstyles"),
     LIST_BOSSBARCOLORS(PageKey.LISTABLE, "show_bossbarcolors"),
+    LIST_HOLOGRAMS(PageKey.LISTABLE, "show_holograms"),
     LIST_GAMETYPES(PageKey.LISTABLE, "show_gametypes"),;
 
     private PageKey key;

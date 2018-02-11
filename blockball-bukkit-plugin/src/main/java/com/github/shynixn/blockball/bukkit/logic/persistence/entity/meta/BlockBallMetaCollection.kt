@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.business.helper.setColor
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallData
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.BossBarBuilder
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.HologramBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.ScoreboardBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.BungeeCordLobbyProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties
@@ -51,11 +52,11 @@ import org.bukkit.util.Vector
  */
 class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, Material> {
     /** Meta data of all holograms. */
-    @YamlSerializer.YamlSerialize(orderNumber = 9, value = "holograms")
-    override val hologramMetas: ArrayList<HologramMeta> = ArrayList()
+    override val hologramMetas: ArrayList<HologramMeta>
+        get() = this.internalHologramMetas as ArrayList<HologramMeta>
     /** Meta data of a generic lobby. */
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "meta")
-    override val lobbyMeta: LobbyProperties  = LobbyProperties()
+    override val lobbyMeta: LobbyProperties = LobbyProperties()
     /** Meta data of the hub lobby. */
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "hubgame-meta")
     override var hubLobbyMeta: HubLobbyProperties = HubLobbyProperties()
@@ -87,6 +88,9 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, M
     /** Meta data of the redTeam. */
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "team-red")
     override val redTeamMeta: TeamProperties = TeamProperties("Team Red", "&c", "<redcolor><redscore> : <bluecolor><bluescore>", "<redcolor><player> scored for <red>", "<redcolor><red>", "<red>&a has won the match")
+
+    @YamlSerializer.YamlSerialize(orderNumber = 9, value = "holograms")
+    private val internalHologramMetas: ArrayList<HologramBuilder> = ArrayList()
 
     init {
         redTeamMeta.armorContents = arrayOf(ItemStack(Material.LEATHER_BOOTS).setColor(Color.RED)

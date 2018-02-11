@@ -1,9 +1,13 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
+import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.HologramBuilder
+import net.milkbowl.vault.chat.Chat
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
@@ -56,12 +60,28 @@ class HologramPage : Page(HologramPage.ID, EffectsSettingsPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        if(command == BlockBallCommand.HOLOGRAM_OPEN)
-        {
-            cache[5] = null;
+        val arena = cache[0] as BukkitArena
+        val holograms = arena.meta.hologramMetas
+        if (command == BlockBallCommand.HOLOGRAM_OPEN) {
+            cache[5] = null
         }
-        val arena = cache!![0] as BukkitArena
-        val scoreboard = arena.meta.hologramMetas
+        if (command == BlockBallCommand.HOLOGRAM_CREATE) {
+            val builder = HologramBuilder();
+            builder.position = player.location.toPosition()
+            holograms.add(builder)
+            cache[5] = builder
+        }
+        if (command == BlockBallCommand.HOLOGRAM_CALLBACK && args.size >= 3) {
+            val range = args[2].toInt();
+            if (range >= 0 && range < holograms.size) {
+                cache[5] = holograms[range];
+            }
+        }
+        if (command == BlockBallCommand.HOLOGRAM_DELETE) {
+            holograms.remove(cache[5])
+            cache[5] = null
+        }
+        cache[2] = holograms.map { p -> printLocation(p.position!!) }
         return super.execute(player, command, cache, args)
     }
 
@@ -72,32 +92,45 @@ class HologramPage : Page(HologramPage.ID, EffectsSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache!![0] as BukkitArena
-        val selectedHologram = cache[5];
+        val arena = cache[0] as BukkitArena
+        val selectedHologram = cache[5]
         var selectedHologramText = "none"
         var selectedHologramHover = "none"
-        if(selectedHologram != null)
-        {
-            selectedHologramText = printLocation((selectedHologram as HologramMeta).position!!);
+        var hologramListText = arena.meta.hologramMetas.map { p -> printLocation(p.position!!) }.toSingleLine()
+        if (selectedHologram != null) {
+            selectedHologramText = printLocation((selectedHologram as HologramMeta).position!!)
             selectedHologramHover = selectedHologram.lines.toSingleLine()
+            cache[2] = selectedHologram.lines
         }
         val holograms = arena.meta.hologramMetas
-        return ChatBuilder()
-                .component("- HOLOGRAMS: ").builder()
+        val builder = ChatBuilder()
+                .component("- Holograms: ").builder()
                 .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
-                .setHoverText("HOWVER")
-                .builder()
-                .component(ClickableComponent.ADD.text).setColor(ClickableComponent.ADD.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SIGNS_ADDTEAMRED.command)
-                .setHoverText(ChatColor.YELLOW.toString() + "Players clicking this sign automatically join the game and the red team.\n&6&m      \n&rEnables the next sign to be added after you rightclicked it.\nDestroy the sign to remove it.")
+                .setHoverText(hologramListText)
+                .builder().component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_HOLOGRAMS.command)
+                .setHoverText("Opens the selectionbox for existing holograms.")
+                .builder().component(" [add by location..]").setColor(ClickableComponent.ADD.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.HOLOGRAM_CREATE.command)
+                .setHoverText("Creates a new hologram at your current location and select it.")
                 .builder().nextLine()
-                .component("- Selected hologram: " + selectedHologramText).builder()
-                .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
-                .setHoverText(selectedHologramHover)
-                .builder()
-                .component(ClickableComponent.ADD.text).setColor(ClickableComponent.ADD.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SIGNS_ADDTEAMRED.command)
-                .setHoverText(ChatColor.YELLOW.toString() + "Players clicking this sign automatically join the game and the red team.\n&6&m      \n&rEnables the next sign to be added after you rightclicked it.\nDestroy the sign to remove it.")
-                .builder().nextLine()
+
+        if (selectedHologram != null) {
+            builder.component("- Selected hologram: " + selectedHologramText).builder()
+                    .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
+                    .setHoverText(selectedHologramHover).builder()
+                    .component(ClickableComponent.DELETE.text).setColor(ClickableComponent.DELETE.color)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.HOLOGRAM_DELETE.command)
+                    .setHoverText("Deletes the selected hologram.")
+                    .builder().nextLine()
+                    .component("- Lines:").builder()
+                    .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_HOLOGRAM.command)
+                    .setHoverText("Configure the lines of the hologram.")
+                    .builder().nextLine()
+
+        }
+
+        return builder
     }
 }

@@ -63,6 +63,9 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
             cache!![2] = BossBarMeta.Color.values().map { p -> p.name }
             cache[3] = BlockBallCommand.BOSSBAR_CALLBACKCOLORS
         }
+        else if (command == BlockBallCommand.LIST_HOLOGRAMS) {
+            cache[3] = BlockBallCommand.HOLOGRAM_CALLBACK
+        }
         return super.execute(player, command, cache, args)
     }
 

@@ -58,7 +58,12 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         if (command == BlockBallCommand.MULTILINES_SCOREBOARD) {
             cache[4] = ScoreboardPage.ID
             cache[3] = 0
-        } else if (command == BlockBallCommand.MULTILINES_ADD) {
+        }
+        else if (command == BlockBallCommand.MULTILINES_HOLOGRAM) {
+            cache[4] = HologramPage.ID
+            cache[3] = 0
+        }
+        else if (command == BlockBallCommand.MULTILINES_ADD) {
             dataList.add(this.mergeArgs(2, args))
         } else if (command == BlockBallCommand.MULTILINES_ANY) {
             if (args!!.size >= 3) {

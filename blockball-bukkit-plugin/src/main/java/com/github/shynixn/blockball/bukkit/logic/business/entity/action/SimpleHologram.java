@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.action;
 
+import net.minecraft.server.v1_12_R1.EntityArmorStand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -46,7 +47,7 @@ public class SimpleHologram implements AutoCloseable {
     private final List<Object> armorstands = new ArrayList<>();
     private final Location defaultLocation;
     private final int taskId;
-    private Plugin plugin;
+    private final Plugin plugin;
 
     private SimpleHologram(Plugin plugin, Location location, Collection<String> lines) {
         this.defaultLocation = location;
@@ -82,12 +83,12 @@ public class SimpleHologram implements AutoCloseable {
     public void addLine(String text) {
         if (text == null)
             throw new IllegalArgumentException("Text cannot be null!");
-        Object entityArmorstand = null;
+        Object entityArmorstand = this.spawnEntityArmorstand(this.defaultLocation);
         final ArmorStand newArmorstand = this.getBukkitEntity(entityArmorstand);
         newArmorstand.setCustomNameVisible(true);
         newArmorstand.setVisible(false);
         newArmorstand.setCustomName(ChatColor.translateAlternateColorCodes('&', text));
-        this.armorstands.add(text);
+        this.armorstands.add(entityArmorstand);
     }
 
     /**
@@ -316,7 +317,7 @@ public class SimpleHologram implements AutoCloseable {
         try {
             for (final Object entityArmorstand : this.armorstands) {
                 final Constructor deSpawnPacketConstructor = (Constructor) reflectionCache[5];
-                final Object spawnPacket = deSpawnPacketConstructor.newInstance(entityArmorstand);
+                final Object spawnPacket = deSpawnPacketConstructor.newInstance(this.getRespawningId(entityArmorstand));
                 this.sendPacket(player, spawnPacket);
             }
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -366,6 +367,23 @@ public class SimpleHologram implements AutoCloseable {
         }
     }
 
+    private int[] getRespawningId(Object entityArmorstand) {
+        try {
+            return new int[]{(int) ((Method) reflectionCache[9]).invoke(entityArmorstand)};
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Object spawnEntityArmorstand(Location location) {
+        try {
+            final Object entityWorld = ((Method) reflectionCache[7]).invoke(location.getWorld());
+            return ((Constructor) reflectionCache[8]).newInstance(entityWorld);
+        } catch (final Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     private static void initializeReflectionCache() throws ClassNotFoundException, NoSuchMethodException, NoSuchFieldException {
         reflectionCache = new Object[20];
         reflectionCache[0] = createClass("net.minecraft.server.VERSION.PacketPlayOutEntityTeleport").getDeclaredConstructor(createClass("net.minecraft.server.VERSION.Entity"));
@@ -375,6 +393,9 @@ public class SimpleHologram implements AutoCloseable {
         reflectionCache[4] = createClass("net.minecraft.server.VERSION.PlayerConnection").getDeclaredMethod("sendPacket", createClass("net.minecraft.server.VERSION.Packet"));
         reflectionCache[5] = createClass("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy").getDeclaredConstructor(int[].class);
         reflectionCache[6] = createClass("net.minecraft.server.VERSION.Entity").getDeclaredMethod("getBukkitEntity");
+        reflectionCache[7] = createClass("org.bukkit.craftbukkit.VERSION.CraftWorld").getDeclaredMethod("getHandle");
+        reflectionCache[8] = createClass("net.minecraft.server.VERSION.EntityArmorStand").getDeclaredConstructor(createClass("net.minecraft.server.VERSION.World"));
+        reflectionCache[9] = createClass("net.minecraft.server.VERSION.Entity").getDeclaredMethod("getId");
     }
 
     /**
@@ -398,7 +419,7 @@ public class SimpleHologram implements AutoCloseable {
      */
     @Override
     public void close() throws Exception {
-        plugin.getServer().getScheduler().cancelTask(this.taskId);
+        this.plugin.getServer().getScheduler().cancelTask(this.taskId);
         Bukkit.getServer().getScheduler().cancelTask(this.taskId);
         for (final Object entityArmorstand : this.armorstands) {
             this.removeHologram(entityArmorstand);

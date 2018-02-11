@@ -8,8 +8,10 @@ import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.GameScoreboard
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleBossBar
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleHologram
 import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
@@ -19,6 +21,8 @@ import org.bukkit.block.Sign
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.Plugin
+import org.bukkit.plugin.java.JavaPlugin
 
 /**
  * Created by Shynixn 2018.
@@ -69,6 +73,8 @@ abstract class LowLevelGame(
 
     private var bossbar: SimpleBossBar? = null
 
+    private var holograms: MutableList<SimpleHologram> = ArrayList()
+
     /** Amount of points the blue team has scored. */
     override val bluePoints: Int
         get() = blueGoals
@@ -95,6 +101,7 @@ abstract class LowLevelGame(
             this.updateScoreboard()
             this.updateBossBar()
             this.updateDoubleJumpCooldown()
+            this.updateHolograms()
         }
     }
 
@@ -105,11 +112,33 @@ abstract class LowLevelGame(
         }
     }
 
+    private fun updateHolograms() {
+        if (holograms.size != this.arena.meta.hologramMetas.size) {
+            val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java) as Plugin
+            cleanHolograms()
+            this.arena.meta.hologramMetas.indices
+                    .map { arena.meta.hologramMetas[it] }
+                    .forEach { holograms.add(SimpleHologram.from(plugin, it.position!!.toBukkitLocation(), it.lines)) }
+        }
+        this.holograms.forEach { holo ->
+            this.getPlayers().forEach { p ->
+                if (!holo.players.contains(p)) {
+                    holo.addPlayer(p)
+                }
+            }
+        }
+    }
+
+    private fun cleanHolograms() {
+        this.holograms.forEach { p -> p.close() }
+        this.holograms.clear()
+    }
+
     private fun updateBossBar() {
         val meta = arena.meta.bossBarMeta
         if (bossbar == null && arena.meta.bossBarMeta.enabled) {
             bossbar = SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, meta.flags[0].name)
-            bossbar!!.percentage = meta.percentage.toDouble()/100.0;
+            bossbar!!.percentage = meta.percentage.toDouble() / 100.0
         }
         if (bossbar != null) {
             bossbar!!.addPlayer(getPlayers())

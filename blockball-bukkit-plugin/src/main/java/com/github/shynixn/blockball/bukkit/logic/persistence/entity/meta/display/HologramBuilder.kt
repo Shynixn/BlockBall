@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 
 /**
  * Created by Shynixn 2018.
@@ -34,9 +35,19 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  */
 class HologramBuilder : PersistenceObject(), HologramMeta {
     /** Position of the hologram. */
-    @YamlSerializer.YamlSerialize("location", orderNumber = 1)
-    override var position: StorageLocation? = null;
+    override var position: StorageLocation?
+        get() = internalPosition
+        set(value) {
+            this.internalPosition = value as LocationBuilder
+        }
     /** Lines of the hologram being rendered. */
     @YamlSerializer.YamlSerialize("lines", orderNumber = 1)
     override val lines: MutableList<String> = ArrayList();
+
+    @YamlSerializer.YamlSerialize("location", orderNumber = 1)
+    private var internalPosition: LocationBuilder? = null
+
+    init {
+        this.lines.add("<redcolor><red> <redscore> : <bluecolor><bluescore> <blue>")
+    }
 }
