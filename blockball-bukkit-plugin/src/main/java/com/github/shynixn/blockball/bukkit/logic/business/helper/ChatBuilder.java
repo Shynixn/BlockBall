@@ -177,6 +177,7 @@ public class ChatBuilder {
     public void sendMessage(Player... players) {
         if (players == null)
             throw new IllegalArgumentException("Players cannot be null");
+
         final StringBuilder finalMessage = new StringBuilder();
         final StringBuilder cache = new StringBuilder();
         finalMessage.append("{\"text\": \"\"");

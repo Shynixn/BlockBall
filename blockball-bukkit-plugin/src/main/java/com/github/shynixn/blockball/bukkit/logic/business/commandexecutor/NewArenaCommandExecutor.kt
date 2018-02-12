@@ -87,6 +87,18 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
     private val arenaController: ArenaRepository? = null
 
 
+    @Inject
+    private val particlesPage: ParticleEffectPage? = null
+
+    @Inject
+    private val soundsPage: SoundEffectPage? = null
+
+    @Inject
+    private val abilitiesPage: AbilitiesSettingsPage? = null
+
+    @Inject
+    private val doubleJumpPage: DoubleJumpPage? = null
+
     /**
      * Can be overwritten to listener to all executed commands.
      *
@@ -246,9 +258,14 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
             this.pagecache!!.add(bossbarPage!!)
             this.pagecache!!.add(signSettingsPage!!)
             this.pagecache!!.add(hologramsPage!!);
+            this.pagecache!!.add(particlesPage!!);
+            this.pagecache!!.add(soundsPage!!);
+            this.pagecache!!.add(abilitiesPage!!);
+            this.pagecache!!.add(doubleJumpPage!!);
         }
         return this.pagecache!!
     }
+
 
     private fun fullCommand(args: Array<String>): String {
         val builder = StringBuilder()

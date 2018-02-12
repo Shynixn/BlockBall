@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc
 
 import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.ParticleEffectData
 import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.SoundBuilder
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.DoubleJumpMeta

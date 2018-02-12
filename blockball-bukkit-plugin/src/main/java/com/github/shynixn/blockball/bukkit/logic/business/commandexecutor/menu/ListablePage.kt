@@ -1,8 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
+import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
+import com.github.shynixn.ball.api.persistence.enumeration.EffectingType
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 
 /**
@@ -51,6 +54,18 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         if (command == BlockBallCommand.LIST_GAMETYPES) {
             cache!![2] = GameType.values().map { p -> p.name }
             cache[3] = BlockBallCommand.SETTINGS_OPEN
+        } else if (command == BlockBallCommand.LIST_PARTICLE_EFFECTINGTYPES) {
+            cache!![2] = EffectingType.values().map { p -> p.name }
+            cache!![3] = BlockBallCommand.PARTICLE_CALLBACK_EFFECTING
+        } else if (command == BlockBallCommand.LIST_PARTICLE_TYPES) {
+            cache!![2] = ParticleEffectMeta.ParticleEffectType.values().map { p -> p.name }
+            cache!![3] = BlockBallCommand.PARTICLE_CALLBACK_TYPE
+        } else if (command == BlockBallCommand.LIST_SOUND_TYPES) {
+            cache!![2] = Sound.values().map { p -> p.name }
+            cache!![3] = BlockBallCommand.SOUND_CALLBACK_TYPE
+        } else if (command == BlockBallCommand.LIST_SOUND_EFFECTINGTYPES) {
+            cache!![2] = EffectingType.values().map { p -> p.name }
+            cache!![3] = BlockBallCommand.SOUND_CALLBACK_EFFECTING
         } else if (command == BlockBallCommand.LIST_LINES) {
             cache!![3] = BlockBallCommand.MULTILINES_ANY
         } else if (command == BlockBallCommand.LIST_BOSSBARSTYLES) {
@@ -62,8 +77,7 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         } else if (command == BlockBallCommand.LIST_BOSSBARCOLORS) {
             cache!![2] = BossBarMeta.Color.values().map { p -> p.name }
             cache[3] = BlockBallCommand.BOSSBAR_CALLBACKCOLORS
-        }
-        else if (command == BlockBallCommand.LIST_HOLOGRAMS) {
+        } else if (command == BlockBallCommand.LIST_HOLOGRAMS) {
             cache[3] = BlockBallCommand.HOLOGRAM_CALLBACK
         }
         return super.execute(player, command, cache, args)

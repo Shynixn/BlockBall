@@ -37,7 +37,11 @@ public enum PageKey {
     BOSSBAR("boss"),
     HOLOGRAM("holog"),
     SIGNS("sign"),
+    DOUBLEJUMP("doubl"),
+    ABILITIES("abi"),
     MULTIPLELINES("mlin"),
+    PARTICLEFFECTS("part"),
+    SOUNDEFFECTS("sound"),
     MULTIPLEITEMS("mitem"),
     MAINCONFIGURATION("mcf");
 

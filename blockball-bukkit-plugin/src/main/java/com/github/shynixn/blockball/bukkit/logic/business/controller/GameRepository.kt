@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.HubGame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
+import com.github.shynixn.blockball.bukkit.logic.business.listener.DoubleJumpListener
 import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
 import com.github.shynixn.blockball.bukkit.logic.business.listener.HubGameListener
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
@@ -57,6 +58,9 @@ class GameRepository : BukkitGameController, Runnable {
 
     @Inject
     private var gameListener: GameListener? = null;
+
+    @Inject
+    private var doubleJumpListener: DoubleJumpListener? = null
 
     @Inject
     private var hubGameListener: HubGameListener? = null;

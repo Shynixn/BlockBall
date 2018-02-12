@@ -28,7 +28,7 @@ import org.bukkit.entity.Player
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHERwwt
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
@@ -86,13 +86,17 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_BLUE_CONFIGURE.command)
                 .setHoverText("Opens the settings page for the blue team.")
                 .builder().nextLine()
+                .component("- Signs:").builder()
+                .component(" [page..]").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SIGNS_OPEN.command)
+                .setHoverText("Configure all signs for this gamemode.").builder().nextLine()
                 .component("- Effects:").builder()
                 .component(" [page..]").setColor(ChatColor.YELLOW)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.EFFECTS_OPEN.command)
                 .setHoverText("Opens the settings page for effects like scoreboard, bossbar and holograms.").builder().nextLine()
-                .component("- Signs:").builder()
+                .component("- Abilities:").builder()
                 .component(" [page..]").setColor(ChatColor.YELLOW)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SIGNS_OPEN.command)
-                .setHoverText("Configure all signs for this gamemode.").builder()
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ABILITIES_OPEN.command)
+                .setHoverText("Opens the settings page for double jumps and boost effects.").builder()
     }
 }

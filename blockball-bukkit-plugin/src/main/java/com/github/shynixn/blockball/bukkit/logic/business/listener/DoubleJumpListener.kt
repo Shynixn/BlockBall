@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerToggleFlightEvent
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
-import java.util.logging.Logger
 
 /**
  * Created by Shynixn 2018.
@@ -78,7 +77,7 @@ class DoubleJumpListener @Inject constructor(plugin: Plugin) : SimpleListener(pl
                 meta.soundEffect.apply(player.location)
                 meta.particleEffect.apply(player.location)
             } catch (e: Exception) {
-                Logger.getAnonymousLogger().log(Level.WARNING, "Invalid 1.8/1.9 sound. [DoubleJumpSound]", e)
+                this.plugin!!.logger.log(Level.WARNING, "Invalid 1.8/1.9 sound. [DoubleJumpSound]", e)
             }
         }
     }

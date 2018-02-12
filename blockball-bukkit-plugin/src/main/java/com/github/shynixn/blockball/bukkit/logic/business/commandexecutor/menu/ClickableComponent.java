@@ -40,6 +40,7 @@ public enum ClickableComponent {
     DELETE(" [delete..]", ChatColor.DARK_RED),
     SELECT(" [select..]", ChatColor.AQUA),
 
+    INVALID(" [page..]", ChatColor.BLACK),
     TOGGLE(" [toggle..]", ChatColor.LIGHT_PURPLE)
     ;
     private String text;
