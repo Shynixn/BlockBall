@@ -5,3 +5,5 @@ Effects
    bossbar
    scoreboard
    holograms
+   particleeffect
+   soundeffect
