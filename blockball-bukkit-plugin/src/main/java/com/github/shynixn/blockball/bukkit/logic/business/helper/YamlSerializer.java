@@ -112,9 +112,20 @@ public final class YamlSerializer {
     public static Map<String, Object> serializeMap(Map<?, ?> objects) throws IllegalAccessException {
         final Map<String, Object> data = new LinkedHashMap<>();
         for (final Object key : objects.keySet()) {
-            if (!isPrimitive(key.getClass()))
+            if (isPrimitive(key.getClass())) {
+                data.put(String.valueOf(key), serializeObject(objects.get(key)));
+            } else if (key.getClass().isEnum()) {
+                final Object value = objects.get(key);
+                if (value == null) {
+                    data.put(((Enum) key).name(), null);
+                } else if (isPrimitive(value.getClass())) {
+                    data.put(((Enum) key).name(), value);
+                } else {
+                    data.put(((Enum) key).name(), serializeObject(value));
+                }
+            } else {
                 throw new IllegalArgumentException("Cannot map non simple Map.");
-            data.put(String.valueOf(key), serializeObject(objects.get(key)));
+            }
         }
         return data;
     }
@@ -208,14 +219,27 @@ public final class YamlSerializer {
      * @throws InstantiationException exception
      * @throws IllegalAccessException exception
      */
-    public static <T extends Map, E> T deserializeMap(Class<E> clazz, Class<T> mapClazz, Object dataSource) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public static <T extends Map, E> T deserializeMap(Class<E> clazz, Class keyClazz, Class<T> mapClazz, Object dataSource) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         final Map<String, Object> data = getDataFromSource(dataSource);
         Class<?> instanceClass = mapClazz;
         if (instanceClass == Map.class)
             instanceClass = HashMap.class;
         final T map = (T) instanceClass.newInstance();
         for (final String key : data.keySet()) {
-            map.put(key, deserializeObject(clazz, ((MemorySection) data.get(key)).getValues(false)));
+            Object value = data.get(key);
+            if (isPrimitive(value.getClass())) {
+                if (keyClazz.isEnum()) {
+                    map.put(Enum.valueOf(keyClazz, key), value);
+                } else {
+                    map.put(key, value);
+                }
+            } else {
+                if (keyClazz.isEnum()) {
+                    map.put(Enum.valueOf(keyClazz, key),deserializeObject(clazz, ((MemorySection) value).getValues(false)));
+                } else {
+                    map.put(key, deserializeObject(clazz, ((MemorySection) value).getValues(false)));
+                }
+            }
         }
         return map;
     }
@@ -276,7 +300,7 @@ public final class YamlSerializer {
             if (item instanceof MemorySection) {
                 collection.add(deserializeObject(clazz, ((MemorySection) item).getValues(false)));
             } else if (clazz.isEnum()) {
-                collection.add(Enum.valueOf((Class)clazz,(String) item));
+                collection.add(Enum.valueOf((Class) clazz, (String) item));
             }
         }
         return collection;
@@ -333,7 +357,7 @@ public final class YamlSerializer {
                                     field.set(object, deserializeCollection(getTypeFromHeavyField(field, 0), (Class<Collection>) field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                                 }
                             } else if (Map.class.isAssignableFrom(field.getType())) {
-                                field.set(object, deserializeMap(getTypeFromHeavyField(field, 1), (Class<Map>) field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                field.set(object, deserializeMap(getTypeFromHeavyField(field, 1), getTypeFromHeavyField(field, 0), (Class<Map>) field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                             } else {
                                 if (yamlAnnotation.classicSerialize() == ManualSerialization.CONSTRUCTOR) {
                                     field.set(object, deserializeObjectClassic(field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));

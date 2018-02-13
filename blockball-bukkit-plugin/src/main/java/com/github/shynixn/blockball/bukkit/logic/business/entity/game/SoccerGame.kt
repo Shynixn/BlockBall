@@ -3,10 +3,16 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 import com.github.shynixn.ball.api.BallsApi
 import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
+import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper
+import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Entity
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 /**
@@ -72,6 +78,43 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
      */
     protected abstract fun onWin(teamMeta: TeamMeta<Location, ItemStack>)
 
+    private fun onMatchEnd(winningPlayers: List<Player>, loosingPlayers: List<Player>) {
+        if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH)) {
+            RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.WIN_MATCH]!!.toDouble(), winningPlayers)
+        }
+        if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH)) {
+            RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.LOOSING_MATCH]!!.toDouble(), loosingPlayers)
+        }
+        if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.PARTICIPATE_MATCH)) {
+            RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.PARTICIPATE_MATCH]!!.toDouble(), getPlayers())
+        }
+        if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH)) {
+            this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.WIN_MATCH]!!, winningPlayers)
+        }
+        if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH)) {
+            this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.LOOSING_MATCH]!!, loosingPlayers)
+        }
+        if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.PARTICIPATE_MATCH)) {
+            this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.PARTICIPATE_MATCH]!!, getPlayers())
+        }
+    }
+
+    private fun executeCommand(meta: CommandMeta, players: List<Player>) {
+        if (meta.command.equals("none", true)) {
+            return
+        }
+        when {
+            meta.mode == CommandMeta.CommandMode.PER_PLAYER -> players.forEach { p ->
+                p.performCommand(meta.command!!.replaceGamePlaceholder(this))
+            }
+            meta.mode == CommandMeta.CommandMode.CONSOLE_PER_PLAYER -> players.forEach { p ->
+                lastInteractedEntity = p
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), meta.command!!.replaceGamePlaceholder(this))
+            }
+            meta.mode == CommandMeta.CommandMode.CONSOLE_SINGLE -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), meta.command!!.replaceGamePlaceholder(this))
+        }
+    }
+
     private fun fixBallPositionSpawn() {
         if (ball == null || ball!!.isDead)
             return
@@ -114,15 +157,17 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
             this.blueGoals++
             this.ball!!.remove()
             this.onScore(this.arena.meta.blueTeamMeta)
-            if (this.blueGoals >= 20) {
+            if (this.blueGoals >= 20) { //TODO Change this to actual value
                 this.onWin(this.arena.meta.blueTeamMeta)
+                this.onMatchEnd(blueTeam, redTeam)
             }
         } else if (this.arena.meta.blueTeamMeta.goal.isLocationInSelection(this.ball!!.location)) {
             this.redGoals++
             this.ball!!.remove()
             this.onScore(this.arena.meta.redTeamMeta)
-            if (this.redGoals >= 20L) {
+            if (this.redGoals >= 20L) { //TODO Change this to actual value
                 this.onWin(this.arena.meta.redTeamMeta)
+                this.onMatchEnd(redTeam, blueTeam)
             }
         }
     }

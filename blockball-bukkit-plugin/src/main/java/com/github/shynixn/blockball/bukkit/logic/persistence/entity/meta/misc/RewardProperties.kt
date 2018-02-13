@@ -37,6 +37,12 @@ class RewardProperties : PersistenceObject(), RewardMeta {
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "money-reward")
     override var moneyReward: MutableMap<RewardMeta.RewardedAction, Int> = HashMap()
     /** Commands which get executed when a player does a rewarded action. */
-    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "command-reward")
-    override var commandReward: MutableMap<RewardMeta.RewardedAction, CommandMeta> = HashMap()
+    override var commandReward: MutableMap<RewardMeta.RewardedAction, CommandMeta>
+        get() = internalCommandReward as MutableMap<RewardMeta.RewardedAction, CommandMeta>
+        set(value) {
+            internalCommandReward = value as (MutableMap<RewardMeta.RewardedAction, CommandProperties>)
+        }
+
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "command-reward")
+    private var internalCommandReward: MutableMap<RewardMeta.RewardedAction, CommandProperties> = HashMap()
 }

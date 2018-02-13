@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.LobbyMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.MinigameLobbyMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.DoubleJumpMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 
 /**
@@ -60,13 +61,16 @@ interface ArenaMeta<Location, ItemStack, Vector, Player, Material> {
     val blueTeamMeta: TeamMeta<Location, ItemStack>
 
     /** Meta data of all holograms. */
-    val hologramMetas : MutableList<HologramMeta>
+    val hologramMetas: MutableList<HologramMeta>
 
     /** Meta data of the ball. */
     val ballMeta: BallExtensionMeta
 
     /** Meta data of protection. */
     val protectionMeta: ArenaProtectionMeta<Vector>
+
+    /** Meta data for rewards */
+    val rewardMeta: RewardMeta
 
     /** Meta data of the scoreboard. */
     val scoreboardMeta: ScoreboardMeta

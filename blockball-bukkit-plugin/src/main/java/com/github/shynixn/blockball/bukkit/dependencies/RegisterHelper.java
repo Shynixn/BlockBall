@@ -11,6 +11,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.logging.Level;
 
@@ -69,18 +71,32 @@ public final class RegisterHelper {
         return false;
     }
 
-
     public static String getCurrencyName() {
         if (RegisterHelper.isRegistered("Vault") && VaultConnection.setupEconomy()) {
             return VaultConnection.getCurrencyName();
         }
-        return null;
+        return ChatColor.RED + "<Cannot find currency name>";
     }
 
     public static void addMoney(double amount, Player... players) {
         if (RegisterHelper.isRegistered("Vault") && VaultConnection.setupEconomy()) {
             VaultConnection.add(amount, players);
         }
+    }
+
+    public static void addMoney(double amount, Collection<Player> players) {
+        if(amount == 0)
+            return;
+        if (RegisterHelper.isRegistered("Vault") && VaultConnection.setupEconomy()) {
+            VaultConnection.add(amount, players.toArray(new Player[0]));
+        }
+    }
+
+    public static String getCurrenyName() {
+        if (RegisterHelper.isRegistered("Vault") && VaultConnection.setupEconomy()) {
+            return VaultConnection.getCurrencyName();
+        }
+        return ChatColor.RED + "<Could obtain currency from Vault>";
     }
 
     public static void registerAll() {

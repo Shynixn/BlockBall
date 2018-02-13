@@ -86,6 +86,8 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
     @Inject
     private val arenaController: ArenaRepository? = null
 
+    @Inject
+    private val rewardsPage : RewardsPage? = null
 
     @Inject
     private val particlesPage: ParticleEffectPage? = null
@@ -262,6 +264,7 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
             this.pagecache!!.add(soundsPage!!)
             this.pagecache!!.add(abilitiesPage!!)
             this.pagecache!!.add(doubleJumpPage!!)
+            this.pagecache!!.add(rewardsPage!!)
         }
         return this.pagecache!!
     }

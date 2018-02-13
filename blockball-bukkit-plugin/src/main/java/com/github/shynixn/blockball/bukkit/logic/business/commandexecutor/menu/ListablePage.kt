@@ -4,6 +4,8 @@ import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
 import com.github.shynixn.ball.api.persistence.enumeration.EffectingType
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -57,9 +59,18 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         } else if (command == BlockBallCommand.LIST_PARTICLE_EFFECTINGTYPES) {
             cache[2] = EffectingType.values().map { p -> p.name }
             cache[3] = BlockBallCommand.PARTICLE_CALLBACK_EFFECTING
+        } else if (command == BlockBallCommand.LIST_COMMANDMODES) {
+            cache[2] = CommandMeta.CommandMode.values().map { p -> p.name }
+            cache[3] = BlockBallCommand.REWARD_CALLBACK_COMMANDMODE
         } else if (command == BlockBallCommand.LIST_PARTICLE_TYPES) {
             cache[2] = ParticleEffectMeta.ParticleEffectType.values().map { p -> p.name }
             cache[3] = BlockBallCommand.PARTICLE_CALLBACK_TYPE
+        } else if (command == BlockBallCommand.LIST_REWARDED_MONEY) {
+            cache[2] = RewardMeta.RewardedAction.values().map { p -> p.name }
+            cache[3] = BlockBallCommand.REWARD_CALLBACK_MONEY
+        } else if (command == BlockBallCommand.LIST_REWARDED_COMMAND) {
+            cache[2] = RewardMeta.RewardedAction.values().map { p -> p.name }
+            cache[3] = BlockBallCommand.REWARD_CALLBACK_COMMAND
         } else if (command == BlockBallCommand.LIST_SOUND_TYPES) {
             cache[2] = Sound.values().map { p -> p.name }
             cache[3] = BlockBallCommand.SOUND_CALLBACK_TYPE

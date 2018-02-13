@@ -147,10 +147,21 @@ public enum BlockBallCommand {
     SOUND_CALLBACK_EFFECTING(PageKey.SOUNDEFFECTS,"caleffecting"),
     SOUND_CALLBACK_TYPE(PageKey.SOUNDEFFECTS,"caltype"),
 
+    REWARD_OPEN(PageKey.REWARDSPAGE, "open"),
+    REWARD_EDIT_MONEY(PageKey.REWARDSPAGE, "money"),
+    REWARD_EDIT_COMMAND(PageKey.REWARDSPAGE, "command"),
+    REWARD_CALLBACK_MONEY(PageKey.REWARDSPAGE, "calmoney"),
+    REWARD_CALLBACK_COMMAND(PageKey.REWARDSPAGE, "calcommand"),
+    REWARD_CALLBACK_COMMANDMODE(PageKey.REWARDSPAGE, "calcommode"),
+
+
     LIST_LINES(PageKey.LISTABLE, "show_lines"),
+    LIST_COMMANDMODES(PageKey.LISTABLE, "show_commandmodes"),
     LIST_PARTICLE_EFFECTINGTYPES(PageKey.LISTABLE, "particlef"),
     LIST_PARTICLE_TYPES(PageKey.LISTABLE, "particles"),
     LIST_SOUND_TYPES(PageKey.LISTABLE, "sounds"),
+    LIST_REWARDED_MONEY(PageKey.LISTABLE, "rewmoney"),
+    LIST_REWARDED_COMMAND(PageKey.LISTABLE, "recommand"),
     LIST_SOUND_EFFECTINGTYPES(PageKey.LISTABLE, "soundf"),
     LIST_BOSSBARFLAGS(PageKey.LISTABLE, "show_bossbarflags"),
     LIST_BOSSBARSTYLES(PageKey.LISTABLE, "show_bossbarstyles"),

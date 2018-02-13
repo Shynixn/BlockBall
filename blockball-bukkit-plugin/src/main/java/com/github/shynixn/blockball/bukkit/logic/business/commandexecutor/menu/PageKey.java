@@ -43,6 +43,8 @@ public enum PageKey {
     PARTICLEFFECTS("part"),
     SOUNDEFFECTS("sound"),
     MULTIPLEITEMS("mitem"),
+    REWARDSPAGE("reward"),
+    COMMANDPAGE("com"),
     MAINCONFIGURATION("mcf");
 
     private String key;

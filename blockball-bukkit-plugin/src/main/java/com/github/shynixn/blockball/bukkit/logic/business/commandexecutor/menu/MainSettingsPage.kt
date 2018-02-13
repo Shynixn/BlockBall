@@ -97,6 +97,10 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 .component("- Abilities:").builder()
                 .component(" [page..]").setColor(ChatColor.YELLOW)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ABILITIES_OPEN.command)
-                .setHoverText("Opens the settings page for double jumps and boost effects.").builder()
+                .setHoverText("Opens the settings page for double jumps and boost effects.").builder().nextLine()
+                .component("- Rewards:").builder()
+                .component(" [page..]").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.REWARD_OPEN.command)
+                .setHoverText("Opens the settings page for rewards.").builder()
     }
 }
