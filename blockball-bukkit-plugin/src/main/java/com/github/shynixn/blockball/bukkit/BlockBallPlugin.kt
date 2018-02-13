@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController
 import com.github.shynixn.blockball.api.business.controller.GameController
 import com.github.shynixn.blockball.api.persistence.controller.LinkSignController
+import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper
 import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.JoinCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.LeaveCommandExecutor
@@ -121,7 +122,7 @@ class BlockBallPlugin : JavaPlugin() {
         if (true) {
             try {
 
-
+                RegisterHelper.register("Vault")
                 gameController!!.reload()
                 ReflectionUtils.invokeMethodByKotlinClass<Void>(BlockBallApi::class.java, "initializeBlockBall", arrayOf(Any::class.java, Any::class.java), arrayOf(this.gameController,bungeeCordController))
                 success = true

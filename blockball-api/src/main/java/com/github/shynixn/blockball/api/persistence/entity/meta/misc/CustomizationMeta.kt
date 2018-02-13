@@ -28,9 +28,6 @@ package com.github.shynixn.blockball.api.persistence.entity.meta.misc
  * SOFTWARE.
  */
 interface CustomizationMeta {
-
-
-
     /** Should players automatically join the other team to even out them?*/
     var onlyAllowEventTeams: Boolean
 

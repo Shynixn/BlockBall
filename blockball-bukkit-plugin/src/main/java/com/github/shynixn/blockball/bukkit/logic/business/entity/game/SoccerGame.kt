@@ -99,6 +99,21 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
         }
     }
 
+    private fun onScoreReward(players: List<Player>) {
+        if (lastInteractedEntity != null && lastInteractedEntity is Player) {
+            if (players.contains(lastInteractedEntity!!)) {
+                val list = ArrayList<Player>()
+                list.add(lastInteractedEntity as Player)
+                if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.SHOOT_GOAL)) {
+                    RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.SHOOT_GOAL]!!.toDouble(), list)
+                }
+                if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.SHOOT_GOAL)) {
+                    this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.SHOOT_GOAL]!!, list)
+                }
+            }
+        }
+    }
+
     private fun executeCommand(meta: CommandMeta, players: List<Player>) {
         if (meta.command.equals("none", true)) {
             return
@@ -157,7 +172,8 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
             this.blueGoals++
             this.ball!!.remove()
             this.onScore(this.arena.meta.blueTeamMeta)
-            if (this.blueGoals >= 20) { //TODO Change this to actual value
+            this.onScoreReward(blueTeam)
+            if (this.blueGoals >= 1L) { //TODO Change this to actual value
                 this.onWin(this.arena.meta.blueTeamMeta)
                 this.onMatchEnd(blueTeam, redTeam)
             }
@@ -165,7 +181,8 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
             this.redGoals++
             this.ball!!.remove()
             this.onScore(this.arena.meta.redTeamMeta)
-            if (this.redGoals >= 20L) { //TODO Change this to actual value
+            this.onScoreReward(redTeam)
+            if (this.redGoals >= 1L) { //TODO Change this to actual value
                 this.onWin(this.arena.meta.redTeamMeta)
                 this.onMatchEnd(redTeam, blueTeam)
             }
