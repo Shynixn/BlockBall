@@ -49,7 +49,7 @@ class DoubleJumpProperties : PersistenceObject(), DoubleJumpMeta<Location, Playe
     override var verticalStrength: Double = 1.0
     /** Horizontal strength modifier.*/
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "horizontal-strength")
-    override var horizontalStrength: Double = 1.0
+    override var horizontalStrength: Double = 2.0
     /** ParticleEffect being played when activating this.*/
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "particle-effect", classicSerialize = YamlSerializer.ManualSerialization.CONSTRUCTOR)
     override val particleEffect: ParticleEffectData = ParticleEffectData()

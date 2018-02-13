@@ -55,7 +55,6 @@ class JoinCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExe
                 println(reddata)
                 if (reddata.equals(game.arena.meta.redTeamMeta.displayName.stripChatColors(), true)) {
                     val gameArgumentsAmount = game.arena.name.split(Pattern.quote(" ")).size
-                    print(gameArgumentsAmount)
                     val result = mergeArgs(redTeamArgumentsAmount+1, gameArgumentsAmount, args);
                     if (result == game.arena.name) {
                         game.join(player!!, Team.RED)
@@ -63,8 +62,6 @@ class JoinCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExe
                 }
                 val blueTeamArgumentsAmount = game.arena.meta.blueTeamMeta.displayName.split(Pattern.quote(" ")).size
                 val bluedata = mergeArgs(0, blueTeamArgumentsAmount+1, args);
-                println(bluedata)
-
                 if (bluedata.equals(game.arena.meta.blueTeamMeta.displayName.stripChatColors(), true)) {
                     val gameArgumentsAmount = game.arena.name.split(Pattern.quote(" ")).size
                     val result = mergeArgs(blueTeamArgumentsAmount+1,gameArgumentsAmount, args);

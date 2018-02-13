@@ -102,6 +102,7 @@ abstract class LowLevelGame(
             this.updateBossBar()
             this.updateDoubleJumpCooldown()
             this.updateHolograms()
+            this.updateDoubleJump()
         }
     }
 
@@ -113,6 +114,17 @@ abstract class LowLevelGame(
         this.holograms.forEachIndexed { i, holo ->
             if (holo.containsPlayer(player)) {
                 holo.removePlayer(player)
+            }
+        }
+    }
+
+    private fun updateDoubleJump() {
+        this.doubleJumpCooldownPlayers.keys.forEach { p ->
+            val cooldown = this.doubleJumpCooldownPlayers[p]!! - 1;
+            if (cooldown <= 0) {
+                doubleJumpCooldownPlayers.remove(p);
+            } else {
+                this.doubleJumpCooldownPlayers[p] = cooldown;
             }
         }
     }

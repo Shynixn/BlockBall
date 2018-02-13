@@ -77,7 +77,7 @@ class DoubleJumpListener @Inject constructor(plugin: Plugin) : SimpleListener(pl
                 meta.soundEffect.apply(player.location)
                 meta.particleEffect.apply(player.location)
             } catch (e: Exception) {
-                this.plugin!!.logger.log(Level.WARNING, "Invalid 1.8/1.9 sound. [DoubleJumpSound]", e)
+                this.plugin!!.logger.log(Level.WARNING, "Invalid 1.8/1.9 effects. [DoubleJumpSound/DoubleJumpParticle]", e)
             }
         }
     }
