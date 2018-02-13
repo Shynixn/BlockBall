@@ -40,7 +40,7 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
 
     companion object {
         /** Id of the page. */
-        val ID = 5
+        const val ID = 5
     }
 
     /**
@@ -59,14 +59,14 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.TEAM_RED_CONFIGURE) {
-            cache!![2] = 0
+            cache[2] = 0
         }
         if (command == BlockBallCommand.TEAM_BLUE_CONFIGURE) {
-            cache!![2] = 1
+            cache[2] = 1
         }
         else if (command == BlockBallCommand.TEAM_SPAWNPOINT) {
             val teamMeta = getTeamMeta(cache)
-            teamMeta.spawnpoint = player!!.location.toPosition()
+            teamMeta.spawnpoint = player.location.toPosition()
         } else if (command == BlockBallCommand.TEAM_NAME) {
             val teamMeta = getTeamMeta(cache)
             val name = mergeArgs(2, args)
@@ -77,7 +77,7 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
             teamMeta.prefix = name
         } else if (command == BlockBallCommand.TEAM_MINAMOUNT) {
             val teamMeta = getTeamMeta(cache)
-            val amount = args!![2].toIntOrNull()
+            val amount = args[2].toIntOrNull()
             if (amount != null) {
                 if (amount > teamMeta.maxAmount) {
                     return CommandResult.MAX_PLAYERS
@@ -86,7 +86,7 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
             }
         } else if (command == BlockBallCommand.TEAM_MAXAMOUNT) {
             val teamMeta = getTeamMeta(cache)
-            val amount = args!![2].toIntOrNull()
+            val amount = args[2].toIntOrNull()
             if (amount != null) {
                 if (amount < teamMeta.minAmount) {
                     return CommandResult.MINPLAYERS
@@ -96,14 +96,14 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
         }
         else if (command == BlockBallCommand.TEAM_WALKSPEED) {
             val teamMeta = getTeamMeta(cache)
-            val amount = args!![2].toDoubleOrNull()
+            val amount = args[2].toDoubleOrNull()
             if (amount != null) {
                 teamMeta.walkingSpeed = amount
             }
         }
         else if (command == BlockBallCommand.TEAM_ARMOR) {
             val teamMeta = getTeamMeta(cache)
-            teamMeta.armorContents = player!!.inventory.armorContents.clone()
+            teamMeta.armorContents = player.inventory.armorContents.clone()
         }
         return super.execute(player, command, cache, args)
     }
@@ -116,7 +116,6 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
         var spawnpoint = "none"
-        val arena = cache!![0] as BukkitArena
         val teamMeta = getTeamMeta(cache)
         if (teamMeta.spawnpoint != null) {
             spawnpoint = this.printLocation(teamMeta.spawnpoint!!)

@@ -54,9 +54,9 @@ class ScoreboardPage : Page(ScoreboardPage.ID, EffectsSettingsPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache!![0] as BukkitArena
+        val arena = cache[0] as BukkitArena
         val scoreboard = arena.meta.scoreboardMeta
-        cache[2] = scoreboard.lines;
+        cache[2] = scoreboard.lines
         if (command == BlockBallCommand.SCOREBOARD_TITLE) {
             scoreboard.title = this.mergeArgs(2, args)
         } else if (command == BlockBallCommand.SCOREBOARD_TOGGLE) {
@@ -72,7 +72,7 @@ class ScoreboardPage : Page(ScoreboardPage.ID, EffectsSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache!![0] as BukkitArena
+        val arena = cache[0] as BukkitArena
         val scoreboard = arena.meta.scoreboardMeta
         return ChatBuilder()
                 .component("- Title: " + scoreboard.title).builder()

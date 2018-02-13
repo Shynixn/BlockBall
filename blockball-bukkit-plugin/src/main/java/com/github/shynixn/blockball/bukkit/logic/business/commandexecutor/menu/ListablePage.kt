@@ -52,30 +52,30 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.LIST_GAMETYPES) {
-            cache!![2] = GameType.values().map { p -> p.name }
+            cache[2] = GameType.values().map { p -> p.name }
             cache[3] = BlockBallCommand.SETTINGS_OPEN
         } else if (command == BlockBallCommand.LIST_PARTICLE_EFFECTINGTYPES) {
-            cache!![2] = EffectingType.values().map { p -> p.name }
-            cache!![3] = BlockBallCommand.PARTICLE_CALLBACK_EFFECTING
+            cache[2] = EffectingType.values().map { p -> p.name }
+            cache[3] = BlockBallCommand.PARTICLE_CALLBACK_EFFECTING
         } else if (command == BlockBallCommand.LIST_PARTICLE_TYPES) {
-            cache!![2] = ParticleEffectMeta.ParticleEffectType.values().map { p -> p.name }
-            cache!![3] = BlockBallCommand.PARTICLE_CALLBACK_TYPE
+            cache[2] = ParticleEffectMeta.ParticleEffectType.values().map { p -> p.name }
+            cache[3] = BlockBallCommand.PARTICLE_CALLBACK_TYPE
         } else if (command == BlockBallCommand.LIST_SOUND_TYPES) {
-            cache!![2] = Sound.values().map { p -> p.name }
-            cache!![3] = BlockBallCommand.SOUND_CALLBACK_TYPE
+            cache[2] = Sound.values().map { p -> p.name }
+            cache[3] = BlockBallCommand.SOUND_CALLBACK_TYPE
         } else if (command == BlockBallCommand.LIST_SOUND_EFFECTINGTYPES) {
-            cache!![2] = EffectingType.values().map { p -> p.name }
-            cache!![3] = BlockBallCommand.SOUND_CALLBACK_EFFECTING
+            cache[2] = EffectingType.values().map { p -> p.name }
+            cache[3] = BlockBallCommand.SOUND_CALLBACK_EFFECTING
         } else if (command == BlockBallCommand.LIST_LINES) {
-            cache!![3] = BlockBallCommand.MULTILINES_ANY
+            cache[3] = BlockBallCommand.MULTILINES_ANY
         } else if (command == BlockBallCommand.LIST_BOSSBARSTYLES) {
-            cache!![2] = BossBarMeta.Style.values().map { p -> p.name }
+            cache[2] = BossBarMeta.Style.values().map { p -> p.name }
             cache[3] = BlockBallCommand.BOSSBAR_OPEN
         } else if (command == BlockBallCommand.LIST_BOSSBARFLAGS) {
-            cache!![2] = BossBarMeta.Flag.values().map { p -> p.name }
+            cache[2] = BossBarMeta.Flag.values().map { p -> p.name }
             cache[3] = BlockBallCommand.BOSSBAR_CALLBACKFLAGS
         } else if (command == BlockBallCommand.LIST_BOSSBARCOLORS) {
-            cache!![2] = BossBarMeta.Color.values().map { p -> p.name }
+            cache[2] = BossBarMeta.Color.values().map { p -> p.name }
             cache[3] = BlockBallCommand.BOSSBAR_CALLBACKCOLORS
         } else if (command == BlockBallCommand.LIST_HOLOGRAMS) {
             cache[3] = BlockBallCommand.HOLOGRAM_CALLBACK
@@ -90,19 +90,19 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        var infoList = cache!![2] as ArrayList<String>
-        var callBackCommand = cache!![3] as BlockBallCommand
+        val infoList = cache[2] as ArrayList<*>
+        val callBackCommand = cache[3] as BlockBallCommand
         val builder = ChatBuilder()
         if (infoList.size == 0) {
             builder.text(" No data found.")
         } else {
-            infoList!!.forEachIndexed { index, p ->
+            infoList.forEachIndexed { index, p ->
                 builder.component((index + 1).toString() + ": [$p]")
-                        .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, callBackCommand!!.command + " " + index)
+                        .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, callBackCommand.command + " " + index)
                         .setHoverText("").builder().nextLine()
             }
 
         }
-        return builder;
+        return builder
     }
 }

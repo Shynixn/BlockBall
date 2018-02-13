@@ -54,14 +54,14 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache!![0] as BukkitArena
+        val arena = cache[0] as BukkitArena
         val bossbar = arena.meta.bossBarMeta
         cache[5] = bossbar.flags.map { p -> p.name }
-        if (command == BlockBallCommand.BOSSBAR_OPEN && args!!.size == 3) {
+        if (command == BlockBallCommand.BOSSBAR_OPEN && args.size == 3) {
             bossbar.style = BossBarMeta.Style.values()[args[2].toInt()]
-        } else if (command == BlockBallCommand.BOSSBAR_CALLBACKCOLORS && args!!.size == 3) {
+        } else if (command == BlockBallCommand.BOSSBAR_CALLBACKCOLORS && args.size == 3) {
             bossbar.color = BossBarMeta.Color.values()[args[2].toInt()]
-        } else if (command == BlockBallCommand.BOSSBAR_CALLBACKFLAGS && args!!.size == 3) {
+        } else if (command == BlockBallCommand.BOSSBAR_CALLBACKFLAGS && args.size == 3) {
             bossbar.flags.clear()
             bossbar.flags.add(BossBarMeta.Flag.values()[args[2].toInt()])
         } else if (command == BlockBallCommand.BOSSBAR_MESSAGE) {
@@ -69,7 +69,7 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
         } else if (command == BlockBallCommand.BOSSBAR_TOGGLE) {
             bossbar.enabled = !bossbar.enabled
         } else if (command == BlockBallCommand.BOSSBAR_PERCENT) {
-            val result = args!![2].toDoubleOrNull()
+            val result = args[2].toDoubleOrNull()
             if (result != null) {
                 bossbar.percentage = result
             }
@@ -84,7 +84,7 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache!![0] as BukkitArena
+        val arena = cache[0] as BukkitArena
         val bossbar = arena.meta.bossBarMeta
         if (bossbar.flags.isEmpty())
             bossbar.flags.add(BossBarMeta.Flag.NONE)

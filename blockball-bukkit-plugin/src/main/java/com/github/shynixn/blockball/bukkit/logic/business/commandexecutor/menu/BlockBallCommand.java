@@ -158,8 +158,8 @@ public enum BlockBallCommand {
     LIST_HOLOGRAMS(PageKey.LISTABLE, "show_holograms"),
     LIST_GAMETYPES(PageKey.LISTABLE, "show_gametypes"),;
 
-    private PageKey key;
-    private String command;
+    private final PageKey key;
+    private final String command;
 
     BlockBallCommand(PageKey key, String command) {
         this.key = key;
@@ -171,9 +171,7 @@ public enum BlockBallCommand {
     }
 
     public String getCommand() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("/blockball " + key.getKey() + " " + command + " ");
-        return builder.toString();
+        return "/blockball " + this.key.getKey() + ' ' + this.command + ' ';
     }
 
     public static BlockBallCommand from(String[] args) {

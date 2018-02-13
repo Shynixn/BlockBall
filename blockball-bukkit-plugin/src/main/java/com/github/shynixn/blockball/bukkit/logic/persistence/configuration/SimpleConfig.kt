@@ -1,4 +1,4 @@
-package com.github.shynixn.ball.bukkit.logic.persistence.configuration
+package com.github.shynixn.blockball.bukkit.logic.persistence.configuration
 
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import org.bukkit.ChatColor

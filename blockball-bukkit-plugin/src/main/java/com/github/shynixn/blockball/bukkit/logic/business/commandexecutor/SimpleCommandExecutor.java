@@ -180,27 +180,6 @@ public class SimpleCommandExecutor {
         final protected JavaPlugin plugin;
 
         /**
-         * Initializes a new commandExecutor by testing parameters and pluginName.
-         *
-         * @param command    command
-         * @param pluginName plugin
-         */
-        public UnRegistered(String command, String pluginName) {
-            this(command, (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName));
-        }
-
-        /**
-         * Initializes a new commandExecutor by testing parameters and pluginClass.
-         *
-         * @param command     command
-         * @param pluginClass pluginClass
-         * @param <T>         pluginClassType
-         */
-        public <T extends JavaPlugin> UnRegistered(String command, Class<T> pluginClass) {
-            this(command, JavaPlugin.getPlugin(pluginClass));
-        }
-
-        /**
          * Initializes a new commandExecutor by testing parameters and plugin.
          *
          * @param command command
@@ -251,20 +230,6 @@ public class SimpleCommandExecutor {
             this.setPermissionMessage((String) configurationMap.get("permission-message"));
             this.setAliases(new ArrayList<>());
             this.registerDynamicCommand((String) configurationMap.get("command"));
-        }
-
-        /**
-         * Initializes a new commandExecutor by all required parameters and pluginName.
-         *
-         * @param command           command
-         * @param useAge            useAge
-         * @param description       description
-         * @param permission        permission
-         * @param permissionMessage permissionMessage
-         * @param pluginName        pluginName
-         */
-        public UnRegistered(String command, String useAge, String description, String permission, String permissionMessage, String pluginName) {
-            this(command, useAge, description, permission, permissionMessage, (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName));
         }
 
         /**

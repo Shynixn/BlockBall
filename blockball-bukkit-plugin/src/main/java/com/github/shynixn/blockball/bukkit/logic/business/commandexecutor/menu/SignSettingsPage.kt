@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Confi
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.BlockBallCommand.*
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
 import com.github.shynixn.blockball.bukkit.logic.business.listener.SignPlacementListener
@@ -64,37 +65,42 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache!![0] as BukkitArena
-        if (command == BlockBallCommand.SIGNS_ADDTEAMRED) {
-            player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
-            listener!!.placementCallBack[player!!] = (object : SignPlacementListener.CallBack {
-                override fun run(position: StorageLocation) {
-                    arena.meta.lobbyMeta.redTeamSigns.add(position)
-                }
-            })
-        } else if (command == BlockBallCommand.SIGNS_ADDTEAMBLUE) {
-            player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
-            listener!!.placementCallBack[player!!] = (object : SignPlacementListener.CallBack {
-                override fun run(position: StorageLocation) {
-                    arena.meta.lobbyMeta.blueTeamSigns.add(position)
-                }
-            })
-        }
-        else if (command == BlockBallCommand.SIGNS_ADDJOINANY) {
-            player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
-            listener!!.placementCallBack[player!!] = (object : SignPlacementListener.CallBack {
-                override fun run(position: StorageLocation) {
-                    arena.meta.lobbyMeta.joinSigns.add(position)
-                }
-            })
-        }
-        else if (command == BlockBallCommand.SIGNS_LEAVE) {
-            player!!.sendMessage(Config.prefix + "Rightclick on a sign.")
-            listener!!.placementCallBack[player!!] = (object : SignPlacementListener.CallBack {
-                override fun run(position: StorageLocation) {
-                    arena.meta.lobbyMeta.leaveSigns.add(position)
-                }
-            })
+        val arena = cache[0] as BukkitArena
+        when (command) {
+            SIGNS_ADDTEAMRED -> {
+                player.sendMessage(Config.prefix + "Rightclick on a sign.")
+                listener!!.placementCallBack[player] = (object : SignPlacementListener.CallBack {
+                    override fun run(position: StorageLocation) {
+                        arena.meta.lobbyMeta.redTeamSigns.add(position)
+                    }
+                })
+            }
+            SIGNS_ADDTEAMBLUE -> {
+                player.sendMessage(Config.prefix + "Rightclick on a sign.")
+                listener!!.placementCallBack[player] = (object : SignPlacementListener.CallBack {
+                    override fun run(position: StorageLocation) {
+                        arena.meta.lobbyMeta.blueTeamSigns.add(position)
+                    }
+                })
+            }
+            SIGNS_ADDJOINANY -> {
+                player.sendMessage(Config.prefix + "Rightclick on a sign.")
+                listener!!.placementCallBack[player] = (object : SignPlacementListener.CallBack {
+                    override fun run(position: StorageLocation) {
+                        arena.meta.lobbyMeta.joinSigns.add(position)
+                    }
+                })
+            }
+            SIGNS_LEAVE -> {
+                player.sendMessage(Config.prefix + "Rightclick on a sign.")
+                listener!!.placementCallBack[player] = (object : SignPlacementListener.CallBack {
+                    override fun run(position: StorageLocation) {
+                        arena.meta.lobbyMeta.leaveSigns.add(position)
+                    }
+                })
+            }
+            else -> {
+            }
         }
         return super.execute(player, command, cache, args)
     }
@@ -107,7 +113,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache!![0] as BukkitArena
+        val arena = cache[0] as BukkitArena
 
         val teamSignsRed = arena.meta.lobbyMeta.redTeamSigns.map { p -> this.printLocation(p) }
         val teamSignsBlue = arena.meta.lobbyMeta.blueTeamSigns.map { p -> this.printLocation(p) }
@@ -121,7 +127,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .setHoverText(teamSignsRed.toSingleLine())
                     .builder()
                     .component(ClickableComponent.ADD.text).setColor(ClickableComponent.ADD.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SIGNS_ADDTEAMRED.command)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, SIGNS_ADDTEAMRED.command)
                     .setHoverText(ChatColor.YELLOW.toString() + "Players clicking this sign automatically join the game and the red team.\n&6&m      \n&rEnables the next sign to be added after you rightclicked it.\nDestroy the sign to remove it.")
                     .builder().nextLine()
                     .component("- Signs Team Blue: ").builder()
@@ -129,7 +135,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .setHoverText(teamSignsBlue.toSingleLine())
                     .builder()
                     .component(ClickableComponent.ADD.text).setColor(ClickableComponent.ADD.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SIGNS_ADDTEAMBLUE.command)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, SIGNS_ADDTEAMBLUE.command)
                     .setHoverText(ChatColor.YELLOW.toString() + "Players clicking this sign automatically join the game and the blue team.\n&6&m      \n&rEnables the next sign to be added after you rightclicked it.\nDestroy the sign to remove it.")
                     .builder().nextLine()
                     .component("- Signs Join any team: ").builder()
@@ -137,7 +143,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .setHoverText(joinSigns.toSingleLine())
                     .builder()
                     .component(ClickableComponent.ADD.text).setColor(ClickableComponent.ADD.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SIGNS_ADDJOINANY.command)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, SIGNS_ADDJOINANY.command)
                     .setHoverText(ChatColor.YELLOW.toString() + "Players clicking this sign automatically join the game and team.\n&6&m      \n&rEnables the next sign to be added after you rightclicked it.\nDestroy the sign to remove it.")
                     .builder().nextLine()
                     .component("- Signs Leave: ").builder()
@@ -145,7 +151,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .setHoverText(leaveSigns.toSingleLine())
                     .builder()
                     .component(ClickableComponent.ADD.text).setColor(ClickableComponent.ADD.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SIGNS_LEAVE.command)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, SIGNS_LEAVE.command)
                     .setHoverText(ChatColor.YELLOW.toString() + "Players clicking this sign automatically leave the game.\n&6&m      \n&rEnables the next sign to be added after you rightclicked it.\nDestroy the sign to remove it.")
                     .builder().nextLine()
         }

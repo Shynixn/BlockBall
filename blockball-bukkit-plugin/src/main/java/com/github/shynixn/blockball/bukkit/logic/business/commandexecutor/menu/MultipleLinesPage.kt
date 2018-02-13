@@ -45,7 +45,7 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
     }
 
     override fun getPreviousIdFrom(cache: Array<Any?>): Int {
-        return cache!![4] as Int
+        return cache[4] as Int
     }
 
     /**
@@ -54,7 +54,7 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val dataList = cache!![2] as ArrayList<String>
+        val dataList = cache[2] as ArrayList<String>
         if (command == BlockBallCommand.MULTILINES_SCOREBOARD) {
             cache[4] = ScoreboardPage.ID
             cache[3] = 0
@@ -66,24 +66,24 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         else if (command == BlockBallCommand.MULTILINES_ADD) {
             dataList.add(this.mergeArgs(2, args))
         } else if (command == BlockBallCommand.MULTILINES_ANY) {
-            if (args!!.size >= 3) {
+            if (args.size >= 3) {
                 cache[3] = args[2].toInt()
             } else {
                 cache[3] = 0
             }
         } else if (command == BlockBallCommand.MULTILINES_SET) {
-            val index = cache[3] as Int;
+            val index = cache[3] as Int
             if (index < dataList.size) {
                 dataList[index] = mergeArgs(2, args)
             } else {
-                cache[3] = 0;
+                cache[3] = 0
             }
         } else if (command == BlockBallCommand.MULTILINES_REMOVE) {
-            val index = cache[3] as Int;
+            val index = cache[3] as Int
             if (index < dataList.size) {
                 dataList.removeAt(cache[3] as Int)
             } else {
-                cache[3] = 0;
+                cache[3] = 0
             }
         }
         return super.execute(player, command, cache, args)
@@ -96,7 +96,7 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val infoList = cache!![2] as ArrayList<String>
+        val infoList = cache[2] as ArrayList<String>
         var selectedLine = "none"
         val index = cache[3] as Int
         if (index < infoList.size) {

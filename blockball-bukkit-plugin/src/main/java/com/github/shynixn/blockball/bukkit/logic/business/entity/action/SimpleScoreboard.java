@@ -348,11 +348,11 @@ public class SimpleScoreboard implements AutoCloseable {
      * @return text
      */
     private String duplicateTextFinder(String text, Collection<String> lines) {
+        final StringBuilder b = new StringBuilder(text);
         for (final String s : lines) {
             if (text.equals(s)) {
-                text += ChatColor.translateAlternateColorCodes('&', "&r");
-                text = this.duplicateTextFinder(text, lines);
-                return text;
+                b.append(ChatColor.translateAlternateColorCodes('&', "&r"));
+                return this.duplicateTextFinder(b.toString(), lines);
             }
         }
         return text;

@@ -54,9 +54,9 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        if (command == BlockBallCommand.SETTINGS_OPEN && args!!.size == 3) {
-            var arena = cache!![0] as BukkitArena
-            arena.gameType = GameType.values()[args[2] as Int];
+        if (command == BlockBallCommand.SETTINGS_OPEN && args.size == 3) {
+            val arena = cache[0] as BukkitArena
+            arena.gameType = GameType.values()[args[2].toInt()];
         }
         return super.execute(player, command, cache, args)
     }
@@ -68,7 +68,7 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache!![0] as BukkitArena
+        val arena = cache[0] as BukkitArena
         return ChatBuilder()
                 .component("- GameType: " + arena.gameType.name).builder()
                 .component(" [select..]")

@@ -294,7 +294,7 @@ public final class YamlSerializer {
      */
     public static <T> T deserializeObject(Class<T> clazz, Object dataSource) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         if (clazz.isInterface()) {
-            throw new IllegalArgumentException("Cannot instantiate interface. Change your object fields! [" + clazz.getSimpleName() + "]");
+            throw new IllegalArgumentException("Cannot instantiate interface. Change your object fields! [" + clazz.getSimpleName() + ']');
         }
         final Map<String, Object> data = getDataFromSource(dataSource);
         try {

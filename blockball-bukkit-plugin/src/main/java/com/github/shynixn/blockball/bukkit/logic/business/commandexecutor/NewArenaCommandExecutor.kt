@@ -126,7 +126,7 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
         player.sendMessage("\n")
         var cache: Array<Any?>?
         if (!this.cache.containsKey(player)) {
-            val anyArray = arrayOfNulls<Any>(8);
+            val anyArray = arrayOfNulls<Any>(8)
             this.cache[player] = anyArray
         }
         cache = this.cache[player]
@@ -145,15 +145,15 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
                     }
                     return
                 } else {
-                    val result = page.execute(player, command, cache!!, args!!)
+                    val result = page.execute(player, command, cache!!, args)
                     if (result == CommandResult.BACK) {
-                        player.performCommand("blockball open back " + usedPage!!.getPreviousIdFrom(cache))
+                        player.performCommand("blockball open back " + usedPage.getPreviousIdFrom(cache))
                         return
                     }
                     if (result != CommandResult.SUCCESS && result != CommandResult.CANCEL_MESSAGE) {
                         ChatBuilder()
                                 .component(ChatColor.WHITE.toString() + "" + ChatColor.BOLD + "[" + ChatColor.RED + ChatColor.BOLD + "!" + ChatColor.WHITE + ChatColor.BOLD + "]")
-                                .setHoverText(result.getMessage()).builder().sendMessage(player)
+                                .setHoverText(result.message).builder().sendMessage(player)
                     }
                     if (result != CommandResult.CANCEL_MESSAGE) {
                         this.sendMessage(player, page.buildPage(cache)!!)
@@ -183,7 +183,7 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
         } else {
             builder.component(">>Back<<")
                     .setColor(ChatColor.RED)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.command + " " + usedPage!!.getPreviousIdFrom(cache!!))
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.command + " " + usedPage.getPreviousIdFrom(cache!!))
                     .setHoverText("Opens the blockball arena configuration.")
                     .builder()
         }
@@ -257,11 +257,11 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
             this.pagecache!!.add(multipleLinesPage!!)
             this.pagecache!!.add(bossbarPage!!)
             this.pagecache!!.add(signSettingsPage!!)
-            this.pagecache!!.add(hologramsPage!!);
-            this.pagecache!!.add(particlesPage!!);
-            this.pagecache!!.add(soundsPage!!);
-            this.pagecache!!.add(abilitiesPage!!);
-            this.pagecache!!.add(doubleJumpPage!!);
+            this.pagecache!!.add(hologramsPage!!)
+            this.pagecache!!.add(particlesPage!!)
+            this.pagecache!!.add(soundsPage!!)
+            this.pagecache!!.add(abilitiesPage!!)
+            this.pagecache!!.add(doubleJumpPage!!)
         }
         return this.pagecache!!
     }

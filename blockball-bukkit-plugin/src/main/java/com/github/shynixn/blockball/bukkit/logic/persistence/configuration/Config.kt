@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.configuration
 
-import com.github.shynixn.ball.bukkit.logic.persistence.configuration.SimpleConfig
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.logging.Logger
