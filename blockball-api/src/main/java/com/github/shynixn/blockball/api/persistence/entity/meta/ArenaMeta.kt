@@ -8,10 +8,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.BungeeCord
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.LobbyMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.MinigameLobbyMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.DoubleJumpMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.*
 
 /**
  * Created by Shynixn 2018.
@@ -80,4 +77,7 @@ interface ArenaMeta<Location, ItemStack, Vector, Player, Material> {
 
     /** Meta data of the doubleJump. */
     val doubleJumpMeta: DoubleJumpMeta<Location, Player, Material>
+
+    /** Meta data of the customizing Properties. */
+    val customizingMeta : CustomizationMeta
 }

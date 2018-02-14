@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CustomizationMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.business.helper.setColor
@@ -14,10 +15,7 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.B
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.LobbyProperties
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.MinigameLobbyProperties
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.ArenaProtectionData
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.DoubleJumpProperties
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.RewardProperties
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.TeamProperties
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.*
 import org.bukkit.Color
 import org.bukkit.Location
 import org.bukkit.Material
@@ -53,6 +51,9 @@ import org.bukkit.util.Vector
  * SOFTWARE.
  */
 class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, Material> {
+    /** Meta data of the customizing Properties. */
+    @YamlSerializer.YamlSerialize(orderNumber = 12, value = "customizing-meta")
+    override val customizingMeta: CustomizationProperties = CustomizationProperties()
     /** Meta data for rewards */
     @YamlSerializer.YamlSerialize(orderNumber = 10, value = "reward-meta")
     override val rewardMeta: RewardProperties = RewardProperties()

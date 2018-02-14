@@ -101,6 +101,15 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
     @Inject
     private val doubleJumpPage: DoubleJumpPage? = null
 
+    @Inject
+    private val miscPage: MiscSettingsPage? = null
+
+    @Inject
+    private val gamepropertiesPage: GamePropertiesPage? = null
+
+    @Inject
+    private val areaProtectionPage: AreaProtectionPage? = null
+
     /**
      * Can be overwritten to listener to all executed commands.
      *
@@ -265,6 +274,12 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
             this.pagecache!!.add(abilitiesPage!!)
             this.pagecache!!.add(doubleJumpPage!!)
             this.pagecache!!.add(rewardsPage!!)
+
+            this.pagecache!!.add(areaProtectionPage!!)
+            this.pagecache!!.add(miscPage!!)
+            this.pagecache!!.add(gamepropertiesPage!!)
+
+
         }
         return this.pagecache!!
     }

@@ -101,6 +101,11 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 .component("- Rewards:").builder()
                 .component(" [page..]").setColor(ChatColor.YELLOW)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.REWARD_OPEN.command)
-                .setHoverText("Opens the settings page for rewards.").builder()
+                .setHoverText("Opens the settings page for rewards.")
+                .builder().nextLine()
+                .component("- Misc:").builder()
+                .component(" [page..]").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MISC_OPEN.command)
+                .setHoverText("Opens the settings page for other settings.").builder()
     }
 }

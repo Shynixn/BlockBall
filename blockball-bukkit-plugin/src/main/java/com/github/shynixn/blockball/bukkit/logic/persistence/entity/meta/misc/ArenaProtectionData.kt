@@ -39,9 +39,9 @@ class ArenaProtectionData : ArenaProtectionMeta<Vector> {
     @YamlSerializer.YamlSerialize(value = "entity-protection-enabled", orderNumber = 1)
     override var entityProtectionEnabled: Boolean = true
     /** Velocity being applied when a player rejoins the server into a field of an arena. */
-    @YamlSerializer.YamlSerialize(value = "entity-protection-enabled", orderNumber = 4)
+    @YamlSerializer.YamlSerialize(value = "rejoin-protection", orderNumber = 4)
     override var rejoinProtection: Vector = Vector(0, 2, 0)
     /** Should a velocity be applied to players which rejoin on the field of the arena. */
-    @YamlSerializer.YamlSerialize(value = "entity-protection-enabled", orderNumber = 3)
+    @YamlSerializer.YamlSerialize(value = "rejoin-protection-enabled", orderNumber = 3)
     override var rejoinProtectionEnabled: Boolean = true
 }

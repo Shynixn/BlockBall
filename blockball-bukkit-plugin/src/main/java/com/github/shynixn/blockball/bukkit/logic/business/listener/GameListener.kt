@@ -99,6 +99,9 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
         if (game != null && event.cause == EntityDamageEvent.DamageCause.FALL) {
             event.isCancelled = true
         }
+        if (game != null && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.arena.meta.customizingMeta.damageEnabled) {
+            event.isCancelled = true
+        }
     }
 
     /**
