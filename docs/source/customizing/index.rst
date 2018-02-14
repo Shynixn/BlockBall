@@ -5,9 +5,6 @@ Customizing
    effects
    abilities
    rewards
+   misc
    database
-   commands
    datacollecting
-
-
-Todo?
