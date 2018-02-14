@@ -73,7 +73,9 @@ class HubGameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugi
             if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(event.to)) {
                 inArea = true
                 if (!this.lastLocation.containsKey(player)) {
-                    player.velocity = game.arena.meta.protectionMeta.rejoinProtection
+                    if (game.arena.meta.protectionMeta.rejoinProtectionEnabled) {
+                        player.velocity = game.arena.meta.protectionMeta.rejoinProtection
+                    }
                 } else {
                     if (!this.moveCounter.containsKey(player))
                         this.moveCounter[player] = 1

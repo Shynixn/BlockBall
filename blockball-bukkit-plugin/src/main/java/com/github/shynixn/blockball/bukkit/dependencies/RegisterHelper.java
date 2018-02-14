@@ -3,8 +3,6 @@ package com.github.shynixn.blockball.bukkit.dependencies;
 import com.github.shynixn.blockball.bukkit.dependencies.bossbar.BossBarConnection;
 import com.github.shynixn.blockball.bukkit.dependencies.placeholderapi.PlaceHolderApiConnection;
 import com.github.shynixn.blockball.bukkit.dependencies.vault.VaultConnection;
-import com.github.shynixn.blockball.bukkit.dependencies.worldguard.WorldGuardConnection5;
-import com.github.shynixn.blockball.bukkit.dependencies.worldguard.WorldGuardConnection6;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.logging.Level;
 
@@ -111,19 +108,6 @@ public final class RegisterHelper {
             }
         } catch (final Error ex) {
             Bukkit.getConsoleSender().sendMessage(PREFIX_CONSOLE + ChatColor.DARK_RED + "Failed to register the last dependency.");
-        }
-    }
-
-    public static void rollbackWorldGuardSpawn(Location location) {
-        if (RegisterHelper.isRegistered("WorldGuard")) {
-            try {
-                if (RegisterHelper.isRegistered("WorldGuard", '6'))
-                    WorldGuardConnection6.rollBack();
-                else if (RegisterHelper.isRegistered("WorldGuard", '5'))
-                    WorldGuardConnection5.rollBack();
-            } catch (final Exception e) {
-                Bukkit.getLogger().log(Level.WARNING, "Cannot access worldguard.", e);
-            }
         }
     }
 
