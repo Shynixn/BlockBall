@@ -46,7 +46,7 @@ interface LobbyMeta : PersistenceAble {
     /** Spawnpoint when someone leaves the hub game. */
     val leaveSpawnpoint: StorageLocation?
 
-    /** Lines displayed on the sign for leaving the match. */
+    /** Lines displayed on the sign for joinin the match. */
     var joinSignLines: Array<String>
 
     /** Lines displayed on the sign for leaving the match. */

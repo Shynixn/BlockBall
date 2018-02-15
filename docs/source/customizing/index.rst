@@ -2,6 +2,7 @@ Customizing
 ===========
 
 .. toctree::
+   teams
    effects
    abilities
    rewards
