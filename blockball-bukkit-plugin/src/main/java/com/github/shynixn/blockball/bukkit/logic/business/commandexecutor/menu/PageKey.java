@@ -48,6 +48,7 @@ public enum PageKey {
     MULTIPLEITEMS("mitem"),
     REWARDSPAGE("reward"),
     COMMANDPAGE("com"),
+    TEAMTEXTBOOK("teamtext"),
     MAINCONFIGURATION("mcf");
 
     private String key;

@@ -156,6 +156,11 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_SPAWNPOINT.command)
                 .setHoverText("If this spawnpoint is set the team will spawn at this location instead of the spawning location of the ball.")
                 .builder().nextLine()
+                .component("- Textbook: ").builder()
+                .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEXTBOOK_OPEN.command)
+                .setHoverText("Opens the messages and texts specific for this team.")
+                .builder().nextLine()
     }
 
     private fun getTeamMeta(cache: Array<Any?>?): TeamMeta<Location, ItemStack> {

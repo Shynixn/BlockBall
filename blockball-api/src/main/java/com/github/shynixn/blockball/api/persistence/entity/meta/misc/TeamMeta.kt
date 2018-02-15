@@ -75,5 +75,5 @@ interface TeamMeta<Location, ItemStack> {
     var leaveMessage: String
 
     /** Lines displayed on the sign for joining the team. */
-    var signLines: Array<String>
+    var signLines: List<String>
 }

@@ -63,6 +63,10 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
             cache[4] = HologramPage.ID
             cache[3] = 0
         }
+        else if (command == BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE) {
+            cache[4] = TeamTextBookPage.ID
+            cache[3] = 0
+        }
         else if (command == BlockBallCommand.MULTILINES_ADD) {
             dataList.add(this.mergeArgs(2, args))
         } else if (command == BlockBallCommand.MULTILINES_ANY) {
