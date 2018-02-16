@@ -137,14 +137,7 @@ class TeamTextBookPage : Page(TeamTextBookPage.ID, MainSettingsPage.ID) {
                 .setHoverText(teamMeta.winMessageSubTitle).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.TEXTBOOK_WINSUBTITLE.command)
-                .setHoverText("Changes the subtitle message getting played when the team wins the match.")
-                .builder().nextLine()
-                .component("- Sign Template: ").builder().component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
-                .setHoverText(teamMeta.signLines.toList().toSingleLine()).builder()
-                .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command)
-                .setHoverText("Opens the page to change the template on signs to join this team.")
-                .builder().nextLine()
+                .setHoverText("Changes the subtitle message getting played when the team wins the match.").builder()
     }
 
     private fun getTeamMeta(cache: Array<Any?>?): TeamMeta<Location, ItemStack> {

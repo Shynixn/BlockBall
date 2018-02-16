@@ -76,4 +76,7 @@ interface TeamMeta<Location, ItemStack> {
 
     /** Lines displayed on the sign for joining the team. */
     var signLines: List<String>
+
+    /** List of signs which can be clicked to join the red team.*/
+    val signs: MutableList<StorageLocation>
 }

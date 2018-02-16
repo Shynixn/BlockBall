@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
-import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.*
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
@@ -46,8 +45,8 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
         private val FOOTER_STANDARD = ChatColor.WHITE.toString() + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           ┌1/1┐                            "
     }
 
-
     private val cache = HashMap<Player, Array<Any?>>()
+    private var pagecache: MutableList<Page>? = null
 
     @Inject
     private val openPage: OpenPage? = null
@@ -59,11 +58,16 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
     private val mainSettingsPage: MainSettingsPage? = null
 
     @Inject
+    private val ballSettingsPage : BallSettingsPage? = null
+
+    @Inject
+    private val ballModifierPage : BallModifierSettingsPage? = null
+
+    @Inject
     private val listablePage: ListablePage? = null
 
     @Inject
     private val teamSettingsPage: TeamSettingsPage? = null
-
 
     @Inject
     private val effectsSettingsPage: EffectsSettingsPage? = null
@@ -105,16 +109,16 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
     private val miscPage: MiscSettingsPage? = null
 
     @Inject
-    private val gamepropertiesPage: GamePropertiesPage? = null
+    private val gamePropertiesPage: GamePropertiesPage? = null
 
     @Inject
     private val areaProtectionPage: AreaProtectionPage? = null
 
     @Inject
-    private val teamTextBookPage : TeamTextBookPage? = null;
+    private val teamTextBookPage : TeamTextBookPage? = null
 
     @Inject
-    private val gameSettingsPage : GameSettingsPage? = null;
+    private val gameSettingsPage : GameSettingsPage? = null
 
     /**
      * Can be overwritten to listener to all executed commands.
@@ -141,16 +145,15 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
         }
         player.sendMessage(HEADER_STANDARD)
         player.sendMessage("\n")
-        var cache: Array<Any?>?
+        val cache: Array<Any?>? = this.cache[player]
         if (!this.cache.containsKey(player)) {
             val anyArray = arrayOfNulls<Any>(8)
             this.cache[player] = anyArray
         }
-        cache = this.cache[player]
         val command = BlockBallCommand.from(args) ?: throw IllegalArgumentException("Command is not registered!")
         var usedPage: Page? = null
         for (page in this.getPageCache()) {
-            if (page.getCommandKey() != null && page.getCommandKey() === command.key) {
+            if (page.getCommandKey() === command.key) {
                 usedPage = page
                 if (command == BlockBallCommand.BACK) {
                     val newPage = this.getPageById(Integer.parseInt(args[2]))
@@ -174,9 +177,6 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
                     }
                     if (result != CommandResult.CANCEL_MESSAGE) {
                         this.sendMessage(player, page.buildPage(cache)!!)
-                    }
-                    if (result == CommandResult.ARENA_NOTVALID) {
-                        //          this.sendMessage(player, CommandResult.ARENA_NOTVALID.getMessage());
                     }
                 }
                 break
@@ -211,55 +211,7 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
                 .builder().sendMessage(player)
 
         player.sendMessage(FOOTER_STANDARD)
-
-
-        /*   if (args.length == 0) {
-            this.printFirstPage(player);
-        } else if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("crna")) {
-
-                ArenaController controller = this.blockBallManager.getGameController().getArenaController();
-                final Arena arena = controller.create();
-
-                this.cache.put(player, arena);
-                this.printArenaPage(player);
-            } else if (args[0].equalsIgnoreCase("cna")) {
-                this.printArenaPage(player);
-            } else if (args[0].equalsIgnoreCase("set-wecorners") && this.cache.containsKey(player)) {
-                final Location left = WorldEditConnection.getLeftSelection(player);
-                final Location right = WorldEditConnection.getRightSelection(player);
-                if (left != null && right != null) {
-                    this.cache.get(player).setCorners(left, right);
-                }
-                this.printArenaPage(player);
-            } else if (args[0].equalsIgnoreCase("set-goalred") && this.cache.containsKey(player)) {
-                this.setGoal(player, Team.RED);
-            } else if (args[0].equalsIgnoreCase("set-goalblue") && this.cache.containsKey(player)) {
-                this.setGoal(player, Team.BLUE);
-            } else if (args[0].equalsIgnoreCase("set-ballspawn") && this.cache.containsKey(player)) {
-                this.cache.get(player).setBallSpawnLocation(player.getLocation());
-                this.printArenaPage(player);
-            } else if (args[0].equalsIgnoreCase("page-settings") && this.cache.containsKey(player)) {
-                this.printSettingsSelectionPage(player);
-            }
-
-        } else if (args.length > 1) {
-            if (args[0].equalsIgnoreCase("set-displayname") && this.cache.containsKey(player)) {
-                final String name = this.mergeArgs(1, args);
-                this.cache.get(player).setDisplayName(name);
-                this.printArenaPage(player);
-            }
-            if (args[0].equalsIgnoreCase("save") && this.cache.containsKey(player)) {
-                final Arena arena = this.cache.get(player);
-                this.blockBallManager.getGameController().getArenaController().store(arena);
-                player.sendMessage("Arena was saved.");
-                this.onPlayerExecuteCommand(player, new String[]{args[1]});
-            }
-        }*/
-
     }
-
-    private var pagecache: MutableList<Page>? = null
 
     private fun getPageCache(): List<Page> {
         if (this.pagecache == null) {
@@ -280,27 +232,15 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
             this.pagecache!!.add(abilitiesPage!!)
             this.pagecache!!.add(doubleJumpPage!!)
             this.pagecache!!.add(rewardsPage!!)
-
             this.pagecache!!.add(areaProtectionPage!!)
             this.pagecache!!.add(miscPage!!)
-            this.pagecache!!.add(gamepropertiesPage!!)
-            this.pagecache!!.add(teamTextBookPage!!);
-            this.pagecache!!.add(gameSettingsPage!!);
-
-
+            this.pagecache!!.add(gamePropertiesPage!!)
+            this.pagecache!!.add(teamTextBookPage!!)
+            this.pagecache!!.add(gameSettingsPage!!)
+            this.pagecache!!.add(ballModifierPage!!)
+            this.pagecache!!.add(ballSettingsPage!!)
         }
         return this.pagecache!!
-    }
-
-
-    private fun fullCommand(args: Array<String>): String {
-        val builder = StringBuilder()
-        builder.append("/blockball")
-        for (s in args) {
-            builder.append(" ")
-            builder.append(s)
-        }
-        return builder.toString()
     }
 
     private fun getPageById(id: Int): Page {
@@ -312,72 +252,7 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
         throw RuntimeException("Page does not exist!")
     }
 
-    private fun setGoal(player: Player, team: Team) {
-        /*  final Location left = WorldEditConnection.getLeftSelection(player);
-        final Location right = WorldEditConnection.getRightSelection(player);
-        if (left != null && right != null) {
-            this.getTeamMeta(player, team).getGoal().setCorners(left, right);
-        }
-        this.printArenaPage(player);*/
-    }
-
-    private fun printHologramEditingPage(player: Player) {
-        if (!this.cache.containsKey(player))
-            return
-
-        this.sendMessage(player, ChatBuilder()
-                .nextLine()
-                .component("- Type configuration:").builder()
-                .component(" [page..]").setColor(ChatColor.YELLOW)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball page-set-types")
-                .setHoverText("Opens the type configuration to change the gamemodes.")
-                .builder().nextLine()
-                .text(ChatColor.STRIKETHROUGH.toString() + "--------------------")
-                .nextLine()
-                .component(">>Save<<")
-                .setColor(ChatColor.GREEN)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball save")
-                .setHoverText("Saves the arena.")
-                .builder().text(" ")
-                .component(">>Back<<")
-                .setColor(ChatColor.RED)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball crna")
-                .setHoverText("Closes the current page.")
-        )
-    }
-
-    private fun printSettingsSelectionPage(player: Player) {
-        if (!this.cache.containsKey(player))
-            return
-
-        this.sendMessage(player, ChatBuilder()
-                .nextLine()
-                .component("- Add line of text:").builder()
-                .component(" [edit..]").setColor(ChatColor.GREEN)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball add-holo-text")
-                .setHoverText("Add a line of text to the hologram")
-                .builder().nextLine()
-                .text(ChatColor.STRIKETHROUGH.toString() + "--------------------")
-                .nextLine()
-                .component(">>Save<<")
-                .setColor(ChatColor.GREEN)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball save")
-                .setHoverText("Saves the arena.")
-                .builder().text(" ")
-                .component(">>Back<<")
-                .setColor(ChatColor.RED)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, "/blockball crna")
-                .setHoverText("Closes the current page.")
-        )
-
-    }
-
     private fun sendMessage(player: Player, builder: ChatBuilder) {
         builder.sendMessage(player)
     }
-
-    private fun sendMessage(player: Player, builder: ChatBuilder.Component) {
-        this.sendMessage(player, builder.builder())
-    }
-
 }

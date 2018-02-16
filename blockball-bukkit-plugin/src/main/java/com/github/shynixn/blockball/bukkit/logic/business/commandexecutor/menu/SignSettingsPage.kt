@@ -71,7 +71,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                 player.sendMessage(Config.prefix + "Rightclick on a sign.")
                 listener!!.placementCallBack[player] = (object : SignPlacementListener.CallBack {
                     override fun run(position: StorageLocation) {
-                        arena.meta.lobbyMeta.redTeamSigns.add(position)
+                        arena.meta.redTeamMeta.signs.add(position)
                     }
                 })
             }
@@ -79,7 +79,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                 player.sendMessage(Config.prefix + "Rightclick on a sign.")
                 listener!!.placementCallBack[player] = (object : SignPlacementListener.CallBack {
                     override fun run(position: StorageLocation) {
-                        arena.meta.lobbyMeta.blueTeamSigns.add(position)
+                        arena.meta.blueTeamMeta.signs.add(position)
                     }
                 })
             }
@@ -115,8 +115,8 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
         val arena = cache[0] as BukkitArena
 
-        val teamSignsRed = arena.meta.lobbyMeta.redTeamSigns.map { p -> this.printLocation(p) }
-        val teamSignsBlue = arena.meta.lobbyMeta.blueTeamSigns.map { p -> this.printLocation(p) }
+        val teamSignsRed = arena.meta.redTeamMeta.signs.map { p -> this.printLocation(p) }
+        val teamSignsBlue = arena.meta.blueTeamMeta.signs.map { p -> this.printLocation(p) }
         val joinSigns = arena.meta.lobbyMeta.joinSigns.map { p -> this.printLocation(p) }
         val leaveSigns = arena.meta.lobbyMeta.leaveSigns.map { p -> this.printLocation(p) }
 
@@ -129,6 +129,12 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .component(ClickableComponent.ADD.text).setColor(ClickableComponent.ADD.color)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, SIGNS_ADDTEAMRED.command)
                     .setHoverText(ChatColor.YELLOW.toString() + "Players clicking this sign automatically join the game and the red team.\n&6&m      \n&rEnables the next sign to be added after you rightclicked it.\nDestroy the sign to remove it.")
+                    .builder().nextLine()
+                    .component("- Template Signs Team Red: ").builder().component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
+                    .setHoverText(arena.meta.redTeamMeta.signLines.toList().toSingleLine()).builder()
+                    .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command)
+                    .setHoverText("Opens the page to change the template on signs to join this team.")
                     .builder().nextLine()
                     .component("- Signs Team Blue: ").builder()
                     .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)

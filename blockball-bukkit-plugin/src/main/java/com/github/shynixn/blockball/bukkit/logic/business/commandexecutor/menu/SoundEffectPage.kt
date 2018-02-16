@@ -73,7 +73,11 @@ class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
         if (command == BlockBallCommand.SOUND_DOUBLEJUMP) {
             cache[5] = arena.meta.doubleJumpMeta.soundEffect
             cache[4] = DoubleJumpPage.ID
-        } else if (command == BlockBallCommand.SOUND_CALLBACK_TYPE ) {
+        }
+        else if (command == BlockBallCommand.SOUND_BALL) {
+            cache[4] = BallSettingsPage.ID
+        }
+        else if (command == BlockBallCommand.SOUND_CALLBACK_TYPE ) {
             val soundEffect = cache[5] as SoundEffectMeta<*, *>
             soundEffect.setName<SoundEffectMeta<*, *>>(args[2])
         } else if (command == BlockBallCommand.SOUND_CALLBACK_EFFECTING && args.size >= 3 && args[2].toIntOrNull() != null) {

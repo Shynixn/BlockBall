@@ -51,12 +51,8 @@ public enum BlockBallCommand {
 
     SETTINGS_OPEN(PageKey.MAINSETTING, "open_settings"),
 
-
-
-
     TEAM_RED_CONFIGURE(PageKey.TEAMMETA, "team_red"),
     TEAM_BLUE_CONFIGURE(PageKey.TEAMMETA, "team_blue"),
-
 
     TEAM_NAME(PageKey.TEAMMETA, "name"),
     TEAM_PREFIX(PageKey.TEAMMETA, "prefix"),
@@ -81,7 +77,6 @@ public enum BlockBallCommand {
     EFFECTS_HOLOGRAMS(PageKey.EFFECTS, "holograms"),
     EFFECTS_SCOREBOARD(PageKey.EFFECTS, "scoreboard"),
 
-
     MULTILINES_ANY(PageKey.MULTIPLELINES, "any"),
     MULTILINES_ADD(PageKey.MULTIPLELINES, "add"),
     MULTILINES_SET(PageKey.MULTIPLELINES, "set"),
@@ -90,6 +85,27 @@ public enum BlockBallCommand {
     MULTILINES_HOLOGRAM(PageKey.MULTIPLELINES, "show_hologram"),
     MULTILINES_TEAMSIGNTEMPLATE(PageKey.MULTIPLELINES, "show_teamsign"),
     MULTILINES_HUBGAMEJOINMESSAGE(PageKey.MULTIPLELINES, "hubgame_join"),
+
+    BALL_OPEN(PageKey.BALL, "open"),
+    BALL_SIZE_CALLBACK(PageKey.BALL, "size-callback"),
+    BALL_PARTICLEACTION_CALLBACK(PageKey.BALL, "part-callback"),
+    BALL_SOUNDACTION_CALLBACK(PageKey.BALL, "sound-callback"),
+
+    BALL_SKIN(PageKey.BALL, "skin"),
+    BALL_HITBOX(PageKey.BALL, "hitbox"),
+    BALL_TOGGLE_CARRYABLE(PageKey.BALL, "tgl-car"),
+    BALL_TOGGLE_ALWAYSBOUNCE(PageKey.BALL, "tgl-bounce"),
+    BALL_TOGGLE_ROTATING(PageKey.BALL, "tgl-rotate"),
+
+    BALLMOD_OPEN(PageKey.BALLMODIFIER, "open"),
+    BALLMOD_HORIZONTALTOUCH(PageKey.BALLMODIFIER, "touch-horizontal"),
+    BALLMOD_VERTICALTOUCH(PageKey.BALLMODIFIER, "touch-vertical"),
+    BALLMOD_HORIZONTALKICK(PageKey.BALLMODIFIER, "kick-horizontal"),
+    BALLMOD_VERTICALKICK(PageKey.BALLMODIFIER, "kick-vertical"),
+    BALLMOD_HORIZONTALTHROW(PageKey.BALLMODIFIER, "throw-horizontal"),
+    BALLMOD_VERTICALTHROW(PageKey.BALLMODIFIER, "throw-vertical"),
+    BALLMOD_ROLLINGDISTANCE(PageKey.BALLMODIFIER, "rolling"),
+    BALLMOD_GRAVITY(PageKey.BALLMODIFIER, "gravity"),
 
     MULTIPLEITEMS_BOSSBAR(PageKey.MULTIPLEITEMS, "show_bossbar"),
     MULTIPLEITEMS_OPEN(PageKey.MULTIPLEITEMS, "open"),
@@ -137,6 +153,7 @@ public enum BlockBallCommand {
     PARTICLE_DOUBLEJUMP(PageKey.PARTICLEFFECTS, "doub"),
     SOUND_DOUBLEJUMP(PageKey.SOUNDEFFECTS, "doub"),
 
+    PARTICLE_BALL(PageKey.PARTICLEFFECTS, "ball-par"),
     PARTICLE_CALLBACK_EFFECTING(PageKey.PARTICLEFFECTS,"caleffecting"),
     PARTICLE_CALLBACK_TYPE(PageKey.PARTICLEFFECTS,"caltype"),
     PARTICLE_OPEN(PageKey.PARTICLEFFECTS, "open"),
@@ -148,6 +165,7 @@ public enum BlockBallCommand {
     PARTICLE_OFFSET_Y(PageKey.PARTICLEFFECTS, "offy"),
     PARTICLE_OFFSET_Z(PageKey.PARTICLEFFECTS, "offz"),
 
+    SOUND_BALL(PageKey.SOUNDEFFECTS, "ball-sound"),
     SOUND_OPEN(PageKey.SOUNDEFFECTS, "open"),
     SOUND_EFFECTING(PageKey.SOUNDEFFECTS, "ef"),
     SOUND_TYPE(PageKey.SOUNDEFFECTS, "type"),
@@ -183,8 +201,12 @@ public enum BlockBallCommand {
     TEXTBOOK_WINTIELE(PageKey.TEAMTEXTBOOK, "wintitle"),
     TEXTBOOK_WINSUBTITLE(PageKey.TEAMTEXTBOOK, "winstitle"),
 
+
+    LIST_BALL_SOUNDEFFECTS(PageKey.LISTABLE, "show_ballsounds"),
+    LIST_BALL_PARTICLEFFECTS(PageKey.LISTABLE, "show_ballparticles"),
     LIST_LINES(PageKey.LISTABLE, "show_lines"),
     LIST_COMMANDMODES(PageKey.LISTABLE, "show_commandmodes"),
+    LIST_BALLSIZES(PageKey.LISTABLE, "show_ballsizes"),
     LIST_PARTICLE_EFFECTINGTYPES(PageKey.LISTABLE, "particlef"),
     LIST_PARTICLE_TYPES(PageKey.LISTABLE, "particles"),
     LIST_SOUND_TYPES(PageKey.LISTABLE, "sounds"),

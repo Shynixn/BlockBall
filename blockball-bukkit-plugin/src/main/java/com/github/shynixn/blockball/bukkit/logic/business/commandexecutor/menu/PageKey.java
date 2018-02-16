@@ -49,6 +49,8 @@ public enum PageKey {
     REWARDSPAGE("reward"),
     GAMESETTINGS("reward"),
     COMMANDPAGE("com"),
+    BALL("ball"),
+    BALLMODIFIER("ballmod"),
     TEAMTEXTBOOK("teamtext"),
     MAINCONFIGURATION("mcf");
 

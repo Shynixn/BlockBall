@@ -71,7 +71,11 @@ class ParticleEffectPage : Page(ParticleEffectPage.ID, MainConfigurationPage.ID)
         if (command == BlockBallCommand.PARTICLE_DOUBLEJUMP) {
             cache[5] = arena.meta.doubleJumpMeta.particleEffect
             cache[4] = DoubleJumpPage.ID
-        } else if (command == BlockBallCommand.PARTICLE_CALLBACK_TYPE && args.size >= 3 && args[2].toIntOrNull() != null) {
+        }
+        else if (command == BlockBallCommand.PARTICLE_BALL) {
+            cache[4] = BallSettingsPage.ID
+        }
+        else if (command == BlockBallCommand.PARTICLE_CALLBACK_TYPE && args.size >= 3 && args[2].toIntOrNull() != null) {
             val particleEffect = cache[5] as ParticleEffectMeta<*, *, *>
             particleEffect.setEffectType<ParticleEffectMeta<*, *, *>>(ParticleEffectMeta.ParticleEffectType.values()[args[2].toInt()])
         } else if (command == BlockBallCommand.PARTICLE_CALLBACK_EFFECTING && args.size >= 3 && args[2].toIntOrNull() != null) {

@@ -95,16 +95,16 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
     }
 
     override fun onUpdateSigns() {
-        for (i in this.arena.meta.lobbyMeta.redTeamSigns.indices) {
-            val position = this.arena.meta.lobbyMeta.redTeamSigns[i]
+        for (i in this.arena.meta.redTeamMeta.signs.indices) {
+            val position = this.arena.meta.redTeamMeta.signs[i]
             if (!replaceTextOnSign(position, arena.meta.redTeamMeta.signLines.toTypedArray(), arena.meta.redTeamMeta)) {
-                this.arena.meta.lobbyMeta.redTeamSigns.removeAt(i)
+                this.arena.meta.redTeamMeta.signs.removeAt(i)
             }
         }
-        for (i in this.arena.meta.lobbyMeta.blueTeamSigns.indices) {
-            val position = this.arena.meta.lobbyMeta.blueTeamSigns[i]
+        for (i in this.arena.meta.blueTeamMeta.signs.indices) {
+            val position = this.arena.meta.blueTeamMeta.signs[i]
             if (!replaceTextOnSign(position, arena.meta.blueTeamMeta.signLines.toTypedArray(), arena.meta.blueTeamMeta)) {
-                this.arena.meta.lobbyMeta.blueTeamSigns.removeAt(i)
+                this.arena.meta.blueTeamMeta.signs.removeAt(i)
             }
         }
         for (i in this.arena.meta.lobbyMeta.joinSigns.indices) {

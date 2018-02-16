@@ -105,6 +105,7 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, M
                 , ItemStack(Material.LEATHER_LEGGINGS).setColor(Color.BLUE), ItemStack(Material.LEATHER_CHESTPLATE).setColor(Color.BLUE), null)
 
         ballMeta.isAlwaysBounceBack = true
+        ballMeta.isCarryable = false
         ballMeta.hitBoxSize = 3.0
         ballMeta.modifiers.verticalKickStrengthModifier = 1.5
         ballMeta.modifiers.horizontalKickStrengthModifier = 1.5

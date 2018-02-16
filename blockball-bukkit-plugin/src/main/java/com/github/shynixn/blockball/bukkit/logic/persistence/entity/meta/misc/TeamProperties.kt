@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.area.SelectedArea
 import org.bukkit.Location
 import org.bukkit.inventory.ItemStack
@@ -52,8 +53,10 @@ class TeamProperties(
         override var winMessageTitle: String,
         /** Subtitle of the message getting played when this team wins a match. */
         @YamlSerializer.YamlSerialize(orderNumber = 14, value = "win-message-subtitle")
-        override var winMessageSubTitle: String) : TeamMeta<Location,ItemStack> {
-
+        override var winMessageSubTitle: String) : TeamMeta<Location, ItemStack> {
+    /** List of signs which can be clicked to join the team.*/
+    override val signs: MutableList<StorageLocation>
+        get() = this.internalSigns as MutableList<StorageLocation>;
     /** Min amount of players in this team to start the match for this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "min-amount")
     override var minAmount: Int = 0
@@ -80,5 +83,7 @@ class TeamProperties(
     override var signLines: List<String> = arrayListOf("&lBlockBall", "<game>", "<teamcolor><team>", "<players>/<maxplayers>")
     /** Armor wearing this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 8, value = "armor", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION)
-    override var armorContents: Array<ItemStack?>  = arrayOfNulls(4)
+    override var armorContents: Array<ItemStack?> = arrayOfNulls(4)
+    @YamlSerializer.YamlSerialize(orderNumber = 9, value = "signs")
+    private var internalSigns: MutableList<LocationBuilder> = ArrayList()
 }

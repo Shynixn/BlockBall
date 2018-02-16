@@ -31,12 +31,6 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
  * SOFTWARE.
  */
 interface LobbyMeta : PersistenceAble {
-    /** List of signs which can be clicked to join the red team.*/
-    val redTeamSigns: MutableList<StorageLocation>
-
-    /** List of signs which can be clicked to join the red team.*/
-    val blueTeamSigns: MutableList<StorageLocation>
-
     /** List of signs which can be clicked to leave the game. */
     val leaveSigns: MutableList<StorageLocation>
 

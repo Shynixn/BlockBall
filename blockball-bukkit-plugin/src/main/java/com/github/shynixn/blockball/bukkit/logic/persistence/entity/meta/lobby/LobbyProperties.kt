@@ -46,12 +46,6 @@ class LobbyProperties : PersistenceObject(), LobbyMeta {
     /** Lines displayed on the sign for leaving the match. */
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leave-sign-lines")
     override var leaveSignLines: Array<String> = arrayOf("&lBlockBall", "<game>", "Leave", "")
-    /** List of signs which can be clicked to join the red team.*/
-    override val redTeamSigns: MutableList<StorageLocation>
-        get() = sign.redTeamSigns as MutableList<StorageLocation>
-    /** List of signs which can be clicked to join the red team.*/
-    override val blueTeamSigns: MutableList<StorageLocation>
-        get() = sign.blueTeamSigns as MutableList<StorageLocation>
     /** List of signs which can be clicked to leave the game. */
     override val leaveSigns: MutableList<StorageLocation>
         get() = sign.leaveSigns as MutableList<StorageLocation>
@@ -70,12 +64,6 @@ class LobbyProperties : PersistenceObject(), LobbyMeta {
 
     /** Helper class to wrap signs. */
     private class SignCollection {
-        /** List of signs which can be clicked to join the red team.*/
-        @YamlSerializer.YamlSerialize(orderNumber = 1, value = "red-team")
-        val redTeamSigns: MutableList<LocationBuilder> = ArrayList()
-        /** List of signs which can be clicked to join the red team.*/
-        @YamlSerializer.YamlSerialize(orderNumber = 2, value = "blue-team")
-        val blueTeamSigns: MutableList<LocationBuilder> = ArrayList()
         /** List of signs which can be clicked to join the game. */
         @YamlSerializer.YamlSerialize(orderNumber = 3, value = "joining")
         val joinSigns: MutableList<LocationBuilder> = ArrayList()
