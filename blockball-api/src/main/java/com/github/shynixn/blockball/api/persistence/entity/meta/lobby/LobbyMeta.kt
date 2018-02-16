@@ -44,7 +44,7 @@ interface LobbyMeta : PersistenceAble {
     val joinSigns: MutableList<StorageLocation>
 
     /** Spawnpoint when someone leaves the hub game. */
-    val leaveSpawnpoint: StorageLocation?
+    var leaveSpawnpoint: StorageLocation?
 
     /** Lines displayed on the sign for joinin the match. */
     var joinSignLines: Array<String>
@@ -52,6 +52,6 @@ interface LobbyMeta : PersistenceAble {
     /** Lines displayed on the sign for leaving the match. */
     var leaveSignLines: Array<String>
 
-    /** Join asking message. */
-    var joinMessage: Array<String>
+    /** Should players automatically join the other team to even out them?*/
+    var onlyAllowEventTeams: Boolean
 }

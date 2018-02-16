@@ -1,6 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
+import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
@@ -54,9 +56,13 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val dataList = cache[2] as ArrayList<String>
         if (command == BlockBallCommand.MULTILINES_SCOREBOARD) {
             cache[4] = ScoreboardPage.ID
+            cache[3] = 0
+        }
+        else if (command == BlockBallCommand.MULTILINES_HUBGAMEJOINMESSAGE) {
+            cache[2] = (cache[0] as BukkitArena).meta.hubLobbyMeta.joinMessage
+            cache[4] = GameSettingsPage.ID
             cache[3] = 0
         }
         else if (command == BlockBallCommand.MULTILINES_HOLOGRAM) {
@@ -68,6 +74,7 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
             cache[3] = 0
         }
         else if (command == BlockBallCommand.MULTILINES_ADD) {
+            val dataList = cache[2] as ArrayList<String>
             dataList.add(this.mergeArgs(2, args))
         } else if (command == BlockBallCommand.MULTILINES_ANY) {
             if (args.size >= 3) {
@@ -76,6 +83,7 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 cache[3] = 0
             }
         } else if (command == BlockBallCommand.MULTILINES_SET) {
+            val dataList = cache[2] as ArrayList<String>
             val index = cache[3] as Int
             if (index < dataList.size) {
                 dataList[index] = mergeArgs(2, args)
@@ -83,6 +91,8 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 cache[3] = 0
             }
         } else if (command == BlockBallCommand.MULTILINES_REMOVE) {
+            val dataList = cache[2] as ArrayList<String>
+
             val index = cache[3] as Int
             if (index < dataList.size) {
                 dataList.removeAt(cache[3] as Int)

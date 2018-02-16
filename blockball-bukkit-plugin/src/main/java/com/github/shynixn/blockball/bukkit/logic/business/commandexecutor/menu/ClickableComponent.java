@@ -39,6 +39,7 @@ public enum ClickableComponent {
     ADD(" [add..]", ChatColor.BLUE),
     DELETE(" [delete..]", ChatColor.DARK_RED),
     SELECT(" [select..]", ChatColor.AQUA),
+    LOCATION(" [location..]", ChatColor.BLUE),
 
     INVALID(" [page..]", ChatColor.BLACK),
     TOGGLE(" [toggle..]", ChatColor.LIGHT_PURPLE)

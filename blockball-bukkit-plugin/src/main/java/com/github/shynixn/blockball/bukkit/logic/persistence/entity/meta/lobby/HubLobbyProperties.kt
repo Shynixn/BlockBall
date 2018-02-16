@@ -32,10 +32,13 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  * SOFTWARE.
  */
 class HubLobbyProperties : PersistenceObject(), HubLobbyMeta {
+    /** Join asking message. */
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "join-selection")
+    override var joinMessage: List<String> = arrayListOf("Click on the team to join the match.", "&c[Team Red]", "&9[Team Blue]")
     /** Allows to instantly play in games by running into the forcefield.*/
-    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "instant-forcefield-join")
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "instant-forcefield-join")
     override var instantForcefieldJoin: Boolean = false
     /** Should the arena be reset when nobody is playing? */
-    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "reset-arena-on-empty")
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "reset-arena-on-empty")
     override var resetArenaOnEmpty: Boolean = false
 }

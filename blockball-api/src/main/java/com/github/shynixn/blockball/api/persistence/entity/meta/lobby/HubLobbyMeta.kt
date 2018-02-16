@@ -35,4 +35,7 @@ interface HubLobbyMeta : PersistenceAble {
 
     /** Should the arena be reset when nobody is playing? */
     var resetArenaOnEmpty: Boolean
+
+    /** Join asking message. */
+    var joinMessage: List<String>
 }

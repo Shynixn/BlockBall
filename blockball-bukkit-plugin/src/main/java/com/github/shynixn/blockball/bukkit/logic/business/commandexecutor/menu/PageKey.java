@@ -47,6 +47,7 @@ public enum PageKey {
     GAMEEXTENSIONS("gameex"),
     MULTIPLEITEMS("mitem"),
     REWARDSPAGE("reward"),
+    GAMESETTINGS("reward"),
     COMMANDPAGE("com"),
     TEAMTEXTBOOK("teamtext"),
     MAINCONFIGURATION("mcf");

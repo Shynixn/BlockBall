@@ -34,13 +34,15 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.Locati
  * SOFTWARE.
  */
 class LobbyProperties : PersistenceObject(), LobbyMeta {
+    /** Should players automatically join the other team to even out them?*/
+    @YamlSerializer.YamlSerialize(value = "even-teams", orderNumber = 1)
+    override var onlyAllowEventTeams: Boolean = false
     /** List of signs which can be clicked to join the game. */
     override val joinSigns: MutableList<StorageLocation>
         get() = sign.joinSigns as MutableList<StorageLocation>
     /** Lines displayed on the sign for leaving the match. */
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "join-sign-lines")
     override var joinSignLines: Array<String> = arrayOf("&lBlockBall", "<game>", "<state>", "")
-    /** Join asking message. */
-    override var joinMessage: Array<String> = arrayOf("Click on the team to join the match.", "&c[Team Red]", "&9[Team Blue]")
     /** Lines displayed on the sign for leaving the match. */
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leave-sign-lines")
     override var leaveSignLines: Array<String> = arrayOf("&lBlockBall", "<game>", "Leave", "")
@@ -54,11 +56,17 @@ class LobbyProperties : PersistenceObject(), LobbyMeta {
     override val leaveSigns: MutableList<StorageLocation>
         get() = sign.leaveSigns as MutableList<StorageLocation>
     /** Spawnpoint when someone leaves the hub game. */
-    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "leave-spawnpoint")
-    override var leaveSpawnpoint: LocationBuilder? = null
+    override var leaveSpawnpoint: StorageLocation?
+        get() = internalLocation
+        set(value) {
+            this.internalLocation = value as LocationBuilder?
+        }
 
-    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "signs")
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "signs")
     private val sign: SignCollection = SignCollection()
+
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "leave-spawnpoint")
+    private var internalLocation: LocationBuilder? = null
 
     /** Helper class to wrap signs. */
     private class SignCollection {

@@ -113,6 +113,9 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
     @Inject
     private val teamTextBookPage : TeamTextBookPage? = null;
 
+    @Inject
+    private val gameSettingsPage : GameSettingsPage? = null;
+
     /**
      * Can be overwritten to listener to all executed commands.
      *
@@ -282,6 +285,7 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
             this.pagecache!!.add(miscPage!!)
             this.pagecache!!.add(gamepropertiesPage!!)
             this.pagecache!!.add(teamTextBookPage!!);
+            this.pagecache!!.add(gameSettingsPage!!);
 
 
         }

@@ -32,9 +32,6 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  * SOFTWARE.
  */
 class CustomizationProperties : PersistenceObject(), CustomizationMeta {
-    /** Should players automatically join the other team to even out them?*/
-    @YamlSerializer.YamlSerialize(value = "even-teams", orderNumber = 1)
-    override var onlyAllowEventTeams: Boolean = false
     /** Can players damage other players during a game?*/
     @YamlSerializer.YamlSerialize(value = "damage-enabled", orderNumber = 2)
     override var damageEnabled: Boolean = false

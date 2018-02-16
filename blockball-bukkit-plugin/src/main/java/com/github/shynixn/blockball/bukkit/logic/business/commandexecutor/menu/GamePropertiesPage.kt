@@ -62,8 +62,6 @@ class GamePropertiesPage : Page(GamePropertiesPage.ID, MiscSettingsPage.ID) {
         val arena = cache[0] as BukkitArena
         if (command == BlockBallCommand.GAMEPROPERTIES_TOGGLE_DAMAGE) {
             arena.meta.customizingMeta.damageEnabled = !arena.meta.customizingMeta.damageEnabled
-        } else if (command == BlockBallCommand.GAMEPROPERTIES_TOGGLE_EVENTEAMS) {
-            arena.meta.customizingMeta.onlyAllowEventTeams = !arena.meta.customizingMeta.onlyAllowEventTeams
         }
         return super.execute(player, command, cache, args)
     }
@@ -77,11 +75,6 @@ class GamePropertiesPage : Page(GamePropertiesPage.ID, MiscSettingsPage.ID) {
         val arena = cache[0] as BukkitArena
         val meta = arena.meta.customizingMeta
         return ChatBuilder()
-                .component("- Even teams enabled: " + meta.onlyAllowEventTeams).builder()
-                .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMEPROPERTIES_TOGGLE_EVENTEAMS.command)
-                .setHoverText("Forces players to join the other team regardless of their choice to have the same amount of players on both teamsa.")
-                .builder().nextLine()
                 .component("- Damage enabled: " + meta.damageEnabled).builder()
                 .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMEPROPERTIES_TOGGLE_DAMAGE.command)

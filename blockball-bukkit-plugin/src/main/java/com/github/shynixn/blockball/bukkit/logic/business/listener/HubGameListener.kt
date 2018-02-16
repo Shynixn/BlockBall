@@ -90,13 +90,13 @@ class HubGameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugi
                         player.velocity = knockback
                         player.allowFlight = true
                         if (!togglePlayers.contains(player)) {
-                            ChatBuilder().text(Config.prefix + game.arena.meta.lobbyMeta.joinMessage[0].convertChatColors())
+                         ChatBuilder().text(Config.prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].convertChatColors())
                                     .nextLine()
-                                    .component(game.arena.meta.lobbyMeta.joinMessage[1].convertChatColors())
+                                    .component(game.arena.meta.hubLobbyMeta.joinMessage[1].convertChatColors())
                                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
                                             , "/" + plugin.config.getString("global-join.command") + " " + game.arena.meta.redTeamMeta.displayName.stripChatColors() + " " + game.arena.name)
                                     .setHoverText(" ")
-                                    .builder().text(" ").component(game.arena.meta.lobbyMeta.joinMessage[2].convertChatColors())
+                                    .builder().text(" ").component(game.arena.meta.hubLobbyMeta.joinMessage[2].convertChatColors())
                                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
                                             , "/" + plugin.config.getString("global-join.command") + " " + game.arena.meta.blueTeamMeta.displayName.stripChatColors() + " " + game.arena.name)
                                     .setHoverText(" ")
