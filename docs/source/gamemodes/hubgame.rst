@@ -1,32 +1,25 @@
-Ball
-====
+HubGame
+=======
 
-One of the most outstanding features of BlockBall is it to provide a really awesome looking ball with working animations. You
-**do not** have to install a mod or Texture Pack in order to make this possible.
+The Game Mode HubGame is a simply game mode to provide players a small little area on your hub, lobby or overworld where
+they can play soccer anytime without any restrictions or lobbies.
 
-The origin physic engine of the Ball was developed back in 2015 and is now replaced by the more advanced 2018 engine. There are many
-modifier values you can adjust.
+Make sure you created a base game first before you continue.
 
-.. image:: ../_static/images/ball3.png
-
-You can even set your own skin or custom texture model to it.
+As the default Game Mode is already a HubGame you do not have to configure anything at all. The Base Game is basically a HubGame.
 
 Configuring ingame
 ~~~~~~~~~~~~~~~~~~
 
-The Ball is per default correctly configured but can be changed for different situations like a small or a very large arena.
-
-
+At this stage, you should be able to open the 'Settings' page of your arena chat UI. If not, please take a look at this page.
 
 1. Go to the **Settings Page** of your arena
-2. Open the **Ball Settings Page**
+2. Open the **Game Settings Page**
 
-.. image:: ../_static/images/ball1.jpg
+.. image:: ../_static/images/arena10.jpg
 
-3. Customize the skin or other values to your own needs.
-4. Open the Ball modifiers page to adjust modifiers like the rolling distance
-
-.. image:: ../_static/images/ball2.jpg
+3. Customize all available
+4. Customize the other available options to your own needs.
 
 You can find all options explained at the bottom of this page.
 
@@ -40,133 +33,41 @@ At this stage, you should be able to find your arena save file. If not, please t
 
 **arena_x.yml**
 ::
-    ball:
-      skin: http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d
-      size: NORMAL
-      hitbox-size: 3.0
-      carry-able: false
-      always-bounce: true
-      rotating: true
-      modifiers:
-        horizontal-touch: 1.0
-        vertical-touch: 1.0
-        horizontal-kick: 1.5
-        vertical-kick: 1.5
-        horizontal-throw: 1.0
-        vertical-throw: 1.0
-        rolling-distance: 1.0
-        gravity: 1.0
-      particle-effects:
-        onmove:
-          effecting: EVERYONE
-          name: none
-          amount: 0
-          speed: 0.0
-          offset:
-            x: 0.0
-            y: 0.0
-            z: 0.0
-        onkick:
-          effecting: EVERYONE
-          name: none
-          amount: 0
-          speed: 0.0
-          offset:
-            x: 0.0
-            y: 0.0
-            z: 0.0
-        onspawn:
-          effecting: EVERYONE
-          name: none
-          amount: 0
-          speed: 0.0
-          offset:
-            x: 0.0
-            y: 0.0
-            z: 0.0
-        onthrow:
-          effecting: EVERYONE
-          name: none
-          amount: 0
-          speed: 0.0
-          offset:
-            x: 0.0
-            y: 0.0
-            z: 0.0
-        oninteraction:
-          effecting: EVERYONE
-          name: none
-          amount: 0
-          speed: 0.0
-          offset:
-            x: 0.0
-            y: 0.0
-            z: 0.0
-        ongrab:
-          effecting: EVERYONE
-          name: none
-          amount: 0
-          speed: 0.0
-          offset:
-            x: 0.0
-            y: 0.0
-            z: 0.0
-      sound-effects:
-        onmove:
-          effecting: EVERYONE
-          name: none
-          volume: 0.0
-          pitch: 0.0
-        onkick:
-          effecting: EVERYONE
-          name: none
-          volume: 0.0
-          pitch: 0.0
-        onspawn:
-          effecting: EVERYONE
-          name: none
-          volume: 0.0
-          pitch: 0.0
-        onthrow:
-          effecting: EVERYONE
-          name: none
-          volume: 0.0
-          pitch: 0.0
-        oninteraction:
-          effecting: EVERYONE
-          name: none
-          volume: 0.0
-          pitch: 0.0
-        ongrab:
-          effecting: EVERYONE
-          name: none
-          volume: 0.0
-          pitch: 0.0
-      wall-bouncing: {}
+    meta:
+      max-score: 10
+      even-teams: false
+    hubgame-meta:
+      join-selection:
+      - Click on the team to join the match.
+      - '&c[Team Red]'
+      - '&9[Team Blue]'
+      instant-forcefield-join: false
+      reset-arena-on-empty: false
 
 3. Customize the available options to your own needs.
 
 Properties
 ~~~~~~~~~~
 
-* Skin: Name of a player using this skin or a skin URL.
-* Size: Size of the ball. Can be NORMAL or SMALL.
-* Hitbox Size: Size of the ball hitbox intercepting player movements. Does not have an impact on left or right clicking the ball.
-* Carry Able: Should the Ball be able to grabbed by players. Should not be used for BlockBall games yet only for fun and testing.
-* Always Bounce: Should the Ball bounce of walls?
-* Rotation Animation: Should the Ball rotate depending on direction and speed?
-* Ball modifiers: Collection of modifiers explained below.
-* Soundeffect: Soundeffect being played for a certain action.
-* Particleeffect: Particleeffect being played for a certain action.
+* Max Score: Max amount of goals the players can score before the arena resets itself back to zero.
+* Leave Spawnpoint: Spawnpoint for players who leave the game. If you leave it empty you will not be able to set up signs for leaving later in the customizing section.
+* Even teams enabled: Should the team choice of the player be ignored if too many players are on one team?
+* Join Message: Message being played when a player runs into the forcefield. Clicking line 2 will cause the player to join the red team, clicking line 3 causes joining the blue team.
+* Reset on empty: Should the arena be reset to 0 scores when nobody is playing in it?
+* Instant forcefield join: Should players instantly join the game, automatically put into a team and without getting teleported to a spawnpoint?
 
-Modifier Properties
-~~~~~~~~~~~~~~~~~~~
 
-* Touch Strength: Horizontal or Vertical speed/distance modifier the ball flies when an animal, monster or player runs into the ball.
-* Kick Strength: Horizontal or Vertical speed/distance modifier the ball flies when a player leftclicks the ball.
-* Throw Strength: Horizontal or Vertical speed/distance modifier the ball flies when a player grabs the ball by rightclicking it and clicking again to throw it.
-* Rolling Distance: The speed/distance modifier the ball rolls after being touched, kicked or thrown
-* Gravity Distance: The speed modifier how fast a ball falls onto the ground. A negative value allows the ball to float into infinity.
+
+
+
+
+
+
+
+
+
+
+
 
 
 

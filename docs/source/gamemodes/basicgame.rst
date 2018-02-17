@@ -57,6 +57,24 @@ restarts all BlockBall games on your server and starts initial games.
 
 7. In this case we have to press *>>Save and reload<<* for our game to start.
 
+
+Checking if everything is working
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Let's check if our base game is correctly configured. Run into the forcefield of your arena and take a look if the
+following message appears.
+
+.. image:: ../_static/images/arena9.jpg
+
+If it does not, your worledit arena selection is probably misplaced or simply wrong.
+
+2. Now you should automatically spawn at the same spawnpoint of the ball. You can customize your team spawnpoint later in the
+team section.
+
+3. Check if the ball is spawning and goals get scored by move the ball into one of your configured goals.
+
+If it does not, your worledit goal selection is probably misplaced or simply wrong.
+
 Putting all together
 ~~~~~~~~~~~~~~~~~~~~
 
