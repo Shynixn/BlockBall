@@ -32,6 +32,5 @@ package com.github.shynixn.blockball.api.business.enumeration;
 public enum GameType {
     HUBGAME,
     MINIGAME,
-    BUNGEE,
-    EVENT
+    BUNGEE
 }

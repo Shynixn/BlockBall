@@ -35,7 +35,7 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameSettingsPage : Page(GameSettingsPage.ID, MainConfigurationPage.ID) {
+class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
 
     companion object {
         /** Id of the page. */
@@ -60,15 +60,20 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainConfigurationPage.ID) {
         val arena = cache[0] as BukkitArena
         if (command == BlockBallCommand.GAMESETTINGS_LEAVESPAWNPOINT) {
             arena.meta.lobbyMeta.leaveSpawnpoint = player.location.toPosition()
-        }
-        else if (command == BlockBallCommand.GAMESETTINGS_TOGGLE_EVENTEAMS) {
-            arena.meta.lobbyMeta.onlyAllowEventTeams = ! arena.meta.lobbyMeta.onlyAllowEventTeams;
-        }
-        else if (command == BlockBallCommand.GAMESETTINGS_TOGGLE_INSTATFORCEFIELD) {
-            arena.meta.hubLobbyMeta.instantForcefieldJoin = ! arena.meta.hubLobbyMeta.instantForcefieldJoin;
-        }
-        else if (command == BlockBallCommand.GAMESETTINGS_TOGGLE_RESETEMPTY) {
-            arena.meta.hubLobbyMeta.resetArenaOnEmpty= ! arena.meta.hubLobbyMeta.resetArenaOnEmpty;
+        } else if (command == BlockBallCommand.GAMESETTINGS_LOBBYSPAWNPOINT) {
+            arena.meta.lobbyMeta.leaveSpawnpoint = player.location.toPosition()
+        } else if (command == BlockBallCommand.GAMESETTINGS_TOGGLE_EVENTEAMS) {
+            arena.meta.lobbyMeta.onlyAllowEventTeams = !arena.meta.lobbyMeta.onlyAllowEventTeams
+        } else if (command == BlockBallCommand.GAMESETTINGS_TOGGLE_INSTATFORCEFIELD) {
+            arena.meta.hubLobbyMeta.instantForcefieldJoin = !arena.meta.hubLobbyMeta.instantForcefieldJoin
+        } else if (command == BlockBallCommand.GAMESETTINGS_TOGGLE_RESETEMPTY) {
+            arena.meta.hubLobbyMeta.resetArenaOnEmpty = !arena.meta.hubLobbyMeta.resetArenaOnEmpty
+        } else if (command == BlockBallCommand.GAMESETTINGS_BUNGEEKICKMESSAGE && args.size >= 3) {
+            arena.meta.bungeeCordMeta.kickMessage = mergeArgs(2, args)
+        } else if (command == BlockBallCommand.GAMESETTINGS_MAXSCORE && args.size == 3 && args[2].toIntOrNull() != null) {
+            arena.meta.lobbyMeta.maxScore = args[2].toInt()
+        } else if (command == BlockBallCommand.GAMESETTINGS_MAXDURATION && args.size == 3 && args[2].toIntOrNull() != null) {
+            arena.meta.minigameMeta.matchDuration = args[2].toInt()
         }
         return super.execute(player, command, cache, args)
     }
@@ -82,11 +87,20 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainConfigurationPage.ID) {
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
         val arena = cache[0] as BukkitArena
 
-        var leaveSpawnpoint = "none";
+        var leaveSpawnpoint = "none"
         if (arena.meta.lobbyMeta.leaveSpawnpoint != null) {
-            leaveSpawnpoint = printLocation(arena.meta.lobbyMeta.leaveSpawnpoint!!);
+            leaveSpawnpoint = printLocation(arena.meta.lobbyMeta.leaveSpawnpoint!!)
         }
-        return ChatBuilder()
+        var lobbySpawnpoint = "none"
+        if (arena.meta.minigameMeta.lobbySpawnpoint != null) {
+            lobbySpawnpoint = printLocation(arena.meta.minigameMeta.lobbySpawnpoint!!)
+        }
+        val builder = ChatBuilder()
+                .component("- Max Score: " + arena.meta.lobbyMeta.maxScore).builder()
+                .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.GAMESETTINGS_MAXSCORE.command)
+                .setHoverText("Amount of goals a team has to score in order to win.")
+                .builder().nextLine()
                 .component("- Leave Spawnpoint: " + leaveSpawnpoint).builder()
                 .component(ClickableComponent.LOCATION.text).setColor(ClickableComponent.LOCATION.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMESETTINGS_LEAVESPAWNPOINT.command)
@@ -97,21 +111,44 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainConfigurationPage.ID) {
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMESETTINGS_TOGGLE_EVENTEAMS.command)
                 .setHoverText("Forces players to join the other team regardless of their choice to have the same amount of players on both teamsa.")
                 .builder().nextLine()
-                .component("- Join Message: ").builder()
-                .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color).setHoverText(arena.meta.hubLobbyMeta.joinMessage.toSingleLine()).builder()
-                .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_HUBGAMEJOINMESSAGE.command)
-                .setHoverText(ChatColor.UNDERLINE.toString() + "HubGame exclusive\n"  + ChatColor.RESET+ "Message being send to players who touch the forcefield.")
-                .builder().nextLine()
-                .component("- Reset on empty: " + arena.meta.hubLobbyMeta.resetArenaOnEmpty).builder()
-                .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMESETTINGS_TOGGLE_RESETEMPTY.command)
-                .setHoverText(ChatColor.UNDERLINE.toString() + "HubGame exclusive\n"  + ChatColor.RESET+ "Should the HubGame game be reset to it's starting stage when everyone has left the game?")
-                .builder().nextLine()
-                .component("- Instant forcefield join: " + arena.meta.hubLobbyMeta.instantForcefieldJoin).builder()
-                .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMESETTINGS_TOGGLE_INSTATFORCEFIELD.command)
-                .setHoverText(ChatColor.UNDERLINE.toString() + "HubGame exclusive\n" + ChatColor.RESET+ "Should players join the game immediately after running into the forcefield? Teams get automatically selected.")
-                .builder().nextLine()
+
+        if (arena.gameType == GameType.MINIGAME || arena.gameType == GameType.BUNGEE) {
+            builder.component("- Max Duration: " + arena.meta.minigameMeta.matchDuration).builder()
+                    .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+                    .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.GAMESETTINGS_MAXDURATION.command)
+                    .setHoverText("Amount of seconds a game is going to last until it ends. The team with the highest score wins the match.")
+                    .builder().nextLine()
+                    .component("- Lobby Spawnpoint: " + lobbySpawnpoint).builder()
+                    .component(ClickableComponent.LOCATION.text).setColor(ClickableComponent.LOCATION.color)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMESETTINGS_LOBBYSPAWNPOINT.command)
+                    .setHoverText("Sets the spawnpoint for people who join the lobby.")
+                    .builder().nextLine()
+        }
+        if (arena.gameType == GameType.BUNGEE) {
+            builder.component("- Kick Message: ").builder()
+                    .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color).setHoverText(arena.meta.bungeeCordMeta.kickMessage).builder()
+                    .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
+                    .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.GAMESETTINGS_BUNGEEKICKMESSAGE.command)
+                    .setHoverText(ChatColor.UNDERLINE.toString() + "BungeeCord exclusive\n" + ChatColor.RESET + "Message being send to players who try to join a running or a full server.")
+                    .builder().nextLine()
+        } else if (arena.gameType == GameType.HUBGAME) {
+            builder.component("- Join Message: ").builder()
+                    .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color).setHoverText(arena.meta.hubLobbyMeta.joinMessage.toSingleLine()).builder()
+                    .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_HUBGAMEJOINMESSAGE.command)
+                    .setHoverText(ChatColor.UNDERLINE.toString() + "HubGame exclusive\n" + ChatColor.RESET + "Message being send to players who touch the forcefield.")
+                    .builder().nextLine()
+                    .component("- Reset on empty: " + arena.meta.hubLobbyMeta.resetArenaOnEmpty).builder()
+                    .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMESETTINGS_TOGGLE_RESETEMPTY.command)
+                    .setHoverText(ChatColor.UNDERLINE.toString() + "HubGame exclusive\n" + ChatColor.RESET + "Should the HubGame game be reset to it's starting stage when everyone has left the game?")
+                    .builder().nextLine()
+                    .component("- Instant forcefield join: " + arena.meta.hubLobbyMeta.instantForcefieldJoin).builder()
+                    .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMESETTINGS_TOGGLE_INSTATFORCEFIELD.command)
+                    .setHoverText(ChatColor.UNDERLINE.toString() + "HubGame exclusive\n" + ChatColor.RESET + "Should players join the game immediately after running into the forcefield? Teams get automatically selected.")
+                    .builder().nextLine()
+        }
+        return builder
     }
 }

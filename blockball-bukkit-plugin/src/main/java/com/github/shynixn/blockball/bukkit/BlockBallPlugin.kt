@@ -121,7 +121,7 @@ class BlockBallPlugin : JavaPlugin() {
         success = false
         if (true) {
             try {
-
+                RegisterHelper.PREFIX = BlockBallPlugin.PREFIX_CONSOLE
                 RegisterHelper.register("Vault")
                 gameController!!.reload()
                 ReflectionUtils.invokeMethodByKotlinClass<Void>(BlockBallApi::class.java, "initializeBlockBall", arrayOf(Any::class.java, Any::class.java), arrayOf(this.gameController,bungeeCordController))

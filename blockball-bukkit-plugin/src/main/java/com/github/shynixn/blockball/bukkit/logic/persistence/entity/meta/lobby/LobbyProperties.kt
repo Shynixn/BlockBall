@@ -34,8 +34,11 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.Locati
  * SOFTWARE.
  */
 class LobbyProperties : PersistenceObject(), LobbyMeta {
+    /** Max score of a team until the match ends and the arena gets reset. */
+    @YamlSerializer.YamlSerialize(value = "max-score", orderNumber = 1)
+    override var maxScore: Int = 10
     /** Should players automatically join the other team to even out them?*/
-    @YamlSerializer.YamlSerialize(value = "even-teams", orderNumber = 1)
+    @YamlSerializer.YamlSerialize(value = "even-teams", orderNumber = 2)
     override var onlyAllowEventTeams: Boolean = false
     /** List of signs which can be clicked to join the game. */
     override val joinSigns: MutableList<StorageLocation>
@@ -56,19 +59,19 @@ class LobbyProperties : PersistenceObject(), LobbyMeta {
             this.internalLocation = value as LocationBuilder?
         }
 
-    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "signs")
-    private val sign: SignCollection = SignCollection()
-
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "leave-spawnpoint")
     private var internalLocation: LocationBuilder? = null
+
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "signs")
+    private val sign: SignCollection = SignCollection()
 
     /** Helper class to wrap signs. */
     private class SignCollection {
         /** List of signs which can be clicked to join the game. */
-        @YamlSerializer.YamlSerialize(orderNumber = 3, value = "joining")
+        @YamlSerializer.YamlSerialize(orderNumber = 1, value = "joining")
         val joinSigns: MutableList<LocationBuilder> = ArrayList()
         /** List of signs which can be clicked to leave the game. */
-        @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leaving")
+        @YamlSerializer.YamlSerialize(orderNumber = 2, value = "leaving")
         val leaveSigns: MutableList<LocationBuilder> = ArrayList()
     }
 }

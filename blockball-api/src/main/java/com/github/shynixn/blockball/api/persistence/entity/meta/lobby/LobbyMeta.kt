@@ -34,6 +34,9 @@ interface LobbyMeta : PersistenceAble {
     /** List of signs which can be clicked to leave the game. */
     val leaveSigns: MutableList<StorageLocation>
 
+    /** Max score of a team until the match ends and the arena gets reset. */
+    var maxScore : Int
+
     /** List of signs which can be clicked to join the game. */
     val joinSigns: MutableList<StorageLocation>
 

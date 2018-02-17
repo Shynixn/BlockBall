@@ -145,11 +145,11 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
         }
         player.sendMessage(HEADER_STANDARD)
         player.sendMessage("\n")
-        val cache: Array<Any?>? = this.cache[player]
         if (!this.cache.containsKey(player)) {
             val anyArray = arrayOfNulls<Any>(8)
             this.cache[player] = anyArray
         }
+        val cache: Array<Any?>? = this.cache[player]
         val command = BlockBallCommand.from(args) ?: throw IllegalArgumentException("Command is not registered!")
         var usedPage: Page? = null
         for (page in this.getPageCache()) {
