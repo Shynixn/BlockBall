@@ -14,9 +14,10 @@ Contents
 
 .. toctree::
    gettingstarted/index
-   general/index
+   gamemodes/index
    customizing/index
    commands/index
+   general/index
    api/index
    faq/index
    contributing/index
