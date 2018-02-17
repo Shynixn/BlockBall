@@ -7,3 +7,5 @@ Create a Base Game first in order to select one of the game modes.
 .. toctree::
  basicgame
  hubgame
+ minigame
+ bungeecord

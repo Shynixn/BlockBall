@@ -13,6 +13,7 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.Locati
 import org.bukkit.ChatColor
 import org.bukkit.Color
 import org.bukkit.Location
+import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.LeatherArmorMeta
@@ -52,6 +53,10 @@ internal fun ItemStack.setSkin(skin: String) {
         skullMeta.owner = skin
         this.itemMeta = skullMeta
     }
+}
+
+internal fun Server.setServerModt(text: String) {
+    ModtHelper.setModt(text)
 }
 
 internal fun List<String>.toSingleLine(): String {

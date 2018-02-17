@@ -61,7 +61,7 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
         if (command == BlockBallCommand.GAMESETTINGS_LEAVESPAWNPOINT) {
             arena.meta.lobbyMeta.leaveSpawnpoint = player.location.toPosition()
         } else if (command == BlockBallCommand.GAMESETTINGS_LOBBYSPAWNPOINT) {
-            arena.meta.lobbyMeta.leaveSpawnpoint = player.location.toPosition()
+            arena.meta.minigameMeta.lobbySpawnpoint = player.location.toPosition()
         } else if (command == BlockBallCommand.GAMESETTINGS_TOGGLE_EVENTEAMS) {
             arena.meta.lobbyMeta.onlyAllowEventTeams = !arena.meta.lobbyMeta.onlyAllowEventTeams
         } else if (command == BlockBallCommand.GAMESETTINGS_TOGGLE_INSTATFORCEFIELD) {
