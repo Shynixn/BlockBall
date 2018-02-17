@@ -3,8 +3,10 @@ package com.github.shynixn.blockball.bukkit.logic.business.controller
 import com.github.shynixn.blockball.api.bukkit.business.controller.BukkitGameController
 import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.bukkit.logic.business.entity.game.BungeeCordMinigame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.HubGame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
+import com.github.shynixn.blockball.bukkit.logic.business.entity.game.Minigame
 import com.github.shynixn.blockball.bukkit.logic.business.listener.DoubleJumpListener
 import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
 import com.github.shynixn.blockball.bukkit.logic.business.listener.HubGameListener
@@ -54,20 +56,20 @@ class GameRepository : BukkitGameController, Runnable {
     override var arenaController: ArenaRepository? = null
 
     @Inject
-    private var plugin: Plugin? = null;
+    private var plugin: Plugin? = null
 
     @Inject
-    private var gameListener: GameListener? = null;
+    private var gameListener: GameListener? = null
 
     @Inject
     private var doubleJumpListener: DoubleJumpListener? = null
 
     @Inject
-    private var hubGameListener: HubGameListener? = null;
+    private var hubGameListener: HubGameListener? = null
 
     /** Games. */
     val games: ArrayList<BukkitGame> = ArrayList()
-    private var task: BukkitTask? = null;
+    private var task: BukkitTask? = null
 
     /**
      * The general contract of the method `run` is that it may
@@ -149,6 +151,13 @@ class GameRepository : BukkitGameController, Runnable {
         this.arenaController!!.getAll().forEach { p ->
             if (p.gameType == GameType.HUBGAME) {
                 this.store(HubGame(p))
+            } else if (p.gameType == GameType.MINIGAME) {
+                this.store(Minigame(p))
+            } else if (p.gameType == GameType.BUNGEE) {
+                this.store(BungeeCordMinigame(p))
+                plugin!!.logger.log(Level.INFO, "BlockBall plugin contains a BungeeCord Minigame. Server is now fully managed " +
+                        "by BlockBall and available for joining game " + p.displayName + ".")
+                return
             }
         }
     }

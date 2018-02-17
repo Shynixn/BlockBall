@@ -36,14 +36,22 @@ import org.bukkit.scoreboard.Scoreboard
  */
 class PlayerStorage(
         /** Player of the storage. */
-        val player: Player,
-        /** Team of the player. */
-                    override val team: Team) : InGameStats {
+        val player: Player) : InGameStats {
+
+    private var level: Int = 0
+    private var exp: Float = 0.0F
+    private var maxHealth: Double = 0.0
+    private var health: Double = 0.0
+    private var hunger: Int = 0
+    private var inventoryContents: Array<ItemStack>? = null
     private var armorContents: Array<ItemStack>? = null
     private var flying: Boolean = false
     private var allowFlying: Boolean = false
     private var walkingSpeed: Float = 0.toFloat()
     private var scoreboard: Scoreboard? = null
+
+    /** Team of the player. */
+    override var team: Team = Team.RED
     private var gameType: GameType = GameType.HUBGAME;
 
     /**
@@ -57,12 +65,36 @@ class PlayerStorage(
             this.allowFlying = player.allowFlight
             this.walkingSpeed = player.walkSpeed
             this.scoreboard = player.scoreboard
+        } else if (gameType == GameType.HUBGAME) {
+            this.level = player.level
+            this.exp = player.exp
+            this.maxHealth = player.maxHealth
+            this.health = player.health
+            this.hunger = player.foodLevel
+            this.inventoryContents = player.inventory?.contents?.clone()
+            this.armorContents = player.inventory?.armorContents?.clone()
+            this.flying = player.isFlying
+            this.allowFlying = player.allowFlight
+            this.walkingSpeed = player.walkSpeed
+            this.scoreboard = player.scoreboard
         }
     }
 
     /** Resets the players state before joining. */
     override fun resetState() {
         if (gameType == GameType.HUBGAME) {
+            player.inventory.armorContents = this.armorContents
+            player.allowFlight = this.allowFlying
+            player.isFlying = this.flying
+            player.walkSpeed = this.walkingSpeed
+            player.scoreboard = this.scoreboard
+        } else if (gameType == GameType.MINIGAME) {
+            player.level = this.level
+            player.exp = this.exp
+            player.maxHealth = maxHealth
+            player.health = health
+            player.foodLevel = hunger
+            player.inventory.contents = this.inventoryContents
             player.inventory.armorContents = this.armorContents
             player.allowFlight = this.allowFlying
             player.isFlying = this.flying

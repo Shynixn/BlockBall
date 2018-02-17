@@ -1,11 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
-import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
+import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.entity.InGameStats
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
+import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
@@ -15,6 +15,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleHo
 import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Sign
@@ -63,6 +64,7 @@ abstract class LowLevelGame(
     /** List of players in the blueTeam. */
     override val blueTeam: MutableList<Player> = ArrayList()
 
+    protected var plugin : Plugin= JavaPlugin.getPlugin(BlockBallPlugin::class.java)
     protected var redGoals = 0
     protected var blueGoals = 0
     var doubleJumpCooldownPlayers: MutableMap<Player, Int> = HashMap()
@@ -95,7 +97,9 @@ abstract class LowLevelGame(
                 close()
             }
         }
+        this.onTick()
         if (this.haveTwentyTicksPassed()) {
+            this.onTwentyTicks()
             this.kickUnwantedEntitiesOutOfForcefield()
             this.onUpdateSigns()
             this.updateScoreboard()
@@ -106,8 +110,26 @@ abstract class LowLevelGame(
         }
     }
 
+    /**
+     * Thread save method to listen on the tick cycle of the game.
+     */
+    protected open fun onTick(){}
+
+    /**
+     * Thread save method to listen on the second tick cycle of the game.
+     */
+    protected open fun onTwentyTicks(){}
+
     /** Leave the game. */
     override fun leave(player: Player) {
+        val stats = this.ingameStats[player];
+        if (stats!!.team == Team.RED) {
+            this.redTeam.remove(player)
+            player.sendMessage(Config.prefix + arena.meta.redTeamMeta.leaveMessage)
+        } else if (stats.team == Team.BLUE) {
+            this.blueTeam.remove(player)
+            player.sendMessage(Config.prefix + arena.meta.blueTeamMeta.leaveMessage)
+        }
         if (bossbar != null) {
             bossbar!!.removePlayer(player)
         }

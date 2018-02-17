@@ -46,7 +46,7 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
     override fun onScore(teamMeta: TeamMeta<Location, ItemStack>) {
         val scoreMessageTitle = teamMeta.scoreMessageTitle
         val scoreMessageSubTitle = teamMeta.scoreMessageSubTitle
-        this.getPlayers().forEach{ p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this)}
+        this.getPlayers().forEach { p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this) }
     }
 
     /**
@@ -55,7 +55,7 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
     override fun onWin(teamMeta: TeamMeta<Location, ItemStack>) {
         val winMessageTitle = teamMeta.winMessageTitle
         val winMessageSubTitle = teamMeta.winMessageSubTitle
-        this.getPlayers().forEach{ p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle, this)}
+        this.getPlayers().forEach { p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle, this) }
     }
 
     /** Join the game. */
@@ -75,54 +75,15 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
 
     /** Leave the game. */
     override fun leave(player: Player) {
-        super.leave(player);
-        if (!this.ingameStats.containsKey(player))
-            return
+        super.leave(player)
         val stats = ingameStats[player] ?: return
-        if (stats.team == Team.RED) {
-            player.sendMessage(Config.prefix + arena.meta.redTeamMeta.leaveMessage)
-            this.redTeam.remove(player)
-        } else if (stats.team == Team.BLUE) {
-            player.sendMessage(Config.prefix + arena.meta.blueTeamMeta.leaveMessage)
-            this.blueTeam.remove(player)
-        }
         ingameStats.remove(player)
         stats.resetState()
-
-        if (arena.meta.lobbyMeta.leaveSpawnpoint != null) {
-            player.teleport(arena.meta.lobbyMeta.leaveSpawnpoint?.toBukkitLocation())
-        }
-    }
-
-    override fun onUpdateSigns() {
-        for (i in this.arena.meta.redTeamMeta.signs.indices) {
-            val position = this.arena.meta.redTeamMeta.signs[i]
-            if (!replaceTextOnSign(position, arena.meta.redTeamMeta.signLines.toTypedArray(), arena.meta.redTeamMeta)) {
-                this.arena.meta.redTeamMeta.signs.removeAt(i)
-            }
-        }
-        for (i in this.arena.meta.blueTeamMeta.signs.indices) {
-            val position = this.arena.meta.blueTeamMeta.signs[i]
-            if (!replaceTextOnSign(position, arena.meta.blueTeamMeta.signLines.toTypedArray(), arena.meta.blueTeamMeta)) {
-                this.arena.meta.blueTeamMeta.signs.removeAt(i)
-            }
-        }
-        for (i in this.arena.meta.lobbyMeta.joinSigns.indices) {
-            val position = this.arena.meta.lobbyMeta.joinSigns[i]
-            if (!replaceTextOnSign(position, arena.meta.lobbyMeta.joinSignLines, null)) {
-                this.arena.meta.lobbyMeta.joinSigns.removeAt(i)
-            }
-        }
-        for (i in this.arena.meta.lobbyMeta.leaveSigns.indices) {
-            val position = this.arena.meta.lobbyMeta.leaveSigns[i]
-            if (!replaceTextOnSign(position, arena.meta.lobbyMeta.leaveSignLines, null)) {
-                this.arena.meta.lobbyMeta.leaveSigns.removeAt(i)
-            }
-        }
     }
 
     private fun prepareStatsForPlayer(player: Player, team: Team, teamMeta: TeamMeta<Location, ItemStack>) {
-        val stats = PlayerStorage(player, team)
+        val stats = PlayerStorage(player)
+        stats.team = team
         stats.storeForType(GameType.HUBGAME)
         this.ingameStats[player] = stats
 
