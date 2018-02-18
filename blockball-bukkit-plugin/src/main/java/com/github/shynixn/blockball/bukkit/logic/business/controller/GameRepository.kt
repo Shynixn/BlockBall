@@ -3,13 +3,15 @@ package com.github.shynixn.blockball.bukkit.logic.business.controller
 import com.github.shynixn.blockball.api.bukkit.business.controller.BukkitGameController
 import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.JoinCommandExecutor
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.LeaveCommandExecutor
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.NewArenaCommandExecutor
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.ReloadCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.BungeeCordMinigame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.HubGame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.Minigame
-import com.github.shynixn.blockball.bukkit.logic.business.listener.DoubleJumpListener
-import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
-import com.github.shynixn.blockball.bukkit.logic.business.listener.HubGameListener
+import com.github.shynixn.blockball.bukkit.logic.business.listener.*
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -50,13 +52,24 @@ import java.util.logging.Level
 @Singleton
 class GameRepository : BukkitGameController, Runnable {
 
-
     /** ArenaController. */
     @Inject
     override var arenaController: ArenaRepository? = null
 
     @Inject
     private var plugin: Plugin? = null
+
+    @Inject
+    private var arenaCommandexecutor: NewArenaCommandExecutor? = null
+
+    @Inject
+    private var reloadCommandExecutor : ReloadCommandExecutor? = null
+
+    @Inject
+    private var joinCommandExecutor : JoinCommandExecutor? = null
+
+    @Inject
+    private var leaveCommandExecutor : LeaveCommandExecutor? = null
 
     @Inject
     private var gameListener: GameListener? = null
@@ -66,6 +79,15 @@ class GameRepository : BukkitGameController, Runnable {
 
     @Inject
     private var hubGameListener: HubGameListener? = null
+
+    @Inject
+    private var statsListener: StatsListener? = null
+
+    @Inject
+    private var minigameListener : MinigameListener? = null
+
+    @Inject
+    private var bungeeCordGameListener : BungeeCordGameListener? = null
 
     /** Games. */
     val games: ArrayList<BukkitGame> = ArrayList()

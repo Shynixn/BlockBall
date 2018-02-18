@@ -43,8 +43,6 @@ messages:
   state-sign-enabled: '&2&lENABLED'
   state-sign-disabled: '&4&lDISABLED'
   state-sign-running: '&1&lRUNNING'
-  lobby-full: '&cLobby is full. You cannot join!'
-  no-perms: '&cYou do not have permissions.'
 
 ############################
 
@@ -66,33 +64,14 @@ sql:
 
 ############################
 
-# BungeeCord settings
+# Game settings
 
-# bungeecord-linking: Enable this to allow linking between other servers with BlockBall installed and linking enabled.
-# bungeecord-low-resources: Enable this to only use the BlockBall signs to join on different servers.
-#                           BlockBall will not be possible to play on this server if you enable this.
-# bungeecord-mods: Mods which will be shown in the client server list and be used for linking players.
-#                  All mods on all servers which have set linking to enabled HAVE TO set the exact same mods!!!
+# allow-server-linking: Enable this to allow linking via BungeeCord between other servers with BlockBall installed.
 
 ############################
 
-bungeecord:
- linking: false
- low-resources: false
- mods:
-   restarting-server: '&cRestarting...'
-   waiting-for-players: '&aWaiting for players...'
-   during-match: '&9Ingame'
- signs:
-   states:
-     restarting-server: '&c&lRestarting'
-     waiting-for-players: '&a&lJoin'
-     during-match: '&9&lIngame'
-   lines:
-     - '&l[BlockBall]'
-     - '<server>'
-     - '<state>'
-     - '<players>/<maxplayers>'
+game:
+  allow-server-linking: false
 
 ############################
 

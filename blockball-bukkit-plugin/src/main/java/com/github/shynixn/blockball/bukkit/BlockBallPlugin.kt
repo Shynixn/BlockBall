@@ -2,30 +2,20 @@ package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.ball.bukkit.core.logic.business.CoreManager
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
-import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController
-import com.github.shynixn.blockball.api.business.controller.GameController
-import com.github.shynixn.blockball.api.persistence.controller.LinkSignController
 import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper
-import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager
-import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.JoinCommandExecutor
-import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.LeaveCommandExecutor
-import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.NewArenaCommandExecutor
-import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.ReloadCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ReflectionUtils
 import com.github.shynixn.blockball.bukkit.logic.business.helper.UpdateUtils
-import com.github.shynixn.blockball.bukkit.logic.business.listener.StatsListener
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.google.inject.Guice
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.IOException
-import java.lang.reflect.InvocationTargetException
 import java.util.logging.Level
 
 /**
@@ -57,102 +47,78 @@ import java.util.logging.Level
  */
 class BlockBallPlugin : JavaPlugin() {
 
+    //region Static Fields
     companion object {
         /** Final Prefix of BlockBall in the console */
         val PREFIX_CONSOLE: String = ChatColor.BLUE.toString() + "[BlockBall] "
-        private val PLUGIN_NAME = "BlockBall"
-        private val SPIGOT_RESOURCEID: Long = 15320
+        private const val PLUGIN_NAME = "BlockBall"
+        private const val SPIGOT_RESOURCEID: Long = 15320
     }
+    //endregion
 
-    private var isnEnabled: Boolean = true
-    private var success: Boolean = false
+    //region Private Fields
+    private var isStartedUp: Boolean = true
+    private var coreManager: CoreManager? = null
+    //endregion
 
-    @Inject
-    private var blockBallBungeeCordManager: BlockBallBungeeCordManager? = null
-
+    //region Private Dependency Fields
     @Inject
     private var bungeeCordController: BungeeCordPingManager? = null
 
     @Inject
     private var gameController: GameRepository? = null
+    //endregion
 
-    @Inject
-    private var arenaCommandexecutor: NewArenaCommandExecutor? = null
-
-    @Inject
-    private var reloadCommandExecutor : ReloadCommandExecutor? = null
-
-    @Inject
-    private var joinCommandExecutor : JoinCommandExecutor? = null
-
-    @Inject
-    private var leaveCommandExecutor : LeaveCommandExecutor? = null
-
-    @Inject
-    private var statsListener: StatsListener? = null
-
-    private var coreManager : CoreManager? = null
-
+    //region Public Methods
+    /**
+     * Enables the plugin BlockBall.
+     */
     override fun onEnable() {
         this.saveDefaultConfig()
         Guice.createInjector(GoogleGuiceBinder(this))
         if (!VersionSupport.isServerVersionSupported(PLUGIN_NAME, PREFIX_CONSOLE)) {
-            this.isnEnabled = false
+            this.isStartedUp = false
             Bukkit.getPluginManager().disablePlugin(this)
         } else {
             Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
             Config.reload()
-           // if (Config.isMetricsEnabled) {
-                //  new Metrics(this);
-         //   }
+            /*if (Config.metrics!!) {
+                Metrics(this) //TODO: Enable this for shipping
+            }*/
             checkForUpdates()
-            startBungeecordLinking()
             startPlugin()
-            coreManager = CoreManager(this, "storage.yml", "ball.yml")
-        }
-    }
-
-    override fun onDisable() {
-        super.onDisable()
-        gameController!!.close();
-    }
-
-    private fun startPlugin() {
-        success = false
-        if (true) {
-            try {
-                RegisterHelper.PREFIX = BlockBallPlugin.PREFIX_CONSOLE
-                RegisterHelper.register("Vault")
-                gameController!!.reload()
-                ReflectionUtils.invokeMethodByKotlinClass<Void>(BlockBallApi::class.java, "initializeBlockBall", arrayOf(Any::class.java, Any::class.java), arrayOf(this.gameController,bungeeCordController))
-                success = true
-            } catch (e: Exception) {
-                logger.log(Level.WARNING, "Failed to enable plugin.", e)
-            }
-        } else {
-            success = true
-        }
-        if (success) {
             Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")
         }
     }
 
-    private fun startBungeecordLinking() {
-        if (false) {
-            Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + "Starting BungeeCord linking....")
-            try {
-                ReflectionUtils.invokeMethodByClass<Any>(BlockBallApi::class.java, "initializeBungeeCord"
-                        , arrayOf(Any::class.java, Any::class.java)
-                        , arrayOf(this.blockBallBungeeCordManager!!.bungeeCordSignController, this.blockBallBungeeCordManager!!.bungeeCordConnectController))
-                Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + "Server [" + Bukkit.getServer().serverName + " is now available via BlockBall-Bungeecord.")
-            } catch (e: NoSuchMethodException) {
-                logger.log(Level.WARNING, "Failed to enable plugin.", e)
-            } catch (e: InvocationTargetException) {
-                logger.log(Level.WARNING, "Failed to enable plugin.", e)
-            } catch (e: IllegalAccessException) {
-                logger.log(Level.WARNING, "Failed to enable plugin.", e)
-            }
+    /**
+     * Disables the plugin BlockBall.
+     */
+    override fun onDisable() {
+        super.onDisable()
+        gameController!!.close()
+    }
+    //endregion
 
+    //region Private Methods
+    /**
+     * Starts the game mode.
+     */
+    private fun startPlugin() {
+        if (Config.allowPlayingGames!!) {
+            try {
+                RegisterHelper.PREFIX = BlockBallPlugin.PREFIX_CONSOLE
+                RegisterHelper.register("Vault")
+                RegisterHelper.register("WorldEdit")
+                RegisterHelper.register("BossBarAPI")
+                RegisterHelper.register("PlaceholderAPI")
+                gameController!!.reload()
+                ReflectionUtils.invokeMethodByKotlinClass<Void>(BlockBallApi::class.java, "initializeBlockBall", arrayOf(Any::class.java, Any::class.java), arrayOf(this.gameController, bungeeCordController))
+                coreManager = CoreManager(this, "storage.yml", "ball.yml")
+                logger.log(Level.INFO, "Enabled BlockBall games.")
+            } catch (e: Exception) {
+                logger.log(Level.WARNING, "Failed to enable BlockBall games.", e)
+            }
         }
     }
 
@@ -168,4 +134,5 @@ class BlockBallPlugin : JavaPlugin() {
             }
         }
     }
+    //endregion
 }

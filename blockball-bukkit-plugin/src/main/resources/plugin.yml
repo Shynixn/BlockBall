@@ -3,11 +3,16 @@ version: 2018.2.1-SNAPSHOT
 author: Shynixn
 website: https://www.spigotmc.org/members/shynixn.63455/
 main: com.github.shynixn.blockball.bukkit.BlockBallPlugin
-softdepend: [WorldGuard, BossBarAPI, PlaceholderAPI, Vault]
+softdepend: [WorldEdit, BossBarAPI, PlaceholderAPI, Vault]
 commands:
    blockball:
       description: Opens the arena creation UI.
       usage: /<command>
+      permission: blockball.command.admin
+      permission-message: You don't have permission.
+   blockballbungeecord:
+      description: Adds a new bungeecord sign for connecting to other BlockBall servers.
+      usage: /<command> <server-name>
       permission: blockball.command.admin
       permission-message: You don't have permission.
    blockballreload:

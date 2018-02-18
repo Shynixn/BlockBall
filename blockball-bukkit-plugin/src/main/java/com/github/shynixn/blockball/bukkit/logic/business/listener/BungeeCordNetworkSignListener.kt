@@ -1,7 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.persistence.entity.bungeecord.LinkSign
-import com.github.shynixn.blockball.bukkit.logic.business.BlockBallBungeeCordManager
+import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.NetworkSignRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -40,7 +41,12 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BungeeCordNetworkSignListener @Inject constructor(plugin: Plugin, private val manager : BlockBallBungeeCordManager) : SimpleListener(plugin) {
+class BungeeCordNetworkSignListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
+    @Inject
+    private val manager: BungeeCordPingManager? = null
+
+    @Inject
+    private val signController: NetworkSignRepository? = null
 
     /**
      * Handles click on signs to create new server signs or to connect players to the server
@@ -54,30 +60,27 @@ class BungeeCordNetworkSignListener @Inject constructor(plugin: Plugin, private 
             return
         if (event.clickedBlock.state !is Sign)
             return
-        if (this.manager.signPlacementCache.containsKey(event.player)) {
-            val server = this.manager.signPlacementCache[event.player]
-            this.manager.signPlacementCache.remove(event.player)
-            val signController = this.manager.bungeeCordSignController
-            val sign = signController.create(server!!, event.clickedBlock.location)
+        if (this.manager!!.signCache.containsKey(event.player)) {
+            val server = this.manager.signCache[event.player]
+            this.manager.signCache.remove(event.player)
+            val sign = signController!!.create(server!!, event.clickedBlock.location)
             signController.store(sign)
-            this.manager.bungeeCordConnectController.pingServers()
+            this.manager.pingServers()
         } else {
             val sign = event.clickedBlock.state as Sign
             try {
                 val signInfo = this.getBungeeCordSignFromLocation(sign.location);
                 if (signInfo != null) {
-                    this.manager.bungeeCordConnectController.connectToServer(event.player, signInfo.server!!)
+                    this.manager.connectToServer(event.player, signInfo.server!!)
                 }
             } catch (ex: Exception) {
                 Bukkit.getLogger().log(Level.WARNING, "Cannot connect player to server.", ex)
             }
-
         }
     }
 
     private fun getBungeeCordSignFromLocation(signLocation: Location): LinkSign? {
-        for (sign1 in this.manager.bungeeCordSignController.getAll()) {
-            val sign = sign1 as LinkSign
+        for (sign in signController!!.getAll()) {
             val l = (sign.position as LocationBuilder).toLocation()
             if (signLocation.blockX == l.blockX) {
                 if (signLocation.blockY == l.blockY) {

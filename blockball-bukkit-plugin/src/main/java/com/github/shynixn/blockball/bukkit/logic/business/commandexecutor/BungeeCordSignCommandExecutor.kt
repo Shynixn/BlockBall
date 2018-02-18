@@ -1,7 +1,9 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.configuration
+package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin
-import org.bukkit.ChatColor
+import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
+import com.google.inject.Inject
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -32,31 +34,20 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-open internal class SimpleConfig {
-
-    /** [plugin] is an instance of the Ball plugin. */
-    var plugin: Plugin? = null
-        protected set
+class BungeeCordSignCommandExecutor @Inject constructor(plugin: Plugin, private val bungeeCordPingManager: BungeeCordPingManager) : SimpleCommandExecutor.Registered("blockballreload", plugin as JavaPlugin) {
 
     /**
-     * Reloads the plugin configuration.
-     */
-    open fun reload() {
-        this.plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
-        this.plugin?.reloadConfig()
-    }
-
-    /**
-     * Returns configuration data.
+     * Can be overwritten to listen to player executed commands.
      *
-     * @param path path
-     * @return data
+     * @param player player
+     * @param args   args
      */
-    fun <T> getData(path: String): T? {
-        var data = this.plugin?.config?.get(path)
-        if (data != null && data is String) {
-            data = ChatColor.translateAlternateColorCodes('&', data)
+    override fun onPlayerExecuteCommand(player: Player, args: Array<out String>) {
+        if (args.size == 1) {
+            this.bungeeCordPingManager.signCache[player] = args[0]
+            player.sendMessage(Config.prefix + "Rightclick on a sign to connect it to the server [" + args[0] + "].")
+        } else {
+            player.sendMessage(Config.prefix + "/blockballbungeecord <server-name>")
         }
-        return data as T
     }
 }

@@ -68,7 +68,7 @@ public class SimpleListener implements Listener {
     /**
      * Unregisters the lister from spigot
      */
-    final void unregister() {
+    public final void unregister() {
         HandlerList.unregisterAll(this);
     }
 }

@@ -1,9 +1,16 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.configuration
 
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
-import org.bukkit.ChatColor
-import org.bukkit.plugin.Plugin
+import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.bungeecord.BungeeCordConfiguration
+import com.google.inject.Inject
+import com.google.inject.Singleton
+import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
+import java.io.IOException
+import java.util.logging.Level
+import java.util.logging.Logger
 
 /**
  * Created by Shynixn 2018.
@@ -32,31 +39,31 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-open internal class SimpleConfig {
+@Singleton
+internal object BungeeCordConfig : SimpleConfig() {
 
-    /** [plugin] is an instance of the Ball plugin. */
-    var plugin: Plugin? = null
-        protected set
+    var bungeeCordConfiguration: BungeeCordConfiguration? = null
+        private set
 
     /**
      * Reloads the plugin configuration.
      */
-    open fun reload() {
+    override fun reload() {
         this.plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
-        this.plugin?.reloadConfig()
-    }
-
-    /**
-     * Returns configuration data.
-     *
-     * @param path path
-     * @return data
-     */
-    fun <T> getData(path: String): T? {
-        var data = this.plugin?.config?.get(path)
-        if (data != null && data is String) {
-            data = ChatColor.translateAlternateColorCodes('&', data)
+        try {
+            val file = File(plugin!!.dataFolder, "bungeecord.yml")
+            if (!file.exists()) {
+                file.createNewFile()
+                val configuration = YamlConfiguration()
+                configuration.set("bungeecord", BungeeCordConfiguration().serialize())
+                configuration.save(file)
+            }
+            val configuration = YamlConfiguration()
+            configuration.load(file)
+            this.bungeeCordConfiguration = YamlSerializer.deserializeObject(BungeeCordConfiguration::class.java, configuration.get("bungeecord"))
+        } catch (e: IOException) {
+            plugin!!.logger.log(Level.WARNING, "Failed to load bungeecord.yml.", e)
         }
-        return data as T
     }
 }
+

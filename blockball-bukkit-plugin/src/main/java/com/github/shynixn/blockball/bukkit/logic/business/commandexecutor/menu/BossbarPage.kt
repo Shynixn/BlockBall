@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
+import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
@@ -88,7 +89,7 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
         val bossbar = arena.meta.bossBarMeta
         if (bossbar.flags.isEmpty())
             bossbar.flags.add(BossBarMeta.Flag.NONE)
-        return ChatBuilder()
+        val builder = ChatBuilder()
                 .component("- Message: " + bossbar.message).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BOSSBAR_MESSAGE.command)
@@ -103,21 +104,24 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BOSSBAR_PERCENT.command)
                 .setHoverText("Edit the amount of percentage the bossbar is filled.")
-                .builder().nextLine()
-                .component("- Color: " + bossbar.color).builder()
-                .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARCOLORS.command)
-                .setHoverText("Opens the selectionbox for colors.")
-                .builder().nextLine()
-                .component("- Style: " + bossbar.style).builder()
-                .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARSTYLES.command)
-                .setHoverText("Opens the selectionbox for styles.")
-                .builder().nextLine()
-                .component("- Flags: " + bossbar.flags[0]).builder()
-                .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARFLAGS.command)
-                .setHoverText("Opens the selectionbox for flags.")
-                .builder().nextLine()
+                .builder()
+        if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
+            builder.component("- Color: " + bossbar.color).builder()
+                    .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARCOLORS.command)
+                    .setHoverText("Opens the selectionbox for colors.")
+                    .builder().nextLine()
+                    .component("- Style: " + bossbar.style).builder()
+                    .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARSTYLES.command)
+                    .setHoverText("Opens the selectionbox for styles.")
+                    .builder().nextLine()
+                    .component("- Flags: " + bossbar.flags[0]).builder()
+                    .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARFLAGS.command)
+                    .setHoverText("Opens the selectionbox for flags.")
+                    .builder().nextLine()
+        }
+        return builder
     }
 }

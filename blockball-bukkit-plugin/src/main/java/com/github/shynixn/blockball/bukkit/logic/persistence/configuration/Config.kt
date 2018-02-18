@@ -33,33 +33,17 @@ import java.util.logging.Logger
  */
 @Singleton
 internal object Config : SimpleConfig() {
-
     @Inject
     var Logger: Logger? = null
 
-    val guiTitle: String?
+    val metrics: Boolean?
         get() {
-            return this.getData<String>("messages.gui-title")
+            return this.getData<Boolean>("metrics")
         }
 
     val prefix: String?
         get() {
             return this.getData<String>("messages.prefix")
-        }
-
-    val permissionYes: String?
-        get() {
-            return this.getData<String>("messages.perms-ico-yes")
-        }
-
-    val permissionNo: String?
-        get() {
-            return this.getData<String>("messages.perms-ico-no")
-        }
-
-    val metrics: Boolean?
-        get() {
-            return this.getData<Boolean>("metrics")
         }
 
     val stateSignEnabled: String?
@@ -77,15 +61,24 @@ internal object Config : SimpleConfig() {
             return this.getData<String>("messages.state-sign-running")
         }
 
-    val statsScoreboardTitle: String?
+    val allowServerLinking: Boolean?
         get() {
-            return this.getData<String>("stats-scoreboard.title")
+            return this.getData<Boolean>("game.allow-server-linking")
         }
 
+    val allowPlayingGames: Boolean?
+        get() {
+            return this.getData<Boolean>("game.allow-playing-games")
+        }
 
     val statsScoreboardEnabled: Boolean?
         get() {
             return this.getData<Boolean>("stats-scoreboard.enabled")
+        }
+
+    val statsScoreboardTitle: String?
+        get() {
+            return this.getData<String>("stats-scoreboard.title")
         }
 
     val statsScoreboardLines: List<String>?

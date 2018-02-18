@@ -30,7 +30,7 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BungeeCordConfiguration : PersistenceObject(){
+class BungeeCordConfiguration : PersistenceObject() {
     @YamlSerializer.YamlSerialize("motd-restarting")
     var restartingMotd = "&cRestarting..."
     @YamlSerializer.YamlSerialize("motd-waiting-players")
@@ -43,4 +43,6 @@ class BungeeCordConfiguration : PersistenceObject(){
     var waitingForPlayersSignState = "&c&lRestarting"
     @YamlSerializer.YamlSerialize("motd-ingame")
     var duringMatchSignState = "&9&lIngame"
+    @YamlSerializer.YamlSerialize("sign-lines")
+    var singLines = arrayOf("BlockBall", "<server>", "<state>", "<players>/<maxplayers>")
 }

@@ -56,20 +56,7 @@ class BungeeCordMinigame(arena: BukkitArena) : Minigame(arena) {
     }
 
     private fun saveBungeeCordConfiguration() {
-        try {
-            val file = File(plugin.dataFolder, "bungeecord.yml")
-            if (!file.exists()) {
-                file.createNewFile()
-                val configuration = YamlConfiguration()
-                configuration.set("bungeecord", BungeeCordConfiguration().serialize())
-                configuration.save(file)
-            }
-            val configuration = YamlConfiguration()
-            configuration.load(file)
-            this.bungeeCordConfiguration = YamlSerializer.deserializeObject(BungeeCordConfiguration::class.java, configuration.get("bungeecord"))
-        } catch (e: IOException) {
-            plugin.logger.log(Level.WARNING, "Failed to load bungeecord.yml.", e)
-        }
+
     }
 
     override fun close() {

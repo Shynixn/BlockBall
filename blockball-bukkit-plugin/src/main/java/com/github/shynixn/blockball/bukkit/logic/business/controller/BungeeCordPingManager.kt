@@ -2,12 +2,19 @@ package com.github.shynixn.blockball.bukkit.logic.business.controller
 
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController
 import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus
+import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState
+import com.github.shynixn.blockball.api.persistence.controller.LinkSignController
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BungeeCordSignCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.entity.bungeecord.BungeeCordServerStats
+import com.github.shynixn.blockball.bukkit.logic.business.listener.BungeeCordNetworkSignListener
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.NetworkSignRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import com.google.common.io.ByteStreams
 import com.google.inject.Inject
+import com.google.inject.Singleton
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -45,23 +52,40 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BungeeCordPingManager : BungeeCordConnectionController<Player>, Runnable, PluginMessageListener {
+@Singleton
+class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: NetworkSignRepository, networkListener: BungeeCordNetworkSignListener?) : BungeeCordConnectionController<Player>, Runnable, PluginMessageListener {
+
+    //region Private Fields
+    private var signController: LinkSignController<Location>? = null
+    private var plugin: Plugin? = null
+    private var task: BukkitTask? = null
 
     @Inject
-    private var signController: NetworkSignRepository? = null
+    private val bungeeCordSignCommandExecutor: BungeeCordSignCommandExecutor? = null
+    //endregion
 
-    private val plugin: Plugin
-    private val task: BukkitTask
+    //region Public Properties
+    var signCache: MutableMap<Player, String> = HashMap()
+    //endregion
 
-    @Inject
-    constructor(plugin: Plugin) {
-        this.plugin = plugin
-        this.task = plugin.server.scheduler.runTaskTimerAsynchronously(plugin, this, 0L, 10L)
-        plugin.server.messenger.registerOutgoingPluginChannel(plugin, "BungeeCord")
-        plugin.server.messenger.registerIncomingPluginChannel(plugin, "BungeeCord", this)
+    //region Constructor
+    init {
+        if (plugin.config.isBoolean("game.allow-server-linking")) {
+            this.plugin = plugin
+            this.signController = signController
+            signController.reload()
+            BungeeCordConfig.reload()
+            this.task = plugin.server.scheduler.runTaskTimerAsynchronously(plugin, this, 0L, 10L)
+            plugin.server.messenger.registerOutgoingPluginChannel(plugin, "BungeeCord")
+            plugin.server.messenger.registerIncomingPluginChannel(plugin, "BungeeCord", this)
+            plugin.logger.log(Level.INFO, "Enabled BungeeCord linking between BlockBall servers.")
+        } else {
+            networkListener!!.unregister()
+        }
     }
+    //endregion
 
-
+    //region Public Methods
     /** Connects the given player to the given server.**/
     override fun connectToServer(player: Player, serverName: String) {
         val out = ByteStreams.newDataOutput()
@@ -81,7 +105,10 @@ class BungeeCordPingManager : BungeeCordConnectionController<Player>, Runnable, 
         }
     }
 
-    override fun onPluginMessageReceived(p0: String?, p1: Player?, p2: ByteArray?) {
+    /**
+     * Gets called from the BungeeCord Spigot framework to manage connections.
+     */
+    override fun onPluginMessageReceived(p0: String?, p1: Player?, p2: ByteArray) {
         if (p0 != "BungeeCord") {
             return
         }
@@ -91,12 +118,31 @@ class BungeeCordPingManager : BungeeCordConnectionController<Player>, Runnable, 
             val serverName = `in`.readUTF()
             val ip = `in`.readUTF()
             val port = `in`.readShort()
-            this.plugin.server.scheduler.runTaskAsynchronously(this.plugin) {
+            this.plugin!!.server.scheduler.runTaskAsynchronously(this.plugin) {
                 val data = this.receiveResultFromServer(serverName, ip, port.toInt())
                 this.parseData(serverName, data)
             }
         }
     }
+
+    /**
+     * When an object implementing interface `Runnable` is used
+     * to create a thread, starting the thread causes the object's
+     * `run` method to be called in that separately executing
+     * thread.
+     *
+     *
+     * The general contract of the method `run` is that it may
+     * take any action whatsoever.
+     *
+     * @see java.lang.Thread.run
+     */
+    override fun run() {
+        this.pingServers()
+    }
+    //endregion
+
+    //region Private Methods
 
     private fun receiveResultFromServer(serverName: String, hostname: String, port: Int): String? {
         var data: String? = null
@@ -119,7 +165,7 @@ class BungeeCordPingManager : BungeeCordConnectionController<Player>, Runnable, 
                 }
             }
         } catch (e: Exception) {
-            plugin.logger.log(Level.WARNING, "Failed to reach server " + serverName + " (" + hostname + ':'.toString() + port + ").")
+            plugin!!.logger.log(Level.WARNING, "Failed to reach server " + serverName + " (" + hostname + ':'.toString() + port + ").")
         }
         return data
     }
@@ -129,9 +175,9 @@ class BungeeCordPingManager : BungeeCordConnectionController<Player>, Runnable, 
             if (data == null)
                 return
             val serverInfo = BungeeCordServerStats(serverName, data)
-            this.plugin.server.scheduler.runTask(this.plugin) { this.updateSigns(serverInfo) }
+            this.plugin!!.server.scheduler.runTask(this.plugin) { this.updateSigns(serverInfo) }
         } catch (e: Exception) {
-            Bukkit.getLogger().log(Level.WARNING, "Cannot parse result from server.", e)
+            plugin!!.logger.log(Level.WARNING, "Cannot parse result from server.", e)
         }
 
     }
@@ -142,13 +188,12 @@ class BungeeCordPingManager : BungeeCordConnectionController<Player>, Runnable, 
                 val location = (signInfo.position as LocationBuilder).toLocation()
                 if (location.block.state is Sign) {
                     val sign = location.block.state as Sign
-                    /*     sign.setLine(0, this.replaceSign(BungeeCord.SIGN_LINE_1, status));
-                    sign.setLine(1, this.replaceSign(BungeeCord.SIGN_LINE_2, status));
-                    sign.setLine(2, this.replaceSign(BungeeCord.SIGN_LINE_3, status));
-                    sign.setLine(3, this.replaceSign(BungeeCord.SIGN_LINE_4, status));*/
+                    for (i in 0..4) {
+                        sign.setLine(i, replaceSign(BungeeCordConfig.bungeeCordConfiguration!!.singLines[i], status))
+                    }
                     sign.update()
                 } else {
-                //   this.signController.remove(signInfo)
+                    this.signController!!.remove(signInfo)
                 }
             }
         }
@@ -156,33 +201,16 @@ class BungeeCordPingManager : BungeeCordConnectionController<Player>, Runnable, 
 
 
     private fun replaceSign(line: String, info: BungeeCordServerStatus): String {
-/*    if (info.getStatus() == BungeeCordServerState.INGAME)
-            customLine = customLine.replace("<state>", BungeeCord.SIGN_INGAME);
-        else if (info.getStatus() == BungeeCordServerState.RESTARTING)
-            customLine = customLine.replace("<state>", BungeeCord.SIGN_RESTARTING);
-        else if (info.getStatus() == BungeeCordServerState.WAITING_FOR_PLAYERS)
-            customLine = customLine.replace("<state>", BungeeCord.SIGN_WAITING_FOR_PLAYERS);
-        else if (info.getStatus() == BungeeCordServerState.UNKNOWN)
-            customLine = customLine.replace("<state>", "UNKNOWN");*/
-        return line.replace("<maxplayers>", (info.playerMaxAmount * 2).toString())
+        var customLine = line
+        customLine = when {
+            info.status == BungeeCordServerState.INGAME -> customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.duringMatchSignState)
+            info.status == BungeeCordServerState.RESTARTING -> customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.restartingSignState)
+            info.status == BungeeCordServerState.WAITING_FOR_PLAYERS -> customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersSignState)
+            else -> customLine.replace("<state>", "---")
+        }
+        return customLine.replace("<maxplayers>", (info.playerMaxAmount * 2).toString())
                 .replace("<players>", info.playerAmount.toString())
                 .replace("<server>", info.serverName!!)
-    }
-
-    /**
-     * When an object implementing interface `Runnable` is used
-     * to create a thread, starting the thread causes the object's
-     * `run` method to be called in that separately executing
-     * thread.
-     *
-     *
-     * The general contract of the method `run` is that it may
-     * take any action whatsoever.
-     *
-     * @see java.lang.Thread.run
-     */
-    override fun run() {
-        this.pingServers()
     }
 
     /**
@@ -192,9 +220,12 @@ class BungeeCordPingManager : BungeeCordConnectionController<Player>, Runnable, 
      */
     private fun getFirstPlayer(): Player? {
         for (world in Bukkit.getWorlds()) {
-            if (!world.players.isEmpty())
+            if (!world.players.isEmpty()) {
                 return world.players[0]
+            }
         }
         return null
     }
+
+    //endregion
 }
