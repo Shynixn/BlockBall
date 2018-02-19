@@ -1,15 +1,22 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent
+import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
+import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
 import com.google.inject.Inject
+import com.google.inject.Singleton
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.Plugin
 
@@ -40,9 +47,11 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+@Singleton
 class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
     @Inject
     private var gameController: GameRepository? = null
+    var placementCallBack: MutableMap<Player,CallBack> = HashMap()
 
     /**
      * Gets called when a player leaves the server and the game.
@@ -113,5 +122,40 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
         if (game != null && game is SoccerGame) {
             game.lastInteractedEntity = event.entity
         }
+    }
+
+    /**
+     * Handles clicking and joining on signs.
+     */
+    @EventHandler
+    fun onClickOnPlacedSign(event: PlayerInteractEvent) {
+        if (event.action != Action.RIGHT_CLICK_BLOCK)
+            return
+        if (event.clickedBlock.type != Material.SIGN_POST && event.clickedBlock.type != Material.WALL_SIGN)
+            return
+        val location = event.clickedBlock.location.toPosition()
+        if (placementCallBack.containsKey(event.player)) {
+            placementCallBack[event.player]!!.run(location)
+            placementCallBack.remove(event.player)
+        }
+        gameController!!.getAll().forEach{
+            p ->
+            if(p.arena.meta.lobbyMeta.joinSigns.contains(location)){
+                p.join(event.player, null)
+            }
+            else if(p.arena.meta.lobbyMeta.leaveSigns.contains(location)){
+                p.leave(event.player)
+            }
+            else if(p.arena.meta.redTeamMeta.signs.contains(location)){
+                p.join(event.player, Team.RED)
+            }
+            else if(p.arena.meta.blueTeamMeta.signs.contains(location)){
+                p.join(event.player, Team.BLUE)
+            }
+        }
+    }
+
+    interface CallBack {
+        fun run(position: StorageLocation)
     }
 }

@@ -7,7 +7,7 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.BlockBallCommand.*
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
-import com.github.shynixn.blockball.bukkit.logic.business.listener.SignPlacementListener
+import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
@@ -47,7 +47,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
     }
 
     @Inject
-    private var listener: SignPlacementListener? = null;
+    private var listener: GameListener? = null;
 
     /**
      * Returns the key of the command when this page should be executed.
@@ -69,7 +69,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
         when (command) {
             SIGNS_ADDTEAMRED -> {
                 player.sendMessage(Config.prefix + "Rightclick on a sign.")
-                listener!!.placementCallBack[player] = (object : SignPlacementListener.CallBack {
+                listener!!.placementCallBack[player] = (object : GameListener.CallBack {
                     override fun run(position: StorageLocation) {
                         arena.meta.redTeamMeta.signs.add(position)
                     }
@@ -77,7 +77,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
             }
             SIGNS_ADDTEAMBLUE -> {
                 player.sendMessage(Config.prefix + "Rightclick on a sign.")
-                listener!!.placementCallBack[player] = (object : SignPlacementListener.CallBack {
+                listener!!.placementCallBack[player] = (object : GameListener.CallBack {
                     override fun run(position: StorageLocation) {
                         arena.meta.blueTeamMeta.signs.add(position)
                     }
@@ -85,7 +85,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
             }
             SIGNS_ADDJOINANY -> {
                 player.sendMessage(Config.prefix + "Rightclick on a sign.")
-                listener!!.placementCallBack[player] = (object : SignPlacementListener.CallBack {
+                listener!!.placementCallBack[player] = (object : GameListener.CallBack {
                     override fun run(position: StorageLocation) {
                         arena.meta.lobbyMeta.joinSigns.add(position)
                     }
@@ -93,7 +93,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
             }
             SIGNS_LEAVE -> {
                 player.sendMessage(Config.prefix + "Rightclick on a sign.")
-                listener!!.placementCallBack[player] = (object : SignPlacementListener.CallBack {
+                listener!!.placementCallBack[player] = (object : GameListener.CallBack {
                     override fun run(position: StorageLocation) {
                         arena.meta.lobbyMeta.leaveSigns.add(position)
                     }
