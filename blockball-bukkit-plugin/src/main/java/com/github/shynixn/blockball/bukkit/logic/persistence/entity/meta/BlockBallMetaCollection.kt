@@ -89,11 +89,10 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, M
     override val ballMeta: BallData = BallData("http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d")
     /** Meta data of the blueTeam. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "team-blue")
-    override val blueTeamMeta: TeamProperties = TeamProperties("Team Blue", "&9", "<bluecolor><bluescore> : <redcolor><redscore>", "<bluecolor><player> scored for <blue>", "<bluecolor><blue>", "<blue>&a has won the match")
-
+    override val blueTeamMeta: TeamProperties = TeamProperties("Team Blue", "&9", "<bluecolor><bluescore> : <redcolor><redscore>", "<bluecolor><player> scored for <blue>", "<bluecolor><blue>", "<blue>&a has won the match", "<bluecolor><blue>", "&eMatch ended in a draw.")
     /** Meta data of the redTeam. */
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "team-red")
-    override val redTeamMeta: TeamProperties = TeamProperties("Team Red", "&c", "<redcolor><redscore> : <bluecolor><bluescore>", "<redcolor><player> scored for <red>", "<redcolor><red>", "<red>&a has won the match")
+    override val redTeamMeta: TeamProperties = TeamProperties("Team Red", "&c", "<redcolor><redscore> : <bluecolor><bluescore>", "<redcolor><player> scored for <red>", "<redcolor><red>", "<red>&a has won the match", "<redcolor><red>", "&eMatch ended in a draw.")
 
     @YamlSerializer.YamlSerialize(orderNumber = 9, value = "holograms")
     private val internalHologramMetas: ArrayList<HologramBuilder> = ArrayList()

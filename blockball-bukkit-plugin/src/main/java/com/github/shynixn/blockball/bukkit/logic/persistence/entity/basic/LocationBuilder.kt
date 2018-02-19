@@ -77,6 +77,28 @@ class LocationBuilder() : PersistenceObject(), StorageLocation, ConfigurationSer
     }
 
     /**
+     * Indicates whether some other object is "equal to" this one. Implementations must fulfil the following
+     * requirements:
+     *
+     * * Reflexive: for any non-null reference value x, x.equals(x) should return true.
+     * * Symmetric: for any non-null reference values x and y, x.equals(y) should return true if and only if y.equals(x) returns true.
+     * * Transitive:  for any non-null reference values x, y, and z, if x.equals(y) returns true and y.equals(z) returns true, then x.equals(z) should return true
+     * * Consistent:  for any non-null reference values x and y, multiple invocations of x.equals(y) consistently return true or consistently return false, provided no information used in equals comparisons on the objects is modified.
+     *
+     * Note that the `==` operator in Kotlin code is translated into a call to [equals] when objects on both sides of the
+     * operator are not null.
+     */
+    override fun equals(other: Any?): Boolean {
+        if (other is StorageLocation) {
+            if (other.x == this.x && other.y == this.y && other.z == this.z) {
+                return true
+            }
+            return false
+        }
+        return super.equals(other)
+    }
+
+    /**
      * Sets the coordinates x, y, z.
      *
      * @param x x
@@ -106,9 +128,9 @@ class LocationBuilder() : PersistenceObject(), StorageLocation, ConfigurationSer
     /** Serializes the given object. */
     override fun serialize(): MutableMap<String, Any> {
         val data = super.serialize()
-        data["x"] = x;
-        data["y"] = y;
-        data["z"] = z;
+        data["x"] = x
+        data["y"] = y
+        data["z"] = z
         data["yaw"] = yaw
         data["pitch"] = pitch
         if (worldName != null) {

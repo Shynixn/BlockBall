@@ -204,6 +204,8 @@ public enum BlockBallCommand {
     TEXTBOOK_SCORESUBTITLE(PageKey.TEAMTEXTBOOK, "scorestitle"),
     TEXTBOOK_WINTIELE(PageKey.TEAMTEXTBOOK, "wintitle"),
     TEXTBOOK_WINSUBTITLE(PageKey.TEAMTEXTBOOK, "winstitle"),
+    TEXTBOOK_DRAWTIELE(PageKey.TEAMTEXTBOOK, "drawtitle"),
+    TEXTBOOK_DRAWSUBTITLE(PageKey.TEAMTEXTBOOK, "drawstitle"),
 
 
     LIST_BALL_SOUNDEFFECTS(PageKey.LISTABLE, "show_ballsounds"),

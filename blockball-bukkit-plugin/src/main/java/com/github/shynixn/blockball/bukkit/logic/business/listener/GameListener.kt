@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
+import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -51,7 +52,7 @@ import org.bukkit.plugin.Plugin
 class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
     @Inject
     private var gameController: GameRepository? = null
-    var placementCallBack: MutableMap<Player,CallBack> = HashMap()
+    var placementCallBack: MutableMap<Player, CallBack> = HashMap()
 
     /**
      * Gets called when a player leaves the server and the game.
@@ -137,19 +138,19 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
         if (placementCallBack.containsKey(event.player)) {
             placementCallBack[event.player]!!.run(location)
             placementCallBack.remove(event.player)
+            return
         }
-        gameController!!.getAll().forEach{
-            p ->
-            if(p.arena.meta.lobbyMeta.joinSigns.contains(location)){
+        gameController!!.getAll().forEach { p ->
+            if (p.arena.meta.lobbyMeta.joinSigns.contains(location)) {
                 p.join(event.player, null)
-            }
-            else if(p.arena.meta.lobbyMeta.leaveSigns.contains(location)){
+            } else if (p.arena.meta.lobbyMeta.leaveSigns.contains(location)) {
                 p.leave(event.player)
-            }
-            else if(p.arena.meta.redTeamMeta.signs.contains(location)){
+                if (p.arena.meta.lobbyMeta.leaveSpawnpoint != null) {
+                    event.player.teleport(p.arena.meta.lobbyMeta.leaveSpawnpoint!!.toBukkitLocation())
+                }
+            } else if (p.arena.meta.redTeamMeta.signs.contains(location)) {
                 p.join(event.player, Team.RED)
-            }
-            else if(p.arena.meta.blueTeamMeta.signs.contains(location)){
+            } else if (p.arena.meta.blueTeamMeta.signs.contains(location)) {
                 p.join(event.player, Team.BLUE)
             }
         }

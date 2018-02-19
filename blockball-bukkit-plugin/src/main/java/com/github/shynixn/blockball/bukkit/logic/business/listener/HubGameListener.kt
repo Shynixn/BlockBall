@@ -113,6 +113,7 @@ class HubGameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugi
                 this.moveCounter.remove(event.player)
             }
             if (togglePlayers.contains(player)) {
+                event.player.allowFlight = false
                 togglePlayers.remove(player)
             }
         }

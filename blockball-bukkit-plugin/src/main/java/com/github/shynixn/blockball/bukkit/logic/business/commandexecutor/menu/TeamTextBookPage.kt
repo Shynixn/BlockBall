@@ -85,6 +85,14 @@ class TeamTextBookPage : Page(TeamTextBookPage.ID, MainSettingsPage.ID) {
             val teamMeta = getTeamMeta(cache)
             teamMeta.winMessageSubTitle = mergeArgs(2, args)
         }
+        else if (command == BlockBallCommand.TEXTBOOK_DRAWTIELE && args.size >= 3) {
+            val teamMeta = getTeamMeta(cache)
+            teamMeta.drawMessageTitle = mergeArgs(2, args)
+        }
+        else if (command == BlockBallCommand.TEXTBOOK_DRAWSUBTITLE && args.size >= 3) {
+            val teamMeta = getTeamMeta(cache)
+            teamMeta.drawMessageSubTitle = mergeArgs(2, args)
+        }
         return super.execute(player, command, cache, args)
     }
 
@@ -137,7 +145,22 @@ class TeamTextBookPage : Page(TeamTextBookPage.ID, MainSettingsPage.ID) {
                 .setHoverText(teamMeta.winMessageSubTitle).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.TEXTBOOK_WINSUBTITLE.command)
-                .setHoverText("Changes the subtitle message getting played when the team wins the match.").builder()
+                .setHoverText("Changes the subtitle message getting played when the team wins the match.")
+                .builder().nextLine()
+                .component("- DrawTitle Message: ").builder()
+                .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
+                .setHoverText(teamMeta.drawMessageTitle).builder()
+                .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.TEXTBOOK_DRAWTIELE.command)
+                .setHoverText("Changes the title message getting played when the match ends in a draw.")
+                .builder().nextLine()
+                .component("- DrawSubTitle Message: ").builder()
+                .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
+                .setHoverText(teamMeta.drawMessageSubTitle).builder()
+                .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.TEXTBOOK_DRAWSUBTITLE.command)
+                .setHoverText("Changes the subtitle message getting played when the match ends in a draw.")
+                .builder()
     }
 
     private fun getTeamMeta(cache: Array<Any?>?): TeamMeta<Location, ItemStack> {

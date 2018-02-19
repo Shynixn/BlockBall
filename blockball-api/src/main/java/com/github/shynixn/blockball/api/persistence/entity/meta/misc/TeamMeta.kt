@@ -68,6 +68,12 @@ interface TeamMeta<Location, ItemStack> {
     /** Subtitle of the message getting played when this team wins a match. */
     var winMessageSubTitle: String
 
+    /** Title of the message getting played when the match ends in a draw.*/
+    var drawMessageTitle: String
+
+    /** Subtitle of the message getting played when the match ends in a draw. */
+    var drawMessageSubTitle: String
+
     /** Message getting played when a player joins a match.*/
     var joinMessage: String
 

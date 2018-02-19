@@ -80,7 +80,6 @@ class BlockBallPlugin : JavaPlugin() {
             this.isStartedUp = false
             Bukkit.getPluginManager().disablePlugin(this)
         } else {
-            Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
             Config.reload()
             /*if (Config.metrics!!) {
                 Metrics(this) //TODO: Enable this for shipping
@@ -105,20 +104,18 @@ class BlockBallPlugin : JavaPlugin() {
      * Starts the game mode.
      */
     private fun startPlugin() {
-        if (Config.allowPlayingGames!!) {
-            try {
-                RegisterHelper.PREFIX = BlockBallPlugin.PREFIX_CONSOLE
-                RegisterHelper.register("Vault")
-                RegisterHelper.register("WorldEdit")
-                RegisterHelper.register("BossBarAPI")
-                RegisterHelper.register("PlaceholderAPI")
-                gameController!!.reload()
-                ReflectionUtils.invokeMethodByKotlinClass<Void>(BlockBallApi::class.java, "initializeBlockBall", arrayOf(Any::class.java, Any::class.java), arrayOf(this.gameController, bungeeCordController))
-                coreManager = CoreManager(this, "storage.yml", "ball.yml")
-                logger.log(Level.INFO, "Enabled BlockBall games.")
-            } catch (e: Exception) {
-                logger.log(Level.WARNING, "Failed to enable BlockBall games.", e)
-            }
+        try {
+            RegisterHelper.PREFIX = BlockBallPlugin.PREFIX_CONSOLE
+            RegisterHelper.register("Vault")
+            RegisterHelper.register("WorldEdit")
+            RegisterHelper.register("BossBarAPI")
+            RegisterHelper.register("PlaceholderAPI")
+            gameController!!.reload()
+            ReflectionUtils.invokeMethodByKotlinClass<Void>(BlockBallApi::class.java, "initializeBlockBall", arrayOf(Any::class.java, Any::class.java), arrayOf(this.gameController, bungeeCordController))
+            coreManager = CoreManager(this, "storage.yml", "ball.yml")
+            logger.log(Level.INFO, "Using NMS Connector " + VersionSupport.getServerVersion().versionText + ".")
+        } catch (e: Exception) {
+            logger.log(Level.WARNING, "Failed to enable BlockBall.", e)
         }
     }
 

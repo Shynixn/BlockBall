@@ -53,7 +53,15 @@ class TeamProperties(
         override var winMessageTitle: String,
         /** Subtitle of the message getting played when this team wins a match. */
         @YamlSerializer.YamlSerialize(orderNumber = 14, value = "win-message-subtitle")
-        override var winMessageSubTitle: String) : TeamMeta<Location, ItemStack> {
+        override var winMessageSubTitle: String,
+        /** Title of the message getting played when the match ends in a draw.*/
+        @YamlSerializer.YamlSerialize(orderNumber = 15, value = "draw-message-subtitle")
+        override var drawMessageTitle: String,
+        /** Subtitle of the message getting played when the match ends in a draw. */
+        @YamlSerializer.YamlSerialize(orderNumber = 16, value = "draw-message-subtitle")
+        override var drawMessageSubTitle: String
+        ) : TeamMeta<Location, ItemStack> {
+
     /** List of signs which can be clicked to join the team.*/
     override val signs: MutableList<StorageLocation>
         get() = this.internalSigns as MutableList<StorageLocation>;

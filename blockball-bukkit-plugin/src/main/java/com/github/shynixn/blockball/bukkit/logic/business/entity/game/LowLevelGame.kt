@@ -64,7 +64,7 @@ abstract class LowLevelGame(
     /** List of players in the blueTeam. */
     override val blueTeam: MutableList<Player> = ArrayList()
 
-    protected var plugin : Plugin= JavaPlugin.getPlugin(BlockBallPlugin::class.java)
+    protected var plugin: Plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
     protected var redGoals = 0
     protected var blueGoals = 0
     var doubleJumpCooldownPlayers: MutableMap<Player, Int> = HashMap()
@@ -93,10 +93,14 @@ abstract class LowLevelGame(
      */
     override fun run() {
         if (!this.arena.enabled) {
+            status = GameStatus.DISABLED
+            onUpdateSigns()
             if (!this.ingameStats.isEmpty()) {
                 close()
             }
+            return
         }
+        status = GameStatus.ENABLED
         this.onTick()
         if (this.haveTwentyTicksPassed()) {
             this.onTwentyTicks()
@@ -113,15 +117,17 @@ abstract class LowLevelGame(
     /**
      * Thread save method to listen on the tick cycle of the game.
      */
-    protected open fun onTick(){}
+    protected open fun onTick() {}
 
     /**
      * Thread save method to listen on the second tick cycle of the game.
      */
-    protected open fun onTwentyTicks(){}
+    protected open fun onTwentyTicks() {}
 
     /** Leave the game. */
     override fun leave(player: Player) {
+        if (!ingameStats.containsKey(player))
+            return
         val stats = this.ingameStats[player];
         if (stats!!.team == Team.RED) {
             this.redTeam.remove(player)
@@ -242,6 +248,7 @@ abstract class LowLevelGame(
             text = when {
                 this.status == GameStatus.RUNNING -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignRunning!!)
                 this.status == GameStatus.ENABLED -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignEnabled!!)
+                this.status == GameStatus.ENABLED -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignEnabled!!)
                 else -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignDisabled!!)
             }
             if (teamMeta != null) {
@@ -250,6 +257,9 @@ abstract class LowLevelGame(
             }
             text = text.replace(PlaceHolder.ARENA_CURRENTPLAYERS.placeHolder, players.toString())
                     .replace(PlaceHolder.ARENA_MAXPLAYERS.placeHolder, maxPlayers.toString())
+
+            text = text.replace(PlaceHolder.ARENA_SUMCURRENTPLAYERS.placeHolder, this.getPlayers().size.toString())
+                    .replace(PlaceHolder.ARENA_SUMMAXPLAYERS.placeHolder, (arena.meta.redTeamMeta.maxAmount + arena.meta.blueTeamMeta.maxAmount).toString())
             sign.setLine(i, text.convertChatColors())
         }
         sign.update(true)

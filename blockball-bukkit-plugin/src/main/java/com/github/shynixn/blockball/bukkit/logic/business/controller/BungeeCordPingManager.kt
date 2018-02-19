@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.business.controller.BungeeCordConnection
 import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus
 import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState
 import com.github.shynixn.blockball.api.persistence.controller.LinkSignController
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BungeeCordSignCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.entity.bungeecord.BungeeCordServerStats
 import com.github.shynixn.blockball.bukkit.logic.business.listener.BungeeCordNetworkSignListener
@@ -14,6 +15,7 @@ import com.google.common.io.ByteStreams
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.block.Sign
 import org.bukkit.entity.Player
@@ -53,12 +55,15 @@ import java.util.logging.Level
  * SOFTWARE.
  */
 @Singleton
-class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: NetworkSignRepository, networkListener: BungeeCordNetworkSignListener?) : BungeeCordConnectionController<Player>, Runnable, PluginMessageListener {
+class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: NetworkSignRepository) : BungeeCordConnectionController<Player>, Runnable, PluginMessageListener {
 
     //region Private Fields
     private var signController: LinkSignController<Location>? = null
     private var plugin: Plugin? = null
     private var task: BukkitTask? = null
+
+    @Inject
+    private val networkListener: BungeeCordNetworkSignListener? = null
 
     @Inject
     private val bungeeCordSignCommandExecutor: BungeeCordSignCommandExecutor? = null
@@ -70,7 +75,9 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
 
     //region Constructor
     init {
-        if (plugin.config.isBoolean("game.allow-server-linking")) {
+        Bukkit.getServer().consoleSender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
+        plugin.saveDefaultConfig()
+        if (plugin.config.getBoolean("game.allow-server-linking")) {
             this.plugin = plugin
             this.signController = signController
             signController.reload()
@@ -79,8 +86,6 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
             plugin.server.messenger.registerOutgoingPluginChannel(plugin, "BungeeCord")
             plugin.server.messenger.registerIncomingPluginChannel(plugin, "BungeeCord", this)
             plugin.logger.log(Level.INFO, "Enabled BungeeCord linking between BlockBall servers.")
-        } else {
-            networkListener!!.unregister()
         }
     }
     //endregion

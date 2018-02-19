@@ -60,6 +60,8 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
 
     /** Join the game. */
     override fun join(player: Player, team: Team?): Boolean {
+        if(!this.arena.enabled)
+            return false;
         this.leave(player)
         if (team == Team.RED && this.redTeam.size < this.arena.meta.redTeamMeta.maxAmount) {
             this.prepareStatsForPlayer(player, team, this.arena.meta.redTeamMeta)

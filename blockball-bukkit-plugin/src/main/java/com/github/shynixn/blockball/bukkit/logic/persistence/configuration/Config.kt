@@ -66,11 +66,6 @@ internal object Config : SimpleConfig() {
             return this.getData<Boolean>("game.allow-server-linking")
         }
 
-    val allowPlayingGames: Boolean?
-        get() {
-            return this.getData<Boolean>("game.allow-playing-games")
-        }
-
     val statsScoreboardEnabled: Boolean?
         get() {
             return this.getData<Boolean>("stats-scoreboard.enabled")

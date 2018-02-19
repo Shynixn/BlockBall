@@ -78,20 +78,20 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
      */
     protected abstract fun onWin(teamMeta: TeamMeta<Location, ItemStack>)
 
-    protected fun onMatchEnd(winningPlayers: List<Player>, loosingPlayers: List<Player>) {
-        if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH)) {
+    protected fun onMatchEnd(winningPlayers: List<Player>?, loosingPlayers: List<Player>?) {
+        if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH) && winningPlayers != null) {
             RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.WIN_MATCH]!!.toDouble(), winningPlayers)
         }
-        if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH)) {
+        if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH)&& loosingPlayers != null) {
             RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.LOOSING_MATCH]!!.toDouble(), loosingPlayers)
         }
         if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.PARTICIPATE_MATCH)) {
             RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.PARTICIPATE_MATCH]!!.toDouble(), getPlayers())
         }
-        if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH)) {
+        if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH)&& winningPlayers != null) {
             this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.WIN_MATCH]!!, winningPlayers)
         }
-        if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH)) {
+        if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH)&& loosingPlayers != null) {
             this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.LOOSING_MATCH]!!, loosingPlayers)
         }
         if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.PARTICIPATE_MATCH)) {
@@ -200,7 +200,7 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
             this.ball!!.remove()
             this.onScore(this.arena.meta.blueTeamMeta)
             this.onScoreReward(blueTeam)
-            if (this.blueGoals >= 1L) { //TODO Change this to actual value
+            if (this.blueGoals >= this.arena.meta.lobbyMeta.maxScore) {
                 this.onWin(this.arena.meta.blueTeamMeta)
                 this.onMatchEnd(blueTeam, redTeam)
             }
@@ -209,7 +209,7 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
             this.ball!!.remove()
             this.onScore(this.arena.meta.redTeamMeta)
             this.onScoreReward(redTeam)
-            if (this.redGoals >= 1L) { //TODO Change this to actual value
+            if (this.redGoals >= this.arena.meta.lobbyMeta.maxScore) {
                 this.onWin(this.arena.meta.redTeamMeta)
                 this.onMatchEnd(redTeam, blueTeam)
             }

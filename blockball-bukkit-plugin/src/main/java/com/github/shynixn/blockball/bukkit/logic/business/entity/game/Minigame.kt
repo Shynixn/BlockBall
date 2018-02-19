@@ -61,6 +61,17 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
     }
 
     /**
+     * Gets called when the match ends in a draw.
+     */
+    fun onDraw() {
+        this.redTeam.forEach { p -> p.sendScreenMessage(arena.meta.redTeamMeta.drawMessageTitle, arena.meta.redTeamMeta.drawMessageSubTitle, this) }
+        this.blueTeam.forEach { p -> p.sendScreenMessage(arena.meta.blueTeamMeta.drawMessageTitle, arena.meta.blueTeamMeta.drawMessageSubTitle, this) }
+        plugin.server.scheduler.runTaskLater(plugin, {
+            this.close()
+        }, 5 * 20L)
+    }
+
+    /**
      * Gets called when a team wins the game.
      */
     override fun onWin(teamMeta: TeamMeta<Location, ItemStack>) {
@@ -89,7 +100,6 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         this.prepareLobbyStatsForPlayer(player)
         return false
     }
-
 
     /**
      * Thread save method to listen on the second tick cycle of the game.
@@ -124,14 +134,19 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
     }
 
     private fun timesUpGame() {
-        if (this.redGoals == this.blueGoals) {
-            //:TODO MAKE IN A DRAW MESSAGE
-        } else if (this.redGoals > this.blueGoals) {
-            this.onMatchEnd(this.redTeam, this.blueTeam)
-            this.onWin(this.arena.meta.redTeamMeta)
-        } else {
-            this.onMatchEnd(this.blueTeam, this.redTeam)
-            this.onWin(this.arena.meta.blueTeamMeta)
+        when {
+            this.redGoals == this.blueGoals -> {
+                this.onMatchEnd(null, null)
+                this.onDraw()
+            }
+            this.redGoals > this.blueGoals -> {
+                this.onMatchEnd(this.redTeam, this.blueTeam)
+                this.onWin(this.arena.meta.redTeamMeta)
+            }
+            else -> {
+                this.onMatchEnd(this.blueTeam, this.redTeam)
+                this.onWin(this.arena.meta.blueTeamMeta)
+            }
         }
     }
 
@@ -145,7 +160,6 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
                     joinTeam(p, arena.meta.blueTeamMeta, blueTeam)
                 }
             }
-
             if (stats.team == Team.RED) {
                 val teamMeta = arena.meta.redTeamMeta
                 if (teamMeta.spawnpoint == null) {

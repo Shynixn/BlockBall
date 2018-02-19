@@ -32,6 +32,8 @@ public enum PlaceHolder {
     ARENA_DISPLAYNAME("<game>"),
     ARENA_MAXPLAYERS("<maxplayers>"),
     ARENA_CURRENTPLAYERS("<players>"),
+    ARENA_SUMMAXPLAYERS("<summaxplayers>"),
+    ARENA_SUMCURRENTPLAYERS("<sumplayers>"),
     ARENA_TEAMDISPLAYNAME("<team>"),
     ARENA_TEAMCOLOR("<teamcolor>"),
     ARENA_STATE("<state>"),
