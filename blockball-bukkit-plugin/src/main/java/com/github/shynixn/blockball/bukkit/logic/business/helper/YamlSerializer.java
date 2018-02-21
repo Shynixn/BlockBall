@@ -55,6 +55,8 @@ public final class YamlSerializer {
         int orderNumber() default 0;
 
         ManualSerialization classicSerialize() default ManualSerialization.NONE;
+
+        int arraySize() default -1;
     }
 
     public enum ManualSerialization {
@@ -162,6 +164,8 @@ public final class YamlSerializer {
                 } else {
                     data.put(String.valueOf(i), serializeObject(object));
                 }
+            } else {
+                data.put(String.valueOf(i), null);
             }
             i++;
         }
@@ -235,7 +239,7 @@ public final class YamlSerializer {
                 }
             } else {
                 if (keyClazz.isEnum()) {
-                    map.put(Enum.valueOf(keyClazz, key),deserializeObject(clazz, ((MemorySection) value).getValues(false)));
+                    map.put(Enum.valueOf(keyClazz, key), deserializeObject(clazz, ((MemorySection) value).getValues(false)));
                 } else {
                     map.put(key, deserializeObject(clazz, ((MemorySection) value).getValues(false)));
                 }
@@ -256,15 +260,23 @@ public final class YamlSerializer {
      */
     public static <T> T[] deserializeArray(Class<T> clazz, YamlSerialize annotation, Object dataSource) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         final Map<String, Object> data = getDataFromSource(dataSource);
-        final T[] objects = (T[]) Array.newInstance(clazz, data.size());
+        final T[] objects;
+        if (annotation.arraySize() != -1) {
+            objects = (T[]) Array.newInstance(clazz, annotation.arraySize());
+        } else {
+            objects = (T[]) Array.newInstance(clazz, data.size());
+        }
         int i = 0;
         for (final String key : data.keySet()) {
-            if (annotation.classicSerialize() == ManualSerialization.DESERIALIZE_FUNCTION) {
-                objects[i] = (T) deserializeObjectBukkit(clazz, ((MemorySection) data.get(key)).getValues(false));
+            int orderPlace = Integer.parseInt(key) - 1;
+            if (data.get(key) == null) {
+                objects[orderPlace] = null;
+            } else if (annotation.classicSerialize() == ManualSerialization.DESERIALIZE_FUNCTION) {
+                objects[orderPlace] = (T) deserializeObjectBukkit(clazz, ((MemorySection) data.get(key)).getValues(false));
             } else if (isPrimitive(data.get(key).getClass())) {
-                objects[i] = (T) data.get(key);
+                objects[orderPlace] = (T) data.get(key);
             } else {
-                objects[i] = deserializeObject(clazz, ((MemorySection) data.get(key)).getValues(false));
+                objects[orderPlace] = deserializeObject(clazz, ((MemorySection) data.get(key)).getValues(false));
             }
             i++;
         }

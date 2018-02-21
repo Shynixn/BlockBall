@@ -106,7 +106,9 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, M
         ballMeta.isAlwaysBounceBack = true
         ballMeta.isCarryable = false
         ballMeta.hitBoxSize = 3.0
-        ballMeta.modifiers.verticalKickStrengthModifier = 1.5
+        ballMeta.modifiers.gravityModifier = 0.7
+        ballMeta.modifiers.verticalKickStrengthModifier = 6.0
         ballMeta.modifiers.horizontalKickStrengthModifier = 1.5
+        ballMeta.modifiers.rollingDistanceModifier = 1.5
     }
 }

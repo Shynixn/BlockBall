@@ -72,6 +72,11 @@ class HubGameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugi
         gameController!!.games.forEach { game ->
             if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(event.to)) {
                 inArea = true
+                if (game.arena.meta.hubLobbyMeta.instantForcefieldJoin) {
+                    game.join(player, null)
+                    return
+                }
+
                 if (!this.lastLocation.containsKey(player)) {
                     if (game.arena.meta.protectionMeta.rejoinProtectionEnabled) {
                         player.velocity = game.arena.meta.protectionMeta.rejoinProtection

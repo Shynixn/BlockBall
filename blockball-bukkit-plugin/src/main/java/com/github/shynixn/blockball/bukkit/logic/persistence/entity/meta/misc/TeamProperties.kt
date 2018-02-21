@@ -60,7 +60,7 @@ class TeamProperties(
         /** Subtitle of the message getting played when the match ends in a draw. */
         @YamlSerializer.YamlSerialize(orderNumber = 16, value = "draw-message-subtitle")
         override var drawMessageSubTitle: String
-        ) : TeamMeta<Location, ItemStack> {
+) : TeamMeta<Location, ItemStack> {
 
     /** List of signs which can be clicked to join the team.*/
     override val signs: MutableList<StorageLocation>
@@ -90,8 +90,9 @@ class TeamProperties(
     @YamlSerializer.YamlSerialize(orderNumber = 11, value = "lines")
     override var signLines: List<String> = arrayListOf("&lBlockBall", "<game>", "<teamcolor><team>", "<players>/<maxplayers>")
     /** Armor wearing this team. */
-    @YamlSerializer.YamlSerialize(orderNumber = 8, value = "armor", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION)
+    @YamlSerializer.YamlSerialize(orderNumber = 8, value = "armor", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION, arraySize = 4)
     override var armorContents: Array<ItemStack?> = arrayOfNulls(4)
+
     @YamlSerializer.YamlSerialize(orderNumber = 9, value = "signs")
     private var internalSigns: MutableList<LocationBuilder> = ArrayList()
 }

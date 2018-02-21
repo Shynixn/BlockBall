@@ -61,10 +61,20 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
 
     /** Join the game. */
     override fun join(player: Player, team: Team?): Boolean {
-        if (!this.arena.enabled)
+        if (!this.arena.enabled || closed)
             return false
         this.leave(player)
+
         var joiningTeam = team
+        if (arena.meta.lobbyMeta.onlyAllowEventTeams) {
+            if (joiningTeam == Team.RED && this.redTeam.size > this.blueTeam.size) {
+                joiningTeam = null
+            }
+            else if (joiningTeam == Team.BLUE && this.blueTeam.size > this.redTeam.size) {
+                joiningTeam = null
+            }
+        }
+
         if (joiningTeam == null) {
             joiningTeam = Team.BLUE
             if (this.redTeam.size < this.blueTeam.size) {
