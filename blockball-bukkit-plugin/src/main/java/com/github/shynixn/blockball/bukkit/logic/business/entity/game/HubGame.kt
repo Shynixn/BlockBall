@@ -56,22 +56,32 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         val winMessageTitle = teamMeta.winMessageTitle
         val winMessageSubTitle = teamMeta.winMessageSubTitle
         this.getPlayers().forEach { p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle, this) }
+        this.close()
     }
 
     /** Join the game. */
     override fun join(player: Player, team: Team?): Boolean {
-        if(!this.arena.enabled)
-            return false;
+        if (!this.arena.enabled)
+            return false
         this.leave(player)
-        if (team == Team.RED && this.redTeam.size < this.arena.meta.redTeamMeta.maxAmount) {
-            this.prepareStatsForPlayer(player, team, this.arena.meta.redTeamMeta)
+        var joiningTeam = team
+        if (joiningTeam == null) {
+            joiningTeam = Team.BLUE
+            if (this.redTeam.size < this.blueTeam.size) {
+                joiningTeam = Team.RED
+            }
+        }
+
+        if (joiningTeam == Team.RED && this.redTeam.size < this.arena.meta.redTeamMeta.maxAmount) {
+            this.prepareStatsForPlayer(player, joiningTeam, this.arena.meta.redTeamMeta)
             this.redTeam.add(player)
             return true
-        } else if (team == Team.BLUE && this.blueTeam.size < this.arena.meta.blueTeamMeta.maxAmount) {
-            this.prepareStatsForPlayer(player, team, this.arena.meta.blueTeamMeta)
+        } else if (joiningTeam == Team.BLUE && this.blueTeam.size < this.arena.meta.blueTeamMeta.maxAmount) {
+            this.prepareStatsForPlayer(player, joiningTeam, this.arena.meta.blueTeamMeta)
             this.blueTeam.add(player)
             return true
         }
+
         return false
     }
 
@@ -81,6 +91,17 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         val stats = ingameStats[player] ?: return
         ingameStats.remove(player)
         stats.resetState()
+    }
+
+    /**
+     * Thread save method to listen on the second tick cycle of the game.
+     */
+    override fun onTwentyTicks() {
+        super.onTwentyTicks()
+        if (this.arena.meta.hubLobbyMeta.resetArenaOnEmpty
+                && this.ingameStats.isEmpty() && (redPoints > 0 || bluePoints > 0)) {
+            this.close()
+        }
     }
 
     private fun prepareStatsForPlayer(player: Player, team: Team, teamMeta: TeamMeta<Location, ItemStack>) {

@@ -90,7 +90,7 @@ class HubGameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugi
                         player.velocity = knockback
                         player.allowFlight = true
                         if (!togglePlayers.contains(player)) {
-                         ChatBuilder().text(Config.prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].convertChatColors())
+                            ChatBuilder().text(Config.prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].convertChatColors())
                                     .nextLine()
                                     .component(game.arena.meta.hubLobbyMeta.joinMessage[1].convertChatColors())
                                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
@@ -113,7 +113,9 @@ class HubGameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugi
                 this.moveCounter.remove(event.player)
             }
             if (togglePlayers.contains(player)) {
-                event.player.allowFlight = false
+                if (event.player.gameMode != GameMode.CREATIVE) {
+                    event.player.allowFlight = false
+                }
                 togglePlayers.remove(player)
             }
         }

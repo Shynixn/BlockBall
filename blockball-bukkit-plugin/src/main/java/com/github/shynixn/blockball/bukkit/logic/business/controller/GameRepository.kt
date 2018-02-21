@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.controller
 
 import com.github.shynixn.blockball.api.bukkit.business.controller.BukkitGameController
 import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
+import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.JoinCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.LeaveCommandExecutor
@@ -63,13 +64,13 @@ class GameRepository : BukkitGameController, Runnable {
     private var arenaCommandexecutor: NewArenaCommandExecutor? = null
 
     @Inject
-    private var reloadCommandExecutor : ReloadCommandExecutor? = null
+    private var reloadCommandExecutor: ReloadCommandExecutor? = null
 
     @Inject
-    private var joinCommandExecutor : JoinCommandExecutor? = null
+    private var joinCommandExecutor: JoinCommandExecutor? = null
 
     @Inject
-    private var leaveCommandExecutor : LeaveCommandExecutor? = null
+    private var leaveCommandExecutor: LeaveCommandExecutor? = null
 
     @Inject
     private var gameListener: GameListener? = null
@@ -84,10 +85,10 @@ class GameRepository : BukkitGameController, Runnable {
     private var statsListener: StatsListener? = null
 
     @Inject
-    private var minigameListener : MinigameListener? = null
+    private var minigameListener: MinigameListener? = null
 
     @Inject
-    private var bungeeCordGameListener : BungeeCordGameListener? = null
+    private var bungeeCordGameListener: BungeeCordGameListener? = null
 
     /** Games. */
     val games: ArrayList<BukkitGame> = ArrayList()
@@ -100,7 +101,14 @@ class GameRepository : BukkitGameController, Runnable {
      * @see java.lang.Thread.run
      */
     override fun run() {
-        games.forEach { p -> (p as LowLevelGame).run() }
+        games.toArray().forEach { p ->
+            if ((p as LowLevelGame).closed) {
+                games.remove(p)
+                this.addGameForArena(p.arena)
+            } else {
+                p.run()
+            }
+        }
     }
 
     /** Removes an item from the repository. */
@@ -171,16 +179,20 @@ class GameRepository : BukkitGameController, Runnable {
         }
         this.games.clear()
         this.arenaController!!.getAll().forEach { p ->
-            if (p.gameType == GameType.HUBGAME) {
-                this.store(HubGame(p))
-            } else if (p.gameType == GameType.MINIGAME) {
-                this.store(Minigame(p))
-            } else if (p.gameType == GameType.BUNGEE) {
-                this.store(BungeeCordMinigame(p))
-                plugin!!.logger.log(Level.INFO, "BlockBall plugin contains a BungeeCord Minigame. Server is now fully managed " +
-                        "by BlockBall and available for joining game " + p.displayName + ".")
-                return
-            }
+            addGameForArena(p)
+        }
+    }
+
+    private fun addGameForArena(arena: BukkitArena) {
+        if (arena.gameType == GameType.HUBGAME) {
+            this.store(HubGame(arena))
+        } else if (arena.gameType == GameType.MINIGAME) {
+            this.store(Minigame(arena))
+        } else if (arena.gameType == GameType.BUNGEE) {
+            this.store(BungeeCordMinigame(arena))
+            plugin!!.logger.log(Level.INFO, "BlockBall plugin contains a BungeeCord Minigame. Server is now fully managed " +
+                    "by BlockBall and available for joining game " + arena.displayName + ".")
+            return
         }
     }
 

@@ -68,7 +68,7 @@ abstract class LowLevelGame(
     protected var redGoals = 0
     protected var blueGoals = 0
     var doubleJumpCooldownPlayers: MutableMap<Player, Int> = HashMap()
-
+    var closed: Boolean = false;
     private var bumperTimer = 20L
 
     private var scoreboard: GameScoreboard? = null
@@ -92,7 +92,7 @@ abstract class LowLevelGame(
      * @see java.lang.Thread.run
      */
     override fun run() {
-        if (!this.arena.enabled) {
+        if (!this.arena.enabled || closed) {
             status = GameStatus.DISABLED
             onUpdateSigns()
             if (!this.ingameStats.isEmpty()) {
@@ -297,13 +297,16 @@ abstract class LowLevelGame(
      * @throws Exception if this resource cannot be closed
      */
     override fun close() {
-        scoreboard?.close()
-        ingameStats.keys.forEach { p -> leave(p); }
-        ingameStats.clear()
-        ball?.remove()
-        redTeam.clear()
-        blueTeam.clear()
-        holograms.forEach { h -> h.close() }
-        holograms.clear()
+        if (!closed) {
+            closed = true
+            scoreboard?.close()
+            ingameStats.keys.forEach { p -> leave(p); }
+            ingameStats.clear()
+            ball?.remove()
+            redTeam.clear()
+            blueTeam.clear()
+            holograms.forEach { h -> h.close() }
+            holograms.clear()
+        }
     }
 }
