@@ -52,9 +52,9 @@ Properties
 ~~~~~~~~~~
 
 * Animal and Monster protection enabled: Should animals and monster be thrown out of the arena with the given velocity when they try to enter it?
-* Animal and Monster protection velocity: Velocity being applied when they enter the arena
-* Join protection enabled: Should player be thrown out of the arena with the given velocity when they try to rejoin in it?
-* Join protection velocity: Velocity being applied when they enter the arena
+* Animal and Monster protection velocity: Velocity being applied when they enter the arena.
+* Join protection enabled: Should player be the certain velocity being applied when they get stuck in the forcefield?
+* Join protection velocity: Velocity being applied when they get stuck in the forcefield.
 
 
 

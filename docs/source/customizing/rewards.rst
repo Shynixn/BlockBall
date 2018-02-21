@@ -5,7 +5,7 @@ It is always a good game design to reward your players for certain action. So do
 certain rewards for the following actions.
 
 * Winning a match
-* Participating a
+* Participating in a match
 * Shooting a goal
 * Loosing a match
 

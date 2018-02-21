@@ -42,7 +42,8 @@ Properties
 * ScoreSubTitle Message: SubTitle Message being send to a player when someone scores a goal.
 * WinTitle Message: Title Message being send to a player when this team wins the match.
 * WinSubTitle Message: SubTitle Message being send to a player when this team wins the match.
-* Sign Template: Template for the sign to join this team.
+* DrawTitle Message: Title Message being send to a player when the match ends in a draw.
+* DrawSubTitle Message: SubTitle Message being send to a player when the match ends in a draw.
 
 
 

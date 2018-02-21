@@ -55,7 +55,7 @@ class TeamProperties(
         @YamlSerializer.YamlSerialize(orderNumber = 14, value = "win-message-subtitle")
         override var winMessageSubTitle: String,
         /** Title of the message getting played when the match ends in a draw.*/
-        @YamlSerializer.YamlSerialize(orderNumber = 15, value = "draw-message-subtitle")
+        @YamlSerializer.YamlSerialize(orderNumber = 15, value = "draw-message-title")
         override var drawMessageTitle: String,
         /** Subtitle of the message getting played when the match ends in a draw. */
         @YamlSerializer.YamlSerialize(orderNumber = 16, value = "draw-message-subtitle")
@@ -71,9 +71,6 @@ class TeamProperties(
     /** Max amount of players in this team to start the match for this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "max-amount")
     override var maxAmount: Int = 10
-    /** Spawnpoint of the team inside of the arena. */
-    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "spawnpoint")
-    override var spawnpoint: StorageLocation? = null
     /** Goal properties of the team. */
     @YamlSerializer.YamlSerialize(orderNumber = 7, value = "goal")
     override val goal: SelectedArea = SelectedArea()
@@ -92,7 +89,17 @@ class TeamProperties(
     /** Armor wearing this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 8, value = "armor", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION, arraySize = 4)
     override var armorContents: Array<ItemStack?> = arrayOfNulls(4)
+    /** Spawnpoint of the team inside of the arena. */
+    override var spawnpoint: StorageLocation?
+        get() {
+            return internalSpawnpoint
+        }
+        set(value) {
+            this.internalSpawnpoint = value as LocationBuilder
+        }
 
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "spawnpoint")
+    private var internalSpawnpoint: LocationBuilder? = null
     @YamlSerializer.YamlSerialize(orderNumber = 9, value = "signs")
     private var internalSigns: MutableList<LocationBuilder> = ArrayList()
 }

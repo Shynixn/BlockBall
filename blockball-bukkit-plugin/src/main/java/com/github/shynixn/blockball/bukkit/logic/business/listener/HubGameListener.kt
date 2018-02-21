@@ -109,7 +109,6 @@ class HubGameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugi
                             togglePlayers.add(player)
                         }
                     }
-                    print(moveCounter[player])
                 }
             }
         }

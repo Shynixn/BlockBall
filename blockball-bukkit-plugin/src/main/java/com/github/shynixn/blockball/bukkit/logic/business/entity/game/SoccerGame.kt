@@ -82,16 +82,16 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
         if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH) && winningPlayers != null) {
             RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.WIN_MATCH]!!.toDouble(), winningPlayers)
         }
-        if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH)&& loosingPlayers != null) {
+        if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH) && loosingPlayers != null) {
             RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.LOOSING_MATCH]!!.toDouble(), loosingPlayers)
         }
         if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.PARTICIPATE_MATCH)) {
             RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.PARTICIPATE_MATCH]!!.toDouble(), getPlayers())
         }
-        if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH)&& winningPlayers != null) {
+        if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH) && winningPlayers != null) {
             this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.WIN_MATCH]!!, winningPlayers)
         }
-        if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH)&& loosingPlayers != null) {
+        if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH) && loosingPlayers != null) {
             this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.LOOSING_MATCH]!!, loosingPlayers)
         }
         if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.PARTICIPATE_MATCH)) {
@@ -142,18 +142,22 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
     }
 
     private fun executeCommand(meta: CommandMeta, players: List<Player>) {
-        if (meta.command.equals("none", true)) {
+        var command = meta.command
+        if (command!!.startsWith("/")) {
+            command = command.substring(1, command.length)
+        }
+        if (command.equals("none", true)) {
             return
         }
         when {
             meta.mode == CommandMeta.CommandMode.PER_PLAYER -> players.forEach { p ->
-                p.performCommand(meta.command!!.replaceGamePlaceholder(this))
+                p.performCommand(command!!.replaceGamePlaceholder(this))
             }
             meta.mode == CommandMeta.CommandMode.CONSOLE_PER_PLAYER -> players.forEach { p ->
                 lastInteractedEntity = p
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), meta.command!!.replaceGamePlaceholder(this))
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command!!.replaceGamePlaceholder(this))
             }
-            meta.mode == CommandMeta.CommandMode.CONSOLE_SINGLE -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), meta.command!!.replaceGamePlaceholder(this))
+            meta.mode == CommandMeta.CommandMode.CONSOLE_SINGLE -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command!!.replaceGamePlaceholder(this))
         }
     }
 
@@ -201,8 +205,8 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
             this.onScore(this.arena.meta.blueTeamMeta)
             this.onScoreReward(blueTeam)
             if (this.blueGoals >= this.arena.meta.lobbyMeta.maxScore) {
-                this.onWin(this.arena.meta.blueTeamMeta)
                 this.onMatchEnd(blueTeam, redTeam)
+                this.onWin(this.arena.meta.blueTeamMeta)
             }
         } else if (this.arena.meta.blueTeamMeta.goal.isLocationInSelection(this.ball!!.location)) {
             this.redGoals++
@@ -210,8 +214,8 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
             this.onScore(this.arena.meta.redTeamMeta)
             this.onScoreReward(redTeam)
             if (this.redGoals >= this.arena.meta.lobbyMeta.maxScore) {
-                this.onWin(this.arena.meta.redTeamMeta)
                 this.onMatchEnd(redTeam, blueTeam)
+                this.onWin(this.arena.meta.redTeamMeta)
             }
         }
     }

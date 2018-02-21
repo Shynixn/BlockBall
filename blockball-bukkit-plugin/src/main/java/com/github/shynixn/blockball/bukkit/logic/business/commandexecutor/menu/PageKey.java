@@ -47,7 +47,7 @@ public enum PageKey {
     GAMEEXTENSIONS("gameex"),
     MULTIPLEITEMS("mitem"),
     REWARDSPAGE("reward"),
-    GAMESETTINGS("reward"),
+    GAMESETTINGS("gameset"),
     COMMANDPAGE("com"),
     BALL("ball"),
     BALLMODIFIER("ballmod"),

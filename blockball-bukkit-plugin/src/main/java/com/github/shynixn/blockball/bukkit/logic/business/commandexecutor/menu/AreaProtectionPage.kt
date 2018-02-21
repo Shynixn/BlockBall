@@ -100,12 +100,12 @@ class AreaProtectionPage : Page(AreaProtectionPage.ID, MiscSettingsPage.ID) {
                 .component("- Join protection enabled: " + meta.rejoinProtectionEnabled).builder()
                 .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.AREAPROTECTION_TOGGLE_PLAYERJOINFORCEFIELD.command)
-                .setHoverText("Toggles the protection to move players outside of the arena when rejoining the server.")
+                .setHoverText("Toggles the protection to move players outside of the arena.")
                 .builder().nextLine()
                 .component("- Join protection velocity: " + meta.rejoinProtection).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.AREAPROTECTION_SET_PLAYERJOINFORCEFIELD.command)
-                .setHoverText("Changes the velocity being applied to players when they try to enter the arena on server join." +
+                .setHoverText("Changes the velocity being applied to players when they try to enter the arena." +
                         "\nEnter 3 values when using this command.\n/blockball aprot plprot <x> <y> <z>")
                 .builder().nextLine()
     }
