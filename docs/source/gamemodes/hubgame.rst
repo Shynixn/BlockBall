@@ -4,14 +4,14 @@ HubGame
 The Game Mode HubGame is a simply game mode to provide players a small little area on your hub, lobby or overworld where
 they can play soccer anytime without any restrictions or lobbies.
 
-Make sure you created a base game first before you continue.
+Make sure you created a `Base Game <../gamemodes/basicgame.html>`__ first before you continue.
 
 As the default Game Mode is already a HubGame you do not have to configure anything at all. The Base Game is basically a HubGame.
 
 Configuring ingame
 ~~~~~~~~~~~~~~~~~~
 
-At this stage, you should be able to open the 'Settings' page of your arena chat UI. If not, please take a look at this page.
+At this stage, you should be able to open the `Settings <../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui>`__ page of your arena chat UI.
 
 1. Go to the **Settings Page** of your arena
 2. Open the **Game Settings Page**

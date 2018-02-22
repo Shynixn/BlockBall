@@ -7,7 +7,7 @@ players, animals and monsters to enter the arena.
 Configuring ingame
 ~~~~~~~~~~~~~~~~~~
 
-At this stage, you should be able to open the 'Settings' page of your arena chat UI. If not, please take a look at this page.
+At this stage, you should be able to open the `Settings <../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui>`__ page of your arena chat UI.
 
 1. Go to the **Settings Page** of your arena
 2. Open the **Misc Page**

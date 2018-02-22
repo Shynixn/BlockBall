@@ -3,9 +3,9 @@ Bungeecord Minigame
 
 The Game Mode Bungeecord Minigame is a advanced game mode to give BlockBall the rights to manage it's on game server.
 
-This guide will not explain how BungeeCord works so do not continue if you are not familiar with it.
+This guide will not explain how `BungeeCord <https://www.spigotmc.org/wiki/bungeecord/>`__  works so do not continue if you are not familiar with it.
 
-Make sure you created a base game first before you continue.
+Make sure you created a `Base Game <../gamemodes/basicgame.html>`__ first before you continue.
 
 Please take a look at associated words which will be used in this guide:
 

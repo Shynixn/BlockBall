@@ -17,7 +17,7 @@ If the Chat UI is only partially formatted correctly, you should temporarily adj
 
 .. image:: ../_static/images/arena3.jpg
 
-2. The UI is very simple to use, simply move your mouse on top of the colored text like '**[create..]**' or '**>>SAVE<<**'. Even tooltips are visible.
+2. The UI is very simple to use, simply move your mouse on top of the colored text like '*[create..]*' or '*>>SAVE<<*'. Even tooltips are visible.
 
 .. image:: ../_static/images/arena4.jpg
 
@@ -61,17 +61,17 @@ restarts all BlockBall games on your server and starts initial games.
 Checking if everything is working
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Let's check if our base game is correctly configured. Run into the forcefield of your arena and take a look if the
+Let's check if our base game is correctly configured. Run into the forcefield of your arena and take a look if the
 following message appears.
 
 .. image:: ../_static/images/arena9.jpg
 
 If it does not, your worledit arena selection is probably misplaced or simply wrong.
 
-2. Now you should automatically spawn at the same spawnpoint of the ball. You can customize your team spawnpoint later in the
+Now you should automatically spawn at the same spawnpoint of the ball. You can customize your team spawnpoint later in the
 team section.
 
-3. Check if the ball is spawning and goals get scored by move the ball into one of your configured goals.
+Check if the ball is spawning and goals get scored by move the ball into one of your configured goals.
 
 If it does not, your worledit goal selection is probably misplaced or simply wrong.
 

@@ -4,14 +4,14 @@ MiniGame
 The Game Mode Minigame is a advanced game mode to use BlockBall as an ordinary Minigame. It contains a lobby and a max amount of time
 a game can last. Also, players can only join before the match starts.
 
-Make sure you created a base game first before you continue.
+Make sure you created a `Base Game <../gamemodes/basicgame.html>`__ first before you continue.
 
 You need to change the GameType on the **Settings Page** to MiniGame before you continue!
 
 Configuring ingame
 ~~~~~~~~~~~~~~~~~~
 
-At this stage, you should be able to open the 'Settings' page of your arena chat UI. If not, please take a look at this page.
+At this stage, you should be able to open the `Settings <../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui>`__ page of your arena chat UI.
 
 1. Go to the **Settings Page** of your arena
 2. Open the **Game Settings Page**

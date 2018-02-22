@@ -8,12 +8,10 @@ Of course it is possible to recolor them to something like yellow or pink, but a
 
 .. image:: ../_static/images/team0.png
 
-You can use it to display team names, the remaining time, scores for each team and more. You can find all available placeholders here.
-
 Configuring ingame
 ~~~~~~~~~~~~~~~~~~
 
-At this stage, you should be able to open the 'Settings' page of your arena chat UI. If not, please take a look at this page.
+At this stage, you should be able to open the `Settings <../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui>`__ page of your arena chat UI.
 
 1. Go to the **Settings Page** of your arena
 

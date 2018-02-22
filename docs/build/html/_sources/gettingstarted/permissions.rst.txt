@@ -10,12 +10,12 @@ Admin
 
 These are the recommend permissions for administrators or moderators.
 
-=======================================================  =======
-Description                                              Permission
-=======================================================  =======
-Allows to use the **/blockball** administration command  blockball.command.admin
-Allows to use the **/blockballreload** command           blockball.command.reload
-=======================================================  =======
+=======================================================================   =======
+Description                                                               Permission
+=======================================================================   =======
+Allows to use the **/blockball** and **/blockballbungeecord** command     blockball.command.admin
+Allows to use the **/blockballreload** command                            blockball.command.reload
+=======================================================================   =======
 
 Users
 ~~~~~
@@ -48,13 +48,13 @@ Permissionlist
 
 **Permissions for commands**
 
-========================================================  =======
-Description                                               Permission
-========================================================  =======
-Allows to use the **/blockball** administration command   blockball.command.admin
-Allows to use the **/blockballreload** command            blockball.command.reload
-Allows to use the **/bbjoin** and **/bbleave** command    blockball.command.use
-========================================================  =======
+======================================================================   =======
+Description                                                              Permission
+======================================================================   =======
+Allows to use the **/blockball** and **/blockballbungeecord** command    blockball.command.admin
+Allows to use the **/blockballreload** command                           blockball.command.reload
+Allows to use the **/bbjoin** and **/bbleave** command                   blockball.command.use
+======================================================================   =======
 
 **Permissions for actions**
 
