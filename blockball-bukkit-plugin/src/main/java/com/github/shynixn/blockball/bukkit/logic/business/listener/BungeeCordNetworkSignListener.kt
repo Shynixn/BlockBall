@@ -2,6 +2,8 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.persistence.entity.bungeecord.LinkSign
 import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
+import com.github.shynixn.blockball.bukkit.logic.business.entity.bungeecord.BungeeCordServerStats
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.NetworkSignRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import com.google.inject.Inject
@@ -66,6 +68,11 @@ class BungeeCordNetworkSignListener @Inject constructor(plugin: Plugin) : Simple
             val sign = signController!!.create(server!!, event.clickedBlock.location)
             signController.store(sign)
             this.manager.pingServers()
+            var signBlock = event.clickedBlock.state as Sign;
+            for (i in 0..3) {
+                signBlock.setLine(i, manager.replaceSign(BungeeCordConfig.bungeeCordConfiguration!!.singLines[i], BungeeCordServerStats(server)))
+            }
+            signBlock.update()
         } else {
             val sign = event.clickedBlock.state as Sign
             try {

@@ -55,6 +55,9 @@ class MinigameListener @Inject constructor(plugin: Plugin) : SimpleListener(plug
      */
     @EventHandler
     fun onPlayerExecuteCommand(event: PlayerCommandPreprocessEvent) {
+        println("MESSG: " + event.message)
+        if (event.message.startsWith("/blockball"))
+            return
         val game = gameController!!.getGameFromPlayer(event.player)
         if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE)) {
             event.isCancelled = true

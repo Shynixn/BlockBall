@@ -118,7 +118,7 @@ class ArenaRepository(private val items: MutableList<BukkitArena> = ArrayList())
                     val file = File(this.getFolder(), s)
                     configuration.load(file)
                     val data = configuration.getConfigurationSection("arena").getValues(true)
-                    val arenaEntity = YamlSerializer.deserializeObject(BlockBallArena::class.java, data)
+                    val arenaEntity = YamlSerializer.deserializeObject(BlockBallArena::class.java, null,data)
                     this.items.add(arenaEntity)
                 }
             } catch (ex: Exception) {
@@ -145,7 +145,7 @@ class ArenaRepository(private val items: MutableList<BukkitArena> = ArrayList())
             val data = serializable.serialize()
             for (key in data.keys) {
                 configuration.set("arena." + key, data[key])
-            }//
+            }
             configuration.save(file)
         } catch (ex: IOException) {
             logger!!.log(Level.WARNING, "Cannot save arena.", ex)

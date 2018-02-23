@@ -12,7 +12,7 @@ commands:
       permission-message: You don't have permission.
    blockballbungeecord:
       description: Adds a new bungeecord sign for connecting to other BlockBall servers.
-      usage: /<command> <server-name>
+      usage: /<command> <server>
       permission: blockball.command.admin
       permission-message: You don't have permission.
    blockballreload:

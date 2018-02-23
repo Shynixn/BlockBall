@@ -56,6 +56,8 @@ public final class YamlSerializer {
 
         ManualSerialization classicSerialize() default ManualSerialization.NONE;
 
+        Class<?> implementation() default Object.class;
+
         int arraySize() default -1;
     }
 
@@ -239,9 +241,9 @@ public final class YamlSerializer {
                 }
             } else {
                 if (keyClazz.isEnum()) {
-                    map.put(Enum.valueOf(keyClazz, key), deserializeObject(clazz, ((MemorySection) value).getValues(false)));
+                    map.put(Enum.valueOf(keyClazz, key), deserializeObject(clazz, null,((MemorySection) value).getValues(false)));
                 } else {
-                    map.put(key, deserializeObject(clazz, ((MemorySection) value).getValues(false)));
+                    map.put(key, deserializeObject(clazz,null, ((MemorySection) value).getValues(false)));
                 }
             }
         }
@@ -276,7 +278,7 @@ public final class YamlSerializer {
             } else if (isPrimitive(data.get(key).getClass())) {
                 objects[orderPlace] = (T) data.get(key);
             } else {
-                objects[orderPlace] = deserializeObject(clazz, ((MemorySection) data.get(key)).getValues(false));
+                objects[orderPlace] = deserializeObject(clazz, annotation.implementation(),((MemorySection) data.get(key)).getValues(false));
             }
             i++;
         }
@@ -310,7 +312,7 @@ public final class YamlSerializer {
         for (final String key : data.keySet()) {
             Object item = data.get(key);
             if (item instanceof MemorySection) {
-                collection.add(deserializeObject(clazz, ((MemorySection) item).getValues(false)));
+                collection.add(deserializeObject(clazz,null, ((MemorySection) item).getValues(false)));
             } else if (clazz.isEnum()) {
                 collection.add(Enum.valueOf((Class) clazz, (String) item));
             }
@@ -328,16 +330,20 @@ public final class YamlSerializer {
      * @throws IllegalAccessException exception
      * @throws InstantiationException exception
      */
-    public static <T> T deserializeObject(Class<T> clazz, Object dataSource) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    public static <T> T deserializeObject(Class<T> clazz, Class<?> instanceClazz, Object dataSource) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         if (clazz.isInterface()) {
-            throw new IllegalArgumentException("Cannot instantiate interface. Change your object fields! [" + clazz.getSimpleName() + ']');
+            if (instanceClazz != null && !instanceClazz.equals(Object.class)) {
+                clazz = (Class<T>) instanceClazz;
+            } else {
+                throw new IllegalArgumentException("Cannot instantiate interface. Change your object fields! [" + clazz.getSimpleName() + ']');
+            }
         }
         final Map<String, Object> data = getDataFromSource(dataSource);
         try {
             final Constructor map = clazz.getConstructor(Map.class);
             return (T) map.newInstance(data);
         } catch (NoSuchMethodException | InvocationTargetException e) {
-            final T object = clazz.newInstance();
+            final T object = (T) clazz.newInstance();
             return heavyDeserialize(object, clazz, data);
         }
     }
@@ -379,7 +385,7 @@ public final class YamlSerializer {
                                     if (field.get(object) != null) {
                                         heavyDeserialize(field.get(object), field.getType(), getDataFromSource(((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                                     } else {
-                                        field.set(object, deserializeObject(field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                        field.set(object, deserializeObject(field.getType(),yamlAnnotation.implementation(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                                     }
                                 }
                             }

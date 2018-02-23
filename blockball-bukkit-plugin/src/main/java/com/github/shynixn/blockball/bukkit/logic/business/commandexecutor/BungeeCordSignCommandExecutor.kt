@@ -34,7 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BungeeCordSignCommandExecutor @Inject constructor(plugin: Plugin, private val bungeeCordPingManager: BungeeCordPingManager) : SimpleCommandExecutor.Registered("blockballreload", plugin as JavaPlugin) {
+class BungeeCordSignCommandExecutor @Inject constructor(plugin: Plugin, private val bungeeCordPingManager: BungeeCordPingManager) : SimpleCommandExecutor.Registered("blockballbungeecord", plugin as JavaPlugin) {
 
     /**
      * Can be overwritten to listen to player executed commands.
@@ -47,7 +47,7 @@ class BungeeCordSignCommandExecutor @Inject constructor(plugin: Plugin, private 
             this.bungeeCordPingManager.signCache[player] = args[0]
             player.sendMessage(Config.prefix + "Rightclick on a sign to connect it to the server [" + args[0] + "].")
         } else {
-            player.sendMessage(Config.prefix + "/blockballbungeecord <server-name>")
+            player.sendMessage(Config.prefix + "/blockballbungeecord <server>")
         }
     }
 }

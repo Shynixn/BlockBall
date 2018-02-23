@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.persistence.controller.LinkSignControlle
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BungeeCordSignCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.entity.bungeecord.BungeeCordServerStats
+import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.listener.BungeeCordNetworkSignListener
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.NetworkSignRepository
@@ -193,7 +194,7 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
                 val location = (signInfo.position as LocationBuilder).toLocation()
                 if (location.block.state is Sign) {
                     val sign = location.block.state as Sign
-                    for (i in 0..4) {
+                    for (i in 0..3) {
                         sign.setLine(i, replaceSign(BungeeCordConfig.bungeeCordConfiguration!!.singLines[i], status))
                     }
                     sign.update()
@@ -205,13 +206,13 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
     }
 
 
-    private fun replaceSign(line: String, info: BungeeCordServerStatus): String {
-        var customLine = line
+    fun replaceSign(line: String, info: BungeeCordServerStatus): String {
+        var customLine = line.convertChatColors()
         customLine = when {
             info.status == BungeeCordServerState.INGAME -> customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.duringMatchSignState)
             info.status == BungeeCordServerState.RESTARTING -> customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.restartingSignState)
             info.status == BungeeCordServerState.WAITING_FOR_PLAYERS -> customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersSignState)
-            else -> customLine.replace("<state>", "---")
+            else -> customLine.replace("<state>", "No connection")
         }
         return customLine.replace("<maxplayers>", (info.playerMaxAmount * 2).toString())
                 .replace("<players>", info.playerAmount.toString())

@@ -117,7 +117,7 @@ class NetworkSignRepository : LinkSignController<Location> {
             if (configuration.getConfigurationSection("signs") != null) {
                 val data = configuration.getConfigurationSection("signs").getValues(false)
                 for (s in data.keys) {
-                    this.signs.add(YamlSerializer.deserializeObject(NetworkSign::class.java, (data[s] as ConfigurationSection).getValues(true)))
+                    this.signs.add(YamlSerializer.deserializeObject(NetworkSign::class.java, null,(data[s] as ConfigurationSection).getValues(true)))
                 }
             }
         } catch (e: IOException) {

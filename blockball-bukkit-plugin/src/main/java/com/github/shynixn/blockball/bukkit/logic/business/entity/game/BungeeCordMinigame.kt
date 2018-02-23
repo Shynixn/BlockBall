@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.bukkit.logic.business.helper.setServerModt
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 
 /**
  * Created by Shynixn 2018.
@@ -34,12 +35,30 @@ import org.bukkit.Bukkit
  */
 class BungeeCordMinigame(arena: BukkitArena) : Minigame(arena) {
 
+    /**
+     * Initially joins all online players.
+     */
+    init {
+        BungeeCordConfig.reload()
+        Bukkit.getOnlinePlayers().forEach { player ->
+            this.join(player, null)
+        }
+        Bukkit.getServer().setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd)
+    }
+
+    /** Leave the game. */
+    override fun leave(player: Player) {
+        if (!ingameStats.containsKey(player))
+            return
+        super.leave(player)
+        player.kickPlayer("")
+    }
+
     override fun onTwentyTicks() {
         super.onTwentyTicks()
         if (this.isGameRunning) {
             Bukkit.getServer().setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.inGameMotd)
-        }
-        else if (this.isLobbyCountdownRunning) {
+        } else if (this.isLobbyCountdownRunning) {
             Bukkit.getServer().setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd)
         }
     }
@@ -47,5 +66,6 @@ class BungeeCordMinigame(arena: BukkitArena) : Minigame(arena) {
     override fun close() {
         super.close()
         Bukkit.getServer().setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.restartingMotd)
+        Bukkit.getServer().shutdown()
     }
 }

@@ -95,9 +95,10 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
     /** Leave the game. */
     override fun leave(player: Player) {
-        super.leave(player)
         if (!ingameStats.containsKey(player))
             return
+        super.leave(player)
+
         player.teleport(arena.meta.lobbyMeta.leaveSpawnpoint!!.toBukkitLocation())
 
         val event = GameLeaveEvent(this, player)
@@ -106,12 +107,12 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
     /** Join the game. */
     override fun join(player: Player, team: Team?): Boolean {
-        if (isGameRunning || isLobbyFull()) {
+        if (isGameRunning || isEndGameRunning || isLobbyFull()) {
             return false
         }
         this.leave(player)
         this.prepareLobbyStatsForPlayer(player)
-        return false
+        return true
     }
 
     /**

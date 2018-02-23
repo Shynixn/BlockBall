@@ -36,6 +36,7 @@ import java.util.logging.Level
  */
 object ModtHelper {
     private var setModtMethod: Method? = null
+    private var getServerConsoleMethod: Method? = null
 
     /**
      * Sets the server modt to the given [text].
@@ -47,10 +48,15 @@ object ModtHelper {
             builder.append(ChatColor.RESET.toString())
             builder.append("]")
             if (setModtMethod == null) {
+                val minecraftServerClazz = Class.forName("net.minecraft.server.VERSION.MinecraftServer".replace("VERSION", VersionSupport.getServerVersion().versionText))
                 val craftServerClazz = Class.forName("org.bukkit.craftbukkit.VERSION.CraftServer".replace("VERSION", VersionSupport.getServerVersion().versionText))
-                setModtMethod = craftServerClazz.getDeclaredMethod("setMotd", String::class.java)
+
+                setModtMethod = minecraftServerClazz.getDeclaredMethod("setMotd", String::class.java)
+                getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")
             }
-            setModtMethod!!.invoke(Bukkit.getServer(), builder.toString())
+
+            val console = getServerConsoleMethod!!.invoke(Bukkit.getServer())
+            setModtMethod!!.invoke(console, ChatColor.translateAlternateColorCodes('&',builder.toString()))
         } catch (e: Exception) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to set log.", e)
         }

@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity.bungeecord
 
 import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus
 import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
 import org.bukkit.ChatColor
 
 /**
@@ -41,6 +42,10 @@ class BungeeCordServerStats : BungeeCordServerStatus {
     /** Name of the server. **/
     override var serverName: String? = null
 
+    constructor(serverName: String) {
+        this.serverName = serverName
+    }
+
     constructor(serverName: String, data: String) {
         this.serverName = serverName;
         try {
@@ -60,14 +65,15 @@ class BungeeCordServerStats : BungeeCordServerStatus {
                 }
                 i++
             }
-            try {
-                motd = ChatColor.translateAlternateColorCodes('&', motdBuilder.toString()).substring(0, motdBuilder.length - 2)
-                /* if (motd.equalsIgnoreCase(BungeeCord.MOD_INGAME))
+            try { //TODO MANAGE SIGNS CORRETLY
+                motd = ChatColor.translateAlternateColorCodes('&', motdBuilder.toString()).substring(0, motdBuilder.length - 2).replace("§","&")
+                if (motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.inGameMotd, true)) {
                     state = BungeeCordServerState.INGAME;
-                else if (motd.equalsIgnoreCase(BungeeCord.MOD_RESTARTING))
+                } else if (motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.restartingMotd, true)) {
                     state = BungeeCordServerState.RESTARTING;
-                else if (motd.equalsIgnoreCase(BungeeCord.MOD_WAITING_FOR_PLAYERS))
-                    state = BungeeCordServerState.WAITING_FOR_PLAYERS;*/
+                } else if (motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd, true)) {
+                    state = BungeeCordServerState.WAITING_FOR_PLAYERS;
+                }
             } catch (ex: Exception) {
                 state = BungeeCordServerState.RESTARTING
             }
@@ -96,7 +102,7 @@ class BungeeCordServerStats : BungeeCordServerStatus {
                     motd += data[i]
                 i++
             }
-           this.status = state
+            this.status = state
             this.playerMaxAmount = Integer.parseInt(motd)
         } catch (ex: Exception) {
             this.status = BungeeCordServerState.RESTARTING

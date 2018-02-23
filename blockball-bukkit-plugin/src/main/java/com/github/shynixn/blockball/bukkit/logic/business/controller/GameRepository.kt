@@ -190,8 +190,8 @@ class GameRepository : BukkitGameController, Runnable {
             this.store(Minigame(arena))
         } else if (arena.gameType == GameType.BUNGEE) {
             this.store(BungeeCordMinigame(arena))
-            plugin!!.logger.log(Level.INFO, "BlockBall plugin contains a BungeeCord Minigame. Server is now fully managed " +
-                    "by BlockBall and available for joining game " + arena.displayName + ".")
+            plugin!!.logger.log(Level.INFO, "Server is now fully managed " +
+                    "by BlockBall and available for joining game '" + arena.displayName + "'.")
             return
         }
     }

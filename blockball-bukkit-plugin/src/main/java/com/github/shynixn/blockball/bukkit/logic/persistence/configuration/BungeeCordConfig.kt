@@ -60,7 +60,7 @@ internal object BungeeCordConfig : SimpleConfig() {
             }
             val configuration = YamlConfiguration()
             configuration.load(file)
-            this.bungeeCordConfiguration = YamlSerializer.deserializeObject(BungeeCordConfiguration::class.java, configuration.get("bungeecord"))
+            this.bungeeCordConfiguration = YamlSerializer.deserializeObject(BungeeCordConfiguration::class.java, null, configuration.get("bungeecord"))
         } catch (e: IOException) {
             plugin!!.logger.log(Level.WARNING, "Failed to load bungeecord.yml.", e)
         }

@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.entity.InGameStats
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
+import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
@@ -95,7 +96,7 @@ abstract class LowLevelGame(
         if (!this.arena.enabled || closed) {
             status = GameStatus.DISABLED
             onUpdateSigns()
-            if (!this.ingameStats.isEmpty()) {
+            if (!this.ingameStats.isEmpty() && this.arena.gameType != GameType.BUNGEE) {
                 close()
             }
             return

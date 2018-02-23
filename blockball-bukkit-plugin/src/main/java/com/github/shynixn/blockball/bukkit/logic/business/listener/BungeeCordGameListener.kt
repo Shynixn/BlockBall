@@ -43,6 +43,12 @@ class BungeeCordGameListener @Inject constructor(plugin: Plugin) : SimpleListene
      */
     @EventHandler
     fun onPlayerJoinEvent(event: PlayerJoinEvent) {
-        gameController!!.getAll().find { p -> p.arena.gameType == GameType.BUNGEE }?.join(event.player)
+        val game = gameController!!.getAll().find { p -> p.arena.gameType == GameType.BUNGEE };
+        if (game != null) {
+            val success = game.join(event.player)
+            if (!success) {
+                event.player.kickPlayer(game.arena.meta.bungeeCordMeta.kickMessage)
+            }
+        }
     }
 }
