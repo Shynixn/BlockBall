@@ -75,6 +75,9 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
         } else if (command == BlockBallCommand.GAMESETTINGS_MAXDURATION && args.size == 3 && args[2].toIntOrNull() != null) {
             arena.meta.minigameMeta.matchDuration = args[2].toInt()
         }
+        else if (command == BlockBallCommand.GAMESETTINGS_LOBBYDURATION && args.size == 3 && args[2].toIntOrNull() != null) {
+            arena.meta.minigameMeta.lobbyDuration = args[2].toInt()
+        }
         return super.execute(player, command, cache, args)
     }
 
@@ -113,10 +116,15 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
                 .builder().nextLine()
 
         if (arena.gameType == GameType.MINIGAME || arena.gameType == GameType.BUNGEE) {
-            builder.component("- Max Duration: " + arena.meta.minigameMeta.matchDuration).builder()
+            builder.component("- Match Duration: " + arena.meta.minigameMeta.matchDuration).builder()
                     .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                     .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.GAMESETTINGS_MAXDURATION.command)
                     .setHoverText("Amount of seconds a game is going to last until it ends. The team with the highest score wins the match.")
+                    .builder().nextLine()
+            builder.component("- Lobby Duration: " + arena.meta.minigameMeta.lobbyDuration).builder()
+                    .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+                    .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.GAMESETTINGS_LOBBYDURATION.command)
+                    .setHoverText("Amount of seconds until a lobby is going to start when it reached its min amount of red and blue players.")
                     .builder().nextLine()
                     .component("- Lobby Spawnpoint: " + lobbySpawnpoint).builder()
                     .component(ClickableComponent.LOCATION.text).setColor(ClickableComponent.LOCATION.color)

@@ -1,5 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
+import com.github.shynixn.blockball.api.bukkit.business.event.GameJoinEvent
+import com.github.shynixn.blockball.api.bukkit.business.event.GameLeaveEvent
+import com.github.shynixn.blockball.api.bukkit.business.event.GameWinEvent
+import com.github.shynixn.blockball.api.bukkit.business.event.GoalShootEvent
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
@@ -8,6 +12,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.container.PlayerStorage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.sendScreenMessage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -43,19 +48,28 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
     /**
      * Gets called when a player scores a point for the given team.
      */
-    override fun onScore(teamMeta: TeamMeta<Location, ItemStack>) {
+    override fun onScore(team: Team, teamMeta: TeamMeta<Location, ItemStack>) {
         val scoreMessageTitle = teamMeta.scoreMessageTitle
         val scoreMessageSubTitle = teamMeta.scoreMessageSubTitle
         this.getPlayers().forEach { p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this) }
+
+        if (lastInteractedEntity != null && lastInteractedEntity is Player) {
+            val event = GoalShootEvent(this, lastInteractedEntity as Player,team)
+            Bukkit.getServer().pluginManager.callEvent(event)
+        }
     }
 
     /**
      * Gets called when a team wins the game.
      */
-    override fun onWin(teamMeta: TeamMeta<Location, ItemStack>) {
+    override fun onWin(team: Team, teamMeta: TeamMeta<Location, ItemStack>) {
         val winMessageTitle = teamMeta.winMessageTitle
         val winMessageSubTitle = teamMeta.winMessageSubTitle
         this.getPlayers().forEach { p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle, this) }
+
+        val event = GameWinEvent(this, team)
+        Bukkit.getServer().pluginManager.callEvent(event)
+
         this.close()
     }
 
@@ -69,8 +83,7 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         if (arena.meta.lobbyMeta.onlyAllowEventTeams) {
             if (joiningTeam == Team.RED && this.redTeam.size > this.blueTeam.size) {
                 joiningTeam = null
-            }
-            else if (joiningTeam == Team.BLUE && this.blueTeam.size > this.redTeam.size) {
+            } else if (joiningTeam == Team.BLUE && this.blueTeam.size > this.redTeam.size) {
                 joiningTeam = null
             }
         }
@@ -85,10 +98,18 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         if (joiningTeam == Team.RED && this.redTeam.size < this.arena.meta.redTeamMeta.maxAmount) {
             this.prepareStatsForPlayer(player, joiningTeam, this.arena.meta.redTeamMeta)
             this.redTeam.add(player)
+
+            val event = GameJoinEvent(this, player)
+            Bukkit.getServer().pluginManager.callEvent(event)
+
             return true
         } else if (joiningTeam == Team.BLUE && this.blueTeam.size < this.arena.meta.blueTeamMeta.maxAmount) {
             this.prepareStatsForPlayer(player, joiningTeam, this.arena.meta.blueTeamMeta)
             this.blueTeam.add(player)
+
+            val event = GameJoinEvent(this, player)
+            Bukkit.getServer().pluginManager.callEvent(event)
+
             return true
         }
 
@@ -98,9 +119,10 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
     /** Leave the game. */
     override fun leave(player: Player) {
         super.leave(player)
-        val stats = ingameStats[player] ?: return
-        ingameStats.remove(player)
-        stats.resetState()
+        if (!ingameStats.containsKey(player))
+            return
+        val event = GameLeaveEvent(this, player)
+        Bukkit.getServer().pluginManager.callEvent(event)
     }
 
     /**

@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity.container
 import com.github.shynixn.blockball.api.business.entity.InGameStats
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.Team
+import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scoreboard.Scoreboard
@@ -49,9 +50,10 @@ class PlayerStorage(
     private var allowFlying: Boolean = false
     private var walkingSpeed: Float = 0.toFloat()
     private var scoreboard: Scoreboard? = null
+    private var gamemode : GameMode? = null
 
     /** Team of the player. */
-    override var team: Team = Team.RED
+    override var team: Team? = null
     private var gameType: GameType = GameType.HUBGAME;
 
     /**
@@ -65,7 +67,8 @@ class PlayerStorage(
             this.allowFlying = player.allowFlight
             this.walkingSpeed = player.walkSpeed
             this.scoreboard = player.scoreboard
-        } else if (gameType == GameType.HUBGAME) {
+        } else if (gameType == GameType.MINIGAME) {
+            this.gamemode = player.gameMode
             this.level = player.level
             this.exp = player.exp
             this.maxHealth = player.maxHealth
@@ -89,6 +92,7 @@ class PlayerStorage(
             player.walkSpeed = this.walkingSpeed
             player.scoreboard = this.scoreboard
         } else if (gameType == GameType.MINIGAME) {
+            player.gameMode = gamemode
             player.level = this.level
             player.exp = this.exp
             player.maxHealth = maxHealth

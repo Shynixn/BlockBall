@@ -100,7 +100,11 @@ abstract class LowLevelGame(
             }
             return
         }
-        status = GameStatus.ENABLED
+
+        if (status == GameStatus.DISABLED) {
+            status = GameStatus.ENABLED
+        }
+
         this.onTick()
         if (this.haveTwentyTicksPassed()) {
             this.onTwentyTicks()
@@ -144,6 +148,9 @@ abstract class LowLevelGame(
                 holo.removePlayer(player)
             }
         }
+
+        ingameStats.remove(player)
+        stats.resetState()
     }
 
     private fun updateDoubleJump() {
@@ -248,7 +255,7 @@ abstract class LowLevelGame(
             text = when {
                 this.status == GameStatus.RUNNING -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignRunning!!)
                 this.status == GameStatus.ENABLED -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignEnabled!!)
-                this.status == GameStatus.ENABLED -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignEnabled!!)
+                this.status == GameStatus.DISABLED -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignDisabled!!)
                 else -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignDisabled!!)
             }
             if (teamMeta != null) {
@@ -258,7 +265,7 @@ abstract class LowLevelGame(
             text = text.replace(PlaceHolder.ARENA_CURRENTPLAYERS.placeHolder, players.toString())
                     .replace(PlaceHolder.ARENA_MAXPLAYERS.placeHolder, maxPlayers.toString())
 
-            text = text.replace(PlaceHolder.ARENA_SUMCURRENTPLAYERS.placeHolder, this.getPlayers().size.toString())
+            text = text.replace(PlaceHolder.ARENA_SUMCURRENTPLAYERS.placeHolder, this.ingameStats.size.toString())
                     .replace(PlaceHolder.ARENA_SUMMAXPLAYERS.placeHolder, (arena.meta.redTeamMeta.maxAmount + arena.meta.blueTeamMeta.maxAmount).toString())
             sign.setLine(i, text.convertChatColors())
         }
@@ -298,6 +305,7 @@ abstract class LowLevelGame(
      */
     override fun close() {
         if (!closed) {
+            status = GameStatus.DISABLED
             closed = true
             scoreboard?.close()
             ingameStats.keys.forEach { p -> leave(p); }

@@ -1,7 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
 import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.SoundBuilder
+import com.github.shynixn.blockball.api.bukkit.business.event.GameLeaveEvent
+import com.github.shynixn.blockball.api.bukkit.business.event.GameWinEvent
+import com.github.shynixn.blockball.api.bukkit.business.event.GoalShootEvent
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
+import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
@@ -12,6 +16,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocatio
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -50,14 +55,20 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
     private var lobbyCountdown: Int = 0
     protected var isGameRunning: Boolean = false
     private var gameCountdown: Int = 0
+    private var isEndGameRunning: Boolean = false
 
     /**
      * Gets called when a player scores a point for the given team.
      */
-    override fun onScore(teamMeta: TeamMeta<Location, ItemStack>) {
+    override fun onScore(team: Team, teamMeta: TeamMeta<Location, ItemStack>) {
         val scoreMessageTitle = teamMeta.scoreMessageTitle
         val scoreMessageSubTitle = teamMeta.scoreMessageSubTitle
         this.getPlayers().forEach { p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this) }
+
+        if (lastInteractedEntity != null && lastInteractedEntity is Player) {
+            val event = GoalShootEvent(this, lastInteractedEntity as Player,team)
+            Bukkit.getServer().pluginManager.callEvent(event)
+        }
     }
 
     /**
@@ -66,37 +77,39 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
     fun onDraw() {
         this.redTeam.forEach { p -> p.sendScreenMessage(arena.meta.redTeamMeta.drawMessageTitle, arena.meta.redTeamMeta.drawMessageSubTitle, this) }
         this.blueTeam.forEach { p -> p.sendScreenMessage(arena.meta.blueTeamMeta.drawMessageTitle, arena.meta.blueTeamMeta.drawMessageSubTitle, this) }
-        plugin.server.scheduler.runTaskLater(plugin, {
-            this.close()
-        }, 5 * 20L)
     }
 
     /**
      * Gets called when a team wins the game.
      */
-    override fun onWin(teamMeta: TeamMeta<Location, ItemStack>) {
+    override fun onWin(team: Team, teamMeta: TeamMeta<Location, ItemStack>) {
         val winMessageTitle = teamMeta.winMessageTitle
         val winMessageSubTitle = teamMeta.winMessageSubTitle
         this.getPlayers().forEach { p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle, this) }
-        plugin.server.scheduler.runTaskLater(plugin, {
-            this.close()
-        }, 5 * 20L)
+
+        val event = GameWinEvent(this, team)
+        Bukkit.getServer().pluginManager.callEvent(event)
+
+        setEndGame()
     }
 
     /** Leave the game. */
     override fun leave(player: Player) {
         super.leave(player)
-        val stats = this.ingameStats[player] ?: return
-        ingameStats.remove(player)
-        stats.resetState()
+        if (!ingameStats.containsKey(player))
+            return
+        player.teleport(arena.meta.lobbyMeta.leaveSpawnpoint!!.toBukkitLocation())
+
+        val event = GameLeaveEvent(this, player)
+        Bukkit.getServer().pluginManager.callEvent(event)
     }
 
     /** Join the game. */
     override fun join(player: Player, team: Team?): Boolean {
-        this.leave(player)
-        if (isLobbyFull()) {
+        if (isGameRunning || isLobbyFull()) {
             return false
         }
+        this.leave(player)
         this.prepareLobbyStatsForPlayer(player)
         return false
     }
@@ -105,30 +118,79 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
      * Thread save method to listen on the second tick cycle of the game.
      */
     override fun onTwentyTicks() {
-        if (isLobbyCountdownRunning) {
+        if (isEndGameRunning) {
+            if (ball != null) {
+                ball!!.remove()
+                ball = null
+            }
+
+            gameCountdown--
             this.ingameStats.keys.forEach { p ->
-                p.exp = (lobbyCountdown.toFloat()) / 100.0F
+                if (gameCountdown <= 10) {
+                    p.exp = (gameCountdown.toFloat() / 10.0F)
+                }
+                p.level = gameCountdown
+            }
+            if (gameCountdown <= 0) {
+                close()
+            }
+            return
+        }
+
+        if (isLobbyCountdownRunning) {
+
+            if (lobbyCountdown > 10) {
+                val amountPlayers = this.arena.meta.blueTeamMeta.maxAmount + this.arena.meta.redTeamMeta.maxAmount
+                if (this.ingameStats.size >= amountPlayers) {
+                    lobbyCountdown = 10;
+                }
             }
             lobbyCountdown--
+            this.ingameStats.keys.forEach { p ->
+                if (lobbyCountdown <= 10) {
+                    p.exp = 1.0F - (lobbyCountdown.toFloat() / 10.0F)
+                }
+                p.level = lobbyCountdown
+            }
+
             if (lobbyCountdown < 5) {
                 this.playBlingSound()
             }
             if (lobbyCountdown <= 0) {
+                this.ingameStats.keys.forEach { p ->
+                    if (lobbyCountdown <= 10) {
+                        p.exp = 1.0F
+                    }
+                    p.level = 0
+                }
                 gameCountdown = this.arena.meta.minigameMeta.matchDuration
                 isLobbyCountdownRunning = false
                 isGameRunning = true
                 startGame()
             }
         }
+
         if (!isLobbyCountdownRunning && canStartLobbyCountdown()) {
             isLobbyCountdownRunning = true
-            lobbyCountdown = 10
+            lobbyCountdown = arena.meta.minigameMeta.lobbyDuration
         }
+
         if (isGameRunning) {
             gameCountdown--
+            this.ingameStats.keys.forEach { p ->
+                if (gameCountdown <= 10) {
+                    p.exp = (gameCountdown.toFloat() / 10.0F)
+                }
+                p.level = gameCountdown
+            }
+
             if (gameCountdown <= 0) {
-                isGameRunning = false
+                setEndGame()
                 timesUpGame()
+            }
+
+            if (this.ingameStats.isEmpty()) {
+                this.close()
             }
         }
     }
@@ -141,16 +203,17 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             }
             this.redGoals > this.blueGoals -> {
                 this.onMatchEnd(this.redTeam, this.blueTeam)
-                this.onWin(this.arena.meta.redTeamMeta)
+                this.onWin(Team.RED,this.arena.meta.redTeamMeta)
             }
             else -> {
                 this.onMatchEnd(this.blueTeam, this.redTeam)
-                this.onWin(this.arena.meta.blueTeamMeta)
+                this.onWin(Team.BLUE,this.arena.meta.blueTeamMeta)
             }
         }
     }
 
     private fun startGame() {
+        status = GameStatus.RUNNING
         ingameStats.keys.forEach { p ->
             val stats = ingameStats[p]
             if (stats!!.team == null) {
@@ -196,7 +259,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
     private fun canStartLobbyCountdown(): Boolean {
         val amount = arena.meta.redTeamMeta.minAmount + arena.meta.blueTeamMeta.minAmount
-        if (!isGameRunning && this.ingameStats.size >= amount) {
+        if (!isGameRunning && this.ingameStats.size >= amount && ingameStats.isNotEmpty()) {
             return true
         }
         return false
@@ -210,6 +273,16 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         }
     }
 
+    private fun setEndGame() {
+        if (!isEndGameRunning) {
+            gameCountdown = 10
+        }
+
+        isGameRunning = false
+        isEndGameRunning = true
+        blockBallSpawning = true
+    }
+
     private fun prepareLobbyStatsForPlayer(player: Player) {
         val stats = PlayerStorage(player)
         stats.storeForType(GameType.MINIGAME)
@@ -221,6 +294,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         player.foodLevel = 20
         player.level = 0
         player.exp = 0.0F
+        player.gameMode = GameMode.ADVENTURE
 
         player.inventory.armorContents = arrayOfNulls(4)
         player.inventory.clear()

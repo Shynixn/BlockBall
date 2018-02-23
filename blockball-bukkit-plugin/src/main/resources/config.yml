@@ -40,9 +40,9 @@ metrics: true
 
 messages:
   prefix: '&0&l[&f&lBall&0&l]&7 '
-  state-sign-enabled: '&2&lENABLED'
-  state-sign-disabled: '&4&lDISABLED'
-  state-sign-running: '&1&lRUNNING'
+  state-sign-enabled: '&aJoin'
+  state-sign-disabled: '&4Disabled'
+  state-sign-running: '&1Running'
 
 ############################
 

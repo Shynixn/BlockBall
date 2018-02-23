@@ -32,7 +32,7 @@ import com.github.shynixn.blockball.api.business.enumeration.Team
 interface InGameStats {
 
     /** Team of the player. */
-    val team : Team
+    val team : Team?
 
     /** Resets the players state before joining. */
     fun resetState()

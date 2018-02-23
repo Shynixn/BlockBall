@@ -35,6 +35,9 @@ interface MinigameLobbyMeta : PersistenceAble {
     /** Duration the match will max last. */
     var matchDuration: Int
 
+    /** Duration the match will max last. */
+    var lobbyDuration: Int
+
     /** Spawnpoint of the player in the lobby. */
     var lobbySpawnpoint: StorageLocation?
 }

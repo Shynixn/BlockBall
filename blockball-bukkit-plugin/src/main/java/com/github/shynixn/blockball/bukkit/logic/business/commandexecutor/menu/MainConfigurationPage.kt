@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.bukkit.business.controller.BukkitGameController
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
+import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.bukkit.dependencies.worldedit.WorldEditConnection
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
@@ -71,12 +72,10 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
             val arena = arenaRepository?.getArenaByName(args[2])!!;
             arenaRepository!!.remove(arena);
             return CommandResult.BACK
-        }
-        else if (command == BlockBallCommand.ARENA_ENABLE) {
+        } else if (command == BlockBallCommand.ARENA_ENABLE) {
             val arena = cache[0] as BukkitArena
             arena.enabled = !arena.enabled
-        }
-        else if (command == BlockBallCommand.ARENA_SETBALLSPAWNPOINT) {
+        } else if (command == BlockBallCommand.ARENA_SETBALLSPAWNPOINT) {
             val arena = cache[0] as BukkitArena
             arena.meta.ballMeta.spawnpoint = player.location.toPosition()
         } else if (command == BlockBallCommand.ARENA_SETDISPLAYNAME) {
@@ -113,29 +112,27 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
             val arena = cache[0] as BukkitArena
             if (arena.lowerCorner != null && arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.lowerCorner != null
                     && arena.meta.ballMeta.spawnpoint != null) {
-                BlockBallApi.getDefaultGameController<BukkitGameController>()
-                        .arenaController!!.store(arena)
+                if (arena.gameType === GameType.HUBGAME || (arena.meta.minigameMeta.lobbySpawnpoint != null && arena.meta.lobbyMeta.leaveSpawnpoint != null)) {
+                    BlockBallApi.getDefaultGameController<BukkitGameController>()
+                            .arenaController!!.store(arena)
+                } else {
+                    return CommandResult.MINIGAMEARENA_NOTVALID
+                }
             } else {
                 return CommandResult.ARENA_NOTVALID
             }
-        }
-        else if (command == BlockBallCommand.ARENA_SAVE) {
+        } else if (command == BlockBallCommand.ARENA_RELOAD) {
             val arena = cache[0] as BukkitArena
             if (arena.lowerCorner != null && arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.lowerCorner != null
                     && arena.meta.ballMeta.spawnpoint != null) {
-                BlockBallApi.getDefaultGameController<BukkitGameController>()
-                        .arenaController!!.store(arena)
-            } else {
-                return CommandResult.ARENA_NOTVALID
-            }
-        }
-        else if (command == BlockBallCommand.ARENA_RELOAD){
-            val arena = cache[0] as BukkitArena
-            if (arena.lowerCorner != null && arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.lowerCorner != null
-                    && arena.meta.ballMeta.spawnpoint != null) {
-                BlockBallApi.getDefaultGameController<BukkitGameController>()
-                        .arenaController!!.store(arena)
-                BlockBallApi.getDefaultGameController<BukkitGameController>().reload()
+                if (arena.gameType === GameType.HUBGAME || (arena.meta.minigameMeta.lobbySpawnpoint != null && arena.meta.lobbyMeta.leaveSpawnpoint != null)) {
+
+                    BlockBallApi.getDefaultGameController<BukkitGameController>()
+                            .arenaController!!.store(arena)
+                    BlockBallApi.getDefaultGameController<BukkitGameController>().reload()
+                } else {
+                    return CommandResult.MINIGAMEARENA_NOTVALID
+                }
             } else {
                 return CommandResult.ARENA_NOTVALID
             }

@@ -6,7 +6,6 @@ a game can last. Also, players can only join before the match starts.
 
 Make sure you created a `Base Game <../gamemodes/basicgame.html>`__ first before you continue.
 
-You need to change the GameType on the **Settings Page** to MiniGame before you continue!
 
 Configuring ingame
 ~~~~~~~~~~~~~~~~~~
@@ -14,12 +13,13 @@ Configuring ingame
 At this stage, you should be able to open the `Settings <../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui>`__ page of your arena chat UI.
 
 1. Go to the **Settings Page** of your arena
-2. Open the **Game Settings Page**
+2. Change the GameType to MiniGame
+3. Open the **Game Settings Page**
 
 .. image:: ../_static/images/arena11.jpg
 
-3. Set the lobby spawnpoint and the leave spawnpoint.
-4. Customize the other available options to your own needs.
+4. Set the lobby spawnpoint and the leave spawnpoint.
+5. Customize the other available options to your own needs.
 
 You can find all options explained at the bottom of this page.
 

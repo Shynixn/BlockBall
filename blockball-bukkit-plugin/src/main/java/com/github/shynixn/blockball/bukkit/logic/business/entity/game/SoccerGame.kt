@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 import com.github.shynixn.ball.api.BallsApi
 import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
+import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
@@ -14,6 +15,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -51,6 +53,7 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
     private var ballSpawnCounter = 0
     private var bumperCounter = 0
     private var bumper = 20
+    protected var blockBallSpawning = false
     private var lastBallLocation: Location? = null
     var lastInteractedEntity: Entity? = null
 
@@ -71,12 +74,12 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
     /**
      * Gets called when a player scores a point for the given team.
      */
-    protected abstract fun onScore(teamMeta: TeamMeta<Location, ItemStack>)
+    protected abstract fun onScore(team: Team, teamMeta: TeamMeta<Location, ItemStack>)
 
     /**
      * Gets called when a team wins the game.
      */
-    protected abstract fun onWin(teamMeta: TeamMeta<Location, ItemStack>)
+    protected abstract fun onWin(team: Team, teamMeta: TeamMeta<Location, ItemStack>)
 
     protected fun onMatchEnd(winningPlayers: List<Player>?, loosingPlayers: List<Player>?) {
         if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH) && winningPlayers != null) {
@@ -115,29 +118,33 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
     }
 
     override fun onUpdateSigns() {
-        for (i in this.arena.meta.redTeamMeta.signs.indices) {
-            val position = this.arena.meta.redTeamMeta.signs[i]
-            if (!replaceTextOnSign(position, arena.meta.redTeamMeta.signLines.toTypedArray(), arena.meta.redTeamMeta)) {
-                this.arena.meta.redTeamMeta.signs.removeAt(i)
+        try {
+            for (i in this.arena.meta.redTeamMeta.signs.indices) {
+                val position = this.arena.meta.redTeamMeta.signs[i]
+                if (!replaceTextOnSign(position, arena.meta.redTeamMeta.signLines.toTypedArray(), arena.meta.redTeamMeta)) {
+                    this.arena.meta.redTeamMeta.signs.removeAt(i)
+                }
             }
-        }
-        for (i in this.arena.meta.blueTeamMeta.signs.indices) {
-            val position = this.arena.meta.blueTeamMeta.signs[i]
-            if (!replaceTextOnSign(position, arena.meta.blueTeamMeta.signLines.toTypedArray(), arena.meta.blueTeamMeta)) {
-                this.arena.meta.blueTeamMeta.signs.removeAt(i)
+            for (i in this.arena.meta.blueTeamMeta.signs.indices) {
+                val position = this.arena.meta.blueTeamMeta.signs[i]
+                if (!replaceTextOnSign(position, arena.meta.blueTeamMeta.signLines.toTypedArray(), arena.meta.blueTeamMeta)) {
+                    this.arena.meta.blueTeamMeta.signs.removeAt(i)
+                }
             }
-        }
-        for (i in this.arena.meta.lobbyMeta.joinSigns.indices) {
-            val position = this.arena.meta.lobbyMeta.joinSigns[i]
-            if (!replaceTextOnSign(position, arena.meta.lobbyMeta.joinSignLines, null)) {
-                this.arena.meta.lobbyMeta.joinSigns.removeAt(i)
+            for (i in this.arena.meta.lobbyMeta.joinSigns.indices) {
+                val position = this.arena.meta.lobbyMeta.joinSigns[i]
+                if (!replaceTextOnSign(position, arena.meta.lobbyMeta.joinSignLines, null)) {
+                    this.arena.meta.lobbyMeta.joinSigns.removeAt(i)
+                }
             }
-        }
-        for (i in this.arena.meta.lobbyMeta.leaveSigns.indices) {
-            val position = this.arena.meta.lobbyMeta.leaveSigns[i]
-            if (!replaceTextOnSign(position, arena.meta.lobbyMeta.leaveSignLines, null)) {
-                this.arena.meta.lobbyMeta.leaveSigns.removeAt(i)
+            for (i in this.arena.meta.lobbyMeta.leaveSigns.indices) {
+                val position = this.arena.meta.lobbyMeta.leaveSigns[i]
+                if (!replaceTextOnSign(position, arena.meta.lobbyMeta.leaveSignLines, null)) {
+                    this.arena.meta.lobbyMeta.leaveSigns.removeAt(i)
+                }
             }
+        } catch (e: Exception) { // Removing sign task could clash with updating signs.
+            plugin.logger.log(Level.INFO, "Sign update was cached.")
         }
     }
 
@@ -202,25 +209,28 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
         if (this.arena.meta.redTeamMeta.goal.isLocationInSelection(this.ball!!.location)) {
             this.blueGoals++
             this.ball!!.remove()
-            this.onScore(this.arena.meta.blueTeamMeta)
+            this.onScore(Team.BLUE,this.arena.meta.blueTeamMeta)
             this.onScoreReward(blueTeam)
             if (this.blueGoals >= this.arena.meta.lobbyMeta.maxScore) {
                 this.onMatchEnd(blueTeam, redTeam)
-                this.onWin(this.arena.meta.blueTeamMeta)
+                this.onWin(Team.BLUE,this.arena.meta.blueTeamMeta)
             }
         } else if (this.arena.meta.blueTeamMeta.goal.isLocationInSelection(this.ball!!.location)) {
             this.redGoals++
             this.ball!!.remove()
-            this.onScore(this.arena.meta.redTeamMeta)
+            this.onScore(Team.RED,this.arena.meta.redTeamMeta)
             this.onScoreReward(redTeam)
             if (this.redGoals >= this.arena.meta.lobbyMeta.maxScore) {
                 this.onMatchEnd(redTeam, blueTeam)
-                this.onWin(this.arena.meta.redTeamMeta)
+                this.onWin(Team.RED,this.arena.meta.redTeamMeta)
             }
         }
     }
 
     private fun handleBallSpawning() {
+        if (blockBallSpawning) {
+            return
+        }
         if (this.ballSpawning) {
             this.ballSpawnCounter--
             if (this.ballSpawnCounter <= 0) {

@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.MinigameLobbyMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 
 /**
  * Created by Shynixn 2018.
@@ -34,9 +35,20 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  */
 class MinigameLobbyProperties : PersistenceObject(), MinigameLobbyMeta {
     /** Duration the match will max last. */
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "lobby-duration")
+    override var lobbyDuration: Int = 20
+    /** Duration the match will max last. */
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "match-duration")
     override var matchDuration: Int = 300
     /** Spawnpoint of the player in the lobby. */
-    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "lobby-spawnpoint")
-    override var lobbySpawnpoint: StorageLocation? = null
+    override var lobbySpawnpoint: StorageLocation?
+        get() {
+            return this.internalLocation
+        }
+        set(value) {
+            this.internalLocation = value as LocationBuilder;
+        }
+
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "lobby-spawnpoint")
+    private var internalLocation: LocationBuilder? = null
 }

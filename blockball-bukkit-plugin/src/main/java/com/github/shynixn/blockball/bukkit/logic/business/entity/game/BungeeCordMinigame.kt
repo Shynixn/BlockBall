@@ -1,14 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.business.helper.setServerModt
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.bungeecord.BungeeCordConfiguration
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
 import org.bukkit.Bukkit
-import org.bukkit.configuration.file.YamlConfiguration
-import java.io.File
-import java.io.IOException
-import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -39,28 +34,18 @@ import java.util.logging.Level
  */
 class BungeeCordMinigame(arena: BukkitArena) : Minigame(arena) {
 
-    private var bungeeCordConfiguration: BungeeCordConfiguration? = null
-
-    init {
-        saveBungeeCordConfiguration()
-    }
-
     override fun onTwentyTicks() {
         super.onTwentyTicks()
         if (this.isGameRunning) {
-            Bukkit.getServer().setServerModt(bungeeCordConfiguration!!.inGameMotd)
+            Bukkit.getServer().setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.inGameMotd)
         }
         else if (this.isLobbyCountdownRunning) {
-            Bukkit.getServer().setServerModt(bungeeCordConfiguration!!.waitingForPlayersMotd)
+            Bukkit.getServer().setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd)
         }
-    }
-
-    private fun saveBungeeCordConfiguration() {
-
     }
 
     override fun close() {
         super.close()
-        Bukkit.getServer().setServerModt(bungeeCordConfiguration!!.restartingMotd)
+        Bukkit.getServer().setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.restartingMotd)
     }
 }
