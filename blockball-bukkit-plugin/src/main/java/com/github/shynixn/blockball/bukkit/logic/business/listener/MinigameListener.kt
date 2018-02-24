@@ -55,7 +55,7 @@ class MinigameListener @Inject constructor(plugin: Plugin) : SimpleListener(plug
      */
     @EventHandler
     fun onPlayerExecuteCommand(event: PlayerCommandPreprocessEvent) {
-        if (event.message.startsWith("/blockball"))
+        if (event.message.startsWith("/blockball") || event.message.startsWith("/" + plugin.config.getString("global-leave.command")))
             return
         val game = gameController!!.getGameFromPlayer(event.player)
         if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE)) {

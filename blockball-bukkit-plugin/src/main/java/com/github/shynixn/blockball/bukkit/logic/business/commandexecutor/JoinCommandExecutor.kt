@@ -47,28 +47,41 @@ class JoinCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExe
      * @param player player
      * @param args   args
      */
-    override fun onPlayerExecuteCommand(player: Player?, args: Array<out String>?) {
+    override fun onPlayerExecuteCommand(player: Player, args: Array<out String>?) {
         if (args!!.size >= 2) {
             gameController!!.games.forEach { game ->
                 val redTeamArgumentsAmount = game.arena.meta.redTeamMeta.displayName.split(Pattern.quote(" ")).size
-                val reddata = mergeArgs(0, redTeamArgumentsAmount+1, args);
-                println(reddata)
+                val reddata = mergeArgs(0, redTeamArgumentsAmount + 1, args)
                 if (reddata.equals(game.arena.meta.redTeamMeta.displayName.stripChatColors(), true)) {
                     val gameArgumentsAmount = game.arena.name.split(Pattern.quote(" ")).size
-                    val result = mergeArgs(redTeamArgumentsAmount+1, gameArgumentsAmount, args);
+                    val result = mergeArgs(redTeamArgumentsAmount + 1, gameArgumentsAmount, args)
                     if (result == game.arena.name) {
-                        game.join(player!!, Team.RED)
+                        game.join(player, Team.RED)
+                        return
                     }
                 }
                 val blueTeamArgumentsAmount = game.arena.meta.blueTeamMeta.displayName.split(Pattern.quote(" ")).size
-                val bluedata = mergeArgs(0, blueTeamArgumentsAmount+1, args);
+                val bluedata = mergeArgs(0, blueTeamArgumentsAmount + 1, args)
                 if (bluedata.equals(game.arena.meta.blueTeamMeta.displayName.stripChatColors(), true)) {
                     val gameArgumentsAmount = game.arena.name.split(Pattern.quote(" ")).size
-                    val result = mergeArgs(blueTeamArgumentsAmount+1,gameArgumentsAmount, args);
+                    val result = mergeArgs(blueTeamArgumentsAmount + 1, gameArgumentsAmount, args)
                     println(result)
                     if (result == game.arena.name) {
-                        game.join(player!!, Team.BLUE)
+                        game.join(player, Team.BLUE)
+                        return
                     }
+                }
+            }
+        }
+        if (args.isNotEmpty()) {
+            val mergedArgs = mergeArgs(0, args.size, args)
+            gameController!!.getAll().forEach { g ->
+                if (g.arena.name.equals(mergedArgs, true)) {
+                    g.join(player)
+                    return
+                } else if (g.arena.displayName.equals(mergedArgs, true)) {
+                    g.join(player)
+                    return
                 }
             }
         }
