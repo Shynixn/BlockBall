@@ -38,28 +38,28 @@ import java.util.logging.Level;
  */
 public final class BossBarConnection {
     /**
-     * Initialize
+     * Initialize.
      */
     private BossBarConnection() {
         super();
     }
 
     /**
-     * Updates the bossBar of the BossBar plugin
+     * Updates the bossBar of the BossBar plugin.
      *
      * @param player  player
      * @param message message
      */
-    public static void updateBossBar(Player player, String message) {
+    public static void updateBossBar(Player player, String message, float percentage) {
         try {
-            ReflectionUtils.invokeMethodByClass(ReflectionUtils.invokeClass("org.inventivetalent.bossbar.BossBarAPI"), "setMessage", new Class[]{Player.class, String.class}, new Object[]{player, message});
+            ReflectionUtils.invokeMethodByClass(ReflectionUtils.invokeClass("org.inventivetalent.bossbar.BossBarAPI"), "setMessage", new Class[]{Player.class, String.class, float.class}, new Object[]{player, message, percentage});
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to update Bossbar.", e);
         }
     }
 
     /**
-     * Removes the bossBar of the BossBar plugin
+     * Removes the bossBar of the BossBar plugin.
      *
      * @param player player
      */

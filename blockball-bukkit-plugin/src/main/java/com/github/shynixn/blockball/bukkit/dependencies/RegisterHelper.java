@@ -82,7 +82,7 @@ public final class RegisterHelper {
     }
 
     public static void addMoney(double amount, Collection<Player> players) {
-        if(amount == 0)
+        if (amount == 0)
             return;
         if (RegisterHelper.isRegistered("Vault") && VaultConnection.setupEconomy()) {
             VaultConnection.add(amount, players.toArray(new Player[0]));
@@ -111,12 +111,12 @@ public final class RegisterHelper {
         }
     }
 
-    public static void setBossBar(Player player, String message) {
+    public static void setBossBar(Player player, String message, double percentage) {
         if (RegisterHelper.isRegistered("BossBarAPI")) {
             if (message == null) {
                 BossBarConnection.removeBossBar(player);
             } else {
-                BossBarConnection.updateBossBar(player, message);
+                BossBarConnection.updateBossBar(player, message, (float) percentage);
             }
         }
     }

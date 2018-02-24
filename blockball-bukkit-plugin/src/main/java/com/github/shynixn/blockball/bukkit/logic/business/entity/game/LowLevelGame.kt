@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
+import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.entity.InGameStats
@@ -10,6 +11,7 @@ import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
+import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.GameScoreboard
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleBossBar
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleHologram
@@ -69,7 +71,7 @@ abstract class LowLevelGame(
     protected var redGoals = 0
     protected var blueGoals = 0
     var doubleJumpCooldownPlayers: MutableMap<Player, Int> = HashMap()
-    var closed: Boolean = false;
+    var closed: Boolean = false
     private var bumperTimer = 20L
 
     private var scoreboard: GameScoreboard? = null
@@ -133,7 +135,7 @@ abstract class LowLevelGame(
     override fun leave(player: Player) {
         if (!ingameStats.containsKey(player))
             return
-        val stats = this.ingameStats[player];
+        val stats = this.ingameStats[player]
         if (stats!!.team == Team.RED) {
             this.redTeam.remove(player)
             player.sendMessage(Config.prefix + arena.meta.redTeamMeta.leaveMessage)
@@ -141,9 +143,15 @@ abstract class LowLevelGame(
             this.blueTeam.remove(player)
             player.sendMessage(Config.prefix + arena.meta.blueTeamMeta.leaveMessage)
         }
+
         if (bossbar != null) {
             bossbar!!.removePlayer(player)
         }
+
+        if (!VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1) && RegisterHelper.isRegistered("BossBarAPI")) {
+            RegisterHelper.setBossBar(player, null, 0.0)
+        }
+
         this.holograms.forEachIndexed { i, holo ->
             if (holo.containsPlayer(player)) {
                 holo.removePlayer(player)
@@ -156,11 +164,11 @@ abstract class LowLevelGame(
 
     private fun updateDoubleJump() {
         this.doubleJumpCooldownPlayers.keys.forEach { p ->
-            val cooldown = this.doubleJumpCooldownPlayers[p]!! - 1;
+            val cooldown = this.doubleJumpCooldownPlayers[p]!! - 1
             if (cooldown <= 0) {
-                doubleJumpCooldownPlayers.remove(p);
+                doubleJumpCooldownPlayers.remove(p)
             } else {
-                this.doubleJumpCooldownPlayers[p] = cooldown;
+                this.doubleJumpCooldownPlayers[p] = cooldown
             }
         }
     }
@@ -179,11 +187,11 @@ abstract class LowLevelGame(
                     holo.addPlayer(p)
                 }
             }
-            val lines = ArrayList(this.arena.meta.hologramMetas[i].lines);
+            val lines = ArrayList(this.arena.meta.hologramMetas[i].lines)
             for (i in lines.indices) {
                 lines[i] = lines[i].replaceGamePlaceholder(this)
             }
-            holo.setLines(lines);
+            holo.setLines(lines)
         }
     }
 
@@ -194,13 +202,22 @@ abstract class LowLevelGame(
 
     private fun updateBossBar() {
         val meta = arena.meta.bossBarMeta
-        if (bossbar == null && arena.meta.bossBarMeta.enabled) {
-            bossbar = SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, meta.flags[0].name)
-            bossbar!!.percentage = meta.percentage.toDouble() / 100.0
-        }
-        if (bossbar != null) {
-            bossbar!!.addPlayer(getPlayers())
-            bossbar!!.message = meta.message.replaceGamePlaceholder(this)
+        if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
+            if (bossbar == null && arena.meta.bossBarMeta.enabled) {
+                bossbar = SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, meta.flags[0].name)
+                bossbar!!.percentage = meta.percentage / 100.0
+            }
+            if (bossbar != null) {
+                bossbar!!.addPlayer(getPlayers())
+                bossbar!!.message = meta.message.replaceGamePlaceholder(this)
+            }
+        } else if (RegisterHelper.isRegistered("BossBarAPI")) {
+            if (arena.meta.bossBarMeta.enabled) {
+                val percentage = meta.percentage
+                getPlayers().forEach { p ->
+                    RegisterHelper.setBossBar(p, meta.message.replaceGamePlaceholder(this), percentage)
+                }
+            }
         }
     }
 
@@ -314,6 +331,7 @@ abstract class LowLevelGame(
             ball?.remove()
             redTeam.clear()
             blueTeam.clear()
+            bossbar?.close()
             holograms.forEach { h -> h.close() }
             holograms.clear()
         }
