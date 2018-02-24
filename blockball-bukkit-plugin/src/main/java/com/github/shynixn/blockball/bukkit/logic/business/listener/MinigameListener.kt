@@ -55,7 +55,6 @@ class MinigameListener @Inject constructor(plugin: Plugin) : SimpleListener(plug
      */
     @EventHandler
     fun onPlayerExecuteCommand(event: PlayerCommandPreprocessEvent) {
-        println("MESSG: " + event.message)
         if (event.message.startsWith("/blockball"))
             return
         val game = gameController!!.getGameFromPlayer(event.player)

@@ -62,6 +62,7 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
     private var signController: LinkSignController<Location>? = null
     private var plugin: Plugin? = null
     private var task: BukkitTask? = null
+    private val statusCache: MutableMap<String, BungeeCordServerStats> = HashMap()
 
     @Inject
     private val networkListener: BungeeCordNetworkSignListener? = null
@@ -103,6 +104,9 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
     /** Pings all servers which are present in the sub sign controller. **/
     override fun pingServers() {
         val player = getFirstPlayer()
+        if (player == null) {
+            return
+        }
         for (s in this.signController!!.linkedServers) {
             val out = ByteStreams.newDataOutput()
             out.writeUTF("ServerIP")
@@ -172,6 +176,12 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
             }
         } catch (e: Exception) {
             plugin!!.logger.log(Level.WARNING, "Failed to reach server " + serverName + " (" + hostname + ':'.toString() + port + ").")
+            if (this.statusCache.containsKey(serverName)) {
+                val status = statusCache[serverName];
+                status!!.playerAmount = 0
+                status!!.status = BungeeCordServerState.RESTARTING
+                updateSigns(status)
+            }
         }
         return data
     }
@@ -181,7 +191,10 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
             if (data == null)
                 return
             val serverInfo = BungeeCordServerStats(serverName, data)
-            this.plugin!!.server.scheduler.runTask(this.plugin) { this.updateSigns(serverInfo) }
+            this.plugin!!.server.scheduler.runTask(this.plugin) {
+                this.statusCache[serverName] = serverInfo
+                this.updateSigns(serverInfo)
+            }
         } catch (e: Exception) {
             plugin!!.logger.log(Level.WARNING, "Cannot parse result from server.", e)
         }
@@ -189,7 +202,7 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
     }
 
     private fun updateSigns(status: BungeeCordServerStatus) {
-        for (signInfo in this.signController!!.getAll()) {
+        for (signInfo in this.signController!!.getAll().toTypedArray()) {
             if (signInfo.server == status.serverName) {
                 val location = (signInfo.position as LocationBuilder).toLocation()
                 if (location.block.state is Sign) {
@@ -208,15 +221,19 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
 
     fun replaceSign(line: String, info: BungeeCordServerStatus): String {
         var customLine = line.convertChatColors()
-        customLine = when {
-            info.status == BungeeCordServerState.INGAME -> customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.duringMatchSignState)
-            info.status == BungeeCordServerState.RESTARTING -> customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.restartingSignState)
-            info.status == BungeeCordServerState.WAITING_FOR_PLAYERS -> customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersSignState)
-            else -> customLine.replace("<state>", "No connection")
+        if (info.status == BungeeCordServerState.INGAME) {
+            customLine = customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.duringMatchSignState)
+        } else if (info.status == BungeeCordServerState.WAITING_FOR_PLAYERS) {
+            customLine = customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersSignState);
+        } else if (info.status == BungeeCordServerState.RESTARTING) {
+            customLine = customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.restartingSignState);
+        } else {
+            customLine = customLine.replace("<state>", "No connection")
         }
-        return customLine.replace("<maxplayers>", (info.playerMaxAmount * 2).toString())
+
+        return customLine.replace("<maxplayers>", (info.playerMaxAmount).toString())
                 .replace("<players>", info.playerAmount.toString())
-                .replace("<server>", info.serverName!!)
+                .replace("<server>", info.serverName!!).convertChatColors()
     }
 
     /**

@@ -65,7 +65,7 @@ class BungeeCordServerStats : BungeeCordServerStatus {
                 }
                 i++
             }
-            try { //TODO MANAGE SIGNS CORRETLY
+            try {
                 motd = ChatColor.translateAlternateColorCodes('&', motdBuilder.toString()).substring(0, motdBuilder.length - 2).replace("§","&")
                 if (motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.inGameMotd, true)) {
                     state = BungeeCordServerState.INGAME;

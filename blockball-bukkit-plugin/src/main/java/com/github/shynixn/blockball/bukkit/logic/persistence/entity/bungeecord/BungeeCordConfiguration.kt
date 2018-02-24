@@ -37,12 +37,12 @@ class BungeeCordConfiguration : PersistenceObject() {
     var waitingForPlayersMotd = "&aWaiting for players..."
     @YamlSerializer.YamlSerialize("motd-ingame")
     var inGameMotd = "&9Ingame"
-    @YamlSerializer.YamlSerialize("sign-ingame")
-    var restartingSignState = "&c&lRestarting"
+    @YamlSerializer.YamlSerialize("sign-restarting")
+    var restartingSignState = "&cRestarting"
     @YamlSerializer.YamlSerialize("sign-waiting-players")
-    var waitingForPlayersSignState = "&c&lRestarting"
-    @YamlSerializer.YamlSerialize("motd-ingame")
-    var duringMatchSignState = "&9&lIngame"
+    var waitingForPlayersSignState = "&aJoin"
+    @YamlSerializer.YamlSerialize("sign-ingame")
+    var duringMatchSignState = "&9Running"
     @YamlSerializer.YamlSerialize("sign-lines")
-    var singLines = arrayOf("BlockBall", "<server>", "<state>", "<players>/<maxplayers>")
+    var singLines = arrayOf("&lBlockBall", "<server>", "<state>", "<players>/<maxplayers>")
 }

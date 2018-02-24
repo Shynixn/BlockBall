@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
 import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.SoundBuilder
+import com.github.shynixn.blockball.api.bukkit.business.event.GameJoinEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.GameLeaveEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.GameWinEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.GoalShootEvent
@@ -66,7 +67,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         this.getPlayers().forEach { p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this) }
 
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
-            val event = GoalShootEvent(this, lastInteractedEntity as Player,team)
+            val event = GoalShootEvent(this, lastInteractedEntity as Player, team)
             Bukkit.getServer().pluginManager.callEvent(event)
         }
     }
@@ -204,11 +205,11 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             }
             this.redGoals > this.blueGoals -> {
                 this.onMatchEnd(this.redTeam, this.blueTeam)
-                this.onWin(Team.RED,this.arena.meta.redTeamMeta)
+                this.onWin(Team.RED, this.arena.meta.redTeamMeta)
             }
             else -> {
                 this.onMatchEnd(this.blueTeam, this.redTeam)
-                this.onWin(Team.BLUE,this.arena.meta.blueTeamMeta)
+                this.onWin(Team.BLUE, this.arena.meta.blueTeamMeta)
             }
         }
     }
@@ -216,6 +217,10 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
     private fun startGame() {
         status = GameStatus.RUNNING
         ingameStats.keys.forEach { p ->
+
+            val event = GameJoinEvent(this, p)
+            Bukkit.getServer().pluginManager.callEvent(event)
+
             val stats = ingameStats[p]
             if (stats!!.team == null) {
                 if (redTeam.size < blueTeam.size) {
