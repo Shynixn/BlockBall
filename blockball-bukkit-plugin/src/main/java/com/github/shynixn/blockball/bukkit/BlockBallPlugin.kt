@@ -4,6 +4,7 @@ import com.github.shynixn.ball.bukkit.core.logic.business.CoreManager
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper
+import com.github.shynixn.blockball.bukkit.dependencies.placeholderapi.PlaceHolderApiConnection
 import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder
@@ -109,7 +110,9 @@ class BlockBallPlugin : JavaPlugin() {
             RegisterHelper.register("Vault")
             RegisterHelper.register("WorldEdit")
             RegisterHelper.register("BossBarAPI")
-            RegisterHelper.register("PlaceholderAPI")
+            if (RegisterHelper.register("PlaceholderAPI")) {
+                PlaceHolderApiConnection.initializeHook(Bukkit.getPluginManager().getPlugin("BlockBall"))
+            }
             gameController!!.reload()
             ReflectionUtils.invokeMethodByKotlinClass<Void>(BlockBallApi::class.java, "initializeBlockBall", arrayOf(Any::class.java, Any::class.java), arrayOf(this.gameController, bungeeCordController))
             coreManager = CoreManager(this, "storage.yml", "ball.yml")

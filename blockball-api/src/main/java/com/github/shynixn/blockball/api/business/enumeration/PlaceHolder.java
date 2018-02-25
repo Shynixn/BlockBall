@@ -67,15 +67,7 @@ public enum PlaceHolder {
 
     PLACEHOLDERAPI_TIME("%blockball_" + TIME.placeHolder),
     PLACEHOLDERAPI_LASTHITBALL("%blockball_" + LASTHITBALL.placeHolder),
-    PLACEHOLDERAPI_ARENA_STATE("%blockball_" + ARENA_STATE.placeHolder),
-
-    /**
-     * Require PLAYER_UUID INSTEAD OF GAME_ID
-     **/
-    PLACEHOLDERAPI_STATS_PLAYER_NAME("%blockball_" + STATS_PLAYER_NAME.placeHolder),
-    PLACEHOLDERAPI_STATS_WINRATE("%blockball_" + STATS_WINRATE.placeHolder),
-    PLACEHOLDERAPI_STATS_PLAYEDGAMES("%blockball_" + STATS_PLAYEDGAMES.placeHolder),
-    PLACEHOLDERAPI_STATS_GOALS_PER_GAME("%blockball_" + STATS_GOALS_PER_GAME.placeHolder),;
+    PLACEHOLDERAPI_ARENA_STATE("%blockball_" + ARENA_STATE.placeHolder);
 
     public String concat(PlaceHolder placeHolder) {
         return this.placeHolder + placeHolder.placeHolder;

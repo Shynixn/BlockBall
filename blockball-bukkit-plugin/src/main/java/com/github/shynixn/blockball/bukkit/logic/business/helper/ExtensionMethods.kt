@@ -12,6 +12,7 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
+import com.github.shynixn.blockball.bukkit.logic.business.entity.game.Minigame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import org.bukkit.ChatColor
@@ -106,7 +107,10 @@ internal fun String.replaceGamePlaceholder(game: BukkitGame, teamMeta: TeamMeta<
 
     if (game.arena.gameType == GameType.HUBGAME) {
         cache = cache.replace(PlaceHolder.TIME.placeHolder, "∞")
+    } else if (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE) {
+        cache = cache.replace(PlaceHolder.TIME.placeHolder, (game as Minigame).gameCountdown.toString())
     }
+
     if (game is SoccerGame) {
         if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
             cache = cache.replace(PlaceHolder.LASTHITBALL.placeHolder, (game.lastInteractedEntity as Player).name)

@@ -85,6 +85,7 @@ public final class PlaceHolderApiConnection {
             try {
                 final PlaceHolderRequestEvent event = new PlaceHolderRequestEvent(player, s);
                 Bukkit.getPluginManager().callEvent(event);
+                return event.getResult();
             } catch (final Exception ignored) {
             }
             return null;

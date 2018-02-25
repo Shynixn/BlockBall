@@ -167,13 +167,14 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
     fun onPlaceHolderRequestEvent(event: PlaceHolderRequestEvent) {
         try {
             PlaceHolder.values().forEach { p ->
+
                 if (event.name.startsWith(p.placeHolder)) {
 
-                    val data = event.name.split(Pattern.quote("_"))
-                    val game = this.gameController!!.getGameFromArenaName(data[2]);
+                    val data = event.name.split("_")
+                    val game = this.gameController!!.getGameFromArenaName(data[1]);
 
                     if (game != null) {
-                        event.result = data[1].replaceGamePlaceholder(game)
+                        event.result = data[0].replaceGamePlaceholder(game)
                     }
 
                     return

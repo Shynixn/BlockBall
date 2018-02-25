@@ -55,7 +55,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
     protected var isLobbyCountdownRunning: Boolean = false
     private var lobbyCountdown: Int = 0
     protected var isGameRunning: Boolean = false
-    private var gameCountdown: Int = 0
+    var gameCountdown: Int = 0
     private var isEndGameRunning: Boolean = false
 
     /**
