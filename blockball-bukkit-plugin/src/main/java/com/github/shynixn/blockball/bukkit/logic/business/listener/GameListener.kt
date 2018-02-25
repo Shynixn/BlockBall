@@ -2,10 +2,12 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.PlaceHolderRequestEvent
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
+import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
 import com.google.inject.Inject
@@ -21,6 +23,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.Plugin
+import java.util.regex.Pattern
 
 /**
  * Created by Shynixn 2018.
@@ -162,9 +165,24 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onPlaceHolderRequestEvent(event: PlaceHolderRequestEvent) {
+        try {
+            PlaceHolder.values().forEach { p ->
+                if (event.name.startsWith(p.placeHolder)) {
 
+                    val data = event.name.split(Pattern.quote("_"))
+                    val game = this.gameController!!.getGameFromArenaName(data[2]);
+
+                    if (game != null) {
+                        event.result = data[1].replaceGamePlaceholder(game)
+                    }
+
+                    return
+                }
+            }
+        } catch (e: Exception) {
+            //Ignored. Simple parsing error that another plugin is responsible for.
+        }
     }
-
 
     interface CallBack {
         fun run(position: StorageLocation)

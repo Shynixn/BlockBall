@@ -53,7 +53,29 @@ public enum PlaceHolder {
     ARENA_TEAMDISPLAYNAME("<team>"),
     ARENA_TEAMCOLOR("<teamcolor>"),
     ARENA_MAX_PLAYERS_ON_TEAM("<maxplayers>"),
-    ARENA_PLAYERS_ON_TEAM("<players>");
+    ARENA_PLAYERS_ON_TEAM("<players>"),
+
+    PLACEHOLDERAPI_ARENA_DISPLAYNAME("%blockball_" + ARENA_DISPLAYNAME.placeHolder),
+    PLACEHOLDERAPI_ARENA_SUM_MAXPLAYERS("%blockball_" + ARENA_SUM_MAXPLAYERS.placeHolder),
+    PLACEHOLDERAPI_ARENA_SUM_CURRENTPLAYERS("%blockball_" + ARENA_SUM_CURRENTPLAYERS.placeHolder),
+    PLACEHOLDERAPI_RED_GOALS("%blockball_" + RED_GOALS.placeHolder),
+    PLACEHOLDERAPI_BLUE_GOALS("%blockball_" + BLUE_GOALS.placeHolder),
+    PLACEHOLDERAPI_TEAM_RED("%blockball_" + TEAM_RED.placeHolder),
+    PLACEHOLDERAPI_TEAM_BLUE("%blockball_" + TEAM_BLUE.placeHolder),
+    PLACEHOLDERAPI_RED_COLOR("%blockball_" + RED_COLOR.placeHolder),
+    PLACEHOLDERAPI_BLUE_COLOR("%blockball_" + BLUE_COLOR.placeHolder),
+
+    PLACEHOLDERAPI_TIME("%blockball_" + TIME.placeHolder),
+    PLACEHOLDERAPI_LASTHITBALL("%blockball_" + LASTHITBALL.placeHolder),
+    PLACEHOLDERAPI_ARENA_STATE("%blockball_" + ARENA_STATE.placeHolder),
+
+    /**
+     * Require PLAYER_UUID INSTEAD OF GAME_ID
+     **/
+    PLACEHOLDERAPI_STATS_PLAYER_NAME("%blockball_" + STATS_PLAYER_NAME.placeHolder),
+    PLACEHOLDERAPI_STATS_WINRATE("%blockball_" + STATS_WINRATE.placeHolder),
+    PLACEHOLDERAPI_STATS_PLAYEDGAMES("%blockball_" + STATS_PLAYEDGAMES.placeHolder),
+    PLACEHOLDERAPI_STATS_GOALS_PER_GAME("%blockball_" + STATS_GOALS_PER_GAME.placeHolder),;
 
     public String concat(PlaceHolder placeHolder) {
         return this.placeHolder + placeHolder.placeHolder;
