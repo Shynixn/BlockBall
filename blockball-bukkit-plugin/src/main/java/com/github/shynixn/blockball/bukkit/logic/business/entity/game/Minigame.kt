@@ -108,12 +108,39 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
     /** Join the game. */
     override fun join(player: Player, team: Team?): Boolean {
-        if (isGameRunning || isEndGameRunning || isLobbyFull()) {
+        if (this.hasJoined(player) && team != null && !this.arena.meta.lobbyMeta.onlyAllowEventTeams) {
+            val amount = getAmountOfQueuedPlayersInThisTeam(team)
+            if (team == Team.RED) {
+                if (amount >= this.arena.meta.redTeamMeta.maxAmount) {
+                    return false
+                }
+                joinTeam(player, arena.meta.redTeamMeta, redTeam)
+            } else if (team == Team.BLUE) {
+                if (amount >= this.arena.meta.blueTeamMeta.maxAmount) {
+                    return false
+                }
+                joinTeam(player, arena.meta.blueTeamMeta, blueTeam)
+            }
+            ingameStats[player]!!.team = team
+            return true
+        }
+        if (isGameRunning || isEndGameRunning || isLobbyFull() || team != null) {
             return false
         }
         this.leave(player)
         this.prepareLobbyStatsForPlayer(player)
         return true
+    }
+
+    private fun getAmountOfQueuedPlayersInThisTeam(team: Team): Int {
+        var amount = 0
+        ingameStats.values.forEach { p ->
+
+            if (p.team != null && p.team == team) {
+                amount++
+            }
+        }
+        return amount
     }
 
     /**
@@ -144,7 +171,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             if (lobbyCountdown > 10) {
                 val amountPlayers = this.arena.meta.blueTeamMeta.maxAmount + this.arena.meta.redTeamMeta.maxAmount
                 if (this.ingameStats.size >= amountPlayers) {
-                    lobbyCountdown = 10;
+                    lobbyCountdown = 10
                 }
             }
             lobbyCountdown--

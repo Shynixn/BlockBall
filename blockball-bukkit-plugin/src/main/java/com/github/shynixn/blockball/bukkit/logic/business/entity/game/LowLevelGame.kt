@@ -281,7 +281,7 @@ abstract class LowLevelGame(
                 }
             }
         } catch (e: Exception) { // Removing sign task could clash with updating signs.
-            plugin.logger.log(Level.INFO, "Sign update was cached.")
+            plugin.logger.log(Level.INFO, "Sign update was cached.", e)
         }
     }
 

@@ -49,7 +49,7 @@ class HologramBuilder : PersistenceObject(), HologramMeta {
     private var internalPosition: LocationBuilder? = null
 
     init {
-        this.lines.add(PlaceHolder.RED_COLOR.placeHolder + PlaceHolder.TEAM_RED + ' ' + PlaceHolder.RED_GOALS
-                + " : " + PlaceHolder.BLUE_COLOR.placeHolder + PlaceHolder.BLUE_GOALS + ' ' + PlaceHolder.TEAM_BLUE)
+        this.lines.add(PlaceHolder.RED_COLOR.placeHolder + PlaceHolder.TEAM_RED.placeHolder + ' ' + PlaceHolder.RED_GOALS.placeHolder
+                + " : " + PlaceHolder.BLUE_COLOR.placeHolder + PlaceHolder.BLUE_GOALS.placeHolder + ' ' + PlaceHolder.TEAM_BLUE.placeHolder)
     }
 }
