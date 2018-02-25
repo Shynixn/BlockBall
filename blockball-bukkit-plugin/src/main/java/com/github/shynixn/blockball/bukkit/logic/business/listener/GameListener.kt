@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent
+import com.github.shynixn.blockball.api.bukkit.business.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
@@ -155,6 +156,15 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
             }
         }
     }
+
+    /**
+     * Handles placeholder requests.
+     */
+    @EventHandler
+    fun onPlaceHolderRequestEvent(event: PlaceHolderRequestEvent) {
+
+    }
+
 
     interface CallBack {
         fun run(position: StorageLocation)

@@ -6,7 +6,6 @@ import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.entity.InGameStats
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
@@ -15,7 +14,6 @@ import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.GameScoreboard
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleBossBar
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleHologram
-import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
@@ -27,6 +25,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -255,37 +254,49 @@ abstract class LowLevelGame(
         return list
     }
 
-    protected abstract fun onUpdateSigns()
+    private fun onUpdateSigns() {
+        try {
+            for (i in this.arena.meta.redTeamMeta.signs.indices) {
+                val position = this.arena.meta.redTeamMeta.signs[i]
+                if (!replaceTextOnSign(position, arena.meta.redTeamMeta.signLines.toTypedArray(), arena.meta.redTeamMeta)) {
+                    this.arena.meta.redTeamMeta.signs.removeAt(i)
+                }
+            }
+            for (i in this.arena.meta.blueTeamMeta.signs.indices) {
+                val position = this.arena.meta.blueTeamMeta.signs[i]
+                if (!replaceTextOnSign(position, arena.meta.blueTeamMeta.signLines.toTypedArray(), arena.meta.blueTeamMeta)) {
+                    this.arena.meta.blueTeamMeta.signs.removeAt(i)
+                }
+            }
+            for (i in this.arena.meta.lobbyMeta.joinSigns.indices) {
+                val position = this.arena.meta.lobbyMeta.joinSigns[i]
+                if (!replaceTextOnSign(position, arena.meta.lobbyMeta.joinSignLines, null)) {
+                    this.arena.meta.lobbyMeta.joinSigns.removeAt(i)
+                }
+            }
+            for (i in this.arena.meta.lobbyMeta.leaveSigns.indices) {
+                val position = this.arena.meta.lobbyMeta.leaveSigns[i]
+                if (!replaceTextOnSign(position, arena.meta.lobbyMeta.leaveSignLines, null)) {
+                    this.arena.meta.lobbyMeta.leaveSigns.removeAt(i)
+                }
+            }
+        } catch (e: Exception) { // Removing sign task could clash with updating signs.
+            plugin.logger.log(Level.INFO, "Sign update was cached.")
+        }
+    }
 
-    protected fun replaceTextOnSign(signPosition: StorageLocation, lines: Array<String>, teamMeta: TeamMeta<Location, ItemStack>?): Boolean {
-        val maxPlayers = teamMeta?.maxAmount
-        var players = redTeam.size
+    private fun replaceTextOnSign(signPosition: StorageLocation, lines: Array<String>, teamMeta: TeamMeta<Location, ItemStack>?): Boolean {
+        var players = this.redTeam
         if (arena.meta.blueTeamMeta == teamMeta) {
-            players = blueTeam.size
+            players = this.blueTeam
         }
         val location = signPosition.toBukkitLocation()
         if (location.block.type != Material.SIGN_POST && location.block.type != Material.WALL_SIGN)
             return false
         val sign = location.block.state as Sign
         for (i in lines.indices) {
-            var text = lines[i]
-            text = text.replace(PlaceHolder.ARENA_DISPLAYNAME.placeHolder, this.arena.displayName)
-            text = when {
-                this.status == GameStatus.RUNNING -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignRunning!!)
-                this.status == GameStatus.ENABLED -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignEnabled!!)
-                this.status == GameStatus.DISABLED -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignDisabled!!)
-                else -> text.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignDisabled!!)
-            }
-            if (teamMeta != null) {
-                text = text.replace(PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, teamMeta.displayName)
-                        .replace(PlaceHolder.ARENA_TEAMCOLOR.placeHolder, teamMeta.prefix)
-            }
-            text = text.replace(PlaceHolder.ARENA_CURRENTPLAYERS.placeHolder, players.toString())
-                    .replace(PlaceHolder.ARENA_MAXPLAYERS.placeHolder, maxPlayers.toString())
-
-            text = text.replace(PlaceHolder.ARENA_SUMCURRENTPLAYERS.placeHolder, this.ingameStats.size.toString())
-                    .replace(PlaceHolder.ARENA_SUMMAXPLAYERS.placeHolder, (arena.meta.redTeamMeta.maxAmount + arena.meta.blueTeamMeta.maxAmount).toString())
-            sign.setLine(i, text.convertChatColors())
+            val text = lines[i]
+            sign.setLine(i, text.replaceGamePlaceholder(this, teamMeta, players))
         }
         sign.update(true)
         return true

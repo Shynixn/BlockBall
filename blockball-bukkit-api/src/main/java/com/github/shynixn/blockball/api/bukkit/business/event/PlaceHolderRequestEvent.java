@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.bukkit.business.event;
 
-import com.github.shynixn.blockball.api.business.entity.Game;
-import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder;
 import org.bukkit.entity.Player;
 
 /**
@@ -33,22 +31,20 @@ import org.bukkit.entity.Player;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class PlaceHolderRequestEvent extends GameCancelableEvent {
+public class PlaceHolderRequestEvent extends BlockBallEvent {
     private String result;
+    private String name;
     private final Player player;
-    private final PlaceHolder type;
 
     /**
      * Initializes a new placeHolderRequest.
      *
      * @param player player
-     * @param type   type
-     * @param game   game
+     * @param name   name
      */
-    public PlaceHolderRequestEvent(Player player, PlaceHolder type, Game game) {
-        super(game);
+    public PlaceHolderRequestEvent(Player player, String name) {
         this.player = player;
-        this.type = type;
+        this.name = name;
     }
 
     /**
@@ -61,12 +57,21 @@ public class PlaceHolderRequestEvent extends GameCancelableEvent {
     }
 
     /**
-     * Returns the type.
+     * Returns the name of the placeholder.
      *
-     * @return type
+     * @return name
      */
-    public PlaceHolder getType() {
-        return this.type;
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Sets the name of the placeholder.
+     *
+     * @param name name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**

@@ -142,7 +142,7 @@ stats-scoreboard:
  title: '&f&lBlockBall Stats'
  lines:
    - ''
-   - '&e<player>'
+   - '&e<playername>'
    - '&m           '
    - '&bWinrate: '
    - '&f&l<winrate> '

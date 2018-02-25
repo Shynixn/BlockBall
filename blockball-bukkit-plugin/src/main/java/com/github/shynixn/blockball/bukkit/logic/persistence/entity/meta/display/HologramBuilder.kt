@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display
 
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
@@ -48,6 +49,7 @@ class HologramBuilder : PersistenceObject(), HologramMeta {
     private var internalPosition: LocationBuilder? = null
 
     init {
-        this.lines.add("<redcolor><red> <redscore> : <bluecolor><bluescore> <blue>")
+        this.lines.add(PlaceHolder.RED_COLOR.placeHolder + PlaceHolder.TEAM_RED + ' ' + PlaceHolder.RED_GOALS
+                + " : " + PlaceHolder.BLUE_COLOR.placeHolder + PlaceHolder.BLUE_GOALS + ' ' + PlaceHolder.TEAM_BLUE)
     }
 }

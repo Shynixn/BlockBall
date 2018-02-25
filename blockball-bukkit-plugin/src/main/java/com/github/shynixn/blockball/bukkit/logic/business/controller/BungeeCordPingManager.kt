@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.controller
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController
 import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus
 import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.controller.LinkSignController
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BungeeCordSignCommandExecutor
@@ -111,7 +112,7 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
             val out = ByteStreams.newDataOutput()
             out.writeUTF("ServerIP")
             out.writeUTF(s)
-            player!!.sendPluginMessage(this.plugin, "BungeeCord", out.toByteArray())
+            player.sendPluginMessage(this.plugin, "BungeeCord", out.toByteArray())
         }
     }
 
@@ -177,9 +178,9 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
         } catch (e: Exception) {
             plugin!!.logger.log(Level.WARNING, "Failed to reach server " + serverName + " (" + hostname + ':'.toString() + port + ").")
             if (this.statusCache.containsKey(serverName)) {
-                val status = statusCache[serverName];
+                val status = statusCache[serverName]
                 status!!.playerAmount = 0
-                status!!.status = BungeeCordServerState.RESTARTING
+                status.status = BungeeCordServerState.RESTARTING
                 updateSigns(status)
             }
         }
@@ -222,18 +223,18 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
     fun replaceSign(line: String, info: BungeeCordServerStatus): String {
         var customLine = line.convertChatColors()
         if (info.status == BungeeCordServerState.INGAME) {
-            customLine = customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.duringMatchSignState)
+            customLine = customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, BungeeCordConfig.bungeeCordConfiguration!!.duringMatchSignState)
         } else if (info.status == BungeeCordServerState.WAITING_FOR_PLAYERS) {
-            customLine = customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersSignState);
+            customLine = customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersSignState)
         } else if (info.status == BungeeCordServerState.RESTARTING) {
-            customLine = customLine.replace("<state>", BungeeCordConfig.bungeeCordConfiguration!!.restartingSignState);
+            customLine = customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, BungeeCordConfig.bungeeCordConfiguration!!.restartingSignState)
         } else {
-            customLine = customLine.replace("<state>", "No connection")
+            customLine = customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, "No connection")
         }
 
-        return customLine.replace("<maxplayers>", (info.playerMaxAmount).toString())
-                .replace("<players>", info.playerAmount.toString())
-                .replace("<server>", info.serverName!!).convertChatColors()
+        return customLine.replace(PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder, (info.playerMaxAmount).toString())
+                .replace(PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder, info.playerAmount.toString())
+                .replace(PlaceHolder.BUNGEECORD_SERVER_NAME.placeHolder, info.serverName!!).convertChatColors()
     }
 
     /**

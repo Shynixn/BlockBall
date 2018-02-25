@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.bungeecord
 
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
@@ -44,5 +45,5 @@ class BungeeCordConfiguration : PersistenceObject() {
     @YamlSerializer.YamlSerialize("sign-ingame")
     var duringMatchSignState = "&9Running"
     @YamlSerializer.YamlSerialize("sign-lines")
-    var singLines = arrayOf("&lBlockBall", "<server>", "<state>", "<players>/<maxplayers>")
+    var singLines = arrayOf("&lBlockBall", PlaceHolder.BUNGEECORD_SERVER_NAME.placeHolder, PlaceHolder.ARENA_STATE.placeHolder,  PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder + '/' + PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder)
 }

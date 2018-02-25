@@ -15,7 +15,6 @@ import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -114,37 +113,6 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
                     this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.SHOOT_GOAL]!!, list)
                 }
             }
-        }
-    }
-
-    override fun onUpdateSigns() {
-        try {
-            for (i in this.arena.meta.redTeamMeta.signs.indices) {
-                val position = this.arena.meta.redTeamMeta.signs[i]
-                if (!replaceTextOnSign(position, arena.meta.redTeamMeta.signLines.toTypedArray(), arena.meta.redTeamMeta)) {
-                    this.arena.meta.redTeamMeta.signs.removeAt(i)
-                }
-            }
-            for (i in this.arena.meta.blueTeamMeta.signs.indices) {
-                val position = this.arena.meta.blueTeamMeta.signs[i]
-                if (!replaceTextOnSign(position, arena.meta.blueTeamMeta.signLines.toTypedArray(), arena.meta.blueTeamMeta)) {
-                    this.arena.meta.blueTeamMeta.signs.removeAt(i)
-                }
-            }
-            for (i in this.arena.meta.lobbyMeta.joinSigns.indices) {
-                val position = this.arena.meta.lobbyMeta.joinSigns[i]
-                if (!replaceTextOnSign(position, arena.meta.lobbyMeta.joinSignLines, null)) {
-                    this.arena.meta.lobbyMeta.joinSigns.removeAt(i)
-                }
-            }
-            for (i in this.arena.meta.lobbyMeta.leaveSigns.indices) {
-                val position = this.arena.meta.lobbyMeta.leaveSigns[i]
-                if (!replaceTextOnSign(position, arena.meta.lobbyMeta.leaveSignLines, null)) {
-                    this.arena.meta.lobbyMeta.leaveSigns.removeAt(i)
-                }
-            }
-        } catch (e: Exception) { // Removing sign task could clash with updating signs.
-            plugin.logger.log(Level.INFO, "Sign update was cached.")
         }
     }
 

@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.action
 
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
 import org.bukkit.entity.Player
@@ -53,10 +54,10 @@ class StatsScoreboard(val player: Player) : SimpleScoreboard() {
         var j = lines!!.size
         while (i < lines.size) {
             val line = lines[i]
-                    .replace("<player>", player.name)
-                    .replace("<winrate>", String.format("%.2f", stats.winRate))
-                    .replace("<playedgames>", stats.amountOfPlayedGames.toString())
-                    .replace("<goalspergame>", String.format("%.2f", stats.goalsPerGame))
+                    .replace(PlaceHolder.STATS_PLAYER_NAME.placeHolder, player.name)
+                    .replace(PlaceHolder.STATS_WINRATE.placeHolder, String.format("%.2f", stats.winRate))
+                    .replace(PlaceHolder.STATS_PLAYEDGAMES.placeHolder, stats.amountOfPlayedGames.toString())
+                    .replace(PlaceHolder.STATS_GOALS_PER_GAME.placeHolder, String.format("%.2f", stats.goalsPerGame))
             this.setDefaultLine(j, line)
             i++
             j--

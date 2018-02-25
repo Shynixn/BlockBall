@@ -30,25 +30,30 @@ package com.github.shynixn.blockball.api.business.enumeration;
 public enum PlaceHolder {
 
     ARENA_DISPLAYNAME("<game>"),
-    ARENA_MAXPLAYERS("<maxplayers>"),
-    ARENA_CURRENTPLAYERS("<players>"),
-    ARENA_SUMMAXPLAYERS("<summaxplayers>"),
-    ARENA_SUMCURRENTPLAYERS("<sumplayers>"),
-    ARENA_TEAMDISPLAYNAME("<team>"),
-    ARENA_TEAMCOLOR("<teamcolor>"),
-    ARENA_STATE("<state>"),
-
+    ARENA_SUM_MAXPLAYERS("<summaxplayers>"),
+    ARENA_SUM_CURRENTPLAYERS("<sumplayers>"),
     RED_GOALS("<redscore>"),
     BLUE_GOALS("<bluescore>"),
     TEAM_RED("<red>"),
     TEAM_BLUE("<blue>"),
     RED_COLOR("<redcolor>"),
+    BLUE_COLOR("<bluecolor>"),
 
     TIME("<time>"),
-
     LASTHITBALL("<player>"),
+    ARENA_STATE("<state>"),
 
-    BLUE_COLOR("<bluecolor>");
+    STATS_PLAYER_NAME("<playername>"),
+    STATS_WINRATE("<winrate>"),
+    STATS_PLAYEDGAMES("<playedgames>"),
+    STATS_GOALS_PER_GAME("<goalspergame>"),
+
+    BUNGEECORD_SERVER_NAME("<server>"),
+
+    ARENA_TEAMDISPLAYNAME("<team>"),
+    ARENA_TEAMCOLOR("<teamcolor>"),
+    ARENA_MAX_PLAYERS_ON_TEAM("<maxplayers>"),
+    ARENA_PLAYERS_ON_TEAM("<players>");
 
     public String concat(PlaceHolder placeHolder) {
         return this.placeHolder + placeHolder.placeHolder;

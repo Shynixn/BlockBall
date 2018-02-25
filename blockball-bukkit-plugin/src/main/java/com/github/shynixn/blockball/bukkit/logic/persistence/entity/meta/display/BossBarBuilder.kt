@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display
 
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
@@ -40,7 +41,7 @@ class BossBarBuilder : PersistenceObject(), BossBarMeta {
     override var enabled: Boolean = false
     /** Displaying message. */
     @YamlSerializer.YamlSerialize("text", orderNumber = 2)
-    override var message: String = "<redcolor><red> <redscore> : <bluecolor><bluescore> <blue>"
+    override var message: String = PlaceHolder.RED_COLOR.placeHolder + PlaceHolder.TEAM_RED.placeHolder + ' ' + PlaceHolder.RED_GOALS.placeHolder + " : " + PlaceHolder.BLUE_COLOR.placeHolder + PlaceHolder.BLUE_GOALS.placeHolder + ' ' + PlaceHolder.TEAM_BLUE.placeHolder
     /** Percentage filled in the bossbar. */
     @YamlSerializer.YamlSerialize("percentage", orderNumber = 3)
     override var percentage: Double = 100.0

@@ -3,11 +3,15 @@ package com.github.shynixn.blockball.bukkit.logic.business.helper
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
+import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
+import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
+import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import org.bukkit.ChatColor
@@ -70,13 +74,36 @@ internal fun List<String>.toSingleLine(): String {
     return builder.toString()
 }
 
-internal fun String.replaceGamePlaceholder(game: BukkitGame): String {
+internal fun String.replaceGamePlaceholder(game: BukkitGame, teamMeta: TeamMeta<Location, ItemStack>? = null, team: List<Player>? = null): String {
     var cache = this.replace(PlaceHolder.TEAM_RED.placeHolder, game.arena.meta.redTeamMeta.displayName)
+            .replace(PlaceHolder.ARENA_DISPLAYNAME.placeHolder, game.arena.displayName)
             .replace(PlaceHolder.TEAM_BLUE.placeHolder, game.arena.meta.blueTeamMeta.displayName)
             .replace(PlaceHolder.RED_COLOR.placeHolder, game.arena.meta.redTeamMeta.prefix)
             .replace(PlaceHolder.BLUE_COLOR.placeHolder, game.arena.meta.blueTeamMeta.prefix)
             .replace(PlaceHolder.RED_GOALS.placeHolder, game.redPoints.toString())
             .replace(PlaceHolder.BLUE_GOALS.placeHolder, game.bluePoints.toString())
+            .replace(PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder, (game as LowLevelGame).ingameStats.size.toString())
+            .replace(PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder, (game.arena.meta.blueTeamMeta.maxAmount + game.arena.meta.redTeamMeta.maxAmount).toString())
+
+
+    if (teamMeta != null) {
+        cache = cache.replace(PlaceHolder.ARENA_TEAMCOLOR.placeHolder, teamMeta.prefix)
+                .replace(PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, teamMeta.displayName)
+    }
+
+    if (team != null) {
+        cache = cache.replace(PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder, team.size.toString())
+                .replace(PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder, teamMeta!!.maxAmount.toString())
+    }
+
+    if (game.status == GameStatus.RUNNING) {
+        cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignRunning!!)
+    } else if (game.status == GameStatus.ENABLED) {
+        cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignEnabled!!)
+    } else if (game.status == GameStatus.DISABLED) {
+        cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignDisabled!!)
+    }
+
     if (game.arena.gameType == GameType.HUBGAME) {
         cache = cache.replace(PlaceHolder.TIME.placeHolder, "∞")
     }

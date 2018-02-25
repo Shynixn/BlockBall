@@ -1,20 +1,20 @@
 package com.github.shynixn.blockball.bukkit.dependencies.placeholderapi;
 
+import com.github.shynixn.blockball.api.bukkit.business.event.PlaceHolderRequestEvent;
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-
-/*
- * Copyright 2017 Shynixn
+/**
+ * Created by Shynixn 2018.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -83,24 +83,11 @@ public final class PlaceHolderApiConnection {
             if (player == null)
                 return "";
             try {
-                /*if (PlaceHolder.getTypeFromName(s) != null) {
-                    final PlaceHolderRequestEvent event;
-                    final Optional<PlaceHolderRequestEvent.PlaceHolderType> optType = PlaceHolderRequestEvent.PlaceHolderType.getTypeFromName(s);
-                    if (optType.isPresent()) {
-                        if (s.split("_")[0].equals("player")) {
-                            event = new PlaceHolderRequestEvent(player, optType.get(), -1);
-                        } else {
-                            event = new PlaceHolderRequestEvent(player, optType.get(), Integer.parseInt(s.split("_")[0]));
-                        }
-                        Bukkit.getPluginManager().callEvent(event);
-                        return ChatColor.translateAlternateColorCodes('&', event.getResult());
-                    }
-                    return null;
-                }*/
-
+                final PlaceHolderRequestEvent event = new PlaceHolderRequestEvent(player, s);
+                Bukkit.getPluginManager().callEvent(event);
             } catch (final Exception ignored) {
             }
-            return "";
+            return null;
         }
     }
 }
