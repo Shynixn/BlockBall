@@ -1,6 +1,36 @@
+import ch.vorburger.exec.ManagedProcessException;
+import ch.vorburger.mariadb4j.DB;
+import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta;
+import com.github.shynixn.blockball.bukkit.logic.business.service.ConnectionContextService;
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.PlayerInfoController;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.PlayerData;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class PlayerMetaMySQLControllerIT {
-/*
+
     private static Plugin mockPlugin() {
         final YamlConfiguration configuration = new YamlConfiguration();
         configuration.set("sql.enabled", false);
@@ -40,7 +70,6 @@ public class PlayerMetaMySQLControllerIT {
     @BeforeAll
     public static void startMariaDB() {
         try {
-            Factory.disable();
             database = DB.newEmbeddedDB(3306);
             database.start();
             try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/?user=root&password=")) {
@@ -57,25 +86,25 @@ public class PlayerMetaMySQLControllerIT {
     public void insertSelectPlayerMetaTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
-        Factory.initialize(plugin);
-        try (PlayerMetaController controller = Factory.createPlayerDataController()) {
-            for (final PlayerMeta item : controller.getAll()) {
+        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        try (PlayerInfoController controller = new PlayerInfoController(connectionContextService)) {
+            for (final PlayerMeta<? extends Player> item : controller.getAll()) {
                 controller.remove(item);
             }
             final UUID uuid = UUID.randomUUID();
             final PlayerMeta playerMeta = new PlayerData();
 
             assertThrows(IllegalArgumentException.class, () -> controller.store(playerMeta));
-            assertEquals(0, controller.size());
+            assertEquals(0, controller.getCount());
 
             playerMeta.setUuid(uuid);
             controller.store(playerMeta);
-            assertEquals(0, controller.size());
+            assertEquals(0, controller.getCount());
 
             playerMeta.setName("Sample");
             controller.store(playerMeta);
-            assertEquals(1, controller.size());
-            assertEquals(uuid, controller.getById(playerMeta.getId()).get().getUUID());
+            assertEquals(1, controller.getCount());
+            assertEquals(uuid, controller.getById((int) playerMeta.getId()).get().getUuid());
         } catch (final Exception e) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.WARNING, "Failed to run test.", e);
             Assert.fail();
@@ -87,8 +116,8 @@ public class PlayerMetaMySQLControllerIT {
     public void storeLoadPlayerMetaTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
-        Factory.initialize(plugin);
-        try (PlayerMetaController controller = Factory.createPlayerDataController()) {
+        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        try (PlayerInfoController controller = new PlayerInfoController(connectionContextService)) {
             for (final PlayerMeta item : controller.getAll()) {
                 controller.remove(item);
             }
@@ -98,9 +127,9 @@ public class PlayerMetaMySQLControllerIT {
             playerMeta.setUuid(uuid);
             controller.store(playerMeta);
 
-            assertEquals(1, controller.size());
+            assertEquals(1, controller.getCount());
             playerMeta = controller.getAll().get(0);
-            assertEquals(uuid, playerMeta.getUUID());
+            assertEquals(uuid, playerMeta.getUuid());
             assertEquals("Second", playerMeta.getName());
 
             uuid = UUID.randomUUID();
@@ -109,11 +138,11 @@ public class PlayerMetaMySQLControllerIT {
             controller.store(playerMeta);
 
             playerMeta = controller.getAll().get(0);
-            assertEquals(uuid, playerMeta.getUUID());
+            assertEquals(uuid, playerMeta.getUuid());
             assertEquals("Shynixn", playerMeta.getName());
         } catch (final Exception e) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.WARNING, "Failed to run test.", e);
             Assert.fail();
         }
-    }*/
+    }
 }

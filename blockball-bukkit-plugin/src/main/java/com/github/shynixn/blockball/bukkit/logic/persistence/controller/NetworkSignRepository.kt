@@ -50,6 +50,7 @@ import java.util.logging.Logger
  */
 @Singleton
 class NetworkSignRepository : LinkSignController<Location> {
+
     private val signs = ArrayList<LinkSign>()
 
     @Inject
@@ -150,5 +151,15 @@ class NetworkSignRepository : LinkSignController<Location> {
                 Bukkit.getLogger().log(Level.WARNING, "Save sign location.", e)
             }
         }
+    }
+
+    /**
+     * Closes this resource, relinquishing any underlying resources.
+     * This method is invoked automatically on objects managed by the
+     * `try`-with-resources statement.
+     * @throws Exception if this resource cannot be closed
+     */
+    override fun close() {
+        signs.clear()
     }
 }

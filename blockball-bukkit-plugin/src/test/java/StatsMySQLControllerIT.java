@@ -1,10 +1,19 @@
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
+import com.github.shynixn.blockball.api.persistence.controller.StatsController;
+import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta;
+import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats;
+import com.github.shynixn.blockball.bukkit.logic.business.service.ConnectionContextService;
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.PlayerInfoController;
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.StatsRepository;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.StatsData;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -13,9 +22,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,7 +47,6 @@ public class StatsMySQLControllerIT {
     @BeforeAll
     public static void startMariaDB() {
         try {
-        //    Factory.disable();
             database = DB.newEmbeddedDB(3306);
             database.start();
             try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/?user=root&password=")) {
@@ -72,57 +82,52 @@ public class StatsMySQLControllerIT {
         return plugin;
     }
 
-    @BeforeAll
-    public static void disableFactory() {
-        //Factory.disable();
-    }
-
     @Test
     public void insertSelectStatsTest() throws ClassNotFoundException {
-     /*   final Plugin plugin = mockPlugin();
+        final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
-     //   Factory.initialize(plugin);
+        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
         final UUID uuid = UUID.randomUUID();
         final Player player = mock(Player.class);
         when(player.getName()).thenReturn("Shynixn");
         when(player.getUniqueId()).thenReturn(uuid);
-        try (StatsController controller = Factory.createStatsController()) {
-            try (PlayerMetaController playerController = Factory.createPlayerDataController()) {
+        try (StatsRepository controller = new StatsRepository(connectionContextService)) {
+            try (PlayerInfoController playerController = new PlayerInfoController(connectionContextService)) {
                 for (final Stats item : controller.getAll()) {
                     controller.remove(item);
                 }
 
                 final Stats meta = controller.create();
                 controller.store(meta);
-                assertEquals(0, controller.size());
+                assertEquals(0, controller.getCount());
 
                 final PlayerMeta playerMeta = playerController.create(player);
                 playerController.store(playerMeta);
                 ((StatsData)meta).setPlayerId(playerMeta.getId());
                 meta.setAmountOfWins(2);
-                meta.setAmountOfGamesPlayed(2);
+                meta.setAmountOfPlayedGames(2);
                 controller.store(meta);
 
-                assertEquals(1, controller.size());
+                assertEquals(1, controller.getCount());
                 assertEquals(2, controller.getByPlayer(player).get().getAmountOfWins());
             }
         } catch (final Exception e) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.WARNING, "Failed to run test.", e);
             Assertions.fail(e);
-        }*/
+        }
     }
 
     @Test
     public void storeLoadPetMetaTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
-      /*  Factory.initialize(plugin);
+        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
         final UUID uuid = UUID.randomUUID();
         final Player player = mock(Player.class);
         when(player.getName()).thenReturn("Shynixn");
         when(player.getUniqueId()).thenReturn(uuid);
-        try (StatsController controller = Factory.createStatsController()) {
-            try (PlayerMetaController playerController = Factory.createPlayerDataController()) {
+        try (StatsRepository controller = new StatsRepository(connectionContextService)) {
+            try (PlayerInfoController playerController = new PlayerInfoController(connectionContextService)) {
                 for (final Stats item : controller.getAll()) {
                     controller.remove(item);
                 }
@@ -132,14 +137,14 @@ public class StatsMySQLControllerIT {
                 playerController.store(playerMeta);
 
                 ((StatsData)stats).setPlayerId(playerMeta.getId());
-                stats.setAmountOfGamesPlayed(5);
+                stats.setAmountOfPlayedGames(5);
                 stats.setAmountOfWins(2);
                 stats.setAmountOfGoals(20);
 
                 controller.store(stats);
 
                 stats = controller.getByPlayer(player).get();
-                assertEquals(5, stats.getAmountOfGamesPlayed());
+                assertEquals(5, stats.getAmountOfPlayedGames());
                 assertEquals(2, stats.getAmountOfWins());
                 assertEquals(20, stats.getAmountOfGoals());
 
@@ -149,6 +154,6 @@ public class StatsMySQLControllerIT {
         } catch (final Exception e) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.WARNING, "Failed to run test.", e);
             Assertions.fail(e);
-        }*/
+        }
     }
 }

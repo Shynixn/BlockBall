@@ -1,6 +1,28 @@
+import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta;
+import com.github.shynixn.blockball.bukkit.logic.business.service.ConnectionContextService;
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.PlayerInfoController;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.PlayerData;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class PlayerMetaSQLiteControllerIT {
 
- /*   private static Plugin mockPlugin() {
+   private static Plugin mockPlugin() {
         final YamlConfiguration configuration = new YamlConfiguration();
         configuration.set("sql.enabled", false);
         configuration.set("sql.host", "localhost");
@@ -13,7 +35,6 @@ public class PlayerMetaSQLiteControllerIT {
         when(server.getLogger()).thenReturn(Logger.getGlobal());
         if(Bukkit.getServer() == null)
             Bukkit.setServer(server);
-        Factory.disable();
         new File("BlockBall/BlockBall.db").delete();
         when(plugin.getDataFolder()).thenReturn(new File("BlockBall"));
         when(plugin.getConfig()).thenReturn(configuration);
@@ -24,31 +45,27 @@ public class PlayerMetaSQLiteControllerIT {
         return plugin;
     }
 
-    @BeforeAll
-    public static void disableFactory() {
-       Factory.disable();
-    }
-
     @Test
     public void insertSelectPlayerMetaTest() throws ClassNotFoundException {
-        Factory.initialize(mockPlugin());
-        try (PlayerMetaController controller = Factory.createPlayerDataController()) {
+        final Plugin plugin = mockPlugin();
+        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        try (PlayerInfoController controller = new PlayerInfoController(connectionContextService)) {
             for (final PlayerMeta item : controller.getAll()) {
                 controller.remove(item);
             }
             final UUID uuid = UUID.randomUUID();
             final PlayerMeta playerMeta = new PlayerData();
             assertThrows(IllegalArgumentException.class, () -> controller.store(playerMeta));
-            assertEquals(0, controller.size());
+            assertEquals(0, controller.getCount());
 
             playerMeta.setUuid(uuid);
             controller.store(playerMeta);
-            assertEquals(0, controller.size());
+            assertEquals(0, controller.getCount());
 
             playerMeta.setName("Sample");
             controller.store(playerMeta);
-            assertEquals(1, controller.size());
-            assertEquals(uuid, controller.getById(playerMeta.getId()).get().getUUID());
+            assertEquals(1, controller.getCount());
+            assertEquals(uuid, controller.getById((int) playerMeta.getId()).get().getUuid());
         } catch (final Exception e) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.WARNING, "Failed to run test.", e);
             Assertions.fail(e);
@@ -58,8 +75,9 @@ public class PlayerMetaSQLiteControllerIT {
 
     @Test
     public void storeLoadPlayerMetaTest() throws ClassNotFoundException {
-        Factory.initialize(mockPlugin());
-        try (PlayerMetaController controller = Factory.createPlayerDataController()) {
+        final Plugin plugin = mockPlugin();
+        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        try (PlayerInfoController controller = new PlayerInfoController(connectionContextService)) {
             for (final PlayerMeta item : controller.getAll()) {
                 controller.remove(item);
             }
@@ -69,9 +87,9 @@ public class PlayerMetaSQLiteControllerIT {
             playerMeta.setUuid(uuid);
             controller.store(playerMeta);
 
-            assertEquals(1, controller.size());
+            assertEquals(1, controller.getCount());
             playerMeta = controller.getAll().get(0);
-            assertEquals(uuid, playerMeta.getUUID());
+            assertEquals(uuid, playerMeta.getUuid());
             assertEquals("Second", playerMeta.getName());
 
             uuid = UUID.randomUUID();
@@ -80,11 +98,11 @@ public class PlayerMetaSQLiteControllerIT {
             controller.store(playerMeta);
 
             playerMeta = controller.getAll().get(0);
-            assertEquals(uuid, playerMeta.getUUID());
+            assertEquals(uuid, playerMeta.getUuid());
             assertEquals("Shynixn", playerMeta.getName());
         } catch (final Exception e) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.WARNING, "Failed to run test.", e);
             Assertions.fail(e);
         }
-    }*/
+    }
 }

@@ -46,13 +46,11 @@ import java.util.logging.Logger
  */
 @Singleton
 class ArenaRepository(private val items: MutableList<BukkitArena> = ArrayList()) : BukkitArenaController {
-
     @Inject
     private var plugin: Plugin? = null
 
     @Inject
     private val logger: Logger? = null
-
 
     /** Creates a new arena with the given properties. */
     override fun create(name: String, corner1: Location, corner2: Location): BukkitArena {
@@ -172,5 +170,16 @@ class ArenaRepository(private val items: MutableList<BukkitArena> = ArrayList())
                 throw IllegalStateException("Cannot create folder!")
         }
         return file
+    }
+
+    /**
+     * Closes this resource, relinquishing any underlying resources.
+     * This method is invoked automatically on objects managed by the
+     * `try`-with-resources statement.
+     * @throws Exception if this resource cannot be closed
+     */
+    override fun close() {
+        items.clear()
+        plugin = null
     }
 }

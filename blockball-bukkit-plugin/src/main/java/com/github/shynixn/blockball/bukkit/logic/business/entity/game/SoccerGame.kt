@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
-import com.github.shynixn.ball.api.BallsApi
+import com.github.shynixn.ball.api.BallApi
 import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.Team
@@ -202,7 +202,7 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
         if (this.ballSpawning) {
             this.ballSpawnCounter--
             if (this.ballSpawnCounter <= 0) {
-                this.ball = BallsApi.spawnTemporaryBall(this.arena.meta.ballMeta.spawnpoint!!.toBukkitLocation(), this.arena.meta.ballMeta)
+                this.ball = BallApi.spawnTemporaryBall(this.arena.meta.ballMeta.spawnpoint!!.toBukkitLocation(), this.arena.meta.ballMeta)
                 this.ballSpawning = false
                 this.ballSpawnCounter = 0
             }

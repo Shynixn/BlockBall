@@ -49,7 +49,11 @@ class PlayerData() : PersistenceObject(), PlayerMeta<Player> {
 
     /** [uuid] of the player. */
     override var uuid: UUID
-        get() = UUID.fromString(uuidText)
+        get() {
+            if(uuidText == null)
+                throw IllegalArgumentException("UUID cannot be null!")
+           return UUID.fromString(uuidText)
+        }
         set(value) {
             uuidText = value.toString()
         }

@@ -2,12 +2,8 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller
 
 import com.github.shynixn.blockball.api.persistence.controller.DatabaseController
 import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
 import com.github.shynixn.blockball.bukkit.logic.business.service.ConnectionContextService
-import com.google.inject.Inject
-import net.minecraft.server.v1_11_R1.EntityEvoker
 import org.bukkit.Bukkit
-import java.io.InputStream
 import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.SQLException
@@ -46,11 +42,12 @@ abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextS
 
     /** Stores a new item into the repository. */
     override fun store(item: T) {
+        if(item == null)
+            throw IllegalArgumentException("Item cannot be null!")
         if (this.hasId(item)) {
             this.update(item)
         } else {
             this.insert(item)
-
         }
     }
 
@@ -175,4 +172,16 @@ abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextS
      */
     @Throws(SQLException::class)
     protected abstract fun from(resultSet: ResultSet): T
+
+    /**
+     * Closes this resource, relinquishing any underlying resources.
+     * This method is invoked automatically on objects managed by the
+     * `try`-with-resources statement.
+     * However, implementers of this interface are strongly encouraged
+     * to make their `close` methods idempotent.
+     *
+     * @throws Exception if this resource cannot be closed
+     */
+    override fun close() {
+    }
 }

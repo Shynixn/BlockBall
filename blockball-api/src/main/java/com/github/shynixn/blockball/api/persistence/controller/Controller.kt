@@ -27,7 +27,7 @@ package com.github.shynixn.blockball.api.persistence.controller
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Controller<T> {
+interface Controller<T> : AutoCloseable {
 
     /** Stores a new item into the repository. */
     fun store(item: T)
