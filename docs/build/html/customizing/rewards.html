@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Rewards &mdash; BlockBall 5.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="BlockBall 5.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="Customizing" href="index.html"/>
+        <link rel="next" title="Misc" href="misc.html"/>
+        <link rel="prev" title="DoubleJump" href="doublejump.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BlockBall
+          
+
+          
+            
+            <img src="../_static/BlockBall.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../gettingstarted/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gamemodes/index.html">Game Modes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Customizing</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ball.html">Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teams.html">Teams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signs.html">Signs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="effects.html">Effects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abilities.html">Abilities</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Rewards</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-ingame">Configuring ingame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-in-your-arena-x-yml">Configuring in your arena_x.yml</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html">Misc</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/index.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing to BlockBall</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BlockBall</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Customizing</a> &raquo;</li>
+        
+      <li>Rewards</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/Shynixn/BlockBall/tree/master/docs/source/customizing/rewards.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rewards">
+<h1>Rewards<a class="headerlink" href="#rewards" title="Permalink to this headline">¶</a></h1>
+<p>It is always a good game design to reward your players for certain action. So does BlockBall support this and you can give your players
+certain rewards for the following actions.</p>
+<ul class="simple">
+<li>Winning a match</li>
+<li>Participating in a match</li>
+<li>Shooting a goal</li>
+<li>Loosing a match</li>
+</ul>
+<div class="section" id="configuring-ingame">
+<h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
+<p>There are 2 available ways how to reward your players. Via <strong>money</strong> or by using <strong>commands</strong>.</p>
+<p>At this stage, you should be able to open the <a class="reference external" href="../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui">Settings</a> page of your arena chat UI.</p>
+<ol class="arabic simple">
+<li>Go to the <strong>Settings Page</strong> of your arena</li>
+<li>Open the <strong>Rewards Page</strong></li>
+</ol>
+<img alt="../_images/reward1.jpg" src="../_images/reward1.jpg" />
+<ol class="arabic simple">
+<li>Let’s start by adding a money reward for your players. Make sure you are using an <strong>economy plugin</strong> on your server which supports Vault and of course installed the <strong>plugin Vault</strong>.</li>
+<li>Press on select and choose an action to bind the reward to. For example the action named winning match belongs to the winning team.</li>
+</ol>
+<img alt="../_images/reward2.jpg" src="../_images/reward2.jpg" />
+<ol class="arabic simple" start="3">
+<li>In this example each player of the winning team receives 5 potatos on win. (this is the plural name of the currency used on this server). You can also see that the connection with Vault is working when your currency name displays correctly.</li>
+</ol>
+<ol class="arabic simple">
+<li>Now let’s continue with adding a command reward for our players. You can also use this option to execute commands on your server when this action appears. It does not have to be a reward at all.</li>
+<li>Press on select and choose an action to bind the reward to. For example the action named winning match belongs to the winning team.</li>
+</ol>
+<img alt="../_images/reward3.jpg" src="../_images/reward3.jpg" />
+<ol class="arabic simple" start="3">
+<li>In this example the server console executes the command <em>/say Hello World</em> with console permissions when any team wins the match</li>
+</ol>
+<p><strong>Command Modes</strong></p>
+<p>There are 3 different ways to execute your commands.</p>
+<ul class="simple">
+<li>CONSOLE_SINGLE: The console executes a single command when the action appears. There are no permission problems.</li>
+<li>COMMAND_PER_PLAYER: The console executes a command for each player and replaces the placeholder <em>&lt;player&gt;</em> with the name of each player. There are no permission problems.</li>
+<li>PER_PLAYER: Each player automatically executes the command. The player has to have got the permission to the command.</li>
+</ul>
+<p>You can set the command to <strong>none</strong> to disable it.</p>
+</div>
+<div class="section" id="configuring-in-your-arena-x-yml">
+<h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
+<p>At this stage, you should be able to find your arena save file. If not, please take a look at this page.</p>
+<ol class="arabic simple">
+<li>Go to the <strong>Open the arena_x.yml</strong> of your arena</li>
+<li>Search for the following section:</li>
+</ol>
+<p><strong>arena_x.yml</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">reward</span><span class="o">-</span><span class="n">meta</span><span class="p">:</span>
+  <span class="n">money</span><span class="o">-</span><span class="n">reward</span><span class="p">:</span>
+    <span class="n">WIN_MATCH</span><span class="p">:</span> <span class="mi">5</span>
+    <span class="n">SHOOT_GOAL</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="n">PARTICIPATE_MATCH</span><span class="p">:</span> <span class="mi">2</span>
+    <span class="n">LOOSING_MATCH</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="n">command</span><span class="o">-</span><span class="n">reward</span><span class="p">:</span>
+    <span class="n">WIN_MATCH</span><span class="p">:</span>
+      <span class="n">mode</span><span class="p">:</span> <span class="n">CONSOLE_SINGLE</span>
+      <span class="n">command</span><span class="p">:</span> <span class="s1">&#39;/say Hello World&#39;</span>
+    <span class="n">SHOOT_GOAL</span><span class="p">:</span>
+      <span class="n">mode</span><span class="p">:</span> <span class="n">PER_PLAYER</span>
+      <span class="n">command</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span>
+    <span class="n">PARTICIPATE_MATCH</span><span class="p">:</span>
+      <span class="n">mode</span><span class="p">:</span> <span class="n">CONSOLE_PER_PLAYER</span>
+      <span class="n">command</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span>
+    <span class="n">LOOSING_MATCH</span><span class="p">:</span>
+      <span class="n">mode</span><span class="p">:</span> <span class="n">CONSOLE_SINGLE</span>
+      <span class="n">command</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li>Customize all available options to your own needs.</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="misc.html" class="btn btn-neutral float-right" title="Misc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="doublejump.html" class="btn btn-neutral" title="DoubleJump" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015 - 2018, Shynixn.
+
+    </p>
+  </div>
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'5.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111364476-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111364476-1');
+</script>
+
+
+</body>
+</html>

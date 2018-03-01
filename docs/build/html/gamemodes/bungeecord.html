@@ -1,0 +1,346 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Bungeecord Minigame &mdash; BlockBall 5.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="BlockBall 5.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="Game Modes" href="index.html"/>
+        <link rel="next" title="Customizing" href="../customizing/index.html"/>
+        <link rel="prev" title="MiniGame" href="minigame.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BlockBall
+          
+
+          
+            
+            <img src="../_static/BlockBall.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../gettingstarted/index.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Game Modes</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="basicgame.html">Base Game</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hubgame.html">HubGame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minigame.html">MiniGame</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Bungeecord Minigame</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-on-your-gameserver">Configuring on your GameServer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-on-your-hubserver">Configuring on your Hubserver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changing-motd-and-sign-content">Changing Motd and sign content</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../customizing/index.html">Customizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/index.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing to BlockBall</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BlockBall</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Game Modes</a> &raquo;</li>
+        
+      <li>Bungeecord Minigame</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/Shynixn/BlockBall/tree/master/docs/source/gamemodes/bungeecord.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="bungeecord-minigame">
+<h1>Bungeecord Minigame<a class="headerlink" href="#bungeecord-minigame" title="Permalink to this headline">¶</a></h1>
+<p>The Game Mode Bungeecord Minigame is a advanced game mode to give BlockBall the rights to manage it’s on game server.</p>
+<p>This guide will not explain how <a class="reference external" href="https://www.spigotmc.org/wiki/bungeecord/">BungeeCord</a>  works so do not continue if you are not familiar with it.</p>
+<p>Make sure you created a <a class="reference external" href="../gamemodes/basicgame.html">Base Game</a> first before you continue.</p>
+<p>Please take a look at associated words which will be used in this guide:</p>
+<ul class="simple">
+<li>Gameserver: Server where the BlockBall arena is located and BlockBall is managing it.</li>
+<li>Hubserver: Any other server where players can join the Gameserver by clicking a Blockball sign.</li>
+</ul>
+<div class="section" id="configuring-on-your-gameserver">
+<h2>Configuring on your GameServer<a class="headerlink" href="#configuring-on-your-gameserver" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Join your game server with the plugins WorlEdit and BlockBall installed.</li>
+<li>Create a Base Game on this server.</li>
+<li>Go to the <strong>Settings Page</strong> of your arena and select the GameType Bungee.</li>
+<li>Open the <strong>Game Settings Page</strong></li>
+</ol>
+<img alt="../_images/arena12.jpg" src="../_images/arena12.jpg" />
+<ol class="arabic simple" start="3">
+<li>Set the lobby spawnpoint and the leave spawnpoint.</li>
+<li>Customize the other available options to your own needs.</li>
+<li>After you have pressed <em>Save and Reload</em> the first time the game is automatically managing the server and starting a game</li>
+<li>You also need to configure a <em>Restart Script</em> to automatically restart the server after a game ends</li>
+<li>Now go to your BlockBall folder on your Gameserver and configure the newly created <strong>bungeecord.yml</strong> file</li>
+</ol>
+<p><strong>config.yml</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">bungeecord</span><span class="p">:</span>
+  <span class="n">motd</span><span class="o">-</span><span class="n">restarting</span><span class="p">:</span> <span class="s1">&#39;&amp;cRestarting...&#39;</span>
+  <span class="n">motd</span><span class="o">-</span><span class="n">waiting</span><span class="o">-</span><span class="n">players</span><span class="p">:</span> <span class="s1">&#39;&amp;aWaiting for players...&#39;</span>
+  <span class="n">motd</span><span class="o">-</span><span class="n">ingame</span><span class="p">:</span> <span class="s1">&#39;&amp;9Ingame&#39;</span>
+  <span class="n">sign</span><span class="o">-</span><span class="n">restarting</span><span class="p">:</span> <span class="s1">&#39;&amp;cRestarting&#39;</span>
+  <span class="n">sign</span><span class="o">-</span><span class="n">waiting</span><span class="o">-</span><span class="n">players</span><span class="p">:</span> <span class="s1">&#39;&amp;aJoin&#39;</span>
+  <span class="n">sign</span><span class="o">-</span><span class="n">ingame</span><span class="p">:</span> <span class="s1">&#39;&amp;9Running&#39;</span>
+  <span class="n">sign</span><span class="o">-</span><span class="n">lines</span><span class="p">:</span>
+    <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="s1">&#39;&amp;lBlockBall&#39;</span>
+    <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">server</span><span class="o">&gt;</span>
+    <span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">state</span><span class="o">&gt;</span>
+    <span class="s1">&#39;4&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">sumplayers</span><span class="o">&gt;/&lt;</span><span class="n">summaxplayers</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="8">
+<li>After finishing the configuration copy the <strong>bungeecord.yml</strong> file and open your Hubserver</li>
+</ol>
+</div>
+<div class="section" id="configuring-on-your-hubserver">
+<h2>Configuring on your Hubserver<a class="headerlink" href="#configuring-on-your-hubserver" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Setup your Hubserver server with the plugins WorlEdit and BlockBall installed.</li>
+<li>Paste the copied <strong>bungeecord.yml</strong> into your BlockBall folder on your Hubserver</li>
+<li>Make sure the content of the <strong>bungeecord.yml</strong> on your Hubserver is exactly the same as the <strong>bungeecord.yml</strong> on your Gameserver</li>
+<li>Enable the server linking config option in your <strong>config.yml</strong> on your Hubserver</li>
+</ol>
+<p><strong>config.yml</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">############################</span>
+
+<span class="c1"># Game settings</span>
+
+<span class="c1"># allow-server-linking: Enable this to allow linking via BungeeCord between other servers with BlockBall installed.</span>
+
+<span class="c1">############################</span>
+
+<span class="n">game</span><span class="p">:</span>
+  <span class="n">allow</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">linking</span><span class="p">:</span> <span class="n">true</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li>Join your Hubserver and type <strong>/blockballbungeecord &lt;server&gt;</strong> (&lt;server&gt; name of your Gameserver)</li>
+<li>Rightclick on a sign and if everything is working correctly the sign will display something</li>
+<li>You probably need to restart your Gameserver or change the server name if the sign displays <em>No connection</em></li>
+<li>Finally, you can join the game by clicking on the sign.</li>
+</ol>
+</div>
+<div class="section" id="changing-motd-and-sign-content">
+<h2>Changing Motd and sign content<a class="headerlink" href="#changing-motd-and-sign-content" title="Permalink to this headline">¶</a></h2>
+<p>Everything related to the signs and motd can be edited in the <strong>bungeecord.yml</strong> file.</p>
+<p><strong>Important!</strong> Make sure the content of bungeecord.yml is exactly the same on all of your servers in your network.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../customizing/index.html" class="btn btn-neutral float-right" title="Customizing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="minigame.html" class="btn btn-neutral" title="MiniGame" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015 - 2018, Shynixn.
+
+    </p>
+  </div>
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'5.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111364476-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111364476-1');
+</script>
+
+
+</body>
+</html>

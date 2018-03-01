@@ -3,72 +3,35 @@
 | branch        | status        | download      |
 | ------------- | --------------| --------------| 
 | master        | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=master)](https://travis-ci.org/Shynixn/BlockBall) |[Download latest release (recommend)](https://github.com/Shynixn/BlockBall/releases)|
-| workflow      | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=workflow)](https://travis-ci.org/Shynixn/BlockBall) | [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/) |
+| development   | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=development)](https://travis-ci.org/Shynixn/BlockBall) | [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/) |
+
+Documentation:  https://shynixn.github.io/BlockBall/
 
 JavaDocs: https://shynixn.github.io/BlockBall/apidocs/
 
 ## Description
-Spigot plugin to simulate a football/soccer game in minecraft.
+
+BlockBall is a spigot plugin to play soccer games in Minecraft.
 
 ## Features
 
-* Simulates a working football/soccer game in minecraft with a real looking ball
-* 4 different gamemodes
+* Uses blocks as balls in minecraft
+* Games are completely customizeable
 * Version support 1.8.R1 - 1.12.R1
-* Check out the [BlockBall-Spigot-Page](https://www.spigotmc.org/resources/blockball-minigame-bungeecord-soccer-football-1-8-1-9-1-10-1-11.15320/) to get more information. 
+* Check out the [BlockBall-Spigot-Page](https://www.spigotmc.org/resources/15320/) to get more information. 
 
 ## Installation
 
-* [Download the plugin BlockBall](https://github.com/Shynixn/BlockBall/releases)
-* Put the plugin into your plugin folder
-* Install the plugin Worldedit
-* Start the server (1.8.0 - 1.12.1, Java 8)
-* Join and play :)
-
-## API
-
-* Reference the BlockBall.jar in your own projects.
-* If you are using maven or gradle you can add it from the central maven repository
-
-### Maven
-
-```xml
-<dependency>
-     <groupId>com.github.shynixn</groupId>
-     <artifactId>blockball</artifactId>
-     <version>4.1.1</version>
-</dependency>
-```
-
-### Gradle
-
-```xml
-dependencies {
-    compileOnly 'com.github.shynixn:blockball:4.1.1'
-}
-```
-
-## How to use the it
-
-#### Spawn a custom ball
-
-```java
-   Location location = new Location(Bukkit.getWorld("world"), 100, 0, 100);
-   Ball ball = BlockBallApi.createNewBall(location.getWorld());
-   ball.spawn(location);
-   ball.setVelocity(new Vector(0.2, 0.2,0.2));
-```
-
-* Check out the [BlockBall-Spigot-Page](https://www.spigotmc.org/resources/blockball-minigame-bungeecord-soccer-football-1-8-1-9-1-10-1-11.15320/) to get more information. 
+* Please check out the [BlockBall Documentation](https://shynixn.github.io/BlockBall/) for further information.
 
 ## Screenshots
 
-![alt tag](http://www.mediafire.com/convkey/0fc6/c5wd0rfxbc01xm7zg.jpg)
+![alt tag](http://www.mediafire.com/convkey/3383/6zhpiiijhk022s5zg.jpg)
 ![alt tag](http://www.mediafire.com/convkey/a253/ur76bhb6doccomvzg.jpg)
 
 ## Licence
 
-Copyright 2017 Shynixn
+Copyright 2015-2018 Shynixn
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
