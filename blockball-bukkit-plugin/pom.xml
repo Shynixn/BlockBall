@@ -139,6 +139,7 @@
                         <phase>verify</phase>
                         <goals>
                             <goal>javadoc</goal>
+                            <goal>javadocJar</goal>
                         </goals>
                     </execution>
                 </executions>
