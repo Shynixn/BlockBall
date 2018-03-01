@@ -1,5 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta
 
+import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
+import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
+import com.github.shynixn.ball.api.persistence.enumeration.ActionEffect
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
@@ -111,5 +114,22 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, M
         ballMeta.modifiers.verticalKickStrengthModifier = 6.0
         ballMeta.modifiers.horizontalKickStrengthModifier = 1.5
         ballMeta.modifiers.rollingDistanceModifier = 1.5
+
+        val partMetaSpawn = ballMeta.getParticleEffectOf(ActionEffect.ONSPAWN)
+        partMetaSpawn.setEffectType<ParticleEffectMeta<Location, Player, Material>>(ParticleEffectMeta.ParticleEffectType.EXPLOSION_NORMAL)
+                .setAmount<ParticleEffectMeta<Location, Player, Material>>(10)
+                .setSpeed<ParticleEffectMeta<Location, Player, Material>>(0.1)
+                .setOffset<ParticleEffectMeta<Location, Player, Material>>(2.0, 2.0, 2.0);
+
+        val partMetaKick = ballMeta.getParticleEffectOf(ActionEffect.ONKICK)
+        partMetaKick.setEffectType<ParticleEffectMeta<Location, Player, Material>>(ParticleEffectMeta.ParticleEffectType.EXPLOSION_LARGE)
+                .setAmount<ParticleEffectMeta<Location, Player, Material>>(2)
+                .setSpeed<ParticleEffectMeta<Location, Player, Material>>(0.1)
+                .setOffset<ParticleEffectMeta<Location, Player, Material>>(0.1, 0.1, 0.1);
+
+        val soundMetaKick = ballMeta.getSoundEffectOf(ActionEffect.ONKICK)
+        soundMetaKick.setName<SoundEffectMeta<Location, Player>>("ZOMBIE_WOOD")
+                .setVolume<SoundEffectMeta<Location, Player>>(10.0)
+                .setPitch<SoundEffectMeta<Location, Player>>(1.0)
     }
 }
