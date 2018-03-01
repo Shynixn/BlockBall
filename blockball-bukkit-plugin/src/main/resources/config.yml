@@ -3,11 +3,7 @@
 # 		            	   by Shynixn							      #
 #######################################################################
 
-# Permission:
-# LEVEL		 DESCRIPTION									PERMISSION
-# user       Access to join a blockball game				blockball.user.<game-id>
-# user       Access to join every blockball game			blockball.user.all
-# admin      Access to the /blockball command 				blockball.admin
+# You can find the permissions at https://shynixn.github.io/BlockBall/build/html/gettingstarted/permissions.html#permissionlist
 
 ############################
 
