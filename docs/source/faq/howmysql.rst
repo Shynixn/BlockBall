@@ -16,10 +16,9 @@ It is recommend to use the MySQL support if:
 
     # Database settings
 
-    # All petblocks are stored in a local file by default.
+    # All player stats are stored in a local file by default.
     # It is recommend to edit these settings when you are using a MySQL database
-    # and have got a bigger player-base. Also if you want to use the same pets
-    # cross servers. (BungeeCord)
+    # and have got a bigger player-base.
 
     ############################
 
@@ -40,10 +39,9 @@ You can get the data from your MySQL database host.
 
     # Database settings
 
-    # All petblocks are stored in a local file by default.
+    # All player stats are stored in a local file by default.
     # It is recommend to edit these settings when you are using a MySQL database
-    # and have got a bigger player-base. Also if you want to use the same pets
-    # cross servers. (BungeeCord)
+    # and have got a bigger player-base.
 
     ############################
 

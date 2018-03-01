@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>How to use a custom skin URL? &mdash; BlockBall 2018.2.1 documentation</title>
+  <title>How to use a custom skin URL? &mdash; BlockBall 5.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 2018.2.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 5.0.0 documentation" href="../index.html"/>
         <link rel="up" title="FAQ" href="index.html"/>
         <link rel="next" title="How to use the MySQL database?" href="howmysql.html"/>
         <link rel="prev" title="Can you support Minecraft 1.7.x or below?" href="support.html"/> 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2018.2.1
+                5.0.0
               </div>
             
           
@@ -102,14 +102,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../general/index.html">General</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Developer API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">FAQ</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="notspawning.html">The petblock does not spawn?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="selling.html">How can you sell costumes/skins?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notspawning.html">The ball does not spawn?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="support.html">Can you support Minecraft 1.7.x or below?</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">How to use a custom skin URL?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howmysql.html">How to use the MySQL database?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="howbungee.html">How to use the same pets on multiple servers?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="canpetwal.html">Can the pet walk instead of hopping like a rabbit?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="playerheadnotshown.html">The player head is not visible in the GUI or when the Pet spawns?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="caniusereload.html">Can I use the /reload command?</a></li>
 </ul>
 </li>
@@ -194,61 +190,30 @@
 </pre></div>
 </div>
 <p>Copy the encoded url and paste it into any base64 decoder. I have used <a class="reference external" href="https://www.base64decode.org/">https://www.base64decode.org/</a> in this example.</p>
-<img alt="faq\../_static/images/faq1.png" src="faq\../_static/images/faq1.png" />
+<img alt="../_images/faq1.png" src="../_images/faq1.png" />
 <p>Select the url after the “url” key.</p>
 <p><strong>decoded url:</strong></p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">textures</span><span class="o">.</span><span class="n">minecraft</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">texture</span><span class="o">/</span><span class="mi">6</span><span class="n">f7eb75e5542cc4937aaad5bb8657393eaf0265006eac1dc96691f32e16437</span>
 </pre></div>
 </div>
-<p>Congratulations, you can use the url anywhere in the plugin. Just do not forget to remove the <a class="reference external" href="http://">http://</a> prefix.</p>
+<p>Congratulations, you can use the url anywhere in the plugin.</p>
 <p><strong>config.yml</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">############################</span>
-
-<span class="c1"># GUI-settings</span>
-
-<span class="c1"># Settings for the petblock-gui</span>
-
-<span class="c1"># settings-title: GUI title</span>
-<span class="c1"># settings-copy-skin: Should the skin of petblock-engine be applied when being selected?</span>
-<span class="c1"># settings-use-only-disable-pet-item: Removes the enable block from the GUI and uses the pet-item instead to spawn the pet.</span>
-<span class="c1"># settings-my-pet-position: Position in the GUI to show the currently selected pet</span>
-<span class="c1"># settings-my-pet-default-appearance:: Default skin of the petblock if the settings-copy-skin is disabled</span>
-
-<span class="c1"># gui enabled: Should the the item be shown in the GUI?</span>
-<span class="c1"># gui position: Position of the item in of the GUI</span>
-<span class="c1"># gui page: Page of the item in of the GUI (PAGES: MAIN, WARDROBE)</span>
-<span class="c1"># gui id: item id in the GUI</span>
-<span class="c1"># gui damage: item damage in the the GUI</span>
-<span class="c1"># gui skin: item skin in the GUI (Name of the player [Shynixn] or the skin URL [textures.minecraft.net/texture/797884d451dc7b7729de2076cd6c4912865ade70391d1ccec3e95fb39f8c5e1])</span>
-<span class="c1"># gui name: item name in the GUI</span>
-<span class="c1"># gui unbreakable: item unbreakable tag in the GUI</span>
-<span class="c1"># gui lore: item lore in the GUI (Multiple lines support)</span>
-
-<span class="c1">############################</span>
-
-<span class="n">gui</span><span class="p">:</span>
-  <span class="n">settings</span><span class="p">:</span>
-    <span class="n">title</span><span class="p">:</span> <span class="s1">&#39;PetBlocks&#39;</span>
-    <span class="n">copy</span><span class="o">-</span><span class="n">skin</span><span class="p">:</span> <span class="n">true</span>
-    <span class="n">use</span><span class="o">-</span><span class="n">only</span><span class="o">-</span><span class="n">disable</span><span class="o">-</span><span class="n">pet</span><span class="o">-</span><span class="n">item</span><span class="p">:</span> <span class="n">false</span>
-    <span class="n">default</span><span class="o">-</span><span class="n">engine</span><span class="p">:</span> <span class="mi">1</span>
-  <span class="n">items</span><span class="p">:</span>
-    <span class="n">my</span><span class="o">-</span><span class="n">pet</span><span class="p">:</span>
-      <span class="n">position</span><span class="p">:</span> <span class="mi">4</span>
-    <span class="n">default</span><span class="o">-</span><span class="n">appearance</span><span class="p">:</span>
-      <span class="nb">id</span><span class="p">:</span> <span class="mi">2</span>
-      <span class="n">damage</span><span class="p">:</span> <span class="mi">0</span>
-      <span class="n">skin</span><span class="p">:</span> <span class="s1">&#39;textures.minecraft.net/texture/dfab7daeb8f333c7886a70ef30caf4dec4a8cd10493f23802f1516bdd23fcd&#39;</span>
-      <span class="n">unbreakable</span><span class="p">:</span> <span class="n">false</span>
-    <span class="n">empty</span><span class="o">-</span><span class="n">slot</span><span class="p">:</span>
-      <span class="n">enabled</span><span class="p">:</span> <span class="n">true</span>
-      <span class="nb">id</span><span class="p">:</span> <span class="mi">160</span>
-      <span class="n">damage</span><span class="p">:</span> <span class="mi">15</span>
-      <span class="n">skin</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span>
-      <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span>
-      <span class="n">unbreakable</span><span class="p">:</span> <span class="n">false</span>
-      <span class="n">lore</span><span class="p">:</span>
-        <span class="o">-</span> <span class="s1">&#39;none&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ball</span><span class="p">:</span>
+  <span class="n">skin</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">textures</span><span class="o">.</span><span class="n">minecraft</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">texture</span><span class="o">/</span><span class="mi">6</span><span class="n">f7eb75e5542cc4937aaad5bb8657393eaf0265006eac1dc96691f32e16437</span>
+  <span class="n">size</span><span class="p">:</span> <span class="n">NORMAL</span>
+  <span class="n">hitbox</span><span class="o">-</span><span class="n">size</span><span class="p">:</span> <span class="mf">3.0</span>
+  <span class="n">carry</span><span class="o">-</span><span class="n">able</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">always</span><span class="o">-</span><span class="n">bounce</span><span class="p">:</span> <span class="n">true</span>
+  <span class="n">rotating</span><span class="p">:</span> <span class="n">true</span>
+  <span class="n">modifiers</span><span class="p">:</span>
+    <span class="n">horizontal</span><span class="o">-</span><span class="n">touch</span><span class="p">:</span> <span class="mf">1.0</span>
+    <span class="n">vertical</span><span class="o">-</span><span class="n">touch</span><span class="p">:</span> <span class="mf">1.0</span>
+    <span class="n">horizontal</span><span class="o">-</span><span class="n">kick</span><span class="p">:</span> <span class="mf">1.5</span>
+    <span class="n">vertical</span><span class="o">-</span><span class="n">kick</span><span class="p">:</span> <span class="mf">6.0</span>
+    <span class="n">horizontal</span><span class="o">-</span><span class="n">throw</span><span class="p">:</span> <span class="mf">1.0</span>
+    <span class="n">vertical</span><span class="o">-</span><span class="n">throw</span><span class="p">:</span> <span class="mf">1.0</span>
+    <span class="n">rolling</span><span class="o">-</span><span class="n">distance</span><span class="p">:</span> <span class="mf">1.5</span>
+    <span class="n">gravity</span><span class="p">:</span> <span class="mf">0.7</span>
 </pre></div>
 </div>
 </div>
@@ -296,7 +261,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'2018.2.1',
+            VERSION:'5.0.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

@@ -9,13 +9,14 @@ Leave a like/review/diamond...
 
 The easiest thing is to rate the plugin on spigotmc.org, planetminecraft.com or github.com. It encourages me to continue supporting BlockBall. :)
 
-.. image:: ../_static/images/contr1.jpg
-
-
-Donating...
+Supporting and Donating
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Todo?
+.. image:: ../_static/images/patreonbanner.png
+    :target: https://www.patreon.com/Shynixn
+
+.. image:: ../_static/images/become_a_patron_button.png
+    :target: https://www.patreon.com/Shynixn
 
 New feature idea? Bug report?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,17 +29,4 @@ private messages on spigot.
 Developer? How can I customize BlockBall?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to customize BlockBall to your own needs,  consider using the Developer Api.
-
-You can also add new features by simply forking the plugin on github:
-
-* Press Fork on github
-* git clone the repository to your local pc
-* Create a lib folder at the same folder level as docs and blockball-api
-* Put the all spigot libraries from spigot-1.8 - spigot-1.12 into it.
-* Use maven to compile the plugin.
-
-When you are finished, you can also submit a pull request to merge your feature into the official repository.
-
-
-
+Take a look at setting up your personal `BlockBall workspace. <../api/index.html#setup-your-personal-blockball-workspace>`__

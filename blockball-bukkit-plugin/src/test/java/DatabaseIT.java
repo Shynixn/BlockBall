@@ -19,7 +19,7 @@ public class DatabaseIT {
             final HikariConfig config = new HikariConfig();
             config.setDriverClassName("org.sqlite.JDBC");
             config.setConnectionTestQuery("SELECT 1");
-            config.setJdbcUrl("jdbc:sqlite:PetBlocks.db");
+            config.setJdbcUrl("jdbc:sqlite:BlockBall.db");
             config.setMaxLifetime(60000);
             config.setIdleTimeout(45000);
             config.setMaximumPoolSize(50);

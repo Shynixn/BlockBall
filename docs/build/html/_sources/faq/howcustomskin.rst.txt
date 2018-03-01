@@ -26,56 +26,24 @@ Select the url after the "url" key.
   http://textures.minecraft.net/texture/6f7eb75e5542cc4937aaad5bb8657393eaf0265006eac1dc96691f32e16437
 
 
-Congratulations, you can use the url anywhere in the plugin. Just do not forget to remove the http:// prefix.
-
+Congratulations, you can use the url anywhere in the plugin.
 
 **config.yml**
 ::
-    ############################
-
-    # GUI-settings
-
-    # Settings for the petblock-gui
-
-    # settings-title: GUI title
-    # settings-copy-skin: Should the skin of petblock-engine be applied when being selected?
-    # settings-use-only-disable-pet-item: Removes the enable block from the GUI and uses the pet-item instead to spawn the pet.
-    # settings-my-pet-position: Position in the GUI to show the currently selected pet
-    # settings-my-pet-default-appearance:: Default skin of the petblock if the settings-copy-skin is disabled
-
-    # gui enabled: Should the the item be shown in the GUI?
-    # gui position: Position of the item in of the GUI
-    # gui page: Page of the item in of the GUI (PAGES: MAIN, WARDROBE)
-    # gui id: item id in the GUI
-    # gui damage: item damage in the the GUI
-    # gui skin: item skin in the GUI (Name of the player [Shynixn] or the skin URL [textures.minecraft.net/texture/797884d451dc7b7729de2076cd6c4912865ade70391d1ccec3e95fb39f8c5e1])
-    # gui name: item name in the GUI
-    # gui unbreakable: item unbreakable tag in the GUI
-    # gui lore: item lore in the GUI (Multiple lines support)
-
-    ############################
-
-    gui:
-      settings:
-        title: 'PetBlocks'
-        copy-skin: true
-        use-only-disable-pet-item: false
-        default-engine: 1
-      items:
-        my-pet:
-          position: 4
-        default-appearance:
-          id: 2
-          damage: 0
-          skin: 'textures.minecraft.net/texture/dfab7daeb8f333c7886a70ef30caf4dec4a8cd10493f23802f1516bdd23fcd'
-          unbreakable: false
-        empty-slot:
-          enabled: true
-          id: 160
-          damage: 15
-          skin: 'none'
-          name: 'none'
-          unbreakable: false
-          lore:
-            - 'none'
+    ball:
+      skin: http://textures.minecraft.net/texture/6f7eb75e5542cc4937aaad5bb8657393eaf0265006eac1dc96691f32e16437
+      size: NORMAL
+      hitbox-size: 3.0
+      carry-able: false
+      always-bounce: true
+      rotating: true
+      modifiers:
+        horizontal-touch: 1.0
+        vertical-touch: 1.0
+        horizontal-kick: 1.5
+        vertical-kick: 6.0
+        horizontal-throw: 1.0
+        vertical-throw: 1.0
+        rolling-distance: 1.5
+        gravity: 0.7
 

@@ -1,25 +1,22 @@
 Developer API
 =============
 
-.. toctree::
-
-
 JavaDocs
 ~~~~~~~~
 
-https://shynixn.github.io/PetBlocks/apidocs/
+https://shynixn.github.io/BlockBall/apidocs/
 
-Including the PetBlocks Bukkit-Api
+Including the BlockBall Bukkit-Api
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-PetBlocks is using maven as build system but you can include the api via different ways:
+BlockBall is using maven as build system but you can include the api via different ways:
 
 **Maven**:
 ::
     <dependency>
-        <groupId>com.github.shynixn.petblocks</groupId>
-        <artifactId>petblocks-bukkit-api</artifactId>
-        <version>6.4.3</version>
+        <groupId>com.github.shynixn.blockball</groupId>
+        <artifactId>blockball-bukkit-api</artifactId>
+        <version>5.0.0</version>
         <scope>provided</scope>
     </dependency>
 
@@ -27,143 +24,96 @@ PetBlocks is using maven as build system but you can include the api via differe
 **Gradle**:
 ::
     dependencies {
-        compileOnly 'com.github.shynixn.petblocks:petblocks-bukkit-api:6.4.3'
+        compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:5.0.0'
     }
 
 **Reference the jar file**:
 
 If you are not capable of using one of these above you can also manually download the
-api from the `repository <https://oss.sonatype.org/content/repositories/releases/com/github/shynixn/petblocks/petblocks-bukkit-api/>`__  and reference it in your project.
+api from the `repository <https://oss.sonatype.org/content/repositories/releases/com/github/shynixn/blockball/blockball-bukkit-api/>`__  and reference it in your project.
 
 Updating your plugin.yml
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Your plugin optionally uses PetBlocks.
+Your plugin optionally uses BlockBall.
 ::
-    softdepend: [PetBlocks]
+    softdepend: [BlockBall]
 
-Your plugin requires PetBlocks to work.
+Your plugin requires BlockBall to work.
 ::
-    depend: [PetBlocks]
+    depend: [BlockBall]
 
-Modifying PetMeta and PetBlock
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Modifying BlockBall games
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-**Creating a new PetMeta for a player:**
+**Teleport the ball of a game to a target location**
 ::
-    Player player; //Any player instance
-    Plugin plugin; //Any plugin instance
+        String arenaId = "1";
+        Location location; // Target location
 
-    PetMetaController metaController = PetBlocksApi.getDefaultPetMetaController();
-    PetMeta petMeta = metaController.create(player);
-    petMeta.setPetDisplayName(ChatColor.GREEN + "This is my new pet."); //Modify the petMeta
+        BukkitGameController gameController = BlockBallApi.INSTANCE.getDefaultGameController();
+        BukkitGame game = gameController.getGameFromArenaName(arenaId);
 
-    Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-        @Override
-        public void run() {
-            metaController.store(petMeta); //It is recommend to save the petMeta asynchronously into the database
+        if (game == null) { // Check if the gme is not null!
+            return;
         }
-    });
 
-**Obtaining an existing PetMeta for a player from the database:**
+        BukkitBall ball = game.getBall();
 
-You can see that this gets easily very complicated if
-you need to manage asynchronous and synchronous server tasks.
-::
-            final Player player; //Any player instance
-            final Plugin plugin; //Any plugin instance
-            PetMetaController metaController = PetBlocksApi.getDefaultPetMetaController();
+        if (ball == null) { // Check if the ball is not null!
+            return;
+        }
 
-            Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-
-                @Override
-                public void run() {
-                    Optional<PetMeta> optPetMeta = metaController.getFromPlayer(player);   //Acquire the PetMeta async from the database.
-                    if (optPetMeta.isPresent()) { //Check if the player has got a petMeta?
-                        Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
-                            @Override
-                            public void run() {
-                                PetMeta petMeta = optPetMeta.get();
-                                petMeta.setSkin(5, 0, null, false); //Change skin to a wooden block
-
-                                Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        metaController.store(petMeta);
-                                    }
-                                });
-                            }
-                        });
-                    }
-                }
-            });
-::
-
-Using lamda expressions can reduce the code above significantly.
-::
-            final Player player; //Any player instance
-            final Plugin plugin; //Any plugin instance
-            PetMetaController metaController = PetBlocksApi.getDefaultPetMetaController();
-
-            Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-                Optional<PetMeta> optPetMeta = metaController.getFromPlayer(player);   //Acquire the PetMeta async from the database.
-                if (optPetMeta.isPresent()) { //Check if the player has got a petMeta?
-                    Bukkit.getServer().getScheduler().runTask(plugin, () -> {
-                        PetMeta petMeta = optPetMeta.get();
-                        petMeta.setSkin(5, 0, null, false); //Change skin to a wooden block
-                        Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> metaController.store(petMeta));
-                    });
-                }
-            });
-
-**Spawning a petblock for a player:**
-::
-    final Player player; //Any player instance
-    final PetMeta petMeta; //Any PetMeta instance
-    final Location location; //Any target location
-
-    final PetBlockController petBlockController = PetBlocksApi.getDefaultPetBlockController();
-    final PetBlock petBlock = petBlockController.create(player, petMeta); //Spawn PetBlock
-    petBlockController.store(petBlock); //Set it managed by the PetBlocks plugin
-
-    petBlock.teleport(location);    //Teleport the petblock to the target location
-
-**Obtaining an existing petblock for a player:**
-::
-            final Player player; //Any player instance
-            final Location location; //Any target location
-
-            final PetBlockController petBlockController = PetBlocksApi.getDefaultPetBlockController();
-            final Optional<PetBlock> optPetBlock = petBlockController.getFromPlayer(player); //PetBlock is already managed
-            if (optPetBlock.isPresent()) {
-                final PetBlock petBlock = optPetBlock.get();
-                petBlock.teleport(location);    //Teleport the petblock to the target location
-            }
-
-**Applying changes to the PetBlock**
-
-You can also directly change the meta data of the spawned PetBlock:
-::
-    final PetBlock petBlock; //Any PetBlock instance
-    petBlock.getMeta().setPetDisplayName("New name");
-
-However, for applying the changes you need to respawn the PetBlock:
-::
-    final PetBlock petBlock; //Any PetBlock instance
-    petBlock.respawn();
+        ball.teleport(location);
 
 Listen to Events
 ~~~~~~~~~~~~~~~~
 
-There are many PetBlock events in order to listen to actions. Please take a look into the `JavaDocs <https://shynixn.github.io/PetBlocks/apidocs/>`__  for all events:
+There are many BlockBall events in order to listen to actions. Please take a look into the `JavaDocs <https://shynixn.github.io/BlockBall/apidocs/>`__  for all events:
 ::
     @EventHandler
-    public void onPetBlockSpawnEvent(PetBlockSpawnEvent event){
-        Player owner = event.getPlayer();
-        PetBlock petBlock = event.getPetBlock();
+    public void onGameJoinEvent(GameJoinEvent event){
+        Player player = event.getPlayer();
+        Game game = event.getGame();
 
         //Do something
     }
 
 ::
+
+
+Setup your personal BlockBall Workspace
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Important!** BlockBall is written in `Kotlin <https://kotlinlang.org/>`__ instead of pure Java. If you are not familiar
+with Kotlin, BlockBall might be a difficult task.
+
+It is sometimes necessary to customize BlockBall itself instead of using the Developer API. The following steps
+help you to get started with developing for BlockBall.
+
+Before you continue you should be familiar with **git**, **github**, **maven** and any preferred **Java IDE**.
+
+1. Open `BlockBall on github <https://github.com/Shynixn/BlockBall>`__
+2. Log in or create a github account and press the **Fork** button in the top right corner.
+3. Github will create a new repository with BlockBall on your account
+4. Click on the green **Clone or download** button and copy the text inside of the textbox
+5. Open a terminal on your pc, go into a target folder and enter the command
+
+Terminal:
+::
+   git clone <your copied text>
+::
+
+6. After BlockBall folder is created you can open the Project with any Java IDE supporting **Maven**
+7. Create a new **lib** folder in your BlockBall folder
+8. Download all spigot libraries from 1.8.0 until the latest version and put it into the lib folder
+9. Try to compile the root project with **mvn compile**
+10. If successful you can start editing the source code and create jar files via **mvn package**
+
+**Optional**
+
+11. To share your changes with the world push your committed changes into your github repository.
+12. Click on the **New pull request** button and start a pull request against BlockBall
+
+(base:fork Shynixn/BlockBall, base: development <- head fork: <your repository> ...)

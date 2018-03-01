@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>BlockBall Documentation &mdash; BlockBall 2018.2.1 documentation</title>
+  <title>BlockBall Documentation &mdash; BlockBall 5.0.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="BlockBall 2018.2.1 documentation" href="#"/>
+    <link rel="top" title="BlockBall 5.0.0 documentation" href="#"/>
         <link rel="next" title="Getting Started" href="gettingstarted/index.html"/> 
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                2018.2.1
+                5.0.0
               </div>
             
           
@@ -217,8 +217,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="gamemodes/bungeecord.html">Bungeecord Minigame</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="gamemodes/bungeecord.html#configuring-on-your-gameserver">Configuring on your GameServer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="gamemodes/bungeecord.html#properties">Properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="gamemodes/bungeecord.html#winning-condition">Winning condition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gamemodes/bungeecord.html#configuring-on-your-hubserver">Configuring on your Hubserver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gamemodes/bungeecord.html#changing-motd-and-sign-content">Changing Motd and sign content</a></li>
 </ul>
 </li>
 </ul>
@@ -239,6 +239,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="customizing/signs.html">Signs</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="customizing/signs.html#configuring-signs-for-hubgame">Configuring Signs for HubGame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customizing/signs.html#configuring-signs-for-minigame">Configuring Signs for Minigame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customizing/signs.html#configuring-signs-for-bungeecord-minigame">Configuring Signs for Bungeecord Minigame</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="customizing/effects.html">Effects</a><ul>
@@ -335,27 +337,24 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/index.html">Developer API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/index.html#javadocs">JavaDocs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/index.html#including-the-petblocks-bukkit-api">Including the PetBlocks Bukkit-Api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/index.html#including-the-blockball-bukkit-api">Including the BlockBall Bukkit-Api</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/index.html#updating-your-plugin-yml">Updating your plugin.yml</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/index.html#modifying-petmeta-and-petblock">Modifying PetMeta and PetBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/index.html#modifying-blockball-games">Modifying BlockBall games</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/index.html#listen-to-events">Listen to Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/index.html#setup-your-personal-blockball-workspace">Setup your personal BlockBall Workspace</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq/index.html">FAQ</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="faq/notspawning.html">The petblock does not spawn?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq/selling.html">How can you sell costumes/skins?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq/notspawning.html">The ball does not spawn?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="faq/support.html">Can you support Minecraft 1.7.x or below?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="faq/howcustomskin.html">How to use a custom skin URL?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="faq/howmysql.html">How to use the MySQL database?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq/howbungee.html">How to use the same pets on multiple servers?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq/canpetwal.html">Can the pet walk instead of hopping like a rabbit?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq/playerheadnotshown.html">The player head is not visible in the GUI or when the Pet spawns?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="faq/caniusereload.html">Can I use the /reload command?</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contributing/index.html">Contributing to BlockBall</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contributing/index.html#leave-a-like-review-diamond">Leave a like/review/diamond…</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing/index.html#donating">Donating…</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing/index.html#supporting-and-donating">Supporting and Donating</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing/index.html#new-feature-idea-bug-report">New feature idea? Bug report?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing/index.html#developer-how-can-i-customize-blockball">Developer? How can I customize BlockBall?</a></li>
 </ul>
@@ -406,7 +405,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'2018.2.1',
+            VERSION:'5.0.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

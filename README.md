@@ -11,7 +11,7 @@ JavaDocs: https://shynixn.github.io/BlockBall/apidocs/
 
 ## Description
 
-Blockball is a spigot plugin to play soccer in Minecraft.
+BlockBall is a spigot plugin to play soccer games in Minecraft.
 
 ## Features
 
