@@ -5,12 +5,12 @@
     <parent>
         <artifactId>root</artifactId>
         <groupId>com.github.shynixn.blockball</groupId>
-        <version>5.0.0</version>
+        <version>5.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>blockball-bukkit-plugin</artifactId>
-    <version>5.0.0</version>
+    <version>5.0.1</version>
 
     <repositories>
         <repository>
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>com.github.shynixn.blockball</groupId>
             <artifactId>blockball-bukkit-api</artifactId>
-            <version>5.0.0</version>
+            <version>5.0.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -100,8 +100,8 @@
                             <shadedPattern>com.github.shynixn.blockball.lib.org.bstats</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>javax</pattern>
-                            <shadedPattern>com.github.shynixn.blockball.lib.javax</shadedPattern>
+                            <pattern>javax.inject</pattern>
+                            <shadedPattern>com.github.shynixn.blockball.lib.javax.inject</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.aopalliance</pattern>
