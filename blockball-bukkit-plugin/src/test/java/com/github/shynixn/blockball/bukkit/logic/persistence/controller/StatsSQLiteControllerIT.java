@@ -1,6 +1,5 @@
-import ch.vorburger.exec.ManagedProcessException;
-import ch.vorburger.mariadb4j.DB;
-import com.github.shynixn.blockball.api.persistence.controller.StatsController;
+package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
+
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta;
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats;
 import com.github.shynixn.blockball.bukkit.logic.business.service.ConnectionContextService;
@@ -12,16 +11,10 @@ import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,33 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class StatsMySQLControllerIT {
-
-    private static DB database;
-
-    @AfterAll
-    public static void stopMariaDB() {
-        try {
-            database.stop();
-        } catch (final ManagedProcessException e) {
-            Logger.getLogger(StatsMySQLControllerIT.class.getSimpleName()).log(Level.WARNING, "Failed stop maria db.", e);
-        }
-    }
-
-    @BeforeAll
-    public static void startMariaDB() {
-        try {
-            database = DB.newEmbeddedDB(3306);
-            database.start();
-            try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/?user=root&password=")) {
-                try (Statement statement = conn.createStatement()) {
-                    statement.executeUpdate("CREATE DATABASE db");
-                }
-            }
-        } catch (SQLException | ManagedProcessException e) {
-            Logger.getLogger(StatsMySQLControllerIT.class.getSimpleName()).log(Level.WARNING, "Failed start maria db.", e);
-        }
-    }
+public class StatsSQLiteControllerIT {
 
     private static Plugin mockPlugin() {
         final YamlConfiguration configuration = new YamlConfiguration();
@@ -84,9 +51,9 @@ public class StatsMySQLControllerIT {
 
     @Test
     public void insertSelectStatsTest() throws ClassNotFoundException {
-        final Plugin plugin = mockPlugin();
-        plugin.getConfig().set("sql.enabled", true);
-        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        Plugin plugin = mockPlugin();
+                final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+
         final UUID uuid = UUID.randomUUID();
         final Player player = mock(Player.class);
         when(player.getName()).thenReturn("Shynixn");
@@ -96,7 +63,6 @@ public class StatsMySQLControllerIT {
                 for (final Stats item : controller.getAll()) {
                     controller.remove(item);
                 }
-
                 final Stats meta = controller.create();
                 controller.store(meta);
                 assertEquals(0, controller.getCount());
@@ -105,6 +71,10 @@ public class StatsMySQLControllerIT {
                 playerController.store(playerMeta);
                 ((StatsData)meta).setPlayerId(playerMeta.getId());
                 meta.setAmountOfWins(2);
+
+                controller.store(meta);
+                assertEquals(0, controller.getCount());
+
                 meta.setAmountOfPlayedGames(2);
                 controller.store(meta);
 
@@ -119,9 +89,9 @@ public class StatsMySQLControllerIT {
 
     @Test
     public void storeLoadPetMetaTest() throws ClassNotFoundException {
-        final Plugin plugin = mockPlugin();
-        plugin.getConfig().set("sql.enabled", true);
+        Plugin plugin = mockPlugin();
         final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+
         final UUID uuid = UUID.randomUUID();
         final Player player = mock(Player.class);
         when(player.getName()).thenReturn("Shynixn");
