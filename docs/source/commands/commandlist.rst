@@ -35,8 +35,8 @@ at the `permission list <../gettingstarted/permissions.html#permissionlist>`__.
 * Server console ✘
 * Command blocks ✘
 
-/bbleave <game>
-~~~~~~~~~~~~~~~
+/bbleave
+~~~~~~~~
 
 This user command allows players to leave games.
 
