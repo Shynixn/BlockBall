@@ -36,11 +36,17 @@ internal object Config : SimpleConfig() {
     @Inject
     var Logger: Logger? = null
 
+    /**
+     * Checks if [metrics] is enabled for dataCollecting.
+     */
     val metrics: Boolean?
         get() {
             return this.getData<Boolean>("metrics")
         }
 
+    /**
+     * Returns the general [prefix] of the plugin.
+     */
     val prefix: String?
         get() {
             return this.getData<String>("messages.prefix")
