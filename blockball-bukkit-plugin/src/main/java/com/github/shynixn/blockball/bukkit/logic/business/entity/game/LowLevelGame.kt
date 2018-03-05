@@ -337,7 +337,7 @@ abstract class LowLevelGame(
             status = GameStatus.DISABLED
             closed = true
             scoreboard?.close()
-            ingameStats.keys.forEach { p -> leave(p); }
+            ingameStats.keys.toTypedArray().forEach { p -> leave(p); }
             ingameStats.clear()
             ball?.remove()
             redTeam.clear()
