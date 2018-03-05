@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby
 
+import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.LobbyMeta
@@ -7,6 +8,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import org.bukkit.ChatColor
+import org.bukkit.GameMode
 
 /**
  * Created by Shynixn 2018.
@@ -47,24 +49,21 @@ class LobbyProperties : PersistenceObject(), LobbyMeta {
         get() = sign.joinSigns as MutableList<StorageLocation>
     /** Lines displayed on the sign for leaving the match. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "join-sign-lines")
-    override var joinSignLines: Array<String> = arrayOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, PlaceHolder.ARENA_STATE.placeHolder,  PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder + '/' + PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder)
+    override var joinSignLines: Array<String> = arrayOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, PlaceHolder.ARENA_STATE.placeHolder, PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder + '/' + PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder)
     /** Lines displayed on the sign for leaving the match. */
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leave-sign-lines")
-    override var leaveSignLines: Array<String> = arrayOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, ChatColor.WHITE.toString() + "Leave",  PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder + '/' + PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder)
+    override var leaveSignLines: Array<String> = arrayOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, ChatColor.WHITE.toString() + "Leave", PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder + '/' + PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder)
     /** List of signs which can be clicked to leave the game. */
     override val leaveSigns: MutableList<StorageLocation>
         get() = sign.leaveSigns as MutableList<StorageLocation>
     /** Spawnpoint when someone leaves the hub game. */
-    override var leaveSpawnpoint: StorageLocation?
-        get() = internalLocation
-        set(value) {
-            this.internalLocation = value as LocationBuilder?
-        }
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "leave-spawnpoint", implementation = LocationBuilder::class)
+    override var leaveSpawnpoint: StorageLocation? = null
+    /** Minecraft gamemode (Survival, Adventure, Creative) the players should be */
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "gamemode", implementation = GameMode::class)
+    override var gamemode: Enum<*> = GameMode.ADVENTURE
 
-    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "leave-spawnpoint")
-    private var internalLocation: LocationBuilder? = null
-
-    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "signs")
+    @YamlSerializer.YamlSerialize(orderNumber = 7, value = "signs")
     private val sign: SignCollection = SignCollection()
 
     /** Helper class to wrap signs. */

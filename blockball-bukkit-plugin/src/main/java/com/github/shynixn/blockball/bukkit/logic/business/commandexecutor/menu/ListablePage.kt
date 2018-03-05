@@ -9,11 +9,12 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarM
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import org.bukkit.GameMode
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 
 /**
- * Created by Shynixn 2018.
+ * [Page] to display values as a selection box for players to choose from.
  * <p>
  * Version 1.2
  * <p>
@@ -56,25 +57,25 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.LIST_GAMETYPES) {
-            cache[2] = GameType.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.SETTINGS_OPEN
+            var collection =  GameType.values().map { p -> p.name }
+            cache[2] = collection
+            cache[3] = BlockBallCommand.SETTINGS_OPEN //TODO: REMOVE SPECTATOR GAMEMODE
         } else if (command == BlockBallCommand.LIST_PARTICLE_EFFECTINGTYPES) {
             cache[2] = EffectingType.values().map { p -> p.name }
             cache[3] = BlockBallCommand.PARTICLE_CALLBACK_EFFECTING
-        }
-        else if (command == BlockBallCommand.LIST_BALL_PARTICLEFFECTS) {
+        } else if (command == BlockBallCommand.LIST_BUKKITGAMESMODES) {
+            cache[2] = GameMode.values().map { p -> p.name }
+            cache[3] = BlockBallCommand.GAMESETTINGS_CALLBACK_BUKKITGAMEMODES
+        } else if (command == BlockBallCommand.LIST_BALL_PARTICLEFFECTS) {
             cache[2] = ActionEffect.values().map { p -> p.name }
             cache[3] = BlockBallCommand.BALL_PARTICLEACTION_CALLBACK
-        }
-        else if (command == BlockBallCommand.LIST_BALL_SOUNDEFFECTS) {
+        } else if (command == BlockBallCommand.LIST_BALL_SOUNDEFFECTS) {
             cache[2] = ActionEffect.values().map { p -> p.name }
             cache[3] = BlockBallCommand.BALL_SOUNDACTION_CALLBACK
-        }
-        else if (command == BlockBallCommand.LIST_BALLSIZES) {
+        } else if (command == BlockBallCommand.LIST_BALLSIZES) {
             cache[2] = BallSize.values().map { p -> p.name }
             cache[3] = BlockBallCommand.BALL_SIZE_CALLBACK
-        }
-        else if (command == BlockBallCommand.LIST_COMMANDMODES) {
+        } else if (command == BlockBallCommand.LIST_COMMANDMODES) {
             cache[2] = CommandMeta.CommandMode.values().map { p -> p.name }
             cache[3] = BlockBallCommand.REWARD_CALLBACK_COMMANDMODE
         } else if (command == BlockBallCommand.LIST_PARTICLE_TYPES) {
@@ -120,7 +121,7 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         val callBackCommand = cache[3] as BlockBallCommand
         val builder = ChatBuilder()
         if (infoList.size == 0) {
-            builder.text(" No data found.")
+            builder.text("No data found.")
         } else {
             infoList.forEachIndexed { index, p ->
                 builder.component((index + 1).toString() + ": [$p]")

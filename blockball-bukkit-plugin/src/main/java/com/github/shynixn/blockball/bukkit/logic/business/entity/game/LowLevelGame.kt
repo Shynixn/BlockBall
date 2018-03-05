@@ -161,6 +161,10 @@ abstract class LowLevelGame(
 
         ingameStats.remove(player)
         stats.resetState()
+
+        if (arena.meta.lobbyMeta.leaveSpawnpoint != null) {
+            player.teleport(arena.meta.lobbyMeta.leaveSpawnpoint!!.toBukkitLocation())
+        }
     }
 
     private fun updateDoubleJump() {

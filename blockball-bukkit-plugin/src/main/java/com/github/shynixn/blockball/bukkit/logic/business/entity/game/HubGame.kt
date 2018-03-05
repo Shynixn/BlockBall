@@ -13,6 +13,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.entity.container.Playe
 import com.github.shynixn.blockball.bukkit.logic.business.helper.sendScreenMessage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -54,7 +55,7 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         this.getPlayers().forEach { p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this) }
 
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
-            val event = GoalShootEvent(this, lastInteractedEntity as Player,team)
+            val event = GoalShootEvent(this, lastInteractedEntity as Player, team)
             Bukkit.getServer().pluginManager.callEvent(event)
         }
     }
@@ -142,6 +143,7 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         stats.storeForType(GameType.HUBGAME)
         this.ingameStats[player] = stats
 
+        player.gameMode = arena.meta.lobbyMeta.gamemode as GameMode
         player.allowFlight = false
         player.isFlying = false
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()

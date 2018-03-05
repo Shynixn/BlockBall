@@ -192,7 +192,7 @@ public final class YamlSerializer {
             if (field.get(object) == null) {
             } else if (isPrimitive(field.getType())) {
                 data.put(yamlAnnotation.value(), field.get(object));
-            } else if (field.getType().isEnum()) {
+            } else if (field.getType().isEnum() || field.getType() == Enum.class) {
                 data.put(yamlAnnotation.value(), ((Enum) field.get(object)).name().toUpperCase());
             } else if (field.getType().isArray()) {
                 data.put(yamlAnnotation.value(), serializeArray((Object[]) field.get(object)));
@@ -241,9 +241,9 @@ public final class YamlSerializer {
                 }
             } else {
                 if (keyClazz.isEnum()) {
-                    map.put(Enum.valueOf(keyClazz, key), deserializeObject(clazz, null,((MemorySection) value).getValues(false)));
+                    map.put(Enum.valueOf(keyClazz, key), deserializeObject(clazz, null, ((MemorySection) value).getValues(false)));
                 } else {
-                    map.put(key, deserializeObject(clazz,null, ((MemorySection) value).getValues(false)));
+                    map.put(key, deserializeObject(clazz, null, ((MemorySection) value).getValues(false)));
                 }
             }
         }
@@ -278,7 +278,7 @@ public final class YamlSerializer {
             } else if (isPrimitive(data.get(key).getClass())) {
                 objects[orderPlace] = (T) data.get(key);
             } else {
-                objects[orderPlace] = deserializeObject(clazz, annotation.implementation(),((MemorySection) data.get(key)).getValues(false));
+                objects[orderPlace] = deserializeObject(clazz, annotation.implementation(), ((MemorySection) data.get(key)).getValues(false));
             }
             i++;
         }
@@ -312,7 +312,7 @@ public final class YamlSerializer {
         for (final String key : data.keySet()) {
             Object item = data.get(key);
             if (item instanceof MemorySection) {
-                collection.add(deserializeObject(clazz,null, ((MemorySection) item).getValues(false)));
+                collection.add(deserializeObject(clazz, null, ((MemorySection) item).getValues(false)));
             } else if (clazz.isEnum()) {
                 collection.add(Enum.valueOf((Class) clazz, (String) item));
             }
@@ -361,6 +361,8 @@ public final class YamlSerializer {
                                 field.set(object, data.get(yamlAnnotation.value()));
                             } else if (field.getType().isEnum()) {
                                 field.set(object, Enum.valueOf((Class) field.getType(), data.get(yamlAnnotation.value()).toString()));
+                            } else if (field.getType() == Enum.class) {
+                                field.set(object, Enum.valueOf((Class)yamlAnnotation.implementation(), data.get(yamlAnnotation.value()).toString()));
                             } else if (field.getType().isArray()) {
                                 field.set(object, deserializeArray(field.getType().getComponentType(), yamlAnnotation, ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                             } else if (Collection.class.isAssignableFrom(field.getType())) {
@@ -385,7 +387,7 @@ public final class YamlSerializer {
                                     if (field.get(object) != null) {
                                         heavyDeserialize(field.get(object), field.getType(), getDataFromSource(((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                                     } else {
-                                        field.set(object, deserializeObject(field.getType(),yamlAnnotation.implementation(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                        field.set(object, deserializeObject(field.getType(), yamlAnnotation.implementation(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                                     }
                                 }
                             }

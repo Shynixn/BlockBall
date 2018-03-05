@@ -100,8 +100,6 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             return
         super.leave(player)
 
-        player.teleport(arena.meta.lobbyMeta.leaveSpawnpoint!!.toBukkitLocation())
-
         val event = GameLeaveEvent(this, player)
         Bukkit.getServer().pluginManager.callEvent(event)
     }
@@ -327,7 +325,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         player.foodLevel = 20
         player.level = 0
         player.exp = 0.0F
-        player.gameMode = GameMode.ADVENTURE
+        player.gameMode = arena.meta.lobbyMeta.gamemode as GameMode
 
         player.inventory.armorContents = arrayOfNulls(4)
         player.inventory.clear()

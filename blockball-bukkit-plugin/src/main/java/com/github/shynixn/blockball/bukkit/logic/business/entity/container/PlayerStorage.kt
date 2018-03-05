@@ -62,6 +62,7 @@ class PlayerStorage(
     fun storeForType(gameType: GameType) {
         this.gameType = gameType;
         if (gameType == GameType.HUBGAME) {
+            this.gamemode = player.gameMode
             this.armorContents = player.inventory?.armorContents?.clone()
             this.flying = player.isFlying
             this.allowFlying = player.allowFlight
@@ -86,6 +87,7 @@ class PlayerStorage(
     /** Resets the players state before joining. */
     override fun resetState() {
         if (gameType == GameType.HUBGAME) {
+            player.gameMode = gamemode
             player.inventory.armorContents = this.armorContents
             player.allowFlight = this.allowFlying
             player.isFlying = this.flying

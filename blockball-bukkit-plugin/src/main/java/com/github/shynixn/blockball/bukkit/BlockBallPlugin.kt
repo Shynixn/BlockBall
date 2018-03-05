@@ -13,7 +13,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.UpdateUtils
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.google.inject.Guice
 import com.google.inject.Inject
-import me.clip.placeholderapi.metrics.bukkit.Metrics
+import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.plugin.java.JavaPlugin

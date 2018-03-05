@@ -81,6 +81,7 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
     init {
         Bukkit.getServer().consoleSender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
         plugin.saveDefaultConfig()
+        Config.reload()
         if (Config.allowServerLinking!!) { //
             this.plugin = plugin
             this.signController = signController
