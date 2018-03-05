@@ -126,6 +126,10 @@ class HubGameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugi
         this.lastLocation[player] = LocationBuilder(event.player.location)
     }
 
+    /**
+     * The [event] gets called when a player toggles flight with double space pressing and
+     * disables flying when it's a player in a game that simply used double jump.
+     */
     @EventHandler
     fun onPlayerToggleFlightEvent(event: PlayerToggleFlightEvent) {
         if (event.player.gameMode != GameMode.CREATIVE && togglePlayers.contains(event.player)) {
