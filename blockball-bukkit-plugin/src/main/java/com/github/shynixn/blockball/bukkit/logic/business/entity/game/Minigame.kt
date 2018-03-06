@@ -130,6 +130,9 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         return true
     }
 
+    /**
+     * Returns the amount of queues players.
+     */
     private fun getAmountOfQueuedPlayersInThisTeam(team: Team): Int {
         var amount = 0
         ingameStats.values.forEach { p ->
