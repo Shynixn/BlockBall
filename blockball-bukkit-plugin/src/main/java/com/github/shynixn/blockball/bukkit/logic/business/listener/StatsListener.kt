@@ -52,7 +52,7 @@ class StatsListener @Inject constructor(plugin: Plugin, private val statsControl
     private val statsScoreboards = HashMap<Player, StatsScoreboard>()
 
     init {
-        if(Config.statsScoreboardEnabled!!) {
+        if (Config.statsScoreboardEnabled!!) {
             this.setStatsForAllOnlinePlayers()
             this.plugin.server.scheduler.runTaskTimerAsynchronously(this.plugin, this, 0, 20L * 60)
         }
@@ -85,7 +85,7 @@ class StatsListener @Inject constructor(plugin: Plugin, private val statsControl
      */
     @EventHandler
     fun onPlayerJoinEvent(event: PlayerJoinEvent) {
-        if(Config.statsScoreboardEnabled!!) {
+        if (Config.statsScoreboardEnabled!!) {
             this.setStatsForPlayer(event.player)
         }
     }
@@ -174,7 +174,9 @@ class StatsListener @Inject constructor(plugin: Plugin, private val statsControl
     }
 
     private fun updateStats(player: Player, stats: Stats) {
-        this.statsScoreboards[player]!!.updateStats(player, stats)
+        if (statsScoreboards.containsKey(player)) {
+            this.statsScoreboards[player]!!.updateStats(player, stats)
+        }
     }
 
     private fun setStatsForPlayer(player: Player) {

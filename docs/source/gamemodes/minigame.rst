@@ -53,6 +53,7 @@ Properties
 
 * Max Score: Max amount of goals the players can score before the arena resets itself back to zero.
 * Leave Spawnpoint: Spawnpoint for players who leave the game. This property **has to be set** for MiniGames.
+* Gamemode: Minecraft gamemode (Survival, Adventure, Creative) the player is spawning inside of the arena
 * Even teams enabled: Should the team choice of the player be ignored if too many players are on one team?
 * Max Duration: Max amount of time in seconds how a match can last.
 * Lobby Spawnpoint: Position where players spawn when they join the game. This property **has to be set** for MiniGame.

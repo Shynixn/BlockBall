@@ -51,6 +51,7 @@ Properties
 
 * Max Score: Max amount of goals the players can score before the arena resets itself back to zero.
 * Leave Spawnpoint: Spawnpoint for players who leave the game. If you leave it empty, players clicking on an leave sign will not be teleported and simply kicked out of the forcefield.
+* Gamemode: Minecraft gamemode (Survival, Adventure, Creative) the player is spawning inside of the arena
 * Even teams enabled: Should the team choice of the player be ignored if too many players are on one team?
 * Join Message: Message being played when a player runs into the forcefield. Clicking line 2 will cause the player to join the red team, clicking line 3 causes joining the blue team.
 * Reset on empty: Should the arena be reset to 0 scores when nobody is playing in it?

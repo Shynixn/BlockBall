@@ -57,14 +57,13 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.LIST_GAMETYPES) {
-            var collection =  GameType.values().map { p -> p.name }
-            cache[2] = collection
-            cache[3] = BlockBallCommand.SETTINGS_OPEN //TODO: REMOVE SPECTATOR GAMEMODE
+            cache[2] = GameType.values().map { p -> p.name }
+            cache[3] = BlockBallCommand.SETTINGS_OPEN
         } else if (command == BlockBallCommand.LIST_PARTICLE_EFFECTINGTYPES) {
             cache[2] = EffectingType.values().map { p -> p.name }
             cache[3] = BlockBallCommand.PARTICLE_CALLBACK_EFFECTING
         } else if (command == BlockBallCommand.LIST_BUKKITGAMESMODES) {
-            cache[2] = GameMode.values().map { p -> p.name }
+            cache[2] = GameMode.values().filterNot {g ->  g == GameMode.SPECTATOR}.map { p -> p.name }
             cache[3] = BlockBallCommand.GAMESETTINGS_CALLBACK_BUKKITGAMEMODES
         } else if (command == BlockBallCommand.LIST_BALL_PARTICLEFFECTS) {
             cache[2] = ActionEffect.values().map { p -> p.name }
