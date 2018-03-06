@@ -37,5 +37,5 @@ interface HubLobbyMeta : PersistenceAble {
     var resetArenaOnEmpty: Boolean
 
     /** Join asking message. */
-    var joinMessage: List<String>
+    var joinMessage: MutableList<String>
 }

@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby
 
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.HubLobbyMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
@@ -34,7 +35,7 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
 class HubLobbyProperties : PersistenceObject(), HubLobbyMeta {
     /** Join asking message. */
     @YamlSerializer.YamlSerialize(orderNumber = 1, value = "join-selection")
-    override var joinMessage: List<String> = arrayListOf("Click on the team to join the match.", "&c[Team Red]", "&9[Team Blue]")
+    override var joinMessage: MutableList<String> = arrayListOf("Click on the team to join the match.", PlaceHolder.RED_COLOR.placeHolder + "[" + PlaceHolder.TEAM_RED.placeHolder +"]", PlaceHolder.BLUE_COLOR.placeHolder + "[" + PlaceHolder.TEAM_BLUE.placeHolder + "]")
     /** Allows to instantly play in games by running into the forcefield.*/
     @YamlSerializer.YamlSerialize(orderNumber = 2, value = "instant-forcefield-join")
     override var instantForcefieldJoin: Boolean = false

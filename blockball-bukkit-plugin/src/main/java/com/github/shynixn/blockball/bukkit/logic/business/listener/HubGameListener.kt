@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
+import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.stripChatColors
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import com.google.inject.Inject
@@ -97,13 +98,13 @@ class HubGameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugi
                         if (!togglePlayers.contains(player)) {
                             ChatBuilder().text(Config.prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].convertChatColors())
                                     .nextLine()
-                                    .component(game.arena.meta.hubLobbyMeta.joinMessage[1].convertChatColors())
+                                    .component(game.arena.meta.hubLobbyMeta.joinMessage[1].replaceGamePlaceholder(game, game.arena.meta.redTeamMeta))
                                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
-                                            , "/" + plugin.config.getString("global-join.command") + " " + game.arena.meta.redTeamMeta.displayName.stripChatColors() + " " + game.arena.name)
+                                            , "/" + plugin.config.getString("global-join.command") + " " + game.arena.meta.redTeamMeta.displayName.stripChatColors() + "|" + game.arena.name)
                                     .setHoverText(" ")
-                                    .builder().text(" ").component(game.arena.meta.hubLobbyMeta.joinMessage[2].convertChatColors())
+                                    .builder().text(" ").component(game.arena.meta.hubLobbyMeta.joinMessage[2].replaceGamePlaceholder(game, game.arena.meta.blueTeamMeta))
                                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
-                                            , "/" + plugin.config.getString("global-join.command") + " " + game.arena.meta.blueTeamMeta.displayName.stripChatColors() + " " + game.arena.name)
+                                            , "/" + plugin.config.getString("global-join.command") + " " + game.arena.meta.blueTeamMeta.displayName.stripChatColors() + "|" + game.arena.name)
                                     .setHoverText(" ")
                                     .builder().sendMessage(player)
                             togglePlayers.add(player)
