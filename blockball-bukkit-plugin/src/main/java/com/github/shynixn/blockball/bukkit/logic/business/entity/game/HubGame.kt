@@ -131,6 +131,11 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
      */
     override fun onTwentyTicks() {
         super.onTwentyTicks()
+        if (this.arena.gameType != GameType.HUBGAME) {
+            this.close()
+            return
+        }
+
         if (this.arena.meta.hubLobbyMeta.resetArenaOnEmpty
                 && this.ingameStats.isEmpty() && (redPoints > 0 || bluePoints > 0)) {
             this.close()

@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
+import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.bukkit.logic.business.helper.setServerModt
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
 import org.bukkit.Bukkit
@@ -56,6 +57,12 @@ class BungeeCordMinigame(arena: BukkitArena) : Minigame(arena) {
 
     override fun onTwentyTicks() {
         super.onTwentyTicks()
+
+        if (this.arena.gameType != GameType.BUNGEE) {
+            this.close()
+            return
+        }
+
         if (this.isGameRunning) {
             Bukkit.getServer().setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.inGameMotd)
         } else if (this.isLobbyCountdownRunning) {

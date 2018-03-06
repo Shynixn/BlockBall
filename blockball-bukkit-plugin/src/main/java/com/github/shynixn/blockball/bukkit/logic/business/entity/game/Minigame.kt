@@ -145,6 +145,11 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
      * Thread save method to listen on the second tick cycle of the game.
      */
     override fun onTwentyTicks() {
+        if (this.arena.gameType != GameType.MINIGAME) {
+            this.close()
+            return
+        }
+
         if (isEndGameRunning) {
             if (ball != null) {
                 ball!!.remove()

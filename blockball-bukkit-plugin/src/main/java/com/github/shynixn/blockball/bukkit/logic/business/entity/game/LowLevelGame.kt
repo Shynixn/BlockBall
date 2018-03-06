@@ -112,6 +112,11 @@ abstract class LowLevelGame(
         this.onTick()
         if (this.haveTwentyTicksPassed()) {
             this.onTwentyTicks()
+
+            if (closed) {
+                return
+            }
+
             this.kickUnwantedEntitiesOutOfForcefield()
             this.onUpdateSigns()
             this.updateScoreboard()

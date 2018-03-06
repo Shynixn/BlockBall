@@ -107,8 +107,8 @@ internal fun String.replaceGamePlaceholder(game: BukkitGame, teamMeta: TeamMeta<
 
     if (game.arena.gameType == GameType.HUBGAME) {
         cache = cache.replace(PlaceHolder.TIME.placeHolder, "∞")
-    } else if (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE) {
-        cache = cache.replace(PlaceHolder.TIME.placeHolder, (game as Minigame).gameCountdown.toString())
+    } else if (game is Minigame) {
+        cache = cache.replace(PlaceHolder.TIME.placeHolder, game.gameCountdown.toString())
     }
 
     if (game is SoccerGame) {

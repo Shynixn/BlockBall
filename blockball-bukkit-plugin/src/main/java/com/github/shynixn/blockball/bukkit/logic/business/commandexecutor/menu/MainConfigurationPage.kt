@@ -130,6 +130,10 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
                     BlockBallApi.getDefaultGameController<BukkitGameController>()
                             .arenaController!!.store(arena)
                     BlockBallApi.getDefaultGameController<BukkitGameController>().reload()
+
+                    val controller = BlockBallApi.getDefaultGameController<BukkitGameController>()
+                    val newArena = controller.getGameFromArenaName(arena.name)
+                    cache[0] = newArena!!.arena
                 } else {
                     return CommandResult.MINIGAMEARENA_NOTVALID
                 }
