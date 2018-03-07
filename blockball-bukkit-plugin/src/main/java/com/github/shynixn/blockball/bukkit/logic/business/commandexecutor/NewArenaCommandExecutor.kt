@@ -197,13 +197,13 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
                 builder.component(">>Back<<")
                         .setColor(ChatColor.RED)
                         .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, (cache!![3] as BlockBallCommand).command)
-                        .setHoverText("Back.")
+                        .setHoverText("Goes back to the previous page.")
                         .builder()
             } else {
                 builder.component(">>Back<<")
                         .setColor(ChatColor.RED)
                         .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.command + " " + usedPage.getPreviousIdFrom(cache!!))
-                        .setHoverText("Opens the blockball arena configuration.")
+                        .setHoverText("Goes back to the previous page.")
                         .builder()
             }
             builder.component(" >>Save and reload<<")
