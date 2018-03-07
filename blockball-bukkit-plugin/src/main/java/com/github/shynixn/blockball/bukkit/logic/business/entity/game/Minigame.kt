@@ -100,8 +100,6 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             return
         super.leave(player)
 
-        player.teleport(arena.meta.lobbyMeta.leaveSpawnpoint!!.toBukkitLocation())
-
         val event = GameLeaveEvent(this, player)
         Bukkit.getServer().pluginManager.callEvent(event)
     }
@@ -132,6 +130,9 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         return true
     }
 
+    /**
+     * Returns the amount of queues players.
+     */
     private fun getAmountOfQueuedPlayersInThisTeam(team: Team): Int {
         var amount = 0
         ingameStats.values.forEach { p ->
@@ -147,6 +148,11 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
      * Thread save method to listen on the second tick cycle of the game.
      */
     override fun onTwentyTicks() {
+        if (this.arena.gameType != GameType.MINIGAME) {
+            this.close()
+            return
+        }
+
         if (isEndGameRunning) {
             if (ball != null) {
                 ball!!.remove()
@@ -327,7 +333,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         player.foodLevel = 20
         player.level = 0
         player.exp = 0.0F
-        player.gameMode = GameMode.ADVENTURE
+        player.gameMode = arena.meta.lobbyMeta.gamemode as GameMode
 
         player.inventory.armorContents = arrayOfNulls(4)
         player.inventory.clear()

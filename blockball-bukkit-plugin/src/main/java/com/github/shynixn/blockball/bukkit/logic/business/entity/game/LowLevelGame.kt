@@ -21,6 +21,8 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Sign
 import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.Item
+import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
@@ -110,6 +112,11 @@ abstract class LowLevelGame(
         this.onTick()
         if (this.haveTwentyTicksPassed()) {
             this.onTwentyTicks()
+
+            if (closed) {
+                return
+            }
+
             this.kickUnwantedEntitiesOutOfForcefield()
             this.onUpdateSigns()
             this.updateScoreboard()
@@ -159,6 +166,10 @@ abstract class LowLevelGame(
 
         ingameStats.remove(player)
         stats.resetState()
+
+        if (arena.meta.lobbyMeta.leaveSpawnpoint != null) {
+            player.teleport(arena.meta.lobbyMeta.leaveSpawnpoint!!.toBukkitLocation())
+        }
     }
 
     private fun updateDoubleJump() {
@@ -305,7 +316,7 @@ abstract class LowLevelGame(
     private fun kickUnwantedEntitiesOutOfForcefield() {
         if (arena.meta.protectionMeta.entityProtectionEnabled) {
             this.arena.meta.ballMeta.spawnpoint!!.toBukkitLocation().world.entities.forEach { p ->
-                if (p !is Player && p !is ArmorStand) {
+                if (p !is Player && p !is ArmorStand && p !is Item && p !is ItemFrame) {
                     if (this.arena.isLocationInSelection(p.location)) {
                         val vector = arena.meta.protectionMeta.entityProtection
                         p.location.direction = vector
@@ -337,7 +348,7 @@ abstract class LowLevelGame(
             status = GameStatus.DISABLED
             closed = true
             scoreboard?.close()
-            ingameStats.keys.forEach { p -> leave(p); }
+            ingameStats.keys.toTypedArray().forEach { p -> leave(p); }
             ingameStats.clear()
             ball?.remove()
             redTeam.clear()

@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.StatsScoreboard
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.PlayerInfoController
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.StatsData
@@ -51,8 +52,10 @@ class StatsListener @Inject constructor(plugin: Plugin, private val statsControl
     private val statsScoreboards = HashMap<Player, StatsScoreboard>()
 
     init {
-        this.setStatsForAllOnlinePlayers()
-        this.plugin.server.scheduler.runTaskTimerAsynchronously(this.plugin, this, 0, 20L * 60)
+        if (Config.statsScoreboardEnabled!!) {
+            this.setStatsForAllOnlinePlayers()
+            this.plugin.server.scheduler.runTaskTimerAsynchronously(this.plugin, this, 0, 20L * 60)
+        }
     }
 
     /**
@@ -82,7 +85,9 @@ class StatsListener @Inject constructor(plugin: Plugin, private val statsControl
      */
     @EventHandler
     fun onPlayerJoinEvent(event: PlayerJoinEvent) {
-        this.setStatsForPlayer(event.player)
+        if (Config.statsScoreboardEnabled!!) {
+            this.setStatsForPlayer(event.player)
+        }
     }
 
     /**
@@ -169,7 +174,9 @@ class StatsListener @Inject constructor(plugin: Plugin, private val statsControl
     }
 
     private fun updateStats(player: Player, stats: Stats) {
-        this.statsScoreboards[player]!!.updateStats(player, stats)
+        if (statsScoreboards.containsKey(player)) {
+            this.statsScoreboards[player]!!.updateStats(player, stats)
+        }
     }
 
     private fun setStatsForPlayer(player: Player) {

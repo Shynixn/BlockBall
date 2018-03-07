@@ -14,7 +14,7 @@
         <module>blockball-bukkit-api</module>
         <module>blockball-bukkit-plugin</module>
     </modules>
-    <version>5.0.1</version>
+    <version>5.0.2</version>
     <packaging>pom</packaging>
 
     <developers>
@@ -36,7 +36,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <kotlin.version>1.2.21</kotlin.version>
     </properties>
-
 
     <profiles>
         <profile>
@@ -127,21 +126,25 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.jetbrains.dokka</groupId>
-                <artifactId>dokka-maven-plugin</artifactId>
-                <version>0.9.16</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
                 <executions>
                     <execution>
+                        <id>attach-javadocs</id>
                         <phase>verify</phase>
                         <goals>
-                            <goal>javadoc</goal>
-                            <goal>javadocJar</goal>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>aggregate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>aggregate</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <outputDir>${project.build.outputDirectory}/../apidocs</outputDir>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>

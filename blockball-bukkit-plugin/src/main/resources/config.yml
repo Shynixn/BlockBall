@@ -134,7 +134,7 @@ security:
 ############################
 
 stats-scoreboard:
- enabled: false
+ enabled: true
  title: '&f&lBlockBall Stats'
  lines:
    - ''

@@ -11,6 +11,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.entity.bungeecord.Bung
 import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.listener.BungeeCordNetworkSignListener
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.NetworkSignRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import com.google.common.io.ByteStreams
@@ -80,7 +81,8 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
     init {
         Bukkit.getServer().consoleSender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
         plugin.saveDefaultConfig()
-        if (plugin.config.getBoolean("game.allow-server-linking")) {
+        Config.reload()
+        if (Config.allowServerLinking!!) { //
             this.plugin = plugin
             this.signController = signController
             signController.reload()
@@ -243,11 +245,9 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
      * @return player
      */
     private fun getFirstPlayer(): Player? {
-        for (world in Bukkit.getWorlds()) {
-            if (!world.players.isEmpty()) {
-                return world.players[0]
-            }
-        }
+        Bukkit.getWorlds()
+                .filterNot { it.players.isEmpty() }
+                .forEach { return it.players[0] }
         return null
     }
 

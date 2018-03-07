@@ -149,9 +149,6 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
                 p.join(event.player, null)
             } else if (p.arena.meta.lobbyMeta.leaveSigns.contains(location)) {
                 p.leave(event.player)
-                if (p.arena.meta.lobbyMeta.leaveSpawnpoint != null) {
-                    event.player.teleport(p.arena.meta.lobbyMeta.leaveSpawnpoint!!.toBukkitLocation())
-                }
             } else if (p.arena.meta.redTeamMeta.signs.contains(location)) {
                 p.join(event.player, Team.RED)
             } else if (p.arena.meta.blueTeamMeta.signs.contains(location)) {

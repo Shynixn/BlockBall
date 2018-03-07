@@ -13,7 +13,6 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
 
-
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -48,7 +47,7 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
     }
 
     private val cache = HashMap<Player, Array<Any?>>()
-    private var pagecache: MutableList<Page>? = null
+    private var pageCache: MutableList<Page>? = null
 
     @Inject
     private val openPage: OpenPage? = null
@@ -160,7 +159,7 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
                     usedPage = page
                     if (command == BlockBallCommand.BACK) {
                         val newPage = this.getPageById(Integer.parseInt(args[2]))
-                        this.sendMessage(player, newPage.buildPage(cache!!)!!)
+                        newPage.buildPage(cache!!)!!.sendMessage(player)
                     } else if (command == BlockBallCommand.CLOSE) {
                         this.cache.remove(player)
                         for (i in 0..19) {
@@ -179,7 +178,7 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
                                     .setHoverText(result.message).builder().sendMessage(player)
                         }
                         if (result != CommandResult.CANCEL_MESSAGE) {
-                            this.sendMessage(player, page.buildPage(cache)!!)
+                            page.buildPage(cache)!!.sendMessage(player)
                         }
                     }
                     break
@@ -198,58 +197,62 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
                 builder.component(">>Back<<")
                         .setColor(ChatColor.RED)
                         .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, (cache!![3] as BlockBallCommand).command)
-                        .setHoverText("Back.")
+                        .setHoverText("Goes back to the previous page.")
                         .builder()
             } else {
                 builder.component(">>Back<<")
                         .setColor(ChatColor.RED)
                         .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BACK.command + " " + usedPage.getPreviousIdFrom(cache!!))
-                        .setHoverText("Opens the blockball arena configuration.")
+                        .setHoverText("Goes back to the previous page.")
                         .builder()
             }
             builder.component(" >>Save and reload<<")
                     .setColor(ChatColor.BLUE)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ARENA_RELOAD.command)
-                    .setHoverText("Opens the blockball arena configuration.")
+                    .setHoverText("Saves the current arena and reloads all games on the server.")
                     .builder().sendMessage(player)
 
             player.sendMessage(FOOTER_STANDARD)
         } catch (e: Exception) {
             player.sendMessage(Config.prefix + "Cannot find command.")
-            plugin.logger.log(Level.INFO, "Cannot find command for args " + args + ".")
+            plugin.logger.log(Level.INFO, "Cannot find command for args $args.")
         }
     }
 
     private fun getPageCache(): List<Page> {
-        if (this.pagecache == null) {
-            this.pagecache = ArrayList()
-            this.pagecache!!.add(this.openPage!!)
-            this.pagecache!!.add(this.mainConfigurationPage!!)
-            this.pagecache!!.add(this.mainSettingsPage!!)
-            this.pagecache!!.add(listablePage!!)
-            this.pagecache!!.add(teamSettingsPage!!)
-            this.pagecache!!.add(effectsSettingsPage!!)
-            this.pagecache!!.add(scoreboardPage!!)
-            this.pagecache!!.add(multipleLinesPage!!)
-            this.pagecache!!.add(bossbarPage!!)
-            this.pagecache!!.add(signSettingsPage!!)
-            this.pagecache!!.add(hologramsPage!!)
-            this.pagecache!!.add(particlesPage!!)
-            this.pagecache!!.add(soundsPage!!)
-            this.pagecache!!.add(abilitiesPage!!)
-            this.pagecache!!.add(doubleJumpPage!!)
-            this.pagecache!!.add(rewardsPage!!)
-            this.pagecache!!.add(areaProtectionPage!!)
-            this.pagecache!!.add(miscPage!!)
-            this.pagecache!!.add(gamePropertiesPage!!)
-            this.pagecache!!.add(teamTextBookPage!!)
-            this.pagecache!!.add(gameSettingsPage!!)
-            this.pagecache!!.add(ballModifierPage!!)
-            this.pagecache!!.add(ballSettingsPage!!)
+        if (this.pageCache == null) {
+            this.pageCache = ArrayList()
+            this.pageCache!!.add(this.openPage!!)
+            this.pageCache!!.add(this.mainConfigurationPage!!)
+            this.pageCache!!.add(this.mainSettingsPage!!)
+            this.pageCache!!.add(listablePage!!)
+            this.pageCache!!.add(teamSettingsPage!!)
+            this.pageCache!!.add(effectsSettingsPage!!)
+            this.pageCache!!.add(scoreboardPage!!)
+            this.pageCache!!.add(multipleLinesPage!!)
+            this.pageCache!!.add(bossbarPage!!)
+            this.pageCache!!.add(signSettingsPage!!)
+            this.pageCache!!.add(hologramsPage!!)
+            this.pageCache!!.add(particlesPage!!)
+            this.pageCache!!.add(soundsPage!!)
+            this.pageCache!!.add(abilitiesPage!!)
+            this.pageCache!!.add(doubleJumpPage!!)
+            this.pageCache!!.add(rewardsPage!!)
+            this.pageCache!!.add(areaProtectionPage!!)
+            this.pageCache!!.add(miscPage!!)
+            this.pageCache!!.add(gamePropertiesPage!!)
+            this.pageCache!!.add(teamTextBookPage!!)
+            this.pageCache!!.add(gameSettingsPage!!)
+            this.pageCache!!.add(ballModifierPage!!)
+            this.pageCache!!.add(ballSettingsPage!!)
         }
-        return this.pagecache!!
+        return this.pageCache!!
     }
 
+    /**
+     * Returns the [Page] with the given [id] and throws
+     * a [RuntimeException] if the page is not found.
+     */
     private fun getPageById(id: Int): Page {
         for (page in this.getPageCache()) {
             if (page.id == id) {
@@ -257,9 +260,5 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
             }
         }
         throw RuntimeException("Page does not exist!")
-    }
-
-    private fun sendMessage(player: Player, builder: ChatBuilder) {
-        builder.sendMessage(player)
     }
 }

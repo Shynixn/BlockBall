@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
 import org.bukkit.ChatColor
+import org.bukkit.GameMode
 import org.bukkit.entity.Player
 
 /**
@@ -74,9 +75,10 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
             arena.meta.lobbyMeta.maxScore = args[2].toInt()
         } else if (command == BlockBallCommand.GAMESETTINGS_MAXDURATION && args.size == 3 && args[2].toIntOrNull() != null) {
             arena.meta.minigameMeta.matchDuration = args[2].toInt()
-        }
-        else if (command == BlockBallCommand.GAMESETTINGS_LOBBYDURATION && args.size == 3 && args[2].toIntOrNull() != null) {
+        } else if (command == BlockBallCommand.GAMESETTINGS_LOBBYDURATION && args.size == 3 && args[2].toIntOrNull() != null) {
             arena.meta.minigameMeta.lobbyDuration = args[2].toInt()
+        } else if (command == BlockBallCommand.GAMESETTINGS_CALLBACK_BUKKITGAMEMODES && args.size == 3 && args[2].toIntOrNull() != null) {
+            arena.meta.lobbyMeta.gamemode = GameMode.values()[args[2].toInt()]
         }
         return super.execute(player, command, cache, args)
     }
@@ -109,10 +111,15 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMESETTINGS_LEAVESPAWNPOINT.command)
                 .setHoverText("Sets the spawnpoint for people who leave the match.")
                 .builder().nextLine()
+                .component("- Gamemode: " + (arena.meta.lobbyMeta.gamemode as GameMode).name).builder()
+                .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BUKKITGAMESMODES.command)
+                .setHoverText("Minecraft gamemode (Survival, Adventure, Creative) the players will be inside of a game.")
+                .builder().nextLine()
                 .component("- Even teams enabled: " + arena.meta.lobbyMeta.onlyAllowEventTeams).builder()
                 .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMESETTINGS_TOGGLE_EVENTEAMS.command)
-                .setHoverText("Forces players to join the other team regardless of their choice to have the same amount of players on both teamsa.")
+                .setHoverText("Forces players to join the other team regardless of their choice to have the same amount of players on both teams.")
                 .builder().nextLine()
 
         if (arena.gameType == GameType.MINIGAME || arena.gameType == GameType.BUNGEE) {

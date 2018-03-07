@@ -51,4 +51,7 @@ interface LobbyMeta : PersistenceAble {
 
     /** Should players automatically join the other team to even out them?*/
     var onlyAllowEventTeams: Boolean
+
+    /** Minecraft gamemode (Survival, Adventure, Creative) the players should be */
+    var gamemode : Enum<*>
 }

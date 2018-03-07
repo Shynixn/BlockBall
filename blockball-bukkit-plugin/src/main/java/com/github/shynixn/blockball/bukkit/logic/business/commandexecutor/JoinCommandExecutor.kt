@@ -84,6 +84,26 @@ class JoinCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExe
                     return
                 }
             }
+
+            try {
+                val data = mergedArgs.split("|")
+
+                gameController!!.getAll().forEach { g ->
+                    if (g.arena.name == data[1]) {
+                        var team: Team? = null
+                        if (data[0] == g.arena.meta.redTeamMeta.displayName) {
+                            team = Team.RED
+                        } else if (data[1] == g.arena.meta.blueTeamMeta.displayName) {
+                            team = Team.BLUE
+                        }
+
+                        g.join(player, team)
+                    }
+                }
+
+            } catch (e: Exception) {
+
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.UpdateUtils
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.google.inject.Guice
 import com.google.inject.Inject
+import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.plugin.java.JavaPlugin
@@ -82,9 +83,9 @@ class BlockBallPlugin : JavaPlugin() {
             Bukkit.getPluginManager().disablePlugin(this)
         } else {
             Config.reload()
-            /*if (Config.metrics!!) {
-                Metrics(this) //TODO: Enable this for shipping
-            }*/
+            if (Config.metrics!!) {
+                Metrics(this)
+            }
             checkForUpdates()
             startPlugin()
             Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")

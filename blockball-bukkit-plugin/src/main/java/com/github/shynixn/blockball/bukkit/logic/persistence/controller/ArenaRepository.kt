@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.bukkit.persistence.controller.BukkitAren
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.bukkit.Location
@@ -116,7 +117,8 @@ class ArenaRepository(private val items: MutableList<BukkitArena> = ArrayList())
                     val file = File(this.getFolder(), s)
                     configuration.load(file)
                     val data = configuration.getConfigurationSection("arena").getValues(true)
-                    val arenaEntity = YamlSerializer.deserializeObject(BlockBallArena::class.java, null,data)
+                    val arenaEntity = YamlSerializer.deserializeObject(BlockBallArena::class.java, null, data)
+                    runVersionStateChecks(arenaEntity)
                     this.items.add(arenaEntity)
                 }
             } catch (ex: Exception) {
@@ -126,6 +128,21 @@ class ArenaRepository(private val items: MutableList<BukkitArena> = ArrayList())
             i++
         }
         logger!!.log(Level.INFO, "Reloaded [" + items.size + "] games.")
+    }
+
+    private fun runVersionStateChecks(arena: BlockBallArena) {
+        // For Version 5.0.2+
+        if (arena.meta.hubLobbyMeta.joinMessage[1] == "&c[Team Red]") {
+            val hubLobby = HubLobbyProperties()
+            arena.meta.hubLobbyMeta.joinMessage[1] = hubLobby.joinMessage[1]
+            arena.meta.hubLobbyMeta.joinMessage[2] = hubLobby.joinMessage[2]
+
+            saveArenaFile(arena)
+
+            plugin!!.logger.log(Level.INFO, "Upgraded arena file [" + arena.name + "] to v5.0.2")
+        }
+
+
     }
 
     private fun saveArenaFile(item: BukkitArena) {

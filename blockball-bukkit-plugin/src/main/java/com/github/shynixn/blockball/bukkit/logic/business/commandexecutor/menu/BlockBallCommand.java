@@ -137,6 +137,7 @@ public enum BlockBallCommand {
     BOSSBAR_CALLBACKFLAGS(PageKey.BOSSBAR, "fla"),
     BOSSBAR_CALLBACKCOLORS(PageKey.BOSSBAR, "colo"),
 
+    GAMESETTINGS_CALLBACK_BUKKITGAMEMODES(PageKey.GAMESETTINGS, "bukkitgame"),
     GAMESETTINGS_OPEN(PageKey.GAMESETTINGS, "open"),
     GAMESETTINGS_MAXSCORE(PageKey.GAMESETTINGS, "maxscore"),
     GAMESETTINGS_MAXDURATION(PageKey.GAMESETTINGS, "matchduration"),
@@ -208,7 +209,7 @@ public enum BlockBallCommand {
     TEXTBOOK_DRAWTIELE(PageKey.TEAMTEXTBOOK, "drawtitle"),
     TEXTBOOK_DRAWSUBTITLE(PageKey.TEAMTEXTBOOK, "drawstitle"),
 
-
+    LIST_BUKKITGAMESMODES(PageKey.LISTABLE, "show_bukkitgamemodes"),
     LIST_BALL_SOUNDEFFECTS(PageKey.LISTABLE, "show_ballsounds"),
     LIST_BALL_PARTICLEFFECTS(PageKey.LISTABLE, "show_ballparticles"),
     LIST_LINES(PageKey.LISTABLE, "show_lines"),
