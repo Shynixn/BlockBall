@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.misc
 
 /**
- * Created by Shynixn 2018.
+ * All additional meta data for games which is optionally.
  * <p>
  * Version 1.2
  * <p>
@@ -30,4 +30,8 @@ package com.github.shynixn.blockball.api.persistence.entity.meta.misc
 interface CustomizationMeta {
     /** Can players damage other players during a game?*/
     var damageEnabled: Boolean
+    /** Should players be teleported back to their spawnpoint if someone scores?*/
+    var backTeleport: Boolean
+    /** After how many seconds should players be teleported back to their spawnpoint if [backTeleport] is enabled?*/
+    var backTeleportDelay: Int
 }

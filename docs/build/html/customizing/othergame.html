@@ -214,15 +214,16 @@ a look into.</p>
 </div>
 <div class="section" id="configuring-in-your-arena-x-yml">
 <h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
-<p>At this stage, you should be able to find your arena save file. If not, please take a look at this page.</p>
+<p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
 <ol class="arabic simple">
 <li>Go to the <strong>Open the arena_x.yml</strong> of your arena</li>
 <li>Search for the following section:</li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">customizing</span><span class="o">-</span><span class="n">meta</span><span class="p">:</span>
-   <span class="n">even</span><span class="o">-</span><span class="n">teams</span><span class="p">:</span> <span class="n">true</span>
-   <span class="n">damage</span><span class="o">-</span><span class="n">enabled</span><span class="p">:</span> <span class="n">true</span>
+   <span class="n">damage</span><span class="o">-</span><span class="n">enabled</span><span class="p">:</span> <span class="n">false</span>
+   <span class="n">score</span><span class="o">-</span><span class="n">back</span><span class="o">-</span><span class="n">teleport</span><span class="p">:</span> <span class="n">false</span>
+   <span class="n">score</span><span class="o">-</span><span class="n">back</span><span class="o">-</span><span class="n">teleport</span><span class="o">-</span><span class="n">delay</span><span class="p">:</span> <span class="mi">2</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
@@ -233,8 +234,9 @@ a look into.</p>
 <div class="section" id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Even teams enabled: Should players automatically join the other team when joining to even out teams?</li>
 <li>Damage enabled: Should players be able to hit each other inside of the arena?</li>
+<li>Score teleport back: Should players be teleported back to their spawnpoint (teamspawnpoint or ballspawnpoint) after someone scores a point?</li>
+<li>Score teleport delay: The amount of seconds after players get teleported back to their spawnpoint if ‘Score teleport back’ is enabled.</li>
 </ul>
 </div>
 </div>

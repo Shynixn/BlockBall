@@ -1,11 +1,6 @@
 Commandslist
 ============
 
-.. toctree::
-
-
-
-
 /blockball
 ~~~~~~~~~~
 

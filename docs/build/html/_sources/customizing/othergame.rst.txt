@@ -23,7 +23,7 @@ You can find all options explained at the bottom of this page.
 Configuring in your arena_x.yml
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-At this stage, you should be able to find your arena save file. If not, please take a look at this page.
+At this stage, you should be able to find your arena save file. If not, please take a look at this `page <../general/database.html#editing-the-arena-files>`__.
 
 1. Go to the **Open the arena_x.yml** of your arena
 2. Search for the following section:
@@ -31,8 +31,9 @@ At this stage, you should be able to find your arena save file. If not, please t
 **arena_x.yml**
 ::
    customizing-meta:
-      even-teams: true
-      damage-enabled: true
+      damage-enabled: false
+      score-back-teleport: false
+      score-back-teleport-delay: 2
 
 3. Now continue by enabling or disabling the values by changing the **enabled** value.
 4. Customize the other available options to your own needs.
@@ -40,9 +41,9 @@ At this stage, you should be able to find your arena save file. If not, please t
 Properties
 ~~~~~~~~~~
 
-* Even teams enabled: Should players automatically join the other team when joining to even out teams?
 * Damage enabled: Should players be able to hit each other inside of the arena?
-
+* Score teleport back: Should players be teleported back to their spawnpoint (teamspawnpoint or ballspawnpoint) after someone scores a point?
+* Score teleport delay: The amount of seconds after players get teleported back to their spawnpoint if 'Score teleport back' is enabled.
 
 
 
