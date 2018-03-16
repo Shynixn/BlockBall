@@ -214,7 +214,13 @@ abstract class LowLevelGame(
         val meta = arena.meta.bossBarMeta
         if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
             if (bossbar == null && arena.meta.bossBarMeta.enabled) {
-                bossbar = SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, meta.flags[0].name)
+
+                bossbar = if (meta.flags.isEmpty()) {
+                    SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, "NONE")
+                } else {
+                    SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, meta.flags[0].name)
+                }
+
                 bossbar!!.percentage = meta.percentage / 100.0
             }
             if (bossbar != null) {
