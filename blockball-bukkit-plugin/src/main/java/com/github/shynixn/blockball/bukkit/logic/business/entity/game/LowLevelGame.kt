@@ -17,6 +17,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleHo
 import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Sign
@@ -107,6 +108,10 @@ abstract class LowLevelGame(
 
         if (status == GameStatus.DISABLED) {
             status = GameStatus.ENABLED
+        }
+
+        if (Bukkit.getWorld(this.arena.meta.ballMeta.spawnpoint!!.worldName) == null) {
+            return
         }
 
         this.onTick()
