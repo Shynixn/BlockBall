@@ -139,7 +139,9 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
     private fun fixBallPositionSpawn() {
         if (ball == null || ball!!.isDead)
             return
-        if (!this.arena.isLocationInSelection(this.ball!!.location)) {
+        if (!this.arena.isLocationInSelection(this.ball!!.location)
+                && !this.arena.meta.redTeamMeta.goal.isLocationInSelection(this.ball!!.location)
+                && !this.arena.meta.blueTeamMeta.goal.isLocationInSelection(this.ball!!.location)) {
             if (this.bumper == 0) {
                 this.rescueBall()
             }

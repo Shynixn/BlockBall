@@ -1,9 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.action;
 
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
@@ -328,7 +326,7 @@ public class SimpleBossBar implements AutoCloseable {
             }
             return new SimpleBossBar(message, color, style, flags);
         } catch (final Exception e) {
-            JavaPlugin.getPlugin(BlockBallPlugin.class).getLogger().log(Level.WARNING, "Failed to initialize bossbar.", e);
+            Bukkit.getLogger().log(Level.WARNING, "Failed to initialize bossbar.", e);
             throw new RuntimeException(e);
         }
     }
