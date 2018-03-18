@@ -62,7 +62,7 @@ class HubGameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugi
         val player = event.player
         if (event.to.distance(event.from) <= 0)
             return
-        var game = gameController!!.getGameFromPlayer(player)
+        val game = gameController!!.getGameFromPlayer(player)
         if (game != null) {
             if (game.arena.gameType == GameType.HUBGAME && !game.arena.isLocationInSelection(player.location)) {
                 game.leave(player)

@@ -37,7 +37,7 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
 
     companion object {
         /** Id of the page. */
-        val ID = 3
+        const val ID = 3
     }
 
     /**
@@ -56,7 +56,7 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.SETTINGS_OPEN && args.size == 3) {
             val arena = cache[0] as BukkitArena
-            arena.gameType = GameType.values()[args[2].toInt()];
+            arena.gameType = GameType.values()[args[2].toInt()]
         }
         return super.execute(player, command, cache, args)
     }

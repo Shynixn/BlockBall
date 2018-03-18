@@ -4,7 +4,6 @@ import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.Inject
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 
@@ -38,7 +37,7 @@ import org.bukkit.util.Vector
 class AreaProtectionPage : Page(AreaProtectionPage.ID, MiscSettingsPage.ID) {
     companion object {
         /** Id of the page. */
-        val ID = 26
+        const val ID = 26
     }
 
     @Inject

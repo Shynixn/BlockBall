@@ -47,7 +47,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
     }
 
     @Inject
-    private var listener: GameListener? = null;
+    private var listener: GameListener? = null
 
     /**
      * Returns the key of the command when this page should be executed.
@@ -236,6 +236,6 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .builder().nextLine()
         }
 
-        return ChatBuilder();
+        return ChatBuilder()
     }
 }

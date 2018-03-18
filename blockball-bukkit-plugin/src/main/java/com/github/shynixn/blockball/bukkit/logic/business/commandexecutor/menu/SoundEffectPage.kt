@@ -1,16 +1,12 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
 import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.ball.api.persistence.enumeration.EffectingType
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.Inject
-import org.bukkit.ChatColor
 import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.Sound
 import org.bukkit.entity.Player
 
 /**
@@ -43,7 +39,7 @@ import org.bukkit.entity.Player
 class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
     companion object {
         /** Id of the page. */
-        val ID = 21
+        const val ID = 21
     }
 
     @Inject
@@ -85,10 +81,10 @@ class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
             soundEffect.setEffectingType<SoundEffectMeta<*, *>>(EffectingType.values()[args[2].toInt()])
         } else if (command == BlockBallCommand.SOUND_PITCH && args[2].toDoubleOrNull() != null) {
             val soundEffect = cache[5] as SoundEffectMeta<*, *>
-            soundEffect.setPitch<SoundEffectMeta<Location, Player>>(args[2].toDouble());
+            soundEffect.setPitch<SoundEffectMeta<Location, Player>>(args[2].toDouble())
         } else if (command == BlockBallCommand.SOUND_VOLUME && args[2].toDoubleOrNull() != null) {
             val soundEffect = cache[5] as SoundEffectMeta<*, *>
-            soundEffect.setVolume<SoundEffectMeta<Location, Player>>(args[2].toDouble());
+            soundEffect.setVolume<SoundEffectMeta<Location, Player>>(args[2].toDouble())
         }
         return super.execute(player, command, cache, args)
     }
@@ -120,6 +116,6 @@ class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.SOUND_PITCH.command)
                 .setHoverText("Changes the pitch of the sound.")
-                .builder();
+                .builder()
     }
 }

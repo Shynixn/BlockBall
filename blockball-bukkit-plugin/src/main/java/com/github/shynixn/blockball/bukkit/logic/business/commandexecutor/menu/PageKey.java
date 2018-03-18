@@ -54,7 +54,7 @@ public enum PageKey {
     TEAMTEXTBOOK("teamtext"),
     MAINCONFIGURATION("mcf");
 
-    private String key;
+    private final String key;
 
     PageKey(String mcf) {
         this.key = mcf;

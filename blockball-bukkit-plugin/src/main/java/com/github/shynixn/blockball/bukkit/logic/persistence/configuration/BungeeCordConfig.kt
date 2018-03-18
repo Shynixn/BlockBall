@@ -3,14 +3,12 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.configuration
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.bungeecord.BungeeCordConfiguration
-import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.IOException
 import java.util.logging.Level
-import java.util.logging.Logger
 
 /**
  * Created by Shynixn 2018.

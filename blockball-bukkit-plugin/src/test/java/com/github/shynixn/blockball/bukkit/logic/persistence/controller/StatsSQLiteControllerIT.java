@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings({"Duplicates", "NestedTryStatement"})
 public class StatsSQLiteControllerIT {
 
     private static Plugin mockPlugin() {
@@ -51,8 +52,8 @@ public class StatsSQLiteControllerIT {
 
     @Test
     public void insertSelectStatsTest() throws ClassNotFoundException {
-        Plugin plugin = mockPlugin();
-                final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        final Plugin plugin = mockPlugin();
+        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
 
         final UUID uuid = UUID.randomUUID();
         final Player player = mock(Player.class);
@@ -89,7 +90,7 @@ public class StatsSQLiteControllerIT {
 
     @Test
     public void storeLoadPetMetaTest() throws ClassNotFoundException {
-        Plugin plugin = mockPlugin();
+        final Plugin plugin = mockPlugin();
         final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
 
         final UUID uuid = UUID.randomUUID();

@@ -42,7 +42,7 @@ import org.bukkit.entity.Player
 class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
     companion object {
         /** Id of the page. */
-        val ID = 2
+        const val ID = 2
     }
 
     @Inject
@@ -69,8 +69,8 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
         } else if (command == BlockBallCommand.ARENA_EDIT) {
             cache[0] = arenaRepository?.getArenaByName(args[2])!!
         } else if (command == BlockBallCommand.ARENA_DELETE) {
-            val arena = arenaRepository?.getArenaByName(args[2])!!;
-            arenaRepository!!.remove(arena);
+            val arena = arenaRepository?.getArenaByName(args[2])!!
+            arenaRepository!!.remove(arena)
             return CommandResult.BACK
         } else if (command == BlockBallCommand.ARENA_ENABLE) {
             val arena = cache[0] as BukkitArena

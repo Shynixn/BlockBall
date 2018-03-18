@@ -65,7 +65,7 @@ class TeamProperties(
 
     /** List of signs which can be clicked to join the team.*/
     override val signs: MutableList<StorageLocation>
-        get() = this.internalSigns as MutableList<StorageLocation>;
+        get() = this.internalSigns as MutableList<StorageLocation>
     /** Min amount of players in this team to start the match for this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "min-amount")
     override var minAmount: Int = 0

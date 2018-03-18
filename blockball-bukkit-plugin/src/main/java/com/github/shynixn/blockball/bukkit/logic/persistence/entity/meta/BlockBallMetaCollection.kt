@@ -7,8 +7,6 @@ import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CustomizationMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.business.helper.setColor
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallData
@@ -119,13 +117,13 @@ class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, M
         partMetaSpawn.setEffectType<ParticleEffectMeta<Location, Player, Material>>(ParticleEffectMeta.ParticleEffectType.EXPLOSION_NORMAL)
                 .setAmount<ParticleEffectMeta<Location, Player, Material>>(10)
                 .setSpeed<ParticleEffectMeta<Location, Player, Material>>(0.1)
-                .setOffset<ParticleEffectMeta<Location, Player, Material>>(2.0, 2.0, 2.0);
+                .setOffset<ParticleEffectMeta<Location, Player, Material>>(2.0, 2.0, 2.0)
 
         val partMetaKick = ballMeta.getParticleEffectOf(ActionEffect.ONKICK)
         partMetaKick.setEffectType<ParticleEffectMeta<Location, Player, Material>>(ParticleEffectMeta.ParticleEffectType.EXPLOSION_LARGE)
                 .setAmount<ParticleEffectMeta<Location, Player, Material>>(2)
                 .setSpeed<ParticleEffectMeta<Location, Player, Material>>(0.1)
-                .setOffset<ParticleEffectMeta<Location, Player, Material>>(0.1, 0.1, 0.1);
+                .setOffset<ParticleEffectMeta<Location, Player, Material>>(0.1, 0.1, 0.1)
 
         val soundMetaKick = ballMeta.getSoundEffectOf(ActionEffect.ONKICK)
         soundMetaKick.setName<SoundEffectMeta<Location, Player>>("ZOMBIE_WOOD")

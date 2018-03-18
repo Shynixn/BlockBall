@@ -191,29 +191,6 @@ public class SimpleCommandExecutor {
         }
 
         /**
-         * Initializes a new commandExecutor by using the given config configuration and pluginName.
-         *
-         * @param configuration configuration
-         * @param pluginName    pluginName
-         * @throws Exception exception
-         */
-        public UnRegistered(Object configuration, String pluginName) throws Exception {
-            this(configuration, (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName));
-        }
-
-        /**
-         * Initializes a new commandExecutor by using the given config configuration and pluginClass.
-         *
-         * @param configuration configuration
-         * @param pluginClass   pluginClass
-         * @param <T>           pluginClassType
-         * @throws Exception exception
-         */
-        public <T extends JavaPlugin> UnRegistered(Object configuration, Class<T> pluginClass) throws Exception {
-            this(configuration, JavaPlugin.getPlugin(pluginClass));
-        }
-
-        /**
          * Initializes a new commandExecutor by using the given config configuration and plugin.
          *
          * @param configuration configuration
@@ -230,21 +207,6 @@ public class SimpleCommandExecutor {
             this.setPermissionMessage((String) configurationMap.get("permission-message"));
             this.setAliases(new ArrayList<>());
             this.registerDynamicCommand((String) configurationMap.get("command"));
-        }
-
-        /**
-         * Initializes a new commandExecutor by all required parameters and pluginClass.
-         *
-         * @param command           command
-         * @param useAge            useAge
-         * @param description       description
-         * @param permission        permission
-         * @param permissionMessage permissionMessage
-         * @param pluginClass       plugin
-         * @param <T>               pluginClassType
-         */
-        public <T extends JavaPlugin> UnRegistered(String command, String useAge, String description, String permission, String permissionMessage, Class<T> pluginClass) {
-            this(command, useAge, description, permission, permissionMessage, JavaPlugin.getPlugin(pluginClass));
         }
 
         /**

@@ -1,29 +1,22 @@
 package com.github.shynixn.blockball.bukkit.logic.business.helper
 
-import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
-import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
-import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
-import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.Minigame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import org.bukkit.ChatColor
 import org.bukkit.Color
 import org.bukkit.Location
-import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.LeatherArmorMeta
-import org.bukkit.inventory.meta.SkullMeta
-import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -52,15 +45,8 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-internal fun ItemStack.setSkin(skin: String) {
-    if (this.itemMeta is SkullMeta) {
-        val skullMeta = this.itemMeta as SkullMeta
-        skullMeta.owner = skin
-        this.itemMeta = skullMeta
-    }
-}
 
-internal fun Server.setServerModt(text: String) {
+internal fun setServerModt(text: String) {
     ModtHelper.setModt(text)
 }
 
@@ -97,12 +83,10 @@ internal fun String.replaceGamePlaceholder(game: BukkitGame, teamMeta: TeamMeta<
         cache = cache.replace(PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder, team.size.toString())
     }
 
-    if (game.status == GameStatus.RUNNING) {
-        cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignRunning!!)
-    } else if (game.status == GameStatus.ENABLED) {
-        cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignEnabled!!)
-    } else if (game.status == GameStatus.DISABLED) {
-        cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignDisabled!!)
+    when {
+        game.status == GameStatus.RUNNING -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignRunning!!)
+        game.status == GameStatus.ENABLED -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignEnabled!!)
+        game.status == GameStatus.DISABLED -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignDisabled!!)
     }
 
     if (game.arena.gameType == GameType.HUBGAME) {
@@ -117,7 +101,7 @@ internal fun String.replaceGamePlaceholder(game: BukkitGame, teamMeta: TeamMeta<
         }
     }
 
-    return cache.convertChatColors();
+    return cache.convertChatColors()
 }
 
 internal fun Player.sendScreenMessage(title: String, subTitle: String, game: BukkitGame) {
@@ -148,82 +132,5 @@ internal fun Location.toPosition(): StorageLocation {
 
 internal fun StorageLocation.toBukkitLocation(): Location {
     return (this as LocationBuilder).toLocation()
-}
-
-internal fun Player.compSetGlowing(enabled: Boolean) {
-    if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
-        try {
-            ReflectionUtils.invokeMethodByObject<Any>(player, "setGlowing", arrayOf<Class<*>>(Boolean::class.javaPrimitiveType!!), arrayOf(enabled))
-        } catch (e: Exception) {
-            Config.Logger!!.log(Level.WARNING, "Failed to set player glowing.", e)
-        }
-    }
-}
-
-internal fun BossBarMeta.Style.getNames(): Array<String?> {
-    return arrayOfNulls<String>(5)
-}
-
-internal fun <T> PersistenceAble.clone(): T where T : PersistenceAble {
-    try {
-        val item = this.javaClass.newInstance() as PersistenceAble
-        var clazz: Class<*>? = this.javaClass
-        while (clazz != null) {
-            for (field in clazz.declaredFields) {
-                field.isAccessible = true
-                field.set(item, field.get(this))
-            }
-            clazz = clazz.superclass
-        }
-        return item as T
-    } catch (e: InstantiationException) {
-        throw RuntimeException(e)
-    } catch (e: IllegalAccessException) {
-        throw RuntimeException(e)
-    }
-}
-
-internal fun Player.compsetItemInHand(itemStack: ItemStack, offHand: Boolean) {
-    if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
-        try {
-            if (offHand) {
-                ReflectionUtils.invokeMethodByObject<Any>(player.inventory, "setItemInOffHand", arrayOf<Class<*>>(ItemStack::class.java), arrayOf<Any>(itemStack))
-            } else {
-                ReflectionUtils.invokeMethodByObject<Any>(player.inventory, "setItemInMainHand", arrayOf<Class<*>>(ItemStack::class.java), arrayOf<Any>(itemStack))
-            }
-        } catch (e: Exception) {
-            Config.Logger!!.log(Level.WARNING, "Failed to set item in hand.")
-            throw RuntimeException(e)
-        }
-    } else {
-        try {
-            ReflectionUtils.invokeMethodByObject<Any>(player, "setItemInHand", arrayOf<Class<*>>(ItemStack::class.java), arrayOf<Any>(itemStack))
-        } catch (e: Exception) {
-            Config.Logger!!.log(Level.WARNING, "Failed to set item in hand.")
-            throw RuntimeException(e)
-        }
-    }
-}
-
-internal fun Player.compGetItemInHand(offHand: Boolean): ItemStack? {
-    return if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
-        try {
-            if (offHand) {
-                ReflectionUtils.invokeMethodByObject(player.inventory, "getItemInOffHand", arrayOf(), arrayOf())
-            } else {
-                ReflectionUtils.invokeMethodByObject<ItemStack>(player.inventory, "getItemInMainHand", arrayOf(), arrayOf())
-            }
-        } catch (e: Exception) {
-            Config.Logger!!.log(Level.WARNING, "Failed to get item in hand.")
-            throw RuntimeException(e)
-        }
-    } else {
-        try {
-            ReflectionUtils.invokeMethodByObject<ItemStack>(player, "getItemInHand", arrayOf(), arrayOf())
-        } catch (e: Exception) {
-            Config.Logger!!.log(Level.WARNING, "Failed to get item in hand.")
-            throw RuntimeException(e)
-        }
-    }
 }
 

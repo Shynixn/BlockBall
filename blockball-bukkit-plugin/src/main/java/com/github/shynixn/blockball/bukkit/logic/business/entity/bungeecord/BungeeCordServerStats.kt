@@ -47,14 +47,13 @@ class BungeeCordServerStats : BungeeCordServerStatus {
     }
 
     constructor(serverName: String, data: String) {
-        this.serverName = serverName;
+        this.serverName = serverName
         try {
             var state = BungeeCordServerState.UNKNOWN
             var motd: String
             val motdBuilder = StringBuilder()
             var started = false
-            var i: Int
-            i = 0
+            var i = 0
             while (i < data.length) {
                 if (data[i] == '[') {
                     started = true
@@ -67,12 +66,10 @@ class BungeeCordServerStats : BungeeCordServerStatus {
             }
             try {
                 motd = ChatColor.translateAlternateColorCodes('&', motdBuilder.toString()).substring(0, motdBuilder.length - 2).replace("§","&")
-                if (motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.inGameMotd, true)) {
-                    state = BungeeCordServerState.INGAME;
-                } else if (motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.restartingMotd, true)) {
-                    state = BungeeCordServerState.RESTARTING;
-                } else if (motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd, true)) {
-                    state = BungeeCordServerState.WAITING_FOR_PLAYERS;
+                when {
+                    motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.inGameMotd, true) -> state = BungeeCordServerState.INGAME
+                    motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.restartingMotd, true) -> state = BungeeCordServerState.RESTARTING
+                    motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd, true) -> state = BungeeCordServerState.WAITING_FOR_PLAYERS
                 }
             } catch (ex: Exception) {
                 state = BungeeCordServerState.RESTARTING

@@ -48,7 +48,7 @@ class OpenPage : Page(OpenPage.ID, OpenPage.ID) {
 
     companion object {
         /** Id of the page. */
-        val ID = 1
+        const val ID = 1
     }
 
     /**

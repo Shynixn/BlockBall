@@ -56,55 +56,71 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        if (command == BlockBallCommand.LIST_GAMETYPES) {
-            cache[2] = GameType.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.SETTINGS_OPEN
-        } else if (command == BlockBallCommand.LIST_PARTICLE_EFFECTINGTYPES) {
-            cache[2] = EffectingType.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.PARTICLE_CALLBACK_EFFECTING
-        } else if (command == BlockBallCommand.LIST_BUKKITGAMESMODES) {
-            cache[2] = GameMode.values().filterNot {g ->  g == GameMode.SPECTATOR}.map { p -> p.name }
-            cache[3] = BlockBallCommand.GAMESETTINGS_CALLBACK_BUKKITGAMEMODES
-        } else if (command == BlockBallCommand.LIST_BALL_PARTICLEFFECTS) {
-            cache[2] = ActionEffect.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.BALL_PARTICLEACTION_CALLBACK
-        } else if (command == BlockBallCommand.LIST_BALL_SOUNDEFFECTS) {
-            cache[2] = ActionEffect.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.BALL_SOUNDACTION_CALLBACK
-        } else if (command == BlockBallCommand.LIST_BALLSIZES) {
-            cache[2] = BallSize.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.BALL_SIZE_CALLBACK
-        } else if (command == BlockBallCommand.LIST_COMMANDMODES) {
-            cache[2] = CommandMeta.CommandMode.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.REWARD_CALLBACK_COMMANDMODE
-        } else if (command == BlockBallCommand.LIST_PARTICLE_TYPES) {
-            cache[2] = ParticleEffectMeta.ParticleEffectType.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.PARTICLE_CALLBACK_TYPE
-        } else if (command == BlockBallCommand.LIST_REWARDED_MONEY) {
-            cache[2] = RewardMeta.RewardedAction.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.REWARD_CALLBACK_MONEY
-        } else if (command == BlockBallCommand.LIST_REWARDED_COMMAND) {
-            cache[2] = RewardMeta.RewardedAction.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.REWARD_CALLBACK_COMMAND
-        } else if (command == BlockBallCommand.LIST_SOUND_TYPES) {
-            cache[2] = Sound.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.SOUND_CALLBACK_TYPE
-        } else if (command == BlockBallCommand.LIST_SOUND_EFFECTINGTYPES) {
-            cache[2] = EffectingType.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.SOUND_CALLBACK_EFFECTING
-        } else if (command == BlockBallCommand.LIST_LINES) {
-            cache[3] = BlockBallCommand.MULTILINES_ANY
-        } else if (command == BlockBallCommand.LIST_BOSSBARSTYLES) {
-            cache[2] = BossBarMeta.Style.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.BOSSBAR_OPEN
-        } else if (command == BlockBallCommand.LIST_BOSSBARFLAGS) {
-            cache[2] = BossBarMeta.Flag.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.BOSSBAR_CALLBACKFLAGS
-        } else if (command == BlockBallCommand.LIST_BOSSBARCOLORS) {
-            cache[2] = BossBarMeta.Color.values().map { p -> p.name }
-            cache[3] = BlockBallCommand.BOSSBAR_CALLBACKCOLORS
-        } else if (command == BlockBallCommand.LIST_HOLOGRAMS) {
-            cache[3] = BlockBallCommand.HOLOGRAM_CALLBACK
+        when (command) {
+            BlockBallCommand.LIST_GAMETYPES -> {
+                cache[2] = GameType.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.SETTINGS_OPEN
+            }
+            BlockBallCommand.LIST_PARTICLE_EFFECTINGTYPES -> {
+                cache[2] = EffectingType.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.PARTICLE_CALLBACK_EFFECTING
+            }
+            BlockBallCommand.LIST_BUKKITGAMESMODES -> {
+                cache[2] = GameMode.values().filterNot {g ->  g == GameMode.SPECTATOR}.map { p -> p.name }
+                cache[3] = BlockBallCommand.GAMESETTINGS_CALLBACK_BUKKITGAMEMODES
+            }
+            BlockBallCommand.LIST_BALL_PARTICLEFFECTS -> {
+                cache[2] = ActionEffect.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.BALL_PARTICLEACTION_CALLBACK
+            }
+            BlockBallCommand.LIST_BALL_SOUNDEFFECTS -> {
+                cache[2] = ActionEffect.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.BALL_SOUNDACTION_CALLBACK
+            }
+            BlockBallCommand.LIST_BALLSIZES -> {
+                cache[2] = BallSize.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.BALL_SIZE_CALLBACK
+            }
+            BlockBallCommand.LIST_COMMANDMODES -> {
+                cache[2] = CommandMeta.CommandMode.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.REWARD_CALLBACK_COMMANDMODE
+            }
+            BlockBallCommand.LIST_PARTICLE_TYPES -> {
+                cache[2] = ParticleEffectMeta.ParticleEffectType.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.PARTICLE_CALLBACK_TYPE
+            }
+            BlockBallCommand.LIST_REWARDED_MONEY -> {
+                cache[2] = RewardMeta.RewardedAction.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.REWARD_CALLBACK_MONEY
+            }
+            BlockBallCommand.LIST_REWARDED_COMMAND -> {
+                cache[2] = RewardMeta.RewardedAction.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.REWARD_CALLBACK_COMMAND
+            }
+            BlockBallCommand.LIST_SOUND_TYPES -> {
+                cache[2] = Sound.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.SOUND_CALLBACK_TYPE
+            }
+            BlockBallCommand.LIST_SOUND_EFFECTINGTYPES -> {
+                cache[2] = EffectingType.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.SOUND_CALLBACK_EFFECTING
+            }
+            BlockBallCommand.LIST_LINES -> cache[3] = BlockBallCommand.MULTILINES_ANY
+            BlockBallCommand.LIST_BOSSBARSTYLES -> {
+                cache[2] = BossBarMeta.Style.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.BOSSBAR_OPEN
+            }
+            BlockBallCommand.LIST_BOSSBARFLAGS -> {
+                cache[2] = BossBarMeta.Flag.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.BOSSBAR_CALLBACKFLAGS
+            }
+            BlockBallCommand.LIST_BOSSBARCOLORS -> {
+                cache[2] = BossBarMeta.Color.values().map { p -> p.name }
+                cache[3] = BlockBallCommand.BOSSBAR_CALLBACKCOLORS
+            }
+            BlockBallCommand.LIST_HOLOGRAMS -> cache[3] = BlockBallCommand.HOLOGRAM_CALLBACK
+            else -> {
+            }
         }
         return super.execute(player, command, cache, args)
     }

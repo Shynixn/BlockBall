@@ -1,13 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.HologramBuilder
-import net.milkbowl.vault.chat.Chat
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
@@ -66,15 +64,15 @@ class HologramPage : Page(HologramPage.ID, EffectsSettingsPage.ID) {
             cache[5] = null
         }
         if (command == BlockBallCommand.HOLOGRAM_CREATE) {
-            val builder = HologramBuilder();
+            val builder = HologramBuilder()
             builder.position = player.location.toPosition()
             holograms.add(builder)
             cache[5] = builder
         }
         if (command == BlockBallCommand.HOLOGRAM_CALLBACK && args.size >= 3) {
-            val range = args[2].toInt();
+            val range = args[2].toInt()
             if (range >= 0 && range < holograms.size) {
-                cache[5] = holograms[range];
+                cache[5] = holograms[range]
             }
         }
         if (command == BlockBallCommand.HOLOGRAM_DELETE) {
@@ -100,7 +98,7 @@ class HologramPage : Page(HologramPage.ID, EffectsSettingsPage.ID) {
         val selectedHologram = cache[5]
         var selectedHologramText = "none"
         var selectedHologramHover = "none"
-        var hologramListText = arena.meta.hologramMetas.map { p -> printLocation(p.position!!) }.toSingleLine()
+        val hologramListText = arena.meta.hologramMetas.map { p -> printLocation(p.position!!) }.toSingleLine()
         if (selectedHologram != null) {
             selectedHologramText = printLocation((selectedHologram as HologramMeta).position!!)
             selectedHologramHover = selectedHologram.lines.toSingleLine()

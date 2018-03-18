@@ -8,7 +8,6 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
 import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -23,7 +22,6 @@ import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.Plugin
-import java.util.regex.Pattern
 
 /**
  * Created by Shynixn 2018.
@@ -145,14 +143,11 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
             return
         }
         gameController!!.getAll().forEach { p ->
-            if (p.arena.meta.lobbyMeta.joinSigns.contains(location)) {
-                p.join(event.player, null)
-            } else if (p.arena.meta.lobbyMeta.leaveSigns.contains(location)) {
-                p.leave(event.player)
-            } else if (p.arena.meta.redTeamMeta.signs.contains(location)) {
-                p.join(event.player, Team.RED)
-            } else if (p.arena.meta.blueTeamMeta.signs.contains(location)) {
-                p.join(event.player, Team.BLUE)
+            when {
+                p.arena.meta.lobbyMeta.joinSigns.contains(location) -> p.join(event.player, null)
+                p.arena.meta.lobbyMeta.leaveSigns.contains(location) -> p.leave(event.player)
+                p.arena.meta.redTeamMeta.signs.contains(location) -> p.join(event.player, Team.RED)
+                p.arena.meta.blueTeamMeta.signs.contains(location) -> p.join(event.player, Team.BLUE)
             }
         }
     }
@@ -168,7 +163,7 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
                 if (event.name.startsWith(p.placeHolder)) {
 
                     val data = event.name.split("_")
-                    val game = this.gameController!!.getGameFromArenaName(data[1]);
+                    val game = this.gameController!!.getGameFromArenaName(data[1])
 
                     if (game != null) {
                         event.result = data[0].replaceGamePlaceholder(game)

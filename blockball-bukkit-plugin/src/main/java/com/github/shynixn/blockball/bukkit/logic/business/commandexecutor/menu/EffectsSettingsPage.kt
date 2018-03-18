@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import org.bukkit.entity.Player
 
 /**
  * Created by Shynixn 2018.
@@ -43,17 +42,7 @@ class EffectsSettingsPage : Page(EffectsSettingsPage.ID, MainSettingsPage.ID) {
      * @return key
      */
     override fun getCommandKey(): PageKey {
-        return PageKey.EFFECTS;
-    }
-
-    /**
-     * Executes actions for this page.
-     *
-     * @param cache cache
-     */
-    override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-
-        return super.execute(player, command, cache, args)
+        return PageKey.EFFECTS
     }
 
     /**

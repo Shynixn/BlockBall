@@ -1,8 +1,5 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
-import com.github.shynixn.ball.api.persistence.enumeration.EffectingType
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
@@ -12,9 +9,6 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRep
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.CommandProperties
 import com.google.inject.Inject
 import org.bukkit.ChatColor
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.Sound
 import org.bukkit.entity.Player
 
 /**
@@ -47,7 +41,7 @@ import org.bukkit.entity.Player
 class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
     companion object {
         /** Id of the page. */
-        val ID = 22
+        const val ID = 22
     }
 
     @Inject
@@ -84,7 +78,7 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
             val rewardedAction = RewardMeta.RewardedAction.values()[args[2].toInt()]
             cache[5] = rewardedAction
             if (arena.meta.rewardMeta.commandReward[rewardedAction] == null) {
-                val command =  CommandProperties();
+                val command =  CommandProperties()
                 command.command = "none"
                 command.mode = CommandMeta.CommandMode.CONSOLE_SINGLE
                 arena.meta.rewardMeta.commandReward[rewardedAction] = command

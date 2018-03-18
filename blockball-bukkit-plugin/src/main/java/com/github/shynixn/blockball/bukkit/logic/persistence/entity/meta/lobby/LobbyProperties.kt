@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby
 
-import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.LobbyMeta

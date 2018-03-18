@@ -68,7 +68,7 @@ class BungeeCordNetworkSignListener @Inject constructor(plugin: Plugin) : Simple
             val sign = signController!!.create(server!!, event.clickedBlock.location)
             signController.store(sign)
             this.manager.pingServers()
-            var signBlock = event.clickedBlock.state as Sign;
+            val signBlock = event.clickedBlock.state as Sign
             for (i in 0..3) {
                 signBlock.setLine(i, manager.replaceSign(BungeeCordConfig.bungeeCordConfiguration!!.singLines[i], BungeeCordServerStats(server)))
             }
@@ -76,7 +76,7 @@ class BungeeCordNetworkSignListener @Inject constructor(plugin: Plugin) : Simple
         } else {
             val sign = event.clickedBlock.state as Sign
             try {
-                val signInfo = this.getBungeeCordSignFromLocation(sign.location);
+                val signInfo = this.getBungeeCordSignFromLocation(sign.location)
                 if (signInfo != null) {
                     this.manager.connectToServer(event.player, signInfo.server!!)
                 }

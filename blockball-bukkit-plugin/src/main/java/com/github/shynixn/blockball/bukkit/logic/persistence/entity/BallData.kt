@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 import org.bukkit.configuration.MemorySection
 
+@Suppress("unused")
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -39,7 +40,7 @@ class BallData : BallData, BallExtensionMeta {
     /** Spawnpoint of the ball. */
     override var spawnpoint: StorageLocation? = null
     /** Returns the id of the object. */
-    override val id: Long = 0;
+    override val id: Long = 0
 
     constructor(skin : String) : super(skin)
 

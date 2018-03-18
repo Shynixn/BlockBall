@@ -42,10 +42,10 @@ public enum ClickableComponent {
     LOCATION(" [location..]", ChatColor.BLUE),
 
     INVALID(" [page..]", ChatColor.BLACK),
-    TOGGLE(" [toggle..]", ChatColor.LIGHT_PURPLE)
-    ;
-    private String text;
-    private ChatColor color;
+    TOGGLE(" [toggle..]", ChatColor.LIGHT_PURPLE);
+
+    private final String text;
+    private final ChatColor color;
 
     ClickableComponent(String text, ChatColor color) {
       this.text = text;
@@ -61,6 +61,6 @@ public enum ClickableComponent {
     }
 
     public ChatBuilder.Component addComponent(ChatBuilder builder)  {
-        return builder.component(this.text).setColor(color);
+        return builder.component(this.text).setColor(this.color);
     }
 }

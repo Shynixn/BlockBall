@@ -353,6 +353,7 @@ public class SimpleBossBar implements AutoCloseable {
      * @throws ClassNotFoundException exception
      * @throws NoSuchMethodException  exception
      */
+    @SuppressWarnings({"JavaReflectionMemberAccess", "HardCodedStringLiteral"})
     private static void initializeReflectionCache() throws ClassNotFoundException, NoSuchMethodException {
         reflectionCache = new Object[20];
         reflectionCache[0] = Class.forName("org.bukkit.boss.BarColor").getDeclaredMethod("valueOf", String.class);
