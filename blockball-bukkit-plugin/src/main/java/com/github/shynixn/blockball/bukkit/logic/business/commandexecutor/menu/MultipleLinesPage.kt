@@ -1,8 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine

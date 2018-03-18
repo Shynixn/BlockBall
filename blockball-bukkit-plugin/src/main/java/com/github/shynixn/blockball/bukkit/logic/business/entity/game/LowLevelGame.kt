@@ -17,6 +17,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleHo
 import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Sign
@@ -107,6 +108,10 @@ abstract class LowLevelGame(
 
         if (status == GameStatus.DISABLED) {
             status = GameStatus.ENABLED
+        }
+
+        if (Bukkit.getWorld(this.arena.meta.ballMeta.spawnpoint!!.worldName) == null) {
+            return
         }
 
         this.onTick()
@@ -214,7 +219,13 @@ abstract class LowLevelGame(
         val meta = arena.meta.bossBarMeta
         if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
             if (bossbar == null && arena.meta.bossBarMeta.enabled) {
-                bossbar = SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, meta.flags[0].name)
+
+                bossbar = if (meta.flags.isEmpty()) {
+                    SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, "NONE")
+                } else {
+                    SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, meta.flags[0].name)
+                }
+
                 bossbar!!.percentage = meta.percentage / 100.0
             }
             if (bossbar != null) {

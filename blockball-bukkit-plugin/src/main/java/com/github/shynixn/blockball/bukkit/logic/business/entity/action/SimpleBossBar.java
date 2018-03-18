@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Manages bukkit bossbars.
@@ -324,7 +325,8 @@ public class SimpleBossBar implements AutoCloseable {
                 initializeReflectionCache();
             }
             return new SimpleBossBar(message, color, style, flags);
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (final Exception e) {
+            Bukkit.getLogger().log(Level.WARNING, "Failed to initialize bossbar.", e);
             throw new RuntimeException(e);
         }
     }
@@ -351,6 +353,7 @@ public class SimpleBossBar implements AutoCloseable {
      * @throws ClassNotFoundException exception
      * @throws NoSuchMethodException  exception
      */
+    @SuppressWarnings({"JavaReflectionMemberAccess", "HardCodedStringLiteral"})
     private static void initializeReflectionCache() throws ClassNotFoundException, NoSuchMethodException {
         reflectionCache = new Object[20];
         reflectionCache[0] = Class.forName("org.bukkit.boss.BarColor").getDeclaredMethod("valueOf", String.class);
@@ -371,7 +374,6 @@ public class SimpleBossBar implements AutoCloseable {
         reflectionCache[15] = getBossBarMethod("getTitle");
         reflectionCache[16] = getBossBarMethod("addFlag", Class.forName("org.bukkit.boss.BarFlag"));
         reflectionCache[17] = getBossBarMethod("removeFlag", Class.forName("org.bukkit.boss.BarFlag"));
-        //   reflectionCache[18] = getBossBarMethod("getFlags", List.class);
         reflectionCache[19] = Bukkit.class.getDeclaredMethod("createBossBar", String.class
                 , Class.forName("org.bukkit.boss.BarColor")
                 , Class.forName("org.bukkit.boss.BarStyle")
@@ -389,17 +391,5 @@ public class SimpleBossBar implements AutoCloseable {
     public void close() throws Exception {
         this.removePlayer(this.getPlayers());
         this.bossBar = null;
-    }
-
-    /**
-     * Returns if the server version is below 1.9.0.
-     *
-     * @return isBelow
-     */
-    private static boolean isServerVersionBelowv1_9_R1() {
-        final String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-        return version.equalsIgnoreCase("v1_8_R1")
-                || version.equalsIgnoreCase("v1_8_R2")
-                || version.equalsIgnoreCase("v1_8_R3");
     }
 }

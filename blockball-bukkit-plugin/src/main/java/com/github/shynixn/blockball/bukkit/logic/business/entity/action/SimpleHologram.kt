@@ -11,6 +11,7 @@ import java.lang.reflect.Field
 import java.lang.reflect.Method
 
 
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -38,7 +39,7 @@ import java.lang.reflect.Method
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class SimpleHologram : AutoCloseable, Runnable {
+class SimpleHologram(private val plugin: Plugin, private val location: Location, lines: Collection<String>) : AutoCloseable, Runnable {
 
     companion object {
         private var reflectionCache: Array<Any?>? = null
@@ -55,22 +56,14 @@ class SimpleHologram : AutoCloseable, Runnable {
     private val armorstands = ArrayList<ArmorStand>()
     private val watchers = HashMap<Player, Boolean>()
     private val bukkitTask: BukkitTask
-    private val location: Location
-    private val plugin: Plugin
 
-    /**
-     * Constructor.
-     */
-    constructor(plugin: Plugin, location: Location, lines: Collection<String>) {
+    init {
         if (reflectionCache == null) {
             initializeReflectionCache()
         }
         this.bukkitTask = plugin.server.scheduler.runTaskTimerAsynchronously(plugin, this, 0L, REFRESH_RATE)
-        this.location = location
-        this.plugin = plugin
         this.addLines(lines)
     }
-
 
     /**
      * Adds a new armorstand for each text [lines] to build a full hologram.

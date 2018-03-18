@@ -5,12 +5,8 @@ import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.ball.api.persistence.enumeration.ActionEffect
 import com.github.shynixn.ball.api.persistence.enumeration.BallSize
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
-import org.bukkit.Location
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 
 /**
  * Created by Shynixn 2018.
@@ -99,7 +95,7 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val ballMeta = (cache!![0] as BukkitArena).meta.ballMeta
+        val ballMeta = (cache[0] as BukkitArena).meta.ballMeta
         val builder = ChatBuilder()
                 .component("- Skin: ").builder()
                 .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color).setHoverText(ballMeta.skin).builder()
@@ -158,6 +154,6 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
                     .setHoverText("Opens the page for editing the particleeffect.")
                     .builder().nextLine()
         }
-        return builder;
+        return builder
     }
 }

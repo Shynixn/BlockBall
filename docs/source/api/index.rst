@@ -16,7 +16,7 @@ BlockBall is using maven as build system but you can include the api via differe
     <dependency>
         <groupId>com.github.shynixn.blockball</groupId>
         <artifactId>blockball-bukkit-api</artifactId>
-        <version>5.0.0</version>
+        <version>5.0.3</version>
         <scope>provided</scope>
     </dependency>
 
@@ -24,7 +24,7 @@ BlockBall is using maven as build system but you can include the api via differe
 **Gradle**:
 ::
     dependencies {
-        compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:5.0.0'
+        compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:5.0.3'
     }
 
 **Reference the jar file**:

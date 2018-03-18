@@ -32,7 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-open internal class SimpleConfig {
+internal open class SimpleConfig {
 
     /** [plugin] is an instance of the Ball plugin. */
     var plugin: Plugin? = null

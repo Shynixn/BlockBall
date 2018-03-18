@@ -43,6 +43,7 @@ public class PlaceHolderRequestEvent extends BlockBallEvent {
      * @param name   name
      */
     public PlaceHolderRequestEvent(Player player, String name) {
+        super();
         this.player = player;
         this.name = name;
     }

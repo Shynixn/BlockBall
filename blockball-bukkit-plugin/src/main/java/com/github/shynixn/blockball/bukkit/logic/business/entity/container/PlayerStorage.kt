@@ -54,13 +54,13 @@ class PlayerStorage(
 
     /** Team of the player. */
     override var team: Team? = null
-    private var gameType: GameType = GameType.HUBGAME;
+    private var gameType: GameType = GameType.HUBGAME
 
     /**
      * Stores the metadata for a [player] joining a hubgame.
      */
     fun storeForType(gameType: GameType) {
-        this.gameType = gameType;
+        this.gameType = gameType
         if (gameType == GameType.HUBGAME) {
             this.gamemode = player.gameMode
             this.armorContents = player.inventory?.armorContents?.clone()

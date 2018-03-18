@@ -58,6 +58,7 @@ public class ConnectionContextService implements AutoCloseable {
 
     @Inject
     public ConnectionContextService(Plugin plugin) {
+        super();
         if (plugin == null)
             throw new IllegalArgumentException("Plugin cannot be null!");
         this.retriever = fileName -> {

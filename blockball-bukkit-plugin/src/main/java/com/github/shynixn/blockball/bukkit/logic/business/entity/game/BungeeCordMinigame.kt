@@ -44,7 +44,7 @@ class BungeeCordMinigame(arena: BukkitArena) : Minigame(arena) {
         Bukkit.getOnlinePlayers().forEach { player ->
             this.join(player, null)
         }
-        Bukkit.getServer().setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd)
+        setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd)
     }
 
     /** Leave the game. */
@@ -64,15 +64,15 @@ class BungeeCordMinigame(arena: BukkitArena) : Minigame(arena) {
         }
 
         if (this.isGameRunning) {
-            Bukkit.getServer().setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.inGameMotd)
+            setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.inGameMotd)
         } else if (this.isLobbyCountdownRunning) {
-            Bukkit.getServer().setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd)
+            setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd)
         }
     }
 
     override fun close() {
         super.close()
-        Bukkit.getServer().setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.restartingMotd)
+        setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.restartingMotd)
         Bukkit.getServer().shutdown()
     }
 }

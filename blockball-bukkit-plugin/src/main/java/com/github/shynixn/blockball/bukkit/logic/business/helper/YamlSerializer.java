@@ -232,7 +232,7 @@ public final class YamlSerializer {
             instanceClass = HashMap.class;
         final T map = (T) instanceClass.newInstance();
         for (final String key : data.keySet()) {
-            Object value = data.get(key);
+            final Object value = data.get(key);
             if (isPrimitive(value.getClass())) {
                 if (keyClazz.isEnum()) {
                     map.put(Enum.valueOf(keyClazz, key), value);
@@ -268,9 +268,8 @@ public final class YamlSerializer {
         } else {
             objects = (T[]) Array.newInstance(clazz, data.size());
         }
-        int i = 0;
         for (final String key : data.keySet()) {
-            int orderPlace = Integer.parseInt(key) - 1;
+            final int orderPlace = Integer.parseInt(key) - 1;
             if (data.get(key) == null) {
                 objects[orderPlace] = null;
             } else if (annotation.classicSerialize() == ManualSerialization.DESERIALIZE_FUNCTION) {
@@ -280,7 +279,6 @@ public final class YamlSerializer {
             } else {
                 objects[orderPlace] = deserializeObject(clazz, annotation.implementation(), ((MemorySection) data.get(key)).getValues(false));
             }
-            i++;
         }
         return objects;
     }
@@ -310,7 +308,7 @@ public final class YamlSerializer {
     private static <T extends Collection, E> T deserializeHeavyCollection(Class<E> clazz, T collection, Object dataSource) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         final Map<String, Object> data = getDataFromSource(dataSource);
         for (final String key : data.keySet()) {
-            Object item = data.get(key);
+            final Object item = data.get(key);
             if (item instanceof MemorySection) {
                 collection.add(deserializeObject(clazz, null, ((MemorySection) item).getValues(false)));
             } else if (clazz.isEnum()) {
@@ -343,7 +341,7 @@ public final class YamlSerializer {
             final Constructor map = clazz.getConstructor(Map.class);
             return (T) map.newInstance(data);
         } catch (NoSuchMethodException | InvocationTargetException e) {
-            final T object = (T) clazz.newInstance();
+            final T object = clazz.newInstance();
             return heavyDeserialize(object, clazz, data);
         }
     }
@@ -401,14 +399,14 @@ public final class YamlSerializer {
     }
 
     private static Object deserializeObjectBukkit(Class<?> clazz, Map<String, Object> internal) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Method method = clazz.getMethod("deserialize", Map.class);
+        final Method method = clazz.getMethod("deserialize", Map.class);
         if (method == null)
             throw new IllegalArgumentException("static deserialize(Map) not found for bukkit deserialization.");
         return method.invoke(null, internal);
     }
 
     private static Object deserializeObjectClassic(Class<?> clazz, Map<String, Object> internal) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Constructor constructor = clazz.getConstructor(Map.class);
+        final Constructor constructor = clazz.getConstructor(Map.class);
         if (constructor == null)
             throw new IllegalArgumentException("Constructor Map<String,Object> not found for classic deserialization.");
         return constructor.newInstance(internal);

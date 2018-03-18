@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.github.shynixn.blockball.api
 
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController

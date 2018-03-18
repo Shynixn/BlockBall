@@ -224,14 +224,11 @@ class BungeeCordPingManager @Inject constructor(plugin: Plugin, signController: 
 
     fun replaceSign(line: String, info: BungeeCordServerStatus): String {
         var customLine = line.convertChatColors()
-        if (info.status == BungeeCordServerState.INGAME) {
-            customLine = customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, BungeeCordConfig.bungeeCordConfiguration!!.duringMatchSignState)
-        } else if (info.status == BungeeCordServerState.WAITING_FOR_PLAYERS) {
-            customLine = customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersSignState)
-        } else if (info.status == BungeeCordServerState.RESTARTING) {
-            customLine = customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, BungeeCordConfig.bungeeCordConfiguration!!.restartingSignState)
-        } else {
-            customLine = customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, "No connection")
+        customLine = when {
+            info.status == BungeeCordServerState.INGAME -> customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, BungeeCordConfig.bungeeCordConfiguration!!.duringMatchSignState)
+            info.status == BungeeCordServerState.WAITING_FOR_PLAYERS -> customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersSignState)
+            info.status == BungeeCordServerState.RESTARTING -> customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, BungeeCordConfig.bungeeCordConfiguration!!.restartingSignState)
+            else -> customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, "No connection")
         }
 
         return customLine.replace(PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder, (info.playerMaxAmount).toString())

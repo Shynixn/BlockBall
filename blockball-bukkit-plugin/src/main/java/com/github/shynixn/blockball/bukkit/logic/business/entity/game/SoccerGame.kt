@@ -126,20 +126,22 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
         }
         when {
             meta.mode == CommandMeta.CommandMode.PER_PLAYER -> players.forEach { p ->
-                p.performCommand(command!!.replaceGamePlaceholder(this))
+                p.performCommand(command.replaceGamePlaceholder(this))
             }
             meta.mode == CommandMeta.CommandMode.CONSOLE_PER_PLAYER -> players.forEach { p ->
                 lastInteractedEntity = p
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command!!.replaceGamePlaceholder(this))
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command.replaceGamePlaceholder(this))
             }
-            meta.mode == CommandMeta.CommandMode.CONSOLE_SINGLE -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command!!.replaceGamePlaceholder(this))
+            meta.mode == CommandMeta.CommandMode.CONSOLE_SINGLE -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command.replaceGamePlaceholder(this))
         }
     }
 
     private fun fixBallPositionSpawn() {
         if (ball == null || ball!!.isDead)
             return
-        if (!this.arena.isLocationInSelection(this.ball!!.location)) {
+        if (!this.arena.isLocationInSelection(this.ball!!.location)
+                && !this.arena.meta.redTeamMeta.goal.isLocationInSelection(this.ball!!.location)
+                && !this.arena.meta.blueTeamMeta.goal.isLocationInSelection(this.ball!!.location)) {
             if (this.bumper == 0) {
                 this.rescueBall()
             }
@@ -177,22 +179,53 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
         if (this.arena.meta.redTeamMeta.goal.isLocationInSelection(this.ball!!.location)) {
             this.blueGoals++
             this.ball!!.remove()
-            this.onScore(Team.BLUE,this.arena.meta.blueTeamMeta)
+            this.onScore(Team.BLUE, this.arena.meta.blueTeamMeta)
             this.onScoreReward(blueTeam)
+            this.teleportBackToSpawnpoint()
             if (this.blueGoals >= this.arena.meta.lobbyMeta.maxScore) {
                 this.onMatchEnd(blueTeam, redTeam)
-                this.onWin(Team.BLUE,this.arena.meta.blueTeamMeta)
+                this.onWin(Team.BLUE, this.arena.meta.blueTeamMeta)
             }
         } else if (this.arena.meta.blueTeamMeta.goal.isLocationInSelection(this.ball!!.location)) {
             this.redGoals++
             this.ball!!.remove()
-            this.onScore(Team.RED,this.arena.meta.redTeamMeta)
+            this.onScore(Team.RED, this.arena.meta.redTeamMeta)
             this.onScoreReward(redTeam)
+            this.teleportBackToSpawnpoint()
             if (this.redGoals >= this.arena.meta.lobbyMeta.maxScore) {
                 this.onMatchEnd(redTeam, blueTeam)
-                this.onWin(Team.RED,this.arena.meta.redTeamMeta)
+                this.onWin(Team.RED, this.arena.meta.redTeamMeta)
             }
         }
+    }
+
+    /**
+     * Teleports all players back to their spawnpoint if [arena] has got back teleport enabled.
+     */
+    private fun teleportBackToSpawnpoint() {
+        if (!this.arena.meta.customizingMeta.backTeleport) {
+            return
+        }
+
+        Bukkit.getScheduler().runTaskLater(plugin, {
+            var redTeamSpawnpoint = this.arena.meta.redTeamMeta.spawnpoint?.toBukkitLocation()
+            if (redTeamSpawnpoint == null) {
+                redTeamSpawnpoint = this.arena.meta.ballMeta.spawnpoint!!.toBukkitLocation()
+            }
+
+            var blueTeamSpawnpoint = this.arena.meta.blueTeamMeta.spawnpoint?.toBukkitLocation()
+            if (blueTeamSpawnpoint == null) {
+                blueTeamSpawnpoint = this.arena.meta.ballMeta.spawnpoint!!.toBukkitLocation()
+            }
+
+            this.ingameStats.forEach { i ->
+                if (i.value.team == Team.RED) {
+                    i.key.teleport(redTeamSpawnpoint)
+                } else if (i.value.team == Team.BLUE) {
+                    i.key.teleport(blueTeamSpawnpoint)
+                }
+            }
+        }, 20L * this.arena.meta.customizingMeta.backTeleportDelay)
     }
 
     private fun handleBallSpawning() {

@@ -33,6 +33,12 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceO
  */
 class CustomizationProperties : PersistenceObject(), CustomizationMeta {
     /** Can players damage other players during a game?*/
-    @YamlSerializer.YamlSerialize(value = "damage-enabled", orderNumber = 2)
+    @YamlSerializer.YamlSerialize(value = "damage-enabled", orderNumber = 1)
     override var damageEnabled: Boolean = false
+    /** Should players be teleported back to their spawnpoint if someone scores?*/
+    @YamlSerializer.YamlSerialize(value = "score-back-teleport", orderNumber = 2)
+    override var backTeleport : Boolean = false
+    /** After how many seconds should players be teleported back to their spawnpoint if [backTeleport] is enabled?*/
+    @YamlSerializer.YamlSerialize(value = "score-back-teleport-delay", orderNumber = 3)
+    override var backTeleportDelay : Int = 2
 }

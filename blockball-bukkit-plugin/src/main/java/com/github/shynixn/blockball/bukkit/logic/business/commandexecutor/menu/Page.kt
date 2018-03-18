@@ -69,20 +69,21 @@ open abstract class Page(val id: Int, private val previousId: Int) {
     internal fun mergeArgs(starting: Int, args: Array<String>): String {
         val builder = StringBuilder()
         for (i in starting until args.size) {
-            if (builder.length != 0)
+            if (builder.isNotEmpty()) {
                 builder.append(' ')
+            }
             builder.append(args[i])
         }
         return builder.toString()
     }
 
     internal fun printLocation(mlocation: Any): String {
-        val location: Location
-        if (mlocation is StorageLocation) {
-            location = (mlocation as LocationBuilder).toLocation()
+        val location: Location = if (mlocation is StorageLocation) {
+            (mlocation as LocationBuilder).toLocation()
         } else {
-            location = mlocation as Location
+            mlocation as Location
         }
+
         return location.world.name + " " + location.blockX + "x " + location.blockY + "y " + location.blockZ + "z"
     }
 }

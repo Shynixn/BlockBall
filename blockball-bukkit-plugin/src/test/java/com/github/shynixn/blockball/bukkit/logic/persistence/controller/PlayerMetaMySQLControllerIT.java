@@ -30,6 +30,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings({"HardCodedStringLiteral", "Duplicates", "NestedTryStatement"})
 public class PlayerMetaMySQLControllerIT {
 
     private static Plugin mockPlugin() {

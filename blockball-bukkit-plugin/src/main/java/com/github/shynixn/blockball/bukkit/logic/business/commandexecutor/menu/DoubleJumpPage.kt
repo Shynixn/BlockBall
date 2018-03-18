@@ -4,7 +4,6 @@ import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.Inject
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
 /**
@@ -37,7 +36,7 @@ import org.bukkit.entity.Player
 class DoubleJumpPage : Page(DoubleJumpPage.ID, OpenPage.ID) {
     companion object {
         /** Id of the page. */
-        val ID = 18
+        const val ID = 18
     }
 
     @Inject

@@ -75,7 +75,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
     /**
      * Gets called when the match ends in a draw.
      */
-    fun onDraw() {
+    private fun onDraw() {
         this.redTeam.forEach { p -> p.sendScreenMessage(arena.meta.redTeamMeta.drawMessageTitle, arena.meta.redTeamMeta.drawMessageSubTitle, this) }
         this.blueTeam.forEach { p -> p.sendScreenMessage(arena.meta.blueTeamMeta.drawMessageTitle, arena.meta.blueTeamMeta.drawMessageSubTitle, this) }
     }

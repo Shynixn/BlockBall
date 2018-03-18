@@ -49,7 +49,7 @@ You can set the command to **none** to disable it.
 Configuring in your arena_x.yml
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-At this stage, you should be able to find your arena save file. If not, please take a look at this page.
+At this stage, you should be able to find your arena save file. If not, please take a look at this `page <../general/database.html#editing-the-arena-files>`__.
 
 1. Go to the **Open the arena_x.yml** of your arena
 2. Search for the following section:

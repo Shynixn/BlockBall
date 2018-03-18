@@ -184,15 +184,15 @@ class GameRepository : BukkitGameController, Runnable {
     }
 
     private fun addGameForArena(arena: BukkitArena) {
-        if (arena.gameType == GameType.HUBGAME) {
-            this.store(HubGame(arena))
-        } else if (arena.gameType == GameType.MINIGAME) {
-            this.store(Minigame(arena))
-        } else if (arena.gameType == GameType.BUNGEE) {
-            this.store(BungeeCordMinigame(arena))
-            plugin!!.logger.log(Level.INFO, "Server is now fully managed " +
-                    "by BlockBall and available for joining game '" + arena.displayName + "'.")
-            return
+        when {
+            arena.gameType == GameType.HUBGAME -> this.store(HubGame(arena))
+            arena.gameType == GameType.MINIGAME -> this.store(Minigame(arena))
+            arena.gameType == GameType.BUNGEE -> {
+                this.store(BungeeCordMinigame(arena))
+                plugin!!.logger.log(Level.INFO, "Server is now fully managed " +
+                        "by BlockBall and available for joining game '" + arena.displayName + "'.")
+                return
+            }
         }
     }
 

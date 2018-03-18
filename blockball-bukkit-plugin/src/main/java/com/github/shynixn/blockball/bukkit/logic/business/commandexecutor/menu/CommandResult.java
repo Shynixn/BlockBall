@@ -37,11 +37,9 @@ public enum CommandResult {
     ARENA_NOTVALID("Please set the center, goal1, goal2 and ball spawpoint before saving!"),
 
     MAX_PLAYERS("Max amount of players cannot be lower than min amount of players!"),
-    MINPLAYERS("Min amount of players cannot be bigger than max amount of players!"),
+    MINPLAYERS("Min amount of players cannot be bigger than max amount of players!");
 
-    ;
-
-    private String message;
+    private final String message;
 
     CommandResult(String s) {
         this.message = s;

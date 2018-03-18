@@ -5,18 +5,16 @@ import com.github.shynixn.blockball.bukkit.dependencies.placeholderapi.PlaceHold
 import com.github.shynixn.blockball.bukkit.dependencies.vault.VaultConnection;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 @Deprecated
 public final class RegisterHelper {
     public static String PREFIX;
-    private static String PREFIX_CONSOLE = ChatColor.BLUE.toString() + "[BlockBall] ";
+    private static final String PREFIX_CONSOLE = ChatColor.BLUE.toString() + "[BlockBall] ";
 
     private static final HashMap<String, String> registered = new HashMap<>();
 

@@ -43,7 +43,7 @@ class HologramBuilder : PersistenceObject(), HologramMeta {
         }
     /** Lines of the hologram being rendered. */
     @YamlSerializer.YamlSerialize("lines", orderNumber = 1)
-    override val lines: MutableList<String> = ArrayList();
+    override val lines: MutableList<String> = ArrayList()
 
     @YamlSerializer.YamlSerialize("location", orderNumber = 1)
     private var internalPosition: LocationBuilder? = null

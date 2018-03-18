@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("NestedTryStatement")
 public class DatabaseIT {
 
     @Test

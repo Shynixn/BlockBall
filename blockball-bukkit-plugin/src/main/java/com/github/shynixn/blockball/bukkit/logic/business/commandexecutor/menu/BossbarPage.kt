@@ -106,6 +106,7 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
                 .setHoverText("Edit the amount of percentage the bossbar is filled.")
                 .builder()
         if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
+            builder.nextLine()
             builder.component("- Color: " + bossbar.color).builder()
                     .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARCOLORS.command)
