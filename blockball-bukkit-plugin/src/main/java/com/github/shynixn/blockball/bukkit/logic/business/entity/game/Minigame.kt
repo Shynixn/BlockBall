@@ -160,7 +160,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             }
 
             gameCountdown--
-            this.ingameStats.keys.forEach { p ->
+            this.ingameStats.keys.toTypedArray().forEach { p ->
                 if (gameCountdown <= 10) {
                     p.exp = (gameCountdown.toFloat() / 10.0F)
                 }
@@ -181,7 +181,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
                 }
             }
             lobbyCountdown--
-            this.ingameStats.keys.forEach { p ->
+            this.ingameStats.keys.toTypedArray().forEach { p ->
                 if (lobbyCountdown <= 10) {
                     p.exp = 1.0F - (lobbyCountdown.toFloat() / 10.0F)
                 }
@@ -192,7 +192,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
                 this.playBlingSound()
             }
             if (lobbyCountdown <= 0) {
-                this.ingameStats.keys.forEach { p ->
+                this.ingameStats.keys.toTypedArray().forEach { p ->
                     if (lobbyCountdown <= 10) {
                         p.exp = 1.0F
                     }
@@ -212,7 +212,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
         if (isGameRunning) {
             gameCountdown--
-            this.ingameStats.keys.forEach { p ->
+            this.ingameStats.keys.toTypedArray().forEach { p ->
                 if (gameCountdown <= 10) {
                     p.exp = (gameCountdown.toFloat() / 10.0F)
                 }
@@ -249,7 +249,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
     private fun startGame() {
         status = GameStatus.RUNNING
-        ingameStats.keys.forEach { p ->
+        ingameStats.keys.toTypedArray().forEach { p ->
 
             val event = GameJoinEvent(this, p)
             Bukkit.getServer().pluginManager.callEvent(event)

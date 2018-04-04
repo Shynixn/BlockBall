@@ -103,7 +103,7 @@ class SimpleHologram(private val plugin: Plugin, private val location: Location,
      */
     private fun clearLines() {
         synchronized(watchers) {
-            this.watchers.keys.forEach { p ->
+            this.watchers.keys.toTypedArray().forEach { p ->
                 this.removePlayer(p)
             }
         }
@@ -144,7 +144,7 @@ class SimpleHologram(private val plugin: Plugin, private val location: Location,
         val dataWatcher = (reflectionCache!![10] as Field).get(getEntityArmorstandFrom(armorstand))
         val packet = (reflectionCache!![9] as Constructor<*>).newInstance(armorstand.entityId, dataWatcher, true)
         synchronized(watchers) {
-            watchers.keys.forEach { p ->
+            watchers.keys.toTypedArray().forEach { p ->
                 if (watchers[p] == true) {
                     sendPacket(p, packet)
                 }
@@ -229,7 +229,7 @@ class SimpleHologram(private val plugin: Plugin, private val location: Location,
     override fun run() {
         synchronized(armorstands) {
             synchronized(watchers) {
-                watchers.keys.forEach { p ->
+                watchers.keys.toTypedArray().forEach { p ->
                     if (p.location.distance(location) < MAX_DISTANCE) {
                         if (this.watchers[p] == false) {
                             sendSpawnPacket(p)

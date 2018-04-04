@@ -178,7 +178,7 @@ abstract class LowLevelGame(
     }
 
     private fun updateDoubleJump() {
-        this.doubleJumpCooldownPlayers.keys.forEach { p ->
+        this.doubleJumpCooldownPlayers.keys.toTypedArray().forEach { p ->
             val cooldown = this.doubleJumpCooldownPlayers[p]!! - 1
             if (cooldown <= 0) {
                 doubleJumpCooldownPlayers.remove(p)
@@ -243,7 +243,7 @@ abstract class LowLevelGame(
     }
 
     private fun updateDoubleJumpCooldown() {
-        doubleJumpCooldownPlayers.keys.forEach { p ->
+        doubleJumpCooldownPlayers.keys.toTypedArray().forEach { p ->
             var time = doubleJumpCooldownPlayers[p]!!
             time -= 1
             if (time <= 0) {
