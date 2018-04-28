@@ -360,15 +360,26 @@ public final class YamlSerializer {
                             } else if (field.getType().isEnum()) {
                                 field.set(object, Enum.valueOf((Class) field.getType(), data.get(yamlAnnotation.value()).toString()));
                             } else if (field.getType() == Enum.class) {
-                                field.set(object, Enum.valueOf((Class)yamlAnnotation.implementation(), data.get(yamlAnnotation.value()).toString()));
+                                field.set(object, Enum.valueOf((Class) yamlAnnotation.implementation(), data.get(yamlAnnotation.value()).toString()));
                             } else if (field.getType().isArray()) {
                                 field.set(object, deserializeArray(field.getType().getComponentType(), yamlAnnotation, ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                             } else if (Collection.class.isAssignableFrom(field.getType())) {
                                 if (field.get(object) != null) {
+                                    boolean worked = false;
                                     ((Collection) field.get(object)).clear();
-                                    if (data.get(yamlAnnotation.value()) instanceof Collection) {
+                                    final Object tmp2 = data.get(yamlAnnotation.value());
+                                    if (tmp2 instanceof MemorySection && yamlAnnotation.implementation() == List.class) {
+                                        Map<String, Object> tmp = ((MemorySection) tmp2).getValues(true);
+                                        if (!tmp.isEmpty() && ((Map) tmp).values().toArray(new Object[0])[0] instanceof String) {
+                                            for (final Object mData : ((Map) tmp).values()) {
+                                                ((Collection) field.get(object)).add(mData);
+                                            }
+                                            worked = true;
+                                        }
+                                    }
+                                    if (tmp2 instanceof Collection) {
                                         ((Collection) field.get(object)).addAll((Collection) data.get(yamlAnnotation.value()));
-                                    } else {
+                                    } else if(!worked){
                                         deserializeHeavyCollection(getTypeFromHeavyField(field, 0), ((Collection) field.get(object)), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false));
                                     }
                                 } else {

@@ -280,13 +280,13 @@ abstract class LowLevelGame(
         try {
             for (i in this.arena.meta.redTeamMeta.signs.indices) {
                 val position = this.arena.meta.redTeamMeta.signs[i]
-                if (!replaceTextOnSign(position, arena.meta.redTeamMeta.signLines.toTypedArray(), arena.meta.redTeamMeta)) {
+                if (!replaceTextOnSign(position, arena.meta.redTeamMeta.signLines, arena.meta.redTeamMeta)) {
                     this.arena.meta.redTeamMeta.signs.removeAt(i)
                 }
             }
             for (i in this.arena.meta.blueTeamMeta.signs.indices) {
                 val position = this.arena.meta.blueTeamMeta.signs[i]
-                if (!replaceTextOnSign(position, arena.meta.blueTeamMeta.signLines.toTypedArray(), arena.meta.blueTeamMeta)) {
+                if (!replaceTextOnSign(position, arena.meta.blueTeamMeta.signLines, arena.meta.blueTeamMeta)) {
                     this.arena.meta.blueTeamMeta.signs.removeAt(i)
                 }
             }
@@ -307,7 +307,7 @@ abstract class LowLevelGame(
         }
     }
 
-    private fun replaceTextOnSign(signPosition: StorageLocation, lines: Array<String>, teamMeta: TeamMeta<Location, ItemStack>?): Boolean {
+    private fun replaceTextOnSign(signPosition: StorageLocation, lines: List<String>, teamMeta: TeamMeta<Location, ItemStack>?): Boolean {
         var players = this.redTeam
         if (arena.meta.blueTeamMeta == teamMeta) {
             players = this.blueTeam

@@ -57,21 +57,25 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         if (command == BlockBallCommand.MULTILINES_SCOREBOARD) {
             cache[4] = ScoreboardPage.ID
             cache[3] = 0
-        }
-        else if (command == BlockBallCommand.MULTILINES_HUBGAMEJOINMESSAGE) {
+        } else if (command == BlockBallCommand.MULTILINES_HUBGAMEJOINMESSAGE) {
             cache[2] = (cache[0] as BukkitArena).meta.hubLobbyMeta.joinMessage
             cache[4] = GameSettingsPage.ID
             cache[3] = 0
-        }
-        else if (command == BlockBallCommand.MULTILINES_HOLOGRAM) {
+        } else if (command == BlockBallCommand.MULTILINES_HOLOGRAM) {
             cache[4] = HologramPage.ID
             cache[3] = 0
-        }
-        else if (command == BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE) {
-            cache[4] = TeamTextBookPage.ID
+        } else if (command == BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE) {
+            val arena = cache[0] as BukkitArena
+            cache[4] = SignSettingsPage.ID
             cache[3] = 0
-        }
-        else if (command == BlockBallCommand.MULTILINES_ADD) {
+
+            when {
+                args[2] == "red" -> cache[2] = arena.meta.redTeamMeta.signLines
+                args[2] == "blue" -> cache[2] = arena.meta.blueTeamMeta.signLines
+                args[2] == "join" -> cache[2] = arena.meta.lobbyMeta.joinSignLines
+                args[2] == "leave" -> cache[2] = arena.meta.lobbyMeta.leaveSignLines
+            }
+        } else if (command == BlockBallCommand.MULTILINES_ADD) {
             val dataList = cache[2] as ArrayList<String>
             dataList.add(this.mergeArgs(2, args))
         } else if (command == BlockBallCommand.MULTILINES_ANY) {

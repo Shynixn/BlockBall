@@ -44,10 +44,10 @@ interface LobbyMeta : PersistenceAble {
     var leaveSpawnpoint: StorageLocation?
 
     /** Lines displayed on the sign for joinin the match. */
-    var joinSignLines: Array<String>
+    var joinSignLines: List<String>
 
     /** Lines displayed on the sign for leaving the match. */
-    var leaveSignLines: Array<String>
+    var leaveSignLines: List<String>
 
     /** Should players automatically join the other team to even out them?*/
     var onlyAllowEventTeams: Boolean
