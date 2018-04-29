@@ -141,8 +141,6 @@ class ArenaRepository(private val items: MutableList<BukkitArena> = ArrayList())
 
             plugin!!.logger.log(Level.INFO, "Upgraded arena file [" + arena.name + "] to v5.0.2")
         }
-
-
     }
 
     private fun saveArenaFile(item: BukkitArena) {
