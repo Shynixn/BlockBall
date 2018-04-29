@@ -13,6 +13,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.entity.container.PlayerStorage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.helper.sendActionBarMessage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.sendScreenMessage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
@@ -206,9 +207,14 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             }
         }
 
-        if (!isLobbyCountdownRunning && canStartLobbyCountdown()) {
-            isLobbyCountdownRunning = true
-            lobbyCountdown = arena.meta.minigameMeta.lobbyDuration
+        if (!isLobbyCountdownRunning) {
+
+            if (canStartLobbyCountdown()) {
+                isLobbyCountdownRunning = true
+                lobbyCountdown = arena.meta.minigameMeta.lobbyDuration
+            } else if(!isGameRunning){
+                ingameStats.keys.toTypedArray().sendActionBarMessage(arena.meta.minigameMeta.playersRequiredToStartMessage.replaceGamePlaceholder(this))
+            }
         }
 
         if (isGameRunning) {

@@ -59,6 +59,7 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         val arena = cache[0] as BukkitArena
+
         if (command == BlockBallCommand.GAMESETTINGS_LEAVESPAWNPOINT) {
             arena.meta.lobbyMeta.leaveSpawnpoint = player.location.toPosition()
         } else if (command == BlockBallCommand.GAMESETTINGS_LOBBYSPAWNPOINT) {
@@ -79,7 +80,10 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
             arena.meta.minigameMeta.lobbyDuration = args[2].toInt()
         } else if (command == BlockBallCommand.GAMESETTINGS_CALLBACK_BUKKITGAMEMODES && args.size == 3 && args[2].toIntOrNull() != null) {
             arena.meta.lobbyMeta.gamemode = GameMode.values()[args[2].toInt()]
+        } else if (command == BlockBallCommand.GAMESETTINGS_REMAININGPLAYERSMESSAGE && args.size > 3) {
+            arena.meta.minigameMeta.playersRequiredToStartMessage = mergeArgs(2, args)
         }
+
         return super.execute(player, command, cache, args)
     }
 
@@ -138,18 +142,24 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMESETTINGS_LOBBYSPAWNPOINT.command)
                     .setHoverText("Sets the spawnpoint for people who join the lobby.")
                     .builder().nextLine()
+            builder.component("- Remaining Players Message:").builder()
+                    .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color).setHoverText(arena.meta.minigameMeta.playersRequiredToStartMessage).builder()
+                    .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+                    .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.GAMESETTINGS_REMAININGPLAYERSMESSAGE.command)
+                    .setHoverText(ChatColor.UNDERLINE.toString() + "Minigame exclusive\n" + ChatColor.RESET + "Message being send to the action bar of players who wait for more players in the lobby.")
+                    .builder().nextLine()
         }
         if (arena.gameType == GameType.BUNGEE) {
             builder.component("- Kick Message: ").builder()
                     .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color).setHoverText(arena.meta.bungeeCordMeta.kickMessage).builder()
-                    .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
+                    .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                     .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.GAMESETTINGS_BUNGEEKICKMESSAGE.command)
                     .setHoverText(ChatColor.UNDERLINE.toString() + "BungeeCord exclusive\n" + ChatColor.RESET + "Message being send to players who try to join a running or a full server.")
                     .builder().nextLine()
         } else if (arena.gameType == GameType.HUBGAME) {
             builder.component("- Join Message: ").builder()
                     .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color).setHoverText(arena.meta.hubLobbyMeta.joinMessage.toSingleLine()).builder()
-                    .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
+                    .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_HUBGAMEJOINMESSAGE.command)
                     .setHoverText(ChatColor.UNDERLINE.toString() + "HubGame exclusive\n" + ChatColor.RESET + "Message being send to players who touch the forcefield.")
                     .builder().nextLine()

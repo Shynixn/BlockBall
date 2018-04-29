@@ -75,6 +75,8 @@ Check if the ball is spawning and goals get scored by move the ball into one of 
 
 If it does not, your worledit goal selection is probably misplaced or simply wrong.
 
+**Important!** Make sure your goal's width, height and length is atleast bigger than 2!
+
 Putting all together
 ~~~~~~~~~~~~~~~~~~~~
 
