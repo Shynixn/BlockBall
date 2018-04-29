@@ -282,24 +282,28 @@ abstract class LowLevelGame(
                 val position = this.arena.meta.redTeamMeta.signs[i]
                 if (!replaceTextOnSign(position, arena.meta.redTeamMeta.signLines, arena.meta.redTeamMeta)) {
                     this.arena.meta.redTeamMeta.signs.removeAt(i)
+                    return
                 }
             }
             for (i in this.arena.meta.blueTeamMeta.signs.indices) {
                 val position = this.arena.meta.blueTeamMeta.signs[i]
                 if (!replaceTextOnSign(position, arena.meta.blueTeamMeta.signLines, arena.meta.blueTeamMeta)) {
                     this.arena.meta.blueTeamMeta.signs.removeAt(i)
+                    return
                 }
             }
             for (i in this.arena.meta.lobbyMeta.joinSigns.indices) {
                 val position = this.arena.meta.lobbyMeta.joinSigns[i]
                 if (!replaceTextOnSign(position, arena.meta.lobbyMeta.joinSignLines, null)) {
                     this.arena.meta.lobbyMeta.joinSigns.removeAt(i)
+                    return
                 }
             }
             for (i in this.arena.meta.lobbyMeta.leaveSigns.indices) {
                 val position = this.arena.meta.lobbyMeta.leaveSigns[i]
                 if (!replaceTextOnSign(position, arena.meta.lobbyMeta.leaveSignLines, null)) {
                     this.arena.meta.lobbyMeta.leaveSigns.removeAt(i)
+                    return
                 }
             }
         } catch (e: Exception) { // Removing sign task could clash with updating signs.

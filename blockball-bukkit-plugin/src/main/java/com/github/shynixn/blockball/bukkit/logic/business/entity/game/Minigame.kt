@@ -12,6 +12,7 @@ import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.entity.container.PlayerStorage
+import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.sendScreenMessage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
@@ -297,7 +298,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()
         player.inventory.armorContents = teamMeta.armorContents.clone()
         player.updateInventory()
-        player.sendMessage(Config.prefix + teamMeta.joinMessage)
+        player.sendMessage(Config.prefix + teamMeta.joinMessage.replaceGamePlaceholder(this, teamMeta, teamPlayers))
     }
 
     private fun isLobbyFull(): Boolean {

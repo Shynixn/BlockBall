@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.container.PlayerStorage
+import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.sendScreenMessage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import org.bukkit.Bukkit
@@ -161,6 +162,6 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
             player.teleport(teamMeta.spawnpoint!!.toBukkitLocation())
         }
 
-        player.sendMessage(Config.prefix + teamMeta.joinMessage)
+        player.sendMessage(Config.prefix + teamMeta.joinMessage.replaceGamePlaceholder(this, teamMeta))
     }
 }
