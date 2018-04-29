@@ -281,6 +281,18 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
     }
 
     private fun joinTeam(player: Player, teamMeta: TeamMeta<Location, ItemStack>, teamPlayers: MutableList<Player>) {
+        if (teamPlayers.contains(player)) {
+            return
+        }
+
+        if (ingameStats[player]!!.team != null) {
+            if (ingameStats[player]!!.team == Team.RED) {
+                redTeam.remove(player)
+            } else {
+                blueTeam.remove(player)
+            }
+        }
+
         teamPlayers.add(player)
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()
         player.inventory.armorContents = teamMeta.armorContents.clone()
