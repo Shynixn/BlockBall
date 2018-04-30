@@ -65,7 +65,9 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.ARENA_CREATE) {
-            cache[0] = arenaRepository!!.create()
+            if (cache[0] == null) {
+                cache[0] = arenaRepository!!.create()
+            }
         } else if (command == BlockBallCommand.ARENA_EDIT) {
             cache[0] = arenaRepository?.getArenaByName(args[2])!!
         } else if (command == BlockBallCommand.ARENA_DELETE) {

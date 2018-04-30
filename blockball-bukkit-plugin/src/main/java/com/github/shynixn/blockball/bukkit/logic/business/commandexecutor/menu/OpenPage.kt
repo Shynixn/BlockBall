@@ -102,7 +102,7 @@ class OpenPage : Page(OpenPage.ID, OpenPage.ID) {
         return ChatBuilder()
                 .component("- Create arena:").builder()
                 .component(" [create..]").setColor(ChatColor.AQUA)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ARENA_CREATE.command)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEMPLATE_OPEN.command)
                 .setHoverText("Creates a new blockball arena.").builder().nextLine()
                 .component("- Edit arena:").builder()
                 .component(" [page..]").setColor(ChatColor.YELLOW)

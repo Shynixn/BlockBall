@@ -21,6 +21,17 @@ If the Chat UI is only partially formatted correctly, you should temporarily adj
 
 .. image:: ../_static/images/arena4.jpg
 
+Selecting the template
+~~~~~~~~~~~~~~~~~~~~~~
+
+1. Before you can start configuring please choose an arena template.
+
+.. image:: ../_static/images/basegame14.jpg
+
+2. The default english template by the plugin author is automatically selected. You can press '*[create..]*' again.
+
+3. However, if you want to use a different **language template** or one of your **previous created arenas** as template click on select.
+
 
 Creating the arena
 ~~~~~~~~~~~~~~~~~~
@@ -74,6 +85,8 @@ team section.
 Check if the ball is spawning and goals get scored by move the ball into one of your configured goals.
 
 If it does not, your worledit goal selection is probably misplaced or simply wrong.
+
+**Important!** Make sure your goal's width, height and length is atleast bigger than 2!
 
 Putting all together
 ~~~~~~~~~~~~~~~~~~~~

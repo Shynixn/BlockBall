@@ -12,6 +12,8 @@ import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.entity.container.PlayerStorage
+import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.helper.sendActionBarMessage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.sendScreenMessage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
@@ -160,7 +162,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             }
 
             gameCountdown--
-            this.ingameStats.keys.forEach { p ->
+            this.ingameStats.keys.toTypedArray().forEach { p ->
                 if (gameCountdown <= 10) {
                     p.exp = (gameCountdown.toFloat() / 10.0F)
                 }
@@ -181,7 +183,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
                 }
             }
             lobbyCountdown--
-            this.ingameStats.keys.forEach { p ->
+            this.ingameStats.keys.toTypedArray().forEach { p ->
                 if (lobbyCountdown <= 10) {
                     p.exp = 1.0F - (lobbyCountdown.toFloat() / 10.0F)
                 }
@@ -192,7 +194,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
                 this.playBlingSound()
             }
             if (lobbyCountdown <= 0) {
-                this.ingameStats.keys.forEach { p ->
+                this.ingameStats.keys.toTypedArray().forEach { p ->
                     if (lobbyCountdown <= 10) {
                         p.exp = 1.0F
                     }
@@ -205,14 +207,19 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             }
         }
 
-        if (!isLobbyCountdownRunning && canStartLobbyCountdown()) {
-            isLobbyCountdownRunning = true
-            lobbyCountdown = arena.meta.minigameMeta.lobbyDuration
+        if (!isLobbyCountdownRunning) {
+
+            if (canStartLobbyCountdown()) {
+                isLobbyCountdownRunning = true
+                lobbyCountdown = arena.meta.minigameMeta.lobbyDuration
+            } else if(!isGameRunning){
+                ingameStats.keys.toTypedArray().sendActionBarMessage(arena.meta.minigameMeta.playersRequiredToStartMessage.replaceGamePlaceholder(this))
+            }
         }
 
         if (isGameRunning) {
             gameCountdown--
-            this.ingameStats.keys.forEach { p ->
+            this.ingameStats.keys.toTypedArray().forEach { p ->
                 if (gameCountdown <= 10) {
                     p.exp = (gameCountdown.toFloat() / 10.0F)
                 }
@@ -249,7 +256,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
     private fun startGame() {
         status = GameStatus.RUNNING
-        ingameStats.keys.forEach { p ->
+        ingameStats.keys.toTypedArray().forEach { p ->
 
             val event = GameJoinEvent(this, p)
             Bukkit.getServer().pluginManager.callEvent(event)
@@ -281,11 +288,23 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
     }
 
     private fun joinTeam(player: Player, teamMeta: TeamMeta<Location, ItemStack>, teamPlayers: MutableList<Player>) {
+        if (teamPlayers.contains(player)) {
+            return
+        }
+
+        if (ingameStats[player]!!.team != null) {
+            if (ingameStats[player]!!.team == Team.RED) {
+                redTeam.remove(player)
+            } else {
+                blueTeam.remove(player)
+            }
+        }
+
         teamPlayers.add(player)
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()
         player.inventory.armorContents = teamMeta.armorContents.clone()
         player.updateInventory()
-        player.sendMessage(Config.prefix + teamMeta.joinMessage)
+        player.sendMessage(Config.prefix + teamMeta.joinMessage.replaceGamePlaceholder(this, teamMeta, teamPlayers))
     }
 
     private fun isLobbyFull(): Boolean {

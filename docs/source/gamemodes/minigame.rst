@@ -38,13 +38,15 @@ At this stage, you should be able to find your arena save file. If not, please t
       even-teams: false
     minigame-meta:
       match-duration: 300
+      lobby-duration: 20
       lobby-spawnpoint:
-        x: 88.93812620630838
-        y: 66.0
-        z: 176.82799113452717
-        yaw: 5.7918171882629395
-        pitch: 12.89991569519043
+        x: 175.92141252808105
+        y: 65.0
+        z: 139.1003464937666
+        yaw: 322.1365661621094
+        pitch: 11.550313949584961
         world: world
+      remaining-players-message: '&aWaiting for &c<remaining> &a more player(s)...'
 
 3. Customize the available options to your own needs.
 
@@ -57,7 +59,8 @@ Properties
 * Even teams enabled: Should the team choice of the player be ignored if too many players are on one team?
 * Max Duration: Max amount of time in seconds how a match can last.
 * Lobby Spawnpoint: Position where players spawn when they join the game. This property **has to be set** for MiniGame.
-
+* Lobby Duration: Amount of time in seconds until a match starts after the lobby has reached the min amount of players.
+* Remaining Players Message: Message being sent to players when they are waiting for more players in the lobby.
 
 Winning condition
 ~~~~~~~~~~~~~~~~~

@@ -40,4 +40,7 @@ interface MinigameLobbyMeta : PersistenceAble {
 
     /** Spawnpoint of the player in the lobby. */
     var lobbySpawnpoint: StorageLocation?
+
+    /** Message being played in the action bar displaying the joined players how many players are remaining to start. */
+    var playersRequiredToStartMessage: String
 }

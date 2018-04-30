@@ -86,6 +86,9 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
     private val bossbarPage: BossbarPage? = null
 
     @Inject
+    private lateinit var templatePage: TemplateSettingsPage
+
+    @Inject
     private val signSettingsPage: SignSettingsPage? = null
 
     @Inject
@@ -245,6 +248,7 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
             this.pageCache!!.add(gameSettingsPage!!)
             this.pageCache!!.add(ballModifierPage!!)
             this.pageCache!!.add(ballSettingsPage!!)
+            this.pageCache!!.add(templatePage)
         }
         return this.pageCache!!
     }

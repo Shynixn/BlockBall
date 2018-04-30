@@ -93,6 +93,7 @@ internal fun String.replaceGamePlaceholder(game: BukkitGame, teamMeta: TeamMeta<
         cache = cache.replace(PlaceHolder.TIME.placeHolder, "∞")
     } else if (game is Minigame) {
         cache = cache.replace(PlaceHolder.TIME.placeHolder, game.gameCountdown.toString())
+                .replace(PlaceHolder.REMAINING_PLAYERS_TO_START.placeHolder, (game.arena.meta.redTeamMeta.minAmount + game.arena.meta.blueTeamMeta.minAmount - game.ingameStats.size).toString())
     }
 
     if (game is SoccerGame) {
@@ -106,6 +107,14 @@ internal fun String.replaceGamePlaceholder(game: BukkitGame, teamMeta: TeamMeta<
 
 internal fun Player.sendScreenMessage(title: String, subTitle: String, game: BukkitGame) {
     ScreenUtils.setTitle(title.replaceGamePlaceholder(game), subTitle.replaceGamePlaceholder(game), 20, 20 * 3, 20, this)
+}
+
+internal fun Player.sendActionBarMessage(message: String) {
+    ScreenUtils.setActionBar(message, this)
+}
+
+internal fun Array<Player>.sendActionBarMessage(message: String) {
+    ScreenUtils.setActionBar(message, *this)
 }
 
 

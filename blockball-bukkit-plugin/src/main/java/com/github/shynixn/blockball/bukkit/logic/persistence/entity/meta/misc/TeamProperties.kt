@@ -80,7 +80,7 @@ class TeamProperties(
     override var walkingSpeed: Double = 0.2
     /** Message getting played when a player joins a match.*/
     @YamlSerializer.YamlSerialize(orderNumber = 9, value = "join-message")
-    override var joinMessage: String = "You have joined the game."
+    override var joinMessage: String = "You have joined the game for " + PlaceHolder.ARENA_TEAMCOLOR.placeHolder + PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder + "."
     /** Message getting played when a player leave a match.*/
     @YamlSerializer.YamlSerialize(orderNumber = 10, value = "leave-message")
     override var leaveMessage: String = "You have left the game."
@@ -96,7 +96,11 @@ class TeamProperties(
             return internalSpawnpoint
         }
         set(value) {
-            this.internalSpawnpoint = value as LocationBuilder
+            if (value == null) {
+                this.internalSpawnpoint = null
+            } else {
+                this.internalSpawnpoint = value as LocationBuilder
+            }
         }
 
     @YamlSerializer.YamlSerialize(orderNumber = 6, value = "spawnpoint")
