@@ -47,11 +47,11 @@ class LobbyProperties : PersistenceObject(), LobbyMeta {
     override val joinSigns: MutableList<StorageLocation>
         get() = sign.joinSigns as MutableList<StorageLocation>
     /** Lines displayed on the sign for leaving the match. */
-    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "join-sign-lines")
-    override var joinSignLines: Array<String> = arrayOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, PlaceHolder.ARENA_STATE.placeHolder, PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder + '/' + PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder)
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "join-sign-lines", implementation = List::class) // Compatibility implementation. Support will be removed after August 2018.
+    override var joinSignLines: List<String> = arrayListOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, PlaceHolder.ARENA_STATE.placeHolder, PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder + '/' + PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder)
     /** Lines displayed on the sign for leaving the match. */
-    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leave-sign-lines")
-    override var leaveSignLines: Array<String> = arrayOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, ChatColor.WHITE.toString() + "Leave", PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder + '/' + PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder)
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "leave-sign-lines", implementation = List::class) // Compatibility implementation. Support will be removed after August 2018.
+    override var leaveSignLines: List<String> = arrayListOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, ChatColor.WHITE.toString() + "Leave", PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder + '/' + PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder)
     /** List of signs which can be clicked to leave the game. */
     override val leaveSigns: MutableList<StorageLocation>
         get() = sign.leaveSigns as MutableList<StorageLocation>

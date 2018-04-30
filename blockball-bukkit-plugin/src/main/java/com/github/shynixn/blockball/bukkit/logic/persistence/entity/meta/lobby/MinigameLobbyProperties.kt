@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby
 
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.lobby.MinigameLobbyMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
@@ -46,9 +47,17 @@ class MinigameLobbyProperties : PersistenceObject(), MinigameLobbyMeta {
             return this.internalLocation
         }
         set(value) {
-            this.internalLocation = value as LocationBuilder
+            if (value == null) {
+                this.internalLocation = null
+            } else {
+                this.internalLocation = value as LocationBuilder
+            }
         }
 
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "lobby-spawnpoint")
     private var internalLocation: LocationBuilder? = null
+
+    /** Message being played in the action bar displaying the joined players how many players are remaining to start. */
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "remaining-players-message")
+    override var playersRequiredToStartMessage: String = "&aWaiting for &c" + PlaceHolder.REMAINING_PLAYERS_TO_START.placeHolder + "&a more player(s)..."
 }

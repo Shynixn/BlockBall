@@ -217,13 +217,15 @@ a game can last. Also, players can only join before the match starts.</p>
   <span class="n">even</span><span class="o">-</span><span class="n">teams</span><span class="p">:</span> <span class="n">false</span>
 <span class="n">minigame</span><span class="o">-</span><span class="n">meta</span><span class="p">:</span>
   <span class="n">match</span><span class="o">-</span><span class="n">duration</span><span class="p">:</span> <span class="mi">300</span>
+  <span class="n">lobby</span><span class="o">-</span><span class="n">duration</span><span class="p">:</span> <span class="mi">20</span>
   <span class="n">lobby</span><span class="o">-</span><span class="n">spawnpoint</span><span class="p">:</span>
-    <span class="n">x</span><span class="p">:</span> <span class="mf">88.93812620630838</span>
-    <span class="n">y</span><span class="p">:</span> <span class="mf">66.0</span>
-    <span class="n">z</span><span class="p">:</span> <span class="mf">176.82799113452717</span>
-    <span class="n">yaw</span><span class="p">:</span> <span class="mf">5.7918171882629395</span>
-    <span class="n">pitch</span><span class="p">:</span> <span class="mf">12.89991569519043</span>
+    <span class="n">x</span><span class="p">:</span> <span class="mf">175.92141252808105</span>
+    <span class="n">y</span><span class="p">:</span> <span class="mf">65.0</span>
+    <span class="n">z</span><span class="p">:</span> <span class="mf">139.1003464937666</span>
+    <span class="n">yaw</span><span class="p">:</span> <span class="mf">322.1365661621094</span>
+    <span class="n">pitch</span><span class="p">:</span> <span class="mf">11.550313949584961</span>
     <span class="n">world</span><span class="p">:</span> <span class="n">world</span>
+  <span class="n">remaining</span><span class="o">-</span><span class="n">players</span><span class="o">-</span><span class="n">message</span><span class="p">:</span> <span class="s1">&#39;&amp;aWaiting for &amp;c&lt;remaining&gt; &amp;a more player(s)...&#39;</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
@@ -239,6 +241,8 @@ a game can last. Also, players can only join before the match starts.</p>
 <li>Even teams enabled: Should the team choice of the player be ignored if too many players are on one team?</li>
 <li>Max Duration: Max amount of time in seconds how a match can last.</li>
 <li>Lobby Spawnpoint: Position where players spawn when they join the game. This property <strong>has to be set</strong> for MiniGame.</li>
+<li>Lobby Duration: Amount of time in seconds until a match starts after the lobby has reached the min amount of players.</li>
+<li>Remaining Players Message: Message being sent to players when they are waiting for more players in the lobby.</li>
 </ul>
 </div>
 <div class="section" id="winning-condition">

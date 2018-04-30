@@ -42,6 +42,7 @@ public enum PlaceHolder {
     TIME("<time>"),
     LASTHITBALL("<player>"),
     ARENA_STATE("<state>"),
+    REMAINING_PLAYERS_TO_START("<remaining>"),
 
     STATS_PLAYER_NAME("<playername>"),
     STATS_WINRATE("<winrate>"),
