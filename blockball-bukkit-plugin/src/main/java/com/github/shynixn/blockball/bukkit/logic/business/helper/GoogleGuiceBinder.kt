@@ -1,5 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.helper
 
+import com.github.shynixn.blockball.api.business.service.TemplateService
+import com.github.shynixn.blockball.bukkit.logic.business.service.TemplateServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.AbstractModule
 import org.bukkit.Bukkit
 import org.bukkit.Server
@@ -37,9 +40,11 @@ import org.bukkit.scheduler.BukkitScheduler
 class GoogleGuiceBinder(private val plugin: Plugin) : AbstractModule() {
 
 
-
-
     override fun configure() {
+        val repository = ArenaRepository()
+
+        bind(ArenaRepository::class.java).toInstance(repository)
+        bind(TemplateService::class.java).toInstance(TemplateServiceImpl(plugin, repository))
         bind(Server::class.java)
                 .toInstance(Bukkit.getServer())
         bind(BukkitScheduler::class.java)

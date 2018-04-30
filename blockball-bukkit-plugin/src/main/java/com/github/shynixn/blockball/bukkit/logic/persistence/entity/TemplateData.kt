@@ -1,13 +1,15 @@
-package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity
+
+import com.github.shynixn.blockball.api.persistence.entity.Template
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,41 +29,16 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public enum PageKey {
-    OPEN("open"),
-    MAINSETTING("mset"),
-    LISTABLE("labl"),
-    TEAMMETA("tma"),
-    EFFECTS("ef"),
-    SCOREBOARD("scor"),
-    BOSSBAR("boss"),
-    HOLOGRAM("holog"),
-    SIGNS("sign"),
-    DOUBLEJUMP("doubl"),
-    ABILITIES("abi"),
-    MULTIPLELINES("mlin"),
-    PARTICLEFFECTS("part"),
-    SOUNDEFFECTS("sound"),
-    MISC("misc"),
-    AREAPROTECTION("aprot"),
-    GAMEEXTENSIONS("gameex"),
-    MULTIPLEITEMS("mitem"),
-    REWARDSPAGE("reward"),
-    GAMESETTINGS("gameset"),
-    COMMANDPAGE("com"),
-    BALL("ball"),
-    BALLMODIFIER("ballmod"),
-    TEAMTEXTBOOK("teamtext"),
-    TEMPLATEPAGE("template"),
-    MAINCONFIGURATION("mcf");
-
-    private final String key;
-
-    PageKey(String mcf) {
-        this.key = mcf;
-    }
-
-    public String getKey() {
-        return this.key;
-    }
-}
+class TemplateData(
+        /**
+         * Returns the name of the template.
+         */
+        override val name: String,
+        /**
+         * Returns the author of the template.
+         */
+        override val author: String,
+        /**
+         * Returns if the template belongs to an existing arena.
+         */
+        override val existingArena: Boolean) : Template

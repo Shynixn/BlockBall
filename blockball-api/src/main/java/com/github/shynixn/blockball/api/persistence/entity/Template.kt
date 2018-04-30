@@ -1,13 +1,13 @@
-package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
+package com.github.shynixn.blockball.api.persistence.entity
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,41 +27,20 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public enum PageKey {
-    OPEN("open"),
-    MAINSETTING("mset"),
-    LISTABLE("labl"),
-    TEAMMETA("tma"),
-    EFFECTS("ef"),
-    SCOREBOARD("scor"),
-    BOSSBAR("boss"),
-    HOLOGRAM("holog"),
-    SIGNS("sign"),
-    DOUBLEJUMP("doubl"),
-    ABILITIES("abi"),
-    MULTIPLELINES("mlin"),
-    PARTICLEFFECTS("part"),
-    SOUNDEFFECTS("sound"),
-    MISC("misc"),
-    AREAPROTECTION("aprot"),
-    GAMEEXTENSIONS("gameex"),
-    MULTIPLEITEMS("mitem"),
-    REWARDSPAGE("reward"),
-    GAMESETTINGS("gameset"),
-    COMMANDPAGE("com"),
-    BALL("ball"),
-    BALLMODIFIER("ballmod"),
-    TEAMTEXTBOOK("teamtext"),
-    TEMPLATEPAGE("template"),
-    MAINCONFIGURATION("mcf");
+interface Template {
 
-    private final String key;
+    /**
+     * Returns the name of the template.
+     */
+    val name: String
 
-    PageKey(String mcf) {
-        this.key = mcf;
-    }
+    /**
+     * Returns the author of the template.
+     */
+    val author: String
 
-    public String getKey() {
-        return this.key;
-    }
+    /**
+     * Returns if the template belongs to an existing arena.
+     */
+    val existingArena : Boolean
 }

@@ -47,7 +47,11 @@ class MinigameLobbyProperties : PersistenceObject(), MinigameLobbyMeta {
             return this.internalLocation
         }
         set(value) {
-            this.internalLocation = value as LocationBuilder
+            if (value == null) {
+                this.internalLocation = null
+            } else {
+                this.internalLocation = value as LocationBuilder
+            }
         }
 
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "lobby-spawnpoint")
