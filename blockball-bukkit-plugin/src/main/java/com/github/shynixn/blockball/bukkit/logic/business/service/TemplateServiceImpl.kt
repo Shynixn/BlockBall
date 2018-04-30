@@ -43,7 +43,7 @@ import java.io.FileOutputStream
  * SOFTWARE.
  */
 class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, private val arenaRepository: ArenaRepository) : TemplateService {
-    private val templateNames = arrayOf("arena-de.yml", "arena_en.yml")
+    private val templateNames = arrayOf("arena-de.yml", "arena-en.yml")
 
     /**
      * Returns a [List] of available
@@ -55,7 +55,14 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
             if (f.name.endsWith(".yml")) {
                 val configuration = YamlConfiguration()
                 configuration.load(f)
-                templates.add(TemplateData(f.name.replace(".yml", ""), configuration.getString("arena.translator"), true))
+
+                val translator = if (configuration.contains("arena.translator")) {
+                    configuration.getString("arena.translator")
+                } else {
+                    "unknown"
+                }
+
+                templates.add(TemplateData(f.name.replace(".yml", ""), translator, true))
             }
         }
 
@@ -63,7 +70,14 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
             if (f.name.endsWith(".yml")) {
                 val configuration = YamlConfiguration()
                 configuration.load(f)
-                templates.add(TemplateData(f.name.replace(".yml", ""), configuration.getString("arena.translator"), false))
+
+                val translator = if (configuration.contains("arena.translator")) {
+                    configuration.getString("arena.translator")
+                } else {
+                    "Unknown"
+                }
+
+                templates.add(TemplateData(f.name.replace(".yml", ""), translator, false))
             }
         }
 

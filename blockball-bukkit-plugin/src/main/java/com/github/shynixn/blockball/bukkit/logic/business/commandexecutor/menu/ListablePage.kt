@@ -5,10 +5,12 @@ import com.github.shynixn.ball.api.persistence.enumeration.ActionEffect
 import com.github.shynixn.ball.api.persistence.enumeration.BallSize
 import com.github.shynixn.ball.api.persistence.enumeration.EffectingType
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.service.TemplateService
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -41,6 +43,10 @@ import org.bukkit.entity.Player
  * SOFTWARE.
  */
 class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
+
+    @Inject
+    private lateinit var templateService: TemplateService
+
     /**
      * Returns the key of the command when this page should be executed.
      *
@@ -65,8 +71,12 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 cache[2] = EffectingType.values().map { p -> p.name }
                 cache[3] = BlockBallCommand.PARTICLE_CALLBACK_EFFECTING
             }
+            BlockBallCommand.LIST_TEMPLATES -> {
+                cache[2] = templateService.getAvailableTemplates().map { p -> p.name }
+                cache[3] = BlockBallCommand.TEMPLATE_SELECT_CALLBACK
+            }
             BlockBallCommand.LIST_BUKKITGAMESMODES -> {
-                cache[2] = GameMode.values().filterNot {g ->  g == GameMode.SPECTATOR}.map { p -> p.name }
+                cache[2] = GameMode.values().filterNot { g -> g == GameMode.SPECTATOR }.map { p -> p.name }
                 cache[3] = BlockBallCommand.GAMESETTINGS_CALLBACK_BUKKITGAMEMODES
             }
             BlockBallCommand.LIST_BALL_PARTICLEFFECTS -> {

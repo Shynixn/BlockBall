@@ -212,6 +212,10 @@ public enum BlockBallCommand {
     TEXTBOOK_DRAWTIELE(PageKey.TEAMTEXTBOOK, "drawtitle"),
     TEXTBOOK_DRAWSUBTITLE(PageKey.TEAMTEXTBOOK, "drawstitle"),
 
+    TEMPLATE_OPEN(PageKey.TEMPLATEPAGE, "open"),
+    TEMPLATE_SELECT_CALLBACK(PageKey.TEMPLATEPAGE, "calls"),
+
+    LIST_TEMPLATES(PageKey.LISTABLE, "show_templates"),
     LIST_BUKKITGAMESMODES(PageKey.LISTABLE, "show_bukkitgamemodes"),
     LIST_BALL_SOUNDEFFECTS(PageKey.LISTABLE, "show_ballsounds"),
     LIST_BALL_PARTICLEFFECTS(PageKey.LISTABLE, "show_ballparticles"),

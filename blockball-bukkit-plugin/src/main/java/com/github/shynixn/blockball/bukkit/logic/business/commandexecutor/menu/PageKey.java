@@ -52,6 +52,7 @@ public enum PageKey {
     BALL("ball"),
     BALLMODIFIER("ballmod"),
     TEAMTEXTBOOK("teamtext"),
+    TEMPLATEPAGE("template"),
     MAINCONFIGURATION("mcf");
 
     private final String key;

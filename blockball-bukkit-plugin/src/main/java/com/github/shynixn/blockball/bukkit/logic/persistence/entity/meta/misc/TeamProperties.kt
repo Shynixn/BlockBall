@@ -96,7 +96,11 @@ class TeamProperties(
             return internalSpawnpoint
         }
         set(value) {
-            this.internalSpawnpoint = value as LocationBuilder
+            if (value == null) {
+                this.internalSpawnpoint = null
+            } else {
+                this.internalSpawnpoint = value as LocationBuilder
+            }
         }
 
     @YamlSerializer.YamlSerialize(orderNumber = 6, value = "spawnpoint")
