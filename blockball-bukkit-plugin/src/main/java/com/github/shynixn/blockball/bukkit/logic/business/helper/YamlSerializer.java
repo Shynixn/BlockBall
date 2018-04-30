@@ -369,7 +369,7 @@ public final class YamlSerializer {
                                     ((Collection) field.get(object)).clear();
                                     final Object tmp2 = data.get(yamlAnnotation.value());
                                     if (tmp2 instanceof MemorySection && yamlAnnotation.implementation() == List.class) {
-                                        Map<String, Object> tmp = ((MemorySection) tmp2).getValues(true);
+                                        final Map<String, Object> tmp = ((MemorySection) tmp2).getValues(true);
                                         if (!tmp.isEmpty() && ((Map) tmp).values().toArray(new Object[0])[0] instanceof String) {
                                             for (final Object mData : ((Map) tmp).values()) {
                                                 ((Collection) field.get(object)).add(mData);
