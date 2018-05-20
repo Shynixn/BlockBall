@@ -212,7 +212,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             if (canStartLobbyCountdown()) {
                 isLobbyCountdownRunning = true
                 lobbyCountdown = arena.meta.minigameMeta.lobbyDuration
-            } else if(!isGameRunning){
+            } else if (!isGameRunning) {
                 ingameStats.keys.toTypedArray().sendActionBarMessage(arena.meta.minigameMeta.playersRequiredToStartMessage.replaceGamePlaceholder(this))
             }
         }
@@ -302,6 +302,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
         teamPlayers.add(player)
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()
+        player.inventory.contents = teamMeta.inventoryContents.clone()
         player.inventory.armorContents = teamMeta.armorContents.clone()
         player.updateInventory()
         player.sendMessage(Config.prefix + teamMeta.joinMessage.replaceGamePlaceholder(this, teamMeta, teamPlayers))

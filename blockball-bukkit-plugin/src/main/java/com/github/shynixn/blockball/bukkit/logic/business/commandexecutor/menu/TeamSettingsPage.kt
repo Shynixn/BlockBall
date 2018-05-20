@@ -63,8 +63,7 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
         }
         if (command == BlockBallCommand.TEAM_BLUE_CONFIGURE) {
             cache[2] = 1
-        }
-        else if (command == BlockBallCommand.TEAM_SPAWNPOINT) {
+        } else if (command == BlockBallCommand.TEAM_SPAWNPOINT) {
             val teamMeta = getTeamMeta(cache)
             teamMeta.spawnpoint = player.location.toPosition()
         } else if (command == BlockBallCommand.TEAM_NAME) {
@@ -93,17 +92,18 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
                 }
                 teamMeta.maxAmount = amount
             }
-        }
-        else if (command == BlockBallCommand.TEAM_WALKSPEED) {
+        } else if (command == BlockBallCommand.TEAM_WALKSPEED) {
             val teamMeta = getTeamMeta(cache)
             val amount = args[2].toDoubleOrNull()
             if (amount != null) {
                 teamMeta.walkingSpeed = amount
             }
-        }
-        else if (command == BlockBallCommand.TEAM_ARMOR) {
+        } else if (command == BlockBallCommand.TEAM_ARMOR) {
             val teamMeta = getTeamMeta(cache)
             teamMeta.armorContents = player.inventory.armorContents.clone()
+        } else if (command == BlockBallCommand.TEAM_INVENTORY) {
+            val teamMeta = getTeamMeta(cache)
+            teamMeta.inventoryContents = player.inventory.contents.clone()
         }
         return super.execute(player, command, cache, args)
     }
@@ -145,6 +145,11 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
                 .component(ClickableComponent.COPY_ARMOR.text).setColor(ClickableComponent.COPY_ARMOR.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_ARMOR.command)
                 .setHoverText("Copies your current equipped armor to the team's armor.")
+                .builder().nextLine()
+                .component("- Inventory").builder()
+                .component(ClickableComponent.COPY_INVENTORY.text).setColor(ClickableComponent.COPY_INVENTORY.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_INVENTORY.command)
+                .setHoverText("Copies your current your inventory to the team's inventory.")
                 .builder().nextLine()
                 .component("- Walking Speed: " + teamMeta.walkingSpeed).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)

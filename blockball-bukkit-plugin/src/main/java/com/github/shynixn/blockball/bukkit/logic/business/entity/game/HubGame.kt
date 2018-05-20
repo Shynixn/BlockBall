@@ -153,6 +153,7 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         player.allowFlight = false
         player.isFlying = false
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()
+        player.inventory.contents = teamMeta.inventoryContents.clone()
         player.inventory.armorContents = teamMeta.armorContents.clone()
         player.updateInventory()
 

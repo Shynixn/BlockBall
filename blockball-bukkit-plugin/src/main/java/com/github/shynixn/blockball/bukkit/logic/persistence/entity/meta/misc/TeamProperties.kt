@@ -10,7 +10,7 @@ import org.bukkit.Location
 import org.bukkit.inventory.ItemStack
 
 /**
- * Created by Shynixn 2018.
+ * Entity to hold information about the team.
  * <p>
  * Version 1.2
  * <p>
@@ -62,7 +62,6 @@ class TeamProperties(
         @YamlSerializer.YamlSerialize(orderNumber = 16, value = "draw-message-subtitle")
         override var drawMessageSubTitle: String
 ) : TeamMeta<Location, ItemStack> {
-
     /** List of signs which can be clicked to join the team.*/
     override val signs: MutableList<StorageLocation>
         get() = this.internalSigns as MutableList<StorageLocation>
@@ -79,32 +78,24 @@ class TeamProperties(
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "walking-speed")
     override var walkingSpeed: Double = 0.2
     /** Message getting played when a player joins a match.*/
-    @YamlSerializer.YamlSerialize(orderNumber = 9, value = "join-message")
+    @YamlSerializer.YamlSerialize(orderNumber = 10, value = "join-message")
     override var joinMessage: String = "You have joined the game for " + PlaceHolder.ARENA_TEAMCOLOR.placeHolder + PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder + "."
     /** Message getting played when a player leave a match.*/
-    @YamlSerializer.YamlSerialize(orderNumber = 10, value = "leave-message")
+    @YamlSerializer.YamlSerialize(orderNumber = 12, value = "leave-message")
     override var leaveMessage: String = "You have left the game."
     /** Lines displayed on the sign for joining the team. */
-    @YamlSerializer.YamlSerialize(orderNumber = 11, value = "lines")
+    @YamlSerializer.YamlSerialize(orderNumber = 13, value = "lines")
     override var signLines: List<String> = arrayListOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, PlaceHolder.ARENA_TEAMCOLOR.placeHolder + PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder + '/' + PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder)
     /** Armor wearing this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 8, value = "armor", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION, arraySize = 4)
     override var armorContents: Array<ItemStack?> = arrayOfNulls(4)
+    /** Inventory this team is getting when playing. */
+    @YamlSerializer.YamlSerialize(orderNumber = 9, value = "inventory", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION, arraySize = 41)
+    override var inventoryContents: Array<ItemStack?> = arrayOfNulls(41)
     /** Spawnpoint of the team inside of the arena. */
-    override var spawnpoint: StorageLocation?
-        get() {
-            return internalSpawnpoint
-        }
-        set(value) {
-            if (value == null) {
-                this.internalSpawnpoint = null
-            } else {
-                this.internalSpawnpoint = value as LocationBuilder
-            }
-        }
-
-    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "spawnpoint")
-    private var internalSpawnpoint: LocationBuilder? = null
-    @YamlSerializer.YamlSerialize(orderNumber = 9, value = "signs")
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "spawnpoint", implementation = LocationBuilder::class)
+    override var spawnpoint: StorageLocation? = null
+    /** List of signs for this team */
+    @YamlSerializer.YamlSerialize(orderNumber = 11, value = "signs")
     private var internalSigns: MutableList<LocationBuilder> = ArrayList()
 }

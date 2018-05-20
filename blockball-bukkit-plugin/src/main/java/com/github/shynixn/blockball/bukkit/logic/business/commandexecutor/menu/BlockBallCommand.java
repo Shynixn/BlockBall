@@ -60,6 +60,7 @@ public enum BlockBallCommand {
     TEAM_MINAMOUNT(PageKey.TEAMMETA, "mina"),
     TEAM_MAXAMOUNT(PageKey.TEAMMETA, "maxa"),
     TEAM_ARMOR(PageKey.TEAMMETA, "armor"),
+    TEAM_INVENTORY(PageKey.TEAMMETA, "invent"),
     TEAM_WALKSPEED(PageKey.TEAMMETA, "wspeed"),
 
     TEAM_SIGN(PageKey.TEAMMETA, "sign"),
@@ -161,8 +162,8 @@ public enum BlockBallCommand {
     SOUND_DOUBLEJUMP(PageKey.SOUNDEFFECTS, "doub"),
 
     PARTICLE_BALL(PageKey.PARTICLEFFECTS, "ball-par"),
-    PARTICLE_CALLBACK_EFFECTING(PageKey.PARTICLEFFECTS,"caleffecting"),
-    PARTICLE_CALLBACK_TYPE(PageKey.PARTICLEFFECTS,"caltype"),
+    PARTICLE_CALLBACK_EFFECTING(PageKey.PARTICLEFFECTS, "caleffecting"),
+    PARTICLE_CALLBACK_TYPE(PageKey.PARTICLEFFECTS, "caltype"),
     PARTICLE_OPEN(PageKey.PARTICLEFFECTS, "open"),
     PARTICLE_EFFECTING(PageKey.PARTICLEFFECTS, "ef"),
     PARTICLE_TYPE(PageKey.PARTICLEFFECTS, "type"),
@@ -178,8 +179,8 @@ public enum BlockBallCommand {
     SOUND_TYPE(PageKey.SOUNDEFFECTS, "type"),
     SOUND_VOLUME(PageKey.SOUNDEFFECTS, "volume"),
     SOUND_PITCH(PageKey.SOUNDEFFECTS, "pitch"),
-    SOUND_CALLBACK_EFFECTING(PageKey.SOUNDEFFECTS,"caleffecting"),
-    SOUND_CALLBACK_TYPE(PageKey.SOUNDEFFECTS,"caltype"),
+    SOUND_CALLBACK_EFFECTING(PageKey.SOUNDEFFECTS, "caleffecting"),
+    SOUND_CALLBACK_TYPE(PageKey.SOUNDEFFECTS, "caltype"),
 
     REWARD_OPEN(PageKey.REWARDSPAGE, "open"),
     REWARD_EDIT_MONEY(PageKey.REWARDSPAGE, "money"),
