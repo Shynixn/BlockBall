@@ -124,11 +124,18 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             ingameStats[player]!!.team = team
             return true
         }
-        if (isGameRunning || isEndGameRunning || isLobbyFull() || team != null) {
+
+        if (isGameRunning || isEndGameRunning || isLobbyFull()) {
             return false
         }
+
         this.leave(player)
         this.prepareLobbyStatsForPlayer(player)
+
+        if (team != null) {
+            join(player, team)
+        }
+
         return true
     }
 

@@ -59,7 +59,7 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 
 **Joining the game**
 
-Players can only join the game by clicking the join sign. Joining teams directly is not possible in this gamemode.
+Players can join the lobby by clicking the join sign. They do not get added to a team yet.
 
 1. Click on *[add..]* at the Signs Join any team.
 2. Rightclick on any sign to convert it
@@ -71,6 +71,7 @@ Players can only join the game by clicking the join sign. Joining teams directly
 
 It is possible to setup a queuing system for teams in this gamemode. Simply setup team signs in your lobby.
 When players do not click on a sign, they will automatically put into a team after the countdown ends.
+Also, you can allow joining teams directly by putting up team signs instead of join signs.
 
 1. Click on *[add..]* at the Signs Team Red line.
 2. Rightclick on any sign to convert it
