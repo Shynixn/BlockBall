@@ -4,10 +4,7 @@ import com.github.shynixn.blockball.api.bukkit.business.controller.BukkitGameCon
 import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.JoinCommandExecutor
-import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.LeaveCommandExecutor
-import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.NewArenaCommandExecutor
-import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.ReloadCommandExecutor
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.*
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.BungeeCordMinigame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.HubGame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
@@ -55,40 +52,43 @@ class GameRepository : BukkitGameController, Runnable {
 
     /** ArenaController. */
     @Inject
-    override var arenaController: ArenaRepository? = null
+    override lateinit var arenaController: ArenaRepository
 
     @Inject
-    private var plugin: Plugin? = null
+    private lateinit var plugin: Plugin
 
     @Inject
-    private var arenaCommandexecutor: NewArenaCommandExecutor? = null
+    private lateinit var arenaCommandExecutor: NewArenaCommandExecutor
 
     @Inject
-    private var reloadCommandExecutor: ReloadCommandExecutor? = null
+    private lateinit var reloadCommandExecutor: ReloadCommandExecutor
 
     @Inject
-    private var joinCommandExecutor: JoinCommandExecutor? = null
+    private lateinit var joinCommandExecutor: JoinCommandExecutor
 
     @Inject
-    private var leaveCommandExecutor: LeaveCommandExecutor? = null
+    private lateinit var leaveCommandExecutor: LeaveCommandExecutor
 
     @Inject
-    private var gameListener: GameListener? = null
+    private lateinit var stopCommandExecutor: StopCommandExecutor
 
     @Inject
-    private var doubleJumpListener: DoubleJumpListener? = null
+    private lateinit var gameListener: GameListener
 
     @Inject
-    private var hubGameListener: HubGameListener? = null
+    private lateinit var doubleJumpListener: DoubleJumpListener
 
     @Inject
-    private var statsListener: StatsListener? = null
+    private lateinit var hubGameListener: HubGameListener
 
     @Inject
-    private var minigameListener: MinigameListener? = null
+    private lateinit var statsListener: StatsListener
 
     @Inject
-    private var bungeeCordGameListener: BungeeCordGameListener? = null
+    private lateinit var minigameListener: MinigameListener
+
+    @Inject
+    private lateinit var bungeeCordGameListener: BungeeCordGameListener
 
     /** Games. */
     val games: ArrayList<BukkitGame> = ArrayList()
@@ -167,9 +167,9 @@ class GameRepository : BukkitGameController, Runnable {
     /** Reloads the contents in the cache of the controller. */
     override fun reload() {
         if (task == null) {
-            task = plugin!!.server.scheduler.runTaskTimer(plugin, this, 0L, 1L)
+            task = plugin.server.scheduler.runTaskTimer(plugin, this, 0L, 1L)
         }
-        this.arenaController!!.reload()
+        this.arenaController.reload()
         for (game in this.games) {
             try {
                 game.close()
@@ -178,7 +178,7 @@ class GameRepository : BukkitGameController, Runnable {
             }
         }
         this.games.clear()
-        this.arenaController!!.getAll().forEach { p ->
+        this.arenaController.getAll().forEach { p ->
             addGameForArena(p)
         }
     }
@@ -189,7 +189,7 @@ class GameRepository : BukkitGameController, Runnable {
             arena.gameType == GameType.MINIGAME -> this.store(Minigame(arena))
             arena.gameType == GameType.BUNGEE -> {
                 this.store(BungeeCordMinigame(arena))
-                plugin!!.logger.log(Level.INFO, "Server is now fully managed " +
+                plugin.logger.log(Level.INFO, "Server is now fully managed " +
                         "by BlockBall and available for joining game '" + arena.displayName + "'.")
                 return
             }

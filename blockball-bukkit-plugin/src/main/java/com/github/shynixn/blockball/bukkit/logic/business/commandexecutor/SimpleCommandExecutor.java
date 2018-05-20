@@ -282,7 +282,7 @@ public class SimpleCommandExecutor {
 
         }
 
-        protected final String mergeArgs(int starting, int amount, String[] args) {
+        protected static String mergeArgs(int starting, int amount, String[] args) {
             final StringBuilder builder = new StringBuilder();
             int counter = 0;
             for (int i = starting; counter < amount; i++) {

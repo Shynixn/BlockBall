@@ -100,11 +100,11 @@ class HubGameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugi
                                     .nextLine()
                                     .component(game.arena.meta.hubLobbyMeta.joinMessage[1].replaceGamePlaceholder(game, game.arena.meta.redTeamMeta))
                                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
-                                            , "/" + plugin.config.getString("global-join.command") + " " + game.arena.meta.redTeamMeta.displayName.stripChatColors() + "|" + game.arena.name)
+                                            , "/" + plugin.config.getString("global-join.command") + " " + game.arena.name + "|" + game.arena.meta.redTeamMeta.displayName.stripChatColors())
                                     .setHoverText(" ")
                                     .builder().text(" ").component(game.arena.meta.hubLobbyMeta.joinMessage[2].replaceGamePlaceholder(game, game.arena.meta.blueTeamMeta))
                                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
-                                            , "/" + plugin.config.getString("global-join.command") + " " + game.arena.meta.blueTeamMeta.displayName.stripChatColors() + "|" + game.arena.name)
+                                            , "/" + plugin.config.getString("global-join.command") + " " + game.arena.name + "|" + game.arena.meta.blueTeamMeta.displayName.stripChatColors())
                                     .setHoverText(" ")
                                     .builder().sendMessage(player)
                             togglePlayers.add(player)

@@ -10,6 +10,11 @@ commands:
       usage: /<command>
       permission: blockball.command.admin
       permission-message: You don't have permission.
+   blockballstop:
+      description: Stops a running blockball game.
+      usage: /<command> <id/name>
+      permission: blockball.command.admin
+      permission-message: You don't have permission.
    blockballbungeecord:
       description: Adds a new bungeecord sign for connecting to other BlockBall servers.
       usage: /<command> <server>
