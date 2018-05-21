@@ -53,7 +53,7 @@ public final class BossBarConnection {
     public static void updateBossBar(Player player, String message, float percentage) {
         try {
             ReflectionUtils.invokeMethodByClass(ReflectionUtils.invokeClass("org.inventivetalent.bossbar.BossBarAPI"), "setMessage", new Class[]{Player.class, String.class, float.class}, new Object[]{player, message, percentage});
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
+        } catch (final NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to update Bossbar.", e);
         }
     }
@@ -69,7 +69,7 @@ public final class BossBarConnection {
             if (ReflectionUtils.invokeMethodByClass(clazz, "hasBar", new Class[]{Player.class}, new Object[]{player})) {
                 ReflectionUtils.invokeMethodByClass(clazz, "removeBar", new Class[]{Player.class}, new Object[]{player});
             }
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
+        } catch (final NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to remove Bossbar.", e);
         }
     }

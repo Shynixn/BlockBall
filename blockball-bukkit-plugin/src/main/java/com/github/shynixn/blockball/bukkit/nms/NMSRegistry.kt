@@ -40,7 +40,7 @@ class NMSRegistry {
          * Creates a new [VirtualArmorstand] from the given [location] [id] [data] for the viewer [player].
          */
         fun createVirtualArmorstand(player: Player, location: Location, id: Int, data: Int): VirtualArmorstand {
-            val clazz = Class.forName("com.github.shynixn.blockball.bukkit.nms.VERSION.DisplayArmorstand".replace("VERSION", VersionSupport.getServerVersion().versionText));
+            val clazz = Class.forName("com.github.shynixn.blockball.bukkit.nms.VERSION.DisplayArmorstand".replace("VERSION", VersionSupport.getServerVersion().versionText))
             val constructor = clazz.getDeclaredConstructor(Player::class.java, Location::class.java, Int::class.java, Int::class.java)
             return constructor.newInstance(player, location, id, data) as VirtualArmorstand
         }

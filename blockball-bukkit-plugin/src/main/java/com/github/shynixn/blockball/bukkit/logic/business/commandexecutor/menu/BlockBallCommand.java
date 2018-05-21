@@ -256,14 +256,8 @@ public enum BlockBallCommand {
             return OPEN;
         if (args.length > 0) {
             for (final BlockBallCommand command : BlockBallCommand.values()) {
-                if (command.key.getKey() != null) {
-                    if (command.key.getKey().equalsIgnoreCase(args[0])) {
-                        if (command.command != null) {
-                            if (command.command.equalsIgnoreCase(args[1])) {
-                                return command;
-                            }
-                        }
-                    }
+                if (command.key.getKey() != null && command.key.getKey().equalsIgnoreCase(args[0]) && command.command != null && command.command.equalsIgnoreCase(args[1])) {
+                    return command;
                 }
             }
         }

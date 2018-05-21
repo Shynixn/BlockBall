@@ -156,7 +156,7 @@ class TeamSettingsPage : Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.TEAM_WALKSPEED.command)
                 .setHoverText("Edit the speed each player of this team is going to walk. (default: 0.2)")
                 .builder().nextLine()
-                .component("- Spawnpoint: " + spawnpoint).builder()
+                .component("- Spawnpoint: $spawnpoint").builder()
                 .component(" [location..]").setColor(ChatColor.BLUE)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.TEAM_SPAWNPOINT.command)
                 .setHoverText("If this spawnpoint is set the team will spawn at this location instead of the spawning location of the ball.")

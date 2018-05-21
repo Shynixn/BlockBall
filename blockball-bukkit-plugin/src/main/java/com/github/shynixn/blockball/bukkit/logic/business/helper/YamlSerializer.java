@@ -340,7 +340,7 @@ public final class YamlSerializer {
         try {
             final Constructor map = clazz.getConstructor(Map.class);
             return (T) map.newInstance(data);
-        } catch (NoSuchMethodException | InvocationTargetException e) {
+        } catch (final NoSuchMethodException | InvocationTargetException e) {
             final T object = clazz.newInstance();
             return heavyDeserialize(object, clazz, data);
         }

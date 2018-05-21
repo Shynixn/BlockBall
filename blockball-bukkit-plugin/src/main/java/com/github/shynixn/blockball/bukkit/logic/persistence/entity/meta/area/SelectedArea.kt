@@ -39,16 +39,10 @@ open class SelectedArea : PersistenceObject(), AreaSelection<Location> {
     /** [upperCorner] of the selected square arena. */
     @YamlSerializer.YamlSerialize(value = "corner-1", orderNumber = 5)
     final override var upperCorner: LocationBuilder? = null
-        set(value) {
-            field = value
-        }
 
     /** [lowerCorner] of the selected square arena. */
     @YamlSerializer.YamlSerialize(value = "corner-2", orderNumber = 6)
     final override var lowerCorner: LocationBuilder? = null
-        set(value) {
-            field = value
-        }
 
     /** [center] of the arena */
     override val center: Location?

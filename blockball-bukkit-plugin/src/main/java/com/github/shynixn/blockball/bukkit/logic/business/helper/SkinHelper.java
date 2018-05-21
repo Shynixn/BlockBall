@@ -9,8 +9,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -61,58 +59,13 @@ public class SkinHelper {
                 field.setAccessible(true);
                 field.set(real, getNonPlayerProfile(newSkin));
                 itemStack.setItemMeta(SkullMeta.class.cast(real));
-            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException | ClassNotFoundException e) {
+            } catch (final IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException | ClassNotFoundException e) {
                 Bukkit.getLogger().log(Level.WARNING, "Failed to set url of itemstack.", e);
             }
         } else {
             ((SkullMeta) meta).setOwner(skin);
             itemStack.setItemMeta(meta);
         }
-    }
-
-    public static Optional<String> getItemStackSkin(ItemStack itemStack) {
-        final ItemMeta meta = itemStack.getItemMeta();
-        if (!(meta instanceof SkullMeta)) {
-            return Optional.empty();
-        }
-
-        final SkullMeta skullMeta = (SkullMeta) meta;
-        if (skullMeta.getOwner() != null) {
-            return Optional.of(skullMeta.getOwner());
-        } else {
-            final Optional<String> s = obtainSkinFromSkull(meta);
-            if (s != null) return s;
-        }
-        return Optional.empty();
-    }
-
-    private static Optional<String> obtainSkinFromSkull(ItemMeta meta) {
-        try {
-            final Class<?> cls = createClass("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull");
-            final Object real = cls.cast(meta);
-            final Field field = real.getClass().getDeclaredField("profile");
-            field.setAccessible(true);
-            final GameProfile profile = (GameProfile) field.get(real);
-            final Collection<Property> props = profile.getProperties().get("textures");
-            for (final Property property : props) {
-                if (property.getName().equals("textures")) {
-                    final String text = Base64Coder.decodeString(property.getValue());
-                    final StringBuilder s = new StringBuilder();
-                    boolean start = false;
-                    for (int i = 0; i < text.length(); i++) {
-                        if (text.charAt(i) == '"') {
-                            start = !start;
-                        } else if (start) {
-                            s.append(text.charAt(i));
-                        }
-                    }
-                    return Optional.of(s.toString());
-                }
-            }
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException | ClassNotFoundException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Failed to set url of itemstack.", e);
-        }
-        return Optional.empty();
     }
 
     private static Class<?> createClass(String path) throws ClassNotFoundException {

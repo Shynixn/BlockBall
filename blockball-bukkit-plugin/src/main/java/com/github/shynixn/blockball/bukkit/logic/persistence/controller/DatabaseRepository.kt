@@ -75,7 +75,7 @@ abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextS
     override fun getById(id: Int): Optional<T> {
         try {
             this.dbContext.connection.use({ connection: Connection ->
-                this.dbContext.executeStoredQuery(folder + "/selectbyid", connection,
+                this.dbContext.executeStoredQuery("$folder/selectbyid", connection,
                         id).use({ preparedStatement ->
                     preparedStatement.executeQuery().use({ resultSet ->
                         if (resultSet.next()) {
@@ -95,7 +95,7 @@ abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextS
         get() {
             try {
                 this.dbContext.connection.use { connection ->
-                    this.dbContext.executeStoredQuery(folder + "/count", connection).use { preparedStatement ->
+                    this.dbContext.executeStoredQuery("$folder/count", connection).use { preparedStatement ->
                         preparedStatement.executeQuery().use { resultSet ->
                             resultSet.next()
                             return resultSet.getInt(1)
@@ -117,7 +117,7 @@ abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextS
         val statsList = ArrayList<T>()
         try {
             this.dbContext.connection.use { connection ->
-                this.dbContext.executeStoredQuery(folder + "/selectall", connection).use { preparedStatement ->
+                this.dbContext.executeStoredQuery("$folder/selectall", connection).use { preparedStatement ->
                     preparedStatement.executeQuery().use { resultSet ->
                         while (resultSet.next()) {
                             val stats = this.from(resultSet)
@@ -141,7 +141,7 @@ abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextS
     protected fun delete(item: T){
         try {
             this.dbContext.connection.use { connection ->
-                this.dbContext.executeStoredUpdate(folder + "/delete", connection,
+                this.dbContext.executeStoredUpdate("$folder/delete", connection,
                         item.id)
             }
         } catch (e: SQLException) {

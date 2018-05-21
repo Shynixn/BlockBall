@@ -140,7 +140,7 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
         }
 
         templateNames.forEach { t ->
-            copyResourceToTarget("template/" + t, t)
+            copyResourceToTarget("template/$t", t)
         }
     }
 

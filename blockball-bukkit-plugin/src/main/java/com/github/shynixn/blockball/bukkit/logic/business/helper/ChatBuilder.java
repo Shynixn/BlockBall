@@ -221,7 +221,7 @@ public class ChatBuilder {
             for (final Player player : players) {
                 sendPacket(player, packet);
             }
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException | InstantiationException | NoSuchFieldException e) {
+        } catch (final ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException | InstantiationException | NoSuchFieldException e) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to send packet.", e);
         }
     }

@@ -144,7 +144,7 @@ class NetworkSignRepository : LinkSignController<Location> {
                     }
                 }
                 for (i in signs.indices) {
-                    configuration.set("signs." + i, (signs[i] as ConfigurationSerializable).serialize())
+                    configuration.set("signs.$i", (signs[i] as ConfigurationSerializable).serialize())
                 }
                 configuration.save(file)
             } catch (e: IOException) {
