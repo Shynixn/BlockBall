@@ -4,9 +4,12 @@ import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.bukkit.business.controller.BukkitGameController
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.service.VirtualArenaService
 import com.github.shynixn.blockball.bukkit.dependencies.worldedit.WorldEditConnection
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.helper.sendActionBarMessage
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
+import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.Inject
 import org.bukkit.ChatColor
@@ -46,7 +49,10 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
     }
 
     @Inject
-    private var arenaRepository: ArenaRepository? = null
+    private lateinit var arenaRepository: ArenaRepository
+
+    @Inject
+    private lateinit var virtualArenaService: VirtualArenaService
 
     /**
      * Returns the key of the command when this page should be executed.
@@ -66,13 +72,13 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.ARENA_CREATE) {
             if (cache[0] == null) {
-                cache[0] = arenaRepository!!.create()
+                cache[0] = arenaRepository.create()
             }
         } else if (command == BlockBallCommand.ARENA_EDIT) {
-            cache[0] = arenaRepository?.getArenaByName(args[2])!!
+            cache[0] = arenaRepository.getArenaByName(args[2])!!
         } else if (command == BlockBallCommand.ARENA_DELETE) {
-            val arena = arenaRepository?.getArenaByName(args[2])!!
-            arenaRepository!!.remove(arena)
+            val arena = arenaRepository.getArenaByName(args[2])!!
+            arenaRepository.remove(arena)
             return CommandResult.BACK
         } else if (command == BlockBallCommand.ARENA_ENABLE) {
             val arena = cache[0] as BukkitArena
@@ -98,6 +104,8 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
             val right = WorldEditConnection.getRightSelection(player)
             if (left != null && right != null) {
                 arena.meta.redTeamMeta.goal.setCorners(left, right)
+                virtualArenaService.displayForPlayer(player, arena)
+                player.sendActionBarMessage(Config.prefix + "Changed goal selection. Rendering virtual blocks...")
             } else {
                 return CommandResult.WESELECTION_MISSING
             }
@@ -107,6 +115,8 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
             val right = WorldEditConnection.getRightSelection(player)
             if (left != null && right != null) {
                 arena.meta.blueTeamMeta.goal.setCorners(left, right)
+                virtualArenaService.displayForPlayer(player, arena)
+                player.sendActionBarMessage(Config.prefix + "Changed goal selection. Rendering virtual blocks...")
             } else {
                 return CommandResult.WESELECTION_MISSING
             }
