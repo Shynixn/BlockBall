@@ -10,6 +10,14 @@ This administration command opens the chat UI to modify and create new games.
 * Server console ✘
 * Command blocks ✘
 
+/blockballstop <id/name>
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+This administration command stops the game with the given id or name.
+
+* Players (require permissions) ✔
+* Server console ✔
+* Command blocks ✔
 
 /blockballreload
 ~~~~~~~~~~~~~~~~

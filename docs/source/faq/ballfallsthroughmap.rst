@@ -1,4 +1,4 @@
-The Ball falls through the ground?
+The ball falls through the ground?
 ==================================
 
 Sometimes the ball is not synchronized with your world or simply requires another relocation distance
