@@ -62,7 +62,7 @@ public class ConnectionContextService implements AutoCloseable {
         if (plugin == null)
             throw new IllegalArgumentException("Plugin cannot be null!");
         this.retriever = fileName -> {
-            try (InputStream stream = plugin.getResource("sql/" + fileName + ".sql")) {
+            try (final InputStream stream = plugin.getResource("sql/" + fileName + ".sql")) {
                 return IOUtils.toString(stream, "UTF-8");
             } catch (final IOException e) {
                 Bukkit.getLogger().log(Level.WARNING, "Cannot read file.", fileName);
@@ -81,7 +81,7 @@ public class ConnectionContextService implements AutoCloseable {
                 if (!file.exists())
                     file.createNewFile();
                 this.enableData(ConnectionContextService.SQLITE_DRIVER, "jdbc:sqlite:" + file.getAbsolutePath(), null, null, this.retriever);
-                try (Connection connection = this.getConnection()) {
+                try (final Connection connection = this.getConnection()) {
                     this.execute("PRAGMA foreign_keys=ON", connection);
                 }
             } catch (final SQLException e) {
@@ -89,7 +89,7 @@ public class ConnectionContextService implements AutoCloseable {
             } catch (final IOException e) {
                 Bukkit.getLogger().log(Level.WARNING, "Cannot read file.", e);
             }
-            try (Connection connection = this.getConnection()) {
+            try (final Connection connection = this.getConnection()) {
                 for (final String data : this.getStringFromFile("create-sqlite").split(Pattern.quote(";"))) {
                     this.executeUpdate(data, connection);
                 }
@@ -113,7 +113,7 @@ public class ConnectionContextService implements AutoCloseable {
                 this.connectInternal(plugin);
                 return;
             }
-            try (Connection connection = this.getConnection()) {
+            try (final Connection connection = this.getConnection()) {
                 for (final String data : this.getStringFromFile("create-mysql").split(Pattern.quote(";"))) {
                     this.executeUpdate(data, connection);
                 }
@@ -205,7 +205,7 @@ public class ConnectionContextService implements AutoCloseable {
             throw new IllegalArgumentException("Connection cannot be null!");
         if (connection.isClosed())
             throw new IllegalArgumentException("Connection is closed. Cannot create statement!");
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             this.setParameters(preparedStatement, parameters);
             return preparedStatement.execute();
         }
@@ -278,7 +278,7 @@ public class ConnectionContextService implements AutoCloseable {
             throw new IllegalArgumentException("Connection cannot be null!");
         if (connection.isClosed())
             throw new IllegalArgumentException("Connection is closed. Cannot create statement!");
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             this.setParameters(preparedStatement, parameters);
             return preparedStatement.executeUpdate();
         }
@@ -315,10 +315,10 @@ public class ConnectionContextService implements AutoCloseable {
             throw new IllegalArgumentException("Connection cannot be null!");
         if (connection.isClosed())
             throw new IllegalArgumentException("Connection is closed. Cannot create statement!");
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (final PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             this.setParameters(preparedStatement, parameters);
             preparedStatement.executeUpdate();
-            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+            try (final ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
                 resultSet.next();
                 return resultSet.getInt(1);
             }

@@ -101,7 +101,7 @@ public final class WorldEditConnection {
             object = ReflectionUtils.invokeMethodByObject(getPlugin(), "getSelection", new Class[]{Player.class}, new Object[]{player});
             if (object != null)
                 return (Location) ReflectionUtils.invokeMethodByObject(object, type, new Class[0], new Object[0], Class.forName("com.sk89q.worldedit.bukkit.selections.RegionSelection"));
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
+        } catch (final NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
             Bukkit.getLogger().log(Level.WARNING, "Cannot access WorldEdit.", e);
         }
         return null;

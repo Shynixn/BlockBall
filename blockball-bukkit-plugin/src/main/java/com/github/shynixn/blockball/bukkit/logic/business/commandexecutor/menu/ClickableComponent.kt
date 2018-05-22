@@ -1,16 +1,15 @@
-package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
+package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder;
-import org.bukkit.ChatColor;
+import org.bukkit.ChatColor
 
 /**
- * Created by Shynixn 2017.
+ * Enum for different clickable components in the chat ui.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +29,16 @@ import org.bukkit.ChatColor;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public enum ClickableComponent {
+enum class ClickableComponent(
+        /*** Returns the displayed text of the component.*/
+        val text: String,
+        /*** Returns the displayed color of the component.*/
+        val color: ChatColor) {
+
     WORLDEDIT(" [worldedit..]", ChatColor.GOLD),
     EDIT(" [edit..]", ChatColor.GREEN),
     COPY_ARMOR(" [copy armor..]", ChatColor.GOLD),
+    COPY_INVENTORY(" [copy inventory..]", ChatColor.GOLD),
     PAGE(" [page..]", ChatColor.YELLOW),
     PREVIEW(" [preview..]", ChatColor.GRAY),
     ADD(" [add..]", ChatColor.BLUE),
@@ -43,24 +48,4 @@ public enum ClickableComponent {
 
     INVALID(" [page..]", ChatColor.BLACK),
     TOGGLE(" [toggle..]", ChatColor.LIGHT_PURPLE);
-
-    private final String text;
-    private final ChatColor color;
-
-    ClickableComponent(String text, ChatColor color) {
-      this.text = text;
-      this.color = color;
-    }
-
-    public String getText() {
-        return this.text;
-    }
-
-    public ChatColor getColor() {
-        return this.color;
-    }
-
-    public ChatBuilder.Component addComponent(ChatBuilder builder)  {
-        return builder.component(this.text).setColor(this.color);
-    }
 }

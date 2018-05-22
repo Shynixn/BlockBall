@@ -2,15 +2,15 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
+import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.helper.stripChatColors
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.regex.Pattern
 
 /**
- * Created by Shynixn 2018.
+ * Handles all command patterns to join games and arenas.
  * <p>
  * Version 1.2
  * <p>
@@ -39,7 +39,7 @@ import java.util.regex.Pattern
 class JoinCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExecutor.UnRegistered(plugin.config.get("global-join"), plugin as JavaPlugin) {
 
     @Inject
-    private var gameController: GameRepository? = null
+    private lateinit var gameController: GameRepository
 
     /**
      * Can be overwritten to listen to player executed commands.
@@ -47,63 +47,51 @@ class JoinCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExe
      * @param player player
      * @param args   args
      */
-    override fun onPlayerExecuteCommand(player: Player, args: Array<out String>?) {
-        if (args!!.size >= 2) {
-            gameController!!.games.forEach { game ->
-                val redTeamArgumentsAmount = game.arena.meta.redTeamMeta.displayName.split(Pattern.quote(" ")).size
-                val reddata = mergeArgs(0, redTeamArgumentsAmount + 1, args)
-                if (reddata.equals(game.arena.meta.redTeamMeta.displayName.stripChatColors(), true)) {
-                    val gameArgumentsAmount = game.arena.name.split(Pattern.quote(" ")).size
-                    val result = mergeArgs(redTeamArgumentsAmount + 1, gameArgumentsAmount, args)
-                    if (result == game.arena.name) {
-                        game.join(player, Team.RED)
-                        return
-                    }
-                }
-                val blueTeamArgumentsAmount = game.arena.meta.blueTeamMeta.displayName.split(Pattern.quote(" ")).size
-                val bluedata = mergeArgs(0, blueTeamArgumentsAmount + 1, args)
-                if (bluedata.equals(game.arena.meta.blueTeamMeta.displayName.stripChatColors(), true)) {
-                    val gameArgumentsAmount = game.arena.name.split(Pattern.quote(" ")).size
-                    val result = mergeArgs(blueTeamArgumentsAmount + 1, gameArgumentsAmount, args)
-                    println(result)
-                    if (result == game.arena.name) {
-                        game.join(player, Team.BLUE)
-                        return
-                    }
-                }
+    override fun onPlayerExecuteCommand(player: Player, args: Array<out String>) {
+        if (args.isEmpty()) {
+            return
+        }
+
+        val mergedArgs = mergeArgs(0, args.size, args)
+        gameController.getAll().forEach { g ->
+            if (g.arena.name.equals(mergedArgs, true)) {
+                g.join(player)
+                return
+            } else if (g.arena.displayName.convertChatColors().stripChatColors().equals(mergedArgs, true)) {
+                g.join(player)
+                return
             }
         }
-        if (args.isNotEmpty()) {
-            val mergedArgs = mergeArgs(0, args.size, args)
-            gameController!!.getAll().forEach { g ->
-                if (g.arena.name.equals(mergedArgs, true)) {
-                    g.join(player)
-                    return
-                } else if (g.arena.displayName.equals(mergedArgs, true)) {
-                    g.join(player)
-                    return
-                }
+
+        try {
+            val success = attemptJoiningGame(player, mergedArgs.split("|"))
+            if (!success) {
+                attemptJoiningGame(player, mergedArgs.split("/"))
             }
+        } catch (e: Throwable) {
+            // Ignore all errors.
+        }
+    }
 
-            try {
-                val data = mergedArgs.split("|")
-
-                gameController!!.getAll().forEach { g ->
-                    if (g.arena.name == data[1]) {
-                        var team: Team? = null
-                        if (data[0] == g.arena.meta.redTeamMeta.displayName) {
-                            team = Team.RED
-                        } else if (data[1] == g.arena.meta.blueTeamMeta.displayName) {
-                            team = Team.BLUE
-                        }
-
-                        g.join(player, team)
-                    }
+    /**
+     * Tries to join the player with the given arguments.
+     * Returns true if successful.
+     */
+    private fun attemptJoiningGame(player: Player, args: List<String>): Boolean {
+        gameController.getAll().forEach { g ->
+            if (g.arena.name == args[0] || g.arena.displayName.convertChatColors().stripChatColors().equals(args[0], true)) {
+                var team: Team? = null
+                if (args[1].equals(g.arena.meta.redTeamMeta.displayName.convertChatColors().stripChatColors(), true)) {
+                    team = Team.RED
+                } else if (args[1].equals(g.arena.meta.blueTeamMeta.displayName.convertChatColors().stripChatColors(), true)) {
+                    team = Team.BLUE
                 }
 
-            } catch (e: Exception) {
-
+                g.join(player, team)
+                return true
             }
         }
+
+        return false
     }
 }

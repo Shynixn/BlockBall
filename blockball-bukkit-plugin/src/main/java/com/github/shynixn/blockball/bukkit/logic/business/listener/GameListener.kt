@@ -53,7 +53,7 @@ import org.bukkit.plugin.Plugin
 @Singleton
 class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
     @Inject
-    private var gameController: GameRepository? = null
+    private lateinit var gameController: GameRepository
     var placementCallBack: MutableMap<Player, CallBack> = HashMap()
 
     /**
@@ -61,16 +61,15 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onPlayerQuitEvent(event: PlayerQuitEvent) {
-        gameController!!.getGameFromPlayer(event.player)?.leave(event.player)
+        gameController.getGameFromPlayer(event.player)?.leave(event.player)
     }
-
 
     /**
      * Gets called when the foodLevel changes and cancels it if the player is inside of a game.
      */
     @EventHandler
     fun onPlayerHungerEvent(event: FoodLevelChangeEvent) {
-        val game = gameController!!.getGameFromPlayer(event.entity as Player)
+        val game = gameController.getGameFromPlayer(event.entity as Player)
         if (game != null) {
             event.isCancelled = true
         }
@@ -81,7 +80,7 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onPlayerClickInventoryEvent(event: InventoryClickEvent) {
-        val game = gameController!!.getGameFromPlayer(event.whoClicked as Player)
+        val game = gameController.getGameFromPlayer(event.whoClicked as Player)
         if (game != null) {
             event.isCancelled = true
             event.whoClicked.closeInventory()
@@ -93,7 +92,7 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onPlayerOpenInventoryEvent(event: InventoryOpenEvent) {
-        val game = gameController!!.getGameFromPlayer(event.player as Player)
+        val game = gameController.getGameFromPlayer(event.player as Player)
         if (game != null) {
             event.isCancelled = true
         }
@@ -107,7 +106,7 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
         if (event.entity !is Player)
             return
         val player = event.entity as Player
-        val game = gameController!!.getGameFromPlayer(player)
+        val game = gameController.getGameFromPlayer(player)
         if (game != null && event.cause == EntityDamageEvent.DamageCause.FALL) {
             event.isCancelled = true
         }
@@ -121,7 +120,7 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onBallInteractEvent(event: BallInteractEvent) {
-        val game = gameController!!.games.find { p -> p.ball != null && p.ball!! == event.ball }
+        val game = gameController.games.find { p -> p.ball != null && p.ball!! == event.ball }
         if (game != null && game is SoccerGame) {
             game.lastInteractedEntity = event.entity
         }
@@ -136,13 +135,15 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
             return
         if (event.clickedBlock.type != Material.SIGN_POST && event.clickedBlock.type != Material.WALL_SIGN)
             return
+
         val location = event.clickedBlock.location.toPosition()
         if (placementCallBack.containsKey(event.player)) {
             placementCallBack[event.player]!!.run(location)
             placementCallBack.remove(event.player)
             return
         }
-        gameController!!.getAll().forEach { p ->
+
+        gameController.getAll().forEach { p ->
             when {
                 p.arena.meta.lobbyMeta.joinSigns.contains(location) -> p.join(event.player, null)
                 p.arena.meta.lobbyMeta.leaveSigns.contains(location) -> p.leave(event.player)
@@ -159,11 +160,9 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
     fun onPlaceHolderRequestEvent(event: PlaceHolderRequestEvent) {
         try {
             PlaceHolder.values().forEach { p ->
-
                 if (event.name.startsWith(p.placeHolder)) {
-
                     val data = event.name.split("_")
-                    val game = this.gameController!!.getGameFromArenaName(data[1])
+                    val game = this.gameController.getGameFromArenaName(data[1])
 
                     if (game != null) {
                         event.result = data[0].replaceGamePlaceholder(game)

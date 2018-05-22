@@ -118,7 +118,7 @@ class HologramPage : Page(HologramPage.ID, EffectsSettingsPage.ID) {
                 .builder().nextLine()
 
         if (selectedHologram != null) {
-            builder.component("- Selected hologram: " + selectedHologramText).builder()
+            builder.component("- Selected hologram: $selectedHologramText").builder()
                     .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
                     .setHoverText(selectedHologramHover).builder()
                     .component(ClickableComponent.DELETE.text).setColor(ClickableComponent.DELETE.color)

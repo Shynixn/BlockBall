@@ -56,6 +56,9 @@ interface TeamMeta<Location, ItemStack> {
     /** Armor wearing this team. */
     var armorContents: Array<ItemStack?>
 
+    /** Inventory this team is getting when playing. */
+    var inventoryContents: Array<ItemStack?>
+
     /** Title of the message getting played when a player scores a goal. */
     var scoreMessageTitle: String
 

@@ -90,9 +90,9 @@ public class UpdateUtils {
      */
     private static String getLatestReleaseVersion(long resourceId) throws IOException {
         final HttpsURLConnection httpsURLConnection = (HttpsURLConnection) new URL(BASE_URL + resourceId).openConnection();
-        try (InputStream stream = httpsURLConnection.getInputStream()) {
-            try (InputStreamReader reader = new InputStreamReader(stream)) {
-                try (BufferedReader bufferedReader = new BufferedReader(reader)) {
+        try (final InputStream stream = httpsURLConnection.getInputStream()) {
+            try (final InputStreamReader reader = new InputStreamReader(stream)) {
+                try (final BufferedReader bufferedReader = new BufferedReader(reader)) {
                     return bufferedReader.readLine();
                 }
             }

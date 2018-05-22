@@ -50,7 +50,7 @@ class PlayerStorage(
     private var allowFlying: Boolean = false
     private var walkingSpeed: Float = 0.toFloat()
     private var scoreboard: Scoreboard? = null
-    private var gamemode : GameMode? = null
+    private var gamemode: GameMode? = null
 
     /** Team of the player. */
     override var team: Team? = null
@@ -68,6 +68,7 @@ class PlayerStorage(
             this.allowFlying = player.allowFlight
             this.walkingSpeed = player.walkSpeed
             this.scoreboard = player.scoreboard
+            this.inventoryContents = player.inventory?.contents?.clone()
         } else if (gameType == GameType.MINIGAME) {
             this.gamemode = player.gameMode
             this.level = player.level
@@ -93,6 +94,7 @@ class PlayerStorage(
             player.isFlying = this.flying
             player.walkSpeed = this.walkingSpeed
             player.scoreboard = this.scoreboard
+            player.inventory.contents = this.inventoryContents
         } else if (gameType == GameType.MINIGAME) {
             player.gameMode = gamemode
             player.level = this.level

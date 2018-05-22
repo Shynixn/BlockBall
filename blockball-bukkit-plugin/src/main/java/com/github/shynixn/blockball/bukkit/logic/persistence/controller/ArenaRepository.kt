@@ -157,7 +157,7 @@ class ArenaRepository(private val items: MutableList<BukkitArena> = ArrayList())
             val serializable = item as ConfigurationSerializable
             val data = serializable.serialize()
             for (key in data.keys) {
-                configuration.set("arena." + key, data[key])
+                configuration.set("arena.$key", data[key])
             }
             configuration.save(file)
         } catch (ex: IOException) {

@@ -54,19 +54,29 @@ Creating the arena
 * The action *[location..]* copies your current player position.
 * You do not have to remember all of this, all actions provide tooltips by hovering the mouse on top of them.
 
-3. Select the the arena via worldedit and press *[worldedit..]* at Center.
+3. Select the arena via worldedit and press *[worldedit..]* at Center.
 
 .. image:: ../_static/images/arena7.png
 
-4. Use the same technique to select the goal for the red and blue team.
 
-5. Move your character to the center or ball spawnpoint of the arena and press *[location..]*
+4. Select the red goal via worldedit and press *[worldedit..]* at goal red.
 
-6. Last but not least do not forget to always save your changes. If you press *>>Save<<* only the arena properties
+.. image:: ../_static/images/goal_selection_1.png
+
+After selecting a goal, virtual blocks get rendered for 20 seconds at the location to display your selection.
+
+.. image:: ../_static/images/goal_selection_2.png
+
+
+5. Repeat step 4 for the goal blue.
+
+6. Move your character to the center or ball spawnpoint of the arena and press *[location..]*
+
+7. Last but not least do not forget to always save your changes. If you press *>>Save<<* only the arena properties
 get saved and does not have an impact on other BlockBall games running on your server, pressing *>>Save and reload<<**
 restarts all BlockBall games on your server and starts initial games.
 
-7. In this case we have to press *>>Save and reload<<* for our game to start.
+8. In this case we have to press *>>Save and reload<<* for our game to start.
 
 
 Checking if everything is working

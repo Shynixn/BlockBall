@@ -34,9 +34,6 @@ open class PersistenceObject : BukkitPersistenceAble {
 
     /** Returns the id of the object. */
     override var id: Long = 0
-        set(value) {
-            field = value
-        }
 
     /** Serializes the given object. */
     override fun serialize(): MutableMap<String, Any> {

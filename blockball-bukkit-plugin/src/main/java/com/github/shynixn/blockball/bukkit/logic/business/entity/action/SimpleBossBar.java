@@ -85,7 +85,7 @@ public class SimpleBossBar implements AutoCloseable {
         try {
             final Method method = (Method) reflectionCache[6];
             method.invoke(this.bossBar, visible);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -99,7 +99,7 @@ public class SimpleBossBar implements AutoCloseable {
         try {
             final Method method = (Method) reflectionCache[7];
             return (boolean) method.invoke(this.bossBar);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -113,7 +113,7 @@ public class SimpleBossBar implements AutoCloseable {
         try {
             final Method method = (Method) reflectionCache[8];
             method.invoke(this.bossBar, percentage);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -127,7 +127,7 @@ public class SimpleBossBar implements AutoCloseable {
         try {
             final Method method = (Method) reflectionCache[9];
             return (double) method.invoke(this.bossBar);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -141,7 +141,7 @@ public class SimpleBossBar implements AutoCloseable {
         try {
             final Method method = (Method) reflectionCache[10];
             method.invoke(this.bossBar, getEnumBarColor(color));
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -155,7 +155,7 @@ public class SimpleBossBar implements AutoCloseable {
         try {
             final Method method = (Method) reflectionCache[11];
             return ((Enum) method.invoke(this.bossBar)).name();
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -169,7 +169,7 @@ public class SimpleBossBar implements AutoCloseable {
         try {
             final Method method = (Method) reflectionCache[12];
             method.invoke(this.bossBar, getEnumBarStyle(style));
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -183,7 +183,7 @@ public class SimpleBossBar implements AutoCloseable {
         try {
             final Method method = (Method) reflectionCache[13];
             return ((Enum) method.invoke(this.bossBar)).name();
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -197,7 +197,7 @@ public class SimpleBossBar implements AutoCloseable {
         try {
             final Method method = (Method) reflectionCache[14];
             method.invoke(this.bossBar, message);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -211,7 +211,7 @@ public class SimpleBossBar implements AutoCloseable {
         try {
             final Method method = (Method) reflectionCache[15];
             return (String) method.invoke(this.bossBar);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -224,9 +224,9 @@ public class SimpleBossBar implements AutoCloseable {
     public void addFlag(String flag) {
         try {
             final Method method = (Method) reflectionCache[16];
-            final Object enumflag = getEnumBarFlag(flag);
-            method.invoke(this.bossBar, enumflag);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            final Object enumFlag = getEnumBarFlag(flag);
+            method.invoke(this.bossBar, enumFlag);
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -239,9 +239,9 @@ public class SimpleBossBar implements AutoCloseable {
     public void removeFlag(String flag) {
         try {
             final Method method = (Method) reflectionCache[17];
-            final Object enumflag = getEnumBarFlag(flag);
-            method.invoke(this.bossBar, enumflag);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            final Object enumFlag = getEnumBarFlag(flag);
+            method.invoke(this.bossBar, enumFlag);
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -266,7 +266,7 @@ public class SimpleBossBar implements AutoCloseable {
             for (final Player player : players) {
                 method.invoke(this.bossBar, player);
             }
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -291,7 +291,7 @@ public class SimpleBossBar implements AutoCloseable {
             for (final Player player : players) {
                 method.invoke(this.bossBar, player);
             }
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -331,15 +331,15 @@ public class SimpleBossBar implements AutoCloseable {
         }
     }
 
-    private static Object getEnumBarColor(String name) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private static Object getEnumBarColor(String name) throws InvocationTargetException, IllegalAccessException {
         return ((Method) reflectionCache[0]).invoke(null, name);
     }
 
-    private static Object getEnumBarStyle(String name) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private static Object getEnumBarStyle(String name) throws InvocationTargetException, IllegalAccessException {
         return ((Method) reflectionCache[1]).invoke(null, name);
     }
 
-    private static Object getEnumBarFlag(String name) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private static Object getEnumBarFlag(String name) throws InvocationTargetException, IllegalAccessException {
         return ((Method) reflectionCache[2]).invoke(null, name);
     }
 
@@ -385,10 +385,9 @@ public class SimpleBossBar implements AutoCloseable {
      * This method is invoked automatically on objects managed by the
      * {@code try}-with-resources statement.
      *
-     * @throws Exception if this resource cannot be closed
      */
     @Override
-    public void close() throws Exception {
+    public void close() {
         this.removePlayer(this.getPlayers());
         this.bossBar = null;
     }
