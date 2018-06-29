@@ -11,11 +11,11 @@ import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.GameScoreboard
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleBossBar
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleHologram
 import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
+import com.github.shynixn.blockball.bukkit.logic.business.service.ScoreboardServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -28,6 +28,8 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.scoreboard.DisplaySlot
+import org.bukkit.scoreboard.Scoreboard
 import java.util.logging.Level
 
 /**
@@ -76,11 +78,13 @@ abstract class LowLevelGame(
     var closed: Boolean = false
     private var bumperTimer = 20L
 
-    private var scoreboard: GameScoreboard? = null
+    private var scoreboard: Scoreboard? = null
 
     private var bossbar: SimpleBossBar? = null
 
     private var holograms: MutableList<SimpleHologram> = ArrayList()
+
+    private val scoreboardService = ScoreboardServiceImpl()
 
     /** Amount of points the blue team has scored. */
     override val bluePoints: Int
@@ -153,6 +157,12 @@ abstract class LowLevelGame(
         } else if (stats.team == Team.BLUE) {
             this.blueTeam.remove(player)
             player.sendMessage(Config.prefix + arena.meta.blueTeamMeta.leaveMessage)
+        }
+
+        if (scoreboard != null) {
+            if (player.scoreboard == scoreboard) {
+                player.scoreboard = Bukkit.getScoreboardManager().newScoreboard
+            }
         }
 
         if (bossbar != null) {
@@ -254,12 +264,35 @@ abstract class LowLevelGame(
         }
     }
 
+    /**
+     * Updates the scoreboard for all players when enabled.
+     */
     private fun updateScoreboard() {
-        if (scoreboard == null && arena.meta.scoreboardMeta.enabled) {
-            scoreboard = GameScoreboard(this)
+        if (!arena.meta.scoreboardMeta.enabled) {
+            return
         }
-        if (scoreboard != null) {
-            getPlayers().forEach { p -> scoreboard!!.updateScoreboard(p) }
+
+        if (scoreboard == null) {
+            scoreboard = Bukkit.getScoreboardManager().newScoreboard
+
+            scoreboardService.setConfiguration(scoreboard, DisplaySlot.SIDEBAR, arena.meta.scoreboardMeta.title)
+        }
+
+        getPlayers().forEach { p ->
+            if (scoreboard != null) {
+                if (p.scoreboard != scoreboard) {
+                    p.scoreboard = this.scoreboard
+                }
+
+                val lines = arena.meta.scoreboardMeta.lines
+
+                var j = lines.size
+                for (i in 0 until lines.size) {
+                    val line = lines[i].replaceGamePlaceholder(this)
+                    scoreboardService.setLine(scoreboard, j, line)
+                    j--
+                }
+            }
         }
     }
 
@@ -351,7 +384,6 @@ abstract class LowLevelGame(
         return false
     }
 
-
     /**
      * Closes this resource, relinquishing any underlying resources.
      * This method is invoked automatically on objects managed by the
@@ -362,7 +394,6 @@ abstract class LowLevelGame(
         if (!closed) {
             status = GameStatus.DISABLED
             closed = true
-            scoreboard?.close()
             ingameStats.keys.toTypedArray().forEach { p -> leave(p); }
             ingameStats.clear()
             ball?.remove()
