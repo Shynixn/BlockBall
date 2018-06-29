@@ -1,15 +1,13 @@
-package com.github.shynixn.blockball.api.business.enumeration;
+package com.github.shynixn.blockball.api.business.enumeration
 
 /**
- * Copyright 2017 Shynixn
+ * Game states.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +27,17 @@ package com.github.shynixn.blockball.api.business.enumeration;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public enum GameStatus {
-    RUNNING, DISABLED, ENABLED
+enum class GameStatus {
+    /**
+     * State when the game is running.
+     */
+    RUNNING,
+    /**
+     * State when the game is disabled.
+     */
+    DISABLED,
+    /**
+     * State when the game is enabled but not running.
+     */
+    ENABLED
 }

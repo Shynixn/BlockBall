@@ -1,8 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
+import com.github.shynixn.blockball.bukkit.logic.business.helper.hasPermission
 import com.google.inject.Inject
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -55,8 +58,14 @@ class MinigameListener @Inject constructor(plugin: Plugin) : SimpleListener(plug
      */
     @EventHandler
     fun onPlayerExecuteCommand(event: PlayerCommandPreprocessEvent) {
-        if (event.message.startsWith("/blockball") || event.message.startsWith("/" + plugin.config.getString("global-leave.command")))
+        if (event.message.startsWith("/blockball")
+                || event.message.startsWith("/" + plugin.config.getString("global-leave.command"))
+                || Permission.STAFF.hasPermission(event.player) || Permission.ADMIN.hasPermission(event.player)
+                || event.player.isOp) {
+
             return
+        }
+
         val game = gameController!!.getGameFromPlayer(event.player)
         if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE)) {
             event.isCancelled = true

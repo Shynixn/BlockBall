@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.helper
 import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
@@ -125,6 +126,13 @@ internal fun ItemStack.setColor(color: Color): ItemStack {
         this.itemMeta = leatherMeta
     }
     return this
+}
+
+/**
+ * Returns if the given [player] has got this [Permission].
+ */
+internal fun Permission.hasPermission(player: Player): Boolean {
+    return player.hasPermission(this.permission)
 }
 
 internal fun String.stripChatColors(): String {
