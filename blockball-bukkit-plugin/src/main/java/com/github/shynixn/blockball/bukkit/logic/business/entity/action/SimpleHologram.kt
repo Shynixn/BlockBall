@@ -230,7 +230,7 @@ class SimpleHologram(private val plugin: Plugin, private val location: Location,
         synchronized(armorstands) {
             synchronized(watchers) {
                 watchers.keys.toTypedArray().forEach { p ->
-                    if (p.location.distance(location) < MAX_DISTANCE) {
+                    if (p.location.world == location.world && p.location.distance(location) < MAX_DISTANCE) {
                         if (this.watchers[p] == false) {
                             sendSpawnPacket(p)
                             this.watchers[p] = true
