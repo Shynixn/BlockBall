@@ -15,6 +15,7 @@ Description                                                               Permis
 =======================================================================   =======
 Allows to use the **/blockball** and **/blockballbungeecord** command     blockball.command.admin
 Allows to use the **/blockballreload** command                            blockball.command.reload
+Allows to use other commands during Minigames and BungeeCordgames         blockball.command.staff
 =======================================================================   =======
 
 Users
@@ -37,5 +38,6 @@ Description                                                              Permiss
 ======================================================================   =======
 Allows to use the **/blockball** and **/blockballbungeecord** command    blockball.command.admin
 Allows to use the **/blockballreload** command                           blockball.command.reload
+Allows to use other commands during Minigames and BungeeCordgames         blockball.command.staff
 Allows to use the **/bbjoin** and **/bbleave** command                   blockball.command.use
 ======================================================================   =======
