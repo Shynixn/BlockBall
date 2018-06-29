@@ -110,6 +110,10 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
     /** Join the game. */
     override fun join(player: Player, team: Team?): Boolean {
+        if (!this.isAllowedToJoinWithPermissions(player)) {
+            return false
+        }
+
         if (this.hasJoined(player) && team != null) {
             var targetTeam = team
             val amount = getAmountOfQueuedPlayersInThisTeam(targetTeam)

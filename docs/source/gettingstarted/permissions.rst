@@ -25,8 +25,9 @@ Users
 Description                                              Permission
 =======================================================  ================================================
 Allows to use the **/bbjoin** and **/bbleave** command   blockball.command.use
+Allows to join all games                                 blockball.game.join.all
+Allows to join the specified game                        blockball.game.join.<id>
 =======================================================  ================================================
-
 
 Permissionlist
 ~~~~~~~~~~~~~~

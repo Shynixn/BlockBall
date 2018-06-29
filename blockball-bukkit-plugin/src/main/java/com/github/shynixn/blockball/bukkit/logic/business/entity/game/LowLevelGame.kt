@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.entity.InGameStats
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
@@ -307,6 +308,20 @@ abstract class LowLevelGame(
         list.addAll(redTeam)
         list.addAll(blueTeam)
         return list
+    }
+
+    /**
+     * Returns if the given [player] is allowed to join the match.
+     */
+    protected fun isAllowedToJoinWithPermissions(player: Player): Boolean {
+        if (player.hasPermission(Permission.JOIN.permission + ".all")
+                || player.hasPermission(Permission.JOIN.permission + "." + this.arena.name)) {
+            return true
+        }
+
+        player.sendMessage(Config.prefix + Config.joinGamePermissionmessage)
+
+        return false
     }
 
     private fun onUpdateSigns() {

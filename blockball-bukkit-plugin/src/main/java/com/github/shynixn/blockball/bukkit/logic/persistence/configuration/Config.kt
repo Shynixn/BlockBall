@@ -52,6 +52,19 @@ internal object Config : SimpleConfig() {
             return this.getData<String>("messages.prefix")
         }
 
+    /**
+     * Returns the message being played when a user cannot join a game because of permission issues.
+     */
+    val joinGamePermissionmessage: String
+        get() {
+            val tmp = this.getData<String>("messages.no-permission-join-game")
+            if (tmp == null) {
+                throw IllegalArgumentException("Config option 'no-permission-join-game' could not be loaded!")
+            }
+
+            return tmp
+        }
+
     val stateSignEnabled: String?
         get() {
             return this.getData<String>("messages.state-sign-enabled")

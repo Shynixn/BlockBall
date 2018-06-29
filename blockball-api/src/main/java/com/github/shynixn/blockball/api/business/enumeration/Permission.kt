@@ -40,5 +40,10 @@ enum class Permission(
     /**
      * Permission for admins to configure and execute commands.
      */
-    ADMIN("blockball.command.admin")
+    ADMIN("blockball.command.admin"),
+
+    /**
+     * Permission for users to join games.
+     */
+    JOIN("blockball.game.join")
 }
