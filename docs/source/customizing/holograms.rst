@@ -5,7 +5,7 @@ It is possible to display multiple holograms during a match all around of the ar
 
 .. image:: ../_static/images/hologram1.jpg
 
-You can use it to display team names, the remaining time, scores for each team and more. You can find all available placeholders here.
+You can use it to display team names, the remaining time, scores for each team and more. You can find all available placeholders `here <placeholders.html>`__.
 
 Holograms do even support multiple lines:
 
