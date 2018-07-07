@@ -5,7 +5,7 @@ It is possible to display a scoreboard during a match on a players screen. It lo
 
 .. image:: ../_static/images/scoreboard1.jpg
 
-You can use it to display team names, the remaining time, scores for each team and more. You can find all available placeholders here.
+You can use it to display team names, the remaining time, scores for each team and more. You can find all available placeholders `here <placeholders.html>`__.
 
 Configuring ingame
 ~~~~~~~~~~~~~~~~~~
