@@ -1,9 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.entity.action
-
-import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
-import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
-import org.bukkit.entity.Player
-import org.bukkit.scoreboard.DisplaySlot
+package com.github.shynixn.blockball.api.business.service
 
 /**
  * Created by Shynixn 2018.
@@ -32,27 +27,14 @@ import org.bukkit.scoreboard.DisplaySlot
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameScoreboard(private val game: BukkitGame) : SimpleScoreboard() {
+interface ScoreboardService {
+    /**
+     * Sets the configuration of the given scoreboard.
+     */
+    fun <Scoreboard> setConfiguration(scoreboard: Scoreboard, displaySlot: Any, title: String)
 
-    init {
-        this.setDefaultObjective(SimpleScoreboard.DUMMY_TYPE)
-        this.setDefaultTitle(game.arena.meta.scoreboardMeta.title)
-        this.setDefaultDisplaySlot(DisplaySlot.SIDEBAR)
-    }
-
-    /** Updates the scoreboard for the given player **/
-    fun updateScoreboard(player: Player) {
-        if (!this.containsPlayer(player)) {
-            this.addPlayer(player)
-        }
-        val lines = game.arena.meta.scoreboardMeta.lines
-        var i = 0
-        var j = lines.size
-        while (i < lines.size) {
-            val line = lines[i].replaceGamePlaceholder(game)
-            this.setDefaultLine(j, line)
-            i++
-            j--
-        }
-    }
+    /**
+     * Sets the [text] at the given [scoreboard] and [lineNumber].
+     */
+    fun <Scoreboard> setLine(scoreboard: Scoreboard, lineNumber: Int, text: String)
 }

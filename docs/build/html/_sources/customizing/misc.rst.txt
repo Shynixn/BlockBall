@@ -5,3 +5,4 @@ Misc
    areaprotection
    othergame
    textbook
+   placeholders

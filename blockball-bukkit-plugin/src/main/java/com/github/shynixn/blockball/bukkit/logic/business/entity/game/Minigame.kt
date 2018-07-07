@@ -98,8 +98,10 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
     /** Leave the game. */
     override fun leave(player: Player) {
-        if (!ingameStats.containsKey(player))
+        if (!ingameStats.containsKey(player)) {
             return
+        }
+
         super.leave(player)
 
         val event = GameLeaveEvent(this, player)
@@ -108,20 +110,40 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
     /** Join the game. */
     override fun join(player: Player, team: Team?): Boolean {
-        if (this.hasJoined(player) && team != null && !this.arena.meta.lobbyMeta.onlyAllowEventTeams) {
-            val amount = getAmountOfQueuedPlayersInThisTeam(team)
-            if (team == Team.RED) {
+        if (!this.isAllowedToJoinWithPermissions(player)) {
+            return false
+        }
+
+        if (this.hasJoined(player) && team != null) {
+            var targetTeam = team
+            val amount = getAmountOfQueuedPlayersInThisTeam(targetTeam)
+
+            if (this.arena.meta.lobbyMeta.onlyAllowEventTeams) {
+                val blueTeamAmount = getAmountOfQueuedPlayersInThisTeam(Team.BLUE)
+                val redTeamAmount = getAmountOfQueuedPlayersInThisTeam(Team.RED)
+
+                if (blueTeamAmount > redTeamAmount) {
+                    targetTeam = Team.RED
+                } else if (blueTeamAmount < redTeamAmount) {
+                    targetTeam = Team.BLUE
+                }
+            }
+
+            if (targetTeam == Team.RED) {
                 if (amount >= this.arena.meta.redTeamMeta.maxAmount) {
                     return false
                 }
+
                 joinTeam(player, arena.meta.redTeamMeta, redTeam)
-            } else if (team == Team.BLUE) {
+            } else if (targetTeam == Team.BLUE) {
                 if (amount >= this.arena.meta.blueTeamMeta.maxAmount) {
                     return false
                 }
+
                 joinTeam(player, arena.meta.blueTeamMeta, blueTeam)
             }
-            ingameStats[player]!!.team = team
+
+            ingameStats[player]!!.team = targetTeam
             return true
         }
 
@@ -144,12 +166,13 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
      */
     private fun getAmountOfQueuedPlayersInThisTeam(team: Team): Int {
         var amount = 0
-        ingameStats.values.forEach { p ->
 
+        ingameStats.values.forEach { p ->
             if (p.team != null && p.team == team) {
                 amount++
             }
         }
+
         return amount
     }
 
@@ -169,15 +192,18 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             }
 
             gameCountdown--
+
             this.ingameStats.keys.toTypedArray().forEach { p ->
                 if (gameCountdown <= 10) {
                     p.exp = (gameCountdown.toFloat() / 10.0F)
                 }
                 p.level = gameCountdown
             }
+
             if (gameCountdown <= 0) {
                 close()
             }
+
             return
         }
 
@@ -185,28 +211,35 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
             if (lobbyCountdown > 10) {
                 val amountPlayers = this.arena.meta.blueTeamMeta.maxAmount + this.arena.meta.redTeamMeta.maxAmount
+
                 if (this.ingameStats.size >= amountPlayers) {
                     lobbyCountdown = 10
                 }
             }
+
             lobbyCountdown--
+
             this.ingameStats.keys.toTypedArray().forEach { p ->
                 if (lobbyCountdown <= 10) {
                     p.exp = 1.0F - (lobbyCountdown.toFloat() / 10.0F)
                 }
+
                 p.level = lobbyCountdown
             }
 
             if (lobbyCountdown < 5) {
                 this.playBlingSound()
             }
+
             if (lobbyCountdown <= 0) {
                 this.ingameStats.keys.toTypedArray().forEach { p ->
                     if (lobbyCountdown <= 10) {
                         p.exp = 1.0F
                     }
+
                     p.level = 0
                 }
+
                 gameCountdown = this.arena.meta.minigameMeta.matchDuration
                 isLobbyCountdownRunning = false
                 isGameRunning = true
@@ -226,6 +259,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
         if (isGameRunning) {
             gameCountdown--
+
             this.ingameStats.keys.toTypedArray().forEach { p ->
                 if (gameCountdown <= 10) {
                     p.exp = (gameCountdown.toFloat() / 10.0F)
@@ -244,6 +278,9 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         }
     }
 
+    /**
+     * Gets called when the game ends.
+     */
     private fun timesUpGame() {
         when {
             this.redGoals == this.blueGoals -> {
@@ -261,6 +298,9 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         }
     }
 
+    /**
+     * Starts the game.
+     */
     private fun startGame() {
         status = GameStatus.RUNNING
         ingameStats.keys.toTypedArray().forEach { p ->
@@ -269,6 +309,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
             Bukkit.getServer().pluginManager.callEvent(event)
 
             val stats = ingameStats[p]
+
             if (stats!!.team == null) {
                 if (redTeam.size < blueTeam.size) {
                     joinTeam(p, arena.meta.redTeamMeta, redTeam)
@@ -276,8 +317,10 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
                     joinTeam(p, arena.meta.blueTeamMeta, blueTeam)
                 }
             }
+
             if (stats.team == Team.RED) {
                 val teamMeta = arena.meta.redTeamMeta
+
                 if (teamMeta.spawnpoint == null) {
                     p.teleport(arena.meta.ballMeta.spawnpoint!!.toBukkitLocation())
                 } else {
@@ -285,6 +328,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
                 }
             } else {
                 val teamMeta = arena.meta.blueTeamMeta
+
                 if (teamMeta.spawnpoint == null) {
                     p.teleport(arena.meta.ballMeta.spawnpoint!!.toBukkitLocation())
                 } else {
@@ -294,6 +338,9 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         }
     }
 
+    /**
+     * Joins the [player] to the given [teamMeta] and [teamPlayers].
+     */
     private fun joinTeam(player: Player, teamMeta: TeamMeta<Location, ItemStack>, teamPlayers: MutableList<Player>) {
         if (teamPlayers.contains(player)) {
             return
@@ -315,22 +362,37 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         player.sendMessage(Config.prefix + teamMeta.joinMessage.replaceGamePlaceholder(this, teamMeta, teamPlayers))
     }
 
+    /**
+     * Returns if the lobby is full.
+     * @return isFull
+     */
     private fun isLobbyFull(): Boolean {
         val amount = arena.meta.redTeamMeta.maxAmount + arena.meta.blueTeamMeta.maxAmount
+
         if (this.ingameStats.size >= amount) {
             return true
         }
+
         return false
     }
 
+    /**
+     * Returns if the lobby countdown can already be started.
+     * @return canStart
+     */
     private fun canStartLobbyCountdown(): Boolean {
         val amount = arena.meta.redTeamMeta.minAmount + arena.meta.blueTeamMeta.minAmount
+
         if (!isGameRunning && this.ingameStats.size >= amount && ingameStats.isNotEmpty()) {
             return true
         }
+
         return false
     }
 
+    /**
+     * Plays the fancy bling countdown sound.
+     */
     private fun playBlingSound() {
         try {
             this.blingsound.apply(this.ingameStats.keys)
@@ -339,6 +401,9 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         }
     }
 
+    /**
+     * Sets the game ending with 10 seconds cooldown.
+     */
     private fun setEndGame() {
         if (!isEndGameRunning) {
             gameCountdown = 10
@@ -349,6 +414,9 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         blockBallSpawning = true
     }
 
+    /**
+     * Prepares the lobby stat for the given [player].
+     */
     private fun prepareLobbyStatsForPlayer(player: Player) {
         val stats = PlayerStorage(player)
         stats.storeForType(GameType.MINIGAME)

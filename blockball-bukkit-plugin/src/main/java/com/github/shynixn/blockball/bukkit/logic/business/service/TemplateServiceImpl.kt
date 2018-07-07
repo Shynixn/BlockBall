@@ -145,7 +145,7 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
     }
 
     private fun copyResourceToTarget(resource: String, target: String) {
-        val file = File(plugin.dataFolder, "template/" + target)
+        val file = File(plugin.dataFolder, "template/$target")
 
         if (!file.exists()) {
             val fileOutputStream = FileOutputStream(file)

@@ -77,8 +77,14 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
 
     /** Join the game. */
     override fun join(player: Player, team: Team?): Boolean {
-        if (!this.arena.enabled || closed)
+        if (!this.arena.enabled || closed) {
             return false
+        }
+
+        if (!this.isAllowedToJoinWithPermissions(player)) {
+            return false
+        }
+
         this.leave(player)
 
         var joiningTeam = team

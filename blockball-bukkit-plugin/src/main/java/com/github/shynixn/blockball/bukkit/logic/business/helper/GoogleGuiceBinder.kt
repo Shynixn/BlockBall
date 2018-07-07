@@ -1,7 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.helper
 
+import com.github.shynixn.blockball.api.business.service.ScoreboardService
 import com.github.shynixn.blockball.api.business.service.TemplateService
 import com.github.shynixn.blockball.api.business.service.VirtualArenaService
+import com.github.shynixn.blockball.bukkit.logic.business.service.ScoreboardServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.TemplateServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.VirtualArenaServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
@@ -47,6 +49,8 @@ class GoogleGuiceBinder(private val plugin: Plugin) : AbstractModule() {
         bind(ArenaRepository::class.java).toInstance(repository)
         bind(TemplateService::class.java).toInstance(TemplateServiceImpl(plugin, repository))
         bind(VirtualArenaService::class.java).toInstance(VirtualArenaServiceImpl(plugin))
+        bind(ScoreboardService::class.java).toInstance(ScoreboardServiceImpl())
+
         bind(Server::class.java)
                 .toInstance(Bukkit.getServer())
         bind(BukkitScheduler::class.java)

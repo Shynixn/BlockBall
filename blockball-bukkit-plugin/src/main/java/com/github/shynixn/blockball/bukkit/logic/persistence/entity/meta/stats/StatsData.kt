@@ -56,6 +56,9 @@ class StatsData : PersistenceObject(), Stats {
             return (this.amountOfGoals.toDouble()) / (this.amountOfPlayedGames.toDouble())
         }
 
+    /**
+     * Id reference to the player in the database.
+     */
     @YamlSerializer.YamlSerialize(value = "playerId", orderNumber = 1)
     var playerId: Long = 0
 }

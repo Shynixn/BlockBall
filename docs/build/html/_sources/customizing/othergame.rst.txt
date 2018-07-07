@@ -1,7 +1,7 @@
 GameProperties
 ==============
 
-BlockBall offers additional game properties which are just default values which can be changed but are not necessarry to take
+BlockBall offers additional game properties which are just default values which can be changed but are not necessary to take
 a look into.
 
 Configuring ingame

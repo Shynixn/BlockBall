@@ -39,6 +39,7 @@ messages:
   state-sign-enabled: '&aJoin'
   state-sign-disabled: '&4Disabled'
   state-sign-running: '&1Running'
+  no-permission-join-game: "&cYou do not have permission to join this game."
 
 ############################
 

@@ -5,7 +5,7 @@ It is possible to display a bossbar during a match on a players screen. It looks
 
 .. image:: ../_static/images/bossbar1.jpg
 
-You can use it to display team names, the remaining time, scores for each team and more. You can find all available placeholders here.
+You can use it to display team names, the remaining time, scores for each team and more. You can find all available placeholders `here <placeholders.html>`__.
 
 **Important!** If your server is on 1.8.9 or lower you need to install the plugin `BossBarAPI <https://www.spigotmc.org/resources/7504/>`__
 in order to use the Bossbar.

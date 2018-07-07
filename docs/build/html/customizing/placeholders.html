@@ -1,0 +1,486 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Placeholders &mdash; BlockBall 5.3.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="BlockBall 5.3.0 documentation" href="../index.html"/>
+        <link rel="up" title="Misc" href="misc.html"/>
+        <link rel="next" title="Commands" href="../commands/index.html"/>
+        <link rel="prev" title="Textbook" href="textbook.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BlockBall
+          
+
+          
+            
+            <img src="../_static/BlockBall-small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../gettingstarted/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gamemodes/index.html">Game Modes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Customizing</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ball.html">Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teams.html">Teams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signs.html">Signs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="effects.html">Effects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abilities.html">Abilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rewards.html">Rewards</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="misc.html">Misc</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="areaprotection.html">AreaProtection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="othergame.html">GameProperties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="textbook.html">Textbook</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Placeholders</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#samples">Samples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#placeholderlist">Placeholderlist</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/index.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing to BlockBall</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BlockBall</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Customizing</a> &raquo;</li>
+        
+          <li><a href="misc.html">Misc</a> &raquo;</li>
+        
+      <li>Placeholders</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/Shynixn/BlockBall/tree/master/docs/source/customizing/placeholders.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="placeholders">
+<h1>Placeholders<a class="headerlink" href="#placeholders" title="Permalink to this headline">¶</a></h1>
+<p>Placeholders are being used in BlockBall to be replace by ingame values. These placeholders should be
+supported by <strong>all</strong> messages you can find ingame. If there are parsing issues where the following placeholders
+cannot be resolved, please report them.</p>
+<p>You can use placeholders on:</p>
+<ul class="simple">
+<li>Messages</li>
+<li>Signs</li>
+<li>Scoreboards</li>
+<li>Bossbars</li>
+<li>Holograms</li>
+<li>…</li>
+</ul>
+<div class="section" id="samples">
+<h2>Samples<a class="headerlink" href="#samples" title="Permalink to this headline">¶</a></h2>
+<p><strong>Title message</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">redcolor</span><span class="o">&gt;&lt;</span><span class="n">redscore</span><span class="o">&gt;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">bluecolor</span><span class="o">&gt;&lt;</span><span class="n">bluescore</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p><strong>Placed ingame message</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">c2</span> <span class="p">:</span> <span class="o">&amp;</span><span class="mi">93</span>
+</pre></div>
+</div>
+<p>You can see that redcolor gets replaced by the ChatColor red and the redscore with 2.</p>
+</div>
+<div class="section" id="placeholderlist">
+<h2>Placeholderlist<a class="headerlink" href="#placeholderlist" title="Permalink to this headline">¶</a></h2>
+<p><strong>Games</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="82%" />
+<col width="18%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Placeholder</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Uses the name of the blue team</td>
+<td>&lt;blue&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the prefix (default color) of the blue team</td>
+<td>&lt;bluecolor&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the current score of the blue team</td>
+<td>&lt;bluescore&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the game’s displayname</td>
+<td>&lt;game&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the name of the player who was the last player touching the ball</td>
+<td>&lt;player&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the name of the red team</td>
+<td>&lt;red&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the prefix (default color) of the red team</td>
+<td>&lt;redcolor&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the current score of the red team</td>
+<td>&lt;redscore&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the game’s remaining players amount to join in order to start</td>
+<td>&lt;remaining&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the game’s state (Enabled,Running,Disabled)</td>
+<td>&lt;state&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the game’s current amount of players value</td>
+<td>&lt;sumplayers&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the game’s max amount of players value</td>
+<td>&lt;summaxplayers&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the game’s current time value</td>
+<td>&lt;time&gt;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Games (Using the team of the player receiving the message)</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="85%" />
+<col width="15%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Placeholder</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Uses the name of the team</td>
+<td>&lt;team&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the prefix (default color) of the team</td>
+<td>&lt;teamcolor&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the teams’s current amount of players value</td>
+<td>&lt;players&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the teams’s max amount of players value</td>
+<td>&lt;maxplayers&gt;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Stats Scoreboard</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="83%" />
+<col width="17%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Placeholder</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Uses the name of the player belonging the stats</td>
+<td>&lt;playername&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the winrate value of the player</td>
+<td>&lt;winrate&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the amount of played games of the player</td>
+<td>&lt;playedgames&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the amount of scored goals of the player</td>
+<td>&lt;goalspergame&gt;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>BungeeCord Joining Signs</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="86%" />
+<col width="14%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Placeholder</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Uses the name of the target server</td>
+<td>&lt;server&gt;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Placeholder API</strong></p>
+<p>It is also possible to redirect some values to the PlaceHolder API plugin.</p>
+<p>Simply use the <strong>Games</strong> placeholders and append the prefix <strong>%blockball_</strong>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="73%" />
+<col width="27%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Placeholder</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Uses the name of the blue team</td>
+<td>%blockball_&lt;blue&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the prefix (default color) of the blue team</td>
+<td>%blockball_&lt;bluecolor&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the current score of the blue team</td>
+<td>%blockball_&lt;bluescore&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the game’s displayname</td>
+<td>%blockball_&lt;game&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the name of the player who was the last player touching the ball</td>
+<td>%blockball_&lt;player&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the name of the red team</td>
+<td>%blockball_&lt;red&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the prefix (default color) of the red team</td>
+<td>%blockball_&lt;redcolor&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the current score of the red team</td>
+<td>%blockball_&lt;redscore&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the game’s remaining players amount to join in order to start</td>
+<td>%blockball_&lt;remaining&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the game’s state (Enabled,Running,Disabled)</td>
+<td>%blockball_&lt;state&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the game’s current amount of players value</td>
+<td>%blockball_&lt;sumplayers&gt;</td>
+</tr>
+<tr class="row-odd"><td>Uses the game’s max amount of players value</td>
+<td>%blockball_&lt;summaxplayers&gt;</td>
+</tr>
+<tr class="row-even"><td>Uses the game’s current time value</td>
+<td>%blockball_&lt;time&gt;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../commands/index.html" class="btn btn-neutral float-right" title="Commands" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="textbook.html" class="btn btn-neutral" title="Textbook" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015 - 2018, Shynixn.
+
+    </p>
+  </div>
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'5.3.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111364476-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111364476-1');
+</script>
+
+
+</body>
+</html>
