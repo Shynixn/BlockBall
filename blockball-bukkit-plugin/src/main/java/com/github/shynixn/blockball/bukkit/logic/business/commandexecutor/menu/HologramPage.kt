@@ -125,7 +125,7 @@ class HologramPage : Page(HologramPage.ID, EffectsSettingsPage.ID) {
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.HOLOGRAM_DELETE.command)
                     .setHoverText("Deletes the selected hologram.")
                     .builder().nextLine()
-                    .component("- Location: " + selectedHologramText).builder()
+                    .component("- Location: $selectedHologramText").builder()
                     .component(" [location..]").setColor(ChatColor.BLUE)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.HOLOGRAM_LOCATION.command)
                     .setHoverText("Sets the location of the hologram to your current location.")

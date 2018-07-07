@@ -33,7 +33,11 @@ import org.bukkit.scoreboard.DisplaySlot
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class StatsScoreboard(val player: Player) : SimpleScoreboard() {
+class StatsScoreboard(
+        /**
+         * Owner of the stats scoreboard.
+         */
+        val player: Player) : SimpleScoreboard() {
 
     init {
         Config.reload()

@@ -5,7 +5,6 @@ import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.helper.hasPermission
 import com.google.inject.Inject
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerInteractEvent

@@ -305,7 +305,7 @@ public class SimpleBossBar implements AutoCloseable {
         try {
             final Method method = (Method) reflectionCache[5];
             return (List<Player>) method.invoke(this.bossBar);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }

@@ -64,7 +64,7 @@ class ScoreboardServiceImpl : ScoreboardService {
         }
 
         val teamFinder = StringBuilder(ChatColor.values()[lineNumber].toString()).append("&r")
-        var team = scoreboard.teams.firstOrNull { t -> t.name == teamFinder.toString().convertChatColors() };
+        var team = scoreboard.teams.firstOrNull { t -> t.name == teamFinder.toString().convertChatColors() }
         val objective = scoreboard.getObjective(defaultObjective)
 
         if (team == null) {

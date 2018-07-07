@@ -44,36 +44,97 @@ interface BossBarMeta : PersistenceAble {
     var style: Style
 
     /** Color of the bossbar. */
-    var color : Color
+    var color: Color
 
     /** Flags of the bossbar. */
     val flags: MutableList<Flag>
 
     /** Style of the bossbar. */
     enum class Style {
+        /**
+         * Segmented Style 6.
+         */
         SEGMENTED_6,
+
+        /**
+         * Segmented Style 10.
+         */
         SEGMENTED_10,
+
+        /**
+         * Segmented Style 12.
+         */
         SEGMENTED_12,
+
+        /**
+         * Segmented Style 20.
+         */
         SEGMENTED_20,
+
+        /**
+         * Solid Style 6.
+         */
         SOLID;
     }
 
     /** Color of the bossbar. */
     enum class Color {
+        /**
+         * Color Pink.
+         */
         PINK,
+
+        /**
+         * Color Blue.
+         */
         BLUE,
+
+        /**
+         * Color Red.
+         */
         RED,
+
+        /**
+         * Color Green.
+         */
         GREEN,
+
+        /**
+         * Color Yellow.
+         */
         YELLOW,
+
+        /**
+         * Color Purple.
+         */
         PURPLE,
+
+        /**
+         * Color White.
+         */
         WHITE;
     }
 
     /** Flag of the bossbar. */
     enum class Flag {
+        /**
+         * No Flag.
+         */
         NONE,
+
+        /**
+         * Flag creating fog.
+         */
         CREATE_FOG,
+
+        /**
+         * Flag darken the sky.
+         */
         DARKEN_SKY,
+
+        /**
+         * Flag playing boss music.
+         */
         PLAY_BOSS_MUSIC
     }
 }
