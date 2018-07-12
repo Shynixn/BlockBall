@@ -7,9 +7,9 @@ cache:
   directories:
   - $HOME/.m2
 install:
-    - [ -f $HOME/.m2/repository/org/spigotmc ] || echo "Installing dependencies..." && install_dependencies=true
-    - if [ "$install_dependencies" = true ] ; then mkdir lib fi
-    - if [ "$install_dependencies" = true ] ; then - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar -P lib/ fi
+    - "[ -f $HOME/.m2/repository/org/spigotmc ] || echo 'Installing dependencies...' && install_dependencies=true"
+ #   - if [ "$install_dependencies" = true ] ; then mkdir lib fi
+  #  - if [ "$install_dependencies" = true ] ; then - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar -P lib/ fi
 before_script:
   - sudo /etc/init.d/mysql stop
 script:
@@ -22,5 +22,4 @@ script:
     - java -jar BuildTools.jar --rev 1.10 > /dev/null
     - java -jar BuildTools.jar --rev 1.11 > /dev/null
     - java -jar BuildTools.jar --rev 1.12 > /dev/null
-    - cdd -
     - mvn install
