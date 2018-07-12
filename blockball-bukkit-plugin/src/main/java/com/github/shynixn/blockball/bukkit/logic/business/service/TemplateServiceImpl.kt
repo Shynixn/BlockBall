@@ -9,11 +9,9 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRep
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.TemplateData
 import com.google.inject.Inject
-import org.apache.commons.io.IOUtils
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
 
 /**
  * Created by Shynixn 2018.
@@ -151,9 +149,13 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
             val fileOutputStream = FileOutputStream(file)
             val inputStream = plugin.getResource(resource)
 
-            fileOutputStream.use {
-                inputStream.use {
-                    IOUtils.copy(inputStream, fileOutputStream)
+            val inputStreamReader = InputStreamReader(inputStream)
+            val outputStreamWriter = OutputStreamWriter(fileOutputStream)
+
+            inputStreamReader.use {
+                outputStreamWriter.use {
+                    val cache = inputStreamReader.readText()
+                    outputStreamWriter.write(cache)
                 }
             }
         }
