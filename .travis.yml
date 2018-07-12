@@ -7,7 +7,9 @@ cache:
   directories:
   - $HOME/.m2
 install:
-    - if ![ -e $HOME/.m2/repository/org/spigotmc ]; then echo "Installing dependencies..."; fi
+    - if ![ -e $HOME/.m2/repository/org/spigotmc ]; then echo "Installing dependencies..." && mkdir lib && cd lib; fi
+    - if ![ -e $HOME/.m2/repository/org/spigotmc ]; then wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar -P lib/; fi
+    - if ![ -e $HOME/.m2/repository/org/spigotmc ]; then java -jar BuildTools.jar --rev 1.8 > /dev/null; fi
   #  - [ -f $HOME/.m2/repository/org/spigotmc ] ||  && install_dependencies=true
    # - if [ "$install_dependencies" = true ] ; then mkdir lib fi
     #- if [ "$install_dependencies" = true ] ; then - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar -P lib/ fi
