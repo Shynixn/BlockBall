@@ -22,5 +22,5 @@ script:
     - java -jar BuildTools.jar --rev 1.10 > /dev/null
     - java -jar BuildTools.jar --rev 1.11 > /dev/null
     - java -jar BuildTools.jar --rev 1.12 > /dev/null
-    - cd -
+    - cdd -
     - mvn install
