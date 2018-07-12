@@ -7,9 +7,10 @@ cache:
   directories:
   - $HOME/.m2
 install:
+    - cd /home/travis/build/Shynixn/BlockBall/
     - mkdir lib
-    - cd lib
-    - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar -P lib/
+    - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar -P /home/travis/build/Shynixn/BlockBall/lib/
+    - cd /home/travis/build/Shynixn/BlockBall/lib/
     - java -jar BuildTools.jar --rev 1.8 > /dev/null
     - java -jar BuildTools.jar --rev 1.8.3 > /dev/null
     - java -jar BuildTools.jar --rev 1.8.8 > /dev/null
