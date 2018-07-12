@@ -6,10 +6,15 @@ cache:
   timeout: 1000
   directories:
   - $HOME/.m2
-install:
-    - "[ -f $HOME/.m2/repository/org/spigotmc ] || echo 'Installing dependencies...' && install_dependencies=true"
- #   - if [ "$install_dependencies" = true ] ; then mkdir lib fi
-  #  - if [ "$install_dependencies" = true ] ; then - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar -P lib/ fi
+
+jobs:
+  include:
+      if: commit_message = rebuild
+          - echo "Installing dependencies..."
+          - mkdir lib
+          - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar -P lib/
+          - cd lib
+          - java -jar BuildTools.jar --rev 1.8 > /dev/null
 before_script:
   - sudo /etc/init.d/mysql stop
 script:
