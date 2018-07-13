@@ -5,7 +5,7 @@ jdk:
 cache:
   timeout: 1000
   directories:
-  - $HOME/.m2
+  - $HOME/.m2/repository/org/spigotmc
 #install:
 #    - cd /home/travis/build/Shynixn/BlockBall/
 #    - mkdir lib
