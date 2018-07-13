@@ -31,4 +31,6 @@ cache:
 before_script:
   - sudo /etc/init.d/mysql stop
 script:
-    - mvn install
+  - mvn install
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
