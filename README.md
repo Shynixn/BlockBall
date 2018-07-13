@@ -1,9 +1,9 @@
 # BlockBall [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://raw.githubusercontent.com/Shynixn/BlockBall/master/LICENSE)
 
-| branch        | status        | download      |
-| ------------- | --------------| --------------| 
-| master        | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=master)](https://travis-ci.org/Shynixn/BlockBall) |[Download latest release (recommend)](https://github.com/Shynixn/BlockBall/releases)|
-| development   | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=development)](https://travis-ci.org/Shynixn/BlockBall) | [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/) |
+| branch        | status        | coverage | download |
+| ------------- | ------------- | -------- | ---------| 
+| master        | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=master)](https://travis-ci.org/Shynixn/BlockBall) | [![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/master.svg)](https://codecov.io/gh/Shynixn/BlockBall/branch/master)|[Download latest release (recommend)](https://github.com/Shynixn/BlockBall/releases)|
+| development   | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=development)](https://travis-ci.org/Shynixn/BlockBall)|[![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/development.svg)](https://codecov.io/gh/Shynixn/BlockBall/branch/development) | [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/) |
 
 Documentation:  https://shynixn.github.io/BlockBall/
 
