@@ -344,12 +344,14 @@ cannot be resolved, please report them.</p>
 </tbody>
 </table>
 <p><strong>Placeholder API</strong></p>
-<p>It is also possible to redirect some values to the PlaceHolder API plugin.</p>
-<p>Simply use the <strong>Games</strong> placeholders and append the prefix <strong>%blockball_</strong>.</p>
+<p>It is also possible to redirect some values to the <a class="reference external" href="https://www.spigotmc.org/resources/placeholderapi.6245/">PlaceHolder API plugin.</a>.</p>
+<p>Simply use the <strong>Games</strong> placeholders and append the prefix <strong>%blockball_</strong> and the suffix <strong>_&lt;id&gt;</strong>.
+Replace &lt;id&gt; with the id of the arena.</p>
+<p>Sample placeholder for the current amount of players in arena 1: <strong>%blockball_&lt;sumplayers&gt;_1%</strong></p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="73%" />
-<col width="27%" />
+<col width="69%" />
+<col width="31%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Description</th>
@@ -358,43 +360,43 @@ cannot be resolved, please report them.</p>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>Uses the name of the blue team</td>
-<td>%blockball_&lt;blue&gt;</td>
+<td>%blockball_&lt;blue&gt;_&lt;id&gt;%</td>
 </tr>
 <tr class="row-odd"><td>Uses the prefix (default color) of the blue team</td>
-<td>%blockball_&lt;bluecolor&gt;</td>
+<td>%blockball_&lt;bluecolor&gt;_&lt;id&gt;%</td>
 </tr>
 <tr class="row-even"><td>Uses the current score of the blue team</td>
-<td>%blockball_&lt;bluescore&gt;</td>
+<td>%blockball_&lt;bluescore&gt;_&lt;id&gt;%</td>
 </tr>
 <tr class="row-odd"><td>Uses the game’s displayname</td>
-<td>%blockball_&lt;game&gt;</td>
+<td>%blockball_&lt;game&gt;_&lt;id&gt;%</td>
 </tr>
 <tr class="row-even"><td>Uses the name of the player who was the last player touching the ball</td>
-<td>%blockball_&lt;player&gt;</td>
+<td>%blockball_&lt;player&gt;_&lt;id&gt;%</td>
 </tr>
 <tr class="row-odd"><td>Uses the name of the red team</td>
-<td>%blockball_&lt;red&gt;</td>
+<td>%blockball_&lt;red&gt;_&lt;id&gt;%</td>
 </tr>
 <tr class="row-even"><td>Uses the prefix (default color) of the red team</td>
-<td>%blockball_&lt;redcolor&gt;</td>
+<td>%blockball_&lt;redcolor&gt;_&lt;id&gt;%</td>
 </tr>
 <tr class="row-odd"><td>Uses the current score of the red team</td>
-<td>%blockball_&lt;redscore&gt;</td>
+<td>%blockball_&lt;redscore&gt;_&lt;id&gt;%</td>
 </tr>
 <tr class="row-even"><td>Uses the game’s remaining players amount to join in order to start</td>
-<td>%blockball_&lt;remaining&gt;</td>
+<td>%blockball_&lt;remaining&gt;_&lt;id&gt;%</td>
 </tr>
 <tr class="row-odd"><td>Uses the game’s state (Enabled,Running,Disabled)</td>
-<td>%blockball_&lt;state&gt;</td>
+<td>%blockball_&lt;state&gt;_&lt;id&gt;%</td>
 </tr>
 <tr class="row-even"><td>Uses the game’s current amount of players value</td>
-<td>%blockball_&lt;sumplayers&gt;</td>
+<td>%blockball_&lt;sumplayers&gt;_&lt;id&gt;%</td>
 </tr>
 <tr class="row-odd"><td>Uses the game’s max amount of players value</td>
-<td>%blockball_&lt;summaxplayers&gt;</td>
+<td>%blockball_&lt;summaxplayers&gt;_&lt;id&gt;%</td>
 </tr>
 <tr class="row-even"><td>Uses the game’s current time value</td>
-<td>%blockball_&lt;time&gt;</td>
+<td>%blockball_&lt;time&gt;_&lt;id&gt;%</td>
 </tr>
 </tbody>
 </table>
