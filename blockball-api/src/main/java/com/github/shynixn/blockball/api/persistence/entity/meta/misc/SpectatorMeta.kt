@@ -1,13 +1,13 @@
-package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
+package com.github.shynixn.blockball.api.persistence.entity.meta.misc
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,43 +27,15 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public enum PageKey {
-    OPEN("open"),
-    MAINSETTING("mset"),
-    LISTABLE("labl"),
-    TEAMMETA("tma"),
-    EFFECTS("ef"),
-    SCOREBOARD("scor"),
-    BOSSBAR("boss"),
-    HOLOGRAM("holog"),
-    SIGNS("sign"),
-    DOUBLEJUMP("doubl"),
-    ABILITIES("abi"),
-    MULTIPLELINES("mlin"),
-    PARTICLEFFECTS("part"),
-    SOUNDEFFECTS("sound"),
-    MISC("misc"),
-    AREAPROTECTION("aprot"),
-    GAMEEXTENSIONS("gameex"),
-    MULTIPLEITEMS("mitem"),
-    REWARDSPAGE("reward"),
-    GAMESETTINGS("gameset"),
-    COMMANDPAGE("com"),
-    SPECTATING("spect"),
-    BALL("ball"),
-    NOTIFICATIONS("notif"),
-    BALLMODIFIER("ballmod"),
-    TEAMTEXTBOOK("teamtext"),
-    TEMPLATEPAGE("template"),
-    MAINCONFIGURATION("mcf");
+interface SpectatorMeta {
 
-    private final String key;
+    /**
+     * Should nearby players inside of the [notificationRadius] be messaged by title messages, scoreboard, holograms and bossbar.
+     */
+    var notifyNearbyPlayers: Boolean
 
-    PageKey(String mcf) {
-        this.key = mcf;
-    }
-
-    public String getKey() {
-        return this.key;
-    }
+    /**
+     * The radius from the center of the arena a player has to be in order to get notified when [notifyNearbyPlayers] is enabled.
+     */
+    var notificationRadius: Int
 }

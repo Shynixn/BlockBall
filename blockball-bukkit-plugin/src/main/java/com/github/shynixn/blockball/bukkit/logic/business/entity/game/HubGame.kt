@@ -53,7 +53,12 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
     override fun onScore(team: Team, teamMeta: TeamMeta<Location, ItemStack>) {
         val scoreMessageTitle = teamMeta.scoreMessageTitle
         val scoreMessageSubTitle = teamMeta.scoreMessageSubTitle
-        this.getPlayers().forEach { p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this) }
+
+        val players = ArrayList(getPlayers())
+        val additionalPlayers = getAdditionalNotificationPlayers()
+        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+
+        players.forEach { p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this) }
 
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
             val event = GoalShootEvent(this, lastInteractedEntity as Player, team)
@@ -67,7 +72,12 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
     override fun onWin(team: Team, teamMeta: TeamMeta<Location, ItemStack>) {
         val winMessageTitle = teamMeta.winMessageTitle
         val winMessageSubTitle = teamMeta.winMessageSubTitle
-        this.getPlayers().forEach { p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle, this) }
+
+        val players = ArrayList(getPlayers())
+        val additionalPlayers = getAdditionalNotificationPlayers()
+        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+
+        players.forEach { p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle, this) }
 
         val event = GameWinEvent(this, team)
         Bukkit.getServer().pluginManager.callEvent(event)

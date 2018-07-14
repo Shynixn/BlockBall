@@ -124,6 +124,12 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
     @Inject
     private val gameSettingsPage: GameSettingsPage? = null
 
+    @Inject
+    private lateinit var spectatingSettingsPage: SpectatingSettingsPage
+
+    @Inject
+    private lateinit var notificationPage: NotificationPage
+
     /**
      * Can be overwritten to listener to all executed commands.
      *
@@ -249,6 +255,8 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
             this.pageCache!!.add(ballModifierPage!!)
             this.pageCache!!.add(ballSettingsPage!!)
             this.pageCache!!.add(templatePage)
+            this.pageCache!!.add(notificationPage)
+            this.pageCache!!.add(spectatingSettingsPage)
         }
         return this.pageCache!!
     }

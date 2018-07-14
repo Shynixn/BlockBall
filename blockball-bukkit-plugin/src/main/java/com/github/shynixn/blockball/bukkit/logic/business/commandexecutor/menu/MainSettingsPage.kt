@@ -48,6 +48,7 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
     override fun getCommandKey(): PageKey {
         return PageKey.MAINSETTING
     }
+
     /**
      * Executes actions for this page.
      *
@@ -112,6 +113,11 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 .component(" [page..]").setColor(ChatColor.YELLOW)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.REWARD_OPEN.command)
                 .setHoverText("Opens the settings page for rewards.")
+                .builder().nextLine()
+                .component("- Spectating:").builder()
+                .component(" [page..]").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SPECTATOR_OPEN.command)
+                .setHoverText("Opens the settings page for spectating.")
                 .builder().nextLine()
                 .component("- Misc:").builder()
                 .component(" [page..]").setColor(ChatColor.YELLOW)

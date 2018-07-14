@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.misc.SpectatorMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.business.helper.setColor
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallData
@@ -53,8 +54,11 @@ import org.bukkit.util.Vector
  * SOFTWARE.
  */
 class BlockBallMetaCollection : ArenaMeta<Location, ItemStack, Vector, Player, Material> {
+    /** Meta data for spectating setting. */
+    @YamlSerializer.YamlSerialize(orderNumber = 12, value = "spectator-meta")
+    override val spectatorMeta: SpectatorProperties = SpectatorProperties()
     /** Meta data of the customizing Properties. */
-    @YamlSerializer.YamlSerialize(orderNumber = 12, value = "customizing-meta")
+    @YamlSerializer.YamlSerialize(orderNumber = 13, value = "customizing-meta")
     override val customizingMeta: CustomizationProperties = CustomizationProperties()
     /** Meta data for rewards */
     @YamlSerializer.YamlSerialize(orderNumber = 10, value = "reward-meta")
