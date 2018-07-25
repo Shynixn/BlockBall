@@ -65,6 +65,19 @@ internal object Config : SimpleConfig() {
             return tmp
         }
 
+    /**
+     * Returns the message being played when a user cannot spectate a game because of permission issues.
+     */
+    val spectateGamePermissionmessage: String
+        get() {
+            val tmp = this.getData<String>("messages.no-permission-spectate-game")
+            if (tmp == null) {
+                throw IllegalArgumentException("Config option 'no-permission-spectate-game' could not be loaded!")
+            }
+
+            return tmp
+        }
+
     val stateSignEnabled: String?
         get() {
             return this.getData<String>("messages.state-sign-enabled")

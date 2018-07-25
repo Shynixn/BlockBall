@@ -66,7 +66,7 @@ class SpectatingSettingsPage : Page(ID, MainSettingsPage.ID) {
                     .builder().nextLine()
                     .component("- Spectatormode:").builder()
                     .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.NOTIFICATIONS_OPEN.command)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SPECTATE_OPEN.command)
                     .setHoverText("Configure the spectator mode.")
                     .builder().nextLine()
         } else {

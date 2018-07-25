@@ -50,6 +50,7 @@ public enum PageKey {
     GAMESETTINGS("gameset"),
     COMMANDPAGE("com"),
     SPECTATING("spect"),
+    SPECTATE("specta"),
     BALL("ball"),
     NOTIFICATIONS("notif"),
     BALLMODIFIER("ballmod"),

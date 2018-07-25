@@ -1,7 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc
 
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.SpectatorMeta
 import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
+import org.bukkit.ChatColor
 
 /**
  * Created by Shynixn 2018.
@@ -39,6 +42,24 @@ class SpectatorProperties : SpectatorMeta {
     /**
      * The radius from the center of the arena a player has to be in order to get notified when [notifyNearbyPlayers] is enabled.
      */
-    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "notify-nearby-players-radius")
+    @YamlSerializer.YamlSerialize(orderNumber = 2, value = "notify-nearby-players-radius")
     override var notificationRadius: Int = 50
+
+    /**
+     * Should the spectator mode be enabled for this arena?
+     */
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "spectatormode-enabled")
+    override var spectatorModeEnabled: Boolean = true
+
+    /**
+     * Spectate asking message.
+     */
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "spectatormode-start-message")
+    override var spectateStartMessage: MutableList<String> = arrayListOf("Game is full! Do you want to spectate?", ChatColor.GREEN.toString() + "[Start spectating]")
+
+    /**
+     *  Spawnpoint of the spectators.
+     */
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "spectatormode-spawnpoint", implementation = LocationBuilder::class)
+    override var spectateSpawnpoint: StorageLocation? = null
 }

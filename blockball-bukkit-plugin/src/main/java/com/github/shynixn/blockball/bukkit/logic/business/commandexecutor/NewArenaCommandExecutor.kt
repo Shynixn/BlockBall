@@ -56,6 +56,9 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
     private val mainConfigurationPage: MainConfigurationPage? = null
 
     @Inject
+    private lateinit var spectatePage: SpectatePage
+
+    @Inject
     private val mainSettingsPage: MainSettingsPage? = null
 
     @Inject
@@ -257,6 +260,7 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
             this.pageCache!!.add(templatePage)
             this.pageCache!!.add(notificationPage)
             this.pageCache!!.add(spectatingSettingsPage)
+            this.pageCache!!.add(spectatePage)
         }
         return this.pageCache!!
     }

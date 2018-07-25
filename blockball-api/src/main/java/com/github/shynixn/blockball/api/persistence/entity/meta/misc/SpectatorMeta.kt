@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity.meta.misc
 
+import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -28,7 +30,6 @@ package com.github.shynixn.blockball.api.persistence.entity.meta.misc
  * SOFTWARE.
  */
 interface SpectatorMeta {
-
     /**
      * Should nearby players inside of the [notificationRadius] be messaged by title messages, scoreboard, holograms and bossbar.
      */
@@ -38,4 +39,19 @@ interface SpectatorMeta {
      * The radius from the center of the arena a player has to be in order to get notified when [notifyNearbyPlayers] is enabled.
      */
     var notificationRadius: Int
+
+    /**
+     * Should the spectator mode be enabled for this arena?
+     */
+    var spectatorModeEnabled: Boolean
+
+    /**
+     * Spectate asking message.
+     */
+    var spectateStartMessage: MutableList<String>
+
+    /**
+     *  Spawnpoint of the spectators.
+     */
+    var spectateSpawnpoint: StorageLocation?
 }

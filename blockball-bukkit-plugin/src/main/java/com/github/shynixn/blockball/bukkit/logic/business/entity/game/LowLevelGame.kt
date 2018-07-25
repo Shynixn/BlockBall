@@ -148,17 +148,6 @@ abstract class LowLevelGame(
 
     /** Leave the game. */
     override fun leave(player: Player) {
-        if (!ingameStats.containsKey(player))
-            return
-        val stats = this.ingameStats[player]
-        if (stats!!.team == Team.RED) {
-            this.redTeam.remove(player)
-            player.sendMessage(Config.prefix + arena.meta.redTeamMeta.leaveMessage)
-        } else if (stats.team == Team.BLUE) {
-            this.blueTeam.remove(player)
-            player.sendMessage(Config.prefix + arena.meta.blueTeamMeta.leaveMessage)
-        }
-
         if (scoreboard != null) {
             if (player.scoreboard == scoreboard) {
                 player.scoreboard = Bukkit.getScoreboardManager().newScoreboard
@@ -167,6 +156,18 @@ abstract class LowLevelGame(
 
         if (bossbar != null) {
             bossbar!!.removePlayer(player)
+        }
+
+        if (!ingameStats.containsKey(player))
+            return
+
+        val stats = this.ingameStats[player]
+        if (stats!!.team == Team.RED) {
+            this.redTeam.remove(player)
+            player.sendMessage(Config.prefix + arena.meta.redTeamMeta.leaveMessage)
+        } else if (stats.team == Team.BLUE) {
+            this.blueTeam.remove(player)
+            player.sendMessage(Config.prefix + arena.meta.blueTeamMeta.leaveMessage)
         }
 
         if (!VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1) && RegisterHelper.isRegistered("BossBarAPI")) {
@@ -444,7 +445,7 @@ abstract class LowLevelGame(
     /**
      * Returns a list of players which can be also notified
      */
-    protected fun getAdditionalNotificationPlayers(): List<Pair<Player, Boolean>> {
+    protected open fun getAdditionalNotificationPlayers(): MutableList<Pair<Player, Boolean>> {
         if (!arena.meta.spectatorMeta.notifyNearbyPlayers) {
             return ArrayList()
         }

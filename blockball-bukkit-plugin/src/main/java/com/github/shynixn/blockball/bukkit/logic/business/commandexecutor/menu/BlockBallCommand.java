@@ -86,6 +86,7 @@ public enum BlockBallCommand {
     MULTILINES_HOLOGRAM(PageKey.MULTIPLELINES, "show_hologram"),
     MULTILINES_TEAMSIGNTEMPLATE(PageKey.MULTIPLELINES, "show_teamsign"),
     MULTILINES_HUBGAMEJOINMESSAGE(PageKey.MULTIPLELINES, "hubgame_join"),
+    MULTILINES_SPECTATEJOINMESSAGE(PageKey.MULTIPLELINES, "minigame_spectate"),
 
     BALL_OPEN(PageKey.BALL, "open"),
     BALL_SIZE_CALLBACK(PageKey.BALL, "size-callback"),
@@ -190,6 +191,10 @@ public enum BlockBallCommand {
     REWARD_CALLBACK_COMMANDMODE(PageKey.REWARDSPAGE, "calcommode"),
 
     SPECTATOR_OPEN(PageKey.SPECTATING, "open"),
+
+    SPECTATE_OPEN(PageKey.SPECTATE, "open"),
+    SPECTATE_TOGGLE(PageKey.SPECTATE, "tgl-sp"),
+    SPECTATE_SPAWNPOINT(PageKey.SPECTATE, "spawn"),
 
     MISC_OPEN(PageKey.MISC, "open"),
 

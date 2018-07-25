@@ -6,3 +6,4 @@ The spectator settings are split into a classic spectator mode settings for the 
 
 .. toctree::
    notifications
+   spectatormode

@@ -168,7 +168,6 @@
                             <shadedPattern>com.github.shynixn.blockball.lib.com.zaxxer</shadedPattern>
                         </relocation>
                     </relocations>
-                    <outputFile>D:/Temp/plugins/BlockBall.jar</outputFile>
                 </configuration>
                 <executions>
                     <execution>

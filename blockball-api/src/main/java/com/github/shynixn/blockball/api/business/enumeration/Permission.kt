@@ -43,6 +43,11 @@ enum class Permission(
     ADMIN("blockball.command.admin"),
 
     /**
+     * Permission for users to spectate games.
+     */
+    SPECTATE("blockball.game.spectate"),
+
+    /**
      * Permission for users to join games.
      */
     JOIN("blockball.game.join")

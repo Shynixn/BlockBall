@@ -33,7 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class LeaveCommandExecutor  @Inject constructor(plugin: Plugin) : SimpleCommandExecutor.UnRegistered(plugin.config.get("global-leave"), plugin as JavaPlugin) {
+class LeaveCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExecutor.UnRegistered(plugin.config.get("global-leave"), plugin as JavaPlugin) {
 
     @Inject
     private var gameController: GameRepository? = null
@@ -46,5 +46,6 @@ class LeaveCommandExecutor  @Inject constructor(plugin: Plugin) : SimpleCommandE
      */
     override fun onPlayerExecuteCommand(player: Player, args: Array<out String>) {
         gameController!!.getGameFromPlayer(player)?.leave(player)
+        gameController!!.getGameFromSpectatingPlayer(player)?.leave(player)
     }
 }
