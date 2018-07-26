@@ -363,8 +363,10 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
             if (stats!!.team == null) {
                 if (redTeam.size < blueTeam.size) {
+                    stats.team = Team.RED
                     joinTeam(p, arena.meta.redTeamMeta, redTeam)
                 } else {
+                    stats.team = Team.BLUE
                     joinTeam(p, arena.meta.blueTeamMeta, blueTeam)
                 }
             }

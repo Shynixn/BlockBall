@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 import com.github.shynixn.ball.api.BallApi
 import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
+import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
@@ -245,10 +246,12 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
                 this.ballSpawnCounter = 0
             }
         } else if ((this.ball == null || this.ball!!.isDead)
-                && (!this.redTeam.isEmpty() || !this.blueTeam.isEmpty())
-                && (this.redTeam.size >= this.arena.meta.redTeamMeta.minAmount && this.blueTeam.size >= this.arena.meta.blueTeamMeta.minAmount)) {
-            this.ballSpawning = true
-            this.ballSpawnCounter = this.arena.meta.ballMeta.delayInTicks
+                && (!this.redTeam.isEmpty() || !this.blueTeam.isEmpty())) {
+
+            if (arena.gameType != GameType.HUBGAME || this.redTeam.size >= this.arena.meta.redTeamMeta.minAmount && this.blueTeam.size >= this.arena.meta.blueTeamMeta.minAmount) {
+                this.ballSpawning = true
+                this.ballSpawnCounter = this.arena.meta.ballMeta.delayInTicks
+            }
         }
     }
 }

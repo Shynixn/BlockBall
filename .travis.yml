@@ -19,6 +19,8 @@ cache:
 #    - java -jar BuildTools.jar --rev 1.10 > /dev/null
 #    - java -jar BuildTools.jar --rev 1.11 > /dev/null
 #    - java -jar BuildTools.jar --rev 1.12 > /dev/null
+     - java -jar BuildTools.jar --rev 1.13 > /dev/null
+     - mvn install:install-file -Dfile=spigot-1.13.jar -DgroupId=org.spigotmc -DartifactId=spigot113R1 -Dversion=1.13.0-R1.0 -Dpackaging=jar > /dev/null
 #    - mvn install:install-file -Dfile=spigot-1.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R1 -Dversion=1.8.0-R1.0 -Dpackaging=jar
 #    - mvn install:install-file -Dfile=spigot-1.8.3.jar -DgroupId=org.spigotmc -DartifactId=spigot18R2 -Dversion=1.8.3-R2.0 -Dpackaging=jar
 #    - mvn install:install-file -Dfile=spigot-1.8.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R3 -Dversion=1.8.8-R3.0 -Dpackaging=jar

@@ -71,6 +71,12 @@
             <version>1.12.0-R1.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot113R1</artifactId>
+            <version>1.13.0-R1.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>
