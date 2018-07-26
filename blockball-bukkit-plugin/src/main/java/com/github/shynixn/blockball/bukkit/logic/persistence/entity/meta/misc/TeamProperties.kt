@@ -90,7 +90,7 @@ class TeamProperties(
     @YamlSerializer.YamlSerialize(orderNumber = 8, value = "armor", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION, arraySize = 4)
     override var armorContents: Array<ItemStack?> = arrayOfNulls(4)
     /** Inventory this team is getting when playing. */
-    @YamlSerializer.YamlSerialize(orderNumber = 9, value = "inventory", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION, arraySize = 41)
+    @YamlSerializer.YamlSerialize(orderNumber = 9, value = "inventory", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION, arraySize = 36)
     override var inventoryContents: Array<ItemStack?> = arrayOfNulls(41)
     /** Spawnpoint of the team inside of the arena. */
     @YamlSerializer.YamlSerialize(orderNumber = 6, value = "spawnpoint", implementation = LocationBuilder::class)

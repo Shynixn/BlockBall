@@ -270,6 +270,11 @@ public final class YamlSerializer {
         }
         for (final String key : data.keySet()) {
             final int orderPlace = Integer.parseInt(key) - 1;
+
+            if (orderPlace >= objects.length) {
+                return objects;
+            }
+
             if (data.get(key) == null) {
                 objects[orderPlace] = null;
             } else if (annotation.classicSerialize() == ManualSerialization.DESERIALIZE_FUNCTION) {
@@ -379,7 +384,7 @@ public final class YamlSerializer {
                                     }
                                     if (tmp2 instanceof Collection) {
                                         ((Collection) field.get(object)).addAll((Collection) data.get(yamlAnnotation.value()));
-                                    } else if(!worked){
+                                    } else if (!worked) {
                                         deserializeHeavyCollection(getTypeFromHeavyField(field, 0), ((Collection) field.get(object)), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false));
                                     }
                                 } else {
