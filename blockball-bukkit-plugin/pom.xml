@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.github.shynixn.ball</groupId>
             <artifactId>ball-bukkit-core</artifactId>
-            <version>1.3</version>
+            <version>1.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -174,7 +174,7 @@
                             <shadedPattern>com.github.shynixn.blockball.lib.com.zaxxer</shadedPattern>
                         </relocation>
                     </relocations>
-                    <!--   <outputFile>D:/Temp/plugins/BlockBall.jar</outputFile>-->
+                    <outputFile>D:/Temp/plugins/BlockBall.jar</outputFile>
                 </configuration>
                 <executions>
                     <execution>
