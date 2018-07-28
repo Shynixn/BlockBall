@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
 import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.SoundBuilder
+import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.bukkit.business.event.GameJoinEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.GameLeaveEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.GameWinEvent
@@ -51,7 +52,12 @@ import org.bukkit.inventory.ItemStack
  */
 open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
-    private val blingsound = SoundBuilder("NOTE_PLING", 1.0, 2.0)
+    private var blindSound: SoundBuilder = if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_13_R1)) {
+        SoundBuilder("BLOCK_NOTE_BLOCK_PLING", 1.0, 2.0)
+    } else {
+        SoundBuilder("NOTE_PLING", 1.0, 2.0)
+    }
+
     protected var isLobbyCountdownRunning: Boolean = false
     private var lobbyCountdown: Int = 0
     protected var isGameRunning: Boolean = false
@@ -448,7 +454,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
      */
     private fun playBlingSound() {
         try {
-            this.blingsound.apply(this.ingameStats.keys)
+            this.blindSound.apply(this.ingameStats.keys)
         } catch (e: Exception) {
             Bukkit.getServer().consoleSender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BlingSound]")
         }
