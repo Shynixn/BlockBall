@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
 import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.SoundBuilder
+import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.bukkit.business.event.GameJoinEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.GameLeaveEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.GameWinEvent
@@ -8,14 +9,12 @@ import com.github.shynixn.blockball.api.bukkit.business.event.GoalShootEvent
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.entity.container.PlayerStorage
-import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.sendActionBarMessage
-import com.github.shynixn.blockball.bukkit.logic.business.helper.sendScreenMessage
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
+import com.github.shynixn.blockball.bukkit.logic.business.helper.*
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -53,12 +52,18 @@ import org.bukkit.inventory.ItemStack
  */
 open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
-    private val blingsound = SoundBuilder("NOTE_PLING", 1.0, 2.0)
+    private var blindSound: SoundBuilder = if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_13_R1)) {
+        SoundBuilder("BLOCK_NOTE_BLOCK_PLING", 1.0, 2.0)
+    } else {
+        SoundBuilder("NOTE_PLING", 1.0, 2.0)
+    }
+
     protected var isLobbyCountdownRunning: Boolean = false
     private var lobbyCountdown: Int = 0
     protected var isGameRunning: Boolean = false
     var gameCountdown: Int = 0
     private var isEndGameRunning: Boolean = false
+    var spectators = HashMap<Player, PlayerStorage>()
 
     /**
      * Gets called when a player scores a point for the given team.
@@ -66,7 +71,12 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
     override fun onScore(team: Team, teamMeta: TeamMeta<Location, ItemStack>) {
         val scoreMessageTitle = teamMeta.scoreMessageTitle
         val scoreMessageSubTitle = teamMeta.scoreMessageSubTitle
-        this.getPlayers().forEach { p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this) }
+
+        val players = ArrayList(getPlayers())
+        val additionalPlayers = getAdditionalNotificationPlayers()
+        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+
+        players.forEach { p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this) }
 
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
             val event = GoalShootEvent(this, lastInteractedEntity as Player, team)
@@ -78,6 +88,9 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
      * Gets called when the match ends in a draw.
      */
     private fun onDraw() {
+        val additionalPlayers = getAdditionalNotificationPlayers().filter { pair -> pair.second }.map { p -> p.first }
+        additionalPlayers.forEach { p -> p.sendScreenMessage(arena.meta.redTeamMeta.drawMessageTitle, arena.meta.redTeamMeta.drawMessageSubTitle, this) }
+
         this.redTeam.forEach { p -> p.sendScreenMessage(arena.meta.redTeamMeta.drawMessageTitle, arena.meta.redTeamMeta.drawMessageSubTitle, this) }
         this.blueTeam.forEach { p -> p.sendScreenMessage(arena.meta.blueTeamMeta.drawMessageTitle, arena.meta.blueTeamMeta.drawMessageSubTitle, this) }
     }
@@ -88,7 +101,12 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
     override fun onWin(team: Team, teamMeta: TeamMeta<Location, ItemStack>) {
         val winMessageTitle = teamMeta.winMessageTitle
         val winMessageSubTitle = teamMeta.winMessageSubTitle
-        this.getPlayers().forEach { p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle, this) }
+
+        val players = ArrayList(getPlayers())
+        val additionalPlayers = getAdditionalNotificationPlayers()
+        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+
+        players.forEach { p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle, this) }
 
         val event = GameWinEvent(this, team)
         Bukkit.getServer().pluginManager.callEvent(event)
@@ -98,18 +116,61 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
     /** Leave the game. */
     override fun leave(player: Player) {
-        if (!ingameStats.containsKey(player)) {
-            return
+        if (spectators.contains(player)) {
+            spectators[player]!!.resetState()
+            player.teleport(arena.meta.lobbyMeta.leaveSpawnpoint!!.toBukkitLocation())
+            spectators.remove(player)
         }
 
         super.leave(player)
+
+        if (!ingameStats.containsKey(player)) {
+            return
+        }
 
         val event = GameLeaveEvent(this, player)
         Bukkit.getServer().pluginManager.callEvent(event)
     }
 
+    /**
+     * Spectates the game.
+     */
+    fun spectate(player: Player) {
+        if (spectators.contains(player)) {
+            return
+        }
+
+        if (!isAllowedToSpectateWithPermissions(player)) {
+            return
+        }
+
+        if (arena.meta.spectatorMeta.spectateSpawnpoint != null) {
+            player.teleport(arena.meta.spectatorMeta.spectateSpawnpoint!!.toBukkitLocation())
+
+        } else {
+            player.teleport(arena.meta.ballMeta.spawnpoint!!.toBukkitLocation())
+        }
+
+        spectators[player] = PlayerStorage(player)
+        spectators[player]!!.storeForType(GameType.MINIGAME)
+
+        player.gameMode = GameMode.SPECTATOR
+    }
+
     /** Join the game. */
     override fun join(player: Player, team: Team?): Boolean {
+        if (isGameRunning || isEndGameRunning || isLobbyFull()) {
+            ChatBuilder().text(Config.prefix + arena.meta.spectatorMeta.spectateStartMessage[0].replaceGamePlaceholder(this))
+                    .nextLine()
+                    .component(Config.prefix + arena.meta.spectatorMeta.spectateStartMessage[1].replaceGamePlaceholder(this))
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
+                            , "/" + plugin.config.getString("global-spectate.command") + " " + arena.name)
+                    .setHoverText(" ")
+                    .builder().sendMessage(player)
+
+            return false
+        }
+
         if (!this.isAllowedToJoinWithPermissions(player)) {
             return false
         }
@@ -145,10 +206,6 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
             ingameStats[player]!!.team = targetTeam
             return true
-        }
-
-        if (isGameRunning || isEndGameRunning || isLobbyFull()) {
-            return false
         }
 
         this.leave(player)
@@ -312,8 +369,10 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
 
             if (stats!!.team == null) {
                 if (redTeam.size < blueTeam.size) {
+                    stats.team = Team.RED
                     joinTeam(p, arena.meta.redTeamMeta, redTeam)
                 } else {
+                    stats.team = Team.BLUE
                     joinTeam(p, arena.meta.blueTeamMeta, blueTeam)
                 }
             }
@@ -395,7 +454,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
      */
     private fun playBlingSound() {
         try {
-            this.blingsound.apply(this.ingameStats.keys)
+            this.blindSound.apply(this.ingameStats.keys)
         } catch (e: Exception) {
             Bukkit.getServer().consoleSender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.RED + "Invalid 1.8/1.9 sound. [BlingSound]")
         }
@@ -413,6 +472,30 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         isEndGameRunning = true
         blockBallSpawning = true
     }
+
+    /**
+     * Returns a list of players which can be also notified
+     */
+    override fun getAdditionalNotificationPlayers(): MutableList<Pair<Player, Boolean>> {
+        val players = super.getAdditionalNotificationPlayers()
+        players.addAll(spectators.keys.map { p -> Pair(p, true) })
+        return players
+    }
+
+    /**
+     * Returns if the given [player] is allowed to join the match.
+     */
+    private fun isAllowedToSpectateWithPermissions(player: Player): Boolean {
+        if (player.hasPermission(Permission.SPECTATE.permission + ".all")
+                || player.hasPermission(Permission.SPECTATE.permission + "." + this.arena.name)) {
+            return true
+        }
+
+        player.sendMessage(Config.prefix + Config.spectateGamePermissionmessage)
+
+        return false
+    }
+
 
     /**
      * Prepares the lobby stat for the given [player].
@@ -437,5 +520,19 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         player.teleport(arena.meta.minigameMeta.lobbySpawnpoint!!.toBukkitLocation())
 
         this.ingameStats[player] = stats
+    }
+
+    /**
+     * Closes this resource, relinquishing any underlying resources.
+     * This method is invoked automatically on objects managed by the
+     * `try`-with-resources statement.
+     * @throws Exception if this resource cannot be closed
+     */
+    override fun close() {
+        spectators.keys.toTypedArray().forEach { s ->
+            leave(s)
+        }
+
+        super.close()
     }
 }

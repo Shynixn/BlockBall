@@ -68,6 +68,16 @@ Join the arena with name 'awesome stadium' and the team with name 'Team Spongy':
 ::
   /bbjoin awesome stadium/team spongy
 
+/bbspectate <game>
+~~~~~~~~~~~~~~~~~~
+
+This user command allows to spectate games by entering the name or displayname of the arena. You can find the permissions
+at the `permission list <../gettingstarted/permissions.html#permissionlist>`__.
+
+* Players (require permissions) ✔
+* Server console ✘
+* Command blocks ✘
+
 /bbleave
 ~~~~~~~~
 

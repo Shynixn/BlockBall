@@ -1,9 +1,9 @@
 # BlockBall [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://raw.githubusercontent.com/Shynixn/BlockBall/master/LICENSE)
 
-| branch        | status        | download      |
-| ------------- | --------------| --------------| 
-| master        | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=master)](https://travis-ci.org/Shynixn/BlockBall) |[Download latest release (recommend)](https://github.com/Shynixn/BlockBall/releases)|
-| development   | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=development)](https://travis-ci.org/Shynixn/BlockBall) | [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/) |
+| branch        | status        | coverage | download |
+| ------------- | ------------- | -------- | ---------| 
+| master        | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=master)](https://travis-ci.org/Shynixn/BlockBall) | [![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/master.svg)](https://codecov.io/gh/Shynixn/BlockBall/branch/master)|[Download latest release (recommend)](https://github.com/Shynixn/BlockBall/releases)|
+| development   | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=development)](https://travis-ci.org/Shynixn/BlockBall)|[![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/development.svg)](https://codecov.io/gh/Shynixn/BlockBall/branch/development) | [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/) |
 
 Documentation:  https://shynixn.github.io/BlockBall/
 
@@ -16,8 +16,8 @@ BlockBall is a spigot plugin to play soccer games in Minecraft.
 ## Features
 
 * Uses blocks as balls in minecraft
-* Games are completely customizeable
-* Version support 1.8.R1 - 1.12.R1
+* Games are completely customizable
+* Version support 1.8.R1 - 1.13.R1
 * Check out the [BlockBall-Spigot-Page](https://www.spigotmc.org/resources/15320/) to get more information. 
 
 ## Installation

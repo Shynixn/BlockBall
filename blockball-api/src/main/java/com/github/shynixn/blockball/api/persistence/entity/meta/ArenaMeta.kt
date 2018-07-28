@@ -42,6 +42,9 @@ interface ArenaMeta<Location, ItemStack, Vector, Player, Material> {
     /** Meta data of the hub lobby. */
     val hubLobbyMeta: HubLobbyMeta
 
+    /** Meta data for spectating setting. */
+    val spectatorMeta: SpectatorMeta
+
     /** Meta data of a generic lobby. */
     val lobbyMeta: LobbyMeta
 
@@ -79,5 +82,5 @@ interface ArenaMeta<Location, ItemStack, Vector, Player, Material> {
     val doubleJumpMeta: DoubleJumpMeta<Location, Player, Material>
 
     /** Meta data of the customizing Properties. */
-    val customizingMeta : CustomizationMeta
+    val customizingMeta: CustomizationMeta
 }

@@ -64,6 +64,10 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         } else if (command == BlockBallCommand.MULTILINES_HOLOGRAM) {
             cache[4] = HologramPage.ID
             cache[3] = 0
+        } else if (command == BlockBallCommand.MULTILINES_SPECTATEJOINMESSAGE) {
+            cache[2] = (cache[0] as BukkitArena).meta.spectatorMeta.spectateStartMessage
+            cache[4] = SpectatePage.ID
+            cache[3] = 0
         } else if (command == BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE) {
             val arena = cache[0] as BukkitArena
             cache[4] = SignSettingsPage.ID

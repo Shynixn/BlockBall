@@ -40,6 +40,7 @@ messages:
   state-sign-disabled: '&4Disabled'
   state-sign-running: '&1Running'
   no-permission-join-game: "&cYou do not have permission to join this game."
+  no-permission-spectate-game: "&cYou do not have permission to spectate this game."
 
 ############################
 
@@ -87,6 +88,13 @@ global-join:
   command: bbjoin
   useage: /<command> <game> <team>
   description: Join a game.
+  permission: blockball.command.use
+  permission-message: You don't have permission
+global-spectate:
+  enabled: true
+  command: bbspectate
+  useage: /<command> <game>
+  description: Spectate a game.
   permission: blockball.command.use
   permission-message: You don't have permission
 global-leave:

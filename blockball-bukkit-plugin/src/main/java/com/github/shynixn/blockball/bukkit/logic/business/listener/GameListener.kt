@@ -11,6 +11,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlac
 import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -122,6 +123,10 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
     fun onBallInteractEvent(event: BallInteractEvent) {
         val game = gameController.games.find { p -> p.ball != null && p.ball!! == event.ball }
         if (game != null && game is SoccerGame) {
+            if (event.entity is Player && (event.entity as Player).gameMode == GameMode.SPECTATOR) {
+                event.isCancelled = true
+            }
+
             game.lastInteractedEntity = event.entity
         }
     }

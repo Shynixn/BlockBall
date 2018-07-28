@@ -40,6 +40,7 @@ import org.bukkit.plugin.Plugin
  * SOFTWARE.
  */
 class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : VirtualArenaService {
+
     /**
      * Displays the [arena] virtual locations for the given [player] for the given amount of [seconds].
      */
@@ -92,5 +93,4 @@ class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : 
             j++
         }
     }
-
 }

@@ -18,6 +18,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.LeatherArmorMeta
+import org.bukkit.plugin.Plugin
 
 /**
  * Created by Shynixn 2018.
@@ -46,6 +47,36 @@ import org.bukkit.inventory.meta.LeatherArmorMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+/**
+ * Executes the given [f] for the given [plugin] on main thread.
+ */
+inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long = 0L, crossinline f: () -> Unit) {
+    if (repeatingTicks > 0) {
+        plugin.server.scheduler.runTaskTimer(plugin, {
+            f.invoke()
+        }, delayTicks, repeatingTicks)
+    } else {
+        plugin.server.scheduler.runTaskLater(plugin, {
+            f.invoke()
+        }, delayTicks)
+    }
+}
+
+/**
+ * Executes the given [f] for the given [plugin] asynchronly.
+ */
+inline fun Any.async(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long = 0L, crossinline f: () -> Unit) {
+    if (repeatingTicks > 0) {
+        plugin.server.scheduler.runTaskTimerAsynchronously(plugin, {
+            f.invoke()
+        }, delayTicks, repeatingTicks)
+    } else {
+        plugin.server.scheduler.runTaskLaterAsynchronously(plugin, {
+            f.invoke()
+        }, delayTicks)
+    }
+}
 
 internal fun setServerModt(text: String) {
     ModtHelper.setModt(text)

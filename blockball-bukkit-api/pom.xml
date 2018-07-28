@@ -5,79 +5,76 @@
     <parent>
         <artifactId>root</artifactId>
         <groupId>com.github.shynixn.blockball</groupId>
-        <version>5.3.0</version>
+        <version>5.4.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>blockball-bukkit-api</artifactId>
-    <version>5.3.0</version>
 
     <dependencies>
         <dependency>
             <groupId>com.github.shynixn.blockball</groupId>
             <artifactId>blockball-api</artifactId>
-            <version>5.3.0</version>
+            <version>5.4.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.shynixn.ball</groupId>
             <artifactId>ball-bukkit-api</artifactId>
-            <version>1.3</version>
+            <version>1.4</version>
         </dependency>
         <dependency>
-            <groupId>net</groupId>
-            <artifactId>minecraft18R1</artifactId>
-            <scope>system</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}/../lib/spigot-1.8.jar</systemPath>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot18R1</artifactId>
+            <version>1.8.0-R1.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net</groupId>
-            <artifactId>minecraft18R2</artifactId>
-            <scope>system</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}/../lib/spigot-1.8.3.jar</systemPath>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot18R2</artifactId>
+            <version>1.8.3-R2.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net</groupId>
-            <artifactId>minecraft18R3</artifactId>
-            <scope>system</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}/../lib/spigot-1.8.8.jar</systemPath>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot18R3</artifactId>
+            <version>1.8.8-R3.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net</groupId>
-            <artifactId>minecraft19R1</artifactId>
-            <scope>system</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}/../lib/spigot-1.9.jar</systemPath>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot19R1</artifactId>
+            <version>1.9.0-R1.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net</groupId>
-            <artifactId>minecraft19R2</artifactId>
-            <scope>system</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}/../lib/spigot-1.9.4.jar</systemPath>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot19R2</artifactId>
+            <version>1.9.4-R2.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net</groupId>
-            <artifactId>minecraft110R1</artifactId>
-            <scope>system</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}/../lib/spigot-1.10.2.jar</systemPath>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot110R1</artifactId>
+            <version>1.10.2-R1.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net</groupId>
-            <artifactId>minecraft111R1</artifactId>
-            <scope>system</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}/../lib/spigot-1.11.jar</systemPath>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot111R1</artifactId>
+            <version>1.11.0-R1.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net</groupId>
-            <artifactId>minecraft112R1</artifactId>
-            <scope>system</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}/../lib/spigot-1.12.jar</systemPath>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot112R1</artifactId>
+            <version>1.12.0-R1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot113R1</artifactId>
+            <version>1.13.0-R1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

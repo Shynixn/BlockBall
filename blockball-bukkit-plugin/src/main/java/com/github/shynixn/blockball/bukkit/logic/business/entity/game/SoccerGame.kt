@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 import com.github.shynixn.ball.api.BallApi
 import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
+import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
@@ -84,18 +85,23 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
         if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH) && winningPlayers != null) {
             RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.WIN_MATCH]!!.toDouble(), winningPlayers)
         }
+
         if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH) && loosingPlayers != null) {
             RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.LOOSING_MATCH]!!.toDouble(), loosingPlayers)
         }
+
         if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.PARTICIPATE_MATCH)) {
             RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.PARTICIPATE_MATCH]!!.toDouble(), getPlayers())
         }
+
         if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH) && winningPlayers != null) {
             this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.WIN_MATCH]!!, winningPlayers)
         }
+
         if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH) && loosingPlayers != null) {
             this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.LOOSING_MATCH]!!, loosingPlayers)
         }
+
         if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.PARTICIPATE_MATCH)) {
             this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.PARTICIPATE_MATCH]!!, getPlayers())
         }
@@ -240,10 +246,12 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
                 this.ballSpawnCounter = 0
             }
         } else if ((this.ball == null || this.ball!!.isDead)
-                && (!this.redTeam.isEmpty() || !this.blueTeam.isEmpty())
-                && (this.redTeam.size >= this.arena.meta.redTeamMeta.minAmount && this.blueTeam.size >= this.arena.meta.blueTeamMeta.minAmount)) {
-            this.ballSpawning = true
-            this.ballSpawnCounter = this.arena.meta.ballMeta.delayInTicks
+                && (!this.redTeam.isEmpty() || !this.blueTeam.isEmpty())) {
+
+            if (arena.gameType != GameType.HUBGAME || this.redTeam.size >= this.arena.meta.redTeamMeta.minAmount && this.blueTeam.size >= this.arena.meta.blueTeamMeta.minAmount) {
+                this.ballSpawning = true
+                this.ballSpawnCounter = this.arena.meta.ballMeta.delayInTicks
+            }
         }
     }
 }

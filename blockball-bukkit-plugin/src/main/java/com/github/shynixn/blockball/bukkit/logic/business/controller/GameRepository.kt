@@ -73,6 +73,9 @@ class GameRepository : BukkitGameController, Runnable {
     private lateinit var stopCommandExecutor: StopCommandExecutor
 
     @Inject
+    private lateinit var spectateCommandExecutor: SpectateCommandExecutor
+
+    @Inject
     private lateinit var gameListener: GameListener
 
     @Inject
@@ -139,6 +142,18 @@ class GameRepository : BukkitGameController, Runnable {
         games.forEach { p ->
             if (p.arena.name.equals(name, true)) {
                 return p
+            }
+        }
+        return null
+    }
+
+    /** Returns the game with the given [player] spectating in it. */
+    fun getGameFromSpectatingPlayer(player: Player): BukkitGame? {
+        games.forEach { g ->
+            if (g is Minigame) {
+                if (g.spectators.containsKey(player)) {
+                    return g
+                }
             }
         }
         return null

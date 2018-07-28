@@ -83,24 +83,27 @@ Uses the name of the target server                                       <server
 
 **Placeholder API**
 
-It is also possible to redirect some values to the PlaceHolder API plugin.
+It is also possible to redirect some values to the `PlaceHolder API plugin. <https://www.spigotmc.org/resources/placeholderapi.6245/>`__.
 
-Simply use the **Games** placeholders and append the prefix **%blockball_**.
+Simply use the **Games** placeholders and append the prefix **%blockball_** and the suffix **_<id>**.
+Replace <id> with the id of the arena.
+
+Sample placeholder for the current amount of players in arena 1: **%blockball_<sumplayers>_1%**
 
 ======================================================================   =======
 Description                                                              Placeholder
 ======================================================================   =======
-Uses the name of the blue team                                           %blockball_<blue>
-Uses the prefix (default color) of the blue team                         %blockball_<bluecolor>
-Uses the current score of the blue team                                  %blockball_<bluescore>
-Uses the game's displayname                                              %blockball_<game>
-Uses the name of the player who was the last player touching the ball    %blockball_<player>
-Uses the name of the red team                                            %blockball_<red>
-Uses the prefix (default color) of the red team                          %blockball_<redcolor>
-Uses the current score of the red team                                   %blockball_<redscore>
-Uses the game's remaining players amount to join in order to start       %blockball_<remaining>
-Uses the game's state (Enabled,Running,Disabled)                         %blockball_<state>
-Uses the game's current amount of players value                          %blockball_<sumplayers>
-Uses the game's max amount of players value                              %blockball_<summaxplayers>
-Uses the game's current time value                                       %blockball_<time>
+Uses the name of the blue team                                           %blockball_<blue>_<id>%
+Uses the prefix (default color) of the blue team                         %blockball_<bluecolor>_<id>%
+Uses the current score of the blue team                                  %blockball_<bluescore>_<id>%
+Uses the game's displayname                                              %blockball_<game>_<id>%
+Uses the name of the player who was the last player touching the ball    %blockball_<player>_<id>%
+Uses the name of the red team                                            %blockball_<red>_<id>%
+Uses the prefix (default color) of the red team                          %blockball_<redcolor>_<id>%
+Uses the current score of the red team                                   %blockball_<redscore>_<id>%
+Uses the game's remaining players amount to join in order to start       %blockball_<remaining>_<id>%
+Uses the game's state (Enabled,Running,Disabled)                         %blockball_<state>_<id>%
+Uses the game's current amount of players value                          %blockball_<sumplayers>_<id>%
+Uses the game's max amount of players value                              %blockball_<summaxplayers>_<id>%
+Uses the game's current time value                                       %blockball_<time>_<id>%
 ======================================================================   =======

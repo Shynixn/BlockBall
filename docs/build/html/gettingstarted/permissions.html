@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuring Permissions &mdash; BlockBall 5.3.0 documentation</title>
+  <title>Configuring Permissions &mdash; BlockBall 5.4.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 5.3.0 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 5.4.0 documentation" href="../index.html"/>
         <link rel="up" title="Getting Started" href="index.html"/>
         <link rel="next" title="Creating the first game" href="playing.html"/>
         <link rel="prev" title="Installing" href="installing.html"/> 
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                5.3.0
+                5.4.0
               </div>
             
           
@@ -217,8 +217,8 @@
 <h2>Users<a class="headerlink" href="#users" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="docutils">
 <colgroup>
-<col width="53%" />
-<col width="47%" />
+<col width="72%" />
+<col width="28%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Description</th>
@@ -226,7 +226,7 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>Allows to use the <strong>/bbjoin</strong> and <strong>/bbleave</strong> command</td>
+<tr class="row-even"><td>Allows to use the <strong>/bbjoin</strong>, <strong>/bbspectate</strong> and <strong>/bbleave</strong> command</td>
 <td>blockball.command.use</td>
 </tr>
 <tr class="row-odd"><td>Allows to join all games</td>
@@ -234,6 +234,12 @@
 </tr>
 <tr class="row-even"><td>Allows to join the specified game</td>
 <td>blockball.game.join.&lt;id&gt;</td>
+</tr>
+<tr class="row-odd"><td>Allows to spectate all games</td>
+<td>blockball.game.spectate.all</td>
+</tr>
+<tr class="row-even"><td>Allows to spectate the specified game</td>
+<td>blockball.game.spectate.&lt;id&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -243,8 +249,8 @@
 <p><strong>Permissions for commands</strong></p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="74%" />
-<col width="26%" />
+<col width="75%" />
+<col width="25%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Description</th>
@@ -261,7 +267,7 @@
 <tr class="row-even"><td>Allows to use other commands during Minigames and BungeeCordgames</td>
 <td>blockball.command.staff</td>
 </tr>
-<tr class="row-odd"><td>Allows to use the <strong>/bbjoin</strong> and <strong>/bbleave</strong> command</td>
+<tr class="row-odd"><td>Allows to use the <strong>/bbjoin</strong>, <strong>/bbspectate</strong> and <strong>/bbleave</strong> command</td>
 <td>blockball.command.use</td>
 </tr>
 </tbody>
@@ -269,8 +275,8 @@
 <p><strong>Permissions for games</strong></p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="74%" />
-<col width="26%" />
+<col width="71%" />
+<col width="29%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Description</th>
@@ -283,6 +289,12 @@
 </tr>
 <tr class="row-odd"><td>Allows to join the specified game</td>
 <td>blockball.game.join.&lt;id&gt;</td>
+</tr>
+<tr class="row-even"><td>Allows to spectate all games</td>
+<td>blockball.game.spectate.all</td>
+</tr>
+<tr class="row-odd"><td>Allows to spectate the specified game</td>
+<td>blockball.game.spectate.&lt;id&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -332,7 +344,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'5.3.0',
+            VERSION:'5.4.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

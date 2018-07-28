@@ -86,7 +86,6 @@ abstract class LowLevelGame(
     private var holograms: MutableList<SimpleHologram> = ArrayList()
 
     private val scoreboardService = ScoreboardServiceImpl()
-
     /** Amount of points the blue team has scored. */
     override val bluePoints: Int
         get() = blueGoals
@@ -149,17 +148,6 @@ abstract class LowLevelGame(
 
     /** Leave the game. */
     override fun leave(player: Player) {
-        if (!ingameStats.containsKey(player))
-            return
-        val stats = this.ingameStats[player]
-        if (stats!!.team == Team.RED) {
-            this.redTeam.remove(player)
-            player.sendMessage(Config.prefix + arena.meta.redTeamMeta.leaveMessage)
-        } else if (stats.team == Team.BLUE) {
-            this.blueTeam.remove(player)
-            player.sendMessage(Config.prefix + arena.meta.blueTeamMeta.leaveMessage)
-        }
-
         if (scoreboard != null) {
             if (player.scoreboard == scoreboard) {
                 player.scoreboard = Bukkit.getScoreboardManager().newScoreboard
@@ -168,6 +156,18 @@ abstract class LowLevelGame(
 
         if (bossbar != null) {
             bossbar!!.removePlayer(player)
+        }
+
+        if (!ingameStats.containsKey(player))
+            return
+
+        val stats = this.ingameStats[player]
+        if (stats!!.team == Team.RED) {
+            this.redTeam.remove(player)
+            player.sendMessage(Config.prefix + arena.meta.redTeamMeta.leaveMessage)
+        } else if (stats.team == Team.BLUE) {
+            this.blueTeam.remove(player)
+            player.sendMessage(Config.prefix + arena.meta.blueTeamMeta.leaveMessage)
         }
 
         if (!VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1) && RegisterHelper.isRegistered("BossBarAPI")) {
@@ -207,16 +207,29 @@ abstract class LowLevelGame(
                     .map { arena.meta.hologramMetas[it] }
                     .forEach { holograms.add(SimpleHologram(plugin, it.position!!.toBukkitLocation(), it.lines)) }
         }
+
         this.holograms.forEachIndexed { i, holo ->
-            this.getPlayers().forEach { p ->
+            val players = ArrayList(getPlayers())
+            val additionalPlayers = getAdditionalNotificationPlayers()
+            players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+
+            players.forEach { p ->
                 if (!holo.containsPlayer(p)) {
                     holo.addPlayer(p)
                 }
             }
+
+            additionalPlayers.filter { p -> !p.second }.forEach { p ->
+                if (holo.containsPlayer(p.first)) {
+                    holo.removePlayer(p.first)
+                }
+            }
+
             val lines = ArrayList(this.arena.meta.hologramMetas[i].lines)
             for (i in lines.indices) {
                 lines[i] = lines[i].replaceGamePlaceholder(this)
             }
+
             holo.setLines(lines)
         }
     }
@@ -230,7 +243,6 @@ abstract class LowLevelGame(
         val meta = arena.meta.bossBarMeta
         if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
             if (bossbar == null && arena.meta.bossBarMeta.enabled) {
-
                 bossbar = if (meta.flags.isEmpty()) {
                     SimpleBossBar.from(meta.message, meta.color.name, meta.style.name, "NONE")
                 } else {
@@ -240,13 +252,34 @@ abstract class LowLevelGame(
                 bossbar!!.percentage = meta.percentage / 100.0
             }
             if (bossbar != null) {
-                bossbar!!.addPlayer(getPlayers())
+                val players = ArrayList(getPlayers())
+                val additionalPlayers = getAdditionalNotificationPlayers()
+                players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+
+                val bossbarPlayers = bossbar!!.players
+
+                additionalPlayers.filter { p -> !p.second }.forEach { p ->
+                    if (bossbarPlayers.contains(p.first)) {
+                        bossbar!!.removePlayer(p.first)
+                    }
+                }
+
+                bossbar!!.addPlayer(players)
                 bossbar!!.message = meta.message.replaceGamePlaceholder(this)
             }
         } else if (RegisterHelper.isRegistered("BossBarAPI")) {
             if (arena.meta.bossBarMeta.enabled) {
                 val percentage = meta.percentage
-                getPlayers().forEach { p ->
+
+                val players = ArrayList(getPlayers())
+                val additionalPlayers = getAdditionalNotificationPlayers()
+                players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+
+                additionalPlayers.filter { p -> !p.second }.forEach { p ->
+                    RegisterHelper.setBossBar(p.first, null, 0.0)
+                }
+
+                players.forEach { p ->
                     RegisterHelper.setBossBar(p, meta.message.replaceGamePlaceholder(this), percentage)
                 }
             }
@@ -279,7 +312,17 @@ abstract class LowLevelGame(
             scoreboardService.setConfiguration(scoreboard, DisplaySlot.SIDEBAR, arena.meta.scoreboardMeta.title)
         }
 
-        getPlayers().forEach { p ->
+        val players = ArrayList(getPlayers())
+        val additionalPlayers = getAdditionalNotificationPlayers()
+        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+
+        additionalPlayers.filter { p -> !p.second }.forEach { p ->
+            if (p.first.scoreboard == scoreboard) {
+                p.first.scoreboard = Bukkit.getScoreboardManager().newScoreboard
+            }
+        }
+
+        players.forEach { p ->
             if (scoreboard != null) {
                 if (p.scoreboard != scoreboard) {
                     p.scoreboard = this.scoreboard
@@ -397,6 +440,30 @@ abstract class LowLevelGame(
             return true
         }
         return false
+    }
+
+    /**
+     * Returns a list of players which can be also notified
+     */
+    protected open fun getAdditionalNotificationPlayers(): MutableList<Pair<Player, Boolean>> {
+        if (!arena.meta.spectatorMeta.notifyNearbyPlayers) {
+            return ArrayList()
+        }
+
+        val players = ArrayList<Pair<Player, Boolean>>()
+        val center = this.arena.center as Location
+
+        center.world.players.forEach { p ->
+            if (!hasJoined(p)) {
+                if (p.location.distance(center) <= arena.meta.spectatorMeta.notificationRadius) {
+                    players.add(Pair(p, true))
+                } else {
+                    players.add(Pair(p, false))
+                }
+            }
+        }
+
+        return players
     }
 
     /**

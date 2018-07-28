@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.helper;
 
+import com.github.shynixn.ball.bukkit.core.nms.VersionSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -212,7 +213,7 @@ public class ChatBuilder {
             final Class<?> chatBaseComponentClazz = findClass("net.minecraft.server.VERSION.IChatBaseComponent");
             final Object chatComponent = invokeMethod(null, clazz, "a", new Class[]{String.class}, new Object[]{finalMessage.toString()});
             final Object packet;
-            if (Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3].equals("v1_12_R1")) {
+            if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_12_R1)) {
                 final Class<?> chatEnumMessage = findClass("net.minecraft.server.VERSION.ChatMessageType");
                 packet = invokeConstructor(packetClazz, new Class[]{chatBaseComponentClazz, chatEnumMessage}, new Object[]{chatComponent, chatEnumMessage.getEnumConstants()[0]});
             } else {

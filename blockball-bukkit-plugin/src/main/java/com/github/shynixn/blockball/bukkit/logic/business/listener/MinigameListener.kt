@@ -46,7 +46,12 @@ class MinigameListener @Inject constructor(plugin: Plugin) : SimpleListener(plug
      */
     @EventHandler
     fun onPlayerInteractEvent(event: PlayerInteractEvent) {
-        val game = gameController!!.getGameFromPlayer(event.player)
+        var game = gameController!!.getGameFromPlayer(event.player)
+
+        if (game == null) {
+            game = gameController!!.getGameFromSpectatingPlayer(event.player)
+        }
+
         if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE)) {
             event.isCancelled = true
         }
@@ -65,7 +70,11 @@ class MinigameListener @Inject constructor(plugin: Plugin) : SimpleListener(plug
             return
         }
 
-        val game = gameController!!.getGameFromPlayer(event.player)
+        var game = gameController!!.getGameFromPlayer(event.player)
+        if (game == null) {
+            game = gameController!!.getGameFromSpectatingPlayer(event.player)
+        }
+
         if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE)) {
             event.isCancelled = true
         }

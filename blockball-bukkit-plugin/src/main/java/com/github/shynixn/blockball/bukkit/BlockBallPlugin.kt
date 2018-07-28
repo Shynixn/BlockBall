@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.controller.GameReposit
 import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder
 import com.github.shynixn.blockball.bukkit.logic.business.helper.ReflectionUtils
 import com.github.shynixn.blockball.bukkit.logic.business.helper.UpdateUtils
+import com.github.shynixn.blockball.bukkit.logic.business.helper.async
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.google.inject.Guice
 import com.google.inject.Inject
@@ -127,7 +128,7 @@ class BlockBallPlugin : JavaPlugin() {
      * Checks if new updates are available on spigotmc.org.
      */
     private fun checkForUpdates() {
-        this.server.scheduler.runTaskAsynchronously(this) {
+        async(this) {
             try {
                 UpdateUtils.checkPluginUpToDateAndPrintMessage(SPIGOT_RESOURCEID, PREFIX_CONSOLE, PLUGIN_NAME, this)
             } catch (e: IOException) {
