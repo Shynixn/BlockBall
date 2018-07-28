@@ -16,28 +16,28 @@ BlockBall is using maven as build system but you can include the api via differe
    <dependency>
         <groupId>com.github.shynixn.ball</groupId>
         <artifactId>ball-api</artifactId>
-        <version>1.3</version>
+        <version>1.4</version>
         <scope>provided</scope>
     </dependency>
     <dependency>
         <groupId>com.github.shynixn.blockball</groupId>
         <artifactId>blockball-api</artifactId>
-        <version>5.3.0</version>
+        <version>5.4.0</version>
         <scope>provided</scope>
     </dependency>
     <dependency>
         <groupId>com.github.shynixn.blockball</groupId>
         <artifactId>blockball-bukkit-api</artifactId>
-        <version>5.3.0</version>
+        <version>5.4.0</version>
         <scope>provided</scope>
     </dependency>
 
 **Gradle**:
 ::
     dependencies {
-        compileOnly 'com.github.shynixn.ball:ball-api:1.3'
-        compileOnly 'com.github.shynixn.blockball:blockball-api:5.3.0'
-        compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:5.3.0'
+        compileOnly 'com.github.shynixn.ball:ball-api:1.4'
+        compileOnly 'com.github.shynixn.blockball:blockball-api:5.4.0'
+        compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:5.4.0'
     }
 
 **Reference the jar file**:
@@ -113,14 +113,37 @@ Before you continue you should be familiar with **git**, **github**, **maven** a
 4. Click on the green **Clone or download** button and copy the text inside of the textbox
 5. Open a terminal on your pc, go into a target folder and enter the command
 
-Terminal:
+**CLI**
 ::
    git clone <your copied text>
 ::
 
 6. After BlockBall folder is created you can open the Project with any Java IDE supporting **Maven**
-7. Create a new **lib** folder in your BlockBall folder
-8. Download all spigot libraries from 1.8.0 until the latest version and put it into the lib folder
+7. Add the required spigot libraries from 1.8.0 until the latest version via BuildTools and the the following commands.
+
+**CLI**
+::
+    - java -jar BuildTools.jar --rev 1.8
+    - java -jar BuildTools.jar --rev 1.8.3
+    - java -jar BuildTools.jar --rev 1.8.8
+    - java -jar BuildTools.jar --rev 1.9
+    - java -jar BuildTools.jar --rev 1.9.4
+    - java -jar BuildTools.jar --rev 1.10
+    - java -jar BuildTools.jar --rev 1.11
+    - java -jar BuildTools.jar --rev 1.12
+    - java -jar BuildTools.jar --rev 1.13
+    - mvn install:install-file -Dfile=spigot-1.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R1 -Dversion=1.8.0-R1.0 -Dpackaging=jar
+    - mvn install:install-file -Dfile=spigot-1.8.3.jar -DgroupId=org.spigotmc -DartifactId=spigot18R2 -Dversion=1.8.3-R2.0 -Dpackaging=jar
+    - mvn install:install-file -Dfile=spigot-1.8.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R3 -Dversion=1.8.8-R3.0 -Dpackaging=jar
+    - mvn install:install-file -Dfile=spigot-1.9.jar -DgroupId=org.spigotmc -DartifactId=spigot19R1 -Dversion=1.9.0-R1.0 -Dpackaging=jar
+    - mvn install:install-file -Dfile=spigot-1.9.4.jar -DgroupId=org.spigotmc -DartifactId=spigot19R2 -Dversion=1.9.4-R2.0 -Dpackaging=jar
+    - mvn install:install-file -Dfile=spigot-1.10.2.jar -DgroupId=org.spigotmc -DartifactId=spigot110R1 -Dversion=1.10.2-R1.0 -Dpackaging=jar
+    - mvn install:install-file -Dfile=spigot-1.11.jar -DgroupId=org.spigotmc -DartifactId=spigot111R1 -Dversion=1.11.0-R1.0 -Dpackaging=jar
+    - mvn install:install-file -Dfile=spigot-1.12.jar -DgroupId=org.spigotmc -DartifactId=spigot112R1 -Dversion=1.12.0-R1.0 -Dpackaging=jar
+    - mvn install:install-file -Dfile=spigot-1.13.jar -DgroupId=org.spigotmc -DartifactId=spigot113R1 -Dversion=1.13.0-R1.0 -Dpackaging=jar
+
+
+8. Refresh the maven dependencies.
 9. Try to compile the root project with **mvn compile**
 10. If successful you can start editing the source code and create jar files via **mvn package**
 
