@@ -6,6 +6,8 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.StatsData;
+import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository;
+import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -91,8 +93,8 @@ public class StatsMySQLControllerIT {
         final Player player = mock(Player.class);
         when(player.getName()).thenReturn("Shynixn");
         when(player.getUniqueId()).thenReturn(uuid);
-        try (StatsRepository controller = new StatsRepository(connectionContextService)) {
-            try (PlayerInfoController playerController = new PlayerInfoController(connectionContextService)) {
+        try (StatsSqlRepository controller = new StatsSqlRepository(connectionContextService)) {
+            try (PlayerSqlRepository playerController = new PlayerSqlRepository(connectionContextService)) {
                 for (final Stats item : controller.getAll()) {
                     controller.remove(item);
                 }
@@ -126,8 +128,8 @@ public class StatsMySQLControllerIT {
         final Player player = mock(Player.class);
         when(player.getName()).thenReturn("Shynixn");
         when(player.getUniqueId()).thenReturn(uuid);
-        try (StatsRepository controller = new StatsRepository(connectionContextService)) {
-            try (PlayerInfoController playerController = new PlayerInfoController(connectionContextService)) {
+        try (StatsSqlRepository controller = new StatsSqlRepository(connectionContextService)) {
+            try (PlayerSqlRepository playerController = new PlayerSqlRepository(connectionContextService)) {
                 for (final Stats item : controller.getAll()) {
                     controller.remove(item);
                 }

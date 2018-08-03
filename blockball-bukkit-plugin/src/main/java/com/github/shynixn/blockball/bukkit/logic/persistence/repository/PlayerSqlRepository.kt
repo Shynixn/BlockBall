@@ -1,12 +1,12 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.controller
+package com.github.shynixn.blockball.bukkit.logic.persistence.repository
 
-import com.github.shynixn.blockball.api.persistence.controller.PlayerMetaController
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta
+import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.PlayerData
 import com.google.inject.Inject
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.util.*
@@ -39,13 +39,62 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class PlayerInfoController  @Inject constructor(dbContext: ConnectionContextService) : DatabaseRepository<PlayerMeta<Player>>(dbContext, "player"), PlayerMetaController<PlayerMeta<Player>,Player> {
+class PlayerSqlRepository @Inject constructor(dbContext: ConnectionContextService, private val plugin: Plugin) : DatabaseRepository<PlayerMeta>(dbContext, "player"), PlayerRepository {
+    /**
+     * Returns the amount of items in this repository.
+     */
+    override fun size(): Int {
+        return this.count
+    }
+
+    /**
+     * Returns the [PlayerMeta] from the given [player] or allocates a new one.
+     */
+    override fun <P> getOrCreateFromPlayer(player: P): PlayerMeta {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        try {
+            this.dbContext.connection.use { connection ->
+                this.dbContext.executeStoredQuery("player/selectbyuuid", connection,
+                        player.uniqueId.toString()).use { preparedStatement ->
+                    preparedStatement.executeQuery().use { resultSet ->
+                        if (resultSet.next()) {
+                            return this.from(resultSet)
+                        }
+                    }
+                }
+            }
+        } catch (e: SQLException) {
+            plugin.logger.log(Level.WARNING, "Database error occurred.", e)
+        }
+
+        val playerMeta = PlayerData(player)
+        save(player, playerMeta)
+
+        return playerMeta
+    }
+
+    /**
+     * Saves the given [PlayerMeta] to the storage.
+     */
+    override fun <P> save(player: P, playerMeta: PlayerMeta) {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        playerMeta.name = player.name
+
+        this.store(playerMeta)
+    }
+
     /**
      * Updates the item inside of the database.
      *
      * @param item item
      */
-    override fun update(item: PlayerMeta<Player>) {
+    override fun update(item: PlayerMeta) {
         try {
             this.dbContext.connection.use { connection ->
                 this.dbContext.executeStoredUpdate("player/update", connection,
@@ -54,7 +103,7 @@ class PlayerInfoController  @Inject constructor(dbContext: ConnectionContextServ
                         item.id)
             }
         } catch (e: SQLException) {
-            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e)
+            plugin.logger.log(Level.WARNING, "Database error occurred.", e)
         }
 
     }
@@ -64,7 +113,7 @@ class PlayerInfoController  @Inject constructor(dbContext: ConnectionContextServ
      *
      * @param item item
      */
-    override fun insert(item: PlayerMeta<Player>) {
+    override fun insert(item: PlayerMeta) {
         try {
             this.dbContext.connection.use { connection ->
                 val id = this.dbContext.executeStoredInsert("player/insert", connection,
@@ -72,7 +121,7 @@ class PlayerInfoController  @Inject constructor(dbContext: ConnectionContextServ
                 (item as PlayerData).id = id
             }
         } catch (e: SQLException) {
-            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e)
+            plugin.logger.log(Level.WARNING, "Database error occurred.", e)
         }
     }
 
@@ -83,35 +132,11 @@ class PlayerInfoController  @Inject constructor(dbContext: ConnectionContextServ
      * @return entity
      * @throws SQLException exception
      */
-    override fun from(resultSet: ResultSet): PlayerMeta<Player> {
+    override fun from(resultSet: ResultSet): PlayerMeta {
         val playerStats = PlayerData()
         playerStats.id = resultSet.getLong("id")
         playerStats.name = resultSet.getString("name")
         playerStats.uuid = UUID.fromString(resultSet.getString("uuid"))
         return playerStats
-    }
-
-    /** Creates a new playerMeta from the given player.**/
-    override fun create(player: Player): PlayerMeta<Player> {
-        return PlayerData(player)
-    }
-
-    /** Returns the playerMeta of the given uuid. **/
-    override fun getByUUID(uuid: UUID): Optional<PlayerMeta<Player>> {
-        try {
-            this.dbContext.connection.use { connection ->
-                this.dbContext.executeStoredQuery("player/selectbyuuid", connection,
-                        uuid.toString()).use { preparedStatement ->
-                    preparedStatement.executeQuery().use { resultSet ->
-                        if (resultSet.next()) {
-                            return Optional.of(this.from(resultSet))
-                        }
-                    }
-                }
-            }
-        } catch (e: SQLException) {
-            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e)
-        }
-        return Optional.empty()
     }
 }

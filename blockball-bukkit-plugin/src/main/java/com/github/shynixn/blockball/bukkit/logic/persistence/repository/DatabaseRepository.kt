@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.controller
+package com.github.shynixn.blockball.bukkit.logic.persistence.repository
 
 import com.github.shynixn.blockball.api.persistence.controller.DatabaseController
 import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
@@ -39,11 +39,8 @@ import java.util.logging.Level
  */
 abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextService, private val folder: String) : DatabaseController<T> where T : PersistenceAble {
 
-
     /** Stores a new item into the repository. */
     override fun store(item: T) {
-        if(item == null)
-            throw IllegalArgumentException("Item cannot be null!")
         if (this.hasId(item)) {
             this.update(item)
         } else {
@@ -138,7 +135,7 @@ abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextS
      *
      * @param item item
      */
-    protected fun delete(item: T){
+    protected fun delete(item: T) {
         try {
             this.dbContext.connection.use { connection ->
                 this.dbContext.executeStoredUpdate("$folder/delete", connection,

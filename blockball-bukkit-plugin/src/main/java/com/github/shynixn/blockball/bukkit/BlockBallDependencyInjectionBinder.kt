@@ -1,8 +1,12 @@
 package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
+import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
+import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository
+import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository
 import com.google.inject.AbstractModule
 import org.bukkit.Bukkit
 import org.bukkit.Server
@@ -51,6 +55,8 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
 
         // Repositories
         bind(ArenaRepository::class.java).toInstance(repository)
+        bind(PlayerRepository::class.java).to(PlayerSqlRepository::class.java)
+        bind(StatsRepository::class.java).to(StatsSqlRepository::class.java)
 
         // Services
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java)
@@ -58,6 +64,10 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(ScoreboardService::class.java).to(ScoreboardServiceImpl::class.java)
         bind(ScreenMessageService::class.java).to(ScreenMessageServiceImpl::class.java)
         bind(UpdateCheckService::class.java).to(UpdateCheckServiceImpl::class.java)
+        bind(ConfigurationService::class.java).to(ConfigurationServiceImpl::class.java)
+        bind(StatsCollectingService::class.java).to(StatsCollectingServiceImpl::class.java)
+
+        bind(PersistenceStatsService::class.java).to(PersistenceStatsServiceImpl::class.java)
 
         bind(DependencyVaultService::class.java).to(DependencyVaultServiceImpl::class.java)
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)

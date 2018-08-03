@@ -1,7 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.stats
+package com.github.shynixn.blockball.api.persistence.repository
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import java.util.*
+import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
 
 /**
  * Created by Shynixn 2018.
@@ -30,11 +29,24 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface PlayerMeta : PersistenceAble {
+interface StatsRepository {
+    /**
+     * Returns all stored stats in this repository.
+     */
+    fun getAll(): List<Stats>
 
-    /** [name] of the player. */
-    var name: String
+    /**
+     * Returns the amount of items in this repository.
+     */
+    fun size(): Int
 
-    /** [uuid] of the player. */
-    var uuid: UUID
+    /**
+     * Returns the [Stats] from the given [player] or allocates a new one.
+     */
+    fun <P> getOrCreateFromPlayer(player: P): Stats
+
+    /**
+     * Saves the given [Stats] to the storage.
+     */
+    fun <P> save(player: P, stats: Stats)
 }

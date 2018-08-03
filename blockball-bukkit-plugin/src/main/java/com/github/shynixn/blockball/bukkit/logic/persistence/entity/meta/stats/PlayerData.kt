@@ -34,10 +34,10 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class PlayerData() : PersistenceObject(), PlayerMeta<Player> {
+class PlayerData() : PersistenceObject(), PlayerMeta {
     /** [name] of the player. */
     @YamlSerializer.YamlSerialize(value = "name", orderNumber = 1)
-    override var name: String? = null
+    override var name: String = ""
 
     @YamlSerializer.YamlSerialize(value = "uuid", orderNumber = 2)
     private var uuidText: String? = null
@@ -50,17 +50,12 @@ class PlayerData() : PersistenceObject(), PlayerMeta<Player> {
     /** [uuid] of the player. */
     override var uuid: UUID
         get() {
-            if(uuidText == null)
+            if (uuidText == null)
                 throw IllegalArgumentException("UUID cannot be null!")
-           return UUID.fromString(uuidText)
+            return UUID.fromString(uuidText)
         }
         set(value) {
             uuidText = value.toString()
         }
 
-    /** [player] instance. */
-    override val player: Player
-        get() {
-            return Bukkit.getPlayer(uuid)
-        }
 }

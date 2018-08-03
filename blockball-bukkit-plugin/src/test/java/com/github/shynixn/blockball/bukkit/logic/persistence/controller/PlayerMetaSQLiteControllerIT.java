@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.PlayerData;
+import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -51,7 +52,7 @@ public class PlayerMetaSQLiteControllerIT {
     public void insertSelectPlayerMetaTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
-        try (PlayerInfoController controller = new PlayerInfoController(connectionContextService)) {
+        try (PlayerSqlRepository controller = new PlayerSqlRepository(connectionContextService)) {
             for (final PlayerMeta item : controller.getAll()) {
                 controller.remove(item);
             }
@@ -79,7 +80,7 @@ public class PlayerMetaSQLiteControllerIT {
     public void storeLoadPlayerMetaTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
-        try (PlayerInfoController controller = new PlayerInfoController(connectionContextService)) {
+        try (PlayerSqlRepository controller = new PlayerSqlRepository(connectionContextService)) {
             for (final PlayerMeta item : controller.getAll()) {
                 controller.remove(item);
             }

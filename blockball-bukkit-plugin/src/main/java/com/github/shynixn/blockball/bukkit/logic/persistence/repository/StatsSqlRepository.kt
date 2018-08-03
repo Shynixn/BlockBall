@@ -1,15 +1,15 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.controller
+package com.github.shynixn.blockball.bukkit.logic.persistence.repository
 
-import com.github.shynixn.blockball.api.persistence.controller.StatsController
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
+import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
+import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.StatsData
 import com.google.inject.Inject
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import java.sql.ResultSet
 import java.sql.SQLException
-import java.util.*
 import java.util.logging.Level
 
 /**
@@ -39,7 +39,56 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class StatsRepository @Inject constructor(dbContext: ConnectionContextService) : DatabaseRepository<Stats>(dbContext, "stats"), StatsController<Player> {
+class StatsSqlRepository @Inject constructor(dbContext: ConnectionContextService, private val plugin: Plugin, private val playerRepository: PlayerRepository) : DatabaseRepository<Stats>(dbContext, "stats"), StatsRepository {
+    /**
+     * Returns the amount of items in this repository.
+     */
+    override fun size(): Int {
+        return this.count
+    }
+
+    /**
+     * Returns the [Stats] from the given [player] or allocates a new one.
+     */
+    override fun <P> getOrCreateFromPlayer(player: P): Stats {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        try {
+            this.dbContext.connection.use { connection ->
+                this.dbContext.executeStoredQuery("stats/selectbyplayer", connection,
+                        player.uniqueId.toString()).use { preparedStatement ->
+                    preparedStatement.executeQuery().use { resultSet ->
+                        if (resultSet.next()) {
+                            return this.from(resultSet)
+                        }
+                    }
+                }
+            }
+        } catch (e: SQLException) {
+            plugin.logger.log(Level.WARNING, "Database error occurred.", e)
+        }
+
+        val playerInfo = playerRepository.getOrCreateFromPlayer(player)
+        val stats = StatsData()
+        stats.playerId = playerInfo.id
+        save(player, stats)
+
+        return stats
+    }
+
+    /**
+     * Saves the given [Stats] to the storage.
+     */
+    override fun <P> save(player: P, stats: Stats) {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        this.store(stats)
+    }
+
     /**
      * Updates the item inside of the database.
      *
@@ -55,7 +104,7 @@ class StatsRepository @Inject constructor(dbContext: ConnectionContextService) :
                         item.id)
             }
         } catch (e: SQLException) {
-            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e)
+            plugin.logger.log(Level.WARNING, "Database error occurred.", e)
         }
     }
 
@@ -75,14 +124,8 @@ class StatsRepository @Inject constructor(dbContext: ConnectionContextService) :
                 item.id = id
             }
         } catch (e: SQLException) {
-            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e)
+            plugin.logger.log(Level.WARNING, "Database error occurred.", e)
         }
-    }
-
-
-    /** Creates a new empty stats instance. **/
-    override fun create(): Stats {
-        return StatsData()
     }
 
     /**
@@ -94,30 +137,15 @@ class StatsRepository @Inject constructor(dbContext: ConnectionContextService) :
      */
     override fun from(resultSet: ResultSet): Stats {
         val stats = StatsData()
-        stats.id = resultSet.getLong("id")
-        stats.playerId = resultSet.getLong("shy_player_id")
-        stats.amountOfWins = resultSet.getInt("wins")
-        stats.amountOfPlayedGames = resultSet.getInt("games")
-        stats.amountOfGoals = resultSet.getInt("goals")
-        return stats
-    }
 
-    /** Returns the stats from the given player. **/
-    override fun getByPlayer(player: Player): Optional<Stats> {
-        try {
-            this.dbContext.connection.use { connection ->
-                this.dbContext.executeStoredQuery("stats/selectbyplayer", connection,
-                        player.uniqueId.toString()).use { preparedStatement ->
-                    preparedStatement.executeQuery().use { resultSet ->
-                        if (resultSet.next()) {
-                            return Optional.of(this.from(resultSet))
-                        }
-                    }
-                }
-            }
-        } catch (e: SQLException) {
-            Bukkit.getLogger().log(Level.WARNING, "Database error occurred.", e)
+        with(stats) {
+            id = resultSet.getLong("id")
+            playerId = resultSet.getLong("shy_player_id")
+            amountOfWins = resultSet.getInt("wins")
+            amountOfPlayedGames = resultSet.getInt("games")
+            amountOfGoals = resultSet.getInt("goals")
         }
-        return Optional.empty()
+
+        return stats
     }
 }

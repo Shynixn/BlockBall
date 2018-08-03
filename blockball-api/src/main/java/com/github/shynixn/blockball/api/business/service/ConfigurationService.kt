@@ -1,7 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.controller
-
-import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta
-import java.util.*
+package com.github.shynixn.blockball.api.business.service
 
 /**
  * Created by Shynixn 2018.
@@ -30,11 +27,11 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface PlayerMetaController<PlayerMetaInfo : Any, Player> : DatabaseController<PlayerMetaInfo> {
-
-    /** Creates a new playerMeta from the given player.**/
-    fun create(player: Player): PlayerMeta<Player>
-
-    /** Returns the playerMeta of the given uuid. **/
-    fun getByUUID(uuid: UUID): Optional<PlayerMeta<Player>>
+interface ConfigurationService {
+    /**
+     * Tries to load the config value from the given [path].
+     * Throws a [IllegalArgumentException] if the path could not be correctly
+     * loaded.
+     */
+    fun <C> findValue(path: String): C
 }

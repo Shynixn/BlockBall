@@ -1,6 +1,7 @@
-package com.github.shynixn.blockball.api.persistence.controller
+package com.github.shynixn.blockball.api.persistence.repository
 
-import java.util.*
+import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta
+import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
 
 /**
  * Created by Shynixn 2018.
@@ -29,8 +30,24 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface DatabaseController<T> : Controller<T> {
+interface PlayerRepository {
+    /**
+     * Returns all stored stats in this repository.
+     */
+    fun getAll(): List<PlayerMeta>
 
-    /** Returns the item by the given database id. */
-    fun getById(id: Int): Optional<T>
+    /**
+     * Returns the amount of items in this repository.
+     */
+    fun size(): Int
+
+    /**
+     * Returns the [PlayerMeta] from the given [player] or allocates a new one.
+     */
+    fun <P> getOrCreateFromPlayer(player: P): PlayerMeta
+
+    /**
+     * Saves the given [PlayerMeta] to the storage.
+     */
+    fun <P> save(player: P, playerMeta: PlayerMeta)
 }

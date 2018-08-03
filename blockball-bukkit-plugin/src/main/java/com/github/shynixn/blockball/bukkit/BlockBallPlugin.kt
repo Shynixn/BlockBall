@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.service.DependencyService
 import com.github.shynixn.blockball.api.business.service.UpdateCheckService
 import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
+import com.github.shynixn.blockball.bukkit.logic.business.listener.StatsListener
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.google.inject.Guice
 import com.google.inject.Inject
@@ -75,6 +76,9 @@ class BlockBallPlugin : JavaPlugin(), com.github.shynixn.blockball.api.business.
             if (Config.metrics!!) {
                 Metrics(this)
             }
+
+            // Register Listeners
+            Bukkit.getPluginManager().registerEvents(resolve(StatsListener::class.java), this)
 
             val updateCheker = resolve(UpdateCheckService::class.java)
             updateCheker.checkForUpdates()

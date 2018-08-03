@@ -5,6 +5,7 @@ import ch.vorburger.mariadb4j.DB;
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.PlayerData;
+import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -89,7 +90,7 @@ public class PlayerMetaMySQLControllerIT {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
         final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
-        try (PlayerInfoController controller = new PlayerInfoController(connectionContextService)) {
+        try (PlayerSqlRepository controller = new PlayerSqlRepository(connectionContextService)) {
             for (final PlayerMeta<? extends Player> item : controller.getAll()) {
                 controller.remove(item);
             }
@@ -119,7 +120,7 @@ public class PlayerMetaMySQLControllerIT {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
         final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
-        try (PlayerInfoController controller = new PlayerInfoController(connectionContextService)) {
+        try (PlayerSqlRepository controller = new PlayerSqlRepository(connectionContextService)) {
             for (final PlayerMeta item : controller.getAll()) {
                 controller.remove(item);
             }

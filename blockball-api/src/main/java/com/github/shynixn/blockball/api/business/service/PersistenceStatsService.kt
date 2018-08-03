@@ -1,7 +1,8 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.stats
+package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
+import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 /**
  * Created by Shynixn 2018.
@@ -30,11 +31,24 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface PlayerMeta : PersistenceAble {
+interface PersistenceStatsService {
+    /**
+     * Returns all stored stats.
+     */
+    fun getAll(): CompletableFuture<List<Stats>>
 
-    /** [name] of the player. */
-    var name: String
+    /**
+     * Returns the amount of stored stats.
+     */
+    fun size(): CompletableFuture<Int>
 
-    /** [uuid] of the player. */
-    var uuid: UUID
+    /**
+     * Returns the [Stats] from the given [player] or allocates a new one.
+     */
+    fun <P> getOrCreateFromPlayer(player: P): CompletableFuture<Stats>
+
+    /**
+     * Saves the given [Stats] to the storage.
+     */
+    fun <P> save(player: P, stats: Stats): CompletableFuture<Void>
 }

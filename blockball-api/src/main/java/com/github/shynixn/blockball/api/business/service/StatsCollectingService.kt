@@ -1,7 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity.meta.stats
+package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import java.util.*
+import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
 
 /**
  * Created by Shynixn 2018.
@@ -30,11 +29,19 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface PlayerMeta : PersistenceAble {
+interface StatsCollectingService {
+    /**
+     * Cleans all allocated resources of the given [player] in this service.
+     */
+    fun <P> cleanResources(player: P)
 
-    /** [name] of the player. */
-    var name: String
+    /**
+     * Updates the stats for the given [player].
+     */
+    fun <P> updateStats(player: P, f: (Stats) -> Unit)
 
-    /** [uuid] of the player. */
-    var uuid: UUID
+    /**
+     * Sets and refreshes the scoreboard for the given [player].
+     */
+    fun <P> setStatsScoreboard(player: P)
 }

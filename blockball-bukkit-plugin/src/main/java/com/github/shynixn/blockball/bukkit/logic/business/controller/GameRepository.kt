@@ -85,9 +85,6 @@ class GameRepository : BukkitGameController, Runnable {
     private lateinit var hubGameListener: HubGameListener
 
     @Inject
-    private lateinit var statsListener: StatsListener
-
-    @Inject
     private lateinit var minigameListener: MinigameListener
 
     @Inject

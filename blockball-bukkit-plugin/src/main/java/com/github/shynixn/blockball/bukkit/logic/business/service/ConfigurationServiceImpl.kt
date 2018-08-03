@@ -1,7 +1,9 @@
-package com.github.shynixn.blockball.api.persistence.controller
+package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
-import java.util.*
+import com.github.shynixn.blockball.api.business.service.ConfigurationService
+import com.google.inject.Inject
+import org.bukkit.ChatColor
+import org.bukkit.plugin.Plugin
 
 /**
  * Created by Shynixn 2018.
@@ -30,11 +32,23 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface StatsController<in Player> : DatabaseController<Stats> {
+class ConfigurationServiceImpl @Inject constructor(private val plugin: Plugin) : ConfigurationService {
+    /**
+     * Tries to load the config value from the given [path].
+     * Throws a [IllegalArgumentException] if the path could not be correctly
+     * loaded.
+     */
+    override fun <C> findValue(path: String): C {
+        if (!plugin.config.contains(path)) {
+            throw IllegalArgumentException("Path '$path' could not be found!")
+        }
 
-    /** Creates a new empty stats instance. **/
-    fun create(): Stats
+        var data = this.plugin.config.get(path)
 
-    /** Returns the stats from the given player **/
-    fun getByPlayer(player: Player): Optional<Stats>
+        if (data is String) {
+            data = ChatColor.translateAlternateColorCodes('&', data)
+        }
+
+        return data as C
+    }
 }
