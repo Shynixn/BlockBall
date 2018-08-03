@@ -31,10 +31,10 @@ interface ScoreboardService {
     /**
      * Sets the configuration of the given scoreboard.
      */
-    fun <Scoreboard> setConfiguration(scoreboard: Scoreboard, displaySlot: Any, title: String)
+    fun <S> setConfiguration(scoreboard: S, displaySlot: Any, title: String)
 
     /**
      * Sets the [text] at the given [scoreboard] and [lineNumber].
      */
-    fun <Scoreboard> setLine(scoreboard: Scoreboard, lineNumber: Int, text: String)
+    fun <S> setLine(scoreboard: S, lineNumber: Int, text: String)
 }

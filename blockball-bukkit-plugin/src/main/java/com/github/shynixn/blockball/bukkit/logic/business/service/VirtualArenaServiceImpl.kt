@@ -44,8 +44,8 @@ class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : 
     /**
      * Displays the [arena] virtual locations for the given [player] for the given amount of [seconds].
      */
-    override fun <Player> displayForPlayer(player: Player, arena: Arena<*, *, *, *, *>, seconds: Int) {
-        if (player !is org.bukkit.entity.Player) {
+    override fun <P> displayForPlayer(player: P, arena: Arena<*, *, *, *, *>, seconds: Int) {
+        if (player !is Player) {
             throw IllegalArgumentException("Player has to be a bukkit player!")
         }
 
