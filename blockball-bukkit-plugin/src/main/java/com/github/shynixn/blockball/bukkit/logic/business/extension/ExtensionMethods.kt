@@ -6,13 +6,15 @@ import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
+import com.github.shynixn.blockball.api.business.proxy.HighlightArmorstandProxy
+import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
+import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.Minigame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
+import com.github.shynixn.blockball.bukkit.logic.business.proxy.HighlightArmorstandProxyImpl
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
 import org.bukkit.*
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -161,6 +163,7 @@ internal fun ItemStack.setColor(color: Color): ItemStack {
     return this
 }
 
+
 /**
  * Returns if the given [player] has got this [Permission].
  */
@@ -188,6 +191,15 @@ fun Player.sendPacket(packet: Any) {
 
     val sendMethod = connection.javaClass.getDeclaredMethod("sendPacket", packet.javaClass.interfaces[0])
     sendMethod.invoke(connection, packet)
+}
+
+/**
+ * Spawns an armorstand proxy entity for the given [player] at the given [location] with the given [material].
+ */
+fun World.spawnVirtualArmorstand(player: Player, location: Location, material: Material): HighlightArmorstandProxy {
+    val highlightArmorstandProxy = HighlightArmorstandProxyImpl(player.uniqueId, location)
+    highlightArmorstandProxy.spawn()
+    return highlightArmorstandProxy
 }
 
 internal fun String.convertChatColors(): String {

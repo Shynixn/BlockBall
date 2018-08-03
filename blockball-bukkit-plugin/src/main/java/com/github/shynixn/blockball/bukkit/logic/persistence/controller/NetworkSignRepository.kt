@@ -1,10 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.controller
 
 import com.github.shynixn.blockball.api.persistence.controller.LinkSignController
-import com.github.shynixn.blockball.api.persistence.entity.bungeecord.LinkSign
+import com.github.shynixn.blockball.api.persistence.entity.LinkSign
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.bungeecord.NetworkSign
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.NetworkSign
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.bukkit.Bukkit

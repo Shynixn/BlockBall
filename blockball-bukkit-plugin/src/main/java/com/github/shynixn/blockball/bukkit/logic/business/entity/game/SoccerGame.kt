@@ -6,9 +6,9 @@ import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
+import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
+import com.github.shynixn.blockball.api.persistence.entity.RewardMeta
+import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitLocation
 import com.github.shynixn.blockball.bukkit.logic.business.service.DependencyVaultServiceImpl

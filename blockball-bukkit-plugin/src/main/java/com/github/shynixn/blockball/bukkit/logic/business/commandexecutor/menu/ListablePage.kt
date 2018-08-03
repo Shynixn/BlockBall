@@ -6,9 +6,9 @@ import com.github.shynixn.ball.api.persistence.enumeration.BallSize
 import com.github.shynixn.ball.api.persistence.enumeration.EffectingType
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.service.TemplateService
-import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
+import com.github.shynixn.blockball.api.persistence.entity.BossBarMeta
+import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
+import com.github.shynixn.blockball.api.persistence.entity.RewardMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
 import com.google.inject.Inject
 import org.bukkit.GameMode

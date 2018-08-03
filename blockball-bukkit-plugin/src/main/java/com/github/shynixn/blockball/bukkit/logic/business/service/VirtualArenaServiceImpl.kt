@@ -1,11 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.api.business.entity.VirtualArmorstand
+import com.github.shynixn.blockball.api.business.proxy.HighlightArmorstandProxy
 import com.github.shynixn.blockball.api.business.service.VirtualArenaService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
-import com.github.shynixn.blockball.bukkit.nms.NMSRegistry
+import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
+import com.github.shynixn.blockball.bukkit.logic.business.extension.spawnVirtualArmorstand
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.Material
@@ -54,7 +54,7 @@ class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : 
         }
 
         plugin.server.scheduler.runTaskAsynchronously(plugin, {
-            val items = ArrayList<VirtualArmorstand>()
+            val items = ArrayList<HighlightArmorstandProxy>()
 
             if (arena.meta.redTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.upperCorner != null) {
                 displayArmorstands(player, items, arena.meta.redTeamMeta.goal.lowerCorner!!, arena.meta.redTeamMeta.goal.upperCorner!!)
@@ -65,7 +65,7 @@ class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : 
 
             plugin.server.scheduler.runTaskLaterAsynchronously(plugin, {
                 items.forEach { i ->
-                    i.close()
+                    i.remove()
                 }
 
                 items.clear()
@@ -76,14 +76,15 @@ class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : 
     /**
      * Displays the armorstands between the given [lowCorner] and [upCorner] location for the given [player].
      */
-    private fun displayArmorstands(player: Player, items: MutableList<VirtualArmorstand>, lowCorner: StorageLocation, upCorner: StorageLocation) {
+    private fun displayArmorstands(player: Player, items: MutableList<HighlightArmorstandProxy>, lowCorner: StorageLocation, upCorner: StorageLocation) {
         var j = lowCorner.y
         while (j <= upCorner.y) {
             var i = lowCorner.x
             while (i <= upCorner.x) {
                 var k = lowCorner.z
                 while (k <= upCorner.z) {
-                    val armorstand = NMSRegistry.createVirtualArmorstand(player, Location(player.world, i, j, k), Material.STAINED_GLASS.id, 1)
+                    val location = Location(player.world, i, j, k)
+                    val armorstand = location.world.spawnVirtualArmorstand(player, location, Material.STAINED_GLASS)
                     armorstand.spawn()
                     items.add(armorstand)
                     k++

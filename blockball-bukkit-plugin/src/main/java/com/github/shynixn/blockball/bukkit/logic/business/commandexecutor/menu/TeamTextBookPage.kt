@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
+import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
 import org.bukkit.Location
 import org.bukkit.entity.Player

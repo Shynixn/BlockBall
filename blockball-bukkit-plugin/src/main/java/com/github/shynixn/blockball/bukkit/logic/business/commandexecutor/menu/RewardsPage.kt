@@ -2,11 +2,11 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.service.DependencyVaultService
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
+import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
+import com.github.shynixn.blockball.api.persistence.entity.RewardMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.CommandProperties
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.CommandProperties
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player

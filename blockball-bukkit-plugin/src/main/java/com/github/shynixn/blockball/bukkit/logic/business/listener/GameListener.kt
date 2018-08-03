@@ -4,7 +4,7 @@ import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
+import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder

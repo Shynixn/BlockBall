@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.configuration
 
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.bungeecord.BungeeCordConfiguration
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BungeeCordConfiguration
 import com.google.inject.Singleton
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin

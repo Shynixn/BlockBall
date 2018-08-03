@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.controller
 
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController
-import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordServerStatus
 import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.controller.LinkSignController
@@ -13,7 +13,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.listener.BungeeCordNet
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.NetworkSignRepository
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
 import com.google.common.io.ByteStreams
 import com.google.inject.Inject
 import com.google.inject.Singleton

@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
-import java.util.*
+import com.github.shynixn.blockball.api.persistence.entity.Stats
 import java.util.concurrent.CompletableFuture
 
 /**

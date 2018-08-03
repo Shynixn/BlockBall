@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.controller
 
-import com.github.shynixn.blockball.api.persistence.entity.bungeecord.LinkSign
+import com.github.shynixn.blockball.api.persistence.entity.LinkSign
 
 /**
  * Created by Shynixn 2018.

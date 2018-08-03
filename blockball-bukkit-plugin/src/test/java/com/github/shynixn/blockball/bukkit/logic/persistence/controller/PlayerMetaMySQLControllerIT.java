@@ -2,9 +2,9 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
-import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta;
+import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.PlayerData;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PlayerData;
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;

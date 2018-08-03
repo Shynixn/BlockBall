@@ -4,7 +4,7 @@ import com.github.shynixn.blockball.api.bukkit.persistence.controller.BukkitAren
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.lobby.HubLobbyProperties
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.HubLobbyProperties
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.bukkit.Location

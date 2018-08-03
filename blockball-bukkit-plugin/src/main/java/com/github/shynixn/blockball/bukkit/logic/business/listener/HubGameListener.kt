@@ -7,7 +7,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuil
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.stripChatColors
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.entity.Player

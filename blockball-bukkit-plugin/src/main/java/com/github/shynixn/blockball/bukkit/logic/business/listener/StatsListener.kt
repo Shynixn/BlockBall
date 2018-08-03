@@ -6,12 +6,10 @@ import com.github.shynixn.blockball.api.bukkit.business.event.GoalShootEvent
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.StatsCollectingService
 import com.google.inject.Inject
-import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.plugin.Plugin
 
 /**
  * Created by Shynixn 2018.

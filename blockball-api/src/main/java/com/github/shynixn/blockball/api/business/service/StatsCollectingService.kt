@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
+import com.github.shynixn.blockball.api.persistence.entity.Stats
 
 /**
  * Created by Shynixn 2018.

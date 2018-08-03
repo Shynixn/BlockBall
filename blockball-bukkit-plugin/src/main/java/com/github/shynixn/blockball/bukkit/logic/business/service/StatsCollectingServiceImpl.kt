@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.PersistenceStatsService
 import com.github.shynixn.blockball.api.business.service.StatsCollectingService
-import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
+import com.github.shynixn.blockball.api.persistence.entity.Stats
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.StatsScoreboard
 import com.google.inject.Inject
 import org.bukkit.Bukkit

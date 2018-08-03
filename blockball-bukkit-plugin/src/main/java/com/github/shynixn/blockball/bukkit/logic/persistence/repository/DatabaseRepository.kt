@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.repository
 
-import com.github.shynixn.blockball.api.persistence.controller.DatabaseController
 import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService
 import org.bukkit.Bukkit
@@ -37,10 +36,10 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextService, private val folder: String) : DatabaseController<T> where T : PersistenceAble {
+abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextService, private val folder: String) where T : PersistenceAble {
 
     /** Stores a new item into the repository. */
-    override fun store(item: T) {
+    fun store(item: T) {
         if (this.hasId(item)) {
             this.update(item)
         } else {
@@ -49,12 +48,12 @@ abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextS
     }
 
     /** Removes an item from the repository. */
-    override fun remove(item: T) {
+    fun remove(item: T) {
         this.delete(item)
     }
 
     /** Returns all items from the repository. */
-    override fun getAll(): List<T> {
+    fun getAll(): List<T> {
         return Collections.unmodifiableList(this.select())
     }
 
@@ -69,7 +68,7 @@ abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextS
     }
 
     /** Returns the item by the given database id. */
-    override fun getById(id: Int): Optional<T> {
+    fun getById(id: Int): Optional<T> {
         try {
             this.dbContext.connection.use({ connection: Connection ->
                 this.dbContext.executeStoredQuery("$folder/selectbyid", connection,
@@ -88,7 +87,7 @@ abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextS
     }
 
     /** Returns the amount of items in the repository. */
-    override val count: Int
+    val count: Int
         get() {
             try {
                 this.dbContext.connection.use { connection ->
@@ -169,16 +168,4 @@ abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextS
      */
     @Throws(SQLException::class)
     protected abstract fun from(resultSet: ResultSet): T
-
-    /**
-     * Closes this resource, relinquishing any underlying resources.
-     * This method is invoked automatically on objects managed by the
-     * `try`-with-resources statement.
-     * However, implementers of this interface are strongly encouraged
-     * to make their `close` methods idempotent.
-     *
-     * @throws Exception if this resource cannot be closed
-     */
-    override fun close() {
-    }
 }

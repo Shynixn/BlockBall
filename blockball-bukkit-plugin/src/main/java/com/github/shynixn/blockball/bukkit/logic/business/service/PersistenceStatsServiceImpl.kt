@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.PersistenceStatsService
-import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
+import com.github.shynixn.blockball.api.persistence.entity.Stats
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.extension.async
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sync

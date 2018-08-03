@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
+import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.BlockBallCommand.*
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toSingleLine

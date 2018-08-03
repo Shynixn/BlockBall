@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
+import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
 import org.bukkit.Location
 import org.bukkit.entity.Player
 

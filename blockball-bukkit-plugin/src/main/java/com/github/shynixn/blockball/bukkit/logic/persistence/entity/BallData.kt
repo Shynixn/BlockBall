@@ -2,8 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
 import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.BallData
 import com.github.shynixn.blockball.api.persistence.entity.BallExtensionMeta
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
+import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
 import org.bukkit.configuration.MemorySection
 
 @Suppress("unused")

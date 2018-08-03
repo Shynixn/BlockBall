@@ -1,10 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.repository
 
-import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
+import com.github.shynixn.blockball.api.persistence.entity.Stats
 import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.StatsData
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.StatsData
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin

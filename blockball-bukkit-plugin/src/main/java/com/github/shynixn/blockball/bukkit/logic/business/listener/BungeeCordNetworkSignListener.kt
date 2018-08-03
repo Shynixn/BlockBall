@@ -1,11 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
-import com.github.shynixn.blockball.api.persistence.entity.bungeecord.LinkSign
+import com.github.shynixn.blockball.api.persistence.entity.LinkSign
 import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
 import com.github.shynixn.blockball.bukkit.logic.business.entity.bungeecord.BungeeCordServerStats
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.NetworkSignRepository
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location

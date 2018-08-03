@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
 import com.github.shynixn.ball.api.persistence.BallMeta
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 
 /**
  * Created by Shynixn 2018.

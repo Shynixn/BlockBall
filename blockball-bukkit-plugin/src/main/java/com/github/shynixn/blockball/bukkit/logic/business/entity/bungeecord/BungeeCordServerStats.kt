@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.entity.bungeecord
 
-import com.github.shynixn.blockball.api.business.entity.BungeeCordServerStatus
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordServerStatus
 import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
 import org.bukkit.ChatColor
