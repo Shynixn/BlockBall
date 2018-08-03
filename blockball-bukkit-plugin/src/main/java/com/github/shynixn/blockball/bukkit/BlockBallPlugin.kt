@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit
 import com.github.shynixn.ball.bukkit.core.logic.business.CoreManager
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.DependencyService
 import com.github.shynixn.blockball.api.business.service.UpdateCheckService
 import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
@@ -45,7 +46,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockBallPlugin : JavaPlugin(), com.github.shynixn.blockball.api.business.entity.BlockBallPlugin {
+class BlockBallPlugin : JavaPlugin(), PluginProxy {
     companion object {
         /** Final Prefix of BlockBall in the console */
         val PREFIX_CONSOLE: String = ChatColor.BLUE.toString() + "[BlockBall] "
@@ -106,7 +107,7 @@ class BlockBallPlugin : JavaPlugin(), com.github.shynixn.blockball.api.business.
         try {
             gameController!!.reload()
 
-            BlockBallApi::class.java.getDeclaredMethod("initializeBlockBall", Any::class.java, Any::class.java, com.github.shynixn.blockball.api.business.entity.BlockBallPlugin::class.java).invoke(this.gameController, bungeeCordController, this)
+            BlockBallApi::class.java.getDeclaredMethod("initializeBlockBall", Any::class.java, Any::class.java, PluginProxy::class.java).invoke(this.gameController, bungeeCordController, this)
             coreManager = CoreManager(this, "storage.yml", "ball.yml")
             logger.log(Level.INFO, "Using NMS Connector " + VersionSupport.getServerVersion().versionText + ".")
         } catch (e: Exception) {

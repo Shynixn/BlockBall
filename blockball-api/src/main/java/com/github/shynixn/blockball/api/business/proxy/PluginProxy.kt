@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.business.entity
+package com.github.shynixn.blockball.api.business.proxy
 
 /**
  * Created by Shynixn 2018.
@@ -27,7 +27,7 @@ package com.github.shynixn.blockball.api.business.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BlockBallPlugin {
+interface PluginProxy {
     /**
      * Gets a business logic from the BlockBall plugin.
      * All types in the service package can be accessed.

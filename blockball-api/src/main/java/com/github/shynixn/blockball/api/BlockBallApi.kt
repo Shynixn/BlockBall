@@ -4,7 +4,7 @@ package com.github.shynixn.blockball.api
 
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController
 import com.github.shynixn.blockball.api.business.controller.GameController
-import com.github.shynixn.blockball.api.business.entity.BlockBallPlugin
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 
 /**
  * Created by Shynixn 2018.
@@ -36,9 +36,9 @@ import com.github.shynixn.blockball.api.business.entity.BlockBallPlugin
 object BlockBallApi {
     private var bungeeCordConnectController: BungeeCordConnectionController<*>? = null
     private var gameController: GameController<*, *, *, *>? = null
-    private var plugin: BlockBallPlugin? = null
+    private var plugin: PluginProxy? = null
 
-    private fun initializeBlockBall(gameController: Any, bungeeCordConnectionController: Any, blockBallPlugin: BlockBallPlugin) {
+    private fun initializeBlockBall(gameController: Any, bungeeCordConnectionController: Any, blockBallPlugin: PluginProxy) {
         this.gameController = gameController as GameController<*, *, *, *>
         this.bungeeCordConnectController = bungeeCordConnectionController as BungeeCordConnectionController<*>
         this.plugin = blockBallPlugin
