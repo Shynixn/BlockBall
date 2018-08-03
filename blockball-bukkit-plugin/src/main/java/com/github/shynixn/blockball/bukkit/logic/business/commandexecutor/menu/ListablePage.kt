@@ -9,7 +9,7 @@ import com.github.shynixn.blockball.api.business.service.TemplateService
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.BossBarMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Sound

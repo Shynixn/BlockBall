@@ -5,8 +5,8 @@ import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.BlockBallCommand.*
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toSingleLine
 import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
 import com.google.inject.Inject
 import org.bukkit.ChatColor

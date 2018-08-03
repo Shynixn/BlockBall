@@ -7,9 +7,8 @@ import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.ArenaProtectionMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.SpectatorMeta
-import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
-import com.github.shynixn.blockball.bukkit.logic.business.helper.setColor
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.business.extension.setColor
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallData
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.BossBarBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.HologramBuilder

@@ -4,19 +4,15 @@ import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.entity.InGameStats
-import com.github.shynixn.blockball.api.business.enumeration.GameStatus
-import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.business.enumeration.Permission
-import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
-import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleBossBar
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.SimpleHologram
-import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
-import com.github.shynixn.blockball.bukkit.logic.business.service.ScoreboardServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitLocation
+import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -86,6 +82,11 @@ abstract class LowLevelGame(
     private var holograms: MutableList<SimpleHologram> = ArrayList()
 
     private val scoreboardService = ScoreboardServiceImpl()
+
+    protected val screenMessageService = ScreenMessageServiceImpl()
+    protected val dependencyService = DependencyServiceImpl(DependencyPlaceholderApiServiceImpl(plugin))
+    private val bossbarApiService = DependencyBossBarApiServiceImpl(plugin)
+
     /** Amount of points the blue team has scored. */
     override val bluePoints: Int
         get() = blueGoals
@@ -170,8 +171,8 @@ abstract class LowLevelGame(
             player.sendMessage(Config.prefix + arena.meta.blueTeamMeta.leaveMessage)
         }
 
-        if (!VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1) && RegisterHelper.isRegistered("BossBarAPI")) {
-            RegisterHelper.setBossBar(player, null, 0.0)
+        if (!VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1) && dependencyService.isInstalled(PluginDependency.BOSSBARAPI)) {
+            bossbarApiService.removeBossbarMessage(player)
         }
 
         this.holograms.forEachIndexed { i, holo ->
@@ -267,7 +268,7 @@ abstract class LowLevelGame(
                 bossbar!!.addPlayer(players)
                 bossbar!!.message = meta.message.replaceGamePlaceholder(this)
             }
-        } else if (RegisterHelper.isRegistered("BossBarAPI")) {
+        } else if (dependencyService.isInstalled(PluginDependency.BOSSBARAPI)) {
             if (arena.meta.bossBarMeta.enabled) {
                 val percentage = meta.percentage
 
@@ -276,11 +277,11 @@ abstract class LowLevelGame(
                 players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
                 additionalPlayers.filter { p -> !p.second }.forEach { p ->
-                    RegisterHelper.setBossBar(p.first, null, 0.0)
+                    bossbarApiService.removeBossbarMessage(p.first)
                 }
 
                 players.forEach { p ->
-                    RegisterHelper.setBossBar(p, meta.message.replaceGamePlaceholder(this), percentage)
+                    bossbarApiService.setBossbarMessage(p, meta.message.replaceGamePlaceholder(this), percentage)
                 }
             }
         }

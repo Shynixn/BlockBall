@@ -4,13 +4,14 @@ import com.github.shynixn.ball.api.BallApi
 import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
-import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper
-import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
+import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitLocation
+import com.github.shynixn.blockball.bukkit.logic.business.service.DependencyVaultServiceImpl
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Entity
@@ -57,6 +58,8 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
     private var lastBallLocation: Location? = null
     var lastInteractedEntity: Entity? = null
 
+    private val vaultDependencyVaultService = DependencyVaultServiceImpl()
+
     /**
      *
      * The general contract of the method `run` is that it may
@@ -82,16 +85,23 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
     protected abstract fun onWin(team: Team, teamMeta: TeamMeta<Location, ItemStack>)
 
     protected fun onMatchEnd(winningPlayers: List<Player>?, loosingPlayers: List<Player>?) {
-        if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH) && winningPlayers != null) {
-            RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.WIN_MATCH]!!.toDouble(), winningPlayers)
-        }
+        if (dependencyService.isInstalled(PluginDependency.VAULT)) {
+            if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH) && winningPlayers != null) {
+                winningPlayers.forEach { p ->
+                    vaultDependencyVaultService.addMoney(p, arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.WIN_MATCH]!!.toDouble())
+                }
+            }
 
-        if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH) && loosingPlayers != null) {
-            RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.LOOSING_MATCH]!!.toDouble(), loosingPlayers)
-        }
-
-        if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.PARTICIPATE_MATCH)) {
-            RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.PARTICIPATE_MATCH]!!.toDouble(), getPlayers())
+            if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.LOOSING_MATCH) && loosingPlayers != null) {
+                loosingPlayers.forEach { p ->
+                    vaultDependencyVaultService.addMoney(p, arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.LOOSING_MATCH]!!.toDouble())
+                }
+            }
+            if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.PARTICIPATE_MATCH)) {
+                getPlayers().forEach { p ->
+                    vaultDependencyVaultService.addMoney(p, arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.PARTICIPATE_MATCH]!!.toDouble())
+                }
+            }
         }
 
         if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.WIN_MATCH) && winningPlayers != null) {
@@ -110,13 +120,11 @@ abstract class SoccerGame(arena: BukkitArena) : LowLevelGame(arena) {
     private fun onScoreReward(players: List<Player>) {
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
             if (players.contains(lastInteractedEntity!!)) {
-                val list = ArrayList<Player>()
-                list.add(lastInteractedEntity as Player)
                 if (arena.meta.rewardMeta.moneyReward.containsKey(RewardMeta.RewardedAction.SHOOT_GOAL)) {
-                    RegisterHelper.addMoney(arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.SHOOT_GOAL]!!.toDouble(), list)
+                    vaultDependencyVaultService.addMoney(lastInteractedEntity, arena.meta.rewardMeta.moneyReward[RewardMeta.RewardedAction.SHOOT_GOAL]!!.toDouble())
                 }
                 if (arena.meta.rewardMeta.commandReward.containsKey(RewardMeta.RewardedAction.SHOOT_GOAL)) {
-                    this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.SHOOT_GOAL]!!, list)
+                    this.executeCommand(arena.meta.rewardMeta.commandReward[RewardMeta.RewardedAction.SHOOT_GOAL]!!, kotlin.collections.arrayListOf(lastInteractedEntity as Player))
                 }
             }
         }

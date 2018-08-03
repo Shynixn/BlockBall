@@ -4,7 +4,7 @@ import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.service.TemplateService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Template
-import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.TemplateData

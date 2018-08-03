@@ -3,22 +3,18 @@ package com.github.shynixn.blockball.bukkit
 import com.github.shynixn.ball.bukkit.core.logic.business.CoreManager
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper
-import com.github.shynixn.blockball.bukkit.dependencies.placeholderapi.PlaceHolderApiConnection
+import com.github.shynixn.blockball.api.business.service.DependencyService
+import com.github.shynixn.blockball.api.business.service.UpdateCheckService
 import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
-import com.github.shynixn.blockball.bukkit.logic.business.helper.GoogleGuiceBinder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ReflectionUtils
-import com.github.shynixn.blockball.bukkit.logic.business.helper.UpdateUtils
-import com.github.shynixn.blockball.bukkit.logic.business.helper.async
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.google.inject.Guice
 import com.google.inject.Inject
+import com.google.inject.Injector
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.plugin.java.JavaPlugin
-import java.io.IOException
 import java.util.logging.Level
 
 /**
@@ -48,37 +44,29 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockBallPlugin : JavaPlugin() {
-
-    //region Static Fields
+class BlockBallPlugin : JavaPlugin(), com.github.shynixn.blockball.api.business.entity.BlockBallPlugin {
     companion object {
         /** Final Prefix of BlockBall in the console */
         val PREFIX_CONSOLE: String = ChatColor.BLUE.toString() + "[BlockBall] "
         private const val PLUGIN_NAME = "BlockBall"
-        private const val SPIGOT_RESOURCEID: Long = 15320
     }
-    //endregion
 
-    //region Private Fields
     private var isStartedUp: Boolean = true
     private var coreManager: CoreManager? = null
-    //endregion
+    private var injector: Injector? = null
 
-    //region Private Dependency Fields
     @Inject
     private var bungeeCordController: BungeeCordPingManager? = null
 
     @Inject
     private var gameController: GameRepository? = null
-    //endregion
 
-    //region Public Methods
     /**
      * Enables the plugin BlockBall.
      */
     override fun onEnable() {
         this.saveDefaultConfig()
-        Guice.createInjector(GoogleGuiceBinder(this))
+        this.injector = Guice.createInjector(BlockBallDependencyInjectionBinder(this))
         if (!VersionSupport.isServerVersionSupported(PLUGIN_NAME, PREFIX_CONSOLE)) {
             this.isStartedUp = false
             Bukkit.getPluginManager().disablePlugin(this)
@@ -87,7 +75,13 @@ class BlockBallPlugin : JavaPlugin() {
             if (Config.metrics!!) {
                 Metrics(this)
             }
-            checkForUpdates()
+
+            val updateCheker = resolve(UpdateCheckService::class.java)
+            updateCheker.checkForUpdates()
+
+            val dependencyChecker = resolve(DependencyService::class.java)
+            dependencyChecker.checkForInstalledDependencies()
+
             startPlugin()
             Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")
         }
@@ -100,23 +94,15 @@ class BlockBallPlugin : JavaPlugin() {
         super.onDisable()
         gameController!!.close()
     }
-    //endregion
 
-    //region Private Methods
     /**
      * Starts the game mode.
      */
     private fun startPlugin() {
         try {
-            RegisterHelper.PREFIX = BlockBallPlugin.PREFIX_CONSOLE
-            RegisterHelper.register("Vault")
-            RegisterHelper.register("WorldEdit")
-            RegisterHelper.register("BossBarAPI")
-            if (RegisterHelper.register("PlaceholderAPI")) {
-                PlaceHolderApiConnection.initializeHook(Bukkit.getPluginManager().getPlugin("BlockBall"))
-            }
             gameController!!.reload()
-            ReflectionUtils.invokeMethodByKotlinClass<Void>(BlockBallApi::class.java, "initializeBlockBall", arrayOf(Any::class.java, Any::class.java), arrayOf(this.gameController, bungeeCordController))
+
+            BlockBallApi::class.java.getDeclaredMethod("initializeBlockBall", Any::class.java, Any::class.java, com.github.shynixn.blockball.api.business.entity.BlockBallPlugin::class.java).invoke(this.gameController, bungeeCordController, this)
             coreManager = CoreManager(this, "storage.yml", "ball.yml")
             logger.log(Level.INFO, "Using NMS Connector " + VersionSupport.getServerVersion().versionText + ".")
         } catch (e: Exception) {
@@ -125,16 +111,15 @@ class BlockBallPlugin : JavaPlugin() {
     }
 
     /**
-     * Checks if new updates are available on spigotmc.org.
+     * Gets a business logic from the BlockBall plugin.
+     * All types in the service package can be accessed.
+     * Throws a [IllegalArgumentException] if the service could not be found.
      */
-    private fun checkForUpdates() {
-        async(this) {
-            try {
-                UpdateUtils.checkPluginUpToDateAndPrintMessage(SPIGOT_RESOURCEID, PREFIX_CONSOLE, PLUGIN_NAME, this)
-            } catch (e: IOException) {
-                Bukkit.getLogger().log(Level.WARNING, "Failed to check for updates.")
-            }
+    override fun <S> resolve(service: Class<S>): S {
+        try {
+            return this.injector!!.getBinding(service).provider.get()
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Service could not be resolved.", e)
         }
     }
-    //endregion
 }

@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.displa
 
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.meta.display.ScoreboardMeta
-import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 
 /**

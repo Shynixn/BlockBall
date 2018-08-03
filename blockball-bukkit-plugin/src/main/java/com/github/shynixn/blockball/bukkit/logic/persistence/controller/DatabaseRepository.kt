@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller
 
 import com.github.shynixn.blockball.api.persistence.controller.DatabaseController
 import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import com.github.shynixn.blockball.bukkit.logic.business.service.ConnectionContextService
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService
 import org.bukkit.Bukkit
 import java.sql.Connection
 import java.sql.ResultSet

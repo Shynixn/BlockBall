@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity.bungeecord
 
 import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.bungeecord.LinkSign
-import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
 

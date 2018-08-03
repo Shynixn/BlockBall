@@ -1,10 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
+import com.github.shynixn.blockball.api.business.service.DependencyVaultService
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
-import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.CommandProperties
 import com.google.inject.Inject
@@ -47,6 +47,9 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
     @Inject
     private var arenaRepository: ArenaRepository? = null
 
+    @Inject
+    private lateinit var vaultService: DependencyVaultService
+
     /**
      * Returns the key of the command when this page should be executed.
      *
@@ -78,7 +81,7 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
             val rewardedAction = RewardMeta.RewardedAction.values()[args[2].toInt()]
             cache[5] = rewardedAction
             if (arena.meta.rewardMeta.commandReward[rewardedAction] == null) {
-                val command =  CommandProperties()
+                val command = CommandProperties()
                 command.command = "none"
                 command.mode = CommandMeta.CommandMode.CONSOLE_SINGLE
                 arena.meta.rewardMeta.commandReward[rewardedAction] = command
@@ -91,7 +94,7 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
             arena.meta.rewardMeta.moneyReward[cache[5] as RewardMeta.RewardedAction] = args[2].toInt()
             cache[4] = args[2].toInt()
         } else if (command == BlockBallCommand.REWARD_EDIT_COMMAND && args.size >= 3) {
-            arena.meta.rewardMeta.commandReward[cache[5] as RewardMeta.RewardedAction]!!.command = mergeArgs(2,args)
+            arena.meta.rewardMeta.commandReward[cache[5] as RewardMeta.RewardedAction]!!.command = mergeArgs(2, args)
         }
         return super.execute(player, command, cache, args)
     }
@@ -118,7 +121,7 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
         if (selectedReward != null) {
             if (selectedReward is Int) {
                 builder.component("- Selected Money reward (Vault): " + (rewardedAction as RewardMeta.RewardedAction).name).builder().nextLine()
-                        .component("- " + RegisterHelper.getCurrencyName() + ": " + ChatColor.WHITE + selectedReward).builder()
+                        .component("- " + vaultService.getPluralCurrencyName() + ": " + ChatColor.WHITE + selectedReward).builder()
                         .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                         .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.REWARD_EDIT_MONEY.command)
                         .setHoverText("Changes the amount of money the players receive on the selected action.")

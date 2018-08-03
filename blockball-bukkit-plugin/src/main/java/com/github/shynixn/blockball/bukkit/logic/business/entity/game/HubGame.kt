@@ -10,9 +10,8 @@ import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.entity.container.PlayerStorage
-import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.sendScreenMessage
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toBukkitLocation
+import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitLocation
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -58,7 +57,7 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         val additionalPlayers = getAdditionalNotificationPlayers()
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
-        players.forEach { p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this) }
+        players.forEach { p -> screenMessageService.setTitle(p, scoreMessageTitle.replaceGamePlaceholder(this), scoreMessageSubTitle.replaceGamePlaceholder(this)) }
 
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
             val event = GoalShootEvent(this, lastInteractedEntity as Player, team)
@@ -77,7 +76,7 @@ class HubGame(arena: BukkitArena) : SoccerGame(arena) {
         val additionalPlayers = getAdditionalNotificationPlayers()
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
-        players.forEach { p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle, this) }
+        players.forEach { p -> screenMessageService.setTitle(p, winMessageTitle.replaceGamePlaceholder(this), winMessageSubTitle.replaceGamePlaceholder(this)) }
 
         val event = GameWinEvent(this, team)
         Bukkit.getServer().pluginManager.callEvent(event)

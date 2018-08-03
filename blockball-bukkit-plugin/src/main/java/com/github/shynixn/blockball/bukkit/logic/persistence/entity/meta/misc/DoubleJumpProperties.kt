@@ -4,7 +4,7 @@ import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
 import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.ParticleEffectData
 import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.SoundBuilder
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.DoubleJumpMeta
-import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 import org.bukkit.Location
 import org.bukkit.Material

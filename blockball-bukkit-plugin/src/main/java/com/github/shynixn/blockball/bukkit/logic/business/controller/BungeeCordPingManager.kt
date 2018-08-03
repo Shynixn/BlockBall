@@ -8,7 +8,7 @@ import com.github.shynixn.blockball.api.persistence.controller.LinkSignControlle
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BungeeCordSignCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.entity.bungeecord.BungeeCordServerStats
-import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
+import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.listener.BungeeCordNetworkSignListener
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config

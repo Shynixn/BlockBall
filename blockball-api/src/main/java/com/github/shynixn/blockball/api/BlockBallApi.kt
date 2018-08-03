@@ -4,6 +4,7 @@ package com.github.shynixn.blockball.api
 
 import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController
 import com.github.shynixn.blockball.api.business.controller.GameController
+import com.github.shynixn.blockball.api.business.entity.BlockBallPlugin
 
 /**
  * Created by Shynixn 2018.
@@ -34,12 +35,20 @@ import com.github.shynixn.blockball.api.business.controller.GameController
  */
 object BlockBallApi {
     private var bungeeCordConnectController: BungeeCordConnectionController<*>? = null
-
     private var gameController: GameController<*, *, *, *>? = null
+    private var plugin: BlockBallPlugin? = null
 
-    private fun initializeBlockBall(gameController: Any, bungeeCordConnectionController: Any) {
+    private fun initializeBlockBall(gameController: Any, bungeeCordConnectionController: Any, blockBallPlugin: BlockBallPlugin) {
         this.gameController = gameController as GameController<*, *, *, *>
         this.bungeeCordConnectController = bungeeCordConnectionController as BungeeCordConnectionController<*>
+        this.plugin = blockBallPlugin
+    }
+
+    /**
+     * Gets a business logic service by resolving the given class.
+     */
+    fun <S> resolve(service: Class<S>): S {
+        return plugin!!.resolve(service)
     }
 
     /**

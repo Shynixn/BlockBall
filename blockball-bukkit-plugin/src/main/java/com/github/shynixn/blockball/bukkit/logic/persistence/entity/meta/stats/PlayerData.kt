@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats
 
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta
-import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player

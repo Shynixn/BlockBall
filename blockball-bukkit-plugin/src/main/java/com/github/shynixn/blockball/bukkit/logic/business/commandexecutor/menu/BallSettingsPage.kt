@@ -5,7 +5,7 @@ import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.ball.api.persistence.enumeration.ActionEffect
 import com.github.shynixn.ball.api.persistence.enumeration.BallSize
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
 import org.bukkit.entity.Player
 
 /**

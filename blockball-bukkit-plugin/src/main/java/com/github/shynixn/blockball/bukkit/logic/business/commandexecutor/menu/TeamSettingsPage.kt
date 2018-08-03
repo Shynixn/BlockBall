@@ -2,8 +2,8 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.entity.Player

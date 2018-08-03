@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.service;
+package com.github.shynixn.blockball.bukkit.logic.business.entity.action;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

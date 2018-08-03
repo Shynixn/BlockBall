@@ -1,9 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toSingleLine
 import org.bukkit.entity.Player
 
 /**

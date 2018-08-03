@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.entity.game
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.bukkit.logic.business.helper.setServerModt
+import com.github.shynixn.blockball.bukkit.logic.business.extension.setModt
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -44,7 +44,8 @@ class BungeeCordMinigame(arena: BukkitArena) : Minigame(arena) {
         Bukkit.getOnlinePlayers().forEach { player ->
             this.join(player, null)
         }
-        setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd)
+
+        plugin.server.setModt(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd)
     }
 
     /** Leave the game. */
@@ -64,15 +65,15 @@ class BungeeCordMinigame(arena: BukkitArena) : Minigame(arena) {
         }
 
         if (this.isGameRunning) {
-            setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.inGameMotd)
+            plugin.server.setModt(BungeeCordConfig.bungeeCordConfiguration!!.inGameMotd)
         } else if (this.isLobbyCountdownRunning) {
-            setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd)
+            plugin.server.setModt(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd)
         }
     }
 
     override fun close() {
         super.close()
-        setServerModt(BungeeCordConfig.bungeeCordConfiguration!!.restartingMotd)
+        plugin.server.setModt(BungeeCordConfig.bungeeCordConfiguration!!.restartingMotd)
         Bukkit.getServer().shutdown()
     }
 }

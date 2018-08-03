@@ -4,15 +4,16 @@ import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.bukkit.business.controller.BukkitGameController
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.service.DependencyWorldEditService
+import com.github.shynixn.blockball.api.business.service.ScreenMessageService
 import com.github.shynixn.blockball.api.business.service.VirtualArenaService
-import com.github.shynixn.blockball.bukkit.dependencies.worldedit.WorldEditConnection
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.sendActionBarMessage
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.Inject
 import org.bukkit.ChatColor
+import org.bukkit.Location
 import org.bukkit.entity.Player
 
 /**
@@ -54,6 +55,12 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
     @Inject
     private lateinit var virtualArenaService: VirtualArenaService
 
+    @Inject
+    private lateinit var screenMessageService: ScreenMessageService
+
+    @Inject
+    private lateinit var worldEditService: DependencyWorldEditService
+
     /**
      * Returns the key of the command when this page should be executed.
      *
@@ -91,32 +98,32 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
             arena.displayName = this.mergeArgs(2, args)
         } else if (command == BlockBallCommand.ARENA_SETAREA) {
             val arena = cache[0] as BukkitArena
-            val left = WorldEditConnection.getLeftSelection(player)
-            val right = WorldEditConnection.getRightSelection(player)
-            if (left != null && right != null) {
-                arena.setCorners(left, right)
+            val left =  worldEditService.getLeftClickLocation<Location,Player>(player)
+            val right =worldEditService.getRightClickLocation<Location,Player>(player)
+            if (left.isPresent && right.isPresent) {
+                arena.setCorners(left.get(), right.get())
             } else {
                 return CommandResult.WESELECTION_MISSING
             }
         } else if (command == BlockBallCommand.ARENA_SETGOALRED) {
             val arena = cache[0] as BukkitArena
-            val left = WorldEditConnection.getLeftSelection(player)
-            val right = WorldEditConnection.getRightSelection(player)
-            if (left != null && right != null) {
-                arena.meta.redTeamMeta.goal.setCorners(left, right)
+            val left =  worldEditService.getLeftClickLocation<Location,Player>(player)
+            val right =worldEditService.getRightClickLocation<Location,Player>(player)
+            if (left.isPresent && right.isPresent) {
+                arena.meta.redTeamMeta.goal.setCorners(left.get(), right.get())
                 virtualArenaService.displayForPlayer(player, arena)
-                player.sendActionBarMessage(Config.prefix + "Changed goal selection. Rendering virtual blocks...")
+                screenMessageService.setActionBar(player,Config.prefix + "Changed goal selection. Rendering virtual blocks...")
             } else {
                 return CommandResult.WESELECTION_MISSING
             }
         } else if (command == BlockBallCommand.ARENA_SETGOALBLUE) {
             val arena = cache[0] as BukkitArena
-            val left = WorldEditConnection.getLeftSelection(player)
-            val right = WorldEditConnection.getRightSelection(player)
-            if (left != null && right != null) {
-                arena.meta.blueTeamMeta.goal.setCorners(left, right)
+            val left =  worldEditService.getLeftClickLocation<Location,Player>(player)
+            val right =worldEditService.getRightClickLocation<Location,Player>(player)
+            if (left.isPresent && right.isPresent) {
+                arena.meta.blueTeamMeta.goal.setCorners(left.get(), right.get())
                 virtualArenaService.displayForPlayer(player, arena)
-                player.sendActionBarMessage(Config.prefix + "Changed goal selection. Rendering virtual blocks...")
+                screenMessageService.setActionBar(player,Config.prefix + "Changed goal selection. Rendering virtual blocks...")
             } else {
                 return CommandResult.WESELECTION_MISSING
             }

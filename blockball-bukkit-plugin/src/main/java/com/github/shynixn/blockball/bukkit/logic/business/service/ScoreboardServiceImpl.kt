@@ -1,7 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.ScoreboardService
-import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
+import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.scoreboard.DisplaySlot
 
@@ -32,7 +33,7 @@ import org.bukkit.scoreboard.DisplaySlot
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ScoreboardServiceImpl : ScoreboardService {
+class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
 
     companion object {
         private const val defaultObjective: String = "def_obj"

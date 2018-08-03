@@ -13,8 +13,10 @@ import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.meta.misc.TeamMeta
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.entity.container.PlayerStorage
-import com.github.shynixn.blockball.bukkit.logic.business.helper.*
+import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitLocation
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -76,7 +78,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         val additionalPlayers = getAdditionalNotificationPlayers()
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
-        players.forEach { p -> p.sendScreenMessage(scoreMessageTitle, scoreMessageSubTitle, this) }
+        players.forEach { p -> screenMessageService.setTitle(p, scoreMessageTitle.replaceGamePlaceholder(this), scoreMessageSubTitle.replaceGamePlaceholder(this)) }
 
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
             val event = GoalShootEvent(this, lastInteractedEntity as Player, team)
@@ -89,10 +91,10 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
      */
     private fun onDraw() {
         val additionalPlayers = getAdditionalNotificationPlayers().filter { pair -> pair.second }.map { p -> p.first }
-        additionalPlayers.forEach { p -> p.sendScreenMessage(arena.meta.redTeamMeta.drawMessageTitle, arena.meta.redTeamMeta.drawMessageSubTitle, this) }
+        additionalPlayers.forEach { p -> screenMessageService.setTitle(p, arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(this), arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(this)) }
 
-        this.redTeam.forEach { p -> p.sendScreenMessage(arena.meta.redTeamMeta.drawMessageTitle, arena.meta.redTeamMeta.drawMessageSubTitle, this) }
-        this.blueTeam.forEach { p -> p.sendScreenMessage(arena.meta.blueTeamMeta.drawMessageTitle, arena.meta.blueTeamMeta.drawMessageSubTitle, this) }
+        this.redTeam.forEach { p -> screenMessageService.setTitle(p, arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(this), arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(this)) }
+        this.blueTeam.forEach { p -> screenMessageService.setTitle(p, arena.meta.blueTeamMeta.drawMessageTitle.replaceGamePlaceholder(this), arena.meta.blueTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(this)) }
     }
 
     /**
@@ -106,7 +108,7 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
         val additionalPlayers = getAdditionalNotificationPlayers()
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
-        players.forEach { p -> p.sendScreenMessage(winMessageTitle, winMessageSubTitle, this) }
+        players.forEach { p -> screenMessageService.setTitle(p, winMessageTitle.replaceGamePlaceholder(this), winMessageSubTitle.replaceGamePlaceholder(this)) }
 
         val event = GameWinEvent(this, team)
         Bukkit.getServer().pluginManager.callEvent(event)
@@ -310,7 +312,9 @@ open class Minigame(arena: BukkitArena) : SoccerGame(arena) {
                 isLobbyCountdownRunning = true
                 lobbyCountdown = arena.meta.minigameMeta.lobbyDuration
             } else if (!isGameRunning) {
-                ingameStats.keys.toTypedArray().sendActionBarMessage(arena.meta.minigameMeta.playersRequiredToStartMessage.replaceGamePlaceholder(this))
+                ingameStats.keys.toTypedArray().forEach { p ->
+                    screenMessageService.setActionBar(p, arena.meta.minigameMeta.playersRequiredToStartMessage.replaceGamePlaceholder(this))
+                }
             }
         }
 

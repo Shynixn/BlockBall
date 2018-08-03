@@ -1,5 +1,6 @@
-package com.github.shynixn.blockball.bukkit.logic.business.helper
+package com.github.shynixn.blockball.bukkit.logic.business.extension
 
+import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.GameType
@@ -12,13 +13,12 @@ import com.github.shynixn.blockball.bukkit.logic.business.entity.game.Minigame
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.basic.LocationBuilder
-import org.bukkit.ChatColor
-import org.bukkit.Color
-import org.bukkit.Location
+import org.bukkit.*
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.plugin.Plugin
+import java.lang.reflect.InvocationTargetException
 
 /**
  * Created by Shynixn 2018.
@@ -78,8 +78,23 @@ inline fun Any.async(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long
     }
 }
 
-internal fun setServerModt(text: String) {
-    ModtHelper.setModt(text)
+/**
+ * Sets the [Server] modt with the given [text].
+ */
+internal fun Server.setModt(text: String) {
+    val builder = java.lang.StringBuilder("[")
+    builder.append((text.replace("[", "").replace("]", "")))
+    builder.append(ChatColor.RESET.toString())
+    builder.append("]")
+
+    val minecraftServerClazz = Class.forName("net.minecraft.server.VERSION.MinecraftServer".replace("VERSION", VersionSupport.getServerVersion().versionText))
+    val craftServerClazz = Class.forName("org.bukkit.craftbukkit.VERSION.CraftServer".replace("VERSION", VersionSupport.getServerVersion().versionText))
+
+    val setModtMethod = minecraftServerClazz.getDeclaredMethod("setMotd", String::class.java)
+    val getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")
+
+    val console = getServerConsoleMethod!!.invoke(Bukkit.getServer())
+    setModtMethod!!.invoke(console, builder.toString().convertChatColors())
 }
 
 internal fun List<String>.toSingleLine(): String {
@@ -137,19 +152,6 @@ internal fun String.replaceGamePlaceholder(game: BukkitGame, teamMeta: TeamMeta<
     return cache.convertChatColors()
 }
 
-internal fun Player.sendScreenMessage(title: String, subTitle: String, game: BukkitGame) {
-    ScreenUtils.setTitle(title.replaceGamePlaceholder(game), subTitle.replaceGamePlaceholder(game), 20, 20 * 3, 20, this)
-}
-
-internal fun Player.sendActionBarMessage(message: String) {
-    ScreenUtils.setActionBar(message, this)
-}
-
-internal fun Array<Player>.sendActionBarMessage(message: String) {
-    ScreenUtils.setActionBar(message, *this)
-}
-
-
 internal fun ItemStack.setColor(color: Color): ItemStack {
     if (this.itemMeta is LeatherArmorMeta) {
         val leatherMeta = this.itemMeta as LeatherArmorMeta
@@ -168,6 +170,24 @@ internal fun Permission.hasPermission(player: Player): Boolean {
 
 internal fun String.stripChatColors(): String {
     return ChatColor.stripColor(this)
+}
+
+/**
+ * Sends the given [packet] to this player.
+ */
+@Throws(ClassNotFoundException::class, IllegalAccessException::class, NoSuchMethodException::class, InvocationTargetException::class, NoSuchFieldException::class)
+fun Player.sendPacket(packet: Any) {
+    val version = VersionSupport.getServerVersion()
+    val craftPlayer = Class.forName("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer".replace("VERSION", version.versionText)).cast(player)
+    val methodHandle = craftPlayer.javaClass.getDeclaredMethod("getHandle")
+    val entityPlayer = methodHandle.invoke(craftPlayer)
+
+    val field = Class.forName("net.minecraft.server.VERSION.EntityPlayer".replace("VERSION", version.versionText)).getDeclaredField("playerConnection")
+    field.isAccessible = true
+    val connection = field.get(entityPlayer)
+
+    val sendMethod = connection.javaClass.getDeclaredMethod("sendPacket", packet.javaClass.interfaces[0])
+    sendMethod.invoke(connection, packet)
 }
 
 internal fun String.convertChatColors(): String {

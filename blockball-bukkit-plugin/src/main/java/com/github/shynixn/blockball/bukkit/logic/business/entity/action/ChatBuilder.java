@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.helper;
+package com.github.shynixn.blockball.bukkit.logic.business.entity.action;
 
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport;
 import org.bukkit.Bukkit;

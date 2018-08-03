@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller
 
 import com.github.shynixn.blockball.api.persistence.controller.StatsController
 import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats
-import com.github.shynixn.blockball.bukkit.logic.business.service.ConnectionContextService
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.StatsData
 import com.google.inject.Inject
 import org.bukkit.Bukkit

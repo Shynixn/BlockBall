@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitPersistenceAble
-import com.github.shynixn.blockball.bukkit.logic.business.helper.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
 
 /**
  * Created by Shynixn 2018.

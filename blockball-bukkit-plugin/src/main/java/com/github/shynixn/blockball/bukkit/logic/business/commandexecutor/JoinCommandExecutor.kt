@@ -2,8 +2,8 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
-import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
-import com.github.shynixn.blockball.bukkit.logic.business.helper.stripChatColors
+import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.bukkit.logic.business.extension.stripChatColors
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
