@@ -4,12 +4,12 @@ import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.bukkit.business.controller.BukkitGameController
 import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.DependencyWorldEditService
 import com.github.shynixn.blockball.api.business.service.ScreenMessageService
 import com.github.shynixn.blockball.api.business.service.VirtualArenaService
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
-import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.Inject
 import org.bukkit.ChatColor
@@ -43,7 +43,7 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
+class MainConfigurationPage @Inject constructor(private val configurationService: ConfigurationService) : Page(MainConfigurationPage.ID, OpenPage.ID) {
     companion object {
         /** Id of the page. */
         const val ID = 2
@@ -77,6 +77,8 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
      * @param args
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
+        val prefix = configurationService.findValue<String>("messages.prefix")
+
         if (command == BlockBallCommand.ARENA_CREATE) {
             if (cache[0] == null) {
                 cache[0] = arenaRepository.create()
@@ -98,8 +100,8 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
             arena.displayName = this.mergeArgs(2, args)
         } else if (command == BlockBallCommand.ARENA_SETAREA) {
             val arena = cache[0] as BukkitArena
-            val left =  worldEditService.getLeftClickLocation<Location,Player>(player)
-            val right =worldEditService.getRightClickLocation<Location,Player>(player)
+            val left = worldEditService.getLeftClickLocation<Location, Player>(player)
+            val right = worldEditService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
                 arena.setCorners(left.get(), right.get())
             } else {
@@ -107,23 +109,23 @@ class MainConfigurationPage : Page(MainConfigurationPage.ID, OpenPage.ID) {
             }
         } else if (command == BlockBallCommand.ARENA_SETGOALRED) {
             val arena = cache[0] as BukkitArena
-            val left =  worldEditService.getLeftClickLocation<Location,Player>(player)
-            val right =worldEditService.getRightClickLocation<Location,Player>(player)
+            val left = worldEditService.getLeftClickLocation<Location, Player>(player)
+            val right = worldEditService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
                 arena.meta.redTeamMeta.goal.setCorners(left.get(), right.get())
                 virtualArenaService.displayForPlayer(player, arena)
-                screenMessageService.setActionBar(player,Config.prefix + "Changed goal selection. Rendering virtual blocks...")
+                screenMessageService.setActionBar(player, prefix + "Changed goal selection. Rendering virtual blocks...")
             } else {
                 return CommandResult.WESELECTION_MISSING
             }
         } else if (command == BlockBallCommand.ARENA_SETGOALBLUE) {
             val arena = cache[0] as BukkitArena
-            val left =  worldEditService.getLeftClickLocation<Location,Player>(player)
-            val right =worldEditService.getRightClickLocation<Location,Player>(player)
+            val left = worldEditService.getLeftClickLocation<Location, Player>(player)
+            val right = worldEditService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
                 arena.meta.blueTeamMeta.goal.setCorners(left.get(), right.get())
                 virtualArenaService.displayForPlayer(player, arena)
-                screenMessageService.setActionBar(player,Config.prefix + "Changed goal selection. Rendering virtual blocks...")
+                screenMessageService.setActionBar(player, prefix + "Changed goal selection. Rendering virtual blocks...")
             } else {
                 return CommandResult.WESELECTION_MISSING
             }

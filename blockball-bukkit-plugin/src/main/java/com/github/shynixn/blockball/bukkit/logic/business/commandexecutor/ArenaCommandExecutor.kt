@@ -1,9 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
+import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.*
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.Inject
 import org.bukkit.ChatColor
@@ -40,7 +40,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExecutor.Registered("blockball", plugin as JavaPlugin) {
+class ArenaCommandExecutor @Inject constructor(plugin: Plugin, private val configurationService: ConfigurationService) : SimpleCommandExecutor.Registered("blockball", plugin as JavaPlugin) {
     companion object {
         private val HEADER_STANDARD = ChatColor.WHITE.toString() + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                          BlockBall                         "
         private val FOOTER_STANDARD = ChatColor.WHITE.toString() + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "                           ┌1/1┐                            "
@@ -226,7 +226,8 @@ class NewArenaCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
 
             player.sendMessage(FOOTER_STANDARD)
         } catch (e: Exception) {
-            player.sendMessage(Config.prefix + "Cannot find command.")
+            val prefix = configurationService.findValue<String>("messages.prefix")
+            player.sendMessage(prefix + "Cannot find command.")
             plugin.logger.log(Level.INFO, "Cannot find command for args $args.")
         }
     }

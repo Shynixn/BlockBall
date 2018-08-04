@@ -58,7 +58,7 @@ class GameRepository : BukkitGameController, Runnable {
     private lateinit var plugin: Plugin
 
     @Inject
-    private lateinit var arenaCommandExecutor: NewArenaCommandExecutor
+    private lateinit var arenaCommandExecutor: ArenaCommandExecutor
 
     @Inject
     private lateinit var reloadCommandExecutor: ReloadCommandExecutor
@@ -76,13 +76,7 @@ class GameRepository : BukkitGameController, Runnable {
     private lateinit var spectateCommandExecutor: SpectateCommandExecutor
 
     @Inject
-    private lateinit var gameListener: GameListener
-
-    @Inject
     private lateinit var doubleJumpListener: DoubleJumpListener
-
-    @Inject
-    private lateinit var hubGameListener: HubGameListener
 
     @Inject
     private lateinit var minigameListener: MinigameListener

@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
+import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
-import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.google.inject.Inject
 import org.bukkit.ChatColor
@@ -37,7 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ReloadCommandExecutor @Inject constructor(plugin: Plugin, private val gameController: GameRepository) : SimpleCommandExecutor.Registered("blockballreload", plugin as JavaPlugin) {
+class ReloadCommandExecutor @Inject constructor(plugin: Plugin, private val gameController: GameRepository, private val configurationService: ConfigurationService) : SimpleCommandExecutor.Registered("blockballreload", plugin as JavaPlugin) {
     /**
      * Reloads the config and the games when executed.
      *
@@ -45,10 +45,12 @@ class ReloadCommandExecutor @Inject constructor(plugin: Plugin, private val game
      * @param args   args
      */
     override fun onCommandSenderExecuteCommand(sender: CommandSender, args: Array<out String>) {
-        Config.reload()
+        val prefix = configurationService.findValue<String>("messages.prefix")
+
+        plugin.reloadConfig()
         this.gameController.reload()
         if (sender is Player) {
-            sender.sendMessage(Config.prefix + ChatColor.GREEN + "Reloaded BlockBall.")
+            sender.sendMessage(prefix + ChatColor.GREEN + "Reloaded BlockBall.")
         } else {
             sender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Reloaded BlockBall.")
         }

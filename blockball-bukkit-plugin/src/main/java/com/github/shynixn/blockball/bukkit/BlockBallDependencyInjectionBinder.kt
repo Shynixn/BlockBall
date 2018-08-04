@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRep
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository
 import com.google.inject.AbstractModule
+import com.google.inject.Scopes
 import org.bukkit.Bukkit
 import org.bukkit.Server
 import org.bukkit.plugin.Plugin
@@ -66,6 +67,8 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(UpdateCheckService::class.java).to(UpdateCheckServiceImpl::class.java)
         bind(ConfigurationService::class.java).to(ConfigurationServiceImpl::class.java)
         bind(StatsCollectingService::class.java).to(StatsCollectingServiceImpl::class.java)
+        bind(RightclickManageService::class.java).to(RightclickManageServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(HubGameForcefieldService::class.java).to(HubGameForcefieldService::class.java).`in`(Scopes.SINGLETON)
 
         bind(PersistenceStatsService::class.java).to(PersistenceStatsServiceImpl::class.java)
 

@@ -4,10 +4,13 @@ import com.github.shynixn.ball.bukkit.core.logic.business.CoreManager
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
+import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.DependencyService
 import com.github.shynixn.blockball.api.business.service.UpdateCheckService
 import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
+import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
+import com.github.shynixn.blockball.bukkit.logic.business.listener.HubGameListener
 import com.github.shynixn.blockball.bukkit.logic.business.listener.StatsListener
 import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
 import com.google.inject.Guice
@@ -53,7 +56,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         private const val PLUGIN_NAME = "BlockBall"
     }
 
-    private var isStartedUp: Boolean = true
     private var coreManager: CoreManager? = null
     private var injector: Injector? = null
 
@@ -69,23 +71,29 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     override fun onEnable() {
         this.saveDefaultConfig()
         this.injector = Guice.createInjector(BlockBallDependencyInjectionBinder(this))
+
         if (!VersionSupport.isServerVersionSupported(PLUGIN_NAME, PREFIX_CONSOLE)) {
-            this.isStartedUp = false
             Bukkit.getPluginManager().disablePlugin(this)
         } else {
-            Config.reload()
-            if (Config.metrics!!) {
-                Metrics(this)
-            }
+            this.reloadConfig()
 
             // Register Listeners
             Bukkit.getPluginManager().registerEvents(resolve(StatsListener::class.java), this)
+            Bukkit.getPluginManager().registerEvents(resolve(GameListener::class.java), this)
+            Bukkit.getPluginManager().registerEvents(resolve(HubGameListener::class.java), this)
 
             val updateCheker = resolve(UpdateCheckService::class.java)
-            updateCheker.checkForUpdates()
-
             val dependencyChecker = resolve(DependencyService::class.java)
+            val configurationService = resolve(ConfigurationService::class.java)
+
+            updateCheker.checkForUpdates()
             dependencyChecker.checkForInstalledDependencies()
+
+            val enableMetrics = configurationService.findValue<Boolean>("metrics")
+
+            if (enableMetrics) {
+                Metrics(this)
+            }
 
             startPlugin()
             Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")

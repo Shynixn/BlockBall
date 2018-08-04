@@ -4,17 +4,18 @@ import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
+import com.github.shynixn.blockball.api.business.service.RightclickManageService
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.google.inject.Inject
-import com.google.inject.Singleton
 import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
@@ -22,7 +23,6 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.plugin.Plugin
 
 /**
  * Created by Shynixn 2018.
@@ -51,18 +51,14 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@Singleton
-class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
-    @Inject
-    private lateinit var gameController: GameRepository
-    var placementCallBack: MutableMap<Player, CallBack> = HashMap()
-
+class GameListener @Inject constructor(private val gameController: GameRepository, private val rightClickManageService: RightclickManageService) : Listener {
     /**
      * Gets called when a player leaves the server and the game.
      */
     @EventHandler
     fun onPlayerQuitEvent(event: PlayerQuitEvent) {
         gameController.getGameFromPlayer(event.player)?.leave(event.player)
+        rightClickManageService.cleanResources(event.player)
     }
 
     /**
@@ -71,6 +67,7 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
     @EventHandler
     fun onPlayerHungerEvent(event: FoodLevelChangeEvent) {
         val game = gameController.getGameFromPlayer(event.entity as Player)
+
         if (game != null) {
             event.isCancelled = true
         }
@@ -82,6 +79,7 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
     @EventHandler
     fun onPlayerClickInventoryEvent(event: InventoryClickEvent) {
         val game = gameController.getGameFromPlayer(event.whoClicked as Player)
+
         if (game != null) {
             event.isCancelled = true
             event.whoClicked.closeInventory()
@@ -94,6 +92,7 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
     @EventHandler
     fun onPlayerOpenInventoryEvent(event: InventoryOpenEvent) {
         val game = gameController.getGameFromPlayer(event.player as Player)
+
         if (game != null) {
             event.isCancelled = true
         }
@@ -104,13 +103,17 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onPlayerDamageEvent(event: EntityDamageEvent) {
-        if (event.entity !is Player)
+        if (event.entity !is Player) {
             return
+        }
+
         val player = event.entity as Player
         val game = gameController.getGameFromPlayer(player)
+
         if (game != null && event.cause == EntityDamageEvent.DamageCause.FALL) {
             event.isCancelled = true
         }
+
         if (game != null && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.arena.meta.customizingMeta.damageEnabled) {
             event.isCancelled = true
         }
@@ -122,6 +125,7 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
     @EventHandler
     fun onBallInteractEvent(event: BallInteractEvent) {
         val game = gameController.games.find { p -> p.ball != null && p.ball!! == event.ball }
+
         if (game != null && game is SoccerGame) {
             if (event.entity is Player && (event.entity as Player).gameMode == GameMode.SPECTATOR) {
                 event.isCancelled = true
@@ -136,18 +140,17 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onClickOnPlacedSign(event: PlayerInteractEvent) {
-        if (event.action != Action.RIGHT_CLICK_BLOCK)
-            return
-        if (event.clickedBlock.type != Material.SIGN_POST && event.clickedBlock.type != Material.WALL_SIGN)
-            return
-
-        val location = event.clickedBlock.location.toPosition()
-        if (placementCallBack.containsKey(event.player)) {
-            placementCallBack[event.player]!!.run(location)
-            placementCallBack.remove(event.player)
+        if (event.action != Action.RIGHT_CLICK_BLOCK) {
             return
         }
 
+        if (event.clickedBlock.type != Material.SIGN_POST && event.clickedBlock.type != Material.WALL_SIGN) {
+            return
+        }
+
+        val location = event.clickedBlock.location.toPosition()
+
+        rightClickManageService.executeWatchers(event.player, event.clickedBlock.state as Sign)
         gameController.getAll().forEach { p ->
             when {
                 p.arena.meta.lobbyMeta.joinSigns.contains(location) -> p.join(event.player, null)
@@ -179,9 +182,5 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
         } catch (e: Exception) {
             //Ignored. Simple parsing error that another plugin is responsible for.
         }
-    }
-
-    interface CallBack {
-        fun run(position: StorageLocation)
     }
 }
