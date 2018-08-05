@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.repository
 
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta
 import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService
+import com.github.shynixn.blockball.bukkit.logic.persistence.context.SqlDbContextImpl
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PlayerData
 import com.google.inject.Inject
 import org.bukkit.entity.Player
@@ -39,7 +39,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class PlayerSqlRepository @Inject constructor(dbContext: ConnectionContextService, private val plugin: Plugin) : DatabaseRepository<PlayerMeta>(dbContext, "player"), PlayerRepository {
+class PlayerSqlRepository @Inject constructor(dbContext: SqlDbContextImpl, private val plugin: Plugin) : DatabaseRepository<PlayerMeta>(dbContext, "player"), PlayerRepository {
     /**
      * Returns the amount of items in this repository.
      */

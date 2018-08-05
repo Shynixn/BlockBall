@@ -76,13 +76,7 @@ class GameRepository : BukkitGameController, Runnable {
     private lateinit var spectateCommandExecutor: SpectateCommandExecutor
 
     @Inject
-    private lateinit var doubleJumpListener: DoubleJumpListener
-
-    @Inject
-    private lateinit var minigameListener: MinigameListener
-
-    @Inject
-    private lateinit var bungeeCordGameListener: BungeeCordGameListener
+    private lateinit var bungeeCordGameListener: BungeeCordgameListener
 
     /** Games. */
     val games: ArrayList<BukkitGame> = ArrayList()

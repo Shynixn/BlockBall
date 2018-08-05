@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.entity.action;
+package com.github.shynixn.blockball.bukkit.logic.persistence.context;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  * SOFTWARE.
  */
 @Singleton
-public class ConnectionContextService implements AutoCloseable {
+public class SqlDbContextImpl implements AutoCloseable {
     public static final String SQLITE_DRIVER = "org.sqlite.JDBC";
     public static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
     private HikariDataSource ds;
@@ -57,7 +57,7 @@ public class ConnectionContextService implements AutoCloseable {
     private Map<String, String> cache = new HashMap<>();
 
     @Inject
-    public ConnectionContextService(Plugin plugin) {
+    public SqlDbContextImpl(Plugin plugin) {
         super();
         if (plugin == null)
             throw new IllegalArgumentException("Plugin cannot be null!");
@@ -80,7 +80,7 @@ public class ConnectionContextService implements AutoCloseable {
                 final File file = new File(plugin.getDataFolder(), "BlockBall.db");
                 if (!file.exists())
                     file.createNewFile();
-                this.enableData(ConnectionContextService.SQLITE_DRIVER, "jdbc:sqlite:" + file.getAbsolutePath(), null, null, this.retriever);
+                this.enableData(SqlDbContextImpl.SQLITE_DRIVER, "jdbc:sqlite:" + file.getAbsolutePath(), null, null, this.retriever);
                 try (final Connection connection = this.getConnection()) {
                     this.execute("PRAGMA foreign_keys=ON", connection);
                 }
@@ -99,7 +99,7 @@ public class ConnectionContextService implements AutoCloseable {
         } else {
             final FileConfiguration c = plugin.getConfig();
             try {
-                this.enableData(ConnectionContextService.MYSQL_DRIVER, "jdbc:mysql://"
+                this.enableData(SqlDbContextImpl.MYSQL_DRIVER, "jdbc:mysql://"
                         , c.getString("sql.host")
                         , c.getInt("sql.port")
                         , c.getString("sql.database")

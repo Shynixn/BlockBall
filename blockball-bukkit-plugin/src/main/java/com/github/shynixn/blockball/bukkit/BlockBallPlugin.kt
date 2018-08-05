@@ -7,12 +7,9 @@ import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.DependencyService
 import com.github.shynixn.blockball.api.business.service.UpdateCheckService
-import com.github.shynixn.blockball.bukkit.logic.business.controller.BungeeCordPingManager
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BungeeCordSignCommandExecutor
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
-import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
-import com.github.shynixn.blockball.bukkit.logic.business.listener.HubGameListener
-import com.github.shynixn.blockball.bukkit.logic.business.listener.StatsListener
-import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
+import com.github.shynixn.blockball.bukkit.logic.business.listener.*
 import com.google.inject.Guice
 import com.google.inject.Inject
 import com.google.inject.Injector
@@ -60,15 +57,13 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     private var injector: Injector? = null
 
     @Inject
-    private var bungeeCordController: BungeeCordPingManager? = null
-
-    @Inject
     private var gameController: GameRepository? = null
 
     /**
      * Enables the plugin BlockBall.
      */
     override fun onEnable() {
+        Bukkit.getServer().consoleSender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
         this.saveDefaultConfig()
         this.injector = Guice.createInjector(BlockBallDependencyInjectionBinder(this))
 
@@ -78,9 +73,14 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             this.reloadConfig()
 
             // Register Listeners
-            Bukkit.getPluginManager().registerEvents(resolve(StatsListener::class.java), this)
             Bukkit.getPluginManager().registerEvents(resolve(GameListener::class.java), this)
-            Bukkit.getPluginManager().registerEvents(resolve(HubGameListener::class.java), this)
+            Bukkit.getPluginManager().registerEvents(resolve(HubgameListener::class.java), this)
+            Bukkit.getPluginManager().registerEvents(resolve(MinigameListener::class.java), this)
+            Bukkit.getPluginManager().registerEvents(resolve(BungeeCordgameListener::class.java), this)
+            Bukkit.getPluginManager().registerEvents(resolve(StatsListener::class.java), this)
+
+            // Register CommandExecutor
+            resolve(BungeeCordSignCommandExecutor::class.java)
 
             val updateCheker = resolve(UpdateCheckService::class.java)
             val dependencyChecker = resolve(DependencyService::class.java)
@@ -115,7 +115,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         try {
             gameController!!.reload()
 
-            BlockBallApi::class.java.getDeclaredMethod("initializeBlockBall", Any::class.java, Any::class.java, PluginProxy::class.java).invoke(this.gameController, bungeeCordController, this)
+            BlockBallApi::class.java.getDeclaredMethod("initializeBlockBall", Any::class.java, Any::class.java, PluginProxy::class.java).invoke(this.gameController, this)
             coreManager = CoreManager(this, "storage.yml", "ball.yml")
             logger.log(Level.INFO, "Using NMS Connector " + VersionSupport.getServerVersion().versionText + ".")
         } catch (e: Exception) {

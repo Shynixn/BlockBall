@@ -4,6 +4,7 @@ import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.business.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.business.service.DoubleJumpService
 import com.github.shynixn.blockball.api.business.service.RightclickManageService
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
@@ -22,7 +23,9 @@ import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.PlayerToggleFlightEvent
 
 /**
  * Created by Shynixn 2018.
@@ -51,7 +54,7 @@ import org.bukkit.event.player.PlayerQuitEvent
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameListener @Inject constructor(private val gameController: GameRepository, private val rightClickManageService: RightclickManageService) : Listener {
+class GameListener @Inject constructor(private val gameController: GameRepository, private val rightClickManageService: RightclickManageService, private val doubleJumpService: DoubleJumpService) : Listener {
     /**
      * Gets called when a player leaves the server and the game.
      */
@@ -70,6 +73,22 @@ class GameListener @Inject constructor(private val gameController: GameRepositor
 
         if (game != null) {
             event.isCancelled = true
+        }
+    }
+
+    /**
+     * Allows the player to start flying as long he is inside of a game.
+     */
+    @EventHandler
+    fun onPlayerMoveEvent(event: PlayerMoveEvent) {
+        if (!event.player.isOnGround) {
+            return
+        }
+
+        val game = gameController.getGameFromPlayer(event.player)
+
+        if (game != null) {
+            event.player.allowFlight = true
         }
     }
 
@@ -159,6 +178,18 @@ class GameListener @Inject constructor(private val gameController: GameRepositor
                 p.arena.meta.blueTeamMeta.signs.contains(location) -> p.join(event.player, Team.BLUE)
             }
         }
+    }
+
+    /**
+     * Handles executing the double jump.
+     */
+    @EventHandler
+    fun onToggleFlightEvent(event: PlayerToggleFlightEvent) {
+        if (event.player.gameMode == GameMode.CREATIVE) {
+            return
+        }
+
+        event.isCancelled = doubleJumpService.handleDoubleClick(event.player)
     }
 
     /**

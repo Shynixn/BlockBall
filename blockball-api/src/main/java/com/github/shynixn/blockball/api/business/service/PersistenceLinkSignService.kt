@@ -1,6 +1,8 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState
+import com.github.shynixn.blockball.api.persistence.entity.LinkSign
+import java.util.*
+import java.util.concurrent.CompletableFuture
 
 /**
  * Created by Shynixn 2018.
@@ -29,17 +31,34 @@ import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerSta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BungeeCordServerStatus {
+interface PersistenceLinkSignService {
+    /**
+     * Returns all stored signs in this repository.
+     */
+    fun getAll(): CompletableFuture<List<LinkSign>>
 
-    /** State of the server. **/
-    var status: BungeeCordServerState
+    /**
+     * Refreshes the runtime cache of the linked services.
+     */
+    fun refresh(): CompletableFuture<Void>
 
-    /** Amount of players on the server. **/
-    var playerAmount: Int
+    /**
+     * Returns the amount of items in this repository.
+     */
+    fun size(): CompletableFuture<Int>
 
-    /** MaxAmount of players on the server. **/
-    var playerMaxAmount: Int
+    /**
+     * Returns the [LinkSign] from the given [location].
+     */
+    fun <L> getFromLocation(location: L): CompletableFuture<Optional<LinkSign>>
 
-    /** Name of the server. **/
-    val serverName: String?
+    /**
+     * Remove the given [linkSign] from the storage.
+     */
+    fun remove(linkSign: LinkSign): CompletableFuture<Void>
+
+    /**
+     * Saves the given [LinkSign] to the storage.
+     */
+    fun save(linkSign: LinkSign): CompletableFuture<Void>
 }

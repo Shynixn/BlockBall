@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.repository
 
 import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService
+import com.github.shynixn.blockball.bukkit.logic.persistence.context.SqlDbContextImpl
 import org.bukkit.Bukkit
 import java.sql.Connection
 import java.sql.ResultSet
@@ -36,7 +36,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-abstract class DatabaseRepository<T>(protected val dbContext: ConnectionContextService, private val folder: String) where T : PersistenceAble {
+abstract class DatabaseRepository<T>(protected val dbContext: SqlDbContextImpl, private val folder: String) where T : PersistenceAble {
 
     /** Stores a new item into the repository. */
     fun store(item: T) {

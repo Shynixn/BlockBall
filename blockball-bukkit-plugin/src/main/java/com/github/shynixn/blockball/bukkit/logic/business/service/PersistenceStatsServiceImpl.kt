@@ -44,7 +44,11 @@ class PersistenceStatsServiceImpl @Inject constructor(private val statsRepositor
         val completableFuture = CompletableFuture<Int>()
 
         async(plugin) {
-            completableFuture.complete(statsRepository.size())
+            val amount = statsRepository.size()
+
+            sync(plugin) {
+                completableFuture.complete(amount)
+            }
         }
 
         return completableFuture

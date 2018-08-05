@@ -1,6 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity
-
-import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState
+package com.github.shynixn.blockball.api.business.service
 
 /**
  * Created by Shynixn 2018.
@@ -29,17 +27,21 @@ import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerSta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BungeeCordServerStatus {
+interface BungeeCordService {
+    /**
+     * Connects the given [player] to the given server which is specified on the given [sign].
+     * Does nothing when the sign is not a server sign.
+     */
+    fun <P, S> clickOnConnectSign(player: P, sign: S)
 
-    /** State of the server. **/
-    var status: BungeeCordServerState
+    /**
+     * Refreshes all signs by pinging the bungeecord network.
+     */
+    fun pingServers()
 
-    /** Amount of players on the server. **/
-    var playerAmount: Int
-
-    /** MaxAmount of players on the server. **/
-    var playerMaxAmount: Int
-
-    /** Name of the server. **/
-    val serverName: String?
+    /**
+     * Connects the given [player] to the given [server]. Does
+     * nothing when the server does not exist or connection fails.
+     */
+    fun <P> connectToServer(player: P, server: String)
 }

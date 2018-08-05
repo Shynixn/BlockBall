@@ -1,6 +1,10 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
-import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState
+import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
+import com.github.shynixn.blockball.api.persistence.entity.LinkSign
+import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
 
 /**
  * Created by Shynixn 2018.
@@ -29,17 +33,11 @@ import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerSta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BungeeCordServerStatus {
-
-    /** State of the server. **/
-    var status: BungeeCordServerState
-
-    /** Amount of players on the server. **/
-    var playerAmount: Int
-
-    /** MaxAmount of players on the server. **/
-    var playerMaxAmount: Int
-
-    /** Name of the server. **/
-    val serverName: String?
+class LinkSignEntity : PersistenceObject(), LinkSign {
+    /** Server linking to. */
+    @YamlSerializer.YamlSerialize(value = "server", orderNumber = 1)
+    override var server: String = ""
+    /** Position of the link sign in the server. */
+    @YamlSerializer.YamlSerialize(value = "location", orderNumber = 2, implementation = LocationBuilder::class)
+    override var position: StorageLocation = LocationBuilder()
 }

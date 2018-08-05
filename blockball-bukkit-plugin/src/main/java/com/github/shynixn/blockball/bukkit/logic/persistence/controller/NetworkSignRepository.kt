@@ -4,7 +4,7 @@ import com.github.shynixn.blockball.api.persistence.controller.LinkSignControlle
 import com.github.shynixn.blockball.api.persistence.entity.LinkSign
 import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.NetworkSign
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LinkSignEntity
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.bukkit.Bukkit
@@ -12,7 +12,6 @@ import org.bukkit.Location
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
-import org.bukkit.configuration.serialization.ConfigurationSerializable
 import org.bukkit.plugin.Plugin
 import java.io.File
 import java.io.IOException
@@ -61,7 +60,7 @@ class NetworkSignRepository : LinkSignController<Location> {
 
     /** Creates a new linking sign. */
     override fun create(server: String, location: Location): LinkSign {
-        val network = NetworkSign()
+        val network = LinkSignEntity()
         network.server = server
         network.position = LocationBuilder(location)
         return network
@@ -118,7 +117,7 @@ class NetworkSignRepository : LinkSignController<Location> {
             if (configuration.getConfigurationSection("signs") != null) {
                 val data = configuration.getConfigurationSection("signs").getValues(false)
                 for (s in data.keys) {
-                    this.signs.add(YamlSerializer.deserializeObject(NetworkSign::class.java, null,(data[s] as ConfigurationSection).getValues(true)))
+                    this.signs.add(YamlSerializer.deserializeObject(LinkSignEntity::class.java, null,(data[s] as ConfigurationSection).getValues(true)))
                 }
             }
         } catch (e: IOException) {
@@ -143,9 +142,7 @@ class NetworkSignRepository : LinkSignController<Location> {
                         Bukkit.getLogger().log(Level.WARNING, "File cannot get deleted.")
                     }
                 }
-                for (i in signs.indices) {
-                    configuration.set("signs.$i", (signs[i] as ConfigurationSerializable).serialize())
-                }
+
                 configuration.save(file)
             } catch (e: IOException) {
                 Bukkit.getLogger().log(Level.WARNING, "Save sign location.", e)

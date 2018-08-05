@@ -1,12 +1,10 @@
-package com.github.shynixn.blockball.bukkit.logic.business.listener
+package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.service.DoubleJumpService
 import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
 import com.google.inject.Inject
-import org.bukkit.GameMode
-import org.bukkit.event.EventHandler
-import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.event.player.PlayerToggleFlightEvent
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 
@@ -37,48 +35,41 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class DoubleJumpListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
-    @Inject
-    private var gameController: GameRepository? = null
-
+class DoubleJumpServiceImpl @Inject constructor(private val plugin: Plugin, private val gameRepository: GameRepository) : DoubleJumpService {
     /**
-     * Allows the player to start flying as long he is inside of a game.
+     * Handles the double click of the given [player] and executes the double jump if available.
      */
-    @EventHandler
-    fun onPlayerMoveEvent(event: PlayerMoveEvent) {
-        if (!event.player.isOnGround)
-            return
-        val game = gameController!!.getGameFromPlayer(event.player)
-        if (game != null) {
-            event.player.allowFlight = true
+    override fun <P> handleDoubleClick(player: P): Boolean {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
-    }
 
-    /**
-     * Handles executing the double jump.
-     */
-    @EventHandler
-    fun onToggleFlightEvent(event: PlayerToggleFlightEvent) {
-        if (event.player.gameMode == GameMode.CREATIVE)
-            return
-        val game = gameController!!.getGameFromPlayer(event.player) ?: return
-        val player = event.player
+        val game = gameRepository.getGameFromPlayer(player)
+
+        if (game == null) {
+            return false
+        }
+
         player.allowFlight = false
         player.isFlying = false
-        event.isCancelled = true
+
         val meta = game.arena.meta.doubleJumpMeta
         game as LowLevelGame
+
         if (meta.enabled && !game.doubleJumpCooldownPlayers.containsKey(player)) {
             game.doubleJumpCooldownPlayers[player] = meta.cooldown
             player.velocity = player.location.direction
                     .multiply(meta.horizontalStrength)
                     .setY(meta.verticalStrength)
+
             try {
                 meta.soundEffect.apply(player.location)
                 meta.particleEffect.apply(player.location)
             } catch (e: Exception) {
-                this.plugin!!.logger.log(Level.WARNING, "Invalid 1.8/1.9 effects. [DoubleJumpSound/DoubleJumpParticle]", e)
+                this.plugin.logger.log(Level.WARNING, "Invalid 1.8/1.9 effects. [DoubleJumpSound/DoubleJumpParticle]", e)
             }
         }
+
+        return true
     }
 }

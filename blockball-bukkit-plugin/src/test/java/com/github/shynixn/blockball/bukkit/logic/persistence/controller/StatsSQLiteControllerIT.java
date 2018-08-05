@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService;
+import com.github.shynixn.blockball.bukkit.logic.persistence.context.SqlDbContextImpl;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.StatsData;
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository;
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository;
@@ -53,7 +53,7 @@ public class StatsSQLiteControllerIT {
     @Test
     public void insertSelectStatsTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
-        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        final SqlDbContextImpl connectionContextService = new SqlDbContextImpl(plugin);
 
         final UUID uuid = UUID.randomUUID();
         final Player player = mock(Player.class);
@@ -91,7 +91,7 @@ public class StatsSQLiteControllerIT {
     @Test
     public void storeLoadPetMetaTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
-        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        final SqlDbContextImpl connectionContextService = new SqlDbContextImpl(plugin);
 
         final UUID uuid = UUID.randomUUID();
         final Player player = mock(Player.class);

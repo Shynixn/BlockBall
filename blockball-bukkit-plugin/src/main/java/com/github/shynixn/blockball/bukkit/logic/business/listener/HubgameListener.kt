@@ -36,7 +36,7 @@ import org.bukkit.event.player.PlayerToggleFlightEvent
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class HubGameListener @Inject constructor(private val hubGameForcefieldService: HubGameForcefieldService) : Listener {
+class HubgameListener @Inject constructor(private val hubGameForcefieldService: HubGameForcefieldService) : Listener {
     /** Handles the forcefield of hubGames. */
     @EventHandler
     fun onPlayerMoveAgainstHubForceField(event: PlayerMoveEvent) {

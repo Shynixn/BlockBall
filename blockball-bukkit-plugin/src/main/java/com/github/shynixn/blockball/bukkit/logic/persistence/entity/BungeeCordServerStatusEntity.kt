@@ -1,9 +1,7 @@
-package com.github.shynixn.blockball.bukkit.logic.business.listener;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
+import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordServerStatus
 
 /**
  * Created by Shynixn 2018.
@@ -32,43 +30,15 @@ import org.bukkit.plugin.Plugin;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class SimpleListener implements Listener {
-
-    final protected Plugin plugin;
-
-    /**
-     * Initializes a new listener by plugin
-     *
-     * @param plugin plugin
-     */
-    public SimpleListener(Plugin plugin) {
-        super();
-        if (plugin == null)
-            throw new IllegalArgumentException("Plugin cannot be null!");
-        this.plugin = plugin;
-        this.register();
-    }
-
-    /**
-     * Initializes a new listener by pluginname
-     *
-     * @param plugin plugin
-     */
-    public SimpleListener(String plugin) {
-        this(Bukkit.getPluginManager().getPlugin(plugin));
-    }
-
-    /**
-     * Registers the listener to spigot
-     */
-    final void register() {
-        Bukkit.getPluginManager().registerEvents(this, this.plugin);
-    }
-
-    /**
-     * Unregisters the lister from spigot
-     */
-    public final void unregister() {
-        HandlerList.unregisterAll(this);
-    }
+class BungeeCordServerStatusEntity(
+        /**
+         *  Name of the server.
+         */
+        override val serverName: String) : BungeeCordServerStatus {
+    /** State of the server. **/
+    override var status: BungeeCordServerState = BungeeCordServerState.UNKNOWN
+    /** Amount of players on the server. **/
+    override var playerAmount: Int = 0
+    /** MaxAmount of players on the server. **/
+    override var playerMaxAmount: Int = 0
 }

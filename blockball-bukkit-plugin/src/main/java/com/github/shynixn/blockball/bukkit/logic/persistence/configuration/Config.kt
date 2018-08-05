@@ -37,14 +37,6 @@ internal object Config : SimpleConfig() {
     var Logger: Logger? = null
 
     /**
-     * Checks if [metrics] is enabled for dataCollecting.
-     */
-    val metrics: Boolean?
-        get() {
-            return this.getData<Boolean>("metrics")
-        }
-
-    /**
      * Returns the general [prefix] of the plugin.
      */
     val prefix: String?
@@ -95,7 +87,7 @@ internal object Config : SimpleConfig() {
 
     val allowServerLinking: Boolean?
         get() {
-            return this.getData<Boolean>("game.allow-server-linking")
+            return this.getData<Boolean>("")
         }
 
     val statsScoreboardEnabled: Boolean?

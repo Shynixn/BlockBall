@@ -1,8 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
-
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -33,8 +30,8 @@ import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
 interface LinkSign : PersistenceAble {
 
     /** Position of the link sign in the server. */
-    var position: StorageLocation?
+    var position: StorageLocation
 
     /** Server linking to. */
-    var server: String?
+    var server: String
 }

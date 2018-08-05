@@ -4,7 +4,7 @@ import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
 import com.github.shynixn.blockball.api.persistence.entity.Stats;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService;
+import com.github.shynixn.blockball.bukkit.logic.persistence.context.SqlDbContextImpl;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.StatsData;
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository;
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository;
@@ -88,7 +88,7 @@ public class StatsMySQLControllerIT {
     public void insertSelectStatsTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
-        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        final SqlDbContextImpl connectionContextService = new SqlDbContextImpl(plugin);
         final UUID uuid = UUID.randomUUID();
         final Player player = mock(Player.class);
         when(player.getName()).thenReturn("Shynixn");
@@ -123,7 +123,7 @@ public class StatsMySQLControllerIT {
     public void storeLoadPetMetaTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
-        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        final SqlDbContextImpl connectionContextService = new SqlDbContextImpl(plugin);
         final UUID uuid = UUID.randomUUID();
         final Player player = mock(Player.class);
         when(player.getName()).thenReturn("Shynixn");

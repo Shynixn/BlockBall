@@ -1,10 +1,7 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity
+package com.github.shynixn.blockball.api.persistence.repository
 
-import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
 import com.github.shynixn.blockball.api.persistence.entity.LinkSign
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PersistenceObject
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
+import com.github.shynixn.blockball.api.persistence.entity.Stats
 
 /**
  * Created by Shynixn 2018.
@@ -33,11 +30,14 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuil
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class NetworkSign : PersistenceObject(), LinkSign {
-    /** Server linking to. */
-    @YamlSerializer.YamlSerialize(value = "server", orderNumber = 1)
-    override var server: String? = null
-    /** Position of the link sign in the server. */
-    @YamlSerializer.YamlSerialize(value = "location", orderNumber = 2, implementation = LocationBuilder::class)
-    override var position: StorageLocation? = null
+interface ServerSignRepository {
+    /**
+     * Returns all stored signs in this repository.
+     */
+    fun getAll(): List<LinkSign>
+
+    /**
+     * Saves the given [signs] to the storage.
+     */
+    fun saveAll(signs: List<LinkSign>)
 }

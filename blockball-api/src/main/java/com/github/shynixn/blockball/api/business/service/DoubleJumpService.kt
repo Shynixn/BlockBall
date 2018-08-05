@@ -1,11 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.listener
-
-import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
-import com.google.inject.Inject
-import org.bukkit.event.EventHandler
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.plugin.Plugin
+package com.github.shynixn.blockball.api.business.service
 
 /**
  * Created by Shynixn 2018.
@@ -34,21 +27,10 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BungeeCordGameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
-    @Inject
-    private var gameController: GameRepository? = null
-
+interface DoubleJumpService {
     /**
-     * Joins the game for a bungeecord player.
+     * Handles the double click of the given [player] and executes the double jump if available.
+     * Returns if the jump has been actived.
      */
-    @EventHandler
-    fun onPlayerJoinEvent(event: PlayerJoinEvent) {
-        val game = gameController!!.getAll().find { p -> p.arena.gameType == GameType.BUNGEE }
-        if (game != null) {
-            val success = game.join(event.player)
-            if (!success) {
-                event.player.kickPlayer(game.arena.meta.bungeeCordMeta.kickMessage)
-            }
-        }
-    }
+    fun <P> handleDoubleClick(player: P): Boolean
 }

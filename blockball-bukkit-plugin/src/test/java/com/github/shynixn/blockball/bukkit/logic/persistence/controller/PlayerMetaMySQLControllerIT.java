@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ConnectionContextService;
+import com.github.shynixn.blockball.bukkit.logic.persistence.context.SqlDbContextImpl;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PlayerData;
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository;
 import org.bukkit.Bukkit;
@@ -89,7 +89,7 @@ public class PlayerMetaMySQLControllerIT {
     public void insertSelectPlayerMetaTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
-        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        final SqlDbContextImpl connectionContextService = new SqlDbContextImpl(plugin);
         try (PlayerSqlRepository controller = new PlayerSqlRepository(connectionContextService)) {
             for (final PlayerMeta<? extends Player> item : controller.getAll()) {
                 controller.remove(item);
@@ -119,7 +119,7 @@ public class PlayerMetaMySQLControllerIT {
     public void storeLoadPlayerMetaTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
-        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        final SqlDbContextImpl connectionContextService = new SqlDbContextImpl(plugin);
         try (PlayerSqlRepository controller = new PlayerSqlRepository(connectionContextService)) {
             for (final PlayerMeta item : controller.getAll()) {
                 controller.remove(item);
