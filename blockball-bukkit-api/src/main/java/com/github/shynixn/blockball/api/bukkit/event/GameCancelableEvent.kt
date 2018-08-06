@@ -1,18 +1,15 @@
-package com.github.shynixn.blockball.api.bukkit.business.event;
+package com.github.shynixn.blockball.api.bukkit.event
 
-import com.github.shynixn.blockball.api.business.entity.Game;
-import com.github.shynixn.blockball.api.business.enumeration.Team;
+import com.github.shynixn.blockball.api.persistence.entity.Game
 
 /**
- * Copyright 2017 Shynixn
+ * Extension of the [GameEvent] for cancellable events.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,26 +29,9 @@ import com.github.shynixn.blockball.api.business.enumeration.Team;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class GameWinEvent extends GameEvent {
-    private final Team team;
-
+open class GameCancelableEvent(game: Game) : GameEvent(game) {
     /**
-     * Initializes a new gameWin event.
-     *
-     * @param game game
-     * @param team team
+     * Is the event cancelled?
      */
-    public GameWinEvent(Game game, Team team) {
-        super(game);
-        this.team = team;
-    }
-
-    /**
-     * Returns the winning team.
-     *
-     * @return team
-     */
-    public Team getTeam() {
-        return this.team;
-    }
+    var Cancelled: Boolean = false
 }

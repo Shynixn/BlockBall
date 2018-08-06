@@ -1,18 +1,16 @@
-package com.github.shynixn.blockball.api.bukkit.business.event;
+package com.github.shynixn.blockball.api.bukkit.event
 
-import com.github.shynixn.blockball.api.business.entity.Game;
-import org.bukkit.entity.Player;
+import com.github.shynixn.blockball.api.persistence.entity.Game
+import org.bukkit.entity.Player
 
 /**
- * Copyright 2017 Shynixn
+ * [GameCancelableEvent] when a player joins a game.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,27 +30,8 @@ import org.bukkit.entity.Player;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class GameJoinEvent extends GameCancelableEvent {
-
-    private final Player player;
-
-    /**
-     * Initializes a new join event.
-     *
-     * @param game   game
-     * @param player player
-     */
-    public GameJoinEvent(Game game, Player player) {
-        super(game);
-        this.player = player;
-    }
-
-    /**
-     * Returns the joined player.
-     *
-     * @return player
-     */
-    public Player getPlayer() {
-        return this.player;
-    }
-}
+class GameJoinEvent(
+        /**
+         * Player joining the game.
+         */
+        val player: Player, game: Game) : GameCancelableEvent(game)

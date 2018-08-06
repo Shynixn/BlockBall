@@ -1,16 +1,17 @@
-package com.github.shynixn.blockball.api.bukkit.business.event;
+package com.github.shynixn.blockball.api.bukkit.event
 
-import com.github.shynixn.blockball.api.business.entity.Game;
-import org.bukkit.entity.Player;
+import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.persistence.entity.Game
+import org.bukkit.entity.Player
 
 /**
- * Created by Shynixn 2017.
+ * [GameCancelableEvent] when someone scores a goal.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,25 +31,12 @@ import org.bukkit.entity.Player;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class GameLeaveEvent extends GameEvent {
-
-    private final Player player;
-
-    /**
-     * Initializes a game event.
-     *
-     * @param game game
-     */
-    public GameLeaveEvent(Game game, Player player) {
-        super(game);
-        this.player = player;
-    }
-
-    /**
-     * Returns the left player.
-     * @return player
-     */
-    public Player getPlayer() {
-        return this.player;
-    }
-}
+class GameGoalEvent(
+        /**
+         *  Player last touching the ball.
+         */
+        val player: Player,
+        /**
+         * Team scoring the goal.
+         */
+        val team: Team, game: Game) : GameCancelableEvent(game)

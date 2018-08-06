@@ -1,16 +1,10 @@
-package com.github.shynixn.blockball.api.bukkit.business.entity
+package com.github.shynixn.blockball.api.bukkit.event
 
-import com.github.shynixn.ball.api.bukkit.business.entity.BukkitBall
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.api.business.entity.Game
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
+import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.persistence.entity.Game
 
 /**
- * Created by Shynixn 2018.
+ * [GameEvent] which gets called when a game ends.
  * <p>
  * Version 1.2
  * <p>
@@ -36,4 +30,8 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitGame : Game<BukkitArena, Player, Location, ItemStack, Vector, Material,BukkitBall>
+class GameEndEvent(
+        /**
+         * Winning [Team]. Is null when the match ended in a draw.
+         */
+        val winningTeam: Team?, game: Game) : GameEvent(game)

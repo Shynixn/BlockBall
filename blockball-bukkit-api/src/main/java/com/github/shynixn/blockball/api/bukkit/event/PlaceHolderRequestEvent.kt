@@ -1,17 +1,15 @@
-package com.github.shynixn.blockball.api.bukkit.business.event;
+package com.github.shynixn.blockball.api.bukkit.event
 
-import com.github.shynixn.blockball.api.business.entity.Game;
+import org.bukkit.entity.Player
 
 /**
- * Copyright 2017 Shynixn
+ * [BlockBallEvent] when a placeholder gets requested from the placeholder api.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,25 +29,16 @@ import com.github.shynixn.blockball.api.business.entity.Game;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class GameEvent extends BlockBallEvent {
-    private final Game game;
-
-    /**
-     * Initializes a game event.
-     *
-     * @param game game
-     */
-    public GameEvent(Game game) {
-        super();
-        this.game = game;
-    }
-
-    /**
-     * Returns the game.
-     *
-     * @return game
-     */
-    public Game getGame() {
-        return this.game;
-    }
-}
+class PlaceHolderRequestEvent(
+        /**
+         * Name of the placeholder.
+         */
+        val name: String,
+        /**
+         * Result of the placeholder if it could be matched successfully.
+         */
+        val result: String?,
+        /**
+         * Optional player sending the placeholder.
+         */
+        val player: Player?) : BlockBallEvent()
