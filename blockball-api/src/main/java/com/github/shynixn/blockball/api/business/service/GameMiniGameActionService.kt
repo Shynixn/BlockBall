@@ -1,7 +1,6 @@
-package com.github.shynixn.blockball.api.business.controller
+package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.blockball.api.persistence.controller.ArenaController
-import com.github.shynixn.blockball.api.persistence.controller.ReloadableController
+import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 
 /**
  * Created by Shynixn 2018.
@@ -30,17 +29,16 @@ import com.github.shynixn.blockball.api.persistence.controller.ReloadableControl
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface GameController<in Location : Any, in Player, GameEntity : Any, ArenaEntity : Any> : ReloadableController<GameEntity>, AutoCloseable {
+interface GameMiniGameActionService<in G : MiniGame> : GameActionService<G> {
 
-    /** ArenaController of the gameController. */
-    val arenaController: ArenaController<Location, ArenaEntity>?
+    /**
+     * Lets the given [player] leave spectate the given [game].
+     * Does nothing if the player is already spectating a Game.
+     */
+    fun <P> spectateGame(game: G, player: P)
 
-    /** Returns the game with the given arena name. */
-    fun getGameFromArenaName(name: String): GameEntity?
-
-    /** Returns the game with the given arena displayName. */
-    fun getGameFromArenaDisplayName(name: String): GameEntity?
-
-    /** Returns the game with the [player] inside. */
-    fun getGameFromPlayer(player: Player): GameEntity?
+    /**
+     * Gets called when the given [game] ends with a draw.
+     */
+    fun onDraw(game: G)
 }

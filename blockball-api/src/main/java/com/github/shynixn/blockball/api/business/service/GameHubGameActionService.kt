@@ -1,6 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.controller
+package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.blockball.api.persistence.entity.LinkSign
+import com.github.shynixn.blockball.api.persistence.entity.HubGame
 
 /**
  * Created by Shynixn 2018.
@@ -29,11 +29,4 @@ import com.github.shynixn.blockball.api.persistence.entity.LinkSign
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface LinkSignController<in Location> : ReloadableController<LinkSign> {
-
-    /** Creates a new linking sign. */
-    fun create(server: String, location: Location): LinkSign
-
-    /** All servers which are linked via signs. */
-    val linkedServers: Set<String>
-}
+interface GameHubGameActionService : GameActionService<HubGame>

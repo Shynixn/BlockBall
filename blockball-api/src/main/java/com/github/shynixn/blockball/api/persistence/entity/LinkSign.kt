@@ -27,10 +27,10 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface LinkSign : PersistenceAble {
+interface LinkSign {
 
     /** Position of the link sign in the server. */
-    var position: StorageLocation
+    var position: Position
 
     /** Server linking to. */
     var server: String

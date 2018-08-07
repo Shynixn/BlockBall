@@ -1,8 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
-
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -30,7 +27,7 @@ import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface MinigameLobbyMeta : PersistenceAble {
+interface MinigameLobbyMeta {
 
     /** Duration the match will max last. */
     var matchDuration: Int
@@ -39,7 +36,7 @@ interface MinigameLobbyMeta : PersistenceAble {
     var lobbyDuration: Int
 
     /** Spawnpoint of the player in the lobby. */
-    var lobbySpawnpoint: StorageLocation?
+    var lobbySpawnpoint: Position?
 
     /** Message being played in the action bar displaying the joined players how many players are remaining to start. */
     var playersRequiredToStartMessage: String

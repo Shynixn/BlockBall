@@ -34,4 +34,10 @@ interface PluginProxy {
      * Throws a [IllegalArgumentException] if the service could not be found.
      */
     fun <S> resolve(service: Class<S>): S
+
+    /**
+     * Creates a new entity from the given [entity].
+     * Throws a [IllegalArgumentException] if the entity could not be found.
+     */
+    fun <E> create(entity: Class<E>): E
 }

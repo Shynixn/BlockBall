@@ -27,16 +27,16 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaProtectionMeta<Vector> {
+interface ArenaProtectionMeta {
 
     /** Velocity being applied when an entity enters the arena which is not an player or armorstand. */
-    var entityProtection: Vector
+    var entityProtection: Any
 
     /** Should a velocity be applied to entities which are not an player or armorstand. */
     var entityProtectionEnabled: Boolean
 
     /** Velocity being applied when a player rejoins the server into a field of an arena. */
-    var rejoinProtection: Vector
+    var rejoinProtection: Any
 
     /** Should a velocity be applied to players which rejoin on the field of the arena. */
     var rejoinProtectionEnabled: Boolean

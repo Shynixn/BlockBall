@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import com.github.shynixn.blockball.api.business.enumeration.CommandMode
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -27,17 +29,11 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface CommandMeta : PersistenceAble {
+interface CommandMeta {
 
     /** Mode how the command gets executed. */
     var mode: CommandMode
 
     /** Command to be executed. */
     var command: String?
-
-    enum class CommandMode {
-        CONSOLE_SINGLE,
-        CONSOLE_PER_PLAYER,
-        PER_PLAYER
-    }
 }

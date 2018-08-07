@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
 import java.util.*
 
 /**
@@ -30,7 +29,7 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface PlayerMeta : PersistenceAble {
+interface PlayerMeta {
 
     /** [name] of the player. */
     var name: String

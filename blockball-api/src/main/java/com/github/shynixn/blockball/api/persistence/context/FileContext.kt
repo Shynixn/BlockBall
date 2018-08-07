@@ -1,6 +1,6 @@
-package com.github.shynixn.blockball.api.business.entity
+package com.github.shynixn.blockball.api.persistence.context
 
-import com.github.shynixn.blockball.api.business.enumeration.Team
+import java.nio.file.Path
 
 /**
  * Created by Shynixn 2018.
@@ -29,11 +29,16 @@ import com.github.shynixn.blockball.api.business.enumeration.Team
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface InGameStats {
+interface FileContext {
+    /**
+     * Returns the content of the given [path] and [yamlPath].
+     * Handles locking for asynchronous operations.
+     * Creates the file if it does not already exist.
+     */
+    fun loadOrCreateYamlFile(path: Path, yamlPath: String, deep: Boolean = false): Map<String, Any>
 
-    /** Team of the player. */
-    var team : Team?
-
-    /** Resets the players state before joining. */
-    fun resetState()
+    /**
+     * Executes the given function with the configuration for the given [path].
+     */
+    fun <F> saveAndCreateYamlFile(path: Path, f: (F) -> Unit)
 }

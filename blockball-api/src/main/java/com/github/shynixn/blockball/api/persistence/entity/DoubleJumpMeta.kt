@@ -30,7 +30,7 @@ import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface DoubleJumpMeta<Location, Player, Material> {
+interface DoubleJumpMeta {
 
     /** Is the effect enabled or disabled?*/
     var enabled: Boolean
@@ -45,8 +45,8 @@ interface DoubleJumpMeta<Location, Player, Material> {
     var horizontalStrength: Double
 
     /** ParticleEffect being played when activating this.*/
-    val particleEffect: ParticleEffectMeta<Location, Player, Material>
+    val particleEffect: ParticleEffectMeta<*, *, *>
 
     /** SoundEffect being played when activating this.*/
-    val soundEffect: SoundEffectMeta<Location, Player>
+    val soundEffect: SoundEffectMeta<*, *>
 }

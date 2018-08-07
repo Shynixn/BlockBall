@@ -1,5 +1,9 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import com.github.shynixn.blockball.api.business.enumeration.BossBarFlag
+import com.github.shynixn.blockball.api.business.enumeration.BossbarColor
+import com.github.shynixn.blockball.api.business.enumeration.BossbarStyle
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -27,7 +31,7 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BossBarMeta : PersistenceAble {
+interface BossBarMeta {
 
     /** Is bossbar visible. */
     var enabled: Boolean
@@ -39,100 +43,11 @@ interface BossBarMeta : PersistenceAble {
     var percentage: Double
 
     /** Style of the bossbar. */
-    var style: Style
+    var style: BossbarStyle
 
     /** Color of the bossbar. */
-    var color: Color
+    var color: BossbarColor
 
     /** Flags of the bossbar. */
-    val flags: MutableList<Flag>
-
-    /** Style of the bossbar. */
-    enum class Style {
-        /**
-         * Segmented Style 6.
-         */
-        SEGMENTED_6,
-
-        /**
-         * Segmented Style 10.
-         */
-        SEGMENTED_10,
-
-        /**
-         * Segmented Style 12.
-         */
-        SEGMENTED_12,
-
-        /**
-         * Segmented Style 20.
-         */
-        SEGMENTED_20,
-
-        /**
-         * Solid Style 6.
-         */
-        SOLID;
-    }
-
-    /** Color of the bossbar. */
-    enum class Color {
-        /**
-         * Color Pink.
-         */
-        PINK,
-
-        /**
-         * Color Blue.
-         */
-        BLUE,
-
-        /**
-         * Color Red.
-         */
-        RED,
-
-        /**
-         * Color Green.
-         */
-        GREEN,
-
-        /**
-         * Color Yellow.
-         */
-        YELLOW,
-
-        /**
-         * Color Purple.
-         */
-        PURPLE,
-
-        /**
-         * Color White.
-         */
-        WHITE;
-    }
-
-    /** Flag of the bossbar. */
-    enum class Flag {
-        /**
-         * No Flag.
-         */
-        NONE,
-
-        /**
-         * Flag creating fog.
-         */
-        CREATE_FOG,
-
-        /**
-         * Flag darken the sky.
-         */
-        DARKEN_SKY,
-
-        /**
-         * Flag playing boss music.
-         */
-        PLAY_BOSS_MUSIC
-    }
+    val flags: MutableList<BossBarFlag>
 }

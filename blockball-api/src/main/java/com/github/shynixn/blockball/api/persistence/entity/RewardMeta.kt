@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import com.github.shynixn.blockball.api.business.enumeration.RewardType
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -27,18 +29,11 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface RewardMeta : PersistenceAble {
+interface RewardMeta {
 
     /** Money which gets added via Vault when a player does a rewarded action. */
-    var moneyReward: MutableMap<RewardedAction, Int>
+    var moneyReward: MutableMap<RewardType, Int>
 
     /** Commands which get executed when a player does a rewarded action. */
-    var commandReward: MutableMap<RewardedAction, CommandMeta>
-
-    enum class RewardedAction {
-        WIN_MATCH,
-        LOOSING_MATCH,
-        SHOOT_GOAL,
-        PARTICIPATE_MATCH,
-    }
+    var commandReward: MutableMap<RewardType, CommandMeta>
 }

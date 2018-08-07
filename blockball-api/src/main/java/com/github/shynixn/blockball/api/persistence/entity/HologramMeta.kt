@@ -1,8 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
-
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -30,10 +27,10 @@ import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface HologramMeta : PersistenceAble {
+interface HologramMeta {
 
     /** Position of the hologram. */
-    var position: StorageLocation?
+    var position: Position?
 
     /** Lines of the hologram being rendered. */
     val lines: MutableList<String>

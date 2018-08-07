@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.controller
+package com.github.shynixn.blockball.api.business.enumeration
 
 /**
  * Created by Shynixn 2018.
@@ -27,8 +27,17 @@ package com.github.shynixn.blockball.api.persistence.controller
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ReloadableController<T : Any> : Controller<T>{
-
-    /** Reloads the contents in the cache of the controller. */
-    fun reload()
+enum class CommandMode {
+    /**
+     * The command gets executed one time per console.
+     */
+    CONSOLE_SINGLE,
+    /**
+     * The commmand gets executed for each player per console.
+     */
+    CONSOLE_PER_PLAYER,
+    /**
+     * The common gets executed for each player by the player.
+     */
+    PER_PLAYER
 }

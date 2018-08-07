@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -29,7 +27,7 @@ import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface HubLobbyMeta : PersistenceAble {
+interface HubLobbyMeta {
     /** Allows to instantly play in games by running into the forcefield.*/
     var instantForcefieldJoin: Boolean
 

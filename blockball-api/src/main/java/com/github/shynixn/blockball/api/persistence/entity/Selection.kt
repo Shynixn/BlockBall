@@ -27,50 +27,22 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaMeta {
+interface Selection {
+    /** [upperCorner] of the selected square arena. */
+    val upperCorner: Position
 
-    /** Meta data of the hub lobby. */
-    val hubLobbyMeta: HubLobbyMeta
+    /** [lowerCorner] of the selected square arena. */
+    val lowerCorner: Position
 
-    /** Meta data for spectating setting. */
-    val spectatorMeta: SpectatorMeta
+    /** [center] of the arena */
+    val center: Position
 
-    /** Meta data of a generic lobby. */
-    val lobbyMeta: LobbyMeta
+    /** Length of the x axe. */
+    val offsetX: Int
 
-    /** Meta data of the minigame lobby. */
-    val minigameMeta: MinigameLobbyMeta
+    /** Length of the y axe. */
+    val offsetY: Int
 
-    /** Meta data of the bungeecord lobby. */
-    val bungeeCordMeta: BungeeCordLobbyMeta
-
-    /** Meta data of the redTeam. */
-    val redTeamMeta: TeamMeta
-
-    /** Meta data of the blueTeam. */
-    val blueTeamMeta: TeamMeta
-
-    /** Meta data of all holograms. */
-    val hologramMetas: MutableList<HologramMeta>
-
-    /** Meta data of the ball. */
-    val ballMeta: BallMeta
-
-    /** Meta data of protection. */
-    val protectionMeta: ArenaProtectionMeta
-
-    /** Meta data for rewards */
-    val rewardMeta: RewardMeta
-
-    /** Meta data of the scoreboard. */
-    val scoreboardMeta: ScoreboardMeta
-
-    /** Meta data of the bossbar. */
-    val bossBarMeta: BossBarMeta
-
-    /** Meta data of the doubleJump. */
-    val doubleJumpMeta: DoubleJumpMeta
-
-    /** Meta data of the customizing Properties. */
-    val customizingMeta: CustomizationMeta
+    /** Length of the z axe. */
+    val offsetZ: Int
 }

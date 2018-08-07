@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -29,13 +27,13 @@ import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ScoreboardMeta  : PersistenceAble {
+interface ScoreboardMeta {
     /** Title of the scoreboard. */
-    var title : String
+    var title: String
 
     /** Is the scoreboard visible. */
-    var enabled : Boolean
+    var enabled: Boolean
 
     /** Lines of the scoreboard being rendered. */
-    val lines : MutableList<String>
+    val lines: MutableList<String>
 }

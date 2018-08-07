@@ -1,4 +1,7 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.service
+
+import com.github.shynixn.blockball.api.persistence.entity.Game
+import java.util.*
 
 /**
  * Created by Shynixn 2018.
@@ -27,42 +30,39 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface StorageLocation : PersistenceAble {
+interface GameService : AutoCloseable {
+    /**
+     * Restarts all games on the server.
+     */
+    fun restartGames()
 
     /**
-     * Sets the coordinates x, y, z.
-     *
-     * @param x x
-     * @param y y
-     * @param z z
-     * @return builder
+     * Returns the game if the given [player] is playing a game.
      */
-    fun setCoordinates(x: Double, y: Double, z: Double): StorageLocation
+    fun <P> getGameFromPlayer(player: P): Optional<Game>
 
-    /** [worldName] which world the location is. */
-    var worldName: String?
+    /**
+     * Returns the game if the given [player] is spectating a game.
+     */
+    fun <P> getGameFromSpectatingPlayer(player: P): Optional<Game>
 
-    /** [x] coordinate. */
-    var x: Double
+    /**
+     * Returns the game at the given location.
+     */
+    fun <L> getGameFromLocation(location: L): Optional<Game>
 
-    /** [y] coordinate. */
-    var y: Double
+    /**
+     * Returns the game with the given name or displayName.
+     */
+    fun getGameFromName(name: String): Optional<Game>
 
-    /** [z] coordinate. */
-    var z: Double
+    /**
+     * Returns all currently loaded games on the server.
+     */
+    fun getAllGames(): List<Game>
 
-    /** [yaw] rotation yaw. */
-    var yaw: Double
-
-    /** [pitch] rotation pitch. */
-    var pitch: Double
-
-    /** [blockX] coordinate as Int. */
-    val blockX: Int
-
-    /** [blockY] coordinate as Int. */
-    val blockY: Int
-
-    /** [blockZ] coordinate as Int. */
-    val blockZ: Int
+    /**
+     * Closes all games permanently and should be executed on server shutdown.
+     */
+    override fun close()
 }

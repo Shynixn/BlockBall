@@ -1,6 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.ball.api.persistence.BallMeta
+import com.github.shynixn.blockball.api.persistence.entity.Sound
 
 /**
  * Created by Shynixn 2018.
@@ -29,11 +29,9 @@ import com.github.shynixn.ball.api.persistence.BallMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BallExtensionMeta: PersistenceAble, BallMeta{
-
-    /** Spawning delay. */
-    var delayInTicks: Int
-
-    /** Spawnpoint of the ball. */
-    var spawnpoint: StorageLocation?
+interface SoundService {
+    /**
+     * Plays the given [sound] at the given [location] for the given [players].
+     */
+    fun <L, P> playSound(location: L, sound: Sound, players: Collection<P>)
 }

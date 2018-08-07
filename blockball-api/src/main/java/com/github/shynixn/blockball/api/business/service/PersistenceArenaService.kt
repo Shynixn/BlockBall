@@ -1,4 +1,7 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.service
+
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import java.util.concurrent.CompletableFuture
 
 /**
  * Created by Shynixn 2018.
@@ -27,29 +30,19 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface SpectatorMeta {
+interface PersistenceArenaService {
     /**
-     * Should nearby players inside of the [notificationRadius] be messaged by title messages, scoreboard, holograms and bossbar.
+     * Returns all stored arenas.
      */
-    var notifyNearbyPlayers: Boolean
+    fun getAll(): CompletableFuture<Arena>
 
     /**
-     * The radius from the center of the arena a player has to be in order to get notified when [notifyNearbyPlayers] is enabled.
+     * Removes the given [arena].
      */
-    var notificationRadius: Int
+    fun remove(arena: Arena): CompletableFuture<Void>
 
     /**
-     * Should the spectator mode be enabled for this arena?
+     * Saves the given [arena] to the storage.
      */
-    var spectatorModeEnabled: Boolean
-
-    /**
-     * Spectate asking message.
-     */
-    var spectateStartMessage: MutableList<String>
-
-    /**
-     *  Spawnpoint of the spectatorPlayers.
-     */
-    var spectateSpawnpoint: Position?
+    fun save(arena: Arena): CompletableFuture<Void>
 }

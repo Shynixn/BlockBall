@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.enumeration
 
 /**
  * Created by Shynixn 2018.
@@ -27,29 +27,29 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface SpectatorMeta {
+enum class BossbarStyle {
     /**
-     * Should nearby players inside of the [notificationRadius] be messaged by title messages, scoreboard, holograms and bossbar.
+     * Segmented Style 6.
      */
-    var notifyNearbyPlayers: Boolean
+    SEGMENTED_6,
 
     /**
-     * The radius from the center of the arena a player has to be in order to get notified when [notifyNearbyPlayers] is enabled.
+     * Segmented Style 10.
      */
-    var notificationRadius: Int
+    SEGMENTED_10,
 
     /**
-     * Should the spectator mode be enabled for this arena?
+     * Segmented Style 12.
      */
-    var spectatorModeEnabled: Boolean
+    SEGMENTED_12,
 
     /**
-     * Spectate asking message.
+     * Segmented Style 20.
      */
-    var spectateStartMessage: MutableList<String>
+    SEGMENTED_20,
 
     /**
-     *  Spawnpoint of the spectatorPlayers.
+     * Solid Style 6.
      */
-    var spectateSpawnpoint: Position?
+    SOLID;
 }

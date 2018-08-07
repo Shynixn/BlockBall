@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.enumeration
 
 /**
  * Created by Shynixn 2018.
@@ -27,29 +27,24 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface AreaSelection<Location> : PersistenceAble {
+enum class BossBarFlag {
+    /**
+     * No Flag.
+     */
+    NONE,
 
-    /** [upperCorner] of the selected square arena. */
-    val upperCorner: StorageLocation?
+    /**
+     * Flag creating fog.
+     */
+    CREATE_FOG,
 
-    /** [lowerCorner] of the selected square arena. */
-    val lowerCorner: StorageLocation?
+    /**
+     * Flag darken the sky.
+     */
+    DARKEN_SKY,
 
-    /** [center] of the arena */
-    val center: Location?
-
-    /** Length of the x axe. */
-    val offsetX: Int
-
-    /** Length of the y axe. */
-    val offsetY: Int
-
-    /** Length of the z axe. */
-    val offsetZ: Int
-
-    /** Sets the corners between [corner1] and [corner2]. Automatically sets lowerCorner and upperCorner. */
-    fun setCorners(corner1: Location, corner2: Location)
-
-    /** Returns if the given [location] is inside of this area selection. */
-    fun isLocationInSelection(location: Location): Boolean
+    /**
+     * Flag playing boss music.
+     */
+    PLAY_BOSS_MUSIC
 }

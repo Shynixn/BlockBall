@@ -1,4 +1,8 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.service
+
+import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 
 /**
  * Created by Shynixn 2018.
@@ -27,29 +31,39 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface SpectatorMeta {
-    /**
-     * Should nearby players inside of the [notificationRadius] be messaged by title messages, scoreboard, holograms and bossbar.
-     */
-    var notifyNearbyPlayers: Boolean
+interface GameActionService<in G : Game> {
 
     /**
-     * The radius from the center of the arena a player has to be in order to get notified when [notifyNearbyPlayers] is enabled.
+     * Closes the given game and all underlying resources.
      */
-    var notificationRadius: Int
+    fun closeGame(game: G)
 
     /**
-     * Should the spectator mode be enabled for this arena?
+     * Lets the given [player] leave join the given [game]. Optional can the prefered
+     * [team] be specified but the team can still change because of arena settings.
+     * Does nothing if the player is already in a Game.
      */
-    var spectatorModeEnabled: Boolean
+    fun <P> joinGame(game: G, player: P, team: Team?)
 
     /**
-     * Spectate asking message.
+     * Gets called when a goal gets scored on the given [game] by the given [team].
      */
-    var spectateStartMessage: MutableList<String>
+    fun onScore(game: G, team: Team, teamMeta: TeamMeta)
 
     /**
-     *  Spawnpoint of the spectatorPlayers.
+     * Gets called when the given [game] gets win by the given [team].
      */
-    var spectateSpawnpoint: Position?
+    fun onWin(game: G, team: Team, teamMeta: TeamMeta)
+
+    /**
+     * Lets the given [player] leave the given [game].
+     * Does nothing if the player is not in the game.
+     */
+    fun <P> leaveGame(game: G, player: P)
+
+    /**
+     * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
+     * 0 - 20 for each second.
+     */
+    fun handle(game: G, ticks: Int)
 }

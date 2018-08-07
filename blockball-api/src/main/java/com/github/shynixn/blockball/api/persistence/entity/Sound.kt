@@ -1,9 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.configuration
-
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin
-import org.bukkit.ChatColor
-import org.bukkit.plugin.Plugin
-import org.bukkit.plugin.java.JavaPlugin
+package com.github.shynixn.blockball.api.persistence.entity
 
 /**
  * Created by Shynixn 2018.
@@ -32,31 +27,19 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-internal open class SimpleConfig {
-
-    /** [plugin] is an instance of the Ball plugin. */
-    var plugin: Plugin? = null
-        protected set
+interface Sound {
+    /**
+     * Name of the sound.
+     */
+    var name: String
 
     /**
-     * Reloads the plugin configuration.
+     * Pitch of the sound.
      */
-    open fun reload() {
-        this.plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
-        this.plugin?.reloadConfig()
-    }
+    var pitch: Double
 
     /**
-     * Returns configuration data.
-     *
-     * @param path path
-     * @return data
+     * Volume of the sound.
      */
-    fun <T> getData(path: String): T? {
-        var data = this.plugin?.config?.get(path)
-        if (data != null && data is String) {
-            data = ChatColor.translateAlternateColorCodes('&', data)
-        }
-        return data as T
-    }
+    var volume: Double
 }

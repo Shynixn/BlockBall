@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.enumeration
 
 /**
  * Created by Shynixn 2018.
@@ -27,8 +27,39 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface PersistenceAble {
+enum class BossbarColor {
+    /**
+     * Color Pink.
+     */
+    PINK,
 
-    /** Returns the id of the object. */
-    val id: Long
+    /**
+     * Color Blue.
+     */
+    BLUE,
+
+    /**
+     * Color Red.
+     */
+    RED,
+
+    /**
+     * Color Green.
+     */
+    GREEN,
+
+    /**
+     * Color Yellow.
+     */
+    YELLOW,
+
+    /**
+     * Color Purple.
+     */
+    PURPLE,
+
+    /**
+     * Color White.
+     */
+    WHITE;
 }

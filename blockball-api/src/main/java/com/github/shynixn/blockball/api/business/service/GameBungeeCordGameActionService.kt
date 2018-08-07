@@ -1,4 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.service
+
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
 
 /**
  * Created by Shynixn 2018.
@@ -27,29 +29,4 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface SpectatorMeta {
-    /**
-     * Should nearby players inside of the [notificationRadius] be messaged by title messages, scoreboard, holograms and bossbar.
-     */
-    var notifyNearbyPlayers: Boolean
-
-    /**
-     * The radius from the center of the arena a player has to be in order to get notified when [notifyNearbyPlayers] is enabled.
-     */
-    var notificationRadius: Int
-
-    /**
-     * Should the spectator mode be enabled for this arena?
-     */
-    var spectatorModeEnabled: Boolean
-
-    /**
-     * Spectate asking message.
-     */
-    var spectateStartMessage: MutableList<String>
-
-    /**
-     *  Spawnpoint of the spectatorPlayers.
-     */
-    var spectateSpawnpoint: Position?
-}
+interface GameBungeeCordGameActionService : GameMiniGameActionService<BungeeCordGame>

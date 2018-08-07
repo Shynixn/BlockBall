@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.enumeration
 
 /**
  * Created by Shynixn 2018.
@@ -27,29 +27,21 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface SpectatorMeta {
+enum class RewardType {
     /**
-     * Should nearby players inside of the [notificationRadius] be messaged by title messages, scoreboard, holograms and bossbar.
+     * Reward for winning a match.
      */
-    var notifyNearbyPlayers: Boolean
-
+    WIN_MATCH,
     /**
-     * The radius from the center of the arena a player has to be in order to get notified when [notifyNearbyPlayers] is enabled.
+     * Reward for loosing a match.
      */
-    var notificationRadius: Int
-
+    LOOSING_MATCH,
     /**
-     * Should the spectator mode be enabled for this arena?
+     * Reward for shooting a goal.
      */
-    var spectatorModeEnabled: Boolean
-
+    SHOOT_GOAL,
     /**
-     * Spectate asking message.
+     * Reward for participating a match.
      */
-    var spectateStartMessage: MutableList<String>
-
-    /**
-     *  Spawnpoint of the spectatorPlayers.
-     */
-    var spectateSpawnpoint: Position?
+    PARTICIPATE_MATCH,
 }

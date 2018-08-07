@@ -1,7 +1,6 @@
-package com.github.shynixn.blockball.api.bukkit.persistence.entity
+package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import org.bukkit.configuration.serialization.ConfigurationSerializable
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 
 /**
  * Created by Shynixn 2018.
@@ -30,4 +29,39 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BukkitPersistenceAble : PersistenceAble, ConfigurationSerializable
+interface BungeeCordConfiguration {
+    /**
+     * Modt being sent when the server is restarting.
+     */
+    var restartingMotd: String
+
+    /**
+     * Modt being sent when the server is waiting for players.
+     */
+    var waitingForPlayersMotd: String
+
+    /**
+     * Modt being sent when the server is ingame.
+     */
+    var inGameMotd: String
+
+    /**
+     * Server state being displayed on signs when restarting.
+     */
+    var restartingSignState: String
+
+    /**
+     * Server state being displayed on signs when waiting for players.
+     */
+    var waitingForPlayersSignState: String
+
+    /**
+     * Server state being displayed on signs when ingame.
+     */
+    var duringMatchSignState: String
+
+    /**
+     * Template of the server sign.
+     */
+    var serverSignTemplate: Array<String>
+}

@@ -1,8 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.persistence.entity.PersistenceAble
-import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
-
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -30,18 +27,18 @@ import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface LobbyMeta : PersistenceAble {
+interface LobbyMeta {
     /** List of signs which can be clicked to leave the game. */
-    val leaveSigns: MutableList<StorageLocation>
+    val leaveSigns: MutableList<Position>
 
     /** Max score of a team until the match ends and the arena gets reset. */
-    var maxScore : Int
+    var maxScore: Int
 
     /** List of signs which can be clicked to join the game. */
-    val joinSigns: MutableList<StorageLocation>
+    val joinSigns: MutableList<Position>
 
     /** Spawnpoint when someone leaves the hub game. */
-    var leaveSpawnpoint: StorageLocation?
+    var leaveSpawnpoint: Position?
 
     /** Lines displayed on the sign for joinin the match. */
     var joinSignLines: List<String>
@@ -53,5 +50,5 @@ interface LobbyMeta : PersistenceAble {
     var onlyAllowEventTeams: Boolean
 
     /** Minecraft gamemode (Survival, Adventure, Creative) the players should be */
-    var gamemode : Enum<*>
+    var gamemode: Enum<*>
 }

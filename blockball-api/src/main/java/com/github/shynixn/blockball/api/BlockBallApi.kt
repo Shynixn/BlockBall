@@ -2,8 +2,6 @@
 
 package com.github.shynixn.blockball.api
 
-import com.github.shynixn.blockball.api.business.controller.BungeeCordConnectionController
-import com.github.shynixn.blockball.api.business.controller.GameController
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 
 /**
@@ -34,34 +32,29 @@ import com.github.shynixn.blockball.api.business.proxy.PluginProxy
  * SOFTWARE.
  */
 object BlockBallApi {
-    private var bungeeCordConnectController: BungeeCordConnectionController<*>? = null
-    private var gameController: GameController<*, *, *, *>? = null
     private var plugin: PluginProxy? = null
 
-    private fun initializeBlockBall(gameController: Any, bungeeCordConnectionController: Any, blockBallPlugin: PluginProxy) {
-        this.gameController = gameController as GameController<*, *, *, *>
-        this.bungeeCordConnectController = bungeeCordConnectionController as BungeeCordConnectionController<*>
+    /**
+     * Initializes the [blockBallPlugin] proxy.
+     */
+    private fun initializeBlockBall(blockBallPlugin: PluginProxy) {
         this.plugin = blockBallPlugin
     }
 
     /**
-     * Gets a business logic service by resolving the given class.
+     * Gets a business logic from the BlockBall plugin.
+     * All types in the service package can be accessed.
+     * Throws a [IllegalArgumentException] if the service could not be found.
      */
     fun <S> resolve(service: Class<S>): S {
         return plugin!!.resolve(service)
     }
 
     /**
-     * Returns the default game controller.
+     * Creates a new entity from the given [entity] clazz.
+     * Throws a [IllegalArgumentException] if the entity could not be found.
      */
-    fun <T : GameController<*, *, *, *>> getDefaultGameController(): T {
-        return gameController as T
-    }
-
-    /**
-     * Returns the default bungeecord controller.
-     */
-    fun <T : BungeeCordConnectionController<*>> getDefaultBungeeCordController(): T {
-        return bungeeCordConnectController as T
+    fun <E> create(entity: Class<E>): E {
+        return plugin!!.create(entity)
     }
 }

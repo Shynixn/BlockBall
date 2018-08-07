@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.controller
+package com.github.shynixn.blockball.api.persistence.entity
 
 /**
  * Created by Shynixn 2018.
@@ -27,11 +27,48 @@ package com.github.shynixn.blockball.api.persistence.controller
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaController<in Location : Any, Arena : Any> : ReloadableController<Arena> {
+interface MiniGame : Game {
+    /**
+     * Are the players currently waiting in the lobby?
+     */
+    var inLobby: Boolean
 
-    /** Creates a new arena with the given properties. */
-    fun create(name: String, corner1: Location, corner2: Location) : Arena
+    /**
+     * Returns the bling sound.
+     */
+    val blingSound: Sound
 
-    /** Returns the arena by name if found. */
-    fun getArenaByName(name: String): Arena?
+    /**
+     * Is the lobby countdown active.
+     */
+    var lobbyCountDownActive: Boolean
+
+    /**
+     * Actual countdown.
+     */
+    var lobbyCountdown: Int
+
+    /**
+     * Actual game coutndown.
+     */
+    var gameCountdown: Int
+
+    /**
+     * Returns if the lobby is full.
+     */
+    val isLobbyFull : Boolean
+
+    /**
+     * Is the endgame active.
+     */
+    var endGameActive: Boolean
+    /**
+     * Storage for [spectatorPlayers],
+     */
+    val spectatorPlayersStorage: MutableMap<Any, GameStorage>
+
+    /**
+     * List of players which are spectating the game.
+     */
+    val spectatorPlayers: List<Any>
 }

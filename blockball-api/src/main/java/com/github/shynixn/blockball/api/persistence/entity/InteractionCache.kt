@@ -36,7 +36,7 @@ interface InteractionCache {
     /**
      * Last Position of the player.
      */
-    var lastPosition: StorageLocation?
+    var lastPosition: Position?
 
     /**
      * Internal movement counter for interactions.

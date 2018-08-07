@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.controller
+package com.github.shynixn.blockball.api.persistence.entity
 
 /**
  * Created by Shynixn 2018.
@@ -27,17 +27,11 @@ package com.github.shynixn.blockball.api.persistence.controller
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Controller<T> : AutoCloseable {
+interface BallMeta : com.github.shynixn.ball.api.persistence.BallMeta {
 
-    /** Stores a new item into the repository. */
-    fun store(item: T)
+    /** Spawning delay. */
+    var delayInTicks: Int
 
-    /** Removes an item from the repository. */
-    fun remove(item: T)
-
-    /** Returns all items from the repository. */
-    fun getAll(): List<T>
-
-    /** Returns the amount of items in the repository. */
-    val count: Int
+    /** Spawnpoint of the ball. */
+    var spawnpoint: Position?
 }

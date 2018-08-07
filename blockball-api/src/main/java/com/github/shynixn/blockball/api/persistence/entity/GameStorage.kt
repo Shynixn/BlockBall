@@ -1,5 +1,9 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.Team
+import java.util.*
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -27,50 +31,78 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaMeta {
+interface GameStorage {
 
-    /** Meta data of the hub lobby. */
-    val hubLobbyMeta: HubLobbyMeta
+    /** Team of the player. */
+    var team: Team?
 
-    /** Meta data for spectating setting. */
-    val spectatorMeta: SpectatorMeta
+    /**
+     * Exp level of the player.
+     */
+    var level: Int
 
-    /** Meta data of a generic lobby. */
-    val lobbyMeta: LobbyMeta
+    /**
+     * Actual exp of the player.
+     */
+    var exp: Float
 
-    /** Meta data of the minigame lobby. */
-    val minigameMeta: MinigameLobbyMeta
+    /**
+     * Owner uuid.
+     */
+    var uuid: UUID
 
-    /** Meta data of the bungeecord lobby. */
-    val bungeeCordMeta: BungeeCordLobbyMeta
+    /**
+     * Max health of the player.
+     */
+    var maxHealth: Double
 
-    /** Meta data of the redTeam. */
-    val redTeamMeta: TeamMeta
+    /**
+     * Health of the player.
+     */
+    var health: Double
 
-    /** Meta data of the blueTeam. */
-    val blueTeamMeta: TeamMeta
+    /**
+     * Hunger of the player.
+     */
+    var hunger: Int
 
-    /** Meta data of all holograms. */
-    val hologramMetas: MutableList<HologramMeta>
+    /**
+     * Storage belongs to this [GameType].
+     */
+    var gameType: GameType
 
-    /** Meta data of the ball. */
-    val ballMeta: BallMeta
+    /**
+     * Gamemode of the player.
+     */
+    var gameMode: Any
 
-    /** Meta data of protection. */
-    val protectionMeta: ArenaProtectionMeta
+    /**
+     * Scoreboard of the player.
+     */
+    var scoreboard: Any
 
-    /** Meta data for rewards */
-    val rewardMeta: RewardMeta
+    /**
+     * Walking Speed of the player.
+     */
+    var walkingSpeed: Float
 
-    /** Meta data of the scoreboard. */
-    val scoreboardMeta: ScoreboardMeta
+    /**
+     * Was the player flying?
+     */
+    var flying: Boolean
 
-    /** Meta data of the bossbar. */
-    val bossBarMeta: BossBarMeta
+    /**
+     * Was the player allowed to fly?
+     */
+    var allowedFlying: Boolean
 
-    /** Meta data of the doubleJump. */
-    val doubleJumpMeta: DoubleJumpMeta
+    /**
+     * Inventory cache.
+     */
+    var inventoryContents: Array<Any?>
 
-    /** Meta data of the customizing Properties. */
-    val customizingMeta: CustomizationMeta
+    /**
+     * Inventory armor cache.
+     */
+    var armorContents: Array<Any?>
 }

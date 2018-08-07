@@ -27,13 +27,13 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface TeamMeta<Location, ItemStack> {
+interface TeamMeta {
 
     /** Goal properties of the team. */
-    val goal: AreaSelection<Location>
+    val goal: Selection
 
     /** Spawnpoint of the team inside of the arena. */
-    var spawnpoint: StorageLocation?
+    var spawnpoint: Position?
 
     /** DisplayName of the team which gets used in the placeholder <red> or <blue>. */
     var displayName: String
@@ -51,10 +51,10 @@ interface TeamMeta<Location, ItemStack> {
     var walkingSpeed: Double
 
     /** Armor wearing this team. */
-    var armorContents: Array<ItemStack?>
+    var armorContents: Array<Any?>
 
     /** Inventory this team is getting when playing. */
-    var inventoryContents: Array<ItemStack?>
+    var inventoryContents: Array<Any?>
 
     /** Title of the message getting played when a player scores a goal. */
     var scoreMessageTitle: String
@@ -84,5 +84,5 @@ interface TeamMeta<Location, ItemStack> {
     var signLines: List<String>
 
     /** List of signs which can be clicked to join the red team.*/
-    val signs: MutableList<StorageLocation>
+    val signs: MutableList<Position>
 }

@@ -27,50 +27,31 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ArenaMeta {
+interface Position {
+    /** [worldName] which world the location is. */
+    var worldName: String?
 
-    /** Meta data of the hub lobby. */
-    val hubLobbyMeta: HubLobbyMeta
+    /** [x] coordinate. */
+    var x: Double
 
-    /** Meta data for spectating setting. */
-    val spectatorMeta: SpectatorMeta
+    /** [y] coordinate. */
+    var y: Double
 
-    /** Meta data of a generic lobby. */
-    val lobbyMeta: LobbyMeta
+    /** [z] coordinate. */
+    var z: Double
 
-    /** Meta data of the minigame lobby. */
-    val minigameMeta: MinigameLobbyMeta
+    /** [yaw] rotation yaw. */
+    var yaw: Double
 
-    /** Meta data of the bungeecord lobby. */
-    val bungeeCordMeta: BungeeCordLobbyMeta
+    /** [pitch] rotation pitch. */
+    var pitch: Double
 
-    /** Meta data of the redTeam. */
-    val redTeamMeta: TeamMeta
+    /** [blockX] coordinate as Int. */
+    val blockX: Int
 
-    /** Meta data of the blueTeam. */
-    val blueTeamMeta: TeamMeta
+    /** [blockY] coordinate as Int. */
+    val blockY: Int
 
-    /** Meta data of all holograms. */
-    val hologramMetas: MutableList<HologramMeta>
-
-    /** Meta data of the ball. */
-    val ballMeta: BallMeta
-
-    /** Meta data of protection. */
-    val protectionMeta: ArenaProtectionMeta
-
-    /** Meta data for rewards */
-    val rewardMeta: RewardMeta
-
-    /** Meta data of the scoreboard. */
-    val scoreboardMeta: ScoreboardMeta
-
-    /** Meta data of the bossbar. */
-    val bossBarMeta: BossBarMeta
-
-    /** Meta data of the doubleJump. */
-    val doubleJumpMeta: DoubleJumpMeta
-
-    /** Meta data of the customizing Properties. */
-    val customizingMeta: CustomizationMeta
+    /** [blockZ] coordinate as Int. */
+    val blockZ: Int
 }
