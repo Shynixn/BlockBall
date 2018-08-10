@@ -1,7 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity
-
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
+package com.github.shynixn.blockball.api.business.proxy
 
 /**
  * Created by Shynixn 2018.
@@ -30,23 +27,31 @@ import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface DoubleJumpMeta {
+interface HologramProxy {
+    /**
+     * Adds a line to the hologram.
+     */
+    fun addLine(line: String)
 
-    /** Is the effect enabled or disabled?*/
-    var enabled: Boolean
+    /**
+     * Adds a watcher to this hologram.
+     * Does nothing if already added.
+     */
+    fun <P> addWatcher(player: P)
 
-    /** Cooldown between activating this effect.*/
-    var cooldown: Int
+    /**
+     * Removes the hologram. If it is not already removed.
+     */
+    fun remove()
 
-    /** Vertical strength modifier.*/
-    var verticalStrength: Double
+    /**
+     * Removes a watcher from this hologram.
+     * Does nothing if the [player] is not aded.
+     */
+    fun <P> removeWatcher(player: P)
 
-    /** Horizontal strength modifier.*/
-    var horizontalStrength: Double
-
-    /** ParticleEffect being played when activating this.*/
-    val particleEffect: Particle
-
-    /** SoundEffect being played when activating this.*/
-    val soundEffect: Sound
+    /**
+     * Changes the lines of the hologram.
+     */
+    fun setLines(lines: Collection<String>)
 }

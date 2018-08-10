@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.api.persistence.entity
 
 import com.github.shynixn.ball.api.business.entity.Ball
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
+import com.github.shynixn.blockball.api.business.proxy.HologramProxy
 
 /**
  * Created by Shynixn 2018.
@@ -55,7 +56,27 @@ interface Game {
     /**
      * Status.
      */
-    var status : GameStatus
+    var status: GameStatus
+
+    /**
+     * Ingame scoreboard.
+     */
+    var scoreboard: Any?
+
+    /**
+     * Ingame bossbar.
+     */
+    var bossBar: Any?
+
+    /**
+     * Ingame holograms.
+     */
+    val holograms: MutableList<HologramProxy>
+
+    /**
+     * Contains players which are in cooldown by doublejump.
+     */
+    val doubleJumpCoolDownPlayers: MutableMap<Any, Int>
 
     /**
      * Ball.

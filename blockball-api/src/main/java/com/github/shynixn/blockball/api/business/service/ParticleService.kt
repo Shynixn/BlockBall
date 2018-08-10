@@ -1,10 +1,9 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
+import com.github.shynixn.blockball.api.persistence.entity.Particle
 
 /**
- * Created by Shynixn 2018.
+ * Handles particle effects in the world.
  * <p>
  * Version 1.2
  * <p>
@@ -30,23 +29,9 @@ import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface DoubleJumpMeta {
-
-    /** Is the effect enabled or disabled?*/
-    var enabled: Boolean
-
-    /** Cooldown between activating this effect.*/
-    var cooldown: Int
-
-    /** Vertical strength modifier.*/
-    var verticalStrength: Double
-
-    /** Horizontal strength modifier.*/
-    var horizontalStrength: Double
-
-    /** ParticleEffect being played when activating this.*/
-    val particleEffect: Particle
-
-    /** SoundEffect being played when activating this.*/
-    val soundEffect: Sound
+interface ParticleService {
+    /**
+     * Plays the given [particle] at the given [location] for the given [players].
+     */
+    fun <L, P> playParticle(location: L, particle: Particle, players: Collection<P>)
 }

@@ -1,7 +1,6 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
+import com.github.shynixn.blockball.api.persistence.entity.BossBarMeta
 
 /**
  * Created by Shynixn 2018.
@@ -30,23 +29,37 @@ import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface DoubleJumpMeta {
+interface BossBarService {
 
-    /** Is the effect enabled or disabled?*/
-    var enabled: Boolean
+    /**
+     * Adds the given [player] to this bossbar.
+     * Does nothing if the player is already added.
+     */
+    fun <B, P> addPlayer(bossBar: B, player: P)
 
-    /** Cooldown between activating this effect.*/
-    var cooldown: Int
+    /**
+     * Removes the given [player] from this bossbar.
+     * Does nothing if the player is already removed.
+     */
+    fun <B, P> removePlayer(bossBar: B, player: P)
 
-    /** Vertical strength modifier.*/
-    var verticalStrength: Double
+    /**
+     * Returns a list of all players watching thie bossbar.
+     */
+    fun <B, P> getPlayers(bossBar: B): List<P>
 
-    /** Horizontal strength modifier.*/
-    var horizontalStrength: Double
+    /**
+     * Changes the style of the bossbar with given [bossBarMeta].
+     */
+    fun <B, P> changeConfiguration(bossBar: B, bossBarMeta: BossBarMeta, player: P)
 
-    /** ParticleEffect being played when activating this.*/
-    val particleEffect: Particle
+    /**
+     * Generates a new bossbar from the given bossBar meta values.
+     */
+    fun <B> createNewBossBar(bossBarMeta: BossBarMeta): B
 
-    /** SoundEffect being played when activating this.*/
-    val soundEffect: Sound
+    /**
+     * Clears all resources this [bossBar] has allocated from this service.
+     */
+    fun <B> cleanResources(bossBar: B)
 }

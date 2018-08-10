@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
+import com.github.shynixn.blockball.api.business.enumeration.ParticleColor
+import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 
 /**
  * Created by Shynixn 2018.
@@ -30,23 +30,69 @@ import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface DoubleJumpMeta {
+interface Particle {
+    /**
+     * Color of the particle effect.
+     */
+    var color: ParticleColor
 
-    /** Is the effect enabled or disabled?*/
-    var enabled: Boolean
+    /**
+     * RGB Color code of red.
+     */
+    var colorRed: Int
 
-    /** Cooldown between activating this effect.*/
-    var cooldown: Int
+    /**
+     * RGB Color code of green.
+     */
+    var colorGreen: Int
 
-    /** Vertical strength modifier.*/
-    var verticalStrength: Double
+    /**
+     * RGB Color code of blue.
+     */
+    var colorBlue: Int
 
-    /** Horizontal strength modifier.*/
-    var horizontalStrength: Double
+    /**
+     * Custom note color code.
+     */
+    var noteColor: Int
 
-    /** ParticleEffect being played when activating this.*/
-    val particleEffect: Particle
+    /**
+     * Amount of particles.
+     */
+    var amount: Int
 
-    /** SoundEffect being played when activating this.*/
-    val soundEffect: Sound
+    /**
+     * Particle speed.
+     */
+    var speed: Double
+
+    /**
+     * Offset for the x coordinate.
+     */
+    var offSetX: Double
+
+    /**
+     * Offset for the y coordinate.
+     */
+    var offSetY: Double
+
+    /**
+     * Offset for the z coordinate.
+     */
+    var offSetZ: Double
+
+    /**
+     * Type of the particle.
+     */
+    var type: ParticleType
+
+    /**
+     * Material value.
+     */
+    var materialName: String?
+
+    /**
+     * Data value.
+     */
+    var data: Int
 }

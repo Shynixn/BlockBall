@@ -1,7 +1,4 @@
-package com.github.shynixn.blockball.api.persistence.entity
-
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
+package com.github.shynixn.blockball.api.business.enumeration
 
 /**
  * Created by Shynixn 2018.
@@ -30,23 +27,55 @@ import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface DoubleJumpMeta {
+enum class Version(
+        /**
+         * Id of the bukkit versions.
+         */
+        val bukkitId: String,
+        /**
+         * General id.
+         */
+        val id: String,
+        /**
+         * Numeric Id for calculations.
+         */
+        val numericId: Double) {
 
-    /** Is the effect enabled or disabled?*/
-    var enabled: Boolean
+    /**
+     * Version 1.8.0-1.8.2.
+     */
+    VERSION_1_8_R1("v1_8_R1", "1.8.0", 1.081),
+    /**
+     * Version 1.8.3-1.8.4.
+     */
+    VERSION_1_8_R2("v1_8_R2", "1.8.3", 1.082),
+    /**
+     * Version 1.8.5-1.8.9.
+     */
+    VERSION_1_8_R3("v1_8_R3", "1.8.8", 1.083),
+    /**
+     * Version 1.9.0-1.9.1.
+     */
+    VERSION_1_9_R1("v1_9_R1", "1.9.0", 1.091),
+    /**
+     * Version 1.9.2-1.9.4
+     */
+    VERSION_1_9_R2("v1_9_R2", "1.9.4", 1.092),
+    /**
+     * Version 1.10.0 - 1.10.2.
+     */
+    VERSION_1_10_R1("v1_10_R1", "1.10.2", 1.10),
+    /**
+     * Version 1.11.0 - 1.11.2.
+     */
+    VERSION_1_11_R1("v1_11_R1", "1.11.2", 1.11),
+    /**
+     * Version 1.12.0 - 1.12.2.
+     */
+    VERSION_1_12_R1("v1_12_R1", "1.12.2", 1.12),
 
-    /** Cooldown between activating this effect.*/
-    var cooldown: Int
-
-    /** Vertical strength modifier.*/
-    var verticalStrength: Double
-
-    /** Horizontal strength modifier.*/
-    var horizontalStrength: Double
-
-    /** ParticleEffect being played when activating this.*/
-    val particleEffect: Particle
-
-    /** SoundEffect being played when activating this.*/
-    val soundEffect: Sound
+    /**
+     * Version 1.13.0 - 1.13.0.
+     */
+    VERSION_1_13_R1("v1_13_R1", "1.13.0", 1.13);
 }

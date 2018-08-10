@@ -1,7 +1,7 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
+import com.github.shynixn.blockball.api.business.proxy.HologramProxy
+import com.github.shynixn.blockball.api.persistence.entity.HologramMeta
 
 /**
  * Created by Shynixn 2018.
@@ -30,23 +30,27 @@ import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface DoubleJumpMeta {
+interface HologramService {
 
-    /** Is the effect enabled or disabled?*/
-    var enabled: Boolean
+    /**
+     * Generates a new hologram from the given meta values.
+     */
+    fun createNewHologram(hologramMeta: HologramMeta): HologramProxy
 
-    /** Cooldown between activating this effect.*/
-    var cooldown: Int
+    /**
+     * Changes the hologram configuration.
+     */
+    fun changeConfiguration(hologramProxy: HologramProxy, hologramMeta: HologramMeta)
 
-    /** Vertical strength modifier.*/
-    var verticalStrength: Double
+    /**
+     * Adds the given [player] to this hologram.
+     * Does nothing if the player is already added.
+     */
+    fun <P> addPlayer(hologramProxy: HologramProxy, player: P)
 
-    /** Horizontal strength modifier.*/
-    var horizontalStrength: Double
-
-    /** ParticleEffect being played when activating this.*/
-    val particleEffect: Particle
-
-    /** SoundEffect being played when activating this.*/
-    val soundEffect: Sound
+    /**
+     * Removes the given [player] from this hologram.
+     * Does nothing if the player is already removed.
+     */
+    fun <P> removePlayer(hologramProxy: HologramProxy, player: P)
 }
