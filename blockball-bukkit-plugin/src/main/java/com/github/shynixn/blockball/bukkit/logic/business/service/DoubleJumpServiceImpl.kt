@@ -1,12 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.DoubleJumpService
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
-import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.business.service.ParticleService
+import com.github.shynixn.blockball.api.business.service.SoundService
 import com.google.inject.Inject
 import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
-import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -35,7 +34,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class DoubleJumpServiceImpl @Inject constructor(private val plugin: Plugin, private val gameRepository: GameRepository) : DoubleJumpService {
+class DoubleJumpServiceImpl @Inject constructor(private val gameService: GameService, private val soundService: SoundService, private val particleService: ParticleService) : DoubleJumpService {
     /**
      * Handles the double click of the given [player] and executes the double jump if available.
      */
@@ -44,30 +43,26 @@ class DoubleJumpServiceImpl @Inject constructor(private val plugin: Plugin, priv
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        val game = gameRepository.getGameFromPlayer(player)
+        val game = gameService.getGameFromPlayer(player)
 
-        if (game == null) {
+        if (!game.isPresent) {
             return false
         }
 
         player.allowFlight = false
         player.isFlying = false
 
-        val meta = game.arena.meta.doubleJumpMeta
-        game as LowLevelGame
+        val meta = game.get().arena.meta.doubleJumpMeta
 
-        if (meta.enabled && !game.doubleJumpCooldownPlayers.containsKey(player)) {
-            game.doubleJumpCooldownPlayers[player] = meta.cooldown
+        if (meta.enabled && !game.get().doubleJumpCoolDownPlayers.containsKey(player)) {
+            @Suppress("USELESS_CAST")
+            game.get().doubleJumpCoolDownPlayers[player as Any] = meta.cooldown
             player.velocity = player.location.direction
                     .multiply(meta.horizontalStrength)
                     .setY(meta.verticalStrength)
 
-            try {
-                meta.soundEffect.apply(player.location)
-                meta.particleEffect.apply(player.location)
-            } catch (e: Exception) {
-                this.plugin.logger.log(Level.WARNING, "Invalid 1.8/1.9 effects. [DoubleJumpSound/DoubleJumpParticle]", e)
-            }
+            soundService.playSound(player.location, meta.soundEffect, player.world.players)
+            particleService.playParticle(player.location, meta.particleEffect, player.world.players)
         }
 
         return true

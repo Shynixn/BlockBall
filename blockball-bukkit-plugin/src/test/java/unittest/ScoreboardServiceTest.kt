@@ -4,10 +4,12 @@ import com.github.shynixn.blockball.api.business.service.ScoreboardService
 import com.github.shynixn.blockball.bukkit.logic.business.service.ScoreboardServiceImpl
 import org.bukkit.scoreboard.*
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+
 
 /**
  * Created by Shynixn 2018.
@@ -69,6 +71,53 @@ class ScoreboardServiceTest {
 
     /**
      * Given
+     *      a valid configuration as parameter and no valid displaySlot
+     * When
+     *      setConfiguration is called
+     * Then
+     *     Exception should be thrown.
+     */
+    @Test
+    fun setConfiguration_NoValidScoreboardDisplaySlotTitle_ShouldRegisterObjective() {
+        // Arrange
+        val classUnderTest = createWithDependencies()
+        val title = "Custom"
+        val scoreboard = mock(Scoreboard::class.java)
+
+        // Act
+        `when`(scoreboard.registerNewObjective(any(), any())).then {
+            mock(Objective::class.java)
+        }
+
+        // Act
+        assertThrows(IllegalArgumentException::class.java) {
+            classUnderTest.setConfiguration(scoreboard, "wrong parameter", title)
+        }
+    }
+
+    /**
+     * Given
+     *      a valid configuration as parameter and no valid scoreboard
+     * When
+     *      setConfiguration is called
+     * Then
+     *     Exception should be thrown.
+     */
+    @Test
+    fun setConfiguration_ValidScoreboardNoDisplaySlotTitle_ShouldRegisterObjective() {
+        // Arrange
+        val classUnderTest = createWithDependencies()
+        val displaySlot = DisplaySlot.SIDEBAR
+        val title = "Custom"
+
+        // Act
+        assertThrows(IllegalArgumentException::class.java) {
+            classUnderTest.setConfiguration("wrong parameter", displaySlot, title)
+        }
+    }
+
+    /**
+     * Given
      *      a valid line as parameter
      * When
      *      setLine is called
@@ -105,6 +154,27 @@ class ScoreboardServiceTest {
 
         // Assert
         Assertions.assertTrue(called)
+    }
+
+
+    /**
+     * Given
+     *      a valid line as parameter but invalid scoreboard
+     * When
+     *      setLine is called
+     * Then
+     *    Exception should be thrown.
+     */
+    @Test
+    fun setLine_ValidLineTextInvalidScoreboard_ShouldAddLine() {
+        // Arrange
+        val classUnderTest = createWithDependencies()
+        var called = false
+
+        // Act
+        assertThrows(IllegalArgumentException::class.java) {
+            classUnderTest.setLine("wrong parameter", 0, "SampleText")
+        }
     }
 
     companion object {

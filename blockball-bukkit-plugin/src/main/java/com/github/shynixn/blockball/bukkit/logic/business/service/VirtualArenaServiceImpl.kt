@@ -1,14 +1,12 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.proxy.HighlightArmorstandProxy
 import com.github.shynixn.blockball.api.business.service.VirtualArenaService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
+import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.bukkit.logic.business.extension.spawnVirtualArmorstand
 import com.google.inject.Inject
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
@@ -44,24 +42,16 @@ class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : 
     /**
      * Displays the [arena] virtual locations for the given [player] for the given amount of [seconds].
      */
-    override fun <P> displayForPlayer(player: P, arena: Arena<*, *, *, *, *>, seconds: Int) {
+    override fun <P> displayForPlayer(player: P, arena: Arena, seconds: Int) {
         if (player !is Player) {
             throw IllegalArgumentException("Player has to be a bukkit player!")
-        }
-
-        if (arena !is BukkitArena) {
-            throw IllegalArgumentException("Arena has to be a bukkit arena!")
         }
 
         plugin.server.scheduler.runTaskAsynchronously(plugin, {
             val items = ArrayList<HighlightArmorstandProxy>()
 
-            if (arena.meta.redTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.upperCorner != null) {
-                displayArmorstands(player, items, arena.meta.redTeamMeta.goal.lowerCorner!!, arena.meta.redTeamMeta.goal.upperCorner!!)
-            }
-            if (arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.blueTeamMeta.goal.upperCorner != null) {
-                displayArmorstands(player, items, arena.meta.blueTeamMeta.goal.lowerCorner!!, arena.meta.blueTeamMeta.goal.upperCorner!!)
-            }
+            displayArmorstands(player, items, arena.meta.redTeamMeta.goal.lowerCorner, arena.meta.redTeamMeta.goal.upperCorner)
+            displayArmorstands(player, items, arena.meta.blueTeamMeta.goal.lowerCorner, arena.meta.blueTeamMeta.goal.upperCorner)
 
             plugin.server.scheduler.runTaskLaterAsynchronously(plugin, {
                 items.forEach { i ->
@@ -76,7 +66,7 @@ class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : 
     /**
      * Displays the armorstands between the given [lowCorner] and [upCorner] location for the given [player].
      */
-    private fun displayArmorstands(player: Player, items: MutableList<HighlightArmorstandProxy>, lowCorner: StorageLocation, upCorner: StorageLocation) {
+    private fun displayArmorstands(player: Player, items: MutableList<HighlightArmorstandProxy>, lowCorner: Position, upCorner: Position) {
         var j = lowCorner.y
         while (j <= upCorner.y) {
             var i = lowCorner.x
@@ -84,7 +74,7 @@ class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : 
                 var k = lowCorner.z
                 while (k <= upCorner.z) {
                     val location = Location(player.world, i, j, k)
-                    val armorstand = location.world.spawnVirtualArmorstand(player, location, Material.STAINED_GLASS)
+                    val armorstand = location.world.spawnVirtualArmorstand(player, location)
                     armorstand.spawn()
                     items.add(armorstand)
                     k++

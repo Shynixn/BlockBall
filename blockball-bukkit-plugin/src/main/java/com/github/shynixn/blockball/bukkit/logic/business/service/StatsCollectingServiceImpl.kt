@@ -1,14 +1,17 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.PersistenceStatsService
+import com.github.shynixn.blockball.api.business.service.ScoreboardService
 import com.github.shynixn.blockball.api.business.service.StatsCollectingService
 import com.github.shynixn.blockball.api.persistence.entity.Stats
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.StatsScoreboard
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import org.bukkit.scoreboard.DisplaySlot
+import org.bukkit.scoreboard.Scoreboard
 import java.util.*
 
 /**
@@ -38,8 +41,8 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin, private val configurationService: ConfigurationService, private val persistenceStatsService: PersistenceStatsService) : StatsCollectingService, Runnable {
-    private val statsScoreboards = HashMap<Player, StatsScoreboard>()
+class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin, private val configurationService: ConfigurationService, private val persistenceStatsService: PersistenceStatsService, private val scoreboardService: ScoreboardService) : StatsCollectingService, Runnable {
+    private val statsScoreboards = HashMap<Player, Scoreboard>()
 
     init {
         Bukkit.getWorlds().forEach { w ->
@@ -63,9 +66,8 @@ class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin,
             return
         }
 
-        val scoreboard = this.statsScoreboards[player]
         this.statsScoreboards.remove(player)
-        scoreboard!!.close()
+        player.scoreboard = Bukkit.getScoreboardManager().newScoreboard
     }
 
     /**
@@ -109,12 +111,28 @@ class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin,
         }
 
         if (!statsScoreboards.containsKey(player)) {
-            val scoreboard = StatsScoreboard(player)
-            this.statsScoreboards[player] = scoreboard
+            val title = configurationService.findValue<String>("stats-scoreboard.title")
+            val scoreboard = Bukkit.getScoreboardManager().newScoreboard
+
+            scoreboardService.setConfiguration(scoreboard, DisplaySlot.SIDEBAR, title)
+            player.scoreboard = scoreboard
         }
 
         persistenceStatsService.getOrCreateFromPlayer(player).thenAccept { stats ->
-            statsScoreboards[player]!!.updateStats(player, stats)
+            val scoreboard = statsScoreboards[player]
+            val lines = configurationService.findValue<List<String>>("stats-scoreboard.lines")
+
+            lines.forEachIndexed { i, line ->
+                scoreboardService.setLine(scoreboard, i, replacePlaceHolders(player, stats, line))
+            }
         }
+    }
+
+    private fun replacePlaceHolders(player: Player, stats: Stats, line: String): String {
+        return line
+                .replace(PlaceHolder.STATS_PLAYER_NAME.placeHolder, player.name)
+                .replace(PlaceHolder.STATS_WINRATE.placeHolder, String.format("%.2f", stats.winRate))
+                .replace(PlaceHolder.STATS_PLAYEDGAMES.placeHolder, stats.amountOfPlayedGames.toString())
+                .replace(PlaceHolder.STATS_GOALS_PER_GAME.placeHolder, String.format("%.2f", stats.goalsPerGame))
     }
 }

@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.bukkit.business.event.PlaceHolderRequestEvent
+import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.service.DependencyPlaceholderApiService
 import com.google.inject.Inject
 import me.clip.placeholderapi.external.EZPlaceholderHook
@@ -62,7 +62,7 @@ class DependencyPlaceholderApiServiceImpl @Inject constructor(plugin: Plugin) : 
         }
 
         try {
-            val event = PlaceHolderRequestEvent(player, s)
+            val event = PlaceHolderRequestEvent(s!!, null, player)
             Bukkit.getPluginManager().callEvent(event)
             return event.result
         } catch (ignored: Exception) {

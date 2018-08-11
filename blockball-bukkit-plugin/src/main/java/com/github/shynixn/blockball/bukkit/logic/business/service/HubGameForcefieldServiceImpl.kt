@@ -2,21 +2,18 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
+import com.github.shynixn.blockball.api.business.service.GameActionService
+import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.HubGameForcefieldService
+import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.InteractionCache
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
-import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
-import com.github.shynixn.blockball.bukkit.logic.business.extension.stripChatColors
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitLocation
-import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
+import com.github.shynixn.blockball.bukkit.logic.business.extension.*
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.InteractionCacheEntity
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.util.Vector
 
 /**
  * Created by Shynixn 2018.
@@ -45,7 +42,7 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class HubGameForcefieldServiceImpl @Inject constructor(private val gameRepository: GameRepository, private val configurationService: ConfigurationService) : HubGameForcefieldService {
+class HubGameForcefieldServiceImpl @Inject constructor(private val gameService: GameService, private val configurationService: ConfigurationService, private val gameActionService: GameActionService<Game>) : HubGameForcefieldService {
     private val cache = HashMap<Player, InteractionCache>()
 
     /**
@@ -61,29 +58,30 @@ class HubGameForcefieldServiceImpl @Inject constructor(private val gameRepositor
             throw IllegalArgumentException("Player has to be a BukkitLocation!")
         }
 
+        val prefix = configurationService.findValue<String>("messages.prefix")
         val interactionCache = getInteractionCache(player)
-        val gameInternal = gameRepository.getGameFromPlayer(player)
+        val gameInternal = gameService.getGameFromPlayer(player)
 
-        if (gameInternal != null) {
-            if (gameInternal.arena.gameType == GameType.HUBGAME && !gameInternal.arena.isLocationInSelection(player.location)) {
-                gameInternal.leave(player)
+        if (gameInternal.isPresent) {
+            if (gameInternal.get().arena.gameType == GameType.HUBGAME && !gameInternal.get().arena.isLocationInSelection(player.location)) {
+                gameActionService.leaveGame(gameInternal.get(), player)
             }
             return
         }
 
         var inArea = false
 
-        gameRepository.games.forEach { game ->
+        gameService.getAllGames().forEach { game ->
             if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(location)) {
                 inArea = true
                 if (game.arena.meta.hubLobbyMeta.instantForcefieldJoin) {
-                    game.join(player, null)
+                    gameActionService.joinGame(game, player)
                     return
                 }
 
                 if (interactionCache.lastPosition == null) {
                     if (game.arena.meta.protectionMeta.rejoinProtectionEnabled) {
-                        player.velocity = game.arena.meta.protectionMeta.rejoinProtection
+                        player.velocity = game.arena.meta.protectionMeta.rejoinProtection as Vector
                     }
                 } else {
                     if (interactionCache.movementCounter == 0) {
@@ -91,9 +89,9 @@ class HubGameForcefieldServiceImpl @Inject constructor(private val gameRepositor
                     } else if (interactionCache.movementCounter < 50)
                         interactionCache.movementCounter = interactionCache.movementCounter + 1
                     if (interactionCache.movementCounter > 20) {
-                        player.velocity = game.arena.meta.protectionMeta.rejoinProtection
+                        player.velocity = game.arena.meta.protectionMeta.rejoinProtection as Vector
                     } else {
-                        val knockback = interactionCache.lastPosition!!.toBukkitLocation().toVector().subtract(player.location.toVector())
+                        val knockback = interactionCache.lastPosition!!.toLocation().toVector().subtract(player.location.toVector())
                         player.location.direction = knockback
                         player.velocity = knockback
                         player.allowFlight = true
@@ -101,7 +99,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(private val gameRepositor
                         if (!interactionCache.toggled) {
                             val joinCommand = configurationService.findValue<String>("global-join.command")
 
-                            ChatBuilder().text(Config.prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].convertChatColors())
+                            ChatBuilder().text(prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].convertChatColors())
                                     .nextLine()
                                     .component(game.arena.meta.hubLobbyMeta.joinMessage[1].replaceGamePlaceholder(game, game.arena.meta.redTeamMeta))
                                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
@@ -134,7 +132,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(private val gameRepositor
             }
         }
 
-        interactionCache.lastPosition = LocationBuilder(player.location)
+        interactionCache.lastPosition = player.location.toPosition()
     }
 
     /**

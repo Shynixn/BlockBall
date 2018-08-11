@@ -1,17 +1,19 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.service.TemplateService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Template
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.YamlSerializer
-import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BlockBallArena
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.TemplateData
+import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ArenaEntity
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PositionEntity
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.TemplateEntity
 import com.google.inject.Inject
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
-import java.io.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 
 /**
  * Created by Shynixn 2018.
@@ -40,7 +42,7 @@ import java.io.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, private val arenaRepository: ArenaRepository) : TemplateService {
+class TemplateServiceImpl @Inject constructor(private val plugin: Plugin) : TemplateService {
     private val templateNames = arrayOf("arena-de.yml", "arena-en.yml")
 
     /**
@@ -60,7 +62,7 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
                     "unknown"
                 }
 
-                templates.add(TemplateData(f.name.replace(".yml", ""), translator, true))
+                templates.add(TemplateEntity(f.name.replace(".yml", ""), translator, true))
             }
         }
 
@@ -75,7 +77,7 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
                     "Unknown"
                 }
 
-                templates.add(TemplateData(f.name.replace(".yml", ""), translator, false))
+                templates.add(TemplateEntity(f.name.replace(".yml", ""), translator, false))
             }
         }
 
@@ -85,38 +87,38 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
     /**
      * Generates a new [Arena] from the given [template].
      */
-    override fun generateArena(template: Template): Arena<*, *, *, *, *> {
-        val arenaSource = arenaRepository.create()
+    override fun generateArena(template: Template): Arena {
+        val arenaSource = ArenaEntity()
 
         val configuration = YamlConfiguration()
-        val arena: BukkitArena
+        val arena: Arena
 
         arena = if (template.existingArena) {
             val file = File(plugin.dataFolder, "arena/" + template.name + ".yml")
             configuration.load(file)
 
             val data = configuration.getConfigurationSection("arena").getValues(true)
-            YamlSerializer.deserializeObject(BlockBallArena::class.java, null, data)
+            YamlSerializer.deserializeObject(ArenaEntity::class.java, null, data)
         } else {
             val file = File(plugin.dataFolder, "template/" + template.name + ".yml")
             configuration.load(file)
 
             val data = configuration.getConfigurationSection("arena").getValues(true)
-            YamlSerializer.deserializeObject(BlockBallArena::class.java, null, data)
+            YamlSerializer.deserializeObject(ArenaEntity::class.java, null, data)
         }
 
         arena.name = arenaSource.name
         arena.displayName = arenaSource.displayName
         arena.meta.lobbyMeta.leaveSpawnpoint = null
         arena.meta.ballMeta.spawnpoint = null
-        arena.lowerCorner = null
-        arena.upperCorner = null
+        arena.lowerCorner = PositionEntity()
+        arena.upperCorner = PositionEntity()
 
-        arena.meta.redTeamMeta.goal.upperCorner = null
-        arena.meta.blueTeamMeta.goal.upperCorner = null
+        arena.meta.redTeamMeta.goal.upperCorner = PositionEntity()
+        arena.meta.blueTeamMeta.goal.upperCorner = PositionEntity()
 
-        arena.meta.redTeamMeta.goal.lowerCorner = null
-        arena.meta.blueTeamMeta.goal.lowerCorner = null
+        arena.meta.redTeamMeta.goal.lowerCorner = PositionEntity()
+        arena.meta.blueTeamMeta.goal.lowerCorner = PositionEntity()
 
         arena.meta.redTeamMeta.spawnpoint = null
         arena.meta.blueTeamMeta.spawnpoint = null

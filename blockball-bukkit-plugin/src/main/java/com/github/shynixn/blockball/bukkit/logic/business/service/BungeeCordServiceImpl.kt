@@ -5,11 +5,11 @@ import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.service.BungeeCordService
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.PersistenceLinkSignService
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordConfiguration
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordServerStatus
 import com.github.shynixn.blockball.bukkit.logic.business.extension.async
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitLocation
-import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.BungeeCordConfig
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BungeeCordServerStatusEntity
 import com.google.common.io.ByteStreams
 import com.google.inject.Inject
@@ -52,10 +52,14 @@ import java.util.logging.Level
  * SOFTWARE.
  */
 class BungeeCordServiceImpl @Inject constructor(private val plugin: Plugin, private val configurationService: ConfigurationService, private val persistenceLinkSignService: PersistenceLinkSignService) : BungeeCordService, Runnable, PluginMessageListener {
+    private lateinit var bungeeCofing: BungeeCordConfiguration
+
     init {
         val serverLink = configurationService.findValue<Boolean>("game.allow-server-linking")
 
         if (serverLink) {
+            bungeeCofing = configurationService.findConfiguration(BungeeCordConfiguration::class.java, "")
+
             plugin.server.scheduler.runTaskTimerAsynchronously(plugin, this, 0L, 10L)
             plugin.server.messenger.registerOutgoingPluginChannel(plugin, "BungeeCord")
             plugin.server.messenger.registerIncomingPluginChannel(plugin, "BungeeCord", this)
@@ -111,13 +115,13 @@ class BungeeCordServiceImpl @Inject constructor(private val plugin: Plugin, priv
 
                 this.persistenceLinkSignService.getAll().thenAccept { signs ->
                     signs.filter { sign -> sign.server == serverName }.forEach { sign ->
-                        val location = sign.position.toBukkitLocation()
+                        val location = sign.position.toLocation()
 
                         if (location.block.state is Sign) {
                             val internalSign = location.block.state as Sign
 
                             for (i in 0..3) {
-                                internalSign.setLine(i, replaceSign(BungeeCordConfig.bungeeCordConfiguration!!.singLines[i], status))
+                                internalSign.setLine(i, replaceSign(bungeeCofing.serverSignTemplate[i], status))
                             }
 
                             internalSign.update()
@@ -187,9 +191,9 @@ class BungeeCordServiceImpl @Inject constructor(private val plugin: Plugin, priv
         var customLine = line.convertChatColors()
 
         customLine = when {
-            info.status == BungeeCordServerState.INGAME -> customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, BungeeCordConfig.bungeeCordConfiguration!!.duringMatchSignState)
-            info.status == BungeeCordServerState.WAITING_FOR_PLAYERS -> customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersSignState)
-            info.status == BungeeCordServerState.RESTARTING -> customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, BungeeCordConfig.bungeeCordConfiguration!!.restartingSignState)
+            info.status == BungeeCordServerState.INGAME -> customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, bungeeCofing.duringMatchSignState)
+            info.status == BungeeCordServerState.WAITING_FOR_PLAYERS -> customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, bungeeCofing.waitingForPlayersSignState)
+            info.status == BungeeCordServerState.RESTARTING -> customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, bungeeCofing.restartingSignState)
             else -> customLine.replace(PlaceHolder.ARENA_STATE.placeHolder, "No connection")
         }
 
@@ -253,9 +257,9 @@ class BungeeCordServiceImpl @Inject constructor(private val plugin: Plugin, priv
         try {
             motd = ChatColor.translateAlternateColorCodes('&', motdBuilder.toString()).substring(0, motdBuilder.length - 2).replace("§", "&")
             when {
-                motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.inGameMotd, true) -> state = BungeeCordServerState.INGAME
-                motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.restartingMotd, true) -> state = BungeeCordServerState.RESTARTING
-                motd.equals(BungeeCordConfig.bungeeCordConfiguration!!.waitingForPlayersMotd, true) -> state = BungeeCordServerState.WAITING_FOR_PLAYERS
+                motd.equals(bungeeCofing.inGameMotd, true) -> state = BungeeCordServerState.INGAME
+                motd.equals(bungeeCofing.restartingMotd, true) -> state = BungeeCordServerState.RESTARTING
+                motd.equals(bungeeCofing.waitingForPlayersMotd, true) -> state = BungeeCordServerState.WAITING_FOR_PLAYERS
             }
         } catch (ex: Exception) {
             state = BungeeCordServerState.RESTARTING

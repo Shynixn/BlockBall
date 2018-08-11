@@ -1,9 +1,18 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordConfiguration
+import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BungeeCordConfigurationEntity
 import com.google.inject.Inject
 import org.bukkit.ChatColor
+import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
+import java.io.File
+import java.io.IOException
+import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -33,6 +42,34 @@ import org.bukkit.plugin.Plugin
  * SOFTWARE.
  */
 class ConfigurationServiceImpl @Inject constructor(private val plugin: Plugin) : ConfigurationService {
+    /**
+     * Tries to load the config values into the given configuration [clazz] from the given [path]
+     * Throws a [IllegalArgumentException] if the path could not be correctly
+     * loaded.
+     */
+    override fun <C> findConfiguration(clazz: Class<C>, path: String): C {
+        if (clazz == BungeeCordConfiguration::class.java) {
+            try {
+                val file = File(plugin.dataFolder, "bungeecord.yml")
+
+                if (!file.exists()) {
+                    file.createNewFile()
+                    val configuration = YamlConfiguration()
+                    configuration.set("bungeecord", YamlSerializer.serialize(BungeeCordConfigurationEntity()))
+                    configuration.save(file)
+                }
+
+                val configuration = YamlConfiguration()
+                configuration.load(file)
+                return YamlSerializer.deserializeObject(BungeeCordConfigurationEntity::class.java, null, configuration.get("bungeecord")) as C
+            } catch (e: IOException) {
+                plugin.logger.log(Level.WARNING, "Failed to load bungeecord.yml.", e)
+            }
+        }
+
+        throw IllegalArgumentException("Cannot find configuration.")
+    }
+
     /**
      * Tries to load the config value from the given [path].
      * Throws a [IllegalArgumentException] if the path could not be correctly
