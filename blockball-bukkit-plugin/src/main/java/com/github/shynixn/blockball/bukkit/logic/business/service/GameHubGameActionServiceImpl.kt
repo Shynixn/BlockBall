@@ -2,7 +2,6 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.GameHubGameActionService
@@ -14,7 +13,6 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.updateInventory
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.GameStorageEntity
 import com.google.inject.Inject
-import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -79,35 +77,14 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
 
         if (joiningTeam == Team.RED && game.redTeam.size < game.arena.meta.redTeamMeta.maxAmount) {
             this.prepareLobbyStorageForPlayer(game, player, joiningTeam, game.arena.meta.redTeamMeta)
-
-            val event = GameJoinEvent(player, game)
-            Bukkit.getServer().pluginManager.callEvent(event)
             return true
 
         } else if (joiningTeam == Team.BLUE && game.blueTeam.size < game.arena.meta.blueTeamMeta.maxAmount) {
             this.prepareLobbyStorageForPlayer(game, player, joiningTeam, game.arena.meta.blueTeamMeta)
-
-            val event = GameJoinEvent(player, game)
-            Bukkit.getServer().pluginManager.callEvent(event)
-
             return true
         }
 
         return false
-    }
-
-    /**
-     * Gets called when a goal gets scored on the given [game] by the given [team].
-     */
-    override fun onScore(game: HubGame, team: Team, teamMeta: TeamMeta) {
-
-    }
-
-    /**
-     * Gets called when the given [game] gets win by the given [team].
-     */
-    override fun onWin(game: HubGame, team: Team, teamMeta: TeamMeta) {
-
     }
 
     /**

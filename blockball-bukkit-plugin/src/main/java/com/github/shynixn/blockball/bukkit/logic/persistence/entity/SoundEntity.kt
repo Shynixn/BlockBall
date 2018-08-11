@@ -41,6 +41,4 @@ class SoundEntity(
         /**
          * Volume of the sound.
          */
-        override var volume: Double = 1.0) : Sound {
-
-}
+        override var volume: Double = 1.0) : Sound

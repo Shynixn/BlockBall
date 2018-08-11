@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
-
 /**
  * Created by Shynixn 2018.
  * <p>

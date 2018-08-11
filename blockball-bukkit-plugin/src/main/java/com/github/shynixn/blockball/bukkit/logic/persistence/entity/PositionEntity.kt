@@ -2,10 +2,6 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
-import org.bukkit.Bukkit
-import org.bukkit.Location
-import org.bukkit.configuration.serialization.ConfigurationSerializable
-import org.bukkit.util.Vector
 
 /**
  * Created by Shynixn 2018.

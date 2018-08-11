@@ -71,7 +71,10 @@ fun PlayerInventory.updateInventory() {
     Player::class.java.getDeclaredMethod("updateInventory").invoke(this)
 }
 
-fun Player.isTouchingGround() : Boolean {
+/**
+ * Is the player touching the ground?
+ */
+fun Player.isTouchingGround(): Boolean {
     return Player::class.java.getDeclaredMethod("isOnGround").invoke(this) as Boolean
 }
 

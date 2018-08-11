@@ -46,6 +46,6 @@ open class BlockBallEvent : Event() {
      * Returns all handles.
      */
     override fun getHandlers(): HandlerList {
-        return handlers
+        return BlockBallEvent.handlers
     }
 }

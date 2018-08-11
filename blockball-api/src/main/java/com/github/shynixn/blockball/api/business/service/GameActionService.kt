@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.api.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.Game
-import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 
 /**
  * Created by Shynixn 2018.
@@ -43,17 +42,7 @@ interface GameActionService<in G : Game> {
      * [team] be specified but the team can still change because of arena settings.
      * Does nothing if the player is already in a Game.
      */
-    fun <P> joinGame(game: G, player: P, team: Team? = null) : Boolean
-
-    /**
-     * Gets called when a goal gets scored on the given [game] by the given [team].
-     */
-    fun onScore(game: G, team: Team, teamMeta: TeamMeta)
-
-    /**
-     * Gets called when the given [game] gets win by the given [team].
-     */
-    fun onWin(game: G, team: Team, teamMeta: TeamMeta)
+    fun <P> joinGame(game: G, player: P, team: Team? = null): Boolean
 
     /**
      * Lets the given [player] leave the given [game].

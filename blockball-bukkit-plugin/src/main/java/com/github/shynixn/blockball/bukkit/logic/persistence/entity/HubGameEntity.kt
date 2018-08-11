@@ -34,5 +34,4 @@ class HubGameEntity(
         /**
          *  Arena of the game.
          */
-        override val arena: Arena) : GameEntity(arena), HubGame {
-}
+        override val arena: Arena) : GameEntity(arena), HubGame

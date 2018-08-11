@@ -34,5 +34,4 @@ class BungeeCordGameEntity(
         /**
          *  Arena of the game.
          */
-        override val arena: Arena) : MiniGameEntity(arena), BungeeCordGame {
-}
+        override val arena: Arena) : MiniGameEntity(arena), BungeeCordGame

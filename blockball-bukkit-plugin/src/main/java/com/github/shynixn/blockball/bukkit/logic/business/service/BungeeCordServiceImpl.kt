@@ -51,7 +51,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BungeeCordServiceImpl @Inject constructor(private val plugin: Plugin, private val configurationService: ConfigurationService, private val persistenceLinkSignService: PersistenceLinkSignService) : BungeeCordService, Runnable, PluginMessageListener {
+class BungeeCordServiceImpl @Inject constructor(private val plugin: Plugin, configurationService: ConfigurationService, private val persistenceLinkSignService: PersistenceLinkSignService) : BungeeCordService, Runnable, PluginMessageListener {
     private lateinit var bungeeCofing: BungeeCordConfiguration
 
     init {

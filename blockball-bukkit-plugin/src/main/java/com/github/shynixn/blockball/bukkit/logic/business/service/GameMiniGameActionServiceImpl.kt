@@ -5,10 +5,8 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
-import com.github.shynixn.blockball.api.business.service.GameMiniGameActionService
-import com.github.shynixn.blockball.api.business.service.ScreenMessageService
-import com.github.shynixn.blockball.api.business.service.SoundService
+import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.GameStorage
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
@@ -51,7 +49,7 @@ import org.bukkit.scoreboard.Scoreboard
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-/*class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plugin, private val configurationService: ConfigurationService, private val screenMessageService: ScreenMessageService, private val soundService: SoundService) : GameMiniGameActionService<MiniGame> {
+class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plugin, private val configurationService: ConfigurationService, private val screenMessageService: ScreenMessageService, private val soundService: SoundService, private val gameSoccerService: GameSoccerService<Game>) : GameMiniGameActionService<MiniGame> {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
     /**
@@ -68,15 +66,15 @@ import org.bukkit.scoreboard.Scoreboard
      * [team] be specified but the team can still change because of arena settings.
      * Does nothing if the player is already in a Game.
      */
-    override fun <P> joinGame(game: MiniGame, player: P, team: Team? = null): Boolean {
+    override fun <P> joinGame(game: MiniGame, player: P, team: Team?): Boolean {
         if (player !is Player) {
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
         if (game.playing || game.endGameActive || game.isLobbyFull) {
-            ChatBuilder().text(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[0].replaceGamePlaceholder(this))
+            ChatBuilder().text(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[0].replaceGamePlaceholder(game))
                     .nextLine()
-                    .component(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[1].replaceGamePlaceholder(this))
+                    .component(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[1].replaceGamePlaceholder(game))
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
                             , "/" + plugin.config.getString("global-spectate.command") + " " + game.arena.name)
                     .setHoverText(" ")
@@ -130,6 +128,31 @@ import org.bukkit.scoreboard.Scoreboard
     }
 
     /**
+     * Lets the given [player] leave the given [game].
+     * Does nothing if the player is not in the game.
+     */
+    override fun <P> leaveGame(game: MiniGame, player: P) {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        if (game.spectatorPlayers.contains(player)) {
+            resetStorage(player, game.spectatorPlayersStorage[player]!!)
+            player.teleport(game.arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation())
+            game.spectatorPlayersStorage.remove(player)
+
+            return
+        }
+
+        if (!game.ingamePlayersStorage.containsKey(player)) {
+            return
+        }
+
+        val stats = game.ingamePlayersStorage[player]!!
+        resetStorage(player, stats)
+    }
+
+    /**
      * Lets the given [player] leave spectate the given [game].
      * Does nothing if the player is already spectating a Game.
      */
@@ -164,36 +187,10 @@ import org.bukkit.scoreboard.Scoreboard
      */
     override fun onDraw(game: MiniGame) {
         val additionalPlayers = game.notifiedPlayers.filter { pair -> pair.second }.map { p -> p.first }
-        additionalPlayers.forEach { p -> screenMessageService.setTitle(p, game.arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(this), game.arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(this)) }
+        additionalPlayers.forEach { p -> screenMessageService.setTitle(p, game.arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(game), game.arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)) }
 
-        game.redTeam.forEach { p -> screenMessageService.setTitle(p, game.arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(this), game.arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(this)) }
-        game.blueTeam.forEach { p -> screenMessageService.setTitle(p, game.arena.meta.blueTeamMeta.drawMessageTitle.replaceGamePlaceholder(this), game.arena.meta.blueTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(this)) }
-    }
-
-
-    /**
-     * Lets the given [player] leave the given [game].
-     * Does nothing if the player is not in the game.
-     */
-    override fun <P> leaveGame(game: MiniGame, player: P) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        if (game.spectatorPlayers.contains(player)) {
-            resetStorage(player, game.spectatorPlayersStorage[player]!!)
-            player.teleport(game.arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation())
-            game.spectatorPlayersStorage.remove(player)
-
-            return
-        }
-
-        if (!game.ingamePlayersStorage.containsKey(player)) {
-            return
-        }
-
-        val stats = game.ingamePlayersStorage[player]!!
-        resetStorage(player, stats)
+        game.redTeam.forEach { p -> screenMessageService.setTitle(p, game.arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(game), game.arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)) }
+        game.blueTeam.forEach { p -> screenMessageService.setTitle(p, game.arena.meta.blueTeamMeta.drawMessageTitle.replaceGamePlaceholder(game), game.arena.meta.blueTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)) }
     }
 
     /**
@@ -292,7 +289,7 @@ import org.bukkit.scoreboard.Scoreboard
             }
 
             if (game.gameCountdown <= 0) {
-                setEndGame()
+                setEndGame(game)
                 timesUpGame(game)
             }
 
@@ -300,18 +297,6 @@ import org.bukkit.scoreboard.Scoreboard
                 game.closing = true
             }
         }
-    }
-
-    /**
-     * Gets called when a goal gets scored on the given [game] by the given [team].
-     */
-    override fun onScore(game: MiniGame, team: Team, teamMeta: TeamMeta) {
-    }
-
-    /**
-     * Gets called when the given [game] gets win by the given [team].
-     */
-    override fun onWin(game: MiniGame, team: Team, teamMeta: TeamMeta) {
     }
 
     private fun createPlayerStorage(game: MiniGame, player: Player): GameStorage {
@@ -451,16 +436,16 @@ import org.bukkit.scoreboard.Scoreboard
     private fun timesUpGame(game: MiniGame) {
         when {
             game.redScore == game.blueScore -> {
-                // this.onMatchEnd(null, null)
+                gameSoccerService.onMatchEnd<Player>(game, null, null)
                 this.onDraw(game)
             }
-            this.redGoals > this.blueGoals -> {
-                // this.onMatchEnd(this.redTeam, this.blueTeam)
-                this.onWin(Team.RED, this.arena.meta.redTeamMeta)
+            game.redScore > game.blueScore -> {
+                gameSoccerService.onMatchEnd(game, game.redTeam as List<Player>, game.blueTeam as List<Player>)
+                gameSoccerService.onWin(game, Team.RED, game.arena.meta.redTeamMeta)
             }
             else -> {
-                //  this.onMatchEnd(this.blueTeam, this.redTeam)
-                this.onWin(Team.BLUE, this.arena.meta.blueTeamMeta)
+                gameSoccerService.onMatchEnd(game, game.blueTeam as List<Player>, game.redTeam as List<Player>)
+                gameSoccerService.onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             }
         }
     }
@@ -468,14 +453,13 @@ import org.bukkit.scoreboard.Scoreboard
     /**
      * Sets the game ending with 10 seconds cooldown.
      */
-    private fun setEndGame() {
-        if (!isEndGameRunning) {
-            gameCountdown = 10
+    private fun setEndGame(game: MiniGame) {
+        if (!game.endGameActive) {
+            game.gameCountdown = 10
         }
 
-        isGameRunning = false
-        isEndGameRunning = true
-        blockBallSpawning = true
+        game.endGameActive = true
+        game.ballSpawning = true
     }
 
     /**
@@ -499,4 +483,4 @@ import org.bukkit.scoreboard.Scoreboard
 
         player.inventory.updateInventory()
     }
-}*/
+}

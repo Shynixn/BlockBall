@@ -36,7 +36,11 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-abstract class DatabaseRepository<T>(protected val dbContext: SqlDbContextImpl, private val folder: String) where T : DatabasePersistenceAble {
+abstract class DatabaseRepository<T>(
+        /**
+         * Public context.
+         */
+        protected val dbContext: SqlDbContextImpl, private val folder: String) where T : DatabasePersistenceAble {
 
     /** Stores a new item into the repository. */
     fun store(item: T) {

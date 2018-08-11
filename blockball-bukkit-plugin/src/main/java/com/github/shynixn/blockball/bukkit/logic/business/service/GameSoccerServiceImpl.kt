@@ -4,14 +4,22 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.ball.api.BallApi
 import com.github.shynixn.ball.api.business.entity.Ball
-import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.bukkit.event.GameEndEvent
+import com.github.shynixn.blockball.api.bukkit.event.GameGoalEvent
+import com.github.shynixn.blockball.api.business.enumeration.*
+import com.github.shynixn.blockball.api.business.service.DependencyService
+import com.github.shynixn.blockball.api.business.service.DependencyVaultService
 import com.github.shynixn.blockball.api.business.service.GameSoccerService
+import com.github.shynixn.blockball.api.business.service.ScreenMessageService
+import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
+import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sync
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.google.inject.Inject
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
@@ -44,7 +52,7 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameSoccerServiceImpl<G : Game> @Inject constructor(private val plugin: Plugin) : GameSoccerService<G> {
+class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin: Plugin, private val screenMessageService: ScreenMessageService, private val vaultService: DependencyVaultService, private val dependencyService: DependencyService) : GameSoccerService<G> {
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
      * 0 - 20 for each second.
@@ -104,28 +112,28 @@ class GameSoccerServiceImpl<G : Game> @Inject constructor(private val plugin: Pl
         if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.location as Location)) {
             game.blueScore++
             game.ball!!.remove()
-            //   game.onScore(Team.BLUE, game.arena.meta.blueTeamMeta)
-            //  game.onScoreReward(blueTeam)
+            onScore(game, Team.BLUE, game.arena.meta.blueTeamMeta)
+            onScoreReward(game, game.blueTeam as List<Player>)
             teleportBackToSpawnpoint(game)
             if (game.blueScore >= game.arena.meta.lobbyMeta.maxScore) {
-                //    game.onMatchEnd(blueTeam, redTeam)
-                //  game.onWin(Team.BLUE, game.arena.meta.blueTeamMeta)
+                onMatchEnd(game, game.blueTeam as List<Player>, game.redTeam as List<Player>)
+                onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             }
         } else if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.location as Location)) {
             game.redScore++
             game.ball!!.remove()
-            //  game.onScore(Team.RED, game.arena.meta.redTeamMeta)
-            //  game.onScoreReward(redTeam)
+            onScore(game, Team.RED, game.arena.meta.redTeamMeta)
+            onScoreReward(game, game.redTeam as List<Player>)
             teleportBackToSpawnpoint(game)
             if (game.redScore >= game.arena.meta.lobbyMeta.maxScore) {
-                //  game.onMatchEnd(redTeam, blueTeam)
-                //  game.onWin(Team.RED, game.arena.meta.redTeamMeta)
+                onMatchEnd(game, game.redTeam as List<Player>, game.blueTeam as List<Player>)
+                onWin(game, Team.RED, game.arena.meta.redTeamMeta)
             }
         }
     }
 
     /**
-     * Teleports all players back to their spawnpoint if [arena] has got back teleport enabled.
+     * Teleports all players back to their spawnpoint if [game] has got back teleport enabled.
      */
     private fun teleportBackToSpawnpoint(game: G) {
         if (!game.arena.meta.customizingMeta.backTeleport) {
@@ -168,6 +176,119 @@ class GameSoccerServiceImpl<G : Game> @Inject constructor(private val plugin: Pl
                 game.ballSpawning = true
                 game.ballSpawnCounter = game.arena.meta.ballMeta.delayInTicks
             }
+        }
+    }
+
+    /**
+     * Gets called when a goal gets scored on the given [game] by the given [team].
+     */
+    private fun onScore(game: G, team: Team, teamMeta: TeamMeta) {
+        var interactionEntity: Player? = null
+
+        if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
+            interactionEntity = game.lastInteractedEntity!! as Player
+        }
+
+        val event = GameGoalEvent(interactionEntity, team, game)
+        Bukkit.getServer().pluginManager.callEvent(event)
+
+        if (event.cancelled) {
+            return
+        }
+
+        val scoreMessageTitle = teamMeta.scoreMessageTitle
+        val scoreMessageSubTitle = teamMeta.scoreMessageSubTitle
+
+        val players = ArrayList(game.inTeamPlayers)
+        val additionalPlayers = game.notifiedPlayers
+        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+
+        players.forEach { p -> screenMessageService.setTitle(p, scoreMessageTitle.replaceGamePlaceholder(game), scoreMessageSubTitle.replaceGamePlaceholder(game)) }
+    }
+
+
+    private fun onScoreReward(game: G, players: List<Player>) {
+        if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
+            if (players.contains(game.lastInteractedEntity!!)) {
+                if (dependencyService.isInstalled(PluginDependency.VAULT) && game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.SHOOT_GOAL)) {
+                    vaultService.addMoney(game.lastInteractedEntity, game.arena.meta.rewardMeta.moneyReward[RewardType.SHOOT_GOAL]!!.toDouble())
+                }
+                if (game.arena.meta.rewardMeta.commandReward.containsKey(RewardType.SHOOT_GOAL)) {
+                    this.executeCommand(game, game.arena.meta.rewardMeta.commandReward[RewardType.SHOOT_GOAL]!!, kotlin.collections.arrayListOf(game.lastInteractedEntity as Player))
+                }
+            }
+        }
+    }
+
+    override fun <P> onMatchEnd(game: G, winningPlayers: List<P>?, loosingPlayers: List<P>?) {
+        if (dependencyService.isInstalled(PluginDependency.VAULT)) {
+            if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.WIN_MATCH) && winningPlayers != null) {
+                winningPlayers.forEach { p ->
+                    vaultService.addMoney(p, game.arena.meta.rewardMeta.moneyReward[RewardType.WIN_MATCH]!!.toDouble())
+                }
+            }
+
+            if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.LOOSING_MATCH) && loosingPlayers != null) {
+                loosingPlayers.forEach { p ->
+                    vaultService.addMoney(p, game.arena.meta.rewardMeta.moneyReward[RewardType.LOOSING_MATCH]!!.toDouble())
+                }
+            }
+            if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.PARTICIPATE_MATCH)) {
+                game.inTeamPlayers.forEach { p ->
+                    vaultService.addMoney(p, game.arena.meta.rewardMeta.moneyReward[RewardType.PARTICIPATE_MATCH]!!.toDouble())
+                }
+            }
+        }
+
+        if (game.arena.meta.rewardMeta.commandReward.containsKey(RewardType.WIN_MATCH) && winningPlayers != null) {
+            this.executeCommand(game, game.arena.meta.rewardMeta.commandReward[RewardType.WIN_MATCH]!!, winningPlayers as List<Player>)
+        }
+
+        if (game.arena.meta.rewardMeta.commandReward.containsKey(RewardType.LOOSING_MATCH) && loosingPlayers != null) {
+            this.executeCommand(game, game.arena.meta.rewardMeta.commandReward[RewardType.LOOSING_MATCH]!!, loosingPlayers as List<Player>)
+        }
+
+        if (game.arena.meta.rewardMeta.commandReward.containsKey(RewardType.PARTICIPATE_MATCH)) {
+            this.executeCommand(game, game.arena.meta.rewardMeta.commandReward[RewardType.PARTICIPATE_MATCH]!!, game.inTeamPlayers as List<Player>)
+        }
+    }
+
+    /**
+     * Gets called when the given [game] gets win by the given [team].
+     */
+    override fun onWin(game: G, team: Team, teamMeta: TeamMeta) {
+        val event = GameEndEvent(team, game)
+        Bukkit.getServer().pluginManager.callEvent(event)
+
+        val winMessageTitle = teamMeta.winMessageTitle
+        val winMessageSubTitle = teamMeta.winMessageSubTitle
+
+        val players = ArrayList(game.inTeamPlayers)
+        val additionalPlayers = game.notifiedPlayers
+        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+
+        players.forEach { p -> screenMessageService.setTitle(p, winMessageTitle.replaceGamePlaceholder(game), winMessageSubTitle.replaceGamePlaceholder(game)) }
+
+        game.closing = true
+    }
+
+    private fun executeCommand(game: G, meta: CommandMeta, players: List<Player>) {
+        var command = meta.command
+        if (command!!.startsWith("/")) {
+            command = command.substring(1, command.length)
+        }
+        if (command.equals("none", true)) {
+            return
+        }
+        when {
+            meta.mode == CommandMode.PER_PLAYER -> players.forEach { p ->
+                p.performCommand(command.replaceGamePlaceholder(game))
+            }
+            meta.mode == CommandMode.CONSOLE_PER_PLAYER -> players.forEach { p ->
+                game.lastInteractedEntity = p
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command.replaceGamePlaceholder(game))
+            }
+            meta.mode == CommandMode.CONSOLE_SINGLE -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command.replaceGamePlaceholder(game))
         }
     }
 }

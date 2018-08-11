@@ -33,5 +33,4 @@ open class GameEvent(
         /**
          * Game firing this event.
          */
-        val game: Game) : BlockBallEvent() {
-}
+        val game: Game) : BlockBallEvent()

@@ -33,9 +33,9 @@ import org.bukkit.entity.Player
  */
 class GameGoalEvent(
         /**
-         *  Player last touching the ball.
+         *  Player last touching the ball. Can be null in very rare cases, mostly when entities interact with the ball.
          */
-        val player: Player,
+        val player: Player?,
         /**
          * Team scoring the goal.
          */

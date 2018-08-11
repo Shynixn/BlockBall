@@ -94,7 +94,9 @@ class HologramProxyImpl(private val plugin: Plugin, private var location: Locati
         }
 
         synchronized(watchers) {
-            this.watchers[player] = false
+            if (!this.watchers.containsKey(player)) {
+                this.watchers[player] = false
+            }
         }
     }
 

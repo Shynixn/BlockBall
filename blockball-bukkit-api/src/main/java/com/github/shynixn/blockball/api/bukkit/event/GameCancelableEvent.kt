@@ -33,5 +33,5 @@ open class GameCancelableEvent(game: Game) : GameEvent(game) {
     /**
      * Is the event cancelled?
      */
-    var Cancelled: Boolean = false
+    var cancelled: Boolean = false
 }

@@ -5,7 +5,6 @@ import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.GameBungeeCordGameActionService
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordConfiguration
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
-import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.setModt
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -96,20 +95,8 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(private val plugin
     }
 
     /**
-     * Gets called when a goal gets scored on the given [game] by the given [team].
-     */
-    override fun onScore(game: BungeeCordGame, team: Team, teamMeta: TeamMeta) {
-    }
-
-    /**
      * Gets called when the given [game] ends with a draw.
      */
     override fun onDraw(game: BungeeCordGame) {
-    }
-
-    /**
-     * Gets called when the given [game] gets win by the given [team].
-     */
-    override fun onWin(game: BungeeCordGame, team: Team, teamMeta: TeamMeta) {
     }
 }

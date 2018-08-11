@@ -98,7 +98,7 @@ open class MiniGameEntity(
         }
 
     /**
-     * List of players in the world of this game which are not [inGamePlayers]
+     * List of players in the world of this game which are not players
      * with their boolean flag if they are nearby to receive notifications.
      * Returns an empty list if notifying is disabled.
      */
