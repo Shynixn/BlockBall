@@ -1,16 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.bukkit.business.controller.BukkitGameController
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
-import com.github.shynixn.blockball.api.business.service.DependencyWorldEditService
-import com.github.shynixn.blockball.api.business.service.ScreenMessageService
-import com.github.shynixn.blockball.api.business.service.VirtualArenaService
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
+import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
-import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -50,7 +45,7 @@ class MainConfigurationPage @Inject constructor(private val configurationService
     }
 
     @Inject
-    private lateinit var arenaRepository: ArenaRepository
+    private lateinit var arenaRepository: PersistenceArenaService
 
     @Inject
     private lateinit var virtualArenaService: VirtualArenaService
@@ -60,6 +55,9 @@ class MainConfigurationPage @Inject constructor(private val configurationService
 
     @Inject
     private lateinit var worldEditService: DependencyWorldEditService
+
+    @Inject
+    private lateinit var gameService: GameService
 
     /**
      * Returns the key of the command when this page should be executed.
@@ -80,26 +78,26 @@ class MainConfigurationPage @Inject constructor(private val configurationService
         val prefix = configurationService.findValue<String>("messages.prefix")
 
         if (command == BlockBallCommand.ARENA_CREATE) {
-            if (cache[0] == null) {
-                cache[0] = arenaRepository.create()
-            }
+
         } else if (command == BlockBallCommand.ARENA_EDIT) {
-            cache[0] = arenaRepository.getArenaByName(args[2])!!
+            val arenas = arenaRepository.getAll().get()
+            cache[0] = arenas.filter { b -> b.name.equals(args[2], true) }
         } else if (command == BlockBallCommand.ARENA_DELETE) {
-            val arena = arenaRepository.getArenaByName(args[2])!!
-            arenaRepository.remove(arena)
+            val arenas = arenaRepository.getAll().get()
+            cache[0] = arenas.filter { b -> b.name.equals(args[2], true) }
+            arenaRepository.remove(cache[0] as Arena)
             return CommandResult.BACK
         } else if (command == BlockBallCommand.ARENA_ENABLE) {
-            val arena = cache[0] as BukkitArena
+            val arena = cache[0] as Arena
             arena.enabled = !arena.enabled
         } else if (command == BlockBallCommand.ARENA_SETBALLSPAWNPOINT) {
-            val arena = cache[0] as BukkitArena
+            val arena = cache[0] as Arena
             arena.meta.ballMeta.spawnpoint = player.location.toPosition()
         } else if (command == BlockBallCommand.ARENA_SETDISPLAYNAME) {
-            val arena = cache[0] as BukkitArena
+            val arena = cache[0] as Arena
             arena.displayName = this.mergeArgs(2, args)
         } else if (command == BlockBallCommand.ARENA_SETAREA) {
-            val arena = cache[0] as BukkitArena
+            val arena = cache[0] as Arena
             val left = worldEditService.getLeftClickLocation<Location, Player>(player)
             val right = worldEditService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
@@ -108,7 +106,7 @@ class MainConfigurationPage @Inject constructor(private val configurationService
                 return CommandResult.WESELECTION_MISSING
             }
         } else if (command == BlockBallCommand.ARENA_SETGOALRED) {
-            val arena = cache[0] as BukkitArena
+            val arena = cache[0] as Arena
             val left = worldEditService.getLeftClickLocation<Location, Player>(player)
             val right = worldEditService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
@@ -119,7 +117,7 @@ class MainConfigurationPage @Inject constructor(private val configurationService
                 return CommandResult.WESELECTION_MISSING
             }
         } else if (command == BlockBallCommand.ARENA_SETGOALBLUE) {
-            val arena = cache[0] as BukkitArena
+            val arena = cache[0] as Arena
             val left = worldEditService.getLeftClickLocation<Location, Player>(player)
             val right = worldEditService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
@@ -130,12 +128,11 @@ class MainConfigurationPage @Inject constructor(private val configurationService
                 return CommandResult.WESELECTION_MISSING
             }
         } else if (command == BlockBallCommand.ARENA_SAVE) {
-            val arena = cache[0] as BukkitArena
-            if (arena.lowerCorner != null && arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.lowerCorner != null
+            val arena = cache[0] as Arena
+            if (arena.lowerCorner.worldName != null && arena.meta.blueTeamMeta.goal.lowerCorner.worldName != null && arena.meta.redTeamMeta.goal.lowerCorner.worldName != null
                     && arena.meta.ballMeta.spawnpoint != null) {
                 if (arena.gameType === GameType.HUBGAME || (arena.meta.minigameMeta.lobbySpawnpoint != null && arena.meta.lobbyMeta.leaveSpawnpoint != null)) {
-                    BlockBallApi.getDefaultGameController<BukkitGameController>()
-                            .arenaController!!.store(arena)
+                    arenaRepository.save(arena)
                 } else {
                     return CommandResult.MINIGAMEARENA_NOTVALID
                 }
@@ -143,18 +140,14 @@ class MainConfigurationPage @Inject constructor(private val configurationService
                 return CommandResult.ARENA_NOTVALID
             }
         } else if (command == BlockBallCommand.ARENA_RELOAD) {
-            val arena = cache[0] as BukkitArena
-            if (arena.lowerCorner != null && arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.lowerCorner != null
+            val arena = cache[0] as Arena
+            if (arena.lowerCorner.worldName != null && arena.meta.blueTeamMeta.goal.lowerCorner.worldName != null && arena.meta.redTeamMeta.goal.lowerCorner.worldName != null
                     && arena.meta.ballMeta.spawnpoint != null) {
                 if (arena.gameType === GameType.HUBGAME || (arena.meta.minigameMeta.lobbySpawnpoint != null && arena.meta.lobbyMeta.leaveSpawnpoint != null)) {
-
-                    BlockBallApi.getDefaultGameController<BukkitGameController>()
-                            .arenaController!!.store(arena)
-                    BlockBallApi.getDefaultGameController<BukkitGameController>().reload()
-
-                    val controller = BlockBallApi.getDefaultGameController<BukkitGameController>()
-                    val newArena = controller.getGameFromArenaName(arena.name)
-                    cache[0] = newArena!!.arena
+                    arenaRepository.save(arena)
+                    gameService.restartGames()
+                    val newArena = gameService.getGameFromName(arena.name)
+                    cache[0] = newArena.get()
                 } else {
                     return CommandResult.MINIGAMEARENA_NOTVALID
                 }
@@ -171,19 +164,19 @@ class MainConfigurationPage @Inject constructor(private val configurationService
      * @return page
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         var corners = "none"
         var goal1 = "none"
         var goal2 = "none"
         var ballSpawn = "none"
-        if (arena.upperCorner != null && arena.lowerCorner != null) {
-            corners = this.printLocation(arena.center!!)
+        if (arena.upperCorner.worldName != null && arena.lowerCorner.worldName != null) {
+            corners = this.printLocation(arena.center)
         }
-        if (arena.meta.redTeamMeta.goal.lowerCorner != null) {
-            goal1 = this.printLocation(arena.meta.redTeamMeta.goal.center!!)
+        if (arena.meta.redTeamMeta.goal.lowerCorner.worldName != null) {
+            goal1 = this.printLocation(arena.meta.redTeamMeta.goal.center)
         }
-        if (arena.meta.blueTeamMeta.goal.lowerCorner != null) {
-            goal2 = this.printLocation(arena.meta.blueTeamMeta.goal.center!!)
+        if (arena.meta.blueTeamMeta.goal.lowerCorner.worldName != null) {
+            goal2 = this.printLocation(arena.meta.blueTeamMeta.goal.center)
         }
         if (arena.meta.ballMeta.spawnpoint != null) {
             ballSpawn = this.printLocation(arena.meta.ballMeta.spawnpoint!!)

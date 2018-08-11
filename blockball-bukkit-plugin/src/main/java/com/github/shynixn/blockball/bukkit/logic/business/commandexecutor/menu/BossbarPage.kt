@@ -1,9 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.api.persistence.entity.BossBarMeta
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
+import com.github.shynixn.blockball.api.business.enumeration.BossBarFlag
+import com.github.shynixn.blockball.api.business.enumeration.BossbarColor
+import com.github.shynixn.blockball.api.business.enumeration.BossbarStyle
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.entity.Player
 
 /**
@@ -55,16 +57,16 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         val bossbar = arena.meta.bossBarMeta
         cache[5] = bossbar.flags.map { p -> p.name }
         if (command == BlockBallCommand.BOSSBAR_OPEN && args.size == 3) {
-            bossbar.style = BossBarMeta.Style.values()[args[2].toInt()]
+            bossbar.style = BossbarStyle.values()[args[2].toInt()]
         } else if (command == BlockBallCommand.BOSSBAR_CALLBACKCOLORS && args.size == 3) {
-            bossbar.color = BossBarMeta.Color.values()[args[2].toInt()]
+            bossbar.color = BossbarColor.values()[args[2].toInt()]
         } else if (command == BlockBallCommand.BOSSBAR_CALLBACKFLAGS && args.size == 3) {
             bossbar.flags.clear()
-            bossbar.flags.add(BossBarMeta.Flag.values()[args[2].toInt()])
+            bossbar.flags.add(BossBarFlag.values()[args[2].toInt()])
         } else if (command == BlockBallCommand.BOSSBAR_MESSAGE) {
             bossbar.message = this.mergeArgs(2, args)
         } else if (command == BlockBallCommand.BOSSBAR_TOGGLE) {
@@ -85,10 +87,10 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         val bossbar = arena.meta.bossBarMeta
         if (bossbar.flags.isEmpty())
-            bossbar.flags.add(BossBarMeta.Flag.NONE)
+            bossbar.flags.add(BossBarFlag.NONE)
         val builder = ChatBuilder()
                 .component("- Message: " + bossbar.message).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)

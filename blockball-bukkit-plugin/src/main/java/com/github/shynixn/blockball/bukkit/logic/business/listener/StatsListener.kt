@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
-import com.github.shynixn.blockball.api.bukkit.business.event.GameJoinEvent
-import com.github.shynixn.blockball.api.bukkit.business.event.GameWinEvent
-import com.github.shynixn.blockball.api.bukkit.business.event.GoalShootEvent
+import com.github.shynixn.blockball.api.bukkit.event.GameEndEvent
+import com.github.shynixn.blockball.api.bukkit.event.GameGoalEvent
+import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.StatsCollectingService
 import com.google.inject.Inject
@@ -65,7 +65,7 @@ class StatsListener @Inject constructor(private val statsCollectingService: Stat
      * @param event event
      */
     @EventHandler
-    fun onPlayerShootGoalEvent(event: GoalShootEvent) {
+    fun onPlayerShootGoalEvent(event: GameGoalEvent) {
         this.statsCollectingService.updateStats(event.player, { stats ->
             stats.amountOfGoals = stats.amountOfGoals + 1
         })
@@ -89,10 +89,10 @@ class StatsListener @Inject constructor(private val statsCollectingService: Stat
      * @param event event
      */
     @EventHandler
-    fun onTeamWinEvent(event: GameWinEvent) {
+    fun onTeamWinEvent(event: GameEndEvent) {
         var winningPlayers = event.game.redTeam
 
-        if (event.team == Team.BLUE) {
+        if (event.winningTeam == Team.BLUE) {
             winningPlayers = event.game.blueTeam
         }
 

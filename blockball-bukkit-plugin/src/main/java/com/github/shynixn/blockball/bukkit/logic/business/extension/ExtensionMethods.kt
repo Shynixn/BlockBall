@@ -1,25 +1,24 @@
+@file:Suppress("unused")
+
 package com.github.shynixn.blockball.bukkit.logic.business.extension
 
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
-import com.github.shynixn.blockball.api.bukkit.business.entity.BukkitGame
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.proxy.HighlightArmorstandProxy
-import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
-import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.bukkit.logic.business.entity.game.LowLevelGame
-import com.github.shynixn.blockball.bukkit.logic.business.entity.game.Minigame
-import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
+import com.github.shynixn.blockball.api.persistence.entity.*
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.HighlightArmorstandProxyImpl
-import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PositionEntity
 import org.bukkit.*
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.PlayerInventory
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.plugin.Plugin
+import org.bukkit.plugin.java.JavaPlugin
 import java.lang.reflect.InvocationTargetException
 
 /**
@@ -66,6 +65,17 @@ inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long 
 }
 
 /**
+ * Updates this inventory.
+ */
+fun PlayerInventory.updateInventory() {
+    Player::class.java.getDeclaredMethod("updateInventory").invoke(this)
+}
+
+fun Player.isTouchingGround() : Boolean {
+    return Player::class.java.getDeclaredMethod("isOnGround").invoke(this) as Boolean
+}
+
+/**
  * Executes the given [f] for the given [plugin] asynchronly.
  */
 inline fun Any.async(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long = 0L, crossinline f: () -> Unit) {
@@ -99,6 +109,9 @@ internal fun Server.setModt(text: String) {
     setModtMethod!!.invoke(console, builder.toString().convertChatColors())
 }
 
+/**
+ * Refactors a list to a single line.
+ */
 internal fun List<String>.toSingleLine(): String {
     val builder = StringBuilder()
     this.forEachIndexed { index, p ->
@@ -110,15 +123,19 @@ internal fun List<String>.toSingleLine(): String {
     return builder.toString()
 }
 
-internal fun String.replaceGamePlaceholder(game: BukkitGame, teamMeta: TeamMeta<Location, ItemStack>? = null, team: List<Player>? = null): String {
+/**
+ * Converts all placeholders.
+ */
+internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = null, team: List<Player>? = null): String {
+    val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
     var cache = this.replace(PlaceHolder.TEAM_RED.placeHolder, game.arena.meta.redTeamMeta.displayName)
             .replace(PlaceHolder.ARENA_DISPLAYNAME.placeHolder, game.arena.displayName)
             .replace(PlaceHolder.TEAM_BLUE.placeHolder, game.arena.meta.blueTeamMeta.displayName)
             .replace(PlaceHolder.RED_COLOR.placeHolder, game.arena.meta.redTeamMeta.prefix)
             .replace(PlaceHolder.BLUE_COLOR.placeHolder, game.arena.meta.blueTeamMeta.prefix)
-            .replace(PlaceHolder.RED_GOALS.placeHolder, game.redPoints.toString())
-            .replace(PlaceHolder.BLUE_GOALS.placeHolder, game.bluePoints.toString())
-            .replace(PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder, (game as LowLevelGame).ingameStats.size.toString())
+            .replace(PlaceHolder.RED_GOALS.placeHolder, game.redScore.toString())
+            .replace(PlaceHolder.BLUE_GOALS.placeHolder, game.blueScore.toString())
+            .replace(PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder, game.ingamePlayersStorage.size.toString())
             .replace(PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder, (game.arena.meta.blueTeamMeta.maxAmount + game.arena.meta.redTeamMeta.maxAmount).toString())
 
 
@@ -132,28 +149,33 @@ internal fun String.replaceGamePlaceholder(game: BukkitGame, teamMeta: TeamMeta<
         cache = cache.replace(PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder, team.size.toString())
     }
 
+    val stateSignEnabled = plugin.config.getString("messages.state-sign-enabled").convertChatColors()
+    val stateSignDisabled = plugin.config.getString("messages.state-sign-disabled").convertChatColors()
+    val stateSignRunning = plugin.config.getString("messages.state-sign-running").convertChatColors()
+
     when {
-        game.status == GameStatus.RUNNING -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignRunning!!)
-        game.status == GameStatus.ENABLED -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignEnabled!!)
-        game.status == GameStatus.DISABLED -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, Config.stateSignDisabled!!)
+        game.status == GameStatus.RUNNING -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, stateSignRunning)
+        game.status == GameStatus.ENABLED -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, stateSignEnabled)
+        game.status == GameStatus.DISABLED -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, stateSignDisabled)
     }
 
     if (game.arena.gameType == GameType.HUBGAME) {
         cache = cache.replace(PlaceHolder.TIME.placeHolder, "∞")
-    } else if (game is Minigame) {
+    } else if (game is MiniGame) {
         cache = cache.replace(PlaceHolder.TIME.placeHolder, game.gameCountdown.toString())
-                .replace(PlaceHolder.REMAINING_PLAYERS_TO_START.placeHolder, (game.arena.meta.redTeamMeta.minAmount + game.arena.meta.blueTeamMeta.minAmount - game.ingameStats.size).toString())
+                .replace(PlaceHolder.REMAINING_PLAYERS_TO_START.placeHolder, (game.arena.meta.redTeamMeta.minAmount + game.arena.meta.blueTeamMeta.minAmount - game.ingamePlayersStorage.size).toString())
     }
 
-    if (game is SoccerGame) {
-        if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
-            cache = cache.replace(PlaceHolder.LASTHITBALL.placeHolder, (game.lastInteractedEntity as Player).name)
-        }
+    if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
+        cache = cache.replace(PlaceHolder.LASTHITBALL.placeHolder, (game.lastInteractedEntity as Player).name)
     }
 
     return cache.convertChatColors()
 }
 
+/**
+ * Sets the color of the itemstack if it has a leather meta.
+ */
 internal fun ItemStack.setColor(color: Color): ItemStack {
     if (this.itemMeta is LeatherArmorMeta) {
         val leatherMeta = this.itemMeta as LeatherArmorMeta
@@ -171,8 +193,19 @@ internal fun Permission.hasPermission(player: Player): Boolean {
     return player.hasPermission(this.permission)
 }
 
-internal fun String.stripChatColors(): String {
-    return ChatColor.stripColor(this)
+
+/** Returns if the given [location] is inside of this area selection. */
+fun Selection.isLocationInSelection(location: Location): Boolean {
+    if (location.world.name == this.upperCorner.worldName) {
+        if (this.upperCorner.x >= location.x && this.lowerCorner.x <= location.x) {
+            if (this.upperCorner.y >= location.y + 1 && this.lowerCorner.y <= location.y + 1) {
+                if (this.upperCorner.z >= location.z && this.lowerCorner.z <= location.z) {
+                    return true
+                }
+            }
+        }
+    }
+    return false
 }
 
 /**
@@ -194,23 +227,46 @@ fun Player.sendPacket(packet: Any) {
 }
 
 /**
- * Spawns an armorstand proxy entity for the given [player] at the given [location] with the given [material].
+ * Spawns an armorstand proxy entity for the given [player] at the given [location].
  */
-fun World.spawnVirtualArmorstand(player: Player, location: Location, material: Material): HighlightArmorstandProxy {
+fun World.spawnVirtualArmorstand(player: Player, location: Location): HighlightArmorstandProxy {
     val highlightArmorstandProxy = HighlightArmorstandProxyImpl(player.uniqueId, location)
     highlightArmorstandProxy.spawn()
     return highlightArmorstandProxy
 }
 
+/**
+ * Converts the chatcolors of this string.
+ */
 internal fun String.convertChatColors(): String {
     return ChatColor.translateAlternateColorCodes('&', this)
 }
 
-internal fun Location.toPosition(): StorageLocation {
-    return LocationBuilder(this)
+/**
+ * Removes the chatColors.
+ */
+internal fun String.stripChatColors(): String {
+    return ChatColor.stripColor(this)
 }
 
-internal fun StorageLocation.toBukkitLocation(): Location {
-    return (this as LocationBuilder).toLocation()
+/**
+ * Converts the given Location to a position.
+ */
+internal fun Location.toPosition(): Position {
+    val position = PositionEntity()
+    position.worldName = this.world.name
+    position.x = this.x
+    position.y = this.y
+    position.z = this.z
+    position.yaw = this.yaw.toDouble()
+    position.pitch = this.pitch.toDouble()
+
+    return position
 }
 
+/**
+ * Converts the given position to a bukkit Location.
+ */
+internal fun Position.toLocation(): Location {
+    return Location(Bukkit.getWorld(this.worldName), this.x, this.y, this.z, this.yaw.toFloat(), this.pitch.toFloat())
+}

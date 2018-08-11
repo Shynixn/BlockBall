@@ -3,8 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.*
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
@@ -50,82 +49,79 @@ class ArenaCommandExecutor @Inject constructor(plugin: Plugin, private val confi
     private var pageCache: MutableList<Page>? = null
 
     @Inject
-    private val openPage: OpenPage? = null
+    private lateinit var openPage: OpenPage
 
     @Inject
-    private val mainConfigurationPage: MainConfigurationPage? = null
+    private lateinit var mainConfigurationPage: MainConfigurationPage
 
     @Inject
     private lateinit var spectatePage: SpectatePage
 
     @Inject
-    private val mainSettingsPage: MainSettingsPage? = null
+    private lateinit var mainSettingsPage: MainSettingsPage
 
     @Inject
-    private val ballSettingsPage: BallSettingsPage? = null
+    private lateinit var ballSettingsPage: BallSettingsPage
 
     @Inject
-    private val ballModifierPage: BallModifierSettingsPage? = null
+    private lateinit var ballModifierPage: BallModifierSettingsPage
 
     @Inject
-    private val listablePage: ListablePage? = null
+    private lateinit var listablePage: ListablePage
 
     @Inject
-    private val teamSettingsPage: TeamSettingsPage? = null
+    private lateinit var teamSettingsPage: TeamSettingsPage
 
     @Inject
-    private val effectsSettingsPage: EffectsSettingsPage? = null
+    private lateinit var effectsSettingsPage: EffectsSettingsPage
 
     @Inject
-    private val multipleLinesPage: MultipleLinesPage? = null
+    private lateinit var multipleLinesPage: MultipleLinesPage
 
     @Inject
-    private val hologramsPage: HologramPage? = null
+    private lateinit var hologramsPage: HologramPage
 
     @Inject
-    private val scoreboardPage: ScoreboardPage? = null
+    private lateinit var scoreboardPage: ScoreboardPage
 
     @Inject
-    private val bossbarPage: BossbarPage? = null
+    private lateinit var bossbarPage: BossbarPage
 
     @Inject
     private lateinit var templatePage: TemplateSettingsPage
 
     @Inject
-    private val signSettingsPage: SignSettingsPage? = null
+    private lateinit var signSettingsPage: SignSettingsPage
 
     @Inject
-    private val arenaController: ArenaRepository? = null
+    private lateinit var rewardsPage: RewardsPage
 
     @Inject
-    private val rewardsPage: RewardsPage? = null
+    private lateinit var particlesPage: ParticleEffectPage
 
     @Inject
-    private val particlesPage: ParticleEffectPage? = null
+    private lateinit var soundsPage: SoundEffectPage
 
     @Inject
-    private val soundsPage: SoundEffectPage? = null
+    private lateinit var abilitiesPage: AbilitiesSettingsPage
 
     @Inject
-    private val abilitiesPage: AbilitiesSettingsPage? = null
+    private lateinit var doubleJumpPage: DoubleJumpPage
 
     @Inject
-    private val doubleJumpPage: DoubleJumpPage? = null
+    private lateinit var miscPage: MiscSettingsPage
 
     @Inject
-    private val miscPage: MiscSettingsPage? = null
+    private lateinit var gamePropertiesPage: GamePropertiesPage
 
     @Inject
-    private val gamePropertiesPage: GamePropertiesPage? = null
+    private lateinit var areaProtectionPage: AreaProtectionPage
 
     @Inject
-    private val areaProtectionPage: AreaProtectionPage? = null
+    private lateinit var teamTextBookPage: TeamTextBookPage
 
     @Inject
-    private val teamTextBookPage: TeamTextBookPage? = null
-
-    @Inject
-    private val gameSettingsPage: GameSettingsPage? = null
+    private lateinit var gameSettingsPage: GameSettingsPage
 
     @Inject
     private lateinit var spectatingSettingsPage: SpectatingSettingsPage
@@ -164,7 +160,8 @@ class ArenaCommandExecutor @Inject constructor(plugin: Plugin, private val confi
                 this.cache[player] = anyArray
             }
             val cache: Array<Any?>? = this.cache[player]
-            val command = BlockBallCommand.from(args) ?: throw IllegalArgumentException("Command is not registered!")
+            val command = BlockBallCommand.from(args)
+                    ?: throw IllegalArgumentException("Command is not registered!")
             var usedPage: Page? = null
             for (page in this.getPageCache()) {
                 if (page.getCommandKey() === command.key) {
@@ -235,29 +232,29 @@ class ArenaCommandExecutor @Inject constructor(plugin: Plugin, private val confi
     private fun getPageCache(): List<Page> {
         if (this.pageCache == null) {
             this.pageCache = ArrayList()
-            this.pageCache!!.add(this.openPage!!)
-            this.pageCache!!.add(this.mainConfigurationPage!!)
-            this.pageCache!!.add(this.mainSettingsPage!!)
-            this.pageCache!!.add(listablePage!!)
-            this.pageCache!!.add(teamSettingsPage!!)
-            this.pageCache!!.add(effectsSettingsPage!!)
-            this.pageCache!!.add(scoreboardPage!!)
-            this.pageCache!!.add(multipleLinesPage!!)
-            this.pageCache!!.add(bossbarPage!!)
-            this.pageCache!!.add(signSettingsPage!!)
-            this.pageCache!!.add(hologramsPage!!)
-            this.pageCache!!.add(particlesPage!!)
-            this.pageCache!!.add(soundsPage!!)
-            this.pageCache!!.add(abilitiesPage!!)
-            this.pageCache!!.add(doubleJumpPage!!)
-            this.pageCache!!.add(rewardsPage!!)
-            this.pageCache!!.add(areaProtectionPage!!)
-            this.pageCache!!.add(miscPage!!)
-            this.pageCache!!.add(gamePropertiesPage!!)
-            this.pageCache!!.add(teamTextBookPage!!)
-            this.pageCache!!.add(gameSettingsPage!!)
-            this.pageCache!!.add(ballModifierPage!!)
-            this.pageCache!!.add(ballSettingsPage!!)
+            this.pageCache!!.add(this.openPage)
+            this.pageCache!!.add(this.mainConfigurationPage)
+            this.pageCache!!.add(this.mainSettingsPage)
+            this.pageCache!!.add(listablePage)
+            this.pageCache!!.add(teamSettingsPage)
+            this.pageCache!!.add(effectsSettingsPage)
+            this.pageCache!!.add(scoreboardPage)
+            this.pageCache!!.add(multipleLinesPage)
+            this.pageCache!!.add(bossbarPage)
+            this.pageCache!!.add(signSettingsPage)
+            this.pageCache!!.add(hologramsPage)
+            this.pageCache!!.add(particlesPage)
+            this.pageCache!!.add(soundsPage)
+            this.pageCache!!.add(abilitiesPage)
+            this.pageCache!!.add(doubleJumpPage)
+            this.pageCache!!.add(rewardsPage)
+            this.pageCache!!.add(areaProtectionPage)
+            this.pageCache!!.add(miscPage)
+            this.pageCache!!.add(gamePropertiesPage)
+            this.pageCache!!.add(teamTextBookPage)
+            this.pageCache!!.add(gameSettingsPage)
+            this.pageCache!!.add(ballModifierPage)
+            this.pageCache!!.add(ballSettingsPage)
             this.pageCache!!.add(templatePage)
             this.pageCache!!.add(notificationPage)
             this.pageCache!!.add(spectatingSettingsPage)

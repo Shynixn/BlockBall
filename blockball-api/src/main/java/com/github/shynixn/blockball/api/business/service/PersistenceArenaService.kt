@@ -34,7 +34,7 @@ interface PersistenceArenaService {
     /**
      * Returns all stored arenas.
      */
-    fun getAll(): CompletableFuture<Arena>
+    fun getAll(): CompletableFuture<List<Arena>>
 
     /**
      * Removes the given [arena].

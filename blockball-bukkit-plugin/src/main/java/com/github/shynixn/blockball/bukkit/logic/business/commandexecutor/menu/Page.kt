@@ -1,8 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LocationBuilder
+import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PositionEntity
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
@@ -33,9 +34,14 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-open abstract class Page(val id: Int, private val previousId: Int) {
-
-
+abstract class Page(
+        /**
+         * Page id.
+         */
+        val id: Int, private val previousId: Int) {
+    /**
+     * GetPrevious id.
+     */
     open fun getPreviousIdFrom(cache: Array<Any?>): Int {
         return previousId
     }
@@ -78,8 +84,8 @@ open abstract class Page(val id: Int, private val previousId: Int) {
     }
 
     internal fun printLocation(mlocation: Any): String {
-        val location: Location = if (mlocation is StorageLocation) {
-            (mlocation as LocationBuilder).toLocation()
+        val location: Location = if (mlocation is Position) {
+            (mlocation as PositionEntity).toLocation()
         } else {
             mlocation as Location
         }

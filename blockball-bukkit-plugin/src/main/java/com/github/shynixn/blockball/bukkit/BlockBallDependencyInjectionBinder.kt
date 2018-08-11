@@ -1,18 +1,16 @@
 package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
-import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
+import com.github.shynixn.blockball.bukkit.logic.persistence.repository.ArenaFileRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
-import org.bukkit.Bukkit
-import org.bukkit.Server
 import org.bukkit.plugin.Plugin
-import org.bukkit.scheduler.BukkitScheduler
 
 /**
  * Created by Shynixn 2018.
@@ -43,19 +41,14 @@ import org.bukkit.scheduler.BukkitScheduler
  */
 class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractModule() {
 
-
+    /**
+     * Configures the business logic tree.
+     */
     override fun configure() {
-        val repository = ArenaRepository()
-
-        bind(Server::class.java)
-                .toInstance(Bukkit.getServer())
-        bind(BukkitScheduler::class.java)
-                .toInstance(Bukkit.getServer().scheduler)
-        bind(Plugin::class.java)
-                .toInstance(plugin)
+        bind(Plugin::class.java).toInstance(plugin)
 
         // Repositories
-        bind(ArenaRepository::class.java).toInstance(repository)
+        bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java)
         bind(PlayerRepository::class.java).to(PlayerSqlRepository::class.java)
         bind(StatsRepository::class.java).to(StatsSqlRepository::class.java)
 
@@ -72,9 +65,12 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(DoubleJumpService::class.java).to(DoubleJumpServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BungeeCordService::class.java).to(BungeeCordServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
+        // Persistence Services
         bind(PersistenceLinkSignService::class.java).to(PersistenceLinkSignServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(PersistenceArenaService::class.java).to(PersistenceArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PersistenceStatsService::class.java).to(PersistenceStatsServiceImpl::class.java)
 
+        // Dependency Services
         bind(DependencyVaultService::class.java).to(DependencyVaultServiceImpl::class.java)
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java)

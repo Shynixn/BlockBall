@@ -4,7 +4,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Stats
 import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.context.SqlDbContextImpl
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.StatsData
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.StatsEntity
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -71,7 +71,7 @@ class StatsSqlRepository @Inject constructor(dbContext: SqlDbContextImpl, privat
         }
 
         val playerInfo = playerRepository.getOrCreateFromPlayer(player)
-        val stats = StatsData()
+        val stats = StatsEntity()
         stats.playerId = playerInfo.id
         save(player, stats)
 
@@ -117,7 +117,7 @@ class StatsSqlRepository @Inject constructor(dbContext: SqlDbContextImpl, privat
         try {
             this.dbContext.connection.use { connection ->
                 val id = this.dbContext.executeStoredInsert("stats/insert", connection,
-                        (item as StatsData).playerId,
+                        (item as StatsEntity).playerId,
                         item.amountOfWins,
                         item.amountOfPlayedGames,
                         item.amountOfGoals).toLong()
@@ -136,7 +136,7 @@ class StatsSqlRepository @Inject constructor(dbContext: SqlDbContextImpl, privat
      * @throws SQLException exception
      */
     override fun from(resultSet: ResultSet): Stats {
-        val stats = StatsData()
+        val stats = StatsEntity()
 
         with(stats) {
             id = resultSet.getLong("id")

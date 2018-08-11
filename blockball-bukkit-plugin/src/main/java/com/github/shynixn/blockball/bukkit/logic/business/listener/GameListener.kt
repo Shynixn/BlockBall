@@ -1,13 +1,15 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent
-import com.github.shynixn.blockball.api.bukkit.business.event.PlaceHolderRequestEvent
+import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.DoubleJumpService
+import com.github.shynixn.blockball.api.business.service.GameActionService
+import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.RightclickManageService
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
-import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
+import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.bukkit.logic.business.extension.isTouchingGround
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.google.inject.Inject
@@ -54,13 +56,18 @@ import org.bukkit.event.player.PlayerToggleFlightEvent
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameListener @Inject constructor(private val gameController: GameRepository, private val rightClickManageService: RightclickManageService, private val doubleJumpService: DoubleJumpService) : Listener {
+class GameListener @Inject constructor(private val gameService: GameService, private val rightClickManageService: RightclickManageService, private val doubleJumpService: DoubleJumpService, private val gameActionService: GameActionService<Game>) : Listener {
     /**
      * Gets called when a player leaves the server and the game.
      */
     @EventHandler
     fun onPlayerQuitEvent(event: PlayerQuitEvent) {
-        gameController.getGameFromPlayer(event.player)?.leave(event.player)
+        val game = gameService.getGameFromPlayer(event.player)
+
+        if (game.isPresent) {
+            gameActionService.leaveGame(game.get(), event.player)
+        }
+
         rightClickManageService.cleanResources(event.player)
     }
 
@@ -69,9 +76,9 @@ class GameListener @Inject constructor(private val gameController: GameRepositor
      */
     @EventHandler
     fun onPlayerHungerEvent(event: FoodLevelChangeEvent) {
-        val game = gameController.getGameFromPlayer(event.entity as Player)
+        val game = gameService.getGameFromPlayer(event.entity as Player)
 
-        if (game != null) {
+        if (game.isPresent) {
             event.isCancelled = true
         }
     }
@@ -81,13 +88,13 @@ class GameListener @Inject constructor(private val gameController: GameRepositor
      */
     @EventHandler
     fun onPlayerMoveEvent(event: PlayerMoveEvent) {
-        if (!event.player.isOnGround) {
+        if (!event.player.isTouchingGround()) {
             return
         }
 
-        val game = gameController.getGameFromPlayer(event.player)
+        val game = gameService.getGameFromPlayer(event.player)
 
-        if (game != null) {
+        if (game.isPresent) {
             event.player.allowFlight = true
         }
     }
@@ -97,9 +104,9 @@ class GameListener @Inject constructor(private val gameController: GameRepositor
      */
     @EventHandler
     fun onPlayerClickInventoryEvent(event: InventoryClickEvent) {
-        val game = gameController.getGameFromPlayer(event.whoClicked as Player)
+        val game = gameService.getGameFromPlayer(event.whoClicked as Player)
 
-        if (game != null) {
+        if (game.isPresent) {
             event.isCancelled = true
             event.whoClicked.closeInventory()
         }
@@ -110,9 +117,9 @@ class GameListener @Inject constructor(private val gameController: GameRepositor
      */
     @EventHandler
     fun onPlayerOpenInventoryEvent(event: InventoryOpenEvent) {
-        val game = gameController.getGameFromPlayer(event.player as Player)
+        val game = gameService.getGameFromPlayer(event.player as Player)
 
-        if (game != null) {
+        if (game.isPresent) {
             event.isCancelled = true
         }
     }
@@ -127,13 +134,13 @@ class GameListener @Inject constructor(private val gameController: GameRepositor
         }
 
         val player = event.entity as Player
-        val game = gameController.getGameFromPlayer(player)
+        val game = gameService.getGameFromPlayer(player)
 
-        if (game != null && event.cause == EntityDamageEvent.DamageCause.FALL) {
+        if (game.isPresent && event.cause == EntityDamageEvent.DamageCause.FALL) {
             event.isCancelled = true
         }
 
-        if (game != null && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.arena.meta.customizingMeta.damageEnabled) {
+        if (game.isPresent && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.get().arena.meta.customizingMeta.damageEnabled) {
             event.isCancelled = true
         }
     }
@@ -143,9 +150,9 @@ class GameListener @Inject constructor(private val gameController: GameRepositor
      */
     @EventHandler
     fun onBallInteractEvent(event: BallInteractEvent) {
-        val game = gameController.games.find { p -> p.ball != null && p.ball!! == event.ball }
+        val game = gameService.getAllGames().find { p -> p.ball != null && p.ball!! == event.ball }
 
-        if (game != null && game is SoccerGame) {
+        if (game != null) {
             if (event.entity is Player && (event.entity as Player).gameMode == GameMode.SPECTATOR) {
                 event.isCancelled = true
             }
@@ -170,12 +177,12 @@ class GameListener @Inject constructor(private val gameController: GameRepositor
         val location = event.clickedBlock.location.toPosition()
 
         rightClickManageService.executeWatchers(event.player, event.clickedBlock.state as Sign)
-        gameController.getAll().forEach { p ->
+        gameService.getAllGames().forEach { p ->
             when {
-                p.arena.meta.lobbyMeta.joinSigns.contains(location) -> p.join(event.player, null)
-                p.arena.meta.lobbyMeta.leaveSigns.contains(location) -> p.leave(event.player)
-                p.arena.meta.redTeamMeta.signs.contains(location) -> p.join(event.player, Team.RED)
-                p.arena.meta.blueTeamMeta.signs.contains(location) -> p.join(event.player, Team.BLUE)
+                p.arena.meta.lobbyMeta.joinSigns.contains(location) -> gameActionService.joinGame(p, event.player)
+                p.arena.meta.lobbyMeta.leaveSigns.contains(location) -> gameActionService.leaveGame(p, event.player)
+                p.arena.meta.redTeamMeta.signs.contains(location) -> gameActionService.joinGame(p, event.player, Team.RED)
+                p.arena.meta.blueTeamMeta.signs.contains(location) -> gameActionService.joinGame(p, event.player, Team.BLUE)
             }
         }
     }
@@ -201,10 +208,10 @@ class GameListener @Inject constructor(private val gameController: GameRepositor
             PlaceHolder.values().forEach { p ->
                 if (event.name.startsWith(p.placeHolder)) {
                     val data = event.name.split("_")
-                    val game = this.gameController.getGameFromArenaName(data[1])
+                    val game = this.gameService.getGameFromName(data[1])
 
-                    if (game != null) {
-                        event.result = data[0].replaceGamePlaceholder(game)
+                    if (game.isPresent) {
+                        event.result = data[0].replaceGamePlaceholder(game.get())
                     }
 
                     return

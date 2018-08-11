@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport

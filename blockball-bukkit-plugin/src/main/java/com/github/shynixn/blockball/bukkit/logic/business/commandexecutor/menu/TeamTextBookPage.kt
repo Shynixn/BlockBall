@@ -1,11 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
+import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
-import org.bukkit.Location
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 
 /**
  * Created by Shynixn 2018.
@@ -63,32 +61,25 @@ class TeamTextBookPage : Page(TeamTextBookPage.ID, MainSettingsPage.ID) {
         } else if (command == BlockBallCommand.TEXTBOOK_JOINMESSAGE && args.size >= 3) {
             val teamMeta = getTeamMeta(cache)
             teamMeta.joinMessage = mergeArgs(2, args)
-        }
-        else if (command == BlockBallCommand.TEXTBOOK_LEAVEMESSAGE && args.size >= 3) {
+        } else if (command == BlockBallCommand.TEXTBOOK_LEAVEMESSAGE && args.size >= 3) {
             val teamMeta = getTeamMeta(cache)
             teamMeta.leaveMessage = mergeArgs(2, args)
-        }
-        else if (command == BlockBallCommand.TEXTBOOK_SCORETIELE && args.size >= 3) {
+        } else if (command == BlockBallCommand.TEXTBOOK_SCORETIELE && args.size >= 3) {
             val teamMeta = getTeamMeta(cache)
             teamMeta.scoreMessageTitle = mergeArgs(2, args)
-        }
-        else if (command == BlockBallCommand.TEXTBOOK_SCORESUBTITLE && args.size >= 3) {
+        } else if (command == BlockBallCommand.TEXTBOOK_SCORESUBTITLE && args.size >= 3) {
             val teamMeta = getTeamMeta(cache)
             teamMeta.scoreMessageSubTitle = mergeArgs(2, args)
-        }
-        else if (command == BlockBallCommand.TEXTBOOK_WINTIELE && args.size >= 3) {
+        } else if (command == BlockBallCommand.TEXTBOOK_WINTIELE && args.size >= 3) {
             val teamMeta = getTeamMeta(cache)
             teamMeta.winMessageTitle = mergeArgs(2, args)
-        }
-        else if (command == BlockBallCommand.TEXTBOOK_WINSUBTITLE && args.size >= 3) {
+        } else if (command == BlockBallCommand.TEXTBOOK_WINSUBTITLE && args.size >= 3) {
             val teamMeta = getTeamMeta(cache)
             teamMeta.winMessageSubTitle = mergeArgs(2, args)
-        }
-        else if (command == BlockBallCommand.TEXTBOOK_DRAWTIELE && args.size >= 3) {
+        } else if (command == BlockBallCommand.TEXTBOOK_DRAWTIELE && args.size >= 3) {
             val teamMeta = getTeamMeta(cache)
             teamMeta.drawMessageTitle = mergeArgs(2, args)
-        }
-        else if (command == BlockBallCommand.TEXTBOOK_DRAWSUBTITLE && args.size >= 3) {
+        } else if (command == BlockBallCommand.TEXTBOOK_DRAWSUBTITLE && args.size >= 3) {
             val teamMeta = getTeamMeta(cache)
             teamMeta.drawMessageSubTitle = mergeArgs(2, args)
         }
@@ -162,8 +153,8 @@ class TeamTextBookPage : Page(TeamTextBookPage.ID, MainSettingsPage.ID) {
                 .builder()
     }
 
-    private fun getTeamMeta(cache: Array<Any?>?): TeamMeta<Location, ItemStack> {
-        val arena = cache!![0] as BukkitArena
+    private fun getTeamMeta(cache: Array<Any?>?): TeamMeta {
+        val arena = cache!![0] as Arena
         val type = cache[5] as Int
         return if (type == 0) {
             arena.meta.redTeamMeta

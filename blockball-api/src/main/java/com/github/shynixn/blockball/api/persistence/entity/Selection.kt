@@ -45,4 +45,9 @@ interface Selection {
 
     /** Length of the z axe. */
     val offsetZ: Int
+
+    /**
+     * Sets the corners of the selection.
+     */
+    fun <L> setCorners(corner1: L, corner2: L)
 }

@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.repository
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta
 import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.context.SqlDbContextImpl
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PlayerData
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PlayerMetaEntity
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -70,7 +70,7 @@ class PlayerSqlRepository @Inject constructor(dbContext: SqlDbContextImpl, priva
             plugin.logger.log(Level.WARNING, "Database error occurred.", e)
         }
 
-        val playerMeta = PlayerData(player)
+        val playerMeta = PlayerMetaEntity(player)
         save(player, playerMeta)
 
         return playerMeta
@@ -118,7 +118,7 @@ class PlayerSqlRepository @Inject constructor(dbContext: SqlDbContextImpl, priva
             this.dbContext.connection.use { connection ->
                 val id = this.dbContext.executeStoredInsert("player/insert", connection,
                         item.name, item.uuid.toString()).toLong()
-                (item as PlayerData).id = id
+                (item as PlayerMetaEntity).id = id
             }
         } catch (e: SQLException) {
             plugin.logger.log(Level.WARNING, "Database error occurred.", e)
@@ -133,7 +133,7 @@ class PlayerSqlRepository @Inject constructor(dbContext: SqlDbContextImpl, priva
      * @throws SQLException exception
      */
     override fun from(resultSet: ResultSet): PlayerMeta {
-        val playerStats = PlayerData()
+        val playerStats = PlayerMetaEntity()
         playerStats.id = resultSet.getLong("id")
         playerStats.name = resultSet.getString("name")
         playerStats.uuid = UUID.fromString(resultSet.getString("uuid"))

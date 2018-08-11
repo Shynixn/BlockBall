@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
+import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.SimpleCommandExecutor.UnRegistered.mergeArgs
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.stripChatColors
 import com.google.inject.Inject
@@ -37,7 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class StopCommandExecutor @Inject constructor(plugin: Plugin, private val gameController: GameRepository, private val configurationService: ConfigurationService) : SimpleCommandExecutor.Registered("blockballstop", plugin as JavaPlugin) {
+class StopCommandExecutor @Inject constructor(plugin: Plugin, private val gameService: GameService, private val configurationService: ConfigurationService) : SimpleCommandExecutor.Registered("blockballstop", plugin as JavaPlugin) {
 
     /**
      * Can be overwritten to listener to all executed commands.
@@ -49,14 +49,14 @@ class StopCommandExecutor @Inject constructor(plugin: Plugin, private val gameCo
         val prefix = configurationService.findValue<String>("messages.prefix")
         val mergedArgs = mergeArgs(0, args.size, args)
 
-        gameController.getAll().forEach { g ->
+        gameService.getAllGames().forEach { g ->
             if (g.arena.name.equals(mergedArgs, true)) {
-                g.close()
-                sender.sendMessage(prefix + "Stopped game " + (g.arena.id + 1) + " named " + g.arena.displayName.convertChatColors() + ".")
+                g.closing = true
+                sender.sendMessage(prefix + "Stopped game " + (g.arena.name + 1) + " named " + g.arena.displayName.convertChatColors() + ".")
                 return
             } else if (g.arena.displayName.convertChatColors().stripChatColors().equals(mergedArgs, true)) {
-                g.close()
-                sender.sendMessage(prefix + "Stopped game " + (g.arena.id + 1) + " named " + g.arena.displayName.convertChatColors() + ".")
+                g.closing = true
+                sender.sendMessage(prefix + "Stopped game " + (g.arena.name + 1) + " named " + g.arena.displayName.convertChatColors() + ".")
                 return
             }
         }

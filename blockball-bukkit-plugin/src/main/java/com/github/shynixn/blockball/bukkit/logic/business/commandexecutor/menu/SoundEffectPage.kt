@@ -2,10 +2,8 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.ball.api.persistence.enumeration.EffectingType
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
-import com.google.inject.Inject
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
@@ -42,9 +40,6 @@ class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
         const val ID = 21
     }
 
-    @Inject
-    private var arenaRepository: ArenaRepository? = null
-
     override fun getPreviousIdFrom(cache: Array<Any?>): Int {
         return cache[4] as Int
     }
@@ -65,7 +60,7 @@ class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
      * @param args
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         if (command == BlockBallCommand.SOUND_DOUBLEJUMP) {
             cache[5] = arena.meta.doubleJumpMeta.soundEffect
             cache[4] = DoubleJumpPage.ID

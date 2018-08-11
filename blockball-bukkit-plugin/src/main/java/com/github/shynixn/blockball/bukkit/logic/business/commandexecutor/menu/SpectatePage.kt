@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toSingleLine
 import org.bukkit.entity.Player
@@ -58,7 +58,7 @@ class SpectatePage : Page(ID, SpectatePage.ID) {
      * @param args
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
 
         if (command == BlockBallCommand.SPECTATE_TOGGLE) {
             arena.meta.spectatorMeta.spectatorModeEnabled = !arena.meta.spectatorMeta.spectatorModeEnabled
@@ -76,7 +76,7 @@ class SpectatePage : Page(ID, SpectatePage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         val meta = arena.meta.spectatorMeta
 
         var spectatorSpawnpoint = "none"

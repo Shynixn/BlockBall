@@ -29,7 +29,7 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface PlayerMeta {
+interface PlayerMeta : DatabasePersistenceAble {
 
     /** [name] of the player. */
     var name: String

@@ -94,14 +94,9 @@ interface Game {
     var playing: Boolean
 
     /**
-     * All players associated with the game. Regardless if playing, lobby, spectating etc.
-     */
-    val inGamePlayers: List<Any>
-
-    /**
      * The last interacted entity with the ball. Can also be a non player.
      */
-    val lastInteractedEntity: Any?
+    var lastInteractedEntity: Any?
 
     /**
      * Storage for the [inGamePlayers].
@@ -112,6 +107,31 @@ interface Game {
      * List of players which are already in the [redTeam] or [blueTeam].
      */
     val inTeamPlayers: List<Any>
+
+    /**
+     * Ball bumper counter
+     */
+    var ballBumperCounter: Int
+
+    /**
+     * Ball bumper.
+     */
+    var ballBumper: Int
+
+    /**
+     * Last location of the ball.
+     */
+    var lastBallLocation: Any?
+
+    /**
+     * Is the ball spawning?
+     */
+    var ballSpawning: Boolean
+
+    /**
+     * Ball spawn counter.
+     */
+    var ballSpawnCounter: Int
 
     /**
      * List of players in the world of this game which are not [inGamePlayers]

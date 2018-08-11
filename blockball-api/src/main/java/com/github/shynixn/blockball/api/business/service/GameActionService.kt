@@ -43,7 +43,7 @@ interface GameActionService<in G : Game> {
      * [team] be specified but the team can still change because of arena settings.
      * Does nothing if the player is already in a Game.
      */
-    fun <P> joinGame(game: G, player: P, team: Team?)
+    fun <P> joinGame(game: G, player: P, team: Team? = null) : Boolean
 
     /**
      * Gets called when a goal gets scored on the given [game] by the given [team].

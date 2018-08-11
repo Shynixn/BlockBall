@@ -1,7 +1,9 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toSingleLine
 import org.bukkit.ChatColor
@@ -58,18 +60,18 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
             cache[4] = ScoreboardPage.ID
             cache[3] = 0
         } else if (command == BlockBallCommand.MULTILINES_HUBGAMEJOINMESSAGE) {
-            cache[2] = (cache[0] as BukkitArena).meta.hubLobbyMeta.joinMessage
+            cache[2] = (cache[0] as Arena).meta.hubLobbyMeta.joinMessage
             cache[4] = GameSettingsPage.ID
             cache[3] = 0
         } else if (command == BlockBallCommand.MULTILINES_HOLOGRAM) {
             cache[4] = HologramPage.ID
             cache[3] = 0
         } else if (command == BlockBallCommand.MULTILINES_SPECTATEJOINMESSAGE) {
-            cache[2] = (cache[0] as BukkitArena).meta.spectatorMeta.spectateStartMessage
+            cache[2] = (cache[0] as Arena).meta.spectatorMeta.spectateStartMessage
             cache[4] = SpectatePage.ID
             cache[3] = 0
         } else if (command == BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE) {
-            val arena = cache[0] as BukkitArena
+            val arena = cache[0] as Arena
             cache[4] = SignSettingsPage.ID
             cache[3] = 0
 

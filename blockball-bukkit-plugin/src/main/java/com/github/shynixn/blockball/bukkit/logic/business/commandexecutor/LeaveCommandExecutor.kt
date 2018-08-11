@@ -1,6 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
+import com.github.shynixn.blockball.api.business.service.GameActionService
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -33,11 +36,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class LeaveCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExecutor.UnRegistered(plugin.config.get("global-leave"), plugin as JavaPlugin) {
-
-    @Inject
-    private var gameController: GameRepository? = null
-
+class LeaveCommandExecutor @Inject constructor(plugin: Plugin, private val gameService: GameService, private val gameActionService: GameActionService<Game>, private val minigameActionService: GameActionService<MiniGame>) : SimpleCommandExecutor.UnRegistered(plugin.config.get("global-leave"), plugin as JavaPlugin) {
     /**
      * Can be overwritten to listen to player executed commands.
      *
@@ -45,7 +44,14 @@ class LeaveCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandEx
      * @param args   args
      */
     override fun onPlayerExecuteCommand(player: Player, args: Array<out String>) {
-        gameController!!.getGameFromPlayer(player)?.leave(player)
-        gameController!!.getGameFromSpectatingPlayer(player)?.leave(player)
+        val playerGame = gameService.getGameFromPlayer(player)
+        if (playerGame.isPresent) {
+            gameActionService.leaveGame(playerGame.get(), player)
+        }
+
+        val spectatorGame = gameService.getGameFromSpectatingPlayer(player)
+        if (spectatorGame.isPresent) {
+            gameActionService.leaveGame(spectatorGame.get(), player)
+        }
     }
 }

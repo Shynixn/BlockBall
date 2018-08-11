@@ -1,7 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
+import com.github.shynixn.blockball.api.business.service.GameActionService
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.stripChatColors
 import com.google.inject.Inject
@@ -36,11 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class JoinCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExecutor.UnRegistered(plugin.config.get("global-join"), plugin as JavaPlugin) {
-
-    @Inject
-    private lateinit var gameController: GameRepository
-
+class JoinCommandExecutor @Inject constructor(private val gameService: GameService, private val gameActionService: GameActionService<Game>, plugin: Plugin) : SimpleCommandExecutor.UnRegistered(plugin.config.get("global-join"), plugin as JavaPlugin) {
     /**
      * Can be overwritten to listen to player executed commands.
      *
@@ -53,12 +51,12 @@ class JoinCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExe
         }
 
         val mergedArgs = mergeArgs(0, args.size, args)
-        gameController.getAll().forEach { g ->
+        gameService.getAllGames().forEach { g ->
             if (g.arena.name.equals(mergedArgs, true)) {
-                g.join(player)
+                gameActionService.joinGame(g, player)
                 return
             } else if (g.arena.displayName.convertChatColors().stripChatColors().equals(mergedArgs, true)) {
-                g.join(player)
+                gameActionService.joinGame(g, player)
                 return
             }
         }
@@ -78,7 +76,7 @@ class JoinCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExe
      * Returns true if successful.
      */
     private fun attemptJoiningGame(player: Player, args: List<String>): Boolean {
-        gameController.getAll().forEach { g ->
+        gameService.getAllGames().forEach { g ->
             if (g.arena.name == args[0] || g.arena.displayName.convertChatColors().stripChatColors().equals(args[0], true)) {
                 var team: Team? = null
                 if (args[1].equals(g.arena.meta.redTeamMeta.displayName.convertChatColors().stripChatColors(), true)) {
@@ -87,7 +85,7 @@ class JoinCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExe
                     team = Team.BLUE
                 }
 
-                g.join(player, team)
+                gameActionService.joinGame(g, player, team)
                 return true
             }
         }

@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
@@ -56,7 +56,7 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.SETTINGS_OPEN && args.size == 3) {
-            val arena = cache[0] as BukkitArena
+            val arena = cache[0] as Arena
             arena.gameType = GameType.values()[args[2].toInt()]
         }
         return super.execute(player, command, cache, args)
@@ -69,7 +69,7 @@ class MainSettingsPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         return ChatBuilder()
                 .component("- GameType: " + arena.gameType.name).builder()
                 .component(" [select..]")

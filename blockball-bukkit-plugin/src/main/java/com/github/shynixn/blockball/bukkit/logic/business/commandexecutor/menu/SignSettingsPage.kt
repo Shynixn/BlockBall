@@ -1,11 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.RightclickManageService
+import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.BlockBallCommand.*
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toSingleLine
 import com.google.inject.Inject
@@ -65,7 +65,7 @@ class SignSettingsPage @Inject constructor(private val configurationService: Con
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         val prefix = configurationService.findValue<String>("messages.prefix")
 
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         when (command) {
             SIGNS_ADDTEAMRED -> {
                 player.sendMessage(prefix + "Rightclick on a sign.")
@@ -105,7 +105,7 @@ class SignSettingsPage @Inject constructor(private val configurationService: Con
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
 
         val teamSignsRed = arena.meta.redTeamMeta.signs.map { p -> this.printLocation(p) }
         val teamSignsBlue = arena.meta.blueTeamMeta.signs.map { p -> this.printLocation(p) }

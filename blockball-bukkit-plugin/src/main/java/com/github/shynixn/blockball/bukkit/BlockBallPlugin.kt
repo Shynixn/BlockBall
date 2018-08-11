@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.ball.bukkit.core.logic.business.CoreManager
@@ -6,12 +8,11 @@ import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.DependencyService
+import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.UpdateCheckService
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BungeeCordSignCommandExecutor
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
 import com.google.inject.Guice
-import com.google.inject.Inject
 import com.google.inject.Injector
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
@@ -20,7 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
 
 /**
- * Created by Shynixn 2018.
+ * Plugin Main Type.
  * <p>
  * Version 1.2
  * <p>
@@ -55,9 +56,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
 
     private var coreManager: CoreManager? = null
     private var injector: Injector? = null
-
-    @Inject
-    private var gameController: GameRepository? = null
 
     /**
      * Enables the plugin BlockBall.
@@ -101,21 +99,14 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     }
 
     /**
-     * Disables the plugin BlockBall.
-     */
-    override fun onDisable() {
-        super.onDisable()
-        gameController!!.close()
-    }
-
-    /**
      * Starts the game mode.
      */
     private fun startPlugin() {
         try {
-            gameController!!.reload()
+            val gameService = resolve(GameService::class.java)
+            gameService.restartGames()
 
-            BlockBallApi::class.java.getDeclaredMethod("initializeBlockBall", Any::class.java, Any::class.java, PluginProxy::class.java).invoke(this.gameController, this)
+            BlockBallApi::class.java.getDeclaredMethod("initializeBlockBall", PluginProxy::class.java).invoke(this)
             coreManager = CoreManager(this, "storage.yml", "ball.yml")
             logger.log(Level.INFO, "Using NMS Connector " + VersionSupport.getServerVersion().versionText + ".")
         } catch (e: Exception) {
@@ -133,6 +124,23 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             return this.injector!!.getBinding(service).provider.get()
         } catch (e: Exception) {
             throw IllegalArgumentException("Service could not be resolved.", e)
+        }
+    }
+
+    /**
+     * Creates a new entity from the given class.
+     * Throws a IllegalArgumentException if not found.
+     *
+     * @param entity entityClazz
+     * @param <E>    type
+     * @return entity.
+    </E> */
+    override fun <E> create(entity: Class<E>): E {
+        try {
+            val entityName = entity.simpleName + "Entity"
+            return Class.forName("com.github.shynixn.blockball.bukkit.logic.persistence.entity.$entityName").newInstance() as E
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Entity could not be created.", e)
         }
     }
 }

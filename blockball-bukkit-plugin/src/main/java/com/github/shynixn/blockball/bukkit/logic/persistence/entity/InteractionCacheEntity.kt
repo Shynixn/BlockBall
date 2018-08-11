@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
 import com.github.shynixn.blockball.api.persistence.entity.InteractionCache
-import com.github.shynixn.blockball.api.persistence.entity.StorageLocation
+import com.github.shynixn.blockball.api.persistence.entity.Position
 
 /**
  * Created by Shynixn 2018.
@@ -39,7 +39,7 @@ class InteractionCacheEntity : InteractionCache {
     /**
      * Last Position of the player.
      */
-    override var lastPosition: StorageLocation? = null
+    override var lastPosition: Position? = null
 
     /**
      * Internal movement counter for interactions.

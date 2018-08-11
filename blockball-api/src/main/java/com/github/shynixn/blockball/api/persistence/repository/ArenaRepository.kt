@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.repository
 
 import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.LinkSign
 
 /**
  * Created by Shynixn 2018.
@@ -35,6 +34,11 @@ interface ArenaRepository {
      * Returns all stored arenas in this repository.
      */
     fun getAll(): List<Arena>
+
+    /**
+     * Delets the given arena in the storage.
+     */
+    fun delete(arena: Arena)
 
     /**
      * Saves the given [arena] to the storage.

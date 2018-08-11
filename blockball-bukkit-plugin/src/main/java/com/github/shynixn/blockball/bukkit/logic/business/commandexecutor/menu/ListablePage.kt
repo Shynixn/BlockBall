@@ -4,12 +4,9 @@ import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
 import com.github.shynixn.ball.api.persistence.enumeration.ActionEffect
 import com.github.shynixn.ball.api.persistence.enumeration.BallSize
 import com.github.shynixn.ball.api.persistence.enumeration.EffectingType
-import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.service.TemplateService
-import com.github.shynixn.blockball.api.persistence.entity.BossBarMeta
-import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
-import com.github.shynixn.blockball.api.persistence.entity.RewardMeta
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Sound
@@ -92,7 +89,7 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 cache[3] = BlockBallCommand.BALL_SIZE_CALLBACK
             }
             BlockBallCommand.LIST_COMMANDMODES -> {
-                cache[2] = CommandMeta.CommandMode.values().map { p -> p.name }
+                cache[2] = CommandMode.values().map { p -> p.name }
                 cache[3] = BlockBallCommand.REWARD_CALLBACK_COMMANDMODE
             }
             BlockBallCommand.LIST_PARTICLE_TYPES -> {
@@ -100,11 +97,11 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 cache[3] = BlockBallCommand.PARTICLE_CALLBACK_TYPE
             }
             BlockBallCommand.LIST_REWARDED_MONEY -> {
-                cache[2] = RewardMeta.RewardedAction.values().map { p -> p.name }
+                cache[2] = RewardType.values().map { p -> p.name }
                 cache[3] = BlockBallCommand.REWARD_CALLBACK_MONEY
             }
             BlockBallCommand.LIST_REWARDED_COMMAND -> {
-                cache[2] = RewardMeta.RewardedAction.values().map { p -> p.name }
+                cache[2] = RewardType.values().map { p -> p.name }
                 cache[3] = BlockBallCommand.REWARD_CALLBACK_COMMAND
             }
             BlockBallCommand.LIST_SOUND_TYPES -> {
@@ -117,15 +114,15 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
             }
             BlockBallCommand.LIST_LINES -> cache[3] = BlockBallCommand.MULTILINES_ANY
             BlockBallCommand.LIST_BOSSBARSTYLES -> {
-                cache[2] = BossBarMeta.Style.values().map { p -> p.name }
+                cache[2] = BossbarStyle.values().map { p -> p.name }
                 cache[3] = BlockBallCommand.BOSSBAR_OPEN
             }
             BlockBallCommand.LIST_BOSSBARFLAGS -> {
-                cache[2] = BossBarMeta.Flag.values().map { p -> p.name }
+                cache[2] = BossBarFlag.values().map { p -> p.name }
                 cache[3] = BlockBallCommand.BOSSBAR_CALLBACKFLAGS
             }
             BlockBallCommand.LIST_BOSSBARCOLORS -> {
-                cache[2] = BossBarMeta.Color.values().map { p -> p.name }
+                cache[2] = BossbarColor.values().map { p -> p.name }
                 cache[3] = BlockBallCommand.BOSSBAR_CALLBACKCOLORS
             }
             BlockBallCommand.LIST_HOLOGRAMS -> cache[3] = BlockBallCommand.HOLOGRAM_CALLBACK

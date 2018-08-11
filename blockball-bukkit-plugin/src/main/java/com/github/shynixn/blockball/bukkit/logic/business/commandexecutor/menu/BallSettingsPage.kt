@@ -4,8 +4,8 @@ import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
 import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
 import com.github.shynixn.ball.api.persistence.enumeration.ActionEffect
 import com.github.shynixn.ball.api.persistence.enumeration.BallSize
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.entity.action.ChatBuilder
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.entity.Player
 
 /**
@@ -57,7 +57,7 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val ballMeta = (cache[0] as BukkitArena).meta.ballMeta
+        val ballMeta = (cache[0] as Arena).meta.ballMeta
         if (command == BlockBallCommand.BALL_OPEN) {
             cache[5] = null
         }
@@ -95,7 +95,7 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val ballMeta = (cache[0] as BukkitArena).meta.ballMeta
+        val ballMeta = (cache[0] as Arena).meta.ballMeta
         val builder = ChatBuilder()
                 .component("- Skin: ").builder()
                 .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color).setHoverText(ballMeta.skin).builder()

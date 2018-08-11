@@ -37,7 +37,7 @@ class PlaceHolderRequestEvent(
         /**
          * Result of the placeholder if it could be matched successfully.
          */
-        val result: String?,
+        var result: String?,
         /**
          * Optional player sending the placeholder.
          */

@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.shynixn.blockball.bukkit.logic.persistence.context
 
 import com.github.shynixn.blockball.api.persistence.context.FileContext
@@ -67,7 +69,7 @@ class FileContextImpl @Inject constructor(private val plugin: Plugin) : FileCont
      * Handles locking for asynchronous operations.
      * Creates the file if it does not already exist.
      */
-    override fun loadOrCreateYamlFile(path: Path, yamlPath: String): Map<String, Any> {
+    override fun loadOrCreateYamlFile(path: Path, yamlPath: String, deep: Boolean): Map<String, Any> {
         synchronized(this) {
             try {
                 val file = path.toFile()
@@ -85,7 +87,7 @@ class FileContextImpl @Inject constructor(private val plugin: Plugin) : FileCont
 
                 configuration.load(path.toFile())
 
-                return configuration.getConfigurationSection("signs").getValues(false)
+                return configuration.getConfigurationSection("signs").getValues(deep)
             } catch (e: Exception) {
                 plugin.logger.log(Level.WARNING, "Failed to load file $path with $yamlPath.")
                 throw RuntimeException(e)

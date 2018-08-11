@@ -27,10 +27,7 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Stats {
-    /** Returns the id of the object. */
-    val id: Long
-
+interface Stats : DatabasePersistenceAble {
     /** [amountOfGoals] the player has shot. */
     var amountOfGoals: Int
 
