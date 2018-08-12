@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
 import com.github.shynixn.blockball.api.persistence.entity.Sound
+import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
 
 /**
  * Created by Shynixn 2018.
@@ -33,12 +34,15 @@ class SoundEntity(
         /**
          * Name of the sound.
          */
+        @YamlSerializer.YamlSerialize(value = "name", orderNumber = 1)
         override var name: String = "none",
         /**
          * Pitch of the sound.
          */
+        @YamlSerializer.YamlSerialize(value = "pitch", orderNumber = 2)
         override var pitch: Double = 1.0,
         /**
          * Volume of the sound.
          */
+        @YamlSerializer.YamlSerialize(value = "volume", orderNumber = 3)
         override var volume: Double = 1.0) : Sound

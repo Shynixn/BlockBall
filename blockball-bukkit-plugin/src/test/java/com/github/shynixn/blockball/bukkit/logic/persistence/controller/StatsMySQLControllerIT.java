@@ -78,6 +78,7 @@ public class StatsMySQLControllerIT {
         new File("BlockBall/BlockBall.db").delete();
         when(plugin.getDataFolder()).thenReturn(new File("BlockBall"));
         when(plugin.getConfig()).thenReturn(configuration);
+        when(plugin.getLogger()).thenReturn(Logger.getGlobal());
         when(plugin.getResource(any(String.class))).thenAnswer(invocationOnMock -> {
             final String file = invocationOnMock.getArgument(0);
             return Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
@@ -107,6 +108,8 @@ public class StatsMySQLControllerIT {
             assertEquals(0, controller.getCount());
 
             final PlayerMeta playerMeta = new PlayerMetaEntity();
+            playerMeta.setName(player.getName());
+            playerMeta.setUuid(player.getUniqueId());
             playerController.store(playerMeta);
             ((StatsEntity) meta).setPlayerId(playerMeta.getId());
             meta.setAmountOfWins(2);
@@ -139,6 +142,8 @@ public class StatsMySQLControllerIT {
             Stats stats = new StatsEntity();
 
             final PlayerMeta playerMeta = new PlayerMetaEntity();
+            playerMeta.setName(player.getName());
+            playerMeta.setUuid(player.getUniqueId());
             playerController.store(playerMeta);
 
             ((StatsEntity) stats).setPlayerId(playerMeta.getId());

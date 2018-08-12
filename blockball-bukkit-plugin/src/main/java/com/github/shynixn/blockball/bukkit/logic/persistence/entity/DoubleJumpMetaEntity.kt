@@ -47,11 +47,10 @@ class DoubleJumpMetaEntity : DoubleJumpMeta {
     @YamlSerializer.YamlSerialize(orderNumber = 4, value = "horizontal-strength")
     override var horizontalStrength: Double = 2.0
     /** ParticleEffect being played when activating this.*/
-    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "particle-effect", classicSerialize = YamlSerializer.ManualSerialization.CONSTRUCTOR)
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "particle-effect", implementation = ParticleEntity::class)
     override val particleEffect: Particle = ParticleEntity(ParticleType.EXPLOSION_NORMAL)
-
     /** SoundEffect being played when activating this.*/
-    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "sound-effect", classicSerialize = YamlSerializer.ManualSerialization.CONSTRUCTOR)
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "sound-effect",implementation = SoundEntity::class)
     override val soundEffect: Sound = SoundEntity("GHAST_FIREBALL", 100.0, 1.0)
 
     init {

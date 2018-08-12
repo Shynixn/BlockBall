@@ -64,7 +64,7 @@ public class PlayerMetaSQLiteControllerIT {
             assertEquals(0, controller.getCount());
 
             playerMeta.setUuid(uuid);
-            controller.store(playerMeta);
+            assertThrows(IllegalArgumentException.class, () -> controller.store(playerMeta));
             assertEquals(0, controller.getCount());
 
             playerMeta.setName("Sample");

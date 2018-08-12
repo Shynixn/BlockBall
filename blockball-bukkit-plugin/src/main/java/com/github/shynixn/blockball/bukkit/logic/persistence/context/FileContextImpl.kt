@@ -85,9 +85,7 @@ class FileContextImpl @Inject constructor(private val plugin: Plugin) : FileCont
                     throw IllegalArgumentException("Yamlfile $path does not contain path $yamlPath.")
                 }
 
-                configuration.load(path.toFile())
-
-                return configuration.getConfigurationSection("signs").getValues(deep)
+                return configuration.getConfigurationSection(yamlPath).getValues(deep)
             } catch (e: Exception) {
                 plugin.logger.log(Level.WARNING, "Failed to load file $path with $yamlPath.")
                 throw RuntimeException(e)

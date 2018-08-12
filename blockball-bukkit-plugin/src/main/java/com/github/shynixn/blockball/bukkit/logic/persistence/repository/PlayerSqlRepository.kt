@@ -115,6 +115,10 @@ class PlayerSqlRepository @Inject constructor(dbContext: SqlDbContextImpl, priva
      */
     override fun insert(item: PlayerMeta) {
         try {
+            if (item.name.isEmpty()) {
+                throw IllegalArgumentException("Name cannot be empty!")
+            }
+
             this.dbContext.connection.use { connection ->
                 val id = this.dbContext.executeStoredInsert("player/insert", connection,
                         item.name, item.uuid.toString()).toLong()

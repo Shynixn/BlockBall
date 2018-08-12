@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PlayerMetaEn
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.Warning;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.AfterAll;
@@ -99,7 +100,7 @@ public class PlayerMetaMySQLControllerIT {
             assertEquals(0, controller.getCount());
 
             playerMeta.setUuid(uuid);
-            controller.store(playerMeta);
+            assertThrows(IllegalArgumentException.class, () -> controller.store(playerMeta));
             assertEquals(0, controller.getCount());
 
             playerMeta.setName("Sample");

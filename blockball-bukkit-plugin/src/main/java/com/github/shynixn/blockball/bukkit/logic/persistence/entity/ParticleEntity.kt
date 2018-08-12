@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 import com.github.shynixn.blockball.api.business.enumeration.ParticleColor
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.persistence.entity.Particle
+import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
 
 /**
  * Created by Shynixn 2018.
@@ -31,7 +32,9 @@ import com.github.shynixn.blockball.api.persistence.entity.Particle
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ParticleEntity(override var type: ParticleType = ParticleType.NONE) : Particle {
+class ParticleEntity(
+        @YamlSerializer.YamlSerialize(value = "name", orderNumber = 1)
+        override var type: ParticleType = ParticleType.NONE) : Particle {
     /**
      * Database Id.
      */
@@ -39,31 +42,38 @@ class ParticleEntity(override var type: ParticleType = ParticleType.NONE) : Part
     /**
      * Amount of particles.
      */
+    @YamlSerializer.YamlSerialize(value = "amount", orderNumber = 2)
     override var amount: Int = 1
     /**
      * Particle speed.
      */
+    @YamlSerializer.YamlSerialize(value = "speed", orderNumber = 3)
     override var speed: Double = 1.0
     /**
      * Offset for the x coordinate.
      */
+    @YamlSerializer.YamlSerialize(value = "offset.x", orderNumber = 4)
     override var offSetX: Double = 1.0
     /**
      * Offset for the y coordinate.
      */
+    @YamlSerializer.YamlSerialize(value = "offset.y", orderNumber = 5)
     override var offSetY: Double = 1.0
     /**
      * Offset for the z coordinate.
      */
+    @YamlSerializer.YamlSerialize(value = "offset.u", orderNumber = 6)
     override var offSetZ: Double = 1.0
 
     /**
      * Material value.
      */
+    @YamlSerializer.YamlSerialize(value = "material", orderNumber = 7)
     override var materialName: String? = null
     /**
      * Data value.
      */
+    @YamlSerializer.YamlSerialize(value = "data", orderNumber = 8)
     override var data: Int = 0
 
     /**
