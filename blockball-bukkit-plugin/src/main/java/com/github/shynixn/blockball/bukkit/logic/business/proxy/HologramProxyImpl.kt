@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
-import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.business.proxy.HologramProxy
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
 import org.bukkit.Location
@@ -35,7 +34,7 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class HologramProxyImpl(private val plugin: Plugin, private var location: Location) : HologramProxy, Runnable {
+class HologramProxyImpl(private val plugin: Plugin, private val version : com.github.shynixn.blockball.api.business.enumeration.Version, private var location: Location) : HologramProxy, Runnable {
     companion object {
         /**
          * Max distance when holograms should be visible to.
@@ -47,7 +46,6 @@ class HologramProxyImpl(private val plugin: Plugin, private var location: Locati
         const val REFRESH_RATE = 60L
     }
 
-    private val version = VersionSupport.getServerVersion()
     private val armorstands = ArrayList<ArmorStand>()
     private val watchers = HashMap<Player, Boolean>()
     private val bukkitTask = plugin.server.scheduler.runTaskTimerAsynchronously(plugin, this, 0L, REFRESH_RATE)
@@ -240,6 +238,6 @@ class HologramProxyImpl(private val plugin: Plugin, private var location: Locati
     }
 
     private fun findClazz(classPath: String): Class<*> {
-        return Class.forName(classPath.replace("VERSION", version.versionText))
+        return Class.forName(classPath.replace("VERSION", version.bukkitId))
     }
 }

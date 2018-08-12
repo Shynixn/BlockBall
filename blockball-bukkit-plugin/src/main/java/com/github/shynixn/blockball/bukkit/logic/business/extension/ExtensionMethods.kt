@@ -3,10 +3,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.extension
 
 import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
-import com.github.shynixn.blockball.api.business.enumeration.GameStatus
-import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.business.enumeration.Permission
-import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
+import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.proxy.HighlightArmorstandProxy
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
@@ -62,6 +59,13 @@ inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long 
             f.invoke()
         }, delayTicks)
     }
+}
+
+/**
+ * Finds the corresponding version.
+ */
+fun VersionSupport.toVersion(): Version {
+    return Version.values().find { v -> this.simpleVersionText == v.id }!!
 }
 
 /**

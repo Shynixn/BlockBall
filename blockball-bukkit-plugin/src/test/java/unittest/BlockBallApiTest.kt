@@ -66,7 +66,7 @@ class BlockBallApiTest {
      *     plugin Proxy resolve should be called.
      */
     @Test
-    fun resolve_ValidPluginAndEntityClass_ShouldCallProxy() {
+    fun create_ValidPluginAndEntityClass_ShouldCallProxy() {
         // Arrange
         val proxy = MockedPluginProxy()
         val classUnderTest = createWithDependencies(proxy)
