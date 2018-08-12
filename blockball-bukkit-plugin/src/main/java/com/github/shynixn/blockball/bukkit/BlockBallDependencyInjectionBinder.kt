@@ -1,15 +1,23 @@
 package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.persistence.context.FileContext
+import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
+import com.github.shynixn.blockball.api.persistence.repository.ServerSignRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
+import com.github.shynixn.blockball.bukkit.logic.persistence.context.FileContextImpl
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ParticleServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.ArenaFileRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository
+import com.github.shynixn.blockball.bukkit.logic.persistence.repository.ServerSignFileRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
+import com.google.inject.TypeLiteral
 import org.bukkit.plugin.Plugin
 
 /**
@@ -51,8 +59,10 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java)
         bind(PlayerRepository::class.java).to(PlayerSqlRepository::class.java)
         bind(StatsRepository::class.java).to(StatsSqlRepository::class.java)
+        bind(ServerSignRepository::class.java).to(ServerSignFileRepository::class.java)
 
         // Services
+        bind(FileContext::class.java).to(FileContextImpl::class.java)
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java)
         bind(VirtualArenaService::class.java).to(VirtualArenaServiceImpl::class.java)
         bind(ScoreboardService::class.java).to(ScoreboardServiceImpl::class.java)
@@ -60,6 +70,19 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(UpdateCheckService::class.java).to(UpdateCheckServiceImpl::class.java)
         bind(ConfigurationService::class.java).to(ConfigurationServiceImpl::class.java)
         bind(StatsCollectingService::class.java).to(StatsCollectingServiceImpl::class.java)
+        bind(ParticleService::class.java).to(ParticleServiceImpl::class.java)
+        bind(SoundService::class.java).to(SoundServiceImpl::class.java)
+        bind(BossBarService::class.java).to(BossBarServiceImpl::class.java)
+        bind(HologramService::class.java).to(HologramServiceImpl::class.java)
+
+        // Singleton Services
+        bind(object : TypeLiteral<GameActionService<Game>>() {}).to(object : TypeLiteral<GameActionServiceImpl<Game>>() {}).`in`(Scopes.SINGLETON)
+        bind(object : TypeLiteral<GameSoccerService<Game>>() {}).to(object : TypeLiteral<GameSoccerServiceImpl<Game>>() {}).`in`(Scopes.SINGLETON)
+        bind(object : TypeLiteral<GameMiniGameActionService<MiniGame>>() {}).to(object : TypeLiteral<GameMiniGameActionServiceImpl>() {}).`in`(Scopes.SINGLETON)
+        bind(GameService::class.java).to(GameServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(GameHubGameActionService::class.java).to(GameHubGameActionServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(GameMiniGameActionService::class.java).to(GameMiniGameActionServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(GameBungeeCordGameActionService::class.java).to(GameBungeeCordGameActionServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(RightclickManageService::class.java).to(RightclickManageServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(HubGameForcefieldService::class.java).to(HubGameForcefieldServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(DoubleJumpService::class.java).to(DoubleJumpServiceImpl::class.java).`in`(Scopes.SINGLETON)

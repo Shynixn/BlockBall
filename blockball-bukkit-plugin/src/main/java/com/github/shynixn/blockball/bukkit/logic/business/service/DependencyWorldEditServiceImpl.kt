@@ -3,6 +3,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.DependencyWorldEditService
+import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -37,7 +38,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class DependencyWorldEditServiceImpl(private val plugin: Plugin) : DependencyWorldEditService {
+class DependencyWorldEditServiceImpl @Inject constructor(private val plugin: Plugin) : DependencyWorldEditService {
     /**
      * Returns the leftclick worledit selection of the given [player].
      */

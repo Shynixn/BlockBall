@@ -106,7 +106,9 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             val gameService = resolve(GameService::class.java)
             gameService.restartGames()
 
-            BlockBallApi::class.java.getDeclaredMethod("initializeBlockBall", PluginProxy::class.java).invoke(this)
+            val method = BlockBallApi::class.java.getDeclaredMethod("initializeBlockBall", PluginProxy::class.java)
+            method.isAccessible = true
+            method.invoke(BlockBallApi, this)
             coreManager = CoreManager(this, "storage.yml", "ball.yml")
             logger.log(Level.INFO, "Using NMS Connector " + VersionSupport.getServerVersion().versionText + ".")
         } catch (e: Exception) {

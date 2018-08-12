@@ -31,12 +31,16 @@ import org.bukkit.event.HandlerList
  * SOFTWARE.
  */
 open class BlockBallEvent : Event() {
+    /**
+     * Event.
+     */
     companion object {
         private var handlers = HandlerList()
 
         /**
          * Handlerlist.
          */
+        @JvmStatic
         fun getHandlerList(): HandlerList {
             return handlers
         }

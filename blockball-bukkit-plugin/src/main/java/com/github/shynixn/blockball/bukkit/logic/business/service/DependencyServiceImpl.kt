@@ -65,8 +65,8 @@ class DependencyServiceImpl @Inject constructor(private val placeholderApiServic
         if (isInstalled(pluginDependency)) {
             val plugin = Bukkit.getPluginManager().getPlugin(pluginDependency.pluginName)
 
-            Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "found dependency [" + plugin.name + "].")
-            Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "successfully loaded dependency [" + plugin.name + "] " + plugin.description.version + '.')
+            Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.DARK_GREEN + "found dependency [" + plugin.name + "].")
+            Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.DARK_GREEN + "successfully loaded dependency [" + plugin.name + "] " + plugin.description.version + '.')
         }
     }
 }
