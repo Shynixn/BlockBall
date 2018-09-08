@@ -87,10 +87,10 @@ class TeamMetaEntity(
     override var signLines: List<String> = arrayListOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, PlaceHolder.ARENA_TEAMCOLOR.placeHolder + PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder + '/' + PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder)
     /** Armor wearing this team. */
     @YamlSerializer.YamlSerialize(orderNumber = 8, value = "armor", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION, implementation = ItemStack::class, arraySize = 4)
-    override var armorContents: Array<Any?> = arrayOfNulls(4)
+    override var armorContents: Array<Any?> = arrayOfNulls<ItemStack>(41) as Array<Any?>
     /** Inventory this team is getting when playing. */
     @YamlSerializer.YamlSerialize(orderNumber = 9, value = "inventory", classicSerialize = YamlSerializer.ManualSerialization.DESERIALIZE_FUNCTION, implementation = ItemStack::class, arraySize = 36)
-    override var inventoryContents: Array<Any?> = arrayOfNulls(41)
+    override var inventoryContents: Array<Any?> = arrayOfNulls<ItemStack>(41) as Array<Any?>
     /** Spawnpoint of the team inside of the arena. */
     @YamlSerializer.YamlSerialize(orderNumber = 6, value = "spawnpoint", implementation = PositionEntity::class)
     override var spawnpoint: Position? = null

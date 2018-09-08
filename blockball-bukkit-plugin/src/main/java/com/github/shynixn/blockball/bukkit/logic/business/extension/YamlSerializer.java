@@ -278,7 +278,7 @@ public final class YamlSerializer {
             if (data.get(key) == null) {
                 objects[orderPlace] = null;
             } else if (annotation.classicSerialize() == ManualSerialization.DESERIALIZE_FUNCTION) {
-                objects[orderPlace] = (T) deserializeObjectBukkit(clazz, ((MemorySection) data.get(key)).getValues(false));
+                objects[orderPlace] = (T) deserializeObjectBukkit(annotation.implementation(), ((MemorySection) data.get(key)).getValues(false));
             } else if (isPrimitive(data.get(key).getClass())) {
                 objects[orderPlace] = (T) data.get(key);
             } else {
@@ -399,7 +399,11 @@ public final class YamlSerializer {
                                     field.set(object, deserializeObjectBukkit(field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                                 } else {
                                     if (field.get(object) != null) {
-                                        heavyDeserialize(field.get(object), field.getType(), getDataFromSource(((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                        if (yamlAnnotation.implementation() != Object.class) {
+                                            heavyDeserialize(field.get(object), yamlAnnotation.implementation(), getDataFromSource(((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                        } else {
+                                            heavyDeserialize(field.get(object), field.getType(), getDataFromSource(((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
+                                        }
                                     } else {
                                         field.set(object, deserializeObject(field.getType(), yamlAnnotation.implementation(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                                     }

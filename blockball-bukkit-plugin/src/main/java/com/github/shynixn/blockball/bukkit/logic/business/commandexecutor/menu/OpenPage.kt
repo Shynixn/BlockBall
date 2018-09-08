@@ -33,7 +33,7 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class OpenPage : Page(OpenPage.ID, OpenPage.ID) {
+class OpenPage @Inject constructor(private val arenaRepository: PersistenceArenaService) : Page(OpenPage.ID, OpenPage.ID) {
     /**
      * Returns the key of the command when this page should be executed.
      *
@@ -48,9 +48,6 @@ class OpenPage : Page(OpenPage.ID, OpenPage.ID) {
         const val ID = 1
     }
 
-    @Inject
-    private lateinit var arenaRepository: PersistenceArenaService
-
     /**
      * Executes actions for this page.
      *
@@ -60,7 +57,7 @@ class OpenPage : Page(OpenPage.ID, OpenPage.ID) {
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
         if (command == BlockBallCommand.OPEN_EDIT_ARENA) {
             var builder: ChatBuilder? = null
-            for (arena in this.arenaRepository.getAll().get()) {
+            for (arena in this.arenaRepository.getArenas()) {
                 if (builder == null) {
                     builder = ChatBuilder()
                 }
@@ -75,7 +72,7 @@ class OpenPage : Page(OpenPage.ID, OpenPage.ID) {
             return CommandResult.CANCEL_MESSAGE
         } else if (command == BlockBallCommand.OPEN_DELETE_ARENA) {
             var builder: ChatBuilder? = null
-            for (arena in this.arenaRepository.getAll().get()) {
+            for (arena in this.arenaRepository.getArenas()) {
                 if (builder == null) {
                     builder = ChatBuilder()
                 }

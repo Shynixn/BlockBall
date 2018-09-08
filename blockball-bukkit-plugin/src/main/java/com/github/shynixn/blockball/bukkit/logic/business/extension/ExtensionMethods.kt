@@ -1,4 +1,4 @@
-@file:Suppress("unused")
+@file:Suppress("unused", "DEPRECATION")
 
 package com.github.shynixn.blockball.bukkit.logic.business.extension
 
@@ -72,14 +72,14 @@ fun VersionSupport.toVersion(): Version {
  * Updates this inventory.
  */
 fun PlayerInventory.updateInventory() {
-    Player::class.java.getDeclaredMethod("updateInventory").invoke(this)
+    (this.holder as Player).updateInventory()
 }
 
 /**
  * Is the player touching the ground?
  */
 fun Player.isTouchingGround(): Boolean {
-    return Player::class.java.getDeclaredMethod("isOnGround").invoke(this) as Boolean
+    return this.isOnGround
 }
 
 /**

@@ -32,9 +32,14 @@ import java.util.concurrent.CompletableFuture
  */
 interface PersistenceArenaService {
     /**
-     * Returns all stored arenas.
+     * Refreshes the runtime cache of arenas.
      */
-    fun getAll(): CompletableFuture<List<Arena>>
+    fun refresh(): CompletableFuture<Void>
+
+    /**
+     * Accesses the cached arenas.
+     */
+    fun getArenas(): List<Arena>
 
     /**
      * Removes the given [arena].

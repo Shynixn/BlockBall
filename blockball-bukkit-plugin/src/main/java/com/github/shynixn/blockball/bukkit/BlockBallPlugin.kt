@@ -10,7 +10,7 @@ import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.DependencyService
 import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.UpdateCheckService
-import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.BungeeCordSignCommandExecutor
+import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.*
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -69,7 +69,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             Bukkit.getPluginManager().disablePlugin(this)
         } else {
             this.reloadConfig()
-
             // Register Listeners
             Bukkit.getPluginManager().registerEvents(resolve(GameListener::class.java), this)
             Bukkit.getPluginManager().registerEvents(resolve(HubgameListener::class.java), this)
@@ -78,7 +77,13 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             Bukkit.getPluginManager().registerEvents(resolve(StatsListener::class.java), this)
 
             // Register CommandExecutor
+            resolve(ArenaCommandExecutor::class.java)
             resolve(BungeeCordSignCommandExecutor::class.java)
+            resolve(JoinCommandExecutor::class.java)
+            resolve(LeaveCommandExecutor::class.java)
+            resolve(ReloadCommandExecutor::class.java)
+            resolve(SpectateCommandExecutor::class.java)
+            resolve(StopCommandExecutor::class.java)
 
             val updateCheker = resolve(UpdateCheckService::class.java)
             val dependencyChecker = resolve(DependencyService::class.java)

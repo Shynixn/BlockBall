@@ -154,8 +154,8 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
         player.allowFlight = false
         player.isFlying = false
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()
-        player.inventory.contents = teamMeta.inventoryContents.clone() as Array<ItemStack?>
-        player.inventory.armorContents = teamMeta.armorContents.clone() as Array<ItemStack?>
+        player.inventory.contents = teamMeta.inventoryContents.clone().map { d -> d as ItemStack? }.toTypedArray()
+        player.inventory.armorContents = teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray()
         player.inventory.updateInventory()
 
         if (teamMeta.spawnpoint == null) {

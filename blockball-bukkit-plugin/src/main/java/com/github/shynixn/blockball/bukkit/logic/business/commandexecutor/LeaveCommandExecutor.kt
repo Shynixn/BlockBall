@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 import com.github.shynixn.blockball.api.business.service.GameActionService
 import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.persistence.entity.Game
-import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -36,7 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class LeaveCommandExecutor @Inject constructor(plugin: Plugin, private val gameService: GameService, private val gameActionService: GameActionService<Game>, private val minigameActionService: GameActionService<MiniGame>) : SimpleCommandExecutor.UnRegistered(plugin.config.get("global-leave"), plugin as JavaPlugin) {
+class LeaveCommandExecutor @Inject constructor(plugin: Plugin, private val gameService: GameService, private val gameActionService: GameActionService<Game>) : SimpleCommandExecutor.UnRegistered(plugin.config.get("global-leave"), plugin as JavaPlugin) {
     /**
      * Can be overwritten to listen to player executed commands.
      *

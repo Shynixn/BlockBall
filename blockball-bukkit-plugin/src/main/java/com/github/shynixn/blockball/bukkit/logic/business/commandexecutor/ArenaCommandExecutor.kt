@@ -223,9 +223,12 @@ class ArenaCommandExecutor @Inject constructor(plugin: Plugin, private val confi
 
             player.sendMessage(FOOTER_STANDARD)
         } catch (e: Exception) {
+            e.printStackTrace()
             val prefix = configurationService.findValue<String>("messages.prefix")
             player.sendMessage(prefix + "Cannot find command.")
-            plugin.logger.log(Level.INFO, "Cannot find command for args $args.")
+            val data = StringBuilder()
+            args.map { d -> data.append(d).append(" ") }
+            plugin.logger.log(Level.INFO, "Cannot find command for args $data.")
         }
     }
 

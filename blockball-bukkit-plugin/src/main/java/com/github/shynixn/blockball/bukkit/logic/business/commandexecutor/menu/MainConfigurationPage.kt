@@ -37,14 +37,11 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class MainConfigurationPage @Inject constructor(private val configurationService: ConfigurationService) : Page(MainConfigurationPage.ID, OpenPage.ID) {
+class MainConfigurationPage @Inject constructor(private val configurationService: ConfigurationService, private val arenaRepository: PersistenceArenaService) : Page(MainConfigurationPage.ID, OpenPage.ID) {
     companion object {
         /** Id of the page. */
         const val ID = 2
     }
-
-    @Inject
-    private lateinit var arenaRepository: PersistenceArenaService
 
     @Inject
     private lateinit var virtualArenaService: VirtualArenaService
@@ -79,11 +76,11 @@ class MainConfigurationPage @Inject constructor(private val configurationService
         if (command == BlockBallCommand.ARENA_CREATE) {
 
         } else if (command == BlockBallCommand.ARENA_EDIT) {
-            val arenas = arenaRepository.getAll().get()
-            cache[0] = arenas.filter { b -> b.name.equals(args[2], true) }
+            val arenas = arenaRepository.getArenas()
+            cache[0] = arenas.single { b -> b.name.equals(args[2], true) }
         } else if (command == BlockBallCommand.ARENA_DELETE) {
-            val arenas = arenaRepository.getAll().get()
-            cache[0] = arenas.filter { b -> b.name.equals(args[2], true) }
+            val arenas = arenaRepository.getArenas()
+            cache[0] = arenas.single { b -> b.name.equals(args[2], true) }
             arenaRepository.remove(cache[0] as Arena)
             return CommandResult.BACK
         } else if (command == BlockBallCommand.ARENA_ENABLE) {
@@ -127,6 +124,13 @@ class MainConfigurationPage @Inject constructor(private val configurationService
                 return CommandResult.WESELECTION_MISSING
             }
         } else if (command == BlockBallCommand.ARENA_SAVE) {
+            if (cache[0] == null || cache[0] !is Arena) {
+                ChatBuilder().text("- ").text(ChatColor.RED.toString() + "Please select an arena to perform this action.")
+                        .sendMessage(player)
+
+                return CommandResult.CANCEL_MESSAGE
+            }
+
             val arena = cache[0] as Arena
             if (arena.lowerCorner.worldName != null && arena.meta.blueTeamMeta.goal.lowerCorner.worldName != null && arena.meta.redTeamMeta.goal.lowerCorner.worldName != null
                     && arena.meta.ballMeta.spawnpoint != null) {
@@ -139,14 +143,20 @@ class MainConfigurationPage @Inject constructor(private val configurationService
                 return CommandResult.ARENA_NOTVALID
             }
         } else if (command == BlockBallCommand.ARENA_RELOAD) {
+            if (cache[0] == null || cache[0] !is Arena) {
+                ChatBuilder().text("- ").text(ChatColor.RED.toString() + "Please select an arena to perform this action.")
+                        .sendMessage(player)
+
+                return CommandResult.CANCEL_MESSAGE
+            }
+
             val arena = cache[0] as Arena
             if (arena.lowerCorner.worldName != null && arena.meta.blueTeamMeta.goal.lowerCorner.worldName != null && arena.meta.redTeamMeta.goal.lowerCorner.worldName != null
                     && arena.meta.ballMeta.spawnpoint != null) {
                 if (arena.gameType === GameType.HUBGAME || (arena.meta.minigameMeta.lobbySpawnpoint != null && arena.meta.lobbyMeta.leaveSpawnpoint != null)) {
-                    arenaRepository.save(arena)
-                    gameService.restartGames()
-                    val newArena = gameService.getGameFromName(arena.name)
-                    cache[0] = newArena.get()
+                    arenaRepository.save(arena).thenAccept {
+                        gameService.restartGames()
+                    }
                 } else {
                     return CommandResult.MINIGAMEARENA_NOTVALID
                 }
@@ -194,7 +204,7 @@ class MainConfigurationPage @Inject constructor(private val configurationService
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ARENA_ENABLE.command)
                 .setHoverText("Toggle the arena.")
                 .builder().nextLine()
-                .component("- Center: $corners").builder()
+                .component("- Field: $corners").builder()
                 .component(" [worldedit..]").setColor(ChatColor.GOLD)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ARENA_SETAREA.command)
                 .setHoverText("Uses the selected worldedit blocks to span the field of the arena.")

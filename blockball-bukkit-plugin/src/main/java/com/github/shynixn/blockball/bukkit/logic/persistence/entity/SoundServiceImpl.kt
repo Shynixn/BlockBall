@@ -99,6 +99,9 @@ class SoundServiceImpl @Inject constructor(private val plugin: Plugin) : SoundSe
                 "EXPLODE" -> {
                     return "ENTITY_GENERIC_EXPLODE"
                 }
+                "GHAST_FIREBALL" -> {
+                    return "ENTITY_GHAST_SHOOT"
+                }
 
                 "EAT" -> {
                     return "ENTITY_GENERIC_EAT"

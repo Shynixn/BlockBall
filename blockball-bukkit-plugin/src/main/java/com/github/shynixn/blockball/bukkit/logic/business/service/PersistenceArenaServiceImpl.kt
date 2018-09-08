@@ -38,27 +38,35 @@ import java.util.concurrent.CompletableFuture
  * SOFTWARE.
  */
 class PersistenceArenaServiceImpl @Inject constructor(private val plugin: Plugin, private val arenaRepository: ArenaRepository) : PersistenceArenaService {
-    private var cache: HashSet<Arena>? = null
+    private var cache: HashSet<Arena> = HashSet()
 
     /**
-     * Returns all stored arenas.
+     * Refreshes the runtime cache of arenas.
      */
-    override fun getAll(): CompletableFuture<List<Arena>> {
-        val completableFuture = CompletableFuture<List<Arena>>()
+    override fun refresh(): CompletableFuture<Void> {
+        val completableFuture = CompletableFuture<Void>()
 
         async(plugin) {
-            if (cache == null) {
-                refreshCache()
+            synchronized(cache) {
+                cache.clear()
+                cache.addAll(arenaRepository.getAll())
             }
 
-            val arenas = cache
-
             sync(plugin) {
-                completableFuture.complete(arenas!!.toList())
+                completableFuture.complete(null)
             }
         }
 
         return completableFuture
+    }
+
+    /**
+     * Accesses the cached arenas.
+     */
+    override fun getArenas(): List<Arena> {
+        synchronized(cache) {
+            return cache.toList()
+        }
     }
 
     /**
@@ -68,13 +76,9 @@ class PersistenceArenaServiceImpl @Inject constructor(private val plugin: Plugin
         val completableFuture = CompletableFuture<Void>()
 
         async(plugin) {
-            if (cache == null) {
-                refreshCache()
-            }
-
-            synchronized(this) {
-                if (this.cache!!.contains(arena)) {
-                    cache!!.remove(arena)
+            synchronized(cache) {
+                if (this.cache.contains(arena)) {
+                    cache.remove(arena)
                 }
             }
 
@@ -95,12 +99,8 @@ class PersistenceArenaServiceImpl @Inject constructor(private val plugin: Plugin
         val completableFuture = CompletableFuture<Void>()
 
         async(plugin) {
-            if (cache == null) {
-                refreshCache()
-            }
-
-            synchronized(this) {
-                cache!!.add(arena)
+            synchronized(cache) {
+                cache.add(arena)
             }
 
             arenaRepository.save(arena)
@@ -111,16 +111,5 @@ class PersistenceArenaServiceImpl @Inject constructor(private val plugin: Plugin
         }
 
         return completableFuture
-    }
-
-    private fun refreshCache() {
-        if (cache == null) {
-            cache = HashSet()
-        }
-
-        synchronized(this) {
-            cache!!.clear()
-            cache!!.addAll(arenaRepository.getAll())
-        }
     }
 }

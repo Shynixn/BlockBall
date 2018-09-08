@@ -46,7 +46,7 @@ class HighlightArmorstandProxyImpl(private val uuid: UUID, initialLocation: Loca
 
     init {
         val player = Bukkit.getPlayer(uuid)
-        val armorstandConstructor = findClazz("net.minecraft.server.VERSION.EntityArmorstand").getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.World"))
+        val armorstandConstructor = findClazz("net.minecraft.server.VERSION.EntityArmorStand").getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.World"))
         val nmsWorld = findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld").getDeclaredMethod("getHandle").invoke(player.world)
         val nmsArmorstand = armorstandConstructor.newInstance(nmsWorld)
         armorstand = findClazz("net.minecraft.server.VERSION.Entity").getDeclaredMethod("getBukkitEntity").invoke(nmsArmorstand) as ArmorStand
@@ -56,11 +56,12 @@ class HighlightArmorstandProxyImpl(private val uuid: UUID, initialLocation: Loca
         val nbtTagCompound = nbtTagClazz.newInstance()
         val nbtTagBooleanMethod = nbtTagClazz.getDeclaredMethod("setBoolean", String::class.java, Boolean::class.java)
 
-        nbtTagBooleanMethod.invoke("invulnerable", true)
-        nbtTagBooleanMethod.invoke("Invisible", true)
-        nbtTagBooleanMethod.invoke("PersistenceRequired", true)
-        nbtTagBooleanMethod.invoke("NoBasePlate", true)
+        nbtTagBooleanMethod.invoke(nbtTagCompound, "invulnerable", true)
+        nbtTagBooleanMethod.invoke(nbtTagCompound, "Invisible", true)
+        nbtTagBooleanMethod.invoke(nbtTagCompound, "PersistenceRequired", true)
+        nbtTagBooleanMethod.invoke(nbtTagCompound, "NoBasePlate", true)
 
+        applyNbtMethod.isAccessible = true;
         applyNbtMethod.invoke(nmsArmorstand, nbtTagCompound)
         val itemStack = ItemStack(Material.STAINED_GLASS_PANE, 1)
 
@@ -72,9 +73,9 @@ class HighlightArmorstandProxyImpl(private val uuid: UUID, initialLocation: Loca
         }
 
         try {
-            val method = Class.forName("org.bukkit.entity.Entity").getDeclaredMethod("setGlowing")
+            val method = Class.forName("org.bukkit.entity.Entity").getDeclaredMethod("setGlowing", Boolean::class.java)
             method.invoke(armorstand, true)
-        } catch (e: NoSuchMethodError) {
+        } catch (e: Exception) {
 
         }
 
@@ -90,11 +91,11 @@ class HighlightArmorstandProxyImpl(private val uuid: UUID, initialLocation: Loca
                 .newInstance(getNMSArmorstand())
 
         @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
-        val enumTimesValue = java.lang.Enum.valueOf<Any>(Class.forName("net.minecraft.server.VERSION.EnumItemSlot") as Class<Any>, "HEAD")
+        val enumTimesValue = java.lang.Enum.valueOf<Any>(findClazz("net.minecraft.server.VERSION.EnumItemSlot") as Class<Any>, "HEAD")
 
         val packetEquipment = findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityEquipment")
-                .getDeclaredConstructor(Int::class.java, Class.forName("net.minecraft.server.VERSION.EnumItemSlot"), Class.forName("net.minecraft.server.VERSION.ItemStack"))
-                .newInstance(armorstand.entityId, enumTimesValue, Class.forName("org.bukkit.craftbukkit.VERSION.inventory.CraftItemStack")
+                .getDeclaredConstructor(Int::class.java, findClazz("net.minecraft.server.VERSION.EnumItemSlot"), findClazz("net.minecraft.server.VERSION.ItemStack"))
+                .newInstance(armorstand.entityId, enumTimesValue,findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftItemStack")
                         .getDeclaredMethod("asNMSCopy", ItemStack::class.java).invoke(null, armorstand.helmet))
 
 
@@ -119,8 +120,8 @@ class HighlightArmorstandProxyImpl(private val uuid: UUID, initialLocation: Loca
      */
     override fun remove() {
         val packetEntityDestroy = findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy")
-                .getDeclaredConstructor(Int::class.java)
-                .newInstance(armorstand.entityId)
+                .getDeclaredConstructor(IntArray::class.java)
+                .newInstance(intArrayOf(armorstand.entityId))
 
         val player = Bukkit.getPlayer(uuid)
         player.sendPacket(packetEntityDestroy)

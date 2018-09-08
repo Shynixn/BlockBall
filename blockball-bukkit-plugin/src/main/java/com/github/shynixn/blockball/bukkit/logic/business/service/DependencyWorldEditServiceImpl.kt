@@ -68,10 +68,10 @@ class DependencyWorldEditServiceImpl @Inject constructor(private val plugin: Plu
         try {
             val clazz = Class.forName("com.sk89q.worldedit.bukkit.WorldEditPlugin")
             val plugin = Bukkit.getPluginManager().getPlugin("WorldEdit")
-            val selection = clazz.getDeclaredMethod("getSelection").invoke(plugin, player)
+            val selection = clazz.getDeclaredMethod("getSelection", Player::class.java).invoke(plugin, player)
 
             if (selection != null) {
-                Optional.of(Class.forName("com.sk89q.worldedit.bukkit.selections.RegionSelection").getDeclaredMethod(name).invoke(selection))
+                return Optional.of(Class.forName("com.sk89q.worldedit.bukkit.selections.RegionSelection").getDeclaredMethod(name).invoke(selection)) as Optional<Location>
             }
         } catch (e: Exception) {
             plugin.logger.log(Level.WARNING, "Failed to gather selection from worldedit.", e)

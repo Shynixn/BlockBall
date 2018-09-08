@@ -49,7 +49,7 @@ class ScreenMessageServiceImpl  @Inject constructor() : ScreenMessageService {
         val finalTitle = title.convertChatColors()
         val finalSubTitle = subTitle.convertChatColors()
 
-        val serializerMethod = findClazz("net.minecraft.server.VERSION.IChatBaseComponent.ChatSerializer").getDeclaredMethod("a", String::class.java)
+        val serializerMethod = findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod("a", String::class.java)
         val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
         val titleActionClazz = findClazz("net.minecraft.server.VERSION.PacketPlayOutTitle.EnumTitleAction")
         val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutTitle").getDeclaredConstructor(titleActionClazz, chatBaseComponentClazz, Int::class.java, Int::class.java, Int::class.java)
@@ -97,17 +97,17 @@ class ScreenMessageServiceImpl  @Inject constructor() : ScreenMessageService {
             val chatMessageClazz = findClazz("net.minecraft.server.VERSION.ChatMessageType")
             val chatMessageType = chatMessageClazz.getDeclaredMethod("a", Byte::class.java).invoke(null, 2.toByte())
             val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat").getDeclaredConstructor(chatBaseComponentClazz, chatMessageClazz)
-            val serializerMethod = findClazz("net.minecraft.server.VERSION.IChatBaseComponent.ChatSerializer").getDeclaredMethod("a", String::class.java)
+            val serializerMethod = findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod("a", String::class.java)
 
-            val messageJSON = serializerMethod.invoke("{\"text\": \"$finalMessage\"}")
+            val messageJSON = serializerMethod.invoke(null,"{\"text\": \"$finalMessage\"}")
 
             packet = packetConstructor.newInstance(messageJSON, chatMessageType)
         } else {
             val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
             val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat").getDeclaredConstructor(chatBaseComponentClazz, Byte::class.java)
-            val serializerMethod = findClazz("net.minecraft.server.VERSION.IChatBaseComponent.ChatSerializer").getDeclaredMethod("a", String::class.java)
+            val serializerMethod = findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod("a", String::class.java)
 
-            val messageJSON = serializerMethod.invoke("{\"text\": \"$finalMessage\"}")
+            val messageJSON = serializerMethod.invoke(null,"{\"text\": \"$finalMessage\"}")
 
             packet = packetConstructor.newInstance(messageJSON, 2.toByte())
         }
@@ -126,7 +126,7 @@ class ScreenMessageServiceImpl  @Inject constructor() : ScreenMessageService {
         val finalHeader = header.convertChatColors()
         val finalFooter = footer.convertChatColors()
 
-        val serializerMethod = findClazz("net.minecraft.server.VERSION.IChatBaseComponent.ChatSerializer").getDeclaredMethod("a", String::class.java)
+        val serializerMethod = findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod("a", String::class.java)
         val packetInstance = findClazz("net.minecraft.server.VERSION.PacketPlayOutPlayerListHeaderFooter").newInstance()
 
         val headerJson = serializerMethod.invoke("{\"color\": \"\", \"text\": \"$finalHeader\"}")

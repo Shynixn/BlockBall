@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.service.PersistenceArenaService
 import com.github.shynixn.blockball.api.business.service.TemplateService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Template
@@ -42,7 +43,7 @@ import java.io.OutputStreamWriter
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class TemplateServiceImpl @Inject constructor(private val plugin: Plugin) : TemplateService {
+class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, private val persistenceArenaService: PersistenceArenaService) : TemplateService {
     private val templateNames = arrayOf("arena-de.yml", "arena-en.yml")
 
     /**
@@ -88,8 +89,6 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin) : Temp
      * Generates a new [Arena] from the given [template].
      */
     override fun generateArena(template: Template): Arena {
-        val arenaSource = ArenaEntity()
-
         val configuration = YamlConfiguration()
         val arena: Arena
 
@@ -107,8 +106,15 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin) : Temp
             YamlSerializer.deserializeObject(ArenaEntity::class.java, null, data)
         }
 
-        arena.name = arenaSource.name
-        arena.displayName = arenaSource.displayName
+        var idGen = 1
+        persistenceArenaService.getArenas().forEach { cacheArena ->
+            if(cacheArena.name == idGen.toString()){
+                idGen++
+            }
+        }
+
+        arena.name = idGen.toString()
+        arena.displayName = "Arena " + arena.name
         arena.meta.lobbyMeta.leaveSpawnpoint = null
         arena.meta.ballMeta.spawnpoint = null
         arena.lowerCorner = PositionEntity()

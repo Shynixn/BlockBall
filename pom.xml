@@ -109,6 +109,9 @@
                         <version>5.0.0-M4</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <debugForkedProcess>true</debugForkedProcess>
+                </configuration>
                 <executions>
                     <execution>
                         <id>failsafe-integration-tests</id>

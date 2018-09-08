@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
 import org.bukkit.Location
+import org.bukkit.configuration.serialization.ConfigurationSerializable
 
 /**
  * Created by Shynixn 2018.
@@ -32,8 +33,7 @@ import org.bukkit.Location
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ArenaEntity() : SelectionEntity(), Arena {
-
+class ArenaEntity() : SelectionEntity(), Arena, ConfigurationSerializable {
     constructor(name: String, corner1: Location, corner2: Location) : this() {
         this.name = name
         this.displayName = name
@@ -59,4 +59,11 @@ class ArenaEntity() : SelectionEntity(), Arena {
     /** Collection of the arena meta data. */
     @YamlSerializer.YamlSerialize(orderNumber = 7, value = "meta")
     override val meta: ArenaMetaEntity = ArenaMetaEntity()
+
+    /**
+     * Serialiezs the data.
+     */
+    override fun serialize(): MutableMap<String, Any> {
+        return YamlSerializer.serialize(this)
+    }
 }

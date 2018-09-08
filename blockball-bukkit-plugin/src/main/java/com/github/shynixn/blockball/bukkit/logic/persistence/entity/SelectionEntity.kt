@@ -37,11 +37,11 @@ import org.bukkit.Location
 open class SelectionEntity : Selection {
 
     /** [upperCorner] of the selected square arena. */
-    @YamlSerializer.YamlSerialize(value = "corner-1", orderNumber = 5)
+    @YamlSerializer.YamlSerialize(value = "corner-1", orderNumber = 5, implementation = PositionEntity::class)
     final override var upperCorner: Position = PositionEntity()
 
     /** [lowerCorner] of the selected square arena. */
-    @YamlSerializer.YamlSerialize(value = "corner-2", orderNumber = 6)
+    @YamlSerializer.YamlSerialize(value = "corner-2", orderNumber = 6, implementation = PositionEntity::class)
     final override var lowerCorner: Position = PositionEntity()
 
     /** [center] of the arena */

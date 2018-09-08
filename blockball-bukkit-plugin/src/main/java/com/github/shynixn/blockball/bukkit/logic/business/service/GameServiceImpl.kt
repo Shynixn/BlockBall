@@ -65,8 +65,8 @@ class GameServiceImpl @Inject constructor(private val plugin: Plugin, private va
 
         plugin.reloadConfig()
 
-        persistenceArenaService.getAll().thenAccept { arenas ->
-            arenas.forEach { arena ->
+        persistenceArenaService.refresh().thenAccept {
+            persistenceArenaService.getArenas().forEach { arena ->
                 initGame(arena)
             }
         }
@@ -96,6 +96,8 @@ class GameServiceImpl @Inject constructor(private val plugin: Plugin, private va
             if (ticks >= 20) {
                 ticks = 0
             }
+
+            ticks++
         }
     }
 

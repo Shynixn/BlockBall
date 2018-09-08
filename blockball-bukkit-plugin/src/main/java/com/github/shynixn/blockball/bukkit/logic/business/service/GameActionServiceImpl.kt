@@ -206,7 +206,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
             bungeeCordGameActionService.handle(game, ticks)
         }
 
-        if (ticks % 20 != 0) {
+        if (ticks % 20 == 0) {
             if (game.closing) {
                 return
             }

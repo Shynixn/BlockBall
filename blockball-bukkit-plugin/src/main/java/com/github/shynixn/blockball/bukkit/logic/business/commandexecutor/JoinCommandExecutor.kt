@@ -67,7 +67,7 @@ class JoinCommandExecutor @Inject constructor(private val gameService: GameServi
                 attemptJoiningGame(player, mergedArgs.split("/"))
             }
         } catch (e: Throwable) {
-            // Ignore all errors.
+            e.printStackTrace()
         }
     }
 
