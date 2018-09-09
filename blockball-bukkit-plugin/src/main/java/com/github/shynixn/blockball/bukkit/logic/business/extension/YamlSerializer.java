@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.extension;
 
+import com.github.shynixn.blockball.api.business.enumeration.ParticleType;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
@@ -363,7 +364,11 @@ public final class YamlSerializer {
                             if (isPrimitive(field.getType())) {
                                 field.set(object, data.get(yamlAnnotation.value()));
                             } else if (field.getType().isEnum()) {
-                                field.set(object, Enum.valueOf((Class) field.getType(), data.get(yamlAnnotation.value()).toString()));
+                                if (field.getType() == ParticleType.class) {
+                                    field.set(object, ExtensionMethodsKt.toParticleType(data.get(yamlAnnotation.value()).toString()));
+                                } else {
+                                    field.set(object, Enum.valueOf((Class) field.getType(), data.get(yamlAnnotation.value()).toString()));
+                                }
                             } else if (field.getType() == Enum.class) {
                                 field.set(object, Enum.valueOf((Class) yamlAnnotation.implementation(), data.get(yamlAnnotation.value()).toString()));
                             } else if (field.getType().isArray()) {

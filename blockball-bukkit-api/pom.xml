@@ -5,7 +5,7 @@
     <parent>
         <artifactId>root</artifactId>
         <groupId>com.github.shynixn.blockball</groupId>
-        <version>5.4.0</version>
+        <version>6.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,60 +15,12 @@
         <dependency>
             <groupId>com.github.shynixn.blockball</groupId>
             <artifactId>blockball-api</artifactId>
-            <version>5.4.0</version>
+            <version>6.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot18R1</artifactId>
-            <version>1.8.0-R1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot18R2</artifactId>
-            <version>1.8.3-R2.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot18R3</artifactId>
-            <version>1.8.8-R3.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot19R1</artifactId>
-            <version>1.9.0-R1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot19R2</artifactId>
-            <version>1.9.4-R2.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot110R1</artifactId>
-            <version>1.10.2-R1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot111R1</artifactId>
-            <version>1.11.0-R1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot112R1</artifactId>
-            <version>1.12.0-R1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot113R1</artifactId>
-            <version>1.13.0-R1.0</version>
+            <artifactId>spigot113R2</artifactId>
+            <version>1.13.1-R2.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

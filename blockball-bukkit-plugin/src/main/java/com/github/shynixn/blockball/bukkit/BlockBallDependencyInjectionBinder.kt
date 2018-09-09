@@ -77,8 +77,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(SoundService::class.java).to(SoundServiceImpl::class.java)
         bind(BossBarService::class.java).to(BossBarServiceImpl::class.java)
         bind(HologramService::class.java).to(HologramServiceImpl::class.java)
-
-        // Singleton Services
         bind(object : TypeLiteral<GameActionService<Game>>() {}).to(object : TypeLiteral<GameActionServiceImpl<Game>>() {}).`in`(Scopes.SINGLETON)
         bind(object : TypeLiteral<GameSoccerService<Game>>() {}).to(object : TypeLiteral<GameSoccerServiceImpl<Game>>() {}).`in`(Scopes.SINGLETON)
         bind(object : TypeLiteral<GameMiniGameActionService<MiniGame>>() {}).to(object : TypeLiteral<GameMiniGameActionServiceImpl>() {}).`in`(Scopes.SINGLETON)

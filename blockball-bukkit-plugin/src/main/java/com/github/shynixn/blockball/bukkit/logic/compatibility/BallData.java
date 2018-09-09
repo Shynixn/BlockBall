@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Sound;
 import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ParticleEntity;
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.SoundEntity;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
@@ -17,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * Created by Shynixn 2017.
@@ -320,11 +322,13 @@ public class BallData implements BallMeta, ConfigurationSerializable {
 
     private Map<String, Object> serializeEffects(Map container) {
         final Map<String, Object> data = new LinkedHashMap<>();
-        int i = 0;
         for (final Object f : container.keySet()) {
             final ActionEffect actionEffect = (ActionEffect) f;
-            data.put(actionEffect.name().toLowerCase(), ((ConfigurationSerializable) container.get(actionEffect)).serialize());
-            i++;
+            try {
+                data.put(actionEffect.name().toLowerCase(), YamlSerializer.serialize(container.get(actionEffect)));
+            } catch (final IllegalAccessException e) {
+                Bukkit.getLogger().log(Level.WARNING, "Failed to serialize effects", e);
+            }
         }
         return data;
     }
