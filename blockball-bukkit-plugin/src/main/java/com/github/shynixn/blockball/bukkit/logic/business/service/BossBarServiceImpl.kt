@@ -2,11 +2,11 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.business.service.BossBarService
 import com.github.shynixn.blockball.api.business.service.DependencyBossBarApiService
 import com.github.shynixn.blockball.api.persistence.entity.BossBarMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import java.lang.reflect.Array

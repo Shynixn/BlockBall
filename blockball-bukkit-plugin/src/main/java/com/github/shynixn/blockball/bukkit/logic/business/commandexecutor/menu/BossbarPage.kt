@@ -1,11 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.business.enumeration.BossBarFlag
 import com.github.shynixn.blockball.api.business.enumeration.BossbarColor
 import com.github.shynixn.blockball.api.business.enumeration.BossbarStyle
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import org.bukkit.entity.Player
 
 /**

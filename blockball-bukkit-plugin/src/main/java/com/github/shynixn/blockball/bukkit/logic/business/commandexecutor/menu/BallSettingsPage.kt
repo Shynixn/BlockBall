@@ -1,10 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
-import com.github.shynixn.ball.api.persistence.enumeration.ActionEffect
-import com.github.shynixn.ball.api.persistence.enumeration.BallSize
+import com.github.shynixn.blockball.api.business.enumeration.BallSize
+import com.github.shynixn.blockball.api.compatibility.ActionEffect
 import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.api.persistence.entity.Particle
+import com.github.shynixn.blockball.api.persistence.entity.Sound
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.entity.Player
 
@@ -143,12 +143,12 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BALL_PARTICLEFFECTS.command)
                 .setHoverText("Opens the selectiongbox for action binders.")
                 .builder().nextLine()
-        if (cache[5] != null && cache[5] is SoundEffectMeta<*, *>) {
+        if (cache[5] != null && cache[5] is Sound) {
             builder.component("- Selected Soundeffect: ").builder().component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SOUND_BALL.command)
                     .setHoverText("Opens the page for editing the soundeffect.")
                     .builder().nextLine()
-        } else if(cache[5] != null && cache[5] is ParticleEffectMeta<*,*,*>) {
+        } else if(cache[5] != null && cache[5] is Particle) {
                      builder.component("- Selected Particleffect: ").builder().component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.PARTICLE_BALL.command)
                     .setHoverText("Opens the page for editing the particleeffect.")

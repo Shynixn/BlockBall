@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
-import com.github.shynixn.ball.api.business.entity.Ball
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.HologramProxy
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Game
@@ -64,7 +64,7 @@ open class GameEntity(
     /**
      * Ball.
      */
-    override var ball: Ball<*, *, *>? = null
+    override var ball: BallProxy? = null
     /**
      * Last location of the ball.
      */

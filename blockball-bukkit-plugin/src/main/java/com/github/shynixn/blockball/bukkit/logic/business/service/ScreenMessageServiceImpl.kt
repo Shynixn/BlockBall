@@ -1,9 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.business.service.ScreenMessageService
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
+import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 
@@ -34,7 +34,7 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ScreenMessageServiceImpl  @Inject constructor() : ScreenMessageService {
+class ScreenMessageServiceImpl @Inject constructor() : ScreenMessageService {
     private val version = VersionSupport.getServerVersion()
 
     /**
@@ -99,7 +99,7 @@ class ScreenMessageServiceImpl  @Inject constructor() : ScreenMessageService {
             val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat").getDeclaredConstructor(chatBaseComponentClazz, chatMessageClazz)
             val serializerMethod = findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod("a", String::class.java)
 
-            val messageJSON = serializerMethod.invoke(null,"{\"text\": \"$finalMessage\"}")
+            val messageJSON = serializerMethod.invoke(null, "{\"text\": \"$finalMessage\"}")
 
             packet = packetConstructor.newInstance(messageJSON, chatMessageType)
         } else {
@@ -107,7 +107,7 @@ class ScreenMessageServiceImpl  @Inject constructor() : ScreenMessageService {
             val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat").getDeclaredConstructor(chatBaseComponentClazz, Byte::class.java)
             val serializerMethod = findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod("a", String::class.java)
 
-            val messageJSON = serializerMethod.invoke(null,"{\"text\": \"$finalMessage\"}")
+            val messageJSON = serializerMethod.invoke(null, "{\"text\": \"$finalMessage\"}")
 
             packet = packetConstructor.newInstance(messageJSON, 2.toByte())
         }

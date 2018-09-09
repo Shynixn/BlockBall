@@ -11,12 +11,4 @@
 
     <artifactId>blockball-api</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.github.shynixn.ball</groupId>
-            <artifactId>ball-api</artifactId>
-            <version>1.4</version>
-        </dependency>
-    </dependencies>
-
 </project>

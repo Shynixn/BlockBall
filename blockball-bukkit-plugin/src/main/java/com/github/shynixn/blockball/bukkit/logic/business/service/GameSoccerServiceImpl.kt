@@ -2,11 +2,10 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.ball.api.BallApi
-import com.github.shynixn.ball.api.business.entity.Ball
 import com.github.shynixn.blockball.api.bukkit.event.GameEndEvent
 import com.github.shynixn.blockball.api.bukkit.event.GameGoalEvent
 import com.github.shynixn.blockball.api.business.enumeration.*
+import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.DependencyService
 import com.github.shynixn.blockball.api.business.service.DependencyVaultService
 import com.github.shynixn.blockball.api.business.service.GameSoccerService
@@ -68,15 +67,15 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
             return
         }
 
-        if (!game.arena.isLocationInSelection(game.ball!!.location as Location)
-                && !game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.location as Location)
-                && !game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.location as Location)) {
+        if (!game.arena.isLocationInSelection(game.ball!!.getLocation() as Location)
+                && !game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)
+                && !game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
             if (game.ballBumper == 0) {
                 rescueBall(game)
             }
         } else {
             game.ballBumperCounter = 0
-            game.lastBallLocation = (game.ball!!.location as Location).clone()
+            game.lastBallLocation = (game.ball!!.getLocation() as Location).clone()
         }
 
         if (game.ingamePlayersStorage.isEmpty()) {
@@ -90,16 +89,16 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
     private fun rescueBall(game: G) {
         if (game.lastBallLocation != null) {
-            val ballLocation = game.ball!!.location
-            val knockback = (game.lastBallLocation!! as Location).toVector().subtract((ballLocation as Location).toVector())
+            val ballLocation = game.ball!!.getLocation() as Location
+            val knockback = (game.lastBallLocation!! as Location).toVector().subtract(ballLocation.toVector())
             ballLocation.direction = knockback
-            (game.ball!!.hitBox as ArmorStand).velocity = knockback
+            (game.ball!!.getHitboxArmorstand() as ArmorStand).velocity = knockback
             val direction = game.arena.meta.ballMeta.spawnpoint!!.toLocation().toVector().subtract(ballLocation.toVector())
-            (game.ball!!.hitBox as ArmorStand).velocity = direction.multiply(0.1)
+            (game.ball!!.getHitboxArmorstand()as ArmorStand).velocity = direction.multiply(0.1)
             game.ballBumper = 40
             game.ballBumperCounter++
             if (game.ballBumperCounter == 5) {
-                (game.ball as Ball<Any, Any, Any>).teleport(game.arena.meta.ballMeta.spawnpoint!!.toLocation())
+                (game.ball as BallProxy).teleport(game.arena.meta.ballMeta.spawnpoint!!.toLocation())
             }
         }
     }
@@ -109,7 +108,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
             return
         }
 
-        if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.location as Location)) {
+        if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
             game.blueScore++
             game.ball!!.remove()
             onScore(game, Team.BLUE, game.arena.meta.blueTeamMeta)
@@ -119,7 +118,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
                 onMatchEnd(game, game.blueTeam as List<Player>, game.redTeam as List<Player>)
                 onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             }
-        } else if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.location as Location)) {
+        } else if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
             game.redScore++
             game.ball!!.remove()
             onScore(game, Team.RED, game.arena.meta.redTeamMeta)
@@ -165,7 +164,8 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
         if (game.ballSpawning) {
             game.ballSpawnCounter--
             if (game.ballSpawnCounter <= 0) {
-                game.ball = BallApi.spawnTemporaryBall(game.arena.meta.ballMeta.spawnpoint!!.toLocation(), game.arena.meta.ballMeta)
+               // game.ball = BallApi.spawnTemporaryBall(game.arena.meta.ballMeta.spawnpoint!!.toLocation(), game.arena.meta.ballMeta)
+                throw RuntimeException("I should spawn a ball here")
                 game.ballSpawning = false
                 game.ballSpawnCounter = 0
             }
@@ -192,7 +192,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
         val event = GameGoalEvent(interactionEntity, team, game)
         Bukkit.getServer().pluginManager.callEvent(event)
 
-        if (event.cancelled) {
+        if (event.isCancelled) {
             return
         }
 

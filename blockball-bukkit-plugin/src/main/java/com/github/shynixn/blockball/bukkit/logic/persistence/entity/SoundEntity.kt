@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
+import com.github.shynixn.blockball.api.compatibility.EffectingType
 import com.github.shynixn.blockball.api.persistence.entity.Sound
 import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
 
@@ -45,4 +46,10 @@ class SoundEntity(
          * Volume of the sound.
          */
         @YamlSerializer.YamlSerialize(value = "volume", orderNumber = 3)
-        override var volume: Double = 1.0) : Sound
+        override var volume: Double = 1.0) : Sound {
+    /**
+     * Which players are effected.
+     */
+    @YamlSerializer.YamlSerialize(value = "effecting", orderNumber = 4)
+    override var effectingType: EffectingType = EffectingType.NOBODY
+}

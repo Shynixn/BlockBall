@@ -1,11 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.enumeration.ActionEffect
-import com.github.shynixn.ball.api.persistence.enumeration.BallSize
-import com.github.shynixn.ball.api.persistence.enumeration.EffectingType
 import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.service.TemplateService
+import com.github.shynixn.blockball.api.compatibility.ActionEffect
+import com.github.shynixn.blockball.api.compatibility.EffectingType
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.google.inject.Inject
 import org.bukkit.GameMode
@@ -93,7 +91,7 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 cache[3] = BlockBallCommand.REWARD_CALLBACK_COMMANDMODE
             }
             BlockBallCommand.LIST_PARTICLE_TYPES -> {
-                cache[2] = ParticleEffectMeta.ParticleEffectType.values().map { p -> p.name }
+                cache[2] = ParticleType.values().map { p -> p.name }
                 cache[3] = BlockBallCommand.PARTICLE_CALLBACK_TYPE
             }
             BlockBallCommand.LIST_REWARDED_MONEY -> {

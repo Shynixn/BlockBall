@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import com.github.shynixn.blockball.api.compatibility.EffectingType
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -42,4 +44,9 @@ interface Sound {
      * Volume of the sound.
      */
     var volume: Double
+    
+    /**
+     * Which players are effected.
+     */
+    var effectingType: EffectingType
 }

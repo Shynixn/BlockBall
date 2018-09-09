@@ -2,7 +2,6 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent
 import com.github.shynixn.blockball.api.bukkit.event.GameLeaveEvent
 import com.github.shynixn.blockball.api.business.enumeration.*
@@ -11,6 +10,7 @@ import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
+import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -74,7 +74,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         val event = GameJoinEvent(player, game)
         Bukkit.getServer().pluginManager.callEvent(event)
 
-        if (event.cancelled) {
+        if (event.isCancelled) {
             return false
         }
 
@@ -100,7 +100,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         val event = GameLeaveEvent(player, game)
         Bukkit.getServer().pluginManager.callEvent(event)
 
-        if (event.cancelled) {
+        if (event.isCancelled) {
             return
         }
 

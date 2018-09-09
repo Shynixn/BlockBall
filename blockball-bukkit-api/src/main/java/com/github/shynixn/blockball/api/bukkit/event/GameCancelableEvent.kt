@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.api.bukkit.event
 
 import com.github.shynixn.blockball.api.persistence.entity.Game
+import org.bukkit.event.Cancellable
 
 /**
  * Extension of the [GameEvent] for cancellable events.
@@ -29,9 +30,20 @@ import com.github.shynixn.blockball.api.persistence.entity.Game
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-open class GameCancelableEvent(game: Game) : GameEvent(game) {
+open class GameCancelableEvent(game: Game) : GameEvent(game), Cancellable {
+    private var cancelled = false
+
     /**
-     * Is the event cancelled?
+     * Sets cancelled.
      */
-    var cancelled: Boolean = false
+    override fun setCancelled(cancel: Boolean) {
+        this.cancelled = cancel
+    }
+
+    /**
+     * Is cancelled.
+     */
+    override fun isCancelled(): Boolean {
+        return cancelled
+    }
 }

@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import com.github.shynixn.blockball.api.compatibility.BallMeta
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -27,7 +29,7 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BallMeta : com.github.shynixn.ball.api.persistence.BallMeta {
+interface BallMeta : BallMeta{
 
     /** Spawning delay. */
     var delayInTicks: Int

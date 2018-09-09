@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.extension;
 
-import com.github.shynixn.ball.bukkit.core.nms.VersionSupport;
+import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

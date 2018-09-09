@@ -1,25 +1,18 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.github.shynixn.blockball.bukkit.logic.persistence.entity
+package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
-import com.github.shynixn.ball.bukkit.core.nms.v1_13_R1.MaterialCompatibility13
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.persistence.entity.Particle
-import com.github.shynixn.blockball.bukkit.logic.business.extension.async
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
-import com.google.inject.Inject
-import net.minecraft.server.v1_13_R1.*
+import com.github.shynixn.blockball.bukkit.logic.business.nms.MaterialCompatibility13
+import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_13_R1.block.CraftBlockState
-import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack
-import org.bukkit.craftbukkit.v1_13_R1.util.CraftMagicNumbers
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.material.MaterialData
-import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 
 /**
@@ -49,7 +42,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ParticleServiceImpl @Inject constructor(private val plugin: Plugin) : ParticleService {
+class ParticleServiceImpl : ParticleService {
     private val version = VersionSupport.getServerVersion()
 
     /**
@@ -75,22 +68,37 @@ class ParticleServiceImpl @Inject constructor(private val plugin: Plugin) : Part
 
         val packet = if (version.isVersionSameOrGreaterThan(VersionSupport.VERSION_1_13_R1)) {
             val dataType = internalParticleType
+            val particleParamClazz = findClazz("net.minecraft.server.VERSION.ParticleParam")
+            val particleClazz = findClazz("net.minecraft.server.VERSION.Particle")
 
             if (dataType == ItemStack::class.java && particle.materialName != null) {
-                val itemStack = CraftItemStack.asNMSCopy(ItemStack(Material.getMaterial(particle.materialName), 1, particle.data.toShort()))
-                internalParticleType = ParticleParamItem(internalParticleType as net.minecraft.server.v1_13_R1.Particle<ParticleParamItem>, itemStack)
-            } else if (dataType == MaterialData::class.java) {
-                val data = MaterialData(Material.getMaterial(particle.materialName), particle.data.toByte())
-                internalParticleType = ParticleParamBlock(internalParticleType as net.minecraft.server.v1_13_R1.Particle<ParticleParamBlock>, CraftMagicNumbers.getBlock(data))
+                val itemStack = findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftItemStack").getDeclaredMethod("asNMSCopy")
+                        .invoke(null, ItemStack(Material.getMaterial(particle.materialName), 1, particle.data.toShort()))
+
+                internalParticleType = findClazz("net.minecraft.server.VERSION.ParticleParamItem")
+                        .getDeclaredConstructor(particleClazz, itemStack.javaClass).newInstance(internalParticleType, itemStack)
             } else if (particle.type == ParticleType.BLOCK_CRACK || particle.type == ParticleType.BLOCK_DUST) {
-                val data = CraftBlockState(Material.getMaterial(particle.materialName))
-                data.rawData = particle.data.toByte()
-                internalParticleType = ParticleParamBlock(internalParticleType as net.minecraft.server.v1_13_R1.Particle<ParticleParamBlock>, data.handle)
+                val craftBlockStateClazz = findClazz("org.bukkit.craftbukkit.VERSION.block.CraftBlockState")
+
+                val data = craftBlockStateClazz
+                        .getDeclaredConstructor(Material::class.java)
+                        .newInstance(Material.getMaterial(particle.materialName))
+
+                craftBlockStateClazz.getDeclaredMethod("setRawData", Byte::class.java).invoke(data, particle.data.toByte())
+                val handle = craftBlockStateClazz.getDeclaredMethod("getHandle").invoke(data)
+
+                internalParticleType = findClazz("net.minecraft.server.VERSION.ParticleParamBlock")
+                        .getDeclaredConstructor(particleClazz, findClazz("net.minecraft.server.VERSION.IBlockData"))
+                        .newInstance(internalParticleType, handle)
             } else if (particle.type == ParticleType.REDSTONE) {
-                internalParticleType = ParticleParamRedstone(particle.colorRed.toFloat() / 255.0f, particle.colorGreen.toFloat() / 255.0f, particle.colorBlue.toFloat() / 255.0f, 1.0F)
+                internalParticleType = findClazz("net.minecraft.server.VERSION.ParticleParamRedstone")
+                        .getDeclaredConstructor(Float::class.java, Float::class.java, Float::class.java, Float::class.java)
+                        .newInstance(particle.colorRed.toFloat() / 255.0f, particle.colorGreen.toFloat() / 255.0f, particle.colorBlue.toFloat() / 255.0f, 1.0F)
             }
 
-            PacketPlayOutWorldParticles(internalParticleType as ParticleParam, isLongDistance(location, targets), location.x.toFloat(), location.y.toFloat(), location.z.toFloat(), particle.offSetX.toFloat(), particle.offSetY.toFloat(), particle.offSetZ.toFloat(), particle.speed.toFloat(), particle.amount)
+            findClazz("net.minecraft.server.VERSION.PacketPlayOutWorldParticles")
+                    .getDeclaredConstructor(particleParamClazz, Boolean::class.java, Float::class.java, Float::class.java, Float::class.java, Float::class.java, Float::class.java, Float::class.java, Float::class.java, Int::class.java)
+                    .newInstance(internalParticleType, isLongDistance(location, targets), location.x.toFloat(), location.y.toFloat(), location.z.toFloat(), particle.offSetX.toFloat(), particle.offSetY.toFloat(), particle.offSetZ.toFloat(), particle.speed.toFloat(), particle.amount)
         } else {
             var additionalPayload: IntArray? = null
 
@@ -119,15 +127,20 @@ class ParticleServiceImpl @Inject constructor(private val plugin: Plugin) : Part
             }
         }
 
-        async(plugin) {
-            try {
-                players.forEach { p ->
-                    p.sendPacket(packet)
-                }
-            } catch (e: Exception) {
-                plugin.logger.log(Level.WARNING, "Failed to send particle.", e)
+        try {
+            players.forEach { p ->
+                p.sendPacket(packet)
             }
+        } catch (e: Exception) {
+            Bukkit.getServer().logger.log(Level.WARNING, "Failed to send particle.", e)
         }
+    }
+
+    /**
+     * Finds the version dependent class.
+     */
+    private fun findClazz(name: String): Class<*> {
+        return Class.forName(name.replace("VERSION", version.versionText))
     }
 
     private fun isLongDistance(location: Location, players: Array<out Player>): Boolean {
@@ -136,16 +149,26 @@ class ParticleServiceImpl @Inject constructor(private val plugin: Plugin) : Part
 
     private fun getInternalEnumValue(particle: ParticleType): Any {
         try {
-            return if (version.isVersionLowerThan(VersionSupport.VERSION_1_13_R1)) {
-                val clazz = Class.forName("net.minecraft.server.VERSION.EnumParticle".replace("VERSION", version.versionText))
-                val method = clazz.getDeclaredMethod("valueOf", String::class.java)
-                method.invoke(null, particle.name)
-            } else {
-                val minecraftKey = MinecraftKey(particle.gameId_113)
-                net.minecraft.server.v1_13_R1.Particle.REGISTRY.get(minecraftKey) as Any
+            return when {
+                version.isVersionLowerThan(VersionSupport.VERSION_1_13_R1) -> {
+                    val clazz = Class.forName("net.minecraft.server.VERSION.EnumParticle".replace("VERSION", version.versionText))
+                    val method = clazz.getDeclaredMethod("valueOf", String::class.java)
+                    method.invoke(null, particle.name)
+                }
+                version == VersionSupport.VERSION_1_13_R1 -> {
+                    val minecraftKey = findClazz("net.minecraft.server.VERSION.MinecraftKey").getDeclaredConstructor(String::class.java).newInstance(particle.gameId_113)
+                    val registry = findClazz("net.minecraft.server.VERSION.Particle").getDeclaredField("REGISTRY").get(null)
+
+                    findClazz("net.minecraft.server.VERSION.RegistryMaterials").getDeclaredMethod("get", Any::class.java).invoke(registry, minecraftKey)
+                }
+                else -> {
+                    val minecraftKey = findClazz("net.minecraft.server.VERSION.MinecraftKey").getDeclaredConstructor(String::class.java).newInstance(particle.gameId_113)
+                    val registry = findClazz("net.minecraft.server.VERSION.IRegistry").getDeclaredField("PARTICLE_TYPE").get(null)
+                    findClazz("net.minecraft.server.VERSION.RegistryMaterials").getDeclaredMethod("get", findClazz("net.minecraft.server.VERSION.MinecraftKey")).invoke(registry, minecraftKey)
+                }
             }
         } catch (e: Exception) {
-            plugin.logger.log(Level.WARNING, "Failed to load enum value.", e)
+            Bukkit.getServer().logger.log(Level.WARNING, "Failed to load enum value.", e)
             throw RuntimeException(e)
         }
     }

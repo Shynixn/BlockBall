@@ -39,12 +39,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.shynixn.ball</groupId>
-            <artifactId>ball-bukkit-core</artifactId>
-            <version>1.4</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
             <version>4.1.0</version>
@@ -128,6 +122,12 @@
             <version>1.13.0-R1.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot113R2</artifactId>
+            <version>1.13.1-R2.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -175,7 +175,6 @@
                             <shadedPattern>com.github.shynixn.blockball.lib.com.zaxxer</shadedPattern>
                         </relocation>
                     </relocations>
-                    <outputFile>D:/Temp/plugins/BlockBall.jar</outputFile>
                 </configuration>
                 <executions>
                     <execution>

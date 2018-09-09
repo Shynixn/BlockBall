@@ -2,19 +2,16 @@
 
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
-import com.github.shynixn.ball.api.persistence.enumeration.ActionEffect
+import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
+import com.github.shynixn.blockball.api.compatibility.ActionEffect
 import com.github.shynixn.blockball.api.persistence.entity.ArenaMeta
 import com.github.shynixn.blockball.api.persistence.entity.ArenaProtectionMeta
 import com.github.shynixn.blockball.api.persistence.entity.HologramMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.business.extension.setColor
 import org.bukkit.Color
-import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 /**
@@ -109,20 +106,24 @@ class ArenaMetaEntity : ArenaMeta {
         ballMeta.modifiers.rollingDistanceModifier = 1.5
 
         val partMetaSpawn = ballMeta.getParticleEffectOf(ActionEffect.ONSPAWN)
-        partMetaSpawn.setEffectType<ParticleEffectMeta<Location, Player, Material>>(ParticleEffectMeta.ParticleEffectType.EXPLOSION_NORMAL)
-                .setAmount<ParticleEffectMeta<Location, Player, Material>>(10)
-                .setSpeed<ParticleEffectMeta<Location, Player, Material>>(0.1)
-                .setOffset<ParticleEffectMeta<Location, Player, Material>>(2.0, 2.0, 2.0)
+        partMetaSpawn.type = ParticleType.EXPLOSION_NORMAL
+        partMetaSpawn.amount = 10
+        partMetaSpawn.speed = 0.1
+        partMetaSpawn.offSetX = 2.0
+        partMetaSpawn.offSetY = 2.0
+        partMetaSpawn.offSetZ = 2.0
 
         val partMetaKick = ballMeta.getParticleEffectOf(ActionEffect.ONKICK)
-        partMetaKick.setEffectType<ParticleEffectMeta<Location, Player, Material>>(ParticleEffectMeta.ParticleEffectType.EXPLOSION_LARGE)
-                .setAmount<ParticleEffectMeta<Location, Player, Material>>(2)
-                .setSpeed<ParticleEffectMeta<Location, Player, Material>>(0.1)
-                .setOffset<ParticleEffectMeta<Location, Player, Material>>(0.1, 0.1, 0.1)
+        partMetaKick.type = (ParticleType.EXPLOSION_LARGE)
+        partMetaKick.amount = 2
+        partMetaKick.speed = 0.1
+        partMetaKick.offSetX = 0.1
+        partMetaKick.offSetY = 0.1
+        partMetaKick.offSetZ = 0.1
 
         val soundMetaKick = ballMeta.getSoundEffectOf(ActionEffect.ONKICK)
-        soundMetaKick.setName<SoundEffectMeta<Location, Player>>("ZOMBIE_WOOD")
-                .setVolume<SoundEffectMeta<Location, Player>>(10.0)
-                .setPitch<SoundEffectMeta<Location, Player>>(1.0)
+        soundMetaKick.name = "ZOMBIE_WOOD"
+        soundMetaKick.volume = 10.0
+        soundMetaKick.pitch = 1.0
     }
 }

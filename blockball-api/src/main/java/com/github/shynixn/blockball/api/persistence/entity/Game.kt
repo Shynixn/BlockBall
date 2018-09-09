@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.ball.api.business.entity.Ball
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
+import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.HologramProxy
 
 /**
@@ -81,7 +81,7 @@ interface Game {
     /**
      * Ball.
      */
-    var ball: Ball<*, *, *>?
+    var ball: BallProxy?
 
     /**
      * Blue Score.

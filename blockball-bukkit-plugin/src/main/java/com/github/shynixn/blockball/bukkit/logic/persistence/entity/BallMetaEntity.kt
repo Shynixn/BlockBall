@@ -1,9 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
-import com.github.shynixn.ball.bukkit.core.logic.persistence.entity.BallData
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.compatibility.BallData
 import org.bukkit.configuration.MemorySection
 
 @Suppress("unused")

@@ -2,9 +2,9 @@
 
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
-import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.business.service.SoundService
 import com.github.shynixn.blockball.api.persistence.entity.Sound
+import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.entity.Player

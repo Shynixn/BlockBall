@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
-import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent
+import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team

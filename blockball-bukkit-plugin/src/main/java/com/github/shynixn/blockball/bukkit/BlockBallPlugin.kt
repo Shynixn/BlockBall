@@ -2,8 +2,6 @@
 
 package com.github.shynixn.blockball.bukkit
 
-import com.github.shynixn.ball.bukkit.core.logic.business.CoreManager
-import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
@@ -12,6 +10,7 @@ import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.UpdateCheckService
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.*
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
+import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Guice
 import com.google.inject.Injector
 import org.bstats.bukkit.Metrics
@@ -53,8 +52,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val PREFIX_CONSOLE: String = ChatColor.BLUE.toString() + "[BlockBall] "
         private const val PLUGIN_NAME = "BlockBall"
     }
-
-    private var coreManager: CoreManager? = null
     private var injector: Injector? = null
 
     /**
@@ -114,7 +111,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             val method = BlockBallApi::class.java.getDeclaredMethod("initializeBlockBall", PluginProxy::class.java)
             method.isAccessible = true
             method.invoke(BlockBallApi, this)
-            coreManager = CoreManager(this, "storage.yml", "ball.yml")
             logger.log(Level.INFO, "Using NMS Connector " + VersionSupport.getServerVersion().versionText + ".")
         } catch (e: Exception) {
             logger.log(Level.WARNING, "Failed to enable BlockBall.", e)

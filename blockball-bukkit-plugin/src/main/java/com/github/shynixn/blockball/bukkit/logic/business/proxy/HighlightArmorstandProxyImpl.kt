@@ -2,9 +2,9 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
-import com.github.shynixn.ball.bukkit.core.nms.VersionSupport
 import com.github.shynixn.blockball.api.business.proxy.HighlightArmorstandProxy
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
+import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -95,7 +95,7 @@ class HighlightArmorstandProxyImpl(private val uuid: UUID, initialLocation: Loca
 
         val packetEquipment = findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityEquipment")
                 .getDeclaredConstructor(Int::class.java, findClazz("net.minecraft.server.VERSION.EnumItemSlot"), findClazz("net.minecraft.server.VERSION.ItemStack"))
-                .newInstance(armorstand.entityId, enumTimesValue,findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftItemStack")
+                .newInstance(armorstand.entityId, enumTimesValue, findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftItemStack")
                         .getDeclaredMethod("asNMSCopy", ItemStack::class.java).invoke(null, armorstand.helmet))
 
 
