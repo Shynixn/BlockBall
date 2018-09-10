@@ -6,10 +6,7 @@ import com.github.shynixn.blockball.api.bukkit.event.GameEndEvent
 import com.github.shynixn.blockball.api.bukkit.event.GameGoalEvent
 import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
-import com.github.shynixn.blockball.api.business.service.DependencyService
-import com.github.shynixn.blockball.api.business.service.DependencyVaultService
-import com.github.shynixn.blockball.api.business.service.GameSoccerService
-import com.github.shynixn.blockball.api.business.service.ScreenMessageService
+import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
@@ -51,7 +48,7 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin: Plugin, private val screenMessageService: ScreenMessageService, private val vaultService: DependencyVaultService, private val dependencyService: DependencyService) : GameSoccerService<G> {
+class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin: Plugin, private val screenMessageService: ScreenMessageService, private val vaultService: DependencyVaultService, private val dependencyService: DependencyService, private val ballEntityService: BallEntityService) : GameSoccerService<G> {
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
      * 0 - 20 for each second.
@@ -94,7 +91,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
             ballLocation.direction = knockback
             (game.ball!!.getHitboxArmorstand() as ArmorStand).velocity = knockback
             val direction = game.arena.meta.ballMeta.spawnpoint!!.toLocation().toVector().subtract(ballLocation.toVector())
-            (game.ball!!.getHitboxArmorstand()as ArmorStand).velocity = direction.multiply(0.1)
+            (game.ball!!.getHitboxArmorstand() as ArmorStand).velocity = direction.multiply(0.1)
             game.ballBumper = 40
             game.ballBumperCounter++
             if (game.ballBumperCounter == 5) {
@@ -164,8 +161,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
         if (game.ballSpawning) {
             game.ballSpawnCounter--
             if (game.ballSpawnCounter <= 0) {
-               // game.ball = BallApi.spawnTemporaryBall(game.arena.meta.ballMeta.spawnpoint!!.toLocation(), game.arena.meta.ballMeta)
-                throw RuntimeException("I should spawn a ball here")
+                game.ball = ballEntityService.spawnTemporaryBall(game.arena.meta.ballMeta.spawnpoint!!.toLocation(), game.arena.meta.ballMeta)
                 game.ballSpawning = false
                 game.ballSpawnCounter = 0
             }
@@ -201,7 +197,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
         val players = ArrayList(game.inTeamPlayers)
         val additionalPlayers = game.notifiedPlayers
-        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+        players.addAll(additionalPlayers.filter { pair -> pair.value }.map { p -> p.key })
 
         players.forEach { p -> screenMessageService.setTitle(p, scoreMessageTitle.replaceGamePlaceholder(game), scoreMessageSubTitle.replaceGamePlaceholder(game)) }
     }
@@ -265,7 +261,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
         val players = ArrayList(game.inTeamPlayers)
         val additionalPlayers = game.notifiedPlayers
-        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+        players.addAll(additionalPlayers.filter { pair -> pair.value }.map { p -> p.key })
 
         players.forEach { p -> screenMessageService.setTitle(p, winMessageTitle.replaceGamePlaceholder(game), winMessageSubTitle.replaceGamePlaceholder(game)) }
 

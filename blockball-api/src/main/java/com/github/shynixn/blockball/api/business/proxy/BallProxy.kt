@@ -123,6 +123,11 @@ interface BallProxy {
     fun <L> grab(entity: L)
 
     /**
+     * Spins the ball with the given velocity and returns the calculated velocity.
+     */
+    fun <V> spin(velocity: V, force : Double): Optional<V>
+
+    /**
      * DeGrabs the ball.
      */
     fun deGrab()

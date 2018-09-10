@@ -3,6 +3,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2
 
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
+import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallProxyImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.SpigotTimingServiceImpl
@@ -49,12 +50,13 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) : EntityArmorStand((location.world as CraftWorld).handle) {
+class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) : EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
     private val hitbox = BallHitBox(this, location, SpigotTimingServiceImpl())
+    private var internalProxy: BallProxyImpl? = null
     /**
      * Proxy handler.
      */
-    var proxy: BallProxyImpl? = null
+    override val proxy: BallProxyImpl get() = internalProxy!!
 
     constructor(uuid: String, data: Map<String, Any>) : this(Location.deserialize((data["location"] as MemorySection).getValues(true)),
             BallMetaEntity((data["meta"] as MemorySection).getValues(true)), true, UUID.fromString(uuid), null)
@@ -67,7 +69,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         this.setPositionRotation(location.x, location.y, location.z, location.yaw, location.pitch)
         mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
 
-        proxy = BallProxyImpl(ballMeta, this.bukkitEntity as ArmorStand, hitbox.bukkitEntity as ArmorStand, uuid, owner, persistent)
+        internalProxy = BallProxyImpl(ballMeta, this.bukkitEntity as ArmorStand, hitbox.bukkitEntity as ArmorStand, uuid, owner, persistent)
 
         val compound = NBTTagCompound()
         compound.setBoolean("invulnerable", true)
@@ -78,12 +80,12 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
 
         val itemStack = ItemStack(Material.SKULL_ITEM, 1, 3.toShort())
         try {
-            SkinHelper.setItemStackSkin(itemStack, proxy!!.meta.skin)
+            SkinHelper.setItemStackSkin(itemStack, proxy.meta.skin)
         } catch (e1: Exception) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to respawn entity.", e1)
         }
 
-        when (proxy!!.meta.size!!) {
+        when (proxy.meta.size!!) {
             BallSize.SMALL -> {
                 (bukkitEntity as ArmorStand).isSmall = true
                 (bukkitEntity as ArmorStand).helmet = itemStack
@@ -109,6 +111,6 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             this.setPositionRotation(loc.x, loc.y - 1.0, loc.z, loc.yaw, loc.pitch)
         }
 
-        proxy!!.run()
+        proxy.run()
     }
 }

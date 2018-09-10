@@ -72,6 +72,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             Bukkit.getPluginManager().registerEvents(resolve(MinigameListener::class.java), this)
             Bukkit.getPluginManager().registerEvents(resolve(BungeeCordgameListener::class.java), this)
             Bukkit.getPluginManager().registerEvents(resolve(StatsListener::class.java), this)
+            Bukkit.getPluginManager().registerEvents(resolve(BallListener::class.java), this)
 
             // Register CommandExecutor
             resolve(ArenaCommandExecutor::class.java)

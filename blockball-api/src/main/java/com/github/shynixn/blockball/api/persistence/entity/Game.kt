@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.api.persistence.entity
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.HologramProxy
+import javafx.util.Pair
 
 /**
  * Created by Shynixn 2018.

@@ -1,8 +1,4 @@
-package com.github.shynixn.blockball.api.business.service
-
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import java.util.*
+package com.github.shynixn.blockball.api.business.proxy
 
 /**
  * Created by Shynixn 2018.
@@ -31,19 +27,9 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BallEntityService {
+interface NMSBallProxy {
     /**
-     * Spawns a temporary ball.
+     * Gets the proxy.
      */
-    fun <L> spawnTemporaryBall(location: L, meta: BallMeta): BallProxy
-
-    /**
-     * Finds Ball from the given entity.
-     */
-    fun <E> findBallFromEntity(entity: E): Optional<BallProxy>
-
-    /**
-     * Returns all balls managed by the plugin.
-     */
-    fun getAllBalls(): List<BallProxy>
+    val proxy: BallProxy
 }

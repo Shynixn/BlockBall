@@ -88,6 +88,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(HubGameForcefieldService::class.java).to(HubGameForcefieldServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(DoubleJumpService::class.java).to(DoubleJumpServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BungeeCordService::class.java).to(BungeeCordServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(BallEntityService::class.java).to(BallEntityServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         // Persistence Services
         bind(PersistenceLinkSignService::class.java).to(PersistenceLinkSignServiceImpl::class.java).`in`(Scopes.SINGLETON)

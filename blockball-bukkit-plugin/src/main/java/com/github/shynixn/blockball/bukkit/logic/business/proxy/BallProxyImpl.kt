@@ -143,6 +143,30 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
     }
 
     /**
+     * Spins the ball with the given velocity.
+     */
+    override fun <V> spin(velocity: V, force: Double): Optional<V> {
+        if (velocity !is Vector) {
+            throw IllegalArgumentException("Vector has to be a BukkitVector!")
+        }
+
+        val spinEvent = BallSpinEvent(force, this)
+        Bukkit.getPluginManager().callEvent(spinEvent)
+
+        val resultingForce = spinEvent.spinningForce
+
+        if ((getHitboxArmorstand<Any>() as ArmorStand).isOnGround) {
+            return Optional.empty()
+        }
+
+        if (resultingForce != 0.0) {
+            return Optional.of(this.calculateMagnusForce(velocity, resultingForce) as V)
+        }
+
+        return Optional.empty()
+    }
+
+    /**
      * DeGrabs the ball.
      */
     override fun deGrab() {
@@ -487,6 +511,55 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         vector.y = 0.5
         vector.add(entity.velocity)
         return vector.multiply(3)
+    }
+
+    /**
+     * Magnus force calculation.
+     */
+    private fun setMagnusForce(facing: Vector, result: Vector, ball: BallProxy) {
+        val angle = this.getAngle(result, facing)
+        val force: Float
+
+        force = if (angle > 0.3f && angle < 10f) {
+            0.03f
+        } else if (angle < -0.3f && angle > -10f) {
+            -0.03f
+        } else {
+            return
+        }
+
+        val event = BallSpinEvent(force.toDouble(), ball)
+        Bukkit.getPluginManager().callEvent(event)
+        if (!event.isCancelled) {
+            ball.spinningForce = event.spinningForce
+        }
+    }
+
+    /**
+     * Magnus force calculation.
+     */
+    private fun calculateMagnusForce(velocity: Vector, force: Double): Vector {
+        val originUnit = velocity.normalize()
+        val x = -originUnit.z
+        val z = originUnit.x
+
+        val newVector = velocity.add(Vector(x, 0.0, z).multiply(force))
+        return newVector.multiply(velocity.length() / newVector.length())
+    }
+
+    /**
+     * Calculates the angle between two vectors in two dimension (XZ Plane) <br></br>
+     * If 'basis' vector is clock-wise to 'against' vector, the angle is negative.
+     *
+     * @param basis   The basis vector
+     * @param against The vector which the angle is calculated against
+     * @return The angle in the range of -180 to 180 degrees
+     */
+    private fun getAngle(basis: Vector, against: Vector): Double {
+        val dot = basis.x * against.x + basis.z * against.z
+        val det = basis.x * against.z - basis.z * against.x
+
+        return Math.atan2(det, dot)
     }
 
     /**
