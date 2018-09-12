@@ -34,7 +34,7 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class HologramProxyImpl(private val plugin: Plugin, private val version : com.github.shynixn.blockball.api.business.enumeration.Version, private var location: Location) : HologramProxy, Runnable {
+class HologramProxyImpl(private val plugin: Plugin, private val version: com.github.shynixn.blockball.api.business.enumeration.Version, private var location: Location) : HologramProxy, Runnable {
     companion object {
         /**
          * Max distance when holograms should be visible to.
@@ -210,11 +210,11 @@ class HologramProxyImpl(private val plugin: Plugin, private val version : com.gi
      */
     private fun sendSpawnPacket(player: Player) {
         this.armorstands.forEach { a ->
-            findClazz("net.minecraft.server.VERSION.PacketPlayOutSpawnEntityLiving")
+            val packet = findClazz("net.minecraft.server.VERSION.PacketPlayOutSpawnEntityLiving")
                     .getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.EntityLiving"))
                     .newInstance(getEntityArmorstandFrom(a))
 
-            player.sendPacket(a)
+            player.sendPacket(packet)
         }
     }
 

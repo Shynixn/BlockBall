@@ -51,7 +51,7 @@ interface BossBarService {
     /**
      * Changes the style of the bossbar with given [bossBarMeta].
      */
-    fun <B, P> changeConfiguration(bossBar: B, bossBarMeta: BossBarMeta, player: P)
+    fun <B, P> changeConfiguration(bossBar: B, title: String, bossBarMeta: BossBarMeta, player: P)
 
     /**
      * Generates a new bossbar from the given bossBar meta values.

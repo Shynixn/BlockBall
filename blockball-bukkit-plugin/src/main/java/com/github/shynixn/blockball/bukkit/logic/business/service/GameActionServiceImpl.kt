@@ -207,12 +207,12 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
             bungeeCordGameActionService.handle(game, ticks)
         }
 
+        this.gameSoccerService.handle(game, ticks)
+
         if (ticks % 20 == 0) {
             if (game.closing) {
                 return
             }
-
-            this.gameSoccerService.handle(game, ticks)
 
             this.kickUnwantedEntitiesOutOfForcefield(game)
             this.onUpdateSigns(game)
@@ -330,6 +330,8 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
                 game.bossBar = bossBarService.createNewBossBar<Any>(game.arena.meta.bossBarMeta)
             }
             if (game.bossBar != null) {
+                bossBarService.changeConfiguration(game.bossBar, meta.message.replaceGamePlaceholder(game), meta, null)
+
                 val players = ArrayList(game.inTeamPlayers)
                 val additionalPlayers = getAdditionalNotificationPlayers(game)
                 players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })

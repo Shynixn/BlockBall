@@ -56,7 +56,7 @@ class ScreenMessageServiceImpl @Inject constructor() : ScreenMessageService {
         val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutTitle").getDeclaredConstructor(titleActionClazz, chatBaseComponentClazz, Int::class.java, Int::class.java, Int::class.java)
 
         if (!finalTitle.isEmpty()) {
-            val titleJson = serializerMethod.invoke("{\"text\": \"$finalTitle\"}")
+            val titleJson = serializerMethod.invoke(null, "{\"text\": \"$finalTitle\"}")
 
             @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
             val enumTitleValue = java.lang.Enum.valueOf<Any>(titleActionClazz as Class<Any>, "TITLE")
@@ -71,7 +71,7 @@ class ScreenMessageServiceImpl @Inject constructor() : ScreenMessageService {
         }
 
         if (!finalSubTitle.isEmpty()) {
-            val subTitleJson = serializerMethod.invoke("{\"text\": \"$finalSubTitle\"}")
+            val subTitleJson = serializerMethod.invoke(null, "{\"text\": \"$finalSubTitle\"}")
 
             @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
             val enumSubTitleValue = java.lang.Enum.valueOf<Any>(titleActionClazz as Class<Any>, "SUBTITLE")

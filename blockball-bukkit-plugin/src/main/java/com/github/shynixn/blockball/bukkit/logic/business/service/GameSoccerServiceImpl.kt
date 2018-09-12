@@ -56,7 +56,10 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
     override fun handle(game: G, ticks: Int) {
         this.fixBallPositionSpawn(game)
         this.checkBallInGoal(game)
-        this.handleBallSpawning(game)
+
+        if (ticks % 20 == 0) {
+            this.handleBallSpawning(game)
+        }
     }
 
     private fun fixBallPositionSpawn(game: G) {
@@ -185,6 +188,15 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
             interactionEntity = game.lastInteractedEntity!! as Player
         }
 
+        if (interactionEntity == null) {
+            if (game.ingamePlayersStorage.isEmpty()) {
+                return
+            }
+
+            interactionEntity = game.ingamePlayersStorage.keys.toTypedArray()[0] as Player
+            game.lastInteractedEntity = interactionEntity
+        }
+
         val event = GameGoalEvent(interactionEntity, team, game)
         Bukkit.getServer().pluginManager.callEvent(event)
 
@@ -261,7 +273,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
         val players = ArrayList(game.inTeamPlayers)
         val additionalPlayers = game.notifiedPlayers
-        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first})
+        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
         players.forEach { p -> screenMessageService.setTitle(p, winMessageTitle.replaceGamePlaceholder(game), winMessageSubTitle.replaceGamePlaceholder(game)) }
 
