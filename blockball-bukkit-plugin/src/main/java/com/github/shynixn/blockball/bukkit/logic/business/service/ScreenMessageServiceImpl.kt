@@ -51,7 +51,8 @@ class ScreenMessageServiceImpl @Inject constructor() : ScreenMessageService {
 
         val serializerMethod = findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod("a", String::class.java)
         val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
-        val titleActionClazz = findClazz("net.minecraft.server.VERSION.PacketPlayOutTitle.EnumTitleAction")
+        val titleActionClazz = findClazz("net.minecraft.server.VERSION.PacketPlayOutTitle\$EnumTitleAction")
+
         val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutTitle").getDeclaredConstructor(titleActionClazz, chatBaseComponentClazz, Int::class.java, Int::class.java, Int::class.java)
 
         if (!finalTitle.isEmpty()) {

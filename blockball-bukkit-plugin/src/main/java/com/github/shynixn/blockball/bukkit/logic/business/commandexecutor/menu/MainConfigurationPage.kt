@@ -37,7 +37,7 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class MainConfigurationPage @Inject constructor(private val configurationService: ConfigurationService, private val arenaRepository: PersistenceArenaService) : Page(MainConfigurationPage.ID, OpenPage.ID) {
+class MainConfigurationPage @Inject constructor(private val configurationService: ConfigurationService, private val arenaRepository: PersistenceArenaService, private val blockSelectionService: BlockSelectionService) : Page(MainConfigurationPage.ID, OpenPage.ID) {
     companion object {
         /** Id of the page. */
         const val ID = 2
@@ -48,9 +48,6 @@ class MainConfigurationPage @Inject constructor(private val configurationService
 
     @Inject
     private lateinit var screenMessageService: ScreenMessageService
-
-    @Inject
-    private lateinit var worldEditService: DependencyWorldEditService
 
     @Inject
     private lateinit var gameService: GameService
@@ -82,6 +79,7 @@ class MainConfigurationPage @Inject constructor(private val configurationService
             val arenas = arenaRepository.getArenas()
             cache[0] = arenas.single { b -> b.name.equals(args[2], true) }
             arenaRepository.remove(cache[0] as Arena)
+            cache[0] = null
             return CommandResult.BACK
         } else if (command == BlockBallCommand.ARENA_ENABLE) {
             val arena = cache[0] as Arena
@@ -94,8 +92,8 @@ class MainConfigurationPage @Inject constructor(private val configurationService
             arena.displayName = this.mergeArgs(2, args)
         } else if (command == BlockBallCommand.ARENA_SETAREA) {
             val arena = cache[0] as Arena
-            val left = worldEditService.getLeftClickLocation<Location, Player>(player)
-            val right = worldEditService.getRightClickLocation<Location, Player>(player)
+            val left = blockSelectionService.getLeftClickLocation<Location, Player>(player)
+            val right = blockSelectionService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
                 arena.setCorners(left.get(), right.get())
             } else {
@@ -103,8 +101,8 @@ class MainConfigurationPage @Inject constructor(private val configurationService
             }
         } else if (command == BlockBallCommand.ARENA_SETGOALRED) {
             val arena = cache[0] as Arena
-            val left = worldEditService.getLeftClickLocation<Location, Player>(player)
-            val right = worldEditService.getRightClickLocation<Location, Player>(player)
+            val left = blockSelectionService.getLeftClickLocation<Location, Player>(player)
+            val right = blockSelectionService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
                 arena.meta.redTeamMeta.goal.setCorners(left.get(), right.get())
                 virtualArenaService.displayForPlayer(player, arena)
@@ -114,8 +112,8 @@ class MainConfigurationPage @Inject constructor(private val configurationService
             }
         } else if (command == BlockBallCommand.ARENA_SETGOALBLUE) {
             val arena = cache[0] as Arena
-            val left = worldEditService.getLeftClickLocation<Location, Player>(player)
-            val right = worldEditService.getRightClickLocation<Location, Player>(player)
+            val left = blockSelectionService.getLeftClickLocation<Location, Player>(player)
+            val right = blockSelectionService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
                 arena.meta.blueTeamMeta.goal.setCorners(left.get(), right.get())
                 virtualArenaService.displayForPlayer(player, arena)
@@ -146,6 +144,8 @@ class MainConfigurationPage @Inject constructor(private val configurationService
             if (cache[0] == null || cache[0] !is Arena) {
                 ChatBuilder().text("- ").text(ChatColor.RED.toString() + "Please select an arena to perform this action.")
                         .sendMessage(player)
+
+                gameService.restartGames()
 
                 return CommandResult.CANCEL_MESSAGE
             }

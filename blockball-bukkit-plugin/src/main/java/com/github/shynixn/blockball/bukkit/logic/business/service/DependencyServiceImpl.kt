@@ -3,9 +3,12 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.service.DependencyPlaceholderApiService
 import com.github.shynixn.blockball.api.business.service.DependencyService
+import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.plugin.Plugin
+import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -34,8 +37,9 @@ import org.bukkit.ChatColor
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class DependencyServiceImpl @Inject constructor(private val placeholderApiService: DependencyPlaceholderApiService) : DependencyService {
+class DependencyServiceImpl @Inject constructor(private val plugin: Plugin, private val placeholderApiService: DependencyPlaceholderApiService) : DependencyService {
     private val prefix: String = ChatColor.BLUE.toString() + "[BlockBall] "
+    private var printedWorldEditError = false
 
     /**
      * Checks for installed dependencies and shows console output.
@@ -54,6 +58,15 @@ class DependencyServiceImpl @Inject constructor(private val placeholderApiServic
      */
     override fun isInstalled(pluginDependency: PluginDependency): Boolean {
         val plugin = Bukkit.getPluginManager().getPlugin(pluginDependency.pluginName)
+
+        if (plugin != null && pluginDependency == PluginDependency.WORLEDIT && VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_13_R1)) {
+            if (!printedWorldEditError) {
+                this.plugin.logger.log(Level.WARNING, "WorldEdit dependency cannot be established in 1.13 yet.")
+                printedWorldEditError = true
+            }
+
+            return false
+        }
 
         return plugin != null
     }

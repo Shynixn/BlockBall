@@ -91,6 +91,16 @@ fun Player.isTouchingGround(): Boolean {
 }
 
 /**
+ * Set displayname.
+ */
+fun ItemStack.setDisplayName(displayName: String): ItemStack {
+    val meta = itemMeta
+    meta.displayName = displayName.convertChatColors()
+    itemMeta = meta
+    return this
+}
+
+/**
  * Executes the given [f] for the given [plugin] asynchronly.
  */
 inline fun Any.async(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long = 0L, crossinline f: () -> Unit) {

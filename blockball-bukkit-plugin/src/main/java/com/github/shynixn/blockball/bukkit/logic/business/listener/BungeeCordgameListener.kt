@@ -79,7 +79,7 @@ class BungeeCordgameListener @Inject constructor(private val gameService: GameSe
             return
         }
 
-        rightClickManageService.executeWatchers(event.player, event.clickedBlock.state as Sign)
-        bungeeCordService.clickOnConnectSign(event.player, event.clickedBlock.location)
+        rightClickManageService.executeWatchers(event.player, event.clickedBlock.location)
+      //  bungeeCordService.clickOnConnectSign(event.player, event.clickedBlock.state as Sign)
     }
 }

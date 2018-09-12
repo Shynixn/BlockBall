@@ -9,7 +9,6 @@ import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.SoundService
 import com.github.shynixn.blockball.api.compatibility.ActionEffect
 import com.google.inject.Inject
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
@@ -21,7 +20,10 @@ import org.bukkit.event.entity.PlayerLeashEntityEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
+import org.bukkit.event.world.ChunkLoadEvent
 import org.bukkit.event.world.ChunkUnloadEvent
+import org.bukkit.plugin.Plugin
+import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -50,7 +52,7 @@ import org.bukkit.event.world.ChunkUnloadEvent
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallListener @Inject constructor(private val ballEntityService: BallEntityService, private val particleService: ParticleService, private val soundService: SoundService) : Listener {
+class BallListener @Inject constructor(private val plugin: Plugin, private val ballEntityService: BallEntityService, private val particleService: ParticleService, private val soundService: SoundService) : Listener {
     /**
      * Avoids saving the ball into the chunk data.
      *
@@ -62,6 +64,22 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
             if (entity is ArmorStand) {
                 ballEntityService.findBallFromEntity(entity).ifPresent { ball ->
                     ball.remove()
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if an ball armorstand is inside of the chunk and remove it.
+     */
+    @EventHandler
+    fun onChunkLoadEvent(event: ChunkLoadEvent) {
+        for (entity in event.chunk.entities) {
+            if (entity is ArmorStand && entity.customName != null && entity.getCustomName() == "ResourceBallsPlugin") {
+                val optProxy = ballEntityService.findBallFromEntity(entity)
+                if (!optProxy.isPresent) {
+                    entity.remove()
+                    plugin.logger.log(Level.INFO, "Removed invalid BlockBall in chunk.")
                 }
             }
         }
@@ -263,7 +281,7 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
 
         if (event.entity is HumanEntity) {
             val entity = event.entity as HumanEntity
-           // Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("Ball"), { this@BallListener.setMagnusForce(entity.eyeLocation.direction, event.resultVelocity, event.ball) }, this.spinDelay)
+            // Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("Ball"), { this@BallListener.setMagnusForce(entity.eyeLocation.direction, event.resultVelocity, event.ball) }, this.spinDelay)
         }
     }
 
@@ -331,9 +349,9 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
             return
         }
 
-        ball.spin(event.resultVelocity, force).ifPresent { velocity ->
-            event.resultVelocity = velocity
-        }
+        /*     ball.spin(event.resultVelocity, force).ifPresent { velocity ->
+                 event.resultVelocity = velocity
+             }*/
     }
 
 

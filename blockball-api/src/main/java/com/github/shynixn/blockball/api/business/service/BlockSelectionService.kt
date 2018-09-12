@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.business.service
 
+import java.util.*
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -27,20 +29,29 @@ package com.github.shynixn.blockball.api.business.service
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface RightclickManageService {
+interface BlockSelectionService {
     /**
-     * Gets called one time when a location gets rightlicked by [player].
+     * Selects the left location internally.
      */
-    fun <P, L> watchForNextRightClickSign(player: P, f: (L) -> Unit)
+    fun <L, P> selectLeftLocation(player: P, location: L)
 
     /**
-     * Executes the watcher for the given [player] if he has registered one.
-     * Returns if watchers has been executed.
+     * Selects the right location internally.
      */
-    fun <P, L> executeWatchers(player: P, location: L): Boolean
+    fun <L, P> selectRightLocation(player: P, location: L)
 
     /**
-     * Clears all resources this [player] has allocated from this service.
+     * Returns the leftclick internal or worledit selection of the given [player].
+     */
+    fun <L, P> getLeftClickLocation(player: P): Optional<L>
+
+    /**
+     * Returns the rightclick internal or worledit selection of the given [player].
+     */
+    fun <L, P> getRightClickLocation(player: P): Optional<L>
+
+    /**
+     * Cleans open resources.
      */
     fun <P> cleanResources(player: P)
 }

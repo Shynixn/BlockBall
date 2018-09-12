@@ -14,11 +14,9 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.isTouchingGr
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
-import com.github.shynixn.blockball.bukkit.logic.business.nms.MaterialCompatibility13
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Material
-import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -181,7 +179,10 @@ class GameListener @Inject constructor(private val gameService: GameService, pri
 
         val location = event.clickedBlock.location.toPosition()
 
-        rightClickManageService.executeWatchers(event.player, event.clickedBlock.state as Sign)
+        if (rightClickManageService.executeWatchers(event.player, event.clickedBlock.location)) {
+            return
+        }
+
         gameService.getAllGames().forEach { p ->
             when {
                 p.arena.meta.lobbyMeta.joinSigns.contains(location) -> gameActionService.joinGame(p, event.player)

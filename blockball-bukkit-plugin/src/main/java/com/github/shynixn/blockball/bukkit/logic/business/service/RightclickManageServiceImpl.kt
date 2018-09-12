@@ -50,17 +50,19 @@ class RightclickManageServiceImpl : RightclickManageService {
     /**
      * Executes the watcher for the given [player] if he has registered one.
      */
-    override fun <P, L> executeWatchers(player: P, location: L) {
+    override fun <P, L> executeWatchers(player: P, location: L): Boolean {
         if (player !is Player) {
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
         if (!rightClickListener.containsKey(player)) {
-            return
+            return false
         }
 
         rightClickListener[player]!!.invoke(location as Any)
         rightClickListener.remove(player)
+
+        return true
     }
 
     /**

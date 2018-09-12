@@ -89,6 +89,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(DoubleJumpService::class.java).to(DoubleJumpServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BungeeCordService::class.java).to(BungeeCordServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BallEntityService::class.java).to(BallEntityServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(BlockSelectionService::class.java).to(BlockSelectionServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         // Persistence Services
         bind(PersistenceLinkSignService::class.java).to(PersistenceLinkSignServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -98,7 +99,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         // Dependency Services
         bind(DependencyVaultService::class.java).to(DependencyVaultServiceImpl::class.java)
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
-        bind(DependencyService::class.java).to(DependencyServiceImpl::class.java)
+        bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(DependencyWorldEditService::class.java).to(DependencyWorldEditServiceImpl::class.java)
         bind(DependencyPlaceholderApiService::class.java).to(DependencyPlaceholderApiServiceImpl::class.java)
     }

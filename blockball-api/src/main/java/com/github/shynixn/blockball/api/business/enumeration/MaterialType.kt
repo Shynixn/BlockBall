@@ -69,6 +69,11 @@ enum class MaterialType(
     STAINED_GLASS_PANE(160),
 
     /**
+     * Golden axe.
+     */
+    GOLDEN_AXE(286),
+
+    /**
      * Iron Bars.
      */
     IRON_BARS(101),

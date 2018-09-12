@@ -75,18 +75,8 @@ class SoundServiceImpl @Inject constructor(private val plugin: Plugin) : SoundSe
                 "MAGMACUBE_WALK" -> {
                     return "ENTITY_MAGMA_CUBE_JUMP"
                 }
-                "ENDERMAN_IDLE" -> {
-                    return "ENTITY_ENDERMAN_AMBIENT"
-                }
-                "ENDERDRAGON_GROWL" -> {
-                    return "ENTITY_ENDER_DRAGON_GROWL"
-                }
-                "ENDERDRAGON_WINGS" -> {
-                    return "ENTITY_ENDER_DRAGON_FLAP"
-                }
-                "IRONGOLEM_WALK" -> {
-                    return "ENTITY_IRON_GOLEM_STEP"
-                }
+                "ENTITY_ZOMBIE_ATTACK_DOOR_WOOD" ->
+                    return "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR"
             }
         }
         if (version.isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {

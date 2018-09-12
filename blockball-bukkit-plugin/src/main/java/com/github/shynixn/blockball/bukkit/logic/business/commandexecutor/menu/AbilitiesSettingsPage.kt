@@ -58,10 +58,5 @@ class AbilitiesSettingsPage : Page(AbilitiesSettingsPage.ID, MainSettingsPage.ID
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.DOUBLEJUMP_OPEN.command)
                 .setHoverText("Configure the double jump options for the players.")
                 .builder().nextLine()
-                .component("- BoostItems:").builder()
-                .component(ClickableComponent.INVALID.text).setColor(ClickableComponent.INVALID.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ABILITIES_OPEN.command)
-                .setHoverText("Temporary disabled in this version.")
-                .builder().nextLine()
     }
 }

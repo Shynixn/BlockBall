@@ -1,4 +1,12 @@
-package com.github.shynixn.blockball.api.business.service
+package com.github.shynixn.blockball.bukkit.logic.business.listener
+
+import com.github.shynixn.blockball.api.business.service.BlockSelectionService
+import com.google.inject.Inject
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.block.Action
+import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerQuitEvent
 
 /**
  * Created by Shynixn 2018.
@@ -27,20 +35,24 @@ package com.github.shynixn.blockball.api.business.service
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface RightclickManageService {
+class BlockSelectionListener @Inject constructor(private val blockSelectionService: BlockSelectionService) : Listener {
     /**
-     * Gets called one time when a location gets rightlicked by [player].
+     * Gets called when the player interacts with a block.
      */
-    fun <P, L> watchForNextRightClickSign(player: P, f: (L) -> Unit)
+    @EventHandler
+    fun onPlayerInteractEvent(event: PlayerInteractEvent) {
+        if (event.action == Action.LEFT_CLICK_BLOCK) {
+            blockSelectionService.selectLeftLocation(event.player, event.clickedBlock.location)
+        } else if (event.action == Action.RIGHT_CLICK_BLOCK) {
+            blockSelectionService.selectRightLocation(event.player, event.clickedBlock.location)
+        }
+    }
 
     /**
-     * Executes the watcher for the given [player] if he has registered one.
-     * Returns if watchers has been executed.
+     * Gets called when a player leaves the server.
      */
-    fun <P, L> executeWatchers(player: P, location: L): Boolean
-
-    /**
-     * Clears all resources this [player] has allocated from this service.
-     */
-    fun <P> cleanResources(player: P)
+    @EventHandler
+    fun onPlayerQuitEvent(event: PlayerQuitEvent) {
+        blockSelectionService.cleanResources(event.player)
+    }
 }
