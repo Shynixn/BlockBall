@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.proxy.HighlightArmorstandProxy
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
+import com.github.shynixn.blockball.bukkit.logic.business.nms.MaterialCompatibility13
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.HighlightArmorstandProxyImpl
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PositionEntity
@@ -59,6 +60,13 @@ inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long 
             f.invoke()
         }, delayTicks)
     }
+}
+
+/**
+ * Convers the type into bukkit material
+ */
+fun MaterialType.toBukkitMaterial(): Material {
+    return MaterialCompatibility13.getBukkitMaterial(this)
 }
 
 /**

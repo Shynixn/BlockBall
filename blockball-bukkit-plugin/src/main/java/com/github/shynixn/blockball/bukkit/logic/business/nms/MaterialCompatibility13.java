@@ -48,6 +48,10 @@ public final class MaterialCompatibility13 {
         }
     }
 
+    public static Material getBukkitMaterial(com.github.shynixn.blockball.api.business.enumeration.MaterialType material) {
+        return getMaterialFromId(material.getMinecraftNumericId());
+    }
+
     private MaterialCompatibility13() {
         super();
     }

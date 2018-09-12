@@ -4,9 +4,12 @@ package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
 import com.github.shynixn.blockball.api.bukkit.event.*
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
+import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.compatibility.BounceObject
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
+import com.github.shynixn.blockball.bukkit.logic.business.nms.MaterialCompatibility13
 import com.github.shynixn.blockball.bukkit.logic.compatibility.BallData
 import com.github.shynixn.blockball.bukkit.logic.compatibility.SkinHelper
 import org.bukkit.Bukkit
@@ -52,7 +55,10 @@ import java.util.logging.Level
  * SOFTWARE.
  */
 class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand, private val hitbox: ArmorStand, override val uuid: UUID = UUID.randomUUID(), private val initialOwner: LivingEntity?, override var persistent: Boolean) : BallProxy, Runnable, ConfigurationSerializable {
-    private val excludedRelativeItems = arrayOf(org.bukkit.Material.FENCE, org.bukkit.Material.IRON_FENCE, org.bukkit.Material.THIN_GLASS, org.bukkit.Material.FENCE_GATE, org.bukkit.Material.NETHER_FENCE, org.bukkit.Material.COBBLE_WALL, org.bukkit.Material.STAINED_GLASS_PANE, org.bukkit.Material.SPRUCE_FENCE_GATE, org.bukkit.Material.BIRCH_FENCE_GATE, org.bukkit.Material.JUNGLE_FENCE_GATE, org.bukkit.Material.DARK_OAK_FENCE_GATE, org.bukkit.Material.ACACIA_FENCE_GATE, org.bukkit.Material.SPRUCE_FENCE, org.bukkit.Material.BIRCH_FENCE, org.bukkit.Material.JUNGLE_FENCE, org.bukkit.Material.DARK_OAK_FENCE, org.bukkit.Material.ACACIA_FENCE)
+    companion object {
+        private val excludedRelativeItems = arrayOf(MaterialType.OAK_FENCE.MinecraftNumericId, MaterialType.IRON_BARS.toBukkitMaterial(), MaterialType.GLASS_PANE.toBukkitMaterial(), MaterialType.OAK_FENCE_GATE.toBukkitMaterial(), MaterialType.NETHER_FENCE.toBukkitMaterial(), MaterialType.COBBLESTONE_WALL.toBukkitMaterial(), MaterialType.STAINED_GLASS_PANE.toBukkitMaterial(), org.bukkit.Material.SPRUCE_FENCE_GATE, org.bukkit.Material.BIRCH_FENCE_GATE, org.bukkit.Material.JUNGLE_FENCE_GATE, org.bukkit.Material.DARK_OAK_FENCE_GATE, org.bukkit.Material.ACACIA_FENCE_GATE, org.bukkit.Material.SPRUCE_FENCE, org.bukkit.Material.BIRCH_FENCE, org.bukkit.Material.JUNGLE_FENCE, org.bukkit.Material.DARK_OAK_FENCE, org.bukkit.Material.ACACIA_FENCE)
+        private val skullmaterial = MaterialType.SKULL_ITEM.toBukkitMaterial()
+    }
 
     /** Design **/
     private var backAnimation = false
@@ -177,7 +183,7 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         val livingEntity = this.interactionEntity as LivingEntity
         livingEntity.equipment.itemInHand = null
         this.isGrabbed = false
-        val itemStack = ItemStack(Material.SKULL_ITEM, 1, 3.toShort())
+        val itemStack = ItemStack(skullmaterial, 1, 3.toShort())
 
         try {
             SkinHelper.setItemStackSkin(itemStack, meta.skin)

@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
+import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.DoubleJumpService
@@ -11,7 +12,9 @@ import com.github.shynixn.blockball.api.business.service.RightclickManageService
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isTouchingGround
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.bukkit.logic.business.nms.MaterialCompatibility13
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Material
@@ -57,6 +60,8 @@ import org.bukkit.event.player.PlayerToggleFlightEvent
  * SOFTWARE.
  */
 class GameListener @Inject constructor(private val gameService: GameService, private val rightClickManageService: RightclickManageService, private val doubleJumpService: DoubleJumpService, private val gameActionService: GameActionService<Game>) : Listener {
+    private val signPostMaterial = MaterialType.SIGN_POST.toBukkitMaterial()
+
     /**
      * Gets called when a player leaves the server and the game.
      */
@@ -170,7 +175,7 @@ class GameListener @Inject constructor(private val gameService: GameService, pri
             return
         }
 
-        if (event.clickedBlock.type != Material.SIGN_POST && event.clickedBlock.type != Material.WALL_SIGN) {
+        if (event.clickedBlock.type != signPostMaterial && event.clickedBlock.type != Material.WALL_SIGN) {
             return
         }
 

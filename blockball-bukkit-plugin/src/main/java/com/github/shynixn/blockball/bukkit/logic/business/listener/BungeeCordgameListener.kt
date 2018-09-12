@@ -1,11 +1,14 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.service.BungeeCordService
 import com.github.shynixn.blockball.api.business.service.GameActionService
 import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.RightclickManageService
 import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
+import com.github.shynixn.blockball.bukkit.logic.business.nms.MaterialCompatibility13
 import com.google.inject.Inject
 import org.bukkit.Material
 import org.bukkit.block.Sign
@@ -43,6 +46,7 @@ import org.bukkit.event.player.PlayerJoinEvent
  * SOFTWARE.
  */
 class BungeeCordgameListener @Inject constructor(private val gameService: GameService, private val rightClickManageService: RightclickManageService, private val bungeeCordService: BungeeCordService, private val gameActionService: GameActionService<Game>) : Listener {
+    private val signPostMaterial = MaterialType.SIGN_POST.toBukkitMaterial()
 
     /**
      * Joins the game for a bungeecord player.
@@ -71,7 +75,7 @@ class BungeeCordgameListener @Inject constructor(private val gameService: GameSe
             return
         }
 
-        if (event.clickedBlock.type != Material.SIGN_POST && event.clickedBlock.type != Material.WALL_SIGN) {
+        if (event.clickedBlock.type != signPostMaterial && event.clickedBlock.type != Material.WALL_SIGN) {
             return
         }
 

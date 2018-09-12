@@ -197,7 +197,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
         val players = ArrayList(game.inTeamPlayers)
         val additionalPlayers = game.notifiedPlayers
-        players.addAll(additionalPlayers.filter { pair -> pair.value }.map { p -> p.key })
+        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
         players.forEach { p -> screenMessageService.setTitle(p, scoreMessageTitle.replaceGamePlaceholder(game), scoreMessageSubTitle.replaceGamePlaceholder(game)) }
     }
@@ -261,7 +261,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
         val players = ArrayList(game.inTeamPlayers)
         val additionalPlayers = game.notifiedPlayers
-        players.addAll(additionalPlayers.filter { pair -> pair.value }.map { p -> p.key })
+        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first})
 
         players.forEach { p -> screenMessageService.setTitle(p, winMessageTitle.replaceGamePlaceholder(game), winMessageSubTitle.replaceGamePlaceholder(game)) }
 

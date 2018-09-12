@@ -1,6 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.compatibility;
 
 import com.github.shynixn.blockball.api.compatibility.BounceObject;
+import com.github.shynixn.blockball.bukkit.logic.business.nms.MaterialCompatibility13;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
@@ -131,7 +133,7 @@ public class BounceInfo implements BounceObject, ConfigurationSerializable {
     @Override
     public boolean isBlock(Object block) {
         final Block bukkitBlock = (Block) block;
-        if (bukkitBlock.getTypeId() == this.getMaterialId()) {
+        if (bukkitBlock.getType() == this.getMaterial()) {
             if (bukkitBlock.getData() == this.getMaterialDamageValue()) {
                 return true;
             }
@@ -151,5 +153,9 @@ public class BounceInfo implements BounceObject, ConfigurationSerializable {
         data.put("damage", this.damage);
         data.put("modifier", this.modifier);
         return data;
+    }
+
+    private Material getMaterial() {
+        return MaterialCompatibility13.getMaterialFromId(this.getMaterialId());
     }
 }

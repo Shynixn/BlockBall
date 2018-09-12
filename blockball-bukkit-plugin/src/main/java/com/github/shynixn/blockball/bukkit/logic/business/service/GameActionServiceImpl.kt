@@ -9,6 +9,7 @@ import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
@@ -55,7 +56,7 @@ import java.util.logging.Level
  */
 class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin: Plugin, private val gameHubGameActionService: GameHubGameActionService, private val bossBarService: BossBarService, private val configurationService: ConfigurationService, private val hubGameActionService: GameHubGameActionService, private val minigameActionService: GameMiniGameActionService<MiniGame>, private val bungeeCordGameActionService: GameBungeeCordGameActionService, private val scoreboardService: ScoreboardService, private val hologramService: HologramService, private val dependencyService: DependencyService, private val dependencyBossBarApiService: DependencyBossBarApiService) : GameActionService<G> {
     private val prefix = configurationService.findValue<String>("messages.prefix")
-    private val version = VersionSupport.getServerVersion()
+    private val signPostMaterial = MaterialType.SIGN_POST.toBukkitMaterial()
 
     /**
      * Lets the given [player] leave join the given [game]. Optional can the prefered
@@ -262,7 +263,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
             players = game.blueTeam
         }
         val location = signPosition.toLocation()
-        if (location.block.type != Material.SIGN_POST && location.block.type != Material.WALL_SIGN)
+        if (location.block.type != signPostMaterial && location.block.type != Material.WALL_SIGN)
             return false
         val sign = location.block.state as Sign
         for (i in lines.indices) {

@@ -3,8 +3,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2
 
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
+import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
+import com.github.shynixn.blockball.bukkit.logic.business.nms.MaterialCompatibility13
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallProxyImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.SpigotTimingServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.compatibility.SkinHelper
@@ -51,6 +54,8 @@ import java.util.logging.Level
  * SOFTWARE.
  */
 class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) : EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
+    private val skullmaterial = MaterialType.SKULL_ITEM.toBukkitMaterial()
+
     private val hitbox = BallHitBox(this, location, SpigotTimingServiceImpl())
     private var internalProxy: BallProxyImpl? = null
     /**
@@ -78,7 +83,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         compound.setBoolean("NoBasePlate", true)
         this.a(compound)
 
-        val itemStack = ItemStack(Material.SKULL_ITEM, 1, 3.toShort())
+        val itemStack = ItemStack(skullmaterial, 1, 3.toShort())
         try {
             SkinHelper.setItemStackSkin(itemStack, proxy.meta.skin)
         } catch (e1: Exception) {

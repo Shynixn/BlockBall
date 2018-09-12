@@ -2,8 +2,10 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
+import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.HighlightArmorstandProxy
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -41,8 +43,13 @@ import java.util.*
  * SOFTWARE.
  */
 class HighlightArmorstandProxyImpl(private val uuid: UUID, initialLocation: Location) : HighlightArmorstandProxy {
+    companion object {
+        private val stainedClassPane = MaterialType.STAINED_GLASS_PANE.toBukkitMaterial()
+    }
+
     private var armorstand: ArmorStand
     private val version = VersionSupport.getServerVersion()
+
 
     init {
         val player = Bukkit.getPlayer(uuid)
@@ -61,9 +68,9 @@ class HighlightArmorstandProxyImpl(private val uuid: UUID, initialLocation: Loca
         nbtTagBooleanMethod.invoke(nbtTagCompound, "PersistenceRequired", true)
         nbtTagBooleanMethod.invoke(nbtTagCompound, "NoBasePlate", true)
 
-        applyNbtMethod.isAccessible = true;
+        applyNbtMethod.isAccessible = true
         applyNbtMethod.invoke(nmsArmorstand, nbtTagCompound)
-        val itemStack = ItemStack(Material.STAINED_GLASS_PANE, 1)
+        val itemStack = ItemStack(stainedClassPane, 1)
 
         with(armorstand) {
             helmet = itemStack
