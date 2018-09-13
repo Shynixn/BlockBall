@@ -2,8 +2,8 @@
 
 | branch        | status        | coverage | download |
 | ------------- | ------------- | -------- | ---------| 
-| master        | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=master)](https://travis-ci.org/Shynixn/BlockBall) | [![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/master.svg)](https://codecov.io/gh/Shynixn/BlockBall/branch/master)|[Download latest release (recommend)](https://github.com/Shynixn/BlockBall/releases)|
-| development   | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=development)](https://travis-ci.org/Shynixn/BlockBall)|[![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/development.svg)](https://codecov.io/gh/Shynixn/BlockBall/branch/development) | [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/) |
+| master        | [![Build Status](https://img.shields.io/travis/Shynixn/BlockBall/master.svg?style=flat-square)](https://travis-ci.org/Shynixn/BlockBall) | [![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/master.svg?style=flat-square)](https://codecov.io/gh/Shynixn/BlockBall/branch/master)|[Download latest release (recommend)](https://github.com/Shynixn/BlockBall/releases)|
+| development   | [![Build Status](https://img.shields.io/travis/Shynixn/BlockBall/development.svg?style=flat-square)](https://travis-ci.org/Shynixn/BlockBall)|[![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/development.svg?style=flat-square)](https://codecov.io/gh/Shynixn/BlockBall/branch/development) | [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/) |
 
 Documentation:  https://shynixn.github.io/BlockBall/
 
@@ -17,7 +17,7 @@ BlockBall is a spigot plugin to play soccer games in Minecraft.
 
 * Uses blocks as balls in minecraft
 * Games are completely customizable
-* Version support 1.8.R1 - 1.13.R1
+* Version support 1.8.R1 - 1.13.R2
 * Check out the [BlockBall-Spigot-Page](https://www.spigotmc.org/resources/15320/) to get more information. 
 
 ## Installation
