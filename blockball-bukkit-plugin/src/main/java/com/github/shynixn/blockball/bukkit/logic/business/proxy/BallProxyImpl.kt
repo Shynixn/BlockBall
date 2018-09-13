@@ -18,6 +18,7 @@ import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.configuration.serialization.ConfigurationSerializable
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
@@ -64,6 +65,7 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
     private var backAnimation = false
     private var interactionEntity: Entity? = null
     private var counter = 20
+    override var yawChange: Float = -1.0F
 
     /** HitBox **/
     private var knockBackBumper: Int = 0
@@ -130,6 +132,9 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
 
             if (!isGrabbed) {
                 checkMovementInteractions()
+                if (this.meta.isRotatingEnabled) {
+                    this.playRotationAnimation()
+                }
             } else {
                 this.hitbox.teleport(design)
             }
@@ -227,7 +232,7 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
 
         val vector = hitbox.location.toVector().subtract(entity.location.toVector()).normalize()
                 .multiply(meta.modifiers.horizontalKickStrengthModifier)
-        //  this.hitBox.yaw = livingEntity.getLocation().getYaw()
+        this.yawChange = entity.location.yaw
         vector.y = 0.1 * meta.modifiers.verticalKickStrengthModifier
         val event = BallKickEvent(vector, entity, this)
         Bukkit.getPluginManager().callEvent(event)
@@ -489,7 +494,7 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
                             .normalize().multiply(meta.modifiers.horizontalTouchModifier)
                     vector.y = 0.1 * meta.modifiers.verticalTouchModifier
 
-                    //  this.hitBox.yaw = entity.getLocation().getYaw()
+                    this.yawChange = entity.location.yaw
                     this.setVelocity(vector)
                     return true
                 }
@@ -538,6 +543,36 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         Bukkit.getPluginManager().callEvent(event)
         if (!event.isCancelled) {
             ball.spinningForce = event.spinningForce
+        }
+    }
+
+    /**
+     * Plays the rotation animation.
+     */
+    private fun playRotationAnimation() {
+        val length = this.hitbox.velocity.length()
+        var angle: EulerAngle? = null
+
+        val a = this.design.headPose
+        when {
+            length > 1.0 -> angle = if (this.backAnimation) {
+                EulerAngle(a.x - 0.5, 0.0, 0.0)
+            } else {
+                EulerAngle(a.x + 0.5, 0.0, 0.0)
+            }
+            length > 0.1 -> angle = if (this.backAnimation) {
+                EulerAngle(a.x - 0.25, 0.0, 0.0)
+            } else {
+                EulerAngle(a.x + 0.25, 0.0, 0.0)
+            }
+            length > 0.08 -> angle = if (this.backAnimation) {
+                EulerAngle(a.x - 0.025, 0.0, 0.0)
+            } else {
+                EulerAngle(a.x + 0.025, 0.0, 0.0)
+            }
+        }
+        if (angle != null) {
+            this.design.headPose = angle
         }
     }
 

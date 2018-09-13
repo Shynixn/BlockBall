@@ -74,15 +74,7 @@ class BallListener @Inject constructor(private val plugin: Plugin, private val b
      */
     @EventHandler
     fun onChunkLoadEvent(event: ChunkLoadEvent) {
-        for (entity in event.chunk.entities) {
-            if (entity is ArmorStand && entity.customName != null && entity.getCustomName() == "ResourceBallsPlugin") {
-                val optProxy = ballEntityService.findBallFromEntity(entity)
-                if (!optProxy.isPresent) {
-                    entity.remove()
-                    plugin.logger.log(Level.INFO, "Removed invalid BlockBall in chunk.")
-                }
-            }
-        }
+        ballEntityService.cleanUpInvalidEntities(event.chunk.entities.toList())
     }
 
     /**

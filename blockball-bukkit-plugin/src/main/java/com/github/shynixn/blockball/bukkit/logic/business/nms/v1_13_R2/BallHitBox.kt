@@ -61,7 +61,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
     override fun recalcPosition() {
         val axisBoundingBox = this.boundingBox
         this.locX = (axisBoundingBox.a + axisBoundingBox.d) / 2.0
-        this.locY = axisBoundingBox.b + ballDesign.proxy!!.meta.hitBoxRelocationDistance
+        this.locY = axisBoundingBox.b + ballDesign.proxy.meta.hitBoxRelocationDistance
         this.locZ = (axisBoundingBox.c + axisBoundingBox.f) / 2.0
     }
 
@@ -70,7 +70,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
      */
     override fun move(enummovetype: EnumMoveType, d0m: Double, d1m: Double, d2m: Double) {
         val motionVector = Vector(motX, motY, motZ)
-        val optSourceVector = ballDesign.proxy!!.calculateMoveSourceVectors(Vector(d0m, d1m, d2m), motionVector, this.onGround)
+        val optSourceVector = ballDesign.proxy.calculateMoveSourceVectors(Vector(d0m, d1m, d2m), motionVector, this.onGround)
 
         if (!optSourceVector.isPresent) {
             return
@@ -255,7 +255,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
             if (this.positionChanged) {
                 try {
                     val sourceBlock = this.world.world.getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ))
-                    this.ballDesign.proxy!!.calculateKnockBack(sourceVector, sourceBlock, d0, d2, d7, d9)
+                    this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, d0, d2, d7, d9)
                 } catch (e: Exception) {
                     Bukkit.getLogger().log(Level.WARNING, "Critical exception.", e)
                 }

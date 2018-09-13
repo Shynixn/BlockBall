@@ -149,7 +149,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
      * Closes the given game and all underlying resources.
      */
     override fun closeGame(game: G) {
-        if (!game.closed) {
+        if (game.closed) {
             return
         }
 
@@ -165,13 +165,16 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
         game.status = GameStatus.DISABLED
         game.closed = true
-        game.ingamePlayersStorage.keys.toTypedArray().map { p -> p is Player }.forEach { p -> leaveGame(game, p) }
+        game.ingamePlayersStorage.keys.toTypedArray().forEach { p -> leaveGame(game, p) }
         game.ingamePlayersStorage.clear()
         game.ball?.remove()
         game.doubleJumpCoolDownPlayers.clear()
         game.holograms.forEach { h -> h.remove() }
         game.holograms.clear()
-        bossBarService.cleanResources(game.bossBar)
+
+        if (game.bossBar != null) {
+            bossBarService.cleanResources(game.bossBar)
+        }
     }
 
     /**

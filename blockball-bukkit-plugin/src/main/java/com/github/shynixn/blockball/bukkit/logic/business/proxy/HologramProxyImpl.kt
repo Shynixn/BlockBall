@@ -234,6 +234,10 @@ class HologramProxyImpl(private val plugin: Plugin, private val version: com.git
                 removeWatcher(p)
             }
         }
+        armorstands.forEach { armorstand ->
+            armorstand.remove()
+        }
+
         this.armorstands.clear()
     }
 

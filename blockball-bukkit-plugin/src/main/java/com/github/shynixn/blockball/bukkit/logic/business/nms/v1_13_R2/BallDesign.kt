@@ -116,6 +116,11 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             this.setPositionRotation(loc.x, loc.y - 1.0, loc.z, loc.yaw, loc.pitch)
         }
 
+        if (proxy.yawChange > 0) {
+            this.hitbox.yaw = proxy.yawChange
+            proxy.yawChange = -1.0F
+        }
+
         proxy.run()
     }
 }

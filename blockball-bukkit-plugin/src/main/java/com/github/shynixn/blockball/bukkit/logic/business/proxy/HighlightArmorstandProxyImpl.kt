@@ -132,6 +132,8 @@ class HighlightArmorstandProxyImpl(private val uuid: UUID, initialLocation: Loca
 
         val player = Bukkit.getPlayer(uuid)
         player.sendPacket(packetEntityDestroy)
+
+        armorstand.remove()
     }
 
     /**

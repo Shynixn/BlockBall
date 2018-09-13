@@ -37,6 +37,12 @@ interface BallProxy {
     val meta: BallMeta
 
     /**
+     * Runnable Value yaw change which reprents internal yaw change calculation.
+     * Returns below 0 if yaw did not change.
+     */
+    var yawChange: Float
+
+    /**
      * Is the ball currently grabbed by some entity?
      */
     val isGrabbed: Boolean
@@ -125,7 +131,7 @@ interface BallProxy {
     /**
      * Spins the ball with the given velocity and returns the calculated velocity.
      */
-    fun <V> spin(velocity: V, force : Double): Optional<V>
+    fun <V> spin(velocity: V, force: Double): Optional<V>
 
     /**
      * DeGrabs the ball.

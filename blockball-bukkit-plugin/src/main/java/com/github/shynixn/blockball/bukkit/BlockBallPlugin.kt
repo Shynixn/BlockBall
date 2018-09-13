@@ -4,10 +4,7 @@ package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
-import com.github.shynixn.blockball.api.business.service.DependencyService
-import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.business.service.UpdateCheckService
+import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.*
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
@@ -52,6 +49,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val PREFIX_CONSOLE: String = ChatColor.BLUE.toString() + "[BlockBall] "
         private const val PLUGIN_NAME = "BlockBall"
     }
+
     private var injector: Injector? = null
 
     /**
@@ -87,6 +85,11 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             val updateCheker = resolve(UpdateCheckService::class.java)
             val dependencyChecker = resolve(DependencyService::class.java)
             val configurationService = resolve(ConfigurationService::class.java)
+            val ballEntitySerivice = resolve(BallEntityService::class.java)
+
+            Bukkit.getWorlds().forEach { world ->
+                ballEntitySerivice.cleanUpInvalidEntities(world.entities)
+            }
 
             updateCheker.checkForUpdates()
             dependencyChecker.checkForInstalledDependencies()
@@ -99,6 +102,17 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
 
             startPlugin()
             Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")
+        }
+    }
+
+    /**
+     * Override on disable.
+     */
+    override fun onDisable() {
+        try {
+            resolve(GameService::class.java).close()
+        } catch (e: Exception) {
+            // Ignored.
         }
     }
 

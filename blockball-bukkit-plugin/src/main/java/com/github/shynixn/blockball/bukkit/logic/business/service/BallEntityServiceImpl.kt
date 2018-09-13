@@ -11,6 +11,7 @@ import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
 import org.bukkit.plugin.Plugin
 import java.util.*
+import java.util.logging.Level
 import kotlin.collections.ArrayList
 
 /**
@@ -59,6 +60,21 @@ class BallEntityServiceImpl @Inject constructor(private val version: Version, pr
         balls.add(ballProxy)
 
         return ballProxy
+    }
+
+    /**
+     * Checks the entity collection for invalid ball entities and removes them.
+     */
+    override fun <E> cleanUpInvalidEntities(entities: Collection<E>) {
+        for (entity in entities) {
+            if (entity is ArmorStand && entity.customName != null && entity.customName == "ResourceBallsPlugin") {
+                val optProxy = findBallFromEntity(entity)
+                if (!optProxy.isPresent) {
+                    entity.remove()
+                    plugin.logger.log(Level.INFO, "Removed invalid BlockBall in chunk.")
+                }
+            }
+        }
     }
 
     /**
