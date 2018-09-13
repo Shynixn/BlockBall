@@ -335,8 +335,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
      */
     private fun joinTeam(game: MiniGame, player: Player, team: Team, teamMeta: TeamMeta) {
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()
-        player.inventory.contents = teamMeta.inventoryContents.clone() as Array<out ItemStack>
-        player.inventory.armorContents = teamMeta.armorContents.clone() as Array<out ItemStack>
+        player.inventory.contents = teamMeta.inventoryContents.clone().map { d -> d as ItemStack? }.toTypedArray()
+        player.inventory.armorContents = teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray()
         player.inventory.updateInventory()
 
         val players = if (team == Team.RED) {
@@ -434,6 +434,10 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
      * Gets called when the game ends.
      */
     private fun timesUpGame(game: MiniGame) {
+        if (game.ball != null) {
+            game.ball!!.remove()
+        }
+
         when {
             game.redScore == game.blueScore -> {
                 gameSoccerService.onMatchEnd<Player>(game, null, null)

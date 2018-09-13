@@ -9,6 +9,7 @@ import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
@@ -162,6 +163,10 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
     private fun handleBallSpawning(game: G) {
         if (game.ballSpawning) {
+            if (game is MiniGame && game.endGameActive) {
+                return
+            }
+
             game.ballSpawnCounter--
             if (game.ballSpawnCounter <= 0) {
                 game.ball = ballEntityService.spawnTemporaryBall(game.arena.meta.ballMeta.spawnpoint!!.toLocation(), game.arena.meta.ballMeta)

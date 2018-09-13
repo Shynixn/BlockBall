@@ -77,6 +77,8 @@ class SoundServiceImpl @Inject constructor(private val plugin: Plugin) : SoundSe
                 }
                 "ENTITY_ZOMBIE_ATTACK_DOOR_WOOD" ->
                     return "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR"
+                "NOTE_PLING" ->
+                    return "BLOCK_NOTE_BLOCK_PLING"
             }
         }
         if (version.isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
@@ -123,6 +125,9 @@ class SoundServiceImpl @Inject constructor(private val plugin: Plugin) : SoundSe
                 }
                 "ENDERDRAGON_GROWL" -> {
                     return "ENTITY_ENDERDRAGON_GROWL"
+                }
+                "NOTE_BLING" -> {
+                    return "BLOCK_NOTE_PLING"
                 }
                 "none" -> {
                     return "none"

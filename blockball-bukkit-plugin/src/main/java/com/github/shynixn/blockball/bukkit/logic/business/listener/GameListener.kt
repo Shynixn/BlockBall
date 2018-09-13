@@ -65,10 +65,15 @@ class GameListener @Inject constructor(private val gameService: GameService, pri
      */
     @EventHandler
     fun onPlayerQuitEvent(event: PlayerQuitEvent) {
-        val game = gameService.getGameFromPlayer(event.player)
+        val playerGame = gameService.getGameFromPlayer(event.player)
+        val spectateGame = gameService.getGameFromSpectatingPlayer(event.player)
 
-        if (game.isPresent) {
-            gameActionService.leaveGame(game.get(), event.player)
+        if (playerGame.isPresent) {
+            gameActionService.leaveGame(playerGame.get(), event.player)
+        }
+
+        if (spectateGame.isPresent) {
+            gameActionService.leaveGame(spectateGame.get(), event.player)
         }
 
         rightClickManageService.cleanResources(event.player)
