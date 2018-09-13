@@ -314,7 +314,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
             }
 
             additionalPlayers.filter { p -> !p.second }.forEach { p ->
-                holo.removeWatcher(p)
+                holo.removeWatcher(p.first)
             }
 
             val lines = ArrayList(game.arena.meta.hologramMetas[i].lines)
@@ -433,7 +433,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         }
 
         val players = ArrayList<Pair<Player, Boolean>>()
-        val center = game.arena.center as Location
+        val center = game.arena.center.toLocation()
 
         center.world.players.forEach { p ->
             if (!game.ingamePlayersStorage.containsKey(p)) {

@@ -311,7 +311,10 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
 
         this.backAnimation = false
         this.spinningForce = 0.0
-        this.design.headPose = EulerAngle(2.0, 0.0, 0.0)
+
+        if (this.meta.isRotatingEnabled) {
+            this.design.headPose = EulerAngle(2.0, 0.0, 0.0)
+        }
 
         try {
             this.times = (50 * this.meta.modifiers.rollingDistanceModifier).toInt()
