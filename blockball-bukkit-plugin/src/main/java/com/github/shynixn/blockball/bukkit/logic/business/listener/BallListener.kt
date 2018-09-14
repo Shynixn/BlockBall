@@ -10,7 +10,10 @@ import com.github.shynixn.blockball.api.business.service.SoundService
 import com.github.shynixn.blockball.api.compatibility.ActionEffect
 import com.google.inject.Inject
 import org.bukkit.Location
-import org.bukkit.entity.*
+import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -22,8 +25,6 @@ import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
 import org.bukkit.event.world.ChunkLoadEvent
 import org.bukkit.event.world.ChunkUnloadEvent
-import org.bukkit.plugin.Plugin
-import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -52,7 +53,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallListener @Inject constructor(private val plugin: Plugin, private val ballEntityService: BallEntityService, private val particleService: ParticleService, private val soundService: SoundService) : Listener {
+class BallListener @Inject constructor(private val ballEntityService: BallEntityService, private val particleService: ParticleService, private val soundService: SoundService) : Listener {
     /**
      * Avoids saving the ball into the chunk data.
      *
@@ -270,11 +271,6 @@ class BallListener @Inject constructor(private val plugin: Plugin, private val b
     @EventHandler
     fun ballKickEvent(event: BallKickEvent) {
         this.playEffects(event.ball, ActionEffect.ONKICK)
-
-        if (event.entity is HumanEntity) {
-            val entity = event.entity as HumanEntity
-            // Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("Ball"), { this@BallListener.setMagnusForce(entity.eyeLocation.direction, event.resultVelocity, event.ball) }, this.spinDelay)
-        }
     }
 
     /**
@@ -327,23 +323,6 @@ class BallListener @Inject constructor(private val plugin: Plugin, private val b
         if (!event.ball.isDead) {
             this.playEffects(event.ball, ActionEffect.ONMOVE)
         }
-    }
-
-    /**
-     * Calculates post spinning.
-     */
-    @EventHandler
-    fun ballPostMoveEvent(event: BallPostMoveEvent) {
-        val ball = event.ball
-        val force = ball.spinningForce
-
-        if (ball.isDead || !event.hasMoved || force == 0.0) {
-            return
-        }
-
-        /*     ball.spin(event.resultVelocity, force).ifPresent { velocity ->
-                 event.resultVelocity = velocity
-             }*/
     }
 
 

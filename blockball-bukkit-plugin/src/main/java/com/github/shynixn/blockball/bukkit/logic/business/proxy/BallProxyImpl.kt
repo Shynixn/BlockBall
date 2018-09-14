@@ -9,7 +9,6 @@ import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.compatibility.BounceObject
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
-import com.github.shynixn.blockball.bukkit.logic.business.nms.MaterialCompatibility13
 import com.github.shynixn.blockball.bukkit.logic.compatibility.BallData
 import com.github.shynixn.blockball.bukkit.logic.compatibility.SkinHelper
 import org.bukkit.Bukkit
@@ -18,15 +17,16 @@ import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.configuration.serialization.ConfigurationSerializable
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import java.util.*
 import java.util.logging.Level
+
 
 /**
  * Created by Shynixn 2018.
@@ -72,6 +72,8 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
     private var reduceVector: Vector? = null
     private var originVector: Vector? = null
     private var times: Int = 0
+    private var magnusForce = 0F
+    // TODO: private var clockwise = true
 
     /**
      * Current spinning force value.
@@ -153,29 +155,6 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         this.hitbox.remove()
     }
 
-    /**
-     * Spins the ball with the given velocity.
-     */
-    override fun <V> spin(velocity: V, force: Double): Optional<V> {
-        if (velocity !is Vector) {
-            throw IllegalArgumentException("Vector has to be a BukkitVector!")
-        }
-
-        val spinEvent = BallSpinEvent(force, this)
-        Bukkit.getPluginManager().callEvent(spinEvent)
-
-        val resultingForce = spinEvent.spinningForce
-
-        if ((getHitboxArmorstand<Any>() as ArmorStand).isOnGround) {
-            return Optional.empty()
-        }
-
-        if (resultingForce != 0.0) {
-            return Optional.of(this.calculateMagnusForce(velocity, resultingForce) as V)
-        }
-
-        return Optional.empty()
-    }
 
     /**
      * DeGrabs the ball.
@@ -199,6 +178,37 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         this.setHelmet(itemStack)
         val vector = this.getDirection(livingEntity).normalize().multiply(3)
         this.teleport(livingEntity.location.add(vector))
+    }
+
+    /**
+     * Lets the ball spin to the player direction.
+     */
+    override fun <V> spin(playerDirection: V, resultVelocity: V) {
+        if (playerDirection !is Vector) {
+            throw IllegalArgumentException("PlayerDirection has to be a BukkitVector!")
+        }
+
+        if (resultVelocity !is Vector) {
+            throw IllegalArgumentException("ResultVelocity has to be a BukkitVector!")
+        }
+
+        val angle = getAngle(resultVelocity, playerDirection)
+        val force: Float
+
+        force = if (angle > 0.3f && angle < 10f) {
+            0.03f
+        } else if (angle < -0.3f && angle > -10f) {
+            -0.03f
+        } else {
+            return
+        }
+
+        val event = BallSpinEvent(force.toDouble(), this)
+        Bukkit.getPluginManager().callEvent(event)
+
+        if (!event.isCancelled) {
+            this.magnusForce = event.spinningForce.toFloat()
+        }
     }
 
     /**
@@ -233,11 +243,16 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         val vector = hitbox.location.toVector().subtract(entity.location.toVector()).normalize()
                 .multiply(meta.modifiers.horizontalKickStrengthModifier)
         this.yawChange = entity.location.yaw
+        this.magnusForce = 0F
         vector.y = 0.1 * meta.modifiers.verticalKickStrengthModifier
         val event = BallKickEvent(vector, entity, this)
         Bukkit.getPluginManager().callEvent(event)
         if (!event.isCancelled) {
             this.setVelocity(vector)
+
+            if (entity is HumanEntity) {
+                // TODO: spin(entity.eyeLocation.direction,vector)
+            }
         }
     }
 
@@ -382,8 +397,11 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
             motionVector.y = this.originVector!!.y
             this.times--
 
+            // TODO this.applyMagnusForce()
             Optional.of(Vector(motionVector.x, motionVector.y, motionVector.z) as V)
         } else {
+
+            // TODO this.applyMagnusForce()
             Optional.of(Vector(movementVector.x, movementVector.y, movementVector.z) as V)
         }
     }
@@ -437,6 +455,10 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
                 this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.NORTH)
             }
         }
+
+        // TODO Post calculation spin
+        val postMovement = BallPostMoveEvent(sourceVector, true, this)
+        Bukkit.getPluginManager().callEvent(postMovement)
     }
 
     /**
@@ -528,28 +550,6 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
     }
 
     /**
-     * Magnus force calculation.
-     */
-    private fun setMagnusForce(facing: Vector, result: Vector, ball: BallProxy) {
-        val angle = this.getAngle(result, facing)
-        val force: Float
-
-        force = if (angle > 0.3f && angle < 10f) {
-            0.03f
-        } else if (angle < -0.3f && angle > -10f) {
-            -0.03f
-        } else {
-            return
-        }
-
-        val event = BallSpinEvent(force.toDouble(), ball)
-        Bukkit.getPluginManager().callEvent(event)
-        if (!event.isCancelled) {
-            ball.spinningForce = event.spinningForce
-        }
-    }
-
-    /**
      * Plays the rotation animation.
      */
     private fun playRotationAnimation() {
@@ -580,16 +580,35 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
     }
 
     /**
-     * Magnus force calculation.
+     * Applies the magnus force to the ball.
      */
-    private fun calculateMagnusForce(velocity: Vector, force: Double): Vector {
-        val originUnit = velocity.normalize()
-        val x = -originUnit.z
-        val z = originUnit.x
+    /* TODO: private fun applyMagnusForce() {
+        if (this.times <= 0) {
+            this.spinningForce = 0.0
+        }
 
-        val newVector = velocity.add(Vector(x, 0.0, z).multiply(force))
-        return newVector.multiply(velocity.length() / newVector.length())
-    }
+        if (this.spinningForce == 0.0) {
+            return
+        }
+
+        if (originVector == null) {
+            return
+        }
+
+        val x: Double
+        val z: Double
+        val originUnit = this.originVector!!.clone().normalize()
+        if (this.clockwise) {
+            x = -originUnit.z
+            z = originUnit.x
+        } else {
+            x = originUnit.z
+            z = -originUnit.x
+        }
+
+        val newVector = this.originVector!!.add(Vector(x, 0.0, z).multiply(this.spinningForce))
+        this.originVector = newVector.multiply(this.originVector!!.length() / newVector.length())
+    }*/
 
     /**
      * Calculates the angle between two vectors in two dimension (XZ Plane) <br></br>
