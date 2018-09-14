@@ -126,7 +126,7 @@ class SoundServiceImpl @Inject constructor(private val plugin: Plugin) : SoundSe
                 "ENDERDRAGON_GROWL" -> {
                     return "ENTITY_ENDERDRAGON_GROWL"
                 }
-                "NOTE_BLING" -> {
+                "NOTE_PLING" -> {
                     return "BLOCK_NOTE_PLING"
                 }
                 "none" -> {
@@ -138,6 +138,18 @@ class SoundServiceImpl @Inject constructor(private val plugin: Plugin) : SoundSe
                     } else if (name.contains("IDLE")) {
                         return "ENTITY_" + name.toUpperCase().split("_".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[0] + "_AMBIENT"
                     }
+                }
+            }
+        } else {
+            when (name) {
+                "ENTITY_GHAST_SHOOT" -> {
+                    return "GHAST_FIREBALL"
+                }
+                "ENTITY_ZOMBIE_ATTACK_DOOR_WOOD" -> {
+                    return "ZOMBIE_WOOD"
+                }
+                "none" -> {
+                    return "none"
                 }
             }
         }

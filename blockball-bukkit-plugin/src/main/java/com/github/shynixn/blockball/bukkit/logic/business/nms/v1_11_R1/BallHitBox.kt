@@ -109,9 +109,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
             }
 
             this.world.methodProfiler.a("move")
-            this.locX
-            this.locY
-            val d6 = this.locZ
+
             if (this.E) {
                 this.E = false
                 d0 *= 0.25
@@ -314,7 +312,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
             if (this.positionChanged) {
                 try {
                     val sourceBlock = this.world.world.getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ))
-                    this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, d0, d2, d6, d8)
+                    this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, d0, d2, d7, d9)
                 } catch (e: Exception) {
                     Bukkit.getLogger().log(Level.WARNING, "Critical exception.", e)
                 }

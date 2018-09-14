@@ -278,13 +278,9 @@ internal fun String.stripChatColors(): String {
  * Tries to return the [ParticleType] from the given name.
  */
 fun String.toParticleType(): ParticleType {
-    val version = VersionSupport.getServerVersion()
-
     ParticleType.values().forEach { p ->
         if (p.gameId_18.equals(this, true) || p.gameId_113.equals(this, true) || p.name.equals(this, true) || p.minecraftId_112.equals(this, true)) {
-            if (version.isVersionSameOrGreaterThan(VersionSupport.fromVersion(Version.VERSION_1_12_R1))) {
-                return p
-            }
+            return p
         }
     }
 
