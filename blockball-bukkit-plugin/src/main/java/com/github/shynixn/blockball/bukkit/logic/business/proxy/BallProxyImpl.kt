@@ -506,9 +506,7 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
             this.counter = 2
             val hitBoxLocation = this.hitbox.location
             for (entity in design.location.chunk.entities) {
-                if (entity != hitbox &&
-                        entity != design &&
-                        entity.location.distance(hitBoxLocation) < meta.hitBoxSize) {
+                if (entity !is ArmorStand && entity.location.distance(hitBoxLocation) < meta.hitBoxSize) {
                     val event = BallInteractEvent(entity, this)
                     Bukkit.getPluginManager().callEvent(event)
                     if (event.isCancelled)
