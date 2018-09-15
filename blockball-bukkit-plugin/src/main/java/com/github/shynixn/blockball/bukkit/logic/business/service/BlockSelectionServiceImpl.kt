@@ -9,14 +9,17 @@ import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.DependencyService
 import com.github.shynixn.blockball.api.business.service.DependencyWorldEditService
 import com.github.shynixn.blockball.bukkit.logic.business.extension.setDisplayName
+import com.github.shynixn.blockball.bukkit.logic.business.extension.sync
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.Plugin
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.collections.HashSet
 
 /**
  * Created by Shynixn 2018.
@@ -45,16 +48,17 @@ import kotlin.collections.HashMap
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockSelectionServiceImpl @Inject constructor(private val configurationService: ConfigurationService, private val dependencyService: DependencyService, private val dependencyWorldEditService: DependencyWorldEditService) : BlockSelectionService {
+class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, private val configurationService: ConfigurationService, private val dependencyService: DependencyService, private val dependencyWorldEditService: DependencyWorldEditService) : BlockSelectionService {
     private val axeName = ChatColor.WHITE.toString() + ChatColor.BOLD + ">>" + ChatColor.YELLOW + "BlockBall" + ChatColor.WHITE + ChatColor.BOLD + "<<"
     private val playerSelection = HashMap<Player, Array<Location?>>()
     private val goldenAxeType = MaterialType.GOLDEN_AXE.toBukkitMaterial()
     private val prefix = configurationService.findValue<String>("messages.prefix")
+    private val rightClickSelectionCahe = HashSet<Player>()
 
     /**
      * Selects the left location internally.
      */
-    override fun <L, P> selectLeftLocation(player: P, location: L) {
+    override fun <L, P> selectLeftLocation(player: P, location: L): Boolean {
         if (player !is Player) {
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
@@ -65,13 +69,16 @@ class BlockSelectionServiceImpl @Inject constructor(private val configurationSer
 
         if (selectLocation(player, location, 0)) {
             player.sendMessage(prefix + ChatColor.YELLOW.toString() + "Leftclick: " + location.blockX + " " + location.blockY + " " + location.blockZ)
+            return true
         }
+
+        return false
     }
 
     /**
      * Selects the right location internally.
      */
-    override fun <L, P> selectRightLocation(player: P, location: L) {
+    override fun <L, P> selectRightLocation(player: P, location: L): Boolean {
         if (player !is Player) {
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
@@ -80,9 +87,18 @@ class BlockSelectionServiceImpl @Inject constructor(private val configurationSer
             throw IllegalArgumentException("Location has to be a BukkitLocation!")
         }
 
-        if (selectLocation(player, location, 1)) {
+        if (!rightClickSelectionCahe.contains(player) && selectLocation(player, location, 1)) {
             player.sendMessage(prefix + ChatColor.YELLOW.toString() + "Rightclick: " + location.blockX + " " + location.blockY + " " + location.blockZ)
+
+            rightClickSelectionCahe.add(player)
+            sync(plugin, 10L) {
+                rightClickSelectionCahe.remove(player)
+            }
+
+            return true
         }
+
+        return false
     }
 
     /**

@@ -42,9 +42,9 @@ class BlockSelectionListener @Inject constructor(private val blockSelectionServi
     @EventHandler
     fun onPlayerInteractEvent(event: PlayerInteractEvent) {
         if (event.action == Action.LEFT_CLICK_BLOCK) {
-            blockSelectionService.selectLeftLocation(event.player, event.clickedBlock.location)
+            event.isCancelled = blockSelectionService.selectLeftLocation(event.player, event.clickedBlock.location)
         } else if (event.action == Action.RIGHT_CLICK_BLOCK) {
-            blockSelectionService.selectRightLocation(event.player, event.clickedBlock.location)
+            event.isCancelled = blockSelectionService.selectRightLocation(event.player, event.clickedBlock.location)
         }
     }
 

@@ -18,6 +18,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import java.util.*
+import java.util.concurrent.CompletableFuture
 import kotlin.collections.ArrayList
 
 /**
@@ -151,7 +152,8 @@ class DoubleJumpServiceTest {
         /**
          * Restarts all games on the server.
          */
-        override fun restartGames() {
+        override fun restartGames(): CompletableFuture<Void> {
+            return CompletableFuture()
         }
 
         /**

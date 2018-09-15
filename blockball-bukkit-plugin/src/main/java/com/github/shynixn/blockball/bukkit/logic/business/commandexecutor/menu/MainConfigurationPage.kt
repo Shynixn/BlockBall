@@ -146,7 +146,6 @@ class MainConfigurationPage @Inject constructor(private val configurationService
                         .sendMessage(player)
 
                 gameService.restartGames()
-
                 return CommandResult.CANCEL_MESSAGE
             }
 
@@ -154,8 +153,11 @@ class MainConfigurationPage @Inject constructor(private val configurationService
             if (arena.lowerCorner.worldName != null && arena.meta.blueTeamMeta.goal.lowerCorner.worldName != null && arena.meta.redTeamMeta.goal.lowerCorner.worldName != null
                     && arena.meta.ballMeta.spawnpoint != null) {
                 if (arena.gameType === GameType.HUBGAME || (arena.meta.minigameMeta.lobbySpawnpoint != null && arena.meta.lobbyMeta.leaveSpawnpoint != null)) {
+                    val name = arena.name
                     arenaRepository.save(arena).thenAccept {
-                        gameService.restartGames()
+                        gameService.restartGames().thenAccept {
+                            cache[0] = arenaRepository.getArenas().single { a -> a.name == name }
+                        }
                     }
                 } else {
                     return CommandResult.MINIGAMEARENA_NOTVALID

@@ -33,12 +33,12 @@ interface BlockSelectionService {
     /**
      * Selects the left location internally.
      */
-    fun <L, P> selectLeftLocation(player: P, location: L)
+    fun <L, P> selectLeftLocation(player: P, location: L) : Boolean
 
     /**
      * Selects the right location internally.
      */
-    fun <L, P> selectRightLocation(player: P, location: L)
+    fun <L, P> selectRightLocation(player: P, location: L) : Boolean
 
     /**
      * Returns the leftclick internal or worledit selection of the given [player].

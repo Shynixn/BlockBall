@@ -18,6 +18,7 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitTask
 import java.util.*
+import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 import kotlin.collections.ArrayList
 
@@ -51,12 +52,14 @@ import kotlin.collections.ArrayList
 class GameServiceImpl @Inject constructor(private val plugin: Plugin, private val persistenceArenaService: PersistenceArenaService, private val gameActionService: GameActionService<Game>) : GameService, Runnable {
     private var task: BukkitTask? = null
     private val games = ArrayList<Game>()
-    private var ticks : Int = 0
+    private var ticks: Int = 0
 
     /**
      * Restarts all games on the server.
      */
-    override fun restartGames() {
+    override fun restartGames(): CompletableFuture<Void> {
+        val completableFuture = CompletableFuture<Void>()
+
         if (task == null) {
             task = plugin.server.scheduler.runTaskTimer(plugin, this, 0L, 1L)
         }
@@ -69,7 +72,11 @@ class GameServiceImpl @Inject constructor(private val plugin: Plugin, private va
             persistenceArenaService.getArenas().forEach { arena ->
                 initGame(arena)
             }
+
+            completableFuture.complete(null)
         }
+
+        return completableFuture
     }
 
     /**

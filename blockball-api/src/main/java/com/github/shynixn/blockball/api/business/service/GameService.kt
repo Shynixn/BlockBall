@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.api.business.service
 
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 /**
  * Created by Shynixn 2018.
@@ -34,7 +35,7 @@ interface GameService : AutoCloseable {
     /**
      * Restarts all games on the server.
      */
-    fun restartGames()
+    fun restartGames() : CompletableFuture<Void>
 
     /**
      * Returns the game if the given [player] is playing a game.
