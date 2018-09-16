@@ -3,12 +3,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.extension
 
 import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.proxy.HighlightArmorstandProxy
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.nms.MaterialCompatibility13
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
-import com.github.shynixn.blockball.bukkit.logic.business.proxy.HighlightArmorstandProxyImpl
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PositionEntity
 import org.bukkit.*
 import org.bukkit.entity.Player
@@ -249,15 +247,6 @@ fun Player.sendPacket(packet: Any) {
 
     val sendMethod = connection.javaClass.getDeclaredMethod("sendPacket", packet.javaClass.interfaces[0])
     sendMethod.invoke(connection, packet)
-}
-
-/**
- * Spawns an armorstand proxy entity for the given [player] at the given [location].
- */
-fun World.spawnVirtualArmorstand(player: Player, location: Location): HighlightArmorstandProxy {
-    val highlightArmorstandProxy = HighlightArmorstandProxyImpl(player.uniqueId, location)
-    highlightArmorstandProxy.spawn()
-    return highlightArmorstandProxy
 }
 
 /**

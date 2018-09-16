@@ -144,6 +144,11 @@ interface BallProxy {
     fun remove()
 
     /**
+     * Calculates post movement.
+     */
+    fun calculatePostMovement()
+
+    /**
      * Calculates the movement vectors.
      */
     fun <V> calculateMoveSourceVectors(movementVector: V, motionVector: V, onGround: Boolean): Optional<V>

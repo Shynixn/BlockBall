@@ -33,4 +33,8 @@ class BallSpinEvent(
         /**
          * Spinning force.
          */
-        val spinningForce: Double, ball: BallProxy) : BallCancelableEvent(ball)
+        val spinningForce: Double, ball: BallProxy,
+        /**
+         * Is this spin the initial spin where all sub spins get calculated from?
+         */
+        val firstSpin: Boolean) : BallCancelableEvent(ball)

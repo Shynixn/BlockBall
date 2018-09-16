@@ -300,6 +300,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
 
         }
 
+        this.ballDesign.proxy.calculatePostMovement()
         timingService.stopTiming()
     }
 }

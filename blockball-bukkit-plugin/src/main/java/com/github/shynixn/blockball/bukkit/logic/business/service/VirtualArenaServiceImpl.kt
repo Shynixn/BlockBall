@@ -1,10 +1,13 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.business.proxy.HighlightArmorstandProxy
+import com.github.shynixn.blockball.api.business.enumeration.ParticleColor
+import com.github.shynixn.blockball.api.business.enumeration.ParticleType
+import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.VirtualArenaService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.bukkit.logic.business.extension.spawnVirtualArmorstand
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ParticleEntity
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -37,7 +40,7 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : VirtualArenaService {
+class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin, private val particleService: ParticleService) : VirtualArenaService {
 
     /**
      * Displays the [arena] virtual locations for the given [player] for the given amount of [seconds].
@@ -47,26 +50,23 @@ class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : 
             throw IllegalArgumentException("Player has to be a bukkit player!")
         }
 
+        val particle = ParticleEntity(ParticleType.REDSTONE)
+        particle.colorRed  = 255
+        particle.colorBlue = 0
+        particle.colorGreen = 0
+        particle.amount = 20
+        particle.speed = 0.02
+
         plugin.server.scheduler.runTaskAsynchronously(plugin, {
-            val items = ArrayList<HighlightArmorstandProxy>()
-
-            displayArmorstands(player, items, arena.meta.redTeamMeta.goal.lowerCorner, arena.meta.redTeamMeta.goal.upperCorner)
-            displayArmorstands(player, items, arena.meta.blueTeamMeta.goal.lowerCorner, arena.meta.blueTeamMeta.goal.upperCorner)
-
-            plugin.server.scheduler.runTaskLaterAsynchronously(plugin, {
-                items.forEach { i ->
-                    i.remove()
-                }
-
-                items.clear()
-            }, 20 * 20)
+            displayArmorstands(player, particle, arena.meta.redTeamMeta.goal.lowerCorner, arena.meta.redTeamMeta.goal.upperCorner)
+            displayArmorstands(player, particle, arena.meta.blueTeamMeta.goal.lowerCorner, arena.meta.blueTeamMeta.goal.upperCorner)
         })
     }
 
     /**
      * Displays the armorstands between the given [lowCorner] and [upCorner] location for the given [player].
      */
-    private fun displayArmorstands(player: Player, items: MutableList<HighlightArmorstandProxy>, lowCorner: Position, upCorner: Position) {
+    private fun displayArmorstands(player: Player, particle: Particle, lowCorner: Position, upCorner: Position) {
         var j = lowCorner.y
         while (j <= upCorner.y) {
             var i = lowCorner.x
@@ -74,9 +74,7 @@ class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : 
                 var k = lowCorner.z
                 while (k <= upCorner.z) {
                     val location = Location(player.world, i, j, k)
-                    val armorstand = location.world.spawnVirtualArmorstand(player, location)
-                    armorstand.spawn()
-                    items.add(armorstand)
+                    particleService.playParticle(location, particle, arrayListOf(player))
                     k++
                 }
                 i++

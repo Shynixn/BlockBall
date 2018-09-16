@@ -20,8 +20,16 @@
     <developers>
         <developer>
             <name>Shynixn</name>
+            <url>https://github.com/Shynixn</url>
         </developer>
     </developers>
+
+    <contributors>
+        <contributor>
+            <name>LazoYoung</name>
+            <url>https://github.com/LazoYoung</url>
+        </contributor>
+    </contributors>
 
     <licenses>
         <license>
