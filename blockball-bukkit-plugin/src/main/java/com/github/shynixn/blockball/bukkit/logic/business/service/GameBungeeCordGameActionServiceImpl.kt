@@ -67,7 +67,7 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(private val plugin
      * 0 - 20 for each second.
      */
     override fun handle(game: BungeeCordGame, ticks: Int) {
-        if (ticks % 20 != 0) {
+        if (ticks < 20) {
             return
         }
 

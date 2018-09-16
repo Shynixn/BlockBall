@@ -198,7 +198,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
      * 0 - 20 for each second.
      */
     override fun handle(game: MiniGame, ticks: Int) {
-        if (ticks % 20 != 0) {
+        if (ticks < 20) {
             return
         }
 

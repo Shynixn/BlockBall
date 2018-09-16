@@ -11,6 +11,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.toSingleLine
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.Location
+import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 
 /**
@@ -71,24 +72,32 @@ class SignSettingsPage @Inject constructor(private val configurationService: Con
                 player.sendMessage(prefix + "Rightclick on a sign.")
                 rightclickManageService.watchForNextRightClickSign<Player, Location>(player, { location ->
                     arena.meta.redTeamMeta.signs.add(location.toPosition())
+                    player.sendMessage(prefix + "Save and reload to enable the sign.")
+                    showLoadingSign(location)
                 })
             }
             SIGNS_ADDTEAMBLUE -> {
                 player.sendMessage(prefix + "Rightclick on a sign.")
                 rightclickManageService.watchForNextRightClickSign<Player, Location>(player, { location ->
                     arena.meta.blueTeamMeta.signs.add(location.toPosition())
+                    player.sendMessage(prefix + "Save and reload to enable the sign.")
+                    showLoadingSign(location)
                 })
             }
             SIGNS_ADDJOINANY -> {
                 player.sendMessage(prefix + "Rightclick on a sign.")
                 rightclickManageService.watchForNextRightClickSign<Player, Location>(player, { location ->
                     arena.meta.lobbyMeta.joinSigns.add(location.toPosition())
+                    player.sendMessage(prefix + "Save and reload to enable the sign.")
+                    showLoadingSign(location)
                 })
             }
             SIGNS_LEAVE -> {
                 player.sendMessage(prefix + "Rightclick on a sign.")
                 rightclickManageService.watchForNextRightClickSign<Player, Location>(player, { location ->
                     arena.meta.lobbyMeta.leaveSigns.add(location.toPosition())
+                    player.sendMessage(prefix + "Save and reload to enable the sign.")
+                    showLoadingSign(location)
                 })
             }
             else -> {
@@ -97,6 +106,15 @@ class SignSettingsPage @Inject constructor(private val configurationService: Con
         return super.execute(player, command, cache, args)
     }
 
+    /**
+     * Show loading sign.
+     */
+    private fun showLoadingSign(location: Location) {
+        val sign = location.block.state as Sign
+        sign.setLine(0, ChatColor.BOLD.toString() + "BlockBall")
+        sign.setLine(1, ChatColor.GREEN.toString() + "Loading...")
+        sign.update(true)
+    }
 
     /**
      * Builds the page content.

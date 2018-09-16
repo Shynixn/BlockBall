@@ -58,7 +58,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
         this.fixBallPositionSpawn(game)
         this.checkBallInGoal(game)
 
-        if (ticks % 20 == 0) {
+        if (ticks >= 20) {
             this.handleBallSpawning(game)
         }
     }

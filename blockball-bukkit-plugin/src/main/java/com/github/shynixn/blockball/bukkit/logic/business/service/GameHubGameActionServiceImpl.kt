@@ -120,7 +120,7 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
      * 0 - 20 for each second.
      */
     override fun handle(game: HubGame, ticks: Int) {
-        if (ticks % 20 != 0) {
+        if (ticks < 20) {
             return
         }
 
