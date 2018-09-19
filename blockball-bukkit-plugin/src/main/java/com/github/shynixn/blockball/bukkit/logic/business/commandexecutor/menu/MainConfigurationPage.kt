@@ -92,6 +92,7 @@ class MainConfigurationPage @Inject constructor(private val configurationService
             arena.displayName = this.mergeArgs(2, args)
         } else if (command == BlockBallCommand.ARENA_SETAREA) {
             val arena = cache[0] as Arena
+            blockSelectionService.setSelectionToolForPlayer(player)
             val left = blockSelectionService.getLeftClickLocation<Location, Player>(player)
             val right = blockSelectionService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
@@ -101,6 +102,8 @@ class MainConfigurationPage @Inject constructor(private val configurationService
             }
         } else if (command == BlockBallCommand.ARENA_SETGOALRED) {
             val arena = cache[0] as Arena
+
+            blockSelectionService.setSelectionToolForPlayer(player)
             val left = blockSelectionService.getLeftClickLocation<Location, Player>(player)
             val right = blockSelectionService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
@@ -112,6 +115,8 @@ class MainConfigurationPage @Inject constructor(private val configurationService
             }
         } else if (command == BlockBallCommand.ARENA_SETGOALBLUE) {
             val arena = cache[0] as Arena
+
+            blockSelectionService.setSelectionToolForPlayer(player)
             val left = blockSelectionService.getLeftClickLocation<Location, Player>(player)
             val right = blockSelectionService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {

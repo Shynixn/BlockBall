@@ -48,7 +48,7 @@ import kotlin.collections.HashSet
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, private val configurationService: ConfigurationService, private val dependencyService: DependencyService, private val dependencyWorldEditService: DependencyWorldEditService) : BlockSelectionService {
+class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, configurationService: ConfigurationService, private val dependencyService: DependencyService, private val dependencyWorldEditService: DependencyWorldEditService) : BlockSelectionService {
     private val axeName = ChatColor.WHITE.toString() + ChatColor.BOLD + ">>" + ChatColor.YELLOW + "BlockBall" + ChatColor.WHITE + ChatColor.BOLD + "<<"
     private val playerSelection = HashMap<Player, Array<Location?>>()
     private val goldenAxeType = MaterialType.GOLDEN_AXE.toBukkitMaterial()
@@ -152,7 +152,7 @@ class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, 
             return false
         }
 
-        if (player.itemInHand.itemMeta.displayName != this.axeName) {
+        if (player.itemInHand.itemMeta.displayName != null && ChatColor.stripColor(player.itemInHand.itemMeta.displayName) != ChatColor.stripColor(this.axeName)) {
             return false
         }
 
@@ -166,11 +166,22 @@ class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, 
     }
 
     /**
-     * Returns the compaitiblity selection.
+     * Gives the given [player] the selection tool if he does not
+     * already have it.
      */
-    private fun getCompatibilitySelection(player: Player, index: Int): Optional<Location> {
-        if (playerSelection.containsKey(player) && playerSelection[player]!![index] != null) {
-            return Optional.of(playerSelection[player]!![index]!!)
+    override fun <P> setSelectionToolForPlayer(player: P) {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        for (i in 0..player.inventory.contents.size) {
+            if (player.inventory.contents[0] != null) {
+                val item = player.inventory.contents[0]
+
+                if (item.type == goldenAxeType && item.itemMeta.displayName != null && ChatColor.stripColor(item.itemMeta.displayName) == ChatColor.stripColor(this.axeName)) {
+                    return
+                }
+            }
         }
 
         val itemStack = ItemStack(goldenAxeType)
@@ -178,6 +189,15 @@ class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, 
         player.inventory.addItem(itemStack)
 
         player.sendMessage(prefix + "WE not installed. Use this golden axe for selection.")
+    }
+
+    /**
+     * Returns the compaitiblity selection.
+     */
+    private fun getCompatibilitySelection(player: Player, index: Int): Optional<Location> {
+        if (playerSelection.containsKey(player) && playerSelection[player]!![index] != null) {
+            return Optional.of(playerSelection[player]!![index]!!)
+        }
 
         return Optional.empty()
     }

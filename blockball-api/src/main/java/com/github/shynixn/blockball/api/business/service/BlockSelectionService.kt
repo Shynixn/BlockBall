@@ -51,6 +51,12 @@ interface BlockSelectionService {
     fun <L, P> getRightClickLocation(player: P): Optional<L>
 
     /**
+     * Gives the given [player] the selection tool if he does not
+     * already have it.
+     */
+    fun <P> setSelectionToolForPlayer(player : P)
+
+    /**
      * Cleans open resources.
      */
     fun <P> cleanResources(player: P)

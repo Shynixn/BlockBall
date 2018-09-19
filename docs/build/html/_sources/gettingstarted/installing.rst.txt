@@ -20,7 +20,7 @@ Spigot/CraftBukkit/Sponge
 WorldEdit
 ~~~~~~~~~
 
-The plugin WorldEdit is required for using BlockBall.
+The plugin WorldEdit can be optionally installed for using BlockBall.
 
 
 Download
