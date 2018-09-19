@@ -7,7 +7,6 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.async
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sync
 import com.google.inject.Inject
 import org.bukkit.plugin.Plugin
-import java.util.*
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -38,7 +37,7 @@ import java.util.concurrent.CompletableFuture
  * SOFTWARE.
  */
 class PersistenceArenaServiceImpl @Inject constructor(private val plugin: Plugin, private val arenaRepository: ArenaRepository) : PersistenceArenaService {
-    private var cache: HashSet<Arena> = HashSet()
+    private var cache: MutableList<Arena> = ArrayList()
 
     /**
      * Refreshes the runtime cache of arenas.
@@ -49,7 +48,7 @@ class PersistenceArenaServiceImpl @Inject constructor(private val plugin: Plugin
         async(plugin) {
             synchronized(cache) {
                 cache.clear()
-                cache.addAll(arenaRepository.getAll())
+                cache.addAll(arenaRepository.getAll().sortedBy { a -> a.name })
             }
 
             sync(plugin) {
@@ -100,7 +99,9 @@ class PersistenceArenaServiceImpl @Inject constructor(private val plugin: Plugin
 
         async(plugin) {
             synchronized(cache) {
-                cache.add(arena)
+                if (!cache.contains(arena)) {
+                    cache.add(arena)
+                }
             }
 
             arenaRepository.save(arena)

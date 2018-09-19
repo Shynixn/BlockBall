@@ -174,6 +174,10 @@ class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, 
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
+        if (dependencyService.isInstalled(PluginDependency.WORLEDIT)) {
+            return
+        }
+
         for (i in 0..player.inventory.contents.size) {
             if (player.inventory.contents[0] != null) {
                 val item = player.inventory.contents[0]
