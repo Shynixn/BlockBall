@@ -2,10 +2,13 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
-import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta;
-import com.github.shynixn.blockball.api.persistence.entity.meta.stats.Stats;
-import com.github.shynixn.blockball.bukkit.logic.business.service.ConnectionContextService;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.StatsData;
+import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
+import com.github.shynixn.blockball.api.persistence.entity.Stats;
+import com.github.shynixn.blockball.bukkit.logic.persistence.context.SqlDbContextImpl;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PlayerMetaEntity;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.StatsEntity;
+import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository;
+import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -75,6 +78,7 @@ public class StatsMySQLControllerIT {
         new File("BlockBall/BlockBall.db").delete();
         when(plugin.getDataFolder()).thenReturn(new File("BlockBall"));
         when(plugin.getConfig()).thenReturn(configuration);
+        when(plugin.getLogger()).thenReturn(Logger.getGlobal());
         when(plugin.getResource(any(String.class))).thenAnswer(invocationOnMock -> {
             final String file = invocationOnMock.getArgument(0);
             return Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
@@ -86,31 +90,34 @@ public class StatsMySQLControllerIT {
     public void insertSelectStatsTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
-        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        final SqlDbContextImpl connectionContextService = new SqlDbContextImpl(plugin);
         final UUID uuid = UUID.randomUUID();
         final Player player = mock(Player.class);
         when(player.getName()).thenReturn("Shynixn");
         when(player.getUniqueId()).thenReturn(uuid);
-        try (StatsRepository controller = new StatsRepository(connectionContextService)) {
-            try (PlayerInfoController playerController = new PlayerInfoController(connectionContextService)) {
-                for (final Stats item : controller.getAll()) {
-                    controller.remove(item);
-                }
+        try {
+            PlayerSqlRepository playerController = new PlayerSqlRepository(connectionContextService, plugin);
+            StatsSqlRepository controller = new StatsSqlRepository(connectionContextService, plugin, playerController);
 
-                final Stats meta = controller.create();
-                controller.store(meta);
-                assertEquals(0, controller.getCount());
-
-                final PlayerMeta playerMeta = playerController.create(player);
-                playerController.store(playerMeta);
-                ((StatsData)meta).setPlayerId(playerMeta.getId());
-                meta.setAmountOfWins(2);
-                meta.setAmountOfPlayedGames(2);
-                controller.store(meta);
-
-                assertEquals(1, controller.getCount());
-                assertEquals(2, controller.getByPlayer(player).get().getAmountOfWins());
+            for (final Stats item : controller.getAll()) {
+                controller.remove(item);
             }
+
+            final Stats meta = new StatsEntity();
+            controller.store(meta);
+            assertEquals(0, controller.getCount());
+
+            final PlayerMeta playerMeta = new PlayerMetaEntity();
+            playerMeta.setName(player.getName());
+            playerMeta.setUuid(player.getUniqueId());
+            playerController.store(playerMeta);
+            ((StatsEntity) meta).setPlayerId(playerMeta.getId());
+            meta.setAmountOfWins(2);
+            meta.setAmountOfPlayedGames(2);
+            controller.store(meta);
+
+            assertEquals(1, controller.getCount());
+            assertEquals(2, controller.getOrCreateFromPlayer(player).getAmountOfWins());
         } catch (final Exception e) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.WARNING, "Failed to run test.", e);
             Assertions.fail(e);
@@ -121,36 +128,39 @@ public class StatsMySQLControllerIT {
     public void storeLoadPetMetaTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
-        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
+        final SqlDbContextImpl connectionContextService = new SqlDbContextImpl(plugin);
         final UUID uuid = UUID.randomUUID();
         final Player player = mock(Player.class);
         when(player.getName()).thenReturn("Shynixn");
         when(player.getUniqueId()).thenReturn(uuid);
-        try (StatsRepository controller = new StatsRepository(connectionContextService)) {
-            try (PlayerInfoController playerController = new PlayerInfoController(connectionContextService)) {
-                for (final Stats item : controller.getAll()) {
-                    controller.remove(item);
-                }
-                Stats stats = controller.create();
-
-                final PlayerMeta playerMeta = playerController.create(player);
-                playerController.store(playerMeta);
-
-                ((StatsData)stats).setPlayerId(playerMeta.getId());
-                stats.setAmountOfPlayedGames(5);
-                stats.setAmountOfWins(2);
-                stats.setAmountOfGoals(20);
-
-                controller.store(stats);
-
-                stats = controller.getByPlayer(player).get();
-                assertEquals(5, stats.getAmountOfPlayedGames());
-                assertEquals(2, stats.getAmountOfWins());
-                assertEquals(20, stats.getAmountOfGoals());
-
-                assertEquals(4, stats.getGoalsPerGame());
-                assertEquals(0.4, stats.getWinRate());
+        try {
+            PlayerSqlRepository playerController = new PlayerSqlRepository(connectionContextService, plugin);
+            StatsSqlRepository controller = new StatsSqlRepository(connectionContextService, plugin, playerController);
+            for (final Stats item : controller.getAll()) {
+                controller.remove(item);
             }
+            Stats stats = new StatsEntity();
+
+            final PlayerMeta playerMeta = new PlayerMetaEntity();
+            playerMeta.setName(player.getName());
+            playerMeta.setUuid(player.getUniqueId());
+            playerController.store(playerMeta);
+
+            ((StatsEntity) stats).setPlayerId(playerMeta.getId());
+            stats.setAmountOfPlayedGames(5);
+            stats.setAmountOfWins(2);
+            stats.setAmountOfGoals(20);
+
+            controller.store(stats);
+
+            stats = controller.getOrCreateFromPlayer(player);
+            assertEquals(5, stats.getAmountOfPlayedGames());
+            assertEquals(2, stats.getAmountOfWins());
+            assertEquals(20, stats.getAmountOfGoals());
+
+            assertEquals(4, stats.getGoalsPerGame());
+            assertEquals(0.4, stats.getWinRate());
+
         } catch (final Exception e) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.WARNING, "Failed to run test.", e);
             Assertions.fail(e);

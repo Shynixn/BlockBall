@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.entity.Player
 
 /**
@@ -53,7 +53,7 @@ class BallModifierSettingsPage : Page(BallModifierSettingsPage.ID, BallSettingsP
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val ballMeta = (cache[0] as BukkitArena).meta.ballMeta.modifiers
+        val ballMeta = (cache[0] as Arena).meta.ballMeta.modifiers
         if (command == BlockBallCommand.BALLMOD_HORIZONTALTOUCH && args.size == 3 && args[2].toDoubleOrNull() != null) {
             ballMeta.horizontalTouchModifier = args[2].toDouble()
         }
@@ -88,7 +88,7 @@ class BallModifierSettingsPage : Page(BallModifierSettingsPage.ID, BallSettingsP
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val ballMeta = (cache[0] as BukkitArena).meta.ballMeta.modifiers
+        val ballMeta = (cache[0] as Arena).meta.ballMeta.modifiers
         return ChatBuilder()
                 .component("- Touch Strength (Horizontal): " + ballMeta.horizontalTouchModifier).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)

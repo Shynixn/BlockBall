@@ -34,5 +34,5 @@ interface VirtualArenaService {
     /**
      * Displays the [arena] virtual locations for the given [player] for the given amount of [seconds].
      */
-    fun <Player> displayForPlayer(player: Player, arena: Arena<*, *, *, *, *>, seconds: Int = 20)
+    fun <P> displayForPlayer(player: P, arena: Arena, seconds: Int = 20)
 }

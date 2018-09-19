@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.entity.Player
 
 /**
@@ -54,7 +54,7 @@ class ScoreboardPage : Page(ScoreboardPage.ID, EffectsSettingsPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         val scoreboard = arena.meta.scoreboardMeta
         cache[2] = scoreboard.lines
         if (command == BlockBallCommand.SCOREBOARD_TITLE) {
@@ -72,7 +72,7 @@ class ScoreboardPage : Page(ScoreboardPage.ID, EffectsSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         val scoreboard = arena.meta.scoreboardMeta
         return ChatBuilder()
                 .component("- Title: " + scoreboard.title).builder()

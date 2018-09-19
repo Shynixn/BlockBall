@@ -1,12 +1,12 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.CommandMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.misc.RewardMeta
-import com.github.shynixn.blockball.bukkit.dependencies.RegisterHelper
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.misc.CommandProperties
+import com.github.shynixn.blockball.api.business.enumeration.CommandMode
+import com.github.shynixn.blockball.api.business.enumeration.RewardType
+import com.github.shynixn.blockball.api.business.service.DependencyVaultService
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.CommandMetaEntity
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
@@ -45,7 +45,7 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
     }
 
     @Inject
-    private var arenaRepository: ArenaRepository? = null
+    private lateinit var vaultService: DependencyVaultService
 
     /**
      * Returns the key of the command when this page should be executed.
@@ -63,35 +63,35 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
      * @param args
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         if (command == BlockBallCommand.REWARD_OPEN) {
             cache[4] = null
             cache[5] = null
         } else if (command == BlockBallCommand.REWARD_CALLBACK_MONEY && args.size >= 3 && args[2].toIntOrNull() != null) {
-            val rewardedAction = RewardMeta.RewardedAction.values()[args[2].toInt()]
+            val rewardedAction = RewardType.values()[args[2].toInt()]
             cache[5] = rewardedAction
             if (arena.meta.rewardMeta.moneyReward[rewardedAction] == null) {
                 arena.meta.rewardMeta.moneyReward[rewardedAction] = 0
             }
             cache[4] = arena.meta.rewardMeta.moneyReward[rewardedAction]
         } else if (command == BlockBallCommand.REWARD_CALLBACK_COMMAND && args.size >= 3 && args[2].toIntOrNull() != null) {
-            val rewardedAction = RewardMeta.RewardedAction.values()[args[2].toInt()]
+            val rewardedAction = RewardType.values()[args[2].toInt()]
             cache[5] = rewardedAction
             if (arena.meta.rewardMeta.commandReward[rewardedAction] == null) {
-                val command =  CommandProperties()
-                command.command = "none"
-                command.mode = CommandMeta.CommandMode.CONSOLE_SINGLE
-                arena.meta.rewardMeta.commandReward[rewardedAction] = command
+                val command2 = CommandMetaEntity()
+                command2.command = "none"
+                command2.mode = CommandMode.CONSOLE_SINGLE
+                arena.meta.rewardMeta.commandReward[rewardedAction] = command2
             }
             cache[4] = arena.meta.rewardMeta.commandReward[rewardedAction]
         } else if (command == BlockBallCommand.REWARD_CALLBACK_COMMANDMODE && args.size >= 3 && args[2].toIntOrNull() != null) {
             val selectedReward = cache[4] as CommandMeta
-            selectedReward.mode = CommandMeta.CommandMode.values()[args[2].toInt()]
+            selectedReward.mode = CommandMode.values()[args[2].toInt()]
         } else if (command == BlockBallCommand.REWARD_EDIT_MONEY && args.size >= 3 && args[2].toIntOrNull() != null) {
-            arena.meta.rewardMeta.moneyReward[cache[5] as RewardMeta.RewardedAction] = args[2].toInt()
+            arena.meta.rewardMeta.moneyReward[cache[5] as RewardType] = args[2].toInt()
             cache[4] = args[2].toInt()
         } else if (command == BlockBallCommand.REWARD_EDIT_COMMAND && args.size >= 3) {
-            arena.meta.rewardMeta.commandReward[cache[5] as RewardMeta.RewardedAction]!!.command = mergeArgs(2,args)
+            arena.meta.rewardMeta.commandReward[cache[5] as RewardType]!!.command = mergeArgs(2, args)
         }
         return super.execute(player, command, cache, args)
     }
@@ -117,14 +117,14 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
                 .builder().nextLine()
         if (selectedReward != null) {
             if (selectedReward is Int) {
-                builder.component("- Selected Money reward (Vault): " + (rewardedAction as RewardMeta.RewardedAction).name).builder().nextLine()
-                        .component("- " + RegisterHelper.getCurrencyName() + ": " + ChatColor.WHITE + selectedReward).builder()
+                builder.component("- Selected Money reward (Vault): " + (rewardedAction as RewardType).name).builder().nextLine()
+                        .component("- " + vaultService.getPluralCurrencyName() + ": " + ChatColor.WHITE + selectedReward).builder()
                         .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                         .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.REWARD_EDIT_MONEY.command)
                         .setHoverText("Changes the amount of money the players receive on the selected action.")
                         .builder()
             } else if (selectedReward is CommandMeta) {
-                builder.component("- Selected Command reward: " + (rewardedAction as RewardMeta.RewardedAction).name).builder().nextLine()
+                builder.component("- Selected Command reward: " + (rewardedAction as RewardType).name).builder().nextLine()
                         .component("- Command: " + selectedReward.command).builder()
                         .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                         .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.REWARD_EDIT_COMMAND.command)

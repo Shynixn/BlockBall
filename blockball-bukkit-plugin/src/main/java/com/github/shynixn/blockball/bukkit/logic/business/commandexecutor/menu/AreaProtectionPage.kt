@@ -1,9 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
-import com.google.inject.Inject
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 
@@ -40,9 +38,6 @@ class AreaProtectionPage : Page(AreaProtectionPage.ID, MiscSettingsPage.ID) {
         const val ID = 26
     }
 
-    @Inject
-    private var arenaRepository: ArenaRepository? = null
-
     /**
      * Returns the key of the command when this page should be executed.
      *
@@ -59,18 +54,16 @@ class AreaProtectionPage : Page(AreaProtectionPage.ID, MiscSettingsPage.ID) {
      * @param args
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         if (command == BlockBallCommand.AREAPROTECTION_TOGGLE_ENTITYFORCEFIELD) {
             arena.meta.protectionMeta.entityProtectionEnabled = !arena.meta.protectionMeta.entityProtectionEnabled
         } else if (command == BlockBallCommand.AREAPROTECTION_TOGGLE_PLAYERJOINFORCEFIELD) {
             arena.meta.protectionMeta.rejoinProtectionEnabled = !arena.meta.protectionMeta.rejoinProtectionEnabled
-        }
-        else if (command == BlockBallCommand.AREAPROTECTION_SET_ENTITYFORCEFIELD && args.size >= 5
-                && args[2].toDoubleOrNull() != null && args[3].toDoubleOrNull() != null  && args[4].toDoubleOrNull() != null) {
+        } else if (command == BlockBallCommand.AREAPROTECTION_SET_ENTITYFORCEFIELD && args.size >= 5
+                && args[2].toDoubleOrNull() != null && args[3].toDoubleOrNull() != null && args[4].toDoubleOrNull() != null) {
             arena.meta.protectionMeta.entityProtection = Vector(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
-        }
-        else if (command == BlockBallCommand.AREAPROTECTION_SET_PLAYERJOINFORCEFIELD && args.size >= 5
-                && args[2].toDoubleOrNull() != null && args[3].toDoubleOrNull() != null  && args[4].toDoubleOrNull() != null) {
+        } else if (command == BlockBallCommand.AREAPROTECTION_SET_PLAYERJOINFORCEFIELD && args.size >= 5
+                && args[2].toDoubleOrNull() != null && args[3].toDoubleOrNull() != null && args[4].toDoubleOrNull() != null) {
             arena.meta.protectionMeta.rejoinProtection = Vector(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
         }
         return super.execute(player, command, cache, args)
@@ -82,7 +75,7 @@ class AreaProtectionPage : Page(AreaProtectionPage.ID, MiscSettingsPage.ID) {
      * @return page
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         val meta = arena.meta.protectionMeta
         return ChatBuilder()
                 .component("- Animal and Monster protection enabled: " + meta.entityProtectionEnabled).builder()

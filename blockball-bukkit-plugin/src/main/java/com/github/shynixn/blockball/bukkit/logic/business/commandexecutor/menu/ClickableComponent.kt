@@ -35,17 +35,52 @@ enum class ClickableComponent(
         /*** Returns the displayed color of the component.*/
         val color: ChatColor) {
 
+    /**
+     * Clickable WorldEdit.
+     */
     WORLDEDIT(" [worldedit..]", ChatColor.GOLD),
+    /**
+     * Clickable Edit.
+     */
     EDIT(" [edit..]", ChatColor.GREEN),
+    /**
+     * Clickable copy armor.
+     */
     COPY_ARMOR(" [copy armor..]", ChatColor.GOLD),
+    /**
+     *  Clickable copy inventory.
+     */
     COPY_INVENTORY(" [copy inventory..]", ChatColor.GOLD),
+    /**
+     * Clickable page.
+     */
     PAGE(" [page..]", ChatColor.YELLOW),
+    /**
+     * Clickable preview.
+     */
     PREVIEW(" [preview..]", ChatColor.GRAY),
+    /**
+     *  Clickable add.
+     */
     ADD(" [add..]", ChatColor.BLUE),
+    /**
+     * Clickable delete.
+     */
     DELETE(" [delete..]", ChatColor.DARK_RED),
+    /**
+     * Clickable select.
+     */
     SELECT(" [select..]", ChatColor.AQUA),
+    /**
+     * Clickable location.
+     */
     LOCATION(" [location..]", ChatColor.BLUE),
-
+    /**
+     * Clickable invalid.
+     */
     INVALID(" [page..]", ChatColor.BLACK),
+    /**
+     * Clickable toggle.
+     */
     TOGGLE(" [toggle..]", ChatColor.LIGHT_PURPLE);
 }

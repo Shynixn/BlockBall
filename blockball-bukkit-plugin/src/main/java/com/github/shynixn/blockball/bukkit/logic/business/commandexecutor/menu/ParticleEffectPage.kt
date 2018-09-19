@@ -1,13 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.enumeration.EffectingType
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
-import com.google.inject.Inject
-import org.bukkit.Location
-import org.bukkit.Material
+import com.github.shynixn.blockball.api.business.enumeration.ParticleType
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.api.persistence.entity.Particle
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.entity.Player
 
 /**
@@ -43,9 +39,6 @@ class ParticleEffectPage : Page(ParticleEffectPage.ID, MainConfigurationPage.ID)
         const val ID = 20
     }
 
-    @Inject
-    private var arenaRepository: ArenaRepository? = null
-
     override fun getPreviousIdFrom(cache: Array<Any?>): Int {
         return cache[4] as Int
     }
@@ -66,35 +59,33 @@ class ParticleEffectPage : Page(ParticleEffectPage.ID, MainConfigurationPage.ID)
      * @param args
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         if (command == BlockBallCommand.PARTICLE_DOUBLEJUMP) {
             cache[5] = arena.meta.doubleJumpMeta.particleEffect
             cache[4] = DoubleJumpPage.ID
-        }
-        else if (command == BlockBallCommand.PARTICLE_BALL) {
+        } else if (command == BlockBallCommand.PARTICLE_BALL) {
             cache[4] = BallSettingsPage.ID
-        }
-        else if (command == BlockBallCommand.PARTICLE_CALLBACK_TYPE && args.size >= 3 && args[2].toIntOrNull() != null) {
-            val particleEffect = cache[5] as ParticleEffectMeta<*, *, *>
-            particleEffect.setEffectType<ParticleEffectMeta<*, *, *>>(ParticleEffectMeta.ParticleEffectType.values()[args[2].toInt()])
+        } else if (command == BlockBallCommand.PARTICLE_CALLBACK_TYPE && args.size >= 3 && args[2].toIntOrNull() != null) {
+            val particleEffect = cache[5] as Particle
+            particleEffect.type = (ParticleType.values()[args[2].toInt()])
         } else if (command == BlockBallCommand.PARTICLE_CALLBACK_EFFECTING && args.size >= 3 && args[2].toIntOrNull() != null) {
-            val particleEffect = cache[5] as ParticleEffectMeta<*, *, *>
-            particleEffect.setEffectingType<ParticleEffectMeta<*, *, *>>(EffectingType.values()[args[2].toInt()])
+            val particleEffect = cache[5] as Particle
+            particleEffect.type = (ParticleType.values()[args[2].toInt()])
         } else if (command == BlockBallCommand.PARTICLE_AMOUNT && args[2].toIntOrNull() != null) {
-            val particleEffect = cache[5] as ParticleEffectMeta<*, *, *>
-            particleEffect.setAmount<ParticleEffectMeta<*, *, *>>(args[2].toInt())
+            val particleEffect = cache[5] as Particle
+            particleEffect.amount = (args[2].toInt())
         } else if (command == BlockBallCommand.PARTICLE_SPEED && args[2].toDoubleOrNull() != null) {
-            val particleEffect = cache[5] as ParticleEffectMeta<*, *, *>
-            particleEffect.setSpeed<ParticleEffectMeta<Location, Player, Material>>(args[2].toDouble())
+            val particleEffect = cache[5] as Particle
+            particleEffect.speed = args[2].toDouble()
         } else if (command == BlockBallCommand.PARTICLE_OFFSET_X && args[2].toDoubleOrNull() != null) {
-            val particleEffect = cache[5] as ParticleEffectMeta<*, *, *>
-            particleEffect.setOffsetX<ParticleEffectMeta<Location, Player, Material>>(args[2].toDouble())
+            val particleEffect = cache[5] as Particle
+            particleEffect.offSetX = (args[2].toDouble())
         } else if (command == BlockBallCommand.PARTICLE_OFFSET_Y && args[2].toDoubleOrNull() != null) {
-            val particleEffect = cache[5] as ParticleEffectMeta<*, *, *>
-            particleEffect.setOffsetY<ParticleEffectMeta<Location, Player, Material>>(args[2].toDouble())
+            val particleEffect = cache[5] as Particle
+            particleEffect.offSetY = (args[2].toDouble())
         } else if (command == BlockBallCommand.PARTICLE_OFFSET_Z && args[2].toDoubleOrNull() != null) {
-            val particleEffect = cache[5] as ParticleEffectMeta<*, *, *>
-            particleEffect.setOffsetZ<ParticleEffectMeta<Location, Player, Material>>(args[2].toDouble())
+            val particleEffect = cache[5] as Particle
+            particleEffect.offSetZ = (args[2].toDouble())
         }
         return super.execute(player, command, cache, args)
     }
@@ -105,14 +96,14 @@ class ParticleEffectPage : Page(ParticleEffectPage.ID, MainConfigurationPage.ID)
      * @return page
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
-        val particleEffect = cache[5] as ParticleEffectMeta<*, *, *>
+        val particleEffect = cache[5] as Particle
         return ChatBuilder()
-                .component("- Effecting: " + particleEffect.effectingType).builder()
+                .component("- Effecting: " + particleEffect.type).builder()
                 .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_PARTICLE_EFFECTINGTYPES.command)
                 .setHoverText("Opens the selectionbox for effecting types.")
                 .builder().nextLine()
-                .component("- Type: " + particleEffect.effectType.name).builder()
+                .component("- Type: " + particleEffect.type.name).builder()
                 .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_PARTICLE_TYPES.command)
                 .setHoverText("Opens the selectionbox for types.")
@@ -127,17 +118,17 @@ class ParticleEffectPage : Page(ParticleEffectPage.ID, MainConfigurationPage.ID)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.PARTICLE_SPEED.command)
                 .setHoverText("Changes the speed of the particles.")
                 .builder().nextLine()
-                .component("- Offset X: " + particleEffect.offsetX).builder()
+                .component("- Offset X: " + particleEffect.offSetX).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.PARTICLE_OFFSET_X.command)
                 .setHoverText("Changes the offset X.")
                 .builder().nextLine()
-                .component("- Offset Y: " + particleEffect.offsetY).builder()
+                .component("- Offset Y: " + particleEffect.offSetY).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.PARTICLE_OFFSET_Y.command)
                 .setHoverText("Changes the offset Y.")
                 .builder().nextLine()
-                .component("- Offset Z: " + particleEffect.offsetZ).builder()
+                .component("- Offset Z: " + particleEffect.offSetZ).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.PARTICLE_OFFSET_Z.command)
                 .setHoverText("Changes the offset Z.")

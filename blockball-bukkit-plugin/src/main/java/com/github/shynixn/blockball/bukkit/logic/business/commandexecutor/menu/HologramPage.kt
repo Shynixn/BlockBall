@@ -1,11 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.api.persistence.entity.meta.display.HologramMeta
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.display.HologramBuilder
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.api.persistence.entity.HologramMeta
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toSingleLine
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.HologramMetaEntity
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
@@ -58,13 +58,13 @@ class HologramPage : Page(HologramPage.ID, EffectsSettingsPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         val holograms = arena.meta.hologramMetas
         if (command == BlockBallCommand.HOLOGRAM_OPEN) {
             cache[5] = null
         }
         if (command == BlockBallCommand.HOLOGRAM_CREATE) {
-            val builder = HologramBuilder()
+            val builder = HologramMetaEntity()
             builder.position = player.location.toPosition()
             holograms.add(builder)
             cache[5] = builder
@@ -94,7 +94,7 @@ class HologramPage : Page(HologramPage.ID, EffectsSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         val selectedHologram = cache[5]
         var selectedHologramText = "none"
         var selectedHologramHover = "none"
@@ -104,7 +104,6 @@ class HologramPage : Page(HologramPage.ID, EffectsSettingsPage.ID) {
             selectedHologramHover = selectedHologram.lines.toSingleLine()
             cache[2] = selectedHologram.lines
         }
-        val holograms = arena.meta.hologramMetas
         val builder = ChatBuilder()
                 .component("- Holograms: ").builder()
                 .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)

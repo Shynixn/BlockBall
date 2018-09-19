@@ -1,14 +1,10 @@
-# BlockBall [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://raw.githubusercontent.com/Shynixn/BlockBall/master/LICENSE)
+# BlockBall  [![Build Status](https://maven-badges.herokuapp.com/maven-central/com.github.shynixn.blockball/blockball-api/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/com.github.shynixn.petblocks/petblocks-api) [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat-square)](https://raw.githubusercontent.com/Shynixn/BlockBall/master/LICENSE)
 
-| branch        | status        | coverage | download |
-| ------------- | ------------- | -------- | ---------| 
-| master        | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=master)](https://travis-ci.org/Shynixn/BlockBall) | [![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/master.svg)](https://codecov.io/gh/Shynixn/BlockBall/branch/master)|[Download latest release (recommend)](https://github.com/Shynixn/BlockBall/releases)|
-| development   | [![Build Status](https://travis-ci.org/Shynixn/BlockBall.svg?branch=development)](https://travis-ci.org/Shynixn/BlockBall)|[![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/development.svg)](https://codecov.io/gh/Shynixn/BlockBall/branch/development) | [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/) |
 
-Documentation:  https://shynixn.github.io/BlockBall/
-
-JavaDocs: https://shynixn.github.io/BlockBall/apidocs/
-
+| branch        | status        | coverage | version | download |
+| ------------- | ------------- | -------- | --------| ---------| 
+| master        | [![Build Status](https://img.shields.io/travis/Shynixn/BlockBall/master.svg?style=flat-square)](https://travis-ci.org/Shynixn/BlockBall) | [![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/master.svg?style=flat-square)](https://codecov.io/gh/Shynixn/BlockBall/branch/master)|![GitHub license](https://img.shields.io/nexus/r/https/oss.sonatype.org/com.github.shynixn.blockball/blockball-bukkit-plugin.svg?style=flat-square)  |[Download latest release](https://github.com/Shynixn/BlockBall/releases)|
+| development   | [![Build Status](https://img.shields.io/travis/Shynixn/BlockBall/development.svg?style=flat-square)](https://travis-ci.org/Shynixn/BlockBall)|[![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/development.svg?style=flat-square)](https://codecov.io/gh/Shynixn/BlockBall/branch/development) |![GitHub license](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.github.shynixn.blockball/blockball-bukkit-plugin.svg?style=flat-square) |  [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/) |
 ## Description
 
 BlockBall is a spigot plugin to play soccer games in Minecraft.
@@ -17,7 +13,7 @@ BlockBall is a spigot plugin to play soccer games in Minecraft.
 
 * Uses blocks as balls in minecraft
 * Games are completely customizable
-* Version support 1.8.R1 - 1.13.R1
+* Version support 1.8.R1 - 1.13.R2
 * Check out the [BlockBall-Spigot-Page](https://www.spigotmc.org/resources/15320/) to get more information. 
 
 ## Installation

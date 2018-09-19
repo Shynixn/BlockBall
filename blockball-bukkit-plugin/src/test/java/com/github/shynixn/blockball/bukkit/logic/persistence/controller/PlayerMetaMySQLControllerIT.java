@@ -2,13 +2,14 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
-import com.github.shynixn.blockball.api.persistence.entity.meta.stats.PlayerMeta;
-import com.github.shynixn.blockball.bukkit.logic.business.service.ConnectionContextService;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.meta.stats.PlayerData;
+import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
+import com.github.shynixn.blockball.bukkit.logic.persistence.context.SqlDbContextImpl;
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PlayerMetaEntity;
+import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.Warning;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -44,7 +45,7 @@ public class PlayerMetaMySQLControllerIT {
         final Plugin plugin = mock(Plugin.class);
         final Server server = mock(Server.class);
         when(server.getLogger()).thenReturn(Logger.getGlobal());
-        if(Bukkit.getServer() == null)
+        if (Bukkit.getServer() == null)
             Bukkit.setServer(server);
         new File("BlockBall/BlockBall.db").delete();
         when(plugin.getDataFolder()).thenReturn(new File("BlockBall"));
@@ -56,12 +57,10 @@ public class PlayerMetaMySQLControllerIT {
         return plugin;
     }
 
-
     private static DB database;
 
     @AfterAll
-    public static void stopMariaDB()
-    {
+    public static void stopMariaDB() {
         try {
             database.stop();
         } catch (final ManagedProcessException e) {
@@ -88,19 +87,20 @@ public class PlayerMetaMySQLControllerIT {
     public void insertSelectPlayerMetaTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
-        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
-        try (PlayerInfoController controller = new PlayerInfoController(connectionContextService)) {
-            for (final PlayerMeta<? extends Player> item : controller.getAll()) {
+        final SqlDbContextImpl connectionContextService = new SqlDbContextImpl(plugin);
+        try {
+            PlayerSqlRepository controller = new PlayerSqlRepository(connectionContextService, plugin);
+            for (final PlayerMeta item : controller.getAll()) {
                 controller.remove(item);
             }
             final UUID uuid = UUID.randomUUID();
-            final PlayerMeta playerMeta = new PlayerData();
+            final PlayerMeta playerMeta = new PlayerMetaEntity();
 
             assertThrows(IllegalArgumentException.class, () -> controller.store(playerMeta));
             assertEquals(0, controller.getCount());
 
             playerMeta.setUuid(uuid);
-            controller.store(playerMeta);
+            assertThrows(IllegalArgumentException.class, () -> controller.store(playerMeta));
             assertEquals(0, controller.getCount());
 
             playerMeta.setName("Sample");
@@ -113,18 +113,18 @@ public class PlayerMetaMySQLControllerIT {
         }
     }
 
-
     @Test
     public void storeLoadPlayerMetaTest() throws ClassNotFoundException {
         final Plugin plugin = mockPlugin();
         plugin.getConfig().set("sql.enabled", true);
-        final ConnectionContextService connectionContextService = new ConnectionContextService(plugin);
-        try (PlayerInfoController controller = new PlayerInfoController(connectionContextService)) {
+        final SqlDbContextImpl connectionContextService = new SqlDbContextImpl(plugin);
+        try {
+            PlayerSqlRepository controller = new PlayerSqlRepository(connectionContextService, plugin);
             for (final PlayerMeta item : controller.getAll()) {
                 controller.remove(item);
             }
             UUID uuid = UUID.randomUUID();
-            PlayerMeta playerMeta = new PlayerData();
+            PlayerMeta playerMeta = new PlayerMetaEntity();
             playerMeta.setName("Second");
             playerMeta.setUuid(uuid);
             controller.store(playerMeta);

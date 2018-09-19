@@ -63,10 +63,7 @@ Creating the arena
 
 .. image:: ../_static/images/goal_selection_1.png
 
-After selecting a goal, virtual blocks get rendered for 20 seconds at the location to display your selection.
-
-.. image:: ../_static/images/goal_selection_2.png
-
+After selecting a goal small red particles are showing the selection of the goal.
 
 5. Repeat step 4 for the goal blue.
 

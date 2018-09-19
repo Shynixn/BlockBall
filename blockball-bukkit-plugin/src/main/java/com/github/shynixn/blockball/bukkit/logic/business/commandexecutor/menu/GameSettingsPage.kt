@@ -1,10 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toSingleLine
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
@@ -58,7 +58,7 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
 
         if (command == BlockBallCommand.GAMESETTINGS_LEAVESPAWNPOINT) {
             arena.meta.lobbyMeta.leaveSpawnpoint = player.location.toPosition()
@@ -94,7 +94,7 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
 
         var leaveSpawnpoint = "none"
         if (arena.meta.lobbyMeta.leaveSpawnpoint != null) {

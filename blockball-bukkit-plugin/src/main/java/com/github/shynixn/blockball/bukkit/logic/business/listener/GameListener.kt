@@ -1,28 +1,34 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
-import com.github.shynixn.ball.api.bukkit.business.event.BallInteractEvent
-import com.github.shynixn.blockball.api.bukkit.business.event.PlaceHolderRequestEvent
+import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
+import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
+import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
-import com.github.shynixn.blockball.bukkit.logic.business.entity.game.SoccerGame
-import com.github.shynixn.blockball.bukkit.logic.business.helper.replaceGamePlaceholder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toPosition
+import com.github.shynixn.blockball.api.business.service.DoubleJumpService
+import com.github.shynixn.blockball.api.business.service.GameActionService
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.business.service.RightclickManageService
+import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.bukkit.logic.business.extension.isTouchingGround
+import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.google.inject.Inject
-import com.google.inject.Singleton
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.plugin.Plugin
+import org.bukkit.event.player.PlayerToggleFlightEvent
 
 /**
  * Created by Shynixn 2018.
@@ -51,18 +57,26 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@Singleton
-class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
-    @Inject
-    private lateinit var gameController: GameRepository
-    var placementCallBack: MutableMap<Player, CallBack> = HashMap()
+class GameListener @Inject constructor(private val gameService: GameService, private val rightClickManageService: RightclickManageService, private val doubleJumpService: DoubleJumpService, private val gameActionService: GameActionService<Game>) : Listener {
+    private val signPostMaterial = MaterialType.SIGN_POST.toBukkitMaterial()
 
     /**
      * Gets called when a player leaves the server and the game.
      */
     @EventHandler
     fun onPlayerQuitEvent(event: PlayerQuitEvent) {
-        gameController.getGameFromPlayer(event.player)?.leave(event.player)
+        val playerGame = gameService.getGameFromPlayer(event.player)
+        val spectateGame = gameService.getGameFromSpectatingPlayer(event.player)
+
+        if (playerGame.isPresent) {
+            gameActionService.leaveGame(playerGame.get(), event.player)
+        }
+
+        if (spectateGame.isPresent) {
+            gameActionService.leaveGame(spectateGame.get(), event.player)
+        }
+
+        rightClickManageService.cleanResources(event.player)
     }
 
     /**
@@ -70,9 +84,26 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onPlayerHungerEvent(event: FoodLevelChangeEvent) {
-        val game = gameController.getGameFromPlayer(event.entity as Player)
-        if (game != null) {
+        val game = gameService.getGameFromPlayer(event.entity as Player)
+
+        if (game.isPresent) {
             event.isCancelled = true
+        }
+    }
+
+    /**
+     * Allows the player to start flying as long he is inside of a game.
+     */
+    @EventHandler
+    fun onPlayerMoveEvent(event: PlayerMoveEvent) {
+        if (!event.player.isTouchingGround()) {
+            return
+        }
+
+        val game = gameService.getGameFromPlayer(event.player)
+
+        if (game.isPresent) {
+            event.player.allowFlight = true
         }
     }
 
@@ -81,8 +112,9 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onPlayerClickInventoryEvent(event: InventoryClickEvent) {
-        val game = gameController.getGameFromPlayer(event.whoClicked as Player)
-        if (game != null) {
+        val game = gameService.getGameFromPlayer(event.whoClicked as Player)
+
+        if (game.isPresent) {
             event.isCancelled = true
             event.whoClicked.closeInventory()
         }
@@ -93,8 +125,9 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onPlayerOpenInventoryEvent(event: InventoryOpenEvent) {
-        val game = gameController.getGameFromPlayer(event.player as Player)
-        if (game != null) {
+        val game = gameService.getGameFromPlayer(event.player as Player)
+
+        if (game.isPresent) {
             event.isCancelled = true
         }
     }
@@ -104,14 +137,18 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onPlayerDamageEvent(event: EntityDamageEvent) {
-        if (event.entity !is Player)
+        if (event.entity !is Player) {
             return
+        }
+
         val player = event.entity as Player
-        val game = gameController.getGameFromPlayer(player)
-        if (game != null && event.cause == EntityDamageEvent.DamageCause.FALL) {
+        val game = gameService.getGameFromPlayer(player)
+
+        if (game.isPresent && event.cause == EntityDamageEvent.DamageCause.FALL) {
             event.isCancelled = true
         }
-        if (game != null && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.arena.meta.customizingMeta.damageEnabled) {
+
+        if (game.isPresent && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.get().arena.meta.customizingMeta.damageEnabled) {
             event.isCancelled = true
         }
     }
@@ -121,8 +158,9 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onBallInteractEvent(event: BallInteractEvent) {
-        val game = gameController.games.find { p -> p.ball != null && p.ball!! == event.ball }
-        if (game != null && game is SoccerGame) {
+        val game = gameService.getAllGames().find { p -> p.ball != null && p.ball!! == event.ball }
+
+        if (game != null) {
             if (event.entity is Player && (event.entity as Player).gameMode == GameMode.SPECTATOR) {
                 event.isCancelled = true
             }
@@ -136,26 +174,40 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
      */
     @EventHandler
     fun onClickOnPlacedSign(event: PlayerInteractEvent) {
-        if (event.action != Action.RIGHT_CLICK_BLOCK)
+        if (event.action != Action.RIGHT_CLICK_BLOCK) {
             return
-        if (event.clickedBlock.type != Material.SIGN_POST && event.clickedBlock.type != Material.WALL_SIGN)
+        }
+
+        if (event.clickedBlock.type != signPostMaterial && event.clickedBlock.type != Material.WALL_SIGN) {
             return
+        }
 
         val location = event.clickedBlock.location.toPosition()
-        if (placementCallBack.containsKey(event.player)) {
-            placementCallBack[event.player]!!.run(location)
-            placementCallBack.remove(event.player)
+
+        if (rightClickManageService.executeWatchers(event.player, event.clickedBlock.location)) {
             return
         }
 
-        gameController.getAll().forEach { p ->
+        gameService.getAllGames().forEach { p ->
             when {
-                p.arena.meta.lobbyMeta.joinSigns.contains(location) -> p.join(event.player, null)
-                p.arena.meta.lobbyMeta.leaveSigns.contains(location) -> p.leave(event.player)
-                p.arena.meta.redTeamMeta.signs.contains(location) -> p.join(event.player, Team.RED)
-                p.arena.meta.blueTeamMeta.signs.contains(location) -> p.join(event.player, Team.BLUE)
+                p.arena.meta.lobbyMeta.joinSigns.contains(location) -> gameActionService.joinGame(p, event.player)
+                p.arena.meta.lobbyMeta.leaveSigns.contains(location) -> gameActionService.leaveGame(p, event.player)
+                p.arena.meta.redTeamMeta.signs.contains(location) -> gameActionService.joinGame(p, event.player, Team.RED)
+                p.arena.meta.blueTeamMeta.signs.contains(location) -> gameActionService.joinGame(p, event.player, Team.BLUE)
             }
         }
+    }
+
+    /**
+     * Handles executing the double jump.
+     */
+    @EventHandler
+    fun onToggleFlightEvent(event: PlayerToggleFlightEvent) {
+        if (event.player.gameMode == GameMode.CREATIVE) {
+            return
+        }
+
+        event.isCancelled = doubleJumpService.handleDoubleClick(event.player)
     }
 
     /**
@@ -167,10 +219,10 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
             PlaceHolder.values().forEach { p ->
                 if (event.name.startsWith(p.placeHolder)) {
                     val data = event.name.split("_")
-                    val game = this.gameController.getGameFromArenaName(data[1])
+                    val game = this.gameService.getGameFromName(data[1])
 
-                    if (game != null) {
-                        event.result = data[0].replaceGamePlaceholder(game)
+                    if (game.isPresent) {
+                        event.result = data[0].replaceGamePlaceholder(game.get())
                     }
 
                     return
@@ -179,9 +231,5 @@ class GameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) 
         } catch (e: Exception) {
             //Ignored. Simple parsing error that another plugin is responsible for.
         }
-    }
-
-    interface CallBack {
-        fun run(position: StorageLocation)
     }
 }

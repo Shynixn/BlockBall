@@ -1,9 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
 
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
-import com.github.shynixn.blockball.bukkit.logic.business.entity.game.Minigame
-import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
-import com.github.shynixn.blockball.bukkit.logic.business.helper.stripChatColors
+import com.github.shynixn.blockball.api.business.service.GameMiniGameActionService
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.persistence.entity.MiniGame
+import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.bukkit.logic.business.extension.stripChatColors
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -36,11 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class SpectateCommandExecutor @Inject constructor(plugin: Plugin) : SimpleCommandExecutor.UnRegistered(plugin.config.get("global-spectate"), plugin as JavaPlugin) {
-
-    @Inject
-    private lateinit var gameController: GameRepository
-
+class SpectateCommandExecutor @Inject constructor(plugin: Plugin, private val gameService: GameService, private val miniGameActionService: GameMiniGameActionService<MiniGame>) : SimpleCommandExecutor.UnRegistered(plugin.config.get("global-spectate"), plugin as JavaPlugin) {
     /**
      * Can be overwritten to listen to player executed commands.
      *
@@ -52,19 +49,19 @@ class SpectateCommandExecutor @Inject constructor(plugin: Plugin) : SimpleComman
             return
         }
 
-        if (gameController.getGameFromPlayer(player) != null) {
+        if (gameService.getGameFromPlayer(player).isPresent) {
             return
         }
 
         val mergedArgs = mergeArgs(0, args.size, args)
 
-        gameController.getAll().filter { g -> g.arena.meta.spectatorMeta.spectatorModeEnabled }.forEach { g ->
-            if (g is Minigame) {
+        gameService.getAllGames().filter { g -> g.arena.meta.spectatorMeta.spectatorModeEnabled }.forEach { g ->
+            if (g is MiniGame) {
                 if (g.arena.name.equals(mergedArgs, true)) {
-                    g.spectate(player)
+                    miniGameActionService.spectateGame(g, player)
                     return
                 } else if (g.arena.displayName.convertChatColors().stripChatColors().equals(mergedArgs, true)) {
-                    g.spectate(player)
+                    miniGameActionService.spectateGame(g, player)
                     return
                 }
             }

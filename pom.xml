@@ -14,14 +14,22 @@
         <module>blockball-bukkit-api</module>
         <module>blockball-bukkit-plugin</module>
     </modules>
-    <version>5.4.0</version>
+    <version>6.0.0</version>
     <packaging>pom</packaging>
 
     <developers>
         <developer>
             <name>Shynixn</name>
+            <url>https://github.com/Shynixn</url>
         </developer>
     </developers>
+
+    <contributors>
+        <contributor>
+            <name>LazoYoung</name>
+            <url>https://github.com/LazoYoung</url>
+        </contributor>
+    </contributors>
 
     <licenses>
         <license>
@@ -31,7 +39,6 @@
     </licenses>
 
     <properties>
-        <blockball.bukkit.test-server-path>D:\Temp\plugins</blockball.bukkit.test-server-path>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <kotlin.version>1.2.21</kotlin.version>
@@ -135,13 +142,6 @@
                         <phase>verify</phase>
                         <goals>
                             <goal>jar</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>aggregate</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>aggregate</goal>
                         </goals>
                     </execution>
                 </executions>

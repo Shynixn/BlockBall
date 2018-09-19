@@ -1,14 +1,15 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.api.business.entity.VirtualArmorstand
+import com.github.shynixn.blockball.api.business.enumeration.ParticleColor
+import com.github.shynixn.blockball.api.business.enumeration.ParticleType
+import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.VirtualArenaService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
-import com.github.shynixn.blockball.bukkit.nms.NMSRegistry
+import com.github.shynixn.blockball.api.persistence.entity.Particle
+import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ParticleEntity
 import com.google.inject.Inject
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
@@ -39,53 +40,41 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin) : VirtualArenaService {
+class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin, private val particleService: ParticleService) : VirtualArenaService {
 
     /**
      * Displays the [arena] virtual locations for the given [player] for the given amount of [seconds].
      */
-    override fun <Player> displayForPlayer(player: Player, arena: Arena<*, *, *, *, *>, seconds: Int) {
-        if (player !is org.bukkit.entity.Player) {
+    override fun <P> displayForPlayer(player: P, arena: Arena, seconds: Int) {
+        if (player !is Player) {
             throw IllegalArgumentException("Player has to be a bukkit player!")
         }
 
-        if (arena !is BukkitArena) {
-            throw IllegalArgumentException("Arena has to be a bukkit arena!")
-        }
+        val particle = ParticleEntity(ParticleType.REDSTONE)
+        particle.colorRed  = 255
+        particle.colorBlue = 0
+        particle.colorGreen = 0
+        particle.amount = 20
+        particle.speed = 0.02
 
         plugin.server.scheduler.runTaskAsynchronously(plugin, {
-            val items = ArrayList<VirtualArmorstand>()
-
-            if (arena.meta.redTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.upperCorner != null) {
-                displayArmorstands(player, items, arena.meta.redTeamMeta.goal.lowerCorner!!, arena.meta.redTeamMeta.goal.upperCorner!!)
-            }
-            if (arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.blueTeamMeta.goal.upperCorner != null) {
-                displayArmorstands(player, items, arena.meta.blueTeamMeta.goal.lowerCorner!!, arena.meta.blueTeamMeta.goal.upperCorner!!)
-            }
-
-            plugin.server.scheduler.runTaskLaterAsynchronously(plugin, {
-                items.forEach { i ->
-                    i.close()
-                }
-
-                items.clear()
-            }, 20 * 20)
+            displayArmorstands(player, particle, arena.meta.redTeamMeta.goal.lowerCorner, arena.meta.redTeamMeta.goal.upperCorner)
+            displayArmorstands(player, particle, arena.meta.blueTeamMeta.goal.lowerCorner, arena.meta.blueTeamMeta.goal.upperCorner)
         })
     }
 
     /**
      * Displays the armorstands between the given [lowCorner] and [upCorner] location for the given [player].
      */
-    private fun displayArmorstands(player: Player, items: MutableList<VirtualArmorstand>, lowCorner: StorageLocation, upCorner: StorageLocation) {
+    private fun displayArmorstands(player: Player, particle: Particle, lowCorner: Position, upCorner: Position) {
         var j = lowCorner.y
         while (j <= upCorner.y) {
             var i = lowCorner.x
             while (i <= upCorner.x) {
                 var k = lowCorner.z
                 while (k <= upCorner.z) {
-                    val armorstand = NMSRegistry.createVirtualArmorstand(player, Location(player.world, i, j, k), Material.STAINED_GLASS.id, 1)
-                    armorstand.spawn()
-                    items.add(armorstand)
+                    val location = Location(player.world, i, j, k)
+                    particleService.playParticle(location, particle, arrayListOf(player))
                     k++
                 }
                 i++

@@ -2,13 +2,14 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.Permission
-import com.github.shynixn.blockball.bukkit.logic.business.controller.GameRepository
-import com.github.shynixn.blockball.bukkit.logic.business.helper.hasPermission
+import com.github.shynixn.blockball.api.business.service.ConfigurationService
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
 import com.google.inject.Inject
 import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.plugin.Plugin
 
 /**
  * Created by Shynixn 2018.
@@ -37,22 +38,20 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class MinigameListener @Inject constructor(plugin: Plugin) : SimpleListener(plugin) {
-    @Inject
-    private var gameController: GameRepository? = null
+class MinigameListener @Inject constructor(private val gameService: GameService, private val configurationService: ConfigurationService) : Listener {
 
     /**
      * Cancels actions in minigame and bungeecord games to restrict destroying the arena.
      */
     @EventHandler
     fun onPlayerInteractEvent(event: PlayerInteractEvent) {
-        var game = gameController!!.getGameFromPlayer(event.player)
+        var game = gameService.getGameFromPlayer(event.player)
 
-        if (game == null) {
-            game = gameController!!.getGameFromSpectatingPlayer(event.player)
+        if (!game.isPresent) {
+            game = gameService.getGameFromSpectatingPlayer(event.player)
         }
 
-        if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE)) {
+        if (game.isPresent && game.get().arena.enabled && (game.get().arena.gameType == GameType.MINIGAME || game.get().arena.gameType == GameType.BUNGEE)) {
             event.isCancelled = true
         }
     }
@@ -63,19 +62,19 @@ class MinigameListener @Inject constructor(plugin: Plugin) : SimpleListener(plug
     @EventHandler
     fun onPlayerExecuteCommand(event: PlayerCommandPreprocessEvent) {
         if (event.message.startsWith("/blockball")
-                || event.message.startsWith("/" + plugin.config.getString("global-leave.command"))
+                || event.message.startsWith("/" + configurationService.findValue<String>("global-leave.command"))
                 || Permission.STAFF.hasPermission(event.player) || Permission.ADMIN.hasPermission(event.player)
                 || event.player.isOp) {
 
             return
         }
 
-        var game = gameController!!.getGameFromPlayer(event.player)
-        if (game == null) {
-            game = gameController!!.getGameFromSpectatingPlayer(event.player)
+        var game = gameService.getGameFromPlayer(event.player)
+        if (game.isPresent) {
+            game = gameService.getGameFromSpectatingPlayer(event.player)
         }
 
-        if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE)) {
+        if (game.isPresent && game.get().arena.enabled && (game.get().arena.gameType == GameType.MINIGAME || game.get().arena.gameType == GameType.BUNGEE)) {
             event.isCancelled = true
         }
     }

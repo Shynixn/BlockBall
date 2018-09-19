@@ -1,15 +1,17 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.bukkit.logic.persistence.configuration.Config
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.persistence.entity.basic.StorageLocation
+import com.github.shynixn.blockball.api.business.service.ConfigurationService
+import com.github.shynixn.blockball.api.business.service.RightclickManageService
+import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu.BlockBallCommand.*
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.helper.toSingleLine
-import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toSingleLine
 import com.google.inject.Inject
 import org.bukkit.ChatColor
+import org.bukkit.Location
+import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 
 /**
@@ -39,15 +41,12 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
+class SignSettingsPage @Inject constructor(private val configurationService: ConfigurationService, private val rightclickManageService: RightclickManageService) : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
 
     companion object {
         /** Id of the page. */
         const val ID = 11
     }
-
-    @Inject
-    private var listener: GameListener? = null
 
     /**
      * Returns the key of the command when this page should be executed.
@@ -65,38 +64,40 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache[0] as BukkitArena
+        val prefix = configurationService.findValue<String>("messages.prefix")
+
+        val arena = cache[0] as Arena
         when (command) {
             SIGNS_ADDTEAMRED -> {
-                player.sendMessage(Config.prefix + "Rightclick on a sign.")
-                listener!!.placementCallBack[player] = (object : GameListener.CallBack {
-                    override fun run(position: StorageLocation) {
-                        arena.meta.redTeamMeta.signs.add(position)
-                    }
+                player.sendMessage(prefix + "Rightclick on a sign.")
+                rightclickManageService.watchForNextRightClickSign<Player, Location>(player, { location ->
+                    arena.meta.redTeamMeta.signs.add(location.toPosition())
+                    player.sendMessage(prefix + "Save and reload to enable the sign.")
+                    showLoadingSign(location)
                 })
             }
             SIGNS_ADDTEAMBLUE -> {
-                player.sendMessage(Config.prefix + "Rightclick on a sign.")
-                listener!!.placementCallBack[player] = (object : GameListener.CallBack {
-                    override fun run(position: StorageLocation) {
-                        arena.meta.blueTeamMeta.signs.add(position)
-                    }
+                player.sendMessage(prefix + "Rightclick on a sign.")
+                rightclickManageService.watchForNextRightClickSign<Player, Location>(player, { location ->
+                    arena.meta.blueTeamMeta.signs.add(location.toPosition())
+                    player.sendMessage(prefix + "Save and reload to enable the sign.")
+                    showLoadingSign(location)
                 })
             }
             SIGNS_ADDJOINANY -> {
-                player.sendMessage(Config.prefix + "Rightclick on a sign.")
-                listener!!.placementCallBack[player] = (object : GameListener.CallBack {
-                    override fun run(position: StorageLocation) {
-                        arena.meta.lobbyMeta.joinSigns.add(position)
-                    }
+                player.sendMessage(prefix + "Rightclick on a sign.")
+                rightclickManageService.watchForNextRightClickSign<Player, Location>(player, { location ->
+                    arena.meta.lobbyMeta.joinSigns.add(location.toPosition())
+                    player.sendMessage(prefix + "Save and reload to enable the sign.")
+                    showLoadingSign(location)
                 })
             }
             SIGNS_LEAVE -> {
-                player.sendMessage(Config.prefix + "Rightclick on a sign.")
-                listener!!.placementCallBack[player] = (object : GameListener.CallBack {
-                    override fun run(position: StorageLocation) {
-                        arena.meta.lobbyMeta.leaveSigns.add(position)
-                    }
+                player.sendMessage(prefix + "Rightclick on a sign.")
+                rightclickManageService.watchForNextRightClickSign<Player, Location>(player, { location ->
+                    arena.meta.lobbyMeta.leaveSigns.add(location.toPosition())
+                    player.sendMessage(prefix + "Save and reload to enable the sign.")
+                    showLoadingSign(location)
                 })
             }
             else -> {
@@ -105,6 +106,15 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
         return super.execute(player, command, cache, args)
     }
 
+    /**
+     * Show loading sign.
+     */
+    private fun showLoadingSign(location: Location) {
+        val sign = location.block.state as Sign
+        sign.setLine(0, ChatColor.BOLD.toString() + "BlockBall")
+        sign.setLine(1, ChatColor.GREEN.toString() + "Loading...")
+        sign.update(true)
+    }
 
     /**
      * Builds the page content.
@@ -113,7 +123,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
 
         val teamSignsRed = arena.meta.redTeamMeta.signs.map { p -> this.printLocation(p) }
         val teamSignsBlue = arena.meta.blueTeamMeta.signs.map { p -> this.printLocation(p) }
@@ -147,7 +157,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .component("- Template Signs Team Blue: ").builder().component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
                     .setHoverText(arena.meta.blueTeamMeta.signLines.toList().toSingleLine()).builder()
                     .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command+ " blue")
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command + " blue")
                     .setHoverText("Opens the page to change the template on signs to join this team.")
                     .builder().nextLine()
                     .component("- Signs Join any team: ").builder()
@@ -161,7 +171,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .component("- Template Signs Join: ").builder().component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
                     .setHoverText(arena.meta.lobbyMeta.joinSignLines.toList().toSingleLine()).builder()
                     .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command+ " join")
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command + " join")
                     .setHoverText("Opens the page to change the template on signs to join this team.")
                     .builder().nextLine()
                     .component("- Signs Leave: ").builder()
@@ -174,7 +184,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .component("- Template Signs Leave: ").builder().component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
                     .setHoverText(arena.meta.lobbyMeta.leaveSignLines.toList().toSingleLine()).builder()
                     .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command+ " leave")
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command + " leave")
                     .setHoverText("Opens the page to change the template on signs to join this team.")
                     .builder().nextLine()
         } else if (arena.gameType == GameType.MINIGAME || arena.gameType == GameType.BUNGEE) {
@@ -190,7 +200,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .component("- Template Signs Team Red: ").builder().component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
                     .setHoverText(arena.meta.redTeamMeta.signLines.toList().toSingleLine()).builder()
                     .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command+ " red")
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command + " red")
                     .setHoverText("Opens the page to change the template on signs to join this team.")
                     .builder().nextLine()
                     .component("- Signs Team Blue: ").builder()
@@ -204,7 +214,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .component("- Template Signs Team Blue: ").builder().component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
                     .setHoverText(arena.meta.blueTeamMeta.signLines.toList().toSingleLine()).builder()
                     .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command+ " blue")
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command + " blue")
                     .setHoverText("Opens the page to change the template on signs to join this team.")
                     .builder().nextLine()
                     .component("- Signs Join any team: ").builder()
@@ -218,7 +228,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .component("- Template Signs Join: ").builder().component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
                     .setHoverText(arena.meta.lobbyMeta.joinSignLines.toList().toSingleLine()).builder()
                     .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command+ " join")
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command + " join")
                     .setHoverText("Opens the page to change the template on signs to join this team.")
                     .builder().nextLine()
                     .component("- Signs Leave: ").builder()
@@ -231,7 +241,7 @@ class SignSettingsPage : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
                     .component("- Template Signs Leave: ").builder().component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color)
                     .setHoverText(arena.meta.lobbyMeta.leaveSignLines.toList().toSingleLine()).builder()
                     .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command+ " leave")
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.MULTILINES_TEAMSIGNTEMPLATE.command + " leave")
                     .setHoverText("Opens the page to change the template on signs to join this team.")
                     .builder().nextLine()
         }

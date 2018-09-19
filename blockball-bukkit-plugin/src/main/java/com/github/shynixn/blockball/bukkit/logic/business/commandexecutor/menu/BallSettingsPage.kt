@@ -1,11 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.ball.api.persistence.effect.ParticleEffectMeta
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
-import com.github.shynixn.ball.api.persistence.enumeration.ActionEffect
-import com.github.shynixn.ball.api.persistence.enumeration.BallSize
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.github.shynixn.blockball.api.business.enumeration.BallSize
+import com.github.shynixn.blockball.api.compatibility.ActionEffect
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.api.persistence.entity.Particle
+import com.github.shynixn.blockball.api.persistence.entity.Sound
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.entity.Player
 
 /**
@@ -57,7 +57,7 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val ballMeta = (cache[0] as BukkitArena).meta.ballMeta
+        val ballMeta = (cache[0] as Arena).meta.ballMeta
         if (command == BlockBallCommand.BALL_OPEN) {
             cache[5] = null
         }
@@ -95,7 +95,7 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val ballMeta = (cache[0] as BukkitArena).meta.ballMeta
+        val ballMeta = (cache[0] as Arena).meta.ballMeta
         val builder = ChatBuilder()
                 .component("- Skin: ").builder()
                 .component(ClickableComponent.PREVIEW.text).setColor(ClickableComponent.PREVIEW.color).setHoverText(ballMeta.skin).builder()
@@ -143,12 +143,12 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BALL_PARTICLEFFECTS.command)
                 .setHoverText("Opens the selectiongbox for action binders.")
                 .builder().nextLine()
-        if (cache[5] != null && cache[5] is SoundEffectMeta<*, *>) {
+        if (cache[5] != null && cache[5] is Sound) {
             builder.component("- Selected Soundeffect: ").builder().component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SOUND_BALL.command)
                     .setHoverText("Opens the page for editing the soundeffect.")
                     .builder().nextLine()
-        } else if(cache[5] != null && cache[5] is ParticleEffectMeta<*,*,*>) {
+        } else if(cache[5] != null && cache[5] is Particle) {
                      builder.component("- Selected Particleffect: ").builder().component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.PARTICLE_BALL.command)
                     .setHoverText("Opens the page for editing the particleeffect.")

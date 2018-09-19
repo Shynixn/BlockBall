@@ -1,7 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.ScoreboardService
-import com.github.shynixn.blockball.bukkit.logic.business.helper.convertChatColors
+import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.scoreboard.DisplaySlot
 
@@ -32,7 +33,7 @@ import org.bukkit.scoreboard.DisplaySlot
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ScoreboardServiceImpl : ScoreboardService {
+class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
 
     companion object {
         private const val defaultObjective: String = "def_obj"
@@ -41,13 +42,13 @@ class ScoreboardServiceImpl : ScoreboardService {
     /**
      * Sets the configuration of the given scoreboard.
      */
-    override fun <Scoreboard> setConfiguration(scoreboard: Scoreboard, displaySlot: Any, title: String) {
+    override fun <S> setConfiguration(scoreboard: S, displaySlot: Any, title: String) {
         if (scoreboard !is org.bukkit.scoreboard.Scoreboard) {
-            throw IllegalArgumentException("Scoreboard has to be a Bukkit Scoreboard.")
+            throw IllegalArgumentException("Scoreboard has to be a Bukkit Scoreboard!")
         }
 
         if (displaySlot !is DisplaySlot) {
-            throw IllegalArgumentException("Displayslot has to be a Bukkit Displayslot.")
+            throw IllegalArgumentException("Displayslot has to be a Bukkit Displayslot!")
         }
 
         val objective = scoreboard.registerNewObjective(defaultObjective, "dummy")
@@ -58,9 +59,9 @@ class ScoreboardServiceImpl : ScoreboardService {
     /**
      * Sets the [text] at the given [scoreboard] and [lineNumber].
      */
-    override fun <Scoreboard> setLine(scoreboard: Scoreboard, lineNumber: Int, text: String) {
+    override fun <S> setLine(scoreboard: S, lineNumber: Int, text: String) {
         if (scoreboard !is org.bukkit.scoreboard.Scoreboard) {
-            throw IllegalArgumentException("Scoreboard has to be a Bukkit Scoreboard.")
+            throw IllegalArgumentException("Scoreboard has to be a Bukkit Scoreboard!")
         }
 
         val teamFinder = StringBuilder(ChatColor.values()[lineNumber].toString()).append("&r")

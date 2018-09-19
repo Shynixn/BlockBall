@@ -46,5 +46,5 @@ interface TemplateService {
     /**
      * Generates a new [Arena] from the given [template].
      */
-    fun generateArena(template: Template): Arena<*, *, *, *, *>
+    fun generateArena(template: Template): Arena
 }

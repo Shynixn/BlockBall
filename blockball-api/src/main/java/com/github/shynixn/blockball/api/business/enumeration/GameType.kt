@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.business.enumeration
 
 /**
- * Created by Shynixn 2018.
+ * Gamemodes.
  * <p>
  * Version 1.2
  * <p>

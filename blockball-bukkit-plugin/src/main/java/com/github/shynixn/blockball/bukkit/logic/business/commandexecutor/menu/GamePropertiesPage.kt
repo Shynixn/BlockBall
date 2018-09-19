@@ -1,9 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
-import com.google.inject.Inject
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.entity.Player
 
 /**
@@ -39,9 +37,6 @@ class GamePropertiesPage : Page(GamePropertiesPage.ID, MiscSettingsPage.ID) {
         const val ID = 25
     }
 
-    @Inject
-    private var arenaRepository: ArenaRepository? = null
-
     /**
      * Returns the key of the command when this page should be executed.
      *
@@ -58,7 +53,7 @@ class GamePropertiesPage : Page(GamePropertiesPage.ID, MiscSettingsPage.ID) {
      * @param args
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         if (command == BlockBallCommand.GAMEPROPERTIES_TOGGLE_DAMAGE) {
             arena.meta.customizingMeta.damageEnabled = !arena.meta.customizingMeta.damageEnabled
         } else if (command == BlockBallCommand.GAMEPROPERTIES_TOGGLE_TELEPORTBACK) {
@@ -75,7 +70,7 @@ class GamePropertiesPage : Page(GamePropertiesPage.ID, MiscSettingsPage.ID) {
      * @return page
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         val meta = arena.meta.customizingMeta
         return ChatBuilder()
                 .component("- Damage enabled: " + meta.damageEnabled).builder()

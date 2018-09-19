@@ -6,123 +6,144 @@ JavaDocs
 
 https://shynixn.github.io/BlockBall/apidocs/
 
-Including the BlockBall Bukkit-Api
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Including the BlockBall API
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-BlockBall is using maven as build system but you can include the api via different ways:
+.. image:: https://maven-badges.herokuapp.com/maven-central/com.github.shynixn.blockball/blockball-api/badge.svg?style=flat-square
+  :target: https://maven-badges.herokuapp.com/maven-central/com.github.shynixn.blockball/blockball-api
 
-**Maven**:
-::
-   <dependency>
-        <groupId>com.github.shynixn.ball</groupId>
-        <artifactId>ball-api</artifactId>
-        <version>1.4</version>
-        <scope>provided</scope>
-    </dependency>
+BlockBall is using maven as build system and is available in the central repository.
+
+.. note::  **Maven** - Bukkit
+
+.. parsed-literal::
+
     <dependency>
         <groupId>com.github.shynixn.blockball</groupId>
         <artifactId>blockball-api</artifactId>
-        <version>5.4.0</version>
+        <version>\ |release|\ </version>
         <scope>provided</scope>
     </dependency>
     <dependency>
         <groupId>com.github.shynixn.blockball</groupId>
         <artifactId>blockball-bukkit-api</artifactId>
-        <version>5.4.0</version>
+        <version>\ |release|\ </version>
         <scope>provided</scope>
     </dependency>
 
-**Gradle**:
-::
+.. note::  **Gradle** - Bukkit
+
+.. parsed-literal::
+
     dependencies {
-        compileOnly 'com.github.shynixn.ball:ball-api:1.4'
-        compileOnly 'com.github.shynixn.blockball:blockball-api:5.4.0'
-        compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:5.4.0'
+        compileOnly 'com.github.shynixn.blockball:blockball-api:\ |release|\ '
+        compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:\ |release|\ '
     }
 
-**Reference the jar file**:
+Registering the dependency
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you are not capable of using one of these above you can also manually download the
-api from the `repository <https://oss.sonatype.org/content/repositories/releases/com/github/shynixn/blockball/blockball-bukkit-api/>`__  and reference it in your project.
+.. note::  **Bukkit** - Add the following tag to your plugin.yml if you **optionally** want to use BlockBall.
 
-Updating your plugin.yml
-~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block:: yaml
 
-Your plugin optionally uses BlockBall.
-::
     softdepend: [BlockBall]
 
-Your plugin requires BlockBall to work.
-::
+.. note::  **Bukkit** - Add the following tag to your plugin.yml if your plugin  **requires** BlockBall to work.
+
+.. code-block:: yaml
+
     depend: [BlockBall]
 
-Modifying BlockBall games
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Working with the BlockBall API
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::  There are 4 simple steps to access the **whole** business logic of BlockBall.
+
+* Check out the package **com.github.shynixn.blockball.api.business.service** in the JavaDocs to find the part of the business logic you want to access.
+* Get the instance by using the following line.
+
+.. code-block:: java
+
+    YourBusinessService service = BlockBallApi.INSTANCE.resolve(YourBusinessService.class);
+
+* If the service methods require additional data entities, check out the JavaDocs to find other services which provide these data entities
+  or create new entities by checking out the package **com.github.shynixn.blockball.api.persistence.entity**.
+
+.. code-block:: java
+
+    YourPersistenceEntity entity = BlockBallApi.INSTANCE.create(YourPersistenceEntity.class);
 
 
-**Teleport the ball of a game to a target location**
-::
-        String arenaId = "1";
-        Location location; // Target location
+* There are some samples below to get your started.
 
-        BukkitGameController gameController = BlockBallApi.INSTANCE.getDefaultGameController();
-        BukkitGame game = gameController.getGameFromArenaName(arenaId);
+.. note::  **Ball** - Bukkit - Spawning a ball.
 
-        if (game == null) { // Check if the gme is not null!
-            return;
-        }
+.. code-block:: java
 
-        BukkitBall ball = game.getBall();
+    Location location; // Any Location instance
 
-        if (ball == null) { // Check if the ball is not null!
-            return;
-        }
+    BallMeta ballMeta = BlockBallApi.INSTANCE.create(BallMeta.class);
+    BallEntityService ballEntityService = BlockBallApi.INSTANCE.resolve(BallEntityService.class);
 
-        ball.teleport(location);
+    BallProxy ballProxy = ballEntityService.spawnTemporaryBall(location, ballMeta);
+
+.. note::  **Game** - Bukkit - Accessing games.
+
+.. code-block:: java
+
+    GameService gameService = BlockBallApi.INSTANCE.resolve(GameService.class);
+    GameActionService<Game> gameActionService = BlockBallApi.INSTANCE.resolve(GameActionService.class);
+
+    Player player; // Any player instance
+    List<Game> games = gameService.getAllGames();
+    Optional<Game> targetGame = gameService.getGameFromName("1");
+
+    if (targetGame.isPresent()) {
+        Game game = targetGame.get();
+        gameActionService.joinGame(game, player)
+    }
+
+.. note::  **Arena** - Bukkit - Accessing arenas.
+
+.. code-block:: java
+
+    final PersistenceArenaService persistenceArenaService = BlockBallApi.INSTANCE.resolve(PersistenceArenaService.class);
+    final CompletableFuture<Void> completableFuture = persistenceArenaService.refresh(); // Do you want to refresh the arenas from the files?
+
+    completableFuture.thenAccept(aVoid -> {
+        // Once the arenas are refreshed you can always access them directly.
+        List<Arena> arenas = persistenceArenaService.getArenas();
+    });
 
 Listen to Events
 ~~~~~~~~~~~~~~~~
 
-There are many BlockBall events in order to listen to actions. Please take a look into the `JavaDocs <https://shynixn.github.io/BlockBall/apidocs/>`__  for all events:
-::
-    @EventHandler
-    public void onGameJoinEvent(GameJoinEvent event){
-        Player player = event.getPlayer();
-        Game game = event.getGame();
+There are many BlockBall events in order to listen to actions. Please take a look into the `JavaDocs <https://shynixn.github.io/BlockBall/apidocs/>`__  for all events.
 
-        //Do something
+.. note::  **SpawnEvent** - Bukkit - Listening to the spawn event.
+
+.. code-block:: java
+
+    @EventHandler
+    public void onBallSpawnEvent(BallSpawnEvent event) {
+        BallProxy ball = event.getBall();
+
+        // Do Something
     }
 
-::
 
+Contributing and setting up your workspace
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Setup your personal BlockBall Workspace
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. warning:: BlockBall is **partially** written in `Kotlin <https://kotlinlang.org/>`__ instead of pure Java. If you are not familiar with Kotlin, modifying BlockBall might be a difficult task.
 
-**Important!** BlockBall is written in `Kotlin <https://kotlinlang.org/>`__ instead of pure Java. If you are not familiar
-with Kotlin, BlockBall might be a difficult task.
+* Fork the BlockBall project on github and clone it to your local environment.
 
-It is sometimes necessary to customize BlockBall itself instead of using the Developer API. The following steps
-help you to get started with developing for BlockBall.
+* Use BuildTools.jar from spigotmc.org to build the following dependencies.
 
-Before you continue you should be familiar with **git**, **github**, **maven** and any preferred **Java IDE**.
+.. code-block:: java
 
-1. Open `BlockBall on github <https://github.com/Shynixn/BlockBall>`__
-2. Log in or create a github account and press the **Fork** button in the top right corner.
-3. Github will create a new repository with BlockBall on your account
-4. Click on the green **Clone or download** button and copy the text inside of the textbox
-5. Open a terminal on your pc, go into a target folder and enter the command
-
-**CLI**
-::
-   git clone <your copied text>
-::
-
-6. After BlockBall folder is created you can open the Project with any Java IDE supporting **Maven**
-7. Add the required spigot libraries from 1.8.0 until the latest version via BuildTools and the the following commands.
-
-**CLI**
-::
     - java -jar BuildTools.jar --rev 1.8
     - java -jar BuildTools.jar --rev 1.8.3
     - java -jar BuildTools.jar --rev 1.8.8
@@ -132,6 +153,12 @@ Before you continue you should be familiar with **git**, **github**, **maven** a
     - java -jar BuildTools.jar --rev 1.11
     - java -jar BuildTools.jar --rev 1.12
     - java -jar BuildTools.jar --rev 1.13
+    - java -jar BuildTools.jar --rev 1.13.1
+
+* Install the created libraries to your local maven repository.
+
+.. code-block:: java
+
     - mvn install:install-file -Dfile=spigot-1.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R1 -Dversion=1.8.0-R1.0 -Dpackaging=jar
     - mvn install:install-file -Dfile=spigot-1.8.3.jar -DgroupId=org.spigotmc -DartifactId=spigot18R2 -Dversion=1.8.3-R2.0 -Dpackaging=jar
     - mvn install:install-file -Dfile=spigot-1.8.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R3 -Dversion=1.8.8-R3.0 -Dpackaging=jar
@@ -141,15 +168,8 @@ Before you continue you should be familiar with **git**, **github**, **maven** a
     - mvn install:install-file -Dfile=spigot-1.11.jar -DgroupId=org.spigotmc -DartifactId=spigot111R1 -Dversion=1.11.0-R1.0 -Dpackaging=jar
     - mvn install:install-file -Dfile=spigot-1.12.jar -DgroupId=org.spigotmc -DartifactId=spigot112R1 -Dversion=1.12.0-R1.0 -Dpackaging=jar
     - mvn install:install-file -Dfile=spigot-1.13.jar -DgroupId=org.spigotmc -DartifactId=spigot113R1 -Dversion=1.13.0-R1.0 -Dpackaging=jar
+    - mvn install:install-file -Dfile=spigot-1.13.1.jar -DgroupId=org.spigotmc -DartifactId=spigot113R2 -Dversion=1.13.1-R2.0 -Dpackaging=jar
 
+* Reimport the BlockBall maven project and execute 'mvn package' afterwards.
 
-8. Refresh the maven dependencies.
-9. Try to compile the root project with **mvn compile**
-10. If successful you can start editing the source code and create jar files via **mvn package**
-
-**Optional**
-
-11. To share your changes with the world push your committed changes into your github repository.
-12. Click on the **New pull request** button and start a pull request against BlockBall
-
-(base:fork Shynixn/BlockBall, base: development <- head fork: <your repository> ...)
+* The generated blockball-bukkit-plugin/target/blockball-bukkit-plugin-###.jar can be used for testing on a server.

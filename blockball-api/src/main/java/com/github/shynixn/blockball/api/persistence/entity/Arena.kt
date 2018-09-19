@@ -1,8 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.persistence.entity.meta.ArenaMeta
-import com.github.shynixn.blockball.api.persistence.entity.meta.area.AreaSelection
 
 /**
  * Created by Shynixn 2018.
@@ -31,7 +29,7 @@ import com.github.shynixn.blockball.api.persistence.entity.meta.area.AreaSelecti
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Arena<Location, ItemStack, Vector, Player, Material> : AreaSelection<Location>{
+interface Arena : Selection {
 
     /** Unique [name] of the arena. */
     val name: String
@@ -46,5 +44,5 @@ interface Arena<Location, ItemStack, Vector, Player, Material> : AreaSelection<L
     var gameType: GameType
 
     /** Collection of the arena meta data. */
-    val meta: ArenaMeta<Location, ItemStack, Vector, Player, Material>
+    val meta: ArenaMeta
 }

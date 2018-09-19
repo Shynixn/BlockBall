@@ -1,12 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.ball.api.persistence.effect.SoundEffectMeta
-import com.github.shynixn.ball.api.persistence.enumeration.EffectingType
-import com.github.shynixn.blockball.api.bukkit.persistence.entity.BukkitArena
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.controller.ArenaRepository
-import com.google.inject.Inject
-import org.bukkit.Location
+import com.github.shynixn.blockball.api.compatibility.EffectingType
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.api.persistence.entity.Sound
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import org.bukkit.entity.Player
 
 /**
@@ -42,9 +39,6 @@ class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
         const val ID = 21
     }
 
-    @Inject
-    private var arenaRepository: ArenaRepository? = null
-
     override fun getPreviousIdFrom(cache: Array<Any?>): Int {
         return cache[4] as Int
     }
@@ -65,26 +59,24 @@ class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
      * @param args
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val arena = cache[0] as BukkitArena
+        val arena = cache[0] as Arena
         if (command == BlockBallCommand.SOUND_DOUBLEJUMP) {
             cache[5] = arena.meta.doubleJumpMeta.soundEffect
             cache[4] = DoubleJumpPage.ID
-        }
-        else if (command == BlockBallCommand.SOUND_BALL) {
+        } else if (command == BlockBallCommand.SOUND_BALL) {
             cache[4] = BallSettingsPage.ID
-        }
-        else if (command == BlockBallCommand.SOUND_CALLBACK_TYPE ) {
-            val soundEffect = cache[5] as SoundEffectMeta<*, *>
-            soundEffect.setName<SoundEffectMeta<*, *>>(args[2])
+        } else if (command == BlockBallCommand.SOUND_CALLBACK_TYPE) {
+            val soundEffect = cache[5] as Sound
+            soundEffect.name = args[2]
         } else if (command == BlockBallCommand.SOUND_CALLBACK_EFFECTING && args.size >= 3 && args[2].toIntOrNull() != null) {
-            val soundEffect = cache[5] as SoundEffectMeta<*, *>
-            soundEffect.setEffectingType<SoundEffectMeta<*, *>>(EffectingType.values()[args[2].toInt()])
+            val soundEffect = cache[5] as Sound
+            soundEffect.effectingType = EffectingType.values()[args[2].toInt()]
         } else if (command == BlockBallCommand.SOUND_PITCH && args[2].toDoubleOrNull() != null) {
-            val soundEffect = cache[5] as SoundEffectMeta<*, *>
-            soundEffect.setPitch<SoundEffectMeta<Location, Player>>(args[2].toDouble())
+            val soundEffect = cache[5] as Sound
+            soundEffect.pitch = args[2].toDouble()
         } else if (command == BlockBallCommand.SOUND_VOLUME && args[2].toDoubleOrNull() != null) {
-            val soundEffect = cache[5] as SoundEffectMeta<*, *>
-            soundEffect.setVolume<SoundEffectMeta<Location, Player>>(args[2].toDouble())
+            val soundEffect = cache[5] as Sound
+            soundEffect.volume = args[2].toDouble()
         }
         return super.execute(player, command, cache, args)
     }
@@ -95,7 +87,7 @@ class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
      * @return page
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
-        val soundEffect = cache[5] as SoundEffectMeta<*, *>
+        val soundEffect = cache[5] as Sound
         return ChatBuilder()
                 .component("- Effecting: " + soundEffect.effectingType).builder()
                 .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)

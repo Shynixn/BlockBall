@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.bukkit.logic.business.helper.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 
 /**
  * Created by Shynixn 2018.
@@ -57,11 +57,6 @@ class AbilitiesSettingsPage : Page(AbilitiesSettingsPage.ID, MainSettingsPage.ID
                 .component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.DOUBLEJUMP_OPEN.command)
                 .setHoverText("Configure the double jump options for the players.")
-                .builder().nextLine()
-                .component("- BoostItems:").builder()
-                .component(ClickableComponent.INVALID.text).setColor(ClickableComponent.INVALID.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.ABILITIES_OPEN.command)
-                .setHoverText("Temporary disabled in this version.")
                 .builder().nextLine()
     }
 }
