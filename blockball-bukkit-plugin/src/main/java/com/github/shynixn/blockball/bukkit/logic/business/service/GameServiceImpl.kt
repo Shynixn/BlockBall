@@ -99,13 +99,13 @@ class GameServiceImpl @Inject constructor(private val plugin: Plugin, private va
             } else {
                 gameActionService.handle(game, ticks)
             }
-
-            if (ticks >= 20) {
-                ticks = 0
-            }
-
-            ticks++
         }
+
+        if (ticks >= 20) {
+            ticks = 0
+        }
+
+        ticks++
     }
 
     /**
