@@ -1,13 +1,13 @@
-package com.github.shynixn.blockball.api.compatibility;
+package com.github.shynixn.blockball.api.persistence.entity
 
 /**
- * Effect type how the effect should be displayed.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,51 @@ package com.github.shynixn.blockball.api.compatibility;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public enum EffectingType {
-    EVERYONE,
-    RELATED_PLAYER,
-    NOBODY
+interface MovementConfiguration {
+
+    /**
+     * Bounceeffect from default objects.
+     */
+    var defaultBounceModifier: Double
+
+    /**
+     * The gravity modifier how fast a ball falls to the ground after being kicked or
+     * thrown in to the sky.
+     */
+    var gravityModifier: Double
+
+    /**
+     * Rolling distance.
+     */
+    var rollingDistanceModifier: Double
+
+    /**
+     * Horizontal touch modifier.
+     */
+    var horizontalTouchModifier: Double
+
+    /**
+     * Vertical touch modifier.
+     */
+    var verticalTouchModifier: Double
+
+    /**
+     * Horizontal kick modifier.
+     */
+    var horizontalKickModifier: Double
+
+    /**
+     * Vertical kick modifier.
+     */
+    var verticalKickModifier: Double
+
+    /**
+     * Horizontal kick modifier.
+     */
+    var horizontalThrowModifier: Double
+
+    /**
+     * Vertical kick modifier.
+     */
+    var verticalThrowModifier: Double
 }

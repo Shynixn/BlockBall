@@ -2,9 +2,9 @@
 
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
+import com.github.shynixn.blockball.api.business.enumeration.BallActionType
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
-import com.github.shynixn.blockball.api.compatibility.ActionEffect
 import com.github.shynixn.blockball.api.persistence.entity.ArenaMeta
 import com.github.shynixn.blockball.api.persistence.entity.ArenaProtectionMeta
 import com.github.shynixn.blockball.api.persistence.entity.HologramMeta
@@ -79,7 +79,7 @@ class ArenaMetaEntity : ArenaMeta {
     @YamlSerializer.YamlSerialize(orderNumber = 5, value = "protection")
     override val protectionMeta: ArenaProtectionMeta = ArenaProtectionMetaEntity()
     /** Meta data of the ball. */
-    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "ball", classicSerialize = YamlSerializer.ManualSerialization.CONSTRUCTOR)
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "ball")
     override val ballMeta: BallMetaEntity = BallMetaEntity("http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d")
     /** Meta data of the blueTeam. */
     @YamlSerializer.YamlSerialize(orderNumber = 3, value = "team-blue")
@@ -97,15 +97,7 @@ class ArenaMetaEntity : ArenaMeta {
         blueTeamMeta.armorContents = arrayOf(ItemStack(Material.LEATHER_BOOTS).setColor(Color.BLUE)
                 , ItemStack(Material.LEATHER_LEGGINGS).setColor(Color.BLUE), ItemStack(Material.LEATHER_CHESTPLATE).setColor(Color.BLUE), null)
 
-        ballMeta.isAlwaysBounceBack = true
-        ballMeta.isCarryable = false
-        ballMeta.hitBoxSize = 3.0
-        ballMeta.modifiers.gravityModifier = 0.7
-        ballMeta.modifiers.verticalKickStrengthModifier = 6.0
-        ballMeta.modifiers.horizontalKickStrengthModifier = 1.5
-        ballMeta.modifiers.rollingDistanceModifier = 1.5
-
-        val partMetaSpawn = ballMeta.getParticleEffectOf(ActionEffect.ONSPAWN)
+        val partMetaSpawn = ParticleEntity()
         partMetaSpawn.type = ParticleType.EXPLOSION_NORMAL
         partMetaSpawn.amount = 10
         partMetaSpawn.speed = 0.1
@@ -113,7 +105,9 @@ class ArenaMetaEntity : ArenaMeta {
         partMetaSpawn.offSetY = 2.0
         partMetaSpawn.offSetZ = 2.0
 
-        val partMetaKick = ballMeta.getParticleEffectOf(ActionEffect.ONKICK)
+        ballMeta.particleEffects[BallActionType.ONSPAWN] = partMetaSpawn
+
+        val partMetaKick = ParticleEntity()
         partMetaKick.type = (ParticleType.EXPLOSION_LARGE)
         partMetaKick.amount = 2
         partMetaKick.speed = 0.1
@@ -121,9 +115,13 @@ class ArenaMetaEntity : ArenaMeta {
         partMetaKick.offSetY = 0.1
         partMetaKick.offSetZ = 0.1
 
-        val soundMetaKick = ballMeta.getSoundEffectOf(ActionEffect.ONKICK)
+        ballMeta.particleEffects[BallActionType.ONKICK] = partMetaKick
+
+        val soundMetaKick = SoundEntity()
         soundMetaKick.name = "ZOMBIE_WOOD"
         soundMetaKick.volume = 10.0
         soundMetaKick.pitch = 1.0
+
+        ballMeta.soundEffects.put(BallActionType.ONKICK, soundMetaKick)
     }
 }

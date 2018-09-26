@@ -65,6 +65,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(ServerSignRepository::class.java).to(ServerSignFileRepository::class.java)
 
         // Services
+        bind(ItemService::class.java).to(ItemServiceImpl::class.java)
         bind(FileContext::class.java).to(FileContextImpl::class.java)
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java)
         bind(VirtualArenaService::class.java).to(VirtualArenaServiceImpl::class.java)

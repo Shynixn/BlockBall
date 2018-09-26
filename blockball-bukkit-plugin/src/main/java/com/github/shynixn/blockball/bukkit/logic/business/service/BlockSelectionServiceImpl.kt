@@ -4,16 +4,13 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
-import com.github.shynixn.blockball.api.business.service.BlockSelectionService
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
-import com.github.shynixn.blockball.api.business.service.DependencyService
-import com.github.shynixn.blockball.api.business.service.DependencyWorldEditService
+import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.setDisplayName
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sync
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
@@ -48,10 +45,10 @@ import kotlin.collections.HashSet
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, configurationService: ConfigurationService, private val dependencyService: DependencyService, private val dependencyWorldEditService: DependencyWorldEditService) : BlockSelectionService {
+class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, configurationService: ConfigurationService, itemService: ItemService, private val dependencyService: DependencyService, private val dependencyWorldEditService: DependencyWorldEditService) : BlockSelectionService {
     private val axeName = ChatColor.WHITE.toString() + ChatColor.BOLD + ">>" + ChatColor.YELLOW + "BlockBall" + ChatColor.WHITE + ChatColor.BOLD + "<<"
     private val playerSelection = HashMap<Player, Array<Location?>>()
-    private val goldenAxeType = MaterialType.GOLDEN_AXE.toBukkitMaterial()
+    private val goldenAxeType = itemService.getMaterialFromMaterialType<Material>(MaterialType.GOLDEN_AXE)
     private val prefix = configurationService.findValue<String>("messages.prefix")
     private val rightClickSelectionCahe = HashSet<Player>()
 

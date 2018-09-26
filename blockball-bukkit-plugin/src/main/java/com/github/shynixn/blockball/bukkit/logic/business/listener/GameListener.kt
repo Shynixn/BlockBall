@@ -5,14 +5,10 @@ import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.DoubleJumpService
-import com.github.shynixn.blockball.api.business.service.GameActionService
-import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.business.service.RightclickManageService
+import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isTouchingGround
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.google.inject.Inject
 import org.bukkit.GameMode
@@ -57,8 +53,8 @@ import org.bukkit.event.player.PlayerToggleFlightEvent
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameListener @Inject constructor(private val gameService: GameService, private val rightClickManageService: RightclickManageService, private val doubleJumpService: DoubleJumpService, private val gameActionService: GameActionService<Game>) : Listener {
-    private val signPostMaterial = MaterialType.SIGN_POST.toBukkitMaterial()
+class GameListener @Inject constructor(private val gameService: GameService, itemService: ItemService, private val rightClickManageService: RightclickManageService, private val doubleJumpService: DoubleJumpService, private val gameActionService: GameActionService<Game>) : Listener {
+    private val signPostMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.SIGN_POST)
 
     /**
      * Gets called when a player leaves the server and the game.

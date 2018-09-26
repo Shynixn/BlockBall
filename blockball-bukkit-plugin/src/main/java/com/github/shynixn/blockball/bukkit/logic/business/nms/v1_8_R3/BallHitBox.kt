@@ -61,7 +61,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
     private fun recalcPosition() {
         val axisBoundingBox = this.boundingBox
         this.locX = (axisBoundingBox.a + axisBoundingBox.d) / 2.0
-        this.locY = axisBoundingBox.b + ballDesign.proxy.meta.hitBoxRelocationDistance
+        this.locY = axisBoundingBox.b + ballDesign.proxy.meta.hitBoxRelocation
         this.locZ = (axisBoundingBox.c + axisBoundingBox.f) / 2.0
     }
 

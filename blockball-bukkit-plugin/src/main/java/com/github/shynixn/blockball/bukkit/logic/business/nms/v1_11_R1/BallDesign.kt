@@ -6,23 +6,19 @@ import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
+import com.github.shynixn.blockball.bukkit.logic.business.extension.setSkin
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallProxyImpl
+import com.github.shynixn.blockball.bukkit.logic.business.service.ItemServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.SpigotTimingServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.compatibility.SkinHelper
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BallMetaEntity
 import net.minecraft.server.v1_11_R1.EntityArmorStand
 import net.minecraft.server.v1_11_R1.NBTTagCompound
-import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.configuration.MemorySection
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
-import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -52,7 +48,7 @@ import java.util.logging.Level
  * SOFTWARE.
  */
 class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) : EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
-    private val skullmaterial = MaterialType.SKULL_ITEM.toBukkitMaterial()
+    private val itemService = ItemServiceImpl()
 
     private val hitbox = BallHitBox(this, location, SpigotTimingServiceImpl())
     private var internalProxy: BallProxyImpl? = null
@@ -60,9 +56,6 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
      * Proxy handler.
      */
     override val proxy: BallProxyImpl get() = internalProxy!!
-
-    constructor(uuid: String, data: Map<String, Any>) : this(Location.deserialize((data["location"] as MemorySection).getValues(true)),
-            BallMetaEntity((data["meta"] as MemorySection).getValues(true)), true, UUID.fromString(uuid), null)
 
     /**
      * Initializes the nms design.
@@ -81,14 +74,10 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         compound.setBoolean("NoBasePlate", true)
         this.a(compound)
 
-        val itemStack = ItemStack(skullmaterial, 1, 3.toShort())
-        try {
-            SkinHelper.setItemStackSkin(itemStack, proxy.meta.skin)
-        } catch (e1: Exception) {
-            Bukkit.getLogger().log(Level.WARNING, "Failed to respawn entity.", e1)
-        }
+        val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
+        itemStack.setSkin(proxy.meta.skin)
 
-        when (proxy.meta.size!!) {
+        when (proxy.meta.size) {
             BallSize.SMALL -> {
                 (bukkitEntity as ArmorStand).isSmall = true
                 (bukkitEntity as ArmorStand).helmet = itemStack

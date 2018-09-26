@@ -3,11 +3,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.bukkit.event.*
+import com.github.shynixn.blockball.api.business.enumeration.BallActionType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.BallEntityService
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.SoundService
-import com.github.shynixn.blockball.api.compatibility.ActionEffect
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
@@ -108,7 +108,7 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
         this.dropBall(event.player)
 
         ballEntityService.findBallFromEntity(event.rightClicked).ifPresent { ball ->
-            if (ball.meta.isCarryable && !ball.isGrabbed) {
+            if (ball.meta.carryAble && !ball.isGrabbed) {
                 ball.grab(event.player)
             }
             event.isCancelled = true
@@ -270,7 +270,7 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
      */
     @EventHandler
     fun ballKickEvent(event: BallKickEvent) {
-        this.playEffects(event.ball, ActionEffect.ONKICK)
+        this.playEffects(event.ball, BallActionType.ONKICK)
     }
 
     /**
@@ -280,7 +280,7 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
      */
     @EventHandler
     fun ballInteractEvent(event: BallInteractEvent) {
-        this.playEffects(event.ball, ActionEffect.ONINTERACTION)
+        this.playEffects(event.ball, BallActionType.ONINTERACTION)
     }
 
     /**
@@ -290,7 +290,7 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
      */
     @EventHandler
     fun ballThrowEvent(event: BallThrowEvent) {
-        this.playEffects(event.ball, ActionEffect.ONTHROW)
+        this.playEffects(event.ball, BallActionType.ONTHROW)
     }
 
     /**
@@ -300,7 +300,7 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
      */
     @EventHandler
     fun ballGrabEvent(event: BallGrabEvent) {
-        this.playEffects(event.ball, ActionEffect.ONGRAB)
+        this.playEffects(event.ball, BallActionType.ONGRAB)
     }
 
     /**
@@ -310,7 +310,7 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
      */
     @EventHandler
     fun ballSpawnEvent(event: BallSpawnEvent) {
-        this.playEffects(event.ball, ActionEffect.ONSPAWN)
+        this.playEffects(event.ball, BallActionType.ONSPAWN)
     }
 
     /**
@@ -321,7 +321,7 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
     @EventHandler
     fun ballMoveEvent(event: BallPreMoveEvent) {
         if (!event.ball.isDead) {
-            this.playEffects(event.ball, ActionEffect.ONMOVE)
+            this.playEffects(event.ball, BallActionType.ONMOVE)
         }
     }
 
@@ -329,9 +329,9 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
     /**
      * Plays effects.
      */
-    private fun playEffects(ball: BallProxy, actionEffect: ActionEffect) {
-        this.particleService.playParticle(ball.getLocation<Any>(), ball.meta.getParticleEffectOf(actionEffect), ball.getLocation<Location>().world.players)
-        this.soundService.playSound(ball.getLocation<Any>(), ball.meta.getSoundEffectOf(actionEffect), ball.getLocation<Location>().world.players)
+    private fun playEffects(ball: BallProxy, actionEffect: BallActionType) {
+        this.particleService.playParticle(ball.getLocation<Any>(), ball.meta.particleEffects[actionEffect]!!, ball.getLocation<Location>().world.players)
+        this.soundService.playSound(ball.getLocation<Any>(), ball.meta.soundEffects[actionEffect]!!, ball.getLocation<Location>().world.players)
     }
 
     /**

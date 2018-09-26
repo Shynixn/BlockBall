@@ -53,7 +53,7 @@ class BallModifierSettingsPage : Page(BallModifierSettingsPage.ID, BallSettingsP
      * @param cache cache
      */
     override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
-        val ballMeta = (cache[0] as Arena).meta.ballMeta.modifiers
+        val ballMeta = (cache[0] as Arena).meta.ballMeta.movementModifier
         if (command == BlockBallCommand.BALLMOD_HORIZONTALTOUCH && args.size == 3 && args[2].toDoubleOrNull() != null) {
             ballMeta.horizontalTouchModifier = args[2].toDouble()
         }
@@ -61,16 +61,16 @@ class BallModifierSettingsPage : Page(BallModifierSettingsPage.ID, BallSettingsP
             ballMeta.verticalTouchModifier = args[2].toDouble()
         }
         else if (command == BlockBallCommand.BALLMOD_HORIZONTALKICK && args.size == 3 && args[2].toDoubleOrNull() != null) {
-            ballMeta.horizontalKickStrengthModifier = args[2].toDouble()
+            ballMeta.horizontalKickModifier = args[2].toDouble()
         }
         else if (command == BlockBallCommand.BALLMOD_VERTICALKICK && args.size == 3 && args[2].toDoubleOrNull() != null) {
-            ballMeta.verticalKickStrengthModifier = args[2].toDouble()
+            ballMeta.verticalKickModifier = args[2].toDouble()
         }
         else if (command == BlockBallCommand.BALLMOD_HORIZONTALTHROW && args.size == 3 && args[2].toDoubleOrNull() != null) {
-            ballMeta.horizontalThrowStrengthModifier = args[2].toDouble()
+            ballMeta.horizontalThrowModifier = args[2].toDouble()
         }
         else if (command == BlockBallCommand.BALLMOD_VERTICALTHROW && args.size == 3 && args[2].toDoubleOrNull() != null) {
-            ballMeta.verticalThrowStrengthModifier = args[2].toDouble()
+            ballMeta.verticalThrowModifier = args[2].toDouble()
         }
         else if (command == BlockBallCommand.BALLMOD_ROLLINGDISTANCE && args.size == 3 && args[2].toDoubleOrNull() != null) {
             ballMeta.rollingDistanceModifier = args[2].toDouble()
@@ -88,7 +88,7 @@ class BallModifierSettingsPage : Page(BallModifierSettingsPage.ID, BallSettingsP
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        val ballMeta = (cache[0] as Arena).meta.ballMeta.modifiers
+        val ballMeta = (cache[0] as Arena).meta.ballMeta.movementModifier
         return ChatBuilder()
                 .component("- Touch Strength (Horizontal): " + ballMeta.horizontalTouchModifier).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
@@ -100,22 +100,22 @@ class BallModifierSettingsPage : Page(BallModifierSettingsPage.ID, BallSettingsP
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BALLMOD_VERTICALTOUCH.command)
                 .setHoverText("Changes the vertical speed modifier when a player touches a ball.")
                 .builder().nextLine()
-                .component("- Kick Strength (Horizontal): " + ballMeta.horizontalKickStrengthModifier).builder()
+                .component("- Kick Strength (Horizontal): " + ballMeta.horizontalKickModifier).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BALLMOD_HORIZONTALKICK.command)
                 .setHoverText("Changes the horizontal speed modifier when a player left clicks a ball.")
                 .builder().nextLine()
-                .component("- Kick Strength (Vertical): " + ballMeta.verticalKickStrengthModifier).builder()
+                .component("- Kick Strength (Vertical): " + ballMeta.verticalKickModifier).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BALLMOD_VERTICALKICK.command)
                 .setHoverText("Changes the vertical speed modifier when a player left clicks a ball.")
                 .builder().nextLine()
-                .component("- Throw Strength (Horizontal): " + ballMeta.horizontalThrowStrengthModifier).builder()
+                .component("- Throw Strength (Horizontal): " + ballMeta.horizontalThrowModifier).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BALLMOD_HORIZONTALTHROW.command)
                 .setHoverText("Changes the horizontal speed modifier when a player throws the ball after grabbing it by rightclicking.")
                 .builder().nextLine()
-                .component("- Throw Strength (Vertical): " + ballMeta.verticalThrowStrengthModifier).builder()
+                .component("- Throw Strength (Vertical): " + ballMeta.verticalThrowModifier).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BALLMOD_VERTICALTHROW.command)
                 .setHoverText("Changes the vertical speed modifier when a player throws the ball after grabbing it by rightclicking.")

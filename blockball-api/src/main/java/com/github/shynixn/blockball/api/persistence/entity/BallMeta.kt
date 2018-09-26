@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.compatibility.BallMeta
+import com.github.shynixn.blockball.api.business.enumeration.BallActionType
+import com.github.shynixn.blockball.api.business.enumeration.BallSize
 
 /**
  * Created by Shynixn 2018.
@@ -29,11 +30,57 @@ import com.github.shynixn.blockball.api.compatibility.BallMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BallMeta : BallMeta{
+interface BallMeta {
 
     /** Spawning delay. */
     var delayInTicks: Int
 
     /** Spawnpoint of the ball. */
     var spawnpoint: Position?
+
+    /** Size of the ball.**/
+    var size: BallSize
+
+    /** Skin of the ball.**/
+    var skin: String
+
+    /** Should the ball rotate? */
+    var rotating: Boolean
+    /**
+     * Hitbox relocation value for ground heights.
+     */
+    var hitBoxRelocation: Double
+    /**
+     * Size of the hitbox used for interaction detecting.
+     */
+    var hitBoxSize: Double
+
+    /**
+     * Should the ball be able to carry.
+     */
+    var carryAble: Boolean
+
+    /**
+     * Should the ball always bounce of walls?
+     */
+    var alwaysBouce: Boolean
+    /**
+     * Bouncing off from objects modifiers.
+     */
+    val bounceModifiers: MutableList<BounceConfiguration>
+
+    /**
+     * Movement modifier.
+     */
+    val movementModifier: MovementConfiguration
+
+    /**
+     * Particle effects.
+     */
+    val particleEffects: MutableMap<BallActionType, Particle>
+
+    /**
+     * Particle effects.
+     */
+    val soundEffects: MutableMap<BallActionType, Sound>
 }

@@ -2,8 +2,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.service.TemplateService
-import com.github.shynixn.blockball.api.compatibility.ActionEffect
-import com.github.shynixn.blockball.api.compatibility.EffectingType
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.google.inject.Inject
 import org.bukkit.GameMode
@@ -63,7 +61,7 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 cache[3] = BlockBallCommand.SETTINGS_OPEN
             }
             BlockBallCommand.LIST_PARTICLE_EFFECTINGTYPES -> {
-                cache[2] = EffectingType.values().map { p -> p.name }
+                cache[2] = EffectTargetType.values().map { p -> p.name }
                 cache[3] = BlockBallCommand.PARTICLE_CALLBACK_EFFECTING
             }
             BlockBallCommand.LIST_TEMPLATES -> {
@@ -75,11 +73,11 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 cache[3] = BlockBallCommand.GAMESETTINGS_CALLBACK_BUKKITGAMEMODES
             }
             BlockBallCommand.LIST_BALL_PARTICLEFFECTS -> {
-                cache[2] = ActionEffect.values().map { p -> p.name }
+                cache[2] = BallActionType.values().map { p -> p.name }
                 cache[3] = BlockBallCommand.BALL_PARTICLEACTION_CALLBACK
             }
             BlockBallCommand.LIST_BALL_SOUNDEFFECTS -> {
-                cache[2] = ActionEffect.values().map { p -> p.name }
+                cache[2] = BallActionType.values().map { p -> p.name }
                 cache[3] = BlockBallCommand.BALL_SOUNDACTION_CALLBACK
             }
             BlockBallCommand.LIST_BALLSIZES -> {
@@ -107,7 +105,7 @@ class ListablePage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
                 cache[3] = BlockBallCommand.SOUND_CALLBACK_TYPE
             }
             BlockBallCommand.LIST_SOUND_EFFECTINGTYPES -> {
-                cache[2] = EffectingType.values().map { p -> p.name }
+                cache[2] = EffectTargetType.values().map { p -> p.name }
                 cache[3] = BlockBallCommand.SOUND_CALLBACK_EFFECTING
             }
             BlockBallCommand.LIST_LINES -> cache[3] = BlockBallCommand.MULTILINES_ANY

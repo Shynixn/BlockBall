@@ -9,12 +9,10 @@ import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
 import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Sign
 import org.bukkit.entity.ArmorStand
@@ -54,9 +52,9 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin: Plugin, private val gameHubGameActionService: GameHubGameActionService, private val bossBarService: BossBarService, private val configurationService: ConfigurationService, private val hubGameActionService: GameHubGameActionService, private val minigameActionService: GameMiniGameActionService<MiniGame>, private val bungeeCordGameActionService: GameBungeeCordGameActionService, private val scoreboardService: ScoreboardService, private val hologramService: HologramService, private val dependencyService: DependencyService, private val dependencyBossBarApiService: DependencyBossBarApiService, private val gameSoccerService: GameSoccerService<Game>) : GameActionService<G> {
+class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin: Plugin, itemService: ItemService, private val gameHubGameActionService: GameHubGameActionService, private val bossBarService: BossBarService, private val configurationService: ConfigurationService, private val hubGameActionService: GameHubGameActionService, private val minigameActionService: GameMiniGameActionService<MiniGame>, private val bungeeCordGameActionService: GameBungeeCordGameActionService, private val scoreboardService: ScoreboardService, private val hologramService: HologramService, private val dependencyService: DependencyService, private val dependencyBossBarApiService: DependencyBossBarApiService, private val gameSoccerService: GameSoccerService<Game>) : GameActionService<G> {
     private val prefix = configurationService.findValue<String>("messages.prefix")
-    private val signPostMaterial = MaterialType.SIGN_POST.toBukkitMaterial()
+    private val signPostMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.SIGN_POST)
 
     /**
      * Lets the given [player] leave join the given [game]. Optional can the prefered
