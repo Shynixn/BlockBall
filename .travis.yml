@@ -38,7 +38,7 @@ install: true
 before_script:
   - sudo /etc/init.d/mysql stop
 script:
-  - mvn clean deploy --settings .travis_settings.xml
+  - mvn clean -q deploy --quiet --settings .travis_settings.xml
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - wget https://github.com/Shynixn/travis-ci-discord-webhook/raw/master/nexus-query-snapshot.jar
