@@ -68,9 +68,6 @@ class ParticleEffectPage : Page(ParticleEffectPage.ID, MainConfigurationPage.ID)
         } else if (command == BlockBallCommand.PARTICLE_CALLBACK_TYPE && args.size >= 3 && args[2].toIntOrNull() != null) {
             val particleEffect = cache[5] as Particle
             particleEffect.type = (ParticleType.values()[args[2].toInt()])
-        } else if (command == BlockBallCommand.PARTICLE_CALLBACK_EFFECTING && args.size >= 3 && args[2].toIntOrNull() != null) {
-            val particleEffect = cache[5] as Particle
-            particleEffect.type = (ParticleType.values()[args[2].toInt()])
         } else if (command == BlockBallCommand.PARTICLE_AMOUNT && args[2].toIntOrNull() != null) {
             val particleEffect = cache[5] as Particle
             particleEffect.amount = (args[2].toInt())
@@ -98,11 +95,6 @@ class ParticleEffectPage : Page(ParticleEffectPage.ID, MainConfigurationPage.ID)
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
         val particleEffect = cache[5] as Particle
         return ChatBuilder()
-                .component("- Effecting: " + particleEffect.type).builder()
-                .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_PARTICLE_EFFECTINGTYPES.command)
-                .setHoverText("Opens the selectionbox for effecting types.")
-                .builder().nextLine()
                 .component("- Type: " + particleEffect.type.name).builder()
                 .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_PARTICLE_TYPES.command)

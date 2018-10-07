@@ -49,5 +49,5 @@ interface PersistenceStatsService {
     /**
      * Saves the given [Stats] to the storage.
      */
-    fun <P> save(player: P, stats: Stats): CompletableFuture<Void>
+    fun <P> save(player: P, stats: Stats): CompletableFuture<Void?>
 }

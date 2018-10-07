@@ -91,8 +91,8 @@ class PersistenceStatsServiceImpl @Inject constructor(private val statsRepositor
     /**
      * Saves the given [Stats] to the storage.
      */
-    override fun <P> save(player: P, stats: Stats): CompletableFuture<Void> {
-        val completableFuture = CompletableFuture<Void>()
+    override fun <P> save(player: P, stats: Stats): CompletableFuture<Void?> {
+        val completableFuture = CompletableFuture<Void?>()
 
         async(plugin) {
             statsRepository.save(player, stats)

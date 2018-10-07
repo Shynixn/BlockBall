@@ -20,6 +20,8 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
 import java.lang.reflect.InvocationTargetException
 import java.util.*
+import java.util.concurrent.CompletableFuture
+import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -258,6 +260,16 @@ internal fun String.convertChatColors(): String {
  */
 internal fun String.stripChatColors(): String {
     return ChatColor.stripColor(this)
+}
+
+/**
+ * Accepts the action safely.
+ */
+fun <T> CompletableFuture<T>.thenAcceptSafely(f: (T) -> Unit) {
+    this.thenAccept(f).exceptionally { e ->
+        JavaPlugin.getPlugin(BlockBallPlugin::class.java).logger.log(Level.WARNING, "Failed to execute Task.", e)
+        throw RuntimeException(e)
+    }
 }
 
 /**

@@ -111,8 +111,8 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
         if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
             game.blueScore++
-            game.ball!!.remove()
             onScore(game, Team.BLUE, game.arena.meta.blueTeamMeta)
+            game.ball!!.remove()
             onScoreReward(game, game.blueTeam as List<Player>)
             teleportBackToSpawnpoint(game)
             if (game.blueScore >= game.arena.meta.lobbyMeta.maxScore) {
@@ -121,8 +121,8 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
             }
         } else if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
             game.redScore++
-            game.ball!!.remove()
             onScore(game, Team.RED, game.arena.meta.redTeamMeta)
+            game.ball!!.remove()
             onScoreReward(game, game.redTeam as List<Player>)
             teleportBackToSpawnpoint(game)
             if (game.redScore >= game.arena.meta.lobbyMeta.maxScore) {

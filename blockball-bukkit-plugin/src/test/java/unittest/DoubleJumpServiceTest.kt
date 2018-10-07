@@ -152,7 +152,7 @@ class DoubleJumpServiceTest {
         /**
          * Restarts all games on the server.
          */
-        override fun restartGames(): CompletableFuture<Void> {
+        override fun restartGames(): CompletableFuture<Void?> {
             return CompletableFuture()
         }
 

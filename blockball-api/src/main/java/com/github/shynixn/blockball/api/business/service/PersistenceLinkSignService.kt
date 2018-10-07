@@ -40,7 +40,7 @@ interface PersistenceLinkSignService {
     /**
      * Refreshes the runtime cache of the linked services.
      */
-    fun refresh(): CompletableFuture<Void>
+    fun refresh(): CompletableFuture<Void?>
 
     /**
      * Returns the amount of items in this repository.
@@ -55,10 +55,10 @@ interface PersistenceLinkSignService {
     /**
      * Remove the given [linkSign] from the storage.
      */
-    fun remove(linkSign: LinkSign): CompletableFuture<Void>
+    fun remove(linkSign: LinkSign): CompletableFuture<Void?>
 
     /**
      * Saves the given [LinkSign] to the storage.
      */
-    fun save(linkSign: LinkSign): CompletableFuture<Void>
+    fun save(linkSign: LinkSign): CompletableFuture<Void?>
 }

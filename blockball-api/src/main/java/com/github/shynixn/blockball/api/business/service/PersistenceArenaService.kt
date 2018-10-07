@@ -34,7 +34,7 @@ interface PersistenceArenaService {
     /**
      * Refreshes the runtime cache of arenas.
      */
-    fun refresh(): CompletableFuture<Void>
+    fun refresh(): CompletableFuture<Void?>
 
     /**
      * Accesses the cached arenas.
@@ -44,10 +44,10 @@ interface PersistenceArenaService {
     /**
      * Removes the given [arena].
      */
-    fun remove(arena: Arena): CompletableFuture<Void>
+    fun remove(arena: Arena): CompletableFuture<Void?>
 
     /**
      * Saves the given [arena] to the storage.
      */
-    fun save(arena: Arena): CompletableFuture<Void>
+    fun save(arena: Arena): CompletableFuture<Void?>
 }

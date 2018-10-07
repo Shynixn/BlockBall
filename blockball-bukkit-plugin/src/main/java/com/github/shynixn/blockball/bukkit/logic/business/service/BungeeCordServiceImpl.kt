@@ -9,6 +9,7 @@ import com.github.shynixn.blockball.api.persistence.entity.BungeeCordConfigurati
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordServerStatus
 import com.github.shynixn.blockball.bukkit.logic.business.extension.async
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.bukkit.logic.business.extension.thenAcceptSafely
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BungeeCordServerStatusEntity
 import com.google.common.io.ByteStreams
@@ -83,7 +84,7 @@ class BungeeCordServiceImpl @Inject constructor(private val plugin: Plugin, conf
             return
         }
 
-        this.persistenceLinkSignService.getAll().thenAccept { items ->
+        this.persistenceLinkSignService.getAll().thenAcceptSafely { items ->
             val set = items.map { s -> s.server }.toHashSet()
 
             set.forEach { server ->
@@ -113,7 +114,7 @@ class BungeeCordServiceImpl @Inject constructor(private val plugin: Plugin, conf
             async(plugin) {
                 val status = getServerInformation(serverName, ip, port.toInt())
 
-                this.persistenceLinkSignService.getAll().thenAccept { signs ->
+                this.persistenceLinkSignService.getAll().thenAcceptSafely { signs ->
                     signs.filter { sign -> sign.server == serverName }.forEach { sign ->
                         val location = sign.position.toLocation()
 
@@ -179,7 +180,7 @@ class BungeeCordServiceImpl @Inject constructor(private val plugin: Plugin, conf
             throw IllegalArgumentException("Sign has to be a BukkitSign!")
         }
 
-        persistenceLinkSignService.getFromLocation(sign.location).thenAccept { opt ->
+        persistenceLinkSignService.getFromLocation(sign.location).thenAcceptSafely { opt ->
             if (opt.isPresent) {
                 connectToServer(player, opt.get().server)
             }

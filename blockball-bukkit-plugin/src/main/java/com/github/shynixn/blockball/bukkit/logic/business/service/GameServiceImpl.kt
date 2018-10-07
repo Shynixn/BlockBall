@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
+import com.github.shynixn.blockball.bukkit.logic.business.extension.thenAcceptSafely
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BungeeCordGameEntity
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.HubGameEntity
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.MiniGameEntity
@@ -57,8 +58,8 @@ class GameServiceImpl @Inject constructor(private val plugin: Plugin, private va
     /**
      * Restarts all games on the server.
      */
-    override fun restartGames(): CompletableFuture<Void> {
-        val completableFuture = CompletableFuture<Void>()
+    override fun restartGames(): CompletableFuture<Void?> {
+        val completableFuture = CompletableFuture<Void?>()
 
         if (task == null) {
             task = plugin.server.scheduler.runTaskTimer(plugin, this, 0L, 1L)
@@ -68,7 +69,7 @@ class GameServiceImpl @Inject constructor(private val plugin: Plugin, private va
 
         plugin.reloadConfig()
 
-        persistenceArenaService.refresh().thenAccept {
+        persistenceArenaService.refresh().thenAcceptSafely {
             persistenceArenaService.getArenas().forEach { arena ->
                 initGame(arena)
             }

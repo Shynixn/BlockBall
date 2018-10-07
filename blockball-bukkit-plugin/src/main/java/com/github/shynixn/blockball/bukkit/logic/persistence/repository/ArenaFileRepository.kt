@@ -1,10 +1,13 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.repository
 
+import com.github.shynixn.blockball.api.business.enumeration.BallActionType
 import com.github.shynixn.blockball.api.persistence.context.FileContext
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ArenaEntity
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ParticleEntity
+import com.github.shynixn.blockball.bukkit.logic.persistence.entity.SoundEntity
 import com.google.inject.Inject
 import org.bukkit.configuration.Configuration
 import org.bukkit.configuration.serialization.ConfigurationSerializable
@@ -52,6 +55,17 @@ class ArenaFileRepository @Inject constructor(private val plugin: Plugin, privat
                 if (s.contains("arena_")) {
                     val data = fileContext.loadOrCreateYamlFile(File(getFolder(), s).toPath(), "arena", true)
                     val arenaEntity = YamlSerializer.deserializeObject(ArenaEntity::class.java, null, data)
+
+                    // Compatibility added in v6.1.0
+                    if (!arenaEntity.meta.ballMeta.soundEffects.containsKey(BallActionType.ONGOAL)) {
+                        arenaEntity.meta.ballMeta.soundEffects[BallActionType.ONGOAL] = SoundEntity()
+                    }
+
+                    // Compatibility added in v6.1.0
+                    if (!arenaEntity.meta.ballMeta.particleEffects.containsKey(BallActionType.ONGOAL)) {
+                        arenaEntity.meta.ballMeta.particleEffects[BallActionType.ONGOAL] = ParticleEntity()
+                    }
+
                     arenas.add(arenaEntity)
                 }
             } catch (ex: Exception) {

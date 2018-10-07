@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.thenAcceptSafely
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.google.inject.Inject
 import org.bukkit.ChatColor
@@ -159,8 +160,8 @@ class MainConfigurationPage @Inject constructor(private val configurationService
                     && arena.meta.ballMeta.spawnpoint != null) {
                 if (arena.gameType === GameType.HUBGAME || (arena.meta.minigameMeta.lobbySpawnpoint != null && arena.meta.lobbyMeta.leaveSpawnpoint != null)) {
                     val name = arena.name
-                    arenaRepository.save(arena).thenAccept {
-                        gameService.restartGames().thenAccept {
+                    arenaRepository.save(arena).thenAcceptSafely {
+                        gameService.restartGames().thenAcceptSafely {
                             cache[0] = arenaRepository.getArenas().single { a -> a.name == name }
                         }
                     }

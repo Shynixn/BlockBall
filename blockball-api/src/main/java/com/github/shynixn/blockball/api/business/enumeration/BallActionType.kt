@@ -48,6 +48,12 @@ enum class BallActionType {
      * Ball Spawn.
      */
     ONSPAWN,
+
+    /**
+     * Ball Score.
+     */
+    ONGOAL,
+
     /**
      * Ball Move.
      */
