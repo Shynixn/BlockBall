@@ -3,7 +3,6 @@ com.github.shynixn.blockball.api.bukkit.event
 com.github.shynixn.blockball.api.business.enumeration
 com.github.shynixn.blockball.api.business.proxy
 com.github.shynixn.blockball.api.business.service
-com.github.shynixn.blockball.api.compatibility
 com.github.shynixn.blockball.api.persistence.context
 com.github.shynixn.blockball.api.persistence.entity
 com.github.shynixn.blockball.api.persistence.repository
@@ -25,7 +24,6 @@ com.github.shynixn.blockball.bukkit.logic.business.nms.v1_9_R1
 com.github.shynixn.blockball.bukkit.logic.business.nms.v1_9_R2
 com.github.shynixn.blockball.bukkit.logic.business.proxy
 com.github.shynixn.blockball.bukkit.logic.business.service
-com.github.shynixn.blockball.bukkit.logic.compatibility
 com.github.shynixn.blockball.bukkit.logic.persistence.context
 com.github.shynixn.blockball.bukkit.logic.persistence.entity
 com.github.shynixn.blockball.bukkit.logic.persistence.repository
