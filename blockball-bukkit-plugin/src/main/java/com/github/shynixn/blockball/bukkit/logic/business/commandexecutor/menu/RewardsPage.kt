@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
+import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.CommandMode
 import com.github.shynixn.blockball.api.business.enumeration.RewardType
 import com.github.shynixn.blockball.api.business.service.DependencyVaultService
@@ -7,7 +8,6 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.CommandMetaEntity
-import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
@@ -43,10 +43,6 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
         /** Id of the page. */
         const val ID = 22
     }
-
-    @Inject
-    private lateinit var vaultService: DependencyVaultService
-
     /**
      * Returns the key of the command when this page should be executed.
      *
@@ -117,6 +113,7 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
                 .builder().nextLine()
         if (selectedReward != null) {
             if (selectedReward is Int) {
+                val vaultService = BlockBallApi.resolve(DependencyVaultService::class.java)
                 builder.component("- Selected Money reward (Vault): " + (rewardedAction as RewardType).name).builder().nextLine()
                         .component("- " + vaultService.getPluralCurrencyName() + ": " + ChatColor.WHITE + selectedReward).builder()
                         .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)

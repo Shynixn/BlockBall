@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
-import com.github.shynixn.blockball.api.business.service.DependencyPlaceholderApiService
 import com.github.shynixn.blockball.api.business.service.DependencyService
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
@@ -37,7 +36,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class DependencyServiceImpl @Inject constructor(private val plugin: Plugin, private val placeholderApiService: DependencyPlaceholderApiService) : DependencyService {
+class DependencyServiceImpl @Inject constructor(private val plugin: Plugin) : DependencyService {
     private val prefix: String = ChatColor.BLUE.toString() + "[BlockBall] "
     private var printedWorldEditError = false
 
@@ -49,8 +48,6 @@ class DependencyServiceImpl @Inject constructor(private val plugin: Plugin, priv
         printInstallment(PluginDependency.PLACEHOLDERAPI)
         printInstallment(PluginDependency.VAULT)
         printInstallment(PluginDependency.BOSSBARAPI)
-
-        placeholderApiService.registerListener()
     }
 
     /**
