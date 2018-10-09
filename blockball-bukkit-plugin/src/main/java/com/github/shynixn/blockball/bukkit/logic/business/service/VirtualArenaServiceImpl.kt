@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.business.enumeration.ParticleColor
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.VirtualArenaService
@@ -43,30 +42,30 @@ import org.bukkit.plugin.Plugin
 class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin, private val particleService: ParticleService) : VirtualArenaService {
 
     /**
-     * Displays the [arena] virtual locations for the given [player] for the given amount of [seconds].
+     * Displays the [arena] virtual locations for the given [player].
      */
-    override fun <P> displayForPlayer(player: P, arena: Arena, seconds: Int) {
+    override fun <P> displayForPlayer(player: P, arena: Arena) {
         if (player !is Player) {
             throw IllegalArgumentException("Player has to be a bukkit player!")
         }
 
         val particle = ParticleEntity(ParticleType.REDSTONE)
-        particle.colorRed  = 255
+        particle.colorRed = 255
         particle.colorBlue = 0
         particle.colorGreen = 0
         particle.amount = 20
         particle.speed = 0.02
 
         plugin.server.scheduler.runTaskAsynchronously(plugin, {
-            displayArmorstands(player, particle, arena.meta.redTeamMeta.goal.lowerCorner, arena.meta.redTeamMeta.goal.upperCorner)
-            displayArmorstands(player, particle, arena.meta.blueTeamMeta.goal.lowerCorner, arena.meta.blueTeamMeta.goal.upperCorner)
+            displayParticles(player, particle, arena.meta.redTeamMeta.goal.lowerCorner, arena.meta.redTeamMeta.goal.upperCorner)
+            displayParticles(player, particle, arena.meta.blueTeamMeta.goal.lowerCorner, arena.meta.blueTeamMeta.goal.upperCorner)
         })
     }
 
     /**
-     * Displays the armorstands between the given [lowCorner] and [upCorner] location for the given [player].
+     * Displays the particles between the given [lowCorner] and [upCorner] location for the given [player].
      */
-    private fun displayArmorstands(player: Player, particle: Particle, lowCorner: Position, upCorner: Position) {
+    private fun displayParticles(player: Player, particle: Particle, lowCorner: Position, upCorner: Position) {
         var j = lowCorner.y
         while (j <= upCorner.y) {
             var i = lowCorner.x
