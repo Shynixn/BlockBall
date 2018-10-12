@@ -13,7 +13,6 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BungeeCordGa
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.HubGameEntity
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.MiniGameEntity
 import com.google.inject.Inject
-import com.sk89q.worldedit.WorldEdit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -190,7 +189,7 @@ class GameServiceImpl @Inject constructor(private val plugin: Plugin, private va
             try {
                 gameActionService.closeGame(game)
             } catch (e: Exception) {
-                WorldEdit.logger.log(Level.WARNING, "Failed to dispose game.", e)
+                plugin.logger.log(Level.WARNING, "Failed to dispose game.", e)
             }
         }
 
