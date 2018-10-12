@@ -344,7 +344,7 @@ arena:
       sound-effect:
         effecting: EVERYONE
         name: ENTITY_GHAST_SHOOT
-        volume: 100.0
+        volume: 10.0
         pitch: 1.0
     holograms: {}
     reward-meta:
