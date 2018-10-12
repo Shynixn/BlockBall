@@ -242,7 +242,7 @@ public final class YamlSerializer {
                 }
             } else {
                 if (keyClazz.isEnum()) {
-                    map.put(Enum.valueOf(keyClazz, key), deserializeObject(clazz, null, ((MemorySection) value).getValues(false)));
+                    map.put(Enum.valueOf(keyClazz, key.toUpperCase()), deserializeObject(clazz, null, ((MemorySection) value).getValues(false)));
                 } else {
                     map.put(key, deserializeObject(clazz, null, ((MemorySection) value).getValues(false)));
                 }
@@ -339,7 +339,13 @@ public final class YamlSerializer {
             if (instanceClazz != null && !instanceClazz.equals(Object.class)) {
                 clazz = (Class<T>) instanceClazz;
             } else {
-                throw new IllegalArgumentException("Cannot instantiate interface. Change your object fields! [" + clazz.getSimpleName() + ']');
+                try {
+                    String entityName = clazz.getSimpleName() + "Entity";
+                    Class<?> helperClazz = Class.forName("com.github.shynixn.blockball.bukkit.logic.persistence.entity." + entityName);
+                    return (T) deserializeObject(helperClazz, instanceClazz, dataSource);
+                } catch (final ClassNotFoundException ex) {
+                    throw new IllegalArgumentException("Cannot instantiate interface. Change your object fields! [" + clazz.getSimpleName() + ']', ex);
+                }
             }
         }
         final Map<String, Object> data = getDataFromSource(dataSource);

@@ -6,20 +6,21 @@ import com.github.shynixn.blockball.api.bukkit.event.*
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
-import com.github.shynixn.blockball.api.compatibility.BounceObject
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
+import com.github.shynixn.blockball.api.persistence.entity.BounceConfiguration
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
+import com.github.shynixn.blockball.bukkit.logic.business.extension.setSkin
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sync
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toBukkitMaterial
-import com.github.shynixn.blockball.bukkit.logic.compatibility.BallData
-import com.github.shynixn.blockball.bukkit.logic.compatibility.SkinHelper
+import com.github.shynixn.blockball.bukkit.logic.business.service.ItemServiceImpl
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
-import org.bukkit.configuration.serialization.ConfigurationSerializable
-import org.bukkit.entity.*
+import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.EulerAngle
@@ -55,10 +56,11 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand, private val hitbox: ArmorStand, override val uuid: UUID = UUID.randomUUID(), private val initialOwner: LivingEntity?, override var persistent: Boolean) : BallProxy, Runnable, ConfigurationSerializable {
+class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand, private val hitbox: ArmorStand, override val uuid: UUID = UUID.randomUUID(), private val initialOwner: LivingEntity?, override var persistent: Boolean) : BallProxy, Runnable {
+
     companion object {
-        private val excludedRelativeItems = arrayOf(MaterialType.OAK_FENCE.MinecraftNumericId, MaterialType.IRON_BARS.toBukkitMaterial(), MaterialType.GLASS_PANE.toBukkitMaterial(), MaterialType.OAK_FENCE_GATE.toBukkitMaterial(), MaterialType.NETHER_FENCE.toBukkitMaterial(), MaterialType.COBBLESTONE_WALL.toBukkitMaterial(), MaterialType.STAINED_GLASS_PANE.toBukkitMaterial(), org.bukkit.Material.SPRUCE_FENCE_GATE, org.bukkit.Material.BIRCH_FENCE_GATE, org.bukkit.Material.JUNGLE_FENCE_GATE, org.bukkit.Material.DARK_OAK_FENCE_GATE, org.bukkit.Material.ACACIA_FENCE_GATE, org.bukkit.Material.SPRUCE_FENCE, org.bukkit.Material.BIRCH_FENCE, org.bukkit.Material.JUNGLE_FENCE, org.bukkit.Material.DARK_OAK_FENCE, org.bukkit.Material.ACACIA_FENCE)
-        private val skullmaterial = MaterialType.SKULL_ITEM.toBukkitMaterial()
+        private val itemService = ItemServiceImpl()
+        private val excludedRelativeItems = arrayOf(itemService.getMaterialFromMaterialType(MaterialType.OAK_FENCE), itemService.getMaterialFromMaterialType(MaterialType.IRON_BARS), itemService.getMaterialFromMaterialType(MaterialType.GLASS_PANE), itemService.getMaterialFromMaterialType(MaterialType.OAK_FENCE_GATE), itemService.getMaterialFromMaterialType(MaterialType.NETHER_FENCE), itemService.getMaterialFromMaterialType(MaterialType.COBBLESTONE_WALL), itemService.getMaterialFromMaterialType(MaterialType.STAINED_GLASS_PANE), org.bukkit.Material.SPRUCE_FENCE_GATE, org.bukkit.Material.BIRCH_FENCE_GATE, org.bukkit.Material.JUNGLE_FENCE_GATE, org.bukkit.Material.DARK_OAK_FENCE_GATE, org.bukkit.Material.ACACIA_FENCE_GATE, org.bukkit.Material.SPRUCE_FENCE, org.bukkit.Material.BIRCH_FENCE, org.bukkit.Material.JUNGLE_FENCE, org.bukkit.Material.DARK_OAK_FENCE, org.bukkit.Material.ACACIA_FENCE)
     }
 
     /** Design **/
@@ -133,7 +135,7 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
 
             if (!isGrabbed) {
                 checkMovementInteractions()
-                if (this.meta.isRotatingEnabled) {
+                if (this.meta.rotating) {
                     this.playRotationAnimation()
                 }
             } else {
@@ -166,13 +168,8 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         val livingEntity = this.interactionEntity as LivingEntity
         livingEntity.equipment.itemInHand = null
         this.isGrabbed = false
-        val itemStack = ItemStack(skullmaterial, 1, 3.toShort())
-
-        try {
-            SkinHelper.setItemStackSkin(itemStack, meta.skin)
-        } catch (e1: Exception) {
-            Bukkit.getLogger().log(Level.WARNING, "Failed to deGrab entity.", e1)
-        }
+        val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
+        itemStack.setSkin(meta.skin)
 
         this.setHelmet(itemStack)
         val vector = this.getDirection(livingEntity).normalize().multiply(3)
@@ -209,10 +206,10 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         }
 
         val vector = hitbox.location.toVector().subtract(entity.location.toVector()).normalize()
-                .multiply(meta.modifiers.horizontalKickStrengthModifier)
+                .multiply(meta.movementModifier.horizontalKickModifier)
         this.yawChange = entity.location.yaw
         this.spinningForce = 0.0
-        vector.y = 0.1 * meta.modifiers.verticalKickStrengthModifier
+        vector.y = 0.1 * meta.movementModifier.verticalKickModifier
 
         val event = BallKickEvent(vector, entity, this)
         Bukkit.getPluginManager().callEvent(event)
@@ -279,8 +276,8 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
 
         var vector = this.getDirection(entity).normalize()
         val y = vector.y
-        vector = vector.multiply(meta.modifiers.horizontalThrowStrengthModifier)
-        vector.y = y * 2.0 * meta.modifiers.verticalThrowStrengthModifier
+        vector = vector.multiply(meta.movementModifier.horizontalThrowModifier)
+        vector.y = y * 2.0 * meta.movementModifier.verticalThrowModifier
         val event = BallThrowEvent(vector, entity, this)
         Bukkit.getPluginManager().callEvent(event)
         if (!event.isCancelled) {
@@ -331,16 +328,16 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         this.backAnimation = false
         this.spinningForce = 0.0
 
-        if (this.meta.isRotatingEnabled) {
+        if (this.meta.rotating) {
             this.design.headPose = EulerAngle(2.0, 0.0, 0.0)
         }
 
         try {
-            this.times = (50 * this.meta.modifiers.rollingDistanceModifier).toInt()
+            this.times = (50 * this.meta.movementModifier.rollingDistanceModifier).toInt()
             this.hitbox.velocity = vector
             val normalized = vector.clone().normalize()
             this.originVector = vector.clone()
-            this.reduceVector = Vector(normalized.x / this.times, 0.0784 * meta.modifiers.gravityModifier, normalized.z / this.times)
+            this.reduceVector = Vector(normalized.x / this.times, 0.0784 * meta.movementModifier.gravityModifier, normalized.z / this.times)
         } catch (ignored: IllegalArgumentException) {
             // Ignore calculated velocity if it's out of range.
         }
@@ -486,16 +483,6 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
     }
 
     /**
-     * Serializes this data.
-     */
-    override fun serialize(): MutableMap<String, Any> {
-        val data = LinkedHashMap<String, Any>()
-        data["location"] = this.getLocation<Location>().serialize()
-        data["meta"] = (meta as BallData).serialize()
-        return data
-    }
-
-    /**
      * Applies the wall knockback.
      */
     private fun applyKnockBack(starter: Vector, n: Vector, block: Block, blockFace: BlockFace) {
@@ -504,14 +491,14 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         }
 
         if (this.knockBackBumper <= 0) {
-            val optBounce = meta.bounceObjectController.getBounceObjectFromBlock(block) as Optional<BounceObject>
-            if (optBounce.isPresent || meta.isAlwaysBounceBack) {
+            val optBounce = getBounceConfigurationFromBlock(block)
+            if (optBounce.isPresent || meta.alwaysBouce) {
                 var r = starter.clone().subtract(n.multiply(2 * starter.dot(n))).multiply(0.75)
 
                 r = if (optBounce.isPresent) {
-                    r.multiply(optBounce.get().bounceModifier)
+                    r.multiply(optBounce.get().modifier)
                 } else {
-                    r.multiply(meta.modifiers.bounceModifier)
+                    r.multiply(meta.movementModifier.defaultBounceModifier)
                 }
 
                 val event = BallWallCollideEvent(block, blockFace, starter.clone(), r.clone(), this)
@@ -523,6 +510,21 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
                 }
             }
         }
+    }
+
+    /**
+     * Gets the bounce configuraiton for the given block.
+     */
+    private fun getBounceConfigurationFromBlock(block: Block): Optional<BounceConfiguration> {
+        meta.bounceModifiers.forEach { modifier ->
+            if (modifier.materialType == block.type) {
+                if (modifier.materialDamage == block.data.toInt()) {
+                    return Optional.of(modifier)
+                }
+            }
+        }
+
+        return Optional.empty()
     }
 
     /**
@@ -541,8 +543,8 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
                     val vector = hitBoxLocation
                             .toVector()
                             .subtract(entity.location.toVector())
-                            .normalize().multiply(meta.modifiers.horizontalTouchModifier)
-                    vector.y = 0.1 * meta.modifiers.verticalTouchModifier
+                            .normalize().multiply(meta.movementModifier.horizontalTouchModifier)
+                    vector.y = 0.1 * meta.movementModifier.verticalTouchModifier
 
                     this.yawChange = entity.location.yaw
                     this.setVelocity(vector)
@@ -608,7 +610,7 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
      * Sets the helmet.
      */
     private fun setHelmet(itemStack: ItemStack?) {
-        when (meta.size!!) {
+        when (meta.size) {
             BallSize.SMALL -> {
                 this.design.isSmall = true
                 this.design.helmet = itemStack

@@ -42,8 +42,8 @@ class PersistenceArenaServiceImpl @Inject constructor(private val plugin: Plugin
     /**
      * Refreshes the runtime cache of arenas.
      */
-    override fun refresh(): CompletableFuture<Void> {
-        val completableFuture = CompletableFuture<Void>()
+    override fun refresh(): CompletableFuture<Void?> {
+        val completableFuture = CompletableFuture<Void?>()
 
         async(plugin) {
             synchronized(cache) {
@@ -71,8 +71,8 @@ class PersistenceArenaServiceImpl @Inject constructor(private val plugin: Plugin
     /**
      * Removes the given [arena].
      */
-    override fun remove(arena: Arena): CompletableFuture<Void> {
-        val completableFuture = CompletableFuture<Void>()
+    override fun remove(arena: Arena): CompletableFuture<Void?> {
+        val completableFuture = CompletableFuture<Void?>()
 
         async(plugin) {
             synchronized(cache) {
@@ -94,8 +94,8 @@ class PersistenceArenaServiceImpl @Inject constructor(private val plugin: Plugin
     /**
      * Saves the given [arena] to the storage.
      */
-    override fun save(arena: Arena): CompletableFuture<Void> {
-        val completableFuture = CompletableFuture<Void>()
+    override fun save(arena: Arena): CompletableFuture<Void?> {
+        val completableFuture = CompletableFuture<Void?>()
 
         async(plugin) {
             synchronized(cache) {

@@ -35,7 +35,7 @@ interface GameService : AutoCloseable {
     /**
      * Restarts all games on the server.
      */
-    fun restartGames() : CompletableFuture<Void>
+    fun restartGames() : CompletableFuture<Void?>
 
     /**
      * Returns the game if the given [player] is playing a game.

@@ -5,17 +5,23 @@ package com.github.shynixn.blockball.bukkit.logic.business.extension
 import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
-import com.github.shynixn.blockball.bukkit.logic.business.nms.MaterialCompatibility13
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PositionEntity
+import com.mojang.authlib.GameProfile
+import com.mojang.authlib.properties.Property
 import org.bukkit.*
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 import org.bukkit.inventory.meta.LeatherArmorMeta
+import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
 import java.lang.reflect.InvocationTargetException
+import java.util.*
+import java.util.concurrent.CompletableFuture
+import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -58,13 +64,6 @@ inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long 
             f.invoke()
         }, delayTicks)
     }
-}
-
-/**
- * Convers the type into bukkit material
- */
-fun MaterialType.toBukkitMaterial(): Material {
-    return MaterialCompatibility13.getBukkitMaterial(this)
 }
 
 /**
@@ -264,6 +263,16 @@ internal fun String.stripChatColors(): String {
 }
 
 /**
+ * Accepts the action safely.
+ */
+fun <T> CompletableFuture<T>.thenAcceptSafely(f: (T) -> Unit) {
+    this.thenAccept(f).exceptionally { e ->
+        JavaPlugin.getPlugin(BlockBallPlugin::class.java).logger.log(Level.WARNING, "Failed to execute Task.", e)
+        throw RuntimeException(e)
+    }
+}
+
+/**
  * Tries to return the [ParticleType] from the given name.
  */
 fun String.toParticleType(): ParticleType {
@@ -274,6 +283,38 @@ fun String.toParticleType(): ParticleType {
     }
 
     throw IllegalArgumentException("ParticleType cannot be parsed from '" + this + "'.")
+}
+
+/**
+ * Sets the skin of an itemstack.
+ */
+internal fun ItemStack.setSkin(skin: String) {
+    val currentMeta = this.itemMeta
+
+    if (currentMeta !is SkullMeta) {
+        return
+    }
+
+    var newSkin = skin
+    if (newSkin.contains("textures.minecraft.net")) {
+        if (!newSkin.startsWith("http://")) {
+            newSkin = "http://$newSkin"
+        }
+
+        val newSkinProfile = GameProfile(UUID.randomUUID(), null)
+
+        val cls = Class.forName("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull".replace("VERSION", VersionSupport.getServerVersion().versionText))
+        val real = cls.cast(currentMeta)
+        val field = real.javaClass.getDeclaredField("profile")
+
+        newSkinProfile.properties.put("textures", Property("textures", Base64Coder.encodeString("{textures:{SKIN:{url:\"$newSkin\"}}}")))
+        field.isAccessible = true
+        field.set(real, newSkinProfile)
+        itemMeta = SkullMeta::class.java.cast(real)
+    } else {
+        currentMeta.owner = skin
+        itemMeta = currentMeta
+    }
 }
 
 /**

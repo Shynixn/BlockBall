@@ -1,15 +1,15 @@
-package com.github.shynixn.blockball.api.compatibility;
+package com.github.shynixn.blockball.api.business.service
 
-import java.util.Optional;
+import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,22 +29,28 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BounceController<Block, Material> extends IController<BounceObject> {
+interface ItemService {
+    /**
+     * Gets the numeric material value. Throws a [IllegalArgumentException]
+     * if the numeric value could not get located.
+     */
+    fun <M> getNumericMaterialValue(material: M): Int
 
     /**
-     * Creates a new bounceObject from the given parameters.
-     *
-     * @param type   type
-     * @param damage damage
-     * @return bounceObject
+     * Gets the material from the numeric value.
+     * Throws a [IllegalArgumentException] if the numeric value could
+     * not get applied to a material.
      */
-    BounceObject create(Material type, int damage);
+    fun <M> getMaterialFromNumericValue(value: Int): M
 
     /**
-     * Returns the bounceObject from the given block.
-     *
-     * @param block block
-     * @return optBounceObject
+     * Gets the material from the material type. Throws a [IllegalArgumentException]
+     * if mapping is not possible.
      */
-    Optional<BounceObject> getBounceObjectFromBlock(Block block);
+    fun <M> getMaterialFromMaterialType(materialType: MaterialType): M
+
+    /**
+     * Creates a new itemStack from the given [materialType] [dataValue] [amount].
+     */
+    fun <I> createItemStack(materialType: MaterialType, dataValue: Int = 0, amount: Int = 1): I
 }

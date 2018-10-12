@@ -1,17 +1,13 @@
-package com.github.shynixn.blockball.api.compatibility;
-
-import com.github.shynixn.blockball.api.business.proxy.BallProxy;
-
-import java.util.Optional;
+package com.github.shynixn.blockball.api.business.enumeration
 
 /**
- * Created by Shynixn 2017.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,24 +27,35 @@ import java.util.Optional;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface BallController extends IController<BallProxy> {
+enum class BallActionType {
+    /**
+     * Ball Kick.
+     */
+    ONKICK,
+    /**
+     * Ball Touch.
+     */
+    ONINTERACTION,
+    /**
+     * Ball Throw.
+     */
+    ONTHROW,
+    /**
+     * Ball Grab.
+     */
+    ONGRAB,
+    /**
+     * Ball Spawn.
+     */
+    ONSPAWN,
 
     /**
-     * Creates a new ball from the given parameters.
-     *
-     * @param location   location
-     * @param ballMeta   ballMeta
-     * @param persistent persistent for restarts
-     * @param owner      entityOwner
-     * @return ball
+     * Ball Score.
      */
-    <L, E> BallProxy create(L location, BallMeta ballMeta, boolean persistent, E owner);
+    ONGOAL,
 
     /**
-     * Returns a ball if the given entity is part of a ball.
-     *
-     * @param entity entity
-     * @return ball
+     * Ball Move.
      */
-    <E> Optional<BallProxy> getBallFromEntity(E entity);
+    ONMOVE;
 }

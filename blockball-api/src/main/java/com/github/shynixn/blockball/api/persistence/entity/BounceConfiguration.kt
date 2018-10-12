@@ -1,20 +1,13 @@
-package com.github.shynixn.blockball.bukkit.logic.compatibility;
-
-import org.bukkit.Bukkit;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
+package com.github.shynixn.blockball.api.persistence.entity
 
 /**
- * Copyright 2017 Shynixn
+ * Created by Shynixn 2018.
  * <p>
- * Do not remove this header!
- * <p>
- * Version 1.0
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2016
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,43 +27,19 @@ import org.bukkit.plugin.Plugin;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class SimpleListener implements Listener {
-
-    final protected Plugin plugin;
+interface BounceConfiguration {
+    /**
+     * Modifier for this bounce configuration.
+     */
+    var modifier: Double
 
     /**
-     * Initializes a new listener by plugin
-     *
-     * @param plugin plugin
+     * MaterialType in Id or String format.
      */
-    public SimpleListener(Plugin plugin) {
-        super();
-        if (plugin == null)
-            throw new IllegalArgumentException("Plugin cannot be null!");
-        this.plugin = plugin;
-        this.register();
-    }
+    var materialType: Any
 
     /**
-     * Initializes a new listener by pluginname
-     *
-     * @param plugin plugin
+     * Material damage value.
      */
-    public SimpleListener(String plugin) {
-        this(Bukkit.getPluginManager().getPlugin(plugin));
-    }
-
-    /**
-     * Registers the listener to spigot
-     */
-    final void register() {
-        Bukkit.getPluginManager().registerEvents(this, this.plugin);
-    }
-
-    /**
-     * Unregisters the lister from spigot
-     */
-    final void unregister() {
-        HandlerList.unregisterAll(this);
-    }
+    var materialDamage: Int
 }

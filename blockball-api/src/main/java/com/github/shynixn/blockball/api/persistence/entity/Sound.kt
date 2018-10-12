@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.compatibility.EffectingType
+import com.github.shynixn.blockball.api.business.enumeration.EffectTargetType
 
 /**
  * Created by Shynixn 2018.
@@ -48,5 +48,5 @@ interface Sound {
     /**
      * Which players are effected.
      */
-    var effectingType: EffectingType
+    var effectingType: EffectTargetType
 }

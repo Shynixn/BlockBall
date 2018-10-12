@@ -1,10 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.entity
 
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.api.business.enumeration.BallActionType
+import com.github.shynixn.blockball.api.business.enumeration.BallSize
+import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
-import com.github.shynixn.blockball.bukkit.logic.compatibility.BallData
-import org.bukkit.configuration.MemorySection
 
 @Suppress("unused")
 /**
@@ -34,33 +33,65 @@ import org.bukkit.configuration.MemorySection
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallMetaEntity : BallData, BallMeta {
+class BallMetaEntity(
+        /** Skin of the ball.**/
+        @YamlSerializer.YamlSerialize(orderNumber = 2, value = "skin")
+        override var skin: String) : BallMeta {
+
+    /** Size of the ball.**/
+    @YamlSerializer.YamlSerialize(orderNumber = 1, value = "size")
+    override var size: BallSize = BallSize.NORMAL
+    /**
+     * Size of the hitbox used for interaction detecting.
+     */
+    @YamlSerializer.YamlSerialize(orderNumber = 3, value = "hitbox-size")
+    override var hitBoxSize: Double = 2.0
+
+    /** Should the ball rotate? */
+    @YamlSerializer.YamlSerialize(orderNumber = 4, value = "rotating")
+    override var rotating: Boolean = true
+    /**
+     * Hitbox relocation value for ground heights.
+     */
+    @YamlSerializer.YamlSerialize(orderNumber = 5, value = "hitbox-relocation")
+    override var hitBoxRelocation: Double = 0.0
+
+    /**
+     * Should the ball be able to carry.
+     */
+    @YamlSerializer.YamlSerialize(orderNumber = 6, value = "carry-able")
+    override var carryAble: Boolean = false
+    /**
+     * Should the ball always bounce of walls?
+     */
+    @YamlSerializer.YamlSerialize(orderNumber = 7, value = "always-bounce")
+    override var alwaysBouce: Boolean = true
+
+    /**
+     * Bouncing off from objects modifiers.
+     */
+    @YamlSerializer.YamlSerialize(orderNumber = 8, value = "wall-bouncing")
+    override val bounceModifiers: MutableList<BounceConfiguration> = ArrayList()
+    /**
+     * Movement modifier.
+     */
+    @YamlSerializer.YamlSerialize(orderNumber = 9, value = "modifiers")
+    override val movementModifier: MovementConfigurationEntity = MovementConfigurationEntity()
+    /**
+     * Particle effects.
+     */
+    @YamlSerializer.YamlSerialize(orderNumber = 10, value = "particle-effects", implementation = ParticleEntity::class)
+    override val particleEffects: MutableMap<BallActionType, Particle> = HashMap()
+    /**
+     * Particle effects.
+     */
+    @YamlSerializer.YamlSerialize(orderNumber = 11, value = "sound-effects", implementation = SoundEntity::class)
+    override val soundEffects: MutableMap<BallActionType, Sound> = HashMap()
+
     /** Spawning delay. */
+    @YamlSerializer.YamlSerialize(orderNumber = 12, value = "spawn-delay")
     override var delayInTicks: Int = 0
     /** Spawnpoint of the ball. */
+    @YamlSerializer.YamlSerialize(orderNumber = 12, value = "spawnpoint", implementation = PositionEntity::class)
     override var spawnpoint: Position? = null
-
-    constructor(skin: String) : super(skin)
-
-    /**
-     * Deserializes a ballData.
-     *
-     * @param data data
-     */
-    constructor(data: Map<String, Any>) : super(data) {
-        this.delayInTicks = data["spawn-delay"] as Int
-        this.spawnpoint = YamlSerializer.deserializeObject(PositionEntity::class.java, PositionEntity::class.java, (data["spawnpoint"] as MemorySection).getValues(false))
-    }
-
-    /**
-     * Serializes the given content.
-     *
-     * @return serializedContent
-     */
-    override fun serialize(): Map<String, Any> {
-        val data = super.serialize()
-        data["spawn-delay"] = this.delayInTicks
-        data["spawnpoint"] = YamlSerializer.serialize(this.spawnpoint as PositionEntity)
-        return data
-    }
 }

@@ -1,13 +1,16 @@
-package com.github.shynixn.blockball.api.compatibility;
+package com.github.shynixn.blockball.bukkit.logic.persistence.entity
+
+import com.github.shynixn.blockball.api.persistence.entity.BounceConfiguration
+import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
 
 /**
- * Extension of the controller interface for file loading.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,9 +30,20 @@ package com.github.shynixn.blockball.api.compatibility;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface IFileController<T> extends IController<T> {
+class BounceConfigurationEntity(
+        /**
+         * MaterialType in Id or String format.
+         */
+        @YamlSerializer.YamlSerialize(value = "id", implementation = Int::class)
+        override var materialType: Any,
+        /**
+         * Material damage value.
+         */
+        @YamlSerializer.YamlSerialize(value = "damage")
+        override var materialDamage: Int) : BounceConfiguration {
     /**
-     * Reloads the content from the fileSystem.
+     * Modifier for this bounce configuration.
      */
-    void reload();
+    @YamlSerializer.YamlSerialize(value = "modifier")
+    override var modifier: Double = 1.0
 }

@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit
 
+import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.context.FileContext
@@ -65,6 +66,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(ServerSignRepository::class.java).to(ServerSignFileRepository::class.java)
 
         // Services
+        bind(ItemService::class.java).to(ItemServiceImpl::class.java)
         bind(FileContext::class.java).to(FileContextImpl::class.java)
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java)
         bind(VirtualArenaService::class.java).to(VirtualArenaServiceImpl::class.java)
@@ -97,10 +99,20 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(PersistenceStatsService::class.java).to(PersistenceStatsServiceImpl::class.java)
 
         // Dependency Services
-        bind(DependencyVaultService::class.java).to(DependencyVaultServiceImpl::class.java)
+        val dependencyService = DependencyServiceImpl(plugin)
+
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(DependencyWorldEditService::class.java).to(DependencyWorldEditServiceImpl::class.java)
-        bind(DependencyPlaceholderApiService::class.java).to(DependencyPlaceholderApiServiceImpl::class.java)
+
+        if (dependencyService.isInstalled(PluginDependency.PLACEHOLDERAPI)) {
+            val placeHolderApiService = DependencyPlaceholderApiServiceImpl(plugin)
+            bind(DependencyPlaceholderApiService::class.java).toInstance(placeHolderApiService)
+            placeHolderApiService.registerListener()
+        }
+
+        if (dependencyService.isInstalled(PluginDependency.VAULT)) {
+            bind(DependencyVaultService::class.java).to(DependencyVaultServiceImpl::class.java)
+        }
     }
 }

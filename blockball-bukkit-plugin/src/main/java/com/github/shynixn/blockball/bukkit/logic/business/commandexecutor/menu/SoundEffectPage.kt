@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
-import com.github.shynixn.blockball.api.compatibility.EffectingType
+import com.github.shynixn.blockball.api.business.enumeration.EffectTargetType
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Sound
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
@@ -70,7 +70,7 @@ class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
             soundEffect.name = args[2]
         } else if (command == BlockBallCommand.SOUND_CALLBACK_EFFECTING && args.size >= 3 && args[2].toIntOrNull() != null) {
             val soundEffect = cache[5] as Sound
-            soundEffect.effectingType = EffectingType.values()[args[2].toInt()]
+            soundEffect.effectingType = EffectTargetType.values()[args[2].toInt()]
         } else if (command == BlockBallCommand.SOUND_PITCH && args[2].toDoubleOrNull() != null) {
             val soundEffect = cache[5] as Sound
             soundEffect.pitch = args[2].toDouble()

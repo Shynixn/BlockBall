@@ -3,11 +3,12 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
+import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
-import com.github.shynixn.blockball.bukkit.logic.business.nms.MaterialCompatibility13
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
+import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -42,7 +43,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ParticleServiceImpl : ParticleService {
+class ParticleServiceImpl @Inject constructor(private val itemService: ItemService) : ParticleService {
     private val version = VersionSupport.getServerVersion()
 
     /**
@@ -104,9 +105,9 @@ class ParticleServiceImpl : ParticleService {
 
             if (particle.materialName != null) {
                 additionalPayload = if (particle.type == ParticleType.ITEM_CRACK) {
-                    intArrayOf(MaterialCompatibility13.getIdFromMaterial(Material.getMaterial(particle.materialName)), particle.data)
+                    intArrayOf(itemService.getNumericMaterialValue(Material.getMaterial(particle.materialName)), particle.data)
                 } else {
-                    intArrayOf(MaterialCompatibility13.getIdFromMaterial(Material.getMaterial(particle.materialName)), (particle.data shl 12))
+                    intArrayOf(itemService.getNumericMaterialValue(Material.getMaterial(particle.materialName)), (particle.data shl 12))
                 }
             }
 

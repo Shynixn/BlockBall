@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
+import com.github.shynixn.blockball.api.business.enumeration.BallActionType
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
-import com.github.shynixn.blockball.api.compatibility.ActionEffect
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Sound
@@ -60,30 +60,22 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
         val ballMeta = (cache[0] as Arena).meta.ballMeta
         if (command == BlockBallCommand.BALL_OPEN) {
             cache[5] = null
-        }
-        else if (command == BlockBallCommand.BALL_SKIN && args.size == 3) {
+        } else if (command == BlockBallCommand.BALL_SKIN && args.size == 3) {
             ballMeta.skin = args[2]
-        }
-        else if (command == BlockBallCommand.BALL_SIZE_CALLBACK && args.size == 3) {
+        } else if (command == BlockBallCommand.BALL_SIZE_CALLBACK && args.size == 3) {
             ballMeta.size = BallSize.values()[args[2].toInt()]
-        }
-        else if (command == BlockBallCommand.BALL_HITBOX && args.size == 3 && args[2].toDoubleOrNull() != null) {
+        } else if (command == BlockBallCommand.BALL_HITBOX && args.size == 3 && args[2].toDoubleOrNull() != null) {
             ballMeta.hitBoxSize = args[2].toDouble()
-        }
-        else if (command == BlockBallCommand.BALL_TOGGLE_CARRYABLE) {
-            ballMeta.isCarryable = !ballMeta.isCarryable
-        }
-        else if (command == BlockBallCommand.BALL_TOGGLE_ALWAYSBOUNCE) {
-            ballMeta.isAlwaysBounceBack = !ballMeta.isAlwaysBounceBack
-        }
-        else if (command == BlockBallCommand.BALL_TOGGLE_ROTATING) {
-            ballMeta.isRotatingEnabled = !ballMeta.isRotatingEnabled
-        }
-        else if (command == BlockBallCommand.BALL_PARTICLEACTION_CALLBACK && args.size == 3) {
-            cache[5] = ballMeta.getParticleEffectOf(ActionEffect.values()[args[2].toInt()])
-        }
-        else if (command == BlockBallCommand.BALL_SOUNDACTION_CALLBACK && args.size == 3) {
-            cache[5] = ballMeta.getSoundEffectOf(ActionEffect.values()[args[2].toInt()])
+        } else if (command == BlockBallCommand.BALL_TOGGLE_CARRYABLE) {
+            ballMeta.carryAble = !ballMeta.carryAble
+        } else if (command == BlockBallCommand.BALL_TOGGLE_ALWAYSBOUNCE) {
+            ballMeta.alwaysBouce = !ballMeta.alwaysBouce
+        } else if (command == BlockBallCommand.BALL_TOGGLE_ROTATING) {
+            ballMeta.rotating = !ballMeta.rotating
+        } else if (command == BlockBallCommand.BALL_PARTICLEACTION_CALLBACK && args.size == 3) {
+            cache[5] = ballMeta.particleEffects[BallActionType.values()[args[2].toInt()]]
+        } else if (command == BlockBallCommand.BALL_SOUNDACTION_CALLBACK && args.size == 3) {
+            cache[5] = ballMeta.soundEffects[BallActionType.values()[args[2].toInt()]]
         }
         return super.execute(player, command, cache, args)
     }
@@ -113,17 +105,17 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BALL_HITBOX.command)
                 .setHoverText("Changes the hitbox size of the ball.")
                 .builder().nextLine()
-                .component("- Carry Able: " + ballMeta.isCarryable).builder()
+                .component("- Carry Able: " + ballMeta.carryAble).builder()
                 .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BALL_TOGGLE_CARRYABLE.command)
                 .setHoverText("Should the ball be carry able when a player right clicks on it?")
                 .builder().nextLine()
-                .component("- Always Bounce: " + ballMeta.isAlwaysBounceBack).builder()
+                .component("- Always Bounce: " + ballMeta.alwaysBouce).builder()
                 .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BALL_TOGGLE_ALWAYSBOUNCE.command)
                 .setHoverText("Should the ball always bounce of surfaces?")
                 .builder().nextLine()
-                .component("- Rotation Animation: " + ballMeta.isRotatingEnabled).builder()
+                .component("- Rotation Animation: " + ballMeta.rotating).builder()
                 .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BALL_TOGGLE_ROTATING.command)
                 .setHoverText("Should the ball play a rotation animation?")
@@ -148,8 +140,8 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.SOUND_BALL.command)
                     .setHoverText("Opens the page for editing the soundeffect.")
                     .builder().nextLine()
-        } else if(cache[5] != null && cache[5] is Particle) {
-                     builder.component("- Selected Particleffect: ").builder().component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
+        } else if (cache[5] != null && cache[5] is Particle) {
+            builder.component("- Selected Particleffect: ").builder().component(ClickableComponent.PAGE.text).setColor(ClickableComponent.PAGE.color)
                     .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.PARTICLE_BALL.command)
                     .setHoverText("Opens the page for editing the particleeffect.")
                     .builder().nextLine()

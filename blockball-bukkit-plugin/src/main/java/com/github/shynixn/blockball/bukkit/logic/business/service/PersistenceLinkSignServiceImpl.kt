@@ -76,8 +76,8 @@ class PersistenceLinkSignServiceImpl @Inject constructor(private val signReposit
     /**
      * Remove the given [linkSign] from the storage.
      */
-    override fun remove(linkSign: LinkSign): CompletableFuture<Void> {
-        val completableFuture = CompletableFuture<Void>()
+    override fun remove(linkSign: LinkSign): CompletableFuture<Void?> {
+        val completableFuture = CompletableFuture<Void?>()
 
         async(plugin) {
             if (cache == null) {
@@ -124,8 +124,8 @@ class PersistenceLinkSignServiceImpl @Inject constructor(private val signReposit
     /**
      * Refreshes the runtime cache of the linked services.
      */
-    override fun refresh(): CompletableFuture<Void> {
-        val completableFuture = CompletableFuture<Void>()
+    override fun refresh(): CompletableFuture<Void?> {
+        val completableFuture = CompletableFuture<Void?>()
 
         async(plugin) {
             refreshCache()
@@ -162,8 +162,8 @@ class PersistenceLinkSignServiceImpl @Inject constructor(private val signReposit
     /**
      * Saves the given [LinkSign] to the storage.
      */
-    override fun save(linkSign: LinkSign): CompletableFuture<Void> {
-        val completableFuture = CompletableFuture<Void>()
+    override fun save(linkSign: LinkSign): CompletableFuture<Void?> {
+        val completableFuture = CompletableFuture<Void?>()
 
         async(plugin) {
             if (cache == null) {

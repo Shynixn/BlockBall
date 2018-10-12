@@ -2,6 +2,7 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.bukkit.event.GameEndEvent
 import com.github.shynixn.blockball.api.bukkit.event.GameGoalEvent
 import com.github.shynixn.blockball.api.business.enumeration.*
@@ -49,7 +50,7 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin: Plugin, private val screenMessageService: ScreenMessageService, private val vaultService: DependencyVaultService, private val dependencyService: DependencyService, private val ballEntityService: BallEntityService) : GameSoccerService<G> {
+class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin: Plugin, private val screenMessageService: ScreenMessageService, private val dependencyService: DependencyService, private val ballEntityService: BallEntityService) : GameSoccerService<G> {
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
      * 0 - 20 for each second.
@@ -111,8 +112,8 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
         if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
             game.blueScore++
-            game.ball!!.remove()
             onScore(game, Team.BLUE, game.arena.meta.blueTeamMeta)
+            game.ball!!.remove()
             onScoreReward(game, game.blueTeam as List<Player>)
             teleportBackToSpawnpoint(game)
             if (game.blueScore >= game.arena.meta.lobbyMeta.maxScore) {
@@ -121,8 +122,8 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
             }
         } else if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
             game.redScore++
-            game.ball!!.remove()
             onScore(game, Team.RED, game.arena.meta.redTeamMeta)
+            game.ball!!.remove()
             onScoreReward(game, game.redTeam as List<Player>)
             teleportBackToSpawnpoint(game)
             if (game.redScore >= game.arena.meta.lobbyMeta.maxScore) {
@@ -224,6 +225,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
         if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
             if (players.contains(game.lastInteractedEntity!!)) {
                 if (dependencyService.isInstalled(PluginDependency.VAULT) && game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.SHOOT_GOAL)) {
+                    val vaultService = BlockBallApi.resolve(DependencyVaultService::class.java)
                     vaultService.addMoney(game.lastInteractedEntity, game.arena.meta.rewardMeta.moneyReward[RewardType.SHOOT_GOAL]!!.toDouble())
                 }
                 if (game.arena.meta.rewardMeta.commandReward.containsKey(RewardType.SHOOT_GOAL)) {
@@ -235,6 +237,8 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
     override fun <P> onMatchEnd(game: G, winningPlayers: List<P>?, loosingPlayers: List<P>?) {
         if (dependencyService.isInstalled(PluginDependency.VAULT)) {
+            val vaultService = BlockBallApi.resolve(DependencyVaultService::class.java)
+
             if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.WIN_MATCH) && winningPlayers != null) {
                 winningPlayers.forEach { p ->
                     vaultService.addMoney(p, game.arena.meta.rewardMeta.moneyReward[RewardType.WIN_MATCH]!!.toDouble())

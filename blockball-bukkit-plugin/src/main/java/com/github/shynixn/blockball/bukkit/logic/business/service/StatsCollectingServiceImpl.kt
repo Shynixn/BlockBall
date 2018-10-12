@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.business.service.PersistenceStatsService
 import com.github.shynixn.blockball.api.business.service.ScoreboardService
 import com.github.shynixn.blockball.api.business.service.StatsCollectingService
 import com.github.shynixn.blockball.api.persistence.entity.Stats
+import com.github.shynixn.blockball.bukkit.logic.business.extension.thenAcceptSafely
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -74,7 +75,7 @@ class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin,
      * Updates the stats for the given [player].
      */
     override fun <P> updateStats(player: P, f: (Stats) -> Unit) {
-        persistenceStatsService.getOrCreateFromPlayer(player).thenAccept { stats ->
+        persistenceStatsService.getOrCreateFromPlayer(player).thenAcceptSafely { stats ->
             f.invoke(stats)
             persistenceStatsService.save(player, stats)
         }
@@ -118,7 +119,7 @@ class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin,
             player.scoreboard = scoreboard
         }
 
-        persistenceStatsService.getOrCreateFromPlayer(player).thenAccept { stats ->
+        persistenceStatsService.getOrCreateFromPlayer(player).thenAcceptSafely { stats ->
             val scoreboard = statsScoreboards[player]
             val lines = configurationService.findValue<List<String>>("stats-scoreboard.lines")
 

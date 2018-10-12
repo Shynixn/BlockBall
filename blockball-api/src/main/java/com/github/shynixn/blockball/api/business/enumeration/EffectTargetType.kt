@@ -1,13 +1,13 @@
-package com.github.shynixn.blockball.api.compatibility;
+package com.github.shynixn.blockball.api.business.enumeration
 
 /**
- * Effecting interface.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,21 +27,17 @@ package com.github.shynixn.blockball.api.compatibility;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface EffectMeta {
-
+enum class EffectTargetType {
     /**
-     * Returns the effecting type.
-     *
-     * @return type
+     * Effect effecting everyone.
      */
-    EffectingType getEffectingType();
-
+    EVERYONE,
     /**
-     * Sets the effecting type.
-     *
-     * @param <K>  EffectMeta type
-     * @param type type
-     * @return effectMeta
+     * Effect effecting the causing player.
      */
-    <K extends EffectMeta> K setEffectingType(EffectingType type);
+    RELATED_PLAYER,
+    /**
+     * Effect effecting nobody.
+     */
+    NOBODY
 }

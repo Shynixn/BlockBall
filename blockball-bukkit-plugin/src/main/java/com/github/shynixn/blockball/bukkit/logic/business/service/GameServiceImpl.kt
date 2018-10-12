@@ -8,11 +8,11 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
+import com.github.shynixn.blockball.bukkit.logic.business.extension.thenAcceptSafely
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BungeeCordGameEntity
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.HubGameEntity
 import com.github.shynixn.blockball.bukkit.logic.persistence.entity.MiniGameEntity
 import com.google.inject.Inject
-import com.sk89q.worldedit.WorldEdit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -57,8 +57,8 @@ class GameServiceImpl @Inject constructor(private val plugin: Plugin, private va
     /**
      * Restarts all games on the server.
      */
-    override fun restartGames(): CompletableFuture<Void> {
-        val completableFuture = CompletableFuture<Void>()
+    override fun restartGames(): CompletableFuture<Void?> {
+        val completableFuture = CompletableFuture<Void?>()
 
         if (task == null) {
             task = plugin.server.scheduler.runTaskTimer(plugin, this, 0L, 1L)
@@ -68,7 +68,7 @@ class GameServiceImpl @Inject constructor(private val plugin: Plugin, private va
 
         plugin.reloadConfig()
 
-        persistenceArenaService.refresh().thenAccept {
+        persistenceArenaService.refresh().thenAcceptSafely {
             persistenceArenaService.getArenas().forEach { arena ->
                 initGame(arena)
             }
@@ -189,7 +189,7 @@ class GameServiceImpl @Inject constructor(private val plugin: Plugin, private va
             try {
                 gameActionService.closeGame(game)
             } catch (e: Exception) {
-                WorldEdit.logger.log(Level.WARNING, "Failed to dispose game.", e)
+                plugin.logger.log(Level.WARNING, "Failed to dispose game.", e)
             }
         }
 

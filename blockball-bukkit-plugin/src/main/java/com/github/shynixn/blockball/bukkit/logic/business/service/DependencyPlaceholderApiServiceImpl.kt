@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.service.DependencyPlaceholderApiService
 import com.google.inject.Inject
-import me.clip.placeholderapi.external.EZPlaceholderHook
+import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -35,8 +35,7 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class DependencyPlaceholderApiServiceImpl @Inject constructor(plugin: Plugin) : EZPlaceholderHook(plugin, "blockball"), DependencyPlaceholderApiService {
-
+class DependencyPlaceholderApiServiceImpl @Inject constructor(private val plugin: Plugin) : PlaceholderExpansion(), DependencyPlaceholderApiService {
     private var registerd: Boolean = false
 
     /**
@@ -44,9 +43,30 @@ class DependencyPlaceholderApiServiceImpl @Inject constructor(plugin: Plugin) : 
      */
     override fun registerListener() {
         if (!registerd) {
-            this.hook()
+            this.register()
             registerd = true
         }
+    }
+
+    /**
+     * Gets the expansion version which is the same of the plugin version.
+     */
+    override fun getVersion(): String {
+        return plugin.description.version
+    }
+
+    /**
+     * Gets the expansion author for placeholderapi.
+     */
+    override fun getAuthor(): String {
+        return plugin.description.authors[0]
+    }
+
+    /**
+     * Gets the identifier which is required by placeholderapi to match the placeholder against this plugin.
+     */
+    override fun getIdentifier(): String {
+        return "blockball"
     }
 
     /**
