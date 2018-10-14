@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.repository
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta
 import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.context.SqlDbContextImpl
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PlayerMetaEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.PlayerMetaEntity
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -70,7 +70,7 @@ class PlayerSqlRepository @Inject constructor(dbContext: SqlDbContextImpl, priva
             plugin.logger.log(Level.WARNING, "Database error occurred.", e)
         }
 
-        val playerMeta = PlayerMetaEntity(player)
+        val playerMeta = PlayerMetaEntity(player.uniqueId, player.name)
         save(player, playerMeta)
 
         return playerMeta

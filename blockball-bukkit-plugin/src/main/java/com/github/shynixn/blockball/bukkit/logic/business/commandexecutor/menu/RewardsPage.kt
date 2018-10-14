@@ -7,7 +7,7 @@ import com.github.shynixn.blockball.api.business.service.DependencyVaultService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.CommandMetaEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.CommandMetaEntity
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 

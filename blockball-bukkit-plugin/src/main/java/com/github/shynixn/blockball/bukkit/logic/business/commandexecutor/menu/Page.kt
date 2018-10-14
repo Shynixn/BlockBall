@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PositionEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import org.bukkit.Location
 import org.bukkit.entity.Player
 

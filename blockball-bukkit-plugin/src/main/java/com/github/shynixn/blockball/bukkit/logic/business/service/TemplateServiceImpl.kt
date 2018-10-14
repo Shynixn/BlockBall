@@ -5,9 +5,9 @@ import com.github.shynixn.blockball.api.business.service.TemplateService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Template
 import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ArenaEntity
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PositionEntity
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.TemplateEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.ArenaEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.TemplateEntity
 import com.google.inject.Inject
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin

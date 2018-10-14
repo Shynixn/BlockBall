@@ -14,8 +14,9 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.updateInventory
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.GameStorageEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.GameStorageEntity
 import com.google.inject.Inject
+import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -186,7 +187,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
      * Gets called when the given [game] ends with a draw.
      */
     override fun onDraw(game: MiniGame) {
-        val additionalPlayers = game.notifiedPlayers.filter { pair -> pair.second }.map { p -> p.first }
+        val additionalPlayers = getNofifiedPlayers(game).filter { pair -> pair.second }.map { p -> p.first }
         additionalPlayers.forEach { p -> screenMessageService.setTitle(p, game.arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(game), game.arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)) }
 
         game.redTeam.forEach { p -> screenMessageService.setTitle(p, game.arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(game), game.arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)) }
@@ -300,7 +301,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
     }
 
     private fun createPlayerStorage(game: MiniGame, player: Player): GameStorage {
-        val stats = GameStorageEntity(player.uniqueId)
+        val stats = GameStorageEntity(player.uniqueId, Bukkit.getScoreboardManager().newScoreboard)
 
         with(stats) {
             gameMode = player.gameMode
@@ -464,6 +465,27 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
 
         game.endGameActive = true
         game.ballSpawning = true
+    }
+
+    /**
+     * Get nofified players.
+     */
+    private fun getNofifiedPlayers(game: MiniGame): List<Pair<Any, Boolean>> {
+        val players = ArrayList<Pair<Any, Boolean>>()
+
+        if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
+            game.arena.center.toLocation().world.players.forEach { p ->
+                if (p.location.distance(game.arena.center.toLocation()) <= game.arena.meta.spectatorMeta.notificationRadius) {
+                    players.add(Pair(p, true))
+                } else {
+                    players.add(Pair(p, false))
+                }
+            }
+        }
+
+        players.addAll(game.spectatorPlayers.map { p -> Pair(p, true) })
+
+        return players
     }
 
     /**

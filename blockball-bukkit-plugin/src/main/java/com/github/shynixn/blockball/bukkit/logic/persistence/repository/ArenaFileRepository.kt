@@ -5,9 +5,9 @@ import com.github.shynixn.blockball.api.persistence.context.FileContext
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ArenaEntity
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ParticleEntity
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.SoundEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.ArenaEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.ParticleEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.SoundEntity
 import com.google.inject.Inject
 import org.bukkit.configuration.Configuration
 import org.bukkit.configuration.serialization.ConfigurationSerializable
@@ -111,12 +111,12 @@ class ArenaFileRepository @Inject constructor(private val plugin: Plugin, privat
             }
         }
 
-        fileContext.saveAndCreateYamlFile<Configuration>(file.toPath(), { configuration ->
+        fileContext.saveAndCreateYamlFile<Configuration>(file.toPath()) { configuration ->
             val data = arena.serialize()
             for (key in data.keys) {
                 configuration.set("arena.$key", data[key])
             }
-        })
+        }
     }
 
     private fun getFolder(): File {

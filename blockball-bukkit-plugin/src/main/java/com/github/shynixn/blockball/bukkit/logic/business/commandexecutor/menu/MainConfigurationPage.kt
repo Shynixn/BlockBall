@@ -97,7 +97,7 @@ class MainConfigurationPage @Inject constructor(private val configurationService
             val left = blockSelectionService.getLeftClickLocation<Location, Player>(player)
             val right = blockSelectionService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
-                arena.setCorners(left.get(), right.get())
+                arena.setCorners(left.get().toPosition(), right.get().toPosition())
             } else {
                 return CommandResult.WESELECTION_MISSING
             }
@@ -108,7 +108,7 @@ class MainConfigurationPage @Inject constructor(private val configurationService
             val left = blockSelectionService.getLeftClickLocation<Location, Player>(player)
             val right = blockSelectionService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
-                arena.meta.redTeamMeta.goal.setCorners(left.get(), right.get())
+                arena.meta.redTeamMeta.goal.setCorners(left.get().toPosition(), right.get().toPosition())
                 virtualArenaService.displayForPlayer(player, arena)
                 screenMessageService.setActionBar(player, prefix + "Changed goal selection. Rendering virtual blocks...")
             } else {
@@ -121,7 +121,7 @@ class MainConfigurationPage @Inject constructor(private val configurationService
             val left = blockSelectionService.getLeftClickLocation<Location, Player>(player)
             val right = blockSelectionService.getRightClickLocation<Location, Player>(player)
             if (left.isPresent && right.isPresent) {
-                arena.meta.blueTeamMeta.goal.setCorners(left.get(), right.get())
+                arena.meta.blueTeamMeta.goal.setCorners(left.get().toPosition(), right.get().toPosition())
                 virtualArenaService.displayForPlayer(player, arena)
                 screenMessageService.setActionBar(player, prefix + "Changed goal selection. Rendering virtual blocks...")
             } else {

@@ -8,7 +8,7 @@ import com.github.shynixn.blockball.api.business.service.HubGameForcefieldServic
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.InteractionCache
 import com.github.shynixn.blockball.bukkit.logic.business.extension.*
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.InteractionCacheEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.InteractionCacheEntity
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Location

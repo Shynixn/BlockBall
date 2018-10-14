@@ -4,7 +4,7 @@ import com.github.shynixn.blockball.api.persistence.context.FileContext
 import com.github.shynixn.blockball.api.persistence.entity.LinkSign
 import com.github.shynixn.blockball.api.persistence.repository.ServerSignRepository
 import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LinkSignEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.LinkSignEntity
 import com.google.inject.Inject
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.FileConfiguration
@@ -48,11 +48,11 @@ class ServerSignFileRepository @Inject constructor(private val plugin: Plugin, p
      * Saves the given [signs] to the storage.
      */
     override fun saveAll(signs: List<LinkSign>) {
-        fileContext.saveAndCreateYamlFile<FileConfiguration>(path, { configuration ->
+        fileContext.saveAndCreateYamlFile<FileConfiguration>(path) { configuration ->
             for (i in signs.indices) {
                 configuration.set("signs.$i", (signs[i] as ConfigurationSerializable).serialize())
             }
-        })
+        }
     }
 
     /**

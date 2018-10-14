@@ -5,7 +5,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordConfiguration
 import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BungeeCordConfigurationEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.BungeeCordConfigurationEntity
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.configuration.file.YamlConfiguration

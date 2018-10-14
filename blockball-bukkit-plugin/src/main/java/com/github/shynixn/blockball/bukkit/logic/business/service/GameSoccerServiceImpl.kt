@@ -214,7 +214,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
         val scoreMessageSubTitle = teamMeta.scoreMessageSubTitle
 
         val players = ArrayList(game.inTeamPlayers)
-        val additionalPlayers = game.notifiedPlayers
+        val additionalPlayers = getNofifiedPlayers(game)
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
         players.forEach { p -> screenMessageService.setTitle(p, scoreMessageTitle.replaceGamePlaceholder(game), scoreMessageSubTitle.replaceGamePlaceholder(game)) }
@@ -281,12 +281,31 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
         val winMessageSubTitle = teamMeta.winMessageSubTitle
 
         val players = ArrayList(game.inTeamPlayers)
-        val additionalPlayers = game.notifiedPlayers
+        val additionalPlayers = getNofifiedPlayers(game)
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
         players.forEach { p -> screenMessageService.setTitle(p, winMessageTitle.replaceGamePlaceholder(game), winMessageSubTitle.replaceGamePlaceholder(game)) }
 
         game.closing = true
+    }
+
+    /**
+     * Get nofified players.
+     */
+    private fun getNofifiedPlayers(game: Game): List<Pair<Any, Boolean>> {
+        val players = ArrayList<Pair<Any, Boolean>>()
+
+        if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
+            game.arena.center.toLocation().world.players.forEach { p ->
+                if (p.location.distance(game.arena.center.toLocation()) <= game.arena.meta.spectatorMeta.notificationRadius) {
+                    players.add(Pair(p, true))
+                } else {
+                    players.add(Pair(p, false))
+                }
+            }
+        }
+
+        return players
     }
 
     private fun executeCommand(game: G, meta: CommandMeta, players: List<Player>) {

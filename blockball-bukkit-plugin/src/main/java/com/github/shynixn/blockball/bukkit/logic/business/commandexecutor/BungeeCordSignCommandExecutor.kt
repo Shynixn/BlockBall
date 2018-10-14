@@ -4,7 +4,7 @@ import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.PersistenceLinkSignService
 import com.github.shynixn.blockball.api.business.service.RightclickManageService
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.LinkSignEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.LinkSignEntity
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.block.Sign
@@ -53,14 +53,14 @@ class BungeeCordSignCommandExecutor @Inject constructor(plugin: Plugin, private 
         if (args.size == 1) {
             val server = args[0]
 
-            rightclickManageService.watchForNextRightClickSign<Player, Location>(player, { location ->
+            rightclickManageService.watchForNextRightClickSign<Player, Location>(player) { location ->
                 if (location.block.state is Sign) {
                     val info = LinkSignEntity()
                     info.server = server
                     info.position = location.toPosition()
                     persistenceLinkSignService.save(LinkSignEntity())
                 }
-            })
+            }
 
             player.sendMessage(prefix + "Rightclick on a sign to connect it to the server [" + args[0] + "].")
         } else {

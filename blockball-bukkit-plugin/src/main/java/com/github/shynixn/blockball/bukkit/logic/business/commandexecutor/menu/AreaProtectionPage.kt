@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
+import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 
@@ -61,10 +62,10 @@ class AreaProtectionPage : Page(AreaProtectionPage.ID, MiscSettingsPage.ID) {
             arena.meta.protectionMeta.rejoinProtectionEnabled = !arena.meta.protectionMeta.rejoinProtectionEnabled
         } else if (command == BlockBallCommand.AREAPROTECTION_SET_ENTITYFORCEFIELD && args.size >= 5
                 && args[2].toDoubleOrNull() != null && args[3].toDoubleOrNull() != null && args[4].toDoubleOrNull() != null) {
-            arena.meta.protectionMeta.entityProtection = Vector(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
+            arena.meta.protectionMeta.entityProtection = PositionEntity(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
         } else if (command == BlockBallCommand.AREAPROTECTION_SET_PLAYERJOINFORCEFIELD && args.size >= 5
                 && args[2].toDoubleOrNull() != null && args[3].toDoubleOrNull() != null && args[4].toDoubleOrNull() != null) {
-            arena.meta.protectionMeta.rejoinProtection = Vector(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
+            arena.meta.protectionMeta.rejoinProtection = PositionEntity(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
         }
         return super.execute(player, command, cache, args)
     }
