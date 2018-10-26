@@ -4,9 +4,7 @@ import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.VirtualArenaService
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.logic.business.service.VirtualArenaServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ArenaEntity
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PositionEntity
-import com.sun.org.apache.bcel.internal.generic.Select
+import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import org.bukkit.Server
 import org.bukkit.World
 import org.bukkit.entity.Player
