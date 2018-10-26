@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -22,7 +23,6 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.Scoreboard
-import org.bukkit.util.Vector
 import java.util.logging.Level
 
 /**
@@ -283,8 +283,8 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
                 if (p !is Player && p !is ArmorStand && p !is Item && p !is ItemFrame) {
                     if (game.arena.isLocationInSelection(p.location)) {
                         val vector = game.arena.meta.protectionMeta.entityProtection
-                        p.location.direction = vector as Vector
-                        p.velocity = vector
+                        p.location.direction = vector.toVector()
+                        p.velocity = vector.toVector()
                     }
                 }
             }
@@ -316,8 +316,9 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
             }
 
             val lines = ArrayList(game.arena.meta.hologramMetas[i].lines)
-            for (i in lines.indices) {
-                lines[i] = lines[i].replaceGamePlaceholder(game)
+
+            for (k in lines.indices) {
+                lines[k] = lines[k].replaceGamePlaceholder(game)
             }
 
             holo.setLines(lines)

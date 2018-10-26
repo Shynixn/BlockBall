@@ -4,7 +4,6 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import org.bukkit.entity.Player
-import org.bukkit.util.Vector
 
 /**
  * Created by Shynixn 2018.

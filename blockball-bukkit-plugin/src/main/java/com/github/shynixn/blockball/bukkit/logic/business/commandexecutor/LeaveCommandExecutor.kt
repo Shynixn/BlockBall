@@ -44,11 +44,13 @@ class LeaveCommandExecutor @Inject constructor(plugin: Plugin, private val gameS
      */
     override fun onPlayerExecuteCommand(player: Player, args: Array<out String>) {
         val playerGame = gameService.getGameFromPlayer(player)
+
         if (playerGame.isPresent) {
             gameActionService.leaveGame(playerGame.get(), player)
         }
 
         val spectatorGame = gameService.getGameFromSpectatingPlayer(player)
+
         if (spectatorGame.isPresent) {
             gameActionService.leaveGame(spectatorGame.get(), player)
         }

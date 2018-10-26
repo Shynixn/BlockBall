@@ -6,7 +6,6 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toSingleLine
 import org.bukkit.ChatColor
-import org.bukkit.GameMode
 import org.bukkit.entity.Player
 
 /**
@@ -79,7 +78,7 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
         } else if (command == BlockBallCommand.GAMESETTINGS_LOBBYDURATION && args.size == 3 && args[2].toIntOrNull() != null) {
             arena.meta.minigameMeta.lobbyDuration = args[2].toInt()
         } else if (command == BlockBallCommand.GAMESETTINGS_CALLBACK_BUKKITGAMEMODES && args.size == 3 && args[2].toIntOrNull() != null) {
-            arena.meta.lobbyMeta.gamemode = GameMode.values()[args[2].toInt()]
+            arena.meta.lobbyMeta.gamemode = com.github.shynixn.blockball.api.business.enumeration.GameMode.values()[args[2].toInt()]
         } else if (command == BlockBallCommand.GAMESETTINGS_REMAININGPLAYERSMESSAGE && args.size > 3) {
             arena.meta.minigameMeta.playersRequiredToStartMessage = mergeArgs(2, args)
         }
@@ -115,7 +114,7 @@ class GameSettingsPage : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMESETTINGS_LEAVESPAWNPOINT.command)
                 .setHoverText("Sets the spawnpoint for people who leave the match.")
                 .builder().nextLine()
-                .component("- Gamemode: " + (arena.meta.lobbyMeta.gamemode as GameMode).name).builder()
+                .component("- Gamemode: " + arena.meta.lobbyMeta.gamemode.name).builder()
                 .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BUKKITGAMESMODES.command)
                 .setHoverText("Minecraft gamemode (Survival, Adventure, Creative) the players will be inside of a game.")

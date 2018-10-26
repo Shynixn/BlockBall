@@ -10,10 +10,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.GameStorage
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
-import com.github.shynixn.blockball.bukkit.logic.business.extension.updateInventory
+import com.github.shynixn.blockball.bukkit.logic.business.extension.*
 import com.github.shynixn.blockball.core.logic.persistence.entity.GameStorageEntity
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -320,7 +317,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
         player.foodLevel = 20
         player.level = 0
         player.exp = 0.0F
-        player.gameMode = game.arena.meta.lobbyMeta.gamemode as GameMode
+        player.gameMode = game.arena.meta.lobbyMeta.gamemode.toGameMode()
 
         player.inventory.armorContents = arrayOfNulls(4)
         player.inventory.clear()

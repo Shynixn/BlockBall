@@ -29,6 +29,11 @@ package com.github.shynixn.blockball.api.business.enumeration
  */
 enum class GameMode {
     /**
+     * Creates gamemode.
+     */
+    CREATIVE,
+
+    /**
      * Survival gamemode.
      */
     SURVIVAL,

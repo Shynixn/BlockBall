@@ -10,7 +10,6 @@ import com.github.shynixn.blockball.core.logic.persistence.entity.ParticleEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.SoundEntity
 import com.google.inject.Inject
 import org.bukkit.configuration.Configuration
-import org.bukkit.configuration.serialization.ConfigurationSerializable
 import org.bukkit.plugin.Plugin
 import java.io.File
 import java.util.logging.Level
@@ -99,10 +98,6 @@ class ArenaFileRepository @Inject constructor(private val plugin: Plugin, privat
      * Saves the given [arena] to the storage.
      */
     override fun save(arena: Arena) {
-        if (arena !is ConfigurationSerializable) {
-            throw IllegalArgumentException("Arena has to implement Configuration Seralizeable!")
-        }
-
         val file = File(this.getFolder(), "arena_" + arena.name + ".yml")
 
         if (file.exists()) {
@@ -112,7 +107,7 @@ class ArenaFileRepository @Inject constructor(private val plugin: Plugin, privat
         }
 
         fileContext.saveAndCreateYamlFile<Configuration>(file.toPath()) { configuration ->
-            val data = arena.serialize()
+            val data = YamlSerializer.serialize(arena)
             for (key in data.keys) {
                 configuration.set("arena.$key", data[key])
             }

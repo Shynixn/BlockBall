@@ -60,7 +60,7 @@ class LobbyMetaEntity : LobbyMeta {
     override var leaveSpawnpoint: Position? = null
     /** Minecraft gamemode (Survival, Adventure, Creative) the players should be */
     @YamlSerialize(orderNumber = 6, value = "gamemode", implementation = GameMode::class)
-    override var gamemode: Enum<*> = GameMode.ADVENTURE
+    override var gamemode: GameMode = GameMode.ADVENTURE
 
     @YamlSerialize(orderNumber = 7, value = "signs")
     private val sign: SignCollection = SignCollection()

@@ -1,6 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.extension;
 
+import com.github.shynixn.blockball.api.business.annotation.YamlSerialize;
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType;
+import com.github.shynixn.blockball.api.business.enumeration.SerializationType;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
@@ -43,29 +45,6 @@ public final class YamlSerializer {
      */
     private YamlSerializer() {
         super();
-    }
-
-    /**
-     * Annotation for fields to get serialized and deSerialized
-     */
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface YamlSerialize {
-        String value();
-
-        int orderNumber() default 0;
-
-        ManualSerialization classicSerialize() default ManualSerialization.NONE;
-
-        Class<?> implementation() default Object.class;
-
-        int arraySize() default -1;
-    }
-
-    public enum ManualSerialization {
-        NONE,
-        CONSTRUCTOR,
-        DESERIALIZE_FUNCTION
     }
 
     /**
@@ -278,7 +257,7 @@ public final class YamlSerializer {
 
             if (data.get(key) == null) {
                 objects[orderPlace] = null;
-            } else if (annotation.classicSerialize() == ManualSerialization.DESERIALIZE_FUNCTION) {
+            } else if (annotation.serializationType() == SerializationType.DESERIALIZE_FUNCTION) {
                 objects[orderPlace] = (T) deserializeObjectBukkit(annotation.implementation(), ((MemorySection) data.get(key)).getValues(false));
             } else if (isPrimitive(data.get(key).getClass())) {
                 objects[orderPlace] = (T) data.get(key);
@@ -341,7 +320,7 @@ public final class YamlSerializer {
             } else {
                 try {
                     String entityName = clazz.getSimpleName() + "Entity";
-                    Class<?> helperClazz = Class.forName("com.github.shynixn.blockball.bukkit.logic.persistence.entity." + entityName);
+                    Class<?> helperClazz = Class.forName("com.github.shynixn.blockball.core.logic.persistence.entity." + entityName);
                     return (T) deserializeObject(helperClazz, instanceClazz, dataSource);
                 } catch (final ClassNotFoundException ex) {
                     throw new IllegalArgumentException("Cannot instantiate interface. Change your object fields! [" + clazz.getSimpleName() + ']', ex);
@@ -404,9 +383,9 @@ public final class YamlSerializer {
                             } else if (Map.class.isAssignableFrom(field.getType())) {
                                 field.set(object, deserializeMap(getTypeFromHeavyField(field, 1), getTypeFromHeavyField(field, 0), (Class<Map>) field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                             } else {
-                                if (yamlAnnotation.classicSerialize() == ManualSerialization.CONSTRUCTOR) {
+                                if (yamlAnnotation.serializationType() == SerializationType.CONSTRUCTOR) {
                                     field.set(object, deserializeObjectClassic(field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
-                                } else if (yamlAnnotation.classicSerialize() == ManualSerialization.DESERIALIZE_FUNCTION) {
+                                } else if (yamlAnnotation.serializationType() == SerializationType.DESERIALIZE_FUNCTION) {
                                     field.set(object, deserializeObjectBukkit(field.getType(), ((MemorySection) data.get(yamlAnnotation.value())).getValues(false)));
                                 } else {
                                     if (field.get(object) != null) {
