@@ -114,6 +114,9 @@ class ArenaFileRepository @Inject constructor(private val plugin: Plugin, privat
         }
     }
 
+    /**
+     * Gets the arena folder and recreates it if it does not exist.
+     */
     private fun getFolder(): File {
         val file = File(this.plugin.dataFolder, "arena")
         if (!file.exists()) {
