@@ -1,8 +1,5 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
-import com.github.shynixn.blockball.api.business.enumeration.ParticleColor
-import com.github.shynixn.blockball.api.business.enumeration.ParticleType
-
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -30,59 +27,17 @@ import com.github.shynixn.blockball.api.business.enumeration.ParticleType
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Particle {
+interface Offset {
     /**
-     * Color of the particle effect.
+     * Offset x.
      */
-    var color: ParticleColor
-
+    var x: Double
     /**
-     * RGB Color code of red.
+     * Offset y.
      */
-    var colorRed: Int
-
+    var y: Double
     /**
-     * RGB Color code of green.
+     * Offset z.
      */
-    var colorGreen: Int
-
-    /**
-     * RGB Color code of blue.
-     */
-    var colorBlue: Int
-
-    /**
-     * Custom note color code.
-     */
-    var noteColor: Int
-
-    /**
-     * Amount of particles.
-     */
-    var amount: Int
-
-    /**
-     * Particle speed.
-     */
-    var speed: Double
-
-    /**
-     * Offset for particle.
-     */
-    var offset: Offset
-
-    /**
-     * Type of the particle.
-     */
-    var type: ParticleType
-
-    /**
-     * Material value.
-     */
-    var materialName: String?
-
-    /**
-     * Data value.
-     */
-    var data: Int
+    var z: Double
 }

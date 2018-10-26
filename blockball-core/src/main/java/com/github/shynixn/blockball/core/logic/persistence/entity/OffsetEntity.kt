@@ -1,7 +1,7 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.core.logic.persistence.entity
 
-import com.github.shynixn.blockball.api.business.enumeration.ParticleColor
-import com.github.shynixn.blockball.api.business.enumeration.ParticleType
+import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
+import com.github.shynixn.blockball.api.persistence.entity.Offset
 
 /**
  * Created by Shynixn 2018.
@@ -30,59 +30,22 @@ import com.github.shynixn.blockball.api.business.enumeration.ParticleType
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Particle {
+class OffsetEntity : Offset {
     /**
-     * Color of the particle effect.
+     * Offset x.
      */
-    var color: ParticleColor
+    @YamlSerialize(value = "x", orderNumber = 1)
+    override var x: Double = 1.0
 
     /**
-     * RGB Color code of red.
+     * Offset y.
      */
-    var colorRed: Int
+    @YamlSerialize(value = "y", orderNumber = 2)
+    override var y: Double = 1.0
 
     /**
-     * RGB Color code of green.
+     * Offset z.
      */
-    var colorGreen: Int
-
-    /**
-     * RGB Color code of blue.
-     */
-    var colorBlue: Int
-
-    /**
-     * Custom note color code.
-     */
-    var noteColor: Int
-
-    /**
-     * Amount of particles.
-     */
-    var amount: Int
-
-    /**
-     * Particle speed.
-     */
-    var speed: Double
-
-    /**
-     * Offset for particle.
-     */
-    var offset: Offset
-
-    /**
-     * Type of the particle.
-     */
-    var type: ParticleType
-
-    /**
-     * Material value.
-     */
-    var materialName: String?
-
-    /**
-     * Data value.
-     */
-    var data: Int
+    @YamlSerialize(value = "z", orderNumber = 3)
+    override var z: Double = 1.0
 }

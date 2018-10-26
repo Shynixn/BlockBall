@@ -305,7 +305,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         game.holograms.forEachIndexed { i, holo ->
             val players = ArrayList(game.inTeamPlayers)
             val additionalPlayers = getAdditionalNotificationPlayers(game)
-            players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+            players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
 
             players.forEach { p ->
                 holo.addWatcher(p)
@@ -336,7 +336,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
                 val players = ArrayList(game.inTeamPlayers)
                 val additionalPlayers = getAdditionalNotificationPlayers(game)
-                players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
 
                 val bossbarPlayers = bossBarService.getPlayers<Any, Player>(game.bossBar!!)
 
@@ -356,7 +356,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
                 val players = ArrayList(game.inTeamPlayers)
                 val additionalPlayers = getAdditionalNotificationPlayers(game)
-                players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
 
                 additionalPlayers.filter { p -> !p.second }.forEach { p ->
                     dependencyBossBarApiService.removeBossbarMessage(p.first)
@@ -397,7 +397,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
         val players = ArrayList(game.inTeamPlayers)
         val additionalPlayers = getAdditionalNotificationPlayers(game)
-        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+        players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
 
         additionalPlayers.filter { p -> !p.second }.forEach { p ->
             if (p.first.scoreboard == game.scoreboard) {

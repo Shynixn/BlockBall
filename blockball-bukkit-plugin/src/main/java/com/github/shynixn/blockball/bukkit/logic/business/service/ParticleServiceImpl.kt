@@ -99,7 +99,7 @@ class ParticleServiceImpl @Inject constructor(private val itemService: ItemServi
 
             findClazz("net.minecraft.server.VERSION.PacketPlayOutWorldParticles")
                     .getDeclaredConstructor(particleParamClazz, Boolean::class.java, Float::class.java, Float::class.java, Float::class.java, Float::class.java, Float::class.java, Float::class.java, Float::class.java, Int::class.java)
-                    .newInstance(internalParticleType, isLongDistance(location, targets), location.x.toFloat(), location.y.toFloat(), location.z.toFloat(), particle.offSetX.toFloat(), particle.offSetY.toFloat(), particle.offSetZ.toFloat(), particle.speed.toFloat(), particle.amount)
+                    .newInstance(internalParticleType, isLongDistance(location, targets), location.x.toFloat(), location.y.toFloat(), location.z.toFloat(), particle.offset.x.toFloat(), particle.offset.y.toFloat(), particle.offset.z.toFloat(), particle.speed.toFloat(), particle.amount)
         } else {
             var additionalPayload: IntArray? = null
 
@@ -124,7 +124,7 @@ class ParticleServiceImpl @Inject constructor(private val itemService: ItemServi
 
                 val constructor = Class.forName("net.minecraft.server.VERSION.PacketPlayOutWorldParticles".replace("VERSION", version.versionText))
                         .getDeclaredConstructor(internalParticleType.javaClass, Boolean::class.javaPrimitiveType, Float::class.javaPrimitiveType, Float::class.javaPrimitiveType, Float::class.javaPrimitiveType, Float::class.javaPrimitiveType, Float::class.javaPrimitiveType, Float::class.javaPrimitiveType, Float::class.javaPrimitiveType, Int::class.javaPrimitiveType, IntArray::class.java)
-                constructor.newInstance(internalParticleType, isLongDistance(location, targets), location.x.toFloat(), location.y.toFloat(), location.z.toFloat(), particle.offSetX.toFloat(), particle.offSetY.toFloat(), particle.offSetZ.toFloat(), particle.speed.toFloat(), particle.amount, additionalPayload)
+                constructor.newInstance(internalParticleType, isLongDistance(location, targets), location.x.toFloat(), location.y.toFloat(), location.z.toFloat(), particle.offset.x.toFloat(), particle.offset.y.toFloat(), particle.offset.z.toFloat(), particle.speed.toFloat(), particle.amount, additionalPayload)
             }
         }
 

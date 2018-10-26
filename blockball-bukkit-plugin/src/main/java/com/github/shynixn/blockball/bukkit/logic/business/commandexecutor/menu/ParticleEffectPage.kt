@@ -76,13 +76,13 @@ class ParticleEffectPage : Page(ParticleEffectPage.ID, MainConfigurationPage.ID)
             particleEffect.speed = args[2].toDouble()
         } else if (command == BlockBallCommand.PARTICLE_OFFSET_X && args[2].toDoubleOrNull() != null) {
             val particleEffect = cache[5] as Particle
-            particleEffect.offSetX = (args[2].toDouble())
+            particleEffect.offset.x = (args[2].toDouble())
         } else if (command == BlockBallCommand.PARTICLE_OFFSET_Y && args[2].toDoubleOrNull() != null) {
             val particleEffect = cache[5] as Particle
-            particleEffect.offSetY = (args[2].toDouble())
+            particleEffect.offset.y = (args[2].toDouble())
         } else if (command == BlockBallCommand.PARTICLE_OFFSET_Z && args[2].toDoubleOrNull() != null) {
             val particleEffect = cache[5] as Particle
-            particleEffect.offSetZ = (args[2].toDouble())
+            particleEffect.offset.z = (args[2].toDouble())
         }
         return super.execute(player, command, cache, args)
     }
@@ -110,17 +110,17 @@ class ParticleEffectPage : Page(ParticleEffectPage.ID, MainConfigurationPage.ID)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.PARTICLE_SPEED.command)
                 .setHoverText("Changes the speed of the particles.")
                 .builder().nextLine()
-                .component("- Offset X: " + particleEffect.offSetX).builder()
+                .component("- Offset X: " + particleEffect.offset.x).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.PARTICLE_OFFSET_X.command)
                 .setHoverText("Changes the offset X.")
                 .builder().nextLine()
-                .component("- Offset Y: " + particleEffect.offSetY).builder()
+                .component("- Offset Y: " + particleEffect.offset.y).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.PARTICLE_OFFSET_Y.command)
                 .setHoverText("Changes the offset Y.")
                 .builder().nextLine()
-                .component("- Offset Z: " + particleEffect.offSetZ).builder()
+                .component("- Offset Z: " + particleEffect.offset.z).builder()
                 .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
                 .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.PARTICLE_OFFSET_Z.command)
                 .setHoverText("Changes the offset Z.")

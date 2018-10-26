@@ -4,6 +4,7 @@ package com.github.shynixn.blockball.core.logic.persistence.entity
 
 import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
+import com.github.shynixn.blockball.api.business.enumeration.SerializationType
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 
@@ -85,10 +86,10 @@ class TeamMetaEntity(
     @YamlSerialize(orderNumber = 13, value = "lines")
     override var signLines: List<String> = arrayListOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, PlaceHolder.ARENA_TEAMCOLOR.placeHolder + PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder + '/' + PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder)
     /** Armor wearing this team. */
-    @YamlSerialize(orderNumber = 8, value = "armor", arraySize = 4)
+    @YamlSerialize(orderNumber = 8, value = "armor", arraySize = 4, serializationType = SerializationType.DESERIALIZE_FUNCTION)
     override var armorContents: Array<Any?> = arrayOfNulls(41)
     /** Inventory this team is getting when playing. */
-    @YamlSerialize(orderNumber = 9, value = "inventory", arraySize = 36)
+    @YamlSerialize(orderNumber = 9, value = "inventory", arraySize = 36, serializationType = SerializationType.DESERIALIZE_FUNCTION)
     override var inventoryContents: Array<Any?> = arrayOfNulls(41)
     /** Spawnpoint of the team inside of the arena. */
     @YamlSerialize(orderNumber = 6, value = "spawnpoint", implementation = PositionEntity::class)

@@ -56,8 +56,8 @@ class DoubleJumpMetaEntity : DoubleJumpMeta {
     init {
         particleEffect.amount = 4
         particleEffect.speed = 0.0002
-        particleEffect.offSetX = 2.0
-        particleEffect.offSetY = 2.0
-        particleEffect.offSetZ = 2.0
+        particleEffect.offset.x = 2.0
+        particleEffect.offset.y = 2.0
+        particleEffect.offset.z = 2.0
     }
 }

@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.business.enumeration.ParticleType;
 import com.github.shynixn.blockball.api.business.enumeration.SerializationType;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.annotation.*;
 import java.lang.reflect.*;
@@ -409,10 +410,7 @@ public final class YamlSerializer {
     }
 
     private static Object deserializeObjectBukkit(Class<?> clazz, Map<String, Object> internal) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        final Method method = clazz.getMethod("deserialize", Map.class);
-        if (method == null)
-            throw new IllegalArgumentException("static deserialize(Map) not found for bukkit deserialization.");
-        return method.invoke(null, internal);
+        return ItemStack.deserialize(internal);
     }
 
     private static Object deserializeObjectClassic(Class<?> clazz, Map<String, Object> internal) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {

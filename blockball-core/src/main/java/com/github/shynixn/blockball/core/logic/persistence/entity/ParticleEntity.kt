@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.core.logic.persistence.entity
 import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
 import com.github.shynixn.blockball.api.business.enumeration.ParticleColor
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
+import com.github.shynixn.blockball.api.persistence.entity.Offset
 import com.github.shynixn.blockball.api.persistence.entity.Particle
 
 /**
@@ -52,37 +53,26 @@ class ParticleEntity(
     /**
      * Offset for the x coordinate.
      */
-    @YamlSerialize(value = "offset.x", orderNumber = 4)
-    override var offSetX: Double = 1.0
-    /**
-     * Offset for the y coordinate.
-     */
-    @YamlSerialize(value = "offset.y", orderNumber = 5)
-    override var offSetY: Double = 1.0
-    /**
-     * Offset for the z coordinate.
-     */
-    @YamlSerialize(value = "offset.u", orderNumber = 6)
-    override var offSetZ: Double = 1.0
-
+    @YamlSerialize(value = "offset", orderNumber = 4, implementation = OffsetEntity::class)
+    override var offset: Offset = OffsetEntity()
     /**
      * Material value.
      */
-    @YamlSerialize(value = "material", orderNumber = 7)
+    @YamlSerialize(value = "material", orderNumber = 5)
     override var materialName: String? = null
     /**
      * Data value.
      */
-    @YamlSerialize(value = "data", orderNumber = 8)
+    @YamlSerialize(value = "data", orderNumber = 6)
     override var data: Int = 0
 
     /**
      * Custom note color code.
      */
     override var noteColor: Int
-        get() = this.offSetX.toInt()
+        get() = this.offset.x.toInt()
         set(value) {
-            this.offSetX = value.toDouble()
+            this.offset.x = value.toDouble()
         }
 
     /**
@@ -100,25 +90,25 @@ class ParticleEntity(
      * RGB Color code of red.
      */
     override var colorRed: Int
-        get() = this.offSetX.toInt()
+        get() = this.offset.x.toInt()
         set(value) {
-            this.offSetX = value.toDouble()
+            this.offset.x = value.toDouble()
         }
 
     /**
      * RGB Color code of green.
      */
     override var colorGreen: Int
-        get() = this.offSetY.toInt()
+        get() = this.offset.y.toInt()
         set(value) {
-            this.offSetY = value.toDouble()
+            this.offset.y = value.toDouble()
         }
     /**
      * RGB Color code of blue.
      */
     override var colorBlue: Int
-        get() = this.offSetZ.toInt()
+        get() = this.offset.z.toInt()
         set(value) {
-            this.offSetZ = value.toDouble()
+            this.offset.z = value.toDouble()
         }
 }

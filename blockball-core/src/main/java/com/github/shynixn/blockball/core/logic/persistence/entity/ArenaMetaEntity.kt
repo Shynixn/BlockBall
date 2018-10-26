@@ -92,9 +92,9 @@ class ArenaMetaEntity : ArenaMeta {
         partMetaSpawn.type = ParticleType.EXPLOSION_NORMAL
         partMetaSpawn.amount = 10
         partMetaSpawn.speed = 0.1
-        partMetaSpawn.offSetX = 2.0
-        partMetaSpawn.offSetY = 2.0
-        partMetaSpawn.offSetZ = 2.0
+        partMetaSpawn.offset.x = 2.0
+        partMetaSpawn.offset.y = 2.0
+        partMetaSpawn.offset.z = 2.0
 
         ballMeta.particleEffects[BallActionType.ONSPAWN] = partMetaSpawn
 
@@ -102,9 +102,9 @@ class ArenaMetaEntity : ArenaMeta {
         partMetaKick.type = (ParticleType.EXPLOSION_LARGE)
         partMetaKick.amount = 2
         partMetaKick.speed = 0.1
-        partMetaKick.offSetX = 0.1
-        partMetaKick.offSetY = 0.1
-        partMetaKick.offSetZ = 0.1
+        partMetaKick.offset.x = 0.1
+        partMetaKick.offset.y = 0.1
+        partMetaKick.offset.z = 0.1
 
         ballMeta.particleEffects[BallActionType.ONKICK] = partMetaKick
 
