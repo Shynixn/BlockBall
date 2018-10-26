@@ -9,6 +9,7 @@ import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.util.Vector
+import java.lang.reflect.Field
 import java.util.logging.Level
 
 /**
@@ -39,6 +40,34 @@ import java.util.logging.Level
  * SOFTWARE.
  */
 class BallHitBox(private val ballDesign: BallDesign, location: Location, private val timingService: SpigotTimingService) : EntityArmorStand((location.world as CraftWorld).handle) {
+    companion object {
+        private val axisAlignmentFields = arrayOfNulls<Field?>(5)
+
+        /**
+         * The name of the axis alignment fields changed from 1.13.1 to 1.13.2 but the
+         * NMS layer is still the same.
+         */
+        init {
+            try {
+                axisAlignmentFields[0] = AxisAlignedBB::class.java.getDeclaredField("minX")
+                axisAlignmentFields[1] = AxisAlignedBB::class.java.getDeclaredField("minY")
+                axisAlignmentFields[2] = AxisAlignedBB::class.java.getDeclaredField("minZ")
+                axisAlignmentFields[3] = AxisAlignedBB::class.java.getDeclaredField("maxX")
+                axisAlignmentFields[4] = AxisAlignedBB::class.java.getDeclaredField("maxZ")
+            } catch (ex: NoSuchFieldException) {
+                try {
+                    axisAlignmentFields[0] = AxisAlignedBB::class.java.getDeclaredField("a")
+                    axisAlignmentFields[1] = AxisAlignedBB::class.java.getDeclaredField("b")
+                    axisAlignmentFields[2] = AxisAlignedBB::class.java.getDeclaredField("c")
+                    axisAlignmentFields[3] = AxisAlignedBB::class.java.getDeclaredField("d")
+                    axisAlignmentFields[4] = AxisAlignedBB::class.java.getDeclaredField("f")
+                } catch (e: NoSuchFieldException) {
+                    throw RuntimeException("Fields could not get located.", e)
+                }
+            }
+        }
+    }
+
     /**
      * Initializes the hitbox.
      */
@@ -60,9 +89,16 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
      */
     override fun recalcPosition() {
         val axisBoundingBox = this.boundingBox
-        this.locX = (axisBoundingBox.a + axisBoundingBox.d) / 2.0
-        this.locY = axisBoundingBox.b + ballDesign.proxy.meta.hitBoxRelocation
-        this.locZ = (axisBoundingBox.c + axisBoundingBox.f) / 2.0
+
+        val minXA = axisAlignmentFields[0]!!.getDouble(axisBoundingBox)
+        val minXB = axisAlignmentFields[1]!!.getDouble(axisBoundingBox)
+        val minXC = axisAlignmentFields[2]!!.getDouble(axisBoundingBox)
+        val maxXD = axisAlignmentFields[3]!!.getDouble(axisBoundingBox)
+        val maxXF = axisAlignmentFields[4]!!.getDouble(axisBoundingBox)
+
+        this.locX = (minXA + maxXD) / 2.0
+        this.locY = minXB + ballDesign.proxy.meta.hitBoxRelocation
+        this.locZ = (minXC + maxXF) / 2.0
     }
 
     /**
