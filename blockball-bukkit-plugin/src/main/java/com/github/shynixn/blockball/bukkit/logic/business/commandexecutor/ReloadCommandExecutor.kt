@@ -49,6 +49,7 @@ class ReloadCommandExecutor @Inject constructor(plugin: Plugin, private val game
 
         plugin.reloadConfig()
         this.gameService.restartGames()
+
         if (sender is Player) {
             sender.sendMessage(prefix + ChatColor.GREEN + "Reloaded BlockBall.")
         } else {

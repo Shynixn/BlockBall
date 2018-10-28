@@ -49,5 +49,5 @@ interface Selection {
     /**
      * Sets the corners of the selection.
      */
-    fun <L> setCorners(corner1: L, corner2: L)
+    fun setCorners(corner1: Position, corner2: Position)
 }

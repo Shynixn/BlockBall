@@ -134,13 +134,6 @@ interface Game {
     var ballSpawnCounter: Int
 
     /**
-     * List of players in the world of this game which are not ingame
-     * with their boolean flag if they are nearby to receive notifications.
-     * Returns an empty list if notifying is disabled.
-     */
-    val notifiedPlayers: List<Pair<Any, Boolean>>
-
-    /**
      * All players which are already fix in team red.
      */
     val redTeam: List<Any>

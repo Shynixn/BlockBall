@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -22,7 +23,6 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.Scoreboard
-import org.bukkit.util.Vector
 import java.util.logging.Level
 
 /**
@@ -283,8 +283,8 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
                 if (p !is Player && p !is ArmorStand && p !is Item && p !is ItemFrame) {
                     if (game.arena.isLocationInSelection(p.location)) {
                         val vector = game.arena.meta.protectionMeta.entityProtection
-                        p.location.direction = vector as Vector
-                        p.velocity = vector
+                        p.location.direction = vector.toVector()
+                        p.velocity = vector.toVector()
                     }
                 }
             }
@@ -305,7 +305,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         game.holograms.forEachIndexed { i, holo ->
             val players = ArrayList(game.inTeamPlayers)
             val additionalPlayers = getAdditionalNotificationPlayers(game)
-            players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+            players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
 
             players.forEach { p ->
                 holo.addWatcher(p)
@@ -316,8 +316,9 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
             }
 
             val lines = ArrayList(game.arena.meta.hologramMetas[i].lines)
-            for (i in lines.indices) {
-                lines[i] = lines[i].replaceGamePlaceholder(game)
+
+            for (k in lines.indices) {
+                lines[k] = lines[k].replaceGamePlaceholder(game)
             }
 
             holo.setLines(lines)
@@ -335,7 +336,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
                 val players = ArrayList(game.inTeamPlayers)
                 val additionalPlayers = getAdditionalNotificationPlayers(game)
-                players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
 
                 val bossbarPlayers = bossBarService.getPlayers<Any, Player>(game.bossBar!!)
 
@@ -355,7 +356,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
                 val players = ArrayList(game.inTeamPlayers)
                 val additionalPlayers = getAdditionalNotificationPlayers(game)
-                players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
 
                 additionalPlayers.filter { p -> !p.second }.forEach { p ->
                     dependencyBossBarApiService.removeBossbarMessage(p.first)
@@ -396,7 +397,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
         val players = ArrayList(game.inTeamPlayers)
         val additionalPlayers = getAdditionalNotificationPlayers(game)
-        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+        players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
 
         additionalPlayers.filter { p -> !p.second }.forEach { p ->
             if (p.first.scoreboard == game.scoreboard) {

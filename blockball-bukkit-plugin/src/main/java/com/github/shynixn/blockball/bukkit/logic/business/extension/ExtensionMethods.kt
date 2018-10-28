@@ -3,13 +3,15 @@
 package com.github.shynixn.blockball.bukkit.logic.business.extension
 
 import com.github.shynixn.blockball.api.business.enumeration.*
+import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PositionEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import org.bukkit.*
+import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
@@ -17,6 +19,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.util.Vector
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
 import java.lang.reflect.InvocationTargetException
 import java.util.*
@@ -333,8 +336,22 @@ internal fun Location.toPosition(): Position {
 }
 
 /**
+ * Converts the given gamemode to a bukkit gamemode.
+ */
+internal fun GameMode.toGameMode(): org.bukkit.GameMode {
+    return org.bukkit.GameMode.valueOf(this.name)
+}
+
+/**
  * Converts the given position to a bukkit Location.
  */
 internal fun Position.toLocation(): Location {
     return Location(Bukkit.getWorld(this.worldName), this.x, this.y, this.z, this.yaw.toFloat(), this.pitch.toFloat())
+}
+
+/**
+ * Converts the given position to a bukkit vector.
+ */
+internal fun Position.toVector(): Vector {
+    return Vector(this.x, this.y, this.z)
 }

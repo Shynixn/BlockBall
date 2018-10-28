@@ -5,14 +5,15 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.GameHubGameActionService
-import com.github.shynixn.blockball.api.business.service.ScreenMessageService
 import com.github.shynixn.blockball.api.persistence.entity.HubGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toGameMode
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.updateInventory
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.GameStorageEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.GameStorageEntity
 import com.google.inject.Inject
+import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -45,7 +46,7 @@ import org.bukkit.scoreboard.Scoreboard
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameHubGameActionServiceImpl @Inject constructor(configurationService: ConfigurationService, private val screenMessageService: ScreenMessageService) : GameHubGameActionService {
+class GameHubGameActionServiceImpl @Inject constructor(configurationService: ConfigurationService) : GameHubGameActionService {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
     /**
@@ -130,7 +131,7 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
     }
 
     private fun prepareLobbyStorageForPlayer(game: HubGame, player: Player, team: Team, teamMeta: TeamMeta) {
-        val stats = GameStorageEntity(player.uniqueId)
+        val stats = GameStorageEntity(player.uniqueId, Bukkit.getScoreboardManager().newScoreboard)
 
         with(stats) {
             this.team = team
@@ -150,7 +151,7 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
 
         game.ingamePlayersStorage[player] = stats
 
-        player.gameMode = game.arena.meta.lobbyMeta.gamemode as GameMode
+        player.gameMode = game.arena.meta.lobbyMeta.gamemode.toGameMode()
         player.allowFlight = false
         player.isFlying = false
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()

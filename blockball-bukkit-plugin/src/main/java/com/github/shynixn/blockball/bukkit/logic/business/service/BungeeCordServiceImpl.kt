@@ -11,7 +11,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.async
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.thenAcceptSafely
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.BungeeCordServerStatusEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.BungeeCordServerStatusEntity
 import com.google.common.io.ByteStreams
 import com.google.inject.Inject
 import org.bukkit.Bukkit

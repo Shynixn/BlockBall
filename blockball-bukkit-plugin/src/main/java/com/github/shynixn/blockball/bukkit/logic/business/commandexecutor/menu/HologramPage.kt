@@ -5,7 +5,7 @@ import com.github.shynixn.blockball.api.persistence.entity.HologramMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toSingleLine
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.HologramMetaEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.HologramMetaEntity
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 

@@ -67,19 +67,9 @@ interface Particle {
     var speed: Double
 
     /**
-     * Offset for the x coordinate.
+     * Offset for particle.
      */
-    var offSetX: Double
-
-    /**
-     * Offset for the y coordinate.
-     */
-    var offSetY: Double
-
-    /**
-     * Offset for the z coordinate.
-     */
-    var offSetZ: Double
+    var offset: Offset
 
     /**
      * Type of the particle.

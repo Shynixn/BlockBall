@@ -6,8 +6,8 @@ import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.SoundService
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.logic.business.service.DoubleJumpServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.DoubleJumpMetaEntity
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.GameEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.DoubleJumpMetaEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.GameEntity
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Player

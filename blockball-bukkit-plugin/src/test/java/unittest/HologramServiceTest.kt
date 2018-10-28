@@ -4,8 +4,8 @@ import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.HologramProxy
 import com.github.shynixn.blockball.api.business.service.HologramService
 import com.github.shynixn.blockball.bukkit.logic.business.service.HologramServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.HologramMetaEntity
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PositionEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.HologramMetaEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import org.bukkit.Bukkit
 import org.bukkit.Server
 import org.bukkit.World

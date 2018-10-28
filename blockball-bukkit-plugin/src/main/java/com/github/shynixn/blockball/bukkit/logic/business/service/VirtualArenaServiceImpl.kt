@@ -6,7 +6,7 @@ import com.github.shynixn.blockball.api.business.service.VirtualArenaService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.ParticleEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.ParticleEntity
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -56,10 +56,10 @@ class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin, pr
         particle.amount = 20
         particle.speed = 0.02
 
-        plugin.server.scheduler.runTaskAsynchronously(plugin, {
+        plugin.server.scheduler.runTaskAsynchronously(plugin) {
             displayParticles(player, particle, arena.meta.redTeamMeta.goal.lowerCorner, arena.meta.redTeamMeta.goal.upperCorner)
             displayParticles(player, particle, arena.meta.blueTeamMeta.goal.lowerCorner, arena.meta.blueTeamMeta.goal.upperCorner)
-        })
+        }
     }
 
     /**

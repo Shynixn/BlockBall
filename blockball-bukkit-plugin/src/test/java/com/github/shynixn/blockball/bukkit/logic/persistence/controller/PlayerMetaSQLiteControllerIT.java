@@ -2,8 +2,8 @@ package com.github.shynixn.blockball.bukkit.logic.persistence.controller;
 
 import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta;
 import com.github.shynixn.blockball.bukkit.logic.persistence.context.SqlDbContextImpl;
-import com.github.shynixn.blockball.bukkit.logic.persistence.entity.PlayerMetaEntity;
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository;
+import com.github.shynixn.blockball.core.logic.persistence.entity.PlayerMetaEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import com.github.shynixn.blockball.api.business.enumeration.GameMode
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -50,5 +52,5 @@ interface LobbyMeta {
     var onlyAllowEventTeams: Boolean
 
     /** Minecraft gamemode (Survival, Adventure, Creative) the players should be */
-    var gamemode: Enum<*>
+    var gamemode: GameMode
 }
