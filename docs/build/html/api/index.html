@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Developer API &mdash; BlockBall 6.1.1 documentation</title>
+  <title>Developer API &mdash; BlockBall 6.2.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.1.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.2.0 documentation" href="../index.html"/>
         <link rel="next" title="FAQ" href="../faq/index.html"/>
         <link rel="prev" title="Datacollecting" href="../general/datacollecting.html"/> 
 
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                6.1.1
+                6.2.0
               </div>
             
           
@@ -195,13 +195,13 @@
 &lt;dependency&gt;
     &lt;groupId&gt;com.github.shynixn.blockball&lt;/groupId&gt;
     &lt;artifactId&gt;blockball-api&lt;/artifactId&gt;
-    &lt;version&gt;6.1.1&lt;/version&gt;
+    &lt;version&gt;6.2.0&lt;/version&gt;
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;com.github.shynixn.blockball&lt;/groupId&gt;
     &lt;artifactId&gt;blockball-bukkit-api&lt;/artifactId&gt;
-    &lt;version&gt;6.1.1&lt;/version&gt;
+    &lt;version&gt;6.2.0&lt;/version&gt;
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;
 </pre>
@@ -211,8 +211,8 @@
 </div>
 <pre class="literal-block">
 dependencies {
-    compileOnly 'com.github.shynixn.blockball:blockball-api:6.1.1'
-    compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:6.1.1'
+    compileOnly 'com.github.shynixn.blockball:blockball-api:6.2.0'
+    compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:6.2.0'
 }
 </pre>
 </div>
@@ -319,7 +319,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <h2>Contributing and setting up your workspace<a class="headerlink" href="#contributing-and-setting-up-your-workspace" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">BlockBall is <strong>partially</strong> written in <a class="reference external" href="https://kotlinlang.org/">Kotlin</a> instead of pure Java. If you are not familiar with Kotlin, modifying BlockBall might be a difficult task.</p>
+<p class="last">BlockBall is written in <a class="reference external" href="https://kotlinlang.org/">Kotlin</a> instead of pure Java. If you are not familiar with Kotlin, modifying BlockBall might be a difficult task.</p>
 </div>
 <ul class="simple">
 <li>Fork the BlockBall project on github and clone it to your local environment.</li>
@@ -334,7 +334,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <span class="o">-</span> <span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="n">BuildTools</span><span class="o">.</span><span class="na">jar</span> <span class="o">--</span><span class="n">rev</span> <span class="mf">1.11</span>
 <span class="o">-</span> <span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="n">BuildTools</span><span class="o">.</span><span class="na">jar</span> <span class="o">--</span><span class="n">rev</span> <span class="mf">1.12</span>
 <span class="o">-</span> <span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="n">BuildTools</span><span class="o">.</span><span class="na">jar</span> <span class="o">--</span><span class="n">rev</span> <span class="mf">1.13</span>
-<span class="o">-</span> <span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="n">BuildTools</span><span class="o">.</span><span class="na">jar</span> <span class="o">--</span><span class="n">rev</span> <span class="mf">1.13.1</span>
+<span class="o">-</span> <span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="n">BuildTools</span><span class="o">.</span><span class="na">jar</span> <span class="o">--</span><span class="n">rev</span> <span class="mf">1.13.2</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -349,7 +349,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <span class="o">-</span> <span class="n">mvn</span> <span class="n">install</span><span class="o">:</span><span class="n">install</span><span class="o">-</span><span class="n">file</span> <span class="o">-</span><span class="n">Dfile</span><span class="o">=</span><span class="n">spigot</span><span class="o">-</span><span class="mf">1.11</span><span class="o">.</span><span class="na">jar</span> <span class="o">-</span><span class="n">DgroupId</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">spigotmc</span> <span class="o">-</span><span class="n">DartifactId</span><span class="o">=</span><span class="n">spigot111R1</span> <span class="o">-</span><span class="n">Dversion</span><span class="o">=</span><span class="mf">1.11.0</span><span class="o">-</span><span class="n">R1</span><span class="mf">.0</span> <span class="o">-</span><span class="n">Dpackaging</span><span class="o">=</span><span class="n">jar</span>
 <span class="o">-</span> <span class="n">mvn</span> <span class="n">install</span><span class="o">:</span><span class="n">install</span><span class="o">-</span><span class="n">file</span> <span class="o">-</span><span class="n">Dfile</span><span class="o">=</span><span class="n">spigot</span><span class="o">-</span><span class="mf">1.12</span><span class="o">.</span><span class="na">jar</span> <span class="o">-</span><span class="n">DgroupId</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">spigotmc</span> <span class="o">-</span><span class="n">DartifactId</span><span class="o">=</span><span class="n">spigot112R1</span> <span class="o">-</span><span class="n">Dversion</span><span class="o">=</span><span class="mf">1.12.0</span><span class="o">-</span><span class="n">R1</span><span class="mf">.0</span> <span class="o">-</span><span class="n">Dpackaging</span><span class="o">=</span><span class="n">jar</span>
 <span class="o">-</span> <span class="n">mvn</span> <span class="n">install</span><span class="o">:</span><span class="n">install</span><span class="o">-</span><span class="n">file</span> <span class="o">-</span><span class="n">Dfile</span><span class="o">=</span><span class="n">spigot</span><span class="o">-</span><span class="mf">1.13</span><span class="o">.</span><span class="na">jar</span> <span class="o">-</span><span class="n">DgroupId</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">spigotmc</span> <span class="o">-</span><span class="n">DartifactId</span><span class="o">=</span><span class="n">spigot113R1</span> <span class="o">-</span><span class="n">Dversion</span><span class="o">=</span><span class="mf">1.13.0</span><span class="o">-</span><span class="n">R1</span><span class="mf">.0</span> <span class="o">-</span><span class="n">Dpackaging</span><span class="o">=</span><span class="n">jar</span>
-<span class="o">-</span> <span class="n">mvn</span> <span class="n">install</span><span class="o">:</span><span class="n">install</span><span class="o">-</span><span class="n">file</span> <span class="o">-</span><span class="n">Dfile</span><span class="o">=</span><span class="n">spigot</span><span class="o">-</span><span class="mf">1.13.1</span><span class="o">.</span><span class="na">jar</span> <span class="o">-</span><span class="n">DgroupId</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">spigotmc</span> <span class="o">-</span><span class="n">DartifactId</span><span class="o">=</span><span class="n">spigot113R2</span> <span class="o">-</span><span class="n">Dversion</span><span class="o">=</span><span class="mf">1.13.1</span><span class="o">-</span><span class="n">R2</span><span class="mf">.0</span> <span class="o">-</span><span class="n">Dpackaging</span><span class="o">=</span><span class="n">jar</span>
+<span class="o">-</span> <span class="n">mvn</span> <span class="n">install</span><span class="o">:</span><span class="n">install</span><span class="o">-</span><span class="n">file</span> <span class="o">-</span><span class="n">Dfile</span><span class="o">=</span><span class="n">spigot</span><span class="o">-</span><span class="mf">1.13.2</span><span class="o">.</span><span class="na">jar</span> <span class="o">-</span><span class="n">DgroupId</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">spigotmc</span> <span class="o">-</span><span class="n">DartifactId</span><span class="o">=</span><span class="n">spigot113R2</span> <span class="o">-</span><span class="n">Dversion</span><span class="o">=</span><span class="mf">1.13.2</span><span class="o">-</span><span class="n">R2</span><span class="mf">.0</span> <span class="o">-</span><span class="n">Dpackaging</span><span class="o">=</span><span class="n">jar</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -402,7 +402,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.1.1',
+            VERSION:'6.2.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

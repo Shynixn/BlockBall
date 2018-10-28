@@ -69,6 +69,7 @@
                             <outputDir>{project.basedir}/../docs/apidocs</outputDir>
                             <sourceDirectories>
                                 <dir>{project.basedir}/../blockball-api/src/main/java</dir>
+                                <dir>{project.basedir}/../blockball-core/src/main/java</dir>
                                 <dir>{project.basedir}/../blockball-bukkit-api/src/main/java</dir>
                                 <dir>{project.basedir}/../blockball-bukkit-plugin/src/main/java</dir>
                             </sourceDirectories>

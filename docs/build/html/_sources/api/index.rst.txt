@@ -136,7 +136,7 @@ There are many BlockBall events in order to listen to actions. Please take a loo
 Contributing and setting up your workspace
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. warning:: BlockBall is **partially** written in `Kotlin <https://kotlinlang.org/>`__ instead of pure Java. If you are not familiar with Kotlin, modifying BlockBall might be a difficult task.
+.. warning:: BlockBall is written in `Kotlin <https://kotlinlang.org/>`__ instead of pure Java. If you are not familiar with Kotlin, modifying BlockBall might be a difficult task.
 
 * Fork the BlockBall project on github and clone it to your local environment.
 
@@ -153,7 +153,7 @@ Contributing and setting up your workspace
     - java -jar BuildTools.jar --rev 1.11
     - java -jar BuildTools.jar --rev 1.12
     - java -jar BuildTools.jar --rev 1.13
-    - java -jar BuildTools.jar --rev 1.13.1
+    - java -jar BuildTools.jar --rev 1.13.2
 
 * Install the created libraries to your local maven repository.
 
@@ -168,7 +168,7 @@ Contributing and setting up your workspace
     - mvn install:install-file -Dfile=spigot-1.11.jar -DgroupId=org.spigotmc -DartifactId=spigot111R1 -Dversion=1.11.0-R1.0 -Dpackaging=jar
     - mvn install:install-file -Dfile=spigot-1.12.jar -DgroupId=org.spigotmc -DartifactId=spigot112R1 -Dversion=1.12.0-R1.0 -Dpackaging=jar
     - mvn install:install-file -Dfile=spigot-1.13.jar -DgroupId=org.spigotmc -DartifactId=spigot113R1 -Dversion=1.13.0-R1.0 -Dpackaging=jar
-    - mvn install:install-file -Dfile=spigot-1.13.1.jar -DgroupId=org.spigotmc -DartifactId=spigot113R2 -Dversion=1.13.1-R2.0 -Dpackaging=jar
+    - mvn install:install-file -Dfile=spigot-1.13.2.jar -DgroupId=org.spigotmc -DartifactId=spigot113R2 -Dversion=1.13.2-R2.0 -Dpackaging=jar
 
 * Reimport the BlockBall maven project and execute 'mvn package' afterwards.
 
