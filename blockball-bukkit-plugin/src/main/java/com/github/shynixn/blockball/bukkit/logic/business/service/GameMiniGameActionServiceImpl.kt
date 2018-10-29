@@ -308,6 +308,11 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
             walkingSpeed = player.walkSpeed
             scoreboard = player.scoreboard
             inventoryContents = player.inventory?.contents?.clone() as Array<Any?>
+            level = player.level
+            exp = player.exp
+            maxHealth = player.maxHealth
+            health = player.health
+            hunger = player.foodLevel
         }
 
         player.allowFlight = false
