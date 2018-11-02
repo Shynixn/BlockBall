@@ -64,14 +64,4 @@ class LobbyMetaEntity : LobbyMeta {
 
     @YamlSerialize(orderNumber = 7, value = "signs")
     private val sign: SignCollection = SignCollection()
-
-    /** Helper class to wrap signs. */
-    private class SignCollection {
-        /** List of signs which can be clicked to join the game. */
-        @YamlSerialize(orderNumber = 1, value = "joining")
-        val joinSigns: MutableList<PositionEntity> = ArrayList()
-        /** List of signs which can be clicked to leave the game. */
-        @YamlSerialize(orderNumber = 2, value = "leaving")
-        val leaveSigns: MutableList<PositionEntity> = ArrayList()
-    }
 }

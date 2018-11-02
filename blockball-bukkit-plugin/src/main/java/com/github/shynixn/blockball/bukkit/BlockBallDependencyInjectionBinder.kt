@@ -18,6 +18,7 @@ import com.github.shynixn.blockball.bukkit.logic.persistence.repository.ArenaFil
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.ServerSignFileRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository
+import com.github.shynixn.blockball.core.logic.business.service.YamlSerializationServiceImpl
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
 import com.google.inject.TypeLiteral
@@ -92,6 +93,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(BungeeCordService::class.java).to(BungeeCordServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BallEntityService::class.java).to(BallEntityServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BlockSelectionService::class.java).to(BlockSelectionServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(YamlSerializationService::class.java).to(YamlSerializationServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         // Persistence Services
         bind(PersistenceLinkSignService::class.java).to(PersistenceLinkSignServiceImpl::class.java).`in`(Scopes.SINGLETON)

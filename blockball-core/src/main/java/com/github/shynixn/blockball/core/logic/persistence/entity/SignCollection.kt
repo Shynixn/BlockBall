@@ -1,7 +1,6 @@
-package com.github.shynixn.blockball.api.business.annotation
+package com.github.shynixn.blockball.core.logic.persistence.entity
 
-import com.github.shynixn.blockball.api.business.enumeration.SerializationType
-import kotlin.reflect.KClass
+import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
 
 /**
  * Created by Shynixn 2018.
@@ -30,24 +29,11 @@ import kotlin.reflect.KClass
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.FIELD)
-annotation class YamlSerialize(
-        /**
-         * Name of the target property.
-         */
-        val value: String,
-        /**
-         * Order number in the target file.
-         */
-        val orderNumber: Int,
-
-        /**
-         * Custom serialization class.
-         */
-        val customserializer: KClass<*> = Any::class,
-        /**
-         * Optional implementation of the class if the type is specified as interface.
-         */
-        val implementation: KClass<*> = Any::class
-)
+class SignCollection {
+    /** List of signs which can be clicked to join the game. */
+    @YamlSerialize(orderNumber = 1, value = "joining")
+    val joinSigns: MutableList<PositionEntity> = ArrayList()
+    /** List of signs which can be clicked to leave the game. */
+    @YamlSerialize(orderNumber = 2, value = "leaving")
+    val leaveSigns: MutableList<PositionEntity> = ArrayList()
+}

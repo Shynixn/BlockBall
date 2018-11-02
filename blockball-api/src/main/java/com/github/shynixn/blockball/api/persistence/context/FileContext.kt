@@ -35,7 +35,7 @@ interface FileContext {
      * Handles locking for asynchronous operations.
      * Creates the file if it does not already exist.
      */
-    fun loadOrCreateYamlFile(path: Path, yamlPath: String, deep: Boolean = false): Map<String, Any>
+    fun loadOrCreateYamlFile(path: Path, yamlPath: String): Map<String, Any?>
 
     /**
      * Executes the given function with the configuration for the given [path].

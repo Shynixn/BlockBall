@@ -12,6 +12,8 @@ import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import org.bukkit.*
 import org.bukkit.ChatColor
+import org.bukkit.configuration.MemorySection
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
@@ -66,6 +68,28 @@ inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long 
         plugin.server.scheduler.runTaskLater(plugin, {
             f.invoke()
         }, delayTicks)
+    }
+}
+
+/**
+ * Deserializes the configuraiton section path to a map.
+ */
+fun FileConfiguration.deserializeToMap(path: String): Map<String, Any?> {
+    val section = getConfigurationSection(path).getValues(false)
+    deserialize(section)
+    return section
+}
+
+/**
+ * Deserializes the given section.
+ */
+private fun deserialize(section: MutableMap<String, Any?>) {
+    section.keys.forEach { key ->
+        if (section[key] is MemorySection) {
+            val map = (section[key] as MemorySection).getValues(false)
+            deserialize(map)
+            section[key] = map
+        }
     }
 }
 

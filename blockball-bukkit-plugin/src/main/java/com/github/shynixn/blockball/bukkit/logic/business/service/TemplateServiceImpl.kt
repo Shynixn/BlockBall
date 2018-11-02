@@ -2,9 +2,10 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.PersistenceArenaService
 import com.github.shynixn.blockball.api.business.service.TemplateService
+import com.github.shynixn.blockball.api.business.service.YamlSerializationService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Template
-import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
+import com.github.shynixn.blockball.bukkit.logic.business.extension.deserializeToMap
 import com.github.shynixn.blockball.core.logic.persistence.entity.ArenaEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.TemplateEntity
@@ -43,7 +44,7 @@ import java.io.OutputStreamWriter
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, private val persistenceArenaService: PersistenceArenaService) : TemplateService {
+class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, private val yamlSerializationService: YamlSerializationService, private val persistenceArenaService: PersistenceArenaService) : TemplateService {
     private val templateNames = arrayOf("arena-de.yml", "arena-en.yml")
 
     /**
@@ -96,19 +97,19 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
             val file = File(plugin.dataFolder, "arena/" + template.name + ".yml")
             configuration.load(file)
 
-            val data = configuration.getConfigurationSection("arena").getValues(true)
-            YamlSerializer.deserializeObject(ArenaEntity::class.java, null, data)
+            val data = configuration.deserializeToMap("arena")
+            yamlSerializationService.deserialize(ArenaEntity::class.java, data)
         } else {
             val file = File(plugin.dataFolder, "template/" + template.name + ".yml")
             configuration.load(file)
 
-            val data = configuration.getConfigurationSection("arena").getValues(true)
-            YamlSerializer.deserializeObject(ArenaEntity::class.java, null, data)
+            val data = configuration.deserializeToMap("arena")
+            yamlSerializationService.deserialize(ArenaEntity::class.java, data)
         }
 
         var idGen = 1
         persistenceArenaService.getArenas().forEach { cacheArena ->
-            if(cacheArena.name == idGen.toString()){
+            if (cacheArena.name == idGen.toString()) {
                 idGen++
             }
         }

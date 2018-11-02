@@ -3,6 +3,7 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.context
 
 import com.github.shynixn.blockball.api.persistence.context.FileContext
+import com.github.shynixn.blockball.bukkit.logic.business.extension.deserializeToMap
 import com.google.inject.Inject
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
@@ -69,7 +70,7 @@ class FileContextImpl @Inject constructor(private val plugin: Plugin) : FileCont
      * Handles locking for asynchronous operations.
      * Creates the file if it does not already exist.
      */
-    override fun loadOrCreateYamlFile(path: Path, yamlPath: String, deep: Boolean): Map<String, Any> {
+    override fun loadOrCreateYamlFile(path: Path, yamlPath: String): Map<String, Any?> {
         synchronized(this) {
             try {
                 val file = path.toFile()
@@ -85,7 +86,7 @@ class FileContextImpl @Inject constructor(private val plugin: Plugin) : FileCont
                     throw IllegalArgumentException("Yamlfile $path does not contain path $yamlPath.")
                 }
 
-                return configuration.getConfigurationSection(yamlPath).getValues(deep)
+                return configuration.deserializeToMap(yamlPath)
             } catch (e: Exception) {
                 plugin.logger.log(Level.WARNING, "Failed to load file $path with $yamlPath.")
                 throw RuntimeException(e)

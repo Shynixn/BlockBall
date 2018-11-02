@@ -4,9 +4,9 @@ package com.github.shynixn.blockball.core.logic.persistence.entity
 
 import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
-import com.github.shynixn.blockball.api.business.enumeration.SerializationType
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
+import com.github.shynixn.blockball.core.logic.business.serializer.ItemStackSerializer
 
 /**
  * Entity to hold information about the team.
@@ -38,28 +38,28 @@ import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 class TeamMetaEntity(
         /** DisplayName of the team which gets used in the placeholder <red> or <blue>. */
         @YamlSerialize(orderNumber = 1, value = "displayname")
-        override var displayName: String,
+        override var displayName: String = "",
         /** Prefix of the team which gets used in the placeholder <redcolor> or <bluecolor>. */
         @YamlSerialize(orderNumber = 2, value = "prefix")
-        override var prefix: String,
+        override var prefix: String = "",
         /** Title of the message getting played when a player scores a goal. */
         @YamlSerialize(orderNumber = 11, value = "score-message-title")
-        override var scoreMessageTitle: String,
+        override var scoreMessageTitle: String = "",
         /** Subtitle of the message getting played when a player scores a goal. */
         @YamlSerialize(orderNumber = 12, value = "score-message-subtitle")
-        override var scoreMessageSubTitle: String,
+        override var scoreMessageSubTitle: String = "",
         /** Title of the message getting played when this team wins a match. */
         @YamlSerialize(orderNumber = 13, value = "win-message-title")
-        override var winMessageTitle: String,
+        override var winMessageTitle: String = "",
         /** Subtitle of the message getting played when this team wins a match. */
         @YamlSerialize(orderNumber = 14, value = "win-message-subtitle")
-        override var winMessageSubTitle: String,
+        override var winMessageSubTitle: String = "",
         /** Title of the message getting played when the match ends in a draw.*/
         @YamlSerialize(orderNumber = 15, value = "draw-message-title")
-        override var drawMessageTitle: String,
+        override var drawMessageTitle: String = "",
         /** Subtitle of the message getting played when the match ends in a draw. */
         @YamlSerialize(orderNumber = 16, value = "draw-message-subtitle")
-        override var drawMessageSubTitle: String
+        override var drawMessageSubTitle: String = ""
 ) : TeamMeta {
     /** List of signs which can be clicked to join the team.*/
     override val signs: MutableList<Position>
@@ -86,11 +86,11 @@ class TeamMetaEntity(
     @YamlSerialize(orderNumber = 13, value = "lines")
     override var signLines: List<String> = arrayListOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, PlaceHolder.ARENA_TEAMCOLOR.placeHolder + PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder + '/' + PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder)
     /** Armor wearing this team. */
-    @YamlSerialize(orderNumber = 8, value = "armor", arraySize = 4, serializationType = SerializationType.DESERIALIZE_FUNCTION)
-    override var armorContents: Array<Any?> = arrayOfNulls(41)
+    @YamlSerialize(orderNumber = 8, value = "armor", customserializer = ItemStackSerializer::class)
+    override var armorContents: Array<Any?> = arrayOfNulls(4)
     /** Inventory this team is getting when playing. */
-    @YamlSerialize(orderNumber = 9, value = "inventory", arraySize = 36, serializationType = SerializationType.DESERIALIZE_FUNCTION)
-    override var inventoryContents: Array<Any?> = arrayOfNulls(41)
+    @YamlSerialize(orderNumber = 9, value = "inventory", customserializer = ItemStackSerializer::class)
+    override var inventoryContents: Array<Any?> = arrayOfNulls(36)
     /** Spawnpoint of the team inside of the arena. */
     @YamlSerialize(orderNumber = 6, value = "spawnpoint", implementation = PositionEntity::class)
     override var spawnpoint: Position? = null

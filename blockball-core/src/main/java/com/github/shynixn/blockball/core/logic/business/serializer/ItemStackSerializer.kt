@@ -1,7 +1,9 @@
-package com.github.shynixn.blockball.api.business.annotation
+@file:Suppress("UNCHECKED_CAST")
 
-import com.github.shynixn.blockball.api.business.enumeration.SerializationType
-import kotlin.reflect.KClass
+package com.github.shynixn.blockball.core.logic.business.serializer
+
+import com.github.shynixn.blockball.api.business.serializer.YamlSerializer
+import java.lang.IllegalArgumentException
 
 /**
  * Created by Shynixn 2018.
@@ -30,24 +32,26 @@ import kotlin.reflect.KClass
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.FIELD)
-annotation class YamlSerialize(
-        /**
-         * Name of the target property.
-         */
-        val value: String,
-        /**
-         * Order number in the target file.
-         */
-        val orderNumber: Int,
+class ItemStackSerializer : YamlSerializer<Any> {
+    /**
+     * Gets called on serialization.
+     */
+    override fun onSerialization(item: Any): Map<String, Any?> {
+        val clazz = Class.forName("org.bukkit.inventory.ItemStack")
 
-        /**
-         * Custom serialization class.
-         */
-        val customserializer: KClass<*> = Any::class,
-        /**
-         * Optional implementation of the class if the type is specified as interface.
-         */
-        val implementation: KClass<*> = Any::class
-)
+        if (item.javaClass != clazz) {
+            throw IllegalArgumentException("Serialization item is not an Itemstack!")
+        }
+
+        return clazz.getDeclaredMethod("serialize").invoke(item) as Map<String, Any?>
+    }
+
+    /**
+     * Gets called on Deserialization.
+     */
+    override fun onDeserialization(item: Map<String, Any?>): Any {
+        val clazz = Class.forName("org.bukkit.inventory.ItemStack")
+
+        return clazz.getDeclaredMethod("deserialize", Map::class.java).invoke(null, item)
+    }
+}

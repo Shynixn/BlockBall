@@ -1,7 +1,4 @@
-package com.github.shynixn.blockball.api.business.annotation
-
-import com.github.shynixn.blockball.api.business.enumeration.SerializationType
-import kotlin.reflect.KClass
+package com.github.shynixn.blockball.api.business.serializer
 
 /**
  * Created by Shynixn 2018.
@@ -30,24 +27,14 @@ import kotlin.reflect.KClass
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.FIELD)
-annotation class YamlSerialize(
-        /**
-         * Name of the target property.
-         */
-        val value: String,
-        /**
-         * Order number in the target file.
-         */
-        val orderNumber: Int,
+interface YamlSerializer<I> {
+    /**
+     * Gets called on serialization.
+     */
+    fun onSerialization(item: I): Map<String, Any?>
 
-        /**
-         * Custom serialization class.
-         */
-        val customserializer: KClass<*> = Any::class,
-        /**
-         * Optional implementation of the class if the type is specified as interface.
-         */
-        val implementation: KClass<*> = Any::class
-)
+    /**
+     * Gets called on Deserialization.
+     */
+    fun onDeserialization(item: Map<String, Any?>): I
+}

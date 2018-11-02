@@ -73,7 +73,7 @@ class ArenaMetaEntity : ArenaMeta {
     override val scoreboardMeta: ScoreboardEntity = ScoreboardEntity()
     /** Meta data of proection. */
     @YamlSerialize(orderNumber = 5, value = "protection")
-    override val protectionMeta: ArenaProtectionMeta = ArenaProtectionMetaEntity()
+    override val protectionMeta: ArenaProtectionMetaEntity = ArenaProtectionMetaEntity()
     /** Meta data of the ball. */
     @YamlSerialize(orderNumber = 4, value = "ball")
     override val ballMeta: BallMetaEntity = BallMetaEntity("http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d")

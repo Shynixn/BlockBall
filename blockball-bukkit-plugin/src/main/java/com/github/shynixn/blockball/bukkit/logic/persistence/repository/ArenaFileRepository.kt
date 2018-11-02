@@ -1,10 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.repository
 
 import com.github.shynixn.blockball.api.business.enumeration.BallActionType
+import com.github.shynixn.blockball.api.business.service.YamlSerializationService
 import com.github.shynixn.blockball.api.persistence.context.FileContext
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
-import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
 import com.github.shynixn.blockball.core.logic.persistence.entity.ArenaEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.ParticleEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.SoundEntity
@@ -41,7 +41,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ArenaFileRepository @Inject constructor(private val plugin: Plugin, private val fileContext: FileContext) : ArenaRepository {
+class ArenaFileRepository @Inject constructor(private val plugin: Plugin, private val yamlSerializationService: YamlSerializationService, private val fileContext: FileContext) : ArenaRepository {
     /**
      * Returns all stored arenas in this repository.
      */
@@ -52,8 +52,8 @@ class ArenaFileRepository @Inject constructor(private val plugin: Plugin, privat
             val s = this.getFolder().list()!![i]
             try {
                 if (s.contains("arena_")) {
-                    val data = fileContext.loadOrCreateYamlFile(File(getFolder(), s).toPath(), "arena", true)
-                    val arenaEntity = YamlSerializer.deserializeObject(ArenaEntity::class.java, null, data)
+                    val data = fileContext.loadOrCreateYamlFile(File(getFolder(), s).toPath(), "arena")
+                    val arenaEntity = yamlSerializationService.deserialize(ArenaEntity::class.java, data)
 
                     // Compatibility added in v6.1.0
                     if (!arenaEntity.meta.ballMeta.soundEffects.containsKey(BallActionType.ONGOAL)) {
@@ -107,7 +107,7 @@ class ArenaFileRepository @Inject constructor(private val plugin: Plugin, privat
         }
 
         fileContext.saveAndCreateYamlFile<Configuration>(file.toPath()) { configuration ->
-            val data = YamlSerializer.serialize(arena)
+            val data = yamlSerializationService.serialize(arena)
             for (key in data.keys) {
                 configuration.set("arena.$key", data[key])
             }
