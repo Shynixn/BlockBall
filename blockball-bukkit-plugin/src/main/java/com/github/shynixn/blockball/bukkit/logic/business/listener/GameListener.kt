@@ -9,6 +9,7 @@ import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isTouchingGround
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.google.inject.Inject
 import org.bukkit.GameMode
@@ -21,10 +22,7 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.event.player.PlayerToggleFlightEvent
+import org.bukkit.event.player.*
 
 /**
  * Created by Shynixn 2018.
@@ -85,6 +83,44 @@ class GameListener @Inject constructor(private val gameService: GameService, ite
         if (game.isPresent) {
             event.isCancelled = true
         }
+    }
+
+    /**
+     * Gets called when a player respawns and teleports it back to the game if it is in a game.
+     */
+    @EventHandler
+    fun onPlayerRespawnEvent(event: PlayerRespawnEvent) {
+        val game = gameService.getGameFromPlayer(event.player)
+
+        if (!game.isPresent || !game.get().ingamePlayersStorage.containsKey(event.player)) {
+            return
+        }
+
+        val playerStorage = game.get().ingamePlayersStorage[event.player]!!
+
+        if (playerStorage.team == null) {
+            return
+        }
+
+        if (playerStorage.team == Team.RED) {
+            val spawnpoint = game.get().arena.meta.redTeamMeta.spawnpoint
+
+            if (spawnpoint != null) {
+                event.respawnLocation = spawnpoint.toLocation()
+                return
+            }
+        }
+
+        if (playerStorage.team == Team.BLUE) {
+            val spawnpoint = game.get().arena.meta.blueTeamMeta.spawnpoint
+
+            if (spawnpoint != null) {
+                event.respawnLocation = spawnpoint.toLocation()
+                return
+            }
+        }
+
+        event.respawnLocation = game.get().arena.meta.ballMeta.spawnpoint!!.toLocation()
     }
 
     /**
