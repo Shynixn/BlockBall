@@ -6,10 +6,12 @@ import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
+import com.github.shynixn.blockball.bukkit.logic.business.coroutine.DispatcherContainer
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
+import kotlinx.coroutines.Dispatchers
 import org.bukkit.*
 import org.bukkit.ChatColor
 import org.bukkit.configuration.MemorySection
@@ -27,6 +29,7 @@ import java.lang.reflect.InvocationTargetException
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by Shynixn 2018.
@@ -55,6 +58,18 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+/**
+ * Minecraft async dispatcher.
+ */
+val Dispatchers.async: CoroutineContext
+    get() =  DispatcherContainer.async
+
+/**
+ * Minecraft sync dispatcher.
+ */
+val Dispatchers.minecraft: CoroutineContext
+    get() =  DispatcherContainer.sync
 
 /**
  * Executes the given [f] for the given [plugin] on main thread.

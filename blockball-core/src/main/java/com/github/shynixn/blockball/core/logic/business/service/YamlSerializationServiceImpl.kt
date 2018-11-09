@@ -85,7 +85,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
     /**
      *  Deserialize the given object collection.
      */
-    private fun deserializeCollection(annotation: YamlSerialize, collection: MutableCollection<Any?>, dataSource: Any) {
+    private fun deserializeCollection(annotation: YamlSerialize, field: Field, collection: MutableCollection<Any?>, dataSource: Any) {
         if (dataSource is Map<*, *>) {
             dataSource.keys.forEach { key ->
                 if (key is String && key.toIntOrNull() == null) {
@@ -96,6 +96,9 @@ class YamlSerializationServiceImpl : YamlSerializationService {
 
                 if (value == null) {
                     collection.add(null)
+                } else if (getArgumentType(field, 0).isEnum) {
+                    @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
+                    collection.add(java.lang.Enum.valueOf<Any>(getArgumentType(field, 0) as Class<Any>, value.toString().toUpperCase()))
                 } else if (isPrimitive(value.javaClass)) {
                     collection.add(value)
                 } else {
@@ -148,7 +151,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
     /**
      *  Deserialize the given object array.
      */
-    private fun deserializeArray(annotation: YamlSerialize, array: Array<Any?>, dataSource: Map<String, Any?>) {
+    private fun deserializeArray(annotation: YamlSerialize, field: Field, array: Array<Any?>, dataSource: Map<String, Any?>) {
         dataSource.keys.forEach { key ->
             if (key.toIntOrNull() == null) {
                 throw java.lang.IllegalArgumentException("Initializing " + annotation.value + " as array failed as dataSource contains a invalid key.")
@@ -161,6 +164,9 @@ class YamlSerializationServiceImpl : YamlSerializationService {
                 array[keyPlace] = null
             } else if (annotation.customserializer != Any::class) {
                 array[keyPlace] = (annotation.customserializer.java.newInstance() as YamlSerializer<*>).onDeserialization(value as Map<String, Any?>)
+            } else if (field.type.componentType.isEnum) {
+                @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
+                array[keyPlace] = java.lang.Enum.valueOf<Any>(field.type as Class<Any>, value.toString().toUpperCase())
             } else if (isPrimitive(value.javaClass)) {
                 array[keyPlace] = value
             } else {
@@ -214,7 +220,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
                 throw IllegalArgumentException("Array field " + field.name + " should already be initialized with a certain array.")
             }
 
-            deserializeArray(annotation, array as Array<Any?>, value as Map<String, Any?>)
+            deserializeArray(annotation, field, array as Array<Any?>, value as Map<String, Any?>)
         } else if (Collection::class.java.isAssignableFrom(field.type)) {
             val collection = field.get(instance)
 
@@ -224,7 +230,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
 
             (collection as MutableCollection<Any?>).clear()
 
-            deserializeCollection(annotation, collection, value)
+            deserializeCollection(annotation, field, collection, value)
         } else if (Map::class.java.isAssignableFrom(field.type)) {
             val map = field.get(instance)
 

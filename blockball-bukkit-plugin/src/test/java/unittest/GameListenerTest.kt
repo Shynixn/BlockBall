@@ -29,23 +29,23 @@ class GameListenerTest {
         // Arrange
         val ball = BallListenerTest.MockedBallProxy()
         val mockedEntityService = BallListenerTest.MockedBallEntityService(ball)
-        val classUnderTest = createWithDependencies(mockedEntityService)
+    //    val classUnderTest = createWithDependencies(mockedEntityService)
         val chunk = Mockito.mock(Chunk::class.java)
         val entities = arrayOf(ball.getDesignArmorstand<Entity>())
         Mockito.`when`(chunk.entities).thenReturn(entities)
         val chunkLoadEvent = ChunkLoadEvent(chunk, false)
 
         // Act
-        classUnderTest.onChunkLoadEvent(chunkLoadEvent)
+      //  classUnderTest.onChunkLoadEvent(chunkLoadEvent)
 
         // Assert
         Assertions.assertTrue(mockedEntityService.cleanUpCalled)
     }
 
     companion object {
-        fun createWithDependencies(mockedGameService : GameService = MockedGameService()): GameListener {
-            return GameListener(mockedGameService, )
-        }
+     //   fun createWithDependencies(mockedGameService : GameService = MockedGameService()): GameListener {
+          //  return GameListener(mockedGameService, )
+       // }
     }
 
     private class MockedItemService : ItemService{
