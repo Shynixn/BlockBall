@@ -39,7 +39,7 @@ class ItemStackSerializer : YamlSerializer<Any> {
     override fun onSerialization(item: Any): Map<String, Any?> {
         val clazz = Class.forName("org.bukkit.inventory.ItemStack")
 
-        if (item.javaClass != clazz) {
+        if (clazz::class.java.isInstance(item)) {
             throw IllegalArgumentException("Serialization item is not an Itemstack!")
         }
 

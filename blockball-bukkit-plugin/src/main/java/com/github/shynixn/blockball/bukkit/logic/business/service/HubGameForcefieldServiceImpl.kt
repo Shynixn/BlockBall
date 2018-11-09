@@ -13,7 +13,6 @@ import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
-import org.bukkit.util.Vector
 
 /**
  * Created by Shynixn 2018.
@@ -55,7 +54,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(private val gameService: 
         }
 
         if (location !is Location) {
-            throw IllegalArgumentException("Player has to be a BukkitLocation!")
+            throw IllegalArgumentException("Location has to be a BukkitLocation!")
         }
 
         val prefix = configurationService.findValue<String>("messages.prefix")
@@ -81,7 +80,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(private val gameService: 
 
                 if (interactionCache.lastPosition == null) {
                     if (game.arena.meta.protectionMeta.rejoinProtectionEnabled) {
-                        player.velocity = game.arena.meta.protectionMeta.rejoinProtection as Vector
+                        player.velocity = game.arena.meta.protectionMeta.rejoinProtection.toVector()
                     }
                 } else {
                     if (interactionCache.movementCounter == 0) {
@@ -89,7 +88,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(private val gameService: 
                     } else if (interactionCache.movementCounter < 50)
                         interactionCache.movementCounter = interactionCache.movementCounter + 1
                     if (interactionCache.movementCounter > 20) {
-                        player.velocity = game.arena.meta.protectionMeta.rejoinProtection as Vector
+                        player.velocity = game.arena.meta.protectionMeta.rejoinProtection.toVector()
                     } else {
                         val knockback = interactionCache.lastPosition!!.toLocation().toVector().subtract(player.location.toVector())
                         player.location.direction = knockback

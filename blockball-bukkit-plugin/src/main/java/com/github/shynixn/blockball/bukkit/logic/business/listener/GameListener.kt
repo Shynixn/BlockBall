@@ -86,44 +86,6 @@ class GameListener @Inject constructor(private val gameService: GameService, ite
     }
 
     /**
-     * Gets called when a player respawns and teleports it back to the game if it is in a game.
-     */
-    @EventHandler
-    fun onPlayerRespawnEvent(event: PlayerRespawnEvent) {
-        val game = gameService.getGameFromPlayer(event.player)
-
-        if (!game.isPresent || !game.get().ingamePlayersStorage.containsKey(event.player)) {
-            return
-        }
-
-        val playerStorage = game.get().ingamePlayersStorage[event.player]!!
-
-        if (playerStorage.team == null) {
-            return
-        }
-
-        if (playerStorage.team == Team.RED) {
-            val spawnpoint = game.get().arena.meta.redTeamMeta.spawnpoint
-
-            if (spawnpoint != null) {
-                event.respawnLocation = spawnpoint.toLocation()
-                return
-            }
-        }
-
-        if (playerStorage.team == Team.BLUE) {
-            val spawnpoint = game.get().arena.meta.blueTeamMeta.spawnpoint
-
-            if (spawnpoint != null) {
-                event.respawnLocation = spawnpoint.toLocation()
-                return
-            }
-        }
-
-        event.respawnLocation = game.get().arena.meta.ballMeta.spawnpoint!!.toLocation()
-    }
-
-    /**
      * Allows the player to start flying as long he is inside of a game.
      */
     @EventHandler
@@ -176,13 +138,51 @@ class GameListener @Inject constructor(private val gameService: GameService, ite
         val player = event.entity as Player
         val game = gameService.getGameFromPlayer(player)
 
-        if (game.isPresent && event.cause == EntityDamageEvent.DamageCause.FALL) {
-            event.isCancelled = true
+        if (!game.isPresent) {
+            return
         }
 
-        if (game.isPresent && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.get().arena.meta.customizingMeta.damageEnabled) {
+        if (event.cause == EntityDamageEvent.DamageCause.FALL) {
             event.isCancelled = true
+            return
         }
+
+        if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.get().arena.meta.customizingMeta.damageEnabled) {
+            event.isCancelled = true
+            return
+        }
+
+        if (player.health - event.finalDamage > 0) {
+            return
+        }
+
+        player.health = player.maxHealth
+
+        val playerStorage = game.get().ingamePlayersStorage[player]!!
+
+        if (playerStorage.team == null) {
+            return
+        }
+
+        if (playerStorage.team == Team.RED) {
+            val spawnpoint = game.get().arena.meta.redTeamMeta.spawnpoint
+
+            if (spawnpoint != null) {
+                player.teleport(spawnpoint.toLocation())
+                return
+            }
+        }
+
+        if (playerStorage.team == Team.BLUE) {
+            val spawnpoint = game.get().arena.meta.blueTeamMeta.spawnpoint
+
+            if (spawnpoint != null) {
+                player.teleport(spawnpoint.toLocation())
+                return
+            }
+        }
+
+        player.teleport(game.get().arena.meta.ballMeta.spawnpoint!!.toLocation())
     }
 
     /**
