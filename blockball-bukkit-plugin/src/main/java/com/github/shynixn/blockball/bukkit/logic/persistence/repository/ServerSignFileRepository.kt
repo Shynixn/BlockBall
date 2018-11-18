@@ -1,12 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.persistence.repository
 
+import com.github.shynixn.blockball.api.business.service.YamlSerializationService
 import com.github.shynixn.blockball.api.persistence.context.FileContext
 import com.github.shynixn.blockball.api.persistence.entity.LinkSign
 import com.github.shynixn.blockball.api.persistence.repository.ServerSignRepository
-import com.github.shynixn.blockball.bukkit.logic.business.extension.YamlSerializer
 import com.github.shynixn.blockball.core.logic.persistence.entity.LinkSignEntity
 import com.google.inject.Inject
-import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.serialization.ConfigurationSerializable
 import org.bukkit.plugin.Plugin
@@ -41,7 +40,7 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ServerSignFileRepository @Inject constructor(private val plugin: Plugin, private val fileContext: FileContext) : ServerSignRepository {
+class ServerSignFileRepository @Inject constructor(private val plugin: Plugin, private val yamlSerializationService: YamlSerializationService, private val fileContext: FileContext) : ServerSignRepository {
     private val path = Paths.get(File(this.plugin.dataFolder, "bungeecord_signs.yml").toURI())
 
     /**
@@ -63,7 +62,7 @@ class ServerSignFileRepository @Inject constructor(private val plugin: Plugin, p
         val data = fileContext.loadOrCreateYamlFile(path, "signs")
 
         for (s in data.keys) {
-            signs.add(YamlSerializer.deserializeObject(LinkSignEntity::class.java, null, (data[s] as ConfigurationSection).getValues(true)))
+            signs.add(yamlSerializationService.deserialize(LinkSignEntity::class.java, data))
         }
 
         return signs

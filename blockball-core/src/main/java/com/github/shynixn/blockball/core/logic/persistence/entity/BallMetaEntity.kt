@@ -35,7 +35,7 @@ import com.github.shynixn.blockball.api.persistence.entity.*
 class BallMetaEntity(
         /** Skin of the ball.**/
         @YamlSerialize(orderNumber = 2, value = "skin")
-        override var skin: String) : BallMeta {
+        override var skin: String = "") : BallMeta {
 
     /** Size of the ball.**/
     @YamlSerialize(orderNumber = 1, value = "size")

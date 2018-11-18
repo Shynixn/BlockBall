@@ -41,16 +41,13 @@ annotation class YamlSerialize(
          * Order number in the target file.
          */
         val orderNumber: Int,
+
         /**
-         * SerializationType.
+         * Custom serialization class.
          */
-        val serializationType: SerializationType = SerializationType.NONE,
+        val customserializer: KClass<*> = Any::class,
         /**
          * Optional implementation of the class if the type is specified as interface.
          */
-        val implementation: KClass<*> = Any::class,
-        /**
-         * Optional default array size.
-         */
-        val arraySize: Int = -1
+        val implementation: KClass<*> = Any::class
 )

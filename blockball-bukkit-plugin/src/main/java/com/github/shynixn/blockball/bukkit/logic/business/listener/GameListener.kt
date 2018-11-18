@@ -9,6 +9,7 @@ import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isTouchingGround
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.google.inject.Inject
 import org.bukkit.GameMode
@@ -21,10 +22,7 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.event.player.PlayerToggleFlightEvent
+import org.bukkit.event.player.*
 
 /**
  * Created by Shynixn 2018.
@@ -140,13 +138,51 @@ class GameListener @Inject constructor(private val gameService: GameService, ite
         val player = event.entity as Player
         val game = gameService.getGameFromPlayer(player)
 
-        if (game.isPresent && event.cause == EntityDamageEvent.DamageCause.FALL) {
-            event.isCancelled = true
+        if (!game.isPresent) {
+            return
         }
 
-        if (game.isPresent && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.get().arena.meta.customizingMeta.damageEnabled) {
+        if (event.cause == EntityDamageEvent.DamageCause.FALL) {
             event.isCancelled = true
+            return
         }
+
+        if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.get().arena.meta.customizingMeta.damageEnabled) {
+            event.isCancelled = true
+            return
+        }
+
+        if (player.health - event.finalDamage > 0) {
+            return
+        }
+
+        player.health = player.maxHealth
+
+        val playerStorage = game.get().ingamePlayersStorage[player]!!
+
+        if (playerStorage.team == null) {
+            return
+        }
+
+        if (playerStorage.team == Team.RED) {
+            val spawnpoint = game.get().arena.meta.redTeamMeta.spawnpoint
+
+            if (spawnpoint != null) {
+                player.teleport(spawnpoint.toLocation())
+                return
+            }
+        }
+
+        if (playerStorage.team == Team.BLUE) {
+            val spawnpoint = game.get().arena.meta.blueTeamMeta.spawnpoint
+
+            if (spawnpoint != null) {
+                player.teleport(spawnpoint.toLocation())
+                return
+            }
+        }
+
+        player.teleport(game.get().arena.meta.ballMeta.spawnpoint!!.toLocation())
     }
 
     /**

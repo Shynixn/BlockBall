@@ -6,12 +6,16 @@ import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
+import com.github.shynixn.blockball.bukkit.logic.business.coroutine.DispatcherContainer
 import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
+import kotlinx.coroutines.Dispatchers
 import org.bukkit.*
 import org.bukkit.ChatColor
+import org.bukkit.configuration.MemorySection
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
@@ -25,6 +29,7 @@ import java.lang.reflect.InvocationTargetException
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by Shynixn 2018.
@@ -55,6 +60,18 @@ import java.util.logging.Level
  */
 
 /**
+ * Minecraft async dispatcher.
+ */
+val Dispatchers.async: CoroutineContext
+    get() =  DispatcherContainer.async
+
+/**
+ * Minecraft sync dispatcher.
+ */
+val Dispatchers.minecraft: CoroutineContext
+    get() =  DispatcherContainer.sync
+
+/**
  * Executes the given [f] for the given [plugin] on main thread.
  */
 inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long = 0L, crossinline f: () -> Unit) {
@@ -66,6 +83,28 @@ inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long 
         plugin.server.scheduler.runTaskLater(plugin, {
             f.invoke()
         }, delayTicks)
+    }
+}
+
+/**
+ * Deserializes the configuraiton section path to a map.
+ */
+fun FileConfiguration.deserializeToMap(path: String): Map<String, Any?> {
+    val section = getConfigurationSection(path).getValues(false)
+    deserialize(section)
+    return section
+}
+
+/**
+ * Deserializes the given section.
+ */
+private fun deserialize(section: MutableMap<String, Any?>) {
+    section.keys.forEach { key ->
+        if (section[key] is MemorySection) {
+            val map = (section[key] as MemorySection).getValues(false)
+            deserialize(map)
+            section[key] = map
+        }
     }
 }
 
