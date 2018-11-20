@@ -27,14 +27,14 @@ package com.github.shynixn.blockball.api.business.serializer
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface YamlSerializer<I> {
+interface YamlSerializer<I, O> {
     /**
      * Gets called on serialization.
      */
-    fun onSerialization(item: I): Map<String, Any?>
+    fun onSerialization(item: I): O
 
     /**
      * Gets called on Deserialization.
      */
-    fun onDeserialization(item: Map<String, Any?>): I
+    fun onDeserialization(item: O): I
 }

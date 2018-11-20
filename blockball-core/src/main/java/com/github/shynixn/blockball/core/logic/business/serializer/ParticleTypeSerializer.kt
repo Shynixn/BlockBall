@@ -1,9 +1,7 @@
-@file:Suppress("UNCHECKED_CAST")
-
 package com.github.shynixn.blockball.core.logic.business.serializer
 
+import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.business.serializer.YamlSerializer
-import java.lang.IllegalArgumentException
 
 /**
  * Created by Shynixn 2018.
@@ -32,26 +30,24 @@ import java.lang.IllegalArgumentException
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ItemStackSerializer : YamlSerializer<Any, Map<String, Any?>> {
+class ParticleTypeSerializer : YamlSerializer<ParticleType, String> {
     /**
      * Gets called on serialization.
      */
-    override fun onSerialization(item: Any): Map<String, Any?> {
-        val clazz = Class.forName("org.bukkit.inventory.ItemStack")
-
-        if (clazz::class.java.isInstance(item)) {
-            throw IllegalArgumentException("Serialization item is not an Itemstack!")
-        }
-
-        return clazz.getDeclaredMethod("serialize").invoke(item) as Map<String, Any?>
+    override fun onSerialization(item: ParticleType): String {
+        return item.name
     }
 
     /**
      * Gets called on Deserialization.
      */
-    override fun onDeserialization(item: Map<String, Any?>): Any {
-        val clazz = Class.forName("org.bukkit.inventory.ItemStack")
+    override fun onDeserialization(item: String): ParticleType {
+        ParticleType.values().forEach { p ->
+            if (p.name == item || p.gameId_18 == item || p.gameId_113 == item || p.minecraftId_112 == item) {
+                return p
+            }
+        }
 
-        return clazz.getDeclaredMethod("deserialize", Map::class.java).invoke(null, item)
+        throw RuntimeException("Item '$item' cannot be deserialized to ParticleType!")
     }
 }

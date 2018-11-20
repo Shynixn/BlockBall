@@ -163,7 +163,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
             if (value == null) {
                 array[keyPlace] = null
             } else if (annotation.customserializer != Any::class) {
-                array[keyPlace] = (annotation.customserializer.java.newInstance() as YamlSerializer<*>).onDeserialization(value as Map<String, Any?>)
+                array[keyPlace] = (annotation.customserializer.java.newInstance() as YamlSerializer<*, Map<String, Any?>>).onDeserialization(value as Map<String, Any?>)
             } else if (field.type.componentType.isEnum) {
                 @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
                 array[keyPlace] = java.lang.Enum.valueOf<Any>(field.type as Class<Any>, value.toString().toUpperCase())
@@ -207,6 +207,9 @@ class YamlSerializationServiceImpl : YamlSerializationService {
 
         if (value == null) {
             field.set(instance, value)
+        } else if (annotation.customserializer != Any::class) {
+            val deserializedValue = (annotation.customserializer.java.newInstance() as YamlSerializer<Any, Any>).onDeserialization(value)
+            field.set(instance, deserializedValue)
         } else if (isPrimitive(field.type)) {
             field.set(instance, value)
         } else if (field.type.isEnum) run {
@@ -278,7 +281,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
             } else if (isPrimitive(instance::class.java)) {
                 data[i.toString()] = instance
             } else if (annotation != null && annotation.customserializer != Any::class) {
-                data[i.toString()] = (annotation.customserializer.java.newInstance() as YamlSerializer<Any>).onSerialization(instance)
+                data[i.toString()] = (annotation.customserializer.java.newInstance() as YamlSerializer<Any, Any>).onSerialization(instance)
             } else if (instance::class.java.isEnum) {
                 data[i.toString()] = (instance as Enum<*>).name
             } else {
@@ -332,6 +335,9 @@ class YamlSerializationServiceImpl : YamlSerializationService {
             val yamlAnnotation = element.first
 
             if (field.get(instance) == null) {
+            } else if (yamlAnnotation.customserializer != Any::class) {
+                val serializedValue = (yamlAnnotation.customserializer.java.newInstance() as YamlSerializer<Any, Any>).onSerialization(field.get(instance))
+                data[yamlAnnotation.value] = serializedValue
             } else if (isPrimitive(field.type)) {
                 data[yamlAnnotation.value] = field.get(instance)
             } else if (field.type.isEnum || field.type == Enum::class.java) {

@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.business.enumeration.ParticleColor
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.persistence.entity.Offset
 import com.github.shynixn.blockball.api.persistence.entity.Particle
+import com.github.shynixn.blockball.core.logic.business.serializer.ParticleTypeSerializer
 
 /**
  * Created by Shynixn 2018.
@@ -34,7 +35,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Particle
  * SOFTWARE.
  */
 class ParticleEntity(
-        @YamlSerialize(value = "name", orderNumber = 1)
+        @YamlSerialize(value = "name", orderNumber = 1, customserializer = ParticleTypeSerializer::class)
         override var type: ParticleType = ParticleType.NONE) : Particle {
     /**
      * Database Id.
