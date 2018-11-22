@@ -207,7 +207,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
 
         if (value == null) {
             field.set(instance, value)
-        } else if (annotation.customserializer != Any::class) {
+        } else if (annotation.customserializer != Any::class && !field.type.isArray && !Collection::class.java.isAssignableFrom(field.type)) {
             val deserializedValue = (annotation.customserializer.java.newInstance() as YamlSerializer<Any, Any>).onDeserialization(value)
             field.set(instance, deserializedValue)
         } else if (isPrimitive(field.type)) {
@@ -335,7 +335,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
             val yamlAnnotation = element.first
 
             if (field.get(instance) == null) {
-            } else if (yamlAnnotation.customserializer != Any::class) {
+            } else if (yamlAnnotation.customserializer != Any::class && !field.type.isArray && !Collection::class.java.isAssignableFrom(field.type)) {
                 val serializedValue = (yamlAnnotation.customserializer.java.newInstance() as YamlSerializer<Any, Any>).onSerialization(field.get(instance))
                 data[yamlAnnotation.value] = serializedValue
             } else if (isPrimitive(field.type)) {

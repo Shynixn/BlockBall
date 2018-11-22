@@ -17,6 +17,12 @@
             <artifactId>blockball-api</artifactId>
             <version>6.3.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot113R2</artifactId>
+            <version>1.13.2-R2.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>
