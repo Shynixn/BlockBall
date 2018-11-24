@@ -102,7 +102,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
                 } else if (isPrimitive(value.javaClass)) {
                     collection.add(value)
                 } else {
-                    collection.add(deserialize(value.javaClass, value as Map<String, Any?>))
+                    collection.add(deserialize(getArgumentType(field, 0) as Class<Any>, value as Map<String, Any?>))
                 }
             }
         } else if (dataSource is Collection<*>) {
@@ -160,17 +160,19 @@ class YamlSerializationServiceImpl : YamlSerializationService {
             val keyPlace = key.toInt() - 1
             val value = dataSource[key]
 
-            if (value == null) {
-                array[keyPlace] = null
-            } else if (annotation.customserializer != Any::class) {
-                array[keyPlace] = (annotation.customserializer.java.newInstance() as YamlSerializer<*, Map<String, Any?>>).onDeserialization(value as Map<String, Any?>)
-            } else if (field.type.componentType.isEnum) {
-                @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
-                array[keyPlace] = java.lang.Enum.valueOf<Any>(field.type as Class<Any>, value.toString().toUpperCase())
-            } else if (isPrimitive(value.javaClass)) {
-                array[keyPlace] = value
-            } else {
-                array[keyPlace] = deserialize(value.javaClass, value as Map<String, Any?>)
+            if (keyPlace < array.size) {
+                if (value == null) {
+                    array[keyPlace] = null
+                } else if (annotation.customserializer != Any::class) {
+                    array[keyPlace] = (annotation.customserializer.java.newInstance() as YamlSerializer<*, Map<String, Any?>>).onDeserialization(value as Map<String, Any?>)
+                } else if (field.type.componentType.isEnum) {
+                    @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
+                    array[keyPlace] = java.lang.Enum.valueOf<Any>(field.type as Class<Any>, value.toString().toUpperCase())
+                } else if (isPrimitive(value.javaClass)) {
+                    array[keyPlace] = value
+                } else {
+                    array[keyPlace] = deserialize(value.javaClass, value as Map<String, Any?>)
+                }
             }
         }
     }
