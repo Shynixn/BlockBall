@@ -32,7 +32,7 @@ import java.lang.IllegalArgumentException
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ItemStackSerializer : YamlSerializer<Any> {
+class ItemStackSerializer : YamlSerializer<Any, Map<String, Any?>> {
     /**
      * Gets called on serialization.
      */

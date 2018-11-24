@@ -43,6 +43,7 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
         /** Id of the page. */
         const val ID = 22
     }
+
     /**
      * Returns the key of the command when this page should be executed.
      *
@@ -101,19 +102,34 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
         val selectedReward = cache[4]
         val rewardedAction = cache[5]
         val builder = ChatBuilder()
-                .component("- Money reward (Vault): ").builder()
-                .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_REWARDED_MONEY.command)
-                .setHoverText("Opens the selectionbox for rewarded actions.")
-                .builder().nextLine()
-                .component("- Command reward: ").builder()
+
+        try {
+            BlockBallApi.resolve(DependencyVaultService::class.java)
+
+            builder.component("- Money reward (Vault): ").builder()
+                    .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
+                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_REWARDED_MONEY.command)
+                    .setHoverText("Opens the selectionbox for rewarded actions.")
+                    .builder().nextLine()
+        } catch (e: Exception) {
+        }
+
+        builder.component("- Command reward: ").builder()
                 .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
                 .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_REWARDED_COMMAND.command)
                 .setHoverText("Opens the selectionbox for rewarded actions.")
                 .builder().nextLine()
+
         if (selectedReward != null) {
             if (selectedReward is Int) {
-                val vaultService = BlockBallApi.resolve(DependencyVaultService::class.java)
+                val vaultService: DependencyVaultService
+
+                try {
+                    vaultService = BlockBallApi.resolve(DependencyVaultService::class.java)
+                } catch (e: Exception) {
+                    return builder
+                }
+
                 builder.component("- Selected Money reward (Vault): " + (rewardedAction as RewardType).name).builder().nextLine()
                         .component("- " + vaultService.getPluralCurrencyName() + ": " + ChatColor.WHITE + selectedReward).builder()
                         .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)

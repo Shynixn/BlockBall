@@ -1,9 +1,11 @@
 package unittest
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.business.service.YamlSerializationService
 import com.github.shynixn.blockball.core.logic.business.service.YamlSerializationServiceImpl
 import com.github.shynixn.blockball.core.logic.persistence.entity.ArenaEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.ParticleEntity
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -85,6 +87,71 @@ class YamlSerializationServiceTest {
 
         // Assert
         Assertions.assertEquals(arena.gameType, arena2.gameType)
+    }
+
+    /**
+     * Given
+     *      a particle
+     * When
+     *      serialize is called
+     * Then
+     *     the particle should be serialized.
+     */
+    @Test
+    fun serialize_Particle_ShouldSerializeCorrectly() {
+        // Arrange
+        val classUnderTest = createWithDependencies()
+        val particle = ParticleEntity(ParticleType.BLOCK_DUST)
+
+        // Act
+        val data = classUnderTest.serialize(particle)
+
+        // Assert
+        Assertions.assertEquals("BLOCK_DUST", data["name"])
+    }
+
+    /**
+     * Given
+     *      a particle
+     * When
+     *      deserialize is called
+     * Then
+     *     the particle should be deSerialized.
+     */
+    @Test
+    fun deSerialize_Particle_ShouldDeSerializeCorrectly() {
+        // Arrange
+        val classUnderTest = createWithDependencies()
+        val dataSource = HashMap<String, Any>()
+        dataSource["name"] = "BLOCK_DUST"
+
+        // Act
+        val data = classUnderTest.deserialize(ParticleEntity::class.java,dataSource)
+
+        // Assert
+        Assertions.assertEquals(ParticleType.BLOCK_DUST, data.type)
+    }
+
+    /**
+     * Given
+     *      a minecraft particle
+     * When
+     *      deserialize is called
+     * Then
+     *     the particle should be deSerialized.
+     */
+    @Test
+    fun deSerialize_MinecraftParticle_ShouldDeSerializeCorrectly() {
+        // Arrange
+        val classUnderTest = createWithDependencies()
+        val dataSource = HashMap<String, Any>()
+        dataSource["name"] = "explosion"
+
+        // Act
+        val data = classUnderTest.deserialize(ParticleEntity::class.java,dataSource)
+
+        // Assert
+        Assertions.assertEquals(ParticleType.EXPLOSION_NORMAL, data.type)
     }
 
     companion object {
