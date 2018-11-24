@@ -154,9 +154,11 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         if (game is HubGame) {
             hubGameActionService.closeGame(game)
         }
+
         if (game is MiniGame) {
             minigameActionService.closeGame(game)
         }
+
         if (game is BungeeCordGame) {
             bungeeCordGameActionService.closeGame(game)
         }
@@ -201,9 +203,11 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         if (game is HubGame) {
             hubGameActionService.handle(game, ticks)
         }
+
         if (game is MiniGame) {
             minigameActionService.handle(game, ticks)
         }
+
         if (game is BungeeCordGame) {
             bungeeCordGameActionService.handle(game, ticks)
         }
@@ -225,10 +229,14 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         }
     }
 
+    /**
+     * Gets called when the signs should be updated in the game lifecycle.
+     */
     private fun onUpdateSigns(game: Game) {
         try {
             for (i in game.arena.meta.redTeamMeta.signs.indices) {
                 val position = game.arena.meta.redTeamMeta.signs[i]
+
                 if (!replaceTextOnSign(game, position, game.arena.meta.redTeamMeta.signLines, game.arena.meta.redTeamMeta)) {
                     game.arena.meta.redTeamMeta.signs.removeAt(i)
                     return
@@ -236,6 +244,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
             }
             for (i in game.arena.meta.blueTeamMeta.signs.indices) {
                 val position = game.arena.meta.blueTeamMeta.signs[i]
+
                 if (!replaceTextOnSign(game, position, game.arena.meta.blueTeamMeta.signLines, game.arena.meta.blueTeamMeta)) {
                     game.arena.meta.blueTeamMeta.signs.removeAt(i)
                     return
@@ -243,6 +252,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
             }
             for (i in game.arena.meta.lobbyMeta.joinSigns.indices) {
                 val position = game.arena.meta.lobbyMeta.joinSigns[i]
+
                 if (!replaceTextOnSign(game, position, game.arena.meta.lobbyMeta.joinSignLines, null)) {
                     game.arena.meta.lobbyMeta.joinSigns.removeAt(i)
                     return
@@ -250,6 +260,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
             }
             for (i in game.arena.meta.lobbyMeta.leaveSigns.indices) {
                 val position = game.arena.meta.lobbyMeta.leaveSigns[i]
+
                 if (!replaceTextOnSign(game, position, game.arena.meta.lobbyMeta.leaveSignLines, null)) {
                     game.arena.meta.lobbyMeta.leaveSigns.removeAt(i)
                     return
@@ -260,37 +271,56 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         }
     }
 
+    /**
+     * Replaces the text on the sign.
+     */
     private fun replaceTextOnSign(game: Game, signPosition: Position, lines: List<String>, teamMeta: TeamMeta?): Boolean {
         var players = game.redTeam
+
         if (game.arena.meta.blueTeamMeta == teamMeta) {
             players = game.blueTeam
         }
+
         val location = signPosition.toLocation()
-        if (location.block.type != signPostMaterial && location.block.type != Material.WALL_SIGN)
+
+        if (location.block.type != signPostMaterial && location.block.type != Material.WALL_SIGN) {
             return false
+        }
+
         val sign = location.block.state as Sign
+
         for (i in lines.indices) {
             val text = lines[i]
             sign.setLine(i, text.replaceGamePlaceholder(game, teamMeta, players as List<Player>))
         }
+
         sign.update(true)
+
         return true
     }
 
+    /**
+     * Kicks entities out of the arena.
+     */
     private fun kickUnwantedEntitiesOutOfForcefield(game: G) {
-        if (game.arena.meta.protectionMeta.entityProtectionEnabled) {
-            game.arena.meta.ballMeta.spawnpoint!!.toLocation().world.entities.forEach { p ->
-                if (p !is Player && p !is ArmorStand && p !is Item && p !is ItemFrame) {
-                    if (game.arena.isLocationInSelection(p.location)) {
-                        val vector = game.arena.meta.protectionMeta.entityProtection
-                        p.location.direction = vector.toVector()
-                        p.velocity = vector.toVector()
-                    }
+        if (!game.arena.meta.protectionMeta.entityProtectionEnabled) {
+            return
+        }
+
+        game.arena.meta.ballMeta.spawnpoint!!.toLocation().world.entities.forEach { p ->
+            if (p !is Player && p !is ArmorStand && p !is Item && p !is ItemFrame) {
+                if (game.arena.isLocationInSelection(p.location)) {
+                    val vector = game.arena.meta.protectionMeta.entityProtection
+                    p.location.direction = vector.toVector()
+                    p.velocity = vector.toVector()
                 }
             }
         }
     }
 
+    /**
+     * Updates the hologram for the current game.
+     */
     private fun updateHolograms(game: G) {
         if (game.holograms.size != game.arena.meta.hologramMetas.size) {
             game.holograms.forEach { h -> h.remove() }
@@ -325,12 +355,16 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         }
     }
 
+    /**
+     * Updates the bossbar for the current game.
+     */
     private fun updateBossBar(game: G) {
         val meta = game.arena.meta.bossBarMeta
         if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
             if (game.bossBar == null && game.arena.meta.bossBarMeta.enabled) {
                 game.bossBar = bossBarService.createNewBossBar<Any>(game.arena.meta.bossBarMeta)
             }
+
             if (game.bossBar != null) {
                 bossBarService.changeConfiguration(game.bossBar, meta.message.replaceGamePlaceholder(game), meta, null)
 
@@ -369,10 +403,14 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         }
     }
 
+    /**
+     * Updates the cooldown of the double jump for the given game.
+     */
     private fun updateDoubleJumpCooldown(game: G) {
         game.doubleJumpCoolDownPlayers.keys.toTypedArray().forEach { p ->
             var time = game.doubleJumpCoolDownPlayers[p]!!
             time -= 1
+
             if (time <= 0) {
                 game.doubleJumpCoolDownPlayers.remove(p)
             } else {
