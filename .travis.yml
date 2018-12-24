@@ -14,25 +14,25 @@ install:
    - mkdir lib
    - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar -P /home/travis/build/Shynixn/BlockBall/lib/
    - cd /home/travis/build/Shynixn/BlockBall/lib/
-   #- java -jar BuildTools.jar --rev 1.8 > /dev/null
-   #- java -jar BuildTools.jar --rev 1.8.3 > /dev/null
-   #- java -jar BuildTools.jar --rev 1.8.8 > /dev/null
-   #- java -jar BuildTools.jar --rev 1.9 > /dev/null
-   #- java -jar BuildTools.jar --rev 1.9.4 > /dev/null
-   #- java -jar BuildTools.jar --rev 1.10 > /dev/null
-   #- java -jar BuildTools.jar --rev 1.11 > /dev/null
-   #- java -jar BuildTools.jar --rev 1.12 > /dev/null
-   #- java -jar BuildTools.jar --rev 1.13 > /dev/null
+   - java -jar BuildTools.jar --rev 1.8 > /dev/null
+   - java -jar BuildTools.jar --rev 1.8.3 > /dev/null
+   - java -jar BuildTools.jar --rev 1.8.8 > /dev/null
+   - java -jar BuildTools.jar --rev 1.9 > /dev/null
+   - java -jar BuildTools.jar --rev 1.9.4 > /dev/null
+   - java -jar BuildTools.jar --rev 1.10 > /dev/null
+   - java -jar BuildTools.jar --rev 1.11 > /dev/null
+   - java -jar BuildTools.jar --rev 1.12 > /dev/null
+   - java -jar BuildTools.jar --rev 1.13 > /dev/null
    - java -jar BuildTools.jar --rev 1.13.2 > /dev/null
-   #- mvn install:install-file -Dfile=spigot-1.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R1 -Dversion=1.8.0-R1.0 -Dpackaging=jar
-   #- mvn install:install-file -Dfile=spigot-1.8.3.jar -DgroupId=org.spigotmc -DartifactId=spigot18R2 -Dversion=1.8.3-R2.0 -Dpackaging=jar
-   #- mvn install:install-file -Dfile=spigot-1.8.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R3 -Dversion=1.8.8-R3.0 -Dpackaging=jar
-   #- mvn install:install-file -Dfile=spigot-1.9.jar -DgroupId=org.spigotmc -DartifactId=spigot19R1 -Dversion=1.9.0-R1.0 -Dpackaging=jar
-   #- mvn install:install-file -Dfile=spigot-1.9.4.jar -DgroupId=org.spigotmc -DartifactId=spigot19R2 -Dversion=1.9.4-R2.0 -Dpackaging=jar
-   #- mvn install:install-file -Dfile=spigot-1.10.2.jar -DgroupId=org.spigotmc -DartifactId=spigot110R1 -Dversion=1.10.2-R1.0 -Dpackaging=jar
-   #- mvn install:install-file -Dfile=spigot-1.11.jar -DgroupId=org.spigotmc -DartifactId=spigot111R1 -Dversion=1.11.0-R1.0 -Dpackaging=jar
-   #- mvn install:install-file -Dfile=spigot-1.12.jar -DgroupId=org.spigotmc -DartifactId=spigot112R1 -Dversion=1.12.0-R1.0 -Dpackaging=jar
-   #- mvn install:install-file -Dfile=spigot-1.13.jar -DgroupId=org.spigotmc -DartifactId=spigot113R1 -Dversion=1.13.0-R1.0 -Dpackaging=jar
+   - mvn install:install-file -Dfile=spigot-1.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R1 -Dversion=1.8.0-R1.0 -Dpackaging=jar
+   - mvn install:install-file -Dfile=spigot-1.8.3.jar -DgroupId=org.spigotmc -DartifactId=spigot18R2 -Dversion=1.8.3-R2.0 -Dpackaging=jar
+   - mvn install:install-file -Dfile=spigot-1.8.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R3 -Dversion=1.8.8-R3.0 -Dpackaging=jar
+   - mvn install:install-file -Dfile=spigot-1.9.jar -DgroupId=org.spigotmc -DartifactId=spigot19R1 -Dversion=1.9.0-R1.0 -Dpackaging=jar
+   - mvn install:install-file -Dfile=spigot-1.9.4.jar -DgroupId=org.spigotmc -DartifactId=spigot19R2 -Dversion=1.9.4-R2.0 -Dpackaging=jar
+   - mvn install:install-file -Dfile=spigot-1.10.2.jar -DgroupId=org.spigotmc -DartifactId=spigot110R1 -Dversion=1.10.2-R1.0 -Dpackaging=jar
+   - mvn install:install-file -Dfile=spigot-1.11.jar -DgroupId=org.spigotmc -DartifactId=spigot111R1 -Dversion=1.11.0-R1.0 -Dpackaging=jar
+   - mvn install:install-file -Dfile=spigot-1.12.jar -DgroupId=org.spigotmc -DartifactId=spigot112R1 -Dversion=1.12.0-R1.0 -Dpackaging=jar
+   - mvn install:install-file -Dfile=spigot-1.13.jar -DgroupId=org.spigotmc -DartifactId=spigot113R1 -Dversion=1.13.0-R1.0 -Dpackaging=jar
    - mvn install:install-file -Dfile=spigot-1.13.2.jar -DgroupId=org.spigotmc -DartifactId=spigot113R2 -Dversion=1.13.2-R2.0 -Dpackaging=jar
    - cd /home/travis/build/Shynixn/BlockBall/
 before_script:
