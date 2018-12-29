@@ -105,7 +105,12 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
 
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(DependencyWorldEditService::class.java).to(DependencyWorldEditServiceImpl::class.java)
+
+        if (dependencyService.isInstalled(PluginDependency.WORLEDIT, "7")) {
+            bind(DependencyWorldEditService::class.java).to(DependencyWorldEdit7ServiceImpl::class.java)
+        } else {
+            bind(DependencyWorldEditService::class.java).to(DependencyWorldEdit6ServiceImpl::class.java)
+        }
 
         if (dependencyService.isInstalled(PluginDependency.PLACEHOLDERAPI)) {
             val placeHolderApiService = DependencyPlaceholderApiServiceImpl(plugin)

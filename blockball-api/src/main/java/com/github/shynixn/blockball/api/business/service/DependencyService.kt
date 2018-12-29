@@ -39,5 +39,5 @@ interface DependencyService {
     /**
      * Returns if the given [pluginDependency] is installed.
      */
-    fun isInstalled(pluginDependency: PluginDependency): Boolean
+    fun isInstalled(pluginDependency: PluginDependency, version: String? = null): Boolean
 }
