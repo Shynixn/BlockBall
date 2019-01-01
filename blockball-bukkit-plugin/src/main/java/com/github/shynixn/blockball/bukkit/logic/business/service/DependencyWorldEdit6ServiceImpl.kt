@@ -38,7 +38,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class DependencyWorldEditServiceImpl @Inject constructor(private val plugin: Plugin) : DependencyWorldEditService {
+class DependencyWorldEdit6ServiceImpl @Inject constructor(private val plugin: Plugin) : DependencyWorldEditService {
     /**
      * Returns the leftclick worledit selection of the given [player].
      */

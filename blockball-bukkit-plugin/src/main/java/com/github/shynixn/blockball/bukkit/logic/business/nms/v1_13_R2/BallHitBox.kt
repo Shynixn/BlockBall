@@ -139,7 +139,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
                 throw ReportedException(crashReport)
             }
 
-            this.world.methodProfiler.a("move")
+            this.world.methodProfiler.enter("move")
 
             if (this.F) {
                 this.F = false
@@ -252,8 +252,8 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
                 }
             }
 
-            this.world.methodProfiler.e()
-            this.world.methodProfiler.a("rest")
+            this.world.methodProfiler.exit()
+            this.world.methodProfiler.enter("rest")
             this.recalcPosition()
             this.positionChanged = d7 != d0 || d9 != d2
             this.C = d1 != d8

@@ -45,6 +45,9 @@ import java.util.*
 class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin, private val configurationService: ConfigurationService, private val persistenceStatsService: PersistenceStatsService, private val scoreboardService: ScoreboardService) : StatsCollectingService, Runnable {
     private val statsScoreboards = HashMap<Player, Scoreboard>()
 
+    /**
+     * Initializes the service.
+     */
     init {
         Bukkit.getWorlds().forEach { w ->
             w.players.forEach { p ->
@@ -113,22 +116,30 @@ class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin,
 
         if (!statsScoreboards.containsKey(player)) {
             val title = configurationService.findValue<String>("stats-scoreboard.title")
-            val scoreboard = Bukkit.getScoreboardManager().newScoreboard
+            val createdScoreboard = Bukkit.getScoreboardManager().newScoreboard
 
-            scoreboardService.setConfiguration(scoreboard, DisplaySlot.SIDEBAR, title)
+            scoreboardService.setConfiguration(createdScoreboard, DisplaySlot.SIDEBAR, title)
+            statsScoreboards[player] = createdScoreboard
+        }
+
+        val scoreboard = statsScoreboards[player]
+
+        if (player.scoreboard == null || player.scoreboard != scoreboard) {
             player.scoreboard = scoreboard
         }
 
         persistenceStatsService.getOrCreateFromPlayer(player).thenAcceptSafely { stats ->
-            val scoreboard = statsScoreboards[player]
             val lines = configurationService.findValue<List<String>>("stats-scoreboard.lines")
 
-            lines.forEachIndexed { i, line ->
+            lines.reversed().forEachIndexed { i, line ->
                 scoreboardService.setLine(scoreboard, i, replacePlaceHolders(player, stats, line))
             }
         }
     }
 
+    /**
+     * Replaces the placeholder with the actual stats of the given [player].
+     */
     private fun replacePlaceHolders(player: Player, stats: Stats, line: String): String {
         return line
                 .replace(PlaceHolder.STATS_PLAYER_NAME.placeHolder, player.name)
