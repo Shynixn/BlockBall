@@ -1,10 +1,12 @@
 package unittest
 
 import com.github.shynixn.blockball.api.business.service.DoubleJumpService
-import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.SoundService
-import com.github.shynixn.blockball.api.persistence.entity.*
+import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.api.persistence.entity.ArenaMeta
+import com.github.shynixn.blockball.api.persistence.entity.Particle
+import com.github.shynixn.blockball.api.persistence.entity.Sound
 import com.github.shynixn.blockball.bukkit.logic.business.service.DoubleJumpServiceImpl
 import com.github.shynixn.blockball.core.logic.persistence.entity.DoubleJumpMetaEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.GameEntity
@@ -17,9 +19,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import java.util.*
-import java.util.concurrent.CompletableFuture
-import kotlin.collections.ArrayList
 
 /**
  * Created by Shynixn 2018.
@@ -60,7 +59,11 @@ class DoubleJumpServiceTest {
     @Test
     fun handleDoubleClick_ValidPlayerConditions_ShouldReturnTrue() {
         // Arrange
-        val mockedGameService = MockedGameService()
+        val arena = mock(Arena::class.java)
+        val meta = mock(ArenaMeta::class.java)
+        `when`(meta.doubleJumpMeta).thenReturn(DoubleJumpMetaEntity())
+        val game = GameEntity(arena)
+        `when`(arena.meta).thenReturn(meta)
         val mockedParticleService = MockedParticleService()
         val mockedSoundServie = MockedSoundService()
         val player = mock(Player::class.java)
@@ -72,10 +75,10 @@ class DoubleJumpServiceTest {
         Mockito.`when`(player.world).thenReturn(world)
         Mockito.`when`(player.velocity).thenReturn(Vector(1, 1, 0))
 
-        val classUnderTest = createWithDependencies(mockedGameService, mockedSoundServie, mockedParticleService)
+        val classUnderTest = createWithDependencies(mockedSoundServie, mockedParticleService)
 
         // Act
-        val success = classUnderTest.handleDoubleClick(player)
+        val success = classUnderTest.handleDoubleClick(game, player)
 
         // Assert
         Assertions.assertTrue(success)
@@ -83,33 +86,6 @@ class DoubleJumpServiceTest {
         Assertions.assertEquals(1.0, player.velocity.y)
         Assertions.assertTrue(mockedSoundServie.playSoundCalled)
         Assertions.assertTrue(mockedParticleService.playParticleCalled)
-    }
-
-    /**
-     * Given
-     *      player which is not in a game.
-     * When
-     *      handleDoubleClick is called
-     * Then
-     *     False should be returned.
-     */
-    @Test
-    fun handleDoubleClick_ValidPlayerNotInGame_ShouldReturnFalse() {
-        // Arrange
-        val mockedGameService = MockedGameService()
-        mockedGameService.shouldReturnGame = false
-        val mockedParticleService = MockedParticleService()
-        val mockedSoundServie = MockedSoundService()
-        val player = mock(Player::class.java)
-        val classUnderTest = createWithDependencies(mockedGameService, mockedSoundServie, mockedParticleService)
-
-        // Act
-        val success = classUnderTest.handleDoubleClick(player)
-
-        // Assert
-        Assertions.assertFalse(success)
-        Assertions.assertFalse(mockedSoundServie.playSoundCalled)
-        Assertions.assertFalse(mockedParticleService.playParticleCalled)
     }
 
     /**
@@ -124,81 +100,21 @@ class DoubleJumpServiceTest {
     fun handleDoubleClick_InvalidPlayer_ShouldThrowException() {
         // Arrange
         val classUnderTest = createWithDependencies()
+        val arena = mock(Arena::class.java)
+        val meta = mock(ArenaMeta::class.java)
+        `when`(meta.doubleJumpMeta).thenReturn(DoubleJumpMetaEntity())
+        val game = GameEntity(arena)
+        `when`(arena.meta).thenReturn(meta)
 
         // Act
         Assertions.assertThrows(IllegalArgumentException::class.java) {
-            classUnderTest.handleDoubleClick("I'm a player")
+            classUnderTest.handleDoubleClick(game, "I'm a player")
         }
     }
 
     companion object {
-        fun createWithDependencies(gameService: GameService = MockedGameService(), soundService: SoundService = MockedSoundService(), particleService: ParticleService = MockedParticleService()): DoubleJumpService {
-            return DoubleJumpServiceImpl(gameService, soundService, particleService)
-        }
-    }
-
-    class MockedGameService : GameService {
-        var shouldReturnGame = true
-        private var gameEntity: Game? = null
-
-        init {
-            val arena = mock(Arena::class.java)
-            val meta = mock(ArenaMeta::class.java)
-            `when`(meta.doubleJumpMeta).thenReturn(DoubleJumpMetaEntity())
-            gameEntity = GameEntity(arena)
-            `when`(arena.meta).thenReturn(meta)
-        }
-
-        /**
-         * Restarts all games on the server.
-         */
-        override fun restartGames(): CompletableFuture<Void?> {
-            return CompletableFuture()
-        }
-
-        /**
-         * Returns the game if the given [player] is playing a game.
-         */
-        override fun <P> getGameFromPlayer(player: P): Optional<Game> {
-            if (shouldReturnGame) {
-                return Optional.of(gameEntity!!)
-            }
-
-            return Optional.empty()
-        }
-
-        /**
-         * Returns the game if the given [player] is spectating a game.
-         */
-        override fun <P> getGameFromSpectatingPlayer(player: P): Optional<Game> {
-            return Optional.empty()
-        }
-
-        /**
-         * Returns the game at the given location.
-         */
-        override fun <L> getGameFromLocation(location: L): Optional<Game> {
-            return Optional.empty()
-        }
-
-        /**
-         * Returns the game with the given name or displayName.
-         */
-        override fun getGameFromName(name: String): Optional<Game> {
-            return Optional.empty()
-        }
-
-        /**
-         * Returns all currently loaded games on the server.
-         */
-        override fun getAllGames(): List<Game> {
-            return ArrayList()
-        }
-
-        /**
-         * Closes all games permanently and should be executed on server shutdown.
-         */
-        override fun close() {
+        fun createWithDependencies(soundService: SoundService = MockedSoundService(), particleService: ParticleService = MockedParticleService()): DoubleJumpService {
+            return DoubleJumpServiceImpl(soundService, particleService)
         }
     }
 

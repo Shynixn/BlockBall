@@ -1,9 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+
 import com.github.shynixn.blockball.api.business.service.DoubleJumpService
-import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.SoundService
+import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 
@@ -34,29 +35,24 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class DoubleJumpServiceImpl @Inject constructor(private val gameService: GameService, private val soundService: SoundService, private val particleService: ParticleService) : DoubleJumpService {
+@Suppress("USELESS_CAST")
+class DoubleJumpServiceImpl @Inject constructor(private val soundService: SoundService, private val particleService: ParticleService) : DoubleJumpService {
     /**
-     * Handles the double click of the given [player] and executes the double jump if available.
+     * Handles the double click of the given [player] in the given [game] and executes the double jump if available.
+     * Returns if the jump has been activated.
      */
-    override fun <P> handleDoubleClick(player: P): Boolean {
+    override fun <P> handleDoubleClick(game: Game, player: P): Boolean {
         if (player !is Player) {
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        val game = gameService.getGameFromPlayer(player)
-
-        if (!game.isPresent) {
-            return false
         }
 
         player.allowFlight = false
         player.isFlying = false
 
-        val meta = game.get().arena.meta.doubleJumpMeta
+        val meta = game.arena.meta.doubleJumpMeta
 
-        if (meta.enabled && !game.get().doubleJumpCoolDownPlayers.containsKey(player)) {
-            @Suppress("USELESS_CAST")
-            game.get().doubleJumpCoolDownPlayers[player as Any] = meta.cooldown
+        if (meta.enabled && !game.doubleJumpCoolDownPlayers.containsKey(player)) {
+            game.doubleJumpCoolDownPlayers[player as Any] = meta.cooldown
             player.velocity = player.location.direction
                     .multiply(meta.horizontalStrength)
                     .setY(meta.verticalStrength)

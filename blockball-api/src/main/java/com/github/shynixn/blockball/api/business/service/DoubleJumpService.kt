@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.business.service
 
+import com.github.shynixn.blockball.api.persistence.entity.Game
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -29,8 +31,8 @@ package com.github.shynixn.blockball.api.business.service
  */
 interface DoubleJumpService {
     /**
-     * Handles the double click of the given [player] and executes the double jump if available.
-     * Returns if the jump has been actived.
+     * Handles the double click of the given [player] in the given [game] and executes the double jump if available.
+     * Returns if the jump has been activated.
      */
-    fun <P> handleDoubleClick(player: P): Boolean
+    fun <P> handleDoubleClick(game : Game, player: P): Boolean
 }

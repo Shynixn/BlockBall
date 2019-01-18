@@ -235,11 +235,17 @@ class GameListener @Inject constructor(private val gameService: GameService, ite
      */
     @EventHandler
     fun onToggleFlightEvent(event: PlayerToggleFlightEvent) {
-        if (event.player.gameMode == GameMode.CREATIVE) {
+        if (event.player.gameMode == GameMode.CREATIVE || event.player.gameMode == GameMode.SPECTATOR) {
             return
         }
 
-        event.isCancelled = doubleJumpService.handleDoubleClick(event.player)
+        val game = gameService.getGameFromPlayer(event.player)
+
+        if (!game.isPresent) {
+            return
+        }
+
+        event.isCancelled = doubleJumpService.handleDoubleClick(game.get(), event.player)
     }
 
     /**
