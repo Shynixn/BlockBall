@@ -220,12 +220,20 @@ class GameListener @Inject constructor(private val gameService: GameService, ite
             return
         }
 
-        gameService.getAllGames().forEach { p ->
+        for (game in gameService.getAllGames()) {
             when {
-                p.arena.meta.lobbyMeta.joinSigns.contains(location) -> gameActionService.joinGame(p, event.player)
-                p.arena.meta.lobbyMeta.leaveSigns.contains(location) -> gameActionService.leaveGame(p, event.player)
-                p.arena.meta.redTeamMeta.signs.contains(location) -> gameActionService.joinGame(p, event.player, Team.RED)
-                p.arena.meta.blueTeamMeta.signs.contains(location) -> gameActionService.joinGame(p, event.player, Team.BLUE)
+                game.arena.meta.lobbyMeta.joinSigns.contains(location) -> {
+                    gameActionService.joinGame(game, event.player)
+                }
+                game.arena.meta.redTeamMeta.signs.contains(location) -> {
+                    gameActionService.joinGame(game, event.player, Team.RED)
+                }
+                game.arena.meta.blueTeamMeta.signs.contains(location) -> {
+                    gameActionService.joinGame(game, event.player, Team.BLUE)
+                }
+                game.arena.meta.lobbyMeta.leaveSigns.contains(location) -> {
+                    gameActionService.leaveGame(game, event.player)
+                }
             }
         }
     }
