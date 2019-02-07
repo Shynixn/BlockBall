@@ -66,6 +66,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             this.reloadConfig()
             // Register Listeners
             Bukkit.getPluginManager().registerEvents(resolve(GameListener::class.java), this)
+            Bukkit.getPluginManager().registerEvents(resolve(DoubleJumpListener::class.java), this)
             Bukkit.getPluginManager().registerEvents(resolve(HubgameListener::class.java), this)
             Bukkit.getPluginManager().registerEvents(resolve(MinigameListener::class.java), this)
             Bukkit.getPluginManager().registerEvents(resolve(BungeeCordgameListener::class.java), this)

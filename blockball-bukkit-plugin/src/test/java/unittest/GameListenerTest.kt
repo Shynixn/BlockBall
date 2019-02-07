@@ -3,13 +3,15 @@
 package unittest
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.business.service.GameActionService
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.business.service.ItemService
+import com.github.shynixn.blockball.api.business.service.RightclickManageService
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
 import com.github.shynixn.blockball.core.logic.persistence.entity.ArenaEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.GameEntity
-import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.block.Block
@@ -17,7 +19,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerToggleFlightEvent
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -53,112 +54,6 @@ import kotlin.collections.ArrayList
  * SOFTWARE.
  */
 class GameListenerTest {
-
-    //region onToggleFlightEvent
-
-    /**
-     * Given
-     *      a toggleFlightEvent with a player in game
-     * When
-     *      onToggleFlightEvent is called
-     * Then
-     *     double jump should be called.
-     */
-    @Test
-    fun onToggleFlightEvent_PlayerInGame_ShouldCallDoubleJump() {
-        // Arrange
-        val doubleJumpService = MockedDoubleJumpService()
-        val gameService = MockedGameService()
-        val classUnderTest = createWithDependencies(doubleJumpService, gameService)
-        val event = PlayerToggleFlightEvent(gameService.players[0], true)
-
-        // Act
-        classUnderTest.onToggleFlightEvent(event)
-
-        // Assert
-        Assertions.assertTrue(doubleJumpService.called)
-        Assertions.assertTrue(event.isCancelled)
-    }
-
-    /**
-     * Given
-     *      a toggleFlightEvent with a creative player in game
-     * When
-     *      onToggleFlightEvent is called
-     * Then
-     *     double jump should not be called.
-     */
-    @Test
-    fun onToggleFlightEvent_CreativePlayerInGame_ShouldNotCallDoubleJump() {
-        // Arrange
-        val doubleJumpService = MockedDoubleJumpService()
-        val gameService = MockedGameService()
-        val classUnderTest = createWithDependencies(doubleJumpService, gameService)
-        Mockito.`when`(gameService.players[0].gameMode).thenReturn(GameMode.CREATIVE)
-        val event = PlayerToggleFlightEvent(gameService.players[0], true)
-
-        // Act
-        classUnderTest.onToggleFlightEvent(event)
-
-        // Assert
-        Assertions.assertFalse(doubleJumpService.called)
-        Assertions.assertTrue(event.isFlying)
-        Assertions.assertFalse(event.isCancelled)
-    }
-
-    /**
-     * Given
-     *      a toggleFlightEvent with a spectator player in game
-     * When
-     *      onToggleFlightEvent is called
-     * Then
-     *     double jump should not be called.
-     */
-    @Test
-    fun onToggleFlightEvent_SpectatorPlayerInGame_ShouldNotCallDoubleJump() {
-        // Arrange
-        val doubleJumpService = MockedDoubleJumpService()
-        val gameService = MockedGameService()
-        val classUnderTest = createWithDependencies(doubleJumpService, gameService)
-        Mockito.`when`(gameService.players[0].gameMode).thenReturn(GameMode.SPECTATOR)
-        val event = PlayerToggleFlightEvent(gameService.players[0], true)
-
-        // Act
-        classUnderTest.onToggleFlightEvent(event)
-
-        // Assert
-        Assertions.assertFalse(doubleJumpService.called)
-        Assertions.assertTrue(event.isFlying)
-        Assertions.assertFalse(event.isCancelled)
-    }
-
-    /**
-     * Given
-     *      a toggleFlightEvent with a player not in game
-     * When
-     *      onToggleFlightEvent is called
-     * Then
-     *     double jump should not be called.
-     */
-    @Test
-    fun onToggleFlightEvent_PlayerNotInGame_ShouldNotCallDoubleJump() {
-        // Arrange
-        val doubleJumpService = MockedDoubleJumpService()
-        val gameService = MockedGameService()
-        val classUnderTest = createWithDependencies(doubleJumpService, gameService)
-        val event = PlayerToggleFlightEvent(Mockito.mock(Player::class.java), true)
-
-        // Act
-        classUnderTest.onToggleFlightEvent(event)
-
-        // Assert
-        Assertions.assertFalse(doubleJumpService.called)
-        Assertions.assertTrue(event.isFlying)
-        Assertions.assertFalse(event.isCancelled)
-    }
-
-    //endregion
-
     //region onClickOnPlacedSign
 
     /**
@@ -172,10 +67,9 @@ class GameListenerTest {
     @Test
     fun onClickOnPlacedSign_NoRightClickBlock_ShouldNotCallWatchers() {
         // Arrange
-        val doubleJumpService = MockedDoubleJumpService()
         val gameService = MockedGameService()
         val rightClickService = MockedRightClickService()
-        val classUnderTest = createWithDependencies(doubleJumpService, gameService, rightClickService)
+        val classUnderTest = createWithDependencies(gameService, rightClickService)
 
         // Act
         classUnderTest.onClickOnPlacedSign(PlayerInteractEvent(gameService.players[0], Action.LEFT_CLICK_AIR, null, null, null))
@@ -198,10 +92,9 @@ class GameListenerTest {
     @Test
     fun onClickOnPlacedSign_RightClickOnWallBlock_ShouldCallWatchers() {
         // Arrange
-        val doubleJumpService = MockedDoubleJumpService()
         val gameService = MockedGameService()
         val rightClickService = MockedRightClickService()
-        val classUnderTest = createWithDependencies(doubleJumpService, gameService, rightClickService)
+        val classUnderTest = createWithDependencies(gameService, rightClickService)
         val block = Mockito.mock(Block::class.java)
         val location = Location(Mockito.mock(World::class.java), 5.0, 28.0, 392.0)
         Mockito.`when`(block.type).thenReturn(null)
@@ -225,11 +118,10 @@ class GameListenerTest {
     @Test
     fun onClickOnPlacedSign_RightClickOnJoinSign_ShouldJoinGame() {
         // Arrange
-        val doubleJumpService = MockedDoubleJumpService()
         val gameService = MockedGameService()
         val rightClickService = MockedRightClickService()
         val gameActionService = MockedGameActionService()
-        val classUnderTest = createWithDependencies(doubleJumpService, gameService, rightClickService, gameActionService)
+        val classUnderTest = createWithDependencies(gameService, rightClickService, gameActionService)
         val location = Location(Mockito.mock(World::class.java), 5.0, 28.0, 392.0)
         val block = Mockito.mock(Block::class.java)
         Mockito.`when`(block.type).thenReturn(null)
@@ -261,11 +153,10 @@ class GameListenerTest {
     @Test
     fun onClickOnPlacedSign_RightClickOnLeaveSign_ShouldLeaveGame() {
         // Arrange
-        val doubleJumpService = MockedDoubleJumpService()
         val gameService = MockedGameService()
         val rightClickService = MockedRightClickService()
         val gameActionService = MockedGameActionService()
-        val classUnderTest = createWithDependencies(doubleJumpService, gameService, rightClickService, gameActionService)
+        val classUnderTest = createWithDependencies(gameService, rightClickService, gameActionService)
         val location = Location(Mockito.mock(World::class.java), 5.0, 28.0, 392.0)
         val block = Mockito.mock(Block::class.java)
         Mockito.`when`(block.type).thenReturn(null)
@@ -296,11 +187,10 @@ class GameListenerTest {
     @Test
     fun onClickOnPlacedSign_RightClickOnRedTeamSign_ShouldJoinRedTeamGame() {
         // Arrange
-        val doubleJumpService = MockedDoubleJumpService()
         val gameService = MockedGameService()
         val rightClickService = MockedRightClickService()
         val gameActionService = MockedGameActionService()
-        val classUnderTest = createWithDependencies(doubleJumpService, gameService, rightClickService, gameActionService)
+        val classUnderTest = createWithDependencies(gameService, rightClickService, gameActionService)
         val location = Location(Mockito.mock(World::class.java), 5.0, 28.0, 392.0)
         val block = Mockito.mock(Block::class.java)
         Mockito.`when`(block.type).thenReturn(null)
@@ -332,11 +222,10 @@ class GameListenerTest {
     @Test
     fun onClickOnPlacedSign_RightClickOnBlueTeamSign_ShouldJoinBlueTeamGame() {
         // Arrange
-        val doubleJumpService = MockedDoubleJumpService()
         val gameService = MockedGameService()
         val rightClickService = MockedRightClickService()
         val gameActionService = MockedGameActionService()
-        val classUnderTest = createWithDependencies(doubleJumpService, gameService, rightClickService, gameActionService)
+        val classUnderTest = createWithDependencies(gameService, rightClickService, gameActionService)
         val location = Location(Mockito.mock(World::class.java), 5.0, 28.0, 392.0)
         val block = Mockito.mock(Block::class.java)
         Mockito.`when`(block.type).thenReturn(null)
@@ -372,9 +261,8 @@ class GameListenerTest {
     @Test
     fun onPlayerHungerEvent_PlayerInGame_ShouldCancelHunger() {
         // Arrange
-        val doubleJumpService = MockedDoubleJumpService()
         val gameService = MockedGameService()
-        val classUnderTest = createWithDependencies(doubleJumpService, gameService)
+        val classUnderTest = createWithDependencies(gameService)
         val event = FoodLevelChangeEvent(gameService.players[0], 2)
 
         // Act
@@ -395,9 +283,8 @@ class GameListenerTest {
     @Test
     fun onPlayerHungerEvent_PlayerNotInGame_ShouldNotCancelHunger() {
         // Arrange
-        val doubleJumpService = MockedDoubleJumpService()
         val gameService = MockedGameService()
-        val classUnderTest = createWithDependencies(doubleJumpService, gameService)
+        val classUnderTest = createWithDependencies(gameService)
         val event = FoodLevelChangeEvent(Mockito.mock(Player::class.java), 2)
 
         // Act
@@ -410,10 +297,10 @@ class GameListenerTest {
     //endregion
 
     companion object {
-        fun createWithDependencies(doubleJumpService: DoubleJumpService, gameService: GameService = Mockito.mock(GameService::class.java), rightclickManageService: RightclickManageService = MockedRightClickService(), gameActionService: GameActionService<Game> = MockedGameActionService()): GameListener {
+        fun createWithDependencies(gameService: GameService = Mockito.mock(GameService::class.java), rightclickManageService: RightclickManageService = MockedRightClickService(), gameActionService: GameActionService<Game> = MockedGameActionService()): GameListener {
             val itemService = Mockito.mock(ItemService::class.java)
 
-            return GameListener(gameService, itemService, rightclickManageService, doubleJumpService, gameActionService)
+            return GameListener(gameService, itemService, rightclickManageService,gameActionService)
         }
     }
 
@@ -526,17 +413,6 @@ class GameListenerTest {
          */
         override fun close() {
             throw IllegalArgumentException()
-        }
-    }
-
-    class MockedDoubleJumpService(var called: Boolean = false) : DoubleJumpService {
-        /**
-         * Handles the double click of the given [player] in the given [game] and executes the double jump if available.
-         * Returns if the jump has been activated.
-         */
-        override fun <P> handleDoubleClick(game: Game, player: P): Boolean {
-            called = true
-            return true
         }
     }
 }
