@@ -5,9 +5,11 @@ import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.business.service.GameActionService
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.business.service.ItemService
+import com.github.shynixn.blockball.api.business.service.RightclickManageService
 import com.github.shynixn.blockball.api.persistence.entity.Game
-import com.github.shynixn.blockball.bukkit.logic.business.extension.isTouchingGround
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
@@ -22,7 +24,8 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
-import org.bukkit.event.player.*
+import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerQuitEvent
 
 /**
  * Created by Shynixn 2018.
@@ -51,7 +54,7 @@ import org.bukkit.event.player.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameListener @Inject constructor(private val gameService: GameService, itemService: ItemService, private val rightClickManageService: RightclickManageService, private val doubleJumpService: DoubleJumpService, private val gameActionService: GameActionService<Game>) : Listener {
+class GameListener @Inject constructor(private val gameService: GameService, itemService: ItemService, private val rightClickManageService: RightclickManageService, private val gameActionService: GameActionService<Game>) : Listener {
     private val signPostMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.SIGN_POST)
 
     /**
@@ -82,22 +85,6 @@ class GameListener @Inject constructor(private val gameService: GameService, ite
 
         if (game.isPresent) {
             event.isCancelled = true
-        }
-    }
-
-    /**
-     * Allows the player to start flying as long he is inside of a game.
-     */
-    @EventHandler
-    fun onPlayerMoveEvent(event: PlayerMoveEvent) {
-        if (!event.player.isTouchingGround()) {
-            return
-        }
-
-        val game = gameService.getGameFromPlayer(event.player)
-
-        if (game.isPresent) {
-            event.player.allowFlight = true
         }
     }
 
@@ -220,26 +207,22 @@ class GameListener @Inject constructor(private val gameService: GameService, ite
             return
         }
 
-        gameService.getAllGames().forEach { p ->
+        for (game in gameService.getAllGames()) {
             when {
-                p.arena.meta.lobbyMeta.joinSigns.contains(location) -> gameActionService.joinGame(p, event.player)
-                p.arena.meta.lobbyMeta.leaveSigns.contains(location) -> gameActionService.leaveGame(p, event.player)
-                p.arena.meta.redTeamMeta.signs.contains(location) -> gameActionService.joinGame(p, event.player, Team.RED)
-                p.arena.meta.blueTeamMeta.signs.contains(location) -> gameActionService.joinGame(p, event.player, Team.BLUE)
+                game.arena.meta.lobbyMeta.joinSigns.contains(location) -> {
+                    gameActionService.joinGame(game, event.player)
+                }
+                game.arena.meta.redTeamMeta.signs.contains(location) -> {
+                    gameActionService.joinGame(game, event.player, Team.RED)
+                }
+                game.arena.meta.blueTeamMeta.signs.contains(location) -> {
+                    gameActionService.joinGame(game, event.player, Team.BLUE)
+                }
+                game.arena.meta.lobbyMeta.leaveSigns.contains(location) -> {
+                    gameActionService.leaveGame(game, event.player)
+                }
             }
         }
-    }
-
-    /**
-     * Handles executing the double jump.
-     */
-    @EventHandler
-    fun onToggleFlightEvent(event: PlayerToggleFlightEvent) {
-        if (event.player.gameMode == GameMode.CREATIVE) {
-            return
-        }
-
-        event.isCancelled = doubleJumpService.handleDoubleClick(event.player)
     }
 
     /**
