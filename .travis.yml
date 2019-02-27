@@ -7,45 +7,31 @@ cache:
   directories:
   - $HOME/.m2/repository/org/spigotmc
 before_install:
-    - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
-    - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
-install:
-   - cd /home/travis/build/Shynixn/BlockBall/
-   - mkdir lib
-   - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar -P /home/travis/build/Shynixn/BlockBall/lib/
-   - cd /home/travis/build/Shynixn/BlockBall/lib/
-   - java -jar BuildTools.jar --rev 1.8 > /dev/null
-   - java -jar BuildTools.jar --rev 1.8.3 > /dev/null
-   - java -jar BuildTools.jar --rev 1.8.8 > /dev/null
-   - java -jar BuildTools.jar --rev 1.9 > /dev/null
-   - java -jar BuildTools.jar --rev 1.9.4 > /dev/null
-   - java -jar BuildTools.jar --rev 1.10 > /dev/null
-   - java -jar BuildTools.jar --rev 1.11 > /dev/null
-   - java -jar BuildTools.jar --rev 1.12 > /dev/null
-   - java -jar BuildTools.jar --rev 1.13 > /dev/null
-   - java -jar BuildTools.jar --rev 1.13.2 > /dev/null
-   - mvn install:install-file -Dfile=spigot-1.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R1 -Dversion=1.8.0-R1.0 -Dpackaging=jar
-   - mvn install:install-file -Dfile=spigot-1.8.3.jar -DgroupId=org.spigotmc -DartifactId=spigot18R2 -Dversion=1.8.3-R2.0 -Dpackaging=jar
-   - mvn install:install-file -Dfile=spigot-1.8.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R3 -Dversion=1.8.8-R3.0 -Dpackaging=jar
-   - mvn install:install-file -Dfile=spigot-1.9.jar -DgroupId=org.spigotmc -DartifactId=spigot19R1 -Dversion=1.9.0-R1.0 -Dpackaging=jar
-   - mvn install:install-file -Dfile=spigot-1.9.4.jar -DgroupId=org.spigotmc -DartifactId=spigot19R2 -Dversion=1.9.4-R2.0 -Dpackaging=jar
-   - mvn install:install-file -Dfile=spigot-1.10.2.jar -DgroupId=org.spigotmc -DartifactId=spigot110R1 -Dversion=1.10.2-R1.0 -Dpackaging=jar
-   - mvn install:install-file -Dfile=spigot-1.11.jar -DgroupId=org.spigotmc -DartifactId=spigot111R1 -Dversion=1.11.0-R1.0 -Dpackaging=jar
-   - mvn install:install-file -Dfile=spigot-1.12.jar -DgroupId=org.spigotmc -DartifactId=spigot112R1 -Dversion=1.12.0-R1.0 -Dpackaging=jar
-   - mvn install:install-file -Dfile=spigot-1.13.jar -DgroupId=org.spigotmc -DartifactId=spigot113R1 -Dversion=1.13.0-R1.0 -Dpackaging=jar
-   - mvn install:install-file -Dfile=spigot-1.13.2.jar -DgroupId=org.spigotmc -DartifactId=spigot113R2 -Dversion=1.13.2-R2.0 -Dpackaging=jar
-   - cd /home/travis/build/Shynixn/BlockBall/
-before_script:
+  - chmod +x gradlew
+  - chmod +x blockball-tools/travis-status.sh
   - sudo /etc/init.d/mysql stop
+  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
+  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--refresh-dependencies"* ]]; then ./gradlew downloadDependencies; fi ;
+  - sudo apt-get install python3-pip
+  - sudo pip3 install https://github.com/Shynixn/sphinx_rtd_theme/releases/download/C1.0/sphinx_rtd_theme.zip
+  - sudo pip3 install -U sphinx
+  - git config --global user.email "travis@travis-ci.org" && git config --global user.name "Travis CI"
+install:
+  - ./gradlew assemble || ./gradlew downloadDependencies
 script:
-  - mvn clean -q deploy --quiet --settings .travis_settings.xml
+  - ./gradlew clean build
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* ]]; then ./gradlew clean publish > /dev/null; fi ;
+  - if [[ $TRAVIS_BRANCH == *"master"* ]]; then rm -rf docs/build && rm -rf docs/apidocs; fi ;
+  - if [[ $TRAVIS_BRANCH == *"master"* ]]; then python3 -msphinx -M html docs/source docs/build; fi ;
+  - if [[ $TRAVIS_BRANCH == *"master"* ]]; then ./gradlew generateJavaDocPages > /dev/null; fi ;
+  - if [[ $TRAVIS_BRANCH == *"master"* ]]; then git add docs && git commit --message "Travis build $TRAVIS_BUILD_NUMBER [skip travis-ci]"; fi ;
+  - if [[ $TRAVIS_BRANCH == *"master"* ]]; then git push --quiet https://Shynixn:$GH_TOKEN@github.com/Shynixn/BlockBall.git HEAD:master; fi ;
 after_success:
+  - ./gradlew jacocoTestReport
   - bash <(curl -s https://codecov.io/bash)
-  - wget https://github.com/Shynixn/travis-ci-discord-webhook/raw/master/nexus-query-snapshot.jar
-  - wget https://raw.githubusercontent.com/Shynixn/travis-ci-discord-webhook/master/blockball.sh
-  - chmod +x blockball.sh
-  - ./blockball.sh success $WEBHOOK_URL $WEBHOOK_SNAPSHOT_URL $SNAPSHOT_REPOSITORY_BUKKIT
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* ]]; then java -jar blockball-tools/Deploy.jar --snapshot $WEBHOOK_SNAPSHOT_URL; fi ;
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* ]]; then java -jar blockball-tools/Deploy.jar --snapshot $WEBHOOK_URL; fi ;
+  - ./blockball-tools/travis-status.sh success $WEBHOOK_URL
 after_failure:
-  - wget https://raw.githubusercontent.com/Shynixn/travis-ci-discord-webhook/master/send.sh
-  - chmod +x send.sh
-  - ./send.sh failure $WEBHOOK_URL
+  - ./blockball-tools/travis-status.sh failure $WEBHOOK_URL

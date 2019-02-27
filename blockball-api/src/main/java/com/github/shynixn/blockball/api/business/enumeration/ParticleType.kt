@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.api.business.enumeration
 
 /**
- * ParticleEffects compatible to PetBlocks.
+ * ParticleEffects compatible to BlockBall.
  * <p>
  * Version 1.2
  * <p>

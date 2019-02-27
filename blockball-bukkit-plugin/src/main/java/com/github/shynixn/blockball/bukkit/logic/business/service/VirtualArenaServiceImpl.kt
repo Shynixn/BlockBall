@@ -39,7 +39,10 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin, private val particleService: ParticleService) : VirtualArenaService {
+class VirtualArenaServiceImpl @Inject constructor(
+    private val plugin: Plugin,
+    private val particleService: ParticleService
+) : VirtualArenaService {
 
     /**
      * Displays the [arena] virtual locations for the given [player].
@@ -56,10 +59,20 @@ class VirtualArenaServiceImpl @Inject constructor(private val plugin: Plugin, pr
         particle.amount = 20
         particle.speed = 0.02
 
-        plugin.server.scheduler.runTaskAsynchronously(plugin) {
-            displayParticles(player, particle, arena.meta.redTeamMeta.goal.lowerCorner, arena.meta.redTeamMeta.goal.upperCorner)
-            displayParticles(player, particle, arena.meta.blueTeamMeta.goal.lowerCorner, arena.meta.blueTeamMeta.goal.upperCorner)
-        }
+        plugin.server.scheduler.runTaskAsynchronously(plugin, Runnable {
+            displayParticles(
+                player,
+                particle,
+                arena.meta.redTeamMeta.goal.lowerCorner,
+                arena.meta.redTeamMeta.goal.upperCorner
+            )
+            displayParticles(
+                player,
+                particle,
+                arena.meta.blueTeamMeta.goal.lowerCorner,
+                arena.meta.blueTeamMeta.goal.upperCorner
+            )
+        })
     }
 
     /**
