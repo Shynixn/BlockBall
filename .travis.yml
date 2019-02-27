@@ -6,6 +6,7 @@ cache:
   timeout: 1000
   directories:
   - $HOME/.m2/repository/org/spigotmc
+  - $HOME/.m2/repository/net/milkbowlvault
 before_install:
   - chmod +x gradlew
   - chmod +x blockball-tools/travis-status.sh
