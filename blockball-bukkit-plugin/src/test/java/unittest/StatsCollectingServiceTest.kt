@@ -95,6 +95,7 @@ class StatsCollectingServiceTest {
         ): StatsCollectingService {
             if (Bukkit.getServer() == null) {
                 val server = Mockito.mock(Server::class.java)
+                `when`(server.logger).thenReturn(Logger.getGlobal())
                 Bukkit.setServer(server)
             }
 

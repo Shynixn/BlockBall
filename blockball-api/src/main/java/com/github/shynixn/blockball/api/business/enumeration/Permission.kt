@@ -7,7 +7,7 @@ package com.github.shynixn.blockball.api.business.enumeration
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2018-2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,14 +28,20 @@ package com.github.shynixn.blockball.api.business.enumeration
  * SOFTWARE.
  */
 enum class Permission(
-        /**
-         * Permission string.
-         */
-        val permission: String) {
+    /**
+     * Permission string.
+     */
+    val permission: String
+) {
     /**
      * Permission for staff to allow executing commands while ingame.
      */
     STAFF("blockball.command.staff"),
+
+    /**
+     * Permission for users to allow opening and clicking their inventory while ingame.
+     */
+    INVENTORY("blockball.game.inventory"),
 
     /**
      * Permission for admins to configure and execute commands.

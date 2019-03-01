@@ -33,12 +33,26 @@ subprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
     apply plugin: 'java-library'
+    apply plugin: 'jacoco'
 
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled = true
+            html.enabled = false
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging.showStandardStreams = true
+        failFast = true
     }
 
     task sourcesJar(type: Jar) {
@@ -114,6 +128,9 @@ subprojects {
     dependencies {
         implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
         implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
+
+        testCompile 'org.jetbrains.kotlin:kotlin-test'
+        testCompile 'org.jetbrains.kotlin:kotlin-test-junit'
     }
 }
 

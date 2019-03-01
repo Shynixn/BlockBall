@@ -66,9 +66,9 @@ class StatsListener @Inject constructor(private val statsCollectingService: Stat
      */
     @EventHandler
     fun onPlayerShootGoalEvent(event: GameGoalEvent) {
-        this.statsCollectingService.updateStats(event.player, { stats ->
+        this.statsCollectingService.updateStats(event.player) { stats ->
             stats.amountOfGoals = stats.amountOfGoals + 1
-        })
+        }
     }
 
     /**
@@ -78,9 +78,9 @@ class StatsListener @Inject constructor(private val statsCollectingService: Stat
      */
     @EventHandler
     fun onPlayerJoinGameEvent(event: GameJoinEvent) {
-        this.statsCollectingService.updateStats(event.player, { stats ->
+        this.statsCollectingService.updateStats(event.player) { stats ->
             stats.amountOfPlayedGames = stats.amountOfPlayedGames + 1
-        })
+        }
     }
 
     /**
@@ -97,9 +97,9 @@ class StatsListener @Inject constructor(private val statsCollectingService: Stat
         }
 
         winningPlayers.forEach { p ->
-            statsCollectingService.updateStats(p, { stats ->
+            statsCollectingService.updateStats(p) { stats ->
                 stats.amountOfWins = stats.amountOfWins + 1
-            })
+            }
         }
     }
 }

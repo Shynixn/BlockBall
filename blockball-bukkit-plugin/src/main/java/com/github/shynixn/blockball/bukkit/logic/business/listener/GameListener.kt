@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
+import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.GameActionService
@@ -10,6 +11,7 @@ import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.business.service.RightclickManageService
 import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
@@ -54,7 +56,12 @@ import org.bukkit.event.player.PlayerQuitEvent
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameListener @Inject constructor(private val gameService: GameService, itemService: ItemService, private val rightClickManageService: RightclickManageService, private val gameActionService: GameActionService<Game>) : Listener {
+class GameListener @Inject constructor(
+    private val gameService: GameService,
+    itemService: ItemService,
+    private val rightClickManageService: RightclickManageService,
+    private val gameActionService: GameActionService<Game>
+) : Listener {
     private val signPostMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.SIGN_POST)
 
     /**
@@ -95,7 +102,7 @@ class GameListener @Inject constructor(private val gameService: GameService, ite
     fun onPlayerClickInventoryEvent(event: InventoryClickEvent) {
         val game = gameService.getGameFromPlayer(event.whoClicked as Player)
 
-        if (game.isPresent) {
+        if (game.isPresent && !Permission.INVENTORY.hasPermission(event.whoClicked as Player)) {
             event.isCancelled = true
             event.whoClicked.closeInventory()
         }
@@ -108,7 +115,7 @@ class GameListener @Inject constructor(private val gameService: GameService, ite
     fun onPlayerOpenInventoryEvent(event: InventoryOpenEvent) {
         val game = gameService.getGameFromPlayer(event.player as Player)
 
-        if (game.isPresent) {
+        if (game.isPresent && !Permission.INVENTORY.hasPermission(event.player as Player)) {
             event.isCancelled = true
         }
     }
