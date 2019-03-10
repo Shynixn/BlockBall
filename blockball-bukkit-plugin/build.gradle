@@ -6,7 +6,7 @@ shadowJar{
     archiveName = "$baseName-$version.$extension"
 
     // Change the output folder of the plugin.
-    destinationDir = new File('D:/Temp/plugins')
+    // destinationDir = new File('D:/Temp/plugins')
 
     relocate 'kotlin', 'com.github.shynixn.blockball.lib.kotlin'
     relocate 'org.intellij', 'com.github.shynixn.blockball.lib.org.intelli'
