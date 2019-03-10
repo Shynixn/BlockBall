@@ -141,7 +141,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
 
             if (value == null) {
                 map[finalKey] = null
-            } else if (isPrimitive(value.javaClass)) {
+            } else if (isPrimitive(valueClazz)) {
                 map[finalKey] = value
             } else {
                 if (valueClazz.isInterface) {
@@ -439,6 +439,6 @@ class YamlSerializationServiceImpl : YamlSerializationService {
      * Gets if the given [clazz] is a primitive class.
      */
     private fun isPrimitive(clazz: Class<*>): Boolean {
-        return clazz.isPrimitive || clazz == String::class.java || clazz == Int::class.java || clazz == Double::class.java || clazz == Long::class.java || clazz == Float::class.java
+        return clazz.isPrimitive || clazz == String::class.java || clazz == Int::class.java || clazz == Double::class.java || clazz == Long::class.java || clazz == Float::class.java || clazz == Integer::class.java
     }
 }
