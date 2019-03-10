@@ -40,4 +40,9 @@ class CustomizationMetaEntity : CustomizationMeta {
     /** After how many seconds should players be teleported back to their spawnpoint if [backTeleport] is enabled?*/
     @YamlSerialize(value = "score-back-teleport-delay", orderNumber = 3)
     override var backTeleportDelay: Int = 2
+    /**
+     * Should the ball be restricted by a forcefield to stay in the arena?
+     */
+    @YamlSerialize(value = "ball-forcefield", orderNumber = 4)
+    override var ballForceField: Boolean = true
 }

@@ -134,6 +134,16 @@ interface Game {
     var ballSpawnCounter: Int
 
     /**
+     * Cached block position for the ball forcefield.
+     */
+    var ballForceFieldBlockPosition: Position?
+
+    /**
+     * Cached in arena position for the ball forcefield.
+     */
+    var ballForceFieldArenaPosition: Position?
+
+    /**
      * All players which are already fix in team red.
      */
     val redTeam: List<Any>

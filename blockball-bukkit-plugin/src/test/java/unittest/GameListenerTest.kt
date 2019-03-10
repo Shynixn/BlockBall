@@ -3,10 +3,8 @@
 package unittest
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.GameActionService
-import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.business.service.ItemService
-import com.github.shynixn.blockball.api.business.service.RightclickManageService
+import com.github.shynixn.blockball.api.business.proxy.BallProxy
+import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
@@ -563,7 +561,16 @@ class GameListenerTest {
         ): GameListener {
             val itemService = Mockito.mock(ItemService::class.java)
 
-            return GameListener(gameService, itemService, rightclickManageService, gameActionService)
+            return GameListener(gameService, itemService, rightclickManageService, gameActionService, MockedBallForceFieldService())
+        }
+    }
+
+    class MockedBallForceFieldService : BallForceFieldService {
+        /**
+         * Calculates forcefield interactions and applies correct knockback
+         * velocity regarding on the enabled game ball forcefield and the velocity of the ball.
+         */
+        override fun calculateForcefieldInteractions(game: Game, ball: BallProxy) {
         }
     }
 

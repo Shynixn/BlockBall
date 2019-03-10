@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.proxy.HologramProxy
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.GameStorage
+import com.github.shynixn.blockball.api.persistence.entity.Position
 
 /**
  * Created by Shynixn 2018.
@@ -36,10 +37,20 @@ import com.github.shynixn.blockball.api.persistence.entity.GameStorage
  * SOFTWARE.
  */
 open class GameEntity(
-        /**
-         *  Arena of the game.
-         */
-        override val arena: Arena) : Game {
+    /**
+     *  Arena of the game.
+     */
+    override val arena: Arena
+) : Game {
+    /**
+     * Cached block position for the ball forcefield.
+     */
+    override var ballForceFieldBlockPosition: Position? = null
+    /**
+     * Cached in arena position for the ball forcefield.
+     */
+    override var ballForceFieldArenaPosition: Position? = null
+
     /**
      * Status.
      */
@@ -123,14 +134,16 @@ open class GameEntity(
      */
     override val redTeam: List<Any>
         get() {
-            return this.ingamePlayersStorage.filter { p -> p.value.team != null && p.value.team!! == Team.RED }.keys.toList()
+            return this.ingamePlayersStorage.filter { p -> p.value.team != null && p.value.team!! == Team.RED }
+                .keys.toList()
         }
     /**
      * All players which are already fix in team blue.
      */
     override val blueTeam: List<Any>
         get() {
-            return this.ingamePlayersStorage.filter { p -> p.value.team != null && p.value.team!! == Team.BLUE }.keys.toList()
+            return this.ingamePlayersStorage.filter { p -> p.value.team != null && p.value.team!! == Team.BLUE }
+                .keys.toList()
         }
 
     /**

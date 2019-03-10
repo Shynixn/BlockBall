@@ -1,13 +1,16 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.service
+
+import com.github.shynixn.blockball.api.business.proxy.BallProxy
+import com.github.shynixn.blockball.api.persistence.entity.Game
 
 /**
- * All additional meta data for games which is optionally.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,15 +30,10 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface CustomizationMeta {
-    /** Can players damage other players during a game?*/
-    var damageEnabled: Boolean
-    /** Should players be teleported back to their spawnpoint if someone scores?*/
-    var backTeleport: Boolean
-    /** After how many seconds should players be teleported back to their spawnpoint if [backTeleport] is enabled?*/
-    var backTeleportDelay: Int
+interface BallForceFieldService {
     /**
-     * Should the ball be restricted by a forcefield to stay in the arena?
+     * Calculates forcefield interactions and applies correct knockback
+     * velocity regarding on the enabled game ball forcefield and the velocity of the ball.
      */
-    var ballForceField: Boolean
+    fun calculateForcefieldInteractions(game: Game, ball: BallProxy)
 }
