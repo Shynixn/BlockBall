@@ -12,6 +12,7 @@ import com.google.inject.Inject
 import org.bukkit.configuration.Configuration
 import org.bukkit.plugin.Plugin
 import java.io.File
+import java.util.*
 import java.util.logging.Level
 
 /**
@@ -41,7 +42,11 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ArenaFileRepository @Inject constructor(private val plugin: Plugin, private val yamlSerializationService: YamlSerializationService, private val fileContext: FileContext) : ArenaRepository {
+class ArenaFileRepository @Inject constructor(
+    private val plugin: Plugin,
+    private val yamlSerializationService: YamlSerializationService,
+    private val fileContext: FileContext
+) : ArenaRepository {
     /**
      * Returns all stored arenas in this repository.
      */
@@ -65,6 +70,10 @@ class ArenaFileRepository @Inject constructor(private val plugin: Plugin, privat
                         arenaEntity.meta.ballMeta.particleEffects[BallActionType.ONGOAL] = ParticleEntity()
                     }
 
+                    if (arenaEntity.name.toIntOrNull() == null) {
+                        throw RuntimeException("Arena name has to be a number!")
+                    }
+
                     arenas.add(arenaEntity)
                 }
             } catch (ex: Exception) {
@@ -73,6 +82,8 @@ class ArenaFileRepository @Inject constructor(private val plugin: Plugin, privat
 
             i++
         }
+
+        arenas.sortWith(Comparator { o1, o2 -> o1.name.toInt().compareTo(o2.name.toInt()) })
 
         plugin.logger.log(Level.INFO, "Reloaded [" + arenas.size + "] games.")
 

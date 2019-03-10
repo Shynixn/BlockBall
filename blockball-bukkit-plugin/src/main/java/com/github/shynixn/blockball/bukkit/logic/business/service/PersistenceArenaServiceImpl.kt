@@ -36,7 +36,10 @@ import java.util.concurrent.CompletableFuture
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class PersistenceArenaServiceImpl @Inject constructor(private val plugin: Plugin, private val arenaRepository: ArenaRepository) : PersistenceArenaService {
+class PersistenceArenaServiceImpl @Inject constructor(
+    private val plugin: Plugin,
+    private val arenaRepository: ArenaRepository
+) : PersistenceArenaService {
     private var cache: MutableList<Arena> = ArrayList()
 
     /**
@@ -48,7 +51,7 @@ class PersistenceArenaServiceImpl @Inject constructor(private val plugin: Plugin
         async(plugin) {
             synchronized(cache) {
                 cache.clear()
-                cache.addAll(arenaRepository.getAll().sortedBy { a -> a.name })
+                cache.addAll(arenaRepository.getAll())
             }
 
             sync(plugin) {
