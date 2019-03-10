@@ -143,18 +143,18 @@ security:
 ############################
 
 stats-scoreboard:
- enabled: false
- title: '&f&lBlockBall Stats'
- lines:
-   - ''
-   - '&e<playername>'
-   - '&m           '
-   - '&bWinrate: '
-   - '&f&l<winrate> '
-   - ''
-   - '&6Goals per game: '
-   - '&f&l<goalspergame>'
-   - ''
-   - '&aPlayed games:'
-   - '&f&l<playedgames>'
-   - '&m           '
+  enabled: false
+  title: '&f&lBlockBall Stats'
+  lines:
+  - ''
+  - '&e<playername>'
+  - '&m           '
+  - '&bWinrate: '
+  - '&f&l<winrate> '
+  - ''
+  - '&6Goals:'
+  - '&f&l<goalspergame>'
+  - ''
+  - '&aPlayed games:'
+  - '&f&l<playedgames>'
+  - '&m           '
