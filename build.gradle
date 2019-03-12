@@ -24,7 +24,7 @@ repositories {
 }
 
 nexusStaging {
-    packageGroup = "com.github.shynixn.blockball"
+    packageGroup = "com.github.shynixn"
     username = project.hasProperty("ossrhUsername") ? project.findProperty("ossrhUsername") : System.getenv('SONATYPE_USERNAME')
     password = project.hasProperty("ossrhPassword") ? project.findProperty("ossrhPassword") : System.getenv('SONATYPE_PASSWORD')
 }
