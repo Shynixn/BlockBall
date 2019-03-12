@@ -13,6 +13,7 @@ buildscript {
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.21'
     id 'io.codearte.nexus-staging' version '0.20.0'
+    id "de.marcphilipp.nexus-publish" version '0.2.0'
 }
 
 apply plugin: 'org.jetbrains.dokka'
@@ -36,10 +37,11 @@ subprojects {
     sourceCompatibility = 1.8
 
     apply plugin: 'kotlin-platform-jvm'
-    apply plugin: 'maven-publish'
     apply plugin: 'signing'
+    apply plugin: 'maven-publish'
     apply plugin: 'java-library'
     apply plugin: 'jacoco'
+    apply plugin: "de.marcphilipp.nexus-publish"
 
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
