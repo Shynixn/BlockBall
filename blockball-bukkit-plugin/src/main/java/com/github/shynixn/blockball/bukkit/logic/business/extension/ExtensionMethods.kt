@@ -76,11 +76,11 @@ val Dispatchers.minecraft: CoroutineContext
  */
 inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long = 0L, crossinline f: () -> Unit) {
     if (repeatingTicks > 0) {
-        plugin.server.scheduler.runTaskTimer(plugin, {
+        plugin.server.scheduler.runTaskTimer(plugin, Runnable {
             f.invoke()
         }, delayTicks, repeatingTicks)
     } else {
-        plugin.server.scheduler.runTaskLater(plugin, {
+        plugin.server.scheduler.runTaskLater(plugin,Runnable {
             f.invoke()
         }, delayTicks)
     }
@@ -144,11 +144,11 @@ fun ItemStack.setDisplayName(displayName: String): ItemStack {
  */
 inline fun Any.async(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long = 0L, crossinline f: () -> Unit) {
     if (repeatingTicks > 0) {
-        plugin.server.scheduler.runTaskTimerAsynchronously(plugin, {
+        plugin.server.scheduler.runTaskTimerAsynchronously(plugin,Runnable {
             f.invoke()
         }, delayTicks, repeatingTicks)
     } else {
-        plugin.server.scheduler.runTaskLaterAsynchronously(plugin, {
+        plugin.server.scheduler.runTaskLaterAsynchronously(plugin,Runnable {
             f.invoke()
         }, delayTicks)
     }

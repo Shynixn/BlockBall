@@ -9,14 +9,7 @@ import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 import java.util.LinkedHashMap
 import kotlin.collections.ArrayList
-import kotlin.collections.Collection
-import kotlin.collections.List
-import kotlin.collections.Map
-import kotlin.collections.MutableCollection
-import kotlin.collections.forEach
 import kotlin.collections.set
-import kotlin.collections.sortedBy
-import kotlin.collections.toTypedArray
 
 /**
  * Created by Shynixn 2018.
@@ -74,7 +67,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
         try {
             instance = targetObjectClass.newInstance()
         } catch (e: Exception) {
-            throw IllegalArgumentException("Cannot instanciet the class $targetObjectClass. Does it have a default constructor?")
+            throw IllegalArgumentException("Cannot instanciate the class $targetObjectClass. Does it have a default constructor?")
         }
 
         deserializeObject(instance!!, targetObjectClass, dataSource)
@@ -85,7 +78,12 @@ class YamlSerializationServiceImpl : YamlSerializationService {
     /**
      *  Deserialize the given object collection.
      */
-    private fun deserializeCollection(annotation: YamlSerialize, field: Field, collection: MutableCollection<Any?>, dataSource: Any) {
+    private fun deserializeCollection(
+        annotation: YamlSerialize,
+        field: Field,
+        collection: MutableCollection<Any?>,
+        dataSource: Any
+    ) {
         if (dataSource is Map<*, *>) {
             dataSource.keys.forEach { key ->
                 if (key is String && key.toIntOrNull() == null) {
@@ -98,7 +96,12 @@ class YamlSerializationServiceImpl : YamlSerializationService {
                     collection.add(null)
                 } else if (getArgumentType(field, 0).isEnum) {
                     @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
-                    collection.add(java.lang.Enum.valueOf<Any>(getArgumentType(field, 0) as Class<Any>, value.toString().toUpperCase()))
+                    collection.add(
+                        java.lang.Enum.valueOf<Any>(
+                            getArgumentType(field, 0) as Class<Any>,
+                            value.toString().toUpperCase()
+                        )
+                    )
                 } else if (isPrimitive(value.javaClass)) {
                     collection.add(value)
                 } else {
@@ -117,7 +120,13 @@ class YamlSerializationServiceImpl : YamlSerializationService {
     /**
      *  Deserialize the given object map.
      */
-    private fun deserializeMap(annotation: YamlSerialize, map: MutableMap<Any, Any?>, keyClazz: Class<*>, valueClazz: Class<*>, dataSource: Map<String, Any?>) {
+    private fun deserializeMap(
+        annotation: YamlSerialize,
+        map: MutableMap<Any, Any?>,
+        keyClazz: Class<*>,
+        valueClazz: Class<*>,
+        dataSource: Map<String, Any?>
+    ) {
         dataSource.keys.forEach { key ->
             val value = dataSource[key]
 
@@ -132,7 +141,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
 
             if (value == null) {
                 map[finalKey] = null
-            } else if (isPrimitive(value.javaClass)) {
+            } else if (isPrimitive(valueClazz)) {
                 map[finalKey] = value
             } else {
                 if (valueClazz.isInterface) {
@@ -151,7 +160,12 @@ class YamlSerializationServiceImpl : YamlSerializationService {
     /**
      *  Deserialize the given object array.
      */
-    private fun deserializeArray(annotation: YamlSerialize, field: Field, array: Array<Any?>, dataSource: Map<String, Any?>) {
+    private fun deserializeArray(
+        annotation: YamlSerialize,
+        field: Field,
+        array: Array<Any?>,
+        dataSource: Map<String, Any?>
+    ) {
         dataSource.keys.forEach { key ->
             if (key.toIntOrNull() == null) {
                 throw java.lang.IllegalArgumentException("Initializing " + annotation.value + " as array failed as dataSource contains a invalid key.")
@@ -164,10 +178,14 @@ class YamlSerializationServiceImpl : YamlSerializationService {
                 if (value == null) {
                     array[keyPlace] = null
                 } else if (annotation.customserializer != Any::class) {
-                    array[keyPlace] = (annotation.customserializer.java.newInstance() as YamlSerializer<*, Map<String, Any?>>).onDeserialization(value as Map<String, Any?>)
+                    array[keyPlace] =
+                        (annotation.customserializer.java.newInstance() as YamlSerializer<*, Map<String, Any?>>).onDeserialization(
+                            value as Map<String, Any?>
+                        )
                 } else if (field.type.componentType.isEnum) {
                     @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
-                    array[keyPlace] = java.lang.Enum.valueOf<Any>(field.type as Class<Any>, value.toString().toUpperCase())
+                    array[keyPlace] =
+                        java.lang.Enum.valueOf<Any>(field.type as Class<Any>, value.toString().toUpperCase())
                 } else if (isPrimitive(value.javaClass)) {
                     array[keyPlace] = value
                 } else {
@@ -200,7 +218,12 @@ class YamlSerializationServiceImpl : YamlSerializationService {
     /**
      * Deserializes a single field of an object.
      */
-    private fun deserializeField(field: Field, annotation: YamlSerialize, instance: Any, dataSource: Map<String, Any?>) {
+    private fun deserializeField(
+        field: Field,
+        annotation: YamlSerialize,
+        instance: Any,
+        dataSource: Map<String, Any?>
+    ) {
         if (!dataSource.containsKey(annotation.value)) {
             return
         }
@@ -209,8 +232,12 @@ class YamlSerializationServiceImpl : YamlSerializationService {
 
         if (value == null) {
             field.set(instance, value)
-        } else if (annotation.customserializer != Any::class && !field.type.isArray && !Collection::class.java.isAssignableFrom(field.type)) {
-            val deserializedValue = (annotation.customserializer.java.newInstance() as YamlSerializer<Any, Any>).onDeserialization(value)
+        } else if (annotation.customserializer != Any::class && !field.type.isArray && !Collection::class.java.isAssignableFrom(
+                field.type
+            )
+        ) {
+            val deserializedValue =
+                (annotation.customserializer.java.newInstance() as YamlSerializer<Any, Any>).onDeserialization(value)
             field.set(instance, deserializedValue)
         } else if (isPrimitive(field.type)) {
             field.set(instance, value)
@@ -245,7 +272,13 @@ class YamlSerializationServiceImpl : YamlSerializationService {
 
             (map as MutableMap<Any, Any?>).clear()
 
-            deserializeMap(annotation, map, getArgumentType(field, 0), getArgumentType(field, 1), value as Map<String, Any?>)
+            deserializeMap(
+                annotation,
+                map,
+                getArgumentType(field, 0),
+                getArgumentType(field, 1),
+                value as Map<String, Any?>
+            )
         } else {
             val instanceClazz: Class<*> = if (field.type.isInterface) {
                 if (annotation.implementation == Any::class) {
@@ -283,7 +316,10 @@ class YamlSerializationServiceImpl : YamlSerializationService {
             } else if (isPrimitive(instance::class.java)) {
                 data[i.toString()] = instance
             } else if (annotation != null && annotation.customserializer != Any::class) {
-                data[i.toString()] = (annotation.customserializer.java.newInstance() as YamlSerializer<Any, Any>).onSerialization(instance)
+                data[i.toString()] =
+                    (annotation.customserializer.java.newInstance() as YamlSerializer<Any, Any>).onSerialization(
+                        instance
+                    )
             } else if (instance::class.java.isEnum) {
                 data[i.toString()] = (instance as Enum<*>).name
             } else {
@@ -337,8 +373,14 @@ class YamlSerializationServiceImpl : YamlSerializationService {
             val yamlAnnotation = element.first
 
             if (field.get(instance) == null) {
-            } else if (yamlAnnotation.customserializer != Any::class && !field.type.isArray && !Collection::class.java.isAssignableFrom(field.type)) {
-                val serializedValue = (yamlAnnotation.customserializer.java.newInstance() as YamlSerializer<Any, Any>).onSerialization(field.get(instance))
+            } else if (yamlAnnotation.customserializer != Any::class && !field.type.isArray && !Collection::class.java.isAssignableFrom(
+                    field.type
+                )
+            ) {
+                val serializedValue =
+                    (yamlAnnotation.customserializer.java.newInstance() as YamlSerializer<Any, Any>).onSerialization(
+                        field.get(instance)
+                    )
                 data[yamlAnnotation.value] = serializedValue
             } else if (isPrimitive(field.type)) {
                 data[yamlAnnotation.value] = field.get(instance)
@@ -350,7 +392,8 @@ class YamlSerializationServiceImpl : YamlSerializationService {
                 if (getArgumentType(field, 0) == String::class.java) {
                     data[yamlAnnotation.value] = field.get(instance)
                 } else {
-                    data[yamlAnnotation.value] = serializeCollection(yamlAnnotation, field.get(instance) as Collection<*>)
+                    data[yamlAnnotation.value] =
+                        serializeCollection(yamlAnnotation, field.get(instance) as Collection<*>)
                 }
             } else if (Map::class.java.isAssignableFrom(field.type)) {
                 data[yamlAnnotation.value] = serializeMap(field.get(instance) as Map<Any, Any?>)
@@ -396,6 +439,6 @@ class YamlSerializationServiceImpl : YamlSerializationService {
      * Gets if the given [clazz] is a primitive class.
      */
     private fun isPrimitive(clazz: Class<*>): Boolean {
-        return clazz.isPrimitive || clazz == String::class.java || clazz == Int::class.java || clazz == Double::class.java || clazz == Long::class.java || clazz == Float::class.java
+        return clazz.isPrimitive || clazz == String::class.java || clazz == Int::class.java || clazz == Double::class.java || clazz == Long::class.java || clazz == Float::class.java || clazz == Integer::class.java
     }
 }

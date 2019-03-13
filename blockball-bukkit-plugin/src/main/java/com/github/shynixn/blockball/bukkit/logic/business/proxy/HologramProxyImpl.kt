@@ -34,7 +34,11 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class HologramProxyImpl(private val plugin: Plugin, private val version: com.github.shynixn.blockball.api.business.enumeration.Version, private var location: Location) : HologramProxy, Runnable {
+class HologramProxyImpl(
+    private val plugin: Plugin,
+    private val version: com.github.shynixn.blockball.api.business.enumeration.Version,
+    private var location: Location
+) : HologramProxy, Runnable {
     companion object {
         /**
          * Max distance when holograms should be visible to.
@@ -126,7 +130,7 @@ class HologramProxyImpl(private val plugin: Plugin, private val version: com.git
      * Changes the lines of the hologram.
      */
     override fun setLines(lines: Collection<String>) {
-        plugin.server.scheduler.runTaskAsynchronously(plugin, {
+        plugin.server.scheduler.runTaskAsynchronously(plugin, Runnable {
             synchronized(armorstands) {
                 if (this.armorstands.size != lines.size) {
                     this.clearLines()
@@ -156,7 +160,9 @@ class HologramProxyImpl(private val plugin: Plugin, private val version: com.git
      */
     private fun sendRemovePacket(player: Player) {
         this.armorstands.forEach { a ->
-            val packet = findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy").getDeclaredConstructor(IntArray::class.java).newInstance(intArrayOf(a.entityId))
+            val packet =
+                findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy").getDeclaredConstructor(IntArray::class.java)
+                    .newInstance(intArrayOf(a.entityId))
             player.sendPacket(packet)
         }
     }
@@ -164,15 +170,29 @@ class HologramProxyImpl(private val plugin: Plugin, private val version: com.git
     private fun spawnEntityArmorstand(text: String) {
         val index = this.armorstands.size
         val upSet = index * 0.23
-        val targetLocation = Location(location.world, location.x, location.y - upSet, location.z, location.yaw, location.pitch)
+        val targetLocation =
+            Location(location.world, location.x, location.y - upSet, location.z, location.yaw, location.pitch)
 
-        val nmsWorld = findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld").getDeclaredMethod("getHandle").invoke(targetLocation.world)
+        val nmsWorld = findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld").getDeclaredMethod("getHandle")
+            .invoke(targetLocation.world)
         val entityArmorstand = findClazz("net.minecraft.server.VERSION.EntityArmorStand")
-                .getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.World"))
-                .newInstance(nmsWorld)
+            .getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.World"))
+            .newInstance(nmsWorld)
 
-        val bukkitArmorstand = findClazz("net.minecraft.server.VERSION.Entity").getDeclaredMethod("getBukkitEntity").invoke(entityArmorstand) as ArmorStand
-        bukkitArmorstand.teleport(Location(location.world, targetLocation.x, targetLocation.y, targetLocation.z, 0F, 0F))
+        val bukkitArmorstand =
+            findClazz("net.minecraft.server.VERSION.Entity").getDeclaredMethod("getBukkitEntity").invoke(
+                entityArmorstand
+            ) as ArmorStand
+        bukkitArmorstand.teleport(
+            Location(
+                location.world,
+                targetLocation.x,
+                targetLocation.y,
+                targetLocation.z,
+                0F,
+                0F
+            )
+        )
         bukkitArmorstand.customName = text
         bukkitArmorstand.isCustomNameVisible = true
         bukkitArmorstand.setGravity(false)
@@ -193,8 +213,12 @@ class HologramProxyImpl(private val plugin: Plugin, private val version: com.git
         val dataWatcher = dataWatcherField.get(getEntityArmorstandFrom(armorstand))
 
         val packet = findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityMetadata")
-                .getDeclaredConstructor(Int::class.java, findClazz("net.minecraft.server.VERSION.DataWatcher"), Boolean::class.java)
-                .newInstance(armorstand.entityId, dataWatcher, true)
+            .getDeclaredConstructor(
+                Int::class.java,
+                findClazz("net.minecraft.server.VERSION.DataWatcher"),
+                Boolean::class.java
+            )
+            .newInstance(armorstand.entityId, dataWatcher, true)
 
         synchronized(watchers) {
             watchers.keys.toTypedArray().forEach { p ->
@@ -211,8 +235,8 @@ class HologramProxyImpl(private val plugin: Plugin, private val version: com.git
     private fun sendSpawnPacket(player: Player) {
         this.armorstands.forEach { a ->
             val packet = findClazz("net.minecraft.server.VERSION.PacketPlayOutSpawnEntityLiving")
-                    .getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.EntityLiving"))
-                    .newInstance(getEntityArmorstandFrom(a))
+                .getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.EntityLiving"))
+                .newInstance(getEntityArmorstandFrom(a))
 
             player.sendPacket(packet)
         }
@@ -222,7 +246,8 @@ class HologramProxyImpl(private val plugin: Plugin, private val version: com.git
      * Returns the entity armorstand from the bukkit Armorstand.
      */
     private fun getEntityArmorstandFrom(armorstand: ArmorStand): Any {
-        return findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftArmorStand").getDeclaredMethod("getHandle").invoke(armorstand)
+        return findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftArmorStand").getDeclaredMethod("getHandle")
+            .invoke(armorstand)
     }
 
     /**

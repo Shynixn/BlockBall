@@ -87,17 +87,25 @@ class StatsCollectingServiceTest {
     }
 
     companion object {
-        fun createWithDependencies(configurationService: ConfigurationService = MockedConfigurationService(), persistenceStatsService: PersistenceStatsService = MockedPersistenceStatsService(), scoreboardService: ScoreboardService = MockedScoreboardService(), plugin: Plugin = Mockito.mock(Plugin::class.java)): StatsCollectingService {
+        fun createWithDependencies(
+            configurationService: ConfigurationService = MockedConfigurationService(),
+            persistenceStatsService: PersistenceStatsService = MockedPersistenceStatsService(),
+            scoreboardService: ScoreboardService = MockedScoreboardService(),
+            plugin: Plugin = Mockito.mock(Plugin::class.java)
+        ): StatsCollectingService {
             if (Bukkit.getServer() == null) {
                 val server = Mockito.mock(Server::class.java)
-                val scheduler = Mockito.mock(BukkitScheduler::class.java)
-
                 `when`(server.logger).thenReturn(Logger.getGlobal())
-                `when`(server.scheduler).thenReturn(scheduler)
                 Bukkit.setServer(server)
             }
 
+            val server = Bukkit.getServer()
+
             `when`(plugin.server).thenReturn(Bukkit.getServer())
+            val scheduler = Mockito.mock(BukkitScheduler::class.java)
+
+            `when`(server.logger).thenReturn(Logger.getGlobal())
+            `when`(server.scheduler).thenReturn(scheduler)
 
             return StatsCollectingServiceImpl(plugin, configurationService, persistenceStatsService, scoreboardService)
         }

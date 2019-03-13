@@ -55,5 +55,6 @@ Allows to join all games                                                 blockba
 Allows to join the specified game                                        blockball.game.join.<id>
 Allows to spectate all games                                             blockball.game.spectate.all
 Allows to spectate the specified game                                    blockball.game.spectate.<id>
+Allows to open and use inventories during games                          blockball.game.inventory
 ======================================================================   =======
 

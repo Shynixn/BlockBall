@@ -52,15 +52,24 @@ class GamePropertiesPage : Page(GamePropertiesPage.ID, MiscSettingsPage.ID) {
      * @param cache cache
      * @param args
      */
-    override fun execute(player: Player, command: BlockBallCommand, cache: Array<Any?>, args: Array<String>): CommandResult {
+    override fun execute(
+        player: Player,
+        command: BlockBallCommand,
+        cache: Array<Any?>,
+        args: Array<String>
+    ): CommandResult {
         val arena = cache[0] as Arena
+
         if (command == BlockBallCommand.GAMEPROPERTIES_TOGGLE_DAMAGE) {
             arena.meta.customizingMeta.damageEnabled = !arena.meta.customizingMeta.damageEnabled
         } else if (command == BlockBallCommand.GAMEPROPERTIES_TOGGLE_TELEPORTBACK) {
             arena.meta.customizingMeta.backTeleport = !arena.meta.customizingMeta.backTeleport
         } else if (command == BlockBallCommand.GAMEPROPERTIES_TELEPORTBACKDELAY && args.size == 3 && args[2].toIntOrNull() != null) {
             arena.meta.customizingMeta.backTeleportDelay = args[2].toInt()
+        } else if (command == BlockBallCommand.GAMEPROPERTIES_TOGGLE_BALLFORCEFIELD) {
+            arena.meta.customizingMeta.ballForceField = !arena.meta.customizingMeta.ballForceField
         }
+
         return super.execute(player, command, cache, args)
     }
 
@@ -73,20 +82,34 @@ class GamePropertiesPage : Page(GamePropertiesPage.ID, MiscSettingsPage.ID) {
         val arena = cache[0] as Arena
         val meta = arena.meta.customizingMeta
         return ChatBuilder()
-                .component("- Damage enabled: " + meta.damageEnabled).builder()
-                .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMEPROPERTIES_TOGGLE_DAMAGE.command)
-                .setHoverText("Toggles the dealing damage in the arena.")
-                .builder().nextLine()
-                .component("- Score teleport back: " + meta.backTeleport).builder()
-                .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMEPROPERTIES_TOGGLE_TELEPORTBACK.command)
-                .setHoverText("Toggles if players should be teleported back to their game spawnpoint after anyone scores a point.")
-                .builder().nextLine()
-                .component("- Score teleport back delay: " + arena.meta.customizingMeta.backTeleportDelay).builder()
-                .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
-                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.GAMEPROPERTIES_TELEPORTBACKDELAY.command)
-                .setHoverText("Delay after the players get teleported back to their game spawnpoint.")
-                .builder().nextLine()
+            .component("- Ball forcefield enabled: " + meta.ballForceField).builder()
+            .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
+            .setClickAction(
+                ChatBuilder.ClickAction.RUN_COMMAND,
+                BlockBallCommand.GAMEPROPERTIES_TOGGLE_BALLFORCEFIELD.command
+            )
+            .setHoverText("Toggles the ball forcefield.")
+            .builder().nextLine()
+            .component("- Damage enabled: " + meta.damageEnabled).builder()
+            .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
+            .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.GAMEPROPERTIES_TOGGLE_DAMAGE.command)
+            .setHoverText("Toggles the dealing damage in the arena.")
+            .builder().nextLine()
+            .component("- Score teleport back: " + meta.backTeleport).builder()
+            .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
+            .setClickAction(
+                ChatBuilder.ClickAction.RUN_COMMAND,
+                BlockBallCommand.GAMEPROPERTIES_TOGGLE_TELEPORTBACK.command
+            )
+            .setHoverText("Toggles if players should be teleported back to their game spawnpoint after anyone scores a point.")
+            .builder().nextLine()
+            .component("- Score teleport back delay: " + arena.meta.customizingMeta.backTeleportDelay).builder()
+            .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+            .setClickAction(
+                ChatBuilder.ClickAction.SUGGEST_COMMAND,
+                BlockBallCommand.GAMEPROPERTIES_TELEPORTBACKDELAY.command
+            )
+            .setHoverText("Delay after the players get teleported back to their game spawnpoint.")
+            .builder().nextLine()
     }
 }

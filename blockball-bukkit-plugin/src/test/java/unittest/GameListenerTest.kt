@@ -3,10 +3,8 @@
 package unittest
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.GameActionService
-import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.business.service.ItemService
-import com.github.shynixn.blockball.api.business.service.RightclickManageService
+import com.github.shynixn.blockball.api.business.proxy.BallProxy
+import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
@@ -18,7 +16,10 @@ import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.FoodLevelChangeEvent
+import org.bukkit.event.inventory.*
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.InventoryView
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -72,10 +73,42 @@ class GameListenerTest {
         val classUnderTest = createWithDependencies(gameService, rightClickService)
 
         // Act
-        classUnderTest.onClickOnPlacedSign(PlayerInteractEvent(gameService.players[0], Action.LEFT_CLICK_AIR, null, null, null))
-        classUnderTest.onClickOnPlacedSign(PlayerInteractEvent(gameService.players[0], Action.LEFT_CLICK_BLOCK, null, null, null))
-        classUnderTest.onClickOnPlacedSign(PlayerInteractEvent(gameService.players[0], Action.PHYSICAL, null, null, null))
-        classUnderTest.onClickOnPlacedSign(PlayerInteractEvent(gameService.players[0], Action.RIGHT_CLICK_AIR, null, null, null))
+        classUnderTest.onClickOnPlacedSign(
+            PlayerInteractEvent(
+                gameService.players[0],
+                Action.LEFT_CLICK_AIR,
+                null,
+                null,
+                null
+            )
+        )
+        classUnderTest.onClickOnPlacedSign(
+            PlayerInteractEvent(
+                gameService.players[0],
+                Action.LEFT_CLICK_BLOCK,
+                null,
+                null,
+                null
+            )
+        )
+        classUnderTest.onClickOnPlacedSign(
+            PlayerInteractEvent(
+                gameService.players[0],
+                Action.PHYSICAL,
+                null,
+                null,
+                null
+            )
+        )
+        classUnderTest.onClickOnPlacedSign(
+            PlayerInteractEvent(
+                gameService.players[0],
+                Action.RIGHT_CLICK_AIR,
+                null,
+                null,
+                null
+            )
+        )
 
         // Assert
         Assertions.assertFalse(rightClickService.called)
@@ -101,7 +134,15 @@ class GameListenerTest {
         Mockito.`when`(block.location).thenReturn(location)
 
         // Act
-        classUnderTest.onClickOnPlacedSign(PlayerInteractEvent(gameService.players[0], Action.RIGHT_CLICK_BLOCK, null, block, null))
+        classUnderTest.onClickOnPlacedSign(
+            PlayerInteractEvent(
+                gameService.players[0],
+                Action.RIGHT_CLICK_BLOCK,
+                null,
+                block,
+                null
+            )
+        )
 
         // Assert
         Assertions.assertTrue(rightClickService.called)
@@ -133,7 +174,15 @@ class GameListenerTest {
         gameService.games.add(game)
 
         // Act
-        classUnderTest.onClickOnPlacedSign(PlayerInteractEvent(gameService.players[0], Action.RIGHT_CLICK_BLOCK, null, block, null))
+        classUnderTest.onClickOnPlacedSign(
+            PlayerInteractEvent(
+                gameService.players[0],
+                Action.RIGHT_CLICK_BLOCK,
+                null,
+                block,
+                null
+            )
+        )
 
         // Assert
         Assertions.assertTrue(rightClickService.called)
@@ -168,7 +217,15 @@ class GameListenerTest {
         gameService.games.add(game)
 
         // Act
-        classUnderTest.onClickOnPlacedSign(PlayerInteractEvent(gameService.players[0], Action.RIGHT_CLICK_BLOCK, null, block, null))
+        classUnderTest.onClickOnPlacedSign(
+            PlayerInteractEvent(
+                gameService.players[0],
+                Action.RIGHT_CLICK_BLOCK,
+                null,
+                block,
+                null
+            )
+        )
 
         // Assert
         Assertions.assertTrue(rightClickService.called)
@@ -202,7 +259,15 @@ class GameListenerTest {
         gameService.games.add(game)
 
         // Act
-        classUnderTest.onClickOnPlacedSign(PlayerInteractEvent(gameService.players[0], Action.RIGHT_CLICK_BLOCK, null, block, null))
+        classUnderTest.onClickOnPlacedSign(
+            PlayerInteractEvent(
+                gameService.players[0],
+                Action.RIGHT_CLICK_BLOCK,
+                null,
+                block,
+                null
+            )
+        )
 
         // Assert
         Assertions.assertTrue(rightClickService.called)
@@ -237,7 +302,15 @@ class GameListenerTest {
         gameService.games.add(game)
 
         // Act
-        classUnderTest.onClickOnPlacedSign(PlayerInteractEvent(gameService.players[0], Action.RIGHT_CLICK_BLOCK, null, block, null))
+        classUnderTest.onClickOnPlacedSign(
+            PlayerInteractEvent(
+                gameService.players[0],
+                Action.RIGHT_CLICK_BLOCK,
+                null,
+                block,
+                null
+            )
+        )
 
         // Assert
         Assertions.assertTrue(rightClickService.called)
@@ -296,15 +369,216 @@ class GameListenerTest {
 
     //endregion
 
+    //region onPlayerClickInventoryEvent
+
+    /**
+     * Given
+     *      a InventoryClickEvent with player in game without permission
+     * When
+     *      onPlayerClickInventoryEvent is called
+     * Then
+     *     event should be canceled.
+     */
+    @Test
+    fun onPlayerClickInventoryEvent_PlayerInGameWithoutPermission_ShouldCancelEvent() {
+        // Arrange
+        val gameService = MockedGameService()
+        val classUnderTest = createWithDependencies(gameService)
+        val inventoryView = Mockito.mock(InventoryView::class.java)
+        Mockito.`when`(inventoryView.topInventory).thenReturn(Mockito.mock(Inventory::class.java))
+        Mockito.`when`(inventoryView.player).thenReturn(gameService.players[0])
+
+        val event = InventoryClickEvent(
+            inventoryView,
+            InventoryType.SlotType.CRAFTING,
+            2,
+            ClickType.LEFT,
+            InventoryAction.PLACE_ONE
+        )
+
+        // Act
+        classUnderTest.onPlayerClickInventoryEvent(event)
+
+        // Assert
+        Assertions.assertTrue(event.isCancelled)
+    }
+
+    /**
+     * Given
+     *      a InventoryClickEvent with player not in game without permission
+     * When
+     *      onPlayerClickInventoryEvent is called
+     * Then
+     *     event should not be canceled.
+     */
+    @Test
+    fun onPlayerClickInventoryEvent_PlayerNotInGameWithoutPermission_ShouldNotCancelEvent() {
+        // Arrange
+        val gameService = MockedGameService()
+        val classUnderTest = createWithDependencies(gameService)
+        val inventoryView = Mockito.mock(InventoryView::class.java)
+        Mockito.`when`(inventoryView.topInventory).thenReturn(Mockito.mock(Inventory::class.java))
+        Mockito.`when`(inventoryView.player).thenReturn(Mockito.mock(Player::class.java))
+
+        val event = InventoryClickEvent(
+            inventoryView,
+            InventoryType.SlotType.CRAFTING,
+            2,
+            ClickType.LEFT,
+            InventoryAction.PLACE_ONE
+        )
+
+        // Act
+        classUnderTest.onPlayerClickInventoryEvent(event)
+
+        // Assert
+        Assertions.assertFalse(event.isCancelled)
+    }
+
+    /**
+     * Given
+     *      a InventoryClickEvent with player in game with permission
+     * When
+     *      onPlayerClickInventoryEvent is called
+     * Then
+     *     event should not be canceled.
+     */
+    @Test
+    fun onPlayerClickInventoryEvent_PlayerInGameWithPermission_ShouldNotCancelEvent() {
+        // Arrange
+        val gameService = MockedGameService()
+        val classUnderTest = createWithDependencies(gameService)
+        val inventoryView = Mockito.mock(InventoryView::class.java)
+        Mockito.`when`(inventoryView.topInventory).thenReturn(Mockito.mock(Inventory::class.java))
+        Mockito.`when`(inventoryView.player).thenReturn(gameService.players[0])
+        Mockito.`when`(gameService.players[0].hasPermission(Mockito.anyString())).thenReturn(true)
+
+        val event = InventoryClickEvent(
+            inventoryView,
+            InventoryType.SlotType.CRAFTING,
+            2,
+            ClickType.LEFT,
+            InventoryAction.PLACE_ONE
+        )
+
+        // Act
+        classUnderTest.onPlayerClickInventoryEvent(event)
+
+        // Assert
+        Assertions.assertFalse(event.isCancelled)
+    }
+
+    //endregion
+
+    //region onPlayerOpenInventoryEvent
+
+    /**
+     * Given
+     *      a InventoryOpenEvent with player in game without permission
+     * When
+     *      onPlayerOpenInventoryEvent is called
+     * Then
+     *     event should be canceled.
+     */
+    @Test
+    fun onPlayerOpenInventoryEvent_PlayerInGameWithoutPermission_ShouldCancelEvent() {
+        // Arrange
+        val gameService = MockedGameService()
+        val classUnderTest = createWithDependencies(gameService)
+        val inventoryView = Mockito.mock(InventoryView::class.java)
+        Mockito.`when`(inventoryView.topInventory).thenReturn(Mockito.mock(Inventory::class.java))
+        Mockito.`when`(inventoryView.player).thenReturn(gameService.players[0])
+
+        val event = InventoryOpenEvent(inventoryView)
+
+        // Act
+        classUnderTest.onPlayerOpenInventoryEvent(event)
+
+        // Assert
+        Assertions.assertTrue(event.isCancelled)
+    }
+
+    /**
+     * Given
+     *      a InventoryOpenEvent with player not in game without permission
+     * When
+     *      onPlayerOpenInventoryEvent is called
+     * Then
+     *     event should not be canceled.
+     */
+    @Test
+    fun onPlayerOpenInventoryEvent_PlayerNotInGameWithoutPermission_ShouldNotCancelEvent() {
+        // Arrange
+        val gameService = MockedGameService()
+        val classUnderTest = createWithDependencies(gameService)
+        val inventoryView = Mockito.mock(InventoryView::class.java)
+        Mockito.`when`(inventoryView.topInventory).thenReturn(Mockito.mock(Inventory::class.java))
+        Mockito.`when`(inventoryView.player).thenReturn(Mockito.mock(Player::class.java))
+
+        val event = InventoryOpenEvent(inventoryView)
+
+        // Act
+        classUnderTest.onPlayerOpenInventoryEvent(event)
+
+        // Assert
+        Assertions.assertFalse(event.isCancelled)
+    }
+
+    /**
+     * Given
+     *      a InventoryOpenEvent with player in game with permission
+     * When
+     *      onPlayerOpenInventoryEvent is called
+     * Then
+     *     event should not be canceled.
+     */
+    @Test
+    fun onPlayerOpenInventoryEvent_PlayerInGameWithPermission_ShouldNotCancelEvent() {
+        // Arrange
+        val gameService = MockedGameService()
+        val classUnderTest = createWithDependencies(gameService)
+        val inventoryView = Mockito.mock(InventoryView::class.java)
+        Mockito.`when`(inventoryView.topInventory).thenReturn(Mockito.mock(Inventory::class.java))
+        Mockito.`when`(inventoryView.player).thenReturn(gameService.players[0])
+        Mockito.`when`(gameService.players[0].hasPermission(Mockito.anyString())).thenReturn(true)
+
+        val event = InventoryOpenEvent(inventoryView)
+
+        // Act
+        classUnderTest.onPlayerOpenInventoryEvent(event)
+
+        // Assert
+        Assertions.assertFalse(event.isCancelled)
+    }
+
+    //endregion
+
     companion object {
-        fun createWithDependencies(gameService: GameService = Mockito.mock(GameService::class.java), rightclickManageService: RightclickManageService = MockedRightClickService(), gameActionService: GameActionService<Game> = MockedGameActionService()): GameListener {
+        fun createWithDependencies(
+            gameService: GameService = Mockito.mock(GameService::class.java),
+            rightclickManageService: RightclickManageService = MockedRightClickService(),
+            gameActionService: GameActionService<Game> = MockedGameActionService()
+        ): GameListener {
             val itemService = Mockito.mock(ItemService::class.java)
 
-            return GameListener(gameService, itemService, rightclickManageService,gameActionService)
+            return GameListener(gameService, itemService, rightclickManageService, gameActionService, MockedBallForceFieldService())
         }
     }
 
-    class MockedGameActionService(var joinCalled: Boolean = false, var leaveCalled: Boolean = false, var joinedTeam: Team? = null) : GameActionService<Game> {
+    class MockedBallForceFieldService : BallForceFieldService {
+        /**
+         * Calculates forcefield interactions and applies correct knockback
+         * velocity regarding on the enabled game ball forcefield and the velocity of the ball.
+         */
+        override fun calculateForcefieldInteractions(game: Game, ball: BallProxy) {
+        }
+    }
+
+    class MockedGameActionService(
+        var joinCalled: Boolean = false,
+        var leaveCalled: Boolean = false,
+        var joinedTeam: Team? = null
+    ) : GameActionService<Game> {
         /**
          * Closes the given game and all underlying resources.
          */
@@ -338,7 +612,8 @@ class GameListenerTest {
         }
     }
 
-    class MockedRightClickService(var called: Boolean = false, var watcherReturns: Boolean = true) : RightclickManageService {
+    class MockedRightClickService(var called: Boolean = false, var watcherReturns: Boolean = true) :
+        RightclickManageService {
         /**
          * Gets called one time when a location gets rightlicked by [player].
          */
@@ -361,7 +636,10 @@ class GameListenerTest {
         }
     }
 
-    class MockedGameService(var players: List<Player> = arrayListOf(Mockito.mock(Player::class.java)), val games: ArrayList<Game> = ArrayList()) : GameService {
+    class MockedGameService(
+        var players: List<Player> = arrayListOf(Mockito.mock(Player::class.java)),
+        val games: ArrayList<Game> = ArrayList()
+    ) : GameService {
         /**
          * Restarts all games on the server.
          */

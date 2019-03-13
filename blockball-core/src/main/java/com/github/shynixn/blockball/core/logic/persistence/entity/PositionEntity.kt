@@ -76,6 +76,17 @@ class PositionEntity() : Position {
     }
 
     /**
+     * Returns a string representation of the object.
+     */
+    override fun toString(): String {
+        if (worldName != null) {
+            return "$worldName $x $y $z"
+        }
+
+        return "$x $y $z"
+    }
+
+    /**
      * Indicates whether some other object is "equal to" this one. Implementations must fulfil the following
      * requirements:
      *

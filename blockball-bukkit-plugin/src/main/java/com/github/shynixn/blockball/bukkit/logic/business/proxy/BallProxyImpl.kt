@@ -294,7 +294,7 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
             throw IllegalArgumentException("Location has to be a BukkitLocation!")
         }
 
-        if (this.isGrabbed) {
+        if (!this.isGrabbed) {
             this.hitbox.teleport(location)
         }
     }

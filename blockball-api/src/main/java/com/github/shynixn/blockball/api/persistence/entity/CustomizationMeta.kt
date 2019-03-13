@@ -34,4 +34,8 @@ interface CustomizationMeta {
     var backTeleport: Boolean
     /** After how many seconds should players be teleported back to their spawnpoint if [backTeleport] is enabled?*/
     var backTeleportDelay: Int
+    /**
+     * Should the ball be restricted by a forcefield to stay in the arena?
+     */
+    var ballForceField: Boolean
 }

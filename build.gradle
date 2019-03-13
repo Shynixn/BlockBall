@@ -1,0 +1,231 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'https://plugins.gradle.org/m2/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'org.jetbrains.kotlin', name: 'kotlin-gradle-plugin', version: kotlinVersion
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.17"
+    }
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+    id 'io.codearte.nexus-staging' version '0.20.0'
+    id "de.marcphilipp.nexus-publish" version '0.2.0'
+}
+
+apply plugin: 'org.jetbrains.dokka'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    jcenter()
+}
+
+nexusStaging {
+    packageGroup = "com.github.shynixn"
+    username = project.hasProperty("ossrhUsername") ? project.findProperty("ossrhUsername") : System.getenv('SONATYPE_USERNAME')
+    password = project.hasProperty("ossrhPassword") ? project.findProperty("ossrhPassword") : System.getenv('SONATYPE_PASSWORD')
+}
+
+subprojects {
+    group 'com.github.shynixn.blockball'
+    version '6.5.0'
+
+    sourceCompatibility = 1.8
+
+    apply plugin: 'kotlin-platform-jvm'
+    apply plugin: 'signing'
+    apply plugin: 'maven-publish'
+    apply plugin: 'java-library'
+    apply plugin: 'jacoco'
+    apply plugin: "de.marcphilipp.nexus-publish"
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled = true
+            html.enabled = false
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging.showStandardStreams = true
+        failFast = true
+    }
+
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allJava
+        classifier = 'sources'
+    }
+
+    task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+        outputFormat = 'javadoc'
+        outputDirectory = "$buildDir/javadoc"
+    }
+
+    task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+        from javadoc
+        classifier = 'javadoc'
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+                pom {
+                    name = 'BlockBall'
+                    description = 'BlockBall is a spigot plugin to play soccer games in Minecraft.'
+                    url = 'https://github.com/Shynixn/BlockBall'
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            name = 'Shynixn'
+                            url = 'https://github.com/Shynixn'
+                        }
+                        // Contributers
+                        developer {
+                            name = 'LazoYoung'
+                            url = 'https://github.com/LazoYoung'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:git://github.com/Shynixn/BlockBall.git'
+                        developerConnection = 'scm:git:ssh://github.com:Shynixn/BlockBall.git'
+                        url = 'http://github.com/Shynixn/BlockBall.git/tree/master'
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+                credentials {
+                    username = project.hasProperty("ossrhUsername") ? project.findProperty("ossrhUsername") : System.getenv('SONATYPE_USERNAME')
+                    password = project.hasProperty("ossrhPassword") ? project.findProperty("ossrhPassword") : System.getenv('SONATYPE_PASSWORD')
+                }
+            }
+        }
+    }
+
+    signing {
+        sign publishing.publications.mavenJava
+    }
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        jcenter()
+    }
+
+    dependencies {
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
+
+        testCompile 'org.jetbrains.kotlin:kotlin-test'
+        testCompile 'org.jetbrains.kotlin:kotlin-test-junit'
+    }
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (project.findProperty("signing.keyId") == null) {
+        ext."signing.keyId" = System.getenv('SIGNING_KEYID')
+        ext."signing.password" = System.getenv('SIGNING_KEYPASSWORD')
+        ext."signing.secretKeyRingFile" = '/home/travis/build/Shynixn/BlockBall/travis_secret_key'
+    }
+}
+
+task generateJavaDocPages(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    outputFormat = 'javadoc'
+    outputDirectory = "docs/apidocs"
+    sourceDirs = files(new File(this.projectDir as File, '/blockball-api/src/main/java')
+            , new File(this.projectDir as File, '/blockball-bukkit-api/src/main/java')
+            , new File(this.projectDir as File, '/blockball-core/src/main/java')
+            , new File(this.projectDir as File, '/blockball-bukkit-plugin/src/main/java'))
+}
+
+task downloadDependencies(type: Exec) {
+    def build = new File('build')
+
+    if (!build.exists()) {
+        build.mkdir()
+    }
+
+    def folder = new File(build, 'buildtools')
+
+    if (!folder.exists()) {
+        folder.mkdir()
+    }
+
+    def file = new File(folder, "BuildTools.jar")
+
+    if (!file.exists()) {
+        new URL('https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar').withInputStream { i ->
+            file.withOutputStream {
+                it << i
+            }
+        }
+    }
+
+    def vaultFile = new File(folder, "Vault.jar")
+
+    if (!vaultFile.exists()) {
+        def connection = new URL('https://dev.bukkit.org/projects/vault/files/2615750/download').openConnection()
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+
+        def out = new BufferedOutputStream(new FileOutputStream(vaultFile))
+        out << connection.inputStream
+
+        out.close()
+    }
+
+    def text = "cd build/buildtools"
+    text += " && mvn install:install-file -Dfile=Vault.jar -DgroupId=net.milkbowlvault -DartifactId=VaultAPI -Dversion=1.7 -Dpackaging=jar"
+    text += " && java -jar BuildTools.jar --rev 1.8"
+    text += " && java -jar BuildTools.jar --rev 1.8.3"
+    text += " && java -jar BuildTools.jar --rev 1.8.8"
+    text += " && java -jar BuildTools.jar --rev 1.9"
+    text += " && java -jar BuildTools.jar --rev 1.9.4"
+    text += " && java -jar BuildTools.jar --rev 1.10"
+    text += " && java -jar BuildTools.jar --rev 1.11"
+    text += " && java -jar BuildTools.jar --rev 1.12"
+    text += " && java -jar BuildTools.jar --rev 1.13"
+    text += " && java -jar BuildTools.jar --rev 1.13.2"
+    text += " && mvn install:install-file -Dfile=spigot-1.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R1 -Dversion=1.8.0-R1.0 -Dpackaging=jar"
+    text += " && mvn install:install-file -Dfile=spigot-1.8.3.jar -DgroupId=org.spigotmc -DartifactId=spigot18R2 -Dversion=1.8.3-R2.0 -Dpackaging=jar"
+    text += " && mvn install:install-file -Dfile=spigot-1.8.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R3 -Dversion=1.8.8-R3.0 -Dpackaging=jar"
+    text += " && mvn install:install-file -Dfile=spigot-1.9.jar -DgroupId=org.spigotmc -DartifactId=spigot19R1 -Dversion=1.9.0-R1.0 -Dpackaging=jar"
+    text += " && mvn install:install-file -Dfile=spigot-1.9.4.jar -DgroupId=org.spigotmc -DartifactId=spigot19R2 -Dversion=1.9.4-R2.0 -Dpackaging=jar"
+    text += " && mvn install:install-file -Dfile=spigot-1.10.2.jar -DgroupId=org.spigotmc -DartifactId=spigot110R1 -Dversion=1.10.2-R1.0 -Dpackaging=jar"
+    text += " && mvn install:install-file -Dfile=spigot-1.11.jar -DgroupId=org.spigotmc -DartifactId=spigot111R1 -Dversion=1.11.0-R1.0 -Dpackaging=jar"
+    text += " && mvn install:install-file -Dfile=spigot-1.12.jar -DgroupId=org.spigotmc -DartifactId=spigot112R1 -Dversion=1.12.0-R1.0 -Dpackaging=jar"
+    text += " && mvn install:install-file -Dfile=spigot-1.13.jar -DgroupId=org.spigotmc -DartifactId=spigot113R1 -Dversion=1.13.0-R1.0 -Dpackaging=jar"
+    text += " && mvn install:install-file -Dfile=spigot-1.13.2.jar -DgroupId=org.spigotmc -DartifactId=spigot113R2 -Dversion=1.13.2-R2.0 -Dpackaging=jar"
+
+    standardOutput = new ByteArrayOutputStream()
+
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine 'cmd', '/c', text
+    } else {
+        commandLine 'sh', '-c', text
+    }
+}
