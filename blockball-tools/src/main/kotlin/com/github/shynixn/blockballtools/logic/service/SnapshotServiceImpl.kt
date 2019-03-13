@@ -1,6 +1,6 @@
 package com.github.shynixn.blockballtools.logic.service
 
-import com.github.shynixn.blockballtools.contract.SnapshotService
+import com.github.shynixn.blockballtools.contract.SonaTypeService
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
@@ -33,13 +33,33 @@ import javax.net.ssl.HttpsURLConnection
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class SnapshotServiceImpl : SnapshotService {
+class SnapshotServiceImpl : SonaTypeService {
     /**
-     * Searches the snapshot repository for the latest snapshot id. Throws
+     * Searches the repository for the latest download link. Throws
      * a [IllegalArgumentException] if not found.
      */
-    override fun findSnapshotId(snapshotRepository: String): String {
-        val content = getSiteContent(snapshotRepository)
+    override fun findDownloadUrl(repository: String): String {
+        val content = getSiteContent(repository)
+        val data = content.split("SNAPSHOT")
+
+        val lastSnapshotRepositoryPayload = data[data.size - 3]
+        val lastSnapshotRepositoryURL = lastSnapshotRepositoryPayload.substring(lastSnapshotRepositoryPayload.indexOf("https://")) + "SNAPSHOT"
+
+        val repositoryContent = getSiteContent(lastSnapshotRepositoryURL)
+        val snapshotPayload = repositoryContent.split("href=\"")
+        val subSnapshotPayload = snapshotPayload.filter { p -> p.contains(".jar\"") }
+
+        val snapshotDownloadURLPayload = subSnapshotPayload[subSnapshotPayload.size - 1]
+
+        return snapshotDownloadURLPayload.substring(0, snapshotDownloadURLPayload.indexOf("\">"))
+    }
+
+    /**
+     * Searches the repository for the latest id. Throws
+     * a [IllegalArgumentException] if not found.
+     */
+    override fun findId(repositor: String): String {
+        val content = getSiteContent(repositor)
         val data = content.split("SNAPSHOT")
 
         val lastSnapshotRepositoryPayload = data[data.size - 3]
@@ -55,26 +75,6 @@ class SnapshotServiceImpl : SnapshotService {
         val parts = url.substring(0, url.indexOf(".jar")).split("-")
 
         return "SNAPSHOT-" + parts[parts.size - 3] + "-" + parts[parts.size - 2] + "-" + parts[parts.size - 1]
-    }
-
-    /**
-     * Searches the snapshot repository for the latest download link. Throws
-     * a [IllegalArgumentException] if not found.
-     */
-    override fun findSnapshotDownloadUrl(snapshotRepository: String): String {
-        val content = getSiteContent(snapshotRepository)
-        val data = content.split("SNAPSHOT")
-
-        val lastSnapshotRepositoryPayload = data[data.size - 3]
-        val lastSnapshotRepositoryURL = lastSnapshotRepositoryPayload.substring(lastSnapshotRepositoryPayload.indexOf("https://")) + "SNAPSHOT"
-
-        val repositoryContent = getSiteContent(lastSnapshotRepositoryURL)
-        val snapshotPayload = repositoryContent.split("href=\"")
-        val subSnapshotPayload = snapshotPayload.filter { p -> p.contains(".jar\"") }
-
-        val snapshotDownloadURLPayload = subSnapshotPayload[subSnapshotPayload.size - 1]
-
-        return snapshotDownloadURLPayload.substring(0, snapshotDownloadURLPayload.indexOf("\">"))
     }
 
     /**

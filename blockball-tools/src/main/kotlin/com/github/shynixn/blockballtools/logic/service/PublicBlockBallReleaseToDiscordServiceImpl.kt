@@ -39,35 +39,35 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class PublishBlockBallSnapshotToDiscord(
-    private val snapshotService: SonaTypeService = SnapshotServiceImpl(),
+class PublicBlockBallReleaseToDiscordServiceImpl(
+    private val releaseService: SonaTypeService = ReleaseServiceImpl(),
     private val discordWebHookService: DiscordWebhookService = DiscordWebhookServiceImpl()
 ) {
     private val bukkitSnapshotRepo =
-        "https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/"
+        "https://oss.sonatype.org/content/repositories/public/com/github/shynixn/blockball/blockball-bukkit-plugin/"
     private val blockBallImage = "https://raw.githubusercontent.com/Shynixn/travis-ci-discord-webhook/master/ball.png"
 
     /**
      * Sends the snapshot status to discord.
      */
-    fun publishSnapshotToDiscord(webHookUrl: String) {
-        val snapshotDownloadUrl = snapshotService.findDownloadUrl(bukkitSnapshotRepo)
-        val snapshotId = snapshotService.findId(bukkitSnapshotRepo)
+    fun publishReleaseToDiscord(webHookUrl: String) {
+        val releaseDownloadUrl =  releaseService.findDownloadUrl(bukkitSnapshotRepo)
+        val releaseId = releaseService.findId(bukkitSnapshotRepo)
 
-        val payload = DiscordPayload("BlockBall-Snapshots", blockBallImage)
+        val payload = DiscordPayload("BlockBall", blockBallImage)
 
         val embeddedMessage = DiscordEmbed(
             "Downloads",
-            Color(0, 145, 234).decimal,
-            DiscordAuthor("BlockBall Snapshot - Shynixn/BlockBall - $snapshotId", "", blockBallImage),
-            "Author Shynixn published a new snapshot build",
+            Color(251, 140, 0).decimal,
+            DiscordAuthor("BlockBall Releases - Shynixn/BlockBall - $releaseId", "", blockBallImage),
+            "Author Shynixn released a new version from BlockBall",
             Date().timestampIso8601
         )
 
         embeddedMessage.fields.add(
             DiscordField(
                 "Spigot/Bukkit",
-                "<:bukkit:493024859555627009> [`Direct Download`]($snapshotDownloadUrl)"
+                "<:bukkit:493024859555627009> [`Download BlockBall`]($releaseDownloadUrl)"
             )
         )
         payload.embeds.add(embeddedMessage)

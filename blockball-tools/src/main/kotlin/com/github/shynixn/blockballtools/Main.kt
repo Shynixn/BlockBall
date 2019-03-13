@@ -1,5 +1,6 @@
 package com.github.shynixn.blockballtools
 
+import com.github.shynixn.blockballtools.logic.service.PublicBlockBallReleaseToDiscordServiceImpl
 import com.github.shynixn.blockballtools.logic.service.PublishBlockBallSnapshotToDiscord
 
 /**
@@ -46,6 +47,19 @@ fun main(args: Array<String>) {
         val publishService = PublishBlockBallSnapshotToDiscord()
 
         publishService.publishSnapshotToDiscord(webHookUrl)
+
+        return
+    }
+
+    if(args[0] == "--release"){
+        if(args.size != 2){
+            throw IllegalArgumentException("--release requires 1 additional arguments [WebHookUrl]!")
+        }
+
+        val webHookUrl = args[1]
+        val publishService = PublicBlockBallReleaseToDiscordServiceImpl()
+
+        publishService.publishReleaseToDiscord(webHookUrl)
 
         return
     }

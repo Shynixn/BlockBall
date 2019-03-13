@@ -27,16 +27,16 @@ package com.github.shynixn.blockballtools.contract
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface SnapshotService {
+interface SonaTypeService {
     /**
-     * Searches the snapshot repository for the latest download link. Throws
+     * Searches the repository for the latest download link. Throws
      * a [IllegalArgumentException] if not found.
      */
-    fun findSnapshotDownloadUrl(snapshotRepository: String): String
+    fun findDownloadUrl(repository: String): String
 
     /**
-     * Searches the snapshot repository for the latest snapshot id. Throws
+     * Searches the repository for the latest id. Throws
      * a [IllegalArgumentException] if not found.
      */
-    fun findSnapshotId(snapshotRepository: String): String
+    fun findId(repositor: String): String
 }
