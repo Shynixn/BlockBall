@@ -70,6 +70,22 @@ class PublicBlockBallReleaseToDiscordServiceImpl(
                 "<:bukkit:493024859555627009> [`Download BlockBall`]($releaseDownloadUrl)"
             )
         )
+
+        embeddedMessage.fields.add(
+            DiscordField(
+                "Leave a Star",
+                 value = "https://github.com/Shynixn/BlockBall"
+
+            )
+        )
+
+        embeddedMessage.fields.add(
+            DiscordField(
+                name = "Like or Review",
+                value = "https://www.spigotmc.org/resources/15320"
+            )
+        )
+
         payload.embeds.add(embeddedMessage)
 
         discordWebHookService.sendDiscordPayload(webHookUrl, payload)

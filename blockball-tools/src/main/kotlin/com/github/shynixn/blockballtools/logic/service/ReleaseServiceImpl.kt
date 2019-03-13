@@ -3,10 +3,6 @@ package com.github.shynixn.blockballtools.logic.service
 import com.github.shynixn.blockballtools.contract.SonaTypeService
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.URL
-import javax.net.ssl.HttpsURLConnection
 
 class ReleaseServiceImpl : SonaTypeService {
     /**
@@ -14,7 +10,8 @@ class ReleaseServiceImpl : SonaTypeService {
      * a [IllegalArgumentException] if not found.
      */
     override fun findDownloadUrl(repository: String): String {
-        val downloadUrl = "https://oss.sonatype.org/content/repositories/public/com/github/shynixn/blockball/blockball-bukkit-plugin/VERSION/blockball-bukkit-plugin-VERSION.jar"
+        val downloadUrl =
+            "https://oss.sonatype.org/content/repositories/public/com/github/shynixn/blockball/blockball-bukkit-plugin/VERSION/blockball-bukkit-plugin-VERSION.jar"
         val id = findId(repository)
         val resultDownloadUrl = downloadUrl.replace("VERSION", id)
 
