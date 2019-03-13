@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>GameProperties &mdash; BlockBall 6.4.1 documentation</title>
+  <title>GameProperties &mdash; BlockBall 6.5.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.4.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.5.0 documentation" href="../index.html"/>
         <link rel="up" title="Misc" href="misc.html"/>
         <link rel="next" title="Textbook" href="textbook.html"/>
         <link rel="prev" title="AreaProtection" href="areaprotection.html"/> 
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                6.4.1
+                6.5.0
               </div>
             
           
@@ -207,7 +207,7 @@ a look into.</p>
 <li>Open the <strong>Misc Page</strong></li>
 <li>Open the <strong>Game Properties Page</strong></li>
 </ol>
-<img alt="../_images/customizing2.jpg" src="../_images/customizing2.jpg" />
+<img alt="customizing/../_static/images/customizing2.jpg" src="customizing/../_static/images/customizing2.jpg" />
 <ol class="arabic simple" start="4">
 <li>Now continue by enabling or disabling the values.</li>
 <li>Customize the other available options to your own needs.</li>
@@ -222,10 +222,11 @@ a look into.</p>
 <li>Search for the following section:</li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">customizing</span><span class="o">-</span><span class="n">meta</span><span class="p">:</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">customizing</span><span class="o">-</span><span class="n">meta</span><span class="p">:</span>
    <span class="n">damage</span><span class="o">-</span><span class="n">enabled</span><span class="p">:</span> <span class="n">false</span>
    <span class="n">score</span><span class="o">-</span><span class="n">back</span><span class="o">-</span><span class="n">teleport</span><span class="p">:</span> <span class="n">false</span>
    <span class="n">score</span><span class="o">-</span><span class="n">back</span><span class="o">-</span><span class="n">teleport</span><span class="o">-</span><span class="n">delay</span><span class="p">:</span> <span class="mi">2</span>
+   <span class="n">ball</span><span class="o">-</span><span class="n">forcefield</span><span class="p">:</span> <span class="n">true</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
@@ -239,6 +240,7 @@ a look into.</p>
 <li>Damage enabled: Should players be able to hit each other inside of the arena?</li>
 <li>Score teleport back: Should players be teleported back to their spawnpoint (teamspawnpoint or ballspawnpoint) after someone scores a point?</li>
 <li>Score teleport delay: The amount of seconds after players get teleported back to their spawnpoint if ‘Score teleport back’ is enabled.</li>
+<li>Ball forcefield: Should the ball stay automatically inside of the arena via an invisible forcefield?</li>
 </ul>
 </div>
 </div>
@@ -286,7 +288,7 @@ a look into.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.4.1',
+            VERSION:'6.5.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -297,6 +299,7 @@ a look into.</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

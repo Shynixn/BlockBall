@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>How to use a custom skin URL? &mdash; BlockBall 6.4.1 documentation</title>
+  <title>How to use a custom skin URL? &mdash; BlockBall 6.5.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.4.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.5.0 documentation" href="../index.html"/>
         <link rel="up" title="FAQ" href="index.html"/>
         <link rel="next" title="How to use the MySQL database?" href="howmysql.html"/>
         <link rel="prev" title="Can you support Minecraft 1.7.x or below?" href="support.html"/> 
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                6.4.1
+                6.5.0
               </div>
             
           
@@ -185,24 +185,24 @@
 <h1>How to use a custom skin URL?<a class="headerlink" href="#how-to-use-a-custom-skin-url" title="Permalink to this headline">¶</a></h1>
 <p>For example you received this command from a site like <a class="reference external" href="https://minecraft-heads.com">https://minecraft-heads.com</a></p>
 <p><strong>command:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">give</span> <span class="nd">@p</span> <span class="n">skull</span> <span class="mi">1</span> <span class="mi">3</span> <span class="p">{</span><span class="n">display</span><span class="p">:{</span><span class="n">Name</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">},</span><span class="n">SkullOwner</span><span class="p">:{</span><span class="n">Id</span><span class="p">:</span><span class="s2">&quot;98958836-4e85-4e5d-9c20-6ee46723f202&quot;</span><span class="p">,</span><span class="n">Properties</span><span class="p">:{</span><span class="n">textures</span><span class="p">:[{</span><span class="n">Value</span><span class="p">:</span><span class="s2">&quot;eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmY3ZWI3NWU1NTQyY2M0OTM3YWFhZDViYjg2NTczOTNlYWYwMjY1MDA2ZWFjMWRjOTY2OTFmMzJlMTY0MzcifX19&quot;</span><span class="p">}]}}}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">give</span> <span class="nd">@p</span> <span class="n">skull</span> <span class="mi">1</span> <span class="mi">3</span> <span class="p">{</span><span class="n">display</span><span class="p">:{</span><span class="n">Name</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">},</span><span class="n">SkullOwner</span><span class="p">:{</span><span class="n">Id</span><span class="p">:</span><span class="s2">&quot;98958836-4e85-4e5d-9c20-6ee46723f202&quot;</span><span class="p">,</span><span class="n">Properties</span><span class="p">:{</span><span class="n">textures</span><span class="p">:[{</span><span class="n">Value</span><span class="p">:</span><span class="s2">&quot;eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmY3ZWI3NWU1NTQyY2M0OTM3YWFhZDViYjg2NTczOTNlYWYwMjY1MDA2ZWFjMWRjOTY2OTFmMzJlMTY0MzcifX19&quot;</span><span class="p">}]}}}</span>
 </pre></div>
 </div>
 <p>Select the import part from your command which hides the actual URL base64encoded.</p>
 <p><strong>encoded url:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmY3ZWI3NWU1NTQyY2M0OTM3YWFhZDViYjg2NTczOTNlYWYwMjY1MDA2ZWFjMWRjOTY2OTFmMzJlMTY0MzcifX19</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmY3ZWI3NWU1NTQyY2M0OTM3YWFhZDViYjg2NTczOTNlYWYwMjY1MDA2ZWFjMWRjOTY2OTFmMzJlMTY0MzcifX19</span>
 </pre></div>
 </div>
 <p>Copy the encoded url and paste it into any base64 decoder. I have used <a class="reference external" href="https://www.base64decode.org/">https://www.base64decode.org/</a> in this example.</p>
 <img alt="../_images/faq1.png" src="../_images/faq1.png" />
 <p>Select the url after the “url” key.</p>
 <p><strong>decoded url:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">textures</span><span class="o">.</span><span class="n">minecraft</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">texture</span><span class="o">/</span><span class="mi">6</span><span class="n">f7eb75e5542cc4937aaad5bb8657393eaf0265006eac1dc96691f32e16437</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">textures</span><span class="o">.</span><span class="n">minecraft</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">texture</span><span class="o">/</span><span class="mi">6</span><span class="n">f7eb75e5542cc4937aaad5bb8657393eaf0265006eac1dc96691f32e16437</span>
 </pre></div>
 </div>
 <p>Congratulations, you can use the url anywhere in the plugin.</p>
 <p><strong>config.yml</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ball</span><span class="p">:</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ball</span><span class="p">:</span>
   <span class="n">skin</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">textures</span><span class="o">.</span><span class="n">minecraft</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">texture</span><span class="o">/</span><span class="mi">6</span><span class="n">f7eb75e5542cc4937aaad5bb8657393eaf0265006eac1dc96691f32e16437</span>
   <span class="n">size</span><span class="p">:</span> <span class="n">NORMAL</span>
   <span class="n">hitbox</span><span class="o">-</span><span class="n">size</span><span class="p">:</span> <span class="mf">3.0</span>
@@ -265,7 +265,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.4.1',
+            VERSION:'6.5.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -276,6 +276,7 @@
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

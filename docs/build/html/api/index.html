@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Developer API &mdash; BlockBall 6.4.1 documentation</title>
+  <title>Developer API &mdash; BlockBall 6.5.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.4.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.5.0 documentation" href="../index.html"/>
         <link rel="next" title="FAQ" href="../faq/index.html"/>
         <link rel="prev" title="Datacollecting" href="../general/datacollecting.html"/> 
 
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                6.4.1
+                6.5.0
               </div>
             
           
@@ -195,13 +195,13 @@
 &lt;dependency&gt;
     &lt;groupId&gt;com.github.shynixn.blockball&lt;/groupId&gt;
     &lt;artifactId&gt;blockball-api&lt;/artifactId&gt;
-    &lt;version&gt;6.4.1&lt;/version&gt;
+    &lt;version&gt;6.5.0&lt;/version&gt;
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;com.github.shynixn.blockball&lt;/groupId&gt;
     &lt;artifactId&gt;blockball-bukkit-api&lt;/artifactId&gt;
-    &lt;version&gt;6.4.1&lt;/version&gt;
+    &lt;version&gt;6.5.0&lt;/version&gt;
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;
 </pre>
@@ -211,8 +211,8 @@
 </div>
 <pre class="literal-block">
 dependencies {
-    compileOnly 'com.github.shynixn.blockball:blockball-api:6.4.1'
-    compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:6.4.1'
+    compileOnly 'com.github.shynixn.blockball:blockball-api:6.5.0'
+    compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:6.5.0'
 }
 </pre>
 </div>
@@ -222,14 +222,14 @@ dependencies {
 <p class="first admonition-title">Note</p>
 <p class="last"><strong>Bukkit</strong> - Add the following tag to your plugin.yml if you <strong>optionally</strong> want to use BlockBall.</p>
 </div>
-<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">softdepend</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="nv">BlockBall</span><span class="p p-Indicator">]</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">softdepend</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">BlockBall</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last"><strong>Bukkit</strong> - Add the following tag to your plugin.yml if your plugin  <strong>requires</strong> BlockBall to work.</p>
 </div>
-<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">depend</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="nv">BlockBall</span><span class="p p-Indicator">]</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">depend</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">BlockBall</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </div>
@@ -243,14 +243,14 @@ dependencies {
 <li>Check out the package <strong>com.github.shynixn.blockball.api.business.service</strong> in the JavaDocs to find the part of the business logic you want to access.</li>
 <li>Get the instance by using the following line.</li>
 </ul>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">YourBusinessService</span> <span class="n">service</span> <span class="o">=</span> <span class="n">BlockBallApi</span><span class="o">.</span><span class="na">INSTANCE</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="n">YourBusinessService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">YourBusinessService</span> <span class="n">service</span> <span class="o">=</span> <span class="n">BlockBallApi</span><span class="o">.</span><span class="na">INSTANCE</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="n">YourBusinessService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li>If the service methods require additional data entities, check out the JavaDocs to find other services which provide these data entities
 or create new entities by checking out the package <strong>com.github.shynixn.blockball.api.persistence.entity</strong>.</li>
 </ul>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">YourPersistenceEntity</span> <span class="n">entity</span> <span class="o">=</span> <span class="n">BlockBallApi</span><span class="o">.</span><span class="na">INSTANCE</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">YourPersistenceEntity</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">YourPersistenceEntity</span> <span class="n">entity</span> <span class="o">=</span> <span class="n">BlockBallApi</span><span class="o">.</span><span class="na">INSTANCE</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">YourPersistenceEntity</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -260,7 +260,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <p class="first admonition-title">Note</p>
 <p class="last"><strong>Ball</strong> - Bukkit - Spawning a ball.</p>
 </div>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Location</span> <span class="n">location</span><span class="o">;</span> <span class="c1">// Any Location instance</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Location</span> <span class="n">location</span><span class="o">;</span> <span class="c1">// Any Location instance</span>
 
 <span class="n">BallMeta</span> <span class="n">ballMeta</span> <span class="o">=</span> <span class="n">BlockBallApi</span><span class="o">.</span><span class="na">INSTANCE</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">BallMeta</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 <span class="n">BallEntityService</span> <span class="n">ballEntityService</span> <span class="o">=</span> <span class="n">BlockBallApi</span><span class="o">.</span><span class="na">INSTANCE</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="n">BallEntityService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
@@ -272,7 +272,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <p class="first admonition-title">Note</p>
 <p class="last"><strong>Game</strong> - Bukkit - Accessing games.</p>
 </div>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">GameService</span> <span class="n">gameService</span> <span class="o">=</span> <span class="n">BlockBallApi</span><span class="o">.</span><span class="na">INSTANCE</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="n">GameService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">GameService</span> <span class="n">gameService</span> <span class="o">=</span> <span class="n">BlockBallApi</span><span class="o">.</span><span class="na">INSTANCE</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="n">GameService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 <span class="n">GameActionService</span><span class="o">&lt;</span><span class="n">Game</span><span class="o">&gt;</span> <span class="n">gameActionService</span> <span class="o">=</span> <span class="n">BlockBallApi</span><span class="o">.</span><span class="na">INSTANCE</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="n">GameActionService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 
 <span class="n">Player</span> <span class="n">player</span><span class="o">;</span> <span class="c1">// Any player instance</span>
@@ -289,7 +289,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <p class="first admonition-title">Note</p>
 <p class="last"><strong>Arena</strong> - Bukkit - Accessing arenas.</p>
 </div>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">final</span> <span class="n">PersistenceArenaService</span> <span class="n">persistenceArenaService</span> <span class="o">=</span> <span class="n">BlockBallApi</span><span class="o">.</span><span class="na">INSTANCE</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="n">PersistenceArenaService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">final</span> <span class="n">PersistenceArenaService</span> <span class="n">persistenceArenaService</span> <span class="o">=</span> <span class="n">BlockBallApi</span><span class="o">.</span><span class="na">INSTANCE</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="n">PersistenceArenaService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 <span class="kd">final</span> <span class="n">CompletableFuture</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span> <span class="n">completableFuture</span> <span class="o">=</span> <span class="n">persistenceArenaService</span><span class="o">.</span><span class="na">refresh</span><span class="o">();</span> <span class="c1">// Do you want to refresh the arenas from the files?</span>
 
 <span class="n">completableFuture</span><span class="o">.</span><span class="na">thenAccept</span><span class="o">(</span><span class="n">aVoid</span> <span class="o">-&gt;</span> <span class="o">{</span>
@@ -306,7 +306,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <p class="first admonition-title">Note</p>
 <p class="last"><strong>SpawnEvent</strong> - Bukkit - Listening to the spawn event.</p>
 </div>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@EventHandler</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@EventHandler</span>
 <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onBallSpawnEvent</span><span class="o">(</span><span class="n">BallSpawnEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">BallProxy</span> <span class="n">ball</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">getBall</span><span class="o">();</span>
 
@@ -325,7 +325,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <li>Fork the BlockBall project on github and clone it to your local environment.</li>
 <li>Use BuildTools.jar from spigotmc.org to build the following dependencies.</li>
 </ul>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="n">BuildTools</span><span class="o">.</span><span class="na">jar</span> <span class="o">--</span><span class="n">rev</span> <span class="mf">1.8</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="n">BuildTools</span><span class="o">.</span><span class="na">jar</span> <span class="o">--</span><span class="n">rev</span> <span class="mf">1.8</span>
 <span class="o">-</span> <span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="n">BuildTools</span><span class="o">.</span><span class="na">jar</span> <span class="o">--</span><span class="n">rev</span> <span class="mf">1.8.3</span>
 <span class="o">-</span> <span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="n">BuildTools</span><span class="o">.</span><span class="na">jar</span> <span class="o">--</span><span class="n">rev</span> <span class="mf">1.8.8</span>
 <span class="o">-</span> <span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="n">BuildTools</span><span class="o">.</span><span class="na">jar</span> <span class="o">--</span><span class="n">rev</span> <span class="mf">1.9</span>
@@ -340,7 +340,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <ul class="simple">
 <li>Install the created libraries to your local maven repository.</li>
 </ul>
-<div class="highlight-java"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">mvn</span> <span class="n">install</span><span class="o">:</span><span class="n">install</span><span class="o">-</span><span class="n">file</span> <span class="o">-</span><span class="n">Dfile</span><span class="o">=</span><span class="n">spigot</span><span class="o">-</span><span class="mf">1.8</span><span class="o">.</span><span class="na">jar</span> <span class="o">-</span><span class="n">DgroupId</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">spigotmc</span> <span class="o">-</span><span class="n">DartifactId</span><span class="o">=</span><span class="n">spigot18R1</span> <span class="o">-</span><span class="n">Dversion</span><span class="o">=</span><span class="mf">1.8.0</span><span class="o">-</span><span class="n">R1</span><span class="mf">.0</span> <span class="o">-</span><span class="n">Dpackaging</span><span class="o">=</span><span class="n">jar</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">mvn</span> <span class="n">install</span><span class="o">:</span><span class="n">install</span><span class="o">-</span><span class="n">file</span> <span class="o">-</span><span class="n">Dfile</span><span class="o">=</span><span class="n">spigot</span><span class="o">-</span><span class="mf">1.8</span><span class="o">.</span><span class="na">jar</span> <span class="o">-</span><span class="n">DgroupId</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">spigotmc</span> <span class="o">-</span><span class="n">DartifactId</span><span class="o">=</span><span class="n">spigot18R1</span> <span class="o">-</span><span class="n">Dversion</span><span class="o">=</span><span class="mf">1.8.0</span><span class="o">-</span><span class="n">R1</span><span class="mf">.0</span> <span class="o">-</span><span class="n">Dpackaging</span><span class="o">=</span><span class="n">jar</span>
 <span class="o">-</span> <span class="n">mvn</span> <span class="n">install</span><span class="o">:</span><span class="n">install</span><span class="o">-</span><span class="n">file</span> <span class="o">-</span><span class="n">Dfile</span><span class="o">=</span><span class="n">spigot</span><span class="o">-</span><span class="mf">1.8.3</span><span class="o">.</span><span class="na">jar</span> <span class="o">-</span><span class="n">DgroupId</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">spigotmc</span> <span class="o">-</span><span class="n">DartifactId</span><span class="o">=</span><span class="n">spigot18R2</span> <span class="o">-</span><span class="n">Dversion</span><span class="o">=</span><span class="mf">1.8.3</span><span class="o">-</span><span class="n">R2</span><span class="mf">.0</span> <span class="o">-</span><span class="n">Dpackaging</span><span class="o">=</span><span class="n">jar</span>
 <span class="o">-</span> <span class="n">mvn</span> <span class="n">install</span><span class="o">:</span><span class="n">install</span><span class="o">-</span><span class="n">file</span> <span class="o">-</span><span class="n">Dfile</span><span class="o">=</span><span class="n">spigot</span><span class="o">-</span><span class="mf">1.8.8</span><span class="o">.</span><span class="na">jar</span> <span class="o">-</span><span class="n">DgroupId</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">spigotmc</span> <span class="o">-</span><span class="n">DartifactId</span><span class="o">=</span><span class="n">spigot18R3</span> <span class="o">-</span><span class="n">Dversion</span><span class="o">=</span><span class="mf">1.8.8</span><span class="o">-</span><span class="n">R3</span><span class="mf">.0</span> <span class="o">-</span><span class="n">Dpackaging</span><span class="o">=</span><span class="n">jar</span>
 <span class="o">-</span> <span class="n">mvn</span> <span class="n">install</span><span class="o">:</span><span class="n">install</span><span class="o">-</span><span class="n">file</span> <span class="o">-</span><span class="n">Dfile</span><span class="o">=</span><span class="n">spigot</span><span class="o">-</span><span class="mf">1.9</span><span class="o">.</span><span class="na">jar</span> <span class="o">-</span><span class="n">DgroupId</span><span class="o">=</span><span class="n">org</span><span class="o">.</span><span class="na">spigotmc</span> <span class="o">-</span><span class="n">DartifactId</span><span class="o">=</span><span class="n">spigot19R1</span> <span class="o">-</span><span class="n">Dversion</span><span class="o">=</span><span class="mf">1.9.0</span><span class="o">-</span><span class="n">R1</span><span class="mf">.0</span> <span class="o">-</span><span class="n">Dpackaging</span><span class="o">=</span><span class="n">jar</span>
@@ -402,7 +402,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.4.1',
+            VERSION:'6.5.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -413,6 +413,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 
