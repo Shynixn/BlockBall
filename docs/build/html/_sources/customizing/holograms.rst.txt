@@ -3,13 +3,13 @@ Holograms
 
 It is possible to display multiple holograms during a match all around of the arena. It looks like that:
 
-.. image:: ../_static/images/hologram1.jpg
+.. image:: ../_static/images/hologram1.JPG
 
 You can use it to display team names, the remaining time, scores for each team and more. You can find all available placeholders `here <placeholders.html>`__.
 
 Holograms do even support multiple lines:
 
-.. image:: ../_static/images/hologram2.jpg
+.. image:: ../_static/images/hologram2.JPG
 
 Configuring ingame
 ~~~~~~~~~~~~~~~~~~
@@ -20,12 +20,12 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 2. Open the **Effects Page**
 3. Open the **Holograms Page**
 
-.. image:: ../_static/images/hologram3.jpg
+.. image:: ../_static/images/hologram3.JPG
 
 4. Now continue by adding a new hologram by pressing **add by location**
 5. Customize the other available options to your own needs.
 
-.. image:: ../_static/images/hologram4.jpg
+.. image:: ../_static/images/hologram4.JPG
 
 You can find all options explained at the bottom of this page.
 
@@ -38,7 +38,9 @@ At this stage, you should be able to find your arena save file. If not, please t
 2. Search for the following section:
 
 **arena_x.yml**
-::
+
+.. code-block:: yaml
+
    holograms:
       '1':
         lines:

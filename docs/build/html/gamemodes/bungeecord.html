@@ -201,7 +201,7 @@
 <li>Go to the <strong>Settings Page</strong> of your arena and select the GameType Bungee.</li>
 <li>Open the <strong>Game Settings Page</strong></li>
 </ol>
-<img alt="gamemodes/../_static/images/arena12.jpg" src="gamemodes/../_static/images/arena12.jpg" />
+<img alt="../_images/arena12.JPG" src="../_images/arena12.JPG" />
 <ol class="arabic simple" start="3">
 <li>Set the lobby spawnpoint and the leave spawnpoint.</li>
 <li>Customize the other available options to your own needs.</li>
@@ -210,18 +210,18 @@
 <li>Now go to your BlockBall folder on your Gameserver and configure the newly created <strong>bungeecord.yml</strong> file</li>
 </ol>
 <p><strong>config.yml</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bungeecord</span><span class="p">:</span>
-  <span class="n">motd</span><span class="o">-</span><span class="n">restarting</span><span class="p">:</span> <span class="s1">&#39;&amp;cRestarting...&#39;</span>
-  <span class="n">motd</span><span class="o">-</span><span class="n">waiting</span><span class="o">-</span><span class="n">players</span><span class="p">:</span> <span class="s1">&#39;&amp;aWaiting for players...&#39;</span>
-  <span class="n">motd</span><span class="o">-</span><span class="n">ingame</span><span class="p">:</span> <span class="s1">&#39;&amp;9Ingame&#39;</span>
-  <span class="n">sign</span><span class="o">-</span><span class="n">restarting</span><span class="p">:</span> <span class="s1">&#39;&amp;cRestarting&#39;</span>
-  <span class="n">sign</span><span class="o">-</span><span class="n">waiting</span><span class="o">-</span><span class="n">players</span><span class="p">:</span> <span class="s1">&#39;&amp;aJoin&#39;</span>
-  <span class="n">sign</span><span class="o">-</span><span class="n">ingame</span><span class="p">:</span> <span class="s1">&#39;&amp;9Running&#39;</span>
-  <span class="n">sign</span><span class="o">-</span><span class="n">lines</span><span class="p">:</span>
-    <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="s1">&#39;&amp;lBlockBall&#39;</span>
-    <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">server</span><span class="o">&gt;</span>
-    <span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">state</span><span class="o">&gt;</span>
-    <span class="s1">&#39;4&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">sumplayers</span><span class="o">&gt;/&lt;</span><span class="n">summaxplayers</span><span class="o">&gt;</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>bungeecord:
+  motd-restarting: &#39;&amp;cRestarting...&#39;
+  motd-waiting-players: &#39;&amp;aWaiting for players...&#39;
+  motd-ingame: &#39;&amp;9Ingame&#39;
+  sign-restarting: &#39;&amp;cRestarting&#39;
+  sign-waiting-players: &#39;&amp;aJoin&#39;
+  sign-ingame: &#39;&amp;9Running&#39;
+  sign-lines:
+    &#39;1&#39;: &#39;&amp;lBlockBall&#39;
+    &#39;2&#39;: &lt;server&gt;
+    &#39;3&#39;: &lt;state&gt;
+    &#39;4&#39;: &lt;sumplayers&gt;/&lt;summaxplayers&gt;
 </pre></div>
 </div>
 <ol class="arabic simple" start="8">
@@ -237,7 +237,7 @@
 <li>Enable the server linking config option in your <strong>config.yml</strong> on your Hubserver</li>
 </ol>
 <p><strong>config.yml</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span>
 
 <span class="c1"># Game settings</span>
 
@@ -245,8 +245,8 @@
 
 <span class="c1">############################</span>
 
-<span class="n">game</span><span class="p">:</span>
-  <span class="n">allow</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">linking</span><span class="p">:</span> <span class="n">true</span>
+<span class="nt">game</span><span class="p">:</span>
+  <span class="nt">allow-server-linking</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="5">

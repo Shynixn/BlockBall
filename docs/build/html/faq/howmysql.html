@@ -105,6 +105,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Developer API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">FAQ</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="notspawning.html">The ball does not spawn?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands.html">How can I automatically execute a command after a game?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="goalgetsnotdetected.html">The ball is inside of the goal but it does not score?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ballfallsthroughmap.html">The ball falls through the ground?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="support.html">Can you support Minecraft 1.7.x or below?</a></li>
@@ -191,7 +192,7 @@
 <li>You have already got a MySQL server and want to keep all saves at one places (backups) ✔</li>
 </ul>
 <p><strong>before</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span>
 
 <span class="c1"># Database settings</span>
 
@@ -201,18 +202,18 @@
 
 <span class="c1">############################</span>
 
-<span class="n">sql</span><span class="p">:</span>
-  <span class="n">enabled</span><span class="p">:</span> <span class="n">false</span>
-  <span class="n">host</span><span class="p">:</span> <span class="n">localhost</span>
-  <span class="n">port</span><span class="p">:</span> <span class="mi">3306</span>
-  <span class="n">database</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
-  <span class="n">username</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
-  <span class="n">password</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
+<span class="nt">sql</span><span class="p">:</span>
+  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+  <span class="nt">host</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="nt">port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3306</span>
+  <span class="nt">database</span><span class="p">:</span> <span class="s">&#39;&#39;</span>
+  <span class="nt">username</span><span class="p">:</span> <span class="s">&#39;&#39;</span>
+  <span class="nt">password</span><span class="p">:</span> <span class="s">&#39;&#39;</span>
 </pre></div>
 </div>
 <p>You can get the data from your MySQL database host.</p>
 <p><strong>after</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span>
 
 <span class="c1"># Database settings</span>
 
@@ -222,13 +223,13 @@
 
 <span class="c1">############################</span>
 
-<span class="n">sql</span><span class="p">:</span>
-  <span class="n">enabled</span><span class="p">:</span> <span class="n">true</span>
-  <span class="n">host</span><span class="p">:</span> <span class="s1">&#39;your_db_host_address&#39;</span>
-  <span class="n">port</span><span class="p">:</span> <span class="mi">3306</span>
-  <span class="n">database</span><span class="p">:</span> <span class="s1">&#39;your_db_name&#39;</span>
-  <span class="n">username</span><span class="p">:</span> <span class="s1">&#39;your_db_login_username&#39;</span>
-  <span class="n">password</span><span class="p">:</span> <span class="s1">&#39;your_db_login_password&#39;</span>
+<span class="nt">sql</span><span class="p">:</span>
+  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">host</span><span class="p">:</span> <span class="s">&#39;your_db_host_address&#39;</span>
+  <span class="nt">port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3306</span>
+  <span class="nt">database</span><span class="p">:</span> <span class="s">&#39;your_db_name&#39;</span>
+  <span class="nt">username</span><span class="p">:</span> <span class="s">&#39;your_db_login_username&#39;</span>
+  <span class="nt">password</span><span class="p">:</span> <span class="s">&#39;your_db_login_password&#39;</span>
 </pre></div>
 </div>
 </div>

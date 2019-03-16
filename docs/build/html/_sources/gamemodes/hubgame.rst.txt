@@ -16,7 +16,7 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 1. Go to the **Settings Page** of your arena
 2. Open the **Game Settings Page**
 
-.. image:: ../_static/images/arena10.jpg
+.. image:: ../_static/images/arena10.JPG
 
 3. Customize all available
 4. Customize the other available options to your own needs.
@@ -32,7 +32,9 @@ At this stage, you should be able to find your arena save file. If not, please t
 2. Search for the following section:
 
 **arena_x.yml**
-::
+
+.. code-block:: yaml
+
     meta:
       max-score: 10
       even-teams: false

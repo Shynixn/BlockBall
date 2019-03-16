@@ -1,5 +1,5 @@
 Soundeffect
-==============
+===========
 
 It is possible to play so called Soundeffects when a certain action appears. This effect cannot be configured
 standalone as it always belongs to another action like DoubleJump.
@@ -14,7 +14,7 @@ As the Soundeffect is always a sub page of another action there is no specific p
 
 1. The Soundeffect page looks like that.
 
-.. image:: ../_static/images/Soundeffect1.jpg
+.. image:: ../_static/images/Soundeffect1.JPG
 
 4. Now continue by selecting which player should be able to see the Soundeffect by clicking on effecting
 5. Customize the other available options to your own needs.
@@ -30,7 +30,9 @@ As the Soundeffect is always a sub effect of another action there is no specific
 2. Search for the following sections:
 
 **arena_x.yml**
-::
+
+.. code-block:: yaml
+
   sound-effect:
     effecting: EVERYONE
     name: ENTITY_GHAST_SHOOT

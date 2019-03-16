@@ -180,7 +180,7 @@
 <h1>Rename Commands<a class="headerlink" href="#rename-commands" title="Permalink to this headline">¶</a></h1>
 <p>You are also allowed to rename the user commands /bbjoin and /bbleave in the config.yml. You can even customize the permissions.</p>
 <p><strong>config.yml</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span>
 
 <span class="c1"># Command settings</span>
 
@@ -192,20 +192,20 @@
 
 <span class="c1">############################</span>
 
-<span class="k">global</span><span class="o">-</span><span class="n">join</span><span class="p">:</span>
-  <span class="n">enabled</span><span class="p">:</span> <span class="n">true</span>
-  <span class="n">command</span><span class="p">:</span> <span class="n">bbjoin</span>
-  <span class="n">useage</span><span class="p">:</span> <span class="o">/&lt;</span><span class="n">command</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">game</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">team</span><span class="o">&gt;</span>
-  <span class="n">description</span><span class="p">:</span> <span class="n">Join</span> <span class="n">a</span> <span class="n">game</span><span class="o">.</span>
-  <span class="n">permission</span><span class="p">:</span> <span class="n">blockball</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">use</span>
-  <span class="n">permission</span><span class="o">-</span><span class="n">message</span><span class="p">:</span> <span class="n">You</span> <span class="n">don</span><span class="s1">&#39;t have permission</span>
-<span class="k">global</span><span class="o">-</span><span class="n">leave</span><span class="p">:</span>
-  <span class="n">enabled</span><span class="p">:</span> <span class="n">true</span>
-  <span class="n">command</span><span class="p">:</span> <span class="n">bbleave</span>
-  <span class="n">useage</span><span class="p">:</span> <span class="o">/&lt;</span><span class="n">command</span><span class="o">&gt;</span>
-  <span class="n">description</span><span class="p">:</span> <span class="n">Leaves</span> <span class="n">current</span> <span class="n">game</span><span class="o">.</span>
-  <span class="n">permission</span><span class="p">:</span> <span class="n">blockball</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">use</span>
-  <span class="n">permission</span><span class="o">-</span><span class="n">message</span><span class="p">:</span> <span class="n">You</span> <span class="n">don</span><span class="s1">&#39;t have permission</span>
+<span class="nt">global-join</span><span class="p">:</span>
+  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">command</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bbjoin</span>
+  <span class="nt">useage</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/&lt;command&gt; &lt;game&gt; &lt;team&gt;</span>
+  <span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Join a game.</span>
+  <span class="nt">permission</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blockball.command.use</span>
+  <span class="nt">permission-message</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">You don&#39;t have permission</span>
+<span class="nt">global-leave</span><span class="p">:</span>
+  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">command</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bbleave</span>
+  <span class="nt">useage</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/&lt;command&gt;</span>
+  <span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Leaves current game.</span>
+  <span class="nt">permission</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blockball.command.use</span>
+  <span class="nt">permission-message</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">You don&#39;t have permission</span>
 </pre></div>
 </div>
 </div>

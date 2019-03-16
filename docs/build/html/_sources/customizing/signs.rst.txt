@@ -14,7 +14,7 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 1. Go to the **Settings Page** of your arena
 2. Open the **Signs Page**
 
-.. image:: ../_static/images/sign3.jpg
+.. image:: ../_static/images/sign3.JPG
 
 **Joining the game and team**
 
@@ -29,7 +29,7 @@ a) Set up team signs for letting players join the team they want to.
 
 The game has to be initially started by *>>Save and reload<<* to display the text.
 
-.. image:: ../_static/images/sign1.jpg
+.. image:: ../_static/images/sign1.JPG
 
 b) Set up join signs for automatically putting players into even teams.
 
@@ -37,7 +37,7 @@ b) Set up join signs for automatically putting players into even teams.
 2. Rightclick on any sign to convert it
 3. The sign will automatically display the text set in the Template Signs Join section
 
-.. image:: ../_static/images/sign2.jpg
+.. image:: ../_static/images/sign2.JPG
 
 **Leaving the game**
 
@@ -55,7 +55,7 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 1. Go to the **Settings Page** of your arena
 2. Open the **Signs Page**
 
-.. image:: ../_static/images/sign3.jpg
+.. image:: ../_static/images/sign3.JPG
 
 **Joining the game**
 
@@ -65,7 +65,7 @@ Players can join the lobby by clicking the join sign. They do not get added to a
 2. Rightclick on any sign to convert it
 3. The sign will automatically display the text set in the Template Signs Join section
 
-.. image:: ../_static/images/sign2.jpg
+.. image:: ../_static/images/sign2.JPG
 
 **Queuing for a team**
 
@@ -80,7 +80,7 @@ Also, you can allow joining teams directly by putting up team signs instead of j
 
 The game has to be initially started by *>>Save and reload<<* to display the text.
 
-.. image:: ../_static/images/sign1.jpg
+.. image:: ../_static/images/sign1.JPG
 
 **Leaving the game**
 
@@ -96,7 +96,7 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 1. Go to the **Settings Page** of your arena
 2. Open the **Signs Page**
 
-.. image:: ../_static/images/sign3.jpg
+.. image:: ../_static/images/sign3.JPG
 
 **Joining the game**
 
@@ -114,7 +114,7 @@ When players do not click on a sign, they will automatically put into a team aft
 
 The game has to be initially started by *>>Save and reload<<* to display the text.
 
-.. image:: ../_static/images/sign1.jpg
+.. image:: ../_static/images/sign1.JPG
 
 **Leaving the game**
 

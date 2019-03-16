@@ -10,21 +10,21 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 
 1. Go to the **Settings Page** of your arena
 
-.. image:: ../_static/images/team1.jpg
+.. image:: ../_static/images/team1.JPG
 
 2. Choose **Team Red** or **Team Blue** to configure.
 
-.. image:: ../_static/images/team2.jpg
+.. image:: ../_static/images/team2.JPG
 
-.. image:: ../_static/images/team5.jpg
+.. image:: ../_static/images/team5.JPG
 
 3. The following messages are available.
 
-.. image:: ../_static/images/team3.jpg
+.. image:: ../_static/images/team3.JPG
 
 4. Customize the available messages to your own needs. You can also edit the Team sign template.
 
-.. image:: ../_static/images/team4.jpg
+.. image:: ../_static/images/team4.JPG
 
 You can find all options explained at the bottom of this page.
 

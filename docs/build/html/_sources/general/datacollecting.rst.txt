@@ -8,7 +8,9 @@ You are allowed to disable metrics in the config.yml, however for supporting Blo
 Also, enabling metrics does not have an impact on your server performance at all.
 
 **config.yml**
-::
+
+.. code-block:: yaml
+
     metrics: true
 
 .. raw:: html

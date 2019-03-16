@@ -19,19 +19,19 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 1. Go to the **Settings Page** of your arena
 2. Open the **Rewards Page**
 
-.. image:: ../_static/images/reward1.jpg
+.. image:: ../_static/images/reward1.JPG
 
 1. Let's start by adding a money reward for your players. Make sure you are using an **economy plugin** on your server which supports Vault and of course installed the **plugin Vault**.
 2. Press on select and choose an action to bind the reward to. For example the action named winning match belongs to the winning team.
 
-.. image:: ../_static/images/reward2.jpg
+.. image:: ../_static/images/reward2.JPG
 
 3. In this example each player of the winning team receives 5 potatos on win. (this is the plural name of the currency used on this server). You can also see that the connection with Vault is working when your currency name displays correctly.
 
 1. Now let's continue with adding a command reward for our players. You can also use this option to execute commands on your server when this action appears. It does not have to be a reward at all.
 2. Press on select and choose an action to bind the reward to. For example the action named winning match belongs to the winning team.
 
-.. image:: ../_static/images/reward3.jpg
+.. image:: ../_static/images/reward3.JPG
 
 3. In this example the server console executes the command */say Hello World* with console permissions when any team wins the match
 
@@ -55,7 +55,9 @@ At this stage, you should be able to find your arena save file. If not, please t
 2. Search for the following section:
 
 **arena_x.yml**
-::
+
+.. code-block:: yaml
+
     reward-meta:
       money-reward:
         WIN_MATCH: 5

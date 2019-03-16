@@ -13,13 +13,11 @@ The most messages and issues I receive are from players who forgot to read them,
 Upgrading from the previous to next version
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is a screenshot from the update log on github. Can you see the config.yml section? This means the config.yml has changed so it is
-your duty to copy these lines at the correct place into your config.yml.
+Apply the changes from the patchnotes if there are any changes mentioned.
 
 If you are not capable of this you have to delete your old config.yml
 in the BlockBall folder.
 
-.. image:: ../_static/images/up1.jpg
 
 Upgrading from any version to the latest version
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -199,7 +199,7 @@
   <div class="section" id="scoreboard">
 <h1>Scoreboard<a class="headerlink" href="#scoreboard" title="Permalink to this headline">¶</a></h1>
 <p>It is possible to display a scoreboard during a match on a players screen. It looks like that:</p>
-<img alt="customizing/../_static/images/scoreboard1.jpg" src="customizing/../_static/images/scoreboard1.jpg" />
+<img alt="../_images/scoreboard1.JPG" src="../_images/scoreboard1.JPG" />
 <p>You can use it to display team names, the remaining time, scores for each team and more. You can find all available placeholders <a class="reference external" href="placeholders.html">here</a>.</p>
 <div class="section" id="configuring-ingame">
 <h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
@@ -209,12 +209,12 @@
 <li>Open the <strong>Effects Page</strong></li>
 <li>Open the <strong>Scoreboard Page</strong></li>
 </ol>
-<img alt="customizing/../_static/images/scoreboard2.jpg" src="customizing/../_static/images/scoreboard2.jpg" />
+<img alt="../_images/scoreboard2.JPG" src="../_images/scoreboard2.JPG" />
 <ol class="arabic simple" start="4">
 <li>Now continue by enabling or disabling the scoreboard by clicking <strong>toggle</strong> with your mouse.</li>
 <li>Customize the other available options to your own needs.</li>
 </ol>
-<img alt="customizing/../_static/images/scoreboard3.jpg" src="customizing/../_static/images/scoreboard3.jpg" />
+<img alt="../_images/scoreboard3.JPG" src="../_images/scoreboard3.JPG" />
 <p>You can find all options explained at the bottom of this page.</p>
 </div>
 <div class="section" id="configuring-in-your-arena-x-yml">
@@ -225,21 +225,21 @@
 <li>Search for the following section:</li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scoreboard</span><span class="p">:</span>
-  <span class="n">title</span><span class="p">:</span> <span class="s1">&#39;&amp;aBlockBall&#39;</span>
-  <span class="n">enabled</span><span class="p">:</span> <span class="n">true</span>
-  <span class="n">lines</span><span class="p">:</span>
-  <span class="o">-</span> <span class="s1">&#39;&#39;</span>
-  <span class="o">-</span> <span class="s1">&#39;&amp;6Time: &#39;</span>
-  <span class="o">-</span> <span class="o">&lt;</span><span class="n">time</span><span class="o">&gt;</span>
-  <span class="o">-</span> <span class="s1">&#39;&#39;</span>
-  <span class="o">-</span> <span class="s1">&#39;&amp;m           &amp;r&#39;</span>
-  <span class="o">-</span> <span class="s1">&#39;&lt;redcolor&gt;&lt;red&gt;:&#39;</span>
-  <span class="o">-</span> <span class="s1">&#39;&amp;l&lt;redscore&gt;&#39;</span>
-  <span class="o">-</span> <span class="s1">&#39;&#39;</span>
-  <span class="o">-</span> <span class="s1">&#39;&lt;bluecolor&gt;&lt;blue&gt;:&#39;</span>
-  <span class="o">-</span> <span class="s1">&#39;&amp;l&lt;bluescore&gt;&#39;</span>
-  <span class="o">-</span> <span class="s1">&#39;&amp;m           &amp;r&#39;</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">scoreboard</span><span class="p">:</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="s">&#39;&amp;aBlockBall&#39;</span>
+  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">lines</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="nt">&#39;&amp;6Time</span><span class="p">:</span> <span class="s">&#39;</span>
+  <span class="s">-</span><span class="nv"> </span><span class="s">&lt;time&gt;</span>
+  <span class="s">-</span><span class="nv"> </span><span class="se">&#39;&#39;</span>
+  <span class="s">-</span><span class="nv"> </span><span class="s">&#39;</span><span class="nl">&amp;m</span>           <span class="nl">&amp;r</span><span class="s">&#39;</span>
+  <span class="s">-</span><span class="nv"> </span><span class="s">&#39;</span><span class="l l-Scalar l-Scalar-Plain">&lt;redcolor&gt;&lt;red&gt;:&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;&amp;l&lt;redscore&gt;&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;&lt;bluecolor&gt;&lt;blue&gt;:&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;&amp;l&lt;bluescore&gt;&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;&amp;m</span><span class="nv">           </span><span class="s">&amp;r&#39;</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
