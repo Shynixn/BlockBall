@@ -6,7 +6,7 @@ The notification settings allow to setup messages for nearby players.
 This allows players standing near the arena to get to know what is going on inside of the arena as they also
 get the same **messages**, **scoreboard**, **bossbar** and **holograms** of the player playing the game.
 
-.. image:: ../_static/images/notifications_1.jpg
+.. image:: ../_static/images/notifications_1.JPG
 
 Configuring ingame
 ~~~~~~~~~~~~~~~~~~
@@ -17,7 +17,7 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 2. Open the **Spectating Page**
 3. Open the **Notifications Page**
 
-.. image:: ../_static/images/notifications_2.jpg
+.. image:: ../_static/images/notifications_2.JPG
 
 4. Now continue by enabling or disabling the notifications by clicking **toggle** with your mouse.
 5. Customize the other available options to your own needs.
@@ -33,7 +33,9 @@ At this stage, you should be able to find your arena save file. If not, please t
 2. Search for the following section:
 
 **arena_x.yml**
-::
+
+.. code-block:: yaml
+
    spectator-meta:
       notify-nearby-players-enabled: true
       notify-nearby-players-radius: 100

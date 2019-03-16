@@ -1,5 +1,5 @@
 The ball does not spawn?
-============================
+========================
 
 It is important to understand how BlockBall works in order to fix this problem. A BlockBall consist out of
 2 entities, 2 **armorstands** .

@@ -18,11 +18,15 @@ Samples
 ~~~~~~~
 
 **Title message**:
-::
+
+.. code-block:: text
+
     <redcolor><redscore> : <bluecolor><bluescore>
 
 **Placed ingame message**:
-::
+
+.. code-block:: text
+
     &c2 : &93
 
 You can see that redcolor gets replaced by the ChatColor red and the redscore with 2.

@@ -30,9 +30,13 @@ nexusStaging {
     password = project.hasProperty("ossrhPassword") ? project.findProperty("ossrhPassword") : System.getenv('SONATYPE_PASSWORD')
 }
 
+allprojects {
+    apply plugin: 'jacoco'
+}
+
 subprojects {
     group 'com.github.shynixn.blockball'
-    version '6.5.0'
+    version '6.6.0-SNAPSHOT'
 
     sourceCompatibility = 1.8
 
@@ -40,7 +44,6 @@ subprojects {
     apply plugin: 'signing'
     apply plugin: 'maven-publish'
     apply plugin: 'java-library'
-    apply plugin: 'jacoco'
     apply plugin: "de.marcphilipp.nexus-publish"
 
     compileKotlin {
@@ -151,6 +154,26 @@ gradle.taskGraph.whenReady { taskGraph ->
         ext."signing.keyId" = System.getenv('SIGNING_KEYID')
         ext."signing.password" = System.getenv('SIGNING_KEYPASSWORD')
         ext."signing.secretKeyRingFile" = '/home/travis/build/Shynixn/BlockBall/travis_secret_key'
+    }
+}
+
+task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+    additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories =  files(subprojects.sourceSets.main.output)
+    executionData = files(subprojects.jacocoTestReport.executionData)
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+    onlyIf = {
+        true
+    }
+    doFirst {
+        executionData = files(executionData.findAll {
+            it.exists()
+        })
     }
 }
 

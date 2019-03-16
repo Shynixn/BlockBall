@@ -13,7 +13,7 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 2. Open the **Misc Page**
 3. Open the **Game Properties Page**
 
-.. image:: ../_static/images/customizing2.jpg
+.. image:: ../_static/images/customizing2.JPG
 
 4. Now continue by enabling or disabling the values.
 5. Customize the other available options to your own needs.
@@ -29,7 +29,9 @@ At this stage, you should be able to find your arena save file. If not, please t
 2. Search for the following section:
 
 **arena_x.yml**
-::
+
+.. code-block:: yaml
+
    customizing-meta:
       damage-enabled: false
       score-back-teleport: false

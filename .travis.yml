@@ -32,7 +32,7 @@ script:
   - if [[ $TRAVIS_BRANCH == *"master"* ]]; then git add docs && git commit --message "Travis build $TRAVIS_BUILD_NUMBER [skip travis-ci]"; fi ;
   - if [[ $TRAVIS_BRANCH == *"master"* ]]; then git push --quiet https://Shynixn:$GH_TOKEN@github.com/Shynixn/BlockBall.git HEAD:master; fi ;
 after_success:
-  - ./gradlew jacocoTestReport
+  - ./gradlew jacocoRootReport
   - bash <(curl -s https://codecov.io/bash)
   - ./blockball-tools/travis-status.sh success $WEBHOOK_URL
   - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* ]]; then java -jar blockball-tools/Deploy.jar --snapshot $WEBHOOK_SNAPSHOT_URL; fi ;

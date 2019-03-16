@@ -20,7 +20,7 @@ Configuring on your GameServer
 3. Go to the **Settings Page** of your arena and select the GameType Bungee.
 4. Open the **Game Settings Page**
 
-.. image:: ../_static/images/arena12.jpg
+.. image:: ../_static/images/arena12.JPG
 
 3. Set the lobby spawnpoint and the leave spawnpoint.
 4. Customize the other available options to your own needs.
@@ -29,7 +29,9 @@ Configuring on your GameServer
 7. Now go to your BlockBall folder on your Gameserver and configure the newly created **bungeecord.yml** file
 
 **config.yml**
-::
+
+.. code-block:: text
+
     bungeecord:
       motd-restarting: '&cRestarting...'
       motd-waiting-players: '&aWaiting for players...'
@@ -55,7 +57,9 @@ Configuring on your Hubserver
 4. Enable the server linking config option in your **config.yml** on your Hubserver
 
 **config.yml**
-::
+
+.. code-block:: yaml
+
     ############################
 
     # Game settings
