@@ -3,7 +3,7 @@ Bossbar
 
 It is possible to display a bossbar during a match on a players screen. It looks like that:
 
-.. image:: ../_static/images/bossbar1.jpg
+.. image:: ../_static/images/bossbar1.JPG
 
 You can use it to display team names, the remaining time, scores for each team and more. You can find all available placeholders `here <placeholders.html>`__.
 
@@ -19,7 +19,7 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 2. Open the **Effects Page**
 3. Open the **Bossbar Page**
 
-.. image:: ../_static/images/bossbar2.jpg
+.. image:: ../_static/images/bossbar2.JPG
 
 4. Now continue by enabling or disabling the bossbar by clicking **toggle** with your mouse.
 5. Customize the other available options to your own needs.
@@ -35,7 +35,9 @@ At this stage, you should be able to find your arena save file. If not, please t
 2. Search for the following section:
 
 **arena_x.yml**
-::
+
+.. code-block:: yaml
+
     bossbar:
       enabled: true
       text: '<redcolor><red> <redscore> : <bluecolor><bluescore> <blue>'

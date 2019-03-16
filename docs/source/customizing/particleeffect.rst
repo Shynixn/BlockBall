@@ -14,7 +14,7 @@ As the Particleeffect is always a sub page of another action there is no specifi
 
 1. The Particleeffect page looks like that.
 
-.. image:: ../_static/images/Particleeffect1.jpg
+.. image:: ../_static/images/Particleeffect1.JPG
 
 4. Now continue by selecting which player should be able to see the Particleeffect by clicking on effecting
 5. Customize the other available options to your own needs.
@@ -30,7 +30,9 @@ As the Particleeffect is always a sub effect of another action there is no speci
 2. Search for the following sections:
 
 **arena_x.yml**
-::
+
+.. code-block:: yaml
+
      particle-effect:
         effecting: EVERYONE
         name: explosion

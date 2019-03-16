@@ -11,7 +11,9 @@ It is recommend to use the MySQL support if:
 
 
 **before**
-::
+
+.. code-block:: yaml
+
     ############################
 
     # Database settings
@@ -34,7 +36,9 @@ It is recommend to use the MySQL support if:
 You can get the data from your MySQL database host.
 
 **after**
-::
+
+.. code-block:: yaml
+
     ############################
 
     # Database settings

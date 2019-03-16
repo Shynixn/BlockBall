@@ -4,7 +4,9 @@ Rename Commands
 You are also allowed to rename the user commands /bbjoin and /bbleave in the config.yml. You can even customize the permissions.
 
 **config.yml**
-::
+
+.. code-block:: yaml
+
     ############################
 
     # Command settings

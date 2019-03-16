@@ -1,5 +1,5 @@
 Contributing to BlockBall
-========================
+=========================
 
 .. toctree::
 
@@ -10,7 +10,7 @@ Leave a like/review/diamond...
 The easiest thing is to rate the plugin on spigotmc.org, planetminecraft.com or github.com. It encourages me to continue supporting BlockBall. :)
 
 Supporting and Donating
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. image:: ../_static/images/patreonbanner.png
     :target: https://www.patreon.com/Shynixn
