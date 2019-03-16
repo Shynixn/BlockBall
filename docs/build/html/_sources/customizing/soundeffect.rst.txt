@@ -14,7 +14,7 @@ As the Soundeffect is always a sub page of another action there is no specific p
 
 1. The Soundeffect page looks like that.
 
-.. image:: ../_static/images/Soundeffect1.JPG
+.. image:: ../_static/images/soundeffect1.JPG
 
 4. Now continue by selecting which player should be able to see the Soundeffect by clicking on effecting
 5. Customize the other available options to your own needs.
