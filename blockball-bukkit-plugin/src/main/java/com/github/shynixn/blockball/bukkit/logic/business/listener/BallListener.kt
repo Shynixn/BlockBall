@@ -340,11 +340,11 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
      */
     private fun playEffects(ball: BallProxy, actionEffect: BallActionType) {
         if (ball.meta.particleEffects.containsKey(actionEffect)) {
-            this.particleService.playParticle(ball.getLocation<Any>(), ball.meta.particleEffects[actionEffect]!!, ball.getLocation<Location>().world.players)
+            this.particleService.playParticle(ball.getLocation<Any>(), ball.meta.particleEffects[actionEffect]!!, ball.getLocation<Location>().world!!.players)
         }
 
         if (ball.meta.soundEffects.containsKey(actionEffect)) {
-            this.soundService.playSound(ball.getLocation<Any>(), ball.meta.soundEffects[actionEffect]!!, ball.getLocation<Location>().world.players)
+            this.soundService.playSound(ball.getLocation<Any>(), ball.meta.soundEffects[actionEffect]!!, ball.getLocation<Location>().world!!.players)
         }
     }
 

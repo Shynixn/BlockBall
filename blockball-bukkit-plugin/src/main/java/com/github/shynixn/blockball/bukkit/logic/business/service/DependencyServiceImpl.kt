@@ -2,10 +2,8 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.service.DependencyService
-import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.plugin.Plugin
 
 /**
  * Created by Shynixn 2018.
@@ -34,7 +32,7 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class DependencyServiceImpl @Inject constructor(private val plugin: Plugin) : DependencyService {
+class DependencyServiceImpl : DependencyService {
     private val prefix: String = ChatColor.BLUE.toString() + "[BlockBall] "
 
     /**
@@ -69,10 +67,11 @@ class DependencyServiceImpl @Inject constructor(private val plugin: Plugin) : De
      */
     private fun printInstallment(pluginDependency: PluginDependency) {
         if (isInstalled(pluginDependency)) {
-            val plugin = Bukkit.getPluginManager().getPlugin(pluginDependency.pluginName)
+            val plugin = Bukkit.getPluginManager().getPlugin(pluginDependency.pluginName)!!
 
             Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.DARK_GREEN + "found dependency [" + plugin.name + "].")
-            Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.DARK_GREEN + "successfully loaded dependency [" + plugin.name + "] " + plugin.description.version + '.')
+            Bukkit.getServer()
+                .consoleSender.sendMessage(prefix + ChatColor.DARK_GREEN + "successfully loaded dependency [" + plugin.name + "] " + plugin.description.version + '.')
         }
     }
 }

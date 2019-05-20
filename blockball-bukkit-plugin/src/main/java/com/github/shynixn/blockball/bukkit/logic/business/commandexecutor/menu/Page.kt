@@ -35,10 +35,11 @@ import org.bukkit.entity.Player
  * SOFTWARE.
  */
 abstract class Page(
-        /**
-         * Page id.
-         */
-        val id: Int, private val previousId: Int) {
+    /**
+     * Page id.
+     */
+    val id: Int, private val previousId: Int
+) {
     /**
      * GetPrevious id.
      */
@@ -90,6 +91,12 @@ abstract class Page(
             mlocation as Location
         }
 
-        return location.world.name + " " + location.blockX + "x " + location.blockY + "y " + location.blockZ + "z"
+        val worldName = if (location.world == null) {
+            ""
+        } else {
+            location.world!!.name
+        }
+
+        return worldName + " " + location.blockX + "x " + location.blockY + "y " + location.blockZ + "z"
     }
 }

@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
 import java.io.File
 import java.io.IOException
+import java.nio.file.Path
 import java.util.logging.Level
 
 /**
@@ -42,7 +43,15 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ConfigurationServiceImpl @Inject constructor(private val plugin: Plugin, private val yamlSerializationService: YamlSerializationService) : ConfigurationService {
+class ConfigurationServiceImpl @Inject constructor(private val plugin: Plugin, private val yamlSerializationService: YamlSerializationService) :
+    ConfigurationService {
+    /**
+     * Gets the path to the folder where the application is allowed to store
+     * save data.
+     */
+    override val applicationDir: Path
+        get() = plugin.dataFolder.toPath()
+
     /**
      * Tries to load the config values into the given configuration [clazz] from the given [path]
      * Throws a [IllegalArgumentException] if the path could not be correctly

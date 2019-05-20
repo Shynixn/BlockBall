@@ -63,13 +63,13 @@ import kotlin.coroutines.CoroutineContext
  * Minecraft async dispatcher.
  */
 val Dispatchers.async: CoroutineContext
-    get() =  DispatcherContainer.async
+    get() = DispatcherContainer.async
 
 /**
  * Minecraft sync dispatcher.
  */
 val Dispatchers.minecraft: CoroutineContext
-    get() =  DispatcherContainer.sync
+    get() = DispatcherContainer.sync
 
 /**
  * Executes the given [f] for the given [plugin] on main thread.
@@ -80,7 +80,7 @@ inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long 
             f.invoke()
         }, delayTicks, repeatingTicks)
     } else {
-        plugin.server.scheduler.runTaskLater(plugin,Runnable {
+        plugin.server.scheduler.runTaskLater(plugin, Runnable {
             f.invoke()
         }, delayTicks)
     }
@@ -90,7 +90,7 @@ inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long 
  * Deserializes the configuraiton section path to a map.
  */
 fun FileConfiguration.deserializeToMap(path: String): Map<String, Any?> {
-    val section = getConfigurationSection(path).getValues(false)
+    val section = getConfigurationSection(path)!!.getValues(false)
     deserialize(section)
     return section
 }
@@ -134,8 +134,12 @@ fun Player.isTouchingGround(): Boolean {
  */
 fun ItemStack.setDisplayName(displayName: String): ItemStack {
     val meta = itemMeta
-    meta.displayName = displayName.convertChatColors()
-    itemMeta = meta
+
+    if (meta != null) {
+        meta.setDisplayName(displayName.convertChatColors())
+        itemMeta = meta
+    }
+
     return this
 }
 
@@ -144,11 +148,11 @@ fun ItemStack.setDisplayName(displayName: String): ItemStack {
  */
 inline fun Any.async(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long = 0L, crossinline f: () -> Unit) {
     if (repeatingTicks > 0) {
-        plugin.server.scheduler.runTaskTimerAsynchronously(plugin,Runnable {
+        plugin.server.scheduler.runTaskTimerAsynchronously(plugin, Runnable {
             f.invoke()
         }, delayTicks, repeatingTicks)
     } else {
-        plugin.server.scheduler.runTaskLaterAsynchronously(plugin,Runnable {
+        plugin.server.scheduler.runTaskLaterAsynchronously(plugin, Runnable {
             f.invoke()
         }, delayTicks)
     }
@@ -193,29 +197,29 @@ internal fun List<String>.toSingleLine(): String {
 internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = null, team: List<Player>? = null): String {
     val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
     var cache = this.replace(PlaceHolder.TEAM_RED.placeHolder, game.arena.meta.redTeamMeta.displayName)
-            .replace(PlaceHolder.ARENA_DISPLAYNAME.placeHolder, game.arena.displayName)
-            .replace(PlaceHolder.TEAM_BLUE.placeHolder, game.arena.meta.blueTeamMeta.displayName)
-            .replace(PlaceHolder.RED_COLOR.placeHolder, game.arena.meta.redTeamMeta.prefix)
-            .replace(PlaceHolder.BLUE_COLOR.placeHolder, game.arena.meta.blueTeamMeta.prefix)
-            .replace(PlaceHolder.RED_GOALS.placeHolder, game.redScore.toString())
-            .replace(PlaceHolder.BLUE_GOALS.placeHolder, game.blueScore.toString())
-            .replace(PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder, game.ingamePlayersStorage.size.toString())
-            .replace(PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder, (game.arena.meta.blueTeamMeta.maxAmount + game.arena.meta.redTeamMeta.maxAmount).toString())
+        .replace(PlaceHolder.ARENA_DISPLAYNAME.placeHolder, game.arena.displayName)
+        .replace(PlaceHolder.TEAM_BLUE.placeHolder, game.arena.meta.blueTeamMeta.displayName)
+        .replace(PlaceHolder.RED_COLOR.placeHolder, game.arena.meta.redTeamMeta.prefix)
+        .replace(PlaceHolder.BLUE_COLOR.placeHolder, game.arena.meta.blueTeamMeta.prefix)
+        .replace(PlaceHolder.RED_GOALS.placeHolder, game.redScore.toString())
+        .replace(PlaceHolder.BLUE_GOALS.placeHolder, game.blueScore.toString())
+        .replace(PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder, game.ingamePlayersStorage.size.toString())
+        .replace(PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder, (game.arena.meta.blueTeamMeta.maxAmount + game.arena.meta.redTeamMeta.maxAmount).toString())
 
 
     if (teamMeta != null) {
         cache = cache.replace(PlaceHolder.ARENA_TEAMCOLOR.placeHolder, teamMeta.prefix)
-                .replace(PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, teamMeta.displayName)
-                .replace(PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder, teamMeta.maxAmount.toString())
+            .replace(PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, teamMeta.displayName)
+            .replace(PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder, teamMeta.maxAmount.toString())
     }
 
     if (team != null) {
         cache = cache.replace(PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder, team.size.toString())
     }
 
-    val stateSignEnabled = plugin.config.getString("messages.state-sign-enabled").convertChatColors()
-    val stateSignDisabled = plugin.config.getString("messages.state-sign-disabled").convertChatColors()
-    val stateSignRunning = plugin.config.getString("messages.state-sign-running").convertChatColors()
+    val stateSignEnabled = plugin.config.getString("messages.state-sign-enabled")!!.convertChatColors()
+    val stateSignDisabled = plugin.config.getString("messages.state-sign-disabled")!!.convertChatColors()
+    val stateSignRunning = plugin.config.getString("messages.state-sign-running")!!.convertChatColors()
 
     when {
         game.status == GameStatus.RUNNING -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, stateSignRunning)
@@ -227,7 +231,10 @@ internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = nul
         cache = cache.replace(PlaceHolder.TIME.placeHolder, "∞")
     } else if (game is MiniGame) {
         cache = cache.replace(PlaceHolder.TIME.placeHolder, game.gameCountdown.toString())
-                .replace(PlaceHolder.REMAINING_PLAYERS_TO_START.placeHolder, (game.arena.meta.redTeamMeta.minAmount + game.arena.meta.blueTeamMeta.minAmount - game.ingamePlayersStorage.size).toString())
+            .replace(
+                PlaceHolder.REMAINING_PLAYERS_TO_START.placeHolder,
+                (game.arena.meta.redTeamMeta.minAmount + game.arena.meta.blueTeamMeta.minAmount - game.ingamePlayersStorage.size).toString()
+            )
     }
 
     if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
@@ -243,7 +250,7 @@ internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = nul
 internal fun ItemStack.setColor(color: Color): ItemStack {
     if (this.itemMeta is LeatherArmorMeta) {
         val leatherMeta = this.itemMeta as LeatherArmorMeta
-        leatherMeta.color = color
+        leatherMeta.setColor(color)
         this.itemMeta = leatherMeta
     }
     return this
@@ -260,7 +267,7 @@ internal fun Permission.hasPermission(player: Player): Boolean {
 
 /** Returns if the given [location] is inside of this area selection. */
 fun Selection.isLocationInSelection(location: Location): Boolean {
-    if (location.world.name == this.upperCorner.worldName) {
+    if (location.world != null && location.world!!.name == this.upperCorner.worldName) {
         if (this.upperCorner.x >= location.x && this.lowerCorner.x <= location.x) {
             if (this.upperCorner.y >= location.y + 1 && this.lowerCorner.y <= location.y + 1) {
                 if (this.upperCorner.z >= location.z && this.lowerCorner.z <= location.z) {
@@ -275,7 +282,13 @@ fun Selection.isLocationInSelection(location: Location): Boolean {
 /**
  * Sends the given [packet] to this player.
  */
-@Throws(ClassNotFoundException::class, IllegalAccessException::class, NoSuchMethodException::class, InvocationTargetException::class, NoSuchFieldException::class)
+@Throws(
+    ClassNotFoundException::class,
+    IllegalAccessException::class,
+    NoSuchMethodException::class,
+    InvocationTargetException::class,
+    NoSuchFieldException::class
+)
 fun Player.sendPacket(packet: Any) {
     val version = VersionSupport.getServerVersion()
     val craftPlayer = Class.forName("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer".replace("VERSION", version.versionText)).cast(player)
@@ -301,7 +314,7 @@ internal fun String.convertChatColors(): String {
  * Removes the chatColors.
  */
 internal fun String.stripChatColors(): String {
-    return ChatColor.stripColor(this)
+    return ChatColor.stripColor(this)!!
 }
 
 /**
@@ -312,19 +325,6 @@ fun <T> CompletableFuture<T>.thenAcceptSafely(f: (T) -> Unit) {
         JavaPlugin.getPlugin(BlockBallPlugin::class.java).logger.log(Level.WARNING, "Failed to execute Task.", e)
         throw RuntimeException(e)
     }
-}
-
-/**
- * Tries to return the [ParticleType] from the given name.
- */
-fun String.toParticleType(): ParticleType {
-    ParticleType.values().forEach { p ->
-        if (p.gameId_18.equals(this, true) || p.gameId_113.equals(this, true) || p.name.equals(this, true) || p.minecraftId_112.equals(this, true)) {
-            return p
-        }
-    }
-
-    throw IllegalArgumentException("ParticleType cannot be parsed from '" + this + "'.")
 }
 
 /**
@@ -364,7 +364,11 @@ internal fun ItemStack.setSkin(skin: String) {
  */
 internal fun Location.toPosition(): Position {
     val position = PositionEntity()
-    position.worldName = this.world.name
+
+    if (this.world != null) {
+        position.worldName = this.world!!.name
+    }
+
     position.x = this.x
     position.y = this.y
     position.z = this.z
@@ -385,7 +389,7 @@ internal fun GameMode.toGameMode(): org.bukkit.GameMode {
  * Converts the given position to a bukkit Location.
  */
 internal fun Position.toLocation(): Location {
-    return Location(Bukkit.getWorld(this.worldName), this.x, this.y, this.z, this.yaw.toFloat(), this.pitch.toFloat())
+    return Location(Bukkit.getWorld(this.worldName!!), this.x, this.y, this.z, this.yaw.toFloat(), this.pitch.toFloat())
 }
 
 /**

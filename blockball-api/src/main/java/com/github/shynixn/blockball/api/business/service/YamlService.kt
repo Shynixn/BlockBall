@@ -3,13 +3,13 @@ package com.github.shynixn.blockball.api.business.service
 import java.nio.file.Path
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,24 +29,14 @@ import java.nio.file.Path
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ConfigurationService {
+interface YamlService {
     /**
-     * Gets the path to the folder where the application is allowed to store
-     * save data.
+     * Writes the given [content] to the given [path].
      */
-    val applicationDir: Path
+    fun write(path: Path, content: Map<String, Any?>)
 
     /**
-     * Tries to load the config value from the given [path].
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
+     * Reads the content from the given [path].
      */
-    fun <C> findValue(path: String): C
-
-    /**
-     * Tries to load the config values into the given configuration [clazz] from the given [path]
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
-     */
-    fun <C> findConfiguration(clazz: Class<C>, path: String): C
+    fun read(path: Path): Map<String, Any?>
 }

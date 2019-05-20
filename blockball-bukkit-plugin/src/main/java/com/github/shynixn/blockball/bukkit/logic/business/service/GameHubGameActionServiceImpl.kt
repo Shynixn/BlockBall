@@ -106,7 +106,7 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
         with(player as Player) {
             gameMode = stats.gameMode as GameMode
             inventory.contents = stats.inventoryContents as Array<out ItemStack>
-            inventory.armorContents = stats.armorContents as Array<out ItemStack>
+            inventory.setArmorContents(stats.armorContents as Array<out ItemStack>)
             allowFlight = stats.allowedFlying
             isFlying = stats.flying
             walkSpeed = stats.walkingSpeed
@@ -131,19 +131,20 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
     }
 
     private fun prepareLobbyStorageForPlayer(game: HubGame, player: Player, team: Team, teamMeta: TeamMeta) {
-        val stats = GameStorageEntity(player.uniqueId, Bukkit.getScoreboardManager().newScoreboard)
+        val stats = GameStorageEntity(player.uniqueId, Bukkit.getScoreboardManager()!!.newScoreboard)
 
         with(stats) {
             this.team = team
             gameMode = player.gameMode
-            armorContents = player.inventory?.armorContents?.clone() as Array<Any?>
+            armorContents = player.inventory.armorContents.clone() as Array<Any?>
             flying = player.isFlying
             allowedFlying = player.allowFlight
             walkingSpeed = player.walkSpeed
             scoreboard = player.scoreboard
-            inventoryContents = player.inventory?.contents?.clone() as Array<Any?>
+            inventoryContents = player.inventory.contents.clone() as Array<Any?>
             level = player.level
             exp = player.exp
+            @Suppress("DEPRECATION")
             maxHealth = player.maxHealth
             health = player.health
             hunger = player.foodLevel
@@ -156,7 +157,7 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
         player.isFlying = false
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()
         player.inventory.contents = teamMeta.inventoryContents.clone().map { d -> d as ItemStack? }.toTypedArray()
-        player.inventory.armorContents = teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray()
+        player.inventory.setArmorContents(teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray())
         player.inventory.updateInventory()
 
         if (teamMeta.spawnpoint == null) {

@@ -1,4 +1,4 @@
-@file:Suppress("UNCHECKED_CAST")
+@file:Suppress("UNCHECKED_CAST","DEPRECATION")
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
@@ -74,7 +74,7 @@ class ParticleServiceImpl @Inject constructor(private val itemService: ItemServi
 
             if (dataType == ItemStack::class.java && particle.materialName != null) {
                 val itemStack = findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftItemStack").getDeclaredMethod("asNMSCopy")
-                        .invoke(null, ItemStack(Material.getMaterial(particle.materialName), 1, particle.data.toShort()))
+                        .invoke(null, ItemStack(Material.getMaterial(particle.materialName!!)!!, 1, particle.data.toShort()))
 
                 internalParticleType = findClazz("net.minecraft.server.VERSION.ParticleParamItem")
                         .getDeclaredConstructor(particleClazz, itemStack.javaClass).newInstance(internalParticleType, itemStack)
@@ -83,7 +83,7 @@ class ParticleServiceImpl @Inject constructor(private val itemService: ItemServi
 
                 val data = craftBlockStateClazz
                         .getDeclaredConstructor(Material::class.java)
-                        .newInstance(Material.getMaterial(particle.materialName))
+                        .newInstance(Material.getMaterial(particle.materialName!!))
 
                 craftBlockStateClazz.getDeclaredMethod("setRawData", Byte::class.java).invoke(data, particle.data.toByte())
                 val handle = craftBlockStateClazz.getDeclaredMethod("getHandle").invoke(data)
@@ -105,9 +105,9 @@ class ParticleServiceImpl @Inject constructor(private val itemService: ItemServi
 
             if (particle.materialName != null) {
                 additionalPayload = if (particle.type == ParticleType.ITEM_CRACK) {
-                    intArrayOf(itemService.getNumericMaterialValue(Material.getMaterial(particle.materialName)), particle.data)
+                    intArrayOf(itemService.getNumericMaterialValue(Material.getMaterial(particle.materialName!!)), particle.data)
                 } else {
-                    intArrayOf(itemService.getNumericMaterialValue(Material.getMaterial(particle.materialName)), (particle.data shl 12))
+                    intArrayOf(itemService.getNumericMaterialValue(Material.getMaterial(particle.materialName!!)), (particle.data shl 12))
                 }
             }
 
@@ -145,7 +145,7 @@ class ParticleServiceImpl @Inject constructor(private val itemService: ItemServi
     }
 
     private fun isLongDistance(location: Location, players: Array<out Player>): Boolean {
-        return players.any { location.world.name == it.location.world.name && it.location.distanceSquared(location) > 65536 }
+        return players.any { location.world!!.name == it.location.world!!.name && it.location.distanceSquared(location) > 65536 }
     }
 
     private fun getInternalEnumValue(particle: ParticleType): Any {

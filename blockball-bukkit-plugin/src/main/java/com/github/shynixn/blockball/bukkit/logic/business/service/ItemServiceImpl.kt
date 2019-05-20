@@ -53,6 +53,7 @@ class ItemServiceImpl : ItemService {
      * Creates a new itemStack from the given [materialType] [dataValue] [amount].
      */
     override fun <I> createItemStack(materialType: MaterialType, dataValue: Int, amount: Int): I {
+        @Suppress("DEPRECATION")
         return ItemStack(getMaterialFromMaterialType<Material>(materialType), amount, dataValue.toShort()) as I
     }
 

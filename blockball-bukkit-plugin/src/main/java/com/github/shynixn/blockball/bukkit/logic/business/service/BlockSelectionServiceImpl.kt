@@ -145,11 +145,13 @@ class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, 
      * Select location and returns if success.
      */
     private fun selectLocation(player: Player, location: Location, index: Int): Boolean {
-        if (player.itemInHand == null || player.itemInHand.type != goldenAxeType) {
+        @Suppress("DEPRECATION")
+        if (player.itemInHand  as ItemStack? == null || player.itemInHand.type != goldenAxeType) {
             return false
         }
 
-        if (player.itemInHand.itemMeta.displayName != null && ChatColor.stripColor(player.itemInHand.itemMeta.displayName) != ChatColor.stripColor(this.axeName)) {
+        @Suppress("DEPRECATION")
+        if (player.itemInHand.itemMeta!!.displayName as String? != null && ChatColor.stripColor(player.itemInHand.itemMeta!!.displayName) != ChatColor.stripColor(this.axeName)) {
             return false
         }
 
@@ -179,7 +181,7 @@ class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, 
             if (player.inventory.contents[0] != null) {
                 val item = player.inventory.contents[0]
 
-                if (item.type == goldenAxeType && item.itemMeta.displayName != null && ChatColor.stripColor(item.itemMeta.displayName) == ChatColor.stripColor(this.axeName)) {
+                if (item.type == goldenAxeType && item.itemMeta!!.displayName as String? != null && ChatColor.stripColor(item.itemMeta!!.displayName) == ChatColor.stripColor(this.axeName)) {
                     return
                 }
             }

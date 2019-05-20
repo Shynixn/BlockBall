@@ -63,6 +63,7 @@ class HologramServiceTest {
         val meta = HologramMetaEntity()
         meta.position = PositionEntity()
         with(meta.position!!) {
+            worldName = "demo"
             x = 2.0
             y = 3.0
             z = 3.0

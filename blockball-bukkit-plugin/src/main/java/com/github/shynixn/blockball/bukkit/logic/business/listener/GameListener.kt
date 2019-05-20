@@ -165,6 +165,7 @@ class GameListener @Inject constructor(
             return
         }
 
+        @Suppress("DEPRECATION")
         player.health = player.maxHealth
 
         val playerStorage = game.get().ingamePlayersStorage[player]!!
@@ -219,13 +220,13 @@ class GameListener @Inject constructor(
             return
         }
 
-        if (event.clickedBlock.type != signPostMaterial && event.clickedBlock.type != Material.WALL_SIGN) {
+        if (event.clickedBlock!!.type != signPostMaterial && event.clickedBlock!!.type != Material.WALL_SIGN) {
             return
         }
 
-        val location = event.clickedBlock.location.toPosition()
+        val location = event.clickedBlock!!.location.toPosition()
 
-        if (rightClickManageService.executeWatchers(event.player, event.clickedBlock.location)) {
+        if (rightClickManageService.executeWatchers(event.player, event.clickedBlock!!.location)) {
             return
         }
 

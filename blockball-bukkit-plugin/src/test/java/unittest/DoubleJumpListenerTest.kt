@@ -63,6 +63,7 @@ class DoubleJumpListenerTest {
         // Arrange
         val location = Location(Mockito.mock(World::class.java), 1.0, 1.0, 1.0)
         val gameService = MockedGameService()
+        @Suppress("DEPRECATION")
         Mockito.`when`(gameService.player.isOnGround).thenReturn(true)
         val playerMoveEvent = PlayerMoveEvent(gameService.player, location, location)
        gameService.game.arena.meta.doubleJumpMeta.enabled = true
@@ -112,6 +113,7 @@ class DoubleJumpListenerTest {
     fun onPlayerMoveEvent_PlayerNotInGame_ShouldNotAllowFlight() {
         // Arrange
         val player = Mockito.mock(Player::class.java)
+        @Suppress("DEPRECATION")
         Mockito.`when`(player.isOnGround).thenReturn(true)
         val location = Location(Mockito.mock(World::class.java), 1.0, 1.0, 1.0)
         val playerMoveEvent = PlayerMoveEvent(player, location, location)

@@ -47,7 +47,8 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) : EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
+class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) :
+    EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
     private val itemService = ItemServiceImpl()
 
     private val hitbox = BallHitBox(this, location, SpigotTimingServiceImpl())
@@ -80,9 +81,9 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         when (proxy.meta.size) {
             BallSize.SMALL -> {
                 (bukkitEntity as ArmorStand).isSmall = true
-                (bukkitEntity as ArmorStand).helmet = itemStack
+                (bukkitEntity as ArmorStand).setHelmet(itemStack)
             }
-            BallSize.NORMAL -> (bukkitEntity as ArmorStand).helmet = itemStack
+            BallSize.NORMAL -> (bukkitEntity as ArmorStand).setHelmet(itemStack)
         }
     }
 

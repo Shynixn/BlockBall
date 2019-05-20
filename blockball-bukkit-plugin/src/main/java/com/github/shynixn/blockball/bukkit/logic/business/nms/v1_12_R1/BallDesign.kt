@@ -80,9 +80,9 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         when (proxy.meta.size) {
             BallSize.SMALL -> {
                 (bukkitEntity as ArmorStand).isSmall = true
-                (bukkitEntity as ArmorStand).helmet = itemStack
+                (bukkitEntity as ArmorStand).setHelmet(itemStack)
             }
-            BallSize.NORMAL -> (bukkitEntity as ArmorStand).helmet = itemStack
+            BallSize.NORMAL -> (bukkitEntity as ArmorStand).setHelmet(itemStack)
         }
     }
 

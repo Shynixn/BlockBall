@@ -296,7 +296,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
         val players = ArrayList<Pair<Any, Boolean>>()
 
         if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
-            game.arena.center.toLocation().world.players.forEach { p ->
+            game.arena.center.toLocation().world!!.players.forEach { p ->
                 if (p.location.distance(game.arena.center.toLocation()) <= game.arena.meta.spectatorMeta.notificationRadius) {
                     players.add(Pair(p, true))
                 } else {

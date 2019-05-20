@@ -1,6 +1,8 @@
-package com.github.shynixn.blockball.api.business.service
+package com.github.shynixn.blockball.core.logic.business.service
 
-import java.nio.file.Path
+import com.github.shynixn.blockball.api.business.service.LoggingService
+import java.util.logging.Level
+import java.util.logging.Logger
 
 /**
  * Created by Shynixn 2018.
@@ -29,24 +31,37 @@ import java.nio.file.Path
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ConfigurationService {
+class LoggingUtilServiceImpl(private val logger: Logger) : LoggingService {
     /**
-     * Gets the path to the folder where the application is allowed to store
-     * save data.
+     * Logs an info text.
      */
-    val applicationDir: Path
+    override fun info(text: String, e: Throwable?) {
+        if (e == null) {
+            logger.log(Level.INFO, text)
+        } else {
+            logger.log(Level.INFO, text, e)
+        }
+    }
 
     /**
-     * Tries to load the config value from the given [path].
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
+     * Logs an warning text.
      */
-    fun <C> findValue(path: String): C
+    override fun warn(text: String, e: Throwable?) {
+        if (e == null) {
+            logger.log(Level.WARNING, text)
+        } else {
+            logger.log(Level.WARNING, text, e)
+        }
+    }
 
     /**
-     * Tries to load the config values into the given configuration [clazz] from the given [path]
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
+     * Logs an error text.
      */
-    fun <C> findConfiguration(clazz: Class<C>, path: String): C
+    override fun error(text: String, e: Throwable?) {
+        if (e == null) {
+            logger.log(Level.WARNING, text)
+        } else {
+            logger.log(Level.WARNING, text, e)
+        }
+    }
 }

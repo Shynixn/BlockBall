@@ -40,11 +40,11 @@ class HubgameListener @Inject constructor(private val hubGameForcefieldService: 
     /** Handles the forcefield of hubGames. */
     @EventHandler
     fun onPlayerMoveAgainstHubForceField(event: PlayerMoveEvent) {
-        if (event.to.distance(event.from) <= 0) {
+        if (event.to == null || event.to!!.distance(event.from) <= 0) {
             return
         }
 
-        hubGameForcefieldService.checkForForcefieldInteractions(event.player!!, event.to)
+        hubGameForcefieldService.checkForForcefieldInteractions(event.player, event.to)
     }
 
     /**

@@ -69,11 +69,11 @@ class BungeeCordgameListener @Inject constructor(private val gameService: GameSe
             return
         }
 
-        if (event.clickedBlock.type != signPostMaterial && event.clickedBlock.type != Material.WALL_SIGN) {
+        if (event.clickedBlock!!.type != signPostMaterial && event.clickedBlock!!.type != Material.WALL_SIGN) {
             return
         }
 
-        rightClickManageService.executeWatchers(event.player, event.clickedBlock.location)
+        rightClickManageService.executeWatchers(event.player, event.clickedBlock!!.location)
         //  bungeeCordService.clickOnConnectSign(event.player, event.clickedBlock.state as Sign)
     }
 }

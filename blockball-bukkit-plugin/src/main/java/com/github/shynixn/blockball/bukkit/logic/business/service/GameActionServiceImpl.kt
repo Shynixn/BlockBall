@@ -118,7 +118,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
         }
 
         if (game.scoreboard != null && player.scoreboard == game.scoreboard) {
-            player.scoreboard = Bukkit.getScoreboardManager().newScoreboard
+            player.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
         }
 
         if (game.bossBar != null) {
@@ -214,7 +214,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
             game.status = GameStatus.ENABLED
         }
 
-        if (Bukkit.getWorld(game.arena.meta.ballMeta.spawnpoint!!.worldName) == null) {
+        if (Bukkit.getWorld(game.arena.meta.ballMeta.spawnpoint!!.worldName!!) == null) {
             return
         }
 
@@ -325,7 +325,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
             return
         }
 
-        game.arena.meta.ballMeta.spawnpoint!!.toLocation().world.entities.forEach { p ->
+        game.arena.meta.ballMeta.spawnpoint!!.toLocation().world!!.entities.forEach { p ->
             if (p !is Player && p !is ArmorStand && p !is Item && p !is ItemFrame) {
                 if (game.arena.isLocationInSelection(p.location)) {
                     val vector = game.arena.meta.protectionMeta.entityProtection
@@ -446,7 +446,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
         }
 
         if (game.scoreboard == null) {
-            game.scoreboard = Bukkit.getScoreboardManager().newScoreboard
+            game.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
 
             scoreboardService.setConfiguration(game.scoreboard, DisplaySlot.SIDEBAR, game.arena.meta.scoreboardMeta.title)
         }
@@ -457,7 +457,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
 
         additionalPlayers.filter { p -> !p.second }.forEach { p ->
             if (p.first.scoreboard == game.scoreboard) {
-                p.first.scoreboard = Bukkit.getScoreboardManager().newScoreboard
+                p.first.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
             }
         }
 
@@ -490,7 +490,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
         val players = ArrayList<Pair<Player, Boolean>>()
         val center = game.arena.center.toLocation()
 
-        center.world.players.forEach { p ->
+        center.world!!.players.forEach { p ->
             if (!game.ingamePlayersStorage.containsKey(p)) {
                 if (p.location.distance(center) <= game.arena.meta.spectatorMeta.notificationRadius) {
                     players.add(Pair(p, true))

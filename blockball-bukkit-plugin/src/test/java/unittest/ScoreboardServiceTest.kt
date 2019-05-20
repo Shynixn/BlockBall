@@ -169,7 +169,6 @@ class ScoreboardServiceTest {
     fun setLine_ValidLineTextInvalidScoreboard_ShouldAddLine() {
         // Arrange
         val classUnderTest = createWithDependencies()
-        var called = false
 
         // Act
         assertThrows(IllegalArgumentException::class.java) {
