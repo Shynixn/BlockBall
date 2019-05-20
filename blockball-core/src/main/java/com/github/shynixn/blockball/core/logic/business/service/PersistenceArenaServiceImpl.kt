@@ -1,12 +1,12 @@
-package com.github.shynixn.blockball.bukkit.logic.business.service
+package com.github.shynixn.blockball.core.logic.business.service
 
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.PersistenceArenaService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
-import com.github.shynixn.blockball.bukkit.logic.business.extension.async
-import com.github.shynixn.blockball.bukkit.logic.business.extension.sync
+import com.github.shynixn.blockball.core.logic.business.extension.async
+import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
-import org.bukkit.plugin.Plugin
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -37,7 +37,7 @@ import java.util.concurrent.CompletableFuture
  * SOFTWARE.
  */
 class PersistenceArenaServiceImpl @Inject constructor(
-    private val plugin: Plugin,
+    private val concurrencyService: ConcurrencyService,
     private val arenaRepository: ArenaRepository
 ) : PersistenceArenaService {
     private var cache: MutableList<Arena> = ArrayList()
@@ -48,13 +48,13 @@ class PersistenceArenaServiceImpl @Inject constructor(
     override fun refresh(): CompletableFuture<Void?> {
         val completableFuture = CompletableFuture<Void?>()
 
-        async(plugin) {
-            synchronized(cache) {
-                cache.clear()
-                cache.addAll(arenaRepository.getAll())
-            }
+        async(concurrencyService) {
+            val arenas = arenaRepository.getAll()
 
-            sync(plugin) {
+            sync(concurrencyService) {
+                cache.clear()
+                cache.addAll(arenas)
+
                 completableFuture.complete(null)
             }
         }
@@ -66,9 +66,7 @@ class PersistenceArenaServiceImpl @Inject constructor(
      * Accesses the cached arenas.
      */
     override fun getArenas(): List<Arena> {
-        synchronized(cache) {
-            return cache.toList()
-        }
+        return cache
     }
 
     /**
@@ -77,16 +75,14 @@ class PersistenceArenaServiceImpl @Inject constructor(
     override fun remove(arena: Arena): CompletableFuture<Void?> {
         val completableFuture = CompletableFuture<Void?>()
 
-        async(plugin) {
-            synchronized(cache) {
-                if (this.cache.contains(arena)) {
-                    cache.remove(arena)
-                }
-            }
+        if (this.cache.contains(arena)) {
+            cache.remove(arena)
+        }
 
+        async(concurrencyService) {
             arenaRepository.delete(arena)
 
-            sync(plugin) {
+            sync(concurrencyService) {
                 completableFuture.complete(null)
             }
         }
@@ -100,16 +96,14 @@ class PersistenceArenaServiceImpl @Inject constructor(
     override fun save(arena: Arena): CompletableFuture<Void?> {
         val completableFuture = CompletableFuture<Void?>()
 
-        async(plugin) {
-            synchronized(cache) {
-                if (!cache.contains(arena)) {
-                    cache.add(arena)
-                }
-            }
+        if (!cache.contains(arena)) {
+            cache.add(arena)
+        }
 
+        async(concurrencyService) {
             arenaRepository.save(arena)
 
-            sync(plugin) {
+            sync(concurrencyService) {
                 completableFuture.complete(null)
             }
         }
