@@ -69,6 +69,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
 ) : GameActionService<G> {
     private val prefix = configurationService.findValue<String>("messages.prefix")
     private val signPostMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.SIGN_POST)
+    private val signWallMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.WALL_SIGN)
 
     /**
      * Lets the given [player] leave join the given [game]. Optional can the prefered
@@ -301,7 +302,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
 
         val location = signPosition.toLocation()
 
-        if (location.block.type != signPostMaterial && location.block.type != Material.WALL_SIGN) {
+        if (location.block.type != signPostMaterial && location.block.type != signWallMaterial) {
             return false
         }
 

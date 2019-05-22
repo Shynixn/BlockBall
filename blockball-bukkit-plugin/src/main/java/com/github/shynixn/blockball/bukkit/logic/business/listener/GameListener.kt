@@ -62,6 +62,7 @@ class GameListener @Inject constructor(
     private val forceFieldService: BallForceFieldService
 ) : Listener {
     private val signPostMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.SIGN_POST)
+    private val signWallMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.WALL_SIGN)
 
     /**
      * Gets called when a player leaves the server and the game.
@@ -92,6 +93,7 @@ class GameListener @Inject constructor(
         if (game.isPresent) {
             event.isCancelled = true
         }
+
     }
 
     /**
@@ -220,7 +222,7 @@ class GameListener @Inject constructor(
             return
         }
 
-        if (event.clickedBlock!!.type != signPostMaterial && event.clickedBlock!!.type != Material.WALL_SIGN) {
+        if (event.clickedBlock!!.type != signPostMaterial && event.clickedBlock!!.type != signWallMaterial) {
             return
         }
 

@@ -28,15 +28,21 @@ package com.github.shynixn.blockball.api.business.enumeration
  * SOFTWARE.
  */
 enum class MaterialType(
-        /**
-         * Numeric internal minecraft id.
-         */
-        val MinecraftNumericId: Int) {
+    /**
+     * Numeric internal minecraft id.
+     */
+    val MinecraftNumericId: Int
+) {
 
     /**
      * Sign post.
      */
     SIGN_POST(63),
+
+    /**
+     * Wall Sign.
+     */
+    WALL_SIGN(68),
 
     /**
      * Skull item.

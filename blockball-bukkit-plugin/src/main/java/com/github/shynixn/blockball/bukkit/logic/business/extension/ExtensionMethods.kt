@@ -26,6 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
 import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.Method
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
@@ -113,6 +114,21 @@ private fun deserialize(section: MutableMap<String, Any?>) {
  */
 fun VersionSupport.toVersion(): Version {
     return Version.values().find { v -> this.simpleVersionText == v.id }!!
+}
+
+private val getIdFromMaterialMethod: Method = { Material::class.java.getDeclaredMethod("getId") }.invoke()
+
+/**
+ * Lazy convertion.
+ */
+fun Material.toCompatibilityId(): Int {
+    for (material in Material.values()) {
+        if (material == this) {
+            return getIdFromMaterialMethod(material) as Int
+        }
+    }
+
+    throw IllegalArgumentException("Material id not found!")
 }
 
 /**

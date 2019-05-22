@@ -58,52 +58,54 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     override fun onEnable() {
         Bukkit.getServer().consoleSender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
         this.saveDefaultConfig()
-        this.injector = Guice.createInjector(BlockBallDependencyInjectionBinder(this))
 
         if (!VersionSupport.isServerVersionSupported(PLUGIN_NAME, PREFIX_CONSOLE)) {
             Bukkit.getPluginManager().disablePlugin(this)
-        } else {
-            this.reloadConfig()
-            // Register Listeners
-            Bukkit.getPluginManager().registerEvents(resolve(GameListener::class.java), this)
-            Bukkit.getPluginManager().registerEvents(resolve(DoubleJumpListener::class.java), this)
-            Bukkit.getPluginManager().registerEvents(resolve(HubgameListener::class.java), this)
-            Bukkit.getPluginManager().registerEvents(resolve(MinigameListener::class.java), this)
-            Bukkit.getPluginManager().registerEvents(resolve(BungeeCordgameListener::class.java), this)
-            Bukkit.getPluginManager().registerEvents(resolve(StatsListener::class.java), this)
-            Bukkit.getPluginManager().registerEvents(resolve(BallListener::class.java), this)
-            Bukkit.getPluginManager().registerEvents(resolve(BlockSelectionListener::class.java), this)
-
-            // Register CommandExecutor
-            resolve(ArenaCommandExecutor::class.java)
-            resolve(BungeeCordSignCommandExecutor::class.java)
-            resolve(JoinCommandExecutor::class.java)
-            resolve(LeaveCommandExecutor::class.java)
-            resolve(ReloadCommandExecutor::class.java)
-            resolve(SpectateCommandExecutor::class.java)
-            resolve(StopCommandExecutor::class.java)
-
-            val updateCheker = resolve(UpdateCheckService::class.java)
-            val dependencyChecker = resolve(DependencyService::class.java)
-            val configurationService = resolve(ConfigurationService::class.java)
-            val ballEntitySerivice = resolve(BallEntityService::class.java)
-
-            Bukkit.getWorlds().forEach { world ->
-                ballEntitySerivice.cleanUpInvalidEntities(world.entities)
-            }
-
-            updateCheker.checkForUpdates()
-            dependencyChecker.checkForInstalledDependencies()
-
-            val enableMetrics = configurationService.findValue<Boolean>("metrics")
-
-            if (enableMetrics) {
-                Metrics(this)
-            }
-
-            startPlugin()
-            Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")
+            return
         }
+
+        this.injector = Guice.createInjector(BlockBallDependencyInjectionBinder(this))
+
+        this.reloadConfig()
+        // Register Listeners
+        Bukkit.getPluginManager().registerEvents(resolve(GameListener::class.java), this)
+        Bukkit.getPluginManager().registerEvents(resolve(DoubleJumpListener::class.java), this)
+        Bukkit.getPluginManager().registerEvents(resolve(HubgameListener::class.java), this)
+        Bukkit.getPluginManager().registerEvents(resolve(MinigameListener::class.java), this)
+        Bukkit.getPluginManager().registerEvents(resolve(BungeeCordgameListener::class.java), this)
+        Bukkit.getPluginManager().registerEvents(resolve(StatsListener::class.java), this)
+        Bukkit.getPluginManager().registerEvents(resolve(BallListener::class.java), this)
+        Bukkit.getPluginManager().registerEvents(resolve(BlockSelectionListener::class.java), this)
+
+        // Register CommandExecutor
+        resolve(ArenaCommandExecutor::class.java)
+        resolve(BungeeCordSignCommandExecutor::class.java)
+        resolve(JoinCommandExecutor::class.java)
+        resolve(LeaveCommandExecutor::class.java)
+        resolve(ReloadCommandExecutor::class.java)
+        resolve(SpectateCommandExecutor::class.java)
+        resolve(StopCommandExecutor::class.java)
+
+        val updateCheker = resolve(UpdateCheckService::class.java)
+        val dependencyChecker = resolve(DependencyService::class.java)
+        val configurationService = resolve(ConfigurationService::class.java)
+        val ballEntitySerivice = resolve(BallEntityService::class.java)
+
+        Bukkit.getWorlds().forEach { world ->
+            ballEntitySerivice.cleanUpInvalidEntities(world.entities)
+        }
+
+        updateCheker.checkForUpdates()
+        dependencyChecker.checkForInstalledDependencies()
+
+        val enableMetrics = configurationService.findValue<Boolean>("metrics")
+
+        if (enableMetrics) {
+            Metrics(this)
+        }
+
+        startPlugin()
+        Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")
     }
 
     /**
