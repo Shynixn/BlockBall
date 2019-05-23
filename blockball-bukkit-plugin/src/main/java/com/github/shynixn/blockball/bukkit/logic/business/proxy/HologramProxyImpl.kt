@@ -176,8 +176,8 @@ class HologramProxyImpl(
         val nmsWorld = findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld").getDeclaredMethod("getHandle")
             .invoke(targetLocation.world)
         val entityArmorstand = findClazz("net.minecraft.server.VERSION.EntityArmorStand")
-            .getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.World"))
-            .newInstance(nmsWorld)
+            .getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.World"), Double::class.java, Double::class.java, Double::class.java)
+            .newInstance(nmsWorld, targetLocation.x, targetLocation.y, targetLocation.z)
 
         val bukkitArmorstand =
             findClazz("net.minecraft.server.VERSION.Entity").getDeclaredMethod("getBukkitEntity").invoke(

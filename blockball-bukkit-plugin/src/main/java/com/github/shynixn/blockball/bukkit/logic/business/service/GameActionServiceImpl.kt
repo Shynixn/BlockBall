@@ -54,7 +54,6 @@ import java.util.logging.Level
  */
 class GameActionServiceImpl<in G : Game> @Inject constructor(
     private val plugin: Plugin,
-    itemService: ItemService,
     private val gameHubGameActionService: GameHubGameActionService,
     private val bossBarService: BossBarService,
     private val configurationService: ConfigurationService,
@@ -68,8 +67,6 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
     private val gameSoccerService: GameSoccerService<Game>
 ) : GameActionService<G> {
     private val prefix = configurationService.findValue<String>("messages.prefix")
-    private val signPostMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.SIGN_POST)
-    private val signWallMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.WALL_SIGN)
 
     /**
      * Lets the given [player] leave join the given [game]. Optional can the prefered
@@ -302,7 +299,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
 
         val location = signPosition.toLocation()
 
-        if (location.block.type != signPostMaterial && location.block.type != signWallMaterial) {
+        if (location.block != null && location.block!!.state != null && location.block!!.state !is Sign) {
             return false
         }
 

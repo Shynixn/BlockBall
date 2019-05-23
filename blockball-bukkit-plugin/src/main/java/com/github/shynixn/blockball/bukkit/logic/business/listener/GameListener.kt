@@ -3,11 +3,13 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.event.BallPostMoveEvent
 import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
-import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.business.service.BallForceFieldService
+import com.github.shynixn.blockball.api.business.service.GameActionService
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.business.service.RightclickManageService
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
@@ -15,7 +17,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.google.inject.Inject
 import org.bukkit.GameMode
-import org.bukkit.Material
+import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -56,14 +58,10 @@ import org.bukkit.event.player.PlayerQuitEvent
  */
 class GameListener @Inject constructor(
     private val gameService: GameService,
-    itemService: ItemService,
     private val rightClickManageService: RightclickManageService,
     private val gameActionService: GameActionService<Game>,
     private val forceFieldService: BallForceFieldService
 ) : Listener {
-    private val signPostMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.SIGN_POST)
-    private val signWallMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.WALL_SIGN)
-
     /**
      * Gets called when a player leaves the server and the game.
      */
@@ -93,7 +91,6 @@ class GameListener @Inject constructor(
         if (game.isPresent) {
             event.isCancelled = true
         }
-
     }
 
     /**
@@ -222,7 +219,7 @@ class GameListener @Inject constructor(
             return
         }
 
-        if (event.clickedBlock!!.type != signPostMaterial && event.clickedBlock!!.type != signWallMaterial) {
+        if (event.clickedBlock != null && event.clickedBlock!!.state != null && event.clickedBlock!!.state !is Sign) {
             return
         }
 

@@ -559,9 +559,8 @@ class GameListenerTest {
             rightclickManageService: RightclickManageService = MockedRightClickService(),
             gameActionService: GameActionService<Game> = MockedGameActionService()
         ): GameListener {
-            val itemService = Mockito.mock(ItemService::class.java)
 
-            return GameListener(gameService, itemService, rightclickManageService, gameActionService, MockedBallForceFieldService())
+            return GameListener(gameService, rightclickManageService, gameActionService, MockedBallForceFieldService())
         }
     }
 
