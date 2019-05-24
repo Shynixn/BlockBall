@@ -2,9 +2,11 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_12_R1
 
+import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
+import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.setSkin
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallProxyImpl
@@ -48,7 +50,7 @@ import java.util.*
  * SOFTWARE.
  */
 class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) : EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
-    private val itemService = ItemServiceImpl()
+    private val itemService = BlockBallApi.resolve(ItemService::class.java)
 
     private val hitbox = BallHitBox(this, location, SpigotTimingServiceImpl())
     private var internalProxy: BallProxyImpl? = null
@@ -80,9 +82,9 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         when (proxy.meta.size) {
             BallSize.SMALL -> {
                 (bukkitEntity as ArmorStand).isSmall = true
-                (bukkitEntity as ArmorStand).helmet = itemStack
+                (bukkitEntity as ArmorStand).setHelmet(itemStack)
             }
-            BallSize.NORMAL -> (bukkitEntity as ArmorStand).helmet = itemStack
+            BallSize.NORMAL -> (bukkitEntity as ArmorStand).setHelmet(itemStack)
         }
     }
 

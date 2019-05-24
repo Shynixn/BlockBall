@@ -6,7 +6,7 @@ shadowJar{
     archiveName = "$baseName-$version.$extension"
 
     // Change the output folder of the plugin.
-    // destinationDir = new File('D:/Temp/plugins')
+    // destinationDir = new File('D:\\Benutzer\\Temp\\plugins')
 
     relocate 'kotlin', 'com.github.shynixn.blockball.lib.kotlin'
     relocate 'org.intellij', 'com.github.shynixn.blockball.lib.org.intelli'
@@ -17,6 +17,7 @@ shadowJar{
     relocate 'org.slf4j', 'com.github.shynixn.blockball.lib.org.slf4j'
     relocate 'com.google', 'com.github.shynixn.blockball.lib.com.google'
     relocate 'com.zaxxer', 'com.github.shynixn.blockball.lib.com.zaxxer'
+    relocate 'org.apache', 'com.github.shynixn.blockball.lib.org.apache'
 }
 
 publishing {
@@ -51,10 +52,12 @@ dependencies {
     implementation 'com.zaxxer:HikariCP:3.2.0'
     implementation 'com.google.inject:guice:4.1.0'
     implementation 'org.bstats.bStats-Metrics:bstats-bukkit:1.3'
+    implementation 'commons-io:commons-io:2.6'
 
     compileOnly 'me.clip:placeholderapi:2.9.2'
     compileOnly 'net.milkbowlvault:VaultAPI:1.7'
 
+    compileOnly 'org.spigotmc:spigot114R1:1.14.1-R1.0'
     compileOnly 'org.spigotmc:spigot113R2:1.13.2-R2.0'
     compileOnly 'org.spigotmc:spigot113R1:1.13.0-R1.0'
     compileOnly 'org.spigotmc:spigot112R1:1.12.0-R1.0'

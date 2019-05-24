@@ -3,8 +3,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
+import com.github.shynixn.blockball.api.business.enumeration.Version
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ItemService
-import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
+import com.google.inject.Inject
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import java.lang.reflect.Method
@@ -36,11 +38,11 @@ import java.lang.reflect.Method
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ItemServiceImpl : ItemService {
-    private val version = VersionSupport.getServerVersion()
-
+class ItemServiceImpl @Inject constructor(private val pluginProxy: PluginProxy) : ItemService {
     private val getMaterialFromIdMethod: Method? = {
-        if (version.isVersionLowerThan(VersionSupport.VERSION_1_13_R1)) {
+        val version = pluginProxy.getServerVersion()
+
+        if (version.isVersionSameOrLowerThan(Version.VERSION_1_12_R1)) {
             Material::class.java.getDeclaredMethod("getMaterial", Int::class.javaPrimitiveType)
         }
 
@@ -53,6 +55,7 @@ class ItemServiceImpl : ItemService {
      * Creates a new itemStack from the given [materialType] [dataValue] [amount].
      */
     override fun <I> createItemStack(materialType: MaterialType, dataValue: Int, amount: Int): I {
+        @Suppress("DEPRECATION")
         return ItemStack(getMaterialFromMaterialType<Material>(materialType), amount, dataValue.toShort()) as I
     }
 

@@ -2,16 +2,19 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
+import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.bukkit.event.*
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
+import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.BounceConfiguration
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.extension.setSkin
-import com.github.shynixn.blockball.bukkit.logic.business.extension.sync
 import com.github.shynixn.blockball.bukkit.logic.business.service.ItemServiceImpl
+import com.github.shynixn.blockball.core.logic.business.extension.cast
+import com.github.shynixn.blockball.core.logic.business.extension.sync
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -22,7 +25,6 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import java.util.*
@@ -56,15 +58,40 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand, private val hitbox: ArmorStand, override val uuid: UUID = UUID.randomUUID(), private val initialOwner: LivingEntity?, override var persistent: Boolean) : BallProxy, Runnable {
+class BallProxyImpl(
+    override val meta: BallMeta,
+    private val design: ArmorStand,
+    private val hitbox: ArmorStand,
+    override val uuid: UUID = UUID.randomUUID(),
+    private val initialOwner: LivingEntity?,
+    override var persistent: Boolean
+) : BallProxy, Runnable {
 
     companion object {
-        private val itemService = ItemServiceImpl()
-        private val excludedRelativeItems = arrayOf(itemService.getMaterialFromMaterialType(MaterialType.OAK_FENCE), itemService.getMaterialFromMaterialType(MaterialType.IRON_BARS), itemService.getMaterialFromMaterialType(MaterialType.GLASS_PANE), itemService.getMaterialFromMaterialType(MaterialType.OAK_FENCE_GATE), itemService.getMaterialFromMaterialType(MaterialType.NETHER_FENCE), itemService.getMaterialFromMaterialType(MaterialType.COBBLESTONE_WALL), itemService.getMaterialFromMaterialType(MaterialType.STAINED_GLASS_PANE), org.bukkit.Material.SPRUCE_FENCE_GATE, org.bukkit.Material.BIRCH_FENCE_GATE, org.bukkit.Material.JUNGLE_FENCE_GATE, org.bukkit.Material.DARK_OAK_FENCE_GATE, org.bukkit.Material.ACACIA_FENCE_GATE, org.bukkit.Material.SPRUCE_FENCE, org.bukkit.Material.BIRCH_FENCE, org.bukkit.Material.JUNGLE_FENCE, org.bukkit.Material.DARK_OAK_FENCE, org.bukkit.Material.ACACIA_FENCE)
+        private val itemService = BlockBallApi.resolve(ItemService::class.java)
+        private val excludedRelativeItems = arrayOf(
+            itemService.getMaterialFromMaterialType(MaterialType.OAK_FENCE),
+            itemService.getMaterialFromMaterialType(MaterialType.IRON_BARS),
+            itemService.getMaterialFromMaterialType(MaterialType.GLASS_PANE),
+            itemService.getMaterialFromMaterialType(MaterialType.OAK_FENCE_GATE),
+            itemService.getMaterialFromMaterialType(MaterialType.NETHER_FENCE),
+            itemService.getMaterialFromMaterialType(MaterialType.COBBLESTONE_WALL),
+            itemService.getMaterialFromMaterialType(MaterialType.STAINED_GLASS_PANE),
+            org.bukkit.Material.SPRUCE_FENCE_GATE,
+            org.bukkit.Material.BIRCH_FENCE_GATE,
+            org.bukkit.Material.JUNGLE_FENCE_GATE,
+            org.bukkit.Material.DARK_OAK_FENCE_GATE,
+            org.bukkit.Material.ACACIA_FENCE_GATE,
+            org.bukkit.Material.SPRUCE_FENCE,
+            org.bukkit.Material.BIRCH_FENCE,
+            org.bukkit.Material.JUNGLE_FENCE,
+            org.bukkit.Material.DARK_OAK_FENCE,
+            org.bukkit.Material.ACACIA_FENCE
+        )
     }
 
     /** Design **/
-    private val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
+    private val concurrencyService = BlockBallApi.resolve(ConcurrencyService::class.java)
     private var backAnimation = false
     private var interactionEntity: Entity? = null
     private var counter = 20
@@ -166,7 +193,8 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         }
 
         val livingEntity = this.interactionEntity as LivingEntity
-        livingEntity.equipment.itemInHand = null
+        @Suppress("DEPRECATION", "UsePropertyAccessSyntax")
+        livingEntity.equipment!!.setItemInHand(null)
         this.isGrabbed = false
         val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
         itemStack.setSkin(meta.skin)
@@ -206,7 +234,7 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         }
 
         val vector = hitbox.location.toVector().subtract(entity.location.toVector()).normalize()
-                .multiply(meta.movementModifier.horizontalKickModifier)
+            .multiply(meta.movementModifier.horizontalKickModifier)
         this.yawChange = entity.location.yaw
         this.spinningForce = 0.0
         vector.y = 0.1 * meta.movementModifier.verticalKickModifier
@@ -218,7 +246,7 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
             this.setVelocity(vector)
 
             if (entity is Player) {
-                sync(plugin, 5L) {
+                sync(concurrencyService, 5L) {
                     spin(entity.eyeLocation.direction, event.resultVelocity)
                 }
             }
@@ -356,11 +384,13 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         }
         this.interactionEntity = entity
 
-        if (entity.equipment.itemInHand == null || entity.equipment.itemInHand.type == Material.AIR) {
+        @Suppress("DEPRECATION")
+        if (entity.equipment!!.itemInHand.cast<ItemStack?>() == null || entity.equipment!!.itemInHand.type == Material.AIR) {
             val event = BallGrabEvent(entity, this)
             Bukkit.getPluginManager().callEvent(event)
             if (!event.isCancelled) {
-                entity.equipment.itemInHand = design.helmet.clone()
+                @Suppress("UsePropertyAccessSyntax")
+                entity.equipment!!.setItemInHand(design.helmet.clone())
                 this.setHelmet(null)
                 this.isGrabbed = true
             }
@@ -388,7 +418,7 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         }
 
         return if ((this.times > 0 || !onGround) && this.originVector != null) {
-            this.originVector = this.originVector!!.subtract(this.reduceVector)
+            this.originVector = this.originVector!!.subtract(this.reduceVector!!)
 
             if (this.times > 0) {
                 motionVector.x = this.originVector!!.x
@@ -518,6 +548,7 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
     private fun getBounceConfigurationFromBlock(block: Block): Optional<BounceConfiguration> {
         meta.bounceModifiers.forEach { modifier ->
             if (modifier.materialType == block.type) {
+                @Suppress("DEPRECATION")
                 if (modifier.materialDamage == block.data.toInt()) {
                     return Optional.of(modifier)
                 }
@@ -541,9 +572,9 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
                     if (event.isCancelled)
                         return true
                     val vector = hitBoxLocation
-                            .toVector()
-                            .subtract(entity.location.toVector())
-                            .normalize().multiply(meta.movementModifier.horizontalTouchModifier)
+                        .toVector()
+                        .subtract(entity.location.toVector())
+                        .normalize().multiply(meta.movementModifier.horizontalTouchModifier)
                     vector.y = 0.1 * meta.movementModifier.verticalTouchModifier
 
                     this.yawChange = entity.location.yaw
@@ -613,9 +644,9 @@ class BallProxyImpl(override val meta: BallMeta, private val design: ArmorStand,
         when (meta.size) {
             BallSize.SMALL -> {
                 this.design.isSmall = true
-                this.design.helmet = itemStack
+                this.design.setHelmet(itemStack)
             }
-            BallSize.NORMAL -> this.design.helmet = itemStack
+            BallSize.NORMAL -> this.design.setHelmet(itemStack)
         }
     }
 

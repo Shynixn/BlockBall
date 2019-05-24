@@ -5,13 +5,13 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent
 import com.github.shynixn.blockball.api.bukkit.event.GameLeaveEvent
 import com.github.shynixn.blockball.api.business.enumeration.*
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
-import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -52,9 +52,22 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin: Plugin, itemService: ItemService, private val gameHubGameActionService: GameHubGameActionService, private val bossBarService: BossBarService, private val configurationService: ConfigurationService, private val hubGameActionService: GameHubGameActionService, private val minigameActionService: GameMiniGameActionService<MiniGame>, private val bungeeCordGameActionService: GameBungeeCordGameActionService, private val scoreboardService: ScoreboardService, private val hologramService: HologramService, private val dependencyService: DependencyService, private val dependencyBossBarApiService: DependencyBossBarApiService, private val gameSoccerService: GameSoccerService<Game>) : GameActionService<G> {
+class GameActionServiceImpl<in G : Game> @Inject constructor(
+    private val plugin: Plugin,
+    private val pluginProxy : PluginProxy,
+    private val gameHubGameActionService: GameHubGameActionService,
+    private val bossBarService: BossBarService,
+    private val configurationService: ConfigurationService,
+    private val hubGameActionService: GameHubGameActionService,
+    private val minigameActionService: GameMiniGameActionService<MiniGame>,
+    private val bungeeCordGameActionService: GameBungeeCordGameActionService,
+    private val scoreboardService: ScoreboardService,
+    private val hologramService: HologramService,
+    private val dependencyService: DependencyService,
+    private val dependencyBossBarApiService: DependencyBossBarApiService,
+    private val gameSoccerService: GameSoccerService<Game>
+) : GameActionService<G> {
     private val prefix = configurationService.findValue<String>("messages.prefix")
-    private val signPostMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.SIGN_POST)
 
     /**
      * Lets the given [player] leave join the given [game]. Optional can the prefered
@@ -104,7 +117,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         }
 
         if (game.scoreboard != null && player.scoreboard == game.scoreboard) {
-            player.scoreboard = Bukkit.getScoreboardManager().newScoreboard
+            player.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
         }
 
         if (game.bossBar != null) {
@@ -163,6 +176,10 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
             bungeeCordGameActionService.closeGame(game)
         }
 
+        if (game.ballForceFieldBlockPosition != null) {
+            game.ballForceFieldBlockPosition!!.toLocation().block.type = Material.AIR
+        }
+
         game.status = GameStatus.DISABLED
         game.closed = true
         game.ingamePlayersStorage.keys.toTypedArray().forEach { p -> leaveGame(game, p) }
@@ -196,7 +213,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
             game.status = GameStatus.ENABLED
         }
 
-        if (Bukkit.getWorld(game.arena.meta.ballMeta.spawnpoint!!.worldName) == null) {
+        if (Bukkit.getWorld(game.arena.meta.ballMeta.spawnpoint!!.worldName!!) == null) {
             return
         }
 
@@ -283,7 +300,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
         val location = signPosition.toLocation()
 
-        if (location.block.type != signPostMaterial && location.block.type != Material.WALL_SIGN) {
+        if (location.block!!.state !is Sign) {
             return false
         }
 
@@ -307,7 +324,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
             return
         }
 
-        game.arena.meta.ballMeta.spawnpoint!!.toLocation().world.entities.forEach { p ->
+        game.arena.meta.ballMeta.spawnpoint!!.toLocation().world!!.entities.forEach { p ->
             if (p !is Player && p !is ArmorStand && p !is Item && p !is ItemFrame) {
                 if (game.arena.isLocationInSelection(p.location)) {
                     val vector = game.arena.meta.protectionMeta.entityProtection
@@ -360,7 +377,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
      */
     private fun updateBossBar(game: G) {
         val meta = game.arena.meta.bossBarMeta
-        if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
+        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
             if (game.bossBar == null && game.arena.meta.bossBarMeta.enabled) {
                 game.bossBar = bossBarService.createNewBossBar<Any>(game.arena.meta.bossBarMeta)
             }
@@ -428,7 +445,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         }
 
         if (game.scoreboard == null) {
-            game.scoreboard = Bukkit.getScoreboardManager().newScoreboard
+            game.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
 
             scoreboardService.setConfiguration(game.scoreboard, DisplaySlot.SIDEBAR, game.arena.meta.scoreboardMeta.title)
         }
@@ -439,7 +456,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
 
         additionalPlayers.filter { p -> !p.second }.forEach { p ->
             if (p.first.scoreboard == game.scoreboard) {
-                p.first.scoreboard = Bukkit.getScoreboardManager().newScoreboard
+                p.first.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
             }
         }
 
@@ -472,7 +489,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
         val players = ArrayList<Pair<Player, Boolean>>()
         val center = game.arena.center.toLocation()
 
-        center.world.players.forEach { p ->
+        center.world!!.players.forEach { p ->
             if (!game.ingamePlayersStorage.containsKey(p)) {
                 if (p.location.distance(center) <= game.arena.meta.spectatorMeta.notificationRadius) {
                     players.add(Pair(p, true))
@@ -490,7 +507,8 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(private val plugin:
      */
     private fun isAllowedToJoinWithPermissions(game: G, player: Player): Boolean {
         if (player.hasPermission(Permission.JOIN.permission + ".all")
-                || player.hasPermission(Permission.JOIN.permission + "." + game.arena.name)) {
+            || player.hasPermission(Permission.JOIN.permission + "." + game.arena.name)
+        ) {
             return true
         }
 

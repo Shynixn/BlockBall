@@ -1,19 +1,18 @@
-package com.github.shynixn.blockball.bukkit.logic.business.coroutine
+@file:Suppress("UNCHECKED_CAST")
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Runnable
-import org.bukkit.Bukkit
-import org.bukkit.plugin.Plugin
-import kotlin.coroutines.CoroutineContext
+package com.github.shynixn.blockball.core.logic.business.extension
+
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,15 +32,37 @@ import kotlin.coroutines.CoroutineContext
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class AsyncCoroutineDispatcher(private val plugin: Plugin) : CoroutineDispatcher() {
-    /**
-     * Handles dispatching the coroutine on the correct thread.
-     */
-    override fun dispatch(context: CoroutineContext, block: Runnable) {
-        if (Bukkit.isPrimaryThread()) {
-            plugin.server.scheduler.runTaskAsynchronously(plugin, block)
-        } else {
-            block.run()
-        }
+/**
+ * Executes the given [f] via the [concurrencyService] synchronized with the server tick.
+ */
+inline fun sync(
+    concurrencyService: ConcurrencyService,
+    delayTicks: Long = 0L,
+    repeatingTicks: Long = 0L,
+    crossinline f: () -> Unit
+) {
+    concurrencyService.runTaskSync(delayTicks, repeatingTicks) {
+        f.invoke()
+    }
+}
+
+/**
+ * Casts any instance to any type.
+ */
+fun <T> Any?.cast(): T {
+    return this as T
+}
+
+/**
+ * Executes the given [f] via the [concurrencyService] asynchronous.
+ */
+inline fun async(
+    concurrencyService: ConcurrencyService,
+    delayTicks: Long = 0L,
+    repeatingTicks: Long = 0L,
+    crossinline f: () -> Unit
+) {
+    concurrencyService.runTaskAsync(delayTicks, repeatingTicks) {
+        f.invoke()
     }
 }

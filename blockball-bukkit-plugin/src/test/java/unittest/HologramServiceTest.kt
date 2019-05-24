@@ -2,6 +2,7 @@ package unittest
 
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.HologramProxy
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.HologramService
 import com.github.shynixn.blockball.bukkit.logic.business.service.HologramServiceImpl
 import com.github.shynixn.blockball.core.logic.persistence.entity.HologramMetaEntity
@@ -16,6 +17,7 @@ import org.bukkit.scheduler.BukkitTask
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import java.util.logging.Logger
@@ -63,6 +65,7 @@ class HologramServiceTest {
         val meta = HologramMetaEntity()
         meta.position = PositionEntity()
         with(meta.position!!) {
+            worldName = "demo"
             x = 2.0
             y = 3.0
             z = 3.0
@@ -162,12 +165,22 @@ class HologramServiceTest {
                 Bukkit.setServer(server)
             }
             `when`(plugin.server).thenReturn(server)
-            `when`(scheduler.runTaskTimerAsynchronously(ArgumentMatchers.any(Plugin::class.java), ArgumentMatchers.any(Runnable::class.java), ArgumentMatchers.any(Long::class.java), ArgumentMatchers.any(Long::class.java)))
-                    .thenReturn(bukkitTask)
+            `when`(
+                scheduler.runTaskTimerAsynchronously(
+                    ArgumentMatchers.any(Plugin::class.java),
+                    ArgumentMatchers.any(Runnable::class.java),
+                    ArgumentMatchers.any(Long::class.java),
+                    ArgumentMatchers.any(Long::class.java)
+                )
+            )
+                .thenReturn(bukkitTask)
             `when`(plugin.server.scheduler).thenReturn(scheduler)
             `when`(Bukkit.getWorld(ArgumentMatchers.anyString())).thenReturn(world)
 
-            return HologramServiceImpl(plugin, Version.VERSION_1_12_R1)
+            val proxy = Mockito.mock(PluginProxy::class.java)
+            Mockito.`when`(proxy.getServerVersion()).thenReturn(Version.VERSION_1_12_R1)
+
+            return HologramServiceImpl(plugin, proxy)
         }
     }
 

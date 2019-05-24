@@ -74,7 +74,7 @@ class BallForceFieldServiceImpl : BallForceFieldService {
         val ballVelocity = ball.getVelocity<Vector>()
 
         try {
-            val iterator = BlockIterator(ballLocation.world, ballLocation.toVector(), ballVelocity, 0.0, maxBlockIteratorSize)
+            val iterator = BlockIterator(ballLocation.world!!, ballLocation.toVector(), ballVelocity, 0.0, maxBlockIteratorSize)
             var prevBlock: Block? = null
 
             while (iterator.hasNext()) {

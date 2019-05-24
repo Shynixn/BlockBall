@@ -3,10 +3,12 @@ package com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 import com.github.shynixn.blockball.api.business.enumeration.BossBarFlag
 import com.github.shynixn.blockball.api.business.enumeration.BossbarColor
 import com.github.shynixn.blockball.api.business.enumeration.BossbarStyle
+import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.extension.ChatBuilder
-import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 
 /**
  * Created by Shynixn 2018.
@@ -41,6 +43,9 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
         /** Id of the page. */
         const val ID = 9
     }
+
+    // Compatibility.
+    private val version = JavaPlugin.getPlugin(BlockBallPlugin::class.java).getServerVersion()
 
     /**
      * Returns the key of the command when this page should be executed.
@@ -92,38 +97,38 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
         if (bossbar.flags.isEmpty())
             bossbar.flags.add(BossBarFlag.NONE)
         val builder = ChatBuilder()
-                .component("- Message: " + bossbar.message).builder()
-                .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
-                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BOSSBAR_MESSAGE.command)
-                .setHoverText("Edit the message of the bossbar.")
-                .builder().nextLine()
-                .component("- Enabled: " + bossbar.enabled).builder()
-                .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
-                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BOSSBAR_TOGGLE.command)
-                .setHoverText("Toggle the bossbar.")
-                .builder().nextLine()
-                .component("- Percentage: " + bossbar.percentage).builder()
-                .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
-                .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BOSSBAR_PERCENT.command)
-                .setHoverText("Edit the amount of percentage the bossbar is filled.")
-                .builder()
-        if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
+            .component("- Message: " + bossbar.message).builder()
+            .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+            .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BOSSBAR_MESSAGE.command)
+            .setHoverText("Edit the message of the bossbar.")
+            .builder().nextLine()
+            .component("- Enabled: " + bossbar.enabled).builder()
+            .component(ClickableComponent.TOGGLE.text).setColor(ClickableComponent.TOGGLE.color)
+            .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.BOSSBAR_TOGGLE.command)
+            .setHoverText("Toggle the bossbar.")
+            .builder().nextLine()
+            .component("- Percentage: " + bossbar.percentage).builder()
+            .component(ClickableComponent.EDIT.text).setColor(ClickableComponent.EDIT.color)
+            .setClickAction(ChatBuilder.ClickAction.SUGGEST_COMMAND, BlockBallCommand.BOSSBAR_PERCENT.command)
+            .setHoverText("Edit the amount of percentage the bossbar is filled.")
+            .builder()
+        if (version.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
             builder.nextLine()
             builder.component("- Color: " + bossbar.color).builder()
-                    .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARCOLORS.command)
-                    .setHoverText("Opens the selectionbox for colors.")
-                    .builder().nextLine()
-                    .component("- Style: " + bossbar.style).builder()
-                    .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARSTYLES.command)
-                    .setHoverText("Opens the selectionbox for styles.")
-                    .builder().nextLine()
-                    .component("- Flags: " + bossbar.flags[0]).builder()
-                    .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARFLAGS.command)
-                    .setHoverText("Opens the selectionbox for flags.")
-                    .builder().nextLine()
+                .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARCOLORS.command)
+                .setHoverText("Opens the selectionbox for colors.")
+                .builder().nextLine()
+                .component("- Style: " + bossbar.style).builder()
+                .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARSTYLES.command)
+                .setHoverText("Opens the selectionbox for styles.")
+                .builder().nextLine()
+                .component("- Flags: " + bossbar.flags[0]).builder()
+                .component(ClickableComponent.SELECT.text).setColor(ClickableComponent.SELECT.color)
+                .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND, BlockBallCommand.LIST_BOSSBARFLAGS.command)
+                .setHoverText("Opens the selectionbox for flags.")
+                .builder().nextLine()
         }
         return builder
     }

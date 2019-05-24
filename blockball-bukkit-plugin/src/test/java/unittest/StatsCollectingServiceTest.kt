@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Logger
 
@@ -156,6 +158,13 @@ class StatsCollectingServiceTest {
     }
 
     class MockedConfigurationService : ConfigurationService {
+        /**
+         * Gets the path to the folder where the application is allowed to store
+         * save data.
+         */
+        override val applicationDir: Path
+            get() = Paths.get("")
+
         /**
          * Tries to load the config value from the given [path].
          * Throws a [IllegalArgumentException] if the path could not be correctly

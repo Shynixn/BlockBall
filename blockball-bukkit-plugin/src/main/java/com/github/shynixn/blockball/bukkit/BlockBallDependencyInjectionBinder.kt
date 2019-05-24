@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
-import com.github.shynixn.blockball.api.business.enumeration.Version
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.context.FileContext
 import com.github.shynixn.blockball.api.persistence.entity.Game
@@ -10,15 +10,13 @@ import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
 import com.github.shynixn.blockball.api.persistence.repository.ServerSignRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toVersion
-import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.persistence.context.FileContextImpl
-import com.github.shynixn.blockball.bukkit.logic.persistence.repository.ArenaFileRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.ServerSignFileRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository
-import com.github.shynixn.blockball.core.logic.business.service.YamlSerializationServiceImpl
+import com.github.shynixn.blockball.core.logic.business.service.*
+import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
 import com.google.inject.TypeLiteral
@@ -51,14 +49,15 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractModule() {
+class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : AbstractModule() {
 
     /**
      * Configures the business logic tree.
      */
     override fun configure() {
         bind(Plugin::class.java).toInstance(plugin)
-        bind(Version::class.java).toInstance(VersionSupport.getServerVersion().toVersion())
+        bind(PluginProxy::class.java).toInstance(plugin)
+        bind(LoggingService::class.java).toInstance(LoggingUtilServiceImpl(plugin.logger))
 
         // Repositories
         bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java)
@@ -94,6 +93,8 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(BlockSelectionService::class.java).to(BlockSelectionServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BallForceFieldService::class.java).to(BallForceFieldServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(YamlSerializationService::class.java).to(YamlSerializationServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(YamlService::class.java).to(YamlServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(ConcurrencyService::class.java).to(ConcurrencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         // Persistence Services
         bind(PersistenceLinkSignService::class.java).to(PersistenceLinkSignServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -101,7 +102,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: Plugin) : AbstractM
         bind(PersistenceStatsService::class.java).to(PersistenceStatsServiceImpl::class.java)
 
         // Dependency Services
-        val dependencyService = DependencyServiceImpl(plugin)
+        val dependencyService = DependencyServiceImpl()
 
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)

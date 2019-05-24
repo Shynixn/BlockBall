@@ -83,7 +83,7 @@ class DoubleJumpListener @Inject constructor(private val gameService: GameServic
             return
         }
 
-        game.get().doubleJumpCoolDownPlayers[player as Any] = meta.cooldown
+        game.get().doubleJumpCoolDownPlayers[player] = meta.cooldown
         player.velocity = player.location.direction
                 .multiply(meta.horizontalStrength)
                 .setY(meta.verticalStrength)

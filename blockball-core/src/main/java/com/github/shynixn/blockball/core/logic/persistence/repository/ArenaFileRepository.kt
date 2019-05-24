@@ -1,19 +1,22 @@
-package com.github.shynixn.blockball.bukkit.logic.persistence.repository
+@file:Suppress("UNCHECKED_CAST")
+
+package com.github.shynixn.blockball.core.logic.persistence.repository
 
 import com.github.shynixn.blockball.api.business.enumeration.BallActionType
+import com.github.shynixn.blockball.api.business.service.ConfigurationService
+import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.business.service.YamlSerializationService
-import com.github.shynixn.blockball.api.persistence.context.FileContext
+import com.github.shynixn.blockball.api.business.service.YamlService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.core.logic.persistence.entity.ArenaEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.ParticleEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.SoundEntity
 import com.google.inject.Inject
-import org.bukkit.configuration.Configuration
-import org.bukkit.plugin.Plugin
-import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.*
-import java.util.logging.Level
+import kotlin.collections.HashMap
 
 /**
  * Created by Shynixn 2018.
@@ -43,9 +46,10 @@ import java.util.logging.Level
  * SOFTWARE.
  */
 class ArenaFileRepository @Inject constructor(
-    private val plugin: Plugin,
+    private val configurationService: ConfigurationService,
     private val yamlSerializationService: YamlSerializationService,
-    private val fileContext: FileContext
+    private val yamlService: YamlService,
+    private val loggingService: LoggingService
 ) : ArenaRepository {
     /**
      * Returns all stored arenas in this repository.
@@ -53,12 +57,15 @@ class ArenaFileRepository @Inject constructor(
     override fun getAll(): List<Arena> {
         val arenas = ArrayList<Arena>()
         var i = 0
-        while (i < this.getFolder().list()!!.size) {
-            val s = this.getFolder().list()!![i]
+
+        while (i < this.getFolder().toFile().list()!!.size) {
+            val s = this.getFolder().toFile().list()!![i]
             try {
                 if (s.contains("arena_")) {
-                    val data = fileContext.loadOrCreateYamlFile(File(getFolder(), s).toPath(), "arena")
-                    val arenaEntity = yamlSerializationService.deserialize(ArenaEntity::class.java, data)
+                    val file = getFolder().resolve(s)
+                    val data = yamlService.read(file)
+
+                    val arenaEntity = yamlSerializationService.deserialize(ArenaEntity::class.java, data["arena"] as Map<String, Any?>)
 
                     // Compatibility added in v6.1.0
                     if (!arenaEntity.meta.ballMeta.soundEffects.containsKey(BallActionType.ONGOAL)) {
@@ -77,7 +84,7 @@ class ArenaFileRepository @Inject constructor(
                     arenas.add(arenaEntity)
                 }
             } catch (ex: Exception) {
-                plugin.logger.log(Level.WARNING, "Cannot read arena file $s.", ex)
+                loggingService.error("Cannot read arena file $s.", ex)
             }
 
             i++
@@ -85,7 +92,7 @@ class ArenaFileRepository @Inject constructor(
 
         arenas.sortWith(Comparator { o1, o2 -> o1.name.toInt().compareTo(o2.name.toInt()) })
 
-        plugin.logger.log(Level.INFO, "Reloaded [" + arenas.size + "] games.")
+        loggingService.info("Reloaded [" + arenas.size + "] games.")
 
         return arenas
     }
@@ -94,14 +101,10 @@ class ArenaFileRepository @Inject constructor(
      * Delets the given arena in the storage.
      */
     override fun delete(arena: Arena) {
-        try {
-            val file = File(this.getFolder(), "arena_" + arena.name + ".yml")
+        val file = this.getFolder().resolve("arena_" + arena.name + ".yml")
 
-            if (file.exists()) {
-                file.delete()
-            }
-        } catch (e: Exception) {
-            plugin.logger.log(Level.WARNING, "Failed to delete file.", e)
+        if (Files.exists(file)) {
+            Files.delete(file)
         }
     }
 
@@ -109,32 +112,29 @@ class ArenaFileRepository @Inject constructor(
      * Saves the given [arena] to the storage.
      */
     override fun save(arena: Arena) {
-        val file = File(this.getFolder(), "arena_" + arena.name + ".yml")
+        val file = this.getFolder().resolve("arena_" + arena.name + ".yml")
 
-        if (file.exists()) {
-            if (!file.delete()) {
-                throw IllegalStateException("Cannot delete file!")
-            }
+        if (Files.exists(file)) {
+            Files.delete(file)
         }
 
-        fileContext.saveAndCreateYamlFile<Configuration>(file.toPath()) { configuration ->
-            val data = yamlSerializationService.serialize(arena)
-            for (key in data.keys) {
-                configuration.set("arena.$key", data[key])
-            }
-        }
+        val data = yamlSerializationService.serialize(arena)
+        val finalData = HashMap<String, Any>()
+
+        finalData["arena"] = data
+        yamlService.write(file, finalData)
     }
 
     /**
      * Gets the arena folder and recreates it if it does not exist.
      */
-    private fun getFolder(): File {
-        val file = File(this.plugin.dataFolder, "arena")
-        if (!file.exists()) {
-            if (!file.mkdir()) {
-                throw IllegalStateException("Cannot create folder!")
-            }
+    private fun getFolder(): Path {
+        val folder = configurationService.applicationDir.resolve("arena")
+
+        if (!Files.exists(folder)) {
+            Files.createDirectories(folder)
         }
-        return file
+
+        return folder
     }
 }

@@ -3,6 +3,7 @@
 package unittest
 
 import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -94,6 +95,31 @@ class BlockBallApiTest {
 
     class MockedPluginProxy : PluginProxy {
         var called = false
+
+        /**
+         * Gets the installed version of the plugin.
+         */
+        override val version: String
+            get() = "Demo"
+
+        /**
+         * Gets the server version this plugin is currently running on.
+         */
+        override fun getServerVersion(): Version {
+            return Version.VERSION_UNKNOWN
+        }
+
+        /**
+         * Sends a console message from this plugin.
+         */
+        override fun sendConsoleMessage(message: String) {
+        }
+
+        /**
+         * Sets the motd of the server.
+         */
+        override fun setMotd(message: String) {
+        }
 
         /**
          * Gets a business logic from the BlockBall plugin.

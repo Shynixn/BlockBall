@@ -28,18 +28,23 @@ package com.github.shynixn.blockball.api.business.enumeration
  * SOFTWARE.
  */
 enum class Version(
-        /**
-         * Id of the bukkit versions.
-         */
-        val bukkitId: String,
-        /**
-         * General id.
-         */
-        val id: String,
-        /**
-         * Numeric Id for calculations.
-         */
-        val numericId: Double) {
+    /**
+     * Id of the bukkit versions.
+     */
+    val bukkitId: String,
+    /**
+     * General id.
+     */
+    val id: String,
+    /**
+     * Numeric Id for calculations.
+     */
+    val numericId: Double
+) {
+    /**
+     * Unknown version.
+     */
+    VERSION_UNKNOWN("", "", 0.0),
 
     /**
      * Version 1.8.0-1.8.2.
@@ -80,7 +85,41 @@ enum class Version(
     VERSION_1_13_R1("v1_13_R1", "1.13.0", 1.13),
 
     /**
-     * Version 1.13.1 - 1.13.1.
+     * Version 1.13.1 - 1.13.2.
      */
-    VERSION_1_13_R2("v1_13_R2", "1.13.1", 1.131);
+    VERSION_1_13_R2("v1_13_R2", "1.13.1", 1.131),
+
+    /**
+     * Version 1.14.0 - 1.14.1.
+     */
+    VERSION_1_14_R1("v1_14_R1", "1.14.1", 1.141);
+
+    /**
+     * Gets if this version is same or greater than the given version by parameter.
+     */
+    fun isVersionSameOrGreaterThan(version: Version): Boolean {
+        val result = this.numericId.compareTo(version.numericId)
+        return result == 0 || result == 1
+    }
+
+    /**
+     * Gets if the version is the same or lower than the given version by parameter.
+     */
+    fun isVersionSameOrLowerThan(version: Version): Boolean {
+        val result = this.numericId.compareTo(version.numericId)
+        return result == 0 || result == -1
+    }
+
+    /**
+     * Gets if this version is compatible to the versions given as parameter.
+     */
+    fun isCompatible(vararg versions: Version): Boolean {
+        for (version in versions) {
+            if (this.bukkitId == version.bukkitId) {
+                return true
+            }
+        }
+
+        return false
+    }
 }

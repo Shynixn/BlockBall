@@ -12,7 +12,7 @@ Including the BlockBall API
 .. image:: https://maven-badges.herokuapp.com/maven-central/com.github.shynixn.blockball/blockball-api/badge.svg?style=flat-square
   :target: https://maven-badges.herokuapp.com/maven-central/com.github.shynixn.blockball/blockball-api
 
-BlockBall is using maven as build system and is available in the central repository.
+BlockBall is using gradle as build system and is available in the central repository.
 
 .. note::  **Maven** - Bukkit
 
@@ -39,6 +39,13 @@ BlockBall is using maven as build system and is available in the central reposit
         compileOnly 'com.github.shynixn.blockball:blockball-api:\ |release|\ '
         compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:\ |release|\ '
     }
+
+.. note::  **Jar Files** - Bukkit
+
+
+* `Download BlockBall-Api <http://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.github.shynixn.blockball&a=blockball-api&v=LATEST>`__
+* `Download BlockBall-Bukkit-Api <http://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.github.shynixn.blockball&a=blockball-bukkit-api&v=LATEST>`__
+
 
 Registering the dependency
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -131,45 +138,3 @@ There are many BlockBall events in order to listen to actions. Please take a loo
 
         // Do Something
     }
-
-
-Contributing and setting up your workspace
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. warning:: BlockBall is written in `Kotlin <https://kotlinlang.org/>`__ instead of pure Java. If you are not familiar with Kotlin, modifying BlockBall might be a difficult task.
-
-* Fork the BlockBall project on github and clone it to your local environment.
-
-* Use BuildTools.jar from spigotmc.org to build the following dependencies.
-
-.. code-block:: java
-
-    - java -jar BuildTools.jar --rev 1.8
-    - java -jar BuildTools.jar --rev 1.8.3
-    - java -jar BuildTools.jar --rev 1.8.8
-    - java -jar BuildTools.jar --rev 1.9
-    - java -jar BuildTools.jar --rev 1.9.4
-    - java -jar BuildTools.jar --rev 1.10
-    - java -jar BuildTools.jar --rev 1.11
-    - java -jar BuildTools.jar --rev 1.12
-    - java -jar BuildTools.jar --rev 1.13
-    - java -jar BuildTools.jar --rev 1.13.2
-
-* Install the created libraries to your local maven repository.
-
-.. code-block:: java
-
-    - mvn install:install-file -Dfile=spigot-1.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R1 -Dversion=1.8.0-R1.0 -Dpackaging=jar
-    - mvn install:install-file -Dfile=spigot-1.8.3.jar -DgroupId=org.spigotmc -DartifactId=spigot18R2 -Dversion=1.8.3-R2.0 -Dpackaging=jar
-    - mvn install:install-file -Dfile=spigot-1.8.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R3 -Dversion=1.8.8-R3.0 -Dpackaging=jar
-    - mvn install:install-file -Dfile=spigot-1.9.jar -DgroupId=org.spigotmc -DartifactId=spigot19R1 -Dversion=1.9.0-R1.0 -Dpackaging=jar
-    - mvn install:install-file -Dfile=spigot-1.9.4.jar -DgroupId=org.spigotmc -DartifactId=spigot19R2 -Dversion=1.9.4-R2.0 -Dpackaging=jar
-    - mvn install:install-file -Dfile=spigot-1.10.2.jar -DgroupId=org.spigotmc -DartifactId=spigot110R1 -Dversion=1.10.2-R1.0 -Dpackaging=jar
-    - mvn install:install-file -Dfile=spigot-1.11.jar -DgroupId=org.spigotmc -DartifactId=spigot111R1 -Dversion=1.11.0-R1.0 -Dpackaging=jar
-    - mvn install:install-file -Dfile=spigot-1.12.jar -DgroupId=org.spigotmc -DartifactId=spigot112R1 -Dversion=1.12.0-R1.0 -Dpackaging=jar
-    - mvn install:install-file -Dfile=spigot-1.13.jar -DgroupId=org.spigotmc -DartifactId=spigot113R1 -Dversion=1.13.0-R1.0 -Dpackaging=jar
-    - mvn install:install-file -Dfile=spigot-1.13.2.jar -DgroupId=org.spigotmc -DartifactId=spigot113R2 -Dversion=1.13.2-R2.0 -Dpackaging=jar
-
-* Reimport the BlockBall maven project and execute 'mvn package' afterwards.
-
-* The generated blockball-bukkit-plugin/target/blockball-bukkit-plugin-###.jar can be used for testing on a server.

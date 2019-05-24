@@ -1,8 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.coroutine
-
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin
-import org.bukkit.plugin.java.JavaPlugin
-import kotlin.coroutines.CoroutineContext
+package com.github.shynixn.blockball.api.business.service
 
 /**
  * Created by Shynixn 2018.
@@ -31,31 +27,14 @@ import kotlin.coroutines.CoroutineContext
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-object DispatcherContainer {
-    private var asyncCoroutine: CoroutineContext? = null
-    private var syncCoroutine: CoroutineContext? = null
+interface ConcurrencyService {
+    /**
+     * Runs the given [function] synchronised with the given [delayTicks] and [repeatingTicks].
+     */
+    fun runTaskSync(delayTicks: Long = 0L, repeatingTicks: Long = 0L, function: () -> Unit)
 
     /**
-     * Gets the async coroutine context.
+     * Runs the given [function] asynchronous with the given [delayTicks] and [repeatingTicks].
      */
-    val async: CoroutineContext
-        get() {
-            if (asyncCoroutine == null) {
-                asyncCoroutine = AsyncCoroutineDispatcher(JavaPlugin.getPlugin(BlockBallPlugin::class.java))
-            }
-
-            return asyncCoroutine!!
-        }
-
-    /**
-     * Gets the sync coroutine context.
-     */
-    val sync: CoroutineContext
-        get() {
-            if (syncCoroutine == null) {
-                syncCoroutine = MinecraftCoroutineDispatcher(JavaPlugin.getPlugin(BlockBallPlugin::class.java))
-            }
-
-            return syncCoroutine!!
-        }
+    fun runTaskAsync(delayTicks: Long = 0L, repeatingTicks: Long = 0L, function: () -> Unit)
 }

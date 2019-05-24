@@ -64,7 +64,7 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
                     "unknown"
                 }
 
-                templates.add(TemplateEntity(f.name.replace(".yml", ""), translator, true))
+                templates.add(TemplateEntity(f.name.replace(".yml", ""), translator!!, true))
             }
         }
 
@@ -79,7 +79,7 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
                     "Unknown"
                 }
 
-                templates.add(TemplateEntity(f.name.replace(".yml", ""), translator, false))
+                templates.add(TemplateEntity(f.name.replace(".yml", ""), translator!!, false))
             }
         }
 

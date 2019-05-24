@@ -4,10 +4,9 @@ package com.github.shynixn.blockball.bukkit.logic.business.extension
 
 import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.enumeration.GameMode
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
-import com.github.shynixn.blockball.bukkit.logic.business.coroutine.DispatcherContainer
-import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
@@ -21,11 +20,10 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.SkullMeta
-import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
-import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.Method
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
@@ -60,37 +58,10 @@ import kotlin.coroutines.CoroutineContext
  */
 
 /**
- * Minecraft async dispatcher.
- */
-val Dispatchers.async: CoroutineContext
-    get() =  DispatcherContainer.async
-
-/**
- * Minecraft sync dispatcher.
- */
-val Dispatchers.minecraft: CoroutineContext
-    get() =  DispatcherContainer.sync
-
-/**
- * Executes the given [f] for the given [plugin] on main thread.
- */
-inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long = 0L, crossinline f: () -> Unit) {
-    if (repeatingTicks > 0) {
-        plugin.server.scheduler.runTaskTimer(plugin, Runnable {
-            f.invoke()
-        }, delayTicks, repeatingTicks)
-    } else {
-        plugin.server.scheduler.runTaskLater(plugin,Runnable {
-            f.invoke()
-        }, delayTicks)
-    }
-}
-
-/**
  * Deserializes the configuraiton section path to a map.
  */
 fun FileConfiguration.deserializeToMap(path: String): Map<String, Any?> {
-    val section = getConfigurationSection(path).getValues(false)
+    val section = getConfigurationSection(path)!!.getValues(false)
     deserialize(section)
     return section
 }
@@ -108,11 +79,19 @@ private fun deserialize(section: MutableMap<String, Any?>) {
     }
 }
 
+private val getIdFromMaterialMethod: Method = { Material::class.java.getDeclaredMethod("getId") }.invoke()
+
 /**
- * Finds the corresponding version.
+ * Lazy convertion.
  */
-fun VersionSupport.toVersion(): Version {
-    return Version.values().find { v -> this.simpleVersionText == v.id }!!
+fun Material.toCompatibilityId(): Int {
+    for (material in Material.values()) {
+        if (material == this) {
+            return getIdFromMaterialMethod(material) as Int
+        }
+    }
+
+    throw IllegalArgumentException("Material id not found!")
 }
 
 /**
@@ -134,43 +113,14 @@ fun Player.isTouchingGround(): Boolean {
  */
 fun ItemStack.setDisplayName(displayName: String): ItemStack {
     val meta = itemMeta
-    meta.displayName = displayName.convertChatColors()
-    itemMeta = meta
-    return this
-}
 
-/**
- * Executes the given [f] for the given [plugin] asynchronly.
- */
-inline fun Any.async(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long = 0L, crossinline f: () -> Unit) {
-    if (repeatingTicks > 0) {
-        plugin.server.scheduler.runTaskTimerAsynchronously(plugin,Runnable {
-            f.invoke()
-        }, delayTicks, repeatingTicks)
-    } else {
-        plugin.server.scheduler.runTaskLaterAsynchronously(plugin,Runnable {
-            f.invoke()
-        }, delayTicks)
+    if (meta != null) {
+        @Suppress("UsePropertyAccessSyntax")
+        meta.setDisplayName(displayName.convertChatColors())
+        itemMeta = meta
     }
-}
 
-/**
- * Sets the [Server] modt with the given [text].
- */
-internal fun Server.setModt(text: String) {
-    val builder = java.lang.StringBuilder("[")
-    builder.append((text.replace("[", "").replace("]", "")))
-    builder.append(ChatColor.RESET.toString())
-    builder.append("]")
-
-    val minecraftServerClazz = Class.forName("net.minecraft.server.VERSION.MinecraftServer".replace("VERSION", VersionSupport.getServerVersion().versionText))
-    val craftServerClazz = Class.forName("org.bukkit.craftbukkit.VERSION.CraftServer".replace("VERSION", VersionSupport.getServerVersion().versionText))
-
-    val setModtMethod = minecraftServerClazz.getDeclaredMethod("setMotd", String::class.java)
-    val getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")
-
-    val console = getServerConsoleMethod!!.invoke(Bukkit.getServer())
-    setModtMethod!!.invoke(console, builder.toString().convertChatColors())
+    return this
 }
 
 /**
@@ -193,29 +143,29 @@ internal fun List<String>.toSingleLine(): String {
 internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = null, team: List<Player>? = null): String {
     val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
     var cache = this.replace(PlaceHolder.TEAM_RED.placeHolder, game.arena.meta.redTeamMeta.displayName)
-            .replace(PlaceHolder.ARENA_DISPLAYNAME.placeHolder, game.arena.displayName)
-            .replace(PlaceHolder.TEAM_BLUE.placeHolder, game.arena.meta.blueTeamMeta.displayName)
-            .replace(PlaceHolder.RED_COLOR.placeHolder, game.arena.meta.redTeamMeta.prefix)
-            .replace(PlaceHolder.BLUE_COLOR.placeHolder, game.arena.meta.blueTeamMeta.prefix)
-            .replace(PlaceHolder.RED_GOALS.placeHolder, game.redScore.toString())
-            .replace(PlaceHolder.BLUE_GOALS.placeHolder, game.blueScore.toString())
-            .replace(PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder, game.ingamePlayersStorage.size.toString())
-            .replace(PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder, (game.arena.meta.blueTeamMeta.maxAmount + game.arena.meta.redTeamMeta.maxAmount).toString())
+        .replace(PlaceHolder.ARENA_DISPLAYNAME.placeHolder, game.arena.displayName)
+        .replace(PlaceHolder.TEAM_BLUE.placeHolder, game.arena.meta.blueTeamMeta.displayName)
+        .replace(PlaceHolder.RED_COLOR.placeHolder, game.arena.meta.redTeamMeta.prefix)
+        .replace(PlaceHolder.BLUE_COLOR.placeHolder, game.arena.meta.blueTeamMeta.prefix)
+        .replace(PlaceHolder.RED_GOALS.placeHolder, game.redScore.toString())
+        .replace(PlaceHolder.BLUE_GOALS.placeHolder, game.blueScore.toString())
+        .replace(PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder, game.ingamePlayersStorage.size.toString())
+        .replace(PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder, (game.arena.meta.blueTeamMeta.maxAmount + game.arena.meta.redTeamMeta.maxAmount).toString())
 
 
     if (teamMeta != null) {
         cache = cache.replace(PlaceHolder.ARENA_TEAMCOLOR.placeHolder, teamMeta.prefix)
-                .replace(PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, teamMeta.displayName)
-                .replace(PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder, teamMeta.maxAmount.toString())
+            .replace(PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, teamMeta.displayName)
+            .replace(PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder, teamMeta.maxAmount.toString())
     }
 
     if (team != null) {
         cache = cache.replace(PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder, team.size.toString())
     }
 
-    val stateSignEnabled = plugin.config.getString("messages.state-sign-enabled").convertChatColors()
-    val stateSignDisabled = plugin.config.getString("messages.state-sign-disabled").convertChatColors()
-    val stateSignRunning = plugin.config.getString("messages.state-sign-running").convertChatColors()
+    val stateSignEnabled = plugin.config.getString("messages.state-sign-enabled")!!.convertChatColors()
+    val stateSignDisabled = plugin.config.getString("messages.state-sign-disabled")!!.convertChatColors()
+    val stateSignRunning = plugin.config.getString("messages.state-sign-running")!!.convertChatColors()
 
     when {
         game.status == GameStatus.RUNNING -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, stateSignRunning)
@@ -227,7 +177,10 @@ internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = nul
         cache = cache.replace(PlaceHolder.TIME.placeHolder, "∞")
     } else if (game is MiniGame) {
         cache = cache.replace(PlaceHolder.TIME.placeHolder, game.gameCountdown.toString())
-                .replace(PlaceHolder.REMAINING_PLAYERS_TO_START.placeHolder, (game.arena.meta.redTeamMeta.minAmount + game.arena.meta.blueTeamMeta.minAmount - game.ingamePlayersStorage.size).toString())
+            .replace(
+                PlaceHolder.REMAINING_PLAYERS_TO_START.placeHolder,
+                (game.arena.meta.redTeamMeta.minAmount + game.arena.meta.blueTeamMeta.minAmount - game.ingamePlayersStorage.size).toString()
+            )
     }
 
     if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
@@ -243,7 +196,8 @@ internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = nul
 internal fun ItemStack.setColor(color: Color): ItemStack {
     if (this.itemMeta is LeatherArmorMeta) {
         val leatherMeta = this.itemMeta as LeatherArmorMeta
-        leatherMeta.color = color
+        @Suppress("UsePropertyAccessSyntax")
+        leatherMeta.setColor(color)
         this.itemMeta = leatherMeta
     }
     return this
@@ -260,7 +214,7 @@ internal fun Permission.hasPermission(player: Player): Boolean {
 
 /** Returns if the given [location] is inside of this area selection. */
 fun Selection.isLocationInSelection(location: Location): Boolean {
-    if (location.world.name == this.upperCorner.worldName) {
+    if (location.world != null && location.world!!.name == this.upperCorner.worldName) {
         if (this.upperCorner.x >= location.x && this.lowerCorner.x <= location.x) {
             if (this.upperCorner.y >= location.y + 1 && this.lowerCorner.y <= location.y + 1) {
                 if (this.upperCorner.z >= location.z && this.lowerCorner.z <= location.z) {
@@ -275,14 +229,14 @@ fun Selection.isLocationInSelection(location: Location): Boolean {
 /**
  * Sends the given [packet] to this player.
  */
-@Throws(ClassNotFoundException::class, IllegalAccessException::class, NoSuchMethodException::class, InvocationTargetException::class, NoSuchFieldException::class)
 fun Player.sendPacket(packet: Any) {
-    val version = VersionSupport.getServerVersion()
-    val craftPlayer = Class.forName("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer".replace("VERSION", version.versionText)).cast(player)
+    val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
+
+    val craftPlayer = findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer", plugin).cast(player)
     val methodHandle = craftPlayer.javaClass.getDeclaredMethod("getHandle")
     val entityPlayer = methodHandle.invoke(craftPlayer)
 
-    val field = Class.forName("net.minecraft.server.VERSION.EntityPlayer".replace("VERSION", version.versionText)).getDeclaredField("playerConnection")
+    val field = findClazz("net.minecraft.server.VERSION.EntityPlayer", plugin).getDeclaredField("playerConnection")
     field.isAccessible = true
     val connection = field.get(entityPlayer)
 
@@ -301,7 +255,7 @@ internal fun String.convertChatColors(): String {
  * Removes the chatColors.
  */
 internal fun String.stripChatColors(): String {
-    return ChatColor.stripColor(this)
+    return ChatColor.stripColor(this)!!
 }
 
 /**
@@ -312,19 +266,6 @@ fun <T> CompletableFuture<T>.thenAcceptSafely(f: (T) -> Unit) {
         JavaPlugin.getPlugin(BlockBallPlugin::class.java).logger.log(Level.WARNING, "Failed to execute Task.", e)
         throw RuntimeException(e)
     }
-}
-
-/**
- * Tries to return the [ParticleType] from the given name.
- */
-fun String.toParticleType(): ParticleType {
-    ParticleType.values().forEach { p ->
-        if (p.gameId_18.equals(this, true) || p.gameId_113.equals(this, true) || p.name.equals(this, true) || p.minecraftId_112.equals(this, true)) {
-            return p
-        }
-    }
-
-    throw IllegalArgumentException("ParticleType cannot be parsed from '" + this + "'.")
 }
 
 /**
@@ -344,8 +285,9 @@ internal fun ItemStack.setSkin(skin: String) {
         }
 
         val newSkinProfile = GameProfile(UUID.randomUUID(), null)
+        val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
 
-        val cls = Class.forName("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull".replace("VERSION", VersionSupport.getServerVersion().versionText))
+        val cls = findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull", plugin)
         val real = cls.cast(currentMeta)
         val field = real.javaClass.getDeclaredField("profile")
 
@@ -364,7 +306,11 @@ internal fun ItemStack.setSkin(skin: String) {
  */
 internal fun Location.toPosition(): Position {
     val position = PositionEntity()
-    position.worldName = this.world.name
+
+    if (this.world != null) {
+        position.worldName = this.world!!.name
+    }
+
     position.x = this.x
     position.y = this.y
     position.z = this.z
@@ -372,6 +318,13 @@ internal fun Location.toPosition(): Position {
     position.pitch = this.pitch.toDouble()
 
     return position
+}
+
+/**
+ * Finds the version compatible NMS class.
+ */
+fun findClazz(name: String, plugin: PluginProxy): Class<*> {
+    return Class.forName(name.replace("VERSION", plugin.getServerVersion().bukkitId))
 }
 
 /**
@@ -385,7 +338,7 @@ internal fun GameMode.toGameMode(): org.bukkit.GameMode {
  * Converts the given position to a bukkit Location.
  */
 internal fun Position.toLocation(): Location {
-    return Location(Bukkit.getWorld(this.worldName), this.x, this.y, this.z, this.yaw.toFloat(), this.pitch.toFloat())
+    return Location(Bukkit.getWorld(this.worldName!!), this.x, this.y, this.z, this.yaw.toFloat(), this.pitch.toFloat())
 }
 
 /**

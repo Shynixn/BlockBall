@@ -1,10 +1,8 @@
-package com.github.shynixn.blockball.bukkit.logic.business.coroutine
+package com.github.shynixn.blockball.core.logic.business.service
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Runnable
-import org.bukkit.Bukkit
-import org.bukkit.plugin.Plugin
-import kotlin.coroutines.CoroutineContext
+import com.github.shynixn.blockball.api.business.service.LoggingService
+import java.util.logging.Level
+import java.util.logging.Logger
 
 /**
  * Created by Shynixn 2018.
@@ -33,15 +31,37 @@ import kotlin.coroutines.CoroutineContext
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class MinecraftCoroutineDispatcher(private val plugin: Plugin) : CoroutineDispatcher() {
+class LoggingUtilServiceImpl(private val logger: Logger) : LoggingService {
     /**
-     * Handles dispatching the coroutine on the correct thread.
+     * Logs an info text.
      */
-    override fun dispatch(context: CoroutineContext, block: Runnable) {
-        if (Bukkit.isPrimaryThread()) {
-            block.run()
+    override fun info(text: String, e: Throwable?) {
+        if (e == null) {
+            logger.log(Level.INFO, text)
         } else {
-            plugin.server.scheduler.runTask(plugin, block)
+            logger.log(Level.INFO, text, e)
+        }
+    }
+
+    /**
+     * Logs an warning text.
+     */
+    override fun warn(text: String, e: Throwable?) {
+        if (e == null) {
+            logger.log(Level.WARNING, text)
+        } else {
+            logger.log(Level.WARNING, text, e)
+        }
+    }
+
+    /**
+     * Logs an error text.
+     */
+    override fun error(text: String, e: Throwable?) {
+        if (e == null) {
+            logger.log(Level.WARNING, text)
+        } else {
+            logger.log(Level.WARNING, text, e)
         }
     }
 }

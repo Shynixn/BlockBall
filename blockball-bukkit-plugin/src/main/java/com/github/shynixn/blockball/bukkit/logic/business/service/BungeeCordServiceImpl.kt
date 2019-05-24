@@ -3,14 +3,15 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.business.enumeration.BungeeCordServerState
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.service.BungeeCordService
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.PersistenceLinkSignService
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordConfiguration
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordServerStatus
-import com.github.shynixn.blockball.bukkit.logic.business.extension.async
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.thenAcceptSafely
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
+import com.github.shynixn.blockball.core.logic.business.extension.async
 import com.github.shynixn.blockball.core.logic.persistence.entity.BungeeCordServerStatusEntity
 import com.google.common.io.ByteStreams
 import com.google.inject.Inject
@@ -52,7 +53,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BungeeCordServiceImpl @Inject constructor(private val plugin: Plugin, configurationService: ConfigurationService, private val persistenceLinkSignService: PersistenceLinkSignService) : BungeeCordService, Runnable, PluginMessageListener {
+class BungeeCordServiceImpl @Inject constructor(private val plugin: Plugin, private val concurrencyService: ConcurrencyService, configurationService: ConfigurationService, private val persistenceLinkSignService: PersistenceLinkSignService) : BungeeCordService, Runnable, PluginMessageListener {
     private lateinit var bungeeCofing: BungeeCordConfiguration
 
     init {
@@ -111,7 +112,7 @@ class BungeeCordServiceImpl @Inject constructor(private val plugin: Plugin, conf
             val ip = `in`.readUTF()
             val port = `in`.readShort()
 
-            async(plugin) {
+            async(concurrencyService) {
                 val status = getServerInformation(serverName, ip, port.toInt())
 
                 this.persistenceLinkSignService.getAll().thenAcceptSafely { signs ->

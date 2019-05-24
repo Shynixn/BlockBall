@@ -25,8 +25,3 @@ All features the plugin is likely to receive in the future can be viewed at the 
 
 The easiest option to suggest new features or report bugs is to submit a new issue there. However, I do also take reports from the spigot comment section or
 private messages on spigot.
-
-Developer? How can I customize BlockBall?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Take a look at setting up your personal `BlockBall workspace. <../api/index.html#setup-your-personal-blockball-workspace>`__

@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.business.service
 
+import java.nio.file.Path
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -29,6 +31,12 @@ package com.github.shynixn.blockball.api.business.service
  */
 interface ConfigurationService {
     /**
+     * Gets the path to the folder where the application is allowed to store
+     * save data.
+     */
+    val applicationDir: Path
+
+    /**
      * Tries to load the config value from the given [path].
      * Throws a [IllegalArgumentException] if the path could not be correctly
      * loaded.
@@ -40,5 +48,5 @@ interface ConfigurationService {
      * Throws a [IllegalArgumentException] if the path could not be correctly
      * loaded.
      */
-    fun <C> findConfiguration(clazz: Class<C>, path: String) : C
+    fun <C> findConfiguration(clazz: Class<C>, path: String): C
 }

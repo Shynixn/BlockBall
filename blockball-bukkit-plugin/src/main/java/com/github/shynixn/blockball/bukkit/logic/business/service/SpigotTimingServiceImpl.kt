@@ -1,7 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.SpigotTimingService
-import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
+import org.bukkit.plugin.java.JavaPlugin
 import java.lang.reflect.Field
 
 /**
@@ -40,7 +42,8 @@ class SpigotTimingServiceImpl : SpigotTimingService {
 
     init {
         try {
-            clazz = Class.forName("org.bukkit.craftbukkit.VERSION.SpigotTimings".replace("VERSION", VersionSupport.getServerVersion().versionText))
+            val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
+            clazz = findClazz("org.bukkit.craftbukkit.VERSION.SpigotTimings", plugin)
             timerField = clazz!!.getDeclaredField("entityMoveTimer")
             timerClazz = Class.forName("org.spigotmc.CustomTimingsHandler")
         } catch (ignored: ClassNotFoundException) {

@@ -47,7 +47,13 @@ import org.bukkit.scoreboard.Scoreboard
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plugin, private val configurationService: ConfigurationService, private val screenMessageService: ScreenMessageService, private val soundService: SoundService, private val gameSoccerService: GameSoccerService<Game>) : GameMiniGameActionService<MiniGame> {
+class GameMiniGameActionServiceImpl @Inject constructor(
+    private val plugin: Plugin,
+    private val configurationService: ConfigurationService,
+    private val screenMessageService: ScreenMessageService,
+    private val soundService: SoundService,
+    private val gameSoccerService: GameSoccerService<Game>
+) : GameMiniGameActionService<MiniGame> {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
     /**
@@ -71,12 +77,14 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
 
         if (game.playing || game.endGameActive || game.isLobbyFull) {
             ChatBuilder().text(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[0].replaceGamePlaceholder(game))
-                    .nextLine()
-                    .component(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[1].replaceGamePlaceholder(game))
-                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
-                            , "/" + plugin.config.getString("global-spectate.command") + " " + game.arena.name)
-                    .setHoverText(" ")
-                    .builder().sendMessage(player)
+                .nextLine()
+                .component(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[1].replaceGamePlaceholder(game))
+                .setClickAction(
+                    ChatBuilder.ClickAction.RUN_COMMAND
+                    , "/" + plugin.config.getString("global-spectate.command") + " " + game.arena.name
+                )
+                .setHoverText(" ")
+                .builder().sendMessage(player)
 
             return false
         }
@@ -185,10 +193,28 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
      */
     override fun onDraw(game: MiniGame) {
         val additionalPlayers = getNofifiedPlayers(game).filter { pair -> pair.second }.map { p -> p.first }
-        additionalPlayers.forEach { p -> screenMessageService.setTitle(p, game.arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(game), game.arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)) }
+        additionalPlayers.forEach { p ->
+            screenMessageService.setTitle(
+                p,
+                game.arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(game),
+                game.arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)
+            )
+        }
 
-        game.redTeam.forEach { p -> screenMessageService.setTitle(p, game.arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(game), game.arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)) }
-        game.blueTeam.forEach { p -> screenMessageService.setTitle(p, game.arena.meta.blueTeamMeta.drawMessageTitle.replaceGamePlaceholder(game), game.arena.meta.blueTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)) }
+        game.redTeam.forEach { p ->
+            screenMessageService.setTitle(
+                p,
+                game.arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(game),
+                game.arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)
+            )
+        }
+        game.blueTeam.forEach { p ->
+            screenMessageService.setTitle(
+                p,
+                game.arena.meta.blueTeamMeta.drawMessageTitle.replaceGamePlaceholder(game),
+                game.arena.meta.blueTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)
+            )
+        }
     }
 
     /**
@@ -298,18 +324,19 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
     }
 
     private fun createPlayerStorage(game: MiniGame, player: Player): GameStorage {
-        val stats = GameStorageEntity(player.uniqueId, Bukkit.getScoreboardManager().newScoreboard)
+        val stats = GameStorageEntity(player.uniqueId, Bukkit.getScoreboardManager()!!.newScoreboard)
 
         with(stats) {
             gameMode = player.gameMode
-            armorContents = player.inventory?.armorContents?.clone() as Array<Any?>
+            armorContents = player.inventory.armorContents.clone() as Array<Any?>
             flying = player.isFlying
             allowedFlying = player.allowFlight
             walkingSpeed = player.walkSpeed
             scoreboard = player.scoreboard
-            inventoryContents = player.inventory?.contents?.clone() as Array<Any?>
+            inventoryContents = player.inventory.contents.clone() as Array<Any?>
             level = player.level
             exp = player.exp
+            @Suppress("DEPRECATION")
             maxHealth = player.maxHealth
             health = player.health
             hunger = player.foodLevel
@@ -317,6 +344,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
 
         player.allowFlight = false
         player.isFlying = false
+        @Suppress("DEPRECATION")
         player.maxHealth = 20.0
         player.health = 20.0
         player.foodLevel = 20
@@ -324,7 +352,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
         player.exp = 0.0F
         player.gameMode = game.arena.meta.lobbyMeta.gamemode.toGameMode()
 
-        player.inventory.armorContents = arrayOfNulls(4)
+        player.inventory.setArmorContents(arrayOfNulls(4))
         player.inventory.clear()
 
         player.inventory.updateInventory()
@@ -339,7 +367,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
     private fun joinTeam(game: MiniGame, player: Player, team: Team, teamMeta: TeamMeta) {
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()
         player.inventory.contents = teamMeta.inventoryContents.clone().map { d -> d as ItemStack? }.toTypedArray()
-        player.inventory.armorContents = teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray()
+        player.inventory.setArmorContents(teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray())
         player.inventory.updateInventory()
 
         val players = if (team == Team.RED) {
@@ -356,7 +384,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
      */
     private fun isAllowedToSpectateWithPermissions(game: MiniGame, player: Player): Boolean {
         if (player.hasPermission(Permission.SPECTATE.permission + ".all")
-                || player.hasPermission(Permission.SPECTATE.permission + "." + game.arena.name)) {
+            || player.hasPermission(Permission.SPECTATE.permission + "." + game.arena.name)
+        ) {
             return true
         }
 
@@ -476,7 +505,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
         val players = ArrayList<Pair<Any, Boolean>>()
 
         if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
-            game.arena.center.toLocation().world.players.forEach { p ->
+            game.arena.center.toLocation().world!!.players.forEach { p ->
                 if (p.location.distance(game.arena.center.toLocation()) <= game.arena.meta.spectatorMeta.notificationRadius) {
                     players.add(Pair(p, true))
                 } else {
@@ -497,13 +526,14 @@ class GameMiniGameActionServiceImpl @Inject constructor(private val plugin: Plug
         with(player) {
             gameMode = stats.gameMode as GameMode
             inventory.contents = stats.inventoryContents as Array<out ItemStack>
-            inventory.armorContents = stats.armorContents as Array<out ItemStack>
+            inventory.setArmorContents(stats.armorContents as Array<out ItemStack>)
             allowFlight = stats.allowedFlying
             isFlying = stats.flying
             walkSpeed = stats.walkingSpeed
             scoreboard = stats.scoreboard as Scoreboard
             level = stats.level
             exp = stats.exp
+            @Suppress("DEPRECATION")
             maxHealth = stats.maxHealth
             health = stats.health
             foodLevel = stats.hunger

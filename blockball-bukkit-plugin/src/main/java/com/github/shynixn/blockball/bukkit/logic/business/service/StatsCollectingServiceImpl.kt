@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.service.ScoreboardService
 import com.github.shynixn.blockball.api.business.service.StatsCollectingService
 import com.github.shynixn.blockball.api.persistence.entity.Stats
 import com.github.shynixn.blockball.bukkit.logic.business.extension.thenAcceptSafely
+import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -42,7 +43,12 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin, private val configurationService: ConfigurationService, private val persistenceStatsService: PersistenceStatsService, private val scoreboardService: ScoreboardService) : StatsCollectingService, Runnable {
+class StatsCollectingServiceImpl @Inject constructor(
+    private val plugin: Plugin,
+    private val configurationService: ConfigurationService,
+    private val persistenceStatsService: PersistenceStatsService,
+    private val scoreboardService: ScoreboardService
+) : StatsCollectingService, Runnable {
     private val statsScoreboards = HashMap<Player, Scoreboard>()
 
     /**
@@ -71,7 +77,7 @@ class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin,
         }
 
         this.statsScoreboards.remove(player)
-        player.scoreboard = Bukkit.getScoreboardManager().newScoreboard
+        player.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
     }
 
     /**
@@ -116,7 +122,7 @@ class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin,
 
         if (!statsScoreboards.containsKey(player)) {
             val title = configurationService.findValue<String>("stats-scoreboard.title")
-            val createdScoreboard = Bukkit.getScoreboardManager().newScoreboard
+            val createdScoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
 
             scoreboardService.setConfiguration(createdScoreboard, DisplaySlot.SIDEBAR, title)
             statsScoreboards[player] = createdScoreboard
@@ -124,8 +130,8 @@ class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin,
 
         val scoreboard = statsScoreboards[player]
 
-        if (player.scoreboard == null || player.scoreboard != scoreboard) {
-            player.scoreboard = scoreboard
+        if (player.scoreboard.cast<Scoreboard?>() == null || player.scoreboard != scoreboard) {
+            player.scoreboard = scoreboard!!
         }
 
         persistenceStatsService.getOrCreateFromPlayer(player).thenAcceptSafely { stats ->
@@ -142,9 +148,9 @@ class StatsCollectingServiceImpl @Inject constructor(private val plugin: Plugin,
      */
     private fun replacePlaceHolders(player: Player, stats: Stats, line: String): String {
         return line
-                .replace(PlaceHolder.STATS_PLAYER_NAME.placeHolder, player.name)
-                .replace(PlaceHolder.STATS_WINRATE.placeHolder, String.format("%.2f", stats.winRate))
-                .replace(PlaceHolder.STATS_PLAYEDGAMES.placeHolder, stats.amountOfPlayedGames.toString())
-                .replace(PlaceHolder.STATS_GOALS_PER_GAME.placeHolder, String.format("%.2f", stats.goalsPerGame))
+            .replace(PlaceHolder.STATS_PLAYER_NAME.placeHolder, player.name)
+            .replace(PlaceHolder.STATS_WINRATE.placeHolder, String.format("%.2f", stats.winRate))
+            .replace(PlaceHolder.STATS_PLAYEDGAMES.placeHolder, stats.amountOfPlayedGames.toString())
+            .replace(PlaceHolder.STATS_GOALS_PER_GAME.placeHolder, String.format("%.2f", stats.goalsPerGame))
     }
 }

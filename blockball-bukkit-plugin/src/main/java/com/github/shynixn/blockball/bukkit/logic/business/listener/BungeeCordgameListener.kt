@@ -1,11 +1,12 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.business.enumeration.MaterialType
-import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.business.service.GameActionService
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.business.service.RightclickManageService
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.google.inject.Inject
-import org.bukkit.Material
+import org.bukkit.block.Sign
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
@@ -39,9 +40,11 @@ import org.bukkit.event.player.PlayerJoinEvent
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BungeeCordgameListener @Inject constructor(private val gameService: GameService, private val rightClickManageService: RightclickManageService, itemService: ItemService, private val gameActionService: GameActionService<Game>) : Listener {
-    private val signPostMaterial = itemService.getMaterialFromMaterialType<Material>(MaterialType.SIGN_POST)
-
+class BungeeCordgameListener @Inject constructor(
+    private val gameService: GameService,
+    private val rightClickManageService: RightclickManageService,
+    private val gameActionService: GameActionService<Game>
+) : Listener {
     /**
      * Joins the game for a bungeecord player.
      */
@@ -69,11 +72,11 @@ class BungeeCordgameListener @Inject constructor(private val gameService: GameSe
             return
         }
 
-        if (event.clickedBlock.type != signPostMaterial && event.clickedBlock.type != Material.WALL_SIGN) {
+        if (event.clickedBlock != null && event.clickedBlock!!.state != null && event.clickedBlock!!.state !is Sign) {
             return
         }
 
-        rightClickManageService.executeWatchers(event.player, event.clickedBlock.location)
+        rightClickManageService.executeWatchers(event.player, event.clickedBlock!!.location)
         //  bungeeCordService.clickOnConnectSign(event.player, event.clickedBlock.state as Sign)
     }
 }

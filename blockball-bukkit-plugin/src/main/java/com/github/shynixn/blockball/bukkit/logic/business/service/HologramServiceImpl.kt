@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.HologramProxy
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.HologramService
 import com.github.shynixn.blockball.api.persistence.entity.HologramMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
@@ -36,12 +36,12 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class HologramServiceImpl @Inject constructor(private val plugin: Plugin, private val version: Version) : HologramService {
+class HologramServiceImpl @Inject constructor(private val plugin: Plugin, private val pluginProxy: PluginProxy) : HologramService {
     /**
      * Generates a new hologram from the given meta values.
      */
     override fun createNewHologram(hologramMeta: HologramMeta): HologramProxy {
-        val hologramProxy = HologramProxyImpl(plugin, version, hologramMeta.position!!.toLocation())
+        val hologramProxy = HologramProxyImpl(plugin, pluginProxy.getServerVersion(), hologramMeta.position!!.toLocation())
         hologramProxy.setLines(hologramMeta.lines)
         return hologramProxy
     }

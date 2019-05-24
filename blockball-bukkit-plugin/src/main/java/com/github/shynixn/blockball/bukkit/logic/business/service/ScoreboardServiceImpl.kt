@@ -51,6 +51,7 @@ class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
             throw IllegalArgumentException("Displayslot has to be a Bukkit Displayslot!")
         }
 
+        @Suppress("DEPRECATION")
         val objective = scoreboard.registerNewObjective(defaultObjective, "dummy")
         objective.displaySlot = displaySlot
         objective.displayName = title.convertChatColors()
@@ -72,9 +73,9 @@ class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
             team = scoreboard.registerNewTeam(teamFinder.toString().convertChatColors())
             team.addEntry(teamFinder.toString().convertChatColors())
 
-            objective.getScore(teamFinder.toString().convertChatColors()).score = lineNumber
+            objective!!.getScore(teamFinder.toString().convertChatColors()).score = lineNumber
         }
 
-        team!!.prefix = text.convertChatColors()
+        team?.prefix = text.convertChatColors()
     }
 }

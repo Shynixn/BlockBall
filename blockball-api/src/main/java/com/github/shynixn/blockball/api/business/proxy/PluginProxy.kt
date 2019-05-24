@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.business.proxy
 
+import com.github.shynixn.blockball.api.business.enumeration.Version
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -28,6 +30,26 @@ package com.github.shynixn.blockball.api.business.proxy
  * SOFTWARE.
  */
 interface PluginProxy {
+    /**
+     * Gets the installed version of the plugin.
+     */
+    val version: String
+
+    /**
+     * Gets the server version this plugin is currently running on.
+     */
+    fun getServerVersion(): Version
+
+    /**
+     * Sends a console message from this plugin.
+     */
+    fun sendConsoleMessage(message: String)
+
+    /**
+     * Sets the motd of the server.
+     */
+    fun setMotd(message: String)
+
     /**
      * Gets a business logic from the BlockBall plugin.
      * All types in the service package can be accessed.
