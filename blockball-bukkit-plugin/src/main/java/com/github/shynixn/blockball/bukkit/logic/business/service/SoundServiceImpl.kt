@@ -2,14 +2,14 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.Version
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
+import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.business.service.SoundService
 import com.github.shynixn.blockball.api.persistence.entity.Sound
-import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
-import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -38,7 +38,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class SoundServiceImpl @Inject constructor(private val plugin: Plugin) : SoundService {
+class SoundServiceImpl @Inject constructor(private val plugin: PluginProxy, private val loggingService: LoggingService) : SoundService {
 
     /**
      * Plays the given [sound] at the given [location] for the given [players].
@@ -60,7 +60,7 @@ class SoundServiceImpl @Inject constructor(private val plugin: Plugin) : SoundSe
                 p.playSound(location, org.bukkit.Sound.valueOf(name), sound.volume.toFloat(), sound.pitch.toFloat())
             }
         } catch (e: Exception) {
-            plugin.logger.log(Level.WARNING, "Failed to send sound. Is the sound '" + sound.name + "' supported by this server version?", e)
+            loggingService.warn("Failed to send sound. Is the sound '" + sound.name + "' supported by this server version?", e)
         }
     }
 
@@ -68,9 +68,9 @@ class SoundServiceImpl @Inject constructor(private val plugin: Plugin) : SoundSe
      * Converts the given [name].
      */
     private fun convertName(name: String): String {
-        val version = VersionSupport.getServerVersion()
+        val version = plugin.getServerVersion()
 
-        if (version.isVersionSameOrGreaterThan(VersionSupport.VERSION_1_13_R1)) {
+        if (version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R1)) {
             when (name) {
                 "MAGMACUBE_WALK" -> {
                     return "ENTITY_MAGMA_CUBE_JUMP"
@@ -81,7 +81,7 @@ class SoundServiceImpl @Inject constructor(private val plugin: Plugin) : SoundSe
                     return "BLOCK_NOTE_BLOCK_PLING"
             }
         }
-        if (version.isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
+        if (version.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
             when (name) {
                 "ENDERMAN_IDLE" -> {
                     return "ENTITY_ENDERMEN_AMBIENT"

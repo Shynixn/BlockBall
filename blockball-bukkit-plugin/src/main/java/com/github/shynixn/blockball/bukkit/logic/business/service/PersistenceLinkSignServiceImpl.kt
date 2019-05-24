@@ -1,13 +1,13 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.PersistenceLinkSignService
 import com.github.shynixn.blockball.api.persistence.entity.LinkSign
 import com.github.shynixn.blockball.api.persistence.repository.ServerSignRepository
-import com.github.shynixn.blockball.bukkit.logic.business.extension.async
-import com.github.shynixn.blockball.bukkit.logic.business.extension.sync
+import com.github.shynixn.blockball.core.logic.business.extension.async
+import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
 import org.bukkit.Location
-import org.bukkit.plugin.Plugin
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
@@ -38,7 +38,7 @@ import java.util.concurrent.CompletableFuture
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class PersistenceLinkSignServiceImpl @Inject constructor(private val signRepository: ServerSignRepository, private val plugin: Plugin) : PersistenceLinkSignService {
+class PersistenceLinkSignServiceImpl @Inject constructor(private val signRepository: ServerSignRepository, private val concurrencyService: ConcurrencyService) : PersistenceLinkSignService {
     private var cache: HashSet<LinkSign>? = null
 
     /**
@@ -51,7 +51,7 @@ class PersistenceLinkSignServiceImpl @Inject constructor(private val signReposit
 
         val completableFuture = CompletableFuture<Optional<LinkSign>>()
 
-        async(plugin) {
+        async(concurrencyService) {
             if (cache == null) {
                 refreshCache()
             }
@@ -61,7 +61,7 @@ class PersistenceLinkSignServiceImpl @Inject constructor(private val signReposit
                 positon.blockX == location.blockX && positon.blockY == location.blockY && positon.blockZ == location.blockZ
             }
 
-            sync(plugin) {
+            sync(concurrencyService) {
                 if (result == null) {
                     completableFuture.complete(Optional.empty())
                 } else {
@@ -79,7 +79,7 @@ class PersistenceLinkSignServiceImpl @Inject constructor(private val signReposit
     override fun remove(linkSign: LinkSign): CompletableFuture<Void?> {
         val completableFuture = CompletableFuture<Void?>()
 
-        async(plugin) {
+        async(concurrencyService) {
             if (cache == null) {
                 refreshCache()
             }
@@ -92,7 +92,7 @@ class PersistenceLinkSignServiceImpl @Inject constructor(private val signReposit
 
             signRepository.saveAll(cache!!.toList())
 
-            sync(plugin) {
+            sync(concurrencyService) {
                 completableFuture.complete(null)
             }
         }
@@ -106,14 +106,14 @@ class PersistenceLinkSignServiceImpl @Inject constructor(private val signReposit
     override fun getAll(): CompletableFuture<List<LinkSign>> {
         val completableFuture = CompletableFuture<List<LinkSign>>()
 
-        async(plugin) {
+        async(concurrencyService) {
             if (cache == null) {
                 refreshCache()
             }
 
             val sign = cache
 
-            sync(plugin) {
+            sync(concurrencyService) {
                 completableFuture.complete(sign!!.toList())
             }
         }
@@ -127,10 +127,10 @@ class PersistenceLinkSignServiceImpl @Inject constructor(private val signReposit
     override fun refresh(): CompletableFuture<Void?> {
         val completableFuture = CompletableFuture<Void?>()
 
-        async(plugin) {
+        async(concurrencyService) {
             refreshCache()
 
-            sync(plugin) {
+            sync(concurrencyService) {
                 completableFuture.complete(null)
             }
         }
@@ -144,14 +144,14 @@ class PersistenceLinkSignServiceImpl @Inject constructor(private val signReposit
     override fun size(): CompletableFuture<Int> {
         val completableFuture = CompletableFuture<Int>()
 
-        async(plugin) {
+        async(concurrencyService) {
             if (cache == null) {
                 refreshCache()
             }
 
             val amount = this.cache!!.size
 
-            sync(plugin) {
+            sync(concurrencyService) {
                 completableFuture.complete(amount)
             }
         }
@@ -165,7 +165,7 @@ class PersistenceLinkSignServiceImpl @Inject constructor(private val signReposit
     override fun save(linkSign: LinkSign): CompletableFuture<Void?> {
         val completableFuture = CompletableFuture<Void?>()
 
-        async(plugin) {
+        async(concurrencyService) {
             if (cache == null) {
                 refreshCache()
             }
@@ -176,7 +176,7 @@ class PersistenceLinkSignServiceImpl @Inject constructor(private val signReposit
 
             signRepository.saveAll(cache!!.toList())
 
-            sync(plugin) {
+            sync(concurrencyService) {
                 completableFuture.complete(null)
             }
         }

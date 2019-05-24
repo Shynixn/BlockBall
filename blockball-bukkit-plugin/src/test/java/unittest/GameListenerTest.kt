@@ -13,6 +13,7 @@ import com.github.shynixn.blockball.core.logic.persistence.entity.GameEntity
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.block.Block
+import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.FoodLevelChangeEvent
@@ -131,6 +132,7 @@ class GameListenerTest {
         val block = Mockito.mock(Block::class.java)
         val location = Location(Mockito.mock(World::class.java), 5.0, 28.0, 392.0)
         Mockito.`when`(block.type).thenReturn(null)
+        Mockito.`when`(block.state).thenReturn(Mockito.mock(Sign::class.java))
         Mockito.`when`(block.location).thenReturn(location)
 
         // Act
@@ -166,6 +168,7 @@ class GameListenerTest {
         val location = Location(Mockito.mock(World::class.java), 5.0, 28.0, 392.0)
         val block = Mockito.mock(Block::class.java)
         Mockito.`when`(block.type).thenReturn(null)
+        Mockito.`when`(block.state).thenReturn(Mockito.mock(Sign::class.java))
         Mockito.`when`(block.location).thenReturn(location)
 
         rightClickService.watcherReturns = false
@@ -209,6 +212,7 @@ class GameListenerTest {
         val location = Location(Mockito.mock(World::class.java), 5.0, 28.0, 392.0)
         val block = Mockito.mock(Block::class.java)
         Mockito.`when`(block.type).thenReturn(null)
+        Mockito.`when`(block.state).thenReturn(Mockito.mock(Sign::class.java))
         Mockito.`when`(block.location).thenReturn(location)
 
         rightClickService.watcherReturns = false
@@ -251,6 +255,7 @@ class GameListenerTest {
         val location = Location(Mockito.mock(World::class.java), 5.0, 28.0, 392.0)
         val block = Mockito.mock(Block::class.java)
         Mockito.`when`(block.type).thenReturn(null)
+        Mockito.`when`(block.state).thenReturn(Mockito.mock(Sign::class.java))
         Mockito.`when`(block.location).thenReturn(location)
 
         rightClickService.watcherReturns = false
@@ -294,6 +299,7 @@ class GameListenerTest {
         val location = Location(Mockito.mock(World::class.java), 5.0, 28.0, 392.0)
         val block = Mockito.mock(Block::class.java)
         Mockito.`when`(block.type).thenReturn(null)
+        Mockito.`when`(block.state).thenReturn(Mockito.mock(Sign::class.java))
         Mockito.`when`(block.location).thenReturn(location)
 
         rightClickService.watcherReturns = false

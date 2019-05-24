@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.service.ScoreboardService
 import com.github.shynixn.blockball.api.business.service.StatsCollectingService
 import com.github.shynixn.blockball.api.persistence.entity.Stats
 import com.github.shynixn.blockball.bukkit.logic.business.extension.thenAcceptSafely
+import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -129,7 +130,7 @@ class StatsCollectingServiceImpl @Inject constructor(
 
         val scoreboard = statsScoreboards[player]
 
-        if (player.scoreboard as Scoreboard? == null || player.scoreboard != scoreboard) {
+        if (player.scoreboard.cast<Scoreboard?>() == null || player.scoreboard != scoreboard) {
             player.scoreboard = scoreboard!!
         }
 

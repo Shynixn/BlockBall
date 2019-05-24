@@ -2,16 +2,19 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
+import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.bukkit.event.*
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
+import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.BounceConfiguration
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.bukkit.logic.business.extension.setSkin
-import com.github.shynixn.blockball.bukkit.logic.business.extension.sync
 import com.github.shynixn.blockball.bukkit.logic.business.service.ItemServiceImpl
+import com.github.shynixn.blockball.core.logic.business.extension.cast
+import com.github.shynixn.blockball.core.logic.business.extension.sync
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -22,7 +25,6 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import java.util.*
@@ -66,7 +68,7 @@ class BallProxyImpl(
 ) : BallProxy, Runnable {
 
     companion object {
-        private val itemService = ItemServiceImpl()
+        private val itemService = BlockBallApi.resolve(ItemService::class.java)
         private val excludedRelativeItems = arrayOf(
             itemService.getMaterialFromMaterialType(MaterialType.OAK_FENCE),
             itemService.getMaterialFromMaterialType(MaterialType.IRON_BARS),
@@ -89,7 +91,7 @@ class BallProxyImpl(
     }
 
     /** Design **/
-    private val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
+    private val concurrencyService = BlockBallApi.resolve(ConcurrencyService::class.java)
     private var backAnimation = false
     private var interactionEntity: Entity? = null
     private var counter = 20
@@ -191,7 +193,7 @@ class BallProxyImpl(
         }
 
         val livingEntity = this.interactionEntity as LivingEntity
-        @Suppress("DEPRECATION")
+        @Suppress("DEPRECATION", "UsePropertyAccessSyntax")
         livingEntity.equipment!!.setItemInHand(null)
         this.isGrabbed = false
         val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
@@ -244,7 +246,7 @@ class BallProxyImpl(
             this.setVelocity(vector)
 
             if (entity is Player) {
-                sync(plugin, 5L) {
+                sync(concurrencyService, 5L) {
                     spin(entity.eyeLocation.direction, event.resultVelocity)
                 }
             }
@@ -383,10 +385,11 @@ class BallProxyImpl(
         this.interactionEntity = entity
 
         @Suppress("DEPRECATION")
-        if (entity.equipment!!.itemInHand as ItemStack? == null || entity.equipment!!.itemInHand.type == Material.AIR) {
+        if (entity.equipment!!.itemInHand.cast<ItemStack?>() == null || entity.equipment!!.itemInHand.type == Material.AIR) {
             val event = BallGrabEvent(entity, this)
             Bukkit.getPluginManager().callEvent(event)
             if (!event.isCancelled) {
+                @Suppress("UsePropertyAccessSyntax")
                 entity.equipment!!.setItemInHand(design.helmet.clone())
                 this.setHelmet(null)
                 this.isGrabbed = true

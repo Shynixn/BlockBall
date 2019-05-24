@@ -1,15 +1,14 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.GameBungeeCordGameActionService
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordConfiguration
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
-import com.github.shynixn.blockball.bukkit.logic.business.extension.setModt
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
 
 /**
  * Created by Shynixn 2018.
@@ -38,14 +37,14 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameBungeeCordGameActionServiceImpl @Inject constructor(private val plugin: Plugin, configurationService: ConfigurationService) : GameBungeeCordGameActionService {
+class GameBungeeCordGameActionServiceImpl @Inject constructor(private val plugin: PluginProxy, configurationService: ConfigurationService) : GameBungeeCordGameActionService {
     private val bungeeCordConfiguration = configurationService.findConfiguration(BungeeCordConfiguration::class.java, "")
 
     /**
      * Closes the given game and all underlying resources.
      */
     override fun closeGame(game: BungeeCordGame) {
-        plugin.server.setModt(bungeeCordConfiguration.restartingMotd)
+        plugin.setMotd(bungeeCordConfiguration.restartingMotd)
         Bukkit.getServer().shutdown()
     }
 
@@ -72,9 +71,9 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(private val plugin
         }
 
         if (game.playing) {
-            plugin.server.setModt(bungeeCordConfiguration.inGameMotd)
+            plugin.setMotd(bungeeCordConfiguration.inGameMotd)
         } else {
-            plugin.server.setModt(bungeeCordConfiguration.waitingForPlayersMotd)
+            plugin.setMotd(bungeeCordConfiguration.waitingForPlayersMotd)
         }
     }
 

@@ -6,14 +6,14 @@ import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.setDisplayName
-import com.github.shynixn.blockball.bukkit.logic.business.extension.sync
+import com.github.shynixn.blockball.core.logic.business.extension.cast
+import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.Plugin
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
@@ -45,7 +45,7 @@ import kotlin.collections.HashSet
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, configurationService: ConfigurationService, itemService: ItemService, private val dependencyService: DependencyService, private val dependencyWorldEditService: DependencyWorldEditService) : BlockSelectionService {
+class BlockSelectionServiceImpl @Inject constructor(private val concurrencyService: ConcurrencyService, configurationService: ConfigurationService, itemService: ItemService, private val dependencyService: DependencyService, private val dependencyWorldEditService: DependencyWorldEditService) : BlockSelectionService {
     private val axeName = ChatColor.WHITE.toString() + ChatColor.BOLD + ">>" + ChatColor.YELLOW + "BlockBall" + ChatColor.WHITE + ChatColor.BOLD + "<<"
     private val playerSelection = HashMap<Player, Array<Location?>>()
     private val goldenAxeType = itemService.getMaterialFromMaterialType<Material>(MaterialType.GOLDEN_AXE)
@@ -88,7 +88,7 @@ class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, 
             player.sendMessage(prefix + ChatColor.YELLOW.toString() + "Rightclick: " + location.blockX + " " + location.blockY + " " + location.blockZ)
 
             rightClickSelectionCahe.add(player)
-            sync(plugin, 10L) {
+            sync(concurrencyService, 10L) {
                 rightClickSelectionCahe.remove(player)
             }
 
@@ -146,12 +146,12 @@ class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, 
      */
     private fun selectLocation(player: Player, location: Location, index: Int): Boolean {
         @Suppress("DEPRECATION")
-        if (player.itemInHand  as ItemStack? == null || player.itemInHand.type != goldenAxeType) {
+        if (player.itemInHand.cast<ItemStack?>() == null || player.itemInHand.type != goldenAxeType) {
             return false
         }
 
         @Suppress("DEPRECATION")
-        if (player.itemInHand.itemMeta!!.displayName as String? != null && ChatColor.stripColor(player.itemInHand.itemMeta!!.displayName) != ChatColor.stripColor(this.axeName)) {
+        if (player.itemInHand.itemMeta!!.displayName.cast<String?>() != null && ChatColor.stripColor(player.itemInHand.itemMeta!!.displayName) != ChatColor.stripColor(this.axeName)) {
             return false
         }
 
@@ -181,7 +181,7 @@ class BlockSelectionServiceImpl @Inject constructor(private val plugin: Plugin, 
             if (player.inventory.contents[0] != null) {
                 val item = player.inventory.contents[0]
 
-                if (item.type == goldenAxeType && item.itemMeta!!.displayName as String? != null && ChatColor.stripColor(item.itemMeta!!.displayName) == ChatColor.stripColor(this.axeName)) {
+                if (item.type == goldenAxeType && item.itemMeta!!.displayName.cast<String?>() != null && ChatColor.stripColor(item.itemMeta!!.displayName) == ChatColor.stripColor(this.axeName)) {
                     return
                 }
             }

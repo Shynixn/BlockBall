@@ -4,10 +4,9 @@ package com.github.shynixn.blockball.bukkit.logic.business.extension
 
 import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.enumeration.GameMode
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
-import com.github.shynixn.blockball.bukkit.logic.business.coroutine.DispatcherContainer
-import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
@@ -21,11 +20,9 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.SkullMeta
-import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
-import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -61,33 +58,6 @@ import kotlin.coroutines.CoroutineContext
  */
 
 /**
- * Minecraft async dispatcher.
- */
-val Dispatchers.async: CoroutineContext
-    get() = DispatcherContainer.async
-
-/**
- * Minecraft sync dispatcher.
- */
-val Dispatchers.minecraft: CoroutineContext
-    get() = DispatcherContainer.sync
-
-/**
- * Executes the given [f] for the given [plugin] on main thread.
- */
-inline fun Any.sync(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long = 0L, crossinline f: () -> Unit) {
-    if (repeatingTicks > 0) {
-        plugin.server.scheduler.runTaskTimer(plugin, Runnable {
-            f.invoke()
-        }, delayTicks, repeatingTicks)
-    } else {
-        plugin.server.scheduler.runTaskLater(plugin, Runnable {
-            f.invoke()
-        }, delayTicks)
-    }
-}
-
-/**
  * Deserializes the configuraiton section path to a map.
  */
 fun FileConfiguration.deserializeToMap(path: String): Map<String, Any?> {
@@ -107,13 +77,6 @@ private fun deserialize(section: MutableMap<String, Any?>) {
             section[key] = map
         }
     }
-}
-
-/**
- * Finds the corresponding version.
- */
-fun VersionSupport.toVersion(): Version {
-    return Version.values().find { v -> this.simpleVersionText == v.id }!!
 }
 
 private val getIdFromMaterialMethod: Method = { Material::class.java.getDeclaredMethod("getId") }.invoke()
@@ -152,45 +115,12 @@ fun ItemStack.setDisplayName(displayName: String): ItemStack {
     val meta = itemMeta
 
     if (meta != null) {
+        @Suppress("UsePropertyAccessSyntax")
         meta.setDisplayName(displayName.convertChatColors())
         itemMeta = meta
     }
 
     return this
-}
-
-/**
- * Executes the given [f] for the given [plugin] asynchronly.
- */
-inline fun Any.async(plugin: Plugin, delayTicks: Long = 0L, repeatingTicks: Long = 0L, crossinline f: () -> Unit) {
-    if (repeatingTicks > 0) {
-        plugin.server.scheduler.runTaskTimerAsynchronously(plugin, Runnable {
-            f.invoke()
-        }, delayTicks, repeatingTicks)
-    } else {
-        plugin.server.scheduler.runTaskLaterAsynchronously(plugin, Runnable {
-            f.invoke()
-        }, delayTicks)
-    }
-}
-
-/**
- * Sets the [Server] modt with the given [text].
- */
-internal fun Server.setModt(text: String) {
-    val builder = java.lang.StringBuilder("[")
-    builder.append((text.replace("[", "").replace("]", "")))
-    builder.append(ChatColor.RESET.toString())
-    builder.append("]")
-
-    val minecraftServerClazz = Class.forName("net.minecraft.server.VERSION.MinecraftServer".replace("VERSION", VersionSupport.getServerVersion().versionText))
-    val craftServerClazz = Class.forName("org.bukkit.craftbukkit.VERSION.CraftServer".replace("VERSION", VersionSupport.getServerVersion().versionText))
-
-    val setModtMethod = minecraftServerClazz.getDeclaredMethod("setMotd", String::class.java)
-    val getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")
-
-    val console = getServerConsoleMethod!!.invoke(Bukkit.getServer())
-    setModtMethod!!.invoke(console, builder.toString().convertChatColors())
 }
 
 /**
@@ -266,6 +196,7 @@ internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = nul
 internal fun ItemStack.setColor(color: Color): ItemStack {
     if (this.itemMeta is LeatherArmorMeta) {
         val leatherMeta = this.itemMeta as LeatherArmorMeta
+        @Suppress("UsePropertyAccessSyntax")
         leatherMeta.setColor(color)
         this.itemMeta = leatherMeta
     }
@@ -298,20 +229,14 @@ fun Selection.isLocationInSelection(location: Location): Boolean {
 /**
  * Sends the given [packet] to this player.
  */
-@Throws(
-    ClassNotFoundException::class,
-    IllegalAccessException::class,
-    NoSuchMethodException::class,
-    InvocationTargetException::class,
-    NoSuchFieldException::class
-)
 fun Player.sendPacket(packet: Any) {
-    val version = VersionSupport.getServerVersion()
-    val craftPlayer = Class.forName("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer".replace("VERSION", version.versionText)).cast(player)
+    val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
+
+    val craftPlayer = findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer", plugin).cast(player)
     val methodHandle = craftPlayer.javaClass.getDeclaredMethod("getHandle")
     val entityPlayer = methodHandle.invoke(craftPlayer)
 
-    val field = Class.forName("net.minecraft.server.VERSION.EntityPlayer".replace("VERSION", version.versionText)).getDeclaredField("playerConnection")
+    val field = findClazz("net.minecraft.server.VERSION.EntityPlayer", plugin).getDeclaredField("playerConnection")
     field.isAccessible = true
     val connection = field.get(entityPlayer)
 
@@ -360,8 +285,9 @@ internal fun ItemStack.setSkin(skin: String) {
         }
 
         val newSkinProfile = GameProfile(UUID.randomUUID(), null)
+        val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
 
-        val cls = Class.forName("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull".replace("VERSION", VersionSupport.getServerVersion().versionText))
+        val cls = findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull", plugin)
         val real = cls.cast(currentMeta)
         val field = real.javaClass.getDeclaredField("profile")
 
@@ -392,6 +318,13 @@ internal fun Location.toPosition(): Position {
     position.pitch = this.pitch.toDouble()
 
     return position
+}
+
+/**
+ * Finds the version compatible NMS class.
+ */
+fun findClazz(name: String, plugin: PluginProxy): Class<*> {
+    return Class.forName(name.replace("VERSION", plugin.getServerVersion().bukkitId))
 }
 
 /**

@@ -14,14 +14,13 @@ import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
-import com.github.shynixn.blockball.bukkit.logic.business.extension.sync
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
+import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
 
 /**
  * Created by Shynixn 2018.
@@ -50,7 +49,12 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin: Plugin, private val screenMessageService: ScreenMessageService, private val dependencyService: DependencyService, private val ballEntityService: BallEntityService) : GameSoccerService<G> {
+class GameSoccerServiceImpl<in G : Game> @Inject constructor(
+    private val concurrencyService: ConcurrencyService,
+    private val screenMessageService: ScreenMessageService,
+    private val dependencyService: DependencyService,
+    private val ballEntityService: BallEntityService
+) : GameSoccerService<G> {
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
      * 0 - 20 for each second.
@@ -70,8 +74,9 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
         }
 
         if (!game.arena.isLocationInSelection(game.ball!!.getLocation() as Location)
-                && !game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)
-                && !game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
+            && !game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)
+            && !game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)
+        ) {
             if (game.ballBumper == 0) {
                 rescueBall(game)
             }
@@ -141,7 +146,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
             return
         }
 
-        sync(plugin, 20L * game.arena.meta.customizingMeta.backTeleportDelay) {
+        sync(concurrencyService, 20L * game.arena.meta.customizingMeta.backTeleportDelay) {
             var redTeamSpawnpoint = game.arena.meta.redTeamMeta.spawnpoint?.toLocation()
             if (redTeamSpawnpoint == null) {
                 redTeamSpawnpoint = game.arena.meta.ballMeta.spawnpoint!!.toLocation()
@@ -175,7 +180,8 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
                 game.ballSpawnCounter = 0
             }
         } else if ((game.ball == null || game.ball!!.isDead)
-                && (!game.redTeam.isEmpty() || !game.blueTeam.isEmpty())) {
+            && (!game.redTeam.isEmpty() || !game.blueTeam.isEmpty())
+        ) {
 
             if (game.arena.gameType != GameType.HUBGAME || game.redTeam.size >= game.arena.meta.redTeamMeta.minAmount && game.blueTeam.size >= game.arena.meta.blueTeamMeta.minAmount) {
                 game.ballSpawning = true
@@ -217,7 +223,13 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
         val additionalPlayers = getNofifiedPlayers(game)
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
-        players.forEach { p -> screenMessageService.setTitle(p, scoreMessageTitle.replaceGamePlaceholder(game), scoreMessageSubTitle.replaceGamePlaceholder(game)) }
+        players.forEach { p ->
+            screenMessageService.setTitle(
+                p,
+                scoreMessageTitle.replaceGamePlaceholder(game),
+                scoreMessageSubTitle.replaceGamePlaceholder(game)
+            )
+        }
     }
 
 
@@ -229,7 +241,11 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(private val plugin:
                     vaultService.addMoney(game.lastInteractedEntity, game.arena.meta.rewardMeta.moneyReward[RewardType.SHOOT_GOAL]!!.toDouble())
                 }
                 if (game.arena.meta.rewardMeta.commandReward.containsKey(RewardType.SHOOT_GOAL)) {
-                    this.executeCommand(game, game.arena.meta.rewardMeta.commandReward[RewardType.SHOOT_GOAL]!!, kotlin.collections.arrayListOf(game.lastInteractedEntity as Player))
+                    this.executeCommand(
+                        game,
+                        game.arena.meta.rewardMeta.commandReward[RewardType.SHOOT_GOAL]!!,
+                        kotlin.collections.arrayListOf(game.lastInteractedEntity as Player)
+                    )
                 }
             }
         }

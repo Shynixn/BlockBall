@@ -1,9 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.extension;
 
-import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport;
+import com.github.shynixn.blockball.api.business.enumeration.Version;
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -203,6 +205,8 @@ public class ChatBuilder {
         }
         finalMessage.append("]}");
         try {
+            Version version = JavaPlugin.getPlugin(BlockBallPlugin.class).getServerVersion();
+
             final Class<?> clazz;
             if (Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3].equals("v1_8_R1")) {
                 clazz = findClass("net.minecraft.server.VERSION.ChatSerializer");
@@ -213,7 +217,7 @@ public class ChatBuilder {
             final Class<?> chatBaseComponentClazz = findClass("net.minecraft.server.VERSION.IChatBaseComponent");
             final Object chatComponent = invokeMethod(null, clazz, "a", new Class[]{String.class}, new Object[]{finalMessage.toString()});
             final Object packet;
-            if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_12_R1)) {
+            if (version.isVersionSameOrGreaterThan(Version.VERSION_1_12_R1)) {
                 final Class<?> chatEnumMessage = findClass("net.minecraft.server.VERSION.ChatMessageType");
                 packet = invokeConstructor(packetClazz, new Class[]{chatBaseComponentClazz, chatEnumMessage}, new Object[]{chatComponent, chatEnumMessage.getEnumConstants()[0]});
             } else {

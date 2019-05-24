@@ -1,9 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.Version
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ScreenMessageService
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
-import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 
@@ -34,9 +36,7 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ScreenMessageServiceImpl @Inject constructor() : ScreenMessageService {
-    private val version = VersionSupport.getServerVersion()
-
+class ScreenMessageServiceImpl @Inject constructor(private val plugin : PluginProxy) : ScreenMessageService {
     /**
      * Sets the [title] of the given [player] [P] for the amount of [stay] ticks. Optionally shows a [subTitle] and displays
      * a [fadeIn] and [fadeOut] effect in ticks.
@@ -48,23 +48,23 @@ class ScreenMessageServiceImpl @Inject constructor() : ScreenMessageService {
 
         val finalTitle = title.convertChatColors()
         val finalSubTitle = subTitle.convertChatColors()
+        val version = plugin.getServerVersion()
 
-
-        val serializerMethod = if (version.isVersionGreaterThan(VersionSupport.VERSION_1_8_R1)) {
-            findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod("a", String::class.java)
+        val serializerMethod = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
+            findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer", plugin).getDeclaredMethod("a", String::class.java)
         } else {
-            findClazz("net.minecraft.server.VERSION.ChatSerializer").getDeclaredMethod("a", String::class.java)
+            findClazz("net.minecraft.server.VERSION.ChatSerializer", plugin).getDeclaredMethod("a", String::class.java)
         }
 
-        val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
+        val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent", plugin)
 
-        val titleActionClazz = if (version.isVersionGreaterThan(VersionSupport.VERSION_1_8_R1)) {
-            findClazz("net.minecraft.server.VERSION.PacketPlayOutTitle\$EnumTitleAction")
+        val titleActionClazz = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
+            findClazz("net.minecraft.server.VERSION.PacketPlayOutTitle\$EnumTitleAction", plugin)
         } else {
-            findClazz("net.minecraft.server.VERSION.EnumTitleAction")
+            findClazz("net.minecraft.server.VERSION.EnumTitleAction", plugin)
         }
 
-        val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutTitle").getDeclaredConstructor(titleActionClazz, chatBaseComponentClazz, Int::class.java, Int::class.java, Int::class.java)
+        val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutTitle", plugin).getDeclaredConstructor(titleActionClazz, chatBaseComponentClazz, Int::class.java, Int::class.java, Int::class.java)
 
         if (!finalTitle.isEmpty()) {
             val titleJson = serializerMethod.invoke(null, "{\"text\": \"$finalTitle\"}")
@@ -103,28 +103,29 @@ class ScreenMessageServiceImpl @Inject constructor() : ScreenMessageService {
 
         val finalMessage = message.convertChatColors()
         val packet: Any?
+        val version = plugin.getServerVersion()
 
-        if (version.isVersionSameOrGreaterThan(VersionSupport.VERSION_1_12_R1)) {
-            val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
-            val chatMessageClazz = findClazz("net.minecraft.server.VERSION.ChatMessageType")
+        if (version.isVersionSameOrGreaterThan(Version.VERSION_1_12_R1)) {
+            val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent", plugin)
+            val chatMessageClazz = findClazz("net.minecraft.server.VERSION.ChatMessageType", plugin)
             val chatMessageType = chatMessageClazz.getDeclaredMethod("a", Byte::class.java).invoke(null, 2.toByte())
-            val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat").getDeclaredConstructor(chatBaseComponentClazz, chatMessageClazz)
-            val serializerMethod = if (version.isVersionGreaterThan(VersionSupport.VERSION_1_8_R1)) {
-                findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod("a", String::class.java)
+            val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat", plugin).getDeclaredConstructor(chatBaseComponentClazz, chatMessageClazz)
+            val serializerMethod = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
+                findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer", plugin).getDeclaredMethod("a", String::class.java)
             } else {
-                findClazz("net.minecraft.server.VERSION.ChatSerializer").getDeclaredMethod("a", String::class.java)
+                findClazz("net.minecraft.server.VERSION.ChatSerializer", plugin).getDeclaredMethod("a", String::class.java)
             }
 
             val messageJSON = serializerMethod.invoke(null, "{\"text\": \"$finalMessage\"}")
 
             packet = packetConstructor.newInstance(messageJSON, chatMessageType)
         } else {
-            val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
-            val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat").getDeclaredConstructor(chatBaseComponentClazz, Byte::class.java)
-            val serializerMethod = if (version.isVersionGreaterThan(VersionSupport.VERSION_1_8_R1)) {
-                findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod("a", String::class.java)
+            val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent", plugin)
+            val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat", plugin).getDeclaredConstructor(chatBaseComponentClazz, Byte::class.java)
+            val serializerMethod = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
+                findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer", plugin).getDeclaredMethod("a", String::class.java)
             } else {
-                findClazz("net.minecraft.server.VERSION.ChatSerializer").getDeclaredMethod("a", String::class.java)
+                findClazz("net.minecraft.server.VERSION.ChatSerializer", plugin).getDeclaredMethod("a", String::class.java)
             }
 
             val messageJSON = serializerMethod.invoke(null, "{\"text\": \"$finalMessage\"}")
@@ -145,14 +146,15 @@ class ScreenMessageServiceImpl @Inject constructor() : ScreenMessageService {
 
         val finalHeader = header.convertChatColors()
         val finalFooter = footer.convertChatColors()
+        val version = plugin.getServerVersion()
 
-        val serializerMethod = if (version.isVersionGreaterThan(VersionSupport.VERSION_1_8_R1)) {
-            findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod("a", String::class.java)
+        val serializerMethod = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
+            findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer", plugin).getDeclaredMethod("a", String::class.java)
         } else {
-            findClazz("net.minecraft.server.VERSION.ChatSerializer").getDeclaredMethod("a", String::class.java)
+            findClazz("net.minecraft.server.VERSION.ChatSerializer", plugin).getDeclaredMethod("a", String::class.java)
         }
 
-        val packetInstance = findClazz("net.minecraft.server.VERSION.PacketPlayOutPlayerListHeaderFooter").newInstance()
+        val packetInstance = findClazz("net.minecraft.server.VERSION.PacketPlayOutPlayerListHeaderFooter", plugin).newInstance()
 
         val headerJson = serializerMethod.invoke("{\"color\": \"\", \"text\": \"$finalHeader\"}")
         val footerJson = serializerMethod.invoke("{\"color\": \"\", \"text\": \"$finalFooter\"}")
@@ -166,12 +168,5 @@ class ScreenMessageServiceImpl @Inject constructor() : ScreenMessageService {
         bField.set(packetInstance, footerJson)
 
         player.sendPacket(player)
-    }
-
-    /**
-     * Finds the class matching the version.
-     */
-    private fun findClazz(name: String): Class<*> {
-        return Class.forName(name.replace("VERSION", version.versionText))
     }
 }

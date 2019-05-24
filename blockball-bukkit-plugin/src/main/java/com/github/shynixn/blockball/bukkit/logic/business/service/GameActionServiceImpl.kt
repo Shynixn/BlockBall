@@ -5,13 +5,13 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent
 import com.github.shynixn.blockball.api.bukkit.event.GameLeaveEvent
 import com.github.shynixn.blockball.api.business.enumeration.*
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
-import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -54,6 +54,7 @@ import java.util.logging.Level
  */
 class GameActionServiceImpl<in G : Game> @Inject constructor(
     private val plugin: Plugin,
+    private val pluginProxy : PluginProxy,
     private val gameHubGameActionService: GameHubGameActionService,
     private val bossBarService: BossBarService,
     private val configurationService: ConfigurationService,
@@ -299,7 +300,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
 
         val location = signPosition.toLocation()
 
-        if (location.block != null && location.block!!.state != null && location.block!!.state !is Sign) {
+        if (location.block!!.state !is Sign) {
             return false
         }
 
@@ -376,7 +377,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
      */
     private fun updateBossBar(game: G) {
         val meta = game.arena.meta.bossBarMeta
-        if (VersionSupport.getServerVersion().isVersionSameOrGreaterThan(VersionSupport.VERSION_1_9_R1)) {
+        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
             if (game.bossBar == null && game.arena.meta.bossBarMeta.enabled) {
                 game.bossBar = bossBarService.createNewBossBar<Any>(game.arena.meta.bossBarMeta)
             }

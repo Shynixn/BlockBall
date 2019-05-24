@@ -3,16 +3,20 @@
 package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.*
+import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
-import com.github.shynixn.blockball.bukkit.logic.business.nms.VersionSupport
+import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.google.inject.Guice
 import com.google.inject.Injector
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.Server
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
 
@@ -47,10 +51,18 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     companion object {
         /** Final Prefix of BlockBall in the console */
         val PREFIX_CONSOLE: String = ChatColor.BLUE.toString() + "[BlockBall] "
-        private const val PLUGIN_NAME = "BlockBall"
     }
 
     private var injector: Injector? = null
+    private var serverVersion: Version? = null
+
+    /**
+     * Gets the installed version of the plugin.
+     */
+    override val version: String
+        get() {
+            return description.version
+        }
 
     /**
      * Enables the plugin BlockBall.
@@ -59,8 +71,28 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         Bukkit.getServer().consoleSender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
         this.saveDefaultConfig()
 
-        if (!VersionSupport.isServerVersionSupported(PLUGIN_NAME, PREFIX_CONSOLE)) {
+        if (!getServerVersion().isCompatible(
+                Version.VERSION_1_8_R1,
+                Version.VERSION_1_8_R2,
+                Version.VERSION_1_8_R3,
+                Version.VERSION_1_9_R1,
+                Version.VERSION_1_9_R2,
+                Version.VERSION_1_10_R1,
+                Version.VERSION_1_11_R1,
+                Version.VERSION_1_12_R1,
+                Version.VERSION_1_13_R1,
+                Version.VERSION_1_13_R2,
+                Version.VERSION_1_14_R1
+            )
+        ) {
+            sendConsoleMessage(ChatColor.RED.toString() + "================================================")
+            sendConsoleMessage(ChatColor.RED.toString() + "BlockBall does not support your server version")
+            sendConsoleMessage(ChatColor.RED.toString() + "Install v" + Version.VERSION_1_8_R1.id + " - v" + Version.VERSION_1_14_R1.id)
+            sendConsoleMessage(ChatColor.RED.toString() + "Plugin gets now disabled!")
+            sendConsoleMessage(ChatColor.RED.toString() + "================================================")
+
             Bukkit.getPluginManager().disablePlugin(this)
+
             return
         }
 
@@ -91,7 +123,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val configurationService = resolve(ConfigurationService::class.java)
         val ballEntitySerivice = resolve(BallEntityService::class.java)
 
-        Bukkit.getWorlds().forEach { world ->
+        for (world in Bukkit.getWorlds()) {
             ballEntitySerivice.cleanUpInvalidEntities(world.entities)
         }
 
@@ -130,10 +162,67 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             val method = BlockBallApi::class.java.getDeclaredMethod("initializeBlockBall", PluginProxy::class.java)
             method.isAccessible = true
             method.invoke(BlockBallApi, this)
-            logger.log(Level.INFO, "Using NMS Connector " + VersionSupport.getServerVersion().versionText + ".")
+            logger.log(Level.INFO, "Using NMS Connector " + getServerVersion().bukkitId + ".")
         } catch (e: Exception) {
             logger.log(Level.WARNING, "Failed to enable BlockBall.", e)
         }
+    }
+
+    /**
+     * Gets the server version this plugin is currently running on.
+     */
+    override fun getServerVersion(): Version {
+        if (this.serverVersion != null) {
+            return this.serverVersion!!
+        }
+
+        try {
+            if (Bukkit.getServer().cast<Server?>() == null || Bukkit.getServer().javaClass.getPackage() == null) {
+                this.serverVersion = Version.VERSION_UNKNOWN
+                return this.serverVersion!!
+            }
+
+            val version = Bukkit.getServer().javaClass.getPackage().name.replace(".", ",").split(",")[3]
+
+            for (versionSupport in Version.values()) {
+                if (versionSupport.bukkitId == version) {
+                    this.serverVersion = versionSupport
+                    return versionSupport
+                }
+            }
+
+        } catch (e: Exception) {
+            // Ignore parsing exceptions.
+        }
+
+        this.serverVersion = Version.VERSION_UNKNOWN
+
+        return this.serverVersion!!
+    }
+
+    /**
+     * Sets the motd of the server.
+     */
+    override fun setMotd(message: String) {
+        val builder = java.lang.StringBuilder("[")
+        builder.append((message.replace("[", "").replace("]", "")))
+        builder.append(ChatColor.RESET.toString())
+        builder.append("]")
+
+        val minecraftServerClazz = findClazz("net.minecraft.server.VERSION.MinecraftServer", this)
+        val craftServerClazz = findClazz("org.bukkit.craftbukkit.VERSION.CraftServer", this)
+        val setModtMethod = minecraftServerClazz.getDeclaredMethod("setMotd", String::class.java)
+        val getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")
+
+        val console = getServerConsoleMethod!!.invoke(Bukkit.getServer())
+        setModtMethod!!.invoke(console, builder.toString().convertChatColors())
+    }
+
+    /**
+     * Sends a console message from this plugin.
+     */
+    override fun sendConsoleMessage(message: String) {
+        Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + message)
     }
 
     /**

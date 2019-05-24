@@ -1,10 +1,11 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.BallEntityService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
@@ -41,7 +42,7 @@ import kotlin.collections.ArrayList
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallEntityServiceImpl @Inject constructor(private val version: Version, private val plugin: Plugin) : BallEntityService, Runnable {
+class BallEntityServiceImpl @Inject constructor(private val pluginProxy: PluginProxy, private val plugin: Plugin) : BallEntityService, Runnable {
     private val balls = ArrayList<BallProxy>()
 
     init {
@@ -52,8 +53,9 @@ class BallEntityServiceImpl @Inject constructor(private val version: Version, pr
      * Spawns a temporary ball.
      */
     override fun <L> spawnTemporaryBall(location: L, meta: BallMeta): BallProxy {
-        val designClazz = Class.forName("com.github.shynixn.blockball.bukkit.logic.business.nms.VERSION.BallDesign".replace("VERSION", version.bukkitId))
-        val nmsProxy = designClazz.getDeclaredConstructor(Location::class.java, BallMeta::class.java, Boolean::class.java, UUID::class.java, LivingEntity::class.java)
+        val designClazz = findClazz("com.github.shynixn.blockball.bukkit.logic.business.nms.VERSION.BallDesign", pluginProxy)
+        val nmsProxy =
+            designClazz.getDeclaredConstructor(Location::class.java, BallMeta::class.java, Boolean::class.java, UUID::class.java, LivingEntity::class.java)
                 .newInstance(location, meta, false, UUID.randomUUID(), null) as NMSBallProxy
 
         val ballProxy = nmsProxy.proxy

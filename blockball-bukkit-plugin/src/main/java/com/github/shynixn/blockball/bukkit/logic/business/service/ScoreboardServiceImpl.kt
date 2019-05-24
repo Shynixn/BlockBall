@@ -76,6 +76,6 @@ class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
             objective!!.getScore(teamFinder.toString().convertChatColors()).score = lineNumber
         }
 
-        team.prefix = text.convertChatColors()
+        team?.prefix = text.convertChatColors()
     }
 }

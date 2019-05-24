@@ -1,5 +1,8 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.shynixn.blockball.core.logic.business.extension
 
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 
 /**
@@ -41,6 +44,13 @@ inline fun sync(
     concurrencyService.runTaskSync(delayTicks, repeatingTicks) {
         f.invoke()
     }
+}
+
+/**
+ * Casts any instance to any type.
+ */
+fun <T> Any?.cast(): T {
+    return this as T
 }
 
 /**

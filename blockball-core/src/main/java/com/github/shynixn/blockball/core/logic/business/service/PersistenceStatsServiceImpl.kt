@@ -1,12 +1,12 @@
-package com.github.shynixn.blockball.bukkit.logic.business.service
+package com.github.shynixn.blockball.core.logic.business.service
 
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.PersistenceStatsService
 import com.github.shynixn.blockball.api.persistence.entity.Stats
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
-import com.github.shynixn.blockball.bukkit.logic.business.extension.async
-import com.github.shynixn.blockball.bukkit.logic.business.extension.sync
+import com.github.shynixn.blockball.core.logic.business.extension.async
+import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
-import org.bukkit.plugin.Plugin
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -36,17 +36,17 @@ import java.util.concurrent.CompletableFuture
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class PersistenceStatsServiceImpl @Inject constructor(private val statsRepository: StatsRepository, private val plugin: Plugin) : PersistenceStatsService {
+class PersistenceStatsServiceImpl @Inject constructor(private val statsRepository: StatsRepository, private val concurrencyService: ConcurrencyService) : PersistenceStatsService {
     /**
      * Returns the amount of stored stats.
      */
     override fun size(): CompletableFuture<Int> {
         val completableFuture = CompletableFuture<Int>()
 
-        async(plugin) {
+        async(concurrencyService) {
             val amount = statsRepository.size()
 
-            sync(plugin) {
+            sync(concurrencyService) {
                 completableFuture.complete(amount)
             }
         }
@@ -60,10 +60,10 @@ class PersistenceStatsServiceImpl @Inject constructor(private val statsRepositor
     override fun getAll(): CompletableFuture<List<Stats>> {
         val completableFuture = CompletableFuture<List<Stats>>()
 
-        async(plugin) {
+        async(concurrencyService) {
             val items = statsRepository.getAll()
 
-            sync(plugin) {
+            sync(concurrencyService) {
                 completableFuture.complete(items)
             }
         }
@@ -77,10 +77,10 @@ class PersistenceStatsServiceImpl @Inject constructor(private val statsRepositor
     override fun <P> getOrCreateFromPlayer(player: P): CompletableFuture<Stats> {
         val completableFuture = CompletableFuture<Stats>()
 
-        async(plugin) {
+        async(concurrencyService) {
             val item = statsRepository.getOrCreateFromPlayer(player)
 
-            sync(plugin) {
+            sync(concurrencyService) {
                 completableFuture.complete(item)
             }
         }
@@ -94,10 +94,10 @@ class PersistenceStatsServiceImpl @Inject constructor(private val statsRepositor
     override fun <P> save(player: P, stats: Stats): CompletableFuture<Void?> {
         val completableFuture = CompletableFuture<Void?>()
 
-        async(plugin) {
+        async(concurrencyService) {
             statsRepository.save(player, stats)
 
-            sync(plugin) {
+            sync(concurrencyService) {
                 completableFuture.complete(null)
             }
         }
