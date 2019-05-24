@@ -1,0 +1,440 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Ball &mdash; BlockBall 6.6.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="BlockBall 6.6.0 documentation" href="../index.html"/>
+        <link rel="up" title="Customizing" href="index.html"/>
+        <link rel="next" title="Teams" href="teams.html"/>
+        <link rel="prev" title="Customizing" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BlockBall
+          
+
+          
+            
+            <img src="../_static/BlockBall-small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                6.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../gettingstarted/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gamemodes/index.html">Game Modes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Customizing</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Ball</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-ingame">Configuring ingame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-in-your-arena-x-yml">Configuring in your arena_x.yml</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#properties">Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#modifier-properties">Modifier Properties</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="teams.html">Teams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signs.html">Signs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="effects.html">Effects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abilities.html">Abilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rewards.html">Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spectating.html">Spectating</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html">Misc</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/index.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing to BlockBall</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BlockBall</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Customizing</a> &raquo;</li>
+        
+      <li>Ball</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/Shynixn/BlockBall/tree/master/docs/source/customizing/ball.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ball">
+<h1>Ball<a class="headerlink" href="#ball" title="Permalink to this headline">¶</a></h1>
+<p>One of the most outstanding features of BlockBall is it to provide a really awesome looking ball with working animations. You
+<strong>do not</strong> have to install a mod or Texture Pack in order to make this possible.</p>
+<p>The origin physic engine of the Ball was developed back in 2015 and is now replaced by the more advanced 2018 engine. There are many
+modifier values you can adjust.</p>
+<img alt="../_images/ball3.png" src="../_images/ball3.png" />
+<p>You can even set your own skin or custom texture model to it.</p>
+<div class="section" id="configuring-ingame">
+<h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
+<p>The Ball is per default correctly configured but can be changed for different situations like a small or a very large arena.</p>
+<ol class="arabic simple">
+<li><p>Go to the <strong>Settings Page</strong> of your arena</p></li>
+<li><p>Open the <strong>Ball Settings Page</strong></p></li>
+</ol>
+<img alt="../_images/ball1.JPG" src="../_images/ball1.JPG" />
+<ol class="arabic simple" start="3">
+<li><p>Customize the skin or other values to your own needs.</p></li>
+<li><p>Open the Ball modifiers page to adjust modifiers like the rolling distance</p></li>
+</ol>
+<img alt="../_images/ball2.JPG" src="../_images/ball2.JPG" />
+<p>You can find all options explained at the bottom of this page.</p>
+</div>
+<div class="section" id="configuring-in-your-arena-x-yml">
+<h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
+<p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
+<ol class="arabic simple">
+<li><p>Go to the <strong>Open the arena_x.yml</strong> of your arena</p></li>
+<li><p>Search for the following section:</p></li>
+</ol>
+<p><strong>arena_x.yml</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ball</span><span class="p">:</span>
+  <span class="nt">skin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
+  <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NORMAL</span>
+  <span class="nt">hitbox-size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3.0</span>
+  <span class="nt">carry-able</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+  <span class="nt">always-bounce</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">rotating</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">modifiers</span><span class="p">:</span>
+    <span class="nt">horizontal-touch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+    <span class="nt">vertical-touch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+    <span class="nt">horizontal-kick</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.5</span>
+    <span class="nt">vertical-kick</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.5</span>
+    <span class="nt">horizontal-throw</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+    <span class="nt">vertical-throw</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+    <span class="nt">rolling-distance</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+    <span class="nt">gravity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+  <span class="nt">particle-effects</span><span class="p">:</span>
+    <span class="nt">onmove</span><span class="p">:</span>
+      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="nt">offset</span><span class="p">:</span>
+        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+    <span class="nt">onkick</span><span class="p">:</span>
+      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="nt">offset</span><span class="p">:</span>
+        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+    <span class="nt">onspawn</span><span class="p">:</span>
+      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="nt">offset</span><span class="p">:</span>
+        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+    <span class="nt">onthrow</span><span class="p">:</span>
+      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="nt">offset</span><span class="p">:</span>
+        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+    <span class="nt">oninteraction</span><span class="p">:</span>
+      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="nt">offset</span><span class="p">:</span>
+        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+    <span class="nt">ongrab</span><span class="p">:</span>
+      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="nt">offset</span><span class="p">:</span>
+        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+  <span class="nt">sound-effects</span><span class="p">:</span>
+    <span class="nt">onmove</span><span class="p">:</span>
+      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+    <span class="nt">onkick</span><span class="p">:</span>
+      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+    <span class="nt">onspawn</span><span class="p">:</span>
+      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+    <span class="nt">onthrow</span><span class="p">:</span>
+      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+    <span class="nt">oninteraction</span><span class="p">:</span>
+      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+    <span class="nt">ongrab</span><span class="p">:</span>
+      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+  <span class="nt">wall-bouncing</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Customize the available options to your own needs.</p></li>
+</ol>
+</div>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Skin: Name of a player using this skin or a skin URL.</p></li>
+<li><p>Size: Size of the ball. Can be NORMAL or SMALL.</p></li>
+<li><p>Hitbox Size: Size of the ball hitbox intercepting player movements. Does not have an impact on left or right clicking the ball.</p></li>
+<li><p>Carry Able: Should the Ball be able to grabbed by players. Should not be used for BlockBall games yet only for fun and testing.</p></li>
+<li><p>Always Bounce: Should the Ball bounce of walls?</p></li>
+<li><p>Rotation Animation: Should the Ball rotate depending on direction and speed?</p></li>
+<li><p>Ball modifiers: Collection of modifiers explained below.</p></li>
+<li><p>Soundeffect: Soundeffect being played for a certain action.</p></li>
+<li><p>Particleeffect: Particleeffect being played for a certain action.</p></li>
+</ul>
+</div>
+<div class="section" id="modifier-properties">
+<h2>Modifier Properties<a class="headerlink" href="#modifier-properties" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Touch Strength: Horizontal or Vertical speed/distance modifier the ball flies when an animal, monster or player runs into the ball.</p></li>
+<li><p>Kick Strength: Horizontal or Vertical speed/distance modifier the ball flies when a player leftclicks the ball.</p></li>
+<li><p>Throw Strength: Horizontal or Vertical speed/distance modifier the ball flies when a player grabs the ball by rightclicking it and clicking again to throw it.</p></li>
+<li><p>Rolling Distance: The speed/distance modifier the ball rolls after being touched, kicked or thrown</p></li>
+<li><p>Gravity Distance: The speed modifier how fast a ball falls onto the ground. A negative value allows the ball to float into infinity.</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="teams.html" class="btn btn-neutral float-right" title="Teams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Customizing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015 - 2019, Shynixn.
+
+    </p>
+  </div>
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'6.6.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111364476-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111364476-1');
+</script>
+
+
+</body>
+</html>
