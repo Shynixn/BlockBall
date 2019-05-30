@@ -54,7 +54,7 @@ import java.util.logging.Level
  */
 class GameActionServiceImpl<in G : Game> @Inject constructor(
     private val plugin: Plugin,
-    private val pluginProxy : PluginProxy,
+    private val pluginProxy: PluginProxy,
     private val gameHubGameActionService: GameHubGameActionService,
     private val bossBarService: BossBarService,
     private val configurationService: ConfigurationService,
@@ -299,6 +299,10 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
         }
 
         val location = signPosition.toLocation()
+
+        if (!location.chunk.isLoaded) {
+            return true
+        }
 
         if (location.block!!.state !is Sign) {
             return false

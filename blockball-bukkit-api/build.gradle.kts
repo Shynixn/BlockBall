@@ -1,5 +1,5 @@
 dependencies {
     implementation(project(":blockball-api"))
 
-    compileOnly("org.spigotmc:spigot113R2:1.13.2-R2.0")
+    compileOnly("org.spigotmc:spigot114R1:1.14.2-R1.0")
 }
