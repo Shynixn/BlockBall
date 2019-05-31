@@ -304,7 +304,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
             return true
         }
 
-        if (location.block!!.state !is Sign) {
+        if (location.block.state !is Sign) {
             return false
         }
 

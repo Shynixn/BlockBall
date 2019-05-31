@@ -64,6 +64,10 @@ subprojects {
     }
 
     test {
+        useJUnitPlatform()
+        testLogging.showStandardStreams = true
+        failFast = true
+        
         testLogging {
             events(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.STARTED)
             displayGranularity = 0

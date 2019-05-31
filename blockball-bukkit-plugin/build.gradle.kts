@@ -26,9 +26,7 @@ tasks.withType<ShadowJar> {
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
-            artifact(ShadowJar.TASK_NAME)
-        }
+        (findByName("mavenJava") as MavenPublication).artifact(tasks.findByName("shadowJar")!!)
     }
 }
 

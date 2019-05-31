@@ -2,9 +2,11 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.ScoreboardService
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.scoreboard.DisplaySlot
+import org.bukkit.scoreboard.Team
 
 /**
  * Created by Shynixn 2018.
@@ -76,6 +78,6 @@ class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
             objective!!.getScore(teamFinder.toString().convertChatColors()).score = lineNumber
         }
 
-        team?.prefix = text.convertChatColors()
+        team.cast<Team?>()!!.prefix = text.convertChatColors()
     }
 }
