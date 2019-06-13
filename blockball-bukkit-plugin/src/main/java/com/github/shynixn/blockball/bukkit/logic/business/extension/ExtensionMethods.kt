@@ -2,15 +2,14 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.extension
 
+import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
+import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
-import com.mojang.authlib.GameProfile
-import com.mojang.authlib.properties.Property
-import kotlinx.coroutines.Dispatchers
 import org.bukkit.*
 import org.bukkit.ChatColor
 import org.bukkit.configuration.MemorySection
@@ -19,15 +18,11 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 import org.bukkit.inventory.meta.LeatherArmorMeta
-import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
 import java.lang.reflect.Method
-import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
-import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by Shynixn 2018.
@@ -272,33 +267,7 @@ fun <T> CompletableFuture<T>.thenAcceptSafely(f: (T) -> Unit) {
  * Sets the skin of an itemstack.
  */
 internal fun ItemStack.setSkin(skin: String) {
-    val currentMeta = this.itemMeta
-
-    if (currentMeta !is SkullMeta) {
-        return
-    }
-
-    var newSkin = skin
-    if (newSkin.contains("textures.minecraft.net")) {
-        if (!newSkin.startsWith("http://")) {
-            newSkin = "http://$newSkin"
-        }
-
-        val newSkinProfile = GameProfile(UUID.randomUUID(), null)
-        val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
-
-        val cls = findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull", plugin)
-        val real = cls.cast(currentMeta)
-        val field = real.javaClass.getDeclaredField("profile")
-
-        newSkinProfile.properties.put("textures", Property("textures", Base64Coder.encodeString("{textures:{SKIN:{url:\"$newSkin\"}}}")))
-        field.isAccessible = true
-        field.set(real, newSkinProfile)
-        itemMeta = SkullMeta::class.java.cast(real)
-    } else {
-        currentMeta.owner = skin
-        itemMeta = currentMeta
-    }
+    BlockBallApi.resolve(ItemService::class.java).setSkin(this, skin)
 }
 
 /**

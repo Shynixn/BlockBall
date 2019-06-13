@@ -144,6 +144,11 @@ interface BallProxy {
     fun remove()
 
     /**
+     * Runnable. Should not be called directly.
+     */
+    fun run()
+
+    /**
      * Calculates post movement.
      */
     fun calculatePostMovement()

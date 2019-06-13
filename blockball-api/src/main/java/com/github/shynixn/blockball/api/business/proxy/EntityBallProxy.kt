@@ -1,15 +1,13 @@
-package com.github.shynixn.blockball.api.business.service
-
-import com.github.shynixn.blockball.api.business.enumeration.MaterialType
+package com.github.shynixn.blockball.api.business.proxy
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,33 +27,14 @@ import com.github.shynixn.blockball.api.business.enumeration.MaterialType
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ItemService {
+interface EntityBallProxy {
     /**
-     * Gets the numeric material value. Throws a [IllegalArgumentException]
-     * if the numeric value could not get located.
+     * Removes this entity.
      */
-    fun <M> getNumericMaterialValue(material: M): Int
+    fun deleteFromWorld()
 
     /**
-     * Sets the [skin] of the given [itemStack].
+     * Boots marker.
      */
-    fun <I> setSkin(itemStack: I, skin: String)
-
-    /**
-     * Gets the material from the numeric value.
-     * Throws a [IllegalArgumentException] if the numeric value could
-     * not get applied to a material.
-     */
-    fun <M> getMaterialFromNumericValue(value: Int): M
-
-    /**
-     * Gets the material from the material type. Throws a [IllegalArgumentException]
-     * if mapping is not possible.
-     */
-    fun <M> getMaterialFromMaterialType(materialType: MaterialType): M
-
-    /**
-     * Creates a new itemStack from the given [materialType] [dataValue] [amount].
-     */
-    fun <I> createItemStack(materialType: MaterialType, dataValue: Int = 0, amount: Int = 1): I
+    var bootsItemStack : Any?
 }

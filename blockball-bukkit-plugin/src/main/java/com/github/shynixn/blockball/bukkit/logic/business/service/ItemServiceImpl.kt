@@ -6,10 +6,18 @@ import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ItemService
+import com.github.shynixn.blockball.bukkit.BlockBallPlugin
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.google.inject.Inject
+import com.mojang.authlib.GameProfile
+import com.mojang.authlib.properties.Property
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.SkullMeta
+import org.bukkit.plugin.java.JavaPlugin
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
 import java.lang.reflect.Method
+import java.util.*
 
 /**
  * Created by Shynixn 2018.
@@ -50,6 +58,44 @@ class ItemServiceImpl @Inject constructor(private val pluginProxy: PluginProxy) 
     }.invoke()
 
     private val getIdFromMaterialMethod: Method = { Material::class.java.getDeclaredMethod("getId") }.invoke()
+
+    /**
+     * Sets the [skin] of the given [itemStack].
+     */
+    override fun <I> setSkin(itemStack: I, skin: String) {
+        if (itemStack !is ItemStack) {
+            throw IllegalArgumentException("ItemStack has to be a BukkitItemStack!")
+        }
+
+        val currentMeta = itemStack.itemMeta
+
+        if (currentMeta !is SkullMeta) {
+            return
+        }
+
+        var newSkin = skin
+        if (newSkin.contains("textures.minecraft.net")) {
+            if (!newSkin.startsWith("http://")) {
+                newSkin = "http://$newSkin"
+            }
+
+            val newSkinProfile = GameProfile(UUID.randomUUID(), null)
+            val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
+
+            val cls = findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull", plugin)
+            val real = cls.cast(currentMeta)
+            val field = real.javaClass.getDeclaredField("profile")
+
+            newSkinProfile.properties.put("textures", Property("textures", Base64Coder.encodeString("{textures:{SKIN:{url:\"$newSkin\"}}}")))
+            field.isAccessible = true
+            field.set(real, newSkinProfile)
+            itemStack.itemMeta = SkullMeta::class.java.cast(real)
+        } else {
+            @Suppress("DEPRECATION")
+            currentMeta.owner = skin
+            itemStack.itemMeta = currentMeta
+        }
+    }
 
     /**
      * Creates a new itemStack from the given [materialType] [dataValue] [amount].
