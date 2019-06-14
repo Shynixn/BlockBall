@@ -5,13 +5,11 @@ package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R1
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
+import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.business.service.ItemService
+import com.github.shynixn.blockball.api.business.service.SpigotTimingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.setSkin
-import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallProxyImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.ItemServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.SpigotTimingServiceImpl
 import net.minecraft.server.v1_13_R1.EntityArmorStand
 import net.minecraft.server.v1_13_R1.NBTTagCompound
 import org.bukkit.Location
@@ -49,15 +47,16 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) : EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
+class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) :
+    EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
     private val itemService = BlockBallApi.resolve(ItemService::class.java)
 
-    private val hitbox = BallHitBox(this, location, SpigotTimingServiceImpl())
-    private var internalProxy: BallProxyImpl? = null
+    private val hitbox = BallHitBox(this, location, BlockBallApi.resolve(SpigotTimingService::class.java))
+    private var internalProxy: BallProxy? = null
     /**
      * Proxy handler.
      */
-    override val proxy: BallProxyImpl get() = internalProxy!!
+    override val proxy: BallProxy get() = internalProxy!!
 
     /**
      * Initializes the nms design.
@@ -67,7 +66,16 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         this.setPositionRotation(location.x, location.y, location.z, location.yaw, location.pitch)
         mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
 
-        internalProxy = BallProxyImpl(ballMeta, this.bukkitEntity as ArmorStand, hitbox.bukkitEntity as ArmorStand, uuid, owner, persistent)
+        internalProxy = Class.forName("com.github.shynixn.blockball.bukkit.logic.business.proxy.BallProxyImpl")
+            .getDeclaredConstructor(
+                BallMeta::class.java,
+                ArmorStand::class.java,
+                ArmorStand::class.java,
+                UUID::class.java,
+                LivingEntity::class.java,
+                Boolean::class.java
+            )
+            .newInstance(ballMeta, this.getBukkitEntity() as ArmorStand, hitbox.bukkitEntity as ArmorStand, uuid, owner, persistent) as BallProxy
 
         val compound = NBTTagCompound()
         compound.setBoolean("invulnerable", true)
@@ -77,14 +85,14 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         this.a(compound)
 
         val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
-        itemStack.setSkin(proxy.meta.skin)
+        itemService.setSkin(itemStack, proxy.meta.skin)
 
         when (proxy.meta.size) {
             BallSize.SMALL -> {
                 (bukkitEntity as ArmorStand).isSmall = true
-                (bukkitEntity as ArmorStand).setHelmet(itemStack)
+                (bukkitEntity as ArmorStand).helmet = itemStack
             }
-            BallSize.NORMAL -> (bukkitEntity as ArmorStand).setHelmet(itemStack)
+            BallSize.NORMAL -> (bukkitEntity as ArmorStand).helmet = itemStack
         }
     }
 
@@ -111,5 +119,16 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         }
 
         proxy.run()
+    }
+
+    /**
+     * Gets the bukkit entity.
+     */
+    override fun getBukkitEntity(): CraftBallArmorstand {
+        if (this.bukkitEntity == null) {
+            this.bukkitEntity = CraftBallArmorstand(this.world.server, this)
+        }
+
+        return this.bukkitEntity as CraftBallArmorstand
     }
 }

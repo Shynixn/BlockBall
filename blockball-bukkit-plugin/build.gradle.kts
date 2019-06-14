@@ -40,6 +40,7 @@ dependencies {
     implementation(project(":blockball-api"))
     implementation(project(":blockball-bukkit-api"))
     implementation(project(":blockball-core"))
+    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-113R1"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-113R2"))
 
     implementation("org.slf4j:slf4j-jdk14:1.7.25")
@@ -52,8 +53,6 @@ dependencies {
     compileOnly("net.milkbowlvault:VaultAPI:1.7")
 
     compileOnly("org.spigotmc:spigot114R1:1.14.1-R1.0")
-    compileOnly("org.spigotmc:spigot113R2:1.13.2-R2.0")
-    compileOnly("org.spigotmc:spigot113R1:1.13.0-R1.0")
     compileOnly("org.spigotmc:spigot112R1:1.12.0-R1.0")
     compileOnly("org.spigotmc:spigot111R1:1.11.0-R1.0")
     compileOnly("org.spigotmc:spigot110R1:1.10.2-R1.0")
