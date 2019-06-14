@@ -108,6 +108,12 @@ class BallListenerTest {
     }
 
     class MockedBallProxy : BallProxy {
+        /**
+         * Runnable. Should not be called directly.
+         */
+        override fun run() {
+        }
+
         private val entity: ArmorStand = Mockito.mock(ArmorStand::class.java)
 
         /**
