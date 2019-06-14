@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
+import com.github.shynixn.blockball.api.business.proxy.EntityBallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.BallEntityService
@@ -73,6 +74,11 @@ class BallEntityServiceImpl @Inject constructor(private val pluginProxy: PluginP
                 val optProxy = findBallFromEntity(entity)
                 if (!optProxy.isPresent) {
                     entity.remove()
+
+                    if (entity is EntityBallProxy) {
+                        entity.deleteFromWorld()
+                    }
+
                     plugin.logger.log(Level.INFO, "Removed invalid BlockBall in chunk.")
                 }
             }

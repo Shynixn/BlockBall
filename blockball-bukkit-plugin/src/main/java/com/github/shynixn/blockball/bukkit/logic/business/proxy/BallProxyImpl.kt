@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.bukkit.event.*
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
+import com.github.shynixn.blockball.api.business.proxy.EntityBallProxy
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
@@ -179,8 +180,17 @@ class BallProxyImpl(
     override fun remove() {
         Bukkit.getPluginManager().callEvent(BallDeathEvent(this))
         this.deGrab()
+
         this.design.remove()
         this.hitbox.remove()
+
+        if (this.design is EntityBallProxy) {
+            this.design.deleteFromWorld()
+        }
+
+        if (this.hitbox is EntityBallProxy) {
+            this.hitbox.deleteFromWorld()
+        }
     }
 
 

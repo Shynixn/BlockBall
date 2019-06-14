@@ -301,4 +301,15 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
         this.ballDesign.proxy.calculatePostMovement()
         timingService.stopTiming()
     }
+
+    /**
+     * Gets the bukkit entity.
+     */
+    override fun getBukkitEntity(): CraftBallArmorstand {
+        if (this.bukkitEntity == null) {
+            this.bukkitEntity = CraftBallArmorstand(this.world.server, this)
+        }
+
+        return this.bukkitEntity as CraftBallArmorstand
+    }
 }

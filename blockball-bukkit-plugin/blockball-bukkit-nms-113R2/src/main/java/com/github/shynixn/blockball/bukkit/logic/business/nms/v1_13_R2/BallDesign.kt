@@ -75,7 +75,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
                 LivingEntity::class.java,
                 Boolean::class.java
             )
-            .newInstance(ballMeta, this.bukkitEntity as ArmorStand, hitbox.bukkitEntity as ArmorStand, uuid, owner, persistent) as BallProxy
+            .newInstance(ballMeta, this.getBukkitEntity() as ArmorStand, hitbox.bukkitEntity as ArmorStand, uuid, owner, persistent) as BallProxy
 
         val compound = NBTTagCompound()
         compound.setBoolean("invulnerable", true)
@@ -119,5 +119,16 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         }
 
         proxy.run()
+    }
+
+    /**
+     * Gets the bukkit entity.
+     */
+    override fun getBukkitEntity(): CraftBallArmorstand {
+        if (this.bukkitEntity == null) {
+            this.bukkitEntity = CraftBallArmorstand(this.world.server, this)
+        }
+
+        return this.bukkitEntity as CraftBallArmorstand
     }
 }
