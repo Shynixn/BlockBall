@@ -1,12 +1,12 @@
 @file:Suppress("PackageName")
 
-package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_12_R1
+package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_11_R1
 
 import com.github.shynixn.blockball.api.business.service.SpigotTimingService
-import net.minecraft.server.v1_12_R1.*
+import net.minecraft.server.v1_11_R1.*
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_11_R1.CraftWorld
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.util.Vector
 import java.util.logging.Level
@@ -109,7 +109,8 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
             }
 
             this.world.methodProfiler.a("move")
-            if (this.E) { //Changing
+
+            if (this.E) {
                 this.E = false
                 d0 *= 0.25
                 d1 *= 0.05000000074505806
@@ -119,32 +120,33 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
                 this.motZ = 0.0
             }
 
-            val d6 = d0
-            val d7 = d1
-            val d8 = d2
+            val d7 = d0
+            val d8 = d1
+            val d9 = d2
+
             val list = this.world.getCubes(this, this.boundingBox.b(d0, d1, d2))
             val axisalignedbb = this.boundingBox
-            var i: Int
-            var j: Int
+            var k: Int
+            var l: Int
             if (d1 != 0.0) {
-                i = 0
+                k = 0
 
-                j = list.size
-                while (i < j) {
-                    d1 = (list[i] as AxisAlignedBB).b(this.boundingBox, d1)
-                    ++i
+                l = list.size
+                while (k < l) {
+                    d1 = (list[k] as AxisAlignedBB).b(this.boundingBox, d1)
+                    ++k
                 }
 
                 this.a(this.boundingBox.d(0.0, d1, 0.0))
             }
 
             if (d0 != 0.0) {
-                i = 0
+                k = 0
 
-                j = list.size
-                while (i < j) {
-                    d0 = (list[i] as AxisAlignedBB).a(this.boundingBox, d0)
-                    ++i
+                l = list.size
+                while (k < l) {
+                    d0 = (list[k] as AxisAlignedBB).a(this.boundingBox, d0)
+                    ++k
                 }
 
                 if (d0 != 0.0) {
@@ -153,12 +155,12 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
             }
 
             if (d2 != 0.0) {
-                i = 0
+                k = 0
 
-                j = list.size
-                while (i < j) {
-                    d2 = (list[i] as AxisAlignedBB).c(this.boundingBox, d2)
-                    ++i
+                l = list.size
+                while (k < l) {
+                    d2 = (list[k] as AxisAlignedBB).c(this.boundingBox, d2)
+                    ++k
                 }
 
                 if (d2 != 0.0) {
@@ -166,151 +168,151 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
                 }
             }
 
-            val flag1 = this.onGround || d1 != d7 && d1 < 0.0
-            var d10: Double
+            val flag = this.onGround || d1 != d1 && d1 < 0.0
+            var d11: Double
 
-            if (this.P > 0.0f && flag1 && (d6 != d0 || d8 != d2)) {
-                val d11 = d0
-                val d12 = d1
-                val d13 = d2
-                val event = this.boundingBox
+            if (this.P > 0.0f && flag && (d7 != d0 || d9 != d2)) {
+                val d12 = d0
+                val d13 = d1
+                val d14 = d2
+                val axisalignedbb1 = this.boundingBox
                 this.a(axisalignedbb)
                 d1 = this.P.toDouble()
-                val event1 = this.world.getCubes(this, this.boundingBox.b(d6, d1, d8))
+                val list1 = this.world.getCubes(this, this.boundingBox.b(d7, d1, d9))
                 var axisalignedbb2 = this.boundingBox
-                val f = axisalignedbb2.b(d6, 0.0, d8)
-                d10 = d1
-                var k = 0
-
-                val l = event1.size
-                while (k < l) {
-                    d10 = (event1[k] as AxisAlignedBB).b(f, d10)
-                    ++k
-                }
-
-                axisalignedbb2 = axisalignedbb2.d(0.0, d10, 0.0)
-                var d14 = d6
+                val axisalignedbb3 = axisalignedbb2.b(d7, 0.0, d9)
+                d11 = d1
                 var i1 = 0
 
-                val j1 = event1.size
+                val j1 = list1.size
                 while (i1 < j1) {
-                    d14 = (event1[i1] as AxisAlignedBB).a(axisalignedbb2, d14)
+                    d11 = (list1[i1] as AxisAlignedBB).b(axisalignedbb3, d11)
                     ++i1
                 }
 
-                axisalignedbb2 = axisalignedbb2.d(d14, 0.0, 0.0)
-                var d15 = d8
+                axisalignedbb2 = axisalignedbb2.d(0.0, d11, 0.0)
+                var d15 = d7
                 var k1 = 0
 
-                val axisalignedbb4 = event1.size
-                while (k1 < axisalignedbb4) {
-                    d15 = (event1[k1] as AxisAlignedBB).c(axisalignedbb2, d15)
+                val l1 = list1.size
+                while (k1 < l1) {
+                    d15 = (list1[k1] as AxisAlignedBB).a(axisalignedbb2, d15)
                     ++k1
                 }
 
-                axisalignedbb2 = axisalignedbb2.d(0.0, 0.0, d15)  //Changing
-                var var85 = this.boundingBox
-                var d16 = d1
+                axisalignedbb2 = axisalignedbb2.d(d15, 0.0, 0.0)
+                var d16 = d9
                 var i2 = 0
 
-                val j2 = event1.size
+                val j2 = list1.size
                 while (i2 < j2) {
-                    d16 = (event1[i2] as AxisAlignedBB).b(var85, d16)
+                    d16 = (list1[i2] as AxisAlignedBB).c(axisalignedbb2, d16)
                     ++i2
                 }
 
-                var85 = var85.d(0.0, d16, 0.0)
-                var d17 = d6
+                axisalignedbb2 = axisalignedbb2.d(0.0, 0.0, d16)
+                var axisalignedbb4 = this.boundingBox
+                var d17 = d1
                 var k2 = 0
 
-                val l2 = event1.size
+                val l2 = list1.size
                 while (k2 < l2) {
-                    d17 = (event1[k2] as AxisAlignedBB).a(var85, d17)
+                    d17 = (list1[k2] as AxisAlignedBB).b(axisalignedbb4, d17)
                     ++k2
                 }
 
-                var85 = var85.d(d17, 0.0, 0.0)
-                var d18 = d8
+                axisalignedbb4 = axisalignedbb4.d(0.0, d17, 0.0)
+                var d18 = d7
                 var i3 = 0
 
-                val j3 = event1.size
+                val j3 = list1.size
                 while (i3 < j3) {
-                    d18 = (event1[i3] as AxisAlignedBB).c(var85, d18)
+                    d18 = (list1[i3] as AxisAlignedBB).a(axisalignedbb4, d18)
                     ++i3
                 }
 
-                var85 = var85.d(0.0, 0.0, d18)
-                val d19 = d14 * d14 + d15 * d15
-                val d20 = d17 * d17 + d18 * d18
-                if (d19 > d20) {
-                    d0 = d14
-                    d2 = d15
-                    d1 = -d10
-                    this.a(axisalignedbb2)
-                } else {
-                    d0 = d17
-                    d2 = d18
-                    d1 = -d16
-                    this.a(var85)
-                }
-
+                axisalignedbb4 = axisalignedbb4.d(d18, 0.0, 0.0)
+                var d19 = d9
                 var k3 = 0
 
-                val l3 = event1.size
+                val l3 = list1.size
                 while (k3 < l3) {
-                    d1 = (event1[k3] as AxisAlignedBB).b(this.boundingBox, d1)
+                    d19 = (list1[k3] as AxisAlignedBB).c(axisalignedbb4, d19)
                     ++k3
                 }
 
+                axisalignedbb4 = axisalignedbb4.d(0.0, 0.0, d19)
+                val d20 = d15 * d15 + d16 * d16
+                val d21 = d18 * d18 + d19 * d19
+                if (d20 > d21) {
+                    d0 = d15
+                    d2 = d16
+                    d1 = -d11
+                    this.a(axisalignedbb2)
+                } else {
+                    d0 = d18
+                    d2 = d19
+                    d1 = -d17
+                    this.a(axisalignedbb4)
+                }
+
+                var i4 = 0
+
+                val j4 = list1.size
+                while (i4 < j4) {
+                    d1 = (list1[i4] as AxisAlignedBB).b(this.boundingBox, d1)
+                    ++i4
+                }
+
                 this.a(this.boundingBox.d(0.0, d1, 0.0))
-                if (d11 * d11 + d13 * d13 >= d0 * d0 + d2 * d2) {
-                    d0 = d11
-                    d1 = d12
-                    d2 = d13
-                    this.a(event)
+                if (d12 * d12 + d14 * d14 >= d0 * d0 + d2 * d2) {
+                    d0 = d12
+                    d1 = d13
+                    d2 = d14
+                    this.a(axisalignedbb1)
                 }
             }
 
             this.world.methodProfiler.b()
             this.world.methodProfiler.a("rest")
             this.recalcPosition()
-            this.positionChanged = d6 != d0 || d8 != d2
-            this.B = d1 != d7
-            this.onGround = this.B && d7 < 0.0
+            this.positionChanged = d7 != d0 || d9 != d2
+            this.B = d1 != d8
+            this.onGround = this.B && d8 < 0.0
             this.C = this.positionChanged || this.B
-            j = MathHelper.floor(this.locX)
-            val i4 = MathHelper.floor(this.locY - 0.20000000298023224)
-            val j4 = MathHelper.floor(this.locZ)
-            var blockposition = BlockPosition(j, i4, j4)
+            l = MathHelper.floor(this.locX)
+            val k4 = MathHelper.floor(this.locY - 0.20000000298023224)
+            val l4 = MathHelper.floor(this.locZ)
+            var blockposition = BlockPosition(l, k4, l4)
             var iblockdata = this.world.getType(blockposition)
             if (iblockdata.material === Material.AIR) {
-                val block1 = blockposition.down()
-                val flag2 = this.world.getType(block1)
-                val var80 = flag2.block
-                if (var80 is BlockFence || var80 is BlockCobbleWall || var80 is BlockFenceGate) {
-                    iblockdata = flag2
-                    blockposition = block1
+                val blockposition1 = blockposition.down()
+                val iblockdata1 = this.world.getType(blockposition1)
+                val block = iblockdata1.block
+                if (block is BlockFence || block is BlockCobbleWall || block is BlockFenceGate) {
+                    iblockdata = iblockdata1
+                    blockposition = blockposition1
                 }
             }
 
             this.a(d1, this.onGround, iblockdata, blockposition)
-            if (d6 != d0) {
+            if (d7 != d0) {
                 this.motX = 0.0
             }
 
-            if (d8 != d2) {
+            if (d9 != d2) {
                 this.motZ = 0.0
             }
 
-            val var86 = iblockdata.block
-            if (d7 != d1) {
-                var86.a(this.world, this)
+            val block1 = iblockdata.block
+            if (d8 != d1) {
+                block1.a(this.world, this)
             }
 
             if (this.positionChanged) {
                 try {
                     val sourceBlock = this.world.world.getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ))
-                    this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, d0, d2, d6, d8)
+                    this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, d0, d2, d7, d9)
                 } catch (e: Exception) {
                     Bukkit.getLogger().log(Level.WARNING, "Critical exception.", e)
                 }
@@ -320,5 +322,16 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
 
         this.ballDesign.proxy.calculatePostMovement()
         timingService.stopTiming()
+    }
+
+    /**
+     * Gets the bukkit entity.
+     */
+    override fun getBukkitEntity(): CraftBallArmorstand {
+        if (this.bukkitEntity == null) {
+            this.bukkitEntity = CraftBallArmorstand(this.world.server, this)
+        }
+
+        return this.bukkitEntity as CraftBallArmorstand
     }
 }
