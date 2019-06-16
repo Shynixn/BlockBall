@@ -53,7 +53,6 @@ dependencies {
     compileOnly("net.milkbowlvault:VaultAPI:1.7")
 
     compileOnly("org.spigotmc:spigot114R1:1.14.1-R1.0")
-    compileOnly("org.spigotmc:spigot19R2:1.9.4-R2.0")
     compileOnly("org.spigotmc:spigot19R1:1.9.0-R1.0")
     compileOnly("org.spigotmc:spigot18R3:1.8.8-R3.0")
     compileOnly("org.spigotmc:spigot18R2:1.8.3-R2.0")
