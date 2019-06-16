@@ -40,8 +40,17 @@ dependencies {
     implementation(project(":blockball-api"))
     implementation(project(":blockball-bukkit-api"))
     implementation(project(":blockball-core"))
+    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-108R1"))
+    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-108R2"))
+    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-108R3"))
+    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-109R1"))
+    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-109R2"))
+    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-110R1"))
+    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-111R1"))
+    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-112R1"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-113R1"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-113R2"))
+    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-114R1"))
 
     implementation("org.slf4j:slf4j-jdk14:1.7.25")
     implementation("com.zaxxer:HikariCP:3.2.0")
@@ -53,7 +62,6 @@ dependencies {
     compileOnly("net.milkbowlvault:VaultAPI:1.7")
 
     compileOnly("org.spigotmc:spigot114R1:1.14.1-R1.0")
-    compileOnly("org.spigotmc:spigot18R1:1.8.0-R1.0")
 
     testCompile("org.xerial:sqlite-jdbc:3.23.1")
     testCompile("ch.vorburger.mariaDB4j:mariaDB4j:2.2.3")
