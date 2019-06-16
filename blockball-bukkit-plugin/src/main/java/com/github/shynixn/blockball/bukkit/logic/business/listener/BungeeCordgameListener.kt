@@ -72,7 +72,7 @@ class BungeeCordgameListener @Inject constructor(
             return
         }
 
-        if (event.clickedBlock != null && event.clickedBlock!!.state != null && event.clickedBlock!!.state !is Sign) {
+        if (event.clickedBlock != null && event.clickedBlock!!.state !is Sign) {
             return
         }
 

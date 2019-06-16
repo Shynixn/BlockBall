@@ -37,6 +37,11 @@ interface ItemService {
     fun <M> getNumericMaterialValue(material: M): Int
 
     /**
+     * Sets the [skin] of the given [itemStack].
+     */
+    fun <I> setSkin(itemStack: I, skin: String)
+
+    /**
      * Gets the material from the numeric value.
      * Throws a [IllegalArgumentException] if the numeric value could
      * not get applied to a material.
