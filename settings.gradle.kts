@@ -2,6 +2,7 @@ rootProject.name = "blockball-root"
 include("blockball-api")
 include("blockball-bukkit-api")
 include("blockball-bukkit-plugin")
+include("blockball-bukkit-plugin:blockball-bukkit-nms-108R2")
 include("blockball-bukkit-plugin:blockball-bukkit-nms-108R3")
 include("blockball-bukkit-plugin:blockball-bukkit-nms-109R1")
 include("blockball-bukkit-plugin:blockball-bukkit-nms-109R2")
