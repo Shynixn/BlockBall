@@ -40,6 +40,8 @@ import java.util.logging.Level
  */
 class BallHitBox(private val ballDesign: BallDesign, location: Location, private val timingService: SpigotTimingService) :
     EntityArmorStand((location.world as CraftWorld).handle, location.x, location.y, location.z) {
+    // BukkitEntity has to be self cached since 1.14.
+    private var entityBukkit: Any? = null
     /**
      * Initializes the hitbox.
      */
@@ -168,5 +170,16 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
 
         this.ballDesign.proxy.calculatePostMovement()
         timingService.stopTiming()
+    }
+
+    /**
+     * Gets the bukkit entity.
+     */
+    override fun getBukkitEntity(): CraftBallArmorstand {
+        if (this.entityBukkit == null) {
+            this.entityBukkit = CraftBallArmorstand(this.world.server, this)
+        }
+
+        return this.entityBukkit as CraftBallArmorstand
     }
 }
