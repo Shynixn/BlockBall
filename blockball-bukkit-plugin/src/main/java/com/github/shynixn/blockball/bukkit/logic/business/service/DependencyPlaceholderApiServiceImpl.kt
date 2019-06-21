@@ -1,10 +1,12 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
+import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.service.DependencyPlaceholderApiService
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.google.inject.Inject
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
@@ -35,7 +37,8 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class DependencyPlaceholderApiServiceImpl @Inject constructor(private val plugin: Plugin) : PlaceholderExpansion(), DependencyPlaceholderApiService {
+class DependencyPlaceholderApiServiceImpl @Inject constructor(private val plugin: Plugin) : PlaceholderExpansion(),
+    DependencyPlaceholderApiService {
     private var registerd: Boolean = false
 
     /**
@@ -82,10 +85,18 @@ class DependencyPlaceholderApiServiceImpl @Inject constructor(private val plugin
         }
 
         try {
-            val event = PlaceHolderRequestEvent(s!!, null, player)
-            Bukkit.getPluginManager().callEvent(event)
-            return event.result
+            PlaceHolder.values().forEach { p ->
+                if (s!!.startsWith(p.placeHolder)) {
+                    val data = s.split("_")
+                    val game = BlockBallApi.resolve(GameService::class.java).getGameFromName(data[1])
+
+                    if (game.isPresent) {
+                        return data[0].replaceGamePlaceholder(game.get())
+                    }
+                }
+            }
         } catch (ignored: Exception) {
+            ignored.printStackTrace()
         }
 
         return null

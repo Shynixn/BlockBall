@@ -2,9 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.event.BallPostMoveEvent
-import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.enumeration.Permission
-import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.BallForceFieldService
 import com.github.shynixn.blockball.api.business.service.GameActionService
@@ -12,7 +10,6 @@ import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.RightclickManageService
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
-import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.google.inject.Inject
@@ -244,29 +241,6 @@ class GameListener @Inject constructor(
                     gameActionService.leaveGame(game, event.player)
                 }
             }
-        }
-    }
-
-    /**
-     * Handles placeholder requests.
-     */
-    @EventHandler
-    fun onPlaceHolderRequestEvent(event: PlaceHolderRequestEvent) {
-        try {
-            PlaceHolder.values().forEach { p ->
-                if (event.name.startsWith(p.placeHolder)) {
-                    val data = event.name.split("_")
-                    val game = this.gameService.getGameFromName(data[1])
-
-                    if (game.isPresent) {
-                        event.result = data[0].replaceGamePlaceholder(game.get())
-                    }
-
-                    return
-                }
-            }
-        } catch (e: Exception) {
-            //Ignored. Simple parsing error that another plugin is responsible for.
         }
     }
 }
