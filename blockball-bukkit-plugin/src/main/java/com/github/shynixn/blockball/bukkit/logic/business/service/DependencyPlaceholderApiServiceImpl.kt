@@ -96,7 +96,6 @@ class DependencyPlaceholderApiServiceImpl @Inject constructor(private val plugin
                 }
             }
         } catch (ignored: Exception) {
-            ignored.printStackTrace()
         }
 
         return null
