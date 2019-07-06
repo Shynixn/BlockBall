@@ -46,6 +46,13 @@ import java.util.logging.Level
 class ConfigurationServiceImpl @Inject constructor(private val plugin: Plugin, private val yamlSerializationService: YamlSerializationService) :
     ConfigurationService {
     /**
+     * Reloads the config.
+     */
+    override fun reload() {
+        plugin.reloadConfig()
+    }
+
+    /**
      * Gets the path to the folder where the application is allowed to store
      * save data.
      */

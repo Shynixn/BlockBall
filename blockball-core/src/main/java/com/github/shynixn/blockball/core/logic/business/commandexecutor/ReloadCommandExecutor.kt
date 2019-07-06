@@ -1,6 +1,11 @@
-package com.github.shynixn.blockball.api.business.service
+package com.github.shynixn.blockball.core.logic.business.commandexecutor
 
-import java.nio.file.Path
+import com.github.shynixn.blockball.api.business.enumeration.ChatColor
+import com.github.shynixn.blockball.api.business.executor.CommandExecutor
+import com.github.shynixn.blockball.api.business.service.ConfigurationService
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.business.service.ProxyService
+import com.google.inject.Inject
 
 /**
  * Created by Shynixn 2018.
@@ -29,29 +34,21 @@ import java.nio.file.Path
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ConfigurationService {
+class ReloadCommandExecutor @Inject constructor(
+    private val gameService: GameService,
+    private val proxyService: ProxyService,
+    private val configurationService: ConfigurationService
+) : CommandExecutor {
     /**
-     * Gets the path to the folder where the application is allowed to store
-     * save data.
+     * Gets called when the given [source] executes the defined command with the given [args].
      */
-    val applicationDir: Path
+    override fun <S> onExecuteCommand(source: S, args: Array<out String>): Boolean {
+        val prefix = configurationService.findValue<String>("messages.prefix")
 
-    /**
-     * Reloads the config.
-     */
-    fun reload()
+        configurationService.reload()
+        this.gameService.restartGames()
 
-    /**
-     * Tries to load the config value from the given [path].
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
-     */
-    fun <C> findValue(path: String): C
-
-    /**
-     * Tries to load the config values into the given configuration [clazz] from the given [path]
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
-     */
-    fun <C> findConfiguration(clazz: Class<C>, path: String): C
+        proxyService.sendMessage(source, prefix + ChatColor.GREEN + "Reloaded BlockBall.")
+        return true
+    }
 }

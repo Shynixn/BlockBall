@@ -39,6 +39,13 @@ import org.bukkit.entity.Player
  * SOFTWARE.
  */
 class SoundServiceImpl @Inject constructor(private val plugin: PluginProxy, private val loggingService: LoggingService) : SoundService {
+    /**
+     * Gets all available sound names.
+     */
+    override val soundNames: List<String>
+        get() {
+            return org.bukkit.Sound.values().map { s -> s.name }
+        }
 
     /**
      * Plays the given [sound] at the given [location] for the given [players].
@@ -134,9 +141,9 @@ class SoundServiceImpl @Inject constructor(private val plugin: PluginProxy, priv
                 }
                 else -> {
                     if (name.contains("WALK")) {
-                        return "ENTITY_" + name.toUpperCase().split("_".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[0] + "_STEP"
+                        return "ENTITY_" + name.toUpperCase().split("_".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "_STEP"
                     } else if (name.contains("IDLE")) {
-                        return "ENTITY_" + name.toUpperCase().split("_".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[0] + "_AMBIENT"
+                        return "ENTITY_" + name.toUpperCase().split("_".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] + "_AMBIENT"
                     }
                 }
             }

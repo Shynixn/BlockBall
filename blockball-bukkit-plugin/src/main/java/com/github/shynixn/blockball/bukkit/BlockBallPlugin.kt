@@ -6,10 +6,10 @@ import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
+import com.github.shynixn.blockball.core.logic.business.commandexecutor.*
 import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -17,6 +17,7 @@ import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Server
+import org.bukkit.configuration.MemorySection
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
 
@@ -110,13 +111,31 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         Bukkit.getPluginManager().registerEvents(resolve(BlockSelectionListener::class.java), this)
 
         // Register CommandExecutor
-        resolve(ArenaCommandExecutor::class.java)
-        resolve(BungeeCordSignCommandExecutor::class.java)
-        resolve(JoinCommandExecutor::class.java)
-        resolve(LeaveCommandExecutor::class.java)
-        resolve(ReloadCommandExecutor::class.java)
-        resolve(SpectateCommandExecutor::class.java)
-        resolve(StopCommandExecutor::class.java)
+        val commandService = resolve(CommandService::class.java)
+        commandService.registerCommandExecutor("blockballstop", resolve(StopCommandExecutor::class.java))
+        commandService.registerCommandExecutor("blockballreload", resolve(ReloadCommandExecutor::class.java))
+        commandService.registerCommandExecutor("blockballbungeecord", resolve(BungeeCordSignCommandExecutor::class.java))
+        commandService.registerCommandExecutor("blockball", resolve(ArenaCommandExecutor::class.java))
+        commandService.registerCommandExecutor(
+            (config.get("global-spectate") as MemorySection).getValues(false) as Map<String, String>,
+            resolve(SpectateCommandExecutor::class.java)
+        )
+        commandService.registerCommandExecutor(
+            (config.get("global-leave") as MemorySection).getValues(false) as Map<String, String>,
+            resolve(LeaveCommandExecutor::class.java)
+        )
+        commandService.registerCommandExecutor(
+            (config.get("global-join") as MemorySection).getValues(false) as Map<String, String>,
+            resolve(JoinCommandExecutor::class.java)
+        )
+
+
+        /* resolve(ArenaCommandExecutor::class.java)
+         resolve(BungeeCordSignCommandExecutor::class.java)
+         resolve(JoinCommandExecutor::class.java)
+         resolve(LeaveCommandExecutor::class.java)
+         resolve(ReloadCommandExecutor::class.java)
+         resolve(SpectateCommandExecutor::class.java)*/
 
         val updateCheker = resolve(UpdateCheckService::class.java)
         val dependencyChecker = resolve(DependencyService::class.java)

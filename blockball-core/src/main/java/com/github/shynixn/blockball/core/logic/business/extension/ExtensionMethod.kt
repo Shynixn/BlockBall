@@ -2,8 +2,14 @@
 
 package com.github.shynixn.blockball.core.logic.business.extension
 
-import com.github.shynixn.blockball.api.business.proxy.PluginProxy
+import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.enumeration.ChatColor
+import com.github.shynixn.blockball.api.business.executor.CommandExecutor
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
+import com.github.shynixn.blockball.api.business.service.LoggingService
+import java.util.concurrent.CompletableFuture
+import java.util.logging.Level
+import java.util.regex.Pattern
 
 /**
  * Created by Shynixn 2019.
@@ -44,6 +50,56 @@ inline fun sync(
     concurrencyService.runTaskSync(delayTicks, repeatingTicks) {
         f.invoke()
     }
+}
+
+/**
+ * Accepts the action safely.
+ */
+fun <T> CompletableFuture<T>.thenAcceptSafely(f: (T) -> Unit) {
+    this.thenAccept(f).exceptionally { e ->
+        BlockBallApi.resolve(LoggingService::class.java).error("Failed to execute Task.", e)
+        throw RuntimeException(e)
+    }
+}
+
+/**
+ * Translates the given chatColor.
+ */
+fun String.translateChatColors(): String {
+    return ChatColor.translateChatColorCodes('&', this)
+}
+
+private val STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + '§'.toString() + "[0-9A-FK-OR]")
+
+/**
+ * Strips the chat colors from the string.
+ */
+fun String.stripChatColors(): String {
+    return STRIP_COLOR_PATTERN.matcher(this).replaceAll("")
+}
+
+/**
+ * Merges arguments starting from [starting] to [amount] from the given [args].
+ */
+fun CommandExecutor.mergeArgs(starting: Int, amount: Int, args: Array<out String>): String {
+    val builder = StringBuilder()
+    var counter = 0
+    var i = starting
+
+    while (counter < amount) {
+        if (builder.isNotEmpty()) {
+            builder.append(' ')
+        }
+
+        if (i < args.size) {
+            builder.append(args[i].stripChatColors())
+        }
+
+        counter++
+        i++
+    }
+
+    return builder.toString()
 }
 
 /**

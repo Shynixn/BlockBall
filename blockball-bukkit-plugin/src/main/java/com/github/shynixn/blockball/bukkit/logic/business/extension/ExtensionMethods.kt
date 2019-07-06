@@ -21,8 +21,6 @@ import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
 import java.lang.reflect.Method
-import java.util.concurrent.CompletableFuture
-import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -116,20 +114,6 @@ fun ItemStack.setDisplayName(displayName: String): ItemStack {
     }
 
     return this
-}
-
-/**
- * Refactors a list to a single line.
- */
-internal fun List<String>.toSingleLine(): String {
-    val builder = StringBuilder()
-    this.forEachIndexed { index, p ->
-        builder.append(org.bukkit.ChatColor.translateAlternateColorCodes('&', p))
-        if (index + 1 != this.size)
-            builder.append('\n')
-        builder.append(org.bukkit.ChatColor.RESET)
-    }
-    return builder.toString()
 }
 
 /**
@@ -251,16 +235,6 @@ internal fun String.convertChatColors(): String {
  */
 internal fun String.stripChatColors(): String {
     return ChatColor.stripColor(this)!!
-}
-
-/**
- * Accepts the action safely.
- */
-fun <T> CompletableFuture<T>.thenAcceptSafely(f: (T) -> Unit) {
-    this.thenAccept(f).exceptionally { e ->
-        JavaPlugin.getPlugin(BlockBallPlugin::class.java).logger.log(Level.WARNING, "Failed to execute Task.", e)
-        throw RuntimeException(e)
-    }
 }
 
 /**

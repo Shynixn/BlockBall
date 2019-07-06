@@ -1,15 +1,16 @@
 package com.github.shynixn.blockball.api.business.service
 
-import java.nio.file.Path
+import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
+import com.github.shynixn.blockball.api.persistence.entity.Position
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,29 +30,44 @@ import java.nio.file.Path
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ConfigurationService {
+interface ProxyService {
     /**
-     * Gets the path to the folder where the application is allowed to store
-     * save data.
+     * Gets all available gamemodes.
      */
-    val applicationDir: Path
+    val gameModes: List<String>
 
     /**
-     * Reloads the config.
+     * Performs a player command.
      */
-    fun reload()
+    fun <P> performPlayerCommand(player: P, command: String)
 
     /**
-     * Tries to load the config value from the given [path].
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
+     * Gets the location of the player.
      */
-    fun <C> findValue(path: String): C
+    fun <L, P> getPlayerLocation(player: P): L
 
     /**
-     * Tries to load the config values into the given configuration [clazz] from the given [path]
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
+     * Gets a copy of the player inventory.
      */
-    fun <C> findConfiguration(clazz: Class<C>, path: String): C
+    fun <P> getPlayerInventoryCopy(player: P): Array<Any?>
+
+    /**
+     * Gets a copy of the player armor inventory.
+     */
+    fun <P> getPlayerInventoryArmorCopy(player: P): Array<Any?>
+
+    /**
+     * Converts the given [location] to a [Position].
+     */
+    fun <L> toPosition(location: L): Position
+
+    /**
+     * Sends a chat message to the [sender].
+     */
+    fun <S> sendMessage(sender: S, chatBuilder: ChatBuilder)
+
+    /**
+     * Sends a message to the [sender].
+     */
+    fun <S> sendMessage(sender: S, message: String)
 }

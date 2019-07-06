@@ -1,6 +1,4 @@
-package com.github.shynixn.blockball.api.business.service
-
-import java.nio.file.Path
+package com.github.shynixn.blockball.api.business.enumeration
 
 /**
  * Created by Shynixn 2018.
@@ -29,29 +27,25 @@ import java.nio.file.Path
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ConfigurationService {
+enum class ChatClickAction {
     /**
-     * Gets the path to the folder where the application is allowed to store
-     * save data.
+     * Opens a URL.
      */
-    val applicationDir: Path
-
+    OPEN_URL,
     /**
-     * Reloads the config.
+     * Opens a file.
      */
-    fun reload()
-
+    OPEN_FILE,
     /**
-     * Tries to load the config value from the given [path].
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
+     * Runs a command.
      */
-    fun <C> findValue(path: String): C
-
+    RUN_COMMAND,
     /**
-     * Tries to load the config values into the given configuration [clazz] from the given [path]
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
+     * Suggests a command.
      */
-    fun <C> findConfiguration(clazz: Class<C>, path: String): C
+    SUGGEST_COMMAND,
+    /**
+     * Changes page.
+     */
+    CHANGE_PAGE,
 }

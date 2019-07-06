@@ -1,15 +1,15 @@
 package com.github.shynixn.blockball.api.business.service
 
-import java.nio.file.Path
+import com.github.shynixn.blockball.api.business.executor.CommandExecutor
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,29 +29,14 @@ import java.nio.file.Path
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ConfigurationService {
+interface CommandService {
     /**
-     * Gets the path to the folder where the application is allowed to store
-     * save data.
+     * Registers a command executor from a pre defined [command] with gets executed by the [commandExecutor].
      */
-    val applicationDir: Path
+    fun registerCommandExecutor(command: String, commandExecutor: CommandExecutor)
 
     /**
-     * Reloads the config.
+     * Registers a command executor from new [commandConfiguration] with gets executed by the [commandExecutor].
      */
-    fun reload()
-
-    /**
-     * Tries to load the config value from the given [path].
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
-     */
-    fun <C> findValue(path: String): C
-
-    /**
-     * Tries to load the config values into the given configuration [clazz] from the given [path]
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
-     */
-    fun <C> findConfiguration(clazz: Class<C>, path: String): C
+    fun registerCommandExecutor(commandConfiguration: Map<String, String>, commandExecutor: CommandExecutor)
 }

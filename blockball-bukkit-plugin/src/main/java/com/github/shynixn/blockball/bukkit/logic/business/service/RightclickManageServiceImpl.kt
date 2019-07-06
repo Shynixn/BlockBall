@@ -2,7 +2,10 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.service.RightclickManageService
+import org.bukkit.Location
+import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 
 /**
@@ -59,8 +62,15 @@ class RightclickManageServiceImpl : RightclickManageService {
             return false
         }
 
-        rightClickListener[player]!!.invoke(location as Any)
-        rightClickListener.remove(player)
+        if ((location as Location).block.state is Sign) {
+            val sign = location.block.state as Sign
+            sign.setLine(0, ChatColor.BOLD.toString() + "BlockBall")
+            sign.setLine(1, ChatColor.GREEN.toString() + "Loading...")
+            sign.update(true)
+
+            rightClickListener[player]!!.invoke(location as Any)
+            rightClickListener.remove(player)
+        }
 
         return true
     }

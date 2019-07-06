@@ -9,9 +9,9 @@ import com.github.shynixn.blockball.api.business.service.PersistenceLinkSignServ
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordConfiguration
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordServerStatus
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
-import com.github.shynixn.blockball.bukkit.logic.business.extension.thenAcceptSafely
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.core.logic.business.extension.async
+import com.github.shynixn.blockball.core.logic.business.extension.thenAcceptSafely
 import com.github.shynixn.blockball.core.logic.persistence.entity.BungeeCordServerStatusEntity
 import com.google.common.io.ByteStreams
 import com.google.inject.Inject

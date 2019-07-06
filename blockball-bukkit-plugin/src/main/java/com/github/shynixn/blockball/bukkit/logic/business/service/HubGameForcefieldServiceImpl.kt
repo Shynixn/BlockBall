@@ -1,13 +1,12 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.ChatClickAction
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
-import com.github.shynixn.blockball.api.business.service.GameActionService
-import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.business.service.HubGameForcefieldService
+import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.InteractionCache
 import com.github.shynixn.blockball.bukkit.logic.business.extension.*
+import com.github.shynixn.blockball.core.logic.persistence.entity.ChatBuilderEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.InteractionCacheEntity
 import com.google.inject.Inject
 import org.bukkit.GameMode
@@ -41,7 +40,12 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class HubGameForcefieldServiceImpl @Inject constructor(private val gameService: GameService, private val configurationService: ConfigurationService, private val gameActionService: GameActionService<Game>) : HubGameForcefieldService {
+class HubGameForcefieldServiceImpl @Inject constructor(
+    private val gameService: GameService,
+    private val configurationService: ConfigurationService,
+    private val gameActionService: GameActionService<Game>,
+    private val proxyService: ProxyService
+) : HubGameForcefieldService {
     private val cache = HashMap<Player, InteractionCache>()
 
     /**
@@ -98,17 +102,24 @@ class HubGameForcefieldServiceImpl @Inject constructor(private val gameService: 
                         if (!interactionCache.toggled) {
                             val joinCommand = configurationService.findValue<String>("global-join.command")
 
-                            ChatBuilder().text(prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].convertChatColors())
-                                    .nextLine()
-                                    .component(game.arena.meta.hubLobbyMeta.joinMessage[1].replaceGamePlaceholder(game, game.arena.meta.redTeamMeta))
-                                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
-                                            , "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.redTeamMeta.displayName.stripChatColors())
-                                    .setHoverText(" ")
-                                    .builder().text(" ").component(game.arena.meta.hubLobbyMeta.joinMessage[2].replaceGamePlaceholder(game, game.arena.meta.blueTeamMeta))
-                                    .setClickAction(ChatBuilder.ClickAction.RUN_COMMAND
-                                            , "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.blueTeamMeta.displayName.stripChatColors())
-                                    .setHoverText(" ")
-                                    .builder().sendMessage(player)
+                            val b = ChatBuilderEntity().text(prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].convertChatColors())
+                                .nextLine()
+                                .component(game.arena.meta.hubLobbyMeta.joinMessage[1].replaceGamePlaceholder(game, game.arena.meta.redTeamMeta))
+                                .setClickAction(
+                                    ChatClickAction.RUN_COMMAND
+                                    , "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.redTeamMeta.displayName.stripChatColors()
+                                )
+                                .setHoverText(" ")
+                                .builder().text(" ")
+                                .component(game.arena.meta.hubLobbyMeta.joinMessage[2].replaceGamePlaceholder(game, game.arena.meta.blueTeamMeta))
+                                .setClickAction(
+                                    ChatClickAction.RUN_COMMAND
+                                    , "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.blueTeamMeta.displayName.stripChatColors()
+                                )
+                                .setHoverText(" ")
+                                .builder()
+
+                            proxyService.sendMessage(player, b)
 
                             interactionCache.toggled = true
                         }

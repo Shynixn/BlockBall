@@ -1,15 +1,16 @@
-package com.github.shynixn.blockball.api.business.service
+package com.github.shynixn.blockball.api.persistence.entity
 
-import java.nio.file.Path
+import com.github.shynixn.blockball.api.business.enumeration.ChatClickAction
+import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,29 +30,24 @@ import java.nio.file.Path
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ConfigurationService {
+interface ChatBuilderComponent {
     /**
-     * Gets the path to the folder where the application is allowed to store
-     * save data.
+     * Gets the root builder of the component.
      */
-    val applicationDir: Path
+    fun builder(): ChatBuilder
 
     /**
-     * Reloads the config.
+     * Sets the click action.
      */
-    fun reload()
+    fun setClickAction(clickAction: ChatClickAction, payload: String): ChatBuilderComponent
 
     /**
-     * Tries to load the config value from the given [path].
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
+     * Sets the hover text.
      */
-    fun <C> findValue(path: String): C
+    fun setHoverText(text: String): ChatBuilderComponent
 
     /**
-     * Tries to load the config values into the given configuration [clazz] from the given [path]
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
+     * Sets the color of the text.
      */
-    fun <C> findConfiguration(clazz: Class<C>, path: String): C
+    fun setColor(color: ChatColor): ChatBuilderComponent
 }

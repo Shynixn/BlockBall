@@ -53,7 +53,11 @@ import org.bukkit.event.world.ChunkUnloadEvent
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallListener @Inject constructor(private val ballEntityService: BallEntityService, private val particleService: ParticleService, private val soundService: SoundService) : Listener {
+class BallListener @Inject constructor(
+    private val ballEntityService: BallEntityService,
+    private val particleService: ParticleService,
+    private val soundService: SoundService
+) : Listener {
     /**
      * Avoids saving the ball into the chunk data.
      *
@@ -61,13 +65,12 @@ class BallListener @Inject constructor(private val ballEntityService: BallEntity
      */
     @EventHandler
     fun onChunkSaveEvent(event: ChunkUnloadEvent) {
-        for (entity in event.chunk.entities) {
-            if (entity is ArmorStand) {
-                ballEntityService.findBallFromEntity(entity).ifPresent { ball ->
+        event.chunk.entities.filter { e -> e is ArmorStand }
+            .forEach { e ->
+                ballEntityService.findBallFromEntity(e).ifPresent { ball ->
                     ball.remove()
                 }
             }
-        }
     }
 
     /**

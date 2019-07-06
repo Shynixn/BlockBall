@@ -1,6 +1,10 @@
-package com.github.shynixn.blockball.api.business.service
+package com.github.shynixn.blockball.core.logic.business.commandexecutor
 
-import java.nio.file.Path
+import com.github.shynixn.blockball.api.business.executor.CommandExecutor
+import com.github.shynixn.blockball.api.business.service.GameActionService
+import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.google.inject.Inject
 
 /**
  * Created by Shynixn 2018.
@@ -29,29 +33,23 @@ import java.nio.file.Path
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ConfigurationService {
+class LeaveCommandExecutor @Inject constructor(private val gameService: GameService, private val gameActionService: GameActionService<Game>) : CommandExecutor {
     /**
-     * Gets the path to the folder where the application is allowed to store
-     * save data.
+     * Gets called when the given [source] executes the defined command with the given [args].
      */
-    val applicationDir: Path
+    override fun <S> onExecuteCommand(source: S, args: Array<out String>): Boolean {
+        val playerGame = gameService.getGameFromPlayer(source)
 
-    /**
-     * Reloads the config.
-     */
-    fun reload()
+        if (playerGame.isPresent) {
+            gameActionService.leaveGame(playerGame.get(), source)
+        }
 
-    /**
-     * Tries to load the config value from the given [path].
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
-     */
-    fun <C> findValue(path: String): C
+        val spectatorGame = gameService.getGameFromSpectatingPlayer(source)
 
-    /**
-     * Tries to load the config values into the given configuration [clazz] from the given [path]
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
-     */
-    fun <C> findConfiguration(clazz: Class<C>, path: String): C
+        if (spectatorGame.isPresent) {
+            gameActionService.leaveGame(spectatorGame.get(), source)
+        }
+
+        return true
+    }
 }

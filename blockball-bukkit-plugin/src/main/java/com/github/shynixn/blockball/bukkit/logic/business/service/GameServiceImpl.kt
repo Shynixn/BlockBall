@@ -8,7 +8,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
-import com.github.shynixn.blockball.bukkit.logic.business.extension.thenAcceptSafely
+import com.github.shynixn.blockball.core.logic.business.extension.thenAcceptSafely
 import com.github.shynixn.blockball.core.logic.persistence.entity.BungeeCordGameEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.HubGameEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.MiniGameEntity

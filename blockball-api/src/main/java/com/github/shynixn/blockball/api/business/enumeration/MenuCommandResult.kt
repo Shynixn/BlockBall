@@ -1,15 +1,13 @@
-package com.github.shynixn.blockball.api.business.service
-
-import java.nio.file.Path
+package com.github.shynixn.blockball.api.business.enumeration
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,29 +27,20 @@ import java.nio.file.Path
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ConfigurationService {
+enum class MenuCommandResult(
     /**
-     * Gets the path to the folder where the application is allowed to store
-     * save data.
+     * Gets the message result.
      */
-    val applicationDir: Path
+    val message: String?
+) {
+    SUCCESS(null),
+    CANCEL_MESSAGE(null),
+    BACK(null),
 
-    /**
-     * Reloads the config.
-     */
-    fun reload()
+    WESELECTION_MISSING("Please select an area via worldedit!"),
+    MINIGAMEARENA_NOTVALID("Please set the center, goal1, goal2, ball spawpoint, lobby spawnpoint and leave spawnpoint before saving!"),
+    ARENA_NOTVALID("Please set the center, goal1, goal2 and ball spawpoint before saving!"),
 
-    /**
-     * Tries to load the config value from the given [path].
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
-     */
-    fun <C> findValue(path: String): C
-
-    /**
-     * Tries to load the config values into the given configuration [clazz] from the given [path]
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
-     */
-    fun <C> findConfiguration(clazz: Class<C>, path: String): C
+    MAX_PLAYERS("Max amount of players cannot be lower than min amount of players!"),
+    MINPLAYERS("Min amount of players cannot be bigger than max amount of players!");
 }
