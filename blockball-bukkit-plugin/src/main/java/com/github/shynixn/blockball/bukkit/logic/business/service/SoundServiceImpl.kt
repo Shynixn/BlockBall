@@ -60,7 +60,7 @@ class SoundServiceImpl @Inject constructor(private val plugin: PluginProxy, priv
         }
 
         val targets = (players as Collection<Player>).toTypedArray()
-        val name = convertName(sound.name)
+        val name = convertName(sound.name.toUpperCase())
 
         try {
             targets.forEach { p ->
