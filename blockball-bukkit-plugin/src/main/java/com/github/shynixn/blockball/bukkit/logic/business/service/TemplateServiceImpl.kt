@@ -45,7 +45,7 @@ import java.io.OutputStreamWriter
  * SOFTWARE.
  */
 class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, private val yamlSerializationService: YamlSerializationService, private val persistenceArenaService: PersistenceArenaService) : TemplateService {
-    private val templateNames = arrayOf("arena-de.yml", "arena-en.yml")
+    private val templateNames = arrayOf("arena-de.yml", "arena-en.yml", "arena-pl.yml")
 
     /**
      * Returns a [List] of available

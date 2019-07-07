@@ -23,14 +23,14 @@ arena:
       max-score: 10
       even-teams: false
       join-sign-lines:
-      - '&f&lPilka nozna'
+      - '&lBlockBall'
       - <game>
       - <state>
       - <sumplayers>/<summaxplayers>
       leave-sign-lines:
-      - '&f&lPilka nozna'
+      - '&lBlockBall'
       - <game>
-      - Wyjdz
+      - §fWyjdz
       - <sumplayers>/<summaxplayers>
       gamemode: ADVENTURE
       signs:
@@ -65,37 +65,47 @@ arena:
           pitch: 0.0
           world: world
       armor:
-        '1': null
-        '2': null
+        '1':
+          type: LEATHER_BOOTS
+          meta:
+            ==: ItemMeta
+            meta-type: LEATHER_ARMOR
+            color: &id001
+              ==: Color
+              RED: 255
+              BLUE: 0
+              GREEN: 0
+        '2':
+          type: LEATHER_LEGGINGS
+          meta:
+            ==: ItemMeta
+            meta-type: LEATHER_ARMOR
+            color: *id001
         '3':
           type: LEATHER_CHESTPLATE
           meta:
             ==: ItemMeta
             meta-type: LEATHER_ARMOR
-            color:
-              ==: Color
-              RED: 176
-              BLUE: 38
-              GREEN: 46
+            color: *id001
         '4': null
-      join-message: '&eDolaczyles do <teamcolor><team>&e.'
+      join-message: 'Dolaczyles do <teamcolor><team>.'
       signs: {}
       leave-message: Opusciles gre.
       lines:
-      - '&f&lPilka nozna'
+      - '&lBlockBall'
       - <game>
       - <teamcolor><team>
       - <players>/<maxplayers>
       score-message-title: '<redcolor><redscore> &e: <bluecolor><bluescore>'
       score-message-subtitle: <redcolor><player> zdobyl punkt dla <red>
       win-message-title: <redcolor><red>
-      win-message-subtitle: <redcolor>Wygrali!
-      draw-message-title: Pilka nozna
+      win-message-subtitle: <redcolor><red>&a wygrali
+      draw-message-title: <redcolor><red>
       draw-message-subtitle: '&eMecz skonczyl sie remisem'
     minigame-meta:
       match-duration: 300
       lobby-duration: 20
-      remaining-players-message: '&eCzekanie na &e<remaining> &egraczy...'
+      remaining-players-message: '&aCzekanie na &c<remaining> &agraczy...'
     team-blue:
       displayname: Niebiescy
       prefix: '&9'
@@ -118,32 +128,41 @@ arena:
           pitch: 0.0
           world: world
       armor:
-      armor:
-        '1': null
-        '2': null
+        '1':
+          type: LEATHER_BOOTS
+          meta:
+            ==: ItemMeta
+            meta-type: LEATHER_ARMOR
+            color: &id001
+              ==: Color
+              RED: 255
+              BLUE: 0
+              GREEN: 0
+        '2':
+          type: LEATHER_LEGGINGS
+          meta:
+            ==: ItemMeta
+            meta-type: LEATHER_ARMOR
+            color: *id001
         '3':
           type: LEATHER_CHESTPLATE
           meta:
             ==: ItemMeta
             meta-type: LEATHER_ARMOR
-            color:
-              ==: Color
-              RED: 0
-              BLUE: 250
-              GREEN: 0
+            color: *id001
         '4': null
-      join-message: '&eDolaczyles do <teamcolor><team>&e.'
+      join-message: 'Dolaczyles do <teamcolor><team>.'
       signs: {}
       leave-message: Opusciles gre.
       lines:
-      - '&f&lPilka nozna'
+      - '&lBlockBall'
       - <game>
       - <teamcolor><team>
       - <players>/<maxplayers>
-      score-message-title: '<bluecolor><bluescore> :&e <redcolor><redscore>'
+      score-message-title: '<bluecolor><bluescore> : <redcolor><redscore>'
       score-message-subtitle: <bluecolor><player> zdobyl punkt dla <blue>
       win-message-title: <bluecolor><blue>
-      win-message-subtitle: <bluecolor>Wygrali!
+      win-message-subtitle: <bluecolor><blue>&a wygrali!
       draw-message-title: Pilka nozna
       draw-message-subtitle: '&eMecz skonczyl sie remisem'
     bungeecord-meta:
@@ -287,7 +306,7 @@ arena:
         y: 2.0
         z: 0.0
     scoreboard:
-      title: '&aPilka nozna'
+      title: '&aBlockBall'
       enabled: false
       lines:
       - ''
@@ -303,7 +322,7 @@ arena:
       - '&m           &r'
     bossbar:
       enabled: false
-      text: '<redcolor><red> &f<redscore> &e: &f<bluescore> <bluecolor><blue>'
+      text: '<redcolor><red> <redscore> : <bluecolor><bluescore> <blue>'
       percentage: 100.0
       color: WHITE
       style: SOLID
