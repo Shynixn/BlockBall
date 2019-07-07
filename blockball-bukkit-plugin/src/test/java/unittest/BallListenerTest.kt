@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by Shynixn 2018.
@@ -314,7 +315,7 @@ class BallListenerTest {
         }
     }
 
-    class MockedSoundService : SoundService {
+    class MockedSoundService(override val soundNames: List<String> = ArrayList()) : SoundService {
         var playSoundCalled = false
 
         /**

@@ -1,14 +1,21 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Version
+import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
+import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.google.inject.Inject
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
+import org.bukkit.Location
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
-import java.lang.reflect.InvocationTargetException
 import java.util.logging.Level
 
 /**
@@ -38,83 +45,97 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ProxyServiceImpl : ProxyService {
+class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy) : ProxyService {
     /**
      * Gets all available gamemodes.
      */
     override val gameModes: List<String>
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() {
+            return GameMode.values().map { g -> g.name }
+        }
 
     /**
      * Performs a player command.
      */
     override fun <P> performPlayerCommand(player: P, command: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        player.performCommand(command)
     }
 
     /**
      * Gets the location of the player.
      */
     override fun <L, P> getPlayerLocation(player: P): L {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        return player.location as L
     }
 
     /**
      * Gets a copy of the player inventory.
      */
     override fun <P> getPlayerInventoryCopy(player: P): Array<Any?> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        return player.inventory.contents.clone() as Array<Any?>
     }
 
     /**
      * Gets a copy of the player armor inventory.
      */
     override fun <P> getPlayerInventoryArmorCopy(player: P): Array<Any?> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        return player.inventory.armorContents.clone() as Array<Any?>
     }
 
     /**
      * Converts the given [location] to a [Position].
      */
     override fun <L> toPosition(location: L): Position {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (location !is Location) {
+            throw IllegalArgumentException("Location has to be a BukkitLocation!")
+        }
+
+        return location.toPosition()
     }
 
     /**
      * Sends a chat message to the [sender].
      */
     override fun <S> sendMessage(sender: S, chatBuilder: ChatBuilder) {
-        try {
-            val version = JavaPlugin.getPlugin(BlockBallPlugin::class.java).getServerVersion()
+        if (sender !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
 
-            val clazz: Class<*> = if (Bukkit.getServer().javaClass.getPackage().name.replace(
-                    ".",
-                    ","
-                ).split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[3] == "v1_8_R1"
-            ) {
-                findClass("net.minecraft.server.VERSION.ChatSerializer")
+        try {
+            val clazz: Class<*> = if (pluginProxy.getServerVersion() == Version.VERSION_1_8_R1) {
+                findClazz("net.minecraft.server.VERSION.ChatSerializer", pluginProxy)
             } else {
-                findClass("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer")
+                findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer", pluginProxy)
             }
-            val packetClazz = findClass("net.minecraft.server.VERSION.PacketPlayOutChat")
-            val chatBaseComponentClazz = findClass("net.minecraft.server.VERSION.IChatBaseComponent")
-            val chatComponent = invokeMethod(null, clazz, "a", arrayOf(String::class.java), arrayOf(chatBuilder.toString()))
-            val packet: Any
-            if (version.isVersionSameOrGreaterThan(Version.VERSION_1_12_R1)) {
-                val chatEnumMessage = findClass("net.minecraft.server.VERSION.ChatMessageType")
-                packet = invokeConstructor(
-                    packetClazz,
-                    arrayOf(chatBaseComponentClazz, chatEnumMessage),
-                    arrayOf(chatComponent, chatEnumMessage.enumConstants[0])
-                )
+
+            val packetClazz = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat", pluginProxy)
+            val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent", pluginProxy)
+            val chatComponent = clazz.getDeclaredMethod("a", String::class.java).invoke(null, chatBuilder.toString())
+
+            val packet = if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_12_R1)) {
+                val chatEnumMessage = findClazz("net.minecraft.server.VERSION.ChatMessageType", pluginProxy)
+                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage).newInstance(chatComponent, chatEnumMessage.enumConstants[0])
             } else {
-                packet = invokeConstructor(
-                    packetClazz,
-                    arrayOf(chatBaseComponentClazz, Byte::class.javaPrimitiveType as Class<*>),
-                    arrayOf(chatComponent, 0.toByte())
-                )
+                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Byte::class.javaPrimitiveType as Class<*>).newInstance(chatComponent, 0.toByte())
             }
-            sendPacket(sender as Player, packet)
+
+            sender.sendPacket(packet)
         } catch (e: Exception) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to send packet.", e)
         }
@@ -124,91 +145,13 @@ class ProxyServiceImpl : ProxyService {
      * Sends a message to the [sender].
      */
     override fun <S> sendMessage(sender: S, message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        if (sender is CommandSender) {
+            sender.sendMessage(message)
+            return
+        }
 
-
-    /**
-     * Sends a packet to the client player
-     *
-     * @param player player
-     * @param packet packet
-     * @throws ClassNotFoundException    exception
-     * @throws IllegalAccessException    exception
-     * @throws NoSuchMethodException     exception
-     * @throws InvocationTargetException exception
-     * @throws NoSuchFieldException      exception
-     */
-
-    @Throws(
-        ClassNotFoundException::class,
-        IllegalAccessException::class,
-        NoSuchMethodException::class,
-        InvocationTargetException::class,
-        NoSuchFieldException::class
-    )
-    private fun sendPacket(player: Player, packet: Any) {
-        val craftPlayer = findClass("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer").cast(player)
-        val entityPlayer = invokeMethod(craftPlayer, craftPlayer.javaClass, "getHandle", arrayOf(), arrayOf())
-        val field = entityPlayer.javaClass.getDeclaredField("playerConnection")
-        field.isAccessible = true
-        val connection = field.get(entityPlayer)
-        invokeMethod(connection, connection.javaClass, "sendPacket", arrayOf(packet.javaClass.interfaces[0]), arrayOf(packet))
-    }
-
-    /**
-     * Invokes a constructor by the given parameters
-     *
-     * @param clazz      clazz
-     * @param paramTypes paramTypes
-     * @param params     params
-     * @return instance
-     * @throws NoSuchMethodException     exception
-     * @throws IllegalAccessException    exception
-     * @throws InvocationTargetException exception
-     * @throws InstantiationException    exception
-     */
-    @Throws(NoSuchMethodException::class, IllegalAccessException::class, InvocationTargetException::class, InstantiationException::class)
-    private fun invokeConstructor(clazz: Class<*>, paramTypes: Array<Class<*>>, params: Array<Any>): Any {
-        val constructor = clazz.getDeclaredConstructor(*paramTypes)
-        constructor.isAccessible = true
-        return constructor.newInstance(*params)
-    }
-
-    /**
-     * Invokes a method by the given parameters
-     *
-     * @param instance   instance
-     * @param clazz      clazz
-     * @param name       name
-     * @param paramTypes paramTypes
-     * @param params     params
-     * @return returnedObject
-     * @throws InvocationTargetException exception
-     * @throws IllegalAccessException    exception
-     * @throws NoSuchMethodException     exception
-     */
-    @Throws(InvocationTargetException::class, IllegalAccessException::class, NoSuchMethodException::class)
-    private fun invokeMethod(instance: Any?, clazz: Class<*>, name: String, paramTypes: Array<Class<*>>, params: Array<Any>): Any {
-        val method = clazz.getDeclaredMethod(name, *paramTypes)
-        method.isAccessible = true
-        return method.invoke(instance, *params)
-    }
-
-    /**
-     * Finds a class regarding of the server Version
-     *
-     * @param name name
-     * @return clazz
-     * @throws ClassNotFoundException exception
-     */
-    @Throws(ClassNotFoundException::class)
-    private fun findClass(name: String): Class<*> {
-        return Class.forName(
-            name.replace(
-                "VERSION",
-                Bukkit.getServer().javaClass.getPackage().name.replace(".", ",").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[3]
-            )
-        )
+        if (sender is Player) {
+            sender.sendMessage(message)
+        }
     }
 }

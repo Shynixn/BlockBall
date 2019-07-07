@@ -169,6 +169,12 @@ class ArenaFileRepositoryTest {
     }
 
     class MockedConfigurationService : ConfigurationService {
+        /**
+         * Reloads the config.
+         */
+        override fun reload() {
+        }
+
         private var path: Path = Paths.get("build/repository-test")
 
         init {

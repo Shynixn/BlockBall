@@ -129,14 +129,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             resolve(JoinCommandExecutor::class.java)
         )
 
-
-        /* resolve(ArenaCommandExecutor::class.java)
-         resolve(BungeeCordSignCommandExecutor::class.java)
-         resolve(JoinCommandExecutor::class.java)
-         resolve(LeaveCommandExecutor::class.java)
-         resolve(ReloadCommandExecutor::class.java)
-         resolve(SpectateCommandExecutor::class.java)*/
-
         val updateCheker = resolve(UpdateCheckService::class.java)
         val dependencyChecker = resolve(DependencyService::class.java)
         val configurationService = resolve(ConfigurationService::class.java)

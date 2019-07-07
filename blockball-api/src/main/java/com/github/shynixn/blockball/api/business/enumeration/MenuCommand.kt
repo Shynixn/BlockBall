@@ -266,7 +266,7 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
 
             if (args.isNotEmpty()) {
                 for (command in MenuCommand.values()) {
-                    if (command.key.key.equals(args[0], ignoreCase = true) && command.command.equals(args[1], ignoreCase = true)) {
+                    if (command.key.key.equals(args[0], ignoreCase = true) && command.internalCommand.equals(args[1], ignoreCase = true)) {
                         return command
                     }
                 }

@@ -159,6 +159,12 @@ class StatsCollectingServiceTest {
 
     class MockedConfigurationService : ConfigurationService {
         /**
+         * Reloads the config.
+         */
+        override fun reload() {
+        }
+
+        /**
          * Gets the path to the folder where the application is allowed to store
          * save data.
          */

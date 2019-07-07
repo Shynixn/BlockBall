@@ -80,10 +80,10 @@ class PositionEntity() : Position {
      */
     override fun toString(): String {
         if (worldName != null) {
-            return "$worldName $x $y $z"
+            return "$worldName ${x.toInt()} ${y.toInt()} ${z.toInt()}"
         }
 
-        return "$x $y $z"
+        return "${x.toInt()} ${y.toInt()} ${z.toInt()}"
     }
 
     /**
