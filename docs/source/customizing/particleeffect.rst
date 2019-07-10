@@ -50,7 +50,7 @@ Properties
 ~~~~~~~~~~
 
 * Effecting: Whether all players can see the Particleeffect, only the player belonging to the action or nobody.
-* Name: Name of the Particleeffect
+* Name: Name of the Particleeffect. All names can be found `here. <https://shynixn.github.io/BlockBall/apidocs/com/github/shynixn/blockball/api/business/enumeration/ParticleType.html>`_
 * Amount: Amount of particles in the air
 * Speed: Speed of each particle in the air
 * Offset X: Offset spread of the x axe
