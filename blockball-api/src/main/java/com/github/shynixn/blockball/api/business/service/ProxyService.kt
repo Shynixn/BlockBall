@@ -47,6 +47,11 @@ interface ProxyService {
     fun <L, P> getPlayerLocation(player: P): L
 
     /**
+     * Sets the location of the player.
+     */
+    fun <L, P> setPlayerLocation(player: P, location: L)
+
+    /**
      * Gets a copy of the player inventory.
      */
     fun <P> getPlayerInventoryCopy(player: P): Array<Any?>

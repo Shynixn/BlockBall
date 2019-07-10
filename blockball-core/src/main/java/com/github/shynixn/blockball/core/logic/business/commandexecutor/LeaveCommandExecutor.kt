@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.core.logic.business.commandexecutor
 import com.github.shynixn.blockball.api.business.executor.CommandExecutor
 import com.github.shynixn.blockball.api.business.service.GameActionService
 import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.google.inject.Inject
 
 /**
@@ -33,7 +32,7 @@ import com.google.inject.Inject
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class LeaveCommandExecutor @Inject constructor(private val gameService: GameService, private val gameActionService: GameActionService<Game>) : CommandExecutor {
+class LeaveCommandExecutor @Inject constructor(private val gameService: GameService, private val gameActionService: GameActionService) : CommandExecutor {
     /**
      * Gets called when the given [source] executes the defined command with the given [args].
      */

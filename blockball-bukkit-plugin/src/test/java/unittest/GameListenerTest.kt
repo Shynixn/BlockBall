@@ -10,7 +10,11 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.listener.GameListener
 import com.github.shynixn.blockball.core.logic.persistence.entity.ArenaEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.GameEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.GameStorageEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
+import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Server
 import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.block.Sign
@@ -19,6 +23,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.*
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.junit.jupiter.api.Assertions
@@ -26,6 +31,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import java.util.*
 import java.util.concurrent.CompletableFuture
+import java.util.logging.Logger
 import kotlin.collections.ArrayList
 
 /**
@@ -56,6 +62,115 @@ import kotlin.collections.ArrayList
  * SOFTWARE.
  */
 class GameListenerTest {
+
+    // region onPlayerRespawnEvent
+
+    /**
+     * Given
+     *      player dieing in team without teamspawnpoint
+     * When
+     *     onPlayerRespawnEvent
+     * Then
+     *    respawn location should be at ball spawnpoint.
+     */
+    @Test
+    fun onPlayerRespawnEvent_PlayerDieingDuringGame_RespawnLocationShouldBeAtBallSpawnpoint() {
+        // Arrange
+        val gameService = MockedGameService()
+        val rightClickService = MockedRightClickService()
+        val classUnderTest = createWithDependencies(gameService, rightClickService)
+
+        val storage = GameStorageEntity(UUID.randomUUID(), "")
+        storage.team = Team.RED
+
+        val game = GameEntity(ArenaEntity())
+        game.ingamePlayersStorage[gameService.players[0]] = storage
+        game.arena.meta.ballMeta.spawnpoint = PositionEntity("world", 34.0, 5.0, 2.0)
+        gameService.games.add(game)
+
+        val event = PlayerRespawnEvent(
+            gameService.players[0],
+            null,
+            false
+        )
+
+        // Act
+        classUnderTest.onPlayerRespawnEvent(event)
+        val respawnLocation = event.respawnLocation
+
+        // Assert
+        Assertions.assertEquals(34.0, respawnLocation.x)
+        Assertions.assertEquals(5.0, respawnLocation.y)
+        Assertions.assertEquals(2.0, respawnLocation.z)
+    }
+
+    /**
+     * Given
+     *      player dieing in team withteamspawnpoint
+     * When
+     *     onPlayerRespawnEvent
+     * Then
+     *    respawn location should be at ball spawnpoint.
+     */
+    @Test
+    fun onPlayerRespawnEvent_PlayerDieingDuringGame_RespawnLocationShouldBeAtTeamSpawnpoint() {
+        // Arrange
+        val gameService = MockedGameService()
+        val rightClickService = MockedRightClickService()
+        val classUnderTest = createWithDependencies(gameService, rightClickService)
+
+        val storage = GameStorageEntity(UUID.randomUUID(), "")
+        storage.team = Team.BLUE
+
+        val game = GameEntity(ArenaEntity())
+        game.ingamePlayersStorage[gameService.players[0]] = storage
+        game.arena.meta.blueTeamMeta.spawnpoint = PositionEntity("world", 37.0, 5.0, 2.0)
+        gameService.games.add(game)
+
+        val event = PlayerRespawnEvent(
+            gameService.players[0],
+            null,
+            false
+        )
+
+        // Act
+        classUnderTest.onPlayerRespawnEvent(event)
+        val respawnLocation = event.respawnLocation
+
+        // Assert
+        Assertions.assertEquals(37.0, respawnLocation.x)
+        Assertions.assertEquals(5.0, respawnLocation.y)
+        Assertions.assertEquals(2.0, respawnLocation.z)
+    }
+
+    /**
+     * Given
+     *      player dieing without game.
+     * When
+     *     onPlayerRespawnEvent
+     * Then
+     *    respawn location should not change.
+     */
+    @Test
+    fun onPlayerRespawnEvent_PlayerNotInGame_RespawnLocationShouldNotChange() {
+        // Arrange
+        val classUnderTest = createWithDependencies()
+
+        val event = PlayerRespawnEvent(
+            Mockito.mock(Player::class.java),
+            null,
+            false
+        )
+
+        // Act
+        classUnderTest.onPlayerRespawnEvent(event)
+
+        // Assert
+        Assertions.assertNull(event.respawnLocation)
+    }
+
+    // endregion
+
     //region onClickOnPlacedSign
 
     /**
@@ -563,10 +678,16 @@ class GameListenerTest {
         fun createWithDependencies(
             gameService: GameService = Mockito.mock(GameService::class.java),
             rightclickManageService: RightclickManageService = MockedRightClickService(),
-            gameActionService: GameActionService<Game> = MockedGameActionService()
+            gameActionService: GameActionService = MockedGameActionService()
         ): GameListener {
+            if (Bukkit.getServer() == null) {
+                val server = Mockito.mock(Server::class.java)
+                Mockito.`when`(server.getWorld(Mockito.anyString())).thenReturn(Mockito.mock(World::class.java))
+                Mockito.`when`(server.logger).thenReturn(Logger.getAnonymousLogger())
+                Bukkit.setServer(server)
+            }
 
-            return GameListener(gameService, rightclickManageService, gameActionService, MockedBallForceFieldService())
+            return GameListener(gameService, rightclickManageService, gameActionService, MockedGameExecutionService(), MockedBallForceFieldService())
         }
     }
 
@@ -583,7 +704,7 @@ class GameListenerTest {
         var joinCalled: Boolean = false,
         var leaveCalled: Boolean = false,
         var joinedTeam: Team? = null
-    ) : GameActionService<Game> {
+    ) : GameActionService {
         /**
          * Closes the given game and all underlying resources.
          */
@@ -641,6 +762,14 @@ class GameListenerTest {
         }
     }
 
+    class MockedGameExecutionService : GameExecutionService {
+        /**
+         * Lets the given [player] in the given [game] respawn at the specified spawnpoint.
+         */
+        override fun <P, G : Game> respawn(game: G, player: P) {
+        }
+    }
+
     class MockedGameService(
         var players: List<Player> = arrayListOf(Mockito.mock(Player::class.java)),
         val games: ArrayList<Game> = ArrayList()
@@ -657,7 +786,11 @@ class GameListenerTest {
          */
         override fun <P> getGameFromPlayer(player: P): Optional<Game> {
             if (players.contains(player as Player)) {
-                return Optional.of(Mockito.mock(Game::class.java))
+                return if (games.size == 0) {
+                    Optional.of(Mockito.mock(Game::class.java))
+                } else {
+                    Optional.of(games[0])
+                }
             }
 
             return Optional.empty()

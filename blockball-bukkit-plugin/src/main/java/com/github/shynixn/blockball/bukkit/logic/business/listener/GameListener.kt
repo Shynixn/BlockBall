@@ -4,11 +4,7 @@ import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.event.BallPostMoveEvent
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.BallForceFieldService
-import com.github.shynixn.blockball.api.business.service.GameActionService
-import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.business.service.RightclickManageService
-import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
@@ -25,6 +21,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.PlayerRespawnEvent
 
 /**
  * Created by Shynixn 2018.
@@ -56,7 +53,8 @@ import org.bukkit.event.player.PlayerQuitEvent
 class GameListener @Inject constructor(
     private val gameService: GameService,
     private val rightClickManageService: RightclickManageService,
-    private val gameActionService: GameActionService<Game>,
+    private val gameActionService: GameActionService,
+    private val gameExecutionService: GameExecutionService,
     private val forceFieldService: BallForceFieldService
 ) : Listener {
     /**
@@ -132,6 +130,32 @@ class GameListener @Inject constructor(
     }
 
     /**
+     * Gets called when a player dies by strange occasions which are not handled by the [EntityDamageEvent].
+     */
+    @EventHandler
+    fun onPlayerRespawnEvent(event: PlayerRespawnEvent) {
+        val game = gameService.getGameFromPlayer(event.player)
+
+        if (!game.isPresent) {
+            return
+        }
+
+        val playerStorage = game.get().ingamePlayersStorage[event.player]!!
+
+        val teamMeta = if (playerStorage.team == Team.RED) {
+            game.get().arena.meta.redTeamMeta
+        } else {
+            game.get().arena.meta.blueTeamMeta
+        }
+
+        if (teamMeta.spawnpoint == null) {
+            event.respawnLocation = game.get().arena.meta.ballMeta.spawnpoint!!.toLocation()
+        } else {
+            event.respawnLocation = teamMeta.spawnpoint!!.toLocation()
+        }
+    }
+
+    /**
      * Cancels all fall damage in the games.
      */
     @EventHandler
@@ -164,31 +188,7 @@ class GameListener @Inject constructor(
         @Suppress("DEPRECATION")
         player.health = player.maxHealth
 
-        val playerStorage = game.get().ingamePlayersStorage[player]!!
-
-        if (playerStorage.team == null) {
-            return
-        }
-
-        if (playerStorage.team == Team.RED) {
-            val spawnpoint = game.get().arena.meta.redTeamMeta.spawnpoint
-
-            if (spawnpoint != null) {
-                player.teleport(spawnpoint.toLocation())
-                return
-            }
-        }
-
-        if (playerStorage.team == Team.BLUE) {
-            val spawnpoint = game.get().arena.meta.blueTeamMeta.spawnpoint
-
-            if (spawnpoint != null) {
-                player.teleport(spawnpoint.toLocation())
-                return
-            }
-        }
-
-        player.teleport(game.get().arena.meta.ballMeta.spawnpoint!!.toLocation())
+        gameExecutionService.respawn(game.get(), player)
     }
 
     /**

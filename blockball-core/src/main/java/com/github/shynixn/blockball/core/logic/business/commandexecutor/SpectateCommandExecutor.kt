@@ -38,7 +38,7 @@ import com.google.inject.Inject
  */
 class SpectateCommandExecutor @Inject constructor(
     private val gameService: GameService,
-    private val miniGameActionService: GameMiniGameActionService<MiniGame>
+    private val miniGameActionService: GameMiniGameActionService
 ) : CommandExecutor {
     /**
      * Gets called when the given [source] executes the defined command with the given [args].

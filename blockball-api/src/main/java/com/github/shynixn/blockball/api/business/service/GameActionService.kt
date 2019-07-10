@@ -30,29 +30,28 @@ import com.github.shynixn.blockball.api.persistence.entity.Game
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface GameActionService<in G : Game> {
-
+interface GameActionService {
     /**
      * Closes the given game and all underlying resources.
      */
-    fun closeGame(game: G)
+    fun closeGame(game: Game)
 
     /**
      * Lets the given [player] leave join the given [game]. Optional can the prefered
      * [team] be specified but the team can still change because of arena settings.
      * Does nothing if the player is already in a Game.
      */
-    fun <P> joinGame(game: G, player: P, team: Team? = null): Boolean
+    fun <P> joinGame(game: Game, player: P, team: Team? = null): Boolean
 
     /**
      * Lets the given [player] leave the given [game].
      * Does nothing if the player is not in the game.
      */
-    fun <P> leaveGame(game: G, player: P)
+    fun <P> leaveGame(game: Game, player: P)
 
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
      * 0 - 20 for each second.
      */
-    fun handle(game: G, ticks: Int)
+    fun handle(game: Game, ticks: Int)
 }

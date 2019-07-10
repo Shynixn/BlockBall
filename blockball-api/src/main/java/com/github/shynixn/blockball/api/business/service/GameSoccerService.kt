@@ -31,22 +31,21 @@ import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface GameSoccerService<in G : Game> {
-
+interface GameSoccerService {
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
      * 0 - 20 for each second.
      */
-    fun handle(game: G, ticks: Int)
+    fun handle(game: Game, ticks: Int)
 
     /**
      * Gets called when the match ends. The [winningPlayers] and [loosingPlayers] parameter
      * can be both null when the match ends in a draw.
      */
-    fun <P> onMatchEnd(game: G, winningPlayers: List<P>?, loosingPlayers: List<P>?)
+    fun <P> onMatchEnd(game: Game, winningPlayers: List<P>?, loosingPlayers: List<P>?)
 
     /**
      * Gets called when the match gets won by the given team.
      */
-    fun onWin(game: G, team: Team, teamMeta: TeamMeta)
+    fun onWin(game: Game, team: Team, teamMeta: TeamMeta)
 }

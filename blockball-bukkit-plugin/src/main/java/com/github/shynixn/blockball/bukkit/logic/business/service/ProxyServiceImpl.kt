@@ -9,6 +9,7 @@ import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -63,6 +64,27 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
         }
 
         player.performCommand(command)
+    }
+
+    /**
+     * Sets the location of the player.
+     */
+    override fun <L, P> setPlayerLocation(player: P, location: L) {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        if (location is Position) {
+            player.teleport(location.toLocation())
+            return
+        }
+
+        if (location is Location) {
+            player.teleport(location)
+            return
+        }
+
+        throw IllegalArgumentException("Location has to be a position or location!")
     }
 
     /**

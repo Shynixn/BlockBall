@@ -7,11 +7,13 @@ import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.GameStorage
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.*
+import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toGameMode
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
+import com.github.shynixn.blockball.bukkit.logic.business.extension.updateInventory
 import com.github.shynixn.blockball.core.logic.persistence.entity.ChatBuilderEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.GameStorageEntity
 import com.google.inject.Inject
@@ -55,8 +57,9 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private val screenMessageService: ScreenMessageService,
     private val soundService: SoundService,
     private val proxyService: ProxyService,
-    private val gameSoccerService: GameSoccerService<Game>
-) : GameMiniGameActionService<MiniGame> {
+    private val gameSoccerService: GameSoccerService,
+    private val gameExecutionService: GameExecutionService
+) : GameMiniGameActionService {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
     /**
@@ -417,23 +420,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 }
             }
 
-            if (stats.team == Team.RED) {
-                val teamMeta = game.arena.meta.redTeamMeta
-
-                if (teamMeta.spawnpoint == null) {
-                    p.teleport(game.arena.meta.ballMeta.spawnpoint!!.toLocation())
-                } else {
-                    p.teleport(teamMeta.spawnpoint!!.toLocation())
-                }
-            } else {
-                val teamMeta = game.arena.meta.blueTeamMeta
-
-                if (teamMeta.spawnpoint == null) {
-                    p.teleport(game.arena.meta.ballMeta.spawnpoint!!.toLocation())
-                } else {
-                    p.teleport(teamMeta.spawnpoint!!.toLocation())
-                }
-            }
+            gameExecutionService.respawn(game, p)
         }
     }
 

@@ -49,17 +49,17 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameSoccerServiceImpl<in G : Game> @Inject constructor(
+class GameSoccerServiceImpl @Inject constructor(
     private val concurrencyService: ConcurrencyService,
     private val screenMessageService: ScreenMessageService,
     private val dependencyService: DependencyService,
     private val ballEntityService: BallEntityService
-) : GameSoccerService<G> {
+) : GameSoccerService {
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
      * 0 - 20 for each second.
      */
-    override fun handle(game: G, ticks: Int) {
+    override fun handle(game: Game, ticks: Int) {
         this.fixBallPositionSpawn(game)
         this.checkBallInGoal(game)
 
@@ -68,7 +68,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(
         }
     }
 
-    private fun fixBallPositionSpawn(game: G) {
+    private fun fixBallPositionSpawn(game: Game) {
         if (game.ball == null || game.ball!!.isDead) {
             return
         }
@@ -94,7 +94,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(
         }
     }
 
-    private fun rescueBall(game: G) {
+    private fun rescueBall(game: Game) {
         if (game.lastBallLocation != null) {
             val ballLocation = game.ball!!.getLocation() as Location
             val knockback = (game.lastBallLocation!! as Location).toVector().subtract(ballLocation.toVector())
@@ -110,7 +110,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(
         }
     }
 
-    private fun checkBallInGoal(game: G) {
+    private fun checkBallInGoal(game: Game) {
         if (game.ball == null || game.ball!!.isDead) {
             return
         }
@@ -141,7 +141,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(
     /**
      * Teleports all players back to their spawnpoint if [game] has got back teleport enabled.
      */
-    private fun teleportBackToSpawnpoint(game: G) {
+    private fun teleportBackToSpawnpoint(game: Game) {
         if (!game.arena.meta.customizingMeta.backTeleport) {
             return
         }
@@ -167,7 +167,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(
         }
     }
 
-    private fun handleBallSpawning(game: G) {
+    private fun handleBallSpawning(game: Game) {
         if (game.ballSpawning) {
             if (game is MiniGame && game.endGameActive) {
                 return
@@ -193,7 +193,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(
     /**
      * Gets called when a goal gets scored on the given [game] by the given [team].
      */
-    private fun onScore(game: G, team: Team, teamMeta: TeamMeta) {
+    private fun onScore(game: Game, team: Team, teamMeta: TeamMeta) {
         var interactionEntity: Player? = null
 
         if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
@@ -233,7 +233,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(
     }
 
 
-    private fun onScoreReward(game: G, players: List<Player>) {
+    private fun onScoreReward(game: Game, players: List<Player>) {
         if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
             if (players.contains(game.lastInteractedEntity!!)) {
                 if (dependencyService.isInstalled(PluginDependency.VAULT) && game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.SHOOT_GOAL)) {
@@ -251,7 +251,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(
         }
     }
 
-    override fun <P> onMatchEnd(game: G, winningPlayers: List<P>?, loosingPlayers: List<P>?) {
+    override fun <P> onMatchEnd(game: Game, winningPlayers: List<P>?, loosingPlayers: List<P>?) {
         if (dependencyService.isInstalled(PluginDependency.VAULT)) {
             val vaultService = BlockBallApi.resolve(DependencyVaultService::class.java)
 
@@ -289,7 +289,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(
     /**
      * Gets called when the given [game] gets win by the given [team].
      */
-    override fun onWin(game: G, team: Team, teamMeta: TeamMeta) {
+    override fun onWin(game: Game, team: Team, teamMeta: TeamMeta) {
         val event = GameEndEvent(team, game)
         Bukkit.getServer().pluginManager.callEvent(event)
 
@@ -324,7 +324,7 @@ class GameSoccerServiceImpl<in G : Game> @Inject constructor(
         return players
     }
 
-    private fun executeCommand(game: G, meta: CommandMeta, players: List<Player>) {
+    private fun executeCommand(game: Game, meta: CommandMeta, players: List<Player>) {
         var command = meta.command
         if (command!!.startsWith("/")) {
             command = command.substring(1, command.length)

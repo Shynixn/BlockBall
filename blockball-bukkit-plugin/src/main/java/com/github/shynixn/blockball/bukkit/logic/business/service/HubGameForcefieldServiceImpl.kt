@@ -43,7 +43,7 @@ import org.bukkit.entity.Player
 class HubGameForcefieldServiceImpl @Inject constructor(
     private val gameService: GameService,
     private val configurationService: ConfigurationService,
-    private val gameActionService: GameActionService<Game>,
+    private val gameActionService: GameActionService,
     private val proxyService: ProxyService
 ) : HubGameForcefieldService {
     private val cache = HashMap<Player, InteractionCache>()

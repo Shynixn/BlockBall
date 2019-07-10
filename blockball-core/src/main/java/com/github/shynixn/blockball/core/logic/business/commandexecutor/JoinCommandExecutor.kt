@@ -4,7 +4,6 @@ import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.executor.CommandExecutor
 import com.github.shynixn.blockball.api.business.service.GameActionService
 import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.core.logic.business.extension.mergeArgs
 import com.github.shynixn.blockball.core.logic.business.extension.stripChatColors
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
@@ -37,7 +36,7 @@ import com.google.inject.Inject
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class JoinCommandExecutor @Inject constructor(private val gameService: GameService, private val gameActionService: GameActionService<Game>) : CommandExecutor {
+class JoinCommandExecutor @Inject constructor(private val gameService: GameService, private val gameActionService: GameActionService) : CommandExecutor {
     /**
      * Gets called when the given [source] executes the defined command with the given [args].
      */

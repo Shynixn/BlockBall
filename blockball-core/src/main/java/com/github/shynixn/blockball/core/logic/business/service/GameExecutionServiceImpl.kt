@@ -1,16 +1,19 @@
-package com.github.shynixn.blockball.api.business.service
+package com.github.shynixn.blockball.core.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.persistence.entity.HubGame
+import com.github.shynixn.blockball.api.business.service.GameExecutionService
+import com.github.shynixn.blockball.api.business.service.ProxyService
+import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.google.inject.Inject
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,23 +33,23 @@ import com.github.shynixn.blockball.api.persistence.entity.HubGame
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface GameHubGameActionService {
+class GameExecutionServiceImpl @Inject constructor(private val proxyService : ProxyService) : GameExecutionService {
     /**
-     * Lets the given [player] leave join the given [game]. Optional can the prefered
-     * [team] be specified but the team can still change because of arena settings.
-     * Does nothing if the player is already in a Game.
+     * Lets the given [player] in the given [game] respawn at the specified spawnpoint.
      */
-    fun <P> joinGame(game: HubGame, player: P, team: Team?): Boolean
+    override fun <P, G : Game> respawn(game: G, player: P) {
+        val team = game.ingamePlayersStorage[player as Any]!!.team!!
 
-    /**
-     * Lets the given [player] leave the given [game].
-     * Does nothing if the player is not in the game.
-     */
-    fun <P> leaveGame(game: HubGame, player: P)
+        val teamMeta = if (team == Team.RED) {
+            game.arena.meta.redTeamMeta
+        } else {
+            game.arena.meta.blueTeamMeta
+        }
 
-    /**
-     * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
-     * 0 - 20 for each second.
-     */
-    fun handle(game: HubGame, ticks: Int)
+        if (teamMeta.spawnpoint == null) {
+            proxyService.setPlayerLocation(player, game.arena.meta.ballMeta.spawnpoint!!)
+        } else {
+            proxyService.setPlayerLocation(player, teamMeta.spawnpoint!!)
+        }
+    }
 }

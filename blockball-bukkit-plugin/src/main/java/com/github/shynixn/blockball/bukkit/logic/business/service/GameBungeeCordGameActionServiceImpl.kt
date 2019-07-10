@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.GameBungeeCordGameActionService
@@ -48,7 +47,6 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(private val plugin
         Bukkit.getServer().shutdown()
     }
 
-
     /**
      * Lets the given [player] leave the given [game].
      * Does nothing if the player is not in the game.
@@ -75,27 +73,5 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(private val plugin
         } else {
             plugin.setMotd(bungeeCordConfiguration.waitingForPlayersMotd)
         }
-    }
-
-    /**
-     * Lets the given [player] leave join the given [game]. Optional can the prefered
-     * [team] be specified but the team can still change because of arena settings.
-     * Does nothing if the player is already in a Game.
-     */
-    override fun <P> joinGame(game: BungeeCordGame, player: P, team: Team?): Boolean {
-        return true
-    }
-
-    /**
-     * Lets the given [player] leave spectate the given [game].
-     * Does nothing if the player is already spectating a Game.
-     */
-    override fun <P> spectateGame(game: BungeeCordGame, player: P) {
-    }
-
-    /**
-     * Gets called when the given [game] ends with a draw.
-     */
-    override fun onDraw(game: BungeeCordGame) {
     }
 }

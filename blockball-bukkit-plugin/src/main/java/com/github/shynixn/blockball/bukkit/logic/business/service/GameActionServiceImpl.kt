@@ -52,21 +52,21 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameActionServiceImpl<in G : Game> @Inject constructor(
+class GameActionServiceImpl @Inject constructor(
     private val plugin: Plugin,
     private val pluginProxy: PluginProxy,
     private val gameHubGameActionService: GameHubGameActionService,
     private val bossBarService: BossBarService,
     private val configurationService: ConfigurationService,
     private val hubGameActionService: GameHubGameActionService,
-    private val minigameActionService: GameMiniGameActionService<MiniGame>,
+    private val minigameActionService: GameMiniGameActionService,
     private val bungeeCordGameActionService: GameBungeeCordGameActionService,
     private val scoreboardService: ScoreboardService,
     private val hologramService: HologramService,
     private val dependencyService: DependencyService,
     private val dependencyBossBarApiService: DependencyBossBarApiService,
-    private val gameSoccerService: GameSoccerService<Game>
-) : GameActionService<G> {
+    private val gameSoccerService: GameSoccerService
+) : GameActionService {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
     /**
@@ -74,7 +74,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
      * [team] be specified but the team can still change because of arena settings.
      * Does nothing if the player is already in a Game.
      */
-    override fun <P> joinGame(game: G, player: P, team: Team?): Boolean {
+    override fun <P> joinGame(game: Game, player: P, team: Team?): Boolean {
         if (player !is Player) {
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
@@ -104,7 +104,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
      * Lets the given [player] leave the given [game].
      * Does nothing if the player is not in the game.
      */
-    override fun <P> leaveGame(game: G, player: P) {
+    override fun <P> leaveGame(game: Game, player: P) {
         if (player !is Player) {
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
@@ -155,17 +155,12 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
         }
     }
 
-
     /**
      * Closes the given game and all underlying resources.
      */
-    override fun closeGame(game: G) {
+    override fun closeGame(game: Game) {
         if (game.closed) {
             return
-        }
-
-        if (game is HubGame) {
-            hubGameActionService.closeGame(game)
         }
 
         if (game is MiniGame) {
@@ -198,7 +193,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
      * 0 - 20 for each second.
      */
-    override fun handle(game: G, ticks: Int) {
+    override fun handle(game: Game, ticks: Int) {
         if (!game.arena.enabled || game.closing) {
             game.status = GameStatus.DISABLED
             onUpdateSigns(game)
@@ -323,7 +318,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
     /**
      * Kicks entities out of the arena.
      */
-    private fun kickUnwantedEntitiesOutOfForcefield(game: G) {
+    private fun kickUnwantedEntitiesOutOfForcefield(game: Game) {
         if (!game.arena.meta.protectionMeta.entityProtectionEnabled) {
             return
         }
@@ -342,7 +337,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
     /**
      * Updates the hologram for the current game.
      */
-    private fun updateHolograms(game: G) {
+    private fun updateHolograms(game: Game) {
         if (game.holograms.size != game.arena.meta.hologramMetas.size) {
             game.holograms.forEach { h -> h.remove() }
             game.holograms.clear()
@@ -379,7 +374,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
     /**
      * Updates the bossbar for the current game.
      */
-    private fun updateBossBar(game: G) {
+    private fun updateBossBar(game: Game) {
         val meta = game.arena.meta.bossBarMeta
         if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
             if (game.bossBar == null && game.arena.meta.bossBarMeta.enabled) {
@@ -427,7 +422,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
     /**
      * Updates the cooldown of the double jump for the given game.
      */
-    private fun updateDoubleJumpCooldown(game: G) {
+    private fun updateDoubleJumpCooldown(game: Game) {
         game.doubleJumpCoolDownPlayers.keys.toTypedArray().forEach { p ->
             var time = game.doubleJumpCoolDownPlayers[p]!!
             time -= 1
@@ -443,7 +438,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
     /**
      * Updates the scoreboard for all players when enabled.
      */
-    private fun updateScoreboard(game: G) {
+    private fun updateScoreboard(game: Game) {
         if (!game.arena.meta.scoreboardMeta.enabled) {
             return
         }
@@ -509,7 +504,7 @@ class GameActionServiceImpl<in G : Game> @Inject constructor(
     /**
      * Returns if the given [player] is allowed to join the match.
      */
-    private fun isAllowedToJoinWithPermissions(game: G, player: Player): Boolean {
+    private fun isAllowedToJoinWithPermissions(game: Game, player: Player): Boolean {
         if (player.hasPermission(Permission.JOIN.permission + ".all")
             || player.hasPermission(Permission.JOIN.permission + "." + game.arena.name)
         ) {
