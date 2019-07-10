@@ -74,11 +74,13 @@ sql:
 
 # Game settings
 
+# always-use-blockballaxe: This disables the worldedit axe for block and only allows the blockball axe.
 # allow-server-linking: Enable this to allow linking via BungeeCord between other servers with BlockBall installed.
 
 ############################
 
 game:
+  always-use-blockballaxe: false
   allow-server-linking: false
 
 ############################

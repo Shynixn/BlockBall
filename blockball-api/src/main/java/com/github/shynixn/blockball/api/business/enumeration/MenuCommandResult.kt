@@ -37,7 +37,7 @@ enum class MenuCommandResult(
     CANCEL_MESSAGE(null),
     BACK(null),
 
-    WESELECTION_MISSING("Please select an area via worldedit!"),
+    WESELECTION_MISSING("Please select an area via the wand!"),
     MINIGAMEARENA_NOTVALID("Please set the center, goal1, goal2, ball spawpoint, lobby spawnpoint and leave spawnpoint before saving!"),
     ARENA_NOTVALID("Please set the center, goal1, goal2 and ball spawpoint before saving!"),
 

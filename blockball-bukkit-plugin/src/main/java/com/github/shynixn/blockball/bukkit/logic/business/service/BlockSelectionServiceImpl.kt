@@ -45,7 +45,13 @@ import kotlin.collections.HashSet
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BlockSelectionServiceImpl @Inject constructor(private val concurrencyService: ConcurrencyService, configurationService: ConfigurationService, itemService: ItemService, private val dependencyService: DependencyService, private val dependencyWorldEditService: DependencyWorldEditService) : BlockSelectionService {
+class BlockSelectionServiceImpl @Inject constructor(
+    private val concurrencyService: ConcurrencyService,
+    private val configurationService: ConfigurationService,
+    itemService: ItemService,
+    private val dependencyService: DependencyService,
+    private val dependencyWorldEditService: DependencyWorldEditService
+) : BlockSelectionService {
     private val axeName = ChatColor.WHITE.toString() + ChatColor.BOLD + ">>" + ChatColor.YELLOW + "BlockBall" + ChatColor.WHITE + ChatColor.BOLD + "<<"
     private val playerSelection = HashMap<Player, Array<Location?>>()
     private val goldenAxeType = itemService.getMaterialFromMaterialType<Material>(MaterialType.GOLDEN_AXE)
@@ -106,7 +112,7 @@ class BlockSelectionServiceImpl @Inject constructor(private val concurrencyServi
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        if (!dependencyService.isInstalled(PluginDependency.WORLEDIT)) {
+        if (isBlockBallAxeEnabled()) {
             return getCompatibilitySelection(player, 0) as Optional<L>
         }
 
@@ -121,7 +127,7 @@ class BlockSelectionServiceImpl @Inject constructor(private val concurrencyServi
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        if (!dependencyService.isInstalled(PluginDependency.WORLEDIT)) {
+        if (isBlockBallAxeEnabled()) {
             return getCompatibilitySelection(player, 1) as Optional<L>
         }
 
@@ -151,7 +157,10 @@ class BlockSelectionServiceImpl @Inject constructor(private val concurrencyServi
         }
 
         @Suppress("DEPRECATION")
-        if (player.itemInHand.itemMeta!!.displayName.cast<String?>() != null && ChatColor.stripColor(player.itemInHand.itemMeta!!.displayName) != ChatColor.stripColor(this.axeName)) {
+        if (player.itemInHand.itemMeta!!.displayName.cast<String?>() != null && ChatColor.stripColor(player.itemInHand.itemMeta!!.displayName) != ChatColor.stripColor(
+                this.axeName
+            )
+        ) {
             return false
         }
 
@@ -173,7 +182,7 @@ class BlockSelectionServiceImpl @Inject constructor(private val concurrencyServi
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        if (dependencyService.isInstalled(PluginDependency.WORLEDIT)) {
+        if (!isBlockBallAxeEnabled()) {
             return
         }
 
@@ -181,7 +190,10 @@ class BlockSelectionServiceImpl @Inject constructor(private val concurrencyServi
             if (player.inventory.contents[0] != null) {
                 val item = player.inventory.contents[0]
 
-                if (item.type == goldenAxeType && item.itemMeta!!.displayName.cast<String?>() != null && ChatColor.stripColor(item.itemMeta!!.displayName) == ChatColor.stripColor(this.axeName)) {
+                if (item.type == goldenAxeType && item.itemMeta!!.displayName.cast<String?>() != null && ChatColor.stripColor(item.itemMeta!!.displayName) == ChatColor.stripColor(
+                        this.axeName
+                    )
+                ) {
                     return
                 }
             }
@@ -191,7 +203,7 @@ class BlockSelectionServiceImpl @Inject constructor(private val concurrencyServi
         itemStack.setDisplayName(axeName)
         player.inventory.addItem(itemStack)
 
-        player.sendMessage(prefix + "WE not installed. Use this golden axe for selection.")
+        player.sendMessage(prefix + "Take a look into your inventory. Use this golden axe for selection.")
     }
 
     /**
@@ -203,5 +215,14 @@ class BlockSelectionServiceImpl @Inject constructor(private val concurrencyServi
         }
 
         return Optional.empty()
+    }
+
+    /**
+     * Should the blockballaxe be enabled?
+     */
+    private fun isBlockBallAxeEnabled(): Boolean {
+        return !dependencyService.isInstalled(PluginDependency.WORLEDIT) || (configurationService.containsValue("game.always-use-blockballaxe") && configurationService.findValue(
+            "game.always-use-blockballaxe"
+        ))
     }
 }
