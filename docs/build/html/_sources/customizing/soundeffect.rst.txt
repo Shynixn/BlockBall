@@ -46,7 +46,7 @@ Properties
 ~~~~~~~~~~
 
 * Effecting: Whether all players can hear the Soundeffect, only the player belonging to the action or nobody.
-* Name: Name of the Soundeffect
+* Name: Name of the Soundeffect. All names can be found `here. <https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html>`_
 * Volume: Volume of the Soundeffect (radius of blocks the sound is audible)
 * Pitch: Pitch of the Soundeffect
 
