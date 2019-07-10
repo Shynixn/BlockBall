@@ -2,6 +2,7 @@ com.github.shynixn.blockball.api
 com.github.shynixn.blockball.api.bukkit.event
 com.github.shynixn.blockball.api.business.annotation
 com.github.shynixn.blockball.api.business.enumeration
+com.github.shynixn.blockball.api.business.executor
 com.github.shynixn.blockball.api.business.proxy
 com.github.shynixn.blockball.api.business.serializer
 com.github.shynixn.blockball.api.business.service
@@ -9,14 +10,14 @@ com.github.shynixn.blockball.api.persistence.context
 com.github.shynixn.blockball.api.persistence.entity
 com.github.shynixn.blockball.api.persistence.repository
 com.github.shynixn.blockball.bukkit
-com.github.shynixn.blockball.bukkit.logic.business.commandexecutor
-com.github.shynixn.blockball.bukkit.logic.business.commandexecutor.menu
 com.github.shynixn.blockball.bukkit.logic.business.extension
 com.github.shynixn.blockball.bukkit.logic.business.listener
 com.github.shynixn.blockball.bukkit.logic.business.proxy
 com.github.shynixn.blockball.bukkit.logic.business.service
 com.github.shynixn.blockball.bukkit.logic.persistence.context
 com.github.shynixn.blockball.bukkit.logic.persistence.repository
+com.github.shynixn.blockball.core.logic.business.commandexecutor
+com.github.shynixn.blockball.core.logic.business.commandmenu
 com.github.shynixn.blockball.core.logic.business.extension
 com.github.shynixn.blockball.core.logic.business.serializer
 com.github.shynixn.blockball.core.logic.business.service
