@@ -169,6 +169,19 @@ class ArenaFileRepositoryTest {
     }
 
     class MockedConfigurationService : ConfigurationService {
+        /**
+         * Checks if the given [path] contains a value.
+         */
+        override fun containsValue(path: String): Boolean {
+            return true
+        }
+
+        /**
+         * Reloads the config.
+         */
+        override fun reload() {
+        }
+
         private var path: Path = Paths.get("build/repository-test")
 
         init {

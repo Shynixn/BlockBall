@@ -4,12 +4,12 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
+import com.github.shynixn.blockball.api.business.service.GameExecutionService
 import com.github.shynixn.blockball.api.business.service.GameHubGameActionService
 import com.github.shynixn.blockball.api.persistence.entity.HubGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toGameMode
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.updateInventory
 import com.github.shynixn.blockball.core.logic.persistence.entity.GameStorageEntity
 import com.google.inject.Inject
@@ -46,7 +46,8 @@ import org.bukkit.scoreboard.Scoreboard
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameHubGameActionServiceImpl @Inject constructor(configurationService: ConfigurationService) : GameHubGameActionService {
+class GameHubGameActionServiceImpl @Inject constructor(configurationService: ConfigurationService, private val gameExecutionService: GameExecutionService) :
+    GameHubGameActionService {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
     /**
@@ -130,6 +131,9 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
         }
     }
 
+    /**
+     * Prepares the storage for a hubgame.
+     */
     private fun prepareLobbyStorageForPlayer(game: HubGame, player: Player, team: Team, teamMeta: TeamMeta) {
         val stats = GameStorageEntity(player.uniqueId, Bukkit.getScoreboardManager()!!.newScoreboard)
 
@@ -160,19 +164,8 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
         player.inventory.setArmorContents(teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray())
         player.inventory.updateInventory()
 
-        if (teamMeta.spawnpoint == null) {
-            player.teleport(game.arena.meta.ballMeta.spawnpoint!!.toLocation())
-        } else {
-            player.teleport(teamMeta.spawnpoint!!.toLocation())
-        }
+        this.gameExecutionService.respawn(game, player)
 
         player.sendMessage(prefix + teamMeta.joinMessage.replaceGamePlaceholder(game, teamMeta))
-    }
-
-
-    /**
-     * Closes the given game and all underlying resources.
-     */
-    override fun closeGame(game: HubGame) {
     }
 }

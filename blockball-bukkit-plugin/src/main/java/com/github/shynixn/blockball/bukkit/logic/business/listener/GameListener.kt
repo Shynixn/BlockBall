@@ -2,19 +2,13 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.event.BallPostMoveEvent
-import com.github.shynixn.blockball.api.bukkit.event.PlaceHolderRequestEvent
 import com.github.shynixn.blockball.api.business.enumeration.Permission
-import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.BallForceFieldService
-import com.github.shynixn.blockball.api.business.service.GameActionService
-import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.business.service.RightclickManageService
-import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
-import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.block.Sign
@@ -26,8 +20,10 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
+import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.PlayerRespawnEvent
 
 /**
  * Created by Shynixn 2018.
@@ -59,7 +55,9 @@ import org.bukkit.event.player.PlayerQuitEvent
 class GameListener @Inject constructor(
     private val gameService: GameService,
     private val rightClickManageService: RightclickManageService,
-    private val gameActionService: GameActionService<Game>,
+    private val gameActionService: GameActionService,
+    private val gameExecutionService: GameExecutionService,
+    private val concurrencyService: ConcurrencyService,
     private val forceFieldService: BallForceFieldService
 ) : Listener {
     /**
@@ -135,6 +133,48 @@ class GameListener @Inject constructor(
     }
 
     /**
+     * Gets called when a player drops his item and cancels the action.
+     */
+    @EventHandler
+    fun onPlayerDropItemEvent(event: PlayerDropItemEvent) {
+        val game = gameService.getGameFromPlayer(event.player)
+
+        if (game.isPresent && !Permission.INVENTORY.hasPermission(event.player)) {
+            event.isCancelled = true
+
+            sync(concurrencyService, 10L) {
+                event.player.updateInventory()
+            }
+        }
+    }
+
+    /**
+     * Gets called when a player dies by strange occasions which are not handled by the [EntityDamageEvent].
+     */
+    @EventHandler
+    fun onPlayerRespawnEvent(event: PlayerRespawnEvent) {
+        val game = gameService.getGameFromPlayer(event.player)
+
+        if (!game.isPresent) {
+            return
+        }
+
+        val playerStorage = game.get().ingamePlayersStorage[event.player]!!
+
+        val teamMeta = if (playerStorage.team == Team.RED) {
+            game.get().arena.meta.redTeamMeta
+        } else {
+            game.get().arena.meta.blueTeamMeta
+        }
+
+        if (teamMeta.spawnpoint == null) {
+            event.respawnLocation = game.get().arena.meta.ballMeta.spawnpoint!!.toLocation()
+        } else {
+            event.respawnLocation = teamMeta.spawnpoint!!.toLocation()
+        }
+    }
+
+    /**
      * Cancels all fall damage in the games.
      */
     @EventHandler
@@ -167,31 +207,7 @@ class GameListener @Inject constructor(
         @Suppress("DEPRECATION")
         player.health = player.maxHealth
 
-        val playerStorage = game.get().ingamePlayersStorage[player]!!
-
-        if (playerStorage.team == null) {
-            return
-        }
-
-        if (playerStorage.team == Team.RED) {
-            val spawnpoint = game.get().arena.meta.redTeamMeta.spawnpoint
-
-            if (spawnpoint != null) {
-                player.teleport(spawnpoint.toLocation())
-                return
-            }
-        }
-
-        if (playerStorage.team == Team.BLUE) {
-            val spawnpoint = game.get().arena.meta.blueTeamMeta.spawnpoint
-
-            if (spawnpoint != null) {
-                player.teleport(spawnpoint.toLocation())
-                return
-            }
-        }
-
-        player.teleport(game.get().arena.meta.ballMeta.spawnpoint!!.toLocation())
+        gameExecutionService.respawn(game.get(), player)
     }
 
     /**
@@ -244,29 +260,6 @@ class GameListener @Inject constructor(
                     gameActionService.leaveGame(game, event.player)
                 }
             }
-        }
-    }
-
-    /**
-     * Handles placeholder requests.
-     */
-    @EventHandler
-    fun onPlaceHolderRequestEvent(event: PlaceHolderRequestEvent) {
-        try {
-            PlaceHolder.values().forEach { p ->
-                if (event.name.startsWith(p.placeHolder)) {
-                    val data = event.name.split("_")
-                    val game = this.gameService.getGameFromName(data[1])
-
-                    if (game.isPresent) {
-                        event.result = data[0].replaceGamePlaceholder(game.get())
-                    }
-
-                    return
-                }
-            }
-        } catch (e: Exception) {
-            //Ignored. Simple parsing error that another plugin is responsible for.
         }
     }
 }

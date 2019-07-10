@@ -29,4 +29,21 @@ import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface GameBungeeCordGameActionService : GameMiniGameActionService<BungeeCordGame>
+interface GameBungeeCordGameActionService{
+    /**
+     * Closes the given game and all underlying resources.
+     */
+     fun closeGame(game: BungeeCordGame)
+
+    /**
+     * Lets the given [player] leave the given [game].
+     * Does nothing if the player is not in the game.
+     */
+    fun <P> leaveGame(game: BungeeCordGame, player: P)
+
+    /**
+    * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
+    * 0 - 20 for each second.
+    */
+    fun handle(game: BungeeCordGame, ticks: Int)
+}

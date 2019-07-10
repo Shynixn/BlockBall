@@ -72,8 +72,15 @@ class DependencyWorldEdit7ServiceImpl @Inject constructor(private val plugin: Pl
             val blockVectorClazz = Class.forName("com.sk89q.worldedit.math.BlockVector3")
 
             val plugin = Bukkit.getPluginManager().getPlugin("WorldEdit")
-            val session = clazz.getDeclaredMethod("getSession", Player::class.java).invoke(plugin, player)
-            val selectionWorld = localSessionClazz.getDeclaredMethod("getSelectionWorld").invoke(session)
+            val session: Any
+            val selectionWorld: Any
+
+            try {
+                session = clazz.getDeclaredMethod("getSession", Player::class.java).invoke(plugin, player)
+                selectionWorld = localSessionClazz.getDeclaredMethod("getSelectionWorld").invoke(session)
+            } catch (e: Exception) {
+                return Optional.empty()
+            }
 
             if (selectionWorld == null) {
                 return Optional.empty()
@@ -89,7 +96,12 @@ class DependencyWorldEdit7ServiceImpl @Inject constructor(private val plugin: Pl
 
             if (selection != null) {
                 val blockVector = Class.forName("com.sk89q.worldedit.regions.Region").getDeclaredMethod(name).invoke(selection)
-                val location = Location(player.world, (blockVectorClazz.getDeclaredMethod("getX").invoke(blockVector) as Int).toDouble(), (blockVectorClazz.getDeclaredMethod("getY").invoke(blockVector) as Int).toDouble(), (blockVectorClazz.getDeclaredMethod("getZ").invoke(blockVector) as Int).toDouble())
+                val location = Location(
+                    player.world,
+                    (blockVectorClazz.getDeclaredMethod("getX").invoke(blockVector) as Int).toDouble(),
+                    (blockVectorClazz.getDeclaredMethod("getY").invoke(blockVector) as Int).toDouble(),
+                    (blockVectorClazz.getDeclaredMethod("getZ").invoke(blockVector) as Int).toDouble()
+                )
 
                 return Optional.of(location)
             }

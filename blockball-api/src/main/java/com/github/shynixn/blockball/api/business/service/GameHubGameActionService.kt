@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.api.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.HubGame
 
 /**
@@ -29,4 +30,23 @@ import com.github.shynixn.blockball.api.persistence.entity.HubGame
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface GameHubGameActionService : GameActionService<HubGame>
+interface GameHubGameActionService {
+    /**
+     * Lets the given [player] leave join the given [game]. Optional can the prefered
+     * [team] be specified but the team can still change because of arena settings.
+     * Does nothing if the player is already in a Game.
+     */
+    fun <P> joinGame(game: HubGame, player: P, team: Team?): Boolean
+
+    /**
+     * Lets the given [player] leave the given [game].
+     * Does nothing if the player is not in the game.
+     */
+    fun <P> leaveGame(game: HubGame, player: P)
+
+    /**
+     * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
+     * 0 - 20 for each second.
+     */
+    fun handle(game: HubGame, ticks: Int)
+}

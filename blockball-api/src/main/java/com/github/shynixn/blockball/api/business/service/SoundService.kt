@@ -34,4 +34,9 @@ interface SoundService {
      * Plays the given [sound] at the given [location] for the given [players].
      */
     fun <L, P> playSound(location: L, sound: Sound, players: Collection<P>)
+
+    /**
+     * Gets all available sound names.
+     */
+    val soundNames: List<String>
 }

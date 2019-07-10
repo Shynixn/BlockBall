@@ -46,6 +46,20 @@ import java.util.logging.Level
 class ConfigurationServiceImpl @Inject constructor(private val plugin: Plugin, private val yamlSerializationService: YamlSerializationService) :
     ConfigurationService {
     /**
+     * Checks if the given [path] contains a value.
+     */
+    override fun containsValue(path: String): Boolean {
+        return plugin.config.contains(path)
+    }
+
+    /**
+     * Reloads the config.
+     */
+    override fun reload() {
+        plugin.reloadConfig()
+    }
+
+    /**
      * Gets the path to the folder where the application is allowed to store
      * save data.
      */

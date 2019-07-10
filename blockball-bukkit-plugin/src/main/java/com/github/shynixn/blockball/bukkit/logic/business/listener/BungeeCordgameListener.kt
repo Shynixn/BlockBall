@@ -4,7 +4,6 @@ import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.service.GameActionService
 import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.RightclickManageService
-import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.google.inject.Inject
 import org.bukkit.block.Sign
 import org.bukkit.event.EventHandler
@@ -43,7 +42,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 class BungeeCordgameListener @Inject constructor(
     private val gameService: GameService,
     private val rightClickManageService: RightclickManageService,
-    private val gameActionService: GameActionService<Game>
+    private val gameActionService: GameActionService
 ) : Listener {
     /**
      * Joins the game for a bungeecord player.

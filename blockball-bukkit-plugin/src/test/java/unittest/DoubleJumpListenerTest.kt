@@ -307,7 +307,7 @@ class DoubleJumpListenerTest {
         }
     }
 
-    class MockedSoundService : SoundService {
+    class MockedSoundService(override val soundNames: List<String> = ArrayList()) : SoundService {
         var playSoundCalled = false
 
         /**

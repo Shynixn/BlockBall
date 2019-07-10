@@ -42,4 +42,9 @@ interface LoggingService {
      * Logs an error text.
      */
     fun error(text: String, e: Throwable? = null)
+
+    /**
+     * Logs an debug text only if debug is enabled.
+     */
+    fun debug(text: String, e: Throwable? = null)
 }

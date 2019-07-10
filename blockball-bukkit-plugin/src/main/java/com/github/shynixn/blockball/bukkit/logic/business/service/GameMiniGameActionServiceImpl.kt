@@ -2,15 +2,19 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.ChatClickAction
 import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.GameStorage
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.*
+import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toGameMode
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
+import com.github.shynixn.blockball.bukkit.logic.business.extension.updateInventory
+import com.github.shynixn.blockball.core.logic.persistence.entity.ChatBuilderEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.GameStorageEntity
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -52,8 +56,11 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private val configurationService: ConfigurationService,
     private val screenMessageService: ScreenMessageService,
     private val soundService: SoundService,
-    private val gameSoccerService: GameSoccerService<Game>
-) : GameMiniGameActionService<MiniGame> {
+    private val proxyService: ProxyService,
+    private val gameSoccerService: GameSoccerService,
+    private val gameExecutionService: GameExecutionService,
+    private val loggingService: LoggingService
+) : GameMiniGameActionService {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
     /**
@@ -75,16 +82,20 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
+        loggingService.debug("Player " + player.name + " has joined game " + game.arena.name + " " + game.arena.displayName)
+
         if (game.playing || game.endGameActive || game.isLobbyFull) {
-            ChatBuilder().text(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[0].replaceGamePlaceholder(game))
+            val b = ChatBuilderEntity().text(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[0].replaceGamePlaceholder(game))
                 .nextLine()
                 .component(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[1].replaceGamePlaceholder(game))
                 .setClickAction(
-                    ChatBuilder.ClickAction.RUN_COMMAND
+                    ChatClickAction.RUN_COMMAND
                     , "/" + plugin.config.getString("global-spectate.command") + " " + game.arena.name
                 )
                 .setHoverText(" ")
-                .builder().sendMessage(player)
+                .builder()
+
+            proxyService.sendMessage(player, b)
 
             return false
         }
@@ -142,15 +153,20 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
+        loggingService.debug("Player " + player.name + " tries to leave game " + game.arena.name + " " + game.arena.displayName)
+
         if (game.spectatorPlayers.contains(player)) {
             resetStorage(player, game.spectatorPlayersStorage[player]!!)
             player.teleport(game.arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation())
             game.spectatorPlayersStorage.remove(player)
 
+            loggingService.debug("Player " + player.name + " has left as spectator.")
+
             return
         }
 
         if (!game.ingamePlayersStorage.containsKey(player)) {
+            loggingService.debug("Player " + player.name + " has left without restorring storage.")
             return
         }
 
@@ -326,6 +342,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private fun createPlayerStorage(game: MiniGame, player: Player): GameStorage {
         val stats = GameStorageEntity(player.uniqueId, Bukkit.getScoreboardManager()!!.newScoreboard)
 
+        loggingService.debug("Created a temporary storage for player " + player.name + ".")
+
         with(stats) {
             gameMode = player.gameMode
             armorContents = player.inventory.armorContents.clone() as Array<Any?>
@@ -341,6 +359,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             health = player.health
             hunger = player.foodLevel
         }
+
+        loggingService.debug("PlayerStorage was filled for player " + player.name + ".")
 
         player.allowFlight = false
         player.isFlying = false
@@ -412,23 +432,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 }
             }
 
-            if (stats.team == Team.RED) {
-                val teamMeta = game.arena.meta.redTeamMeta
-
-                if (teamMeta.spawnpoint == null) {
-                    p.teleport(game.arena.meta.ballMeta.spawnpoint!!.toLocation())
-                } else {
-                    p.teleport(teamMeta.spawnpoint!!.toLocation())
-                }
-            } else {
-                val teamMeta = game.arena.meta.blueTeamMeta
-
-                if (teamMeta.spawnpoint == null) {
-                    p.teleport(game.arena.meta.ballMeta.spawnpoint!!.toLocation())
-                } else {
-                    p.teleport(teamMeta.spawnpoint!!.toLocation())
-                }
-            }
+            gameExecutionService.respawn(game, p)
         }
     }
 
@@ -538,6 +542,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             health = stats.health
             foodLevel = stats.hunger
         }
+
+        loggingService.debug("The inventory of player " + player.name + " was restored.")
 
         player.inventory.updateInventory()
     }

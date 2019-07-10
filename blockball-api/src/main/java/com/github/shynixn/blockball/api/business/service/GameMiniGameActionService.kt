@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.api.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 
 /**
@@ -29,16 +30,39 @@ import com.github.shynixn.blockball.api.persistence.entity.MiniGame
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface GameMiniGameActionService<in G : MiniGame> : GameActionService<G> {
+interface GameMiniGameActionService {
+    /**
+     * Lets the given [player] leave join the given [game]. Optional can the prefered
+     * [team] be specified but the team can still change because of arena settings.
+     * Does nothing if the player is already in a Game.
+     */
+    fun <P> joinGame(game: MiniGame, player: P, team: Team?): Boolean
+
+    /**
+     * Lets the given [player] leave the given [game].
+     * Does nothing if the player is not in the game.
+     */
+    fun <P> leaveGame(game: MiniGame, player: P)
+
+    /**
+     * Closes the given game and all underlying resources.
+     */
+    fun closeGame(game: MiniGame)
 
     /**
      * Lets the given [player] leave spectate the given [game].
      * Does nothing if the player is already spectating a Game.
      */
-    fun <P> spectateGame(game: G, player: P)
+    fun <P> spectateGame(game: MiniGame, player: P)
 
     /**
      * Gets called when the given [game] ends with a draw.
      */
-    fun onDraw(game: G)
+    fun onDraw(game: MiniGame)
+
+    /**
+     * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
+     * 0 - 20 for each second.
+     */
+    fun handle(game: MiniGame, ticks: Int)
 }

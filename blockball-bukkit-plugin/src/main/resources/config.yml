@@ -7,6 +7,16 @@
 
 ############################
 
+# Debug settings
+
+# This setting should only be turned on if debugging messages are intended which is not necessarry for production servers.
+
+############################
+
+debug: false
+
+############################
+
 # Data-collecting settings
 
 # Settings to send anonymous stats to https://bstats.org/plugin/bukkit/BlockBall.
@@ -64,11 +74,13 @@ sql:
 
 # Game settings
 
+# always-use-blockballaxe: This disables the worldedit axe for block and only allows the blockball axe.
 # allow-server-linking: Enable this to allow linking via BungeeCord between other servers with BlockBall installed.
 
 ############################
 
 game:
+  always-use-blockballaxe: false
   allow-server-linking: false
 
 ############################
@@ -146,15 +158,15 @@ stats-scoreboard:
   enabled: false
   title: '&f&lBlockBall Stats'
   lines:
-  - ''
-  - '&e<playername>'
-  - '&m           '
-  - '&bWinrate: '
-  - '&f&l<winrate> '
-  - ''
-  - '&6Goals:'
-  - '&f&l<goalspergame>'
-  - ''
-  - '&aPlayed games:'
-  - '&f&l<playedgames>'
-  - '&m           '
+    - ''
+    - '&e<playername>'
+    - '&m           '
+    - '&bWinrate: '
+    - '&f&l<winrate> '
+    - ''
+    - '&6Goals:'
+    - '&f&l<goalspergame>'
+    - ''
+    - '&aPlayed games:'
+    - '&f&l<playedgames>'
+    - '&m           '
