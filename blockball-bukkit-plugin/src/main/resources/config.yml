@@ -7,6 +7,16 @@
 
 ############################
 
+# Debug settings
+
+# This setting should only be turned on if debugging messages are intended which is not necessarry for production servers.
+
+############################
+
+debug: false
+
+############################
+
 # Data-collecting settings
 
 # Settings to send anonymous stats to https://bstats.org/plugin/bukkit/BlockBall.
@@ -146,15 +156,15 @@ stats-scoreboard:
   enabled: false
   title: '&f&lBlockBall Stats'
   lines:
-  - ''
-  - '&e<playername>'
-  - '&m           '
-  - '&bWinrate: '
-  - '&f&l<winrate> '
-  - ''
-  - '&6Goals:'
-  - '&f&l<goalspergame>'
-  - ''
-  - '&aPlayed games:'
-  - '&f&l<playedgames>'
-  - '&m           '
+    - ''
+    - '&e<playername>'
+    - '&m           '
+    - '&bWinrate: '
+    - '&f&l<winrate> '
+    - ''
+    - '&6Goals:'
+    - '&f&l<goalspergame>'
+    - ''
+    - '&aPlayed games:'
+    - '&f&l<playedgames>'
+    - '&m           '

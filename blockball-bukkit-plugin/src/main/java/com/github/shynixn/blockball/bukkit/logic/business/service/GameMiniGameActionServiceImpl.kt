@@ -58,7 +58,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private val soundService: SoundService,
     private val proxyService: ProxyService,
     private val gameSoccerService: GameSoccerService,
-    private val gameExecutionService: GameExecutionService
+    private val gameExecutionService: GameExecutionService,
+    private val loggingService: LoggingService
 ) : GameMiniGameActionService {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
@@ -80,6 +81,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         if (player !is Player) {
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
+
+        loggingService.debug("Player " + player.name + " has joined game " + game.arena.name + " " + game.arena.displayName)
 
         if (game.playing || game.endGameActive || game.isLobbyFull) {
             val b = ChatBuilderEntity().text(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[0].replaceGamePlaceholder(game))
@@ -150,15 +153,20 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
+        loggingService.debug("Player " + player.name + " tries to leave game " + game.arena.name + " " + game.arena.displayName)
+
         if (game.spectatorPlayers.contains(player)) {
             resetStorage(player, game.spectatorPlayersStorage[player]!!)
             player.teleport(game.arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation())
             game.spectatorPlayersStorage.remove(player)
 
+            loggingService.debug("Player " + player.name + " has left as spectator.")
+
             return
         }
 
         if (!game.ingamePlayersStorage.containsKey(player)) {
+            loggingService.debug("Player " + player.name + " has left without restorring storage.")
             return
         }
 
@@ -334,6 +342,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private fun createPlayerStorage(game: MiniGame, player: Player): GameStorage {
         val stats = GameStorageEntity(player.uniqueId, Bukkit.getScoreboardManager()!!.newScoreboard)
 
+        loggingService.debug("Created a temporary storage for player " + player.name + ".")
+
         with(stats) {
             gameMode = player.gameMode
             armorContents = player.inventory.armorContents.clone() as Array<Any?>
@@ -349,6 +359,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             health = player.health
             hunger = player.foodLevel
         }
+
+        loggingService.debug("PlayerStorage was filled for player " + player.name + ".")
 
         player.allowFlight = false
         player.isFlying = false
@@ -530,6 +542,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             health = stats.health
             foodLevel = stats.hunger
         }
+
+        loggingService.debug("The inventory of player " + player.name + " was restored.")
 
         player.inventory.updateInventory()
     }

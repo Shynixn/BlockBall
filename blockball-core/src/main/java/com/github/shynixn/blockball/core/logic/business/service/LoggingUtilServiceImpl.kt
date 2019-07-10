@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.core.logic.business.service
 
+import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.LoggingService
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -32,6 +34,25 @@ import java.util.logging.Logger
  * SOFTWARE.
  */
 class LoggingUtilServiceImpl(private val logger: Logger) : LoggingService {
+    private var configService: ConfigurationService? = null
+
+    /**
+     * Logs an debug text only if debug is enabled.
+     */
+    override fun debug(text: String, e: Throwable?) {
+        if (configService == null) {
+            configService = BlockBallApi.resolve(ConfigurationService::class.java)
+        }
+
+        if (configService!!.containsValue("debug") && configService!!.findValue("debug")) {
+            if (e == null) {
+                logger.log(Level.INFO, text)
+            } else {
+                logger.log(Level.INFO, text, e)
+            }
+        }
+    }
+
     /**
      * Logs an info text.
      */
