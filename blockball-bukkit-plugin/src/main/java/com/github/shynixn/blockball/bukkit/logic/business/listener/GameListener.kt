@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.block.Sign
@@ -19,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
+import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerRespawnEvent
@@ -55,6 +57,7 @@ class GameListener @Inject constructor(
     private val rightClickManageService: RightclickManageService,
     private val gameActionService: GameActionService,
     private val gameExecutionService: GameExecutionService,
+    private val concurrencyService: ConcurrencyService,
     private val forceFieldService: BallForceFieldService
 ) : Listener {
     /**
@@ -126,6 +129,22 @@ class GameListener @Inject constructor(
 
         if (game.isPresent && !Permission.INVENTORY.hasPermission(event.player as Player)) {
             event.isCancelled = true
+        }
+    }
+
+    /**
+     * Gets called when a player drops his item and cancels the action.
+     */
+    @EventHandler
+    fun onPlayerDropItemEvent(event: PlayerDropItemEvent) {
+        val game = gameService.getGameFromPlayer(event.player)
+
+        if (game.isPresent && !Permission.INVENTORY.hasPermission(event.player)) {
+            event.isCancelled = true
+
+            sync(concurrencyService, 10L) {
+                event.player.updateInventory()
+            }
         }
     }
 

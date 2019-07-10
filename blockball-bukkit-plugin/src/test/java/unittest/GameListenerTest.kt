@@ -687,7 +687,14 @@ class GameListenerTest {
                 Bukkit.setServer(server)
             }
 
-            return GameListener(gameService, rightclickManageService, gameActionService, MockedGameExecutionService(), MockedBallForceFieldService())
+            return GameListener(
+                gameService,
+                rightclickManageService,
+                gameActionService,
+                MockedGameExecutionService(),
+                Mockito.mock(ConcurrencyService::class.java),
+                MockedBallForceFieldService()
+            )
         }
     }
 
