@@ -3,6 +3,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
+import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.setDisplayName
@@ -151,16 +152,29 @@ class BlockSelectionServiceImpl @Inject constructor(
      * Select location and returns if success.
      */
     private fun selectLocation(player: Player, location: Location, index: Int): Boolean {
-        @Suppress("DEPRECATION")
-        if (player.itemInHand.cast<ItemStack?>() == null || player.itemInHand.type != goldenAxeType) {
+        if (!player.hasPermission(Permission.ADMIN.permission)) {
             return false
         }
 
         @Suppress("DEPRECATION")
-        if (player.itemInHand.itemMeta!!.displayName.cast<String?>() != null && ChatColor.stripColor(player.itemInHand.itemMeta!!.displayName) != ChatColor.stripColor(
-                this.axeName
-            )
-        ) {
+        if (player.itemInHand.cast<ItemStack?>() == null) {
+            return false
+        }
+
+        @Suppress("DEPRECATION")
+        val itemStack = player.itemInHand
+
+        if (itemStack.type != goldenAxeType || itemStack.itemMeta == null) {
+            return false
+        }
+
+        val itemMeta = itemStack.itemMeta!!
+
+        if (itemMeta.displayName.cast<String?>() == null) {
+            return false
+        }
+
+        if (ChatColor.stripColor(itemMeta.displayName) != ChatColor.stripColor(this.axeName)) {
             return false
         }
 
