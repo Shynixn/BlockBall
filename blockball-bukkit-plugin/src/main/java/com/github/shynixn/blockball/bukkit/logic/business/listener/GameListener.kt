@@ -18,6 +18,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerDropItemEvent
@@ -60,6 +61,8 @@ class GameListener @Inject constructor(
     private val concurrencyService: ConcurrencyService,
     private val forceFieldService: BallForceFieldService
 ) : Listener {
+    private val playerCache = HashSet<Player>()
+
     /**
      * Gets called when a player leaves the server and the game.
      */
@@ -175,6 +178,24 @@ class GameListener @Inject constructor(
     }
 
     /**
+     * Player Death event.
+     */
+    @EventHandler
+    fun onPlayerDeathEvent(event: PlayerDeathEvent) {
+        val game = gameService.getGameFromPlayer(event.entity)
+
+        if (!game.isPresent) {
+            return
+        }
+
+        if (playerCache.contains(event.entity)) {
+            return
+        }
+
+        gameExecutionService.applyDeathPoints(game.get(), event.entity)
+    }
+
+    /**
      * Cancels all fall damage in the games.
      */
     @EventHandler
@@ -207,7 +228,14 @@ class GameListener @Inject constructor(
         @Suppress("DEPRECATION")
         player.health = player.maxHealth
 
+        playerCache.add(player)
+
+        gameExecutionService.applyDeathPoints(game.get(), player)
         gameExecutionService.respawn(game.get(), player)
+
+        sync(concurrencyService, 40L) {
+            playerCache.remove(player)
+        }
     }
 
     /**

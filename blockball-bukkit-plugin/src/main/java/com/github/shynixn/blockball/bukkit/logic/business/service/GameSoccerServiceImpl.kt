@@ -116,7 +116,7 @@ class GameSoccerServiceImpl @Inject constructor(
         }
 
         if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
-            game.blueScore++
+            game.blueScore += game.arena.meta.blueTeamMeta.pointsPerGoal
             onScore(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             game.ball!!.remove()
             onScoreReward(game, game.blueTeam as List<Player>)
@@ -126,7 +126,7 @@ class GameSoccerServiceImpl @Inject constructor(
                 onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             }
         } else if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
-            game.redScore++
+            game.redScore += game.arena.meta.redTeamMeta.pointsPerGoal
             onScore(game, Team.RED, game.arena.meta.redTeamMeta)
             game.ball!!.remove()
             onScoreReward(game, game.redTeam as List<Player>)

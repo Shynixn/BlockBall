@@ -36,31 +36,37 @@ import com.github.shynixn.blockball.core.logic.business.serializer.ItemStackSeri
  * SOFTWARE.
  */
 class TeamMetaEntity(
-        /** DisplayName of the team which gets used in the placeholder <red> or <blue>. */
-        @YamlSerialize(orderNumber = 1, value = "displayname")
-        override var displayName: String = "",
-        /** Prefix of the team which gets used in the placeholder <redcolor> or <bluecolor>. */
-        @YamlSerialize(orderNumber = 2, value = "prefix")
-        override var prefix: String = "",
-        /** Title of the message getting played when a player scores a goal. */
-        @YamlSerialize(orderNumber = 11, value = "score-message-title")
-        override var scoreMessageTitle: String = "",
-        /** Subtitle of the message getting played when a player scores a goal. */
-        @YamlSerialize(orderNumber = 12, value = "score-message-subtitle")
-        override var scoreMessageSubTitle: String = "",
-        /** Title of the message getting played when this team wins a match. */
-        @YamlSerialize(orderNumber = 13, value = "win-message-title")
-        override var winMessageTitle: String = "",
-        /** Subtitle of the message getting played when this team wins a match. */
-        @YamlSerialize(orderNumber = 14, value = "win-message-subtitle")
-        override var winMessageSubTitle: String = "",
-        /** Title of the message getting played when the match ends in a draw.*/
-        @YamlSerialize(orderNumber = 15, value = "draw-message-title")
-        override var drawMessageTitle: String = "",
-        /** Subtitle of the message getting played when the match ends in a draw. */
-        @YamlSerialize(orderNumber = 16, value = "draw-message-subtitle")
-        override var drawMessageSubTitle: String = ""
+    /** DisplayName of the team which gets used in the placeholder <red> or <blue>. */
+    @YamlSerialize(orderNumber = 1, value = "displayname")
+    override var displayName: String = "",
+    /** Prefix of the team which gets used in the placeholder <redcolor> or <bluecolor>. */
+    @YamlSerialize(orderNumber = 2, value = "prefix")
+    override var prefix: String = "",
+    /** Title of the message getting played when a player scores a goal. */
+    @YamlSerialize(orderNumber = 11, value = "score-message-title")
+    override var scoreMessageTitle: String = "",
+    /** Subtitle of the message getting played when a player scores a goal. */
+    @YamlSerialize(orderNumber = 12, value = "score-message-subtitle")
+    override var scoreMessageSubTitle: String = "",
+    /** Title of the message getting played when this team wins a match. */
+    @YamlSerialize(orderNumber = 13, value = "win-message-title")
+    override var winMessageTitle: String = "",
+    /** Subtitle of the message getting played when this team wins a match. */
+    @YamlSerialize(orderNumber = 14, value = "win-message-subtitle")
+    override var winMessageSubTitle: String = "",
+    /** Title of the message getting played when the match ends in a draw.*/
+    @YamlSerialize(orderNumber = 15, value = "draw-message-title")
+    override var drawMessageTitle: String = "",
+    /** Subtitle of the message getting played when the match ends in a draw. */
+    @YamlSerialize(orderNumber = 16, value = "draw-message-subtitle")
+    override var drawMessageSubTitle: String = ""
 ) : TeamMeta {
+    /** Amount of points this team receives when a goal gets scored. */
+    @YamlSerialize(orderNumber = 17, value = "points-per-goal")
+    override var pointsPerGoal: Int = 1
+    /** Amount of points this team receives when a player of the opposite team dies. */
+    @YamlSerialize(orderNumber = 18, value = "points-per-opponent-death")
+    override var pointsPerEnemyDeath: Int = 0
     /** List of signs which can be clicked to join the team.*/
     override val signs: MutableList<Position>
         get() = this.internalSigns as MutableList<Position>
@@ -78,13 +84,19 @@ class TeamMetaEntity(
     override var walkingSpeed: Double = 0.2
     /** Message getting played when a player joins a match.*/
     @YamlSerialize(orderNumber = 10, value = "join-message")
-    override var joinMessage: String = "You have joined the game for " + PlaceHolder.ARENA_TEAMCOLOR.placeHolder + PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder + "."
+    override var joinMessage: String =
+        "You have joined the game for " + PlaceHolder.ARENA_TEAMCOLOR.placeHolder + PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder + "."
     /** Message getting played when a player leave a match.*/
     @YamlSerialize(orderNumber = 12, value = "leave-message")
     override var leaveMessage: String = "You have left the game."
     /** Lines displayed on the sign for joining the team. */
     @YamlSerialize(orderNumber = 13, value = "lines")
-    override var signLines: List<String> = arrayListOf("&lBlockBall", PlaceHolder.ARENA_DISPLAYNAME.placeHolder, PlaceHolder.ARENA_TEAMCOLOR.placeHolder + PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder + '/' + PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder)
+    override var signLines: List<String> = arrayListOf(
+        "&lBlockBall",
+        PlaceHolder.ARENA_DISPLAYNAME.placeHolder,
+        PlaceHolder.ARENA_TEAMCOLOR.placeHolder + PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder,
+        PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder + '/' + PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder
+    )
     /** Armor wearing this team. */
     @YamlSerialize(orderNumber = 8, value = "armor", customserializer = ItemStackSerializer::class)
     override var armorContents: Array<Any?> = arrayOfNulls(4)
