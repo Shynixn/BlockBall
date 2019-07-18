@@ -2,6 +2,7 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent
 import com.github.shynixn.blockball.api.bukkit.event.GameLeaveEvent
 import com.github.shynixn.blockball.api.business.enumeration.*
@@ -81,6 +82,10 @@ class GameActionServiceImpl @Inject constructor(
 
         if (!isAllowedToJoinWithPermissions(game, player)) {
             return false
+        }
+
+        BlockBallApi.resolve(GameService::class.java).getGameFromPlayer(player).ifPresent { g ->
+            this.leaveGame(g, player)
         }
 
         val event = GameJoinEvent(player, game)

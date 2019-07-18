@@ -49,7 +49,11 @@ import kotlin.collections.ArrayList
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameServiceImpl @Inject constructor(private val plugin: Plugin, private val persistenceArenaService: PersistenceArenaService, private val gameActionService: GameActionService) : GameService, Runnable {
+class GameServiceImpl @Inject constructor(
+    private val plugin: Plugin,
+    private val persistenceArenaService: PersistenceArenaService,
+    private val gameActionService: GameActionService
+) : GameService, Runnable {
     private var task: BukkitTask? = null
     private val games = ArrayList<Game>()
     private var ticks: Int = 0
@@ -178,7 +182,7 @@ class GameServiceImpl @Inject constructor(private val plugin: Plugin, private va
      * Returns all currently loaded games on the server.
      */
     override fun getAllGames(): List<Game> {
-        return games
+        return games.filter { g -> !g.closing && !g.closed }
     }
 
     /**

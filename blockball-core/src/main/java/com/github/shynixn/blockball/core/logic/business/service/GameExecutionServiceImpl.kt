@@ -33,7 +33,20 @@ import com.google.inject.Inject
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameExecutionServiceImpl @Inject constructor(private val proxyService : ProxyService) : GameExecutionService {
+class GameExecutionServiceImpl @Inject constructor(private val proxyService: ProxyService) : GameExecutionService {
+    /**
+     * Applies points to the belonging teams when the given [player] dies in the given [game].
+     */
+    override fun <P, G : Game> applyDeathPoints(game: G, player: P) {
+        val team = game.ingamePlayersStorage[player as Any]!!.team!!
+
+        if (team == Team.RED) {
+            game.blueScore += game.arena.meta.blueTeamMeta.pointsPerEnemyDeath
+        } else {
+            game.redScore += game.arena.meta.redTeamMeta.pointsPerEnemyDeath
+        }
+    }
+
     /**
      * Lets the given [player] in the given [game] respawn at the specified spawnpoint.
      */

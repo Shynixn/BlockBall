@@ -47,6 +47,12 @@ interface TeamMeta {
     /** Max amount of players in this team to start the match for this team. */
     var maxAmount: Int
 
+    /** Amount of points this team receives when a goal gets scored. */
+    var pointsPerGoal: Int
+
+    /** Amount of points this team receives when a player of the opposite team dies. */
+    var pointsPerEnemyDeath: Int
+
     /** WalkingSpeed of the players in this team. */
     var walkingSpeed: Double
 

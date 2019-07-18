@@ -680,12 +680,13 @@ class GameListenerTest {
             rightclickManageService: RightclickManageService = MockedRightClickService(),
             gameActionService: GameActionService = MockedGameActionService()
         ): GameListener {
-            if (Bukkit.getServer() == null) {
-                val server = Mockito.mock(Server::class.java)
-                Mockito.`when`(server.getWorld(Mockito.anyString())).thenReturn(Mockito.mock(World::class.java))
-                Mockito.`when`(server.logger).thenReturn(Logger.getAnonymousLogger())
-                Bukkit.setServer(server)
-            }
+
+            val server = Mockito.mock(Server::class.java)
+            Mockito.`when`(server.getWorld(Mockito.anyString())).thenReturn(Mockito.mock(World::class.java))
+            Mockito.`when`(server.logger).thenReturn(Logger.getAnonymousLogger())
+            val field = Bukkit::class.java.getDeclaredField("server")
+            field.isAccessible = true
+            field.set(null, server)
 
             return GameListener(
                 gameService,
@@ -770,6 +771,12 @@ class GameListenerTest {
     }
 
     class MockedGameExecutionService : GameExecutionService {
+        /**
+         * Applies points to the belonging teams when the given [player] dies in the given [game].
+         */
+        override fun <P, G : Game> applyDeathPoints(game: G, player: P) {
+        }
+
         /**
          * Lets the given [player] in the given [game] respawn at the specified spawnpoint.
          */

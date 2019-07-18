@@ -93,6 +93,18 @@ class TeamSettingsPage @Inject constructor(private val proxyService: ProxyServic
                 }
                 teamMeta.maxAmount = amount
             }
+        } else if (command == MenuCommand.TEAM_POINTSGOAL) {
+            val teamMeta = getTeamMeta(cache)
+            val amount = args[2].toIntOrNull()
+            if (amount != null) {
+                teamMeta.pointsPerGoal = amount
+            }
+        } else if (command == MenuCommand.TEAM_POINTSDEATH) {
+            val teamMeta = getTeamMeta(cache)
+            val amount = args[2].toIntOrNull()
+            if (amount != null) {
+                teamMeta.pointsPerEnemyDeath = amount
+            }
         } else if (command == MenuCommand.TEAM_WALKSPEED) {
             val teamMeta = getTeamMeta(cache)
             val amount = args[2].toDoubleOrNull()
@@ -156,6 +168,16 @@ class TeamSettingsPage @Inject constructor(private val proxyService: ProxyServic
             .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
             .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.TEAM_WALKSPEED.command)
             .setHoverText("Edit the speed each player of this team is going to walk. (default: 0.2)")
+            .builder().nextLine()
+            .component("- Points per goal: " + teamMeta.pointsPerGoal).builder()
+            .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
+            .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.TEAM_POINTSGOAL.command)
+            .setHoverText("Edit the amount of points this team gets when a goal gets scored. (default: 1)")
+            .builder().nextLine()
+            .component("- Points per opponent death: " + teamMeta.pointsPerEnemyDeath).builder()
+            .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
+            .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.TEAM_POINTSDEATH.command)
+            .setHoverText("Edit the amount of points this team gets when a player of the opponent team dies. (default: 0)")
             .builder().nextLine()
             .component("- Spawnpoint: $spawnpoint").builder()
             .component(" [location..]").setColor(ChatColor.BLUE)

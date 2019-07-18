@@ -62,6 +62,8 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     TEAM_ARMOR(MenuPageKey.TEAMMETA, "armor"),
     TEAM_INVENTORY(MenuPageKey.TEAMMETA, "invent"),
     TEAM_WALKSPEED(MenuPageKey.TEAMMETA, "wspeed"),
+    TEAM_POINTSGOAL(MenuPageKey.TEAMMETA, "ppgoal"),
+    TEAM_POINTSDEATH(MenuPageKey.TEAMMETA, "ppdeath"),
 
     TEAM_SIGN(MenuPageKey.TEAMMETA, "sign"),
 
