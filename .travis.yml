@@ -25,8 +25,8 @@ install:
   - ./gradlew assemble || ./gradlew downloadDependencies
 script:
   - ./gradlew clean build
-  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* ]]; then ./gradlew clean publish > /dev/null; fi ;
-  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--release"* && $TRAVIS_BRANCH == *"master"* ]]; then ./gradlew clean publishToNexus > /dev/null; fi ;
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* ]]; then ./gradlew publish > /dev/null; fi ;
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--release"* && $TRAVIS_BRANCH == *"master"* ]]; then ./gradlew publishToNexus > /dev/null; fi ;
   - if [[ $TRAVIS_COMMIT_MESSAGE == *"--release"* && $TRAVIS_BRANCH == *"master"* ]]; then ./gradlew closeAndReleaseRepository; fi ;
   - if [[ $TRAVIS_BRANCH == *"master"* ]]; then rm -rf docs/build && rm -rf docs/apidocs; fi ;
   - if [[ $TRAVIS_BRANCH == *"master"* ]]; then python3 -msphinx -M html docs/source docs/build; fi ;
