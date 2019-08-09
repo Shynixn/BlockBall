@@ -80,6 +80,12 @@ class GameSettingsPage @Inject constructor(private val proxyService: ProxyServic
             arena.meta.lobbyMeta.gamemode = com.github.shynixn.blockball.api.business.enumeration.GameMode.values()[args[2].toInt()]
         } else if (command == MenuCommand.GAMESETTINGS_REMAININGPLAYERSMESSAGE && args.size > 3) {
             arena.meta.minigameMeta.playersRequiredToStartMessage = mergeArgs(2, args)
+        } else if (command == MenuCommand.GAMESETTINGS_TOGGLE_TELEPORTONJOIN) {
+            arena.meta.hubLobbyMeta.teleportOnJoin = !arena.meta.hubLobbyMeta.teleportOnJoin
+
+            if (!arena.meta.hubLobbyMeta.teleportOnJoin) {
+                arena.meta.hubLobbyMeta.instantForcefieldJoin = true
+            }
         }
 
         return super.execute(player, command, cache, args)
@@ -168,6 +174,11 @@ class GameSettingsPage @Inject constructor(private val proxyService: ProxyServic
                 .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.GAMESETTINGS_TOGGLE_RESETEMPTY.command)
                 .setHoverText(ChatColor.UNDERLINE.toString() + "HubGame exclusive\n" + ChatColor.RESET + "Should the HubGame game be reset to it's starting stage when everyone has left the game?")
+                .builder().nextLine()
+                .component("- Teleport on join: " + arena.meta.hubLobbyMeta.teleportOnJoin).builder()
+                .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
+                .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.GAMESETTINGS_TOGGLE_TELEPORTONJOIN.command)
+                .setHoverText(ChatColor.UNDERLINE.toString() + "HubGame exclusive\n" + ChatColor.RESET + "Should players be teleported to the spawnpoint on join? Automatically enables instant forcefield join when being disabled.")
                 .builder().nextLine()
                 .component("- Instant forcefield join: " + arena.meta.hubLobbyMeta.instantForcefieldJoin).builder()
                 .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)

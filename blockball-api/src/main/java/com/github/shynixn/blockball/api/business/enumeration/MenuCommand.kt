@@ -154,6 +154,7 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     GAMESETTINGS_TOGGLE_EVENTEAMS(MenuPageKey.GAMESETTINGS, "tlgeven"),
     GAMESETTINGS_TOGGLE_RESETEMPTY(MenuPageKey.GAMESETTINGS, "resemp"),
     GAMESETTINGS_TOGGLE_INSTATFORCEFIELD(MenuPageKey.GAMESETTINGS, "iforce"),
+    GAMESETTINGS_TOGGLE_TELEPORTONJOIN(MenuPageKey.GAMESETTINGS, "tglteleport"),
 
     SIGNS_OPEN(MenuPageKey.SIGNS, "open"),
     SIGNS_ADDTEAMRED(MenuPageKey.SIGNS, "adteamr"),

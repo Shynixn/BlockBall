@@ -36,4 +36,7 @@ interface HubLobbyMeta {
 
     /** Join asking message. */
     var joinMessage: MutableList<String>
+
+    /** Should the player be teleported to the spawnpoint when joining?*/
+    var teleportOnJoin: Boolean
 }
