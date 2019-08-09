@@ -45,7 +45,7 @@ class ReleaseServiceImpl : SonaTypeService {
                             latestId = value
                         }
 
-                        if (newNumbers[0].toInt() == oldNumbers[0].toInt() && newNumbers[1].toInt() == oldNumbers[1].toInt() && newNumbers[1].toInt() > oldNumbers[1].toInt()) {
+                        if (newNumbers[0].toInt() == oldNumbers[0].toInt() && newNumbers[1].toInt() == oldNumbers[1].toInt() && newNumbers[2].toInt() > oldNumbers[2].toInt()) {
                             latestId = value
                         }
                     }

@@ -5,8 +5,8 @@ jdk:
 cache:
   timeout: 1000
   directories:
-  - $HOME/.m2/repository/org/spigotmc
-  - $HOME/.m2/repository/net/milkbowlvault
+    - $HOME/.m2/repository/org/spigotmc
+    - $HOME/.m2/repository/net/milkbowlvault
 before_install:
   - chmod +x gradlew
   - chmod +x blockball-tools/travis-status.sh
@@ -37,9 +37,9 @@ after_success:
   - ./gradlew jacocoRootReport
   - bash <(curl -s https://codecov.io/bash)
   - ./blockball-tools/travis-status.sh success $WEBHOOK_URL
-  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* ]]; then java -jar blockball-tools/Deploy.jar --snapshot $WEBHOOK_SNAPSHOT_URL; fi ;
-  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* ]]; then java -jar blockball-tools/Deploy.jar --snapshot $WEBHOOK_URL; fi ;
-  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--release"* ]]; then java -jar blockball-tools/Deploy.jar --release $WEBHOOK_URL; fi
-  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--release"* ]]; then java -jar blockball-tools/Deploy.jar --release $WEBHOOK_SNAPSHOT_URL; fi
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* ]]; then java -jar blockball-tools/build/libs/Deploy.jar --snapshot $WEBHOOK_SNAPSHOT_URL; fi ;
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* ]]; then java -jar blockball-tools/build/libs/Deploy.jar --snapshot $WEBHOOK_URL; fi ;
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--release"* ]]; then java -jar blockball-tools/build/libs/Deploy.jar --release $WEBHOOK_URL; fi
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--release"* ]]; then java -jar blockball-tools/build/libs/Deploy.jar --release $WEBHOOK_SNAPSHOT_URL; fi
 after_failure:
   - ./blockball-tools/travis-status.sh failure $WEBHOOK_URL
