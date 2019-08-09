@@ -54,7 +54,7 @@ class BungeeCordSignCommandExecutor @Inject constructor(
                 val info = LinkSignEntity()
                 info.server = server
                 info.position = proxyService.toPosition(location)
-                persistenceLinkSignService.save(LinkSignEntity())
+                persistenceLinkSignService.save(info)
             }
 
             proxyService.sendMessage(source, prefix + "Rightclick on a sign to connect it to the server [" + args[0] + "].")
