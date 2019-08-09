@@ -134,10 +134,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val configurationService = resolve(ConfigurationService::class.java)
         val ballEntitySerivice = resolve(BallEntityService::class.java)
 
-        for (world in Bukkit.getWorlds()) {
-            ballEntitySerivice.cleanUpInvalidEntities(world.entities)
-        }
-
         updateCheker.checkForUpdates()
         dependencyChecker.checkForInstalledDependencies()
 
@@ -148,6 +144,11 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         }
 
         startPlugin()
+
+        for (world in Bukkit.getWorlds()) {
+            ballEntitySerivice.cleanUpInvalidEntities(world.entities)
+        }
+
         Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")
     }
 

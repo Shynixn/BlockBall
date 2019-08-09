@@ -78,7 +78,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(ParticleService::class.java).to(ParticleServiceImpl::class.java)
         bind(SoundService::class.java).to(SoundServiceImpl::class.java)
         bind(BossBarService::class.java).to(BossBarServiceImpl::class.java)
-        bind(HologramService::class.java).to(HologramServiceImpl::class.java)
         bind(GameService::class.java).to(GameServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameActionService::class.java).to(GameActionServiceImpl::class.java)
         bind(GameHubGameActionService::class.java).to(GameHubGameActionServiceImpl::class.java).`in`(Scopes.SINGLETON)
