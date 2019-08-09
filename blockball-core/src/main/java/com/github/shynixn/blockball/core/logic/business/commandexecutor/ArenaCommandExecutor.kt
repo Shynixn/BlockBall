@@ -174,6 +174,7 @@ class ArenaCommandExecutor @Inject constructor(
             proxyService.sendMessage(source, b)
             proxyService.sendMessage(source, FOOTER_STANDARD)
         } catch (e: Exception) {
+            loggingService.debug("Command completion failed.", e)
             val prefix = configurationService.findValue<String>("messages.prefix")
             proxyService.sendMessage(source, prefix + "Cannot find command.")
             val data = StringBuilder()
