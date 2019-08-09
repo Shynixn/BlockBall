@@ -139,11 +139,11 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
 
         val enableMetrics = configurationService.findValue<Boolean>("metrics")
 
+        startPlugin()
+
         if (enableMetrics) {
             Metrics(this)
         }
-
-        startPlugin()
 
         for (world in Bukkit.getWorlds()) {
             ballEntitySerivice.cleanUpInvalidEntities(world.entities)

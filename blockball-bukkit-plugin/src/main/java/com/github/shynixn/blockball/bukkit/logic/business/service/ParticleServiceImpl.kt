@@ -5,11 +5,13 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
+import com.github.shynixn.blockball.core.logic.business.extension.async
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -45,7 +47,12 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ParticleServiceImpl @Inject constructor(private val itemService: ItemService, private val pluginProxy: PluginProxy) : ParticleService {
+class ParticleServiceImpl @Inject constructor(
+    private val itemService: ItemService,
+    private val pluginProxy: PluginProxy,
+    private val concurrencyService: ConcurrencyService
+) : ParticleService {
+
     /**
      * Plays the given [particle] at the given [location] for the given [players].
      */
@@ -65,6 +72,15 @@ class ParticleServiceImpl @Inject constructor(private val itemService: ItemServi
             particle.speed = 1.0f.toDouble()
         }
 
+        async(concurrencyService) {
+            playParticles(location, particle, targets)
+        }
+    }
+
+    /**
+     * Plays the particles.
+     */
+    private fun playParticles(location: Location, particle: Particle, targets: Array<Player>) {
         val version = pluginProxy.getServerVersion()
         var internalParticleType = getInternalEnumValue(particle.type)
 
@@ -200,7 +216,7 @@ class ParticleServiceImpl @Inject constructor(private val itemService: ItemServi
         }
 
         try {
-            players.forEach { p ->
+            targets.forEach { p ->
                 p.sendPacket(packet)
             }
         } catch (e: Exception) {
@@ -230,16 +246,22 @@ class ParticleServiceImpl @Inject constructor(private val itemService: ItemServi
                 }
                 version == Version.VERSION_1_13_R1 -> {
                     val minecraftKey =
-                        findClazz("net.minecraft.server.VERSION.MinecraftKey", pluginProxy).getDeclaredConstructor(String::class.java).newInstance(particle.gameId_113)
+                        findClazz("net.minecraft.server.VERSION.MinecraftKey", pluginProxy).getDeclaredConstructor(String::class.java)
+                            .newInstance(particle.gameId_113)
                     val registry = findClazz("net.minecraft.server.VERSION.Particle", pluginProxy).getDeclaredField("REGISTRY").get(null)
 
-                    findClazz("net.minecraft.server.VERSION.RegistryMaterials", pluginProxy).getDeclaredMethod("get", Any::class.java).invoke(registry, minecraftKey)
+                    findClazz("net.minecraft.server.VERSION.RegistryMaterials", pluginProxy).getDeclaredMethod("get", Any::class.java)
+                        .invoke(registry, minecraftKey)
                 }
                 else -> {
                     val minecraftKey =
-                        findClazz("net.minecraft.server.VERSION.MinecraftKey", pluginProxy).getDeclaredConstructor(String::class.java).newInstance(particle.gameId_113)
+                        findClazz("net.minecraft.server.VERSION.MinecraftKey", pluginProxy).getDeclaredConstructor(String::class.java)
+                            .newInstance(particle.gameId_113)
                     val registry = findClazz("net.minecraft.server.VERSION.IRegistry", pluginProxy).getDeclaredField("PARTICLE_TYPE").get(null)
-                    findClazz("net.minecraft.server.VERSION.RegistryMaterials", pluginProxy).getDeclaredMethod("get", findClazz("net.minecraft.server.VERSION.MinecraftKey", pluginProxy))
+                    findClazz("net.minecraft.server.VERSION.RegistryMaterials", pluginProxy).getDeclaredMethod(
+                        "get",
+                        findClazz("net.minecraft.server.VERSION.MinecraftKey", pluginProxy)
+                    )
                         .invoke(registry, minecraftKey)
                 }
             }
