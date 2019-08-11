@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
 import org.bukkit.block.Sign
 import org.bukkit.event.EventHandler
@@ -43,6 +44,7 @@ class BungeeCordgameListener @Inject constructor(
     private val rightClickManageService: RightclickManageService,
     private val gameActionService: GameActionService,
     private val bungeeCordService: BungeeCordService,
+    private val concurrencyService: ConcurrencyService,
     private val persistenceLinkSignService: PersistenceLinkSignService
 ) : Listener {
     /**
@@ -53,9 +55,14 @@ class BungeeCordgameListener @Inject constructor(
         val game = gameService.getAllGames().find { p -> p.arena.gameType == GameType.BUNGEE }
 
         if (game != null) {
-            val success = gameActionService.joinGame(game, event.player)
-            if (!success) {
-                event.player.kickPlayer(game.arena.meta.bungeeCordMeta.kickMessage)
+            sync(concurrencyService, 40L) {
+                if (event.player.isOnline) {
+                    val success = gameActionService.joinGame(game, event.player)
+
+                    if (!success) {
+                        event.player.kickPlayer(game.arena.meta.bungeeCordMeta.kickMessage)
+                    }
+                }
             }
         }
     }

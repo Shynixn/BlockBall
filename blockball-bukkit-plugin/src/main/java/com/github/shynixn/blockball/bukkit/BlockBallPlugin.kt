@@ -129,6 +129,8 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             resolve(JoinCommandExecutor::class.java)
         )
 
+        server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
+
         val updateCheker = resolve(UpdateCheckService::class.java)
         val dependencyChecker = resolve(DependencyService::class.java)
         val configurationService = resolve(ConfigurationService::class.java)

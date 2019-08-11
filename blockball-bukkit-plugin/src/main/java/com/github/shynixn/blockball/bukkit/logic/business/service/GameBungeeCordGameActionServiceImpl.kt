@@ -2,8 +2,10 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.BungeeCordService
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.GameBungeeCordGameActionService
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
+import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -35,13 +37,21 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameBungeeCordGameActionServiceImpl @Inject constructor(private val plugin: PluginProxy, private val bungeeCordService: BungeeCordService) : GameBungeeCordGameActionService {
+class GameBungeeCordGameActionServiceImpl @Inject constructor(
+    private val plugin: PluginProxy,
+    private val concurrencyService: ConcurrencyService,
+    private val bungeeCordService: BungeeCordService
+) :
+    GameBungeeCordGameActionService {
     /**
      * Closes the given game and all underlying resources.
      */
     override fun closeGame(game: BungeeCordGame) {
         plugin.setMotd(bungeeCordService.bungeeCordConfiguration.restartingMotd)
-        Bukkit.getServer().shutdown()
+
+        sync(concurrencyService, 20 * 20L) {
+            Bukkit.getServer().shutdown()
+        }
     }
 
     /**
@@ -53,7 +63,11 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(private val plugin
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        player.kickPlayer("")
+        if (game.arena.meta.bungeeCordMeta.fallbackServer.isEmpty()) {
+            player.kickPlayer(game.arena.meta.bungeeCordMeta.leaveKickMessage)
+        } else {
+            bungeeCordService.connectToServer(player, game.arena.meta.bungeeCordMeta.fallbackServer)
+        }
     }
 
     /**

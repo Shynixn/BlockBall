@@ -59,7 +59,6 @@ class BungeeCordConnectionServiceImpl @Inject constructor(
             return
         }
 
-        plugin.server.messenger.registerOutgoingPluginChannel(plugin, "BungeeCord")
         plugin.server.messenger.registerIncomingPluginChannel(plugin, "BungeeCord", this)
 
         bungeeCordService.restartConnectionHandling()
