@@ -17,6 +17,7 @@ import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 
 /**
@@ -47,6 +48,30 @@ import java.util.logging.Level
  * SOFTWARE.
  */
 class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy) : ProxyService {
+    /**
+     * Gets a list of all online players.
+     */
+    override fun <P> getOnlinePlayers(): List<P> {
+        val players = ArrayList<Player>()
+
+        for (world in Bukkit.getWorlds()) {
+            players.addAll(world.players)
+        }
+
+        return players as List<P>
+    }
+
+    /**
+     * Sends a plugin message through the given channel.
+     */
+    override fun <P> sendPlayerPluginMessage(player: P, channel: String, content: ByteArray) {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        player.sendPluginMessage(this.pluginProxy as Plugin, "BungeeCord", content)
+    }
+
     /**
      * Gets all available gamemodes.
      */

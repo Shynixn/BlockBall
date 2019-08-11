@@ -59,7 +59,7 @@ class BungeeCordSignCommandExecutor @Inject constructor(
 
             proxyService.sendMessage(source, prefix + "Rightclick on a sign to connect it to the server [" + args[0] + "].")
         } else {
-            proxyService.sendMessage(source, "$prefix$prefix/blockballbungeecord <server>")
+            proxyService.sendMessage(source, "$prefix/blockballbungeecord <server>")
         }
 
         return true

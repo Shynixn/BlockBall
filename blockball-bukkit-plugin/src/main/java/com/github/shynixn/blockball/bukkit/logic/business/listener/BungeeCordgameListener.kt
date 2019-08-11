@@ -1,9 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.business.service.GameActionService
-import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.business.service.RightclickManageService
+import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.google.inject.Inject
 import org.bukkit.block.Sign
 import org.bukkit.event.EventHandler
@@ -42,7 +41,9 @@ import org.bukkit.event.player.PlayerJoinEvent
 class BungeeCordgameListener @Inject constructor(
     private val gameService: GameService,
     private val rightClickManageService: RightclickManageService,
-    private val gameActionService: GameActionService
+    private val gameActionService: GameActionService,
+    private val bungeeCordService: BungeeCordService,
+    private val persistenceLinkSignService: PersistenceLinkSignService
 ) : Listener {
     /**
      * Joins the game for a bungeecord player.
@@ -75,7 +76,15 @@ class BungeeCordgameListener @Inject constructor(
             return
         }
 
+        val position = event.clickedBlock!!.location.toPosition()
+
+        for (sign in persistenceLinkSignService.getAll()) {
+            if (sign.position == position) {
+                bungeeCordService.connectToServer(event.player, sign.server)
+                break
+            }
+        }
+
         rightClickManageService.executeWatchers(event.player, event.clickedBlock!!.location)
-        //  bungeeCordService.clickOnConnectSign(event.player, event.clickedBlock.state as Sign)
     }
 }

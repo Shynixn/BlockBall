@@ -1,9 +1,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
+import com.github.shynixn.blockball.api.business.service.BungeeCordService
 import com.github.shynixn.blockball.api.business.service.GameBungeeCordGameActionService
-import com.github.shynixn.blockball.api.persistence.entity.BungeeCordConfiguration
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -36,14 +35,12 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameBungeeCordGameActionServiceImpl @Inject constructor(private val plugin: PluginProxy, configurationService: ConfigurationService) : GameBungeeCordGameActionService {
-    private val bungeeCordConfiguration = configurationService.findConfiguration(BungeeCordConfiguration::class.java, "")
-
+class GameBungeeCordGameActionServiceImpl @Inject constructor(private val plugin: PluginProxy, private val bungeeCordService: BungeeCordService) : GameBungeeCordGameActionService {
     /**
      * Closes the given game and all underlying resources.
      */
     override fun closeGame(game: BungeeCordGame) {
-        plugin.setMotd(bungeeCordConfiguration.restartingMotd)
+        plugin.setMotd(bungeeCordService.bungeeCordConfiguration.restartingMotd)
         Bukkit.getServer().shutdown()
     }
 
@@ -69,9 +66,9 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(private val plugin
         }
 
         if (game.playing) {
-            plugin.setMotd(bungeeCordConfiguration.inGameMotd)
+            plugin.setMotd(bungeeCordService.bungeeCordConfiguration.inGameMotd)
         } else {
-            plugin.setMotd(bungeeCordConfiguration.waitingForPlayersMotd)
+            plugin.setMotd(bungeeCordService.bungeeCordConfiguration.waitingForPlayersMotd)
         }
     }
 }

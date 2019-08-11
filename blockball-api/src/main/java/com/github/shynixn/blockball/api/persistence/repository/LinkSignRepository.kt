@@ -1,15 +1,15 @@
-package com.github.shynixn.blockball.api.persistence.context
+package com.github.shynixn.blockball.api.persistence.repository
 
-import java.nio.file.Path
+import com.github.shynixn.blockball.api.persistence.entity.LinkSign
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,16 +29,14 @@ import java.nio.file.Path
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface FileContext {
+interface LinkSignRepository {
     /**
-     * Returns the content of the given [path] and [yamlPath].
-     * Handles locking for asynchronous operations.
-     * Creates the file if it does not already exist.
+     * Saves all signs to the repository.
      */
-    fun loadOrCreateYamlFile(path: Path, yamlPath: String): Map<String, Any?>
+    fun save(signs: List<LinkSign>)
 
     /**
-     * Executes the given function with the configuration for the given [path].
+     * Gets all signs from the repository.
      */
-    fun <F> saveAndCreateYamlFile(path: Path, f: (F) -> Unit)
+    fun getAll(): List<LinkSign>
 }

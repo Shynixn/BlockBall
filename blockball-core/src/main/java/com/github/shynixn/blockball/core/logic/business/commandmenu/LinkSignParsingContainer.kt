@@ -1,16 +1,16 @@
-package com.github.shynixn.blockball.api.business.service
+package com.github.shynixn.blockball.core.logic.business.commandmenu
 
-import com.github.shynixn.blockball.api.persistence.entity.BungeeCordConfiguration
-import java.util.concurrent.CompletableFuture
+import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
+import com.github.shynixn.blockball.core.logic.persistence.entity.LinkSignEntity
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,25 +30,10 @@ import java.util.concurrent.CompletableFuture
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BungeeCordService {
+class LinkSignParsingContainer {
     /**
-     * Gets the configuration.
+     * Gets the link signs.
      */
-    val bungeeCordConfiguration: BungeeCordConfiguration
-
-    /**
-     * Connects the given [player] to the given [server]. Does
-     * nothing when the server does not exist or connection fails.
-     */
-    fun <P> connectToServer(player: P, server: String)
-
-    /**
-     * Gets the lines of a sign connecting to the given server.
-     */
-    fun getServerSignLines(serverName: String, ip: String, port: Int): CompletableFuture<Array<String>>
-
-    /**
-     * Restarts all connection handling and caching between servers.
-     */
-    fun restartConnectionHandling()
+    @YamlSerialize(orderNumber = 1, value = "signs")
+    val signs = ArrayList<LinkSignEntity>()
 }

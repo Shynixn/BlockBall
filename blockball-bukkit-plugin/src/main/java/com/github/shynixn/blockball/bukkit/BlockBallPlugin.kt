@@ -133,16 +133,23 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val dependencyChecker = resolve(DependencyService::class.java)
         val configurationService = resolve(ConfigurationService::class.java)
         val ballEntitySerivice = resolve(BallEntityService::class.java)
+        val bungeeCordConnectionService = resolve(BungeeCordConnectionService::class.java)
 
         updateCheker.checkForUpdates()
         dependencyChecker.checkForInstalledDependencies()
 
         val enableMetrics = configurationService.findValue<Boolean>("metrics")
+        val enableBungeeCord = configurationService.findValue<Boolean>("game.allow-server-linking")
 
         startPlugin()
 
         if (enableMetrics) {
             Metrics(this)
+        }
+
+        if (enableBungeeCord) {
+            bungeeCordConnectionService.restartChannelListeners()
+            Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.DARK_GREEN + "Started server linking.")
         }
 
         for (world in Bukkit.getWorlds()) {

@@ -1,15 +1,13 @@
-package com.github.shynixn.blockball.api.persistence.repository
-
-import com.github.shynixn.blockball.api.persistence.entity.LinkSign
+package com.github.shynixn.blockball.api.business.service
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,14 +27,9 @@ import com.github.shynixn.blockball.api.persistence.entity.LinkSign
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ServerSignRepository {
+interface BungeeCordConnectionService {
     /**
-     * Returns all stored signs in this repository.
+     * Restarts the channel listeners on this connection service.
      */
-    fun getAll(): List<LinkSign>
-
-    /**
-     * Saves the given [signs] to the storage.
-     */
-    fun saveAll(signs: List<LinkSign>)
+    fun restartChannelListeners()
 }

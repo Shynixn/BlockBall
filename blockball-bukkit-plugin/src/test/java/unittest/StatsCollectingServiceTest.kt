@@ -115,7 +115,7 @@ class StatsCollectingServiceTest {
 
     class MockedScoreboardService : ScoreboardService {
         /**
-         * Sets the configuration of the given scoreboard.
+         * Sets the bungeeCordConfiguration of the given scoreboard.
          */
         override fun <S> setConfiguration(scoreboard: S, displaySlot: Any, title: String) {
         }
@@ -184,15 +184,6 @@ class StatsCollectingServiceTest {
          * loaded.
          */
         override fun <C> findValue(path: String): C {
-            throw IllegalArgumentException()
-        }
-
-        /**
-         * Tries to load the config values into the given configuration [clazz] from the given [path]
-         * Throws a [IllegalArgumentException] if the path could not be correctly
-         * loaded.
-         */
-        override fun <C> findConfiguration(clazz: Class<C>, path: String): C {
             throw IllegalArgumentException()
         }
     }
