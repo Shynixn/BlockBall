@@ -2,10 +2,12 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.BallForceFieldService
+import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -39,7 +41,7 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallForceFieldServiceImpl : BallForceFieldService {
+class BallForceFieldServiceImpl @Inject constructor(private val loggingService: LoggingService): BallForceFieldService {
     private val maxBlockIteratorSize = 10000
 
     /**
@@ -65,6 +67,8 @@ class BallForceFieldServiceImpl : BallForceFieldService {
             ball.teleport(location)
             adder.y = velocity.y
             ball.setVelocity(adder.multiply(0.5))
+
+            loggingService.debug("Teleport Replay.")
         }
 
         if (game.ballForceFieldBlockPosition != null) {
@@ -85,6 +89,8 @@ class BallForceFieldServiceImpl : BallForceFieldService {
                     if (prevBlock.type == Material.AIR) {
                         prevBlock.type = Material.BARRIER
                         game.ballForceFieldBlockPosition = prevBlock.location.toPosition()
+
+                        loggingService.debug("Iterate BlockForcefield.")
                     }
 
                     return

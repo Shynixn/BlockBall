@@ -178,6 +178,8 @@ class GameSoccerServiceImpl @Inject constructor(
                 game.ball = ballEntityService.spawnTemporaryBall(game.arena.meta.ballMeta.spawnpoint!!.toLocation(), game.arena.meta.ballMeta)
                 game.ballSpawning = false
                 game.ballSpawnCounter = 0
+                game.ballForceFieldArenaPosition = null
+                game.ballForceFieldBlockPosition = null
             }
         } else if ((game.ball == null || game.ball!!.isDead)
             && (!game.redTeam.isEmpty() || !game.blueTeam.isEmpty())

@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.bukkit.event.*
 import com.github.shynixn.blockball.api.business.enumeration.BallActionType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.BallEntityService
+import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.SoundService
 import com.google.inject.Inject
@@ -56,7 +57,8 @@ import org.bukkit.event.world.ChunkUnloadEvent
 class BallListener @Inject constructor(
     private val ballEntityService: BallEntityService,
     private val particleService: ParticleService,
-    private val soundService: SoundService
+    private val soundService: SoundService,
+    private val loggingService: LoggingService
 ) : Listener {
     /**
      * Avoids saving the ball into the chunk data.
@@ -274,6 +276,7 @@ class BallListener @Inject constructor(
     @EventHandler
     fun ballKickEvent(event: BallKickEvent) {
         this.playEffects(event.ball, BallActionType.ONKICK)
+        loggingService.debug("Ball KickEvent.")
     }
 
     /**
@@ -284,6 +287,7 @@ class BallListener @Inject constructor(
     @EventHandler
     fun ballInteractEvent(event: BallInteractEvent) {
         this.playEffects(event.ball, BallActionType.ONINTERACTION)
+        loggingService.debug("Ball Interactionevent.")
     }
 
     /**
@@ -294,6 +298,7 @@ class BallListener @Inject constructor(
     @EventHandler
     fun ballThrowEvent(event: BallThrowEvent) {
         this.playEffects(event.ball, BallActionType.ONTHROW)
+        loggingService.debug("Ball Thrownevent.")
     }
 
     /**
@@ -304,6 +309,7 @@ class BallListener @Inject constructor(
     @EventHandler
     fun ballGrabEvent(event: BallGrabEvent) {
         this.playEffects(event.ball, BallActionType.ONGRAB)
+        loggingService.debug("Ball GrabEvent.")
     }
 
     /**
@@ -314,6 +320,7 @@ class BallListener @Inject constructor(
     @EventHandler
     fun ballSpawnEvent(event: BallSpawnEvent) {
         this.playEffects(event.ball, BallActionType.ONSPAWN)
+        loggingService.debug("Ball SpawnEvent.")
     }
 
     /**
