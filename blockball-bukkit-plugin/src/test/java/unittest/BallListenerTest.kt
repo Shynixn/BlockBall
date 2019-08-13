@@ -149,7 +149,7 @@ class BallListenerTest {
         /**
          * Current spinning force value.
          */
-        override var spinningForce: Double = 0.0
+        override var angularVelocity: Double = 0.0
 
         /**
          * Returns the armorstand for the design.
@@ -258,7 +258,7 @@ class BallListenerTest {
         /**
          * Calculates post movement.
          */
-        override fun calculatePostMovement() {
+        override fun calculatePostMovement(collision: Boolean) {
             throw IllegalArgumentException()
         }
 
@@ -272,8 +272,10 @@ class BallListenerTest {
         /**
          * Calculates the knockback for the given [sourceVector] and [sourceBlock]. Uses the motion values to correctly adjust the
          * wall.
+         *
+         * @return if collision was detected and the knockback was applied
          */
-        override fun <V, B> calculateKnockBack(sourceVector: V, sourceBlock: B, mot0: Double, mot2: Double, mot6: Double, mot8: Double) {
+        override fun <V, B> calculateKnockBack(sourceVector: V, sourceBlock: B, mot0: Double, mot2: Double, mot6: Double, mot8: Double): Boolean {
             throw IllegalArgumentException()
         }
 

@@ -13,7 +13,6 @@ import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.BounceConfiguration
 import com.github.shynixn.blockball.bukkit.logic.business.extension.setSkin
-import com.github.shynixn.blockball.bukkit.logic.business.service.ItemServiceImpl
 import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.github.shynixn.blockball.core.logic.business.extension.sync
 import org.bukkit.Bukkit
@@ -107,7 +106,7 @@ class BallProxyImpl(
     /**
      * Current spinning force value.
      */
-    override var spinningForce: Double = 0.0
+    override var angularVelocity: Double = 0.0
 
     /**
      * Is the ball currently grabbed by some entity?
@@ -246,7 +245,7 @@ class BallProxyImpl(
         val vector = hitbox.location.toVector().subtract(entity.location.toVector()).normalize()
             .multiply(meta.movementModifier.horizontalKickModifier)
         this.yawChange = entity.location.yaw
-        this.spinningForce = 0.0
+        this.angularVelocity = 0.0
         vector.y = 0.1 * meta.movementModifier.verticalKickModifier
 
         val event = BallKickEvent(vector, entity, this)
@@ -264,7 +263,7 @@ class BallProxyImpl(
     }
 
     /**
-     * Lets the ball spin to the player direction.
+     * Begins the ball spin towards the player direction.
      */
     override fun <V> spin(playerDirection: V, resultVelocity: V) {
         if (playerDirection !is Vector) {
@@ -290,7 +289,7 @@ class BallProxyImpl(
         Bukkit.getPluginManager().callEvent(event)
 
         if (!event.isCancelled) {
-            spinningForce = event.spinningForce
+            angularVelocity = event.angularVelocity
         }
     }
 
@@ -364,7 +363,7 @@ class BallProxyImpl(
         }
 
         this.backAnimation = false
-        this.spinningForce = 0.0
+        this.angularVelocity = 0.0
 
         if (this.meta.rotating) {
             this.design.headPose = EulerAngle(2.0, 0.0, 0.0)
@@ -448,7 +447,7 @@ class BallProxyImpl(
      * Calculates the knockback for the given [sourceVector] and [sourceBlock]. Uses the motion values to correctly adjust the
      * wall.
      */
-    override fun <V, B> calculateKnockBack(sourceVector: V, sourceBlock: B, mot0: Double, mot2: Double, mot6: Double, mot8: Double) {
+    override fun <V, B> calculateKnockBack(sourceVector: V, sourceBlock: B, mot0: Double, mot2: Double, mot6: Double, mot8: Double): Boolean {
         if (sourceVector !is Vector) {
             throw IllegalArgumentException("SourceVector has to be a BukkitVector!")
         }
@@ -466,7 +465,7 @@ class BallProxyImpl(
                 }
 
                 val n = Vector(-1, 0, 0)
-                this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.EAST)
+                return this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.EAST)
             }
             mot6 < mot0 -> {
                 if (this.isValidKnockBackBlock(knockBackBlock)) {
@@ -474,7 +473,7 @@ class BallProxyImpl(
                 }
 
                 val n = Vector(1, 0, 0)
-                this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.WEST)
+                return this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.WEST)
             }
             mot8 > mot2 -> {
                 if (this.isValidKnockBackBlock(knockBackBlock)) {
@@ -482,7 +481,7 @@ class BallProxyImpl(
                 }
 
                 val n = Vector(0, 0, -1)
-                this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.SOUTH)
+                return this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.SOUTH)
             }
             mot8 < mot2 -> {
                 if (this.isValidKnockBackBlock(knockBackBlock)) {
@@ -490,15 +489,16 @@ class BallProxyImpl(
                 }
 
                 val n = Vector(0, 0, 1)
-                this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.NORTH)
+                return this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.NORTH)
             }
         }
+        return false
     }
 
     /**
      * Calculates post movement.
      */
-    override fun calculatePostMovement() {
+    override fun calculatePostMovement(collision: Boolean) {
         if (originVector == null) {
             return
         }
@@ -506,31 +506,29 @@ class BallProxyImpl(
         val postMovement = BallPostMoveEvent(this.originVector!!, true, this)
         Bukkit.getPluginManager().callEvent(postMovement)
 
-        if (times <= 0 || spinningForce == 0.0 || this.design.isOnGround) {
+        if (times <= 0 || angularVelocity == 0.0 || this.design.isOnGround || collision) {
             return
         }
 
-        val event = BallSpinEvent(spinningForce, this, false)
+        val event = BallSpinEvent(angularVelocity, this, false)
         Bukkit.getPluginManager().callEvent(event)
 
         if (!event.isCancelled) {
-            spinningForce = event.spinningForce
+            angularVelocity = event.angularVelocity
 
-            if (spinningForce != 0.0) {
-                this.originVector = calculateMagnusForce(this.originVector!!, spinningForce.toFloat())
+            if (angularVelocity != 0.0) {
+                this.originVector = calculateMagnusForce(this.originVector!!, angularVelocity.toFloat())
             }
         }
     }
 
     /**
      * Applies the wall knockback.
+     *
+     * @return whether the knockback was applied
      */
-    private fun applyKnockBack(starter: Vector, n: Vector, block: Block, blockFace: BlockFace) {
-        if (block.type == org.bukkit.Material.AIR) {
-            return
-        }
-
-        if (this.knockBackBumper <= 0) {
+    private fun applyKnockBack(starter: Vector, n: Vector, block: Block, blockFace: BlockFace): Boolean {
+        if (block.type == org.bukkit.Material.AIR && this.knockBackBumper <= 0) {
             val optBounce = getBounceConfigurationFromBlock(block)
             if (optBounce.isPresent || meta.alwaysBouce) {
                 var r = starter.clone().subtract(n.multiply(2 * starter.dot(n))).multiply(0.75)
@@ -547,9 +545,11 @@ class BallProxyImpl(
                     this.setVelocity(r)
                     this.backAnimation = !backAnimation
                     this.knockBackBumper = 5
+                    return true
                 }
             }
         }
+        return false
     }
 
     /**
@@ -663,13 +663,13 @@ class BallProxyImpl(
     /**
      * Magnus force calculation.
      */
-    private fun calculateMagnusForce(velocity: Vector, force: Float): Vector {
-        val originUnit = velocity.normalize()
+    private fun calculateMagnusForce(vector: Vector, velocity: Float): Vector {
+        val originUnit = vector.normalize()
         val x = -originUnit.z
         val z = originUnit.x
 
-        val newVector = velocity.add(Vector(x, 0.0, z).multiply(force))
-        return newVector.multiply(velocity.length() / newVector.length())
+        val newVector = vector.add(Vector(x, 0.0, z).multiply(velocity))
+        return newVector.multiply(vector.length() / newVector.length())
     }
 
     /**

@@ -33,7 +33,7 @@ class BallSpinEvent(
         /**
          * Spinning force.
          */
-        val spinningForce: Double, ball: BallProxy,
+        val angularVelocity: Double, ball: BallProxy,
         /**
          * Is this spin the initial spin where all sub spins get calculated from?
          */

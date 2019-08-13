@@ -63,9 +63,9 @@ interface BallProxy {
     var persistent: Boolean
 
     /**
-     * Current spinning force value.
+     * Current velocity of spin generating Magnus force.
      */
-    var spinningForce: Double
+    var angularVelocity: Double
 
     /**
      * Returns the armorstand for the design.
@@ -150,8 +150,10 @@ interface BallProxy {
 
     /**
      * Calculates post movement.
+     *
+     * @param collision if knockback were applied during the movement
      */
-    fun calculatePostMovement()
+    fun calculatePostMovement(collision: Boolean)
 
     /**
      * Calculates the movement vectors.
@@ -161,6 +163,8 @@ interface BallProxy {
     /**
      * Calculates the knockback for the given [sourceVector] and [sourceBlock]. Uses the motion values to correctly adjust the
      * wall.
+     *
+     * @return if collision was detected and the knockback was applied
      */
-    fun <V, B> calculateKnockBack(sourceVector: V, sourceBlock: B, mot0: Double, mot2: Double, mot6: Double, mot8: Double)
+    fun <V, B> calculateKnockBack(sourceVector: V, sourceBlock: B, mot0: Double, mot2: Double, mot6: Double, mot8: Double): Boolean
 }

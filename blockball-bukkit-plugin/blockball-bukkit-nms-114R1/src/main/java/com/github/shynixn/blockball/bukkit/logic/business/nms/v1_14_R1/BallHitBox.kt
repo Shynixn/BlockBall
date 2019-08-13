@@ -74,6 +74,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
      */
     override fun move(enummovetype: EnumMoveType, vec3dmp: Vec3D) {
         var vec3d = vec3dmp
+        var collision = false
         val motionVector = Vector(this.mot.x, this.mot.y, this.mot.z)
         val optSourceVector = ballDesign.proxy.calculateMoveSourceVectors(Vector(vec3d.x, vec3d.y, vec3d.z), motionVector, this.onGround)
 
@@ -159,7 +160,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
             if (this.positionChanged) {
                 try {
                     val sourceBlock = this.world.world.getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ))
-                    this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, vec3d1.x, vec3d1.z, vec3d.x, vec3d1.z)
+                    collision = this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, vec3d1.x, vec3d1.z, vec3d.x, vec3d1.z)
                 } catch (e: Exception) {
                     Bukkit.getLogger().log(Level.WARNING, "Critical exception.", e)
                 }
@@ -168,7 +169,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
             this.world.methodProfiler.exit()
         }
 
-        this.ballDesign.proxy.calculatePostMovement()
+        this.ballDesign.proxy.calculatePostMovement(collision)
         timingService.stopTiming()
     }
 
