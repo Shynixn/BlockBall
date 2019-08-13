@@ -94,7 +94,7 @@ class BallProxyImpl(
     private val concurrencyService = BlockBallApi.resolve(ConcurrencyService::class.java)
     private var backAnimation = false
     private var interactionEntity: Entity? = null
-    private var counter = 20
+    private var breakCounter = 20
     override var yawChange: Float = -1.0F
 
     /** HitBox **/
@@ -318,7 +318,7 @@ class BallProxyImpl(
         val event = BallThrowEvent(vector, entity, this)
         Bukkit.getPluginManager().callEvent(event)
         if (!event.isCancelled) {
-            this.counter = 10
+            this.breakCounter = 10
             setVelocity(vector)
         }
     }
@@ -572,8 +572,8 @@ class BallProxyImpl(
      * Checks movement interactions with the ball.
      */
     private fun checkMovementInteractions(): Boolean {
-        if (this.counter <= 0) {
-            this.counter = 2
+        if (this.breakCounter <= 0) {
+            this.breakCounter = meta.interactionSkipInTicks
             val hitBoxLocation = this.hitbox.location
             for (entity in design.location.chunk.entities) {
                 if (entity !is ArmorStand && entity.location.distance(hitBoxLocation) < meta.hitBoxSize) {
@@ -593,7 +593,7 @@ class BallProxyImpl(
                 }
             }
         } else {
-            this.counter--
+            this.breakCounter--
         }
         return false
     }

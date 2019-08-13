@@ -82,6 +82,8 @@ class BallListener @Inject constructor(
     }
 
     /**
+     * TODO 'interaction' can be interpreted as kick or dribbling, but this function is all about 'carrying' a ball.
+     * TODO The comment below is misleading because PlayerInteractEvent is not designed for entity interactions.
      * Gets called when a player hits the ball and kicks the ball.
      *
      * @param event event
@@ -89,9 +91,13 @@ class BallListener @Inject constructor(
     @EventHandler
     fun onPlayerInteractBallEvent(event: PlayerInteractEvent) {
         for (ball in this.ballEntityService.getAllBalls()) {
-            if (ball.getLastInteractionEntity<Entity>().isPresent && ball.getLastInteractionEntity<Entity>().get() == event.player) {
-                ball.throwByEntity(event.player)
-                event.isCancelled = true
+            if (ball.isGrabbed) {
+                ball.getLastInteractionEntity<Entity>().ifPresent{
+                    if (it is Player && it.uniqueId == event.player.uniqueId) {
+                        ball.throwByEntity(event.player)
+                        event.isCancelled = true
+                    }
+                }
             }
         }
     }

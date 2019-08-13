@@ -84,6 +84,7 @@ interface BallProxy {
 
     /**
      * Gets the last interaction entity.
+     * TODO 'interaction' can be interpreted as kick or dribbling
      */
     fun <L> getLastInteractionEntity(): Optional<L>
 
