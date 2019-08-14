@@ -29,6 +29,8 @@ import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import java.util.*
 import java.util.logging.Level
+import kotlin.math.abs
+import kotlin.math.atan2
 
 
 /**
@@ -104,7 +106,7 @@ class BallProxyImpl(
     private var times: Int = 0
 
     /**
-     * Current spinning force value.
+     * Current velocity of spin generating Magnus force.
      */
     override var angularVelocity: Double = 0.0
 
@@ -253,6 +255,7 @@ class BallProxyImpl(
 
         if (!event.isCancelled) {
             this.setVelocity(vector)
+            this.breakCounter = 2
 
             if (entity is Player) {
                 sync(concurrencyService, 5L) {
@@ -263,7 +266,7 @@ class BallProxyImpl(
     }
 
     /**
-     * Begins the ball spin towards the player direction.
+     * Begins ball spin towards the player direction.
      */
     override fun <V> spin(playerDirection: V, resultVelocity: V) {
         if (playerDirection !is Vector) {
@@ -274,22 +277,25 @@ class BallProxyImpl(
             throw IllegalArgumentException("ResultVelocity has to be a BukkitVelocity!")
         }
 
-        val angle = getAngle(resultVelocity, playerDirection)
-        val force: Float
+        val angle = Math.toDegrees(getIncludedAngle(resultVelocity, playerDirection))
+        val absAngle = abs(angle).toFloat()
+        var velocity: Float
 
-        force = if (angle > 0.3f && angle < 10f) {
-            0.03f
-        } else if (angle < -0.3f && angle > -10f) {
-            -0.03f
+        velocity = if (absAngle < 90f) {
+            0.1f * absAngle / 90f
         } else {
             return
         }
 
-        val event = BallSpinEvent(force.toDouble(), this, true)
+        if (angle < 0.0) {
+            velocity *= -1f
+        }
+
+        val event = BallSpinEvent(velocity.toDouble(), this, true)
         Bukkit.getPluginManager().callEvent(event)
 
         if (!event.isCancelled) {
-            angularVelocity = event.angularVelocity
+            this.angularVelocity = event.angularVelocity
         }
     }
 
@@ -318,7 +324,7 @@ class BallProxyImpl(
         val event = BallThrowEvent(vector, entity, this)
         Bukkit.getPluginManager().callEvent(event)
         if (!event.isCancelled) {
-            this.breakCounter = 10
+            this.breakCounter = 2
             setVelocity(vector)
         }
     }
@@ -499,25 +505,42 @@ class BallProxyImpl(
      * Calculates post movement.
      */
     override fun calculatePostMovement(collision: Boolean) {
-        if (originVector == null) {
+        if (this.originVector == null) {
             return
         }
 
         val postMovement = BallPostMoveEvent(this.originVector!!, true, this)
-        Bukkit.getPluginManager().callEvent(postMovement)
 
-        if (times <= 0 || angularVelocity == 0.0 || this.design.isOnGround || collision) {
-            return
+        Bukkit.getPluginManager().callEvent(postMovement)
+        calculateSpinMovement(collision)
+    }
+
+    /**
+     * Calculates spin movement. The spinning will slow down
+     * if the ball stops moving, hits the ground or hits the wall.
+     */
+    private fun calculateSpinMovement(collision: Boolean) {
+        if (abs(angularVelocity) < 0.01) {
+            return;
+        }
+
+        if (times <= 0 || this.design.isOnGround || collision) {
+            angularVelocity /= 2
         }
 
         val event = BallSpinEvent(angularVelocity, this, false)
+
         Bukkit.getPluginManager().callEvent(event)
 
         if (!event.isCancelled) {
             angularVelocity = event.angularVelocity
 
             if (angularVelocity != 0.0) {
-                this.originVector = calculateMagnusForce(this.originVector!!, angularVelocity.toFloat())
+                val originUnit = this.originVector!!.normalize()
+                val x = -originUnit.z
+                val z = originUnit.x
+                val newVector = this.originVector!!.add(Vector(x, 0.0, z).multiply(angularVelocity.toFloat()))
+                this.originVector = newVector.multiply(this.originVector!!.length() / newVector.length())
             }
         }
     }
@@ -661,29 +684,18 @@ class BallProxyImpl(
     }
 
     /**
-     * Magnus force calculation.
+     * Calculates the angle between two vectors in horizontal dimension.
+     * Included angle never exceeds PI. If the returned value is negative,
+     * then subseq vector is actually not subsequent to precede vector.
+     * @param subseq The vector subsequent to precede vector in clock-wised order.
+     * @param precede The vector preceding subseq vector in clock-wised order.
+     * @return A radian angle in the range of -PI to PI
      */
-    private fun calculateMagnusForce(vector: Vector, velocity: Float): Vector {
-        val originUnit = vector.normalize()
-        val x = -originUnit.z
-        val z = originUnit.x
+    private fun getIncludedAngle(subseq: Vector, precede: Vector): Double {
+        val dot = subseq.x * precede.x + subseq.z * precede.z
+        val det = subseq.x * precede.z - subseq.z * precede.x
 
-        val newVector = vector.add(Vector(x, 0.0, z).multiply(velocity))
-        return newVector.multiply(vector.length() / newVector.length())
-    }
-
-    /**
-     * Calculates the angle between two vectors in two dimension (XZ Plane) <br></br>
-     * If 'basis' vector is clock-wise to 'against' vector, the angle is negative.
-     * @param basis The basis vector
-     * @param against The vector which the angle is calculated against
-     * @return The angle in the range of -180 to 180 degrees
-     */
-    private fun getAngle(basis: Vector, against: Vector): Double {
-        val dot = basis.x * against.x + basis.z * against.z
-        val det = basis.x * against.z - basis.z * against.x
-
-        return Math.atan2(det, dot)
+        return atan2(det, dot)
     }
 
     /**
