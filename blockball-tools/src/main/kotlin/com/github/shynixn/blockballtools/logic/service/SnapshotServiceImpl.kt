@@ -1,6 +1,8 @@
 package com.github.shynixn.blockballtools.logic.service
 
 import com.github.shynixn.blockballtools.contract.SonaTypeService
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
@@ -39,16 +41,13 @@ class SnapshotServiceImpl : SonaTypeService {
      * a [IllegalArgumentException] if not found.
      */
     override fun findDownloadUrl(repository: String): String {
-        val content = getSiteContent(repository)
-        val data = content.split("SNAPSHOT")
-
-        val lastSnapshotRepositoryPayload = data[data.size - 3]
-        val lastSnapshotRepositoryURL = lastSnapshotRepositoryPayload.substring(lastSnapshotRepositoryPayload.indexOf("https://")) + "SNAPSHOT"
+        val latestId = findId(repository)
+        val lastSnapshotRepositoryURL =
+            "https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/$latestId/"
 
         val repositoryContent = getSiteContent(lastSnapshotRepositoryURL)
         val snapshotPayload = repositoryContent.split("href=\"")
         val subSnapshotPayload = snapshotPayload.filter { p -> p.contains(".jar\"") }
-
         val snapshotDownloadURLPayload = subSnapshotPayload[subSnapshotPayload.size - 1]
 
         return snapshotDownloadURLPayload.substring(0, snapshotDownloadURLPayload.indexOf("\">"))
@@ -59,22 +58,37 @@ class SnapshotServiceImpl : SonaTypeService {
      * a [IllegalArgumentException] if not found.
      */
     override fun findId(repositor: String): String {
-        val content = getSiteContent(repositor)
-        val data = content.split("SNAPSHOT")
+        val tableItem = Jsoup.connect(repositor).get().body().getElementsByTag("table")[0]
+        var latestId = "0.0.0-SNAPSHOT"
 
-        val lastSnapshotRepositoryPayload = data[data.size - 3]
-        val lastSnapshotRepositoryURL = lastSnapshotRepositoryPayload.substring(lastSnapshotRepositoryPayload.indexOf("https://")) + "SNAPSHOT"
+        for (item in (tableItem.childNodes()[1] as Element).children()) {
+            if (item.tagName() == "tr") {
+                val nameColumn = item.children()[0]
 
-        val repositoryContent = getSiteContent(lastSnapshotRepositoryURL)
-        val snapshotPayload = repositoryContent.split("href=\"")
-        val subSnapshotPayload = snapshotPayload.filter { p -> p.contains(".jar\"") }
+                if (nameColumn.children().size > 0) {
+                    val value = nameColumn.children()[0].html().replace("/", "")
 
-        val snapshotDownloadURLPayload = subSnapshotPayload[subSnapshotPayload.size - 1]
+                    if (value.toCharArray()[0].toString().toIntOrNull() != null && value.endsWith("-SNAPSHOT")) {
+                        val newNumbers = value.split("-")[0].split(".")
+                        val oldNumbers = latestId.split("-")[0].split(".")
 
-        val url = snapshotDownloadURLPayload.substring(0, snapshotDownloadURLPayload.indexOf("\">"))
-        val parts = url.substring(0, url.indexOf(".jar")).split("-")
+                        if (newNumbers[0].toInt() > oldNumbers[0].toInt()) {
+                            latestId = value
+                        }
 
-        return "SNAPSHOT-" + parts[parts.size - 3] + "-" + parts[parts.size - 2] + "-" + parts[parts.size - 1]
+                        if (newNumbers[0].toInt() == oldNumbers[0].toInt() && newNumbers[1].toInt() > oldNumbers[1].toInt()) {
+                            latestId = value
+                        }
+
+                        if (newNumbers[0].toInt() == oldNumbers[0].toInt() && newNumbers[1].toInt() == oldNumbers[1].toInt() && newNumbers[2].toInt() > oldNumbers[2].toInt()) {
+                            latestId = value
+                        }
+                    }
+                }
+            }
+        }
+
+        return latestId
     }
 
     /**

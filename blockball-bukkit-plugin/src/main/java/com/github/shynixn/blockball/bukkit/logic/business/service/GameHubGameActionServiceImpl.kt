@@ -164,7 +164,11 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
         player.inventory.setArmorContents(teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray())
         player.inventory.updateInventory()
 
-        this.gameExecutionService.respawn(game, player)
+        if (game.arena.meta.hubLobbyMeta.teleportOnJoin) {
+            this.gameExecutionService.respawn(game, player)
+        } else {
+            player.velocity = player.location.direction.normalize().multiply(0.5)
+        }
 
         player.sendMessage(prefix + teamMeta.joinMessage.replaceGamePlaceholder(game, teamMeta))
     }

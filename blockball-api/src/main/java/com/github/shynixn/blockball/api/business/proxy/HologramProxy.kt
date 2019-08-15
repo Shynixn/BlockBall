@@ -1,13 +1,13 @@
 package com.github.shynixn.blockball.api.business.proxy
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,29 +29,32 @@ package com.github.shynixn.blockball.api.business.proxy
  */
 interface HologramProxy {
     /**
-     * Adds a line to the hologram.
+     * List of players being able to see this hologram.
      */
-    fun addLine(line: String)
+    val players: MutableSet<Any>
 
     /**
-     * Adds a watcher to this hologram.
-     * Does nothing if already added.
+     * List of lines being displayed on the hologram.
      */
-    fun <P> addWatcher(player: P)
+    var lines: MutableList<String>
 
     /**
-     * Removes the hologram. If it is not already removed.
+     * Location of the hologram.
+     */
+    var location: Any
+
+    /**
+     * Gets if this hologram was removed.
+     */
+    val isDead: Boolean
+
+    /**
+     * Updates changes of the hologram.
+     */
+    fun update()
+
+    /**
+     * Removes this hologram permanently.
      */
     fun remove()
-
-    /**
-     * Removes a watcher from this hologram.
-     * Does nothing if the [player] is not aded.
-     */
-    fun <P> removeWatcher(player: P)
-
-    /**
-     * Changes the lines of the hologram.
-     */
-    fun setLines(lines: Collection<String>)
 }

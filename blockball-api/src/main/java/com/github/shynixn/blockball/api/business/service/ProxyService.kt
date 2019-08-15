@@ -62,6 +62,16 @@ interface ProxyService {
     fun <P> getPlayerInventoryArmorCopy(player: P): Array<Any?>
 
     /**
+     * Gets a list of all online players.
+     */
+    fun <P> getOnlinePlayers(): List<P>
+
+    /**
+     * Sends a plugin message through the given channel.
+     */
+    fun <P> sendPlayerPluginMessage(player: P, channel: String, content: ByteArray)
+
+    /**
      * Converts the given [location] to a [Position].
      */
     fun <L> toPosition(location: L): Position

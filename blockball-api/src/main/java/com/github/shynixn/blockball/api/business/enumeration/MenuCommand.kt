@@ -147,6 +147,8 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     GAMESETTINGS_MAXDURATION(MenuPageKey.GAMESETTINGS, "matchduration"),
     GAMESETTINGS_LOBBYDURATION(MenuPageKey.GAMESETTINGS, "lobbyduration"),
     GAMESETTINGS_BUNGEEKICKMESSAGE(MenuPageKey.GAMESETTINGS, "kickmes"),
+    GAMESETTINGS_BUNGEELEAVEKICKMESSAGE(MenuPageKey.GAMESETTINGS, "levkikmes"),
+    GAMESETTINGS_BUNGEEFALLBACKSERVER(MenuPageKey.GAMESETTINGS, "falbac"),
     GAMESETTINGS_REMAININGPLAYERSMESSAGE(MenuPageKey.GAMESETTINGS, "remainmes"),
     GAMESETTINGS_LEAVESPAWNPOINT(MenuPageKey.GAMESETTINGS, "lspawn"),
     GAMESETTINGS_LOBBYSPAWNPOINT(MenuPageKey.GAMESETTINGS, "lobspawn"),
@@ -154,6 +156,7 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     GAMESETTINGS_TOGGLE_EVENTEAMS(MenuPageKey.GAMESETTINGS, "tlgeven"),
     GAMESETTINGS_TOGGLE_RESETEMPTY(MenuPageKey.GAMESETTINGS, "resemp"),
     GAMESETTINGS_TOGGLE_INSTATFORCEFIELD(MenuPageKey.GAMESETTINGS, "iforce"),
+    GAMESETTINGS_TOGGLE_TELEPORTONJOIN(MenuPageKey.GAMESETTINGS, "tglteleport"),
 
     SIGNS_OPEN(MenuPageKey.SIGNS, "open"),
     SIGNS_ADDTEAMRED(MenuPageKey.SIGNS, "adteamr"),

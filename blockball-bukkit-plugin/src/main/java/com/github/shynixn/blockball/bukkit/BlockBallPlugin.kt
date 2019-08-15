@@ -129,25 +129,35 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             resolve(JoinCommandExecutor::class.java)
         )
 
+        server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
+
         val updateCheker = resolve(UpdateCheckService::class.java)
         val dependencyChecker = resolve(DependencyService::class.java)
         val configurationService = resolve(ConfigurationService::class.java)
         val ballEntitySerivice = resolve(BallEntityService::class.java)
-
-        for (world in Bukkit.getWorlds()) {
-            ballEntitySerivice.cleanUpInvalidEntities(world.entities)
-        }
+        val bungeeCordConnectionService = resolve(BungeeCordConnectionService::class.java)
 
         updateCheker.checkForUpdates()
         dependencyChecker.checkForInstalledDependencies()
 
         val enableMetrics = configurationService.findValue<Boolean>("metrics")
+        val enableBungeeCord = configurationService.findValue<Boolean>("game.allow-server-linking")
+
+        startPlugin()
 
         if (enableMetrics) {
             Metrics(this)
         }
 
-        startPlugin()
+        if (enableBungeeCord) {
+            bungeeCordConnectionService.restartChannelListeners()
+            Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.DARK_GREEN + "Started server linking.")
+        }
+
+        for (world in Bukkit.getWorlds()) {
+            ballEntitySerivice.cleanUpInvalidEntities(world.entities)
+        }
+
         Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")
     }
 

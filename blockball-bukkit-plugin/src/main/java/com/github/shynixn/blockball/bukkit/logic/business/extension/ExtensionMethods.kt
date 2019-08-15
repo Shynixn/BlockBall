@@ -271,6 +271,13 @@ fun findClazz(name: String, plugin: PluginProxy): Class<*> {
 }
 
 /**
+ * Finds the version compatible NMS class.
+ */
+fun findClazz(name: String): Class<*> {
+    return Class.forName(name.replace("VERSION", BlockBallApi.resolve(PluginProxy::class.java).getServerVersion().bukkitId))
+}
+
+/**
  * Converts the given gamemode to a bukkit gamemode.
  */
 internal fun GameMode.toGameMode(): org.bukkit.GameMode {

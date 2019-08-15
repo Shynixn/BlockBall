@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.api.business.service
 
 import com.github.shynixn.blockball.api.persistence.entity.LinkSign
-import java.util.*
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -33,32 +32,22 @@ import java.util.concurrent.CompletableFuture
  */
 interface PersistenceLinkSignService {
     /**
-     * Returns all stored signs in this repository.
+     * Removes the given [sign].
      */
-    fun getAll(): CompletableFuture<List<LinkSign>>
+    fun remove(sign: LinkSign): CompletableFuture<Void?>
 
     /**
-     * Refreshes the runtime cache of the linked services.
+     * Saves the given [sign] to the storage.
+     */
+    fun save(sign: LinkSign): CompletableFuture<Void?>
+
+    /**
+     * Refreshes the runtime cache of signs.
      */
     fun refresh(): CompletableFuture<Void?>
 
     /**
-     * Returns the amount of items in this repository.
+     * Accesses the cached signs.
      */
-    fun size(): CompletableFuture<Int>
-
-    /**
-     * Returns the [LinkSign] from the given [location].
-     */
-    fun <L> getFromLocation(location: L): CompletableFuture<Optional<LinkSign>>
-
-    /**
-     * Remove the given [linkSign] from the storage.
-     */
-    fun remove(linkSign: LinkSign): CompletableFuture<Void?>
-
-    /**
-     * Saves the given [LinkSign] to the storage.
-     */
-    fun save(linkSign: LinkSign): CompletableFuture<Void?>
+    fun getAll(): List<LinkSign>
 }

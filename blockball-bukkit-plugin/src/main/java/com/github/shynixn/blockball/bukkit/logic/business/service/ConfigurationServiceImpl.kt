@@ -3,18 +3,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
-import com.github.shynixn.blockball.api.business.service.YamlSerializationService
-import com.github.shynixn.blockball.api.persistence.entity.BungeeCordConfiguration
-import com.github.shynixn.blockball.bukkit.logic.business.extension.deserializeToMap
-import com.github.shynixn.blockball.core.logic.persistence.entity.BungeeCordConfigurationEntity
 import com.google.inject.Inject
 import org.bukkit.ChatColor
-import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
-import java.io.File
-import java.io.IOException
 import java.nio.file.Path
-import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -43,7 +35,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ConfigurationServiceImpl @Inject constructor(private val plugin: Plugin, private val yamlSerializationService: YamlSerializationService) :
+class ConfigurationServiceImpl @Inject constructor(private val plugin: Plugin) :
     ConfigurationService {
     /**
      * Checks if the given [path] contains a value.
@@ -65,34 +57,6 @@ class ConfigurationServiceImpl @Inject constructor(private val plugin: Plugin, p
      */
     override val applicationDir: Path
         get() = plugin.dataFolder.toPath()
-
-    /**
-     * Tries to load the config values into the given configuration [clazz] from the given [path]
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
-     */
-    override fun <C> findConfiguration(clazz: Class<C>, path: String): C {
-        if (clazz == BungeeCordConfiguration::class.java) {
-            try {
-                val file = File(plugin.dataFolder, "bungeecord.yml")
-
-                if (!file.exists()) {
-                    file.createNewFile()
-                    val configuration = YamlConfiguration()
-                    configuration.set("bungeecord", yamlSerializationService.serialize(BungeeCordConfigurationEntity()))
-                    configuration.save(file)
-                }
-
-                val configuration = YamlConfiguration()
-                configuration.load(file)
-                return yamlSerializationService.deserialize(BungeeCordConfigurationEntity::class.java, configuration.deserializeToMap("bungeecord")) as C
-            } catch (e: IOException) {
-                plugin.logger.log(Level.WARNING, "Failed to load bungeecord.yml.", e)
-            }
-        }
-
-        throw IllegalArgumentException("Cannot find configuration.")
-    }
 
     /**
      * Tries to load the config value from the given [path].

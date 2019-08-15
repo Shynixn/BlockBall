@@ -24,7 +24,7 @@ class ReleaseServiceImpl : SonaTypeService {
      */
     override fun findId(repositor: String): String {
         val tableItem = Jsoup.connect(repositor).get().body().getElementsByTag("table")[0]
-        var latestId = "?"
+        var latestId = "0.0.0"
 
         for (item in (tableItem.childNodes()[1] as Element).children()) {
             if (item.tagName() == "tr") {
@@ -34,7 +34,20 @@ class ReleaseServiceImpl : SonaTypeService {
                     val value = nameColumn.children()[0].html().replace("/", "")
 
                     if (value.toCharArray()[0].toString().toIntOrNull() != null && !value.endsWith("-SNAPSHOT")) {
-                        latestId = value
+                        val newNumbers = value.split("-")[0].split(".")
+                        val oldNumbers = latestId.split("-")[0].split(".")
+
+                        if (newNumbers[0].toInt() > oldNumbers[0].toInt()) {
+                            latestId = value
+                        }
+
+                        if (newNumbers[0].toInt() == oldNumbers[0].toInt() && newNumbers[1].toInt() > oldNumbers[1].toInt()) {
+                            latestId = value
+                        }
+
+                        if (newNumbers[0].toInt() == oldNumbers[0].toInt() && newNumbers[1].toInt() == oldNumbers[1].toInt() && newNumbers[2].toInt() > oldNumbers[2].toInt()) {
+                            latestId = value
+                        }
                     }
                 }
             }
