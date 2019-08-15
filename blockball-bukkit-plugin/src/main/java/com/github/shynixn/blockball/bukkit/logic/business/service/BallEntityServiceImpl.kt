@@ -13,6 +13,7 @@ import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
 import org.bukkit.plugin.Plugin
+import java.lang.Exception
 import java.util.*
 import java.util.logging.Level
 import kotlin.collections.ArrayList
@@ -77,8 +78,9 @@ class BallEntityServiceImpl @Inject constructor(private val pluginProxy: PluginP
                     if (!optProxy.isPresent) {
                         entity.remove()
 
-                        if (entity is EntityBallProxy) {
-                            entity.deleteFromWorld()
+                        try{
+                            (entity as Any).javaClass.getDeclaredMethod("deleteFromWorld").invoke(entity)
+                        }catch(e : Exception){
                         }
 
                         plugin.logger.log(Level.INFO, "Removed invalid BlockBall in chunk.")
