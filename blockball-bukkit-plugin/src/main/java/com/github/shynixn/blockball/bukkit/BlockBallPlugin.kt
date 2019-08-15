@@ -138,6 +138,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             ballEntitySerivice.cleanUpInvalidEntities(world.entities)
         }
 
+        ballEntitySerivice.registerEntitiesOnServer()
         updateCheker.checkForUpdates()
         dependencyChecker.checkForInstalledDependencies()
 
@@ -157,6 +158,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     override fun onDisable() {
         try {
             resolve(GameService::class.java).close()
+            resolve(EntityRegistrationService::class.java).clearResources()
         } catch (e: Exception) {
             // Ignored.
         }

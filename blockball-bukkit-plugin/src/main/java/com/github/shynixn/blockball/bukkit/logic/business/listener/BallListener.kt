@@ -10,10 +10,7 @@ import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.SoundService
 import com.google.inject.Inject
 import org.bukkit.Location
-import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.Entity
-import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
+import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -65,7 +62,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onChunkSaveEvent(event: ChunkUnloadEvent) {
-        event.chunk.entities.filter { e -> e is ArmorStand }
+        event.chunk.entities.filter { e -> e is ArmorStand || e is Slime }
             .forEach { e ->
                 ballEntityService.findBallFromEntity(e).ifPresent { ball ->
                     ball.remove()
@@ -74,7 +71,7 @@ class BallListener @Inject constructor(
     }
 
     /**
-     * Checks if an ball armorstand is inside of the chunk and remove it.
+     * Checks if a ball armorstand is inside of the chunk and remove it.
      */
     @EventHandler
     fun onChunkLoadEvent(event: ChunkLoadEvent) {
@@ -110,7 +107,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun entityRightClickBallEvent(event: PlayerInteractAtEntityEvent) {
-        if (event.rightClicked !is ArmorStand) {
+        if (event.rightClicked !is Slime) {
             return
         }
 
@@ -131,7 +128,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerDamageBallEvent(event: EntityDamageByEntityEvent) {
-        if (event.entity is ArmorStand) {
+        if (event.entity is Slime) {
             val optBall = this.ballEntityService.findBallFromEntity(event.entity)
             if (optBall.isPresent) {
                 val ball = optBall.get()
@@ -148,7 +145,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun entityDamageEvent(event: EntityDamageEvent) {
-        if (event.entity is ArmorStand) {
+        if (event.entity is Slime) {
             val optBall = ballEntityService.findBallFromEntity(event.entity)
             if (optBall.isPresent) {
                 event.isCancelled = true

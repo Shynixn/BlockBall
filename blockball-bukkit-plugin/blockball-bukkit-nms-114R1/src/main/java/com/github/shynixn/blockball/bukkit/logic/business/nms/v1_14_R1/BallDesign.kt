@@ -16,6 +16,7 @@ import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Slime
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -51,7 +52,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
     EntityArmorStand((location.world as CraftWorld).handle, location.x, location.y, location.z), NMSBallProxy {
     private val itemService = BlockBallApi.resolve(ItemService::class.java)
 
-    private val hitbox = BallHitBox(this, location, BlockBallApi.resolve(SpigotTimingService::class.java))
+    private val hitbox = BallHitbox(this, ballMeta, location, BlockBallApi.resolve(SpigotTimingService::class.java))
     private var internalProxy: BallProxy? = null
     // BukkitEntity has to be self cached since 1.14.
     private var entityBukkit: Any? = null
@@ -72,12 +73,12 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             .getDeclaredConstructor(
                 BallMeta::class.java,
                 ArmorStand::class.java,
-                ArmorStand::class.java,
+                Slime::class.java,
                 UUID::class.java,
                 LivingEntity::class.java,
                 Boolean::class.java
             )
-            .newInstance(ballMeta, this.bukkitEntity as ArmorStand, hitbox.bukkitEntity as ArmorStand, uuid, owner, persistent) as BallProxy
+            .newInstance(ballMeta, this.bukkitEntity as ArmorStand, hitbox.bukkitEntity as Slime, uuid, owner, persistent) as BallProxy
 
         val compound = NBTTagCompound()
         compound.setBoolean("invulnerable", true)
@@ -94,7 +95,9 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
                 (bukkitEntity as ArmorStand).isSmall = true
                 (bukkitEntity as ArmorStand).setHelmet(itemStack)
             }
-            BallSize.NORMAL -> (bukkitEntity as ArmorStand).setHelmet(itemStack)
+            BallSize.NORMAL -> {
+                (bukkitEntity as ArmorStand).setHelmet(itemStack)
+            }
         }
     }
 
@@ -127,11 +130,11 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
     /**
      * Gets the bukkit entity.
      */
-    override fun getBukkitEntity(): CraftBallArmorstand {
+    override fun getBukkitEntity(): CraftDesignArmorstand {
         if (this.entityBukkit == null) {
-            this.entityBukkit = CraftBallArmorstand(this.world.server, this)
+            this.entityBukkit = CraftDesignArmorstand(this.world.server, this)
         }
 
-        return this.entityBukkit as CraftBallArmorstand
+        return this.entityBukkit as CraftDesignArmorstand
     }
 }

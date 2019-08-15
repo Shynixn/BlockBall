@@ -20,10 +20,7 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
-import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.Entity
-import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
+import org.bukkit.entity.*
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
@@ -31,6 +28,8 @@ import java.util.*
 import java.util.logging.Level
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 /**
@@ -63,7 +62,7 @@ import kotlin.math.atan2
 class BallProxyImpl(
     override val meta: BallMeta,
     private val design: ArmorStand,
-    private val hitbox: ArmorStand,
+    private val hitbox: Slime,
     override val uuid: UUID = UUID.randomUUID(),
     private val initialOwner: LivingEntity?,
     override var persistent: Boolean
@@ -114,6 +113,7 @@ class BallProxyImpl(
      * Is the ball currently grabbed by some entity?
      */
     override var isGrabbed: Boolean = false
+
     /**
      * Is the entity dead?
      */
@@ -139,9 +139,9 @@ class BallProxyImpl(
     }
 
     /**
-     * Returns the armorstand for the hitbox.
+     * Returns the hitbox entity.
      */
-    override fun <A> getHitboxArmorstand(): A {
+    override fun <A> getHitbox(): A {
         return hitbox as A
     }
 
@@ -509,10 +509,11 @@ class BallProxyImpl(
             return
         }
 
-        val postMovement = BallPostMoveEvent(this.originVector!!, true, this)
-
-        Bukkit.getPluginManager().callEvent(postMovement)
+        // Movement calculation
         calculateSpinMovement(collision)
+
+        val postMovement = BallPostMoveEvent(this.originVector!!, true, this)
+        Bukkit.getPluginManager().callEvent(postMovement)
     }
 
     /**
@@ -521,7 +522,7 @@ class BallProxyImpl(
      */
     private fun calculateSpinMovement(collision: Boolean) {
         if (abs(angularVelocity) < 0.01) {
-            return;
+            return
         }
 
         if (times <= 0 || this.design.isOnGround || collision) {
@@ -631,10 +632,10 @@ class BallProxyImpl(
         val vector = Vector()
         val rotX = entity.location.yaw.toDouble()
         val rotY = entity.location.pitch.toDouble()
-        vector.y = -Math.sin(Math.toRadians(rotY))
-        val h = Math.cos(Math.toRadians(rotY))
-        vector.x = -h * Math.sin(Math.toRadians(rotX))
-        vector.z = h * Math.cos(Math.toRadians(rotX))
+        vector.y = -sin(Math.toRadians(rotY))
+        val h = cos(Math.toRadians(rotY))
+        vector.x = -h * sin(Math.toRadians(rotX))
+        vector.z = h * cos(Math.toRadians(rotX))
         vector.y = 0.5
         vector.add(entity.velocity)
         return vector.multiply(3)

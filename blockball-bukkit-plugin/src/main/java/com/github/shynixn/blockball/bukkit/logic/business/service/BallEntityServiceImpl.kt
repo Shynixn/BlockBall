@@ -1,16 +1,19 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.EntityType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.EntityBallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.BallEntityService
+import com.github.shynixn.blockball.api.business.service.EntityRegistrationService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Slime
 import org.bukkit.plugin.Plugin
 import java.util.*
 import java.util.logging.Level
@@ -43,7 +46,13 @@ import kotlin.collections.ArrayList
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallEntityServiceImpl @Inject constructor(private val pluginProxy: PluginProxy, private val plugin: Plugin) : BallEntityService, Runnable {
+class BallEntityServiceImpl @Inject constructor(
+    private val pluginProxy: PluginProxy,
+    private val plugin: Plugin,
+    private val entityRegistry: EntityRegistrationService
+) : BallEntityService, Runnable {
+
+    private var registered = false
     private val balls = ArrayList<BallProxy>()
 
     init {
@@ -66,20 +75,41 @@ class BallEntityServiceImpl @Inject constructor(private val pluginProxy: PluginP
     }
 
     /**
+     * Registers entities on the server when not already registered.
+     * Returns true if registered. Returns false when not registered.
+     */
+    override fun registerEntitiesOnServer(): Boolean {
+        if (registered) {
+            return false
+        }
+
+        val slimeClazz = findClazz("com.github.shynixn.blockball.bukkit.logic.business.nms.VERSION.BallHitbox", pluginProxy)
+        val armorStandClazz = findClazz("com.github.shynixn.blockball.bukkit.logic.business.nms.VERSION.BallDesign", pluginProxy)
+
+        entityRegistry.register(slimeClazz, EntityType.SLIME)
+        entityRegistry.register(armorStandClazz, EntityType.ARMORSTAND)
+
+        registered = true
+        return true
+    }
+
+    /**
      * Checks the entity collection for invalid ball entities and removes them.
      */
     override fun <E> cleanUpInvalidEntities(entities: Collection<E>) {
         for (entity in entities) {
-            if (entity is ArmorStand && entity.customName != null && entity.customName == "ResourceBallsPlugin") {
-                val optProxy = findBallFromEntity(entity)
-                if (!optProxy.isPresent) {
-                    entity.remove()
+            if (entity is LivingEntity && (entity is Slime || entity is ArmorStand)) {
+                if (entity.customName != null && entity.customName == "ResourceBallsPlugin") {
+                    val optProxy = findBallFromEntity(entity)
+                    if (!optProxy.isPresent) {
+                        entity.remove()
 
-                    if (entity is EntityBallProxy) {
-                        entity.deleteFromWorld()
+                        if (entity is EntityBallProxy) {
+                            entity.deleteFromWorld()
+                        }
+
+                        plugin.logger.log(Level.INFO, "Removed invalid BlockBall in chunk.")
                     }
-
-                    plugin.logger.log(Level.INFO, "Removed invalid BlockBall in chunk.")
                 }
             }
         }
@@ -91,7 +121,7 @@ class BallEntityServiceImpl @Inject constructor(private val pluginProxy: PluginP
     override fun <E> findBallFromEntity(entity: E): Optional<BallProxy> {
         balls.forEach { ball ->
             if (!ball.isDead) {
-                if (ball.getDesignArmorstand<ArmorStand>() == entity || ball.getHitboxArmorstand<ArmorStand>() == entity) {
+                if (ball.getDesignArmorstand<E>() == entity || ball.getHitbox<E>() == entity) {
                     return Optional.of(ball)
                 }
             }

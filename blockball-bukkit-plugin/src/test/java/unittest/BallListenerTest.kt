@@ -11,8 +11,8 @@ import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Sound
 import com.github.shynixn.blockball.bukkit.logic.business.listener.BallListener
 import org.bukkit.Chunk
-import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
+import org.bukkit.entity.Slime
 import org.bukkit.event.world.ChunkLoadEvent
 import org.bukkit.event.world.ChunkUnloadEvent
 import org.junit.jupiter.api.Assertions
@@ -115,7 +115,7 @@ class BallListenerTest {
         override fun run() {
         }
 
-        private val entity: ArmorStand = Mockito.mock(ArmorStand::class.java)
+        private val entity: Slime = Mockito.mock(Slime::class.java)
 
         /**
          * Gets the meta data.
@@ -159,9 +159,9 @@ class BallListenerTest {
         }
 
         /**
-         * Returns the armorstand for the hitbox.
+         * Returns the hitbox entity.
          */
-        override fun <A> getHitboxArmorstand(): A {
+        override fun <A> getHitbox(): A {
             return entity as A
         }
 
@@ -282,7 +282,16 @@ class BallListenerTest {
     }
 
     class MockedBallEntityService(private val ball: BallProxy = MockedBallProxy()) : BallEntityService {
+
         var cleanUpCalled = false
+
+        /**
+         * Registers entities on the server when not already registered.
+         * Returns true if registered. Returns false when not registered.
+         */
+        override fun registerEntitiesOnServer(): Boolean {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
 
         /**
          * Spawns a temporary ball.
@@ -295,7 +304,7 @@ class BallListenerTest {
          * Finds Ball from the given entity.
          */
         override fun <E> findBallFromEntity(entity: E): Optional<BallProxy> {
-            if (ball.getHitboxArmorstand<E>() == entity || ball.getDesignArmorstand<E>() == entity) {
+            if (ball.getHitbox<E>() == entity || ball.getDesignArmorstand<E>() == entity) {
                 return Optional.of(ball)
             }
 

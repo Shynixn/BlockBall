@@ -19,8 +19,8 @@ import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
+import org.bukkit.entity.Slime
 
 /**
  * Created by Shynixn 2018.
@@ -99,9 +99,9 @@ class GameSoccerServiceImpl @Inject constructor(
             val ballLocation = game.ball!!.getLocation() as Location
             val knockback = (game.lastBallLocation!! as Location).toVector().subtract(ballLocation.toVector())
             ballLocation.direction = knockback
-            (game.ball!!.getHitboxArmorstand() as ArmorStand).velocity = knockback
+            (game.ball!!.getHitbox() as Slime).velocity = knockback
             val direction = game.arena.meta.ballMeta.spawnpoint!!.toLocation().toVector().subtract(ballLocation.toVector())
-            (game.ball!!.getHitboxArmorstand() as ArmorStand).velocity = direction.multiply(0.1)
+            (game.ball!!.getHitbox() as Slime).velocity = direction.multiply(0.1)
             game.ballBumper = 40
             game.ballBumperCounter++
             if (game.ballBumperCounter == 5) {

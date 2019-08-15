@@ -2,7 +2,9 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1
 
+import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.business.service.SpigotTimingService
+import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_14_R1.*
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -12,7 +14,7 @@ import org.bukkit.util.Vector
 import java.util.logging.Level
 
 /**
- * Armorstand implementation for hitbox calculation.
+ * Slime implementation for hitbox calculation.
  * <p>
  * Version 1.3
  * <p>
@@ -38,10 +40,16 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallHitBox(private val ballDesign: BallDesign, location: Location, private val timingService: SpigotTimingService) :
-    EntityArmorStand((location.world as CraftWorld).handle, location.x, location.y, location.z) {
+class BallHitbox(
+    private val ballDesign: BallDesign,
+    private val ballMeta: BallMeta,
+    location: Location,
+    private val timingService: SpigotTimingService
+): EntitySlime(EntityTypes.SLIME, (location.world as CraftWorld).handle) {
+
     // BukkitEntity has to be self cached since 1.14.
     private var entityBukkit: Any? = null
+
     /**
      * Initializes the hitbox.
      */
@@ -51,11 +59,16 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
         mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
 
         val compound = NBTTagCompound()
-        compound.setBoolean("invulnerable", true)
-        compound.setBoolean("Invisible", true)
+        compound.setBoolean("Invulnerable", true)
         compound.setBoolean("PersistenceRequired", true)
-        compound.setBoolean("NoBasePlate", true)
+
+        when (ballMeta.size) {
+            BallSize.SMALL -> compound.setInt("Size", 1)
+            else -> compound.setInt("Size", 2)
+        }
+
         this.a(compound)
+        this.isInvisible = true
     }
 
     /**
@@ -174,13 +187,25 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
     }
 
     /**
+     * Disable health.
+     */
+    override fun setHealth(f: Float) {}
+
+    /**
+     * Disable AI.
+     */
+    override fun isNoAI(): Boolean {
+        return true
+    }
+
+    /**
      * Gets the bukkit entity.
      */
-    override fun getBukkitEntity(): CraftBallArmorstand {
+    override fun getBukkitEntity(): CraftHitboxSlime {
         if (this.entityBukkit == null) {
-            this.entityBukkit = CraftBallArmorstand(this.world.server, this)
+            this.entityBukkit = CraftHitboxSlime(this.world.server, this)
         }
 
-        return this.entityBukkit as CraftBallArmorstand
+        return this.entityBukkit as CraftHitboxSlime
     }
 }

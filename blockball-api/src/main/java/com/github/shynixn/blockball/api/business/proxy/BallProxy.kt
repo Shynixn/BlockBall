@@ -73,9 +73,9 @@ interface BallProxy {
     fun <A> getDesignArmorstand(): A
 
     /**
-     * Returns the armorstand for the hitbox.
+     * Returns the hitbox entity.
      */
-    fun <A> getHitboxArmorstand(): A
+    fun <A> getHitbox(): A
 
     /**
      * Gets the optional living entity owner of the ball.
