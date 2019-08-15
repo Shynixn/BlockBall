@@ -10,7 +10,6 @@ import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Sound
 import com.github.shynixn.blockball.bukkit.logic.business.listener.BallListener
-import com.github.shynixn.blockball.core.logic.business.service.LoggingUtilServiceImpl
 import org.bukkit.Chunk
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
@@ -21,7 +20,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import java.util.*
-import java.util.logging.Logger
 import kotlin.collections.ArrayList
 
 /**
@@ -106,7 +104,7 @@ class BallListenerTest {
 
     companion object {
         fun createWithDependencies(ballEntityService: BallEntityService, soundService: SoundService = MockedSoundService(), particleService: ParticleService = MockedParticleService()): BallListener {
-            return BallListener(ballEntityService, particleService, soundService, LoggingUtilServiceImpl(Logger.getAnonymousLogger()))
+            return BallListener(ballEntityService, particleService, soundService)
         }
     }
 

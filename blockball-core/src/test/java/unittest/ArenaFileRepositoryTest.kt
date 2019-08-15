@@ -102,7 +102,7 @@ class ArenaFileRepositoryTest {
         val actualDataLength = FileUtils.readFileToString(File("build/repository-test/arena/arena_1.yml"), "UTF-8")
 
         // Assert
-        Assertions.assertEquals(7532, actualDataLength.length)
+        Assertions.assertEquals(7456, actualDataLength.length)
     }
 
     /**
