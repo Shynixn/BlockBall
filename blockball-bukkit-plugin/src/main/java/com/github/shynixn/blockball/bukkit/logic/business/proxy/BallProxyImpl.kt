@@ -282,7 +282,7 @@ class BallProxyImpl(
         var velocity: Float
 
         velocity = if (absAngle < 90f) {
-            0.1f * absAngle / 90f
+            0.08f * absAngle / 90f
         } else {
             return
         }
@@ -462,7 +462,7 @@ class BallProxyImpl(
             throw IllegalArgumentException("SourceBlock has to be a BukkitBlock!")
         }
 
-        var knockBackBlock: Block = sourceBlock
+         var knockBackBlock: Block = sourceBlock
 
         when {
             mot6 > mot0 -> {
@@ -600,7 +600,7 @@ class BallProxyImpl(
             this.breakCounter = meta.interactionSkipInTicks
             val hitBoxLocation = this.hitbox.location
             for (entity in design.location.chunk.entities) {
-                if (entity !is ArmorStand && entity.location.distance(hitBoxLocation) < meta.hitBoxSize) {
+                if (!entity.customName.equals("ResourceBallsPlugin") && entity.location.distance(hitBoxLocation) < meta.hitBoxSize) {
                     val event = BallInteractEvent(entity, this)
                     Bukkit.getPluginManager().callEvent(event)
                     if (event.isCancelled)

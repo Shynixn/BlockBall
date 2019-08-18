@@ -10,6 +10,8 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld
 import org.bukkit.event.entity.CreatureSpawnEvent
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import java.util.logging.Level
 
@@ -40,9 +42,9 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallHitbox(
+class BallHitBox(
     private val ballDesign: BallDesign,
-    private val ballMeta: BallMeta,
+    ballMeta: BallMeta,
     location: Location,
     private val timingService: SpigotTimingService
 ): EntitySlime(EntityTypes.SLIME, (location.world as CraftWorld).handle) {
@@ -55,20 +57,20 @@ class BallHitbox(
      */
     init {
         val mcWorld = (location.world as CraftWorld).handle
+        val compound = NBTTagCompound()
+
         this.setPosition(location.x, location.y, location.z)
         mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
-
-        val compound = NBTTagCompound()
         compound.setBoolean("Invulnerable", true)
         compound.setBoolean("PersistenceRequired", true)
-
         when (ballMeta.size) {
-            BallSize.SMALL -> compound.setInt("Size", 1)
-            else -> compound.setInt("Size", 2)
+            BallSize.SMALL -> compound.setInt("Size", 0)
+            else -> compound.setInt("Size", 1)
         }
 
+        clearAI()
         this.a(compound)
-        this.isInvisible = true
+        bukkitEntity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
     }
 
     /**
@@ -173,7 +175,7 @@ class BallHitbox(
             if (this.positionChanged) {
                 try {
                     val sourceBlock = this.world.world.getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ))
-                    collision = this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, vec3d1.x, vec3d1.z, vec3d.x, vec3d1.z)
+                    collision = ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, vec3d1.x, vec3d1.z, vec3d.x, vec3d1.z)
                 } catch (e: Exception) {
                     Bukkit.getLogger().log(Level.WARNING, "Critical exception.", e)
                 }
@@ -182,21 +184,36 @@ class BallHitbox(
             this.world.methodProfiler.exit()
         }
 
-        this.ballDesign.proxy.calculatePostMovement(collision)
+        ballDesign.proxy.calculatePostMovement(collision)
         timingService.stopTiming()
     }
+
+    /*
+     * TODO Disable particle and sound effects
+     * TODO see if slime dies in Peaceful difficulty
+    override fun tick() {
+        val fieldBA = this::class.java.superclass.getDeclaredField("bA")
+        val bA: Boolean
+
+        fieldBA.isAccessible = true
+        bA = fieldBA.getBoolean(this)
+
+        if (this.onGround) {
+            if (!bA) {
+                this.b = -0.5f
+            }
+
+            fieldBA.setBoolean(this, true)
+        }
+
+        super.tick()
+    }
+     */
 
     /**
      * Disable health.
      */
     override fun setHealth(f: Float) {}
-
-    /**
-     * Disable AI.
-     */
-    override fun isNoAI(): Boolean {
-        return true
-    }
 
     /**
      * Gets the bukkit entity.
@@ -207,5 +224,14 @@ class BallHitbox(
         }
 
         return this.entityBukkit as CraftHitboxSlime
+    }
+
+    private fun clearAI() {
+        val dField = PathfinderGoalSelector::class.java.getDeclaredField("d")
+        dField.isAccessible = true
+        (dField.get(this.goalSelector) as MutableSet<*>).clear()
+        (dField.get(this.targetSelector) as MutableSet<*>).clear()
+        this.isSilent = true
+        this.setJumping(false)
     }
 }

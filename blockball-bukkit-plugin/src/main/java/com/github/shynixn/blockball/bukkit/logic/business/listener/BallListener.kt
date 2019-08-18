@@ -10,7 +10,10 @@ import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.SoundService
 import com.google.inject.Inject
 import org.bukkit.Location
-import org.bukkit.entity.*
+import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
+import org.bukkit.entity.Slime
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -62,7 +65,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onChunkSaveEvent(event: ChunkUnloadEvent) {
-        event.chunk.entities.filter { e -> e is ArmorStand || e is Slime }
+        event.chunk.entities.filter { e -> e.customName.equals("ResourceBallsPlugin") }
             .forEach { e ->
                 ballEntityService.findBallFromEntity(e).ifPresent { ball ->
                     ball.remove()
@@ -128,7 +131,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerDamageBallEvent(event: EntityDamageByEntityEvent) {
-        if (event.entity is Slime) {
+        if (event.entity.customName.equals("ResourceBallsPlugin")) {
             val optBall = this.ballEntityService.findBallFromEntity(event.entity)
             if (optBall.isPresent) {
                 val ball = optBall.get()

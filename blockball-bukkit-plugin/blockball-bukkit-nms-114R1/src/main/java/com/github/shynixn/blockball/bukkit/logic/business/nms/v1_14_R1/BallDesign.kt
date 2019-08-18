@@ -50,9 +50,9 @@ import java.util.*
  */
 class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) :
     EntityArmorStand((location.world as CraftWorld).handle, location.x, location.y, location.z), NMSBallProxy {
-    private val itemService = BlockBallApi.resolve(ItemService::class.java)
 
-    private val hitbox = BallHitbox(this, ballMeta, location, BlockBallApi.resolve(SpigotTimingService::class.java))
+    private val itemService = BlockBallApi.resolve(ItemService::class.java)
+    private val hitBox = BallHitBox(this, ballMeta, location, BlockBallApi.resolve(SpigotTimingService::class.java))
     private var internalProxy: BallProxy? = null
     // BukkitEntity has to be self cached since 1.14.
     private var entityBukkit: Any? = null
@@ -78,7 +78,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
                 LivingEntity::class.java,
                 Boolean::class.java
             )
-            .newInstance(ballMeta, this.bukkitEntity as ArmorStand, hitbox.bukkitEntity as Slime, uuid, owner, persistent) as BallProxy
+            .newInstance(ballMeta, this.bukkitEntity as ArmorStand, hitBox.bukkitEntity as Slime, uuid, owner, persistent) as BallProxy
 
         val compound = NBTTagCompound()
         compound.setBoolean("invulnerable", true)
@@ -112,7 +112,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             return
         }
 
-        val loc = hitbox.bukkitEntity.location
+        val loc = hitBox.bukkitEntity.location
         if (this.isSmall) {
             this.setPositionRotation(loc.x, loc.y, loc.z, loc.yaw, loc.pitch)
         } else {
@@ -120,7 +120,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         }
 
         if (proxy.yawChange > 0) {
-            this.hitbox.yaw = proxy.yawChange
+            this.hitBox.yaw = proxy.yawChange
             proxy.yawChange = -1.0F
         }
 
