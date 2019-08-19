@@ -41,4 +41,7 @@ class HubLobbyMetaEntity : HubLobbyMeta {
     /** Should the arena be reset when nobody is playing? */
     @YamlSerialize(orderNumber = 3, value = "reset-arena-on-empty")
     override var resetArenaOnEmpty: Boolean = false
+    /** Should the player be teleported to the spawnpoint when joining?*/
+    @YamlSerialize(orderNumber = 4, value = "teleport-on-join")
+    override var teleportOnJoin: Boolean = true
 }

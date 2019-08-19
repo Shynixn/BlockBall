@@ -178,7 +178,7 @@ class BallHitBox(
             if (this.positionChanged) {
                 try {
                     val sourceBlock = this.world.world.getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ))
-                    collision = ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, vec3d1.x, vec3d1.z, vec3d.x, vec3d1.z)
+                    collision = this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, vec3d1.x, vec3d1.z, vec3d.x, vec3d.z)
                 } catch (e: Exception) {
                     Bukkit.getLogger().log(Level.WARNING, "Critical exception.", e)
                 }

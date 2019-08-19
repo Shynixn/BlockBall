@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.business.service.GameActionService
 import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.PersistenceArenaService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
@@ -13,6 +14,7 @@ import com.github.shynixn.blockball.core.logic.persistence.entity.BungeeCordGame
 import com.github.shynixn.blockball.core.logic.persistence.entity.HubGameEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.MiniGameEntity
 import com.google.inject.Inject
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -98,8 +100,10 @@ class GameServiceImpl @Inject constructor(
     override fun run() {
         games.toTypedArray().forEach { game ->
             if (game.closed) {
-                games.remove(game)
-                initGame(game.arena)
+                if(game !is BungeeCordGame){
+                    games.remove(game)
+                    initGame(game.arena)
+                }
             } else {
                 gameActionService.handle(game, ticks)
             }
@@ -182,7 +186,7 @@ class GameServiceImpl @Inject constructor(
      * Returns all currently loaded games on the server.
      */
     override fun getAllGames(): List<Game> {
-        return games.filter { g -> !g.closing && !g.closed }
+        return games.filter { g -> (!g.closing && !g.closed) || g is BungeeCordGame }
     }
 
     /**
@@ -208,6 +212,18 @@ class GameServiceImpl @Inject constructor(
             else -> BungeeCordGameEntity(arena)
         }
 
-        games.add(game)
+        if (game is BungeeCordGame && game.arena.enabled) {
+            games.add(game)
+
+            for (world in Bukkit.getWorlds()) {
+                for (player in world.players) {
+                    if (!getGameFromPlayer(player).isPresent) {
+                        gameActionService.joinGame(game, player)
+                    }
+                }
+            }
+        } else {
+            games.add(game)
+        }
     }
 }

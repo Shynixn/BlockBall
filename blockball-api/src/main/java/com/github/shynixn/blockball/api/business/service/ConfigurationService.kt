@@ -52,11 +52,4 @@ interface ConfigurationService {
      * Checks if the given [path] contains a value.
      */
     fun containsValue(path: String): Boolean
-
-    /**
-     * Tries to load the config values into the given configuration [clazz] from the given [path]
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
-     */
-    fun <C> findConfiguration(clazz: Class<C>, path: String): C
 }

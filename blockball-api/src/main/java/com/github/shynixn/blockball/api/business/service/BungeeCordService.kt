@@ -1,5 +1,8 @@
 package com.github.shynixn.blockball.api.business.service
 
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordConfiguration
+import java.util.concurrent.CompletableFuture
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -29,19 +32,23 @@ package com.github.shynixn.blockball.api.business.service
  */
 interface BungeeCordService {
     /**
-     * Connects the given [player] to the given server which is specified on the given [sign].
-     * Does nothing when the sign is not a server sign.
+     * Gets the configuration.
      */
-    fun <P, S> clickOnConnectSign(player: P, sign: S)
-
-    /**
-     * Refreshes all signs by pinging the bungeecord network.
-     */
-    fun pingServers()
+    val bungeeCordConfiguration: BungeeCordConfiguration
 
     /**
      * Connects the given [player] to the given [server]. Does
      * nothing when the server does not exist or connection fails.
      */
     fun <P> connectToServer(player: P, server: String)
+
+    /**
+     * Gets the lines of a sign connecting to the given server.
+     */
+    fun getServerSignLines(serverName: String, ip: String, port: Int): CompletableFuture<Array<String>>
+
+    /**
+     * Restarts all connection handling and caching between servers.
+     */
+    fun restartConnectionHandling()
 }

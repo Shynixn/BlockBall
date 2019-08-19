@@ -1,20 +1,21 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.business.enumeration.EntityType
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
-import com.github.shynixn.blockball.api.business.proxy.EntityBallProxy
-import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
-import com.github.shynixn.blockball.api.business.proxy.PluginProxy
+import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.proxy.*
 import com.github.shynixn.blockball.api.business.service.BallEntityService
 import com.github.shynixn.blockball.api.business.service.EntityRegistrationService
+import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
+import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
 import com.google.inject.Inject
+import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Slime
 import org.bukkit.plugin.Plugin
+import java.lang.Exception
 import java.util.*
 import java.util.logging.Level
 import kotlin.collections.ArrayList
@@ -98,17 +99,46 @@ class BallEntityServiceImpl @Inject constructor(
      */
     override fun <E> cleanUpInvalidEntities(entities: Collection<E>) {
         for (entity in entities) {
-            if (entity is LivingEntity && (entity is Slime || entity is ArmorStand)) {
+            if (entity is Slime || entity is ArmorStand) {
                 if (entity.customName != null && entity.customName == "ResourceBallsPlugin") {
                     val optProxy = findBallFromEntity(entity)
                     if (!optProxy.isPresent) {
                         entity.remove()
 
-                        if (entity is EntityBallProxy) {
-                            entity.deleteFromWorld()
+                        try{
+                            (entity as Any).javaClass.getDeclaredMethod("deleteFromWorld").invoke(entity)
+                        }catch(e : Exception){
                         }
 
                         plugin.logger.log(Level.INFO, "Removed invalid BlockBall in chunk.")
+                    }
+                }
+
+                // Holograms hide a boots marker of every spawned armorstand.
+                if (entity.equipment != null && entity.equipment!!.boots != null) {
+                    val boots = entity.equipment!!.boots
+
+                    if (boots!!.itemMeta != null && boots.itemMeta!!.lore != null && boots.itemMeta!!.lore!!.size > 0) {
+                        val lore = boots.itemMeta!!.lore!![0]
+
+                        if (ChatColor.stripColor(lore) == "BlockBallHologram") {
+                            var exists = false
+
+                            for (game in BlockBallApi.resolve(GameService::class.java).getAllGames()) {
+                                for (hologram in game.holograms) {
+                                    if ((hologram as HologramProxyImpl).armorstands.contains(entity)) {
+                                        exists = true
+                                    }
+
+                                }
+                            }
+
+                            if (!exists) {
+                                entity.remove()
+                            }
+
+                            plugin.logger.log(Level.INFO, "Removed invalid Hologram in chunk.")
+                        }
                     }
                 }
             }

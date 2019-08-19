@@ -1,20 +1,25 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
 import com.github.shynixn.blockball.api.business.proxy.HologramProxy
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
+import org.bukkit.inventory.ItemStack
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,157 +40,132 @@ import org.bukkit.plugin.Plugin
  * SOFTWARE.
  */
 class HologramProxyImpl(
-    private val plugin: Plugin,
-    private val version: com.github.shynixn.blockball.api.business.enumeration.Version,
-    private var location: Location
-) : HologramProxy, Runnable {
-    companion object {
-        /**
-         * Max distance when holograms should be visible to.
-         */
-        const val MAX_DISTANCE = 50
-        /**
-         * Refresh rate of the max distance check.
-         */
-        const val REFRESH_RATE = 60L
-    }
+    /**
+     * Location of the hologram.
+     */
+    override var location: Any = Unit,
+    /**
+     * List of lines being displayed on the hologram.
+     */
+    override var lines: MutableList<String> = ArrayList(),
+    /**
+     * List of players being able to see this hologram.
+     */
+    override val players: MutableSet<Any> = HashSet()
+) : HologramProxy {
+    /**
+     * Armorstands.
+     */
+    val armorstands = ArrayList<ArmorStand>()
 
-    private val armorstands = ArrayList<ArmorStand>()
-    private val watchers = HashMap<Player, Boolean>()
-    private val bukkitTask = plugin.server.scheduler.runTaskTimerAsynchronously(plugin, this, 0L, REFRESH_RATE)
+    private val visibleTo = HashSet<Player>()
+    private var previousAmount = 0
 
     /**
-     * When an object implementing interface `Runnable` is used
-     * to create a thread, starting the thread causes the object's
-     * `run` method to be called in that separately executing
-     * thread.
-     *
-     *
-     * The general contract of the method `run` is that it may
-     * take any action whatsoever.
-     *
-     * @see java.lang.Thread.run
+     * Gets if this hologram was removed.
      */
-    override fun run() {
-        synchronized(armorstands) {
-            synchronized(watchers) {
-                watchers.keys.toTypedArray().forEach { p ->
-                    if (p.location.world == location.world && p.location.distance(location) < MAX_DISTANCE) {
-                        if (this.watchers[p] == false) {
-                            sendSpawnPacket(p)
-                            this.watchers[p] = true
-                        }
-                    } else {
-                        if (this.watchers[p] == true) {
-                            sendRemovePacket(p)
-                            this.watchers[p] = false
-                        }
-                    }
+    override var isDead: Boolean = false
+
+    /**
+     * Updates the hologram visibility handling.
+     */
+    override fun update() {
+        for (player in players) {
+            if (isInVisibilityDistance(player as Player)) {
+                if (!visibleTo.contains(player)) {
+                    addArmorstandsForPlayer(player)
+                }
+            } else {
+                if (visibleTo.contains(player)) {
+                    removeArmorstandsForPlayer(player)
                 }
             }
         }
-    }
 
-    /**
-     * Adds a watcher to this hologram.
-     * Does nothing if already added.
-     */
-    override fun <P> addWatcher(player: P) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        synchronized(watchers) {
-            if (!this.watchers.containsKey(player)) {
-                this.watchers[player] = false
+        for (player in visibleTo.toTypedArray()) {
+            if (!players.contains(player)) {
+                removeArmorstandsForPlayer(player)
+                visibleTo.remove(player)
             }
         }
-    }
 
-    /**
-     * Removes a watcher from this hologram.
-     * Does nothing if the [player] is not aded.
-     */
-    override fun <P> removeWatcher(player: P) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
+        if (previousAmount != lines.size) {
+            clearAllArmorstands()
 
-        synchronized(watchers) {
-            if (watchers.containsKey(player)) {
-                this.watchers.remove(player)
-                this.sendRemovePacket(player)
+            for (line in lines) {
+                spawnArmorstand(line)
             }
+
+            previousAmount = lines.size
+        } else {
+            updateMetaDataArmorstands()
         }
     }
 
     /**
-     * Adds a line to the hologram.
-     */
-    override fun addLine(line: String) {
-        spawnEntityArmorstand(line)
-    }
-
-    /**
-     * Changes the lines of the hologram.
-     */
-    override fun setLines(lines: Collection<String>) {
-        plugin.server.scheduler.runTaskAsynchronously(plugin, Runnable {
-            synchronized(armorstands) {
-                if (this.armorstands.size != lines.size) {
-                    this.clearLines()
-                    lines.forEach { line ->
-                        addLine(line)
-                    }
-                }
-                lines.forEachIndexed { i, l ->
-                    armorstands[i].customName = l
-                    updateMetaData(armorstands[i])
-                }
-            }
-        })
-    }
-
-    /**
-     * Removes the hologram. If it is not already removed.
+     * Removes this hologram permanently.
      */
     override fun remove() {
-        clearLines()
-        watchers.clear()
-        bukkitTask.cancel()
+        clearAllArmorstands()
+        players.clear()
+        visibleTo.clear()
+        lines.clear()
+        isDead = true
     }
 
     /**
-     * Sends a remove packet to the [player].
+     * Updates changed entity meta values.
      */
-    private fun sendRemovePacket(player: Player) {
-        this.armorstands.forEach { a ->
-            val packet =
-                findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy").getDeclaredConstructor(IntArray::class.java)
-                    .newInstance(intArrayOf(a.entityId))
-            player.sendPacket(packet)
+    private fun updateMetaDataArmorstands() {
+        for (i in 0 until armorstands.size) {
+            val armorstand = armorstands[i]
+
+            val dataWatcherField = findClazz("net.minecraft.server.VERSION.Entity").getDeclaredField("datawatcher")
+            dataWatcherField.isAccessible = true
+            val dataWatcher = dataWatcherField.get(
+                findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftArmorStand").getDeclaredMethod("getHandle")
+                    .invoke(armorstand)
+            )
+
+            val packet = findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityMetadata")
+                .getDeclaredConstructor(
+                    Int::class.java,
+                    findClazz("net.minecraft.server.VERSION.DataWatcher"),
+                    Boolean::class.java
+                )
+                .newInstance(armorstand.entityId, dataWatcher, true)
+
+            armorstand.customName = lines[i]
+
+            for (watcher in visibleTo) {
+                watcher.sendPacket(packet)
+            }
         }
     }
 
-    private fun spawnEntityArmorstand(text: String) {
+    /**
+     * SpawnArmorstand for player.
+     */
+    private fun spawnArmorstand(text: String) {
         val index = this.armorstands.size
         val upSet = index * 0.23
+        val locationInWorld = location as Location
         val targetLocation =
-            Location(location.world, location.x, location.y - upSet, location.z, location.yaw, location.pitch)
+            Location(locationInWorld.world, locationInWorld.x, locationInWorld.y - upSet, locationInWorld.z, locationInWorld.yaw, locationInWorld.pitch)
 
         val nmsWorld = findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld").getDeclaredMethod("getHandle")
             .invoke(targetLocation.world)
         val entityArmorstand = findClazz("net.minecraft.server.VERSION.EntityArmorStand")
             .getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.World"), Double::class.java, Double::class.java, Double::class.java)
             .newInstance(nmsWorld, targetLocation.x, targetLocation.y, targetLocation.z)
-
         val bukkitArmorstand =
             findClazz("net.minecraft.server.VERSION.Entity").getDeclaredMethod("getBukkitEntity").invoke(
                 entityArmorstand
             ) as ArmorStand
+
         bukkitArmorstand.teleport(
             Location(
-                location.world,
+                locationInWorld.world,
                 targetLocation.x,
                 targetLocation.y,
                 targetLocation.z,
@@ -193,80 +173,82 @@ class HologramProxyImpl(
                 0F
             )
         )
-        bukkitArmorstand.customName = text
+
+        bukkitArmorstand.customName = text.translateChatColors()
         bukkitArmorstand.isCustomNameVisible = true
         bukkitArmorstand.setGravity(false)
         bukkitArmorstand.isSmall = true
         bukkitArmorstand.isVisible = false
+        bukkitArmorstand.equipment!!.boots = generateMarkerItemStack()
 
-        synchronized(armorstands) {
-            this.armorstands.add(bukkitArmorstand)
-        }
+        this.armorstands.add(bukkitArmorstand)
     }
 
     /**
-     * Updates changed entity meta values.
+     * Clears all armorstands.
      */
-    private fun updateMetaData(armorstand: ArmorStand) {
-        val dataWatcherField = findClazz("net.minecraft.server.VERSION.Entity").getDeclaredField("datawatcher")
-        dataWatcherField.isAccessible = true
-        val dataWatcher = dataWatcherField.get(getEntityArmorstandFrom(armorstand))
-
-        val packet = findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityMetadata")
-            .getDeclaredConstructor(
-                Int::class.java,
-                findClazz("net.minecraft.server.VERSION.DataWatcher"),
-                Boolean::class.java
-            )
-            .newInstance(armorstand.entityId, dataWatcher, true)
-
-        synchronized(watchers) {
-            watchers.keys.toTypedArray().forEach { p ->
-                if (watchers[p] == true) {
-                    p.sendPacket(packet)
-                }
-            }
+    private fun clearAllArmorstands() {
+        for (player in visibleTo) {
+            removeArmorstandsForPlayer(player)
         }
-    }
 
-    /**
-     * Sends a spawn packet to the [player].
-     */
-    private fun sendSpawnPacket(player: Player) {
-        this.armorstands.forEach { a ->
-            val packet = findClazz("net.minecraft.server.VERSION.PacketPlayOutSpawnEntityLiving")
-                .getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.EntityLiving"))
-                .newInstance(getEntityArmorstandFrom(a))
-
-            player.sendPacket(packet)
-        }
-    }
-
-    /**
-     * Returns the entity armorstand from the bukkit Armorstand.
-     */
-    private fun getEntityArmorstandFrom(armorstand: ArmorStand): Any {
-        return findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftArmorStand").getDeclaredMethod("getHandle")
-            .invoke(armorstand)
-    }
-
-    /**
-     * Removes all visible information of the hologram.
-     */
-    private fun clearLines() {
-        synchronized(watchers) {
-            this.watchers.keys.toTypedArray().forEach { p ->
-                removeWatcher(p)
-            }
-        }
-        armorstands.forEach { armorstand ->
+        for (armorstand in armorstands) {
             armorstand.remove()
         }
 
-        this.armorstands.clear()
+        armorstands.clear()
     }
 
-    private fun findClazz(classPath: String): Class<*> {
-        return Class.forName(classPath.replace("VERSION", version.bukkitId))
+    /**
+     * Is player in visibility distance.
+     */
+    private fun isInVisibilityDistance(p: Player): Boolean {
+        return p.location.world == (location as Location).world && p.location.distance(location as Location) < 60
+    }
+
+    /**
+     * Add Armorstands for a player.
+     */
+    private fun addArmorstandsForPlayer(player: Player) {
+        for (armorstand in armorstands) {
+            val packet = findClazz("net.minecraft.server.VERSION.PacketPlayOutSpawnEntityLiving")
+                .getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.EntityLiving"))
+                .newInstance(
+                    findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftArmorStand").getDeclaredMethod("getHandle")
+                        .invoke(armorstand)
+                )
+
+            player.sendPacket(packet)
+        }
+
+        if (!visibleTo.contains(player)) {
+            visibleTo.add(player)
+        }
+    }
+
+    /**
+     * Removes the armorstand for a player.
+     */
+    private fun removeArmorstandsForPlayer(player: Player) {
+        val packet = findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy")
+            .getDeclaredConstructor(IntArray::class.java)
+            .newInstance(armorstands.map { a -> a.entityId }.toIntArray())
+        player.sendPacket(packet)
+
+        if (visibleTo.contains(player)) {
+            visibleTo.remove(player)
+        }
+    }
+
+    /**
+     * Gets a new marker itemstack.
+     */
+    private fun generateMarkerItemStack(): ItemStack {
+        val item = ItemStack(Material.APPLE)
+        val meta = item.itemMeta
+        meta!!.lore = arrayListOf("BlockBallHologram")
+        item.itemMeta = meta
+
+        return item
     }
 }

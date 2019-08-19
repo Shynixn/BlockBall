@@ -102,7 +102,7 @@ class ArenaFileRepositoryTest {
         val actualDataLength = FileUtils.readFileToString(File("build/repository-test/arena/arena_1.yml"), "UTF-8")
 
         // Assert
-        Assertions.assertEquals(7427, actualDataLength.length)
+        Assertions.assertEquals(7532, actualDataLength.length)
     }
 
     /**
@@ -208,15 +208,6 @@ class ArenaFileRepositoryTest {
          * loaded.
          */
         override fun <C> findValue(path: String): C {
-            throw IllegalArgumentException()
-        }
-
-        /**
-         * Tries to load the config values into the given configuration [clazz] from the given [path]
-         * Throws a [IllegalArgumentException] if the path could not be correctly
-         * loaded.
-         */
-        override fun <C> findConfiguration(clazz: Class<C>, path: String): C {
             throw IllegalArgumentException()
         }
     }

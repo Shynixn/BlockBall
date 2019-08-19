@@ -4,9 +4,11 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.business.service.SoundService
 import com.github.shynixn.blockball.api.persistence.entity.Sound
+import com.github.shynixn.blockball.core.logic.business.extension.async
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -38,7 +40,11 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class SoundServiceImpl @Inject constructor(private val plugin: PluginProxy, private val loggingService: LoggingService) : SoundService {
+class SoundServiceImpl @Inject constructor(
+    private val plugin: PluginProxy,
+    private val loggingService: LoggingService,
+    private val concurrencyService: ConcurrencyService
+) : SoundService {
     /**
      * Gets all available sound names.
      */
@@ -60,14 +66,17 @@ class SoundServiceImpl @Inject constructor(private val plugin: PluginProxy, priv
         }
 
         val targets = (players as Collection<Player>).toTypedArray()
-        val name = convertName(sound.name.toUpperCase())
 
-        try {
-            targets.forEach { p ->
-                p.playSound(location, org.bukkit.Sound.valueOf(name), sound.volume.toFloat(), sound.pitch.toFloat())
+        async(concurrencyService) {
+            val name = convertName(sound.name.toUpperCase())
+
+            try {
+                targets.forEach { p ->
+                    p.playSound(location, org.bukkit.Sound.valueOf(name), sound.volume.toFloat(), sound.pitch.toFloat())
+                }
+            } catch (e: Exception) {
+                loggingService.warn("Failed to send sound. Is the sound '" + sound.name + "' supported by this server version?", e)
             }
-        } catch (e: Exception) {
-            loggingService.warn("Failed to send sound. Is the sound '" + sound.name + "' supported by this server version?", e)
         }
     }
 

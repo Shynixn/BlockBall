@@ -31,4 +31,14 @@ interface BungeeCordLobbyMeta {
 
     /** Message being played when a player cannot join the server because of too many players.*/
     var kickMessage: String
+
+    /**
+     * Message being displayed when a player executes the leave command.
+     */
+    var leaveKickMessage: String
+
+    /**
+     * FallBack server when a player executes the leave command.
+     */
+    var fallbackServer: String
 }

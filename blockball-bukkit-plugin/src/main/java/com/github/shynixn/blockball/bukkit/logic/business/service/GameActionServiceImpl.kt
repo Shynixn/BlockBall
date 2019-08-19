@@ -13,6 +13,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationIn
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
+import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -62,7 +63,6 @@ class GameActionServiceImpl @Inject constructor(
     private val minigameActionService: GameMiniGameActionService,
     private val bungeeCordGameActionService: GameBungeeCordGameActionService,
     private val scoreboardService: ScoreboardService,
-    private val hologramService: HologramService,
     private val dependencyService: DependencyService,
     private val dependencyBossBarApiService: DependencyBossBarApiService,
     private val gameSoccerService: GameSoccerService
@@ -128,8 +128,10 @@ class GameActionServiceImpl @Inject constructor(
             bossBarService.removePlayer(game.bossBar, player)
         }
 
-        game.holograms.forEach { h ->
-            h.removeWatcher(player)
+        for (hologram in game.holograms) {
+            if (hologram.players.contains(player)) {
+                hologram.players.remove(player)
+            }
         }
 
         if (game is HubGame) {
@@ -347,7 +349,7 @@ class GameActionServiceImpl @Inject constructor(
             game.holograms.clear()
 
             game.arena.meta.hologramMetas.forEach { meta ->
-                val hologram = hologramService.createNewHologram(meta)
+                val hologram = HologramProxyImpl(meta.position!!.toLocation(), meta.lines)
                 game.holograms.add(hologram)
             }
         }
@@ -357,12 +359,10 @@ class GameActionServiceImpl @Inject constructor(
             val additionalPlayers = getAdditionalNotificationPlayers(game)
             players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
 
-            players.forEach { p ->
-                holo.addWatcher(p)
-            }
+            holo.players.addAll(players)
 
-            additionalPlayers.filter { p -> !p.second }.forEach { p ->
-                holo.removeWatcher(p.first)
+            additionalPlayers.filter { p -> !p.second && holo.players.contains(p.first) }.forEach { p ->
+                holo.players.remove(p.first)
             }
 
             val lines = ArrayList(game.arena.meta.hologramMetas[i].lines)
@@ -371,7 +371,8 @@ class GameActionServiceImpl @Inject constructor(
                 lines[k] = lines[k].replaceGamePlaceholder(game)
             }
 
-            holo.setLines(lines)
+            holo.lines = lines
+            holo.update()
         }
     }
 

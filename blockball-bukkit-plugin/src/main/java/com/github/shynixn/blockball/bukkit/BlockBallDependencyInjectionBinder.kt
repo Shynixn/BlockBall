@@ -4,19 +4,17 @@ import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.context.FileContext
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
+import com.github.shynixn.blockball.api.persistence.repository.LinkSignRepository
 import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
-import com.github.shynixn.blockball.api.persistence.repository.ServerSignRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1.EntityRegistration114R1ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
-import com.github.shynixn.blockball.bukkit.logic.persistence.context.FileContextImpl
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository
-import com.github.shynixn.blockball.bukkit.logic.persistence.repository.ServerSignFileRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository
 import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
+import com.github.shynixn.blockball.core.logic.persistence.repository.LinkSignFileRepository
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
 import org.bukkit.plugin.Plugin
@@ -64,11 +62,10 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java)
         bind(PlayerRepository::class.java).to(PlayerSqlRepository::class.java)
         bind(StatsRepository::class.java).to(StatsSqlRepository::class.java)
-        bind(ServerSignRepository::class.java).to(ServerSignFileRepository::class.java)
+        bind(LinkSignRepository::class.java).to(LinkSignFileRepository::class.java).`in`(Scopes.SINGLETON)
 
         // Services
         bind(ItemService::class.java).to(ItemServiceImpl::class.java)
-        bind(FileContext::class.java).to(FileContextImpl::class.java)
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java)
         bind(VirtualArenaService::class.java).to(VirtualArenaServiceImpl::class.java)
         bind(ScoreboardService::class.java).to(ScoreboardServiceImpl::class.java)
@@ -79,7 +76,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(ParticleService::class.java).to(ParticleServiceImpl::class.java)
         bind(SoundService::class.java).to(SoundServiceImpl::class.java)
         bind(BossBarService::class.java).to(BossBarServiceImpl::class.java)
-        bind(HologramService::class.java).to(HologramServiceImpl::class.java)
         bind(GameService::class.java).to(GameServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameActionService::class.java).to(GameActionServiceImpl::class.java)
         bind(GameHubGameActionService::class.java).to(GameHubGameActionServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -89,6 +85,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(RightclickManageService::class.java).to(RightclickManageServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(HubGameForcefieldService::class.java).to(HubGameForcefieldServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BungeeCordService::class.java).to(BungeeCordServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(BungeeCordConnectionService::class.java).to(BungeeCordConnectionServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BallEntityService::class.java).to(BallEntityServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BlockSelectionService::class.java).to(BlockSelectionServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BallForceFieldService::class.java).to(BallForceFieldServiceImpl::class.java).`in`(Scopes.SINGLETON)

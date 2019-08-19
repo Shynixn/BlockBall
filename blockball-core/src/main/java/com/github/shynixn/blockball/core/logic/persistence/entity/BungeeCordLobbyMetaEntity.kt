@@ -34,4 +34,15 @@ class BungeeCordLobbyMetaEntity : BungeeCordLobbyMeta {
     /** Message being played when a player cannot join the server because of too many players.*/
     @YamlSerialize(orderNumber = 1, value = "kick-message")
     override var kickMessage: String = "Server is already full."
+    /**
+     * Message being displayed when a player executes the leave command.
+     */
+    @YamlSerialize(orderNumber = 2, value = "kick-message-leave")
+    override var leaveKickMessage: String = "You have left the game."
+    /**
+     * FallBack server when a player executes the leave command.
+     */
+    @YamlSerialize(orderNumber = 3, value = "fallback-server")
+    override var fallbackServer: String = ""
+
 }
