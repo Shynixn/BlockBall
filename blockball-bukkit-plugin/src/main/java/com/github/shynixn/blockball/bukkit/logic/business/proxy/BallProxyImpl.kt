@@ -244,7 +244,11 @@ class BallProxyImpl(
             return
         }
 
-        val vector = hitbox.location.toVector().subtract(entity.location.toVector()).normalize()
+        /*
+        val vector = design.location.toVector().subtract(entity.location.toVector()).normalize()
+            .multiply(meta.movementModifier.horizontalKickModifier)
+         */
+        val vector = entity.location.direction.normalize()
             .multiply(meta.movementModifier.horizontalKickModifier)
         this.yawChange = entity.location.yaw
         this.angularVelocity = 0.0
@@ -338,7 +342,7 @@ class BallProxyImpl(
         }
 
         if (!this.isGrabbed) {
-            this.hitbox.teleport(location)
+            this.design.teleport(location)
         }
     }
 
@@ -346,7 +350,7 @@ class BallProxyImpl(
      * Gets the location of the ball.
      */
     override fun <L> getLocation(): L {
-        return hitbox.location as L
+        return design.location as L
     }
 
     /**
@@ -377,7 +381,7 @@ class BallProxyImpl(
 
         try {
             this.times = (50 * this.meta.movementModifier.rollingDistanceModifier).toInt()
-            this.hitbox.velocity = vector
+            this.design.velocity = vector
             val normalized = vector.clone().normalize()
             this.originVector = vector.clone()
             this.reduceVector = Vector(normalized.x / this.times, 0.0784 * meta.movementModifier.gravityModifier, normalized.z / this.times)
@@ -598,14 +602,14 @@ class BallProxyImpl(
     private fun checkMovementInteractions(): Boolean {
         if (this.breakCounter <= 0) {
             this.breakCounter = meta.interactionSkipInTicks
-            val hitBoxLocation = this.hitbox.location
+            val ballLocation = this.design.location
             for (entity in design.location.chunk.entities) {
-                if (!entity.customName.equals("ResourceBallsPlugin") && entity.location.distance(hitBoxLocation) < meta.hitBoxSize) {
+                if (entity.customName != "ResourceBallsPlugin" && entity.location.distance(ballLocation) < meta.hitBoxSize) {
                     val event = BallInteractEvent(entity, this)
                     Bukkit.getPluginManager().callEvent(event)
                     if (event.isCancelled)
                         return true
-                    val vector = hitBoxLocation
+                    val vector = ballLocation
                         .toVector()
                         .subtract(entity.location.toVector())
                         .normalize().multiply(meta.movementModifier.horizontalTouchModifier)
@@ -645,7 +649,7 @@ class BallProxyImpl(
      * Plays the rotation animation.
      */
     private fun playRotationAnimation() {
-        val length = this.hitbox.velocity.length()
+        val length = this.design.velocity.length()
         var angle: EulerAngle? = null
 
         val a = this.design.headPose

@@ -13,7 +13,6 @@ import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.entity.Slime
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -65,7 +64,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onChunkSaveEvent(event: ChunkUnloadEvent) {
-        event.chunk.entities.filter { e -> e.customName.equals("ResourceBallsPlugin") }
+        event.chunk.entities.filter { e -> e.customName == "ResourceBallsPlugin" }
             .forEach { e ->
                 ballEntityService.findBallFromEntity(e).ifPresent { ball ->
                     ball.remove()
@@ -82,8 +81,7 @@ class BallListener @Inject constructor(
     }
 
     /**
-     * TODO 'interaction' can be interpreted as kick or dribbling, but this function is all about 'carrying' a ball.
-     * TODO The comment below is misleading because PlayerInteractEvent is not designed for entity interactions.
+     * TODO The comment below is misleading. PlayerInteractEvent is designed for item interactions
      * Gets called when a player hits the ball and kicks the ball.
      *
      * @param event event
@@ -110,7 +108,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun entityRightClickBallEvent(event: PlayerInteractAtEntityEvent) {
-        if (event.rightClicked !is Slime) {
+        if (event.rightClicked.customName == "ResourceBallsPlugin") {
             return
         }
 
@@ -131,7 +129,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerDamageBallEvent(event: EntityDamageByEntityEvent) {
-        if (event.entity.customName.equals("ResourceBallsPlugin")) {
+        if (event.entity.customName == "ResourceBallsPlugin") {
             val optBall = this.ballEntityService.findBallFromEntity(event.entity)
             if (optBall.isPresent) {
                 val ball = optBall.get()
@@ -148,7 +146,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun entityDamageEvent(event: EntityDamageEvent) {
-        if (event.entity is Slime) {
+        if (event.entity.customName == "ResourceBallsPlugin") {
             val optBall = ballEntityService.findBallFromEntity(event.entity)
             if (optBall.isPresent) {
                 event.isCancelled = true
