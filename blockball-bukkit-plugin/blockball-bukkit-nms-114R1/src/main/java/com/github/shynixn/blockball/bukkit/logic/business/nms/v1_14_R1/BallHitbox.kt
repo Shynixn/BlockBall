@@ -8,8 +8,11 @@ import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_14_R1.*
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack
 import org.bukkit.event.entity.CreatureSpawnEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
@@ -188,27 +191,29 @@ class BallHitBox(
         timingService.stopTiming()
     }
 
-    /*
-     * TODO Disable particle and sound effects
-     * TODO see if slime dies in Peaceful difficulty
+    /**
+     * Prevent slime from dying in Peaceful difficulty
+     */
     override fun tick() {
+        /*
+         * A failed attempt to disable slime particles
+         * Slime particles are still generated regardless of blocking the code: EntitySlime#tick().114
+         */
         val fieldBA = this::class.java.superclass.getDeclaredField("bA")
-        val bA: Boolean
-
         fieldBA.isAccessible = true
-        bA = fieldBA.getBoolean(this)
-
-        if (this.onGround) {
-            if (!bA) {
-                this.b = -0.5f
-            }
-
-            fieldBA.setBoolean(this, true)
-        }
+        fieldBA.setBoolean(this, true)
 
         super.tick()
+        this.dead = false
     }
+
+    /**
+     * Disable slime particles.
+     * TODO This is not working
      */
+    override fun l(): ParticleParam {
+        return ParticleParamItem(Particles.ITEM, CraftItemStack.asNMSCopy(ItemStack(Material.AIR)))
+    }
 
     /**
      * Disable health.
