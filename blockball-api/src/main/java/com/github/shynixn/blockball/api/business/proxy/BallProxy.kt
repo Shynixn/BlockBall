@@ -63,6 +63,11 @@ interface BallProxy {
     var persistent: Boolean
 
     /**
+     * Is the ball currently in kick phase?
+     */
+    var skipKickCounter: Int
+
+    /**
      * Current velocity of spin generating Magnus force.
      */
     var angularVelocity: Double

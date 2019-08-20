@@ -126,7 +126,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
     }
 
     /**
-     * Recalculates y-axe hitbox offset in the world.
+     * Recalculates y-axe design offset in the world.
      */
     override fun recalcPosition() {
         val axisBoundingBox = this.boundingBox

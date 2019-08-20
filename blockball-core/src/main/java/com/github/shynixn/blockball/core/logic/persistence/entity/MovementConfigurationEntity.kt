@@ -58,23 +58,28 @@ class MovementConfigurationEntity : MovementConfiguration {
     @YamlSerialize(orderNumber = 5, value = "vertical-touch")
     override var verticalTouchModifier: Double = 1.0
     /**
+     * Adjusts the overall kick velocity.
+     */
+    @YamlSerialize(orderNumber = 6, value = "kick")
+    override var kickModifier: Double = 1.5
+    /**
      * Horizontal kick modifier.
      */
-    @YamlSerialize(orderNumber = 6, value = "horizontal-kick")
+    @YamlSerialize(orderNumber = 7, value = "horizontal-kick")
     override var horizontalKickModifier: Double = 1.5
     /**
      * Vertical kick modifier.
      */
-    @YamlSerialize(orderNumber = 7, value = "vertical-kick")
+    @YamlSerialize(orderNumber = 8, value = "vertical-kick")
     override var verticalKickModifier: Double = 6.0
     /**
      * Horizontal kick modifier.
      */
-    @YamlSerialize(orderNumber = 8, value = "horizontal-throw")
+    @YamlSerialize(orderNumber = 9, value = "horizontal-throw")
     override var horizontalThrowModifier: Double = 1.0
     /**
      * Vertical kick modifier.
      */
-    @YamlSerialize(orderNumber = 9, value = "vertical-throw")
+    @YamlSerialize(orderNumber = 10, value = "vertical-throw")
     override var verticalThrowModifier: Double = 1.0
 }

@@ -56,12 +56,19 @@ interface MovementConfiguration {
     var verticalTouchModifier: Double
 
     /**
+     * Adjusts the overall kick velocity.
+     */
+    var kickModifier: Double
+
+    /**
      * Horizontal kick modifier.
+     * TODO Deprecated
      */
     var horizontalKickModifier: Double
 
     /**
      * Vertical kick modifier.
+     * TODO Deprecated
      */
     var verticalKickModifier: Double
 
