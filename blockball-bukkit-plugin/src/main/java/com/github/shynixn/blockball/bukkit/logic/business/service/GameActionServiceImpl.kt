@@ -330,7 +330,7 @@ class GameActionServiceImpl @Inject constructor(
         }
 
         game.arena.meta.ballMeta.spawnpoint!!.toLocation().world!!.entities.forEach { e ->
-            if (e !is Player && e.customName.equals("ResourceBallsPlugin") && e !is Item && e !is ItemFrame) {
+            if (e !is Player && !e.customName.equals("ResourceBallsPlugin") && e !is Item && e !is ItemFrame) {
                 if (game.arena.isLocationInSelection(e.location)) {
                     val vector = game.arena.meta.protectionMeta.entityProtection
                     e.location.direction = vector.toVector()
