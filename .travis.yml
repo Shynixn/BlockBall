@@ -22,7 +22,7 @@ before_install:
   - git config --global user.email "travis@travis-ci.org" && git config --global user.name "Travis CI"
   - gpg2 --batch --cipher-algo AES256 --passphrase $SIGNING_KEYPASSWORD travis_secret_key.gpg
 install:
-  - ./gradlew assemble || ./gradlew downloadDependencies
+  - ./gradlew assemble || ./gradlew setupDecompWorkspace && ./gradlew assemble || ./gradlew downloadDependencies
 script:
   - ./gradlew clean build
   - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* ]]; then ./gradlew publish > /dev/null; fi ;
