@@ -7,7 +7,7 @@
 | development   | [![Build Status](https://img.shields.io/travis/Shynixn/BlockBall/development.svg?style=flat-square)](https://travis-ci.org/Shynixn/BlockBall)|[![Coverage](https://img.shields.io/codecov/c/github/shynixn/blockball/development.svg?style=flat-square)](https://codecov.io/gh/Shynixn/BlockBall/branch/development) |![GitHub license](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.github.shynixn.blockball/blockball-bukkit-plugin.svg?style=flat-square) |  [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/) |
 ## Description
 
-BlockBall is a spigot plugin to play soccer games in Minecraft.
+BlockBall is a spigot and also a sponge plugin to play soccer games in Minecraft.
 
 ## Features
 
@@ -35,13 +35,20 @@ BlockBall is a spigot plugin to play soccer games in Minecraft.
 [./gradlew|gradlew.bat] downloadDependencies
 ```
 
+* Install the ForgeGradle development workspace for sponge
+
+```xml
+[./gradlew|gradlew.bat] setupDecompWorkspace
+```
+
 * Build the plugin by executing
 
 ```xml
 [./gradlew|gradlew.bat] shadowJar
 ```
 
-* The .jar file gets generated at blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin.jar
+* The BlockBall-Bukkit.jar file gets generated at ``blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin.jar``
+* The BlockBall-Sponge-1.12.2.jar file gets generated at ``blockball-sponge-plugin/blockball-sponge-nms-112R1/build/libs/blockball-sponge-nms.jar``
 
 ## Licence
 

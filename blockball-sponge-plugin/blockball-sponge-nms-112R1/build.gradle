@@ -1,0 +1,105 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+buildscript {
+    repositories {
+        maven {
+            name = 'forge'
+            url = 'https://files.minecraftforge.net/maven'
+        }
+    }
+
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+plugins {
+    id 'org.spongepowered.plugin' version '0.9.0'
+    id 'net.minecrell.vanillagradle.server' version '2.2-6'
+    id 'com.github.johnrengelman.shadow' version '4.0.2'
+}
+
+minecraft {
+    version = '1.12'
+    mappings = 'snapshot_20180323'
+}
+
+apply plugin: 'jacoco'
+
+shadowJar {
+    from sourceSets.main.resources.srcDirs
+
+    archiveName = "$baseName-$version.$extension"
+
+    // Change the output folder of the plugin.
+    // destinationDir = new File('D:\\Benutzer\\Temp\\SpongePowered\\Sponge-2825-7.1.6\\mods')
+
+    relocate 'kotlin', 'com.github.shynixn.blockball.lib.kotlin'
+    relocate 'org.intellij', 'com.github.shynixn.blockball.lib.org.intellij'
+    relocate 'org.jetbrains', 'com.github.shynixn.blockball.lib.org.jetbrains'
+    relocate 'javax.inject', 'com.github.shynixn.blockball.lib.javax.inject'
+    relocate 'org.aopalliance', 'com.github.shynixn.blockball.lib.org.aopalliance'
+
+    exclude "dummyThing"
+}
+
+jar {
+    destinationDir = shadowJar.destinationDir
+
+    dependsOn shadowJar
+    enabled = false
+    finalizedBy reobfJar
+}
+
+shadowJar.finalizedBy reobfJar
+
+test {
+    useJUnitPlatform()
+    testLogging.showStandardStreams = true
+    failFast = true
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = false
+    }
+}
+
+tasks {
+    test {
+        testLogging {
+            events(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.STARTED)
+            displayGranularity = 0
+            showExceptions = true
+            showCauses = true
+            showStackTraces = true
+            exceptionFormat = TestExceptionFormat.FULL
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact shadowJar
+        }
+    }
+}
+
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+dependencies {
+    implementation project(':blockball-core')
+    implementation project(':blockball-api')
+    implementation project(':blockball-sponge-api')
+    implementation project(':blockball-sponge-plugin')
+
+    compileOnly 'com.zaxxer:HikariCP:3.2.0'
+    compileOnly 'org.spongepowered:spongeapi:7.1.0'
+}
