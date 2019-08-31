@@ -226,7 +226,6 @@ task downloadDependencies(type: Exec) {
     }
 
     def vaultFile = new File(folder, "Vault.jar")
-    def protoFile = new File(folder, "ProtocolLib.jar")
 
     if (!vaultFile.exists()) {
         def connection = new URL('https://dev.bukkit.org/projects/vault/files/2615750/download').openConnection()
@@ -237,17 +236,9 @@ task downloadDependencies(type: Exec) {
 
         out.close()
     }
-    if (!protoFile.exists()) {
-        def connection = new URL('http://ci.dmulloy2.net/job/ProtocolLib%20Gradle/lastStableBuild/artifact/build/libs/ProtocolLib.jar').openConnection()
-        def out = new BufferedOutputStream(new FileOutputStream(protoFile))
-
-        out << connection.inputStream
-        out.close()
-    }
 
     def text = "cd build/buildtools"
     text += " && mvn install:install-file -Dfile=Vault.jar -DgroupId=net.milkbowlvault -DartifactId=VaultAPI -Dversion=1.7 -Dpackaging=jar"
-    text += " && mvn install:install-file -Dfile=ProtocolLib.jar -DgroupId=com.comphenix.protocol -DartifactId=ProtocolLib -Dversion=4.5.0 -Dpackaging=jar"
     text += " && java -jar BuildTools.jar --rev 1.8"
     text += " && java -jar BuildTools.jar --rev 1.8.3"
     text += " && java -jar BuildTools.jar --rev 1.8.8"
