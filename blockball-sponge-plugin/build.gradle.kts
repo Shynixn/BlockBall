@@ -7,3 +7,7 @@ dependencies {
 
     compileOnly("org.spongepowered:spongeapi:7.1.0")
 }
+
+repositories {
+    maven("https://jitpack.io")
+}
