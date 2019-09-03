@@ -1,12 +1,18 @@
 package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
+import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.api.persistence.repository.LinkSignRepository
 import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
+import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_11_R1.EntityRegistration111R1ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R1.EntityRegistration113R1ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2.EntityRegistration113R2ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1.EntityRegistration114R1ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_8_R1.EntityRegistration108R1ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository
@@ -50,6 +56,8 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
      * Configures the business logic tree.
      */
     override fun configure() {
+        val version = plugin.getServerVersion()
+
         bind(Plugin::class.java).toInstance(plugin)
         bind(PluginProxy::class.java).toInstance(plugin)
         bind(LoggingService::class.java).toInstance(LoggingUtilServiceImpl(plugin.logger))
@@ -92,6 +100,18 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(ProxyService::class.java).to(ProxyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(CommandService::class.java).to(CommandServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameExecutionService::class.java).to(GameExecutionServiceImpl::class.java).`in`(Scopes.SINGLETON)
+
+        when {
+            version.isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)
+                    -> bind(EntityRegistrationService::class.java).to(EntityRegistration114R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)
+                    -> bind(EntityRegistrationService::class.java).to(EntityRegistration113R2ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R1)
+                    -> bind(EntityRegistrationService::class.java).to(EntityRegistration113R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            version.isVersionSameOrGreaterThan(Version.VERSION_1_11_R1)
+                    -> bind(EntityRegistrationService::class.java).to(EntityRegistration111R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            else -> bind(EntityRegistrationService::class.java).to(EntityRegistration108R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        }
 
         // Persistence Services
         bind(PersistenceLinkSignService::class.java).to(PersistenceLinkSignServiceImpl::class.java).`in`(Scopes.SINGLETON)

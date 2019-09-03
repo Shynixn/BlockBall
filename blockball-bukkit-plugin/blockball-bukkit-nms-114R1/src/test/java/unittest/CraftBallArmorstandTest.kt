@@ -1,6 +1,6 @@
 package unittest
 
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1.CraftBallArmorstand
+import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1.CraftDesignArmorstand
 import net.minecraft.server.v1_14_R1.EntityArmorStand
 import org.bukkit.craftbukkit.v1_14_R1.CraftServer
 import org.bukkit.entity.EntityType
@@ -106,10 +106,10 @@ class CraftBallArmorstandTest {
     }
 
     companion object {
-        fun createWithDependencies(entityInsentient: EntityArmorStand = Mockito.mock(EntityArmorStand::class.java)): CraftBallArmorstand {
+        fun createWithDependencies(entityInsentient: EntityArmorStand = Mockito.mock(EntityArmorStand::class.java)): CraftDesignArmorstand {
             val server = Mockito.mock(CraftServer::class.java)
 
-            return CraftBallArmorstand(server, entityInsentient)
+            return CraftDesignArmorstand(server, entityInsentient)
         }
     }
 }

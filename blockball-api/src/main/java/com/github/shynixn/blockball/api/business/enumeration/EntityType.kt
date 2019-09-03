@@ -1,17 +1,13 @@
-package com.github.shynixn.blockball.api.business.service
-
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import java.util.*
+package com.github.shynixn.blockball.api.business.enumeration
 
 /**
- * Created by Shynixn 2018.
+ * Created by LazoYoung 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,30 +27,31 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface BallEntityService {
+enum class EntityType(
     /**
-     * Spawns a temporary ball.
+     * Entity internal id.
      */
-    fun <L> spawnTemporaryBall(location: L, meta: BallMeta): BallProxy
+    val entityId: Int,
+    /**
+     * Simplified name independent from version.
+     */
+    val entityName: String,
+    /**
+     *  SaveGame id from 1.8.0 to 1.10.2.
+     */
+    val saveGame_18: String,
+    /**
+     * SaveGame id from 1.11.0 to 1.13.0.
+     */
+    val saveGame_11: String) {
 
     /**
-     * Registers entities on the server when not already registered.
-     * Returns true if registered. Returns false when not registered.
+     * Armorstand EntityType.
      */
-    fun registerEntitiesOnServer(): Boolean
+    ARMORSTAND(30, "ARMORSTAND", "ArmorStand", "armor_stand"),
 
     /**
-     * Finds Ball from the given entity.
+     * Slime entity type.
      */
-    fun <E> findBallFromEntity(entity: E): Optional<BallProxy>
-
-    /**
-     * Checks the entity collection for invalid ball entities and removes them.
-     */
-    fun <E> cleanUpInvalidEntities(entities: Collection<E>)
-
-    /**
-     * Returns all balls managed by the plugin.
-     */
-    fun getAllBalls(): List<BallProxy>
+    SLIME(55, "SLIME", "Slime", "slime")
 }

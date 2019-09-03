@@ -19,6 +19,7 @@
 *.rar
 
 # IDEA Files
+/.idea/
 *.iml
 *.db
 
