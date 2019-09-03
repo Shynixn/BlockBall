@@ -86,11 +86,8 @@ class BallEntityServiceImpl @Inject constructor(
         }
 
         val slimeClazz = findClazz("com.github.shynixn.blockball.bukkit.logic.business.nms.VERSION.BallHitBox", pluginProxy)
-        val armorStandClazz = findClazz("com.github.shynixn.blockball.bukkit.logic.business.nms.VERSION.BallDesign", pluginProxy)
 
         entityRegistry.register(slimeClazz, EntityType.SLIME)
-        entityRegistry.register(armorStandClazz, EntityType.ARMORSTAND)
-
         registered = true
         return true
     }
