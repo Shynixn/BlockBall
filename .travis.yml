@@ -11,8 +11,6 @@ before_install:
   - chmod +x gradlew
   - chmod +x blockball-tools/travis-status.sh
   - sudo /etc/init.d/mysql stop
-  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
-  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
   - if [[ $TRAVIS_COMMIT_MESSAGE == *"--refresh-dependencies"* ]]; then ./gradlew downloadDependencies; fi ;
   - sudo apt-get install python3-pip
   - sudo apt-get install python3-setuptools
