@@ -93,8 +93,4 @@ class BallMetaEntity(
     /** Spawnpoint of the ball. */
     @YamlSerialize(orderNumber = 12, value = "spawnpoint", implementation = PositionEntity::class)
     override var spawnpoint: Position? = null
-
-    /** Amount of time to skip until the next movement interactions check **/
-    @YamlSerialize(orderNumber = 13, value = "interaction-skip")
-    override var interactionSkipInTicks: Int = 2
 }

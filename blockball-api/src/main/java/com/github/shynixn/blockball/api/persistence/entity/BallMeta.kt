@@ -66,11 +66,6 @@ interface BallMeta {
     var alwaysBouce: Boolean
 
     /**
-     * Amount of time to skip until the next movement interactions check
-     */
-    var interactionSkipInTicks: Int
-
-    /**
      * Bouncing off from objects modifiers.
      */
     val bounceModifiers: MutableList<BounceConfiguration>

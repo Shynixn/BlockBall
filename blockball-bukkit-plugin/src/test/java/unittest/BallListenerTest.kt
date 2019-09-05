@@ -73,7 +73,7 @@ class BallListenerTest {
         classUnderTest.onChunkSaveEvent(chunkUnloadEvent)
 
         // Assert
-        Assertions.assertTrue(ball.isDead)
+        Assertions.assertTrue(mockedEntityService.cleanUpCalled)
     }
 
     /**

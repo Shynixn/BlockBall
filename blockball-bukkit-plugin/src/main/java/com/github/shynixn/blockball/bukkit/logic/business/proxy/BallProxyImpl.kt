@@ -601,7 +601,7 @@ class BallProxyImpl(
      */
     private fun checkMovementInteractions(): Boolean {
         if (this.breakCounter <= 0) {
-            this.breakCounter = meta.interactionSkipInTicks
+            this.breakCounter = 2
             val ballLocation = this.design.location
             for (entity in design.location.chunk.entities) {
                 if (entity.customName != "ResourceBallsPlugin" && entity.location.distance(ballLocation) < meta.hitBoxSize) {
