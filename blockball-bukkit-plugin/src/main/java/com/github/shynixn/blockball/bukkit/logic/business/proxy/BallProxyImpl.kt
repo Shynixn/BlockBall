@@ -31,7 +31,6 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -244,7 +243,7 @@ class BallProxyImpl(
             return
         }
 
-        /*
+        /* TODO: Why is this present?
         val vector = design.location.toVector().subtract(entity.location.toVector()).normalize()
             .multiply(meta.movementModifier.horizontalKickModifier)
          */
@@ -257,14 +256,16 @@ class BallProxyImpl(
         val event = BallKickEvent(vector, entity, this)
         Bukkit.getPluginManager().callEvent(event)
 
-        if (!event.isCancelled) {
-            this.setVelocity(vector)
-            this.breakCounter = 2
+        if (event.isCancelled) {
+            return
+        }
 
-            if (entity is Player) {
-                sync(concurrencyService, 5L) {
-                    spin(entity.eyeLocation.direction, event.resultVelocity)
-                }
+        this.setVelocity(vector)
+        this.breakCounter = 2
+
+        if (entity is Player) {
+            sync(concurrencyService, 5L) {
+                spin(entity.eyeLocation.direction, event.resultVelocity)
             }
         }
     }
@@ -327,6 +328,7 @@ class BallProxyImpl(
         vector.y = y * 2.0 * meta.movementModifier.verticalThrowModifier
         val event = BallThrowEvent(vector, entity, this)
         Bukkit.getPluginManager().callEvent(event)
+
         if (!event.isCancelled) {
             this.breakCounter = 2
             setVelocity(vector)
@@ -401,18 +403,22 @@ class BallProxyImpl(
         if (isGrabbed) {
             return
         }
+
         this.interactionEntity = entity
 
         @Suppress("DEPRECATION")
         if (entity.equipment!!.itemInHand.cast<ItemStack?>() == null || entity.equipment!!.itemInHand.type == Material.AIR) {
             val event = BallGrabEvent(entity, this)
             Bukkit.getPluginManager().callEvent(event)
-            if (!event.isCancelled) {
-                @Suppress("UsePropertyAccessSyntax")
-                entity.equipment!!.setItemInHand(design.helmet.clone())
-                this.setHelmet(null)
-                this.isGrabbed = true
+
+            if (event.isCancelled) {
+                return
             }
+
+            @Suppress("UsePropertyAccessSyntax")
+            entity.equipment!!.setItemInHand(design.helmet.clone())
+            this.setHelmet(null)
+            this.isGrabbed = true
         }
     }
 
@@ -466,7 +472,7 @@ class BallProxyImpl(
             throw IllegalArgumentException("SourceBlock has to be a BukkitBlock!")
         }
 
-         var knockBackBlock: Block = sourceBlock
+        var knockBackBlock: Block = sourceBlock
 
         when {
             mot6 > mot0 -> {
