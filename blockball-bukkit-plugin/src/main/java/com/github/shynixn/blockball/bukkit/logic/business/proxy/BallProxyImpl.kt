@@ -126,6 +126,10 @@ class BallProxyImpl(
         hitbox.customName = "ResourceBallsPlugin"
         hitbox.isCustomNameVisible = false
 
+        if (meta.size == BallSize.NORMAL) {
+            this.teleport(this.getLocation<Location>().add(0.0, 0.01, 0.0))
+        }
+
         val event = BallSpawnEvent(this)
         Bukkit.getPluginManager().callEvent(event)
     }
@@ -218,7 +222,7 @@ class BallProxyImpl(
      * Gets the velocity of the ball.
      */
     override fun <V> getVelocity(): V {
-        return hitbox.velocity as V
+        return design.velocity as V
     }
 
     /**
