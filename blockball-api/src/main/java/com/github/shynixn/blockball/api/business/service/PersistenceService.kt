@@ -1,16 +1,15 @@
 package com.github.shynixn.blockball.api.business.service
 
-import java.io.InputStream
-import java.nio.file.Path
+import java.util.concurrent.CompletableFuture
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,32 +29,24 @@ import java.nio.file.Path
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ConfigurationService {
+interface PersistenceService<E> {
     /**
-     * Gets the path to the folder where the application is allowed to store
-     * save data.
+     * Gets the currently cached items.
      */
-    val applicationDir: Path
+    val items: List<E>
 
     /**
-     * Reloads the config.
+     * Refreshes the runtime cache of items.
      */
-    fun reload()
+    fun refresh(): CompletableFuture<Void?>
 
     /**
-     * Tries to load the config value from the given [path].
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
+     * Removes the given [item].
      */
-    fun <C> findValue(path: String): C
+    fun remove(item: E): CompletableFuture<Void?>
 
     /**
-     * Opens an inputStream to the given resource name.
+     * Saves the given item to the storage.
      */
-    fun openResource(name: String): InputStream
-
-    /**
-     * Checks if the given [path] contains a value.
-     */
-    fun containsValue(path: String): Boolean
+    fun save(item: E): CompletableFuture<Void?>
 }

@@ -1,16 +1,13 @@
-package com.github.shynixn.blockball.api.business.service
-
-import java.io.InputStream
-import java.nio.file.Path
+package com.github.shynixn.blockball.api.persistence.repository
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,32 +27,19 @@ import java.nio.file.Path
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ConfigurationService {
+interface Repository<E> {
     /**
-     * Gets the path to the folder where the application is allowed to store
-     * save data.
+     * Returns all stored items in this repository.
      */
-    val applicationDir: Path
+    fun getAll(): List<E>
 
     /**
-     * Reloads the config.
+     * Delets the given item in the storage.
      */
-    fun reload()
+    fun delete(item: E)
 
     /**
-     * Tries to load the config value from the given [path].
-     * Throws a [IllegalArgumentException] if the path could not be correctly
-     * loaded.
+     * Saves the given [item] to the storage.
      */
-    fun <C> findValue(path: String): C
-
-    /**
-     * Opens an inputStream to the given resource name.
-     */
-    fun openResource(name: String): InputStream
-
-    /**
-     * Checks if the given [path] contains a value.
-     */
-    fun containsValue(path: String): Boolean
+    fun save(item: E)
 }
