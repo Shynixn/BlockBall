@@ -94,7 +94,7 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.BALL_SKIN.command)
             .setHoverText("Changes the skin of the ball. Can be the name of a skin or a skin URL.")
             .builder().nextLine()
-            .component("- Size: " + ballMeta.size.name).builder()
+            .component("- Skin Size: " + ballMeta.size.name).builder()
             .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BALLSIZES.command)
             .setHoverText("Opens the selectionbox for ball sizes.")

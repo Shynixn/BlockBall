@@ -44,7 +44,7 @@ class BallHitBox(
     private val ballDesign: BallDesign,
     ballMeta: BallMeta,
     location: Location
-): EntitySlime(EntityTypes.SLIME, (location.world as CraftWorld).handle) {
+) : EntitySlime(EntityTypes.SLIME, (location.world as CraftWorld).handle) {
 
     // BukkitEntity has to be self cached since 1.14.
     private var entityBukkit: Any? = null
@@ -54,19 +54,16 @@ class BallHitBox(
      */
     init {
         val mcWorld = (location.world as CraftWorld).handle
-        val compound = NBTTagCompound()
-
         this.setPosition(location.x, location.y, location.z)
         mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
+
+        val compound = NBTTagCompound()
         compound.setBoolean("Invulnerable", true)
         compound.setBoolean("PersistenceRequired", true)
         compound.setBoolean("NoAI", true)
-        when (ballMeta.size) {
-            BallSize.SMALL -> compound.setInt("Size", 0)
-            else -> compound.setInt("Size", 1)
-        }
-
+        compound.setInt("Size", ballMeta.hitBoxSize.toInt() - 1)
         this.a(compound)
+
         bukkitEntity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
     }
 

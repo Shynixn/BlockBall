@@ -64,12 +64,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onChunkSaveEvent(event: ChunkUnloadEvent) {
-        event.chunk.entities.filter { e -> e.customName == "ResourceBallsPlugin" }
-            .forEach { e ->
-                ballEntityService.findBallFromEntity(e).ifPresent { ball ->
-                    ball.remove()
-                }
-            }
+        ballEntityService.cleanUpInvalidEntities(event.chunk.entities.toList())
     }
 
     /**
@@ -90,7 +85,7 @@ class BallListener @Inject constructor(
     fun onPlayerInteractBallEvent(event: PlayerInteractEvent) {
         for (ball in this.ballEntityService.getAllBalls()) {
             if (ball.isGrabbed) {
-                ball.getLastInteractionEntity<Entity>().ifPresent{
+                ball.getLastInteractionEntity<Entity>().ifPresent {
                     if (it is Player && it.uniqueId == event.player.uniqueId) {
                         ball.throwByEntity(event.player)
                         event.isCancelled = true

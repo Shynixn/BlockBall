@@ -73,7 +73,7 @@ class BallListenerTest {
         classUnderTest.onChunkSaveEvent(chunkUnloadEvent)
 
         // Assert
-        Assertions.assertTrue(ball.isDead)
+        Assertions.assertTrue(mockedEntityService.cleanUpCalled)
     }
 
     /**
@@ -290,7 +290,7 @@ class BallListenerTest {
          * Returns true if registered. Returns false when not registered.
          */
         override fun registerEntitiesOnServer(): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            return true
         }
 
         /**
