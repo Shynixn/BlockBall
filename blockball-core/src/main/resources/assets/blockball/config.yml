@@ -66,6 +66,7 @@ sql:
   enabled: false
   host: localhost
   port: 3306
+  usessl: false
   database: ''
   username: ''
   password: ''

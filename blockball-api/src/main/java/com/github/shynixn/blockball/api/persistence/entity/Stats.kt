@@ -42,4 +42,8 @@ interface Stats : DatabasePersistenceAble {
 
     /** [goalsPerGame] of the player. */
     val goalsPerGame: Double
+    /**
+     * Gets the meta information of the player owning this stats.
+     */
+    val playerMeta: PlayerMeta
 }

@@ -47,6 +47,16 @@ interface ProxyService {
     fun <L, P> getPlayerLocation(player: P): L
 
     /**
+     * Gets the name of a player.
+     */
+    fun <P> getPlayerName(player: P): String
+
+    /**
+     * Gets the player uuid.
+     */
+    fun <P> getPlayerUUID(player: P): String
+
+    /**
      * Sets the location of the player.
      */
     fun <L, P> setPlayerLocation(player: P, location: L)

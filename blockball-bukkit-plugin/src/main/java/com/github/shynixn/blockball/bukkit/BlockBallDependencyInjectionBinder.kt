@@ -5,14 +5,12 @@ import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.api.persistence.repository.LinkSignRepository
-import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
-import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository
-import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository
 import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
 import com.github.shynixn.blockball.core.logic.persistence.repository.LinkSignFileRepository
+import com.github.shynixn.blockball.core.logic.persistence.repository.StatsSqlRepository
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
 import org.bukkit.plugin.Plugin
@@ -56,7 +54,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
 
         // Repositories
         bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java)
-        bind(PlayerRepository::class.java).to(PlayerSqlRepository::class.java)
         bind(StatsRepository::class.java).to(StatsSqlRepository::class.java)
         bind(LinkSignRepository::class.java).to(LinkSignFileRepository::class.java).`in`(Scopes.SINGLETON)
 

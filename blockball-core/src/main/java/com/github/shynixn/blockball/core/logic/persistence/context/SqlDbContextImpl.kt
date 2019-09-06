@@ -63,7 +63,7 @@ class SqlDbContextImpl @Inject constructor(
     private lateinit var dataSource: HikariDataSource
 
     init {
-        if (configurationService.findValue<String>("sql.type") == "sqlite") {
+        if (!configurationService.findValue<Boolean>("sql.enabled")) {
             connectToSqlite()
         } else {
             try {
@@ -167,11 +167,14 @@ class SqlDbContextImpl @Inject constructor(
 
         statement.append(")")
 
+        println(statement.toString())
+
         val preparedStatement = connection.prepareStatement(statement.toString(), Statement.RETURN_GENERATED_KEYS)
 
         preparedStatement.use {
             for (i in parameters.indices) {
                 preparedStatement.setObject(i + 1, parameters[i].second)
+                println(parameters[i].second)
             }
 
             preparedStatement.executeUpdate()
