@@ -93,6 +93,7 @@ class StatsListener @Inject constructor(
     @EventHandler
     fun onPlayerShootGoalEvent(event: GameGoalEvent) {
         persistenceStatsService.getStatsFromPlayer(event.player).amountOfGoals += 1
+        statsCollectingService.setStatsScoreboard(event.player)
     }
 
     /**
@@ -103,6 +104,7 @@ class StatsListener @Inject constructor(
     @EventHandler
     fun onPlayerJoinGameEvent(event: GameJoinEvent) {
         persistenceStatsService.getStatsFromPlayer(event.player).amountOfPlayedGames += 1
+        statsCollectingService.setStatsScoreboard(event.player)
     }
 
     /**
@@ -120,6 +122,7 @@ class StatsListener @Inject constructor(
 
         winningPlayers.forEach { p ->
             persistenceStatsService.getStatsFromPlayer(p).amountOfWins += 1
+            statsCollectingService.setStatsScoreboard(p)
         }
     }
 
@@ -135,6 +138,8 @@ class StatsListener @Inject constructor(
             if (alreadyLoading.contains(player.uniqueId)) {
                 alreadyLoading.remove(player.uniqueId)
             }
+
+            statsCollectingService.setStatsScoreboard(player)
         }
     }
 }

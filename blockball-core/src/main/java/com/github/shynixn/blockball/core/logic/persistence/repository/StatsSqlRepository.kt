@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Stats
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.core.logic.persistence.entity.PlayerMetaEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.StatsEntity
+import com.google.inject.Inject
 
 /**
  * Created by Shynixn 2019.
@@ -33,7 +34,7 @@ import com.github.shynixn.blockball.core.logic.persistence.entity.StatsEntity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class StatsSqlRepository(private val sqlDbContext: SqlDbContext) : StatsRepository {
+class StatsSqlRepository @Inject constructor(private val sqlDbContext: SqlDbContext) : StatsRepository {
     /**
      * Returns the [Stats] for the given player uniqueId. Creates
      * a new one if it does not exist yet.

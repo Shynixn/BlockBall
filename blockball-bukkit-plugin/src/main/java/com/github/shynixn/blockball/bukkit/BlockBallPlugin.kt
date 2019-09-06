@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
@@ -169,9 +170,11 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
      * Override on disable.
      */
     override fun onDisable() {
+        resolve(PersistenceStatsService::class.java).close()
+        resolve(SqlDbContext::class.java).close()
+
         try {
             resolve(GameService::class.java).close()
-            resolve(PersistenceStatsService::class.java).close()
         } catch (e: Exception) {
             // Ignored.
         }

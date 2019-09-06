@@ -88,7 +88,7 @@ class PersistenceStatsServiceImpl @Inject constructor(
 
         if (!cacheInternal.containsKey(playerUUID)) {
             // Blocks the calling (main) thread and should not be executed on an normal server.
-            return statsRepository.getOrCreateFromPlayer(playerName, playerUUID)
+            cacheInternal[playerUUID] = statsRepository.getOrCreateFromPlayer(playerName, playerUUID)
         }
 
         return cacheInternal[playerUUID]!!

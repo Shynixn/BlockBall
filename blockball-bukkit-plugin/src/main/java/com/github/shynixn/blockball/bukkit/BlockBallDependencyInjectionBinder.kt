@@ -3,11 +3,13 @@ package com.github.shynixn.blockball.bukkit
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.api.persistence.repository.LinkSignRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.business.service.*
+import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextImpl
 import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
 import com.github.shynixn.blockball.core.logic.persistence.repository.LinkSignFileRepository
 import com.github.shynixn.blockball.core.logic.persistence.repository.StatsSqlRepository
@@ -53,11 +55,12 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(LoggingService::class.java).toInstance(LoggingUtilServiceImpl(plugin.logger))
 
         // Repositories
-        bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java)
-        bind(StatsRepository::class.java).to(StatsSqlRepository::class.java)
+        bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java).`in`(Scopes.SINGLETON)
+        bind(StatsRepository::class.java).to(StatsSqlRepository::class.java).`in`(Scopes.SINGLETON)
         bind(LinkSignRepository::class.java).to(LinkSignFileRepository::class.java).`in`(Scopes.SINGLETON)
 
         // Services
+        bind(SqlDbContext::class.java).to(SqlDbContextImpl::class.java)
         bind(ItemService::class.java).to(ItemServiceImpl::class.java)
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java)
         bind(VirtualArenaService::class.java).to(VirtualArenaServiceImpl::class.java)
@@ -93,7 +96,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         // Persistence Services
         bind(PersistenceLinkSignService::class.java).to(PersistenceLinkSignServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PersistenceArenaService::class.java).to(PersistenceArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(PersistenceStatsService::class.java).to(PersistenceStatsServiceImpl::class.java)
+        bind(PersistenceStatsService::class.java).to(PersistenceStatsServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         // Dependency Services
         val dependencyService = DependencyServiceImpl()
