@@ -61,7 +61,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.9.2")
     compileOnly("net.milkbowlvault:VaultAPI:1.7")
 
-    compileOnly("org.spigotmc:spigot114R1:1.14.1-R1.0")
+    compileOnly("org.spigotmc:spigot114R1:1.14.4-R1.0")
 
     testCompile("org.xerial:sqlite-jdbc:3.23.1")
     testCompile("ch.vorburger.mariaDB4j:mariaDB4j:2.2.3")
