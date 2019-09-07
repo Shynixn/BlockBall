@@ -1,10 +1,9 @@
-package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1
+package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_8_R3
 
 import com.github.shynixn.blockball.api.business.proxy.EntityBallProxy
-import net.minecraft.server.v1_14_R1.EntitySlime
-import org.bukkit.craftbukkit.v1_14_R1.CraftServer
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftSlime
-import org.bukkit.entity.EntityType
+import net.minecraft.server.v1_8_R3.EntityArmorStand
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand
 
 /**
  * Created by Shynixn 2019.
@@ -33,7 +32,7 @@ import org.bukkit.entity.EntityType
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class CraftHitboxSlime(server: CraftServer, nmsBall: EntitySlime) : CraftSlime(server, nmsBall), EntityBallProxy {
+class CraftDesignArmorstand(server: CraftServer, nmsBall: EntityArmorStand) : CraftArmorStand(server, nmsBall), EntityBallProxy {
     /**
      * Boots marker.
      */
@@ -49,32 +48,21 @@ class CraftHitboxSlime(server: CraftServer, nmsBall: EntitySlime) : CraftSlime(s
     /**
      * Hides the true type of the ball from everyone else.
      */
-    override fun getType(): EntityType {
-        return EntityType.SLIME
+    override fun getType(): org.bukkit.entity.EntityType {
+        return org.bukkit.entity.EntityType.ARMOR_STAND
     }
 
     /**
      * Ignore all other plugins trying to remove this entity. This is the entity of BlockBall,
      * no one else is allowed to modify this!
      */
-    override fun remove() {}
-
-    /**
-     * Ball should never be persistent.
-     */
-    override fun isPersistent(): Boolean {
-        return false
+    override fun remove() {
     }
-
-    /**
-     * Ball should never be persistent.
-     */
-    override fun setPersistent(persistent: Boolean) {}
 
     /**
      * Custom type.
      */
     override fun toString(): String {
-        return "BlockBall{SlimeEntity}"
+        return "BlockBall{ArmorstandEntity}"
     }
 }

@@ -1,9 +1,9 @@
-package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1
+package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_9_R2
 
 import com.github.shynixn.blockball.api.business.proxy.EntityBallProxy
-import net.minecraft.server.v1_14_R1.EntitySlime
-import org.bukkit.craftbukkit.v1_14_R1.CraftServer
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftSlime
+import net.minecraft.server.v1_9_R2.EntitySlime
+import org.bukkit.craftbukkit.v1_9_R2.CraftServer
+import org.bukkit.craftbukkit.v1_9_R2.entity.CraftSlime
 import org.bukkit.entity.EntityType
 
 /**
@@ -34,6 +34,11 @@ import org.bukkit.entity.EntityType
  * SOFTWARE.
  */
 class CraftHitboxSlime(server: CraftServer, nmsBall: EntitySlime) : CraftSlime(server, nmsBall), EntityBallProxy {
+
+    init {
+        handle.persistent = false
+    }
+
     /**
      * Boots marker.
      */
@@ -58,18 +63,6 @@ class CraftHitboxSlime(server: CraftServer, nmsBall: EntitySlime) : CraftSlime(s
      * no one else is allowed to modify this!
      */
     override fun remove() {}
-
-    /**
-     * Ball should never be persistent.
-     */
-    override fun isPersistent(): Boolean {
-        return false
-    }
-
-    /**
-     * Ball should never be persistent.
-     */
-    override fun setPersistent(persistent: Boolean) {}
 
     /**
      * Custom type.

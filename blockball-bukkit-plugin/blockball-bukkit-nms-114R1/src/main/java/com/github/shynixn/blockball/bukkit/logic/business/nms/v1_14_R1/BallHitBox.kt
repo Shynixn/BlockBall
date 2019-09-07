@@ -67,7 +67,7 @@ class BallHitBox(
         }
 
         this.a(compound)
-        bukkitEntity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
+        getBukkitEntity().addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
     }
 
     /**
