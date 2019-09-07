@@ -10,12 +10,8 @@ import com.github.shynixn.blockball.api.persistence.repository.PlayerRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_11_R1.EntityRegistration111R1ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2.EntityRegistration113R2ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_11_R1.EntityRegistration111R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R1.EntityRegistration113R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2.EntityRegistration113R2ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1.EntityRegistration114R1ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_8_R3.EntityRegistration108R3ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_8_R1.EntityRegistration108R1ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.PlayerSqlRepository
 import com.github.shynixn.blockball.bukkit.logic.persistence.repository.StatsSqlRepository
