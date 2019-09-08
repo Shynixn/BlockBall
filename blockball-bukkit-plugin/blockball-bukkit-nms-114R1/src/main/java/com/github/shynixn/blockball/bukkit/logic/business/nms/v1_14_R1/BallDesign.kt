@@ -104,8 +104,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
     }
 
     /**
-     * Overrides the default implementation of the armorstand in order to update the
-     * position of the armorstand design to the hitbox.
+     * Update the yaw rotation.
      */
     override fun doTick() {
         super.doTick()

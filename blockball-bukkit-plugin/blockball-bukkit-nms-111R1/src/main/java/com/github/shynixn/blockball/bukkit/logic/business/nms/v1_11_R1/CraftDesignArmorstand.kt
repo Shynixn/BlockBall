@@ -1,9 +1,9 @@
-package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_10_R1
+package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_11_R1
 
 import com.github.shynixn.blockball.api.business.proxy.EntityBallProxy
-import net.minecraft.server.v1_10_R1.EntityArmorStand
-import org.bukkit.craftbukkit.v1_10_R1.CraftServer
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftArmorStand
+import net.minecraft.server.v1_11_R1.EntityArmorStand
+import org.bukkit.craftbukkit.v1_11_R1.CraftServer
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftArmorStand
 
 /**
  * Created by Shynixn 2019.
@@ -32,7 +32,7 @@ import org.bukkit.craftbukkit.v1_10_R1.entity.CraftArmorStand
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class CraftBallArmorstand(server: CraftServer, nmsBall: EntityArmorStand) : CraftArmorStand(server, nmsBall), EntityBallProxy {
+class CraftDesignArmorstand(server: CraftServer, nmsBall: EntityArmorStand) : CraftArmorStand(server, nmsBall), EntityBallProxy {
     /**
      * Boots marker.
      */

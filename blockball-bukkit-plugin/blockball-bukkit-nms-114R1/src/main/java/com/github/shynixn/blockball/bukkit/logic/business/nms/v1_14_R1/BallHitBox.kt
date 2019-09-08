@@ -2,7 +2,6 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1
 
-import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_14_R1.EntitySlime
 import net.minecraft.server.v1_14_R1.EntityTypes
@@ -63,8 +62,7 @@ class BallHitBox(
         compound.setBoolean("NoAI", true)
         compound.setInt("Size", ballMeta.hitBoxSize.toInt() - 1)
         this.a(compound)
-
-        bukkitEntity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
+        getBukkitEntity().addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
     }
 
     /**
