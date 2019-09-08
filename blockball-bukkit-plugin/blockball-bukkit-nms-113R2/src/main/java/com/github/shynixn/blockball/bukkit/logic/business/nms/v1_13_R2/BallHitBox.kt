@@ -80,18 +80,14 @@ class BallHitBox(
      */
     init {
         val mcWorld = (location.world as CraftWorld).handle
-        val compound = NBTTagCompound()
-
         this.setPosition(location.x, location.y, location.z)
         mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
+
+        val compound = NBTTagCompound()
         compound.setBoolean("Invulnerable", true)
         compound.setBoolean("PersistenceRequired", true)
         compound.setBoolean("NoAI", true)
-        when (ballMeta.size) {
-            BallSize.SMALL -> compound.setInt("Size", 0)
-            else -> compound.setInt("Size", 1)
-        }
-
+        compound.setInt("Size", ballMeta.hitBoxSize.toInt() - 1)
         this.a(compound)
         getBukkitEntity().addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
     }

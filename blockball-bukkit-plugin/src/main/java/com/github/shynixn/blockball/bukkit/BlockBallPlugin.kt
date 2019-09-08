@@ -69,19 +69,31 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
      * Enables the plugin BlockBall.
      */
     override fun onEnable() {
-        Bukkit.getServer().consoleSender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
+        Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
         this.saveDefaultConfig()
 
+        if (disableForVersion(Version.VERSION_1_8_R1, Version.VERSION_1_8_R3)) {
+            return
+        }
+
+        if (disableForVersion(Version.VERSION_1_8_R2, Version.VERSION_1_8_R3)) {
+            return
+        }
+
+        if (disableForVersion(Version.VERSION_1_9_R1, Version.VERSION_1_9_R2)) {
+            return
+        }
+
+        if (disableForVersion(Version.VERSION_1_13_R1, Version.VERSION_1_13_R2)) {
+            return
+        }
+
         if (!getServerVersion().isCompatible(
-                Version.VERSION_1_8_R1,
-                Version.VERSION_1_8_R2,
                 Version.VERSION_1_8_R3,
-                Version.VERSION_1_9_R1,
                 Version.VERSION_1_9_R2,
                 Version.VERSION_1_10_R1,
                 Version.VERSION_1_11_R1,
                 Version.VERSION_1_12_R1,
-                Version.VERSION_1_13_R1,
                 Version.VERSION_1_13_R2,
                 Version.VERSION_1_14_R1
             )
@@ -276,5 +288,22 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         } catch (e: Exception) {
             throw IllegalArgumentException("Entity could not be created.", e)
         }
+    }
+
+    /**
+     * Disables the plugin for the given version.
+     */
+    private fun disableForVersion(version: Version, supportedVersion: Version): Boolean {
+        if (getServerVersion() == version) {
+            sendConsoleMessage(ChatColor.RED.toString() + "================================================")
+            sendConsoleMessage(ChatColor.RED.toString() + "BlockBall does not support this subversion")
+            sendConsoleMessage(ChatColor.RED.toString() + "Please upgrade from v" + version.id + " to v" + supportedVersion.id)
+            sendConsoleMessage(ChatColor.RED.toString() + "Plugin gets now disabled!")
+            sendConsoleMessage(ChatColor.RED.toString() + "================================================")
+            Bukkit.getPluginManager().disablePlugin(this)
+            return true
+        }
+
+        return false
     }
 }

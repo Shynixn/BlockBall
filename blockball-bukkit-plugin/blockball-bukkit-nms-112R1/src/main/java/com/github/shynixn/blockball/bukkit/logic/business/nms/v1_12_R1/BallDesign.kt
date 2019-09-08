@@ -125,7 +125,13 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         val axisBoundingBox = this.boundingBox
 
         this.locX = (axisBoundingBox.a + axisBoundingBox.d) / 2.0
-        this.locY = axisBoundingBox.b + proxy.meta.hitBoxRelocation - 1
+
+        this.locY = if (proxy.meta.size == BallSize.NORMAL) {
+            axisBoundingBox.b + proxy.meta.hitBoxRelocation - 1
+        } else {
+            axisBoundingBox.b + proxy.meta.hitBoxRelocation - 0.4
+        }
+
         this.locZ = (axisBoundingBox.c + axisBoundingBox.f) / 2.0
     }
 

@@ -40,15 +40,11 @@ dependencies {
     implementation(project(":blockball-api"))
     implementation(project(":blockball-bukkit-api"))
     implementation(project(":blockball-core"))
-    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-108R1"))
-    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-108R2"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-108R3"))
-    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-109R1"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-109R2"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-110R1"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-111R1"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-112R1"))
-    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-113R1"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-113R2"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-114R1"))
 
@@ -65,5 +61,5 @@ dependencies {
 
     testCompile("org.xerial:sqlite-jdbc:3.23.1")
     testCompile("ch.vorburger.mariaDB4j:mariaDB4j:2.2.3")
-    testCompile("org.spigotmc:spigot18R1:1.8.0-R1.0")
+    testCompile("org.spigotmc:spigot18R3:1.8.8-R3.0")
 }
