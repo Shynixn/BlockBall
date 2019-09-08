@@ -320,7 +320,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     }
 
     /**
-     * Disables the plugin for the given version.
+     * Disables the plugin for the given version and prints the supported version.
      */
     private fun disableForVersion(version: Version, supportedVersion: Version): Boolean {
         if (getServerVersion() == version) {
