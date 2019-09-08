@@ -49,6 +49,28 @@ import java.util.logging.Level
  */
 class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy) : ProxyService {
     /**
+     * Gets the name of a player.
+     */
+    override fun <P> getPlayerName(player: P): String {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        return player.name
+    }
+
+    /**
+     * Gets the player uuid.
+     */
+    override fun <P> getPlayerUUID(player: P): String {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        return player.uniqueId.toString()
+    }
+
+    /**
      * Gets a list of all online players.
      */
     override fun <P> getOnlinePlayers(): List<P> {

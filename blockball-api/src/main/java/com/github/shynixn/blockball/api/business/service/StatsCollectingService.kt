@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.blockball.api.persistence.entity.Stats
-
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -34,11 +32,6 @@ interface StatsCollectingService {
      * Cleans all allocated resources of the given [player] in this service.
      */
     fun <P> cleanResources(player: P)
-
-    /**
-     * Updates the stats for the given [player].
-     */
-    fun <P> updateStats(player: P, f: (Stats) -> Unit)
 
     /**
      * Sets and refreshes the scoreboard for the given [player].

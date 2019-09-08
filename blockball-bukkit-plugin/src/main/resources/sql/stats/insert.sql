@@ -1,1 +1,0 @@
-INSERT INTO SHY_BLOCKBALL_STATS(shy_player_id, wins, games, goals) VALUES (?,?,?,?)

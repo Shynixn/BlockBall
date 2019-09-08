@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import java.io.InputStream
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.CompletableFuture
@@ -129,35 +130,51 @@ class StatsCollectingServiceTest {
 
     class MockedPersistenceStatsService : PersistenceStatsService {
         /**
-         * Returns all stored stats.
+         * Gets the [Stats] from the given player.
+         * This call will never return null.
          */
-        override fun getAll(): CompletableFuture<List<Stats>> {
+        override fun <P> getStatsFromPlayer(player: P): Stats {
             throw IllegalArgumentException()
         }
 
         /**
-         * Returns the amount of stored stats.
+         * Gets or creates stats from the player.
+         * Call getsStatsFromPlayer instead. This is only intended for internal useage.
          */
-        override fun size(): CompletableFuture<Int> {
-            throw IllegalArgumentException()
-        }
-
-        /**
-         * Returns the [Stats] from the given [player] or allocates a new one.
-         */
-        override fun <P> getOrCreateFromPlayer(player: P): CompletableFuture<Stats> {
+        override fun <P> refreshStatsFromPlayer(player: P): CompletableFuture<Stats> {
             throw IllegalArgumentException()
         }
 
         /**
          * Saves the given [Stats] to the storage.
          */
-        override fun <P> save(player: P, stats: Stats): CompletableFuture<Void?> {
+        override fun save(stats: Stats): CompletableFuture<Stats> {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Clears the cache of the player and saves the allocated resources.
+         */
+        override fun <P> clearResources(player: P): CompletableFuture<Void?> {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Closes all resources immediately.
+         */
+        override fun close() {
             throw IllegalArgumentException()
         }
     }
 
     class MockedConfigurationService : ConfigurationService {
+        /**
+         * Opens an inputStream to the given resource name.
+         */
+        override fun openResource(name: String): InputStream {
+            throw IllegalArgumentException()
+        }
+
         /**
          * Checks if the given [path] contains a value.
          */

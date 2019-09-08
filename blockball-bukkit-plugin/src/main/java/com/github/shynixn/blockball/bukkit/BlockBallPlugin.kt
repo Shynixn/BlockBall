@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
@@ -13,12 +14,16 @@ import com.github.shynixn.blockball.core.logic.business.commandexecutor.*
 import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.google.inject.Guice
 import com.google.inject.Injector
+import org.apache.commons.io.IOUtils
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Server
 import org.bukkit.configuration.MemorySection
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
+import java.io.FileOutputStream
 import java.util.logging.Level
 
 /**
@@ -178,6 +183,9 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
      * Override on disable.
      */
     override fun onDisable() {
+        resolve(PersistenceStatsService::class.java).close()
+        resolve(SqlDbContext::class.java).close()
+
         try {
             resolve(GameService::class.java).close()
             resolve(EntityRegistrationService::class.java).clearResources()
@@ -185,6 +193,27 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             // Ignored.
         }
     }
+
+    /**
+     * Loads the default config and saves it to the plugin folder.
+     */
+    override fun saveDefaultConfig() {
+        this.getResource("assets/blockball/config.yml").use { inputStream ->
+            if (!this.dataFolder.exists()) {
+                this.dataFolder.mkdir()
+            }
+
+            val configFile = File(this.dataFolder, "config.yml")
+            if (configFile.exists()) {
+                return
+            }
+
+            FileOutputStream(configFile).use { outStream ->
+                IOUtils.copy(inputStream, outStream)
+            }
+        }
+    }
+
 
     /**
      * Starts the game mode.
