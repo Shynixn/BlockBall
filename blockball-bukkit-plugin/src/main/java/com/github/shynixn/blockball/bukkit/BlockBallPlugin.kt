@@ -183,6 +183,10 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
      * Override on disable.
      */
     override fun onDisable() {
+        if (injector == null) {
+            return
+        }
+
         resolve(PersistenceStatsService::class.java).close()
         resolve(SqlDbContext::class.java).close()
 
