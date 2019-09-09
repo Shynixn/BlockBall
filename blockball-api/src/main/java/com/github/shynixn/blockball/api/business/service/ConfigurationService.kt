@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.api.business.service
 
+import java.io.InputStream
 import java.nio.file.Path
 
 /**
@@ -47,6 +48,11 @@ interface ConfigurationService {
      * loaded.
      */
     fun <C> findValue(path: String): C
+
+    /**
+     * Opens an inputStream to the given resource name.
+     */
+    fun openResource(name: String): InputStream
 
     /**
      * Checks if the given [path] contains a value.

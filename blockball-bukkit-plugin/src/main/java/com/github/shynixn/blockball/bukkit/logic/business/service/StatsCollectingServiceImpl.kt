@@ -7,7 +7,6 @@ import com.github.shynixn.blockball.api.business.service.ScoreboardService
 import com.github.shynixn.blockball.api.business.service.StatsCollectingService
 import com.github.shynixn.blockball.api.persistence.entity.Stats
 import com.github.shynixn.blockball.core.logic.business.extension.cast
-import com.github.shynixn.blockball.core.logic.business.extension.thenAcceptSafely
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -81,16 +80,6 @@ class StatsCollectingServiceImpl @Inject constructor(
     }
 
     /**
-     * Updates the stats for the given [player].
-     */
-    override fun <P> updateStats(player: P, f: (Stats) -> Unit) {
-        persistenceStatsService.getOrCreateFromPlayer(player).thenAcceptSafely { stats ->
-            f.invoke(stats)
-            persistenceStatsService.save(player, stats)
-        }
-    }
-
-    /**
      * When an object implementing interface `Runnable` is used
      * to create a thread, starting the thread causes the object's
      * `run` method to be called in that separately executing
@@ -134,12 +123,11 @@ class StatsCollectingServiceImpl @Inject constructor(
             player.scoreboard = scoreboard!!
         }
 
-        persistenceStatsService.getOrCreateFromPlayer(player).thenAcceptSafely { stats ->
-            val lines = configurationService.findValue<List<String>>("stats-scoreboard.lines")
+        val stats = persistenceStatsService.getStatsFromPlayer(player)
+        val lines = configurationService.findValue<List<String>>("stats-scoreboard.lines")
 
-            lines.reversed().forEachIndexed { i, line ->
-                scoreboardService.setLine(scoreboard, i, replacePlaceHolders(player, stats, line))
-            }
+        lines.reversed().forEachIndexed { i, line ->
+            scoreboardService.setLine(scoreboard, i, replacePlaceHolders(player, stats, line))
         }
     }
 

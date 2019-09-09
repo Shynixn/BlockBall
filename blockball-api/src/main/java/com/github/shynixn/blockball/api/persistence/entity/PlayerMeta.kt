@@ -35,5 +35,5 @@ interface PlayerMeta : DatabasePersistenceAble {
     var name: String
 
     /** [uuid] of the player. */
-    var uuid: UUID
+    var uuid: String
 }

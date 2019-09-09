@@ -32,22 +32,29 @@ import java.util.concurrent.CompletableFuture
  */
 interface PersistenceStatsService {
     /**
-     * Returns all stored stats.
+     * Gets the [Stats] from the given player.
+     * This call will never return null.
      */
-    fun getAll(): CompletableFuture<List<Stats>>
+    fun <P> getStatsFromPlayer(player: P): Stats
 
     /**
-     * Returns the amount of stored stats.
+     * Gets or creates stats from the player.
+     * Call getsStatsFromPlayer instead. This is only intended for internal useage.
      */
-    fun size(): CompletableFuture<Int>
-
-    /**
-     * Returns the [Stats] from the given [player] or allocates a new one.
-     */
-    fun <P> getOrCreateFromPlayer(player: P): CompletableFuture<Stats>
+    fun <P> refreshStatsFromPlayer(player: P): CompletableFuture<Stats>
 
     /**
      * Saves the given [Stats] to the storage.
      */
-    fun <P> save(player: P, stats: Stats): CompletableFuture<Void?>
+    fun save(stats: Stats): CompletableFuture<Stats>
+
+    /**
+     * Clears the cache of the player and saves the allocated resources.
+     */
+    fun <P> clearResources(player: P): CompletableFuture<Void?>
+
+    /**
+     * Closes all resources immediately.
+     */
+    fun close()
 }

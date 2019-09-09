@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.plugin.Plugin
+import java.io.InputStream
 import java.nio.file.Path
 
 /**
@@ -37,6 +38,13 @@ import java.nio.file.Path
  */
 class ConfigurationServiceImpl @Inject constructor(private val plugin: Plugin) :
     ConfigurationService {
+    /**
+     * Opens an inputStream to the given resource name.
+     */
+    override fun openResource(name: String): InputStream {
+        return plugin.getResource(name)!!
+    }
+
     /**
      * Checks if the given [path] contains a value.
      */

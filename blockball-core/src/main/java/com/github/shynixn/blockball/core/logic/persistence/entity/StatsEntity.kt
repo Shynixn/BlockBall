@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.core.logic.persistence.entity
 
 import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
+import com.github.shynixn.blockball.api.persistence.entity.PlayerMeta
 import com.github.shynixn.blockball.api.persistence.entity.Stats
 
 /**
@@ -30,7 +31,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Stats
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class StatsEntity : Stats {
+class StatsEntity(override val playerMeta: PlayerMeta) : Stats {
     /**
      * Database id.
      */
@@ -58,10 +59,4 @@ class StatsEntity : Stats {
                 return 0.0
             return (this.amountOfGoals.toDouble()) / (this.amountOfPlayedGames.toDouble())
         }
-
-    /**
-     * Id reference to the player in the database.
-     */
-    @YamlSerialize(value = "playerId", orderNumber = 1)
-    var playerId: Long = 0
 }

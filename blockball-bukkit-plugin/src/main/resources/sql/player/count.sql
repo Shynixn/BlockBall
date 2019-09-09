@@ -1,1 +1,0 @@
-select COUNT(*) from SHY_PLAYER

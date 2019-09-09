@@ -4,12 +4,19 @@ import com.github.shynixn.blockball.api.bukkit.event.GameEndEvent
 import com.github.shynixn.blockball.api.bukkit.event.GameGoalEvent
 import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent
 import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
+import com.github.shynixn.blockball.api.business.service.PersistenceStatsService
 import com.github.shynixn.blockball.api.business.service.StatsCollectingService
+import com.github.shynixn.blockball.core.logic.business.extension.sync
+import com.github.shynixn.blockball.core.logic.business.extension.thenAcceptSafely
 import com.google.inject.Inject
+import org.bukkit.World
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import java.util.*
 
 /**
  * Created by Shynixn 2018.
@@ -38,15 +45,33 @@ import org.bukkit.event.player.PlayerQuitEvent
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class StatsListener @Inject constructor(private val statsCollectingService: StatsCollectingService) : Listener {
+class StatsListener @Inject constructor(
+    private val persistenceStatsService: PersistenceStatsService,
+    private val statsCollectingService: StatsCollectingService,
+    private val concurrencyService: ConcurrencyService
+) :
+    Listener {
+    private val alreadyLoading = HashSet<UUID>()
+    private val joinCooldown = 20 * 6L
+
     /**
      * Sets the stats scoreboard for a player when he joins the server.
      *
-     * @param event event
+     * @param event event.
      */
     @EventHandler
     fun onPlayerJoinEvent(event: PlayerJoinEvent) {
-        this.statsCollectingService.setStatsScoreboard(event.player)
+        val uuid = event.player.uniqueId
+
+        if (alreadyLoading.contains(uuid)) {
+            return
+        }
+
+        alreadyLoading.add(uuid)
+
+        sync(concurrencyService, joinCooldown) {
+            this.loadStats(event.player)
+        }
     }
 
     /**
@@ -57,6 +82,7 @@ class StatsListener @Inject constructor(private val statsCollectingService: Stat
     @EventHandler
     fun playerQuitEvent(event: PlayerQuitEvent) {
         this.statsCollectingService.cleanResources(event.player)
+        this.persistenceStatsService.clearResources(event.player)
     }
 
     /**
@@ -66,9 +92,8 @@ class StatsListener @Inject constructor(private val statsCollectingService: Stat
      */
     @EventHandler
     fun onPlayerShootGoalEvent(event: GameGoalEvent) {
-        this.statsCollectingService.updateStats(event.player) { stats ->
-            stats.amountOfGoals = stats.amountOfGoals + 1
-        }
+        persistenceStatsService.getStatsFromPlayer(event.player).amountOfGoals += 1
+        statsCollectingService.setStatsScoreboard(event.player)
     }
 
     /**
@@ -78,9 +103,8 @@ class StatsListener @Inject constructor(private val statsCollectingService: Stat
      */
     @EventHandler
     fun onPlayerJoinGameEvent(event: GameJoinEvent) {
-        this.statsCollectingService.updateStats(event.player) { stats ->
-            stats.amountOfPlayedGames = stats.amountOfPlayedGames + 1
-        }
+        persistenceStatsService.getStatsFromPlayer(event.player).amountOfPlayedGames += 1
+        statsCollectingService.setStatsScoreboard(event.player)
     }
 
     /**
@@ -97,9 +121,25 @@ class StatsListener @Inject constructor(private val statsCollectingService: Stat
         }
 
         winningPlayers.forEach { p ->
-            statsCollectingService.updateStats(p) { stats ->
-                stats.amountOfWins = stats.amountOfWins + 1
+            persistenceStatsService.getStatsFromPlayer(p).amountOfWins += 1
+            statsCollectingService.setStatsScoreboard(p)
+        }
+    }
+
+    /**
+     * Loads the Stats data.
+     */
+    private fun loadStats(player: Player) {
+        if (!player.isOnline || (player.world as World?) == null) {
+            return
+        }
+
+        persistenceStatsService.refreshStatsFromPlayer(player).thenAcceptSafely {
+            if (alreadyLoading.contains(player.uniqueId)) {
+                alreadyLoading.remove(player.uniqueId)
             }
+
+            statsCollectingService.setStatsScoreboard(player)
         }
     }
 }

@@ -1,1 +1,0 @@
-UPDATE SHY_BLOCKBALL_STATS SET wins=?, games=?, goals=?  WHERE id=?;
