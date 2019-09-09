@@ -58,6 +58,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         val version = plugin.getServerVersion()
 
         bind(Plugin::class.java).toInstance(plugin)
+        bind(Version::class.java).toInstance(version)
         bind(PluginProxy::class.java).toInstance(plugin)
         bind(LoggingService::class.java).toInstance(LoggingUtilServiceImpl(plugin.logger))
 
