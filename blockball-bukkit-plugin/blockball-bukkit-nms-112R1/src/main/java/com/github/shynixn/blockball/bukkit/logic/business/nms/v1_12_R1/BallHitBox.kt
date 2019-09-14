@@ -2,12 +2,13 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_12_R1
 
-import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_12_R1.EntitySlime
 import net.minecraft.server.v1_12_R1.NBTTagCompound
+import net.minecraft.server.v1_12_R1.PacketPlayOutEntityTeleport
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -59,7 +60,10 @@ class BallHitBox(
         compound.setBoolean("NoAI", true)
         compound.setInt("Size", ballMeta.hitBoxSize.toInt() - 1)
         this.a(compound)
-        getBukkitEntity().addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
+
+        val entity = getBukkitEntity()
+        entity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
+        entity.isCollidable = false
     }
 
     /**
@@ -77,6 +81,9 @@ class BallHitBox(
         } else {
             this.setPositionRotation(loc.x, loc.y + 1, loc.z, loc.yaw, loc.pitch)
         }
+
+        val packet = PacketPlayOutEntityTeleport(this)
+        this.world.players.forEach{p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet)}
     }
 
     /**

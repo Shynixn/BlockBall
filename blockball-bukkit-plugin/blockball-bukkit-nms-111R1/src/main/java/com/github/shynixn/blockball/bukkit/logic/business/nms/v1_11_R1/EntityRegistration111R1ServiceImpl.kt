@@ -52,7 +52,7 @@ class EntityRegistration111R1ServiceImpl @Inject constructor(private val version
         val minecraftKeyConstructor = findClass("net.minecraft.server.VERSION.MinecraftKey").getDeclaredConstructor(String::class.java, String::class.java)
         val materialField = entityTypeClazz.getDeclaredField("b")
         val appendEntityMethod = findClass("net.minecraft.server.VERSION.RegistryMaterials").getDeclaredMethod("a", Int::class.javaPrimitiveType, Any::class.java, Any::class.java)
-        val minecraftKey = minecraftKeyConstructor.newInstance("PetBlocks", entityType.saveGame_11)
+        val minecraftKey = minecraftKeyConstructor.newInstance("BlockBall", entityType.saveGame_11)
         val materialRegistry = materialField.get(null)
 
         appendEntityMethod.invoke(materialRegistry, entityType.entityId, minecraftKey, customEntityClazz)
@@ -73,7 +73,7 @@ class EntityRegistration111R1ServiceImpl @Inject constructor(private val version
         removeMaterialField.isAccessible = true
 
         classes.forEach { _, entityType ->
-            val minecraftKey = minecraftKeyConstructor.newInstance("PetBlocks", entityType.saveGame_11)
+            val minecraftKey = minecraftKeyConstructor.newInstance("BlockBall", entityType.saveGame_11)
             val materialRegistry = materialField.get(null)
             (removeMaterialField.get(materialRegistry) as MutableMap<*, *>).remove(minecraftKey)
         }

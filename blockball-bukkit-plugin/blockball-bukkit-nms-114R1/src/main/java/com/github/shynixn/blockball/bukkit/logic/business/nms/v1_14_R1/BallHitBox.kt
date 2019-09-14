@@ -6,8 +6,10 @@ import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_14_R1.EntitySlime
 import net.minecraft.server.v1_14_R1.EntityTypes
 import net.minecraft.server.v1_14_R1.NBTTagCompound
+import net.minecraft.server.v1_14_R1.PacketPlayOutEntityTeleport
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -79,6 +81,9 @@ class BallHitBox(
         } else {
             this.setPositionRotation(loc.x, loc.y + 1, loc.z, loc.yaw, loc.pitch)
         }
+
+        val packet = PacketPlayOutEntityTeleport(this)
+        this.world.players.forEach{p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet)}
     }
 
     /**

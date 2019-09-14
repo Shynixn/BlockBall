@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 import java.util.*
 import java.util.logging.Level
+import kotlin.math.abs
 
 /**
  * Created by Shynixn 2018.
@@ -164,7 +165,61 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             this.a(this.boundingBox.d(x, y, z))
             this.recalcPosition()
         } else {
+            if (enummovetype == EnumMoveType.PISTON) {
+                val i = this.world.time
+                val aM = Entity::class.java.getDeclaredField("aM")
+                val aL = Entity::class.java.getDeclaredField("aL")
+                aM.isAccessible = true
+                aL.isAccessible = true
+
+                if (i != aM.getLong(this)) {
+                    Arrays.fill(aL.get(this) as DoubleArray, 0.0)
+                    aM.setLong(this, i)
+                }
+
+                val j: Int
+                val d3: Double
+                if (d0 != 0.0) {
+                    val arr = aL.get(this) as DoubleArray
+                    j = EnumDirection.EnumAxis.X.ordinal
+                    d3 = MathHelper.a(d0 + arr[j], -0.51, 0.51)
+                    x = d3 - arr[j]
+                    arr[j] = d3
+                    aL.set(this, arr)
+                    if (abs(d0) <= 9.999999747378752E-6) {
+                        return
+                    }
+                } else if (d1 != 0.0) {
+                    val arr = aL.get(this) as DoubleArray
+                    j = EnumDirection.EnumAxis.Y.ordinal
+                    d3 = MathHelper.a(d1 + arr[j], -0.51, 0.51)
+                    y = d3 - arr[j]
+                    arr[j] = d3
+                    aL.set(this, arr)
+                    if (abs(d1) <= 9.999999747378752E-6) {
+                        return
+                    }
+                } else {
+                    if (d2 == 0.0) {
+                        return
+                    }
+
+                    val arr = aL.get(this) as DoubleArray
+                    j = EnumDirection.EnumAxis.Z.ordinal
+                    d3 = MathHelper.a(d2 + arr[j], -0.51, 0.51)
+                    z = d3 - arr[j]
+                    arr[j] = d3
+                    aL.set(this, arr)
+                    if (abs(d2) <= 9.999999747378752E-6) {
+                        return
+                    }
+                }
+            }
+
             this.world.methodProfiler.enter("move")
+            val d4 = this.locX
+            val d5 = this.locY
+            val d6 = this.locZ
             if (this.F) {
                 this.F = false
                 x *= 0.25
@@ -176,6 +231,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             }
 
             val d7 = x
+            val d8 = y
             val d9 = z
 
             val axisalignedbb = this.boundingBox
@@ -202,7 +258,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             }
 
             val flag = this.onGround || y != y && y < 0.0
-            val d11: Double
+            var d11: Double
             if (this.Q > 0.0f && flag && (d7 != x || d9 != z)) {
                 val axisalignedbb1 = this.boundingBox
                 this.a(axisalignedbb)
@@ -276,8 +332,8 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             this.world.methodProfiler.enter("rest")
             this.recalcPosition()
             this.positionChanged = d7 != x || d9 != z
-            this.C = y != y
-            this.onGround = this.C && y < 0.0
+            this.C = y != d8
+            this.onGround = this.C && d8 < 0.0
             this.D = this.positionChanged || this.C
             val k = MathHelper.floor(this.locX)
             val l = MathHelper.floor(this.locY - 0.20000000298023224)
@@ -304,8 +360,50 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             }
 
             val block1 = iblockdata.block
-            if (y != y) {
+            if (d8 != y) {
                 block1!!.a(this.world, this)
+            }
+
+            if (this.playStepSound() && !this.isPassenger) {
+                val d22 = this.locX - d4
+                var d23 = this.locY - d5
+                d11 = this.locZ - d6
+                if (block1 !== Blocks.LADDER) {
+                    d23 = 0.0
+                }
+
+                if (block1 != null && this.onGround) {
+                    block1.stepOn(this.world, blockposition, this)
+                }
+
+                this.K = (this.K.toDouble() + MathHelper.sqrt(d22 * d22 + d11 * d11).toDouble() * 0.6).toFloat()
+                this.L =
+                    (this.L.toDouble() + MathHelper.sqrt(d22 * d22 + d23 * d23 + d11 * d11).toDouble() * 0.6).toFloat()
+                val field1 = Entity::class.java.getDeclaredField("aA")
+                val field2 = Entity::class.java.getDeclaredField("aB")
+                field1.isAccessible = true
+                field2.isAccessible = true
+                val aA = field1.getFloat(this)
+                val aB = field2.getFloat(this)
+
+                if (this.L > aA && !iblockdata.isAir) {
+                    field1.setFloat(this, this.ab())
+                    if (!this.isInWater) {
+                        this.a(blockposition, iblockdata)
+                    } else {
+                        val entity = if (this.isVehicle && this.bO() != null) this.bO() else this
+                        val f = if (entity === this) 0.35f else 0.4f
+                        var f1 =
+                            MathHelper.sqrt(entity!!.motX * entity.motX * 0.20000000298023224 + entity.motY * entity.motY + entity.motZ * entity.motZ * 0.20000000298023224) * f
+                        if (f1 > 1.0f) {
+                            f1 = 1.0f
+                        }
+
+                        this.d(f1)
+                    }
+                } else if (this.L > aB && this.ah() && iblockdata.isAir) {
+                    field2.setFloat(this, this.e(this.L))
+                }
             }
 
             try {
