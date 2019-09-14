@@ -2,12 +2,14 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_10_R1
 
-import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_10_R1.EntitySlime
 import net.minecraft.server.v1_10_R1.NBTTagCompound
+import net.minecraft.server.v1_10_R1.PacketPlayOutEntityTeleport
+import net.minecraft.server.v1_10_R1.PathfinderGoalSelector
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_10_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -59,7 +61,12 @@ class BallHitBox(
         compound.setBoolean("NoAI", true)
         compound.setInt("Size", ballMeta.hitBoxSize.toInt() - 1)
         this.a(compound)
-        getBukkitEntity().addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
+
+        val entity = getBukkitEntity()
+        entity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
+        entity.isCollidable = false
+        entity.isSilent = true
+        entity.setGravity(false)
     }
 
     /**
@@ -69,14 +76,16 @@ class BallHitBox(
      */
     override fun m() {
         super.m()
-        this.dead = false
 
         val loc = ballDesign.bukkitEntity.location
         if (ballDesign.isSmall) {
-            this.setPositionRotation(loc.x, loc.y + 1, loc.z, loc.yaw, loc.pitch)
+            this.setPositionRotation(loc.x, loc.y + 1.05, loc.z, loc.yaw, loc.pitch)
         } else {
-            this.setPositionRotation(loc.x, loc.y + 1, loc.z, loc.yaw, loc.pitch)
+            this.setPositionRotation(loc.x, loc.y + 1.05, loc.z, loc.yaw, loc.pitch)
         }
+
+        val packet = PacketPlayOutEntityTeleport(this)
+        this.world.players.forEach{p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet)}
     }
 
     /**
@@ -88,5 +97,17 @@ class BallHitBox(
         }
 
         return this.bukkitEntity as CraftHitboxSlime
+    }
+
+    @Deprecated("Failed attempt to resolve particles")
+    private fun clearPathfinders() {
+        val bField = PathfinderGoalSelector::class.java.getDeclaredField("b")
+        val cField = PathfinderGoalSelector::class.java.getDeclaredField("c")
+        bField.isAccessible = true
+        cField.isAccessible = true
+        bField.set(this.goalSelector, HashSet<PathfinderGoalSelector>())
+        bField.set(this.targetSelector, HashSet<PathfinderGoalSelector>())
+        cField.set(this.goalSelector, HashSet<PathfinderGoalSelector>())
+        cField.set(this.targetSelector, HashSet<PathfinderGoalSelector>())
     }
 }
