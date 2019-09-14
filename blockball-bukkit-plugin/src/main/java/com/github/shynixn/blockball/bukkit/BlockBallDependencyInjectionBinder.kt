@@ -11,7 +11,7 @@ import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_11_R1.EntityRegistration111R1ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2.EntityRegistration113R2ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1.EntityRegistration114R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_8_R3.EntityRegistration108R3ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_8_R3.EntityRegistrationLegacyServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextImpl
@@ -108,7 +108,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
                     -> bind(EntityRegistrationService::class.java).to(EntityRegistration113R2ServiceImpl::class.java).`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_11_R1)
                     -> bind(EntityRegistrationService::class.java).to(EntityRegistration111R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
-            else -> bind(EntityRegistrationService::class.java).to(EntityRegistration108R3ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            else -> bind(EntityRegistrationService::class.java).to(EntityRegistrationLegacyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         }
 
         // Persistence Services

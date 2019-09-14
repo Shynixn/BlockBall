@@ -20,7 +20,10 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
-import org.bukkit.entity.*
+import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
@@ -58,10 +61,10 @@ import kotlin.math.sin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallProxyImpl(
+class BallProxyLegacyImpl(
     override val meta: BallMeta,
     private val design: ArmorStand,
-    private val hitbox: Slime,
+    private val hitbox: ArmorStand,
     override val uuid: UUID = UUID.randomUUID(),
     private val initialOwner: LivingEntity?,
     override var persistent: Boolean
@@ -222,7 +225,7 @@ class BallProxyImpl(
      * Gets the velocity of the ball.
      */
     override fun <V> getVelocity(): V {
-        return design.velocity as V
+        return hitbox.velocity as V
     }
 
     /**
@@ -344,7 +347,7 @@ class BallProxyImpl(
         }
 
         if (!this.isGrabbed) {
-            this.design.teleport(location)
+            this.hitbox.teleport(location)
         }
     }
 
@@ -352,7 +355,7 @@ class BallProxyImpl(
      * Gets the location of the ball.
      */
     override fun <L> getLocation(): L {
-        return design.location as L
+        return hitbox.location as L
     }
 
     /**
@@ -383,7 +386,7 @@ class BallProxyImpl(
 
         try {
             this.times = (50 * this.meta.movementModifier.rollingDistanceModifier).toInt()
-            this.design.velocity = vector
+            this.hitbox.velocity = vector
             val normalized = vector.clone().normalize()
             this.originVector = vector.clone()
             this.reduceVector = Vector(normalized.x / this.times, 0.0784 * meta.movementModifier.gravityModifier, normalized.z / this.times)
@@ -535,7 +538,7 @@ class BallProxyImpl(
             return
         }
 
-        if (times <= 0 || this.design.isOnGround || collision) {
+        if (times <= 0 || this.hitbox.isOnGround || collision) {
             angularVelocity /= 2
         }
 
@@ -608,8 +611,8 @@ class BallProxyImpl(
     private fun checkMovementInteractions(): Boolean {
         if (this.breakCounter <= 0) {
             this.breakCounter = 2
-            val ballLocation = this.design.location
-            for (entity in design.location.chunk.entities) {
+            val ballLocation = this.hitbox.location
+            for (entity in hitbox.location.chunk.entities) {
                 if (entity.customName != "ResourceBallsPlugin" && entity.location.distance(ballLocation) < meta.hitBoxSize) {
                     val event = BallInteractEvent(entity, this)
                     Bukkit.getPluginManager().callEvent(event)
@@ -655,7 +658,7 @@ class BallProxyImpl(
      * Plays the rotation animation.
      */
     private fun playRotationAnimation() {
-        val length = this.design.velocity.length()
+        val length = getVelocity<Vector>().length()
         var angle: EulerAngle? = null
 
         val a = this.design.headPose
