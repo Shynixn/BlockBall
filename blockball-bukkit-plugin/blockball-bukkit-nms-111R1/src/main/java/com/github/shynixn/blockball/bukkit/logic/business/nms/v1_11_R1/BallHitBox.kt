@@ -2,6 +2,8 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_11_R1
 
+import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_11_R1.EntitySlime
 import net.minecraft.server.v1_11_R1.NBTTagCompound
@@ -50,10 +52,6 @@ class BallHitBox(
      * Initializes the hitbox.
      */
     init {
-        val mcWorld = (location.world as CraftWorld).handle
-        this.setPosition(location.x, location.y, location.z)
-        mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
-
         val compound = NBTTagCompound()
         compound.setBoolean("Invulnerable", true)
         compound.setBoolean("PersistenceRequired", true)
@@ -64,6 +62,13 @@ class BallHitBox(
         val entity = getBukkitEntity()
         entity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
         entity.isCollidable = false
+
+        val mcWorld = (location.world as CraftWorld).handle
+        this.setPosition(location.x, location.y, location.z)
+        mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
+
+        updatePosition()
+        debugPosition()
     }
 
     /**
@@ -73,17 +78,23 @@ class BallHitBox(
      */
     override fun A_() {
         super.A_()
+
         this.dead = false
 
         val loc = ballDesign.bukkitEntity.location
-        if (ballDesign.isSmall) {
-            this.setPositionRotation(loc.x, loc.y + 1, loc.z, loc.yaw, loc.pitch)
-        } else {
-            this.setPositionRotation(loc.x, loc.y + 1, loc.z, loc.yaw, loc.pitch)
-        }
+        val lastX = ballDesign.lastX
+        val lastY = ballDesign.lastY
+        val lastZ = ballDesign.lastZ
 
-        val packet = PacketPlayOutEntityTeleport(this)
-        this.world.players.forEach{p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet)}
+        if (!loc.x.equals(lastX) || !loc.y.equals(lastY) || !loc.z.equals(lastZ)) {
+            if (ballDesign.isSmall) {
+                this.setPositionRotation(loc.x, loc.y + 0.5, loc.z, loc.yaw, loc.pitch)
+            } else {
+                this.setPositionRotation(loc.x, loc.y + 1.05, loc.z, loc.yaw, loc.pitch)
+            }
+            updatePosition()
+            debugPosition()
+        }
     }
 
     /**
@@ -100,5 +111,15 @@ class BallHitBox(
         }
 
         return this.bukkitEntity as CraftHitboxSlime
+    }
+
+    private fun updatePosition() {
+        val packet = PacketPlayOutEntityTeleport(this)
+        this.world.players.forEach{p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet)}
+    }
+
+    private fun debugPosition() {
+        val loc = getBukkitEntity().location
+        BlockBallApi.resolve(LoggingService::class.java).debug("Hitbox at ${loc.x.toFloat()} ${loc.y.toFloat()} ${loc.z.toFloat()}")
     }
 }
