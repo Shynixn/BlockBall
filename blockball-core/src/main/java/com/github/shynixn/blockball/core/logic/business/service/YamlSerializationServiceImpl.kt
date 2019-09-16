@@ -2,10 +2,8 @@
 
 package com.github.shynixn.blockball.core.logic.business.service
 
-import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
 import com.github.shynixn.blockball.api.business.serializer.YamlSerializer
-import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.business.service.YamlSerializationService
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
@@ -242,12 +240,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
                 (annotation.customserializer.java.newInstance() as YamlSerializer<Any, Any>).onDeserialization(value)
             field.set(instance, deserializedValue)
         } else if (isPrimitive(field.type)) {
-            try {
-                field.set(instance, value)
-            } catch (e: IllegalArgumentException) {
-                BlockBallApi.resolve(LoggingService::class.java).error("\'${annotation.value}\' is mapped with invalid type of value: $value")
-                throw e
-            }
+            field.set(instance, value)
         } else if (field.type.isEnum) run {
             @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
             field.set(instance, java.lang.Enum.valueOf<Any>(field.type as Class<Any>, value.toString().toUpperCase()))

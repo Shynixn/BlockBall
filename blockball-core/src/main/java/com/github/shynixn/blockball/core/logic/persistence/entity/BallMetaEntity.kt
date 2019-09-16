@@ -44,7 +44,7 @@ class BallMetaEntity(
      * Size of the hitbox used for interaction detecting.
      */
     @YamlSerialize(orderNumber = 3, value = "hitbox-size")
-    override var hitBoxSize: Int = 2
+    override var hitBoxSize: Double = 2.0
 
     /** Should the ball rotate? */
     @YamlSerialize(orderNumber = 4, value = "rotating")
