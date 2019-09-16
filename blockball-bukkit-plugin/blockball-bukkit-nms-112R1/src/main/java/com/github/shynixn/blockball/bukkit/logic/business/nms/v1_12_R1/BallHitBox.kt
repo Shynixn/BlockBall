@@ -56,7 +56,7 @@ class BallHitBox(
         compound.setBoolean("Invulnerable", true)
         compound.setBoolean("PersistenceRequired", true)
         compound.setBoolean("NoAI", true)
-        compound.setInt("Size", ballMeta.hitBoxSize.toInt() - 1)
+        compound.setInt("Size", ballMeta.hitBoxSize - 1)
         this.a(compound)
 
         val entity = getBukkitEntity()

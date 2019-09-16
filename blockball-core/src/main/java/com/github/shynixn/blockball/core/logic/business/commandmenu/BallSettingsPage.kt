@@ -63,8 +63,8 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             ballMeta.skin = args[2]
         } else if (command == MenuCommand.BALL_SIZE_CALLBACK && args.size == 3) {
             ballMeta.size = BallSize.values()[args[2].toInt()]
-        } else if (command == MenuCommand.BALL_HITBOX && args.size == 3 && args[2].toDoubleOrNull() != null) {
-            ballMeta.hitBoxSize = args[2].toDouble()
+        } else if (command == MenuCommand.BALL_HITBOX && args.size == 3 && args[2].toIntOrNull() != null) {
+            ballMeta.hitBoxSize = args[2].toInt()
         } else if (command == MenuCommand.BALL_TOGGLE_CARRYABLE) {
             ballMeta.carryAble = !ballMeta.carryAble
         } else if (command == MenuCommand.BALL_TOGGLE_ALWAYSBOUNCE) {

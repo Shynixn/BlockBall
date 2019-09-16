@@ -60,7 +60,7 @@ class BallHitBox(
         compound.setBoolean("Invulnerable", true)
         compound.setBoolean("PersistenceRequired", true)
         compound.setBoolean("NoAI", true)
-        compound.setInt("Size", ballMeta.hitBoxSize.toInt() - 1)
+        compound.setInt("Size", ballMeta.hitBoxSize - 1)
         this.a(compound)
 
         getBukkitEntity().addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))

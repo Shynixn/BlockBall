@@ -53,7 +53,7 @@ interface BallMeta {
     /**
      * Size of the hitbox used for interaction detecting.
      */
-    var hitBoxSize: Double
+    var hitBoxSize: Int
 
     /**
      * Should the ball be able to carry.
