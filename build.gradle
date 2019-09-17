@@ -114,7 +114,6 @@ subprojects {
                             name = 'Shynixn'
                             url = 'https://github.com/Shynixn'
                         }
-                        // Contributers
                         developer {
                             name = 'LazoYoung'
                             url = 'https://github.com/LazoYoung'

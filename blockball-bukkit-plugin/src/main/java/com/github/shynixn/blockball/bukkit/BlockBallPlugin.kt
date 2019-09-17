@@ -176,7 +176,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             ballEntitySerivice.cleanUpInvalidEntities(world.entities)
         }
 
-        Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")
+        Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn, LazoYoung")
     }
 
     /**
