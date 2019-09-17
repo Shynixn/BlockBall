@@ -63,7 +63,7 @@ class BallHitBox(
         compound.setInt("Size", ballMeta.hitBoxSize.toInt() - 1)
         this.a(compound)
 
-        getBukkitEntity().addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
+        bukkitEntity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
 
         val mcWorld = (location.world as CraftWorld).handle
         this.setPosition(location.x, location.y, location.z)
@@ -92,6 +92,7 @@ class BallHitBox(
             } else {
                 this.setPositionRotation(loc.x, loc.y + 1.05, loc.z, loc.yaw, loc.pitch)
             }
+
             updatePosition()
             debugPosition()
         }
@@ -113,13 +114,19 @@ class BallHitBox(
         return this.entityBukkit as CraftHitboxSlime
     }
 
+    /**
+     * Updates the position of the entity manually.
+     */
     private fun updatePosition() {
         val packet = PacketPlayOutEntityTeleport(this)
-        this.world.players.forEach{p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet)}
+        this.world.players.forEach { p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet) }
     }
 
+    /**
+     * Prints a debugging message for this entity.
+     */
     private fun debugPosition() {
-        val loc = getBukkitEntity().location
+        val loc = bukkitEntity.location
         BlockBallApi.resolve(LoggingService::class.java).debug("Hitbox at ${loc.x.toFloat()} ${loc.y.toFloat()} ${loc.z.toFloat()}")
     }
 }

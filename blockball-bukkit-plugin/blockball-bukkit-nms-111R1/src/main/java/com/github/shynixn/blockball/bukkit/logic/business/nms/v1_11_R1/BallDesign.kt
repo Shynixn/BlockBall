@@ -51,7 +51,8 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) : EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
+class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) :
+    EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
 
     private val itemService = BlockBallApi.resolve(ItemService::class.java)
     private val hitbox = BallHitBox(this, ballMeta, location)
@@ -411,11 +412,17 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         return this.bukkitEntity as CraftDesignArmorstand
     }
 
+    /**
+     * Updates the position of the entity manually.
+     */
     private fun updatePosition() {
         val packet = PacketPlayOutEntityTeleport(this)
-        this.world.players.forEach{p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet)}
+        this.world.players.forEach { p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet) }
     }
 
+    /**
+     * Prints a debugging message for this entity.
+     */
     private fun debugPosition() {
         val loc = getBukkitEntity().location
         BlockBallApi.resolve(LoggingService::class.java).debug("Design at ${loc.x.toFloat()} ${loc.y.toFloat()} ${loc.z.toFloat()}")

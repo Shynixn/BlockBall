@@ -151,28 +151,6 @@ class BallProxyImpl(
     }
 
     /**
-     * Gets the representative entity used for calculation.
-     */
-    fun <A> getCalculationEntity(): A {
-        return if (hitbox is Slime) {
-            getDesignArmorstand()
-        } else {
-            getHitbox()
-        }
-    }
-
-    /**
-     * Gets the subordinate entity which is not used for calculation.
-     */
-    fun <A> getSecondaryEntity(): A {
-        return if (hitbox is Slime) {
-            getHitbox()
-        } else {
-            getDesignArmorstand()
-        }
-    }
-
-    /**
      * When an object implementing interface `Runnable` is used
      * to create a thread, starting the thread causes the object's
      * `run` method to be called in that separately executing
@@ -745,5 +723,27 @@ class BallProxyImpl(
         }
 
         return true
+    }
+
+    /**
+     * Gets the representative entity used for calculation.
+     */
+    private fun <A> getCalculationEntity(): A {
+        return if (hitbox is Slime) {
+            getDesignArmorstand()
+        } else {
+            getHitbox()
+        }
+    }
+
+    /**
+     * Gets the subordinate entity which is not used for calculation.
+     */
+    private fun <A> getSecondaryEntity(): A {
+        return if (hitbox is Slime) {
+            getHitbox()
+        } else {
+            getDesignArmorstand()
+        }
     }
 }
