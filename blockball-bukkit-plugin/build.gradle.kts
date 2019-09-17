@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    id("com.github.johnrengelman.shadow") version("2.0.4")
+    id("com.github.johnrengelman.shadow") version ("2.0.4")
 }
 
 tasks.withType<ShadowJar> {
@@ -10,23 +10,33 @@ tasks.withType<ShadowJar> {
     // Change the output folder of the plugin.
     // destinationDir = File("D:\\Benutzer\\Temp\\plugins")
 
-    relocate("kotlin","com.github.shynixn.blockball.lib.kotlin")
+    relocate("kotlin", "com.github.shynixn.blockball.lib.kotlin")
 
-    relocate("org.intellij","com.github.shynixn.blockball.lib.org.intelli")
-    relocate("org.jetbrains","com.github.shynixn.blockball.lib.org.jetbrains")
-    relocate("org.bstats","com.github.shynixn.blockball.lib.org.bstats")
-    relocate("javax.inject","com.github.shynixn.blockball.lib.javax.inject")
-    relocate("org.aopalliance","com.github.shynixn.blockball.lib.org.aopalliance")
-    relocate("org.slf4j","com.github.shynixn.blockball.lib.org.slf4j")
+    relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intelli")
+    relocate("org.jetbrains", "com.github.shynixn.blockball.lib.org.jetbrains")
+    relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
+    relocate("javax.inject", "com.github.shynixn.blockball.lib.javax.inject")
+    relocate("org.aopalliance", "com.github.shynixn.blockball.lib.org.aopalliance")
+    relocate("org.slf4j", "com.github.shynixn.blockball.lib.org.slf4j")
 
-    relocate("com.google","com.github.shynixn.blockball.lib.com.google")
-    relocate("com.zaxxer","com.github.shynixn.blockball.lib.com.zaxxer")
-    relocate("org.apache","com.github.shynixn.blockball.lib.org.apache")
+    relocate("com.google", "com.github.shynixn.blockball.lib.com.google")
+    relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
+    relocate("org.apache", "com.github.shynixn.blockball.lib.org.apache")
 }
 
 publishing {
     publications {
         (findByName("mavenJava") as MavenPublication).artifact(tasks.findByName("shadowJar")!!)
+    }
+}
+
+tasks.register<Exec>("dockerJar") {
+    dependsOn("shadowJar")
+
+    commandLine = if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+        listOf("cmd", "/c", "docker cp build/libs/. spigot-1.8.8:/minecraft/plugins")
+    } else {
+        listOf("sh", "-c", "docker cp build/libs/. spigot-1.8.8:/minecraft/plugins")
     }
 }
 
