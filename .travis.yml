@@ -18,7 +18,7 @@ before_install:
   - sudo pip3 install -U sphinx
   - sudo pip3 install typing
   - git config --global user.email "travis@travis-ci.org" && git config --global user.name "Travis CI"
-  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* OR $TRAVIS_COMMIT_MESSAGE == *"--release"* ]]; then gpg2 --batch --cipher-algo AES256 --passphrase $SIGNING_KEYPASSWORD travis_secret_key.gpg; fi ;
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"--snapshot"* || $TRAVIS_COMMIT_MESSAGE == *"--release"* ]]; then gpg2 --batch --cipher-algo AES256 --passphrase $SIGNING_KEYPASSWORD travis_secret_key.gpg; fi ;
 install:
   - ./gradlew assemble || ./gradlew downloadDependencies
 script:
