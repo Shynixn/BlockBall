@@ -60,8 +60,8 @@ import kotlin.math.sin
  */
 class BallProxyImpl(
     override val meta: BallMeta,
-    private val design: ArmorStand,
-    private val hitbox: Slime,
+    private val design: LivingEntity,
+    private val hitbox: LivingEntity,
     override val uuid: UUID = UUID.randomUUID(),
     private val initialOwner: LivingEntity?,
     override var persistent: Boolean
@@ -126,9 +126,11 @@ class BallProxyImpl(
         hitbox.customName = "ResourceBallsPlugin"
         hitbox.isCustomNameVisible = false
 
-        if (meta.size == BallSize.NORMAL) {
-            this.teleport(this.getLocation<Location>().add(0.0, 0.01, 0.0))
-        }
+        /*
+         * Y offset has to be more than 1.0, otherwise it sinks into the ground.
+         * It does not apply to legacy versions below 1.10
+         */
+        this.teleport(this.getLocation<Location>().add(0.0, 1.0, 0.0))
 
         val event = BallSpawnEvent(this)
         Bukkit.getPluginManager().callEvent(event)
@@ -146,6 +148,28 @@ class BallProxyImpl(
      */
     override fun <A> getHitbox(): A {
         return hitbox as A
+    }
+
+    /**
+     * Gets the representative entity used for calculation.
+     */
+    fun <A> getCalculationEntity(): A {
+        return if (hitbox is Slime) {
+            getDesignArmorstand()
+        } else {
+            getHitbox()
+        }
+    }
+
+    /**
+     * Gets the subordinate entity which is not used for calculation.
+     */
+    fun <A> getSecondaryEntity(): A {
+        return if (hitbox is Slime) {
+            getHitbox()
+        } else {
+            getDesignArmorstand()
+        }
     }
 
     /**
@@ -171,7 +195,7 @@ class BallProxyImpl(
                     this.playRotationAnimation()
                 }
             } else {
-                this.hitbox.teleport(design)
+                getSecondaryEntity<Entity>().teleport(getCalculationEntity<Entity>())
             }
         } catch (e: Exception) {
             Bukkit.getLogger().log(Level.WARNING, "Entity ticking exception.", e)
@@ -222,7 +246,7 @@ class BallProxyImpl(
      * Gets the velocity of the ball.
      */
     override fun <V> getVelocity(): V {
-        return design.velocity as V
+        return getCalculationEntity<Entity>().velocity as V
     }
 
     /**
@@ -344,7 +368,7 @@ class BallProxyImpl(
         }
 
         if (!this.isGrabbed) {
-            this.design.teleport(location)
+            this.getCalculationEntity<Entity>().teleport(location)
         }
     }
 
@@ -352,7 +376,7 @@ class BallProxyImpl(
      * Gets the location of the ball.
      */
     override fun <L> getLocation(): L {
-        return design.location as L
+        return getCalculationEntity<Entity>().location as L
     }
 
     /**
@@ -378,12 +402,12 @@ class BallProxyImpl(
         this.angularVelocity = 0.0
 
         if (this.meta.rotating) {
-            this.design.headPose = EulerAngle(2.0, 0.0, 0.0)
+            getDesignArmorstand<ArmorStand>().headPose = EulerAngle(2.0, 0.0, 0.0)
         }
 
         try {
             this.times = (50 * this.meta.movementModifier.rollingDistanceModifier).toInt()
-            this.design.velocity = vector
+            this.getCalculationEntity<Entity>().velocity = vector
             val normalized = vector.clone().normalize()
             this.originVector = vector.clone()
             this.reduceVector = Vector(normalized.x / this.times, 0.0784 * meta.movementModifier.gravityModifier, normalized.z / this.times)
@@ -416,7 +440,7 @@ class BallProxyImpl(
             }
 
             @Suppress("UsePropertyAccessSyntax")
-            entity.equipment!!.setItemInHand(design.helmet.clone())
+            entity.equipment!!.setItemInHand(getDesignArmorstand<ArmorStand>().helmet.clone())
             this.setHelmet(null)
             this.isGrabbed = true
         }
@@ -535,7 +559,7 @@ class BallProxyImpl(
             return
         }
 
-        if (times <= 0 || this.design.isOnGround || collision) {
+        if (times <= 0 || getCalculationEntity<Entity>().isOnGround || collision) {
             angularVelocity /= 2
         }
 
@@ -608,8 +632,8 @@ class BallProxyImpl(
     private fun checkMovementInteractions(): Boolean {
         if (this.breakCounter <= 0) {
             this.breakCounter = 2
-            val ballLocation = this.design.location
-            for (entity in design.location.chunk.entities) {
+            val ballLocation = getCalculationEntity<Entity>().location
+            for (entity in ballLocation.chunk.entities) {
                 if (entity.customName != "ResourceBallsPlugin" && entity.location.distance(ballLocation) < meta.hitBoxSize) {
                     val event = BallInteractEvent(entity, this)
                     Bukkit.getPluginManager().callEvent(event)
@@ -655,10 +679,10 @@ class BallProxyImpl(
      * Plays the rotation animation.
      */
     private fun playRotationAnimation() {
-        val length = this.design.velocity.length()
+        val length = getVelocity<Vector>().length()
         var angle: EulerAngle? = null
 
-        val a = this.design.headPose
+        val a = getDesignArmorstand<ArmorStand>().headPose
         when {
             length > 1.0 -> angle = if (this.backAnimation) {
                 EulerAngle(a.x - 0.5, 0.0, 0.0)
@@ -677,7 +701,7 @@ class BallProxyImpl(
             }
         }
         if (angle != null) {
-            this.design.headPose = angle
+            getDesignArmorstand<ArmorStand>().headPose = angle
         }
     }
 
@@ -687,10 +711,10 @@ class BallProxyImpl(
     private fun setHelmet(itemStack: ItemStack?) {
         when (meta.size) {
             BallSize.SMALL -> {
-                this.design.isSmall = true
-                this.design.setHelmet(itemStack)
+                getDesignArmorstand<ArmorStand>().isSmall = true
+                getDesignArmorstand<ArmorStand>().setHelmet(itemStack)
             }
-            BallSize.NORMAL -> this.design.setHelmet(itemStack)
+            BallSize.NORMAL -> getDesignArmorstand<ArmorStand>().setHelmet(itemStack)
         }
     }
 

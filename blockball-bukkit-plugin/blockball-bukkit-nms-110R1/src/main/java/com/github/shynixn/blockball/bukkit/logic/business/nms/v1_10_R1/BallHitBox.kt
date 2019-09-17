@@ -2,11 +2,12 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_10_R1
 
+import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_10_R1.EntitySlime
 import net.minecraft.server.v1_10_R1.NBTTagCompound
 import net.minecraft.server.v1_10_R1.PacketPlayOutEntityTeleport
-import net.minecraft.server.v1_10_R1.PathfinderGoalSelector
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_10_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer
@@ -51,22 +52,24 @@ class BallHitBox(
      * Initializes the hitbox.
      */
     init {
-        val mcWorld = (location.world as CraftWorld).handle
-        this.setPosition(location.x, location.y, location.z)
-        mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
-
         val compound = NBTTagCompound()
         compound.setBoolean("Invulnerable", true)
         compound.setBoolean("PersistenceRequired", true)
         compound.setBoolean("NoAI", true)
         compound.setInt("Size", ballMeta.hitBoxSize.toInt() - 1)
         this.a(compound)
+        this.isNoGravity = true
+        this.collides = false
 
         val entity = getBukkitEntity()
         entity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
-        entity.isCollidable = false
-        entity.isSilent = true
-        entity.setGravity(false)
+
+        val mcWorld = (location.world as CraftWorld).handle
+        this.setPosition(location.x, location.y, location.z)
+        mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
+
+        updatePosition()
+        debugPosition()
     }
 
     /**
@@ -77,16 +80,28 @@ class BallHitBox(
     override fun m() {
         super.m()
 
-        val loc = ballDesign.bukkitEntity.location
-        if (ballDesign.isSmall) {
-            this.setPositionRotation(loc.x, loc.y + 1.05, loc.z, loc.yaw, loc.pitch)
-        } else {
-            this.setPositionRotation(loc.x, loc.y + 1.05, loc.z, loc.yaw, loc.pitch)
-        }
+        this.dead = false
 
-        val packet = PacketPlayOutEntityTeleport(this)
-        this.world.players.forEach{p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet)}
+        val loc = ballDesign.bukkitEntity.location
+        val lastX = ballDesign.lastX
+        val lastY = ballDesign.lastY
+        val lastZ = ballDesign.lastZ
+
+        if (!loc.x.equals(lastX) || !loc.y.equals(lastY) || !loc.z.equals(lastZ)) {
+            if (ballDesign.isSmall) {
+                this.setPositionRotation(loc.x, loc.y + 0.5, loc.z, loc.yaw, loc.pitch)
+            } else {
+                this.setPositionRotation(loc.x, loc.y + 1.05, loc.z, loc.yaw, loc.pitch)
+            }
+            updatePosition()
+            debugPosition()
+        }
     }
+
+    /**
+     * Disable health.
+     */
+    override fun setHealth(f: Float) {}
 
     /**
      * Gets the bukkit entity.
@@ -99,15 +114,13 @@ class BallHitBox(
         return this.bukkitEntity as CraftHitboxSlime
     }
 
-    @Deprecated("Failed attempt to resolve particles")
-    private fun clearPathfinders() {
-        val bField = PathfinderGoalSelector::class.java.getDeclaredField("b")
-        val cField = PathfinderGoalSelector::class.java.getDeclaredField("c")
-        bField.isAccessible = true
-        cField.isAccessible = true
-        bField.set(this.goalSelector, HashSet<PathfinderGoalSelector>())
-        bField.set(this.targetSelector, HashSet<PathfinderGoalSelector>())
-        cField.set(this.goalSelector, HashSet<PathfinderGoalSelector>())
-        cField.set(this.targetSelector, HashSet<PathfinderGoalSelector>())
+    private fun updatePosition() {
+        val packet = PacketPlayOutEntityTeleport(this)
+        this.world.players.forEach{p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet)}
+    }
+
+    private fun debugPosition() {
+        val loc = getBukkitEntity().location
+        BlockBallApi.resolve(LoggingService::class.java).debug("Hitbox at ${loc.x.toFloat()} ${loc.y.toFloat()} ${loc.z.toFloat()}")
     }
 }

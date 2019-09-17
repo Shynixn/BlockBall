@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.business.service.ItemService
+import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.business.service.SpigotTimingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_10_R1.*
@@ -15,9 +16,9 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_10_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_10_R1.SpigotTimings
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Slime
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
@@ -75,13 +76,13 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         internalProxy = Class.forName("com.github.shynixn.blockball.bukkit.logic.business.proxy.BallProxyImpl")
             .getDeclaredConstructor(
                 BallMeta::class.java,
-                ArmorStand::class.java,
-                Slime::class.java,
+                LivingEntity::class.java,
+                LivingEntity::class.java,
                 UUID::class.java,
                 LivingEntity::class.java,
                 Boolean::class.java
             )
-            .newInstance(ballMeta, this.getBukkitEntity() as ArmorStand, hitbox.bukkitEntity as Slime, uuid, owner, persistent) as BallProxy
+            .newInstance(ballMeta, this.getBukkitEntity() as LivingEntity, hitbox.bukkitEntity as LivingEntity, uuid, owner, persistent) as BallProxy
 
         val compound = NBTTagCompound()
         compound.setBoolean("invulnerable", true)
@@ -100,6 +101,9 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             }
             BallSize.NORMAL -> (bukkitEntity as ArmorStand).helmet = itemStack
         }
+
+        updatePosition()
+        debugPosition()
     }
 
     /**
@@ -135,6 +139,10 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         }
 
         this.locZ = (axisBoundingBox.c + axisBoundingBox.f) / 2.0
+
+        if (!locX.equals(lastX) || !locY.equals(lastY) || !locZ.equals(lastZ)) {
+            debugPosition()
+        }
     }
 
     /**
@@ -400,5 +408,15 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         }
 
         return this.bukkitEntity as CraftDesignArmorstand
+    }
+
+    private fun updatePosition() {
+        val packet = PacketPlayOutEntityTeleport(this)
+        this.world.players.forEach{p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet)}
+    }
+
+    private fun debugPosition() {
+        val loc = getBukkitEntity().location
+        BlockBallApi.resolve(LoggingService::class.java).debug("Design at ${loc.x.toFloat()} ${loc.y.toFloat()} ${loc.z.toFloat()}")
     }
 }
