@@ -1,5 +1,11 @@
 wget "https://hub.spigotmc.org/jenkins/job/BuildTools/lastStableBuild/artifact/target/BuildTools.jar"
-java -Xmx1024M -jar BuildTools.jar --rev "$1"
+java -Xmx1024M -jar BuildTools.jar --rev "1.8.8"
+java -Xmx1024M -jar BuildTools.jar --rev "1.9.4"
+java -Xmx1024M -jar BuildTools.jar --rev "1.10.0"
+java -Xmx1024M -jar BuildTools.jar --rev "1.11.0"
+java -Xmx1024M -jar BuildTools.jar --rev "1.12.2"
+java -Xmx1024M -jar BuildTools.jar --rev "1.13.2"
+java -Xmx1024M -jar BuildTools.jar --rev "1.14.4"
 echo "eula=true" > eula.txt
 echo '[
   {
@@ -10,6 +16,4 @@ echo '[
   }
 ]' > ops.json
 mkdir plugins
-mkdir plugins/BlockBall
-mkdir plugins/BlockBall/arena
-mv arena/* plugins/BlockBall/arena
+mv blockball-bukkit-plugin* plugins

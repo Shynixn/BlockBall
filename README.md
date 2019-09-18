@@ -41,7 +41,14 @@ BlockBall is a spigot plugin to play soccer games in Minecraft.
 [./gradlew|gradlew.bat] shadowJar
 ```
 
-* The .jar file gets generated at blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin.jar
+* The .jar file gets generated at ``blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin.jar``
+
+### Docker :whale:
+
+* The generated .jar file can be built into a docker image including a spigot server to make testing easier. 
+* Execute the included Dockerfile and set the preferred spigot version via the environment variable ``SPIGOT_VERSION``.
+* The first startup of the container will take a while to download and install all spigot versions.
+* Instead of using ``shadowJar`` you can use ``dockerJar`` to directly copy compiled .jar file into a running container named ``spigot``.
 
 ## Licence
 
