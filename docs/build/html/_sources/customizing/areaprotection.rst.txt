@@ -13,7 +13,7 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 2. Open the **Misc Page**
 3. Open the **Arena Protection Page**
 
-.. image:: ../_static/images/customizing1.jpg
+.. image:: ../_static/images/customizing1.JPG
 
 4. Now continue by enabling or disabling the protections.
 5. Customize the other available options to your own needs.
@@ -32,7 +32,9 @@ At this stage, you should be able to find your arena save file. If not, please t
 2. Search for the following section:
 
 **arena_x.yml**
-::
+
+.. code-block:: yaml
+
    protection:
       entity-protection-enabled: true
       entity-protection:

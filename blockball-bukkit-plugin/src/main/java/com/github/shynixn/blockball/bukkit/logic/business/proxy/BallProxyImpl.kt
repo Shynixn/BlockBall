@@ -13,7 +13,6 @@ import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.BounceConfiguration
 import com.github.shynixn.blockball.bukkit.logic.business.extension.setSkin
-import com.github.shynixn.blockball.bukkit.logic.business.service.ItemServiceImpl
 import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.github.shynixn.blockball.core.logic.business.extension.sync
 import org.bukkit.Bukkit
@@ -21,16 +20,16 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
-import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.Entity
-import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
+import org.bukkit.entity.*
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import java.util.*
 import java.util.logging.Level
-
+import kotlin.math.abs
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  * Created by Shynixn 2018.
@@ -61,8 +60,8 @@ import java.util.logging.Level
  */
 class BallProxyImpl(
     override val meta: BallMeta,
-    private val design: ArmorStand,
-    private val hitbox: ArmorStand,
+    private val design: LivingEntity,
+    private val hitbox: LivingEntity,
     override val uuid: UUID = UUID.randomUUID(),
     private val initialOwner: LivingEntity?,
     override var persistent: Boolean
@@ -95,7 +94,7 @@ class BallProxyImpl(
     private val concurrencyService = BlockBallApi.resolve(ConcurrencyService::class.java)
     private var backAnimation = false
     private var interactionEntity: Entity? = null
-    private var counter = 20
+    private var breakCounter = 20
     override var yawChange: Float = -1.0F
 
     /** HitBox **/
@@ -105,14 +104,15 @@ class BallProxyImpl(
     private var times: Int = 0
 
     /**
-     * Current spinning force value.
+     * Current velocity of spin generating Magnus force.
      */
-    override var spinningForce: Double = 0.0
+    override var angularVelocity: Double = 0.0
 
     /**
      * Is the ball currently grabbed by some entity?
      */
     override var isGrabbed: Boolean = false
+
     /**
      * Is the entity dead?
      */
@@ -126,6 +126,12 @@ class BallProxyImpl(
         hitbox.customName = "ResourceBallsPlugin"
         hitbox.isCustomNameVisible = false
 
+        /*
+         * Y offset has to be more than 1.0, otherwise it sinks into the ground.
+         * It does not apply to legacy versions below 1.10
+         */
+        this.teleport(this.getLocation<Location>().add(0.0, 1.0, 0.0))
+
         val event = BallSpawnEvent(this)
         Bukkit.getPluginManager().callEvent(event)
     }
@@ -138,9 +144,9 @@ class BallProxyImpl(
     }
 
     /**
-     * Returns the armorstand for the hitbox.
+     * Returns the hitbox entity.
      */
-    override fun <A> getHitboxArmorstand(): A {
+    override fun <A> getHitbox(): A {
         return hitbox as A
     }
 
@@ -167,7 +173,7 @@ class BallProxyImpl(
                     this.playRotationAnimation()
                 }
             } else {
-                this.hitbox.teleport(design)
+                getSecondaryEntity<Entity>().teleport(getCalculationEntity<Entity>())
             }
         } catch (e: Exception) {
             Bukkit.getLogger().log(Level.WARNING, "Entity ticking exception.", e)
@@ -218,7 +224,7 @@ class BallProxyImpl(
      * Gets the velocity of the ball.
      */
     override fun <V> getVelocity(): V {
-        return hitbox.velocity as V
+        return getCalculationEntity<Entity>().velocity as V
     }
 
     /**
@@ -243,28 +249,31 @@ class BallProxyImpl(
             return
         }
 
-        val vector = hitbox.location.toVector().subtract(entity.location.toVector()).normalize()
+        val vector = entity.location.direction.normalize()
             .multiply(meta.movementModifier.horizontalKickModifier)
         this.yawChange = entity.location.yaw
-        this.spinningForce = 0.0
+        this.angularVelocity = 0.0
         vector.y = 0.1 * meta.movementModifier.verticalKickModifier
 
         val event = BallKickEvent(vector, entity, this)
         Bukkit.getPluginManager().callEvent(event)
 
-        if (!event.isCancelled) {
-            this.setVelocity(vector)
+        if (event.isCancelled) {
+            return
+        }
 
-            if (entity is Player) {
-                sync(concurrencyService, 5L) {
-                    spin(entity.eyeLocation.direction, event.resultVelocity)
-                }
+        this.setVelocity(vector)
+        this.breakCounter = 2
+
+        if (entity is Player) {
+            sync(concurrencyService, 5L) {
+                spin(entity.eyeLocation.direction, event.resultVelocity)
             }
         }
     }
 
     /**
-     * Lets the ball spin to the player direction.
+     * Begins ball spin towards the player direction.
      */
     override fun <V> spin(playerDirection: V, resultVelocity: V) {
         if (playerDirection !is Vector) {
@@ -275,22 +284,25 @@ class BallProxyImpl(
             throw IllegalArgumentException("ResultVelocity has to be a BukkitVelocity!")
         }
 
-        val angle = getAngle(resultVelocity, playerDirection)
-        val force: Float
+        val angle = Math.toDegrees(getIncludedAngle(resultVelocity, playerDirection))
+        val absAngle = abs(angle).toFloat()
+        var velocity: Float
 
-        force = if (angle > 0.3f && angle < 10f) {
-            0.03f
-        } else if (angle < -0.3f && angle > -10f) {
-            -0.03f
+        velocity = if (absAngle < 90f) {
+            0.08f * absAngle / 90f
         } else {
             return
         }
 
-        val event = BallSpinEvent(force.toDouble(), this, true)
+        if (angle < 0.0) {
+            velocity *= -1f
+        }
+
+        val event = BallSpinEvent(velocity.toDouble(), this, true)
         Bukkit.getPluginManager().callEvent(event)
 
         if (!event.isCancelled) {
-            spinningForce = event.spinningForce
+            this.angularVelocity = event.angularVelocity
         }
     }
 
@@ -318,8 +330,9 @@ class BallProxyImpl(
         vector.y = y * 2.0 * meta.movementModifier.verticalThrowModifier
         val event = BallThrowEvent(vector, entity, this)
         Bukkit.getPluginManager().callEvent(event)
+
         if (!event.isCancelled) {
-            this.counter = 10
+            this.breakCounter = 2
             setVelocity(vector)
         }
     }
@@ -333,7 +346,7 @@ class BallProxyImpl(
         }
 
         if (!this.isGrabbed) {
-            this.hitbox.teleport(location)
+            this.getCalculationEntity<Entity>().teleport(location)
         }
     }
 
@@ -341,7 +354,7 @@ class BallProxyImpl(
      * Gets the location of the ball.
      */
     override fun <L> getLocation(): L {
-        return hitbox.location as L
+        return getCalculationEntity<Entity>().location as L
     }
 
     /**
@@ -364,15 +377,15 @@ class BallProxyImpl(
         }
 
         this.backAnimation = false
-        this.spinningForce = 0.0
+        this.angularVelocity = 0.0
 
         if (this.meta.rotating) {
-            this.design.headPose = EulerAngle(2.0, 0.0, 0.0)
+            getDesignArmorstand<ArmorStand>().headPose = EulerAngle(2.0, 0.0, 0.0)
         }
 
         try {
             this.times = (50 * this.meta.movementModifier.rollingDistanceModifier).toInt()
-            this.hitbox.velocity = vector
+            this.getCalculationEntity<Entity>().velocity = vector
             val normalized = vector.clone().normalize()
             this.originVector = vector.clone()
             this.reduceVector = Vector(normalized.x / this.times, 0.0784 * meta.movementModifier.gravityModifier, normalized.z / this.times)
@@ -392,18 +405,22 @@ class BallProxyImpl(
         if (isGrabbed) {
             return
         }
+
         this.interactionEntity = entity
 
         @Suppress("DEPRECATION")
         if (entity.equipment!!.itemInHand.cast<ItemStack?>() == null || entity.equipment!!.itemInHand.type == Material.AIR) {
             val event = BallGrabEvent(entity, this)
             Bukkit.getPluginManager().callEvent(event)
-            if (!event.isCancelled) {
-                @Suppress("UsePropertyAccessSyntax")
-                entity.equipment!!.setItemInHand(design.helmet.clone())
-                this.setHelmet(null)
-                this.isGrabbed = true
+
+            if (event.isCancelled) {
+                return
             }
+
+            @Suppress("UsePropertyAccessSyntax")
+            entity.equipment!!.setItemInHand(getDesignArmorstand<ArmorStand>().helmet.clone())
+            this.setHelmet(null)
+            this.isGrabbed = true
         }
     }
 
@@ -448,7 +465,7 @@ class BallProxyImpl(
      * Calculates the knockback for the given [sourceVector] and [sourceBlock]. Uses the motion values to correctly adjust the
      * wall.
      */
-    override fun <V, B> calculateKnockBack(sourceVector: V, sourceBlock: B, mot0: Double, mot2: Double, mot6: Double, mot8: Double) {
+    override fun <V, B> calculateKnockBack(sourceVector: V, sourceBlock: B, mot0: Double, mot2: Double, mot6: Double, mot8: Double): Boolean {
         if (sourceVector !is Vector) {
             throw IllegalArgumentException("SourceVector has to be a BukkitVector!")
         }
@@ -466,7 +483,7 @@ class BallProxyImpl(
                 }
 
                 val n = Vector(-1, 0, 0)
-                this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.EAST)
+                return this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.EAST)
             }
             mot6 < mot0 -> {
                 if (this.isValidKnockBackBlock(knockBackBlock)) {
@@ -474,7 +491,7 @@ class BallProxyImpl(
                 }
 
                 val n = Vector(1, 0, 0)
-                this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.WEST)
+                return this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.WEST)
             }
             mot8 > mot2 -> {
                 if (this.isValidKnockBackBlock(knockBackBlock)) {
@@ -482,7 +499,7 @@ class BallProxyImpl(
                 }
 
                 val n = Vector(0, 0, -1)
-                this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.SOUTH)
+                return this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.SOUTH)
             }
             mot8 < mot2 -> {
                 if (this.isValidKnockBackBlock(knockBackBlock)) {
@@ -490,47 +507,64 @@ class BallProxyImpl(
                 }
 
                 val n = Vector(0, 0, 1)
-                this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.NORTH)
+                return this.applyKnockBack(sourceVector, n, knockBackBlock, BlockFace.NORTH)
             }
         }
+        return false
     }
 
     /**
      * Calculates post movement.
      */
-    override fun calculatePostMovement() {
-        if (originVector == null) {
+    override fun calculatePostMovement(collision: Boolean) {
+        if (this.originVector == null) {
             return
         }
+
+        // Movement calculation
+        calculateSpinMovement(collision)
 
         val postMovement = BallPostMoveEvent(this.originVector!!, true, this)
         Bukkit.getPluginManager().callEvent(postMovement)
+    }
 
-        if (times <= 0 || spinningForce == 0.0 || this.design.isOnGround) {
+    /**
+     * Calculates spin movement. The spinning will slow down
+     * if the ball stops moving, hits the ground or hits the wall.
+     */
+    private fun calculateSpinMovement(collision: Boolean) {
+        if (abs(angularVelocity) < 0.01) {
             return
         }
 
-        val event = BallSpinEvent(spinningForce, this, false)
+        if (times <= 0 || getCalculationEntity<Entity>().isOnGround || collision) {
+            angularVelocity /= 2
+        }
+
+        val event = BallSpinEvent(angularVelocity, this, false)
+
         Bukkit.getPluginManager().callEvent(event)
 
         if (!event.isCancelled) {
-            spinningForce = event.spinningForce
+            angularVelocity = event.angularVelocity
 
-            if (spinningForce != 0.0) {
-                this.originVector = calculateMagnusForce(this.originVector!!, spinningForce.toFloat())
+            if (angularVelocity != 0.0) {
+                val originUnit = this.originVector!!.normalize()
+                val x = -originUnit.z
+                val z = originUnit.x
+                val newVector = this.originVector!!.add(Vector(x, 0.0, z).multiply(angularVelocity.toFloat()))
+                this.originVector = newVector.multiply(this.originVector!!.length() / newVector.length())
             }
         }
     }
 
     /**
      * Applies the wall knockback.
+     *
+     * @return whether the knockback was applied
      */
-    private fun applyKnockBack(starter: Vector, n: Vector, block: Block, blockFace: BlockFace) {
-        if (block.type == org.bukkit.Material.AIR) {
-            return
-        }
-
-        if (this.knockBackBumper <= 0) {
+    private fun applyKnockBack(starter: Vector, n: Vector, block: Block, blockFace: BlockFace): Boolean {
+        if (block.type == org.bukkit.Material.AIR && this.knockBackBumper <= 0) {
             val optBounce = getBounceConfigurationFromBlock(block)
             if (optBounce.isPresent || meta.alwaysBouce) {
                 var r = starter.clone().subtract(n.multiply(2 * starter.dot(n))).multiply(0.75)
@@ -547,9 +581,11 @@ class BallProxyImpl(
                     this.setVelocity(r)
                     this.backAnimation = !backAnimation
                     this.knockBackBumper = 5
+                    return true
                 }
             }
         }
+        return false
     }
 
     /**
@@ -572,16 +608,16 @@ class BallProxyImpl(
      * Checks movement interactions with the ball.
      */
     private fun checkMovementInteractions(): Boolean {
-        if (this.counter <= 0) {
-            this.counter = 2
-            val hitBoxLocation = this.hitbox.location
-            for (entity in design.location.chunk.entities) {
-                if (entity !is ArmorStand && entity.location.distance(hitBoxLocation) < meta.hitBoxSize) {
+        if (this.breakCounter <= 0) {
+            this.breakCounter = 2
+            val ballLocation = getCalculationEntity<Entity>().location
+            for (entity in ballLocation.chunk.entities) {
+                if (entity.customName != "ResourceBallsPlugin" && entity.location.distance(ballLocation) < meta.hitBoxSize) {
                     val event = BallInteractEvent(entity, this)
                     Bukkit.getPluginManager().callEvent(event)
                     if (event.isCancelled)
                         return true
-                    val vector = hitBoxLocation
+                    val vector = ballLocation
                         .toVector()
                         .subtract(entity.location.toVector())
                         .normalize().multiply(meta.movementModifier.horizontalTouchModifier)
@@ -593,7 +629,7 @@ class BallProxyImpl(
                 }
             }
         } else {
-            this.counter--
+            this.breakCounter--
         }
         return false
     }
@@ -608,10 +644,10 @@ class BallProxyImpl(
         val vector = Vector()
         val rotX = entity.location.yaw.toDouble()
         val rotY = entity.location.pitch.toDouble()
-        vector.y = -Math.sin(Math.toRadians(rotY))
-        val h = Math.cos(Math.toRadians(rotY))
-        vector.x = -h * Math.sin(Math.toRadians(rotX))
-        vector.z = h * Math.cos(Math.toRadians(rotX))
+        vector.y = -sin(Math.toRadians(rotY))
+        val h = cos(Math.toRadians(rotY))
+        vector.x = -h * sin(Math.toRadians(rotX))
+        vector.z = h * cos(Math.toRadians(rotX))
         vector.y = 0.5
         vector.add(entity.velocity)
         return vector.multiply(3)
@@ -621,10 +657,10 @@ class BallProxyImpl(
      * Plays the rotation animation.
      */
     private fun playRotationAnimation() {
-        val length = this.hitbox.velocity.length()
+        val length = getVelocity<Vector>().length()
         var angle: EulerAngle? = null
 
-        val a = this.design.headPose
+        val a = getDesignArmorstand<ArmorStand>().headPose
         when {
             length > 1.0 -> angle = if (this.backAnimation) {
                 EulerAngle(a.x - 0.5, 0.0, 0.0)
@@ -643,7 +679,7 @@ class BallProxyImpl(
             }
         }
         if (angle != null) {
-            this.design.headPose = angle
+            getDesignArmorstand<ArmorStand>().headPose = angle
         }
     }
 
@@ -653,37 +689,26 @@ class BallProxyImpl(
     private fun setHelmet(itemStack: ItemStack?) {
         when (meta.size) {
             BallSize.SMALL -> {
-                this.design.isSmall = true
-                this.design.setHelmet(itemStack)
+                getDesignArmorstand<ArmorStand>().isSmall = true
+                getDesignArmorstand<ArmorStand>().setHelmet(itemStack)
             }
-            BallSize.NORMAL -> this.design.setHelmet(itemStack)
+            BallSize.NORMAL -> getDesignArmorstand<ArmorStand>().setHelmet(itemStack)
         }
     }
 
     /**
-     * Magnus force calculation.
+     * Calculates the angle between two vectors in horizontal dimension.
+     * Included angle never exceeds PI. If the returned value is negative,
+     * then subseq vector is actually not subsequent to precede vector.
+     * @param subseq The vector subsequent to precede vector in clock-wised order.
+     * @param precede The vector preceding subseq vector in clock-wised order.
+     * @return A radian angle in the range of -PI to PI
      */
-    private fun calculateMagnusForce(velocity: Vector, force: Float): Vector {
-        val originUnit = velocity.normalize()
-        val x = -originUnit.z
-        val z = originUnit.x
+    private fun getIncludedAngle(subseq: Vector, precede: Vector): Double {
+        val dot = subseq.x * precede.x + subseq.z * precede.z
+        val det = subseq.x * precede.z - subseq.z * precede.x
 
-        val newVector = velocity.add(Vector(x, 0.0, z).multiply(force))
-        return newVector.multiply(velocity.length() / newVector.length())
-    }
-
-    /**
-     * Calculates the angle between two vectors in two dimension (XZ Plane) <br></br>
-     * If 'basis' vector is clock-wise to 'against' vector, the angle is negative.
-     * @param basis The basis vector
-     * @param against The vector which the angle is calculated against
-     * @return The angle in the range of -180 to 180 degrees
-     */
-    private fun getAngle(basis: Vector, against: Vector): Double {
-        val dot = basis.x * against.x + basis.z * against.z
-        val det = basis.x * against.z - basis.z * against.x
-
-        return Math.atan2(det, dot)
+        return atan2(det, dot)
     }
 
     /**
@@ -698,5 +723,27 @@ class BallProxyImpl(
         }
 
         return true
+    }
+
+    /**
+     * Gets the representative entity used for calculation.
+     */
+    private fun <A> getCalculationEntity(): A {
+        return if (hitbox is Slime) {
+            getDesignArmorstand()
+        } else {
+            getHitbox()
+        }
+    }
+
+    /**
+     * Gets the subordinate entity which is not used for calculation.
+     */
+    private fun <A> getSecondaryEntity(): A {
+        return if (hitbox is Slime) {
+            getHitbox()
+        } else {
+            getDesignArmorstand()
+        }
     }
 }

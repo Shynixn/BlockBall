@@ -21,12 +21,12 @@ The Ball is per default correctly configured but can be changed for different si
 1. Go to the **Settings Page** of your arena
 2. Open the **Ball Settings Page**
 
-.. image:: ../_static/images/ball1.jpg
+.. image:: ../_static/images/ball1.JPG
 
 3. Customize the skin or other values to your own needs.
 4. Open the Ball modifiers page to adjust modifiers like the rolling distance
 
-.. image:: ../_static/images/ball2.jpg
+.. image:: ../_static/images/ball2.JPG
 
 You can find all options explained at the bottom of this page.
 
@@ -39,7 +39,9 @@ At this stage, you should be able to find your arena save file. If not, please t
 2. Search for the following section:
 
 **arena_x.yml**
-::
+
+.. code-block:: yaml
+
     ball:
       skin: http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d
       size: NORMAL

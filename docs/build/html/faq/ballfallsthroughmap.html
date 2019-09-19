@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The ball falls through the ground? &mdash; BlockBall 6.4.1 documentation</title>
+  <title>The ball falls through the ground? &mdash; BlockBall 6.10.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.4.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.10.0 documentation" href="../index.html"/>
         <link rel="up" title="FAQ" href="index.html"/>
         <link rel="next" title="Can you support Minecraft 1.7.x or below?" href="support.html"/>
         <link rel="prev" title="The ball is inside of the goal but it does not score?" href="goalgetsnotdetected.html"/> 
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                6.4.1
+                6.10.0
               </div>
             
           
@@ -105,6 +105,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Developer API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">FAQ</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="notspawning.html">The ball does not spawn?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands.html">How can I automatically execute a command after a game?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="goalgetsnotdetected.html">The ball is inside of the goal but it does not score?</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">The ball falls through the ground?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="support.html">Can you support Minecraft 1.7.x or below?</a></li>
@@ -186,30 +187,30 @@
 <p>Sometimes the ball is not synchronized with your world or simply requires another relocation distance
 for your server version.</p>
 <ol class="arabic simple">
-<li>Make sure the thickness of the ground is at least <strong>2 or more blocks</strong></li>
-<li>If the ball does still fall through the ground you can try to modify the hidden <strong>hitbox-relocation</strong> value of the ball.</li>
+<li><p>Make sure the thickness of the ground is at least <strong>2 or more blocks</strong></p></li>
+<li><p>If the ball does still fall through the ground you can try to modify the hidden <strong>hitbox-relocation</strong> value of the ball.</p></li>
 </ol>
 <p><strong>before - arena_x.yml</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ball</span><span class="p">:</span>
-   <span class="n">skin</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">textures</span><span class="o">.</span><span class="n">minecraft</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">texture</span><span class="o">/</span><span class="mf">8e4</span><span class="n">a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
-   <span class="n">size</span><span class="p">:</span> <span class="n">SMALL</span>
-   <span class="n">hitbox</span><span class="o">-</span><span class="n">size</span><span class="p">:</span> <span class="mf">3.0</span>
-   <span class="n">hitbox</span><span class="o">-</span><span class="n">relocation</span><span class="p">:</span> <span class="mf">0.0</span>
-   <span class="n">carry</span><span class="o">-</span><span class="n">able</span><span class="p">:</span> <span class="n">true</span>
-   <span class="n">always</span><span class="o">-</span><span class="n">bounce</span><span class="p">:</span> <span class="n">true</span>
-   <span class="n">rotating</span><span class="p">:</span> <span class="n">true</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ball</span><span class="p">:</span>
+   <span class="nt">skin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
+   <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SMALL</span>
+   <span class="nt">hitbox-size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3.0</span>
+   <span class="nt">hitbox-relocation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+   <span class="nt">carry-able</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">always-bounce</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">rotating</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <p>Test it with different values like 0.2, 0.5 and take a look what fits best with your server.</p>
 <p><strong>after - arena_x.yml</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ball</span><span class="p">:</span>
-   <span class="n">skin</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">textures</span><span class="o">.</span><span class="n">minecraft</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">texture</span><span class="o">/</span><span class="mf">8e4</span><span class="n">a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
-   <span class="n">size</span><span class="p">:</span> <span class="n">SMALL</span>
-   <span class="n">hitbox</span><span class="o">-</span><span class="n">size</span><span class="p">:</span> <span class="mf">3.0</span>
-   <span class="n">hitbox</span><span class="o">-</span><span class="n">relocation</span><span class="p">:</span> <span class="mf">0.2</span>
-   <span class="n">carry</span><span class="o">-</span><span class="n">able</span><span class="p">:</span> <span class="n">true</span>
-   <span class="n">always</span><span class="o">-</span><span class="n">bounce</span><span class="p">:</span> <span class="n">true</span>
-   <span class="n">rotating</span><span class="p">:</span> <span class="n">true</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ball</span><span class="p">:</span>
+   <span class="nt">skin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
+   <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SMALL</span>
+   <span class="nt">hitbox-size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3.0</span>
+   <span class="nt">hitbox-relocation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.2</span>
+   <span class="nt">carry-able</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">always-bounce</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">rotating</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 </div>
@@ -257,7 +258,7 @@ for your server version.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.4.1',
+            VERSION:'6.10.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -268,6 +269,7 @@ for your server version.</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

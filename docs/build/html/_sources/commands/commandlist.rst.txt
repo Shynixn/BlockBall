@@ -41,31 +41,45 @@ at the `permission list <../gettingstarted/permissions.html#permissionlist>`__.
 **Sample list:**
 
 Join the arena by the id '1':
-::
-  /bbjoin 1
+
+.. code-block:: text
+
+ /bbjoin 1
 
 Join the arena by the name 'stadium':
-::
+
+.. code-block:: text
+
   /bbjoin stadium
 
 Join the arena by the name 'awesome stadium':
-::
+
+.. code-block:: text
+
   /bbjoin awesome stadium
 
 Join the arena with id '1' and the team with name 'Team Red':
-::
+
+.. code-block:: text
+
   /bbjoin 1|team red
 
 Join the arena with id '1' and the team with name 'Team Red':
-::
+
+.. code-block:: text
+
   /bbjoin 1/team red
 
 Join the arena with name 'awesome stadium' and the team with name 'Team Spongy':
-::
+
+.. code-block:: text
+
   /bbjoin awesome stadium|team spongy
 
 Join the arena with name 'awesome stadium' and the team with name 'Team Spongy':
-::
+
+.. code-block:: text
+
   /bbjoin awesome stadium/team spongy
 
 /bbspectate <game>

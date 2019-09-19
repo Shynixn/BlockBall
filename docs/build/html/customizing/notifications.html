@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Notifications &mdash; BlockBall 6.4.1 documentation</title>
+  <title>Notifications &mdash; BlockBall 6.10.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.4.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.10.0 documentation" href="../index.html"/>
         <link rel="up" title="Spectating" href="spectating.html"/>
         <link rel="next" title="Spectatormode" href="spectatormode.html"/>
         <link rel="prev" title="Spectating" href="spectating.html"/> 
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                6.4.1
+                6.10.0
               </div>
             
           
@@ -198,19 +198,19 @@
 <p>The notification settings allow to setup messages for nearby players.</p>
 <p>This allows players standing near the arena to get to know what is going on inside of the arena as they also
 get the same <strong>messages</strong>, <strong>scoreboard</strong>, <strong>bossbar</strong> and <strong>holograms</strong> of the player playing the game.</p>
-<img alt="../_images/notifications_1.jpg" src="../_images/notifications_1.jpg" />
+<img alt="../_images/notifications_1.JPG" src="../_images/notifications_1.JPG" />
 <div class="section" id="configuring-ingame">
 <h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to open the <a class="reference external" href="../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui">Settings</a> page of your arena chat UI.</p>
 <ol class="arabic simple">
-<li>Go to the <strong>Settings Page</strong> of your arena</li>
-<li>Open the <strong>Spectating Page</strong></li>
-<li>Open the <strong>Notifications Page</strong></li>
+<li><p>Go to the <strong>Settings Page</strong> of your arena</p></li>
+<li><p>Open the <strong>Spectating Page</strong></p></li>
+<li><p>Open the <strong>Notifications Page</strong></p></li>
 </ol>
-<img alt="../_images/notifications_2.jpg" src="../_images/notifications_2.jpg" />
+<img alt="../_images/notifications_2.JPG" src="../_images/notifications_2.JPG" />
 <ol class="arabic simple" start="4">
-<li>Now continue by enabling or disabling the notifications by clicking <strong>toggle</strong> with your mouse.</li>
-<li>Customize the other available options to your own needs.</li>
+<li><p>Now continue by enabling or disabling the notifications by clicking <strong>toggle</strong> with your mouse.</p></li>
+<li><p>Customize the other available options to your own needs.</p></li>
 </ol>
 <p>You can find all options explained at the bottom of this page.</p>
 </div>
@@ -218,25 +218,25 @@ get the same <strong>messages</strong>, <strong>scoreboard</strong>, <strong>bos
 <h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
 <ol class="arabic simple">
-<li>Go to the <strong>Open the arena_x.yml</strong> of your arena</li>
-<li>Search for the following section:</li>
+<li><p>Go to the <strong>Open the arena_x.yml</strong> of your arena</p></li>
+<li><p>Search for the following section:</p></li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spectator</span><span class="o">-</span><span class="n">meta</span><span class="p">:</span>
-   <span class="n">notify</span><span class="o">-</span><span class="n">nearby</span><span class="o">-</span><span class="n">players</span><span class="o">-</span><span class="n">enabled</span><span class="p">:</span> <span class="n">true</span>
-   <span class="n">notify</span><span class="o">-</span><span class="n">nearby</span><span class="o">-</span><span class="n">players</span><span class="o">-</span><span class="n">radius</span><span class="p">:</span> <span class="mi">100</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">spectator-meta</span><span class="p">:</span>
+   <span class="nt">notify-nearby-players-enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">notify-nearby-players-radius</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li>Now continue by enabling or disabling the notifications by changing the <strong>notify-nearby-players-enabled</strong> value.</li>
-<li>Customize the other available options to your own needs.</li>
+<li><p>Now continue by enabling or disabling the notifications by changing the <strong>notify-nearby-players-enabled</strong> value.</p></li>
+<li><p>Customize the other available options to your own needs.</p></li>
 </ol>
 </div>
 <div class="section" id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Notify-nearby-players-enabled: Enable or disable notifications for nearby players.</li>
-<li>Notify-nearby-players-radius: The amount of blocks a player has to be near an arena to still receive notifications.</li>
+<li><p>Notify-nearby-players-enabled: Enable or disable notifications for nearby players.</p></li>
+<li><p>Notify-nearby-players-radius: The amount of blocks a player has to be near an arena to still receive notifications.</p></li>
 </ul>
 </div>
 </div>
@@ -284,7 +284,7 @@ get the same <strong>messages</strong>, <strong>scoreboard</strong>, <strong>bos
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.4.1',
+            VERSION:'6.10.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -295,6 +295,7 @@ get the same <strong>messages</strong>, <strong>scoreboard</strong>, <strong>bos
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

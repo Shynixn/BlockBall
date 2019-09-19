@@ -8,7 +8,9 @@ for your server version.
 2. If the ball does still fall through the ground you can try to modify the hidden **hitbox-relocation** value of the ball.
 
 **before - arena_x.yml**
-::
+
+.. code-block:: yaml
+
    ball:
       skin: http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d
       size: SMALL
@@ -21,7 +23,9 @@ for your server version.
 Test it with different values like 0.2, 0.5 and take a look what fits best with your server.
 
 **after - arena_x.yml**
-::
+
+.. code-block:: yaml
+
    ball:
       skin: http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d
       size: SMALL

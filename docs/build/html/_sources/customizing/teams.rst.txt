@@ -15,15 +15,15 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 
 1. Go to the **Settings Page** of your arena
 
-.. image:: ../_static/images/team1.jpg
+.. image:: ../_static/images/team1.JPG
 
 2. Choose **Team Red** or **Team Blue** to configure.
 
-.. image:: ../_static/images/team2.jpg
+.. image:: ../_static/images/team2.JPG
 
 3. Customize each team to your needs.
 
-.. image:: ../_static/images/team5.jpg
+.. image:: ../_static/images/team5.JPG
 
 4. The Teams also provide so called `Textbook Settings <textbook.html>`_ which are Team specific messages.
 
@@ -38,7 +38,9 @@ At this stage, you should be able to find your arena save file. If not, please t
 2. Search for the following section:
 
 **arena_x.yml - red-team**
-::
+
+.. code-block:: yaml
+
    team-red:
       displayname: Team Red
       prefix: '&c'
@@ -96,7 +98,9 @@ At this stage, you should be able to find your arena save file. If not, please t
       win-message-subtitle: <red>&a has won the match
 
 **arena_x.yml - red-team**
-::
+
+.. code-block:: yaml
+
    team-blue:
       displayname: Team Blue
       prefix: '&9'

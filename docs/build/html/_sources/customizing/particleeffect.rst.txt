@@ -14,7 +14,7 @@ As the Particleeffect is always a sub page of another action there is no specifi
 
 1. The Particleeffect page looks like that.
 
-.. image:: ../_static/images/Particleeffect1.jpg
+.. image:: ../_static/images/particleeffect1.JPG
 
 4. Now continue by selecting which player should be able to see the Particleeffect by clicking on effecting
 5. Customize the other available options to your own needs.
@@ -30,7 +30,9 @@ As the Particleeffect is always a sub effect of another action there is no speci
 2. Search for the following sections:
 
 **arena_x.yml**
-::
+
+.. code-block:: yaml
+
      particle-effect:
         effecting: EVERYONE
         name: explosion
@@ -48,7 +50,7 @@ Properties
 ~~~~~~~~~~
 
 * Effecting: Whether all players can see the Particleeffect, only the player belonging to the action or nobody.
-* Name: Name of the Particleeffect
+* Name: Name of the Particleeffect. All names can be found `here. <https://shynixn.github.io/BlockBall/apidocs/com/github/shynixn/blockball/api/business/enumeration/ParticleType.html>`_
 * Amount: Amount of particles in the air
 * Speed: Speed of each particle in the air
 * Offset X: Offset spread of the x axe

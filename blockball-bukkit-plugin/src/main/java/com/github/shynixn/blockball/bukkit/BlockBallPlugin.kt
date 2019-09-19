@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
 import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
@@ -13,12 +14,16 @@ import com.github.shynixn.blockball.core.logic.business.commandexecutor.*
 import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.google.inject.Guice
 import com.google.inject.Injector
+import org.apache.commons.io.IOUtils
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Server
 import org.bukkit.configuration.MemorySection
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
+import java.io.FileOutputStream
 import java.util.logging.Level
 
 /**
@@ -69,19 +74,31 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
      * Enables the plugin BlockBall.
      */
     override fun onEnable() {
-        Bukkit.getServer().consoleSender.sendMessage(BlockBallPlugin.PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
+        Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
         this.saveDefaultConfig()
 
+        if (disableForVersion(Version.VERSION_1_8_R1, Version.VERSION_1_8_R3)) {
+            return
+        }
+
+        if (disableForVersion(Version.VERSION_1_8_R2, Version.VERSION_1_8_R3)) {
+            return
+        }
+
+        if (disableForVersion(Version.VERSION_1_9_R1, Version.VERSION_1_9_R2)) {
+            return
+        }
+
+        if (disableForVersion(Version.VERSION_1_13_R1, Version.VERSION_1_13_R2)) {
+            return
+        }
+
         if (!getServerVersion().isCompatible(
-                Version.VERSION_1_8_R1,
-                Version.VERSION_1_8_R2,
                 Version.VERSION_1_8_R3,
-                Version.VERSION_1_9_R1,
                 Version.VERSION_1_9_R2,
                 Version.VERSION_1_10_R1,
                 Version.VERSION_1_11_R1,
                 Version.VERSION_1_12_R1,
-                Version.VERSION_1_13_R1,
                 Version.VERSION_1_13_R2,
                 Version.VERSION_1_14_R1
             )
@@ -137,6 +154,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val ballEntitySerivice = resolve(BallEntityService::class.java)
         val bungeeCordConnectionService = resolve(BungeeCordConnectionService::class.java)
 
+        ballEntitySerivice.registerEntitiesOnServer()
         updateCheker.checkForUpdates()
         dependencyChecker.checkForInstalledDependencies()
 
@@ -158,19 +176,48 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             ballEntitySerivice.cleanUpInvalidEntities(world.entities)
         }
 
-        Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")
+        Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn, LazoYoung")
     }
 
     /**
      * Override on disable.
      */
     override fun onDisable() {
+        if (injector == null) {
+            return
+        }
+
+        resolve(PersistenceStatsService::class.java).close()
+        resolve(SqlDbContext::class.java).close()
+
         try {
             resolve(GameService::class.java).close()
+            resolve(EntityRegistrationService::class.java).clearResources()
         } catch (e: Exception) {
             // Ignored.
         }
     }
+
+    /**
+     * Loads the default config and saves it to the plugin folder.
+     */
+    override fun saveDefaultConfig() {
+        this.getResource("assets/blockball/config.yml").use { inputStream ->
+            if (!this.dataFolder.exists()) {
+                this.dataFolder.mkdir()
+            }
+
+            val configFile = File(this.dataFolder, "config.yml")
+            if (configFile.exists()) {
+                return
+            }
+
+            FileOutputStream(configFile).use { outStream ->
+                IOUtils.copy(inputStream, outStream)
+            }
+        }
+    }
+
 
     /**
      * Starts the game mode.
@@ -274,5 +321,22 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         } catch (e: Exception) {
             throw IllegalArgumentException("Entity could not be created.", e)
         }
+    }
+
+    /**
+     * Disables the plugin for the given version and prints the supported version.
+     */
+    private fun disableForVersion(version: Version, supportedVersion: Version): Boolean {
+        if (getServerVersion() == version) {
+            sendConsoleMessage(ChatColor.RED.toString() + "================================================")
+            sendConsoleMessage(ChatColor.RED.toString() + "BlockBall does not support this subversion")
+            sendConsoleMessage(ChatColor.RED.toString() + "Please upgrade from v" + version.id + " to v" + supportedVersion.id)
+            sendConsoleMessage(ChatColor.RED.toString() + "Plugin gets now disabled!")
+            sendConsoleMessage(ChatColor.RED.toString() + "================================================")
+            Bukkit.getPluginManager().disablePlugin(this)
+            return true
+        }
+
+        return false
     }
 }

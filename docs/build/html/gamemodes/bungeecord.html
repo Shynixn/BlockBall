@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Bungeecord Minigame &mdash; BlockBall 6.4.1 documentation</title>
+  <title>Bungeecord Minigame &mdash; BlockBall 6.10.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.4.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.10.0 documentation" href="../index.html"/>
         <link rel="up" title="Game Modes" href="index.html"/>
         <link rel="next" title="Customizing" href="../customizing/index.html"/>
         <link rel="prev" title="MiniGame" href="minigame.html"/> 
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                6.4.1
+                6.10.0
               </div>
             
           
@@ -105,7 +105,6 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Bungeecord Minigame</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#configuring-on-your-gameserver">Configuring on your GameServer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#configuring-on-your-hubserver">Configuring on your Hubserver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#changing-motd-and-sign-content">Changing Motd and sign content</a></li>
 </ul>
 </li>
 </ul>
@@ -186,58 +185,63 @@
   <div class="section" id="bungeecord-minigame">
 <h1>Bungeecord Minigame<a class="headerlink" href="#bungeecord-minigame" title="Permalink to this headline">¶</a></h1>
 <p>The Game Mode Bungeecord Minigame is a advanced game mode to give BlockBall the rights to manage it’s on game server.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
 <p>This guide will not explain how <a class="reference external" href="https://www.spigotmc.org/wiki/bungeecord/">BungeeCord</a>  works so do not continue if you are not familiar with it.</p>
+</div>
 <p>Make sure you created a <a class="reference external" href="../gamemodes/basicgame.html">Base Game</a> first before you continue.</p>
 <p>Please take a look at associated words which will be used in this guide:</p>
 <ul class="simple">
-<li>Gameserver: Server where the BlockBall arena is located and BlockBall is managing it.</li>
-<li>Hubserver: Any other server where players can join the Gameserver by clicking a Blockball sign.</li>
+<li><p>Gameserver: Server where the BlockBall arena is located and BlockBall is managing it.</p></li>
+<li><p>Hubserver: Any other server where players can join the Gameserver.</p></li>
 </ul>
 <div class="section" id="configuring-on-your-gameserver">
 <h2>Configuring on your GameServer<a class="headerlink" href="#configuring-on-your-gameserver" title="Permalink to this headline">¶</a></h2>
+<p>Let’s start by creating a server where BlockBall manages its state.</p>
 <ol class="arabic simple">
-<li>Join your game server with the plugins WorlEdit and BlockBall installed.</li>
-<li>Create a Base Game on this server.</li>
-<li>Go to the <strong>Settings Page</strong> of your arena and select the GameType Bungee.</li>
-<li>Open the <strong>Game Settings Page</strong></li>
+<li><p>Join your game server with the plugin BlockBall installed.</p></li>
+<li><p>Create a Base Game on this server.</p></li>
+<li><p>Go to the <strong>Settings Page</strong> of your arena and select the GameType Bungee.</p></li>
+<li><p>Open the <strong>Game Settings Page</strong></p></li>
 </ol>
-<img alt="../_images/arena12.jpg" src="../_images/arena12.jpg" />
-<ol class="arabic simple" start="3">
-<li>Set the lobby spawnpoint and the leave spawnpoint.</li>
-<li>Customize the other available options to your own needs.</li>
-<li>After you have pressed <em>Save and Reload</em> the first time the game is automatically managing the server and starting a game</li>
-<li>You also need to configure a <em>Restart Script</em> to automatically restart the server after a game ends</li>
-<li>Now go to your BlockBall folder on your Gameserver and configure the newly created <strong>bungeecord.yml</strong> file</li>
+<img alt="../_images/arena12.JPG" src="../_images/arena12.JPG" />
+<ol class="arabic simple" start="5">
+<li><p>Set the lobby spawnpoint and the leave spawnpoint.</p></li>
+<li><p>Customize the other available options to your own needs.</p></li>
 </ol>
-<p><strong>config.yml</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">bungeecord</span><span class="p">:</span>
-  <span class="n">motd</span><span class="o">-</span><span class="n">restarting</span><span class="p">:</span> <span class="s1">&#39;&amp;cRestarting...&#39;</span>
-  <span class="n">motd</span><span class="o">-</span><span class="n">waiting</span><span class="o">-</span><span class="n">players</span><span class="p">:</span> <span class="s1">&#39;&amp;aWaiting for players...&#39;</span>
-  <span class="n">motd</span><span class="o">-</span><span class="n">ingame</span><span class="p">:</span> <span class="s1">&#39;&amp;9Ingame&#39;</span>
-  <span class="n">sign</span><span class="o">-</span><span class="n">restarting</span><span class="p">:</span> <span class="s1">&#39;&amp;cRestarting&#39;</span>
-  <span class="n">sign</span><span class="o">-</span><span class="n">waiting</span><span class="o">-</span><span class="n">players</span><span class="p">:</span> <span class="s1">&#39;&amp;aJoin&#39;</span>
-  <span class="n">sign</span><span class="o">-</span><span class="n">ingame</span><span class="p">:</span> <span class="s1">&#39;&amp;9Running&#39;</span>
-  <span class="n">sign</span><span class="o">-</span><span class="n">lines</span><span class="p">:</span>
-    <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="s1">&#39;&amp;lBlockBall&#39;</span>
-    <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">server</span><span class="o">&gt;</span>
-    <span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">state</span><span class="o">&gt;</span>
-    <span class="s1">&#39;4&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">sumplayers</span><span class="o">&gt;/&lt;</span><span class="n">summaxplayers</span><span class="o">&gt;</span>
-</pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have got just <strong>one Hubserver</strong> you can simply enter the Hubserver name into the <strong>Fallback Server</strong> setting to let players get automatically connected back to the Hubserver if a match ends.</p>
 </div>
-<ol class="arabic simple" start="8">
-<li>After finishing the configuration copy the <strong>bungeecord.yml</strong> file and open your Hubserver</li>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have got <strong>multiple Hubserver</strong> you should edit the <strong>Leave Server Kick Message</strong> to create a custom kick message. Install a BungeeCord plugin which redirects players across your network when a player gets kicked from a server with a certain message.</p>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>After you have pressed <em>Save and Reload</em> the first time the game is automatically managing the server and starting a game.</p></li>
+<li><p>You also need to configure a <em>Restart Script</em> to automatically restart the server after a game ends.</p></li>
 </ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can optionally change the server motd by editing the generated <strong>bungeecord.yml</strong> file in the BlockBall folder.</p>
+</div>
 </div>
 <div class="section" id="configuring-on-your-hubserver">
 <h2>Configuring on your Hubserver<a class="headerlink" href="#configuring-on-your-hubserver" title="Permalink to this headline">¶</a></h2>
+<p>BlockBall contains a system to offer signs which connects BlockBall Gameserver to Hubservers. This means you can
+place signs on your HubServer which connect players to Gameservers.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The following section is entirely <strong>optional</strong>. It is probably even better to install a minigame server management plugin to allow sign joining.</p>
+</div>
 <ol class="arabic simple">
-<li>Setup your Hubserver server with the plugins WorlEdit and BlockBall installed.</li>
-<li>Paste the copied <strong>bungeecord.yml</strong> into your BlockBall folder on your Hubserver</li>
-<li>Make sure the content of the <strong>bungeecord.yml</strong> on your Hubserver is exactly the same as the <strong>bungeecord.yml</strong> on your Gameserver</li>
-<li>Enable the server linking config option in your <strong>config.yml</strong> on your Hubserver</li>
+<li><p>Setup your Hubserver server with the plugin BlockBall installed.</p></li>
+<li><p>Copy the <strong>bungeecord.yml</strong> file from your Gameserver folder into the Hubserver folder.</p></li>
+<li><p>Make sure the content of the <strong>bungeecord.yml</strong> on your Hubserver is exactly the same as the <strong>bungeecord.yml</strong> on your Gameserver.</p></li>
+<li><p>Enable the server linking config option in your <strong>config.yml</strong> on your Hubserver</p></li>
 </ol>
 <p><strong>config.yml</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">############################</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span>
 
 <span class="c1"># Game settings</span>
 
@@ -245,21 +249,16 @@
 
 <span class="c1">############################</span>
 
-<span class="n">game</span><span class="p">:</span>
-  <span class="n">allow</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">linking</span><span class="p">:</span> <span class="n">true</span>
+<span class="nt">game</span><span class="p">:</span>
+  <span class="nt">allow-server-linking</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="5">
-<li>Join your Hubserver and type <strong>/blockballbungeecord &lt;server&gt;</strong> (&lt;server&gt; name of your Gameserver)</li>
-<li>Rightclick on a sign and if everything is working correctly the sign will display something</li>
-<li>You probably need to restart your Gameserver or change the server name if the sign displays <em>No connection</em></li>
-<li>Finally, you can join the game by clicking on the sign.</li>
+<li><p>Join your Hubserver and type <strong>/blockballbungeecord &lt;server&gt;</strong> (&lt;server&gt; name of your Gameserver)</p></li>
+<li><p>Rightclick on a sign and if everything is working correctly the sign will display something</p></li>
+<li><p>You probably need to restart your Gameserver or change the server name if the sign displays <em>No connection</em></p></li>
+<li><p>Finally, you can join the game by clicking on the sign.</p></li>
 </ol>
-</div>
-<div class="section" id="changing-motd-and-sign-content">
-<h2>Changing Motd and sign content<a class="headerlink" href="#changing-motd-and-sign-content" title="Permalink to this headline">¶</a></h2>
-<p>Everything related to the signs and motd can be edited in the <strong>bungeecord.yml</strong> file.</p>
-<p><strong>Important!</strong> Make sure the content of bungeecord.yml is exactly the same on all of your servers in your network.</p>
 </div>
 </div>
 
@@ -306,7 +305,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.4.1',
+            VERSION:'6.10.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -317,6 +316,7 @@
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

@@ -2,17 +2,22 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1
 
-import com.github.shynixn.blockball.api.business.service.SpigotTimingService
-import net.minecraft.server.v1_14_R1.*
-import org.bukkit.Bukkit
+import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.service.LoggingService
+import com.github.shynixn.blockball.api.persistence.entity.BallMeta
+import net.minecraft.server.v1_14_R1.EntitySlime
+import net.minecraft.server.v1_14_R1.EntityTypes
+import net.minecraft.server.v1_14_R1.NBTTagCompound
+import net.minecraft.server.v1_14_R1.PacketPlayOutEntityTeleport
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer
 import org.bukkit.event.entity.CreatureSpawnEvent
-import org.bukkit.util.Vector
-import java.util.logging.Level
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 /**
- * Armorstand implementation for hitbox calculation.
+ * Slime implementation for hitbox calculation.
  * <p>
  * Version 1.3
  * <p>
@@ -38,148 +43,90 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallHitBox(private val ballDesign: BallDesign, location: Location, private val timingService: SpigotTimingService) :
-    EntityArmorStand((location.world as CraftWorld).handle, location.x, location.y, location.z) {
+class BallHitBox(
+    private val ballDesign: BallDesign,
+    ballMeta: BallMeta,
+    location: Location
+) : EntitySlime(EntityTypes.SLIME, (location.world as CraftWorld).handle) {
+
     // BukkitEntity has to be self cached since 1.14.
     private var entityBukkit: Any? = null
+
     /**
      * Initializes the hitbox.
      */
     init {
+        val compound = NBTTagCompound()
+        compound.setBoolean("Invulnerable", true)
+        compound.setBoolean("PersistenceRequired", true)
+        compound.setBoolean("NoAI", true)
+        compound.setInt("Size", ballMeta.hitBoxSize.toInt() - 1)
+        this.a(compound)
+
+        bukkitEntity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
+
         val mcWorld = (location.world as CraftWorld).handle
         this.setPosition(location.x, location.y, location.z)
         mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
 
-        val compound = NBTTagCompound()
-        compound.setBoolean("invulnerable", true)
-        compound.setBoolean("Invisible", true)
-        compound.setBoolean("PersistenceRequired", true)
-        compound.setBoolean("NoBasePlate", true)
-        this.a(compound)
+        updatePosition()
+        debugPosition()
     }
 
     /**
-     * Recalculates y-axe hitbox offset in the world.
+     * 1. Prevent slime from dying in Peaceful difficulty
+     * 2. Constantly move hitbox to overlap with ballDesign
      */
-    override fun recalcPosition() {
-        val axisBoundingBox = this.boundingBox
+    override fun tick() {
+        super.tick()
+        this.dead = false
 
-        this.locX = (axisBoundingBox.minX + axisBoundingBox.maxX) / 2.0
-        this.locY = axisBoundingBox.minY + ballDesign.proxy.meta.hitBoxRelocation
-        this.locZ = (axisBoundingBox.minZ + axisBoundingBox.maxZ) / 2.0
+        val loc = ballDesign.bukkitEntity.location
+        val lastX = ballDesign.lastX
+        val lastY = ballDesign.lastY
+        val lastZ = ballDesign.lastZ
+
+        if (!loc.x.equals(lastX) || !loc.y.equals(lastY) || !loc.z.equals(lastZ)) {
+            if (ballDesign.isSmall) {
+                this.setPositionRotation(loc.x, loc.y + 0.5, loc.z, loc.yaw, loc.pitch)
+            } else {
+                this.setPositionRotation(loc.x, loc.y + 1.05, loc.z, loc.yaw, loc.pitch)
+            }
+
+            updatePosition()
+            debugPosition()
+        }
     }
 
     /**
-     * Override the default entity movement.
+     * Disable health.
      */
-    override fun move(enummovetype: EnumMoveType, vec3dmp: Vec3D) {
-        var vec3d = vec3dmp
-        val motionVector = Vector(this.mot.x, this.mot.y, this.mot.z)
-        val optSourceVector = ballDesign.proxy.calculateMoveSourceVectors(Vector(vec3d.x, vec3d.y, vec3d.z), motionVector, this.onGround)
-
-        if (!optSourceVector.isPresent) {
-            return
-        }
-
-        val sourceVector = optSourceVector.get()
-
-        if (sourceVector.x != vec3d.x) {
-            this.setMot(motionVector.x, motionVector.y, motionVector.z)
-        }
-
-        timingService.startTiming()
-
-        if (this.noclip) {
-            this.a(this.boundingBox.b(vec3d))
-            this.recalcPosition()
-        } else {
-            this.world.methodProfiler.enter("move")
-            if (this.B.g() > 1.0E-7) {
-                vec3d = vec3d.h(this.B)
-                this.B = Vec3D.a
-                this.mot = Vec3D.a
-            }
-
-            vec3d = this.a(vec3d, enummovetype)
-
-            val methodE = Entity::class.java.getDeclaredMethod("e", Vec3D::class.java)
-            methodE.isAccessible = true
-
-            val vec3d1 = methodE.invoke(this, vec3d) as Vec3D
-            if (vec3d1.g() > 1.0E-7) {
-                this.a(this.boundingBox.b(vec3d1))
-                this.recalcPosition()
-            }
-
-            this.world.methodProfiler.exit()
-            this.world.methodProfiler.enter("rest")
-            this.positionChanged = !MathHelper.b(vec3d.x, vec3d1.x) || !MathHelper.b(vec3d.z, vec3d1.z)
-            this.y = vec3d.y != vec3d1.y
-            this.onGround = this.y && vec3d.y < 0.0
-            this.z = this.positionChanged || this.y
-            val i = MathHelper.floor(this.locX)
-            val j = MathHelper.floor(this.locY - 0.20000000298023224)
-            val k = MathHelper.floor(this.locZ)
-            var blockposition = BlockPosition(i, j, k)
-            var iblockdata = this.world.getType(blockposition)
-            if (iblockdata.isAir) {
-                val blockposition1 = blockposition.down()
-                val iblockdata1 = this.world.getType(blockposition1)
-                val block = iblockdata1.block
-                if (block.a(TagsBlock.FENCES) || block.a(TagsBlock.WALLS) || block is BlockFenceGate) {
-                    iblockdata = iblockdata1
-                    blockposition = blockposition1
-                }
-            }
-
-            this.a(vec3d1.y, this.onGround, iblockdata, blockposition)
-            val vec3d2 = this.mot
-            if (vec3d.x != vec3d1.x) {
-                this.setMot(0.0, vec3d2.y, vec3d2.z)
-            }
-
-            if (vec3d.z != vec3d1.z) {
-                this.setMot(vec3d2.x, vec3d2.y, 0.0)
-            }
-
-            val block1 = iblockdata.block
-            if (vec3d.y != vec3d1.y) {
-                block1.a(this.world, this)
-            }
-
-            try {
-                this.checkBlockCollisions()
-            } catch (var21: Throwable) {
-                val crashreport = CrashReport.a(var21, "Checking entity block collision")
-                val crashreportsystemdetails = crashreport.a("Entity being checked for collision")
-                this.appendEntityCrashDetails(crashreportsystemdetails)
-                throw ReportedException(crashreport)
-            }
-
-            if (this.positionChanged) {
-                try {
-                    val sourceBlock = this.world.world.getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ))
-                    this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, vec3d1.x, vec3d1.z, vec3d.x, vec3d1.z)
-                } catch (e: Exception) {
-                    Bukkit.getLogger().log(Level.WARNING, "Critical exception.", e)
-                }
-            }
-
-            this.world.methodProfiler.exit()
-        }
-
-        this.ballDesign.proxy.calculatePostMovement()
-        timingService.stopTiming()
-    }
+    override fun setHealth(f: Float) {}
 
     /**
      * Gets the bukkit entity.
      */
-    override fun getBukkitEntity(): CraftBallArmorstand {
+    override fun getBukkitEntity(): CraftHitboxSlime {
         if (this.entityBukkit == null) {
-            this.entityBukkit = CraftBallArmorstand(this.world.server, this)
+            this.entityBukkit = CraftHitboxSlime(this.world.server, this)
         }
 
-        return this.entityBukkit as CraftBallArmorstand
+        return this.entityBukkit as CraftHitboxSlime
+    }
+
+    /**
+     * Updates the position of the entity manually.
+     */
+    private fun updatePosition() {
+        val packet = PacketPlayOutEntityTeleport(this)
+        this.world.players.forEach { p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet) }
+    }
+
+    /**
+     * Prints a debugging message for this entity.
+     */
+    private fun debugPosition() {
+        val loc = bukkitEntity.location
+        BlockBallApi.resolve(LoggingService::class.java).debug("Hitbox at ${loc.x.toFloat()} ${loc.y.toFloat()} ${loc.z.toFloat()}")
     }
 }

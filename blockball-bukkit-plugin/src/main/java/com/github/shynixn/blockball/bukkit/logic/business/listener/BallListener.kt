@@ -10,7 +10,6 @@ import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.SoundService
 import com.google.inject.Inject
 import org.bukkit.Location
-import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -65,16 +64,11 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onChunkSaveEvent(event: ChunkUnloadEvent) {
-        event.chunk.entities.filter { e -> e is ArmorStand }
-            .forEach { e ->
-                ballEntityService.findBallFromEntity(e).ifPresent { ball ->
-                    ball.remove()
-                }
-            }
+        ballEntityService.cleanUpInvalidEntities(event.chunk.entities.toList())
     }
 
     /**
-     * Checks if an ball armorstand is inside of the chunk and remove it.
+     * Checks if a ball armorstand is inside of the chunk and remove it.
      */
     @EventHandler
     fun onChunkLoadEvent(event: ChunkLoadEvent) {
@@ -82,6 +76,7 @@ class BallListener @Inject constructor(
     }
 
     /**
+     * TODO The comment below is misleading. PlayerInteractEvent is designed for item interactions
      * Gets called when a player hits the ball and kicks the ball.
      *
      * @param event event
@@ -89,9 +84,13 @@ class BallListener @Inject constructor(
     @EventHandler
     fun onPlayerInteractBallEvent(event: PlayerInteractEvent) {
         for (ball in this.ballEntityService.getAllBalls()) {
-            if (ball.getLastInteractionEntity<Entity>().isPresent && ball.getLastInteractionEntity<Entity>().get() == event.player) {
-                ball.throwByEntity(event.player)
-                event.isCancelled = true
+            if (ball.isGrabbed) {
+                ball.getLastInteractionEntity<Entity>().ifPresent {
+                    if (it is Player && it.uniqueId == event.player.uniqueId) {
+                        ball.throwByEntity(event.player)
+                        event.isCancelled = true
+                    }
+                }
             }
         }
     }
@@ -104,7 +103,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun entityRightClickBallEvent(event: PlayerInteractAtEntityEvent) {
-        if (event.rightClicked !is ArmorStand) {
+        if (event.rightClicked.customName == "ResourceBallsPlugin") {
             return
         }
 
@@ -125,7 +124,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerDamageBallEvent(event: EntityDamageByEntityEvent) {
-        if (event.entity is ArmorStand) {
+        if (event.entity.customName == "ResourceBallsPlugin") {
             val optBall = this.ballEntityService.findBallFromEntity(event.entity)
             if (optBall.isPresent) {
                 val ball = optBall.get()
@@ -142,7 +141,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun entityDamageEvent(event: EntityDamageEvent) {
-        if (event.entity is ArmorStand) {
+        if (event.entity.customName == "ResourceBallsPlugin") {
             val optBall = ballEntityService.findBallFromEntity(event.entity)
             if (optBall.isPresent) {
                 event.isCancelled = true

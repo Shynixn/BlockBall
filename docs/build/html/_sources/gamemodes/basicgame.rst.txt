@@ -11,22 +11,22 @@ Unlike the old Chat UI this Chat UI is fully compatible to all chat plugins and 
 
 1. Let's start by typing **/blockball**. This UI should show up.
 
-.. image:: ../_static/images/arena1.jpg
+.. image:: ../_static/images/arena1.JPG
 
 If the Chat UI is only partially formatted correctly, you should temporarily adjust your client chat settings.
 
-.. image:: ../_static/images/arena3.jpg
+.. image:: ../_static/images/arena3.JPG
 
 2. The UI is very simple to use, simply move your mouse on top of the colored text like '*[create..]*' or '*>>SAVE<<*'. Even tooltips are visible.
 
-.. image:: ../_static/images/arena4.jpg
+.. image:: ../_static/images/arena4.JPG
 
 Selecting the template
 ~~~~~~~~~~~~~~~~~~~~~~
 
 1. Before you can start configuring please choose an arena template.
 
-.. image:: ../_static/images/basegame14.jpg
+.. image:: ../_static/images/basegame14.JPG
 
 2. The default english template by the plugin author is automatically selected. You can press '*[create..]*' again.
 
@@ -38,15 +38,15 @@ Creating the arena
 
 1. As displayed on the previous screenshot simply click on '*[create..]*' with your mouse.
 
-.. image:: ../_static/images/arena2.jpg
+.. image:: ../_static/images/arena2.JPG
 
 2. You can see that different actions do have different colors.
 
 * The action '*[edit..]* requires text input when being clicked. It suggests the command for changing the displayname of the arena in this case. Simply enter the name, it supports spaces and chat colors!
 
-.. image:: ../_static/images/arena5.jpg
+.. image:: ../_static/images/arena5.JPG
 
-.. image:: ../_static/images/arena6.jpg
+.. image:: ../_static/images/arena6.JPG
 
 
 * The action *[toggle..]* simply behaves as a switch between true and false.
@@ -82,7 +82,7 @@ Checking if everything is working
 Let's check if our base game is correctly configured. Run into the forcefield of your arena and take a look if the
 following message appears.
 
-.. image:: ../_static/images/arena9.jpg
+.. image:: ../_static/images/arena9.JPG
 
 If it does not, your worledit arena selection is probably misplaced or simply wrong.
 

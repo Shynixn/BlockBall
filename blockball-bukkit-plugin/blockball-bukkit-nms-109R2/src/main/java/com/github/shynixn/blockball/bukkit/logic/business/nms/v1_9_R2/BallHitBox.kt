@@ -69,6 +69,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
      * Override the default entity movement.
      */
     override fun move(d0m: Double, d1m: Double, d2m: Double) {
+        var collision = false
         val motionVector = Vector(motX, motY, motZ)
         val optSourceVector = ballDesign.proxy.calculateMoveSourceVectors(Vector(d0m, d1m, d2m), motionVector, this.onGround)
 
@@ -301,7 +302,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
             if (this.positionChanged) {
                 try {
                     val sourceBlock = this.world.world.getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ))
-                    this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, d0, d2, d6, d8)
+                    collision = this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, d0, d2, d6, d8)
                 } catch (e: Exception) {
                     Bukkit.getLogger().log(Level.WARNING, "Critical exception.", e)
                 }
@@ -309,7 +310,7 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
 
         }
 
-        this.ballDesign.proxy.calculatePostMovement()
+        this.ballDesign.proxy.calculatePostMovement(collision)
         timingService.stopTiming()
     }
 

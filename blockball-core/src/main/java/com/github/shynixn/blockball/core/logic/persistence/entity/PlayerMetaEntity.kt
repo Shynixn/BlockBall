@@ -31,32 +31,16 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class PlayerMetaEntity() : PlayerMeta {
+class PlayerMetaEntity(
+    @YamlSerialize(value = "uuid", orderNumber = 2)
+    override
+    /** [uuid] of the player. */
+    var uuid: String,
+    @YamlSerialize(value = "name", orderNumber = 1)
+    override var name: String = ""
+) : PlayerMeta {
     /**
      * Database id.
      */
     override var id: Long = 0L
-    /** [name] of the player. */
-    @YamlSerialize(value = "name", orderNumber = 1)
-    override var name: String = ""
-
-    @YamlSerialize(value = "uuid", orderNumber = 2)
-    private var uuidText: String? = null
-
-    constructor(uuid: UUID, name: String) : this() {
-        this.name = name
-        this.uuid = uuid
-    }
-
-    /** [uuid] of the player. */
-    override var uuid: UUID
-        get() {
-            if (uuidText == null)
-                throw IllegalArgumentException("UUID cannot be null!")
-            return UUID.fromString(uuidText)
-        }
-        set(value) {
-            uuidText = value.toString()
-        }
-
 }

@@ -3,7 +3,7 @@ DoubleJump
 
 It is possible to use a double jump per default during a match. It looks like that:
 
-.. image:: ../_static/images/doublejump1.jpg
+.. image:: ../_static/images/doublejump1.JPG
 
 You can use it to offer you players another way of moving around in the arena.
 
@@ -18,7 +18,7 @@ At this stage, you should be able to open the `Settings <../gamemodes/basicgame.
 2. Open the **Abilities Page**
 3. Open the **DoubleJump Page**
 
-.. image:: ../_static/images/doublejump2.jpg
+.. image:: ../_static/images/doublejump2.JPG
 
 4. Now continue by enabling or disabling the doubleJump by clicking **toggle** with your mouse.
 5. Customize the other available options to your own needs.
@@ -34,7 +34,9 @@ At this stage, you should be able to find your arena save file. If not, please t
 2. Search for the following section:
 
 **arena_x.yml**
-::
+
+.. code-block:: yaml
+
    double-jump:
       enabled: true
       cooldown: 2

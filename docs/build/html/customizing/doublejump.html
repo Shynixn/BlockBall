@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DoubleJump &mdash; BlockBall 6.4.1 documentation</title>
+  <title>DoubleJump &mdash; BlockBall 6.10.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.4.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.10.0 documentation" href="../index.html"/>
         <link rel="up" title="Abilities" href="abilities.html"/>
         <link rel="next" title="Rewards" href="rewards.html"/>
         <link rel="prev" title="Abilities" href="abilities.html"/> 
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                6.4.1
+                6.10.0
               </div>
             
           
@@ -195,21 +195,21 @@
   <div class="section" id="doublejump">
 <h1>DoubleJump<a class="headerlink" href="#doublejump" title="Permalink to this headline">¶</a></h1>
 <p>It is possible to use a double jump per default during a match. It looks like that:</p>
-<img alt="../_images/doublejump1.jpg" src="../_images/doublejump1.jpg" />
+<img alt="../_images/doublejump1.JPG" src="../_images/doublejump1.JPG" />
 <p>You can use it to offer you players another way of moving around in the arena.</p>
 <p><strong>Note:</strong> You might need to adjust the horizontal strength value when your arena is bigger or smaller than the sample arena.</p>
 <div class="section" id="configuring-ingame">
 <h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to open the <a class="reference external" href="../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui">Settings</a> page of your arena chat UI.</p>
 <ol class="arabic simple">
-<li>Go to the <strong>Settings Page</strong> of your arena</li>
-<li>Open the <strong>Abilities Page</strong></li>
-<li>Open the <strong>DoubleJump Page</strong></li>
+<li><p>Go to the <strong>Settings Page</strong> of your arena</p></li>
+<li><p>Open the <strong>Abilities Page</strong></p></li>
+<li><p>Open the <strong>DoubleJump Page</strong></p></li>
 </ol>
-<img alt="../_images/doublejump2.jpg" src="../_images/doublejump2.jpg" />
+<img alt="../_images/doublejump2.JPG" src="../_images/doublejump2.JPG" />
 <ol class="arabic simple" start="4">
-<li>Now continue by enabling or disabling the doubleJump by clicking <strong>toggle</strong> with your mouse.</li>
-<li>Customize the other available options to your own needs.</li>
+<li><p>Now continue by enabling or disabling the doubleJump by clicking <strong>toggle</strong> with your mouse.</p></li>
+<li><p>Customize the other available options to your own needs.</p></li>
 </ol>
 <p>You can find all options explained at the bottom of this page.</p>
 </div>
@@ -217,45 +217,45 @@
 <h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
 <ol class="arabic simple">
-<li>Go to the <strong>Open the arena_x.yml</strong> of your arena</li>
-<li>Search for the following section:</li>
+<li><p>Go to the <strong>Open the arena_x.yml</strong> of your arena</p></li>
+<li><p>Search for the following section:</p></li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">double</span><span class="o">-</span><span class="n">jump</span><span class="p">:</span>
-   <span class="n">enabled</span><span class="p">:</span> <span class="n">true</span>
-   <span class="n">cooldown</span><span class="p">:</span> <span class="mi">2</span>
-   <span class="n">vertical</span><span class="o">-</span><span class="n">strength</span><span class="p">:</span> <span class="mf">1.0</span>
-   <span class="n">horizontal</span><span class="o">-</span><span class="n">strength</span><span class="p">:</span> <span class="mf">2.0</span>
-   <span class="n">particle</span><span class="o">-</span><span class="n">effect</span><span class="p">:</span>
-     <span class="n">effecting</span><span class="p">:</span> <span class="n">EVERYONE</span>
-     <span class="n">name</span><span class="p">:</span> <span class="n">explosion</span>
-     <span class="n">amount</span><span class="p">:</span> <span class="mi">4</span>
-     <span class="n">speed</span><span class="p">:</span> <span class="mf">2.0</span>
-     <span class="n">offset</span><span class="p">:</span>
-       <span class="n">x</span><span class="p">:</span> <span class="mf">2.0</span>
-       <span class="n">y</span><span class="p">:</span> <span class="mf">2.0</span>
-       <span class="n">z</span><span class="p">:</span> <span class="mf">2.0</span>
-   <span class="n">sound</span><span class="o">-</span><span class="n">effect</span><span class="p">:</span>
-     <span class="n">effecting</span><span class="p">:</span> <span class="n">EVERYONE</span>
-     <span class="n">name</span><span class="p">:</span> <span class="n">GHAST_FIREBALL</span>
-     <span class="n">volume</span><span class="p">:</span> <span class="mf">100.0</span>
-     <span class="n">pitch</span><span class="p">:</span> <span class="mf">1.0</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">double-jump</span><span class="p">:</span>
+   <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">cooldown</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+   <span class="nt">vertical-strength</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+   <span class="nt">horizontal-strength</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+   <span class="nt">particle-effect</span><span class="p">:</span>
+     <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">explosion</span>
+     <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+     <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+     <span class="nt">offset</span><span class="p">:</span>
+       <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+       <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+       <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+   <span class="nt">sound-effect</span><span class="p">:</span>
+     <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GHAST_FIREBALL</span>
+     <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100.0</span>
+     <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li>Now continue by enabling or disabling the doubleJump by changing the <strong>enabled</strong> value.</li>
-<li>Customize the other available options to your own needs.</li>
+<li><p>Now continue by enabling or disabling the doubleJump by changing the <strong>enabled</strong> value.</p></li>
+<li><p>Customize the other available options to your own needs.</p></li>
 </ol>
 </div>
 <div class="section" id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Enabled: Enable or disable the doubleJump</li>
-<li>Cooldown: Cooldown in seconds between the time a player activates the jump and can use another jump</li>
-<li>Vertical strength: Strength modifier for the y axe</li>
-<li>Horizontal strength: Strength modifier for the x and z axe</li>
-<li>Particleeffect: <a class="reference external" href="particleeffect.html">Particleeffect</a>  being played when a player clicks space a second time</li>
-<li>Soundeffect: <a class="reference external" href="soundeffect.html">Soundeffect</a>  being played when a player clicks space a second time</li>
+<li><p>Enabled: Enable or disable the doubleJump</p></li>
+<li><p>Cooldown: Cooldown in seconds between the time a player activates the jump and can use another jump</p></li>
+<li><p>Vertical strength: Strength modifier for the y axe</p></li>
+<li><p>Horizontal strength: Strength modifier for the x and z axe</p></li>
+<li><p>Particleeffect: <a class="reference external" href="particleeffect.html">Particleeffect</a>  being played when a player clicks space a second time</p></li>
+<li><p>Soundeffect: <a class="reference external" href="soundeffect.html">Soundeffect</a>  being played when a player clicks space a second time</p></li>
 </ul>
 </div>
 </div>
@@ -303,7 +303,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.4.1',
+            VERSION:'6.10.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -314,6 +314,7 @@
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 
