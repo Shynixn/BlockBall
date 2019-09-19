@@ -63,6 +63,8 @@ class GamePropertiesPage : Page(GamePropertiesPage.ID, MiscSettingsPage.ID) {
             arena.meta.customizingMeta.backTeleportDelay = args[2].toInt()
         } else if (command == MenuCommand.GAMEPROPERTIES_TOGGLE_BALLFORCEFIELD) {
             arena.meta.customizingMeta.ballForceField = !arena.meta.customizingMeta.ballForceField
+        } else if (command == MenuCommand.GAMEPROPERTIES_TOGGLE_KEEPINVENTORY) {
+            arena.meta.customizingMeta.keepInventoryEnabled = !arena.meta.customizingMeta.keepInventoryEnabled
         }
 
         return super.execute(player, command, cache, args)
@@ -105,6 +107,14 @@ class GamePropertiesPage : Page(GamePropertiesPage.ID, MiscSettingsPage.ID) {
                 MenuCommand.GAMEPROPERTIES_TELEPORTBACKDELAY.command
             )
             .setHoverText("Delay after the players get teleported back to their game spawnpoint.")
+            .builder().nextLine()
+            .component("- Keep inventory: " + meta.keepInventoryEnabled).builder()
+            .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
+            .setClickAction(
+                ChatClickAction.RUN_COMMAND,
+                MenuCommand.GAMEPROPERTIES_TOGGLE_KEEPINVENTORY.command
+            )
+            .setHoverText("Toggles if players should keep their current inventory when they join a match.")
             .builder().nextLine()
     }
 }
