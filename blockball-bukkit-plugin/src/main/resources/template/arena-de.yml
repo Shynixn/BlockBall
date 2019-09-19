@@ -286,6 +286,7 @@ arena:
           volume: 0.0
           pitch: 0.0
       wall-bouncing: {}
+      interaction-skip: 2
       spawn-delay: 0
       spawnpoint:
         x: 162.0042862705688

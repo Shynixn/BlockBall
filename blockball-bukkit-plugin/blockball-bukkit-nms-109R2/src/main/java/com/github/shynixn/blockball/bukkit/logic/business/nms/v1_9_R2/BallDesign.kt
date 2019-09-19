@@ -68,13 +68,13 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         internalProxy = Class.forName("com.github.shynixn.blockball.bukkit.logic.business.proxy.BallProxyImpl")
             .getDeclaredConstructor(
                 BallMeta::class.java,
-                ArmorStand::class.java,
-                ArmorStand::class.java,
+                LivingEntity::class.java,
+                LivingEntity::class.java,
                 UUID::class.java,
                 LivingEntity::class.java,
                 Boolean::class.java
             )
-            .newInstance(ballMeta, this.getBukkitEntity() as ArmorStand, hitbox.bukkitEntity as ArmorStand, uuid, owner, persistent) as BallProxy
+            .newInstance(ballMeta, this.getBukkitEntity() as LivingEntity, hitbox.bukkitEntity as LivingEntity, uuid, owner, persistent) as BallProxy
 
         val compound = NBTTagCompound()
         compound.setBoolean("invulnerable", true)

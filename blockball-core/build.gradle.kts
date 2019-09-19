@@ -2,6 +2,7 @@ dependencies {
     implementation(project(":blockball-api"))
 
     compileOnly("com.google.inject:guice:4.1.0")
+    compileOnly("com.zaxxer:HikariCP:3.2.0")
 
     testCompile("org.jetbrains.kotlin:kotlin-test")
     testCompile("org.jetbrains.kotlin:kotlin-test-junit")

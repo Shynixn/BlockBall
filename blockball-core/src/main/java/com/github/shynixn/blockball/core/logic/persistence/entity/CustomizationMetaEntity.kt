@@ -45,4 +45,10 @@ class CustomizationMetaEntity : CustomizationMeta {
      */
     @YamlSerialize(value = "ball-forcefield", orderNumber = 4)
     override var ballForceField: Boolean = true
+
+    /**
+     * Should the players keep their inventory when they join a game?
+     */
+    @YamlSerialize(value = "keep-inventory", orderNumber = 4)
+    override var keepInventoryEnabled: Boolean = false
 }

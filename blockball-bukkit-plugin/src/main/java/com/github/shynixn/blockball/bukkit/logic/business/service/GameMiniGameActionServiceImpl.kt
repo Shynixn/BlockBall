@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.enumeration.GameStatus
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.GameStorage
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
@@ -156,7 +157,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         loggingService.debug("Player " + player.name + " tries to leave game " + game.arena.name + " " + game.arena.displayName)
 
         if (game.spectatorPlayers.contains(player)) {
-            resetStorage(player, game.spectatorPlayersStorage[player]!!)
+            resetStorage(player, game, game.spectatorPlayersStorage[player]!!)
             player.teleport(game.arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation())
             game.spectatorPlayersStorage.remove(player)
 
@@ -171,7 +172,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         }
 
         val stats = game.ingamePlayersStorage[player]!!
-        resetStorage(player, stats)
+        resetStorage(player, game, stats)
     }
 
     /**
@@ -372,10 +373,12 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         player.exp = 0.0F
         player.gameMode = game.arena.meta.lobbyMeta.gamemode.toGameMode()
 
-        player.inventory.setArmorContents(arrayOfNulls(4))
-        player.inventory.clear()
+        if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
+            player.inventory.setArmorContents(arrayOfNulls(4))
+            player.inventory.clear()
+            player.inventory.updateInventory()
+        }
 
-        player.inventory.updateInventory()
         player.teleport(game.arena.meta.minigameMeta.lobbySpawnpoint!!.toLocation())
 
         return stats
@@ -386,9 +389,12 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      */
     private fun joinTeam(game: MiniGame, player: Player, team: Team, teamMeta: TeamMeta) {
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()
-        player.inventory.contents = teamMeta.inventoryContents.clone().map { d -> d as ItemStack? }.toTypedArray()
-        player.inventory.setArmorContents(teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray())
-        player.inventory.updateInventory()
+
+        if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
+            player.inventory.contents = teamMeta.inventoryContents.clone().map { d -> d as ItemStack? }.toTypedArray()
+            player.inventory.setArmorContents(teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray())
+            player.inventory.updateInventory()
+        }
 
         val players = if (team == Team.RED) {
             game.redTeam as List<Player>
@@ -450,7 +456,6 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
         return amount
     }
-
 
     /**
      * Returns if the lobby countdown can already be started.
@@ -526,11 +531,9 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     /**
      * Resets the storage of the given [player].
      */
-    private fun resetStorage(player: Player, stats: GameStorage) {
+    private fun resetStorage(player: Player, game: Game, stats: GameStorage) {
         with(player) {
             gameMode = stats.gameMode as GameMode
-            inventory.contents = stats.inventoryContents as Array<out ItemStack>
-            inventory.setArmorContents(stats.armorContents as Array<out ItemStack>)
             allowFlight = stats.allowedFlying
             isFlying = stats.flying
             walkSpeed = stats.walkingSpeed
@@ -543,8 +546,12 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             foodLevel = stats.hunger
         }
 
-        loggingService.debug("The inventory of player " + player.name + " was restored.")
+        if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
+            player.inventory.contents = stats.inventoryContents as Array<out ItemStack>
+            player.inventory.setArmorContents(stats.armorContents as Array<out ItemStack>)
+            player.inventory.updateInventory()
+        }
 
-        player.inventory.updateInventory()
+        loggingService.debug("The inventory of player " + player.name + " was restored.")
     }
 }

@@ -106,15 +106,17 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
 
         with(player as Player) {
             gameMode = stats.gameMode as GameMode
-            inventory.contents = stats.inventoryContents as Array<out ItemStack>
-            inventory.setArmorContents(stats.armorContents as Array<out ItemStack>)
             allowFlight = stats.allowedFlying
             isFlying = stats.flying
             walkSpeed = stats.walkingSpeed
             scoreboard = stats.scoreboard as Scoreboard
         }
 
-        player.inventory.updateInventory()
+        if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
+            player.inventory.contents = stats.inventoryContents as Array<out ItemStack>
+            player.inventory.setArmorContents(stats.armorContents as Array<out ItemStack>)
+            player.inventory.updateInventory()
+        }
     }
 
     /**
@@ -160,9 +162,12 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
         player.allowFlight = false
         player.isFlying = false
         player.walkSpeed = teamMeta.walkingSpeed.toFloat()
-        player.inventory.contents = teamMeta.inventoryContents.clone().map { d -> d as ItemStack? }.toTypedArray()
-        player.inventory.setArmorContents(teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray())
-        player.inventory.updateInventory()
+
+        if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
+            player.inventory.contents = teamMeta.inventoryContents.clone().map { d -> d as ItemStack? }.toTypedArray()
+            player.inventory.setArmorContents(teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray())
+            player.inventory.updateInventory()
+        }
 
         if (game.arena.meta.hubLobbyMeta.teleportOnJoin) {
             this.gameExecutionService.respawn(game, player)

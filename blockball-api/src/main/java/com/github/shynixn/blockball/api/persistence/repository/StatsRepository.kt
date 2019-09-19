@@ -31,22 +31,12 @@ import com.github.shynixn.blockball.api.persistence.entity.Stats
  */
 interface StatsRepository {
     /**
-     * Returns all stored stats in this repository.
+     * Returns the [Stats] from the given player name and uuid or allocates a new one.
      */
-    fun getAll(): List<Stats>
+    fun getOrCreateFromPlayer(name: String, uuid: String): Stats
 
     /**
-     * Returns the amount of items in this repository.
+     * Saves the given [item] to the storage.
      */
-    fun size(): Int
-
-    /**
-     * Returns the [Stats] from the given [player] or allocates a new one.
-     */
-    fun <P> getOrCreateFromPlayer(player: P): Stats
-
-    /**
-     * Saves the given [Stats] to the storage.
-     */
-    fun <P> save(player: P, stats: Stats)
+    fun save(item: Stats): Stats
 }

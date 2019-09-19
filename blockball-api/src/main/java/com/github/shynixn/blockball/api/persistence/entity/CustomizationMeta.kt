@@ -38,4 +38,9 @@ interface CustomizationMeta {
      * Should the ball be restricted by a forcefield to stay in the arena?
      */
     var ballForceField: Boolean
+
+    /**
+     * Should the players keep their inventory when they join a game?
+     */
+    var keepInventoryEnabled: Boolean
 }

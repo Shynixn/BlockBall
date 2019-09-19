@@ -7,7 +7,6 @@ import com.github.shynixn.blockball.api.business.enumeration.BallActionType
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.ArenaMeta
-import com.github.shynixn.blockball.api.persistence.entity.ArenaProtectionMeta
 import com.github.shynixn.blockball.api.persistence.entity.HologramMeta
 
 /**

@@ -11,8 +11,8 @@ import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Sound
 import com.github.shynixn.blockball.bukkit.logic.business.listener.BallListener
 import org.bukkit.Chunk
-import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
+import org.bukkit.entity.Slime
 import org.bukkit.event.world.ChunkLoadEvent
 import org.bukkit.event.world.ChunkUnloadEvent
 import org.junit.jupiter.api.Assertions
@@ -73,7 +73,7 @@ class BallListenerTest {
         classUnderTest.onChunkSaveEvent(chunkUnloadEvent)
 
         // Assert
-        Assertions.assertTrue(ball.isDead)
+        Assertions.assertTrue(mockedEntityService.cleanUpCalled)
     }
 
     /**
@@ -115,7 +115,7 @@ class BallListenerTest {
         override fun run() {
         }
 
-        private val entity: ArmorStand = Mockito.mock(ArmorStand::class.java)
+        private val entity: Slime = Mockito.mock(Slime::class.java)
 
         /**
          * Gets the meta data.
@@ -149,7 +149,7 @@ class BallListenerTest {
         /**
          * Current spinning force value.
          */
-        override var spinningForce: Double = 0.0
+        override var angularVelocity: Double = 0.0
 
         /**
          * Returns the armorstand for the design.
@@ -159,9 +159,9 @@ class BallListenerTest {
         }
 
         /**
-         * Returns the armorstand for the hitbox.
+         * Returns the hitbox entity.
          */
-        override fun <A> getHitboxArmorstand(): A {
+        override fun <A> getHitbox(): A {
             return entity as A
         }
 
@@ -258,7 +258,7 @@ class BallListenerTest {
         /**
          * Calculates post movement.
          */
-        override fun calculatePostMovement() {
+        override fun calculatePostMovement(collision: Boolean) {
             throw IllegalArgumentException()
         }
 
@@ -272,15 +272,26 @@ class BallListenerTest {
         /**
          * Calculates the knockback for the given [sourceVector] and [sourceBlock]. Uses the motion values to correctly adjust the
          * wall.
+         *
+         * @return if collision was detected and the knockback was applied
          */
-        override fun <V, B> calculateKnockBack(sourceVector: V, sourceBlock: B, mot0: Double, mot2: Double, mot6: Double, mot8: Double) {
+        override fun <V, B> calculateKnockBack(sourceVector: V, sourceBlock: B, mot0: Double, mot2: Double, mot6: Double, mot8: Double): Boolean {
             throw IllegalArgumentException()
         }
 
     }
 
     class MockedBallEntityService(private val ball: BallProxy = MockedBallProxy()) : BallEntityService {
+
         var cleanUpCalled = false
+
+        /**
+         * Registers entities on the server when not already registered.
+         * Returns true if registered. Returns false when not registered.
+         */
+        override fun registerEntitiesOnServer(): Boolean {
+            return true
+        }
 
         /**
          * Spawns a temporary ball.
@@ -293,7 +304,7 @@ class BallListenerTest {
          * Finds Ball from the given entity.
          */
         override fun <E> findBallFromEntity(entity: E): Optional<BallProxy> {
-            if (ball.getHitboxArmorstand<E>() == entity || ball.getDesignArmorstand<E>() == entity) {
+            if (ball.getHitbox<E>() == entity || ball.getDesignArmorstand<E>() == entity) {
                 return Optional.of(ball)
             }
 

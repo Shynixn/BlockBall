@@ -101,11 +101,7 @@ class GameListener @Inject constructor(
      */
     @EventHandler
     fun onBallPostMoveEvent(event: BallPostMoveEvent) {
-        val game = this.gameService.getAllGames().firstOrNull { g -> g.ball != null && g.ball == event.ball }
-
-        if (game == null) {
-            return
-        }
+        val game = this.gameService.getAllGames().firstOrNull { g -> g.ball != null && g.ball == event.ball } ?: return
 
         forceFieldService.calculateForcefieldInteractions(game, event.ball)
     }

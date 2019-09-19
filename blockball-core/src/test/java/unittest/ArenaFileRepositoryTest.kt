@@ -170,6 +170,13 @@ class ArenaFileRepositoryTest {
 
     class MockedConfigurationService : ConfigurationService {
         /**
+         * Opens an inputStream to the given resource name.
+         */
+        override fun openResource(name: String): InputStream {
+            throw IllegalArgumentException()
+        }
+
+        /**
          * Checks if the given [path] contains a value.
          */
         override fun containsValue(path: String): Boolean {

@@ -1,1 +1,0 @@
-INSERT INTO SHY_PLAYER (name, uuid) VALUES (?,?)

@@ -2,15 +2,20 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2
 
-import com.github.shynixn.blockball.api.business.service.SpigotTimingService
-import net.minecraft.server.v1_13_R2.*
-import org.bukkit.Bukkit
+import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.service.LoggingService
+import com.github.shynixn.blockball.api.persistence.entity.BallMeta
+import net.minecraft.server.v1_13_R2.AxisAlignedBB
+import net.minecraft.server.v1_13_R2.EntitySlime
+import net.minecraft.server.v1_13_R2.NBTTagCompound
+import net.minecraft.server.v1_13_R2.PacketPlayOutEntityTeleport
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer
 import org.bukkit.event.entity.CreatureSpawnEvent
-import org.bukkit.util.Vector
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import java.lang.reflect.Field
-import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -39,7 +44,12 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallHitBox(private val ballDesign: BallDesign, location: Location, private val timingService: SpigotTimingService) : EntityArmorStand((location.world as CraftWorld).handle) {
+class BallHitBox(
+    private val ballDesign: BallDesign,
+    ballMeta: BallMeta,
+    location: Location
+) : EntitySlime((location.world as CraftWorld).handle) {
+
     companion object {
         private val axisAlignmentFields = arrayOfNulls<Field?>(5)
 
@@ -72,244 +82,78 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
      * Initializes the hitbox.
      */
     init {
+        val compound = NBTTagCompound()
+        compound.setBoolean("Invulnerable", true)
+        compound.setBoolean("PersistenceRequired", true)
+        compound.setBoolean("NoAI", true)
+        compound.setInt("Size", ballMeta.hitBoxSize.toInt() - 1)
+        this.a(compound)
+
+        val entity = getBukkitEntity()
+        entity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false))
+        entity.isCollidable = false
+
         val mcWorld = (location.world as CraftWorld).handle
         this.setPosition(location.x, location.y, location.z)
         mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
 
-        val compound = NBTTagCompound()
-        compound.setBoolean("invulnerable", true)
-        compound.setBoolean("Invisible", true)
-        compound.setBoolean("PersistenceRequired", true)
-        compound.setBoolean("NoBasePlate", true)
-        this.a(compound)
+        updatePosition()
+        debugPosition()
     }
 
     /**
-     * Recalculates y-axe hitbox offset in the world.
+     * 1. Prevent slime from dying in Peaceful difficulty
+     * 2. Constantly move hitbox to overlap with ballDesign
      */
-    override fun recalcPosition() {
-        val axisBoundingBox = this.boundingBox
+    override fun tick() {
+        super.tick()
+        this.dead = false
 
-        val minXA = axisAlignmentFields[0]!!.getDouble(axisBoundingBox)
-        val minXB = axisAlignmentFields[1]!!.getDouble(axisBoundingBox)
-        val minXC = axisAlignmentFields[2]!!.getDouble(axisBoundingBox)
-        val maxXD = axisAlignmentFields[3]!!.getDouble(axisBoundingBox)
-        val maxXF = axisAlignmentFields[4]!!.getDouble(axisBoundingBox)
+        val loc = ballDesign.bukkitEntity.location
+        val lastX = ballDesign.lastX
+        val lastY = ballDesign.lastY
+        val lastZ = ballDesign.lastZ
 
-        this.locX = (minXA + maxXD) / 2.0
-        this.locY = minXB + ballDesign.proxy.meta.hitBoxRelocation
-        this.locZ = (minXC + maxXF) / 2.0
+        if (!loc.x.equals(lastX) || !loc.y.equals(lastY) || !loc.z.equals(lastZ)) {
+            if (ballDesign.isSmall) {
+                this.setPositionRotation(loc.x, loc.y + 0.5, loc.z, loc.yaw, loc.pitch)
+            } else {
+                this.setPositionRotation(loc.x, loc.y + 1.05, loc.z, loc.yaw, loc.pitch)
+            }
+            updatePosition()
+            debugPosition()
+        }
     }
 
     /**
-     * Override the default entity movement.
+     * Disable health.
      */
-    override fun move(enummovetype: EnumMoveType, d0m: Double, d1m: Double, d2m: Double) {
-        val motionVector = Vector(motX, motY, motZ)
-        val optSourceVector = ballDesign.proxy.calculateMoveSourceVectors(Vector(d0m, d1m, d2m), motionVector, this.onGround)
-
-        if (!optSourceVector.isPresent) {
-            return
-        }
-
-        val sourceVector = optSourceVector.get()
-
-        if (sourceVector.x != d0m) {
-            this.motX = motionVector.x
-            this.motY = motionVector.y
-            this.motZ = motionVector.z
-        }
-
-        timingService.startTiming()
-
-        var d0 = d0m
-        var d1 = d1m
-        var d2 = d2m
-
-        if (this.noclip) {
-            this.a(this.boundingBox.d(d0, d1, d2))
-            this.recalcPosition()
-        } else {
-            try {
-                this.checkBlockCollisions()
-            } catch (var49: Throwable) {
-                val crashReport = CrashReport.a(var49, "Checking entity block collision")
-                val crashReportSystemDetails = crashReport.a("Entity being checked for collision")
-                this.appendEntityCrashDetails(crashReportSystemDetails)
-                throw ReportedException(crashReport)
-            }
-
-            this.world.methodProfiler.enter("move")
-
-            if (this.F) {
-                this.F = false
-                d0 *= 0.25
-                d1 *= 0.05000000074505806
-                d2 *= 0.25
-                this.motX = 0.0
-                this.motY = 0.0
-                this.motZ = 0.0
-            }
-
-            val d7 = d0
-            val d8 = d1
-            val d9 = d2
-
-            val axisAlignedBB = this.boundingBox
-            if (d0 != 0.0 || d1 != 0.0 || d2 != 0.0) {
-                val streamAccumulator = StreamAccumulator(this.world.a(this, this.boundingBox, d0, d1, d2))
-                if (d1 != 0.0) {
-                    d1 = VoxelShapes.a(EnumDirection.EnumAxis.Y, this.boundingBox, streamAccumulator.a(), d1)
-                    this.a(this.boundingBox.d(0.0, d1, 0.0))
-                }
-
-                if (d0 != 0.0) {
-                    d0 = VoxelShapes.a(EnumDirection.EnumAxis.X, this.boundingBox, streamAccumulator.a(), d0)
-                    if (d0 != 0.0) {
-                        this.a(this.boundingBox.d(d0, 0.0, 0.0))
-                    }
-                }
-
-                if (d2 != 0.0) {
-                    d2 = VoxelShapes.a(EnumDirection.EnumAxis.Z, this.boundingBox, streamAccumulator.a(), d2)
-                    if (d2 != 0.0) {
-                        this.a(this.boundingBox.d(0.0, 0.0, d2))
-                    }
-                }
-            }
-
-            val flag = this.onGround || d1 != d1 && d1 < 0.0
-            val d11: Double
-            if (this.Q > 0.0f && flag && (d7 != d0 || d9 != d2)) {
-                val d12 = d0
-                val d13 = d1
-                val d14 = d2
-                val axisAlignedB1 = this.boundingBox
-                this.a(axisAlignedBB)
-                d0 = d7
-                d1 = this.Q.toDouble()
-                d2 = d9
-                if (d7 != 0.0 || d1 != 0.0 || d9 != 0.0) {
-                    val streamAccumulator1 = StreamAccumulator(this.world.a(this, this.boundingBox, d7, d1, d9))
-                    var axisAlignedBB2 = this.boundingBox
-                    val axisAlignedBB3 = axisAlignedBB2.b(d7, 0.0, d9)
-                    d11 = VoxelShapes.a(EnumDirection.EnumAxis.Y, axisAlignedBB3, streamAccumulator1.a(), d1)
-                    if (d11 != 0.0) {
-                        axisAlignedBB2 = axisAlignedBB2.d(0.0, d11, 0.0)
-                    }
-
-                    val d15 = VoxelShapes.a(EnumDirection.EnumAxis.X, axisAlignedBB2, streamAccumulator1.a(), d7)
-                    if (d15 != 0.0) {
-                        axisAlignedBB2 = axisAlignedBB2.d(d15, 0.0, 0.0)
-                    }
-
-                    val d16 = VoxelShapes.a(EnumDirection.EnumAxis.Z, axisAlignedBB2, streamAccumulator1.a(), d9)
-                    if (d16 != 0.0) {
-                        axisAlignedBB2 = axisAlignedBB2.d(0.0, 0.0, d16)
-                    }
-
-                    var axisAlignedBB4 = this.boundingBox
-                    val d17 = VoxelShapes.a(EnumDirection.EnumAxis.Y, axisAlignedBB4, streamAccumulator1.a(), d1)
-                    if (d17 != 0.0) {
-                        axisAlignedBB4 = axisAlignedBB4.d(0.0, d17, 0.0)
-                    }
-
-                    val d18 = VoxelShapes.a(EnumDirection.EnumAxis.X, axisAlignedBB4, streamAccumulator1.a(), d7)
-                    if (d18 != 0.0) {
-                        axisAlignedBB4 = axisAlignedBB4.d(d18, 0.0, 0.0)
-                    }
-
-                    val d19 = VoxelShapes.a(EnumDirection.EnumAxis.Z, axisAlignedBB4, streamAccumulator1.a(), d9)
-                    if (d19 != 0.0) {
-                        axisAlignedBB4 = axisAlignedBB4.d(0.0, 0.0, d19)
-                    }
-
-                    val d20 = d15 * d15 + d16 * d16
-                    val d21 = d18 * d18 + d19 * d19
-                    if (d20 > d21) {
-                        d0 = d15
-                        d2 = d16
-                        d1 = -d11
-                        this.a(axisAlignedBB2)
-                    } else {
-                        d0 = d18
-                        d2 = d19
-                        d1 = -d17
-                        this.a(axisAlignedBB4)
-                    }
-
-                    d1 = VoxelShapes.a(EnumDirection.EnumAxis.Y, this.boundingBox, streamAccumulator1.a(), d1)
-                    if (d1 != 0.0) {
-                        this.a(this.boundingBox.d(0.0, d1, 0.0))
-                    }
-                }
-
-                if (d12 * d12 + d14 * d14 >= d0 * d0 + d2 * d2) {
-                    d0 = d12
-                    d1 = d13
-                    d2 = d14
-                    this.a(axisAlignedB1)
-                }
-            }
-
-            this.world.methodProfiler.exit()
-            this.world.methodProfiler.enter("rest")
-            this.recalcPosition()
-            this.positionChanged = d7 != d0 || d9 != d2
-            this.C = d1 != d8
-            this.onGround = this.C && d8 < 0.0
-            this.D = this.positionChanged || this.C
-            val k = MathHelper.floor(this.locX)
-            val l = MathHelper.floor(this.locY - 0.20000000298023224)
-            val i1 = MathHelper.floor(this.locZ)
-            var blockposition = BlockPosition(k, l, i1)
-            var iblockdata = this.world.getType(blockposition)
-            if (iblockdata.isAir) {
-                val blockPosition1 = blockposition.down()
-                val blockData1 = this.world.getType(blockPosition1)
-                val block = blockData1.block
-                if (block is BlockFence || block is BlockCobbleWall || block is BlockFenceGate) {
-                    iblockdata = blockData1
-                    blockposition = blockPosition1
-                }
-            }
-
-            this.a(d1, this.onGround, iblockdata, blockposition)
-            if (d7 != d0) {
-                this.motX = 0.0
-            }
-
-            if (d9 != d2) {
-                this.motZ = 0.0
-            }
-
-            val block1 = iblockdata.block
-            if (d8 != d1) {
-                block1!!.a(this.world, this)
-            }
-
-            if (this.positionChanged) {
-                try {
-                    val sourceBlock = this.world.world.getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ))
-                    this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, d0, d2, d7, d9)
-                } catch (e: Exception) {
-                    Bukkit.getLogger().log(Level.WARNING, "Critical exception.", e)
-                }
-            }
-        }
-
-        this.ballDesign.proxy.calculatePostMovement()
-        timingService.stopTiming()
-    }
+    override fun setHealth(f: Float) {}
 
     /**
      * Gets the bukkit entity.
      */
-    override fun getBukkitEntity(): CraftBallArmorstand {
+    override fun getBukkitEntity(): CraftHitboxSlime {
         if (this.bukkitEntity == null) {
-            this.bukkitEntity = CraftBallArmorstand(this.world.server, this)
+            this.bukkitEntity = CraftHitboxSlime(this.world.server, this)
         }
 
-        return this.bukkitEntity as CraftBallArmorstand
+        return this.bukkitEntity as CraftHitboxSlime
+    }
+
+    /**
+     * Updates the position of the entity manually.
+     */
+    private fun updatePosition() {
+        val packet = PacketPlayOutEntityTeleport(this)
+        this.world.players.forEach { p -> (p.bukkitEntity as CraftPlayer).handle.playerConnection.sendPacket(packet) }
+    }
+
+    /**
+     * Prints a debugging message for this entity.
+     */
+    private fun debugPosition() {
+        val loc = getBukkitEntity().location
+        BlockBallApi.resolve(LoggingService::class.java).debug("Hitbox at ${loc.x.toFloat()} ${loc.y.toFloat()} ${loc.z.toFloat()}")
     }
 }

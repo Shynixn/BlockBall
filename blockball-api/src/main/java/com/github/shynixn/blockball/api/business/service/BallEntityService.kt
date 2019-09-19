@@ -38,6 +38,12 @@ interface BallEntityService {
     fun <L> spawnTemporaryBall(location: L, meta: BallMeta): BallProxy
 
     /**
+     * Registers entities on the server when not already registered.
+     * Returns true if registered. Returns false when not registered.
+     */
+    fun registerEntitiesOnServer(): Boolean
+
+    /**
      * Finds Ball from the given entity.
      */
     fun <E> findBallFromEntity(entity: E): Optional<BallProxy>

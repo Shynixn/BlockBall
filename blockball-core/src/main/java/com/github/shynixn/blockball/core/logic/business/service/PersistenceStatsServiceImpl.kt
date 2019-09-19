@@ -2,10 +2,12 @@ package com.github.shynixn.blockball.core.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.PersistenceStatsService
+import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.Stats
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.core.logic.business.extension.async
 import com.github.shynixn.blockball.core.logic.business.extension.sync
+import com.github.shynixn.blockball.core.logic.business.extension.thenAcceptSafely
 import com.google.inject.Inject
 import java.util.concurrent.CompletableFuture
 
@@ -36,52 +38,77 @@ import java.util.concurrent.CompletableFuture
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class PersistenceStatsServiceImpl @Inject constructor(private val statsRepository: StatsRepository, private val concurrencyService: ConcurrencyService) : PersistenceStatsService {
+class PersistenceStatsServiceImpl @Inject constructor(
+    private val statsRepository: StatsRepository,
+    private val proxyService: ProxyService,
+    private val concurrencyService: ConcurrencyService
+) : PersistenceStatsService {
+    private val cacheInternal = HashMap<String, Stats>()
+
     /**
-     * Returns the amount of stored stats.
+     * Initialize.
      */
-    override fun size(): CompletableFuture<Int> {
-        val completableFuture = CompletableFuture<Int>()
-
-        async(concurrencyService) {
-            val amount = statsRepository.size()
-
-            sync(concurrencyService) {
-                completableFuture.complete(amount)
+    init {
+        sync(concurrencyService, 0L, 20 * 60L * 5) {
+            cacheInternal.values.forEach { p ->
+                save(p)
             }
+        }
+    }
+
+    /**
+     * Clears the cache of the player and saves the allocated resources.
+     */
+    override fun <P> clearResources(player: P): CompletableFuture<Void?> {
+        val completableFuture = CompletableFuture<Void?>()
+        val playerUUID = proxyService.getPlayerUUID(player)
+
+        if (!cacheInternal.containsKey(playerUUID)) {
+            return completableFuture
+        }
+
+        val petMeta = cacheInternal[playerUUID]!!
+        val completable = save(petMeta)
+        cacheInternal.remove(playerUUID)
+
+        completable.thenAcceptSafely {
+            completableFuture.complete(null)
         }
 
         return completableFuture
     }
 
     /**
-     * Returns all stored stats.
+     * Gets the [Stats] from the given player.
+     * This call will never return null.
      */
-    override fun getAll(): CompletableFuture<List<Stats>> {
-        val completableFuture = CompletableFuture<List<Stats>>()
+    override fun <P> getStatsFromPlayer(player: P): Stats {
+        val playerUUID = proxyService.getPlayerUUID(player)
+        val playerName = proxyService.getPlayerName(player)
 
-        async(concurrencyService) {
-            val items = statsRepository.getAll()
-
-            sync(concurrencyService) {
-                completableFuture.complete(items)
-            }
+        if (!cacheInternal.containsKey(playerUUID)) {
+            // Blocks the calling (main) thread and should not be executed on an normal server.
+            cacheInternal[playerUUID] = statsRepository.getOrCreateFromPlayer(playerName, playerUUID)
         }
 
-        return completableFuture
+        return cacheInternal[playerUUID]!!
     }
 
     /**
-     * Returns the [Stats] from the given [player] or allocates a new one.
+     * Gets or creates stats from the player.
+     * Call getsStatsFromPlayer instead. This is only intended for internal useage.
      */
-    override fun <P> getOrCreateFromPlayer(player: P): CompletableFuture<Stats> {
+    override fun <P> refreshStatsFromPlayer(player: P): CompletableFuture<Stats> {
+        val playerUUID = proxyService.getPlayerUUID(player)
+        val playerName = proxyService.getPlayerName(player)
         val completableFuture = CompletableFuture<Stats>()
 
         async(concurrencyService) {
-            val item = statsRepository.getOrCreateFromPlayer(player)
+            val petMeta = statsRepository.getOrCreateFromPlayer(playerName, playerUUID)
 
             sync(concurrencyService) {
-                completableFuture.complete(item)
+                cacheInternal[playerUUID] = petMeta
+                completableFuture.complete(petMeta)
             }
         }
 
@@ -91,17 +118,28 @@ class PersistenceStatsServiceImpl @Inject constructor(private val statsRepositor
     /**
      * Saves the given [Stats] to the storage.
      */
-    override fun <P> save(player: P, stats: Stats): CompletableFuture<Void?> {
-        val completableFuture = CompletableFuture<Void?>()
+    override fun save(stats: Stats): CompletableFuture<Stats> {
+        val completableFuture = CompletableFuture<Stats>()
 
         async(concurrencyService) {
-            statsRepository.save(player, stats)
+            statsRepository.save(stats)
 
             sync(concurrencyService) {
-                completableFuture.complete(null)
+                completableFuture.complete(stats)
             }
         }
 
         return completableFuture
+    }
+
+    /**
+     * Closes all resources immediately.
+     */
+    override fun close() {
+        for (player in cacheInternal.keys) {
+            statsRepository.save(cacheInternal[player]!!)
+        }
+
+        cacheInternal.clear()
     }
 }

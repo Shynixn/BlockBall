@@ -18,7 +18,6 @@ import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.block.Sign
-import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Item
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
@@ -330,12 +329,12 @@ class GameActionServiceImpl @Inject constructor(
             return
         }
 
-        game.arena.meta.ballMeta.spawnpoint!!.toLocation().world!!.entities.forEach { p ->
-            if (p !is Player && p !is ArmorStand && p !is Item && p !is ItemFrame) {
-                if (game.arena.isLocationInSelection(p.location)) {
+        game.arena.meta.ballMeta.spawnpoint!!.toLocation().world!!.entities.forEach { e ->
+            if (e !is Player && !e.customName.equals("ResourceBallsPlugin") && e !is Item && e !is ItemFrame) {
+                if (game.arena.isLocationInSelection(e.location)) {
                     val vector = game.arena.meta.protectionMeta.entityProtection
-                    p.location.direction = vector.toVector()
-                    p.velocity = vector.toVector()
+                    e.location.direction = vector.toVector()
+                    e.velocity = vector.toVector()
                 }
             }
         }
