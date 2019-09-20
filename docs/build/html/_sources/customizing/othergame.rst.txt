@@ -37,6 +37,7 @@ At this stage, you should be able to find your arena save file. If not, please t
       score-back-teleport: false
       score-back-teleport-delay: 2
       ball-forcefield: true
+      keep-inventory: false
 
 3. Now continue by enabling or disabling the values by changing the **enabled** value.
 4. Customize the other available options to your own needs.
@@ -48,6 +49,7 @@ Properties
 * Score teleport back: Should players be teleported back to their spawnpoint (teamspawnpoint or ballspawnpoint) after someone scores a point?
 * Score teleport delay: The amount of seconds after players get teleported back to their spawnpoint if 'Score teleport back' is enabled.
 * Ball forcefield: Should the ball stay automatically inside of the arena via an invisible forcefield?
+* Keep inventory: Should the players keep their current inventory when they join a game?
 
 
 
