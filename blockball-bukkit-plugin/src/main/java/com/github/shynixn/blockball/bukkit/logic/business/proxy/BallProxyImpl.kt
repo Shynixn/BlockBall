@@ -284,25 +284,17 @@ class BallProxyImpl(
             throw IllegalArgumentException("ResultVelocity has to be a BukkitVelocity!")
         }
 
-        val angle = Math.toDegrees(getIncludedAngle(resultVelocity, playerDirection))
+        val angle = Math.toDegrees(getHorizontalDeviation(resultVelocity, playerDirection))
         val absAngle = abs(angle).toFloat()
-        var velocity: Float
 
-        velocity = if (absAngle < 90f) {
-            0.08f * absAngle / 90f
-        } else {
-            return
+        this.angularVelocity = when {
+            absAngle < 30f -> return
+            absAngle < 110f -> 0.08 * absAngle / 80
+            else -> return
         }
 
         if (angle < 0.0) {
-            velocity *= -1f
-        }
-
-        val event = BallSpinEvent(velocity.toDouble(), this, true)
-        Bukkit.getPluginManager().callEvent(event)
-
-        if (!event.isCancelled) {
-            this.angularVelocity = event.angularVelocity
+            this.angularVelocity *= -1f
         }
     }
 
@@ -542,14 +534,13 @@ class BallProxyImpl(
         }
 
         val event = BallSpinEvent(angularVelocity, this, false)
-
         Bukkit.getPluginManager().callEvent(event)
 
         if (!event.isCancelled) {
             angularVelocity = event.angularVelocity
 
             if (angularVelocity != 0.0) {
-                val originUnit = this.originVector!!.normalize()
+                val originUnit = this.originVector!!.clone().normalize()
                 val x = -originUnit.z
                 val z = originUnit.x
                 val newVector = this.originVector!!.add(Vector(x, 0.0, z).multiply(angularVelocity.toFloat()))
@@ -697,14 +688,14 @@ class BallProxyImpl(
     }
 
     /**
-     * Calculates the angle between two vectors in horizontal dimension.
-     * Included angle never exceeds PI. If the returned value is negative,
+     * Calculates the angle deviation between two vectors in X-Z dimension.
+     * The angle never exceeds PI. If the calculated value is negative,
      * then subseq vector is actually not subsequent to precede vector.
      * @param subseq The vector subsequent to precede vector in clock-wised order.
      * @param precede The vector preceding subseq vector in clock-wised order.
      * @return A radian angle in the range of -PI to PI
      */
-    private fun getIncludedAngle(subseq: Vector, precede: Vector): Double {
+    private fun getHorizontalDeviation(subseq: Vector, precede: Vector): Double {
         val dot = subseq.x * precede.x + subseq.z * precede.z
         val det = subseq.x * precede.z - subseq.z * precede.x
 
