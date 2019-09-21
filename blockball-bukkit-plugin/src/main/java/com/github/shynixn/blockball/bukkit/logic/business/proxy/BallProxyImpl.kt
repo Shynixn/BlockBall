@@ -277,15 +277,20 @@ class BallProxyImpl(
                 this.skipKickCounter = delay + 4
                 this.setVelocity(entity.velocity)
 
+                // TODO Do not apply spin and delay if the ball is airborne
+
                 sync(concurrencyService, delay.toLong()) {
                     var kickVector = prevEyeLoc.direction.clone()
-                    val angle = calculatePitchToLaunch(prevEyeLoc, entity.eyeLocation)
+                    val eyeLocation = (entity as Player).eyeLocation
+                    val spinV = calculateSpinVelocity(eyeLocation.direction, kickVector)
+                    val spinDrag = 1.0 - abs(spinV) / (3.0 * meta.movementModifier.maximumSpinModifier)
+                    val angle = calculatePitchToLaunch(prevEyeLoc, eyeLocation)
                     val basis = when {
                         pass -> meta.movementModifier.passVelocity
                         else -> meta.movementModifier.shotVelocity
                     }
-                    val verticalMod = basis * sin(angle)
-                    val horizontalMod = basis * cos(angle)
+                    val verticalMod = basis * spinDrag * sin(angle)
+                    val horizontalMod = basis * spinDrag * cos(angle)
                     kickVector = kickVector.normalize().multiply(horizontalMod)
                     kickVector.y = verticalMod
 
@@ -294,7 +299,7 @@ class BallProxyImpl(
 
                     if (!event.isCancelled) {
                         this.setVelocity(event.resultVelocity)
-                        spin(entity.eyeLocation.direction, kickVector)
+                        this.angularVelocity = spinV
                     }
                 }
             }
@@ -312,36 +317,40 @@ class BallProxyImpl(
     }
 
     /**
-     * Begins ball spin towards the player direction.
+     * Calculates the angular velocity in order to spin the ball.
+     *
+     * @return The angular velocity
      */
-    override fun <V> spin(playerDirection: V, resultVelocity: V) {
-        if (playerDirection !is Vector) {
+    override fun <V> calculateSpinVelocity(postVector: V, initVector: V): Double {
+        if (postVector !is Vector) {
             throw IllegalArgumentException("PlayerDirection has to be a BukkitVelocity!")
         }
 
-        if (resultVelocity !is Vector) {
+        if (initVector !is Vector) {
             throw IllegalArgumentException("ResultVelocity has to be a BukkitVelocity!")
         }
 
-        val angle = Math.toDegrees(getHorizontalDeviation(resultVelocity, playerDirection))
+        val angle = Math.toDegrees(getHorizontalDeviation(initVector, postVector))
         val absAngle = abs(angle).toFloat()
+        val maxV = meta.movementModifier.maximumSpinModifier
+        var velocity: Double
 
-        this.angularVelocity = when {
-            absAngle < 10f -> return
-            absAngle < 100f -> 0.05 * absAngle / 90
-            else -> return
+        velocity = when (absAngle < 90) {
+            true -> maxV * absAngle / 90
+            false -> maxV * (180 - absAngle) / 90
         }
 
         if (angle < 0.0) {
-            this.angularVelocity *= -1f
+            velocity *= -1f
         }
+
+        return velocity
     }
 
     /**
      * Throws the ball by the given entity.
      * The calculated velocity can be manipulated by the BallThrowEvent.
      *
-     * @param entity entity
      * @param entity entity
      */
     override fun <E> throwByEntity(entity: E) {
