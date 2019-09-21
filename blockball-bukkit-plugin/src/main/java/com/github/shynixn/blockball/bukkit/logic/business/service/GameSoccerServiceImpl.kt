@@ -110,16 +110,15 @@ class GameSoccerServiceImpl @Inject constructor(
     }
 
     private fun checkBallInGoal(game: Game) {
-        if (game.ball == null || game.ball!!.isDead) {
+        if (game.ball == null || game.ball!!.isDead || game.ball!!.isInNet) {
             return
         }
 
         if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
             game.blueScore += game.arena.meta.blueTeamMeta.pointsPerGoal
             onScore(game, Team.BLUE, game.arena.meta.blueTeamMeta)
-            game.ball!!.remove()
             onScoreReward(game, game.blueTeam as List<Player>)
-            teleportBackToSpawnpoint(game)
+            relocatePlayersAndBall(game)
             if (game.blueScore >= game.arena.meta.lobbyMeta.maxScore) {
                 onMatchEnd(game, game.blueTeam as List<Player>, game.redTeam as List<Player>)
                 onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
@@ -127,21 +126,25 @@ class GameSoccerServiceImpl @Inject constructor(
         } else if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
             game.redScore += game.arena.meta.redTeamMeta.pointsPerGoal
             onScore(game, Team.RED, game.arena.meta.redTeamMeta)
-            game.ball!!.remove()
             onScoreReward(game, game.redTeam as List<Player>)
-            teleportBackToSpawnpoint(game)
+            relocatePlayersAndBall(game)
             if (game.redScore >= game.arena.meta.lobbyMeta.maxScore) {
                 onMatchEnd(game, game.redTeam as List<Player>, game.blueTeam as List<Player>)
                 onWin(game, Team.RED, game.arena.meta.redTeamMeta)
             }
+        } else {
+            return
         }
+
+        game.ball!!.isInNet = true
     }
 
     /**
-     * Teleports all players back to their spawnpoint if [game] has got back teleport enabled.
+     * Teleports all players and ball back to their spawnpoint if [game] has got back teleport enabled.
      */
-    private fun teleportBackToSpawnpoint(game: Game) {
+    private fun relocatePlayersAndBall(game: Game) {
         if (!game.arena.meta.customizingMeta.backTeleport) {
+            game.ball!!.remove()
             return
         }
 
@@ -156,6 +159,7 @@ class GameSoccerServiceImpl @Inject constructor(
                 blueTeamSpawnpoint = game.arena.meta.ballMeta.spawnpoint!!.toLocation()
             }
 
+            game.ball!!.remove()
             game.ingamePlayersStorage.forEach { i ->
                 if (i.value.team == Team.RED) {
                     (i.key as Player).teleport(redTeamSpawnpoint)

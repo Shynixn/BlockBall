@@ -119,6 +119,11 @@ class BallProxyImpl(
     override var isGrabbed: Boolean = false
 
     /**
+     * Is the ball inside the goal net?
+     */
+    override var isInNet: Boolean = false
+    
+    /**
      * Is the entity dead?
      */
     override val isDead: Boolean
@@ -681,7 +686,7 @@ class BallProxyImpl(
      * Checks movement interactions with the ball.
      */
     private fun checkMovementInteractions(): Boolean {
-        if (this.skipCounter <= 0) {
+        if (!this.isInNet && this.skipCounter <= 0) {
             this.skipCounter = 2
             val ballLocation = getCalculationEntity<Entity>().location
             for (entity in ballLocation.chunk.entities) {

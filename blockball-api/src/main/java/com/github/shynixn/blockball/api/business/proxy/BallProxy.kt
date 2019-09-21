@@ -48,6 +48,11 @@ interface BallProxy {
     val isGrabbed: Boolean
 
     /**
+     * Is the ball inside the goal net?
+     */
+    var isInNet: Boolean
+
+    /**
      * Is the entity dead?
      */
     val isDead: Boolean
