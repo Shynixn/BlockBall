@@ -13,9 +13,8 @@ import com.google.inject.Inject
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
 import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
+import java.nio.file.Files
+import java.nio.file.Paths
 
 /**
  * Created by Shynixn 2018.
@@ -45,7 +44,7 @@ import java.io.OutputStreamWriter
  * SOFTWARE.
  */
 class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, private val yamlSerializationService: YamlSerializationService, private val persistenceArenaService: PersistenceArenaService) : TemplateService {
-    private val templateNames = arrayOf("arena-de.yml", "arena-en.yml", "arena-pl.yml")
+    private val templateNames = arrayOf("arena-de.yml", "arena-en.yml", "arena-pl.yml", "arena-ko.yml")
 
     /**
      * Returns a [List] of available
@@ -152,20 +151,11 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
     }
 
     private fun copyResourceToTarget(resource: String, target: String) {
-        val file = File(plugin.dataFolder, "template/$target")
+        val file = Paths.get(plugin.dataFolder.absolutePath, "template/$target")
 
-        if (!file.exists()) {
-            val fileOutputStream = FileOutputStream(file)
-            val inputStream = plugin.getResource(resource)
-
-            val inputStreamReader = InputStreamReader(inputStream)
-            val outputStreamWriter = OutputStreamWriter(fileOutputStream)
-
-            inputStreamReader.use {
-                outputStreamWriter.use {
-                    val cache = inputStreamReader.readText()
-                    outputStreamWriter.write(cache)
-                }
+        if (!Files.exists(file)) {
+            plugin.getResource(resource)!!.use { inputStream ->
+                Files.copy(inputStream, file)
             }
         }
     }
