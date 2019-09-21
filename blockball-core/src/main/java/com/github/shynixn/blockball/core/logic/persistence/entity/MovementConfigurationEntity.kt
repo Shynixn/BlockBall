@@ -75,32 +75,38 @@ class MovementConfigurationEntity : MovementConfiguration {
     override var passVelocity: Double = 1.2
 
     /**
-     * Horizontal kick modifier.
+     * The maximum strength of spin.
      */
-    @YamlSerialize(orderNumber = 8, value = "horizontal-throw")
+    @YamlSerialize(orderNumber = 8, value = "max-spin")
+    override var maximumSpinModifier: Double = 0.08
+
+    /**
+     * Horizontal throw modifier.
+     */
+    @YamlSerialize(orderNumber = 9, value = "horizontal-throw")
     override var horizontalThrowModifier: Double = 1.0
 
     /**
-     * Vertical kick modifier.
+     * Vertical throw modifier.
      */
-    @YamlSerialize(orderNumber = 9, value = "vertical-throw")
+    @YamlSerialize(orderNumber = 10, value = "vertical-throw")
     override var verticalThrowModifier: Double = 1.0
 
     /**
      * Maximum vertical angle (in degrees) when launching a ball
      */
-    @YamlSerialize(orderNumber = 10, value = "max-pitch")
+    @YamlSerialize(orderNumber = 11, value = "max-pitch")
     override var maximumPitch: Int = 60
 
     /**
      * Minimum vertical angle (in degrees) when launching a ball
      */
-    @YamlSerialize(orderNumber = 11, value = "min-pitch")
+    @YamlSerialize(orderNumber = 12, value = "min-pitch")
     override var minimumPitch: Int = 0
 
     /**
      * Initial value of vertical angle (in degrees) when launching a ball
      */
-    @YamlSerialize(orderNumber = 12, value = "default-pitch")
+    @YamlSerialize(orderNumber = 13, value = "default-pitch")
     override var defaultPitch: Int = 20
 }

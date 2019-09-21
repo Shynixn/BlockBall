@@ -108,6 +108,7 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     BALLMOD_VERTICALTHROW(MenuPageKey.BALLMODIFIER, "throw-vertical"),
     BALLMOD_SHOTVELOCITY(MenuPageKey.BALLMODIFIER, "shot-velocity"),
     BALLMOD_PASSVELOCITY(MenuPageKey.BALLMODIFIER, "pass-velocity"),
+    BALLMOD_MAXSPIN(MenuPageKey.BALLMODIFIER, "max-spin"),
     BALLMOD_MAXPITCH(MenuPageKey.BALLMODIFIER, "max-pitch"),
     BALLMOD_MINPITCH(MenuPageKey.BALLMODIFIER, "min-pitch"),
     BALLMOD_DEFAULTPITCH(MenuPageKey.BALLMODIFIER, "default-pitch"),

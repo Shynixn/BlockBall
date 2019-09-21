@@ -56,12 +56,12 @@ interface MovementConfiguration {
     var verticalTouchModifier: Double
 
     /**
-     * Horizontal kick modifier.
+     * Horizontal throw modifier.
      */
     var horizontalThrowModifier: Double
 
     /**
-     * Vertical kick modifier.
+     * Vertical throw modifier.
      */
     var verticalThrowModifier: Double
 
@@ -74,6 +74,11 @@ interface MovementConfiguration {
      * The overall pass velocity.
      */
     var passVelocity: Double
+
+    /**
+     * The maximum strength of spin.
+     */
+    var maximumSpinModifier: Double
 
     /**
      * Maximum vertical angle (in degrees) when launching a ball

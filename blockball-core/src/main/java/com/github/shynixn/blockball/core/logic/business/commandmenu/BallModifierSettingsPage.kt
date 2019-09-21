@@ -67,6 +67,9 @@ class BallModifierSettingsPage : Page(BallModifierSettingsPage.ID, BallSettingsP
         else if (command == MenuCommand.BALLMOD_PASSVELOCITY && args.size == 3 && args[2].toDoubleOrNull() != null) {
             ballMeta.passVelocity = args[2].toDouble()
         }
+        else if (command == MenuCommand.BALLMOD_MAXSPIN && args.size == 3 && args[2].toDoubleOrNull() != null) {
+            ballMeta.maximumSpinModifier = args[2].toDouble()
+        }
         else if (command == MenuCommand.BALLMOD_MAXPITCH && args.size == 3 && args[2].toDoubleOrNull() != null) {
             ballMeta.maximumPitch = args[2].toInt()
         }
@@ -119,6 +122,11 @@ class BallModifierSettingsPage : Page(BallModifierSettingsPage.ID, BallSettingsP
                 .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
                 .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.BALLMOD_PASSVELOCITY.command)
                 .setHoverText("Changes the power of passing when a player right-click the ball.")
+                .builder().nextLine()
+                .component("- Maximum Spin Velocity: " + ballMeta.passVelocity).builder()
+                .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
+                .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.BALLMOD_MAXSPIN.command)
+                .setHoverText("Changes the spin modifier when a player tilts head left/right after shooting the ball.")
                 .builder().nextLine()
                 .component("- Maximum Pitch (Vertical): " + ballMeta.maximumPitch).builder()
                 .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
