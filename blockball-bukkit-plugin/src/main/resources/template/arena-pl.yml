@@ -197,13 +197,13 @@ arena:
             z: 2.0
         oninteraction:
           effecting: EVERYONE
-          name: none
-          amount: 0
-          speed: 0.0
+          name: critical_hit
+          amount: 5
+          speed: 0.1
           offset:
-            x: 0.0
-            y: 0.0
-            z: 0.0
+            x: 2.0
+            y: 2.0
+            z: 2.0
         ongrab:
           effecting: EVERYONE
           name: none
@@ -216,7 +216,16 @@ arena:
         onkick:
           effecting: EVERYONE
           name: large_explosion
-          amount: 2
+          amount: 5
+          speed: 0.1
+          offset:
+            x: 0.1
+            y: 0.1
+            z: 0.1
+        onpass:
+          effecting: EVERYONE
+          name: explosion
+          amount: 5
           speed: 0.1
           offset:
             x: 0.1
@@ -269,7 +278,7 @@ arena:
           effecting: EVERYONE
           name: ENTITY_ZOMBIE_ATTACK_DOOR_WOOD
           volume: 10.0
-          pitch: 1.0
+          pitch: 1.5
         onthrow:
           effecting: EVERYONE
           name: none

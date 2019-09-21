@@ -63,12 +63,12 @@ interface BallProxy {
     var persistent: Boolean
 
     /**
-     * Is the ball currently in kick phase?
+     * Remaining time in ticks until players regain the ability to kick this ball.
      */
     var skipKickCounter: Int
 
     /**
-     * Current velocity of spin generating Magnus force.
+     * Current angular velocity that determines the intensity of Magnus effect.
      */
     var angularVelocity: Double
 
@@ -118,8 +118,9 @@ interface BallProxy {
      * The calculated velocity can be manipulated by the BallKickEvent.
      *
      * @param entity entity
+     * @param pass whether the kick was a pass or a shot.
      */
-    fun <E> kickByEntity(entity: E)
+    fun <E> kickByEntity(entity: E, pass: Boolean)
 
     /**
      * Throws the ball by the given entity.
@@ -160,6 +161,14 @@ interface BallProxy {
      * @param collision if knockback were applied during the movement
      */
     fun calculatePostMovement(collision: Boolean)
+
+    /**
+     * Calculates spin movement. The spinning will slow down
+     * if the ball stops moving, hits the ground or hits the wall.
+     *
+     * @param collision if knockback were applied
+     */
+    fun calculateSpinMovement(collision: Boolean)
 
     /**
      * Calculates the movement vectors.

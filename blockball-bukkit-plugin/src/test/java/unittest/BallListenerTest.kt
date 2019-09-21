@@ -152,6 +152,11 @@ class BallListenerTest {
         override var angularVelocity: Double = 0.0
 
         /**
+         * Remaining time in ticks until players regain the ability to kick this ball.
+         */
+        override var skipKickCounter: Int = 0
+
+        /**
          * Returns the armorstand for the design.
          */
         override fun <A> getDesignArmorstand(): A {
@@ -213,7 +218,7 @@ class BallListenerTest {
          *
          * @param entity entity
          */
-        override fun <E> kickByEntity(entity: E) {
+        override fun <E> kickByEntity(entity: E, pass: Boolean) {
             throw IllegalArgumentException()
         }
 
@@ -266,6 +271,16 @@ class BallListenerTest {
          * Calculates the movement vectors.
          */
         override fun <V> calculateMoveSourceVectors(movementVector: V, motionVector: V, onGround: Boolean): Optional<V> {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Calculates spin movement. The spinning will slow down
+         * if the ball stops moving, hits the ground or hits the wall.
+         *
+         * @param collision if knockback were applied
+         */
+        override fun calculateSpinMovement(collision: Boolean) {
             throw IllegalArgumentException()
         }
 

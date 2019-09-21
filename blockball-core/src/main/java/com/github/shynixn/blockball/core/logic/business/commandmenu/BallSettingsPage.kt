@@ -68,7 +68,7 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
         } else if (command == MenuCommand.BALL_TOGGLE_CARRYABLE) {
             ballMeta.carryAble = !ballMeta.carryAble
         } else if (command == MenuCommand.BALL_TOGGLE_ALWAYSBOUNCE) {
-            ballMeta.alwaysBouce = !ballMeta.alwaysBouce
+            ballMeta.alwaysBounce = !ballMeta.alwaysBounce
         } else if (command == MenuCommand.BALL_TOGGLE_ROTATING) {
             ballMeta.rotating = !ballMeta.rotating
         } else if (command == MenuCommand.BALL_PARTICLEACTION_CALLBACK && args.size == 3) {
@@ -109,7 +109,7 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.BALL_TOGGLE_CARRYABLE.command)
             .setHoverText("Should the ball be carry able when a player right clicks on it?")
             .builder().nextLine()
-            .component("- Always Bounce: " + ballMeta.alwaysBouce).builder()
+            .component("- Always Bounce: " + ballMeta.alwaysBounce).builder()
             .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.BALL_TOGGLE_ALWAYSBOUNCE.command)
             .setHoverText("Should the ball always bounce of surfaces?")
@@ -119,30 +119,30 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.BALL_TOGGLE_ROTATING.command)
             .setHoverText("Should the ball play a rotation animation?")
             .builder().nextLine()
-            .component("- Ball modifiers: ").builder()
+            .component("- Ball Modifiers: ").builder()
             .component(MenuClickableItem.PAGE.text).setColor(MenuClickableItem.PAGE.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.BALLMOD_OPEN.command)
             .setHoverText("Opens the page for ball modifiers.")
             .builder().nextLine()
-            .component("- Soundeffect: ").builder()
+            .component("- Sound Effect: ").builder()
             .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BALL_SOUNDEFFECTS.command)
-            .setHoverText("Opens the selectiongbox for action binders.")
+            .setHoverText("Opens the selection page for action binders.")
             .builder().nextLine()
-            .component("- Particleeffect: ").builder()
+            .component("- Particle Effect: ").builder()
             .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BALL_PARTICLEFFECTS.command)
-            .setHoverText("Opens the selectiongbox for action binders.")
+            .setHoverText("Opens the selection page for action binders.")
             .builder().nextLine()
         if (cache[5] != null && cache[5] is Sound) {
-            builder.component("- Selected Soundeffect: ").builder().component(MenuClickableItem.PAGE.text).setColor(MenuClickableItem.PAGE.color)
+            builder.component("- Selected Sound-effect: ").builder().component(MenuClickableItem.PAGE.text).setColor(MenuClickableItem.PAGE.color)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.SOUND_BALL.command)
-                .setHoverText("Opens the page for editing the soundeffect.")
+                .setHoverText("Opens the page for editing sound effects.")
                 .builder().nextLine()
         } else if (cache[5] != null && cache[5] is Particle) {
-            builder.component("- Selected Particleffect: ").builder().component(MenuClickableItem.PAGE.text).setColor(MenuClickableItem.PAGE.color)
+            builder.component("- Selected Particle-effect: ").builder().component(MenuClickableItem.PAGE.text).setColor(MenuClickableItem.PAGE.color)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.PARTICLE_BALL.command)
-                .setHoverText("Opens the page for editing the particleeffect.")
+                .setHoverText("Opens the page for editing particle effects.")
                 .builder().nextLine()
         }
         return builder

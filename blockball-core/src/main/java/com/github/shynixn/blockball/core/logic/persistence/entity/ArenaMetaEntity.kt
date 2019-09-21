@@ -97,20 +97,40 @@ class ArenaMetaEntity : ArenaMeta {
 
         ballMeta.particleEffects[BallActionType.ONSPAWN] = partMetaSpawn
 
+        val partMetaInteraction = ParticleEntity()
+        partMetaInteraction.type = ParticleType.CRIT
+        partMetaInteraction.amount = 5
+        partMetaInteraction.speed = 0.1
+        partMetaInteraction.offset.x = 2.0
+        partMetaInteraction.offset.y = 2.0
+        partMetaInteraction.offset.z = 2.0
+
+        ballMeta.particleEffects[BallActionType.ONINTERACTION] = partMetaInteraction
+
         val partMetaKick = ParticleEntity()
-        partMetaKick.type = (ParticleType.EXPLOSION_LARGE)
-        partMetaKick.amount = 2
+        partMetaKick.type = ParticleType.EXPLOSION_LARGE
+        partMetaKick.amount = 5
         partMetaKick.speed = 0.1
-        partMetaKick.offset.x = 0.1
-        partMetaKick.offset.y = 0.1
-        partMetaKick.offset.z = 0.1
+        partMetaKick.offset.x = 0.2
+        partMetaKick.offset.y = 0.2
+        partMetaKick.offset.z = 0.2
 
         ballMeta.particleEffects[BallActionType.ONKICK] = partMetaKick
+
+        val partMetaShoot = ParticleEntity()
+        partMetaShoot.type = ParticleType.EXPLOSION_NORMAL
+        partMetaShoot.amount = 5
+        partMetaShoot.speed = 0.1
+        partMetaShoot.offset.x = 0.1
+        partMetaShoot.offset.y = 0.1
+        partMetaShoot.offset.z = 0.1
+
+        ballMeta.particleEffects[BallActionType.ONPASS] = partMetaShoot
 
         val soundMetaKick = SoundEntity()
         soundMetaKick.name = "ZOMBIE_WOOD"
         soundMetaKick.volume = 10.0
-        soundMetaKick.pitch = 1.0
+        soundMetaKick.pitch = 1.5
 
         ballMeta.soundEffects[BallActionType.ONKICK] = soundMetaKick
     }

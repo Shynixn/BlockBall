@@ -40,6 +40,7 @@ class BallMetaEntity(
     /** Size of the ball.**/
     @YamlSerialize(orderNumber = 1, value = "size")
     override var size: BallSize = BallSize.NORMAL
+
     /**
      * Size of the hitbox used for interaction detecting.
      */
@@ -49,6 +50,7 @@ class BallMetaEntity(
     /** Should the ball rotate? */
     @YamlSerialize(orderNumber = 4, value = "rotating")
     override var rotating: Boolean = true
+
     /**
      * Hitbox relocation value for ground heights.
      */
@@ -60,27 +62,31 @@ class BallMetaEntity(
      */
     @YamlSerialize(orderNumber = 6, value = "carry-able")
     override var carryAble: Boolean = false
+
     /**
      * Should the ball always bounce of walls?
      */
     @YamlSerialize(orderNumber = 7, value = "always-bounce")
-    override var alwaysBouce: Boolean = true
+    override var alwaysBounce: Boolean = true
 
     /**
      * Bouncing off from objects modifiers.
      */
     @YamlSerialize(orderNumber = 8, value = "wall-bouncing")
     override val bounceModifiers: MutableList<BounceConfiguration> = ArrayList()
+
     /**
      * Movement modifier.
      */
     @YamlSerialize(orderNumber = 9, value = "modifiers")
     override val movementModifier: MovementConfigurationEntity = MovementConfigurationEntity()
+
     /**
      * Particle effects.
      */
     @YamlSerialize(orderNumber = 10, value = "particle-effects", implementation = ParticleEntity::class)
     override val particleEffects: MutableMap<BallActionType, Particle> = HashMap()
+
     /**
      * Particle effects.
      */
@@ -90,7 +96,8 @@ class BallMetaEntity(
     /** Spawning delay. */
     @YamlSerialize(orderNumber = 12, value = "spawn-delay")
     override var delayInTicks: Int = 0
+
     /** Spawnpoint of the ball. */
-    @YamlSerialize(orderNumber = 12, value = "spawnpoint", implementation = PositionEntity::class)
+    @YamlSerialize(orderNumber = 13, value = "spawnpoint", implementation = PositionEntity::class)
     override var spawnpoint: Position? = null
 }
