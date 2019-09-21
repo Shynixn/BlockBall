@@ -634,14 +634,14 @@ class BallProxyImpl(
 
     /**
      * Calculates the pitch when launching the ball.
-     * Result depends on the change of the entity's pitch.
-     * Positive value implies that entity has raised its head.
+     * Result depends on the change of pitch. For example,
+     * positive value implies that entity raised the pitch of its head.
      *
-     * @param beforeEyeLoc The eye location of the entity before a certain event
-     * @param afterEyeLoc The eye location of the entity after a certain event
+     * @param preLoc The eye location of entity before a certain event occurs
+     * @param postLoc The eye location of entity after a certain event occurs
      * @return Angle measured in Radian
      */
-    private fun calculatePitchToLaunch(beforeEyeLoc: Location, afterEyeLoc: Location): Double {
+    private fun calculatePitchToLaunch(preLoc: Location, postLoc: Location): Double {
         val maximum = meta.movementModifier.maximumPitch
         val minimum = meta.movementModifier.minimumPitch
         val default = meta.movementModifier.defaultPitch
@@ -650,12 +650,12 @@ class BallProxyImpl(
             throw IllegalArgumentException("Default value must be in range of minimum and maximum!")
         }
 
-        val delta = (beforeEyeLoc.pitch - afterEyeLoc.pitch)
-        val plusBasis = 180 - beforeEyeLoc.pitch
+        val delta = (preLoc.pitch - postLoc.pitch)
+        val plusBasis = 90 + preLoc.pitch
 
         val result = when {
             (delta >= 0) -> default + (maximum - default) * delta / plusBasis
-            else -> default + (default - minimum) * delta / (360 - plusBasis)
+            else -> default + (default - minimum) * delta / (180 - plusBasis)
         }
 
         return Math.toRadians(result.toDouble())
