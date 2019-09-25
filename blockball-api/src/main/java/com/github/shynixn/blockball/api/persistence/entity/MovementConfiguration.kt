@@ -78,7 +78,7 @@ interface MovementConfiguration {
     /**
      * The maximum strength of spin.
      */
-    var maximumSpinModifier: Double
+    var maximumSpinVelocity: Double
 
     /**
      * Maximum vertical angle (in degrees) when launching a ball

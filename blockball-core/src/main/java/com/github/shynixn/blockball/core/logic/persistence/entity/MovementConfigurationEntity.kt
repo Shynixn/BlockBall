@@ -78,7 +78,7 @@ class MovementConfigurationEntity : MovementConfiguration {
      * The maximum strength of spin.
      */
     @YamlSerialize(orderNumber = 8, value = "max-spin")
-    override var maximumSpinModifier: Double = 0.08
+    override var maximumSpinVelocity: Double = 0.08
 
     /**
      * Horizontal throw modifier.

@@ -288,7 +288,7 @@ class BallProxyImpl(
                     var kickVector = prevEyeLoc.direction.clone()
                     val eyeLocation = (entity as Player).eyeLocation
                     val spinV = calculateSpinVelocity(eyeLocation.direction, kickVector)
-                    val spinDrag = 1.0 - abs(spinV) / (3.0 * meta.movementModifier.maximumSpinModifier)
+                    val spinDrag = 1.0 - abs(spinV) / (3.0 * meta.movementModifier.maximumSpinVelocity)
                     val angle = calculatePitchToLaunch(prevEyeLoc, eyeLocation)
                     val basis = when {
                         pass -> meta.movementModifier.passVelocity
@@ -337,7 +337,7 @@ class BallProxyImpl(
 
         val angle = Math.toDegrees(getHorizontalDeviation(initVector, postVector))
         val absAngle = abs(angle).toFloat()
-        val maxV = meta.movementModifier.maximumSpinModifier
+        val maxV = meta.movementModifier.maximumSpinVelocity
         var velocity: Double
 
         velocity = when (absAngle < 90) {
