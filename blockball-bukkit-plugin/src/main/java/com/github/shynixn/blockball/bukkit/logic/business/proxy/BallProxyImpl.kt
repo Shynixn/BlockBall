@@ -181,6 +181,10 @@ class BallProxyImpl(
                 skipKickCounter--
             }
 
+            if (skipCounter > 0) {
+                skipCounter--;
+            }
+
             if (!isGrabbed) {
                 checkMovementInteractions()
                 if (this.meta.rotating) {
@@ -363,7 +367,7 @@ class BallProxyImpl(
             throw IllegalArgumentException("Entity has to be a BukkitEntity!")
         }
 
-        if (interactionEntity == null || !this.isGrabbed || entity == interactionEntity) {
+        if (!this.isGrabbed || this.skipCounter > 0) {
             return
         }
 
@@ -373,6 +377,7 @@ class BallProxyImpl(
         val y = vector.y
         vector = vector.multiply(meta.movementModifier.horizontalThrowModifier)
         vector.y = y * 2.0 * meta.movementModifier.verticalThrowModifier
+
         val event = BallThrowEvent(vector, entity, this)
         Bukkit.getPluginManager().callEvent(event)
 
@@ -706,8 +711,6 @@ class BallProxyImpl(
                     return true
                 }
             }
-        } else {
-            this.skipCounter--
         }
         return false
     }
