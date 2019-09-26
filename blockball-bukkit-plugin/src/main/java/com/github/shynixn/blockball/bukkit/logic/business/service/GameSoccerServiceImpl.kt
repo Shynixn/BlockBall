@@ -110,7 +110,7 @@ class GameSoccerServiceImpl @Inject constructor(
     }
 
     private fun checkBallInGoal(game: Game) {
-        if (game.ball == null || game.ball!!.isDead || game.ball!!.isInNet) {
+        if (game.ball == null || game.ball!!.isDead || game.ballSpawning) {
             return
         }
 
@@ -135,8 +135,6 @@ class GameSoccerServiceImpl @Inject constructor(
         } else {
             return
         }
-
-        game.ball!!.isInNet = true
     }
 
     /**
@@ -144,11 +142,14 @@ class GameSoccerServiceImpl @Inject constructor(
      */
     private fun relocatePlayersAndBall(game: Game) {
         if (!game.arena.meta.customizingMeta.backTeleport) {
-            game.ball!!.remove()
+            respawnBall(game)
             return
         }
 
-        sync(concurrencyService, 20L * game.arena.meta.customizingMeta.backTeleportDelay) {
+        val delay = 20 * game.arena.meta.customizingMeta.backTeleportDelay
+
+        respawnBall(game, delay)
+        sync(concurrencyService, delay.toLong()) {
             var redTeamSpawnpoint = game.arena.meta.redTeamMeta.spawnpoint?.toLocation()
             if (redTeamSpawnpoint == null) {
                 redTeamSpawnpoint = game.arena.meta.ballMeta.spawnpoint!!.toLocation()
@@ -159,7 +160,6 @@ class GameSoccerServiceImpl @Inject constructor(
                 blueTeamSpawnpoint = game.arena.meta.ballMeta.spawnpoint!!.toLocation()
             }
 
-            game.ball!!.remove()
             game.ingamePlayersStorage.forEach { i ->
                 if (i.value.team == Team.RED) {
                     (i.key as Player).teleport(redTeamSpawnpoint)
@@ -170,6 +170,15 @@ class GameSoccerServiceImpl @Inject constructor(
         }
     }
 
+    private fun respawnBall(game: Game, delayInTicks: Int = game.arena.meta.ballMeta.delayInTicks) {
+        if (game.ballSpawning) {
+            return
+        }
+
+        game.ballSpawning = true
+        game.ballSpawnCounter = delayInTicks / 20
+    }
+
     private fun handleBallSpawning(game: Game) {
         if (game.ballSpawning) {
             if (game is MiniGame && game.endGameActive) {
@@ -178,6 +187,10 @@ class GameSoccerServiceImpl @Inject constructor(
 
             game.ballSpawnCounter--
             if (game.ballSpawnCounter <= 0) {
+                if (game.ball != null && !game.ball!!.isDead) {
+                    game.ball!!.remove()
+                }
+
                 game.ball = ballEntityService.spawnTemporaryBall(game.arena.meta.ballMeta.spawnpoint!!.toLocation(), game.arena.meta.ballMeta)
                 game.ballSpawning = false
                 game.ballSpawnCounter = 0

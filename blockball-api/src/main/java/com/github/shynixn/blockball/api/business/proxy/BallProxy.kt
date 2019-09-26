@@ -48,11 +48,6 @@ interface BallProxy {
     val isGrabbed: Boolean
 
     /**
-     * Is the ball inside the goal net?
-     */
-    var isInNet: Boolean
-
-    /**
      * Is the entity dead?
      */
     val isDead: Boolean
@@ -119,13 +114,20 @@ interface BallProxy {
     fun <V> getVelocity(): V
 
     /**
-     * Kicks the ball by the given entity.
+     * Shoot the ball by the given player.
      * The calculated velocity can be manipulated by the BallKickEvent.
      *
-     * @param entity entity
-     * @param pass whether the kick was a pass or a shot.
+     * @param player
      */
-    fun <E> kickByEntity(entity: E, pass: Boolean)
+    fun <E> shootByPlayer(player: E)
+
+    /**
+     * Pass the ball by the given player.
+     * The calculated velocity can be manipulated by the BallKickEvent
+     *
+     * @param player
+     */
+    fun <E> passByPlayer(player: E)
 
     /**
      * Throws the ball by the given entity.

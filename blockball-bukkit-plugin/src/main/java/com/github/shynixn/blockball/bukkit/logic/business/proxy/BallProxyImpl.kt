@@ -117,11 +117,6 @@ class BallProxyImpl(
      * Is the ball currently grabbed by some entity?
      */
     override var isGrabbed: Boolean = false
-
-    /**
-     * Is the ball inside the goal net?
-     */
-    override var isInNet: Boolean = false
     
     /**
      * Is the entity dead?
@@ -253,76 +248,31 @@ class BallProxyImpl(
     }
 
     /**
-     * Kicks the ball by the given entity.
+     * Shoot the ball by the given player.
      * The calculated velocity can be manipulated by the BallKickEvent.
      *
-     * @param entity entity
-     * @param pass whether the kick was a pass or a shot.
+     * @param player
      */
-    override fun <E> kickByEntity(entity: E, pass: Boolean) {
-        if (entity !is Entity) {
-            throw IllegalArgumentException("Entity has to be a BukkitEntity!")
+    override fun <E> shootByPlayer(player: E) {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        if (this.isGrabbed || this.skipKickCounter > 0) {
-            return
+        kickByPlayer(player, false)
+    }
+
+    /**
+     * Pass the ball by the given player.
+     * The calculated velocity can be manipulated by the BallKickEvent
+     *
+     * @param player
+     */
+    override fun <E> passByPlayer(player: E) {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        this.yawChange = entity.location.yaw
-
-        if (entity is Player) {
-            val prevEyeLoc = entity.eyeLocation.clone()
-            val preEvent = BallInteractEvent(entity, this)
-            Bukkit.getPluginManager().callEvent(preEvent)
-
-            if (!preEvent.isCancelled) {
-                val delay = when {
-                    pass -> 3
-                    else -> 6
-                }
-
-                this.angularVelocity = 0.0
-                this.skipCounter = delay + 4
-                this.skipKickCounter = delay + 4
-                this.setVelocity(entity.velocity)
-
-                // TODO Do not apply spin and delay if the ball is airborne
-
-                sync(concurrencyService, delay.toLong()) {
-                    var kickVector = prevEyeLoc.direction.clone()
-                    val eyeLocation = (entity as Player).eyeLocation
-                    val spinV = calculateSpinVelocity(eyeLocation.direction, kickVector)
-                    val spinDrag = 1.0 - abs(spinV) / (3.0 * meta.movementModifier.maximumSpinVelocity)
-                    val angle = calculatePitchToLaunch(prevEyeLoc, eyeLocation)
-                    val basis = when {
-                        pass -> meta.movementModifier.passVelocity
-                        else -> meta.movementModifier.shotVelocity
-                    }
-                    val verticalMod = basis * spinDrag * sin(angle)
-                    val horizontalMod = basis * spinDrag * cos(angle)
-                    kickVector = kickVector.normalize().multiply(horizontalMod)
-                    kickVector.y = verticalMod
-
-                    val event = BallKickEvent(kickVector, entity, this)
-                    Bukkit.getPluginManager().callEvent(event)
-
-                    if (!event.isCancelled) {
-                        this.setVelocity(event.resultVelocity)
-                        this.angularVelocity = spinV
-                    }
-                }
-            }
-        }
-        else {
-            val vector = entity.location.direction
-            val event = BallKickEvent(vector, entity, this)
-            Bukkit.getPluginManager().callEvent(event)
-
-            if (!event.isCancelled) {
-                this.angularVelocity = 0.0
-                this.setVelocity(vector)
-            }
-        }
+        kickByPlayer(player, true)
     }
 
     /**
@@ -643,6 +593,60 @@ class BallProxyImpl(
     }
 
     /**
+     * Calculation to perform shoot or pass
+     *
+     * @param player the kicker
+     * @param pass either pass or shoot
+     */
+    private fun kickByPlayer(player: Player, pass: Boolean) {
+        if (this.isGrabbed || this.skipKickCounter > 0) {
+            return
+        }
+
+        val preEvent = BallInteractEvent(player, this)
+        Bukkit.getPluginManager().callEvent(preEvent)
+        if (preEvent.isCancelled) {
+            return
+        }
+
+        val delay = when {
+            pass -> 4
+            else -> 6
+        }
+        val prevEyeLoc = player.eyeLocation.clone()
+        this.yawChange = player.location.yaw
+        this.skipCounter = delay + 4
+        this.skipKickCounter = delay + 4
+        this.setVelocity(player.velocity)
+
+        // TODO Do not apply spin and delay if the ball is airborne
+
+        sync(concurrencyService, delay.toLong()) {
+            var kickVector = prevEyeLoc.direction.clone()
+            val eyeLocation = player.eyeLocation
+            val spinV = calculateSpinVelocity(eyeLocation.direction, kickVector)
+            val spinDrag = 1.0 - abs(spinV) / (3.0 * meta.movementModifier.maximumSpinVelocity)
+            val angle = calculatePitchToLaunch(prevEyeLoc, eyeLocation)
+            val basis = when {
+                pass -> meta.movementModifier.passVelocity
+                else -> meta.movementModifier.shotVelocity
+            }
+            val verticalMod = basis * spinDrag * sin(angle)
+            val horizontalMod = basis * spinDrag * cos(angle)
+            kickVector = kickVector.normalize().multiply(horizontalMod)
+            kickVector.y = verticalMod
+
+            val event = BallKickEvent(kickVector, player, this)
+            Bukkit.getPluginManager().callEvent(event)
+
+            if (!event.isCancelled) {
+                this.setVelocity(event.resultVelocity)
+                this.angularVelocity = spinV
+            }
+        }
+    }
+
+    /**
      * Calculates the pitch when launching the ball.
      * Result depends on the change of pitch. For example,
      * positive value implies that entity raised the pitch of its head.
@@ -691,7 +695,7 @@ class BallProxyImpl(
      * Checks movement interactions with the ball.
      */
     private fun checkMovementInteractions(): Boolean {
-        if (!this.isInNet && this.skipCounter <= 0) {
+        if (this.skipCounter <= 0) {
             this.skipCounter = 2
             val ballLocation = getCalculationEntity<Entity>().location
             for (entity in ballLocation.chunk.entities) {

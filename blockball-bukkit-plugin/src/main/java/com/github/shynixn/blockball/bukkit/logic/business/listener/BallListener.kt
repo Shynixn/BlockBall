@@ -116,7 +116,7 @@ class BallListener @Inject constructor(
             if (event.player.isSneaking) {
                 ball.grab(event.player)
             } else {
-                ball.kickByEntity(event.player, true)
+                ball.passByPlayer(event.player)
             }
 
             event.isCancelled = true
@@ -141,7 +141,7 @@ class BallListener @Inject constructor(
                 if (damager is Player && damager.isSneaking) {
                     ball.grab(damager)
                 } else {
-                    ball.kickByEntity(event.damager, false)
+                    ball.shootByPlayer(event.damager)
                 }
             }
         }

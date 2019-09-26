@@ -213,12 +213,22 @@ class BallListenerTest {
         }
 
         /**
-         * Kicks the ball by the given entity.
+         * Shoot the ball by the given player.
          * The calculated velocity can be manipulated by the BallKickEvent.
          *
-         * @param entity entity
+         * @param player
          */
-        override fun <E> kickByEntity(entity: E, pass: Boolean) {
+        override fun <E> shootByPlayer(player: E) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Pass the ball by the given player.
+         * The calculated velocity can be manipulated by the BallKickEvent
+         *
+         * @param player
+         */
+        override fun <E> passByPlayer(player: E) {
             throw IllegalArgumentException()
         }
 
