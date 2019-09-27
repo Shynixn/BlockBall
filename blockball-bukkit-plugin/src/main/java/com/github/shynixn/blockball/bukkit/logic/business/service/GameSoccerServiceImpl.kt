@@ -132,8 +132,6 @@ class GameSoccerServiceImpl @Inject constructor(
                 onMatchEnd(game, game.redTeam as List<Player>, game.blueTeam as List<Player>)
                 onWin(game, Team.RED, game.arena.meta.redTeamMeta)
             }
-        } else {
-            return
         }
     }
 

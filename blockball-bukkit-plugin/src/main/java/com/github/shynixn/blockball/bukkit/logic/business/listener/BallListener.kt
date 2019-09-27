@@ -88,7 +88,7 @@ class BallListener @Inject constructor(
             if (ball.isGrabbed) {
                 ball.getLastInteractionEntity<Entity>().ifPresent {
                     if (it is Player && it.uniqueId == event.player.uniqueId) {
-                        ball.throwByEntity(event.player)
+                        ball.throwByPlayer(event.player)
                         event.isCancelled = true
                     }
                 }
@@ -132,16 +132,16 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerDamageBallEvent(event: EntityDamageByEntityEvent) {
-        if (event.entity.customName == "ResourceBallsPlugin") {
+        if (event.damager is Player && event.entity.customName == "ResourceBallsPlugin") {
             val optBall = this.ballEntityService.findBallFromEntity(event.entity)
             if (optBall.isPresent) {
                 val ball = optBall.get()
-                val damager = event.damager
+                val player = event.damager as Player
 
-                if (damager is Player && damager.isSneaking) {
-                    ball.grab(damager)
+                if (player.isSneaking) {
+                    ball.grab(player)
                 } else {
-                    ball.shootByPlayer(event.damager)
+                    ball.shootByPlayer(player)
                 }
             }
         }

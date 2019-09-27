@@ -233,12 +233,12 @@ class BallListenerTest {
         }
 
         /**
-         * Throws the ball by the given entity.
+         * Throws the ball by the given player.
          * The calculated velocity can be manipulated by the BallThrowEvent.
          *
-         * @param entity entity
+         * @param player
          */
-        override fun <E> throwByEntity(entity: E) {
+        override fun <E> throwByPlayer(player: E) {
             throw IllegalArgumentException()
         }
 

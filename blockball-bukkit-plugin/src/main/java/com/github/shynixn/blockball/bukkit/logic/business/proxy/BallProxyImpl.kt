@@ -177,7 +177,7 @@ class BallProxyImpl(
             }
 
             if (skipCounter > 0) {
-                skipCounter--;
+                skipCounter--
             }
 
             if (!isGrabbed) {
@@ -307,14 +307,14 @@ class BallProxyImpl(
     }
 
     /**
-     * Throws the ball by the given entity.
+     * Throws the ball by the given player.
      * The calculated velocity can be manipulated by the BallThrowEvent.
      *
-     * @param entity entity
+     * @param player
      */
-    override fun <E> throwByEntity(entity: E) {
-        if (entity !is Entity) {
-            throw IllegalArgumentException("Entity has to be a BukkitEntity!")
+    override fun <E> throwByPlayer(player: E) {
+        if (player !is Player) {
+            throw IllegalArgumentException("Entity has to be a BukkitPlayer!")
         }
 
         if (!this.isGrabbed || this.skipCounter > 0) {
@@ -323,12 +323,12 @@ class BallProxyImpl(
 
         this.deGrab()
 
-        var vector = this.getDirection(entity).normalize()
+        var vector = this.getDirection(player).normalize()
         val y = vector.y
         vector = vector.multiply(meta.movementModifier.horizontalThrowModifier)
         vector.y = y * 2.0 * meta.movementModifier.verticalThrowModifier
 
-        val event = BallThrowEvent(vector, entity, this)
+        val event = BallThrowEvent(vector, player, this)
         Bukkit.getPluginManager().callEvent(event)
 
         if (!event.isCancelled) {

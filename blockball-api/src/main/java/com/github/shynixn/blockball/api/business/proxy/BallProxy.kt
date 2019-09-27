@@ -130,12 +130,12 @@ interface BallProxy {
     fun <E> passByPlayer(player: E)
 
     /**
-     * Throws the ball by the given entity.
+     * Throws the ball by the given player.
      * The calculated velocity can be manipulated by the BallThrowEvent.
      *
-     * @param entity entity
+     * @param player
      */
-    fun <E> throwByEntity(entity: E)
+    fun <E> throwByPlayer(player: E)
 
     /**
      * Lets the given living entity grab the ball.
