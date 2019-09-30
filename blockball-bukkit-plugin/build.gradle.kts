@@ -66,6 +66,7 @@ dependencies {
 
     compileOnly("me.clip:placeholderapi:2.9.2")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
+    compileOnly("org.bukkit:bukkit:1.13.1-R0.1-SNAPSHOT")
 
     compileOnly("org.spigotmc:spigot114R1:1.14.4-R1.0")
 
