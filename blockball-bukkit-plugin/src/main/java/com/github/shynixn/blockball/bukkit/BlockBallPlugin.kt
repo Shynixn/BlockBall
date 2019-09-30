@@ -20,7 +20,6 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Server
 import org.bukkit.configuration.MemorySection
-import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.FileOutputStream
@@ -110,13 +109,12 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
 
             Bukkit.getPluginManager().disablePlugin(this)
-
             return
         }
 
         this.injector = Guice.createInjector(BlockBallDependencyInjectionBinder(this))
-
         this.reloadConfig()
+
         // Register Listeners
         Bukkit.getPluginManager().registerEvents(resolve(GameListener::class.java), this)
         Bukkit.getPluginManager().registerEvents(resolve(DoubleJumpListener::class.java), this)
@@ -148,15 +146,15 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
 
         server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
 
-        val updateCheker = resolve(UpdateCheckService::class.java)
-        val dependencyChecker = resolve(DependencyService::class.java)
+        val updateCheckService = resolve(UpdateCheckService::class.java)
+        val dependencyService = resolve(DependencyService::class.java)
         val configurationService = resolve(ConfigurationService::class.java)
-        val ballEntitySerivice = resolve(BallEntityService::class.java)
+        val ballEntityService = resolve(BallEntityService::class.java)
         val bungeeCordConnectionService = resolve(BungeeCordConnectionService::class.java)
 
-        ballEntitySerivice.registerEntitiesOnServer()
-        updateCheker.checkForUpdates()
-        dependencyChecker.checkForInstalledDependencies()
+        ballEntityService.registerEntitiesOnServer()
+        updateCheckService.checkForUpdates()
+        dependencyService.checkForInstalledDependencies()
 
         val enableMetrics = configurationService.findValue<Boolean>("metrics")
         val enableBungeeCord = configurationService.findValue<Boolean>("game.allow-server-linking")
@@ -173,10 +171,11 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         }
 
         for (world in Bukkit.getWorlds()) {
-            ballEntitySerivice.cleanUpInvalidEntities(world.entities)
+            ballEntityService.cleanUpInvalidEntities(world.entities)
         }
 
-        Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn, LazoYoung")
+        Bukkit.getServer()
+            .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn, LazoYoung")
     }
 
     /**
@@ -217,7 +216,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             }
         }
     }
-
 
     /**
      * Starts the game mode.

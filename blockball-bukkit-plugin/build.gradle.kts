@@ -65,7 +65,7 @@ dependencies {
     implementation("commons-io:commons-io:2.6")
 
     compileOnly("me.clip:placeholderapi:2.9.2")
-    compileOnly("net.milkbowlvault:VaultAPI:1.7")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
 
     compileOnly("org.spigotmc:spigot114R1:1.14.4-R1.0")
 
