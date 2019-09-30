@@ -29,6 +29,10 @@ package com.github.shynixn.blockball.api.business.enumeration
  */
 enum class BallActionType {
     /**
+     * Ball Pass.
+     */
+    ONPASS,
+    /**
      * Ball Kick.
      */
     ONKICK,

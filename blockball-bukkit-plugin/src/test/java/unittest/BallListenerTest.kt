@@ -152,6 +152,11 @@ class BallListenerTest {
         override var angularVelocity: Double = 0.0
 
         /**
+         * Remaining time in ticks until players regain the ability to kick this ball.
+         */
+        override var skipKickCounter: Int = 0
+
+        /**
          * Returns the armorstand for the design.
          */
         override fun <A> getDesignArmorstand(): A {
@@ -208,22 +213,32 @@ class BallListenerTest {
         }
 
         /**
-         * Kicks the ball by the given entity.
+         * Shoot the ball by the given player.
          * The calculated velocity can be manipulated by the BallKickEvent.
          *
-         * @param entity entity
+         * @param player
          */
-        override fun <E> kickByEntity(entity: E) {
+        override fun <E> shootByPlayer(player: E) {
             throw IllegalArgumentException()
         }
 
         /**
-         * Throws the ball by the given entity.
+         * Pass the ball by the given player.
+         * The calculated velocity can be manipulated by the BallKickEvent
+         *
+         * @param player
+         */
+        override fun <E> passByPlayer(player: E) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Throws the ball by the given player.
          * The calculated velocity can be manipulated by the BallThrowEvent.
          *
-         * @param entity entity
+         * @param player
          */
-        override fun <E> throwByEntity(entity: E) {
+        override fun <E> throwByPlayer(player: E) {
             throw IllegalArgumentException()
         }
 
@@ -235,9 +250,11 @@ class BallListenerTest {
         }
 
         /**
-         * Lets the ball spin to the player direction.
+         * Calculates the angular velocity in order to spin the ball.
+         *
+         * @return The angular velocity
          */
-        override fun <V> spin(playerDirection: V, resultVelocity: V) {
+        override fun <V> calculateSpinVelocity(postVector: V, initVector: V): Double {
             throw IllegalArgumentException()
         }
 
@@ -266,6 +283,16 @@ class BallListenerTest {
          * Calculates the movement vectors.
          */
         override fun <V> calculateMoveSourceVectors(movementVector: V, motionVector: V, onGround: Boolean): Optional<V> {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Calculates spin movement. The spinning will slow down
+         * if the ball stops moving, hits the ground or hits the wall.
+         *
+         * @param collision if knockback were applied
+         */
+        override fun calculateSpinMovement(collision: Boolean) {
             throw IllegalArgumentException()
         }
 

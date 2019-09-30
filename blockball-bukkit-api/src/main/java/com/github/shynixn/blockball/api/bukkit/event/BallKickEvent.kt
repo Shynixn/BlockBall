@@ -32,7 +32,12 @@ import org.bukkit.util.Vector
  * SOFTWARE.
  */
 class BallKickEvent(
+
         /**
          * Resulting velocity.
          */
-        val resultVelocity: Vector, entity: Entity, ball: BallProxy) : BallInteractEvent(entity, ball)
+        val resultVelocity: Vector,
+        entity: Entity,
+        ball: BallProxy
+
+) : BallInteractEvent(entity, ball)

@@ -63,7 +63,7 @@ interface BallMeta {
     /**
      * Should the ball always bounce of walls?
      */
-    var alwaysBouce: Boolean
+    var alwaysBounce: Boolean
 
     /**
      * Bouncing off from objects modifiers.
