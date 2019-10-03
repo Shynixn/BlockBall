@@ -224,7 +224,20 @@ task downloadDependencies(type: Exec) {
         }
     }
 
+    def vaultFile = new File(folder, "Vault.jar")
+
+    if (!vaultFile.exists()) {
+        def connection = new URL('https://dev.bukkit.org/projects/vault/files/2704903/download').openConnection()
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.1.2; en-us; GT-N8013 Build/JZO54K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30")
+
+        def out = new BufferedOutputStream(new FileOutputStream(vaultFile))
+        out << connection.inputStream
+
+        out.close()
+    }
+
     def text = "cd build/buildtools"
+    text += " && mvn install:install-file -Dfile=Vault.jar -DgroupId=net.milkbowlvault -DartifactId=VaultAPI -Dversion=1.7 -Dpackaging=jar"
     text += " && java -jar BuildTools.jar --rev 1.8.8"
     text += " && java -jar BuildTools.jar --rev 1.9.4"
     text += " && java -jar BuildTools.jar --rev 1.10"
