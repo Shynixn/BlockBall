@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.api.persistence.entity.InteractionCache
 import com.github.shynixn.blockball.bukkit.logic.business.extension.*
 import com.github.shynixn.blockball.core.logic.persistence.entity.ChatBuilderEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.InteractionCacheEntity
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -102,7 +103,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                         if (!interactionCache.toggled) {
                             val joinCommand = configurationService.findValue<String>("global-join.command")
 
-                            val b = ChatBuilderEntity().text(prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].convertChatColors())
+                            val b = ChatBuilderEntity().text(prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].translateChatColors())
                                 .nextLine()
                                 .component(game.arena.meta.hubLobbyMeta.joinMessage[1].replaceGamePlaceholder(game, game.arena.meta.redTeamMeta))
                                 .setClickAction(
