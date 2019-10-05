@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import org.bukkit.*
 import org.bukkit.ChatColor
 import org.bukkit.configuration.MemorySection
@@ -109,7 +110,7 @@ fun ItemStack.setDisplayName(displayName: String): ItemStack {
 
     if (meta != null) {
         @Suppress("UsePropertyAccessSyntax")
-        meta.setDisplayName(displayName.convertChatColors())
+        meta.setDisplayName(displayName.translateChatColors())
         itemMeta = meta
     }
 
@@ -142,9 +143,9 @@ internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = nul
         cache = cache.replace(PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder, team.size.toString())
     }
 
-    val stateSignEnabled = plugin.config.getString("messages.state-sign-enabled")!!.convertChatColors()
-    val stateSignDisabled = plugin.config.getString("messages.state-sign-disabled")!!.convertChatColors()
-    val stateSignRunning = plugin.config.getString("messages.state-sign-running")!!.convertChatColors()
+    val stateSignEnabled = plugin.config.getString("messages.state-sign-enabled")!!.translateChatColors()
+    val stateSignDisabled = plugin.config.getString("messages.state-sign-disabled")!!.translateChatColors()
+    val stateSignRunning = plugin.config.getString("messages.state-sign-running")!!.translateChatColors()
 
     when {
         game.status == GameStatus.RUNNING -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, stateSignRunning)
@@ -166,7 +167,7 @@ internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = nul
         cache = cache.replace(PlaceHolder.LASTHITBALL.placeHolder, (game.lastInteractedEntity as Player).name)
     }
 
-    return cache.convertChatColors()
+    return cache.translateChatColors()
 }
 
 /**
@@ -221,13 +222,6 @@ fun Player.sendPacket(packet: Any) {
 
     val sendMethod = connection.javaClass.getDeclaredMethod("sendPacket", packet.javaClass.interfaces[0])
     sendMethod.invoke(connection, packet)
-}
-
-/**
- * Converts the chatcolors of this string.
- */
-internal fun String.convertChatColors(): String {
-    return ChatColor.translateAlternateColorCodes('&', this)
 }
 
 /**

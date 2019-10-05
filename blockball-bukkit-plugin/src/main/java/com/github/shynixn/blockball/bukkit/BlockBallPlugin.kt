@@ -7,7 +7,7 @@ import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
-import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
 import com.github.shynixn.blockball.core.logic.business.commandexecutor.*
@@ -281,7 +281,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")
 
         val console = getServerConsoleMethod!!.invoke(Bukkit.getServer())
-        setModtMethod!!.invoke(console, builder.toString().convertChatColors())
+        setModtMethod!!.invoke(console, builder.toString().translateChatColors())
     }
 
     /**

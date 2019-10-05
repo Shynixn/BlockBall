@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.DependencyBossBarApiService
-import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -45,7 +45,7 @@ class DependencyBossBarApiServiceImpl @Inject constructor(private val plugin: Pl
 
         try {
             val clazz = Class.forName("org.inventivetalent.bossbar.BossBarAPI")
-            clazz.getDeclaredMethod("setMessage", String::class.java, Float::class.java).invoke(null, player, message.convertChatColors(), percent.toFloat())
+            clazz.getDeclaredMethod("setMessage", String::class.java, Float::class.java).invoke(null, player, message.translateChatColors(), percent.toFloat())
         } catch (e: Exception) {
             plugin.logger.log(Level.WARNING, "Failed to set bossbar message.", e)
         }

@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ScreenMessageService
-import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
 import com.google.inject.Inject
@@ -46,8 +46,8 @@ class ScreenMessageServiceImpl @Inject constructor(private val plugin : PluginPr
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        val finalTitle = title.convertChatColors()
-        val finalSubTitle = subTitle.convertChatColors()
+        val finalTitle = title.translateChatColors()
+        val finalSubTitle = subTitle.translateChatColors()
         val version = plugin.getServerVersion()
 
         val serializerMethod = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
@@ -101,7 +101,7 @@ class ScreenMessageServiceImpl @Inject constructor(private val plugin : PluginPr
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        val finalMessage = message.convertChatColors()
+        val finalMessage = message.translateChatColors()
         val packet: Any?
         val version = plugin.getServerVersion()
 
@@ -144,8 +144,8 @@ class ScreenMessageServiceImpl @Inject constructor(private val plugin : PluginPr
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        val finalHeader = header.convertChatColors()
-        val finalFooter = footer.convertChatColors()
+        val finalHeader = header.translateChatColors()
+        val finalFooter = footer.translateChatColors()
         val version = plugin.getServerVersion()
 
         val serializerMethod = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
