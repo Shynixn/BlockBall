@@ -212,11 +212,11 @@ fun Selection.isLocationInSelection(location: Location): Boolean {
 fun Player.sendPacket(packet: Any) {
     val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
 
-    val craftPlayer = findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer", plugin).cast(player)
+    val craftPlayer = findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer").cast(player)
     val methodHandle = craftPlayer.javaClass.getDeclaredMethod("getHandle")
     val entityPlayer = methodHandle.invoke(craftPlayer)
 
-    val field = findClazz("net.minecraft.server.VERSION.EntityPlayer", plugin).getDeclaredField("playerConnection")
+    val field = findClazz("net.minecraft.server.VERSION.EntityPlayer").getDeclaredField("playerConnection")
     field.isAccessible = true
     val connection = field.get(entityPlayer)
 
@@ -255,13 +255,6 @@ internal fun Location.toPosition(): Position {
     position.pitch = this.pitch.toDouble()
 
     return position
-}
-
-/**
- * Finds the version compatible NMS class.
- */
-fun findClazz(name: String, plugin: PluginProxy): Class<*> {
-    return Class.forName(name.replace("VERSION", plugin.getServerVersion().bukkitId))
 }
 
 /**

@@ -188,17 +188,17 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
 
         try {
             val clazz: Class<*> = if (pluginProxy.getServerVersion() == Version.VERSION_1_8_R1) {
-                findClazz("net.minecraft.server.VERSION.ChatSerializer", pluginProxy)
+                findClazz("net.minecraft.server.VERSION.ChatSerializer")
             } else {
-                findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer", pluginProxy)
+                findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer")
             }
 
-            val packetClazz = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat", pluginProxy)
-            val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent", pluginProxy)
+            val packetClazz = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat")
+            val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
             val chatComponent = clazz.getDeclaredMethod("a", String::class.java).invoke(null, chatBuilder.toString())
 
             val packet = if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_12_R1)) {
-                val chatEnumMessage = findClazz("net.minecraft.server.VERSION.ChatMessageType", pluginProxy)
+                val chatEnumMessage = findClazz("net.minecraft.server.VERSION.ChatMessageType")
                 packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage).newInstance(chatComponent, chatEnumMessage.enumConstants[0])
             } else {
                 packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Byte::class.javaPrimitiveType as Class<*>).newInstance(chatComponent, 0.toByte())

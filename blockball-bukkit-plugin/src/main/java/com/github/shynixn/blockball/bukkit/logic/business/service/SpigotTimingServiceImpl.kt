@@ -43,7 +43,7 @@ class SpigotTimingServiceImpl : SpigotTimingService {
     init {
         try {
             val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
-            clazz = findClazz("org.bukkit.craftbukkit.VERSION.SpigotTimings", plugin)
+            clazz = findClazz("org.bukkit.craftbukkit.VERSION.SpigotTimings")
             timerField = clazz!!.getDeclaredField("entityMoveTimer")
             timerClazz = Class.forName("org.spigotmc.CustomTimingsHandler")
         } catch (ignored: ClassNotFoundException) {

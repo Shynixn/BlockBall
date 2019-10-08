@@ -65,7 +65,7 @@ class BallEntityServiceImpl @Inject constructor(
      * Spawns a temporary ball.
      */
     override fun <L> spawnTemporaryBall(location: L, meta: BallMeta): BallProxy {
-        val designClazz = findClazz("com.github.shynixn.blockball.bukkit.logic.business.nms.VERSION.BallDesign", pluginProxy)
+        val designClazz = findClazz("com.github.shynixn.blockball.bukkit.logic.business.nms.VERSION.BallDesign")
         val nmsProxy =
             designClazz.getDeclaredConstructor(Location::class.java, BallMeta::class.java, Boolean::class.java, UUID::class.java, LivingEntity::class.java)
                 .newInstance(location, meta, false, UUID.randomUUID(), null) as NMSBallProxy
@@ -85,7 +85,7 @@ class BallEntityServiceImpl @Inject constructor(
             return false
         }
 
-        val slimeClazz = findClazz("com.github.shynixn.blockball.bukkit.logic.business.nms.VERSION.BallHitBox", pluginProxy)
+        val slimeClazz = findClazz("com.github.shynixn.blockball.bukkit.logic.business.nms.VERSION.BallHitBox")
 
         entityRegistry.register(slimeClazz, EntityType.SLIME)
         registered = true
