@@ -86,17 +86,17 @@ class ParticleServiceImpl @Inject constructor(
 
         val packet = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R1)) {
             val dataType = internalParticleType
-            val particleParamClazz = findClazz("net.minecraft.server.VERSION.ParticleParam", pluginProxy)
-            val particleClazz = findClazz("net.minecraft.server.VERSION.Particle", pluginProxy)
+            val particleParamClazz = findClazz("net.minecraft.server.VERSION.ParticleParam")
+            val particleClazz = findClazz("net.minecraft.server.VERSION.Particle")
 
             if (dataType == ItemStack::class.java && particle.materialName != null) {
-                val itemStack = findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftItemStack", pluginProxy).getDeclaredMethod("asNMSCopy")
+                val itemStack = findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftItemStack").getDeclaredMethod("asNMSCopy")
                     .invoke(null, ItemStack(Material.getMaterial(particle.materialName!!)!!, 1, particle.data.toShort()))
 
-                internalParticleType = findClazz("net.minecraft.server.VERSION.ParticleParamItem", pluginProxy)
+                internalParticleType = findClazz("net.minecraft.server.VERSION.ParticleParamItem")
                     .getDeclaredConstructor(particleClazz, itemStack.javaClass).newInstance(internalParticleType, itemStack)
             } else if (particle.type == ParticleType.BLOCK_CRACK || particle.type == ParticleType.BLOCK_DUST) {
-                val craftBlockStateClazz = findClazz("org.bukkit.craftbukkit.VERSION.block.CraftBlockState", pluginProxy)
+                val craftBlockStateClazz = findClazz("org.bukkit.craftbukkit.VERSION.block.CraftBlockState")
 
                 val data = craftBlockStateClazz
                     .getDeclaredConstructor(Material::class.java)
@@ -105,16 +105,16 @@ class ParticleServiceImpl @Inject constructor(
                 craftBlockStateClazz.getDeclaredMethod("setRawData", Byte::class.java).invoke(data, particle.data.toByte())
                 val handle = craftBlockStateClazz.getDeclaredMethod("getHandle").invoke(data)
 
-                internalParticleType = findClazz("net.minecraft.server.VERSION.ParticleParamBlock", pluginProxy)
-                    .getDeclaredConstructor(particleClazz, findClazz("net.minecraft.server.VERSION.IBlockData", pluginProxy))
+                internalParticleType = findClazz("net.minecraft.server.VERSION.ParticleParamBlock")
+                    .getDeclaredConstructor(particleClazz, findClazz("net.minecraft.server.VERSION.IBlockData"))
                     .newInstance(internalParticleType, handle)
             } else if (particle.type == ParticleType.REDSTONE) {
-                internalParticleType = findClazz("net.minecraft.server.VERSION.ParticleParamRedstone", pluginProxy)
+                internalParticleType = findClazz("net.minecraft.server.VERSION.ParticleParamRedstone")
                     .getDeclaredConstructor(Float::class.java, Float::class.java, Float::class.java, Float::class.java)
                     .newInstance(particle.colorRed.toFloat() / 255.0f, particle.colorGreen.toFloat() / 255.0f, particle.colorBlue.toFloat() / 255.0f, 1.0F)
             }
 
-            findClazz("net.minecraft.server.VERSION.PacketPlayOutWorldParticles", pluginProxy)
+            findClazz("net.minecraft.server.VERSION.PacketPlayOutWorldParticles")
                 .getDeclaredConstructor(
                     particleParamClazz,
                     Boolean::class.java,
@@ -156,7 +156,7 @@ class ParticleServiceImpl @Inject constructor(
                     red = Float.MIN_VALUE
                 }
 
-                val constructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutWorldParticles", pluginProxy)
+                val constructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutWorldParticles")
                     .getDeclaredConstructor(
                         internalParticleType.javaClass,
                         Boolean::class.javaPrimitiveType,
@@ -185,7 +185,7 @@ class ParticleServiceImpl @Inject constructor(
                 )
             } else {
 
-                val constructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutWorldParticles", pluginProxy)
+                val constructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutWorldParticles")
                     .getDeclaredConstructor(
                         internalParticleType.javaClass,
                         Boolean::class.javaPrimitiveType,
@@ -240,27 +240,27 @@ class ParticleServiceImpl @Inject constructor(
 
             return when {
                 version.isVersionSameOrLowerThan(Version.VERSION_1_12_R1) -> {
-                    val clazz = findClazz("net.minecraft.server.VERSION.EnumParticle", pluginProxy)
+                    val clazz = findClazz("net.minecraft.server.VERSION.EnumParticle")
                     val method = clazz.getDeclaredMethod("valueOf", String::class.java)
                     method.invoke(null, particle.name)
                 }
                 version == Version.VERSION_1_13_R1 -> {
                     val minecraftKey =
-                        findClazz("net.minecraft.server.VERSION.MinecraftKey", pluginProxy).getDeclaredConstructor(String::class.java)
+                        findClazz("net.minecraft.server.VERSION.MinecraftKey").getDeclaredConstructor(String::class.java)
                             .newInstance(particle.gameId_113)
-                    val registry = findClazz("net.minecraft.server.VERSION.Particle", pluginProxy).getDeclaredField("REGISTRY").get(null)
+                    val registry = findClazz("net.minecraft.server.VERSION.Particle").getDeclaredField("REGISTRY").get(null)
 
-                    findClazz("net.minecraft.server.VERSION.RegistryMaterials", pluginProxy).getDeclaredMethod("get", Any::class.java)
+                    findClazz("net.minecraft.server.VERSION.RegistryMaterials").getDeclaredMethod("get", Any::class.java)
                         .invoke(registry, minecraftKey)
                 }
                 else -> {
                     val minecraftKey =
-                        findClazz("net.minecraft.server.VERSION.MinecraftKey", pluginProxy).getDeclaredConstructor(String::class.java)
+                        findClazz("net.minecraft.server.VERSION.MinecraftKey").getDeclaredConstructor(String::class.java)
                             .newInstance(particle.gameId_113)
-                    val registry = findClazz("net.minecraft.server.VERSION.IRegistry", pluginProxy).getDeclaredField("PARTICLE_TYPE").get(null)
-                    findClazz("net.minecraft.server.VERSION.RegistryMaterials", pluginProxy).getDeclaredMethod(
+                    val registry = findClazz("net.minecraft.server.VERSION.IRegistry").getDeclaredField("PARTICLE_TYPE").get(null)
+                    findClazz("net.minecraft.server.VERSION.RegistryMaterials").getDeclaredMethod(
                         "get",
-                        findClazz("net.minecraft.server.VERSION.MinecraftKey", pluginProxy)
+                        findClazz("net.minecraft.server.VERSION.MinecraftKey")
                     )
                         .invoke(registry, minecraftKey)
                 }
