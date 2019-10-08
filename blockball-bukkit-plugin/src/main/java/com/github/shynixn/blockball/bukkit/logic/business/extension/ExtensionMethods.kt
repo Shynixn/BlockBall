@@ -210,8 +210,6 @@ fun Selection.isLocationInSelection(location: Location): Boolean {
  * Sends the given [packet] to this player.
  */
 fun Player.sendPacket(packet: Any) {
-    val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
-
     val craftPlayer = findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer").cast(player)
     val methodHandle = craftPlayer.javaClass.getDeclaredMethod("getHandle")
     val entityPlayer = methodHandle.invoke(craftPlayer)

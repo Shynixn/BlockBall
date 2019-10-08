@@ -275,8 +275,8 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         builder.append(ChatColor.RESET.toString())
         builder.append("]")
 
-        val minecraftServerClazz = findClazz("net.minecraft.server.VERSION.MinecraftServer", this)
-        val craftServerClazz = findClazz("org.bukkit.craftbukkit.VERSION.CraftServer", this)
+        val minecraftServerClazz = findClazz("net.minecraft.server.VERSION.MinecraftServer")
+        val craftServerClazz = findClazz("org.bukkit.craftbukkit.VERSION.CraftServer")
         val setModtMethod = minecraftServerClazz.getDeclaredMethod("setMotd", String::class.java)
         val getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")
 
