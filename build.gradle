@@ -227,7 +227,7 @@ task downloadDependencies(type: Exec) {
     def vaultFile = new File(folder, "Vault.jar")
 
     if (!vaultFile.exists()) {
-        def connection = new URL('https://dev.bukkit.org/projects/vault/files/2615750/download').openConnection()
+        def connection = new URL('https://jitpack.io/com/github/MilkBowl/VaultAPI/1.7/VaultAPI-1.7.jar').openConnection()
         connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
 
         def out = new BufferedOutputStream(new FileOutputStream(vaultFile))
