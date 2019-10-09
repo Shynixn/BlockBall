@@ -9,7 +9,6 @@ import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.business.service.LoggingService
-import com.github.shynixn.blockball.api.business.service.SpigotTimingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_10_R1.*
 import org.bukkit.Bukkit
@@ -58,7 +57,6 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
     private val itemService = BlockBallApi.resolve(ItemService::class.java)
     private val hitbox = BallHitBox(this, ballMeta, location)
     private var internalProxy: BallProxy? = null
-    private val timingService = BlockBallApi.resolve(SpigotTimingService::class.java)
 
     /**
      * Proxy handler.
@@ -168,7 +166,6 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             motZ = motionVector.z
         }
 
-        timingService.startTiming()
 
         if (this.noclip) {
             this.a(this.boundingBox.c(x, y, z))
