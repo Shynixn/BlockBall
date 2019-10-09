@@ -8,7 +8,6 @@ import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.business.service.ItemService
-import com.github.shynixn.blockball.api.business.service.SpigotTimingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_9_R2.EntityArmorStand
 import net.minecraft.server.v1_9_R2.NBTTagCompound
@@ -50,7 +49,7 @@ import java.util.*
 class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) : EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
     private val itemService = BlockBallApi.resolve(ItemService::class.java)
 
-    private val hitbox = BallHitBox(this, location, BlockBallApi.resolve(SpigotTimingService::class.java))
+    private val hitbox = BallHitBox(this, location)
     private var internalProxy: BallProxy? = null
     /**
      * Proxy handler.
