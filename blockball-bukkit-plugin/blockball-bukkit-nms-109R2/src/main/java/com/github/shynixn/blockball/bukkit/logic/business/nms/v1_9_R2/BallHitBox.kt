@@ -2,7 +2,6 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_9_R2
 
-import com.github.shynixn.blockball.api.business.service.SpigotTimingService
 import net.minecraft.server.v1_9_R2.*
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -38,7 +37,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallHitBox(private val ballDesign: BallDesign, location: Location, private val timingService: SpigotTimingService) : EntityArmorStand((location.world as CraftWorld).handle) {
+class BallHitBox(private val ballDesign: BallDesign, location: Location) : EntityArmorStand((location.world as CraftWorld).handle) {
     /**
      * Initializes the hitbox.
      */
@@ -85,7 +84,6 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
             this.motZ = motionVector.z
         }
 
-        timingService.startTiming()
 
         var d0 = d0m
         var d1 = d1m
@@ -311,7 +309,6 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location, private
         }
 
         this.ballDesign.proxy.calculatePostMovement(collision)
-        timingService.stopTiming()
     }
 
     /**
