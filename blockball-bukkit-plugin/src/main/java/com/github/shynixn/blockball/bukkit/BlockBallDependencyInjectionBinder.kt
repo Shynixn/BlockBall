@@ -101,16 +101,17 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(ProxyService::class.java).to(ProxyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(CommandService::class.java).to(CommandServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameExecutionService::class.java).to(GameExecutionServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(PackageService::class.java).to(PackageServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         when {
             version.isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)
-                    -> bind(EntityRegistrationService::class.java).to(EntityRegistration114R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            -> bind(EntityRegistrationService::class.java).to(EntityRegistration114R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)
-                    -> bind(EntityRegistrationService::class.java).to(EntityRegistration113R2ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            -> bind(EntityRegistrationService::class.java).to(EntityRegistration113R2ServiceImpl::class.java).`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_11_R1)
-                    -> bind(EntityRegistrationService::class.java).to(EntityRegistration111R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            -> bind(EntityRegistrationService::class.java).to(EntityRegistration111R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_10_R1)
-                    -> bind(EntityRegistrationService::class.java).to(EntityRegistration110R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            -> bind(EntityRegistrationService::class.java).to(EntityRegistration110R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
             else -> bind(EntityRegistrationService::class.java).to(EntityRegistrationLegacyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         }
 
