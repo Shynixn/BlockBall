@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ItemService
+import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
@@ -183,14 +184,12 @@ internal fun ItemStack.setColor(color: Color): ItemStack {
     return this
 }
 
-
 /**
  * Returns if the given [player] has got this [Permission].
  */
 internal fun Permission.hasPermission(player: Player): Boolean {
     return player.hasPermission(this.permission)
 }
-
 
 /** Returns if the given [location] is inside of this area selection. */
 fun Selection.isLocationInSelection(location: Location): Boolean {
@@ -210,16 +209,7 @@ fun Selection.isLocationInSelection(location: Location): Boolean {
  * Sends the given [packet] to this player.
  */
 fun Player.sendPacket(packet: Any) {
-    val craftPlayer = findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer").cast(player)
-    val methodHandle = craftPlayer.javaClass.getDeclaredMethod("getHandle")
-    val entityPlayer = methodHandle.invoke(craftPlayer)
-
-    val field = findClazz("net.minecraft.server.VERSION.EntityPlayer").getDeclaredField("playerConnection")
-    field.isAccessible = true
-    val connection = field.get(entityPlayer)
-
-    val sendMethod = connection.javaClass.getDeclaredMethod("sendPacket", packet.javaClass.interfaces[0])
-    sendMethod.invoke(connection, packet)
+    BlockBallApi.resolve(PackageService::class.java).sendPacket(this, packet)
 }
 
 /**
