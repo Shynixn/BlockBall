@@ -9,8 +9,10 @@ import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.persistence.entity.Particle
+import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.core.logic.business.extension.async
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -57,10 +59,16 @@ class ParticleServiceImpl @Inject constructor(
      * Plays the given [particle] at the given [location] for the given [players].
      */
     override fun <L, P> playParticle(location: L, particle: Particle, players: Collection<P>) {
-        if (location !is Location) {
+        if (location is Position) {
+            playParticle(location.toLocation(), particle, players)
+        }else if (location is Location) {
+            playParticle(location, particle, players)
+        }else {
             throw IllegalArgumentException("Location has to be a BukkitLocation!")
         }
+    }
 
+    private fun <P> playParticle(location: Location, particle: Particle, players: Collection<P>){
         if (particle.type == ParticleType.NONE) {
             return
         }
