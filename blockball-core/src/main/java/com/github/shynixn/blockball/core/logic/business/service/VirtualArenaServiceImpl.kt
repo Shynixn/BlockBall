@@ -1,16 +1,16 @@
-package com.github.shynixn.blockball.bukkit.logic.business.service
+package com.github.shynixn.blockball.core.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.ParticleService
+import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.business.service.VirtualArenaService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.core.logic.business.extension.async
 import com.github.shynixn.blockball.core.logic.persistence.entity.ParticleEntity
 import com.google.inject.Inject
-import org.bukkit.Location
-import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
 
 /**
  * Created by Shynixn 2018.
@@ -40,7 +40,8 @@ import org.bukkit.plugin.Plugin
  * SOFTWARE.
  */
 class VirtualArenaServiceImpl @Inject constructor(
-    private val plugin: Plugin,
+    private val concurrencyservice: ConcurrencyService,
+    private val proxyservice: ProxyService,
     private val particleService: ParticleService
 ) : VirtualArenaService {
 
@@ -48,18 +49,16 @@ class VirtualArenaServiceImpl @Inject constructor(
      * Displays the [arena] virtual locations for the given [player].
      */
     override fun <P> displayForPlayer(player: P, arena: Arena) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a bukkit player!")
-        }
 
         val particle = ParticleEntity(ParticleType.REDSTONE)
+        // Used to check if player is of legal type
+        proxyservice.getPlayerName(player)
         particle.colorRed = 255
         particle.colorBlue = 0
         particle.colorGreen = 0
         particle.amount = 20
         particle.speed = 0.02
-
-        plugin.server.scheduler.runTaskAsynchronously(plugin, Runnable {
+        async(concurrencyservice) {
             displayParticles(
                 player,
                 particle,
@@ -72,20 +71,20 @@ class VirtualArenaServiceImpl @Inject constructor(
                 arena.meta.blueTeamMeta.goal.lowerCorner,
                 arena.meta.blueTeamMeta.goal.upperCorner
             )
-        })
+        }
     }
 
     /**
      * Displays the particles between the given [lowCorner] and [upCorner] location for the given [player].
      */
-    private fun displayParticles(player: Player, particle: Particle, lowCorner: Position, upCorner: Position) {
+    private fun <P> displayParticles(player: P, particle: Particle, lowCorner: Position, upCorner: Position) {
         var j = lowCorner.y
         while (j <= upCorner.y) {
             var i = lowCorner.x
             while (i <= upCorner.x) {
                 var k = lowCorner.z
                 while (k <= upCorner.z) {
-                    val location = Location(player.world, i, j, k)
+                    val location = proxyservice.getPlayerLocation<Any, P>(player)
                     particleService.playParticle(location, particle, arrayListOf(player))
                     k++
                 }
