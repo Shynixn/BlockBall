@@ -47,7 +47,7 @@ class VirtualArenaServiceTest {
      * When
      *      displayForPlayers is called
      * Then
-     *     playParticle should be called with correct particle and location.
+     *     playParticle should be called, generating correct particles within the bounds of the arena.
      */
     @Test
     fun displayForPlayers_ValidPlayerArena_ShouldCallPlayParticles() {
@@ -78,31 +78,26 @@ class VirtualArenaServiceTest {
         }
 
         val classUnderTest = createWithDependencies(mockedParticleService)
-        val locations = arrayListOf<Position>()
-        for(calls in 1..2){
-            var j = goal.lowerCorner.y
-            while (j <= goal.upperCorner.y) {
-                var i = goal.lowerCorner.x
-                while (i <= goal.upperCorner.x) {
-                    var k = goal.lowerCorner.z
-                    while (k <= goal.upperCorner.z) {
-                        locations.add(PositionEntity("World", i, j, k))
-                        k++
-                    }
-                    i++
-                }
-                j++
-            }
-        }
 
         // Act
         classUnderTest.displayForPlayer(player, arena)
 
         // Assert
+        Assertions.assertDoesNotThrow{
+            classUnderTest.displayForPlayer(player, arena)
+        }
         Assertions.assertTrue(mockedParticleService.playParticleCalled)
         Assertions.assertEquals(255, mockedParticleService.usedParticle!!.colorRed)
         Assertions.assertEquals(20, mockedParticleService.usedParticle!!.amount)
-        Assertions.assertTrue(locations == mockedParticleService.locations)
+        Assertions.assertTrue(mockedParticleService.locations.foldRight(true){
+            position, acc ->  acc && isWithinBounds(goal.lowerCorner, goal.upperCorner, position)
+        })
+    }
+
+    private fun isWithinBounds(lowerC: Position, upperC: Position, pos: Position): Boolean{
+        return pos.x >= lowerC.x && pos.y >= lowerC.y &&
+                pos.z >= lowerC.z && pos.x <= upperC.x &&
+                pos.y <= upperC.y && pos.z <= upperC.z
     }
 
     companion object {

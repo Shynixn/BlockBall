@@ -63,8 +63,9 @@ class ParticleServiceImpl @Inject constructor(
             playParticle(location.toLocation(), particle, players)
         }else if (location is Location) {
             playParticle(location, particle, players)
+        }else {
+            throw IllegalArgumentException("Location has to be a BukkitLocation!")
         }
-        throw IllegalArgumentException("Location has to be a BukkitLocation!")
     }
 
     private fun <P> playParticle(location: Location, particle: Particle, players: Collection<P>){
