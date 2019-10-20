@@ -179,6 +179,13 @@ class PersistenceSQLiteIT {
 
     class MockedProxyService : ProxyService {
         /**
+         * Gets the name of the World the player is in.
+         */
+        override fun <P> getWorldName(player: P): String {
+            throw IllegalArgumentException()
+        }
+
+        /**
          * Gets all available gamemodes.
          */
         override val gameModes: List<String>

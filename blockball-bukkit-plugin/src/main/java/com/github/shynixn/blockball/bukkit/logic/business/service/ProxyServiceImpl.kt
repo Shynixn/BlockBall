@@ -48,6 +48,18 @@ import java.util.logging.Level
  * SOFTWARE.
  */
 class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy) : ProxyService {
+
+    /**
+     * Gets the name of the World the player is in.
+     */
+    override fun <P> getWorldName(player: P): String {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        return player.world.name
+    }
+
     /**
      * Gets the name of a player.
      */
