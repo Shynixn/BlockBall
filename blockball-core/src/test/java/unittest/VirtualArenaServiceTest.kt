@@ -72,12 +72,28 @@ class VirtualArenaServiceTest {
         }
 
         with(goal.upperCorner) {
-            x = 150.0
-            y = 140.0
-            z = 150.0
+            x = 110.0
+            y = 130.0
+            z = 110.0
         }
 
         val classUnderTest = createWithDependencies(mockedParticleService)
+        val locations = arrayListOf<Position>()
+        for(calls in 1..2){
+            var j = goal.lowerCorner.y
+            while (j <= goal.upperCorner.y) {
+                var i = goal.lowerCorner.x
+                while (i <= goal.upperCorner.x) {
+                    var k = goal.lowerCorner.z
+                    while (k <= goal.upperCorner.z) {
+                        locations.add(PositionEntity("World", i, j, k))
+                        k++
+                    }
+                    i++
+                }
+                j++
+            }
+        }
 
         // Act
         classUnderTest.displayForPlayer(player, arena)
@@ -86,14 +102,15 @@ class VirtualArenaServiceTest {
         Assertions.assertTrue(mockedParticleService.playParticleCalled)
         Assertions.assertEquals(255, mockedParticleService.usedParticle!!.colorRed)
         Assertions.assertEquals(20, mockedParticleService.usedParticle!!.amount)
+        Assertions.assertTrue(locations == mockedParticleService.locations)
     }
 
     companion object {
         fun createWithDependencies(particleService: ParticleService = MockedParticleService()): VirtualArenaService {
             val concurrencyService = MockedConcurrencyService()
             val proxyService = Mockito.mock(ProxyService::class.java)
-            Mockito.`when`(proxyService.getPlayerLocation<String, String>(Mockito.anyString()))
-                .thenReturn("Location")
+            Mockito.`when`(proxyService.getWorldName<String>(Mockito.anyString()))
+                .thenReturn("World")
             return VirtualArenaServiceImpl(concurrencyService, proxyService, particleService)
         }
     }
@@ -101,6 +118,7 @@ class VirtualArenaServiceTest {
     class MockedParticleService : ParticleService {
         var playParticleCalled = false
         var usedParticle: Particle? = null
+        var locations = arrayListOf<Position>()
 
         /**
          * Plays the given [particle] at the given [location] for the given [players].
@@ -108,6 +126,7 @@ class VirtualArenaServiceTest {
         override fun <L, P> playParticle(location: L, particle: Particle, players: Collection<P>) {
             playParticleCalled = true
             usedParticle = particle
+            locations.add(location as Position)
         }
     }
 

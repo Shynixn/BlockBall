@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.core.logic.business.extension.async
 import com.github.shynixn.blockball.core.logic.persistence.entity.ParticleEntity
+import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.google.inject.Inject
 
 /**
@@ -82,7 +83,7 @@ class VirtualArenaServiceImpl @Inject constructor(
             while (i <= upCorner.x) {
                 var k = lowCorner.z
                 while (k <= upCorner.z) {
-                    val location = proxyservice.getPlayerLocation<Any, P>(player)
+                    val location = PositionEntity(proxyservice.getWorldName(player), i, j, k)
                     particleService.playParticle(location, particle, arrayListOf(player))
                     k++
                 }
