@@ -51,8 +51,6 @@ class VirtualArenaServiceImpl @Inject constructor(
     override fun <P> displayForPlayer(player: P, arena: Arena) {
 
         val particle = ParticleEntity(ParticleType.REDSTONE)
-        // Used to check if player is of legal type
-        proxyservice.getPlayerName(player)
         particle.colorRed = 255
         particle.colorBlue = 0
         particle.colorGreen = 0
