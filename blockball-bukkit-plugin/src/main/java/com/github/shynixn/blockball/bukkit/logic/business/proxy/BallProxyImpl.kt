@@ -122,7 +122,7 @@ class BallProxyImpl(
      * Is the entity dead?
      */
     override val isDead: Boolean
-        get() = this.design.isDead || this.hitbox.isDead
+        get() = this.design.isDead
 
     init {
         design.customName = "ResourceBallsPlugin"
