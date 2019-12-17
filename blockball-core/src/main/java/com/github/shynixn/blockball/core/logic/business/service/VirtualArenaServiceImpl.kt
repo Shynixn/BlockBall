@@ -51,7 +51,7 @@ class VirtualArenaServiceImpl @Inject constructor(
      */
     override fun <P> displayForPlayer(player: P, arena: Arena) {
 
-        val particle = ParticleEntity(ParticleType.REDSTONE)
+        val particle = ParticleEntity(ParticleType.REDSTONE.name)
         particle.colorRed = 255
         particle.colorBlue = 0
         particle.colorGreen = 0

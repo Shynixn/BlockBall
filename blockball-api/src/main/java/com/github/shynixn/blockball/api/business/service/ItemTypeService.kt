@@ -1,13 +1,15 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.service
+
+import com.github.shynixn.blockball.api.persistence.entity.Item
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,49 +29,24 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Particle {
+interface ItemTypeService {
     /**
-     * Gets or sets the particle typeName.
+     * Tries to find a matching itemType matching the given hint.
      */
-    var typeName: String
+    fun <I> findItemType(sourceHint: Any): I
 
     /**
-     * RGB Color code of red.
+     * Tries to find the data value of the given hint.
      */
-    var colorRed: Int
+    fun findItemDataValue(sourceHint: Any): Int
 
     /**
-     * RGB Color code of green.
+     * Converts the given item to an ItemStack.
      */
-    var colorGreen: Int
+    fun <I> toItemStack(item: Item): I
 
     /**
-     * RGB Color code of blue.
+     * Converts the given itemStack ot an item.
      */
-    var colorBlue: Int
-
-    /**
-     * Amount of particles.
-     */
-    var amount: Int
-
-    /**
-     * Particle speed.
-     */
-    var speed: Double
-
-    /**
-     * Offset for particle.
-     */
-    var offset: Offset
-
-    /**
-     * Material value.
-     */
-    var materialName: String?
-
-    /**
-     * Data value.
-     */
-    var data: Int
+    fun <I> toItem(itemStack: I): Item
 }

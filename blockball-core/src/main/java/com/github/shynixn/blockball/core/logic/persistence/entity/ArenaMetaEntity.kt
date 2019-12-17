@@ -88,7 +88,7 @@ class ArenaMetaEntity : ArenaMeta {
 
     init {
         val partMetaSpawn = ParticleEntity()
-        partMetaSpawn.type = ParticleType.EXPLOSION_NORMAL
+        partMetaSpawn.typeName = ParticleType.EXPLOSION_NORMAL.name
         partMetaSpawn.amount = 10
         partMetaSpawn.speed = 0.1
         partMetaSpawn.offset.x = 2.0
@@ -98,7 +98,7 @@ class ArenaMetaEntity : ArenaMeta {
         ballMeta.particleEffects[BallActionType.ONSPAWN] = partMetaSpawn
 
         val partMetaInteraction = ParticleEntity()
-        partMetaInteraction.type = ParticleType.CRIT
+        partMetaInteraction.typeName = ParticleType.CRIT.name
         partMetaInteraction.amount = 5
         partMetaInteraction.speed = 0.1
         partMetaInteraction.offset.x = 2.0
@@ -108,7 +108,7 @@ class ArenaMetaEntity : ArenaMeta {
         ballMeta.particleEffects[BallActionType.ONINTERACTION] = partMetaInteraction
 
         val partMetaKick = ParticleEntity()
-        partMetaKick.type = ParticleType.EXPLOSION_LARGE
+        partMetaKick.typeName = ParticleType.EXPLOSION_LARGE.name
         partMetaKick.amount = 5
         partMetaKick.speed = 0.1
         partMetaKick.offset.x = 0.2
@@ -118,7 +118,7 @@ class ArenaMetaEntity : ArenaMeta {
         ballMeta.particleEffects[BallActionType.ONKICK] = partMetaKick
 
         val partMetaShoot = ParticleEntity()
-        partMetaShoot.type = ParticleType.EXPLOSION_NORMAL
+        partMetaShoot.typeName = ParticleType.EXPLOSION_NORMAL.name
         partMetaShoot.amount = 5
         partMetaShoot.speed = 0.1
         partMetaShoot.offset.x = 0.1

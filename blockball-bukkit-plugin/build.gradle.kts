@@ -34,9 +34,9 @@ tasks.register<Exec>("dockerJar") {
     dependsOn("shadowJar")
 
     commandLine = if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-        listOf("cmd", "/c", "docker cp build/libs/. spigot:/minecraft/plugins")
+        listOf("cmd", "/c", "docker cp build/libs/. blockball-1.15:/minecraft/plugins")
     } else {
-        listOf("sh", "-c", "docker cp build/libs/. spigot:/minecraft/plugins")
+        listOf("sh", "-c", "docker cp build/libs/. blockball-1.15:/minecraft/plugins")
     }
 }
 

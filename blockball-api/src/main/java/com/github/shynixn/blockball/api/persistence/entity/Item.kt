@@ -1,13 +1,13 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,49 +27,34 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Particle {
+interface Item {
     /**
-     * Gets or sets the particle typeName.
+     * ItemType.
      */
-    var typeName: String
+    var type: String
 
     /**
-     * RGB Color code of red.
+     * DataValue.
      */
-    var colorRed: Int
+    var dataValue: Int
 
     /**
-     * RGB Color code of green.
+     * Unbreakable.
      */
-    var colorGreen: Int
+    var unbreakable: Boolean
 
     /**
-     * RGB Color code of blue.
+     * DisplayName.
      */
-    var colorBlue: Int
+    var displayName: String?
 
     /**
-     * Amount of particles.
+     * Lore.
      */
-    var amount: Int
+    var lore: List<String>?
 
     /**
-     * Particle speed.
+     * Item skin.
      */
-    var speed: Double
-
-    /**
-     * Offset for particle.
-     */
-    var offset: Offset
-
-    /**
-     * Material value.
-     */
-    var materialName: String?
-
-    /**
-     * Data value.
-     */
-    var data: Int
+    var skin: String?
 }

@@ -126,6 +126,23 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         Bukkit.getPluginManager().registerEvents(resolve(BallListener::class.java), this)
         Bukkit.getPluginManager().registerEvents(resolve(BlockSelectionListener::class.java), this)
 
+        server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
+
+        startPlugin()
+
+        val updateCheckService = resolve(UpdateCheckService::class.java)
+        val dependencyService = resolve(DependencyService::class.java)
+        val configurationService = resolve(ConfigurationService::class.java)
+        val ballEntityService = resolve(BallEntityService::class.java)
+        val bungeeCordConnectionService = resolve(BungeeCordConnectionService::class.java)
+
+        ballEntityService.registerEntitiesOnServer()
+        updateCheckService.checkForUpdates()
+        dependencyService.checkForInstalledDependencies()
+
+        val enableMetrics = configurationService.findValue<Boolean>("metrics")
+        val enableBungeeCord = configurationService.findValue<Boolean>("game.allow-server-linking")
+
         // Register CommandExecutor
         val commandService = resolve(CommandService::class.java)
         commandService.registerCommandExecutor("blockballstop", resolve(StopCommandExecutor::class.java))
@@ -144,23 +161,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             (config.get("global-join") as MemorySection).getValues(false) as Map<String, String>,
             resolve(JoinCommandExecutor::class.java)
         )
-
-        server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
-
-        val updateCheckService = resolve(UpdateCheckService::class.java)
-        val dependencyService = resolve(DependencyService::class.java)
-        val configurationService = resolve(ConfigurationService::class.java)
-        val ballEntityService = resolve(BallEntityService::class.java)
-        val bungeeCordConnectionService = resolve(BungeeCordConnectionService::class.java)
-
-        ballEntityService.registerEntitiesOnServer()
-        updateCheckService.checkForUpdates()
-        dependencyService.checkForInstalledDependencies()
-
-        val enableMetrics = configurationService.findValue<Boolean>("metrics")
-        val enableBungeeCord = configurationService.findValue<Boolean>("game.allow-server-linking")
-
-        startPlugin()
 
         if (enableMetrics) {
             Metrics(this)

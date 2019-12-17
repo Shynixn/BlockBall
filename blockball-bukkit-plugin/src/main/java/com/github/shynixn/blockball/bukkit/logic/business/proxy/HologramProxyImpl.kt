@@ -188,7 +188,7 @@ class HologramProxyImpl(
      * Clears all armorstands.
      */
     private fun clearAllArmorstands() {
-        for (player in visibleTo) {
+        for (player in visibleTo.toList()) {
             removeArmorstandsForPlayer(player)
         }
 

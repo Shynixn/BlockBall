@@ -66,7 +66,7 @@ class ParticleEffectPage : Page(ParticleEffectPage.ID, MainConfigurationPage.ID)
             cache[4] = BallSettingsPage.ID
         } else if (command == MenuCommand.PARTICLE_CALLBACK_TYPE && args.size >= 3 && args[2].toIntOrNull() != null) {
             val particleEffect = cache[5] as Particle
-            particleEffect.type = (ParticleType.values()[args[2].toInt()])
+            particleEffect.typeName = (ParticleType.values()[args[2].toInt()]).name
         } else if (command == MenuCommand.PARTICLE_AMOUNT && args[2].toIntOrNull() != null) {
             val particleEffect = cache[5] as Particle
             particleEffect.amount = (args[2].toInt())
@@ -94,7 +94,7 @@ class ParticleEffectPage : Page(ParticleEffectPage.ID, MainConfigurationPage.ID)
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
         val particleEffect = cache[5] as Particle
         return ChatBuilderEntity()
-                .component("- Type: " + particleEffect.type.name).builder()
+                .component("- Type: " + particleEffect.typeName).builder()
                 .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_PARTICLE_TYPES.command)
                 .setHoverText("Opens the selectionbox for types.")

@@ -80,7 +80,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(UpdateCheckService::class.java).to(UpdateCheckServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ConfigurationService::class.java).to(ConfigurationServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(StatsCollectingService::class.java).to(StatsCollectingServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(ParticleService::class.java).to(ParticleServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(SoundService::class.java).to(SoundServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BossBarService::class.java).to(BossBarServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameService::class.java).to(GameServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -98,6 +97,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(BallForceFieldService::class.java).to(BallForceFieldServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(YamlSerializationService::class.java).to(YamlSerializationServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(YamlService::class.java).to(YamlServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(ItemTypeService::class.java).to(ItemTypeServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ConcurrencyService::class.java).to(ConcurrencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ProxyService::class.java).to(ProxyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(CommandService::class.java).to(CommandServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -107,6 +107,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(PersistenceStatsService::class.java).to(PersistenceStatsServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(PackageService::class.java).to(PackageServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         when {
             version.isVersionSameOrGreaterThan(Version.VERSION_1_15_R1)
@@ -120,6 +121,13 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
             version.isVersionSameOrGreaterThan(Version.VERSION_1_10_R1)
             -> bind(EntityRegistrationService::class.java).to(EntityRegistration110R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
             else -> bind(EntityRegistrationService::class.java).to(EntityRegistrationLegacyServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        }
+
+        when {
+            version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2) -> bind(ParticleService::class.java).to(Particle113R2ServiceImpl::class.java).`in`(
+                Scopes.SINGLETON
+            )
+            else -> bind(ParticleService::class.java).to(Particle18R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
         }
 
         if (dependencyService.isInstalled(PluginDependency.WORLEDIT, "7")) {
