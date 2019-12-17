@@ -60,12 +60,10 @@ class TemplateServiceImpl @Inject constructor(
 
         return templateFolders.flatMap { (folderName, existingArena) ->
             Files.walk(configurationService.applicationDir.resolve(folderName), 1)
-                .filter { path -> path.endsWith(".yml") }
+                .filter { p -> p.toFile().absolutePath.endsWith(".yml") }
                 .map { path ->
                     val configuration = yamlService.read(path)
-
                     val templateName = path.fileName.toString().replace(".yml", "")
-
                     val translator = configuration.getOrDefault("arena.translator", "unknown") as String
 
                     TemplateEntity(templateName, translator, existingArena)
