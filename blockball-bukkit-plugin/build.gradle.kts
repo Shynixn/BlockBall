@@ -34,9 +34,9 @@ tasks.register<Exec>("dockerJar") {
     dependsOn("shadowJar")
 
     commandLine = if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-        listOf("cmd", "/c", "docker cp build/libs/. spigot:/minecraft/plugins")
+        listOf("cmd", "/c", "docker cp build/libs/. blockball-1.15:/minecraft/plugins")
     } else {
-        listOf("sh", "-c", "docker cp build/libs/. spigot:/minecraft/plugins")
+        listOf("sh", "-c", "docker cp build/libs/. blockball-1.15:/minecraft/plugins")
     }
 }
 
@@ -57,6 +57,7 @@ dependencies {
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-112R1"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-113R2"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-114R1"))
+    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-115R1"))
 
     implementation("org.slf4j:slf4j-jdk14:1.7.25")
     implementation("com.zaxxer:HikariCP:3.2.0")

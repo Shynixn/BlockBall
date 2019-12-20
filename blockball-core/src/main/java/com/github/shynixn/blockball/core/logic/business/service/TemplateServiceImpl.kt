@@ -1,21 +1,20 @@
-package com.github.shynixn.blockball.bukkit.logic.business.service
+@file:Suppress("UNCHECKED_CAST")
 
+package com.github.shynixn.blockball.core.logic.business.service
+
+import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.PersistenceArenaService
 import com.github.shynixn.blockball.api.business.service.TemplateService
 import com.github.shynixn.blockball.api.business.service.YamlSerializationService
+import com.github.shynixn.blockball.api.business.service.YamlService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.Template
-import com.github.shynixn.blockball.bukkit.logic.business.extension.deserializeToMap
 import com.github.shynixn.blockball.core.logic.persistence.entity.ArenaEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.TemplateEntity
 import com.google.inject.Inject
-import org.bukkit.configuration.file.YamlConfiguration
-import org.bukkit.plugin.Plugin
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
+import java.nio.file.Files
+import kotlin.streams.toList
 
 /**
  * Created by Shynixn 2018.
@@ -44,68 +43,50 @@ import java.io.OutputStreamWriter
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, private val yamlSerializationService: YamlSerializationService, private val persistenceArenaService: PersistenceArenaService) : TemplateService {
-    private val templateNames = arrayOf("arena-de.yml", "arena-en.yml", "arena-pl.yml")
+class TemplateServiceImpl @Inject constructor(
+    private val configurationService: ConfigurationService,
+    private val yamlService: YamlService,
+    private val yamlSerializationService: YamlSerializationService,
+    private val persistenceArenaService: PersistenceArenaService
+) : TemplateService {
+    private val templateNames = arrayOf("arena-de.yml", "arena-en.yml", "arena-pl.yml", "arena-ko.yml")
 
     /**
      * Returns a [List] of available
      */
     override fun getAvailableTemplates(): List<Template> {
-        val templates = ArrayList<Template>()
+        val templateFolders = listOf(
+            "arena" to true,
+            "template" to false
+        )
 
-        File(plugin.dataFolder, "arena").listFiles().forEach { f ->
-            if (f.name.endsWith(".yml")) {
-                val configuration = YamlConfiguration()
-                configuration.load(f)
+        return templateFolders.flatMap { (folderName, existingArena) ->
+            Files.walk(configurationService.applicationDir.resolve(folderName), 1)
+                .filter { p -> p.toFile().absolutePath.endsWith(".yml") }
+                .map { path ->
+                    val configuration = yamlService.read(path)
+                    val templateName = path.fileName.toString().replace(".yml", "")
+                    val translator = configuration.getOrDefault("arena.translator", "unknown") as String
 
-                val translator = if (configuration.contains("arena.translator")) {
-                    configuration.getString("arena.translator")
-                } else {
-                    "unknown"
+                    TemplateEntity(templateName, translator, existingArena)
                 }
-
-                templates.add(TemplateEntity(f.name.replace(".yml", ""), translator!!, true))
-            }
+                .toList()
         }
-
-        File(plugin.dataFolder, "template").listFiles().forEach { f ->
-            if (f.name.endsWith(".yml")) {
-                val configuration = YamlConfiguration()
-                configuration.load(f)
-
-                val translator = if (configuration.contains("arena.translator")) {
-                    configuration.getString("arena.translator")
-                } else {
-                    "Unknown"
-                }
-
-                templates.add(TemplateEntity(f.name.replace(".yml", ""), translator!!, false))
-            }
-        }
-
-        return templates
     }
 
     /**
      * Generates a new [Arena] from the given [template].
      */
     override fun generateArena(template: Template): Arena {
-        val configuration = YamlConfiguration()
-        val arena: Arena
-
-        arena = if (template.existingArena) {
-            val file = File(plugin.dataFolder, "arena/" + template.name + ".yml")
-            configuration.load(file)
-
-            val data = configuration.deserializeToMap("arena")
-            yamlSerializationService.deserialize(ArenaEntity::class.java, data)
+        val folderName = if (template.existingArena) {
+            "arena"
         } else {
-            val file = File(plugin.dataFolder, "template/" + template.name + ".yml")
-            configuration.load(file)
-
-            val data = configuration.deserializeToMap("arena")
-            yamlSerializationService.deserialize(ArenaEntity::class.java, data)
+            "template"
         }
+
+        val filePath = configurationService.applicationDir.resolve(folderName + "/" + template.name + ".yml")
+        val data = yamlService.read(filePath)
+        val arena = yamlSerializationService.deserialize(ArenaEntity::class.java, data["arena"] as Map<String, Any?>)
 
         var idGen = 1
         persistenceArenaService.getArenas().forEach { cacheArena ->
@@ -140,7 +121,8 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
      * do not already exist.
      */
     override fun copyTemplateFilesFromResources() {
-        val templateFolder = File(plugin.dataFolder, "template")
+        val templateFolderPath = configurationService.applicationDir.resolve("template")
+        val templateFolder = templateFolderPath.toFile()
 
         if (!templateFolder.exists()) {
             templateFolder.mkdir()
@@ -152,20 +134,11 @@ class TemplateServiceImpl @Inject constructor(private val plugin: Plugin, privat
     }
 
     private fun copyResourceToTarget(resource: String, target: String) {
-        val file = File(plugin.dataFolder, "template/$target")
+        val filePath = configurationService.applicationDir.resolve("template/$target")
 
-        if (!file.exists()) {
-            val fileOutputStream = FileOutputStream(file)
-            val inputStream = plugin.getResource(resource)
-
-            val inputStreamReader = InputStreamReader(inputStream)
-            val outputStreamWriter = OutputStreamWriter(fileOutputStream)
-
-            inputStreamReader.use {
-                outputStreamWriter.use {
-                    val cache = inputStreamReader.readText()
-                    outputStreamWriter.write(cache)
-                }
+        if (!Files.exists(filePath)) {
+            configurationService.openResource(resource).use { inputStream ->
+                Files.copy(inputStream, filePath)
             }
         }
     }

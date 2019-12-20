@@ -63,7 +63,12 @@ interface BallProxy {
     var persistent: Boolean
 
     /**
-     * Current velocity of spin generating Magnus force.
+     * Remaining time in ticks until players regain the ability to kick this ball.
+     */
+    var skipKickCounter: Int
+
+    /**
+     * Current angular velocity that determines the intensity of Magnus effect.
      */
     var angularVelocity: Double
 
@@ -109,20 +114,28 @@ interface BallProxy {
     fun <V> getVelocity(): V
 
     /**
-     * Kicks the ball by the given entity.
+     * Shoot the ball by the given player.
      * The calculated velocity can be manipulated by the BallKickEvent.
      *
-     * @param entity entity
+     * @param player
      */
-    fun <E> kickByEntity(entity: E)
+    fun <E> shootByPlayer(player: E)
 
     /**
-     * Throws the ball by the given entity.
+     * Pass the ball by the given player.
+     * The calculated velocity can be manipulated by the BallKickEvent
+     *
+     * @param player
+     */
+    fun <E> passByPlayer(player: E)
+
+    /**
+     * Throws the ball by the given player.
      * The calculated velocity can be manipulated by the BallThrowEvent.
      *
-     * @param entity entity
+     * @param player
      */
-    fun <E> throwByEntity(entity: E)
+    fun <E> throwByPlayer(player: E)
 
     /**
      * Lets the given living entity grab the ball.
@@ -130,9 +143,11 @@ interface BallProxy {
     fun <L> grab(entity: L)
 
     /**
-     * Lets the ball spin to the player direction.
+     * Calculates the angular velocity in order to spin the ball.
+     *
+     * @return The angular velocity
      */
-    fun <V> spin(playerDirection: V, resultVelocity: V)
+    fun <V> calculateSpinVelocity(postVector: V, initVector: V): Double
 
     /**
      * DeGrabs the ball.
@@ -155,6 +170,14 @@ interface BallProxy {
      * @param collision if knockback were applied during the movement
      */
     fun calculatePostMovement(collision: Boolean)
+
+    /**
+     * Calculates spin movement. The spinning will slow down
+     * if the ball stops moving, hits the ground or hits the wall.
+     *
+     * @param collision if knockback were applied
+     */
+    fun calculateSpinMovement(collision: Boolean)
 
     /**
      * Calculates the movement vectors.

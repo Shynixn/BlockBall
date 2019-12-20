@@ -1,16 +1,12 @@
 package unittest
 
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.ParticleService
+import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.business.service.VirtualArenaService
 import com.github.shynixn.blockball.api.persistence.entity.*
-import com.github.shynixn.blockball.bukkit.logic.business.service.VirtualArenaServiceImpl
+import com.github.shynixn.blockball.core.logic.business.service.VirtualArenaServiceImpl
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
-import org.bukkit.Server
-import org.bukkit.World
-import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
-import org.bukkit.scheduler.BukkitScheduler
-import org.bukkit.scheduler.BukkitTask
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -51,19 +47,17 @@ class VirtualArenaServiceTest {
      * When
      *      displayForPlayers is called
      * Then
-     *     playParticle should be called with correct particle and location.
+     *     playParticle should be called, generating correct particles within the bounds of the arena.
      */
     @Test
     fun displayForPlayers_ValidPlayerArena_ShouldCallPlayParticles() {
         // Arrange
         val mockedParticleService = MockedParticleService()
-        val player = mock(Player::class.java)
-        val world = mock(World::class.java)
         val arena = mock(Arena::class.java)
         val arenaMeta = mock(ArenaMeta::class.java)
         val teamMeta = mock(TeamMeta::class.java)
         val goal = mock(Selection::class.java)
-
+        val player = "Player"
         `when`(teamMeta.goal).thenReturn(goal)
         `when`(arenaMeta.redTeamMeta).thenReturn(teamMeta)
         `when`(arenaMeta.blueTeamMeta).thenReturn(teamMeta)
@@ -78,65 +72,48 @@ class VirtualArenaServiceTest {
         }
 
         with(goal.upperCorner) {
-            x = 150.0
-            y = 140.0
-            z = 150.0
+            x = 110.0
+            y = 130.0
+            z = 110.0
         }
 
-        Mockito.`when`(player.world).thenReturn(world)
         val classUnderTest = createWithDependencies(mockedParticleService)
 
         // Act
         classUnderTest.displayForPlayer(player, arena)
 
         // Assert
+        Assertions.assertDoesNotThrow{
+            classUnderTest.displayForPlayer(player, arena)
+        }
         Assertions.assertTrue(mockedParticleService.playParticleCalled)
         Assertions.assertEquals(255, mockedParticleService.usedParticle!!.colorRed)
         Assertions.assertEquals(20, mockedParticleService.usedParticle!!.amount)
+        Assertions.assertTrue(mockedParticleService.locations.foldRight(true){
+            position, acc ->  acc && isWithinBounds(goal.lowerCorner, goal.upperCorner, position)
+        })
     }
 
-    /**
-     * Given
-     *      a invalid player
-     * When
-     *      displayForPlayers is called
-     * Then
-     *     a exception should be thrown.
-     */
-    @Test
-    fun displayForPlayers_InvalidPlayer_ShouldThrowException() {
-        // Arrange
-        val player = "This is a invalid player."
-        val arena = mock(Arena::class.java)
-        val classUnderTest = createWithDependencies()
-
-        // Act
-        Assertions.assertThrows(IllegalArgumentException::class.java) {
-            classUnderTest.displayForPlayer(player, arena)
-        }
+    private fun isWithinBounds(lowerC: Position, upperC: Position, pos: Position): Boolean{
+        return pos.x >= lowerC.x && pos.y >= lowerC.y &&
+                pos.z >= lowerC.z && pos.x <= upperC.x &&
+                pos.y <= upperC.y && pos.z <= upperC.z
     }
 
     companion object {
         fun createWithDependencies(particleService: ParticleService = MockedParticleService()): VirtualArenaService {
-            val plugin = Mockito.mock(Plugin::class.java)
-            val server = Mockito.mock(Server::class.java)
-            val scheduler = Mockito.mock(BukkitScheduler::class.java)
-            Mockito.`when`(scheduler.runTaskAsynchronously(Mockito.any(Plugin::class.java), Mockito.any(Runnable::class.java))).then { p ->
-                (p.arguments[1] as Runnable).run()
-                mock(BukkitTask::class.java)
-            }
-
-            Mockito.`when`(server.scheduler).thenReturn(scheduler)
-            Mockito.`when`(plugin.server).thenReturn(server)
-
-
-            return VirtualArenaServiceImpl(plugin, particleService)
+            val concurrencyService = MockedConcurrencyService()
+            val proxyService = Mockito.mock(ProxyService::class.java)
+            Mockito.`when`(proxyService.getWorldName<String>(Mockito.anyString()))
+                .thenReturn("World")
+            return VirtualArenaServiceImpl(concurrencyService, proxyService, particleService)
         }
     }
 
     class MockedParticleService : ParticleService {
         var playParticleCalled = false
         var usedParticle: Particle? = null
+        var locations = arrayListOf<Position>()
 
         /**
          * Plays the given [particle] at the given [location] for the given [players].
@@ -144,6 +121,22 @@ class VirtualArenaServiceTest {
         override fun <L, P> playParticle(location: L, particle: Particle, players: Collection<P>) {
             playParticleCalled = true
             usedParticle = particle
+            locations.add(location as Position)
+        }
+    }
+
+    class MockedConcurrencyService: ConcurrencyService{
+        /**
+         * Runs the given [function] synchronised with the given [delayTicks] and [repeatingTicks].
+         */
+        override fun runTaskSync(delayTicks: Long, repeatingTicks: Long, function: () -> Unit) {
+        }
+
+        /**
+         * Runs the given [function] asynchronous with the given [delayTicks] and [repeatingTicks].
+         */
+        override fun runTaskAsync(delayTicks: Long, repeatingTicks: Long, function: () -> Unit) {
+            function()
         }
     }
 }

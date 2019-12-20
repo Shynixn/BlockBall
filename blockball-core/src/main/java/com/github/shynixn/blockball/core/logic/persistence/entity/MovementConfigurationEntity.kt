@@ -36,45 +36,77 @@ class MovementConfigurationEntity : MovementConfiguration {
      */
     @YamlSerialize(orderNumber = 1, value = "bouncing")
     override var defaultBounceModifier: Double = 1.0
+
     /**
      * The gravity modifier how fast a ball falls to the ground after being kicked or
      * thrown in to the sky.
      */
     @YamlSerialize(orderNumber = 2, value = "gravity")
     override var gravityModifier: Double = 0.7
+
     /**
      * Rolling distance.
      */
     @YamlSerialize(orderNumber = 3, value = "rolling-distance")
     override var rollingDistanceModifier: Double = 1.5
+
     /**
      * Horizontal touch modifier.
      */
     @YamlSerialize(orderNumber = 4, value = "horizontal-touch")
     override var horizontalTouchModifier: Double = 1.0
+
     /**
      * Vertical touch modifier.
      */
     @YamlSerialize(orderNumber = 5, value = "vertical-touch")
     override var verticalTouchModifier: Double = 1.0
+
     /**
-     * Horizontal kick modifier.
+     * The overall shot velocity.
      */
-    @YamlSerialize(orderNumber = 6, value = "horizontal-kick")
-    override var horizontalKickModifier: Double = 1.5
+    @YamlSerialize(orderNumber = 6, value = "shot-velocity")
+    override var shotVelocity: Double = 1.5
+
     /**
-     * Vertical kick modifier.
+     * The overall pass velocity.
      */
-    @YamlSerialize(orderNumber = 7, value = "vertical-kick")
-    override var verticalKickModifier: Double = 6.0
+    @YamlSerialize(orderNumber = 7, value = "pass-velocity")
+    override var passVelocity: Double = 1.2
+
     /**
-     * Horizontal kick modifier.
+     * The maximum strength of spin.
      */
-    @YamlSerialize(orderNumber = 8, value = "horizontal-throw")
+    @YamlSerialize(orderNumber = 8, value = "max-spin")
+    override var maximumSpinVelocity: Double = 0.08
+
+    /**
+     * Horizontal throw modifier.
+     */
+    @YamlSerialize(orderNumber = 9, value = "horizontal-throw")
     override var horizontalThrowModifier: Double = 1.0
+
     /**
-     * Vertical kick modifier.
+     * Vertical throw modifier.
      */
-    @YamlSerialize(orderNumber = 9, value = "vertical-throw")
+    @YamlSerialize(orderNumber = 10, value = "vertical-throw")
     override var verticalThrowModifier: Double = 1.0
+
+    /**
+     * Maximum vertical angle (in degrees) when launching a ball
+     */
+    @YamlSerialize(orderNumber = 11, value = "max-pitch")
+    override var maximumPitch: Int = 60
+
+    /**
+     * Minimum vertical angle (in degrees) when launching a ball
+     */
+    @YamlSerialize(orderNumber = 12, value = "min-pitch")
+    override var minimumPitch: Int = 0
+
+    /**
+     * Initial value of vertical angle (in degrees) when launching a ball
+     */
+    @YamlSerialize(orderNumber = 13, value = "default-pitch")
+    override var defaultPitch: Int = 20
 }

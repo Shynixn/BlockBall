@@ -9,7 +9,6 @@ import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.business.service.LoggingService
-import com.github.shynixn.blockball.api.business.service.SpigotTimingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_14_R1.*
 import org.bukkit.Bukkit
@@ -58,7 +57,6 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
     private var entityBukkit: Any? = null // BukkitEntity has to be self cached since 1.14.
     private val itemService = BlockBallApi.resolve(ItemService::class.java)
     private val hitBox = BallHitBox(this, ballMeta, location)
-    private val timingService = BlockBallApi.resolve(SpigotTimingService::class.java)
     /**
      * Proxy handler.
      */
@@ -126,7 +124,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
     }
 
     /**
-     * Recalculates y-axe hitbox offset in the world.
+     * Recalculates y-axe design offset in the world.
      */
     override fun recalcPosition() {
         val axisBoundingBox = this.boundingBox
@@ -164,8 +162,6 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         if (sourceVector.x != vec3d.x) {
             this.setMot(motionVector.x, motionVector.y, motionVector.z)
         }
-
-        timingService.startTiming()
 
         if (this.noclip) {
             this.a(this.boundingBox.b(vec3d))
@@ -247,7 +243,6 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         }
 
         proxy.calculatePostMovement(collision)
-        timingService.stopTiming()
     }
 
     /**

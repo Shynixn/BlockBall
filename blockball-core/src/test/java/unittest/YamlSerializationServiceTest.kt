@@ -101,7 +101,7 @@ class YamlSerializationServiceTest {
     fun serialize_Particle_ShouldSerializeCorrectly() {
         // Arrange
         val classUnderTest = createWithDependencies()
-        val particle = ParticleEntity(ParticleType.BLOCK_DUST)
+        val particle = ParticleEntity(ParticleType.BLOCK_DUST.name)
 
         // Act
         val data = classUnderTest.serialize(particle)
@@ -129,7 +129,7 @@ class YamlSerializationServiceTest {
         val data = classUnderTest.deserialize(ParticleEntity::class.java,dataSource)
 
         // Assert
-        Assertions.assertEquals(ParticleType.BLOCK_DUST, data.type)
+        Assertions.assertEquals(ParticleType.BLOCK_DUST.name, data.typeName)
     }
 
     /**
@@ -145,13 +145,13 @@ class YamlSerializationServiceTest {
         // Arrange
         val classUnderTest = createWithDependencies()
         val dataSource = HashMap<String, Any>()
-        dataSource["name"] = "explosion"
+        dataSource["name"] = "EXPLOSION_NORMAL"
 
         // Act
         val data = classUnderTest.deserialize(ParticleEntity::class.java,dataSource)
 
         // Assert
-        Assertions.assertEquals(ParticleType.EXPLOSION_NORMAL, data.type)
+        Assertions.assertEquals(ParticleType.EXPLOSION_NORMAL.name, data.typeName)
     }
 
     companion object {

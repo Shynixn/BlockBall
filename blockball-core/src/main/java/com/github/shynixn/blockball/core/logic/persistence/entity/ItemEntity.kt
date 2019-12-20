@@ -1,13 +1,15 @@
-package com.github.shynixn.blockball.api.business.service
+package com.github.shynixn.blockball.core.logic.persistence.entity
+
+import com.github.shynixn.blockball.api.persistence.entity.Item
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,16 +29,11 @@ package com.github.shynixn.blockball.api.business.service
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface SpigotTimingService {
-    /**
-     * Starts the spigot timer for ball calculation.
-     * Does nothing if the spigot timer is already running or the timer framework is not installed.
-     */
-    fun startTiming()
-
-    /**
-     * Stops the spigot timer for ball calculation.
-     * Does nothing if the spigot timer is already stopped or the timer framework is not installed.
-     */
-    fun stopTiming()
-}
+class ItemEntity(
+    override var type: String,
+    override var dataValue: Int = 0,
+    override var unbreakable: Boolean = false,
+    override var displayName: String? = null,
+    override var lore: List<String>? = null,
+    override var skin: String? = null
+) : Item

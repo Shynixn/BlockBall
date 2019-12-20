@@ -7,7 +7,7 @@ import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
-import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
 import com.github.shynixn.blockball.core.logic.business.commandexecutor.*
@@ -20,7 +20,6 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Server
 import org.bukkit.configuration.MemorySection
-import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.FileOutputStream
@@ -100,23 +99,23 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
                 Version.VERSION_1_11_R1,
                 Version.VERSION_1_12_R1,
                 Version.VERSION_1_13_R2,
-                Version.VERSION_1_14_R1
+                Version.VERSION_1_14_R1,
+                Version.VERSION_1_15_R1
             )
         ) {
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
             sendConsoleMessage(ChatColor.RED.toString() + "BlockBall does not support your server version")
-            sendConsoleMessage(ChatColor.RED.toString() + "Install v" + Version.VERSION_1_8_R1.id + " - v" + Version.VERSION_1_14_R1.id)
+            sendConsoleMessage(ChatColor.RED.toString() + "Install v" + Version.VERSION_1_8_R1.id + " - v" + Version.VERSION_1_15_R1.id)
             sendConsoleMessage(ChatColor.RED.toString() + "Plugin gets now disabled!")
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
 
             Bukkit.getPluginManager().disablePlugin(this)
-
             return
         }
 
         this.injector = Guice.createInjector(BlockBallDependencyInjectionBinder(this))
-
         this.reloadConfig()
+
         // Register Listeners
         Bukkit.getPluginManager().registerEvents(resolve(GameListener::class.java), this)
         Bukkit.getPluginManager().registerEvents(resolve(DoubleJumpListener::class.java), this)
@@ -126,6 +125,23 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         Bukkit.getPluginManager().registerEvents(resolve(StatsListener::class.java), this)
         Bukkit.getPluginManager().registerEvents(resolve(BallListener::class.java), this)
         Bukkit.getPluginManager().registerEvents(resolve(BlockSelectionListener::class.java), this)
+
+        server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
+
+        startPlugin()
+
+        val updateCheckService = resolve(UpdateCheckService::class.java)
+        val dependencyService = resolve(DependencyService::class.java)
+        val configurationService = resolve(ConfigurationService::class.java)
+        val ballEntityService = resolve(BallEntityService::class.java)
+        val bungeeCordConnectionService = resolve(BungeeCordConnectionService::class.java)
+
+        ballEntityService.registerEntitiesOnServer()
+        updateCheckService.checkForUpdates()
+        dependencyService.checkForInstalledDependencies()
+
+        val enableMetrics = configurationService.findValue<Boolean>("metrics")
+        val enableBungeeCord = configurationService.findValue<Boolean>("game.allow-server-linking")
 
         // Register CommandExecutor
         val commandService = resolve(CommandService::class.java)
@@ -146,23 +162,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             resolve(JoinCommandExecutor::class.java)
         )
 
-        server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
-
-        val updateCheker = resolve(UpdateCheckService::class.java)
-        val dependencyChecker = resolve(DependencyService::class.java)
-        val configurationService = resolve(ConfigurationService::class.java)
-        val ballEntitySerivice = resolve(BallEntityService::class.java)
-        val bungeeCordConnectionService = resolve(BungeeCordConnectionService::class.java)
-
-        ballEntitySerivice.registerEntitiesOnServer()
-        updateCheker.checkForUpdates()
-        dependencyChecker.checkForInstalledDependencies()
-
-        val enableMetrics = configurationService.findValue<Boolean>("metrics")
-        val enableBungeeCord = configurationService.findValue<Boolean>("game.allow-server-linking")
-
-        startPlugin()
-
         if (enableMetrics) {
             Metrics(this)
         }
@@ -173,10 +172,11 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         }
 
         for (world in Bukkit.getWorlds()) {
-            ballEntitySerivice.cleanUpInvalidEntities(world.entities)
+            ballEntityService.cleanUpInvalidEntities(world.entities)
         }
 
-        Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn, LazoYoung")
+        Bukkit.getServer()
+            .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn, LazoYoung")
     }
 
     /**
@@ -217,7 +217,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             }
         }
     }
-
 
     /**
      * Starts the game mode.
@@ -277,13 +276,13 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         builder.append(ChatColor.RESET.toString())
         builder.append("]")
 
-        val minecraftServerClazz = findClazz("net.minecraft.server.VERSION.MinecraftServer", this)
-        val craftServerClazz = findClazz("org.bukkit.craftbukkit.VERSION.CraftServer", this)
+        val minecraftServerClazz = findClazz("net.minecraft.server.VERSION.MinecraftServer")
+        val craftServerClazz = findClazz("org.bukkit.craftbukkit.VERSION.CraftServer")
         val setModtMethod = minecraftServerClazz.getDeclaredMethod("setMotd", String::class.java)
         val getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")
 
         val console = getServerConsoleMethod!!.invoke(Bukkit.getServer())
-        setModtMethod!!.invoke(console, builder.toString().convertChatColors())
+        setModtMethod!!.invoke(console, builder.toString().translateChatColors())
     }
 
     /**

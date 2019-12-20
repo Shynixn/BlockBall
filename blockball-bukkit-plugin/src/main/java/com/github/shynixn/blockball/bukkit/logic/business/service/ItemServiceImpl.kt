@@ -80,9 +80,7 @@ class ItemServiceImpl @Inject constructor(private val pluginProxy: PluginProxy) 
             }
 
             val newSkinProfile = GameProfile(UUID.randomUUID(), null)
-            val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
-
-            val cls = findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull", plugin)
+            val cls = findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull")
             val real = cls.cast(currentMeta)
             val field = real.javaClass.getDeclaredField("profile")
 

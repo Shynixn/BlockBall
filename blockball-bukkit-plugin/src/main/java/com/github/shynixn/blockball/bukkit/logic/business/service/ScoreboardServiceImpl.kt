@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.ScoreboardService
-import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.google.inject.Inject
 import org.bukkit.ChatColor
@@ -56,7 +56,7 @@ class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
         @Suppress("DEPRECATION")
         val objective = scoreboard.registerNewObjective(defaultObjective, "dummy")
         objective.displaySlot = displaySlot
-        objective.displayName = title.convertChatColors()
+        objective.displayName = title.translateChatColors()
     }
 
     /**
@@ -68,16 +68,16 @@ class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
         }
 
         val teamFinder = StringBuilder(ChatColor.values()[lineNumber].toString()).append("&r")
-        var team = scoreboard.teams.firstOrNull { t -> t.name == teamFinder.toString().convertChatColors() }
+        var team = scoreboard.teams.firstOrNull { t -> t.name == teamFinder.toString().translateChatColors() }
         val objective = scoreboard.getObjective(defaultObjective)
 
         if (team == null) {
-            team = scoreboard.registerNewTeam(teamFinder.toString().convertChatColors())
-            team.addEntry(teamFinder.toString().convertChatColors())
+            team = scoreboard.registerNewTeam(teamFinder.toString().translateChatColors())
+            team.addEntry(teamFinder.toString().translateChatColors())
 
-            objective!!.getScore(teamFinder.toString().convertChatColors()).score = lineNumber
+            objective!!.getScore(teamFinder.toString().translateChatColors()).score = lineNumber
         }
 
-        team.cast<Team?>()!!.prefix = text.convertChatColors()
+        team.cast<Team?>()!!.prefix = text.translateChatColors()
     }
 }

@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
@@ -76,8 +77,8 @@ class BallListener @Inject constructor(
     }
 
     /**
-     * TODO The comment below is misleading. PlayerInteractEvent is designed for item interactions
-     * Gets called when a player hits the ball and kicks the ball.
+     * Gets called when a player interacts on a ball item.
+     * This action generally performs throwing the ball.
      *
      * @param event event
      */
@@ -87,7 +88,7 @@ class BallListener @Inject constructor(
             if (ball.isGrabbed) {
                 ball.getLastInteractionEntity<Entity>().ifPresent {
                     if (it is Player && it.uniqueId == event.player.uniqueId) {
-                        ball.throwByEntity(event.player)
+                        ball.throwByPlayer(event.player)
                         event.isCancelled = true
                     }
                 }
@@ -97,45 +98,60 @@ class BallListener @Inject constructor(
 
 
     /**
-     * Gets called when a player rightClicks on a ball.
+     * Gets called when a player right-click a ball.
+     * 1) Player grabs the ball if he were sneaking (SHIFT)
+     * 2) Otherwise, player performs passing
      *
      * @param event event
      */
     @EventHandler
-    fun entityRightClickBallEvent(event: PlayerInteractAtEntityEvent) {
-        if (event.rightClicked.customName == "ResourceBallsPlugin") {
+    fun onPlayerRightClickBallEvent(event: PlayerInteractAtEntityEvent) {
+        if (event.rightClicked.customName != "ResourceBallsPlugin") {
             return
         }
 
         this.dropBall(event.player)
 
         ballEntityService.findBallFromEntity(event.rightClicked).ifPresent { ball ->
-            if (ball.meta.carryAble && !ball.isGrabbed) {
+            if (event.player.isSneaking) {
                 ball.grab(event.player)
+            } else {
+                ball.passByPlayer(event.player)
             }
+
             event.isCancelled = true
         }
     }
 
     /**
-     * Gets called when a player hits the ball and kicks the ball.
+     * Gets called when a player left-click a ball.
+     * 1) Player grabs the ball if he were sneaking (SHIFT)
+     * 2) Otherwise, player performs shooting
      *
      * @param event event
      */
     @EventHandler
     fun onPlayerDamageBallEvent(event: EntityDamageByEntityEvent) {
-        if (event.entity.customName == "ResourceBallsPlugin") {
+        if (event.damager is Player && event.entity.customName == "ResourceBallsPlugin") {
             val optBall = this.ballEntityService.findBallFromEntity(event.entity)
             if (optBall.isPresent) {
                 val ball = optBall.get()
-                ball.kickByEntity(event.damager)
+                val player = event.damager as Player
+
+                if (player.isSneaking) {
+                    ball.grab(player)
+                } else {
+                    ball.shootByPlayer(player)
+                }
             }
         }
     }
 
 
     /**
-     * Gets called when the ball takes damage and cancels all of it.
+     * Gets called when an entity takes damage.
+     * 1) Cancel all the damage if victim is a ball entity
+     * 2) If victim is a player grabbing a ball, he/she will drop it
      *
      * @param event event
      */
@@ -251,13 +267,13 @@ class BallListener @Inject constructor(
     }
 
     /**
-     * Gets called when a player tries to leah a ball and cancels all of it.
+     * Gets called when a player tries to leash a ball and cancels all of it.
      *
      * @param event event
      */
     @EventHandler
     fun entityLeashEvent(event: PlayerLeashEntityEvent) {
-        if (event is LivingEntity) {
+        if (event.entity is LivingEntity) {
             val optBall = ballEntityService.findBallFromEntity(event.entity)
             if (optBall.isPresent) {
                 event.isCancelled = true
@@ -266,13 +282,15 @@ class BallListener @Inject constructor(
     }
 
     /**
-     * Gets called when a player kicks a ball.
+     * Gets called when a player left clicks a ball.
      *
      * @param event event
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     fun ballKickEvent(event: BallKickEvent) {
-        this.playEffects(event.ball, BallActionType.ONKICK)
+        if (!event.isCancelled) {
+            this.playEffects(event.ball, BallActionType.ONKICK)
+        }
     }
 
     /**

@@ -39,7 +39,7 @@ allprojects {
 
 subprojects {
     group 'com.github.shynixn.blockball'
-    version '6.11.0'
+    version '6.12.0'
 
     sourceCompatibility = 1.8
 
@@ -228,7 +228,7 @@ task downloadDependencies(type: Exec) {
 
     if (!vaultFile.exists()) {
         def connection = new URL('https://jitpack.io/com/github/MilkBowl/VaultAPI/1.7/VaultAPI-1.7.jar').openConnection()
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.1.2; en-us; GT-N8013 Build/JZO54K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30")
 
         def out = new BufferedOutputStream(new FileOutputStream(vaultFile))
         out << connection.inputStream
@@ -245,6 +245,7 @@ task downloadDependencies(type: Exec) {
     text += " && java -jar BuildTools.jar --rev 1.12"
     text += " && java -jar BuildTools.jar --rev 1.13.2"
     text += " && java -jar BuildTools.jar --rev 1.14.4"
+    text += " && java -jar BuildTools.jar --rev 1.15"
     text += " && mvn install:install-file -Dfile=spigot-1.8.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R3 -Dversion=1.8.8-R3.0 -Dpackaging=jar"
     text += " && mvn install:install-file -Dfile=spigot-1.9.4.jar -DgroupId=org.spigotmc -DartifactId=spigot19R2 -Dversion=1.9.4-R2.0 -Dpackaging=jar"
     text += " && mvn install:install-file -Dfile=spigot-1.10.2.jar -DgroupId=org.spigotmc -DartifactId=spigot110R1 -Dversion=1.10.2-R1.0 -Dpackaging=jar"
@@ -252,6 +253,7 @@ task downloadDependencies(type: Exec) {
     text += " && mvn install:install-file -Dfile=spigot-1.12.jar -DgroupId=org.spigotmc -DartifactId=spigot112R1 -Dversion=1.12.0-R1.0 -Dpackaging=jar"
     text += " && mvn install:install-file -Dfile=spigot-1.13.2.jar -DgroupId=org.spigotmc -DartifactId=spigot113R2 -Dversion=1.13.2-R2.0 -Dpackaging=jar"
     text += " && mvn install:install-file -Dfile=spigot-1.14.4.jar -DgroupId=org.spigotmc -DartifactId=spigot114R1 -Dversion=1.14.4-R1.0 -Dpackaging=jar"
+    text += " && mvn install:install-file -Dfile=spigot-1.15.jar -DgroupId=org.spigotmc -DartifactId=spigot115R1 -Dversion=1.15.0-R1.0 -Dpackaging=jar"
 
     standardOutput = new ByteArrayOutputStream()
 

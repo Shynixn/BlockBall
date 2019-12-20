@@ -47,6 +47,11 @@ interface ProxyService {
     fun <L, P> getPlayerLocation(player: P): L
 
     /**
+     * Gets the name of the World the player is in.
+     */
+    fun <P> getWorldName(player: P): String
+
+    /**
      * Gets the name of a player.
      */
     fun <P> getPlayerName(player: P): String

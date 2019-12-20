@@ -8,7 +8,7 @@ import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.BossBarService
 import com.github.shynixn.blockball.api.business.service.DependencyBossBarApiService
 import com.github.shynixn.blockball.api.persistence.entity.BossBarMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.convertChatColors
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -88,7 +88,7 @@ class BossBarServiceImpl @Inject constructor(private val plugin: PluginProxy, pr
      */
     override fun <B, P> changeConfiguration(bossBar: B, title: String, bossBarMeta: BossBarMeta, player: P) {
         if (plugin.getServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3) && player != null) {
-            dependencyBossBarService.setBossbarMessage(player, bossBarMeta.message.convertChatColors(), bossBarMeta.percentage)
+            dependencyBossBarService.setBossbarMessage(player, bossBarMeta.message.translateChatColors(), bossBarMeta.percentage)
         } else {
             getBossBarMethod("setVisible", Boolean::class.java).invoke(bossBar, bossBarMeta.enabled)
             getBossBarMethod("setTitle", String::class.java).invoke(bossBar, title)

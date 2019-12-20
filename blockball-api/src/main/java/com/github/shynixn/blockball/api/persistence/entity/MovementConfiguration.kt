@@ -30,7 +30,7 @@ package com.github.shynixn.blockball.api.persistence.entity
 interface MovementConfiguration {
 
     /**
-     * Bounceeffect from default objects.
+     * Bounce-effect from default objects.
      */
     var defaultBounceModifier: Double
 
@@ -56,22 +56,42 @@ interface MovementConfiguration {
     var verticalTouchModifier: Double
 
     /**
-     * Horizontal kick modifier.
-     */
-    var horizontalKickModifier: Double
-
-    /**
-     * Vertical kick modifier.
-     */
-    var verticalKickModifier: Double
-
-    /**
-     * Horizontal kick modifier.
+     * Horizontal throw modifier.
      */
     var horizontalThrowModifier: Double
 
     /**
-     * Vertical kick modifier.
+     * Vertical throw modifier.
      */
     var verticalThrowModifier: Double
+
+    /**
+     * The overall shot velocity.
+     */
+    var shotVelocity: Double
+
+    /**
+     * The overall pass velocity.
+     */
+    var passVelocity: Double
+
+    /**
+     * The maximum strength of spin.
+     */
+    var maximumSpinVelocity: Double
+
+    /**
+     * Maximum vertical angle (in degrees) when launching a ball
+     */
+    var maximumPitch: Int
+
+    /**
+     * Minimum vertical angle (in degrees) when launching a ball
+     */
+    var minimumPitch: Int
+
+    /**
+     * Initial value of vertical angle (in degrees) when launching a ball
+     */
+    var defaultPitch: Int
 }

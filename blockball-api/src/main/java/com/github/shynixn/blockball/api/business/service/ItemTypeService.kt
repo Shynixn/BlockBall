@@ -1,16 +1,15 @@
-package com.github.shynixn.blockball.core.logic.business.serializer
+package com.github.shynixn.blockball.api.business.service
 
-import com.github.shynixn.blockball.api.business.enumeration.ParticleType
-import com.github.shynixn.blockball.api.business.serializer.YamlSerializer
+import com.github.shynixn.blockball.api.persistence.entity.Item
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2019.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2019 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,24 +29,24 @@ import com.github.shynixn.blockball.api.business.serializer.YamlSerializer
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ParticleTypeSerializer : YamlSerializer<ParticleType, String> {
+interface ItemTypeService {
     /**
-     * Gets called on serialization.
+     * Tries to find a matching itemType matching the given hint.
      */
-    override fun onSerialization(item: ParticleType): String {
-        return item.name
-    }
+    fun <I> findItemType(sourceHint: Any): I
 
     /**
-     * Gets called on Deserialization.
+     * Tries to find the data value of the given hint.
      */
-    override fun onDeserialization(item: String): ParticleType {
-        ParticleType.values().forEach { p ->
-            if (p.name == item || p.gameId_18 == item || p.gameId_113 == item || p.minecraftId_112 == item) {
-                return p
-            }
-        }
+    fun findItemDataValue(sourceHint: Any): Int
 
-        throw RuntimeException("Item '$item' cannot be deserialized to ParticleType!")
-    }
+    /**
+     * Converts the given item to an ItemStack.
+     */
+    fun <I> toItemStack(item: Item): I
+
+    /**
+     * Converts the given itemStack ot an item.
+     */
+    fun <I> toItem(itemStack: I): Item
 }

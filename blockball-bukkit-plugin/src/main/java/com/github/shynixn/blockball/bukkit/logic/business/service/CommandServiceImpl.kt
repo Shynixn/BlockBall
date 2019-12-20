@@ -77,7 +77,7 @@ class CommandServiceImpl @Inject constructor(private val plugin: Plugin) : Comma
         val permissionMessage = commandConfiguration["permission-message"] as String
 
         val internalExecutor = InternalBukkitCommand(command, description, usage, permission, permissionMessage, commandExecutor)
-        val clazz = findClazz("org.bukkit.craftbukkit.VERSION.CraftServer", plugin as PluginProxy)
+        val clazz = findClazz("org.bukkit.craftbukkit.VERSION.CraftServer")
         val server = clazz.cast(Bukkit.getServer())
         val map = server.javaClass.getDeclaredMethod("getCommandMap").invoke(server) as SimpleCommandMap
         map.register(command, internalExecutor)

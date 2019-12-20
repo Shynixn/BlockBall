@@ -7,9 +7,11 @@ import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ItemService
+import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.api.persistence.entity.*
 import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import org.bukkit.*
 import org.bukkit.ChatColor
 import org.bukkit.configuration.MemorySection
@@ -109,7 +111,7 @@ fun ItemStack.setDisplayName(displayName: String): ItemStack {
 
     if (meta != null) {
         @Suppress("UsePropertyAccessSyntax")
-        meta.setDisplayName(displayName.convertChatColors())
+        meta.setDisplayName(displayName.translateChatColors())
         itemMeta = meta
     }
 
@@ -142,9 +144,9 @@ internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = nul
         cache = cache.replace(PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder, team.size.toString())
     }
 
-    val stateSignEnabled = plugin.config.getString("messages.state-sign-enabled")!!.convertChatColors()
-    val stateSignDisabled = plugin.config.getString("messages.state-sign-disabled")!!.convertChatColors()
-    val stateSignRunning = plugin.config.getString("messages.state-sign-running")!!.convertChatColors()
+    val stateSignEnabled = plugin.config.getString("messages.state-sign-enabled")!!.translateChatColors()
+    val stateSignDisabled = plugin.config.getString("messages.state-sign-disabled")!!.translateChatColors()
+    val stateSignRunning = plugin.config.getString("messages.state-sign-running")!!.translateChatColors()
 
     when {
         game.status == GameStatus.RUNNING -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, stateSignRunning)
@@ -166,7 +168,7 @@ internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = nul
         cache = cache.replace(PlaceHolder.LASTHITBALL.placeHolder, (game.lastInteractedEntity as Player).name)
     }
 
-    return cache.convertChatColors()
+    return cache.translateChatColors()
 }
 
 /**
@@ -182,14 +184,12 @@ internal fun ItemStack.setColor(color: Color): ItemStack {
     return this
 }
 
-
 /**
  * Returns if the given [player] has got this [Permission].
  */
 internal fun Permission.hasPermission(player: Player): Boolean {
     return player.hasPermission(this.permission)
 }
-
 
 /** Returns if the given [location] is inside of this area selection. */
 fun Selection.isLocationInSelection(location: Location): Boolean {
@@ -209,25 +209,7 @@ fun Selection.isLocationInSelection(location: Location): Boolean {
  * Sends the given [packet] to this player.
  */
 fun Player.sendPacket(packet: Any) {
-    val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
-
-    val craftPlayer = findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer", plugin).cast(player)
-    val methodHandle = craftPlayer.javaClass.getDeclaredMethod("getHandle")
-    val entityPlayer = methodHandle.invoke(craftPlayer)
-
-    val field = findClazz("net.minecraft.server.VERSION.EntityPlayer", plugin).getDeclaredField("playerConnection")
-    field.isAccessible = true
-    val connection = field.get(entityPlayer)
-
-    val sendMethod = connection.javaClass.getDeclaredMethod("sendPacket", packet.javaClass.interfaces[0])
-    sendMethod.invoke(connection, packet)
-}
-
-/**
- * Converts the chatcolors of this string.
- */
-internal fun String.convertChatColors(): String {
-    return ChatColor.translateAlternateColorCodes('&', this)
+    BlockBallApi.resolve(PackageService::class.java).sendPacket(this, packet)
 }
 
 /**
@@ -261,13 +243,6 @@ internal fun Location.toPosition(): Position {
     position.pitch = this.pitch.toDouble()
 
     return position
-}
-
-/**
- * Finds the version compatible NMS class.
- */
-fun findClazz(name: String, plugin: PluginProxy): Class<*> {
-    return Class.forName(name.replace("VERSION", plugin.getServerVersion().bukkitId))
 }
 
 /**
