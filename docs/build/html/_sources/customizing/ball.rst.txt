@@ -155,11 +155,11 @@ Properties
 * Size: Size of the ball. Can be NORMAL or SMALL.
 * Hitbox Size: Size of the ball hitbox intercepting player movements. Does not have an impact on left or right clicking the ball.
 * Carry Able: Should the Ball be able to grabbed by players. Should not be used for BlockBall games yet only for fun and testing.
-* Always Bounce: Should the Ball bounce of walls?
-* Rotation Animation: Should the Ball rotate depending on direction and speed?
+* Always Bounce: Should the ball bounce on walls?
+* Rotation Animation: Should the ball rotate depending on its direction and speed?
 * Ball modifiers: Collection of modifiers explained below.
-* Soundeffect: Soundeffect being played for a certain action.
-* Particleeffect: Particleeffect being played for a certain action.
+* Sound-effect: Sound being played for a certain action.
+* Particle-effect: Particle being generated for a certain action.
 
 Modifier Properties
 ~~~~~~~~~~~~~~~~~~~
@@ -168,7 +168,7 @@ Modifier Properties
 * Kick Strength: Horizontal or Vertical speed/distance modifier the ball flies when a player leftclicks the ball.
 * Throw Strength: Horizontal or Vertical speed/distance modifier the ball flies when a player grabs the ball by rightclicking it and clicking again to throw it.
 * Rolling Distance: The speed/distance modifier the ball rolls after being touched, kicked or thrown
-* Gravity Distance: The speed modifier how fast a ball falls onto the ground. A negative value allows the ball to float into infinity.
+* Gravity Modifier: The speed modifier how fast a ball falls onto the ground. A negative value allows the ball to float into infinity.
 
 
 
