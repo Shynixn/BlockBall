@@ -117,7 +117,7 @@ class BallProxyImpl(
      * Is the ball currently grabbed by some entity?
      */
     override var isGrabbed: Boolean = false
-    
+
     /**
      * Is the entity dead?
      */
@@ -388,7 +388,11 @@ class BallProxyImpl(
             this.getCalculationEntity<Entity>().velocity = vector
             val normalized = vector.clone().normalize()
             this.originVector = vector.clone()
-            this.reduceVector = Vector(normalized.x / this.times, 0.0784 * meta.movementModifier.gravityModifier, normalized.z / this.times)
+            this.reduceVector = Vector(
+                normalized.x / this.times,
+                0.0784 * meta.movementModifier.gravityModifier,
+                normalized.z / this.times
+            )
         } catch (ignored: IllegalArgumentException) {
             // Ignore calculated velocity if it's out of range.
         }
@@ -466,7 +470,14 @@ class BallProxyImpl(
      * Calculates the knockback for the given [sourceVector] and [sourceBlock]. Uses the motion values to correctly adjust the
      * wall.
      */
-    override fun <V, B> calculateKnockBack(sourceVector: V, sourceBlock: B, mot0: Double, mot2: Double, mot6: Double, mot8: Double): Boolean {
+    override fun <V, B> calculateKnockBack(
+        sourceVector: V,
+        sourceBlock: B,
+        mot0: Double,
+        mot2: Double,
+        mot6: Double,
+        mot8: Double
+    ): Boolean {
         if (sourceVector !is Vector) {
             throw IllegalArgumentException("SourceVector has to be a BukkitVector!")
         }
@@ -568,7 +579,7 @@ class BallProxyImpl(
      * @return whether the knockback was applied
      */
     private fun applyKnockBack(starter: Vector, n: Vector, block: Block, blockFace: BlockFace): Boolean {
-        if (block.type == org.bukkit.Material.AIR && this.knockBackBumper <= 0) {
+        if (this.knockBackBumper <= 0) {
             val optBounce = getBounceConfigurationFromBlock(block)
             if (optBounce.isPresent || meta.alwaysBounce) {
                 var r = starter.clone().subtract(n.multiply(2 * starter.dot(n))).multiply(0.75)
