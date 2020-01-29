@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.sponge.logic.business.extension
 
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import org.spongepowered.api.command.source.ConsoleSource
+import org.spongepowered.api.data.key.Keys
 import org.spongepowered.api.entity.living.player.Player
 import org.spongepowered.api.text.Text
 import org.spongepowered.api.text.serializer.TextSerializers
@@ -47,6 +48,17 @@ fun ConsoleSource.sendMessage(message: String) {
 fun String.toText(): Text {
     return TextSerializers.formattingCode('§').deserialize(this.translateChatColors())
 }
+
+/**
+ * Gets/Sets allow to flight.
+ */
+var Player.allowFlight: Boolean
+    get() {
+        return this.get(Keys.CAN_FLY).orElse(false)
+    }
+    set(value) {
+        this.offer(Keys.CAN_FLY, value)
+    }
 
 /**
  * Converts the given text to a string.
