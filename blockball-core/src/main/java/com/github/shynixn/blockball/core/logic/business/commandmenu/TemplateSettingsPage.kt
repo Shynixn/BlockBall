@@ -77,15 +77,19 @@ class TemplateSettingsPage : Page(TemplateSettingsPage.ID, OpenPage.ID) {
             cache[0] = templateService.generateArena(targetTemplate)
             cache[3] = targetTemplate
             return MenuCommandResult.SUCCESS
-        } else if (command == MenuCommand.TEMPLATE_SELECT_CALLBACK && args.size >= 3) {
-            val templateID = args[2].toInt()
-            val templates = templateService.getAvailableTemplates()
+        } else if (command == MenuCommand.TEMPLATE_SELECT_CALLBACK) {
+            if(args.size >= 3){
+                val templateID = args[2].toInt()
+                val templates = templateService.getAvailableTemplates()
 
-            templateService.copyTemplateFilesFromResources()
-            cache[0] = templateService.generateArena(templates[templateID])
-            cache[3] = templates[templateID]
+                templateService.copyTemplateFilesFromResources()
+                cache[0] = templateService.generateArena(templates[templateID])
+                cache[3] = templates[templateID]
 
-            return MenuCommandResult.SUCCESS
+                return MenuCommandResult.SUCCESS
+            }
+
+            return MenuCommandResult.BACK;
         }
 
         return super.execute(player, command, cache, args)
