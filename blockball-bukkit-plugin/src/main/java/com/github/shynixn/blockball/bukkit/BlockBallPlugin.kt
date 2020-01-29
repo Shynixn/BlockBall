@@ -23,6 +23,8 @@ import org.bukkit.configuration.MemorySection
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.FileOutputStream
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.logging.Level
 
 /**
@@ -113,6 +115,19 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             return
         }
 
+        if (isArmorStandTickingDisabled()) {
+            sendConsoleMessage(ChatColor.RED.toString() + "================================================")
+            sendConsoleMessage(ChatColor.RED.toString() + "BlockBall does only work with armor-stands-tick: true")
+            sendConsoleMessage(ChatColor.RED.toString() + "Please enable it in your paper.yml file!")
+            sendConsoleMessage(ChatColor.GRAY.toString() + "You can disable this security check on your own risk by")
+            sendConsoleMessage(ChatColor.GRAY.toString() + "setting ignore-ticking-settings: true in the config.yml of BlockBall.")
+            sendConsoleMessage(ChatColor.RED.toString() + "Plugin gets now disabled!")
+            sendConsoleMessage(ChatColor.RED.toString() + "================================================")
+
+            Bukkit.getPluginManager().disablePlugin(this)
+            return
+        }
+
         this.injector = Guice.createInjector(BlockBallDependencyInjectionBinder(this))
         this.reloadConfig()
 
@@ -147,7 +162,10 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val commandService = resolve(CommandService::class.java)
         commandService.registerCommandExecutor("blockballstop", resolve(StopCommandExecutor::class.java))
         commandService.registerCommandExecutor("blockballreload", resolve(ReloadCommandExecutor::class.java))
-        commandService.registerCommandExecutor("blockballbungeecord", resolve(BungeeCordSignCommandExecutor::class.java))
+        commandService.registerCommandExecutor(
+            "blockballbungeecord",
+            resolve(BungeeCordSignCommandExecutor::class.java)
+        )
         commandService.registerCommandExecutor("blockball", resolve(ArenaCommandExecutor::class.java))
         commandService.registerCommandExecutor(
             (config.get("global-spectate") as MemorySection).getValues(false) as Map<String, String>,
@@ -168,7 +186,8 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
 
         if (enableBungeeCord) {
             bungeeCordConnectionService.restartChannelListeners()
-            Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.DARK_GREEN + "Started server linking.")
+            Bukkit.getServer()
+                .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.DARK_GREEN + "Started server linking.")
         }
 
         for (world in Bukkit.getWorlds()) {
@@ -334,6 +353,29 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
             Bukkit.getPluginManager().disablePlugin(this)
             return true
+        }
+
+        return false
+    }
+
+    /**
+     * Checks if armorStand ticking is disabled when PaperSpigot is being used.
+     */
+    private fun isArmorStandTickingDisabled(): Boolean {
+        if (config.getBoolean("game.ignore-ticking-settings")) {
+            return false
+        }
+
+        val path = Paths.get("paper.yml")
+
+        if (!Files.exists(path)) {
+            return false
+        }
+
+        for (line in Files.readAllLines(path)) {
+            if (line.contains("armor-stands-tick: false")) {
+                return true
+            }
         }
 
         return false
