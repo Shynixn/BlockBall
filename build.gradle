@@ -149,6 +149,10 @@ subprojects {
         mavenCentral()
         mavenLocal()
         jcenter()
+        maven {
+            name = 'sponge'
+            url = 'https://repo.spongepowered.org/maven'
+        }
     }
 
     dependencies {
