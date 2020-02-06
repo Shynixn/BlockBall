@@ -191,20 +191,6 @@ internal fun Permission.hasPermission(player: Player): Boolean {
     return player.hasPermission(this.permission)
 }
 
-/** Returns if the given [location] is inside of this area selection. */
-fun Selection.isLocationInSelection(location: Location): Boolean {
-    if (location.world != null && location.world!!.name == this.upperCorner.worldName) {
-        if (this.upperCorner.x >= location.x && this.lowerCorner.x <= location.x) {
-            if (this.upperCorner.y >= location.y + 1 && this.lowerCorner.y <= location.y + 1) {
-                if (this.upperCorner.z >= location.z && this.lowerCorner.z <= location.z) {
-                    return true
-                }
-            }
-        }
-    }
-    return false
-}
-
 /**
  * Sends the given [packet] to this player.
  */

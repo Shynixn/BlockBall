@@ -9,9 +9,9 @@ import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.*
-import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
 import com.google.inject.Inject
@@ -204,7 +204,7 @@ class GameActionServiceImpl @Inject constructor(
             game.status = GameStatus.DISABLED
             onUpdateSigns(game)
             closeGame(game)
-            if (!game.ingamePlayersStorage.isEmpty() && game.arena.gameType != GameType.BUNGEE) {
+            if (game.ingamePlayersStorage.isNotEmpty() && game.arena.gameType != GameType.BUNGEE) {
                 game.closing = true
             }
             return
@@ -255,7 +255,13 @@ class GameActionServiceImpl @Inject constructor(
             for (i in game.arena.meta.redTeamMeta.signs.indices) {
                 val position = game.arena.meta.redTeamMeta.signs[i]
 
-                if (!replaceTextOnSign(game, position, game.arena.meta.redTeamMeta.signLines, game.arena.meta.redTeamMeta)) {
+                if (!replaceTextOnSign(
+                        game,
+                        position,
+                        game.arena.meta.redTeamMeta.signLines,
+                        game.arena.meta.redTeamMeta
+                    )
+                ) {
                     game.arena.meta.redTeamMeta.signs.removeAt(i)
                     return
                 }
@@ -263,7 +269,13 @@ class GameActionServiceImpl @Inject constructor(
             for (i in game.arena.meta.blueTeamMeta.signs.indices) {
                 val position = game.arena.meta.blueTeamMeta.signs[i]
 
-                if (!replaceTextOnSign(game, position, game.arena.meta.blueTeamMeta.signLines, game.arena.meta.blueTeamMeta)) {
+                if (!replaceTextOnSign(
+                        game,
+                        position,
+                        game.arena.meta.blueTeamMeta.signLines,
+                        game.arena.meta.blueTeamMeta
+                    )
+                ) {
                     game.arena.meta.blueTeamMeta.signs.removeAt(i)
                     return
                 }
@@ -292,7 +304,12 @@ class GameActionServiceImpl @Inject constructor(
     /**
      * Replaces the text on the sign.
      */
-    private fun replaceTextOnSign(game: Game, signPosition: Position, lines: List<String>, teamMeta: TeamMeta?): Boolean {
+    private fun replaceTextOnSign(
+        game: Game,
+        signPosition: Position,
+        lines: List<String>,
+        teamMeta: TeamMeta?
+    ): Boolean {
         var players = game.redTeam
 
         if (game.arena.meta.blueTeamMeta == teamMeta) {
@@ -331,7 +348,7 @@ class GameActionServiceImpl @Inject constructor(
 
         game.arena.meta.ballMeta.spawnpoint!!.toLocation().world!!.entities.forEach { e ->
             if (e !is Player && !e.customName.equals("ResourceBallsPlugin") && e !is Item && e !is ItemFrame) {
-                if (game.arena.isLocationInSelection(e.location)) {
+                if (game.arena.isLocationInSelection(e.location.toPosition())) {
                     val vector = game.arena.meta.protectionMeta.entityProtection
                     e.location.direction = vector.toVector()
                     e.velocity = vector.toVector()
@@ -418,7 +435,11 @@ class GameActionServiceImpl @Inject constructor(
                 }
 
                 players.forEach { p ->
-                    dependencyBossBarApiService.setBossbarMessage(p, meta.message.replaceGamePlaceholder(game), percentage)
+                    dependencyBossBarApiService.setBossbarMessage(
+                        p,
+                        meta.message.replaceGamePlaceholder(game),
+                        percentage
+                    )
                 }
             }
         }
@@ -451,7 +472,11 @@ class GameActionServiceImpl @Inject constructor(
         if (game.scoreboard == null) {
             game.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
 
-            scoreboardService.setConfiguration(game.scoreboard, DisplaySlot.SIDEBAR, game.arena.meta.scoreboardMeta.title)
+            scoreboardService.setConfiguration(
+                game.scoreboard,
+                DisplaySlot.SIDEBAR,
+                game.arena.meta.scoreboardMeta.title
+            )
         }
 
         val players = ArrayList(game.inTeamPlayers)

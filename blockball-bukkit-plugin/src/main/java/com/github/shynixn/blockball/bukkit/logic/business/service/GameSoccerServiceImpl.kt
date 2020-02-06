@@ -12,9 +12,9 @@ import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -72,9 +72,11 @@ class GameSoccerServiceImpl @Inject constructor(
             return
         }
 
-        if (!game.arena.isLocationInSelection(game.ball!!.getLocation() as Location)
-            && !game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)
-            && !game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)
+        val ballPosition = (game.ball!!.getLocation() as Location).toPosition()
+
+        if (!game.arena.isLocationInSelection(ballPosition)
+            && !game.arena.meta.redTeamMeta.goal.isLocationInSelection(ballPosition)
+            && !game.arena.meta.blueTeamMeta.goal.isLocationInSelection(ballPosition)
         ) {
             if (game.ballBumper == 0) {
                 rescueBall(game)
@@ -99,7 +101,8 @@ class GameSoccerServiceImpl @Inject constructor(
             val knockback = (game.lastBallLocation!! as Location).toVector().subtract(ballLocation.toVector())
             ballLocation.direction = knockback
             game.ball!!.setVelocity(knockback)
-            val direction = game.arena.meta.ballMeta.spawnpoint!!.toLocation().toVector().subtract(ballLocation.toVector())
+            val direction =
+                game.arena.meta.ballMeta.spawnpoint!!.toLocation().toVector().subtract(ballLocation.toVector())
             game.ball!!.setVelocity(direction.multiply(0.1))
             game.ballBumper = 40
             game.ballBumperCounter++
@@ -114,7 +117,7 @@ class GameSoccerServiceImpl @Inject constructor(
             return
         }
 
-        if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
+        if (game.arena.meta.redTeamMeta.goal.isLocationInSelection((game.ball!!.getLocation() as Location).toPosition())) {
             game.blueScore += game.arena.meta.blueTeamMeta.pointsPerGoal
             onScore(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             onScoreReward(game, game.blueTeam as List<Player>)
@@ -123,7 +126,7 @@ class GameSoccerServiceImpl @Inject constructor(
                 onMatchEnd(game, game.blueTeam as List<Player>, game.redTeam as List<Player>)
                 onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             }
-        } else if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(game.ball!!.getLocation() as Location)) {
+        } else if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection((game.ball!!.getLocation() as Location).toPosition())) {
             game.redScore += game.arena.meta.redTeamMeta.pointsPerGoal
             onScore(game, Team.RED, game.arena.meta.redTeamMeta)
             onScoreReward(game, game.redTeam as List<Player>)
@@ -189,7 +192,10 @@ class GameSoccerServiceImpl @Inject constructor(
                     game.ball!!.remove()
                 }
 
-                game.ball = ballEntityService.spawnTemporaryBall(game.arena.meta.ballMeta.spawnpoint!!.toLocation(), game.arena.meta.ballMeta)
+                game.ball = ballEntityService.spawnTemporaryBall(
+                    game.arena.meta.ballMeta.spawnpoint!!.toLocation(),
+                    game.arena.meta.ballMeta
+                )
                 game.ballSpawning = false
                 game.ballSpawnCounter = 0
             }
@@ -250,15 +256,21 @@ class GameSoccerServiceImpl @Inject constructor(
     private fun onScoreReward(game: Game, players: List<Player>) {
         if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
             if (players.contains(game.lastInteractedEntity!!)) {
-                if (dependencyService.isInstalled(PluginDependency.VAULT) && game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.SHOOT_GOAL)) {
+                if (dependencyService.isInstalled(PluginDependency.VAULT) && game.arena.meta.rewardMeta.moneyReward.containsKey(
+                        RewardType.SHOOT_GOAL
+                    )
+                ) {
                     val vaultService = BlockBallApi.resolve(DependencyVaultService::class.java)
-                    vaultService.addMoney(game.lastInteractedEntity, game.arena.meta.rewardMeta.moneyReward[RewardType.SHOOT_GOAL]!!.toDouble())
+                    vaultService.addMoney(
+                        game.lastInteractedEntity,
+                        game.arena.meta.rewardMeta.moneyReward[RewardType.SHOOT_GOAL]!!.toDouble()
+                    )
                 }
                 if (game.arena.meta.rewardMeta.commandReward.containsKey(RewardType.SHOOT_GOAL)) {
                     this.executeCommand(
                         game,
                         game.arena.meta.rewardMeta.commandReward[RewardType.SHOOT_GOAL]!!,
-                        kotlin.collections.arrayListOf(game.lastInteractedEntity as Player)
+                        arrayListOf(game.lastInteractedEntity as Player)
                     )
                 }
             }
@@ -277,26 +289,44 @@ class GameSoccerServiceImpl @Inject constructor(
 
             if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.LOOSING_MATCH) && loosingPlayers != null) {
                 loosingPlayers.forEach { p ->
-                    vaultService.addMoney(p, game.arena.meta.rewardMeta.moneyReward[RewardType.LOOSING_MATCH]!!.toDouble())
+                    vaultService.addMoney(
+                        p,
+                        game.arena.meta.rewardMeta.moneyReward[RewardType.LOOSING_MATCH]!!.toDouble()
+                    )
                 }
             }
             if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.PARTICIPATE_MATCH)) {
                 game.inTeamPlayers.forEach { p ->
-                    vaultService.addMoney(p, game.arena.meta.rewardMeta.moneyReward[RewardType.PARTICIPATE_MATCH]!!.toDouble())
+                    vaultService.addMoney(
+                        p,
+                        game.arena.meta.rewardMeta.moneyReward[RewardType.PARTICIPATE_MATCH]!!.toDouble()
+                    )
                 }
             }
         }
 
         if (game.arena.meta.rewardMeta.commandReward.containsKey(RewardType.WIN_MATCH) && winningPlayers != null) {
-            this.executeCommand(game, game.arena.meta.rewardMeta.commandReward[RewardType.WIN_MATCH]!!, winningPlayers as List<Player>)
+            this.executeCommand(
+                game,
+                game.arena.meta.rewardMeta.commandReward[RewardType.WIN_MATCH]!!,
+                winningPlayers as List<Player>
+            )
         }
 
         if (game.arena.meta.rewardMeta.commandReward.containsKey(RewardType.LOOSING_MATCH) && loosingPlayers != null) {
-            this.executeCommand(game, game.arena.meta.rewardMeta.commandReward[RewardType.LOOSING_MATCH]!!, loosingPlayers as List<Player>)
+            this.executeCommand(
+                game,
+                game.arena.meta.rewardMeta.commandReward[RewardType.LOOSING_MATCH]!!,
+                loosingPlayers as List<Player>
+            )
         }
 
         if (game.arena.meta.rewardMeta.commandReward.containsKey(RewardType.PARTICIPATE_MATCH)) {
-            this.executeCommand(game, game.arena.meta.rewardMeta.commandReward[RewardType.PARTICIPATE_MATCH]!!, game.inTeamPlayers as List<Player>)
+            this.executeCommand(
+                game,
+                game.arena.meta.rewardMeta.commandReward[RewardType.PARTICIPATE_MATCH]!!,
+                game.inTeamPlayers as List<Player>
+            )
         }
     }
 
@@ -314,7 +344,13 @@ class GameSoccerServiceImpl @Inject constructor(
         val additionalPlayers = getNofifiedPlayers(game)
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
-        players.forEach { p -> screenMessageService.setTitle(p, winMessageTitle.replaceGamePlaceholder(game), winMessageSubTitle.replaceGamePlaceholder(game)) }
+        players.forEach { p ->
+            screenMessageService.setTitle(
+                p,
+                winMessageTitle.replaceGamePlaceholder(game),
+                winMessageSubTitle.replaceGamePlaceholder(game)
+            )
+        }
 
         game.closing = true
     }
@@ -354,7 +390,10 @@ class GameSoccerServiceImpl @Inject constructor(
                 game.lastInteractedEntity = p
                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command.replaceGamePlaceholder(game))
             }
-            meta.mode == CommandMode.CONSOLE_SINGLE -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command.replaceGamePlaceholder(game))
+            meta.mode == CommandMode.CONSOLE_SINGLE -> Bukkit.getServer().dispatchCommand(
+                Bukkit.getConsoleSender(),
+                command.replaceGamePlaceholder(game)
+            )
         }
     }
 }

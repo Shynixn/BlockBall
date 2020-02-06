@@ -44,9 +44,11 @@ open class SelectionEntity : Selection {
     /** [center] of the arena */
     override val center: Position
         get() {
-            return PositionEntity(this.lowerCorner.worldName!!,
-                    (this.lowerCorner.blockX + this.offsetX / 2).toDouble(),
-                    (this.lowerCorner.blockY + offsetX / 2).toDouble(), (this.lowerCorner.blockZ + offsetZ / 2).toDouble())
+            return PositionEntity(
+                this.lowerCorner.worldName!!,
+                (this.lowerCorner.blockX + this.offsetX / 2).toDouble(),
+                (this.lowerCorner.blockY + offsetX / 2).toDouble(), (this.lowerCorner.blockZ + offsetZ / 2).toDouble()
+            )
         }
 
     /** Length of the x axe. */
@@ -71,6 +73,22 @@ open class SelectionEntity : Selection {
     override fun setCorners(corner1: Position, corner2: Position) {
         this.calculateDownLocation(corner1, corner2)
         this.calculateUpLocation(corner1, corner2)
+    }
+
+    /**
+     * Is location inside of this selection.
+     */
+    override fun isLocationInSelection(location: Position): Boolean {
+        if (location.worldName != null && location.worldName == this.upperCorner.worldName) {
+            if (this.upperCorner.x >= location.x && this.lowerCorner.x <= location.x) {
+                if (this.upperCorner.y >= location.y + 1 && this.lowerCorner.y <= location.y + 1) {
+                    if (this.upperCorner.z >= location.z && this.lowerCorner.z <= location.z) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
     }
 
     private fun calculateUpLocation(corner1: Position, corner2: Position) {
