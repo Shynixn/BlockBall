@@ -121,7 +121,12 @@ class ListablePage @Inject constructor(
                 cache[2] = BossbarColor.values().map { p -> p.name }
                 cache[3] = MenuCommand.BOSSBAR_CALLBACKCOLORS
             }
+            MenuCommand.LIST_MATCHCLOSETYPES -> {
+                cache[2] = MatchTimeCloseType.values().map { p -> p.name }
+                cache[3] = MenuCommand.MATCHTIMES_CALLBACKCLOSETYPE
+            }
             MenuCommand.LIST_HOLOGRAMS -> cache[3] = MenuCommand.HOLOGRAM_CALLBACK
+            MenuCommand.LIST_MATCHTIMES -> cache[3] = MenuCommand.MATCHTIMES_CALLBACK
             else -> {
             }
         }

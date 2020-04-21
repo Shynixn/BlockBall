@@ -51,6 +51,15 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
 
     SETTINGS_OPEN(MenuPageKey.MAINSETTING, "open_settings"),
 
+    MATCHTIMES_OPEN(MenuPageKey.MATCHTIMES, "open_matcht"),
+    MATCHTIMES_CALLBACK(MenuPageKey.MATCHTIMES, "callback"),
+    MATCHTIMES_CALLBACKCLOSETYPE(MenuPageKey.MATCHTIMES, "callbclot"),
+    MATCHTIMES_CREATE(MenuPageKey.MATCHTIMES, "create"),
+    MATCHTIMES_DELETE(MenuPageKey.MATCHTIMES, "del"),
+    MATCHTIMES_DURATION(MenuPageKey.MATCHTIMES, "dur"),
+    MATCHTIMES_SWITCHGOAL(MenuPageKey.MATCHTIMES, "swgo"),
+    MATCHTIMES_CLOSECONDITION(MenuPageKey.MATCHTIMES, "clc"),
+
     TEAM_RED_CONFIGURE(MenuPageKey.TEAMMETA, "team_red"),
     TEAM_BLUE_CONFIGURE(MenuPageKey.TEAMMETA, "team_blue"),
 
@@ -255,7 +264,10 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     LIST_BOSSBARSTYLES(MenuPageKey.LISTABLE, "show_bossbarstyles"),
     LIST_BOSSBARCOLORS(MenuPageKey.LISTABLE, "show_bossbarcolors"),
     LIST_HOLOGRAMS(MenuPageKey.LISTABLE, "show_holograms"),
-    LIST_GAMETYPES(MenuPageKey.LISTABLE, "show_gametypes"), ;
+    LIST_GAMETYPES(MenuPageKey.LISTABLE, "show_gametypes"),
+    LIST_MATCHTIMES(MenuPageKey.LISTABLE, "show_matchtimes"),
+    LIST_MATCHCLOSETYPES(MenuPageKey.LISTABLE, "show_closetypes")
+    ;
 
     /**
      * Gets the command.

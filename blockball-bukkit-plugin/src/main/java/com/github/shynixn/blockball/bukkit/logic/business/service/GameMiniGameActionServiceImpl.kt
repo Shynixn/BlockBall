@@ -301,7 +301,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                     p.level = 0
                 }
 
-                game.gameCountdown = game.arena.meta.minigameMeta.matchDuration
+                game.gameCountdown = 300 // TODO: MATch duration update
                 game.lobbyCountDownActive = false
                 game.playing = true
                 startGame(game)

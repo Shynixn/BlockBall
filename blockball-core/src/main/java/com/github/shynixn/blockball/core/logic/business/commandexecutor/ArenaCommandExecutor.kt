@@ -69,7 +69,8 @@ class ArenaCommandExecutor @Inject constructor(
     teamTextBookPage: TeamTextBookPage,
     gameSettingsPage: GameSettingsPage,
     spectatingSettingsPage: SpectatingSettingsPage,
-    notificationPage: NotificationPage
+    notificationPage: NotificationPage,
+    matchtimesPage : MatchTimesPage
 ) : CommandExecutor {
 
 
@@ -85,7 +86,7 @@ class ArenaCommandExecutor @Inject constructor(
         openPage, mainConfigurationPage, spectatePage, mainSettingsPage, ballSettingsPage
         , ballModifierPage, listablePage, teamSettingsPage, effectsSettingsPage, multipleLinesPage, hologramsPage, scoreboardPage, bossbarPage
         , templatePage, signSettingsPage, rewardsPage, particlesPage, soundsPage, abilitiesPage, doubleJumpPage, miscPage, gamePropertiesPage
-        , areaProtectionPage, teamTextBookPage, gameSettingsPage, spectatingSettingsPage, notificationPage
+        , areaProtectionPage, teamTextBookPage, gameSettingsPage, spectatingSettingsPage, notificationPage, matchtimesPage
     )
 
     /**

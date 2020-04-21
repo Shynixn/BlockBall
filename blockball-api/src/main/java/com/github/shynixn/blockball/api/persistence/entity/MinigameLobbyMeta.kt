@@ -28,9 +28,10 @@ package com.github.shynixn.blockball.api.persistence.entity
  * SOFTWARE.
  */
 interface MinigameLobbyMeta {
-
-    /** Duration the match will max last. */
-    var matchDuration: Int
+    /**
+     * Match Times.
+     */
+    val matchTimes: MutableList<MatchTimeMeta>
 
     /** Duration the match will max last. */
     var lobbyDuration: Int
