@@ -10,7 +10,6 @@ import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.Game
-import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
@@ -117,20 +116,39 @@ class GameSoccerServiceImpl @Inject constructor(
             return
         }
 
-        if (game.arena.meta.redTeamMeta.goal.isLocationInSelection((game.ball!!.getLocation() as Location).toPosition())) {
+        var isBallInRedGoal =
+            game.arena.meta.redTeamMeta.goal.isLocationInSelection((game.ball!!.getLocation() as Location).toPosition())
+        var isBallInBlueGoal =
+            game.arena.meta.blueTeamMeta.goal.isLocationInSelection((game.ball!!.getLocation() as Location).toPosition())
+
+        if (isBallInBlueGoal && game.mirroredGoals) {
+            isBallInBlueGoal = false
+            isBallInRedGoal = true
+        } else if (isBallInRedGoal && game.mirroredGoals) {
+            isBallInBlueGoal = true
+            isBallInRedGoal = false
+        }
+
+        if (isBallInRedGoal) {
             game.blueScore += game.arena.meta.blueTeamMeta.pointsPerGoal
             onScore(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             onScoreReward(game, game.blueTeam as List<Player>)
             relocatePlayersAndBall(game)
+
             if (game.blueScore >= game.arena.meta.lobbyMeta.maxScore) {
                 onMatchEnd(game, game.blueTeam as List<Player>, game.redTeam as List<Player>)
                 onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             }
-        } else if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection((game.ball!!.getLocation() as Location).toPosition())) {
+
+            return
+        }
+
+        if (isBallInBlueGoal) {
             game.redScore += game.arena.meta.redTeamMeta.pointsPerGoal
             onScore(game, Team.RED, game.arena.meta.redTeamMeta)
             onScoreReward(game, game.redTeam as List<Player>)
             relocatePlayersAndBall(game)
+
             if (game.redScore >= game.arena.meta.lobbyMeta.maxScore) {
                 onMatchEnd(game, game.redTeam as List<Player>, game.blueTeam as List<Player>)
                 onWin(game, Team.RED, game.arena.meta.redTeamMeta)
@@ -181,11 +199,7 @@ class GameSoccerServiceImpl @Inject constructor(
     }
 
     private fun handleBallSpawning(game: Game) {
-        if (game.ballSpawning) {
-            if (game is MiniGame && game.endGameActive) {
-                return
-            }
-
+        if (game.ballSpawning && game.ballEnabled) {
             game.ballSpawnCounter--
             if (game.ballSpawnCounter <= 0) {
                 if (game.ball != null && !game.ball!!.isDead) {

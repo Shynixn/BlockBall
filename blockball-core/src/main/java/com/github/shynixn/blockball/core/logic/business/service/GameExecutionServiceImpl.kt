@@ -51,7 +51,7 @@ class GameExecutionServiceImpl @Inject constructor(private val proxyService: Pro
      * Lets the given [player] in the given [game] respawn at the specified spawnpoint.
      */
     override fun <P, G : Game> respawn(game: G, player: P) {
-        val team = game.ingamePlayersStorage[player as Any]!!.team!!
+        val team = game.ingamePlayersStorage[player as Any]!!.goalTeam!!
 
         val teamMeta = if (team == Team.RED) {
             game.arena.meta.redTeamMeta

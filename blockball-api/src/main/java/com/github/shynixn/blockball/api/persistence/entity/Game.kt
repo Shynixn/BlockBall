@@ -114,6 +114,16 @@ interface Game {
     var ballBumperCounter: Int
 
     /**
+     * Is the ball currently enabled to spawn?
+     */
+    var ballEnabled: Boolean
+
+    /**
+     * Are the goals mirrored?
+     */
+    var mirroredGoals : Boolean
+
+    /**
      * Ball bumper.
      */
     var ballBumper: Int

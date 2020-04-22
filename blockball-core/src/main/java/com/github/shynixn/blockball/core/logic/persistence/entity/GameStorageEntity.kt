@@ -41,6 +41,10 @@ class GameStorageEntity(override var uuid: UUID,
     /** Team of the player. */
     override var team: Team? = null
     /**
+     * Team of the goal which may or may not be the same of the team depending on the swapping state.
+     */
+    override var goalTeam: Team? = null
+    /**
      * Exp level of the player.
      */
     override var level: Int = 0

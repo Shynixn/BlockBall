@@ -61,6 +61,11 @@ interface GameMiniGameActionService {
     fun onDraw(game: MiniGame)
 
     /**
+     * Actives the next match time. Closes the match if no match time is available.
+     */
+    fun switchToNextMatchTime(game: MiniGame)
+
+    /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
      * 0 - 20 for each second.
      */

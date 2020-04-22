@@ -35,6 +35,10 @@ interface GameStorage {
 
     /** Team of the player. */
     var team: Team?
+    /**
+     * Team of the goal which may or may not be the same of the team depending on the swapping state.
+     */
+    var goalTeam: Team?
 
     /**
      * Exp level of the player.

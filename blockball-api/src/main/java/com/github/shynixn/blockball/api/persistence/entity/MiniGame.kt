@@ -56,12 +56,13 @@ interface MiniGame : Game {
     /**
      * Returns if the lobby is full.
      */
-    val isLobbyFull : Boolean
+    val isLobbyFull: Boolean
 
     /**
-     * Is the endgame active.
+     * Index of the current match time.
      */
-    var endGameActive: Boolean
+    var matchTimeIndex: Int
+
     /**
      * Storage for [spectatorPlayers],
      */

@@ -141,6 +141,7 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
 
         with(stats) {
             this.team = team
+            this.goalTeam = team
             gameMode = player.gameMode
             armorContents = player.inventory.armorContents.clone() as Array<Any?>
             flying = player.isFlying

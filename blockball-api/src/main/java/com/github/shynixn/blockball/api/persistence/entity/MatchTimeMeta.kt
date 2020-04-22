@@ -42,4 +42,24 @@ interface MatchTimeMeta {
      * Close time when the match is over.
      */
     var closeType: MatchTimeCloseType
+
+    /**
+     * Is the ball playable?
+     */
+    var playAbleBall: Boolean
+
+    /**
+     * Should the players respawn when this match time starts.
+     */
+    var respawnEnabled: Boolean
+
+    /**
+     * Title of the message getting played when this match time starts.
+     */
+    var startMessageTitle: String
+
+    /**
+     * SubTitle of the message getting played when this match time starts.
+     */
+    var startMessageSubTitle: String
 }
