@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.core.logic.business.extension.thenAcceptSafely
 import com.github.shynixn.blockball.core.logic.persistence.entity.ChatBuilderEntity
 import com.google.inject.Inject
+import kotlin.math.abs
 
 /**
  * Created by Shynixn 2018.
@@ -43,7 +44,7 @@ class MainConfigurationPage @Inject constructor(
     private val screenMessageService: ScreenMessageService,
     private val gameService: GameService,
     private val proxyService: ProxyService
-) : Page(MainConfigurationPage.ID, OpenPage.ID) {
+) : Page(ID, OpenPage.ID) {
     companion object {
         /** Id of the page. */
         const val ID = 2
@@ -63,7 +64,12 @@ class MainConfigurationPage @Inject constructor(
      *
      * @param cache cache
      */
-    override fun <P> execute(player: P, command: MenuCommand, cache: Array<Any?>, args: Array<String>): MenuCommandResult {
+    override fun <P> execute(
+        player: P,
+        command: MenuCommand,
+        cache: Array<Any?>,
+        args: Array<String>
+    ): MenuCommandResult {
         val prefix = configurationService.findValue<String>("messages.prefix")
 
         if (command == MenuCommand.ARENA_CREATE) {
@@ -92,7 +98,15 @@ class MainConfigurationPage @Inject constructor(
             val left = blockSelectionService.getLeftClickLocation<Any, P>(player)
             val right = blockSelectionService.getRightClickLocation<Any, P>(player)
             if (left.isPresent && right.isPresent) {
-                arena.setCorners(proxyService.toPosition(left.get()), proxyService.toPosition(right.get()))
+                val leftPosition = proxyService.toPosition(left.get())
+                val rightPosition = proxyService.toPosition(right.get())
+                val yDistance = abs(leftPosition.y - rightPosition.y)
+
+                if (yDistance < 10) {
+                    return MenuCommandResult.WESELECTION_TOSMALL
+                }
+
+                arena.setCorners(leftPosition, rightPosition)
             } else {
                 return MenuCommandResult.WESELECTION_MISSING
             }
@@ -103,9 +117,30 @@ class MainConfigurationPage @Inject constructor(
             val left = blockSelectionService.getLeftClickLocation<Any, P>(player)
             val right = blockSelectionService.getRightClickLocation<Any, P>(player)
             if (left.isPresent && right.isPresent) {
-                arena.meta.redTeamMeta.goal.setCorners(proxyService.toPosition(left.get()), proxyService.toPosition(right.get()))
+                val leftPosition = proxyService.toPosition(left.get())
+                val rightPosition = proxyService.toPosition(right.get())
+                val xDistance = abs(leftPosition.x - rightPosition.x)
+                val yDistance = abs(leftPosition.y - rightPosition.y)
+                val zDistance = abs(leftPosition.z - rightPosition.z)
+
+                if (yDistance < 2) {
+                    return MenuCommandResult.WESELECTIONHEIGHTGOAL_TOSMALL
+                }
+
+                if (zDistance < 2) {
+                    return MenuCommandResult.WESELECTIONZAXEGOAL_TOSMALL
+                }
+
+                if (xDistance < 2) {
+                    return MenuCommandResult.WESELECTIONXAXEGOAL_TOSMALL
+                }
+
+                arena.meta.redTeamMeta.goal.setCorners(leftPosition, rightPosition)
                 virtualArenaService.displayForPlayer(player, arena)
-                screenMessageService.setActionBar(player, prefix + "Changed goal selection. Rendering virtual blocks...")
+                screenMessageService.setActionBar(
+                    player,
+                    prefix + "Changed goal selection. Rendering virtual blocks..."
+                )
             } else {
                 return MenuCommandResult.WESELECTION_MISSING
             }
@@ -116,15 +151,37 @@ class MainConfigurationPage @Inject constructor(
             val left = blockSelectionService.getLeftClickLocation<Any, P>(player)
             val right = blockSelectionService.getRightClickLocation<Any, P>(player)
             if (left.isPresent && right.isPresent) {
-                arena.meta.blueTeamMeta.goal.setCorners(proxyService.toPosition(left.get()), proxyService.toPosition(right.get()))
+                val leftPosition = proxyService.toPosition(left.get())
+                val rightPosition = proxyService.toPosition(right.get())
+                val xDistance = abs(leftPosition.x - rightPosition.x)
+                val yDistance = abs(leftPosition.y - rightPosition.y)
+                val zDistance = abs(leftPosition.z - rightPosition.z)
+
+                if (yDistance < 2) {
+                    return MenuCommandResult.WESELECTIONHEIGHTGOAL_TOSMALL
+                }
+
+                if (zDistance < 2) {
+                    return MenuCommandResult.WESELECTIONZAXEGOAL_TOSMALL
+                }
+
+                if (xDistance < 2) {
+                    return MenuCommandResult.WESELECTIONXAXEGOAL_TOSMALL
+                }
+
+                arena.meta.blueTeamMeta.goal.setCorners(leftPosition, rightPosition)
                 virtualArenaService.displayForPlayer(player, arena)
-                screenMessageService.setActionBar(player, prefix + "Changed goal selection. Rendering virtual blocks...")
+                screenMessageService.setActionBar(
+                    player,
+                    prefix + "Changed goal selection. Rendering virtual blocks..."
+                )
             } else {
                 return MenuCommandResult.WESELECTION_MISSING
             }
         } else if (command == MenuCommand.ARENA_SAVE) {
             if (cache[0] == null || cache[0] !is Arena) {
-                val b = ChatBuilderEntity().text("- ").text(ChatColor.RED.toString() + "Please select an arena to perform this action.")
+                val b = ChatBuilderEntity().text("- ")
+                    .text(ChatColor.RED.toString() + "Please select an arena to perform this action.")
                 proxyService.sendMessage(player, b)
 
                 return MenuCommandResult.CANCEL_MESSAGE
@@ -144,7 +201,8 @@ class MainConfigurationPage @Inject constructor(
             }
         } else if (command == MenuCommand.ARENA_RELOAD) {
             if (cache[0] == null || cache[0] !is Arena) {
-                val b = ChatBuilderEntity().text("- ").text(ChatColor.RED.toString() + "Please select an arena to perform this action.")
+                val b = ChatBuilderEntity().text("- ")
+                    .text(ChatColor.RED.toString() + "Please select an arena to perform this action.")
                 proxyService.sendMessage(player, b)
 
                 gameService.restartGames()

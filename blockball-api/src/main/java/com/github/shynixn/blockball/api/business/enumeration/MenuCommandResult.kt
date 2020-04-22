@@ -37,6 +37,11 @@ enum class MenuCommandResult(
     CANCEL_MESSAGE(null),
     BACK(null),
 
+    WESELECTIONHEIGHTGOAL_TOSMALL("The height of the goal is less than 2 blocks. Select a cube instead of a square!"),
+    WESELECTIONXAXEGOAL_TOSMALL("The x-axe size of the goal is less than 2 blocks. Select a cube instead of a square!"),
+    WESELECTIONZAXEGOAL_TOSMALL("The z-axe size of the goal is less than 2 blocks. Select a cube instead of a square!"),
+
+    WESELECTION_TOSMALL("The height of the arena is less than 10 blocks. Select a cube instead of a square!"),
     WESELECTION_MISSING("Please select an area via the wand!"),
     MINIGAMEARENA_NOTVALID("Please set the center, goal1, goal2, ball spawpoint, lobby spawnpoint and leave spawnpoint before saving!"),
     ARENA_NOTVALID("Please set the center, goal1, goal2 and ball spawpoint before saving!"),

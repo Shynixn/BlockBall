@@ -132,7 +132,7 @@ class ArenaCommandExecutor @Inject constructor(
                         }
                         if (result != MenuCommandResult.SUCCESS && result != MenuCommandResult.CANCEL_MESSAGE) {
                             val b = ChatBuilderEntity()
-                                .component(ChatColor.WHITE.toString() + "" + ChatColor.BOLD + "[" + ChatColor.RED + ChatColor.BOLD + "!" + ChatColor.WHITE + ChatColor.BOLD + "]")
+                                .component(ChatColor.WHITE.toString() + "" + ChatColor.BOLD + "[" + ChatColor.RED + ChatColor.BOLD + "!" + ChatColor.WHITE + ChatColor.BOLD + "] " + ChatColor.RED + "Error (Hover me)")
                                 .setHoverText(result.message!!).builder()
                             proxyService.sendMessage(source, b)
                         }
