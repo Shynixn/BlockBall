@@ -13,8 +13,6 @@
 
   
   
-    <link rel="shortcut icon" href="../_static/favicon.png"/>
-  
   
   
 
@@ -193,13 +191,13 @@ they can play soccer anytime without any restrictions or lobbies.</p>
 <h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to open the <a class="reference external" href="../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui">Settings</a> page of your arena chat UI.</p>
 <ol class="arabic simple">
-<li>Go to the <strong>Settings Page</strong> of your arena</li>
-<li>Open the <strong>Game Settings Page</strong></li>
+<li><p>Go to the <strong>Settings Page</strong> of your arena</p></li>
+<li><p>Open the <strong>Game Settings Page</strong></p></li>
 </ol>
 <img alt="../_images/arena10.JPG" src="../_images/arena10.JPG" />
 <ol class="arabic simple" start="3">
-<li>Customize all available</li>
-<li>Customize the other available options to your own needs.</li>
+<li><p>Customize all available</p></li>
+<li><p>Customize the other available options to your own needs.</p></li>
 </ol>
 <p>You can find all options explained at the bottom of this page.</p>
 </div>
@@ -207,36 +205,36 @@ they can play soccer anytime without any restrictions or lobbies.</p>
 <h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
 <ol class="arabic simple">
-<li>Go to the <strong>Open the arena_x.yml</strong> of your arena</li>
-<li>Search for the following section:</li>
+<li><p>Go to the <strong>Open the arena_x.yml</strong> of your arena</p></li>
+<li><p>Search for the following section:</p></li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
-<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">meta</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">max-score</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
-  <span class="l l-Scalar l-Scalar-Plain">even-teams</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="l l-Scalar l-Scalar-Plain">hubgame-meta</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">join-selection</span><span class="p p-Indicator">:</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">max-score</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+  <span class="nt">even-teams</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">hubgame-meta</span><span class="p">:</span>
+  <span class="nt">join-selection</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Click on the team to join the match.</span>
   <span class="p p-Indicator">-</span> <span class="s">&#39;&amp;c[Team</span><span class="nv"> </span><span class="s">Red]&#39;</span>
   <span class="p p-Indicator">-</span> <span class="s">&#39;&amp;9[Team</span><span class="nv"> </span><span class="s">Blue]&#39;</span>
-  <span class="l l-Scalar l-Scalar-Plain">instant-forcefield-join</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
-  <span class="l l-Scalar l-Scalar-Plain">reset-arena-on-empty</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+  <span class="nt">instant-forcefield-join</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+  <span class="nt">reset-arena-on-empty</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li>Customize the available options to your own needs.</li>
+<li><p>Customize the available options to your own needs.</p></li>
 </ol>
 </div>
 <div class="section" id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Max Score: Max amount of goals the players can score before the arena resets itself back to zero.</li>
-<li>Leave Spawnpoint: Spawnpoint for players who leave the game. If you leave it empty, players clicking on an leave sign will not be teleported and simply kicked out of the forcefield.</li>
-<li>Gamemode: Minecraft gamemode (Survival, Adventure, Creative) the player is spawning inside of the arena</li>
-<li>Even teams enabled: Should the team choice of the player be ignored if too many players are on one team?</li>
-<li>Join Message: Message being played when a player runs into the forcefield. Clicking line 2 will cause the player to join the red team, clicking line 3 causes joining the blue team.</li>
-<li>Reset on empty: Should the arena be reset to 0 scores when nobody is playing in it?</li>
-<li>Instant forcefield join: Should players instantly join the game, automatically put into a team and without getting teleported to a spawnpoint?</li>
+<li><p>Max Score: Max amount of goals the players can score before the arena resets itself back to zero.</p></li>
+<li><p>Leave Spawnpoint: Spawnpoint for players who leave the game. If you leave it empty, players clicking on an leave sign will not be teleported and simply kicked out of the forcefield.</p></li>
+<li><p>Gamemode: Minecraft gamemode (Survival, Adventure, Creative) the player is spawning inside of the arena</p></li>
+<li><p>Even teams enabled: Should the team choice of the player be ignored if too many players are on one team?</p></li>
+<li><p>Join Message: Message being played when a player runs into the forcefield. Clicking line 2 will cause the player to join the red team, clicking line 3 causes joining the blue team.</p></li>
+<li><p>Reset on empty: Should the arena be reset to 0 scores when nobody is playing in it?</p></li>
+<li><p>Instant forcefield join: Should players instantly join the game, automatically put into a team and without getting teleported to a spawnpoint?</p></li>
 </ul>
 </div>
 </div>
@@ -295,6 +293,7 @@ they can play soccer anytime without any restrictions or lobbies.</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

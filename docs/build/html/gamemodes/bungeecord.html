@@ -13,8 +13,6 @@
 
   
   
-    <link rel="shortcut icon" href="../_static/favicon.png"/>
-  
   
   
 
@@ -186,44 +184,44 @@
 <h1>Bungeecord Minigame<a class="headerlink" href="#bungeecord-minigame" title="Permalink to this headline">¶</a></h1>
 <p>The Game Mode Bungeecord Minigame is a advanced game mode to give BlockBall the rights to manage it’s on game server.</p>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">This guide will not explain how <a class="reference external" href="https://www.spigotmc.org/wiki/bungeecord/">BungeeCord</a>  works so do not continue if you are not familiar with it.</p>
+<p class="admonition-title">Warning</p>
+<p>This guide will not explain how <a class="reference external" href="https://www.spigotmc.org/wiki/bungeecord/">BungeeCord</a>  works so do not continue if you are not familiar with it.</p>
 </div>
 <p>Make sure you created a <a class="reference external" href="../gamemodes/basicgame.html">Base Game</a> first before you continue.</p>
 <p>Please take a look at associated words which will be used in this guide:</p>
 <ul class="simple">
-<li>Gameserver: Server where the BlockBall arena is located and BlockBall is managing it.</li>
-<li>Hubserver: Any other server where players can join the Gameserver.</li>
+<li><p>Gameserver: Server where the BlockBall arena is located and BlockBall is managing it.</p></li>
+<li><p>Hubserver: Any other server where players can join the Gameserver.</p></li>
 </ul>
 <div class="section" id="configuring-on-your-gameserver">
 <h2>Configuring on your GameServer<a class="headerlink" href="#configuring-on-your-gameserver" title="Permalink to this headline">¶</a></h2>
 <p>Let’s start by creating a server where BlockBall manages its state.</p>
 <ol class="arabic simple">
-<li>Join your game server with the plugin BlockBall installed.</li>
-<li>Create a Base Game on this server.</li>
-<li>Go to the <strong>Settings Page</strong> of your arena and select the GameType Bungee.</li>
-<li>Open the <strong>Game Settings Page</strong></li>
+<li><p>Join your game server with the plugin BlockBall installed.</p></li>
+<li><p>Create a Base Game on this server.</p></li>
+<li><p>Go to the <strong>Settings Page</strong> of your arena and select the GameType Bungee.</p></li>
+<li><p>Open the <strong>Game Settings Page</strong></p></li>
 </ol>
 <img alt="../_images/arena12.JPG" src="../_images/arena12.JPG" />
 <ol class="arabic simple" start="5">
-<li>Set the lobby spawnpoint and the leave spawnpoint.</li>
-<li>Customize the other available options to your own needs.</li>
+<li><p>Set the lobby spawnpoint and the leave spawnpoint.</p></li>
+<li><p>Customize the other available options to your own needs.</p></li>
 </ol>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If you have got just <strong>one Hubserver</strong> you can simply enter the Hubserver name into the <strong>Fallback Server</strong> setting to let players get automatically connected back to the Hubserver if a match ends.</p>
+<p class="admonition-title">Note</p>
+<p>If you have got just <strong>one Hubserver</strong> you can simply enter the Hubserver name into the <strong>Fallback Server</strong> setting to let players get automatically connected back to the Hubserver if a match ends.</p>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If you have got <strong>multiple Hubserver</strong> you should edit the <strong>Leave Server Kick Message</strong> to create a custom kick message. Install a BungeeCord plugin which redirects players across your network when a player gets kicked from a server with a certain message.</p>
+<p class="admonition-title">Note</p>
+<p>If you have got <strong>multiple Hubserver</strong> you should edit the <strong>Leave Server Kick Message</strong> to create a custom kick message. Install a BungeeCord plugin which redirects players across your network when a player gets kicked from a server with a certain message.</p>
 </div>
 <ol class="arabic simple" start="5">
-<li>After you have pressed <em>Save and Reload</em> the first time the game is automatically managing the server and starting a game.</li>
-<li>You also need to configure a <em>Restart Script</em> to automatically restart the server after a game ends.</li>
+<li><p>After you have pressed <em>Save and Reload</em> the first time the game is automatically managing the server and starting a game.</p></li>
+<li><p>You also need to configure a <em>Restart Script</em> to automatically restart the server after a game ends.</p></li>
 </ol>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">You can optionally change the server motd by editing the generated <strong>bungeecord.yml</strong> file in the BlockBall folder.</p>
+<p class="admonition-title">Note</p>
+<p>You can optionally change the server motd by editing the generated <strong>bungeecord.yml</strong> file in the BlockBall folder.</p>
 </div>
 </div>
 <div class="section" id="configuring-on-your-hubserver">
@@ -231,17 +229,17 @@
 <p>BlockBall contains a system to offer signs which connects BlockBall Gameserver to Hubservers. This means you can
 place signs on your HubServer which connect players to Gameservers.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The following section is entirely <strong>optional</strong>. It is probably even better to install a minigame server management plugin to allow sign joining.</p>
+<p class="admonition-title">Note</p>
+<p>The following section is entirely <strong>optional</strong>. It is probably even better to install a minigame server management plugin to allow sign joining.</p>
 </div>
 <ol class="arabic simple">
-<li>Setup your Hubserver server with the plugin BlockBall installed.</li>
-<li>Copy the <strong>bungeecord.yml</strong> file from your Gameserver folder into the Hubserver folder.</li>
-<li>Make sure the content of the <strong>bungeecord.yml</strong> on your Hubserver is exactly the same as the <strong>bungeecord.yml</strong> on your Gameserver.</li>
-<li>Enable the server linking config option in your <strong>config.yml</strong> on your Hubserver</li>
+<li><p>Setup your Hubserver server with the plugin BlockBall installed.</p></li>
+<li><p>Copy the <strong>bungeecord.yml</strong> file from your Gameserver folder into the Hubserver folder.</p></li>
+<li><p>Make sure the content of the <strong>bungeecord.yml</strong> on your Hubserver is exactly the same as the <strong>bungeecord.yml</strong> on your Gameserver.</p></li>
+<li><p>Enable the server linking config option in your <strong>config.yml</strong> on your Hubserver</p></li>
 </ol>
 <p><strong>config.yml</strong></p>
-<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="c1">############################</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span>
 
 <span class="c1"># Game settings</span>
 
@@ -249,15 +247,15 @@ place signs on your HubServer which connect players to Gameservers.</p>
 
 <span class="c1">############################</span>
 
-<span class="l l-Scalar l-Scalar-Plain">game</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">allow-server-linking</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">game</span><span class="p">:</span>
+  <span class="nt">allow-server-linking</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="5">
-<li>Join your Hubserver and type <strong>/blockballbungeecord &lt;server&gt;</strong> (&lt;server&gt; name of your Gameserver)</li>
-<li>Rightclick on a sign and if everything is working correctly the sign will display something</li>
-<li>You probably need to restart your Gameserver or change the server name if the sign displays <em>No connection</em></li>
-<li>Finally, you can join the game by clicking on the sign.</li>
+<li><p>Join your Hubserver and type <strong>/blockballbungeecord &lt;server&gt;</strong> (&lt;server&gt; name of your Gameserver)</p></li>
+<li><p>Rightclick on a sign and if everything is working correctly the sign will display something</p></li>
+<li><p>You probably need to restart your Gameserver or change the server name if the sign displays <em>No connection</em></p></li>
+<li><p>Finally, you can join the game by clicking on the sign.</p></li>
 </ol>
 </div>
 </div>
@@ -316,6 +314,7 @@ place signs on your HubServer which connect players to Gameservers.</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 
