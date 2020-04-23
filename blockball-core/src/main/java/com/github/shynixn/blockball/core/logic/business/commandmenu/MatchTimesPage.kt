@@ -69,31 +69,37 @@ class MatchTimesPage @Inject constructor(private val proxyService: ProxyService)
 
         if (command == MenuCommand.MATCHTIMES_OPEN) {
             cache[5] = null
-        }
-        if (command == MenuCommand.MATCHTIMES_CREATE) {
+        } else if (command == MenuCommand.MATCHTIMES_CREATE) {
             val matchTime = MatchTimeMetaEntity()
             arena.meta.minigameMeta.matchTimes.add(matchTime)
             cache[5] = matchTime
-        }
-        if (command == MenuCommand.MATCHTIMES_CALLBACK && args.size >= 3) {
+        } else if (command == MenuCommand.MATCHTIMES_CALLBACK && args.size >= 3) {
             val index = args[2].toInt()
             if (index >= 0 && index < arena.meta.minigameMeta.matchTimes.size) {
                 cache[5] = arena.meta.minigameMeta.matchTimes[index]
             }
-        }
-        if (command == MenuCommand.MATCHTIMES_DELETE) {
+        } else if (command == MenuCommand.MATCHTIMES_DELETE) {
             arena.meta.minigameMeta.matchTimes.remove(cache[5])
             cache[5] = null
-        }
-        if (command == MenuCommand.MATCHTIMES_DURATION && args[2].toIntOrNull() != null) {
+        } else if (command == MenuCommand.MATCHTIMES_DURATION && args[2].toIntOrNull() != null) {
             val matchTime = cache[5] as MatchTimeMeta
             matchTime.duration = args[2].toInt()
-        }
-        if (command == MenuCommand.MATCHTIMES_SWITCHGOAL) {
+        } else if (command == MenuCommand.MATCHTIMES_SWITCHGOAL) {
             val matchTime = cache[5] as MatchTimeMeta
             matchTime.isSwitchGoalsEnabled = !matchTime.isSwitchGoalsEnabled
-        }
-        if (command == MenuCommand.MATCHTIMES_CALLBACKCLOSETYPE) {
+        } else if (command == MenuCommand.MATCHTIMES_BALLAVAILABLE) {
+            val matchTime = cache[5] as MatchTimeMeta
+            matchTime.playAbleBall = !matchTime.playAbleBall
+        } else if (command == MenuCommand.MATCHTIMES_RESPAWN) {
+            val matchTime = cache[5] as MatchTimeMeta
+            matchTime.respawnEnabled = !matchTime.respawnEnabled
+        } else if (command == MenuCommand.MATCHTIMES_STARTTITLEMESSAGE && args.size >= 3) {
+            val matchTime = cache[5] as MatchTimeMeta
+            matchTime.startMessageTitle = mergeArgs(2, args)
+        } else if (command == MenuCommand.MATCHTIMES_STARTSUBTITLEMESSAGE && args.size >= 3) {
+            val matchTime = cache[5] as MatchTimeMeta
+            matchTime.startMessageSubTitle = mergeArgs(2, args)
+        } else if (command == MenuCommand.MATCHTIMES_CALLBACKCLOSETYPE) {
             val index = args[2].toInt()
             val matchTime = cache[5] as MatchTimeMeta
             if (index >= 0 && index < MatchTimeCloseType.values().size) {
@@ -102,7 +108,7 @@ class MatchTimesPage @Inject constructor(private val proxyService: ProxyService)
         }
 
         cache[2] =
-            arena.meta.minigameMeta.matchTimes.mapIndexed { index, e -> (index + 1).toString() + ". ${e.closeType.name}\\nDuration: ${e.duration} seconds\\nSwitch goals: ${e.isSwitchGoalsEnabled}" }
+            arena.meta.minigameMeta.matchTimes.mapIndexed { index, e -> (index + 1).toString() + ". ${e.closeType.name}\\nDuration: ${e.duration} seconds"}
         return super.execute(player, command, cache, args)
     }
 
@@ -157,6 +163,30 @@ class MatchTimesPage @Inject constructor(private val proxyService: ProxyService)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.MATCHTIMES_SWITCHGOAL.command)
                 .setHoverText("Toggles if the team should switch goals when this match time starts.")
                 .builder().nextLine()
+                .component("- Playable Ball: " + selectedMatchTime.playAbleBall).builder()
+                .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
+                .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.MATCHTIMES_BALLAVAILABLE.command)
+                .setHoverText("Toggles if the ball should be spawned during this match time.")
+                .builder().nextLine()
+                .component("- Respawn: " + selectedMatchTime.respawnEnabled).builder()
+                .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
+                .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.MATCHTIMES_RESPAWN.command)
+                .setHoverText("Toggles if players should respawn when this match time starts.")
+                .builder().nextLine()
+                .component("- StartTitle Message: ").builder()
+                .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
+                .setHoverText(selectedMatchTime.startMessageTitle).builder()
+                .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
+                .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.MATCHTIMES_STARTTITLEMESSAGE.command)
+                .setHoverText("Changes the title message getting played when the match time starts.")
+                .builder().nextLine()
+                .component("- StartSubTitle Message: ").builder()
+                .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
+                .setHoverText(selectedMatchTime.startMessageSubTitle).builder()
+                .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
+                .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.MATCHTIMES_STARTSUBTITLEMESSAGE.command)
+                .setHoverText("Changes the subtitle message getting played when the match time starts.")
+                .builder()
         }
 
         return builder

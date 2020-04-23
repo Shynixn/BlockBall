@@ -59,6 +59,10 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     MATCHTIMES_DURATION(MenuPageKey.MATCHTIMES, "dur"),
     MATCHTIMES_SWITCHGOAL(MenuPageKey.MATCHTIMES, "swgo"),
     MATCHTIMES_CLOSECONDITION(MenuPageKey.MATCHTIMES, "clc"),
+    MATCHTIMES_BALLAVAILABLE(MenuPageKey.MATCHTIMES, "bav"),
+    MATCHTIMES_RESPAWN(MenuPageKey.MATCHTIMES, "res"),
+    MATCHTIMES_STARTSUBTITLEMESSAGE(MenuPageKey.MATCHTIMES, "sstlm"),
+    MATCHTIMES_STARTTITLEMESSAGE(MenuPageKey.MATCHTIMES, "stlm"),
 
     TEAM_RED_CONFIGURE(MenuPageKey.TEAMMETA, "team_red"),
     TEAM_BLUE_CONFIGURE(MenuPageKey.TEAMMETA, "team_blue"),
