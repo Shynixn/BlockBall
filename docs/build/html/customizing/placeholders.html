@@ -8,10 +8,12 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Placeholders &mdash; BlockBall 6.11.0 documentation</title>
+  <title>Placeholders &mdash; BlockBall 6.14.0 documentation</title>
   
 
   
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
   
   
   
@@ -35,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.11.0 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.14.0 documentation" href="../index.html"/>
         <link rel="up" title="Misc" href="misc.html"/>
         <link rel="next" title="Commands" href="../commands/index.html"/>
         <link rel="prev" title="Textbook" href="textbook.html"/> 
@@ -70,7 +72,7 @@
             
             
               <div class="version">
-                6.11.0
+                6.14.0
               </div>
             
           
@@ -100,6 +102,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Customizing</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ball.html">Ball</a></li>
 <li class="toctree-l2"><a class="reference internal" href="teams.html">Teams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matchtimes.html">Periods</a></li>
 <li class="toctree-l2"><a class="reference internal" href="signs.html">Signs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="effects.html">Effects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abilities.html">Abilities</a></li>
@@ -199,21 +202,21 @@ supported by <strong>all</strong> messages you can find ingame. If there are par
 cannot be resolved, please report them.</p>
 <p>You can use placeholders on:</p>
 <ul class="simple">
-<li><p>Messages</p></li>
-<li><p>Signs</p></li>
-<li><p>Scoreboards</p></li>
-<li><p>Bossbars</p></li>
-<li><p>Holograms</p></li>
-<li><p>…</p></li>
+<li>Messages</li>
+<li>Signs</li>
+<li>Scoreboards</li>
+<li>Bossbars</li>
+<li>Holograms</li>
+<li>…</li>
 </ul>
 <div class="section" id="samples">
 <h2>Samples<a class="headerlink" href="#samples" title="Permalink to this headline">¶</a></h2>
 <p><strong>Title message</strong>:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;redcolor&gt;&lt;redscore&gt; : &lt;bluecolor&gt;&lt;bluescore&gt;
+<div class="highlight-text"><div class="highlight"><pre><span></span>&lt;redcolor&gt;&lt;redscore&gt; : &lt;bluecolor&gt;&lt;bluescore&gt;
 </pre></div>
 </div>
 <p><strong>Placed ingame message</strong>:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&amp;c2 : &amp;93
+<div class="highlight-text"><div class="highlight"><pre><span></span>&amp;c2 : &amp;93
 </pre></div>
 </div>
 <p>You can see that redcolor gets replaced by the ChatColor red and the redscore with 2.</p>
@@ -221,124 +224,124 @@ cannot be resolved, please report them.</p>
 <div class="section" id="placeholderlist">
 <h2>Placeholderlist<a class="headerlink" href="#placeholderlist" title="Permalink to this headline">¶</a></h2>
 <p><strong>Games</strong></p>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 82%" />
-<col style="width: 18%" />
+<col width="82%" />
+<col width="18%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Description</p></th>
-<th class="head"><p>Placeholder</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Placeholder</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>Uses the name of the blue team</p></td>
-<td><p>&lt;blue&gt;</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>Uses the name of the blue team</td>
+<td>&lt;blue&gt;</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the prefix (default color) of the blue team</p></td>
-<td><p>&lt;bluecolor&gt;</p></td>
+<tr class="row-odd"><td>Uses the prefix (default color) of the blue team</td>
+<td>&lt;bluecolor&gt;</td>
 </tr>
-<tr class="row-even"><td><p>Uses the current score of the blue team</p></td>
-<td><p>&lt;bluescore&gt;</p></td>
+<tr class="row-even"><td>Uses the current score of the blue team</td>
+<td>&lt;bluescore&gt;</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the game’s displayname</p></td>
-<td><p>&lt;game&gt;</p></td>
+<tr class="row-odd"><td>Uses the game’s displayname</td>
+<td>&lt;game&gt;</td>
 </tr>
-<tr class="row-even"><td><p>Uses the name of the player who was the last player touching the ball</p></td>
-<td><p>&lt;player&gt;</p></td>
+<tr class="row-even"><td>Uses the name of the player who was the last player touching the ball</td>
+<td>&lt;player&gt;</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the name of the red team</p></td>
-<td><p>&lt;red&gt;</p></td>
+<tr class="row-odd"><td>Uses the name of the red team</td>
+<td>&lt;red&gt;</td>
 </tr>
-<tr class="row-even"><td><p>Uses the prefix (default color) of the red team</p></td>
-<td><p>&lt;redcolor&gt;</p></td>
+<tr class="row-even"><td>Uses the prefix (default color) of the red team</td>
+<td>&lt;redcolor&gt;</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the current score of the red team</p></td>
-<td><p>&lt;redscore&gt;</p></td>
+<tr class="row-odd"><td>Uses the current score of the red team</td>
+<td>&lt;redscore&gt;</td>
 </tr>
-<tr class="row-even"><td><p>Uses the game’s remaining players amount to join in order to start</p></td>
-<td><p>&lt;remaining&gt;</p></td>
+<tr class="row-even"><td>Uses the game’s remaining players amount to join in order to start</td>
+<td>&lt;remaining&gt;</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the game’s state (Enabled,Running,Disabled)</p></td>
-<td><p>&lt;state&gt;</p></td>
+<tr class="row-odd"><td>Uses the game’s state (Enabled,Running,Disabled)</td>
+<td>&lt;state&gt;</td>
 </tr>
-<tr class="row-even"><td><p>Uses the game’s current amount of players value</p></td>
-<td><p>&lt;sumplayers&gt;</p></td>
+<tr class="row-even"><td>Uses the game’s current amount of players value</td>
+<td>&lt;sumplayers&gt;</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the game’s max amount of players value</p></td>
-<td><p>&lt;summaxplayers&gt;</p></td>
+<tr class="row-odd"><td>Uses the game’s max amount of players value</td>
+<td>&lt;summaxplayers&gt;</td>
 </tr>
-<tr class="row-even"><td><p>Uses the game’s current time value</p></td>
-<td><p>&lt;time&gt;</p></td>
+<tr class="row-even"><td>Uses the game’s current time value</td>
+<td>&lt;time&gt;</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Games (Using the team of the player receiving the message)</strong></p>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 85%" />
-<col style="width: 15%" />
+<col width="85%" />
+<col width="15%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Description</p></th>
-<th class="head"><p>Placeholder</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Placeholder</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>Uses the name of the team</p></td>
-<td><p>&lt;team&gt;</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>Uses the name of the team</td>
+<td>&lt;team&gt;</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the prefix (default color) of the team</p></td>
-<td><p>&lt;teamcolor&gt;</p></td>
+<tr class="row-odd"><td>Uses the prefix (default color) of the team</td>
+<td>&lt;teamcolor&gt;</td>
 </tr>
-<tr class="row-even"><td><p>Uses the teams’s current amount of players value</p></td>
-<td><p>&lt;players&gt;</p></td>
+<tr class="row-even"><td>Uses the teams’s current amount of players value</td>
+<td>&lt;players&gt;</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the teams’s max amount of players value</p></td>
-<td><p>&lt;maxplayers&gt;</p></td>
+<tr class="row-odd"><td>Uses the teams’s max amount of players value</td>
+<td>&lt;maxplayers&gt;</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Stats Scoreboard</strong></p>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 83%" />
-<col style="width: 17%" />
+<col width="83%" />
+<col width="17%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Description</p></th>
-<th class="head"><p>Placeholder</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Placeholder</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>Uses the name of the player belonging the stats</p></td>
-<td><p>&lt;playername&gt;</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>Uses the name of the player belonging the stats</td>
+<td>&lt;playername&gt;</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the winrate value of the player</p></td>
-<td><p>&lt;winrate&gt;</p></td>
+<tr class="row-odd"><td>Uses the winrate value of the player</td>
+<td>&lt;winrate&gt;</td>
 </tr>
-<tr class="row-even"><td><p>Uses the amount of played games of the player</p></td>
-<td><p>&lt;playedgames&gt;</p></td>
+<tr class="row-even"><td>Uses the amount of played games of the player</td>
+<td>&lt;playedgames&gt;</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the amount of scored goals of the player</p></td>
-<td><p>&lt;goalspergame&gt;</p></td>
+<tr class="row-odd"><td>Uses the amount of scored goals of the player</td>
+<td>&lt;goalspergame&gt;</td>
 </tr>
 </tbody>
 </table>
 <p><strong>BungeeCord Joining Signs</strong></p>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 86%" />
-<col style="width: 14%" />
+<col width="86%" />
+<col width="14%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Description</p></th>
-<th class="head"><p>Placeholder</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Placeholder</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>Uses the name of the target server</p></td>
-<td><p>&lt;server&gt;</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>Uses the name of the target server</td>
+<td>&lt;server&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -347,55 +350,55 @@ cannot be resolved, please report them.</p>
 <p>Simply use the <strong>Games</strong> placeholders and append the prefix <strong>%blockball_</strong> and the suffix <strong>_&lt;id&gt;</strong>.
 Replace &lt;id&gt; with the id of the arena.</p>
 <p>Sample placeholder for the current amount of players in arena 1: <strong>%blockball_&lt;sumplayers&gt;_1%</strong></p>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 69%" />
-<col style="width: 31%" />
+<col width="69%" />
+<col width="31%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Description</p></th>
-<th class="head"><p>Placeholder</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Description</th>
+<th class="head">Placeholder</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>Uses the name of the blue team</p></td>
-<td><p>%blockball_&lt;blue&gt;_&lt;id&gt;%</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>Uses the name of the blue team</td>
+<td>%blockball_&lt;blue&gt;_&lt;id&gt;%</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the prefix (default color) of the blue team</p></td>
-<td><p>%blockball_&lt;bluecolor&gt;_&lt;id&gt;%</p></td>
+<tr class="row-odd"><td>Uses the prefix (default color) of the blue team</td>
+<td>%blockball_&lt;bluecolor&gt;_&lt;id&gt;%</td>
 </tr>
-<tr class="row-even"><td><p>Uses the current score of the blue team</p></td>
-<td><p>%blockball_&lt;bluescore&gt;_&lt;id&gt;%</p></td>
+<tr class="row-even"><td>Uses the current score of the blue team</td>
+<td>%blockball_&lt;bluescore&gt;_&lt;id&gt;%</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the game’s displayname</p></td>
-<td><p>%blockball_&lt;game&gt;_&lt;id&gt;%</p></td>
+<tr class="row-odd"><td>Uses the game’s displayname</td>
+<td>%blockball_&lt;game&gt;_&lt;id&gt;%</td>
 </tr>
-<tr class="row-even"><td><p>Uses the name of the player who was the last player touching the ball</p></td>
-<td><p>%blockball_&lt;player&gt;_&lt;id&gt;%</p></td>
+<tr class="row-even"><td>Uses the name of the player who was the last player touching the ball</td>
+<td>%blockball_&lt;player&gt;_&lt;id&gt;%</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the name of the red team</p></td>
-<td><p>%blockball_&lt;red&gt;_&lt;id&gt;%</p></td>
+<tr class="row-odd"><td>Uses the name of the red team</td>
+<td>%blockball_&lt;red&gt;_&lt;id&gt;%</td>
 </tr>
-<tr class="row-even"><td><p>Uses the prefix (default color) of the red team</p></td>
-<td><p>%blockball_&lt;redcolor&gt;_&lt;id&gt;%</p></td>
+<tr class="row-even"><td>Uses the prefix (default color) of the red team</td>
+<td>%blockball_&lt;redcolor&gt;_&lt;id&gt;%</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the current score of the red team</p></td>
-<td><p>%blockball_&lt;redscore&gt;_&lt;id&gt;%</p></td>
+<tr class="row-odd"><td>Uses the current score of the red team</td>
+<td>%blockball_&lt;redscore&gt;_&lt;id&gt;%</td>
 </tr>
-<tr class="row-even"><td><p>Uses the game’s remaining players amount to join in order to start</p></td>
-<td><p>%blockball_&lt;remaining&gt;_&lt;id&gt;%</p></td>
+<tr class="row-even"><td>Uses the game’s remaining players amount to join in order to start</td>
+<td>%blockball_&lt;remaining&gt;_&lt;id&gt;%</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the game’s state (Enabled,Running,Disabled)</p></td>
-<td><p>%blockball_&lt;state&gt;_&lt;id&gt;%</p></td>
+<tr class="row-odd"><td>Uses the game’s state (Enabled,Running,Disabled)</td>
+<td>%blockball_&lt;state&gt;_&lt;id&gt;%</td>
 </tr>
-<tr class="row-even"><td><p>Uses the game’s current amount of players value</p></td>
-<td><p>%blockball_&lt;sumplayers&gt;_&lt;id&gt;%</p></td>
+<tr class="row-even"><td>Uses the game’s current amount of players value</td>
+<td>%blockball_&lt;sumplayers&gt;_&lt;id&gt;%</td>
 </tr>
-<tr class="row-odd"><td><p>Uses the game’s max amount of players value</p></td>
-<td><p>%blockball_&lt;summaxplayers&gt;_&lt;id&gt;%</p></td>
+<tr class="row-odd"><td>Uses the game’s max amount of players value</td>
+<td>%blockball_&lt;summaxplayers&gt;_&lt;id&gt;%</td>
 </tr>
-<tr class="row-even"><td><p>Uses the game’s current time value</p></td>
-<td><p>%blockball_&lt;time&gt;_&lt;id&gt;%</p></td>
+<tr class="row-even"><td>Uses the game’s current time value</td>
+<td>%blockball_&lt;time&gt;_&lt;id&gt;%</td>
 </tr>
 </tbody>
 </table>
@@ -424,7 +427,7 @@ Replace &lt;id&gt; with the id of the arena.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015 - 2019, Shynixn.
+        &copy; Copyright 2015 - 2020, Shynixn.
 
     </p>
   </div>
@@ -445,7 +448,7 @@ Replace &lt;id&gt; with the id of the arena.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.11.0',
+            VERSION:'6.14.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -456,7 +459,6 @@ Replace &lt;id&gt; with the id of the arena.</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

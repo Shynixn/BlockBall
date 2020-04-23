@@ -6,6 +6,7 @@ The articles in this section deal with customizing and changing your created Gam
 .. toctree::
    ball
    teams
+   matchtimes
    signs
    effects
    abilities
