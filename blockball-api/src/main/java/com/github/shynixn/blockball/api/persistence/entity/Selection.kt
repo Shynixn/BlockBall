@@ -47,6 +47,11 @@ interface Selection {
     val offsetZ: Int
 
     /**
+     * Is location inside of this selection.
+     */
+    fun isLocationInSelection(location: Position): Boolean
+
+    /**
      * Sets the corners of the selection.
      */
     fun setCorners(corner1: Position, corner2: Position)

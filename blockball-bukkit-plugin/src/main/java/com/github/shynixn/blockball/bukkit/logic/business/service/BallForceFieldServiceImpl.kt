@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.BallForceFieldService
 import com.github.shynixn.blockball.api.persistence.entity.Game
-import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import org.bukkit.Location
@@ -53,13 +52,14 @@ class BallForceFieldServiceImpl : BallForceFieldService {
 
         val ballLocation = ball.getLocation<Location>()
 
-        if (game.arena.isLocationInSelection(ballLocation)) {
+        if (game.arena.isLocationInSelection(ballLocation.toPosition())) {
             game.ballForceFieldArenaPosition = ballLocation.toPosition()
         } else if (game.ballForceFieldArenaPosition != null) {
             val velocity = ball.getVelocity<Vector>()
             val location = game.ballForceFieldArenaPosition!!.toLocation()
 
-            val adder = game.arena.center.toLocation().toVector().subtract(location.toVector()).normalize().multiply(2.0)
+            val adder =
+                game.arena.center.toLocation().toVector().subtract(location.toVector()).normalize().multiply(2.0)
             location.add(adder)
 
             ball.teleport(location)
@@ -74,13 +74,14 @@ class BallForceFieldServiceImpl : BallForceFieldService {
         val ballVelocity = ball.getVelocity<Vector>()
 
         try {
-            val iterator = BlockIterator(ballLocation.world!!, ballLocation.toVector(), ballVelocity, 0.0, maxBlockIteratorSize)
+            val iterator =
+                BlockIterator(ballLocation.world!!, ballLocation.toVector(), ballVelocity, 0.0, maxBlockIteratorSize)
             var prevBlock: Block? = null
 
             while (iterator.hasNext()) {
                 val block = iterator.next()
 
-                if (prevBlock != null && !game.arena.isLocationInSelection(block.location)) {
+                if (prevBlock != null && !game.arena.isLocationInSelection(block.location.toPosition())) {
 
                     if (prevBlock.type == Material.AIR) {
                         prevBlock.type = Material.BARRIER

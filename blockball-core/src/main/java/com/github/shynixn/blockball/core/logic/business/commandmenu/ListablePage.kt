@@ -54,7 +54,12 @@ class ListablePage @Inject constructor(
      *
      * @param cache cache
      */
-    override fun <P> execute(player: P, command: MenuCommand, cache: Array<Any?>, args: Array<String>): MenuCommandResult {
+    override fun <P> execute(
+        player: P,
+        command: MenuCommand,
+        cache: Array<Any?>,
+        args: Array<String>
+    ): MenuCommandResult {
         when (command) {
             MenuCommand.LIST_GAMETYPES -> {
                 cache[2] = GameType.values().map { p -> p.name }
@@ -121,7 +126,12 @@ class ListablePage @Inject constructor(
                 cache[2] = BossbarColor.values().map { p -> p.name }
                 cache[3] = MenuCommand.BOSSBAR_CALLBACKCOLORS
             }
+            MenuCommand.LIST_MATCHCLOSETYPES -> {
+                cache[2] = MatchTimeCloseType.values().map { p -> p.name }
+                cache[3] = MenuCommand.MATCHTIMES_CALLBACKCLOSETYPE
+            }
             MenuCommand.LIST_HOLOGRAMS -> cache[3] = MenuCommand.HOLOGRAM_CALLBACK
+            MenuCommand.LIST_MATCHTIMES -> cache[3] = MenuCommand.MATCHTIMES_CALLBACK
             else -> {
             }
         }
@@ -138,15 +148,15 @@ class ListablePage @Inject constructor(
         val infoList = cache[2] as ArrayList<*>
         val callBackCommand = cache[3] as MenuCommand
         val builder = ChatBuilderEntity()
+
         if (infoList.size == 0) {
             builder.text("No data found.")
         } else {
             infoList.forEachIndexed { index, p ->
                 builder.component((index + 1).toString() + ": [$p]")
                     .setClickAction(ChatClickAction.RUN_COMMAND, callBackCommand.command + " " + index)
-                    .setHoverText("").builder().nextLine()
+                    .setHoverText("").builder().nextLine().nextLine()
             }
-
         }
         return builder
     }

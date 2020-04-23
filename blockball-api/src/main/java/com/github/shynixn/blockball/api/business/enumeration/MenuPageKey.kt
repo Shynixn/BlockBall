@@ -53,6 +53,7 @@ enum class MenuPageKey(
     MULTIPLEITEMS("mitem"),
     REWARDSPAGE("reward"),
     GAMESETTINGS("gameset"),
+    MATCHTIMES("mats"),
     COMMANDPAGE("com"),
     SPECTATING("spect"),
     SPECTATE("specta"),

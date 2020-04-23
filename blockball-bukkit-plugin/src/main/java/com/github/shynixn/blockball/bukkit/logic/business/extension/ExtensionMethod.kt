@@ -1,4 +1,4 @@
-@file:Suppress("unused", "DEPRECATION")
+@file:Suppress("DEPRECATION")
 
 package com.github.shynixn.blockball.bukkit.logic.business.extension
 
@@ -14,15 +14,11 @@ import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import org.bukkit.*
 import org.bukkit.ChatColor
-import org.bukkit.configuration.MemorySection
-import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
-import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
-import java.lang.reflect.Method
 
 /**
  * Created by Shynixn 2018.
@@ -51,43 +47,6 @@ import java.lang.reflect.Method
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-/**
- * Deserializes the configuraiton section path to a map.
- */
-fun FileConfiguration.deserializeToMap(path: String): Map<String, Any?> {
-    val section = getConfigurationSection(path)!!.getValues(false)
-    deserialize(section)
-    return section
-}
-
-/**
- * Deserializes the given section.
- */
-private fun deserialize(section: MutableMap<String, Any?>) {
-    section.keys.forEach { key ->
-        if (section[key] is MemorySection) {
-            val map = (section[key] as MemorySection).getValues(false)
-            deserialize(map)
-            section[key] = map
-        }
-    }
-}
-
-private val getIdFromMaterialMethod: Method = { Material::class.java.getDeclaredMethod("getId") }.invoke()
-
-/**
- * Lazy convertion.
- */
-fun Material.toCompatibilityId(): Int {
-    for (material in Material.values()) {
-        if (material == this) {
-            return getIdFromMaterialMethod(material) as Int
-        }
-    }
-
-    throw IllegalArgumentException("Material id not found!")
-}
 
 /**
  * Updates this inventory.
@@ -172,37 +131,10 @@ internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = nul
 }
 
 /**
- * Sets the color of the itemstack if it has a leather meta.
- */
-internal fun ItemStack.setColor(color: Color): ItemStack {
-    if (this.itemMeta is LeatherArmorMeta) {
-        val leatherMeta = this.itemMeta as LeatherArmorMeta
-        @Suppress("UsePropertyAccessSyntax")
-        leatherMeta.setColor(color)
-        this.itemMeta = leatherMeta
-    }
-    return this
-}
-
-/**
  * Returns if the given [player] has got this [Permission].
  */
 internal fun Permission.hasPermission(player: Player): Boolean {
     return player.hasPermission(this.permission)
-}
-
-/** Returns if the given [location] is inside of this area selection. */
-fun Selection.isLocationInSelection(location: Location): Boolean {
-    if (location.world != null && location.world!!.name == this.upperCorner.worldName) {
-        if (this.upperCorner.x >= location.x && this.lowerCorner.x <= location.x) {
-            if (this.upperCorner.y >= location.y + 1 && this.lowerCorner.y <= location.y + 1) {
-                if (this.upperCorner.z >= location.z && this.lowerCorner.z <= location.z) {
-                    return true
-                }
-            }
-        }
-    }
-    return false
 }
 
 /**

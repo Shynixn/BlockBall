@@ -1,13 +1,15 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import com.github.shynixn.blockball.api.business.enumeration.MatchTimeCloseType
+
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2020.
  * <p>
- * Version 1.2
+ * Version 1.5
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2020 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,49 +29,37 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface MiniGame : Game {
+interface MatchTimeMeta {
     /**
-     * Are the players currently waiting in the lobby?
+     * Should the goals of the teams be switched when this match time gets enabled?
      */
-    var inLobby: Boolean
+    var isSwitchGoalsEnabled: Boolean
+    /**
+     * TimeSpan of the match in seconds.
+     */
+    var duration: Int
+    /**
+     * Close time when the match is over.
+     */
+    var closeType: MatchTimeCloseType
 
     /**
-     * Returns the bling sound.
+     * Is the ball playable?
      */
-    val blingSound: Sound
+    var playAbleBall: Boolean
 
     /**
-     * Is the lobby countdown active.
+     * Should the players respawn when this match time starts.
      */
-    var lobbyCountDownActive: Boolean
+    var respawnEnabled: Boolean
 
     /**
-     * Actual countdown.
+     * Title of the message getting played when this match time starts.
      */
-    var lobbyCountdown: Int
+    var startMessageTitle: String
 
     /**
-     * Actual game coutndown.
+     * SubTitle of the message getting played when this match time starts.
      */
-    var gameCountdown: Int
-
-    /**
-     * Returns if the lobby is full.
-     */
-    val isLobbyFull: Boolean
-
-    /**
-     * Index of the current match time.
-     */
-    var matchTimeIndex: Int
-
-    /**
-     * Storage for [spectatorPlayers],
-     */
-    val spectatorPlayersStorage: MutableMap<Any, GameStorage>
-
-    /**
-     * List of players which are spectating the game.
-     */
-    val spectatorPlayers: List<Any>
+    var startMessageSubTitle: String
 }

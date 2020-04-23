@@ -6,7 +6,7 @@ The following items have to be installed in order to use BlockBall:
 Java
 ~~~~
 
-Java 8 - Java 13 can be used to run BlockBall.
+Java 8 - Java Latest can be used to run BlockBall.
 
 Spigot/CraftBukkit/Sponge
 ~~~~~~~~~~~~~~~~~~~~~~~~~

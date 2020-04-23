@@ -62,6 +62,7 @@ class GameExecutionServiceTest {
         var position: Position = PositionEntity(0.0, 0.0, 0.0)
         val storage = GameStorageEntity(UUID.randomUUID(), "")
         storage.team = Team.RED
+        storage.goalTeam = Team.RED
         game.ingamePlayersStorage[player] = storage
         game.arena.meta.ballMeta.spawnpoint = PositionEntity("world", 34.0, 5.0, 2.0)
 
@@ -97,6 +98,7 @@ class GameExecutionServiceTest {
         var position: Position = PositionEntity(0.0, 0.0, 0.0)
         val storage = GameStorageEntity(UUID.randomUUID(), "")
         storage.team = Team.BLUE
+        storage.goalTeam = Team.BLUE
         game.ingamePlayersStorage[player] = storage
         game.arena.meta.blueTeamMeta.spawnpoint = PositionEntity("world", 37.0, 5.0, 2.0)
 

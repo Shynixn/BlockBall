@@ -96,7 +96,6 @@ class BallListener @Inject constructor(
         }
     }
 
-
     /**
      * Gets called when a player right-click a ball.
      * 1) Player grabs the ball if he were sneaking (SHIFT)
@@ -106,21 +105,22 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerRightClickBallEvent(event: PlayerInteractAtEntityEvent) {
-        if (event.rightClicked.customName != "ResourceBallsPlugin") {
+        val optBall = ballEntityService.findBallFromEntity(event.rightClicked)
+
+        if (!optBall.isPresent) {
             return
         }
 
         this.dropBall(event.player)
+        val ball = optBall.get()
 
-        ballEntityService.findBallFromEntity(event.rightClicked).ifPresent { ball ->
-            if (event.player.isSneaking) {
-                ball.grab(event.player)
-            } else {
-                ball.passByPlayer(event.player)
-            }
-
-            event.isCancelled = true
+        if (event.player.isSneaking) {
+            ball.grab(event.player)
+        } else {
+            ball.passByPlayer(event.player)
         }
+
+        event.isCancelled = true
     }
 
     /**
@@ -132,21 +132,25 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerDamageBallEvent(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player && event.entity.customName == "ResourceBallsPlugin") {
-            val optBall = this.ballEntityService.findBallFromEntity(event.entity)
-            if (optBall.isPresent) {
-                val ball = optBall.get()
-                val player = event.damager as Player
+        if (event.damager !is Player) {
+            return
+        }
 
-                if (player.isSneaking) {
-                    ball.grab(player)
-                } else {
-                    ball.shootByPlayer(player)
-                }
-            }
+        val optBall = this.ballEntityService.findBallFromEntity(event.entity)
+
+        if (!optBall.isPresent) {
+            return
+        }
+
+        val ball = optBall.get()
+        val player = event.damager as Player
+
+        if (player.isSneaking) {
+            ball.grab(player)
+        } else {
+            ball.shootByPlayer(player)
         }
     }
-
 
     /**
      * Gets called when an entity takes damage.
@@ -157,12 +161,12 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun entityDamageEvent(event: EntityDamageEvent) {
-        if (event.entity.customName == "ResourceBallsPlugin") {
-            val optBall = ballEntityService.findBallFromEntity(event.entity)
-            if (optBall.isPresent) {
-                event.isCancelled = true
-            }
+        val optBall = ballEntityService.findBallFromEntity(event.entity)
+
+        optBall.ifPresent {
+            event.isCancelled = true
         }
+
         if (event.entity is Player) {
             this.dropBall(event.entity as Player)
         }
@@ -360,11 +364,19 @@ class BallListener @Inject constructor(
      */
     private fun playEffects(ball: BallProxy, actionEffect: BallActionType) {
         if (ball.meta.particleEffects.containsKey(actionEffect)) {
-            this.particleService.playParticle(ball.getLocation<Any>(), ball.meta.particleEffects[actionEffect]!!, ball.getLocation<Location>().world!!.players)
+            this.particleService.playParticle(
+                ball.getLocation<Any>(),
+                ball.meta.particleEffects[actionEffect]!!,
+                ball.getLocation<Location>().world!!.players
+            )
         }
 
         if (ball.meta.soundEffects.containsKey(actionEffect)) {
-            this.soundService.playSound(ball.getLocation<Any>(), ball.meta.soundEffects[actionEffect]!!, ball.getLocation<Location>().world!!.players)
+            this.soundService.playSound(
+                ball.getLocation<Any>(),
+                ball.meta.soundEffects[actionEffect]!!,
+                ball.getLocation<Location>().world!!.players
+            )
         }
     }
 

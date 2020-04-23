@@ -60,7 +60,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private val proxyService: ProxyService,
     private val gameSoccerService: GameSoccerService,
     private val gameExecutionService: GameExecutionService,
-    private val loggingService: LoggingService
+    private val loggingService: LoggingService,
+    private val concurrencyService: ConcurrencyService
 ) : GameMiniGameActionService {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
@@ -85,8 +86,10 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
         loggingService.debug("Player " + player.name + " has joined game " + game.arena.name + " " + game.arena.displayName)
 
-        if (game.playing || game.endGameActive || game.isLobbyFull) {
-            val b = ChatBuilderEntity().text(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[0].replaceGamePlaceholder(game))
+        if (game.playing || game.isLobbyFull) {
+            val b = ChatBuilderEntity().text(
+                prefix + game.arena.meta.spectatorMeta.spectateStartMessage[0].replaceGamePlaceholder(game)
+            )
                 .nextLine()
                 .component(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[1].replaceGamePlaceholder(game))
                 .setClickAction(
@@ -131,6 +134,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             }
 
             game.ingamePlayersStorage[player]!!.team = targetTeam
+            game.ingamePlayersStorage[player]!!.goalTeam = targetTeam
             return true
         }
 
@@ -209,7 +213,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Gets called when the given [game] ends with a draw.
      */
     override fun onDraw(game: MiniGame) {
-        val additionalPlayers = getNofifiedPlayers(game).filter { pair -> pair.second }.map { p -> p.first }
+        val additionalPlayers = getNotifiedPlayers(game).filter { pair -> pair.second }.map { p -> p.first }
         additionalPlayers.forEach { p ->
             screenMessageService.setTitle(
                 p,
@@ -243,31 +247,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             return
         }
 
-        if (game.endGameActive) {
-            if (game.ball != null) {
-                game.ball!!.remove()
-                game.ball = null
-            }
-
-            game.gameCountdown--
-
-            game.ingamePlayersStorage.keys.toTypedArray().map { p -> p as Player }.forEach { p ->
-                if (game.gameCountdown <= 10) {
-                    p.exp = (game.gameCountdown.toFloat() / 10.0F)
-                }
-
-                p.level = game.gameCountdown
-            }
-
-            if (game.gameCountdown <= 0) {
-                game.closing = true
-            }
-
-            return
-        }
-
         if (game.lobbyCountDownActive) {
-
             if (game.lobbyCountdown > 10) {
                 val amountPlayers = game.arena.meta.blueTeamMeta.maxAmount + game.arena.meta.redTeamMeta.maxAmount
 
@@ -301,10 +281,28 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                     p.level = 0
                 }
 
-                game.gameCountdown = game.arena.meta.minigameMeta.matchDuration
                 game.lobbyCountDownActive = false
                 game.playing = true
-                startGame(game)
+                game.status = GameStatus.RUNNING
+                game.matchTimeIndex = -1
+
+                game.ingamePlayersStorage.keys.toTypedArray().map { p -> p as Player }.forEach { p ->
+                    val stats = game.ingamePlayersStorage[p]
+
+                    if (stats!!.team == null) {
+                        if (game.redTeam.size < game.blueTeam.size) {
+                            stats.team = Team.RED
+                            stats.goalTeam = Team.RED
+                            joinTeam(game, p, Team.RED, game.arena.meta.redTeamMeta)
+                        } else {
+                            stats.team = Team.BLUE
+                            stats.goalTeam = Team.BLUE
+                            joinTeam(game, p, Team.BLUE, game.arena.meta.blueTeamMeta)
+                        }
+                    }
+                }
+
+                switchToNextMatchTime(game)
             }
         }
 
@@ -314,7 +312,10 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 game.lobbyCountdown = game.arena.meta.minigameMeta.lobbyDuration
             } else if (!game.playing) {
                 game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
-                    screenMessageService.setActionBar(p, game.arena.meta.minigameMeta.playersRequiredToStartMessage.replaceGamePlaceholder(game))
+                    screenMessageService.setActionBar(
+                        p,
+                        game.arena.meta.minigameMeta.playersRequiredToStartMessage.replaceGamePlaceholder(game)
+                    )
                 }
             }
         }
@@ -322,21 +323,86 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         if (game.playing) {
             game.gameCountdown--
 
-            game.ingamePlayersStorage.keys.toTypedArray().map { p -> p as Player }.forEach { p ->
+            game.ingamePlayersStorage.keys.toTypedArray().asSequence().map { p -> p as Player }.forEach { p ->
                 if (game.gameCountdown <= 10) {
                     p.exp = (game.gameCountdown.toFloat() / 10.0F)
                 }
+
+                if (game.gameCountdown <= 5) {
+                    soundService.playSound(p.location, game.blingSound, arrayListOf(p))
+                }
+
                 p.level = game.gameCountdown
             }
 
             if (game.gameCountdown <= 0) {
-                setEndGame(game)
-                timesUpGame(game)
+                switchToNextMatchTime(game)
             }
 
             if (game.ingamePlayersStorage.isEmpty()) {
                 game.closing = true
             }
+        }
+    }
+
+    /**
+     * Actives the next match time. Closes the match if no match time is available.
+     */
+    override fun switchToNextMatchTime(game: MiniGame) {
+        game.matchTimeIndex++
+
+        val matchTimes = game.arena.meta.minigameMeta.matchTimes
+
+        if (game.matchTimeIndex >= matchTimes.size) {
+            game.closing = true
+            return
+        }
+
+        val matchTime = matchTimes[game.matchTimeIndex]
+        val isLastMatchTimeSwap = (game.matchTimeIndex + 1) >= matchTimes.size
+
+        if (isLastMatchTimeSwap) {
+            timeAlmostUp(game)
+        }
+
+        game.gameCountdown = matchTime.duration
+
+        if (matchTime.isSwitchGoalsEnabled) {
+            game.mirroredGoals = !game.mirroredGoals
+
+            game.ingamePlayersStorage.values.forEach { e ->
+                if (e.goalTeam != null) {
+                    if (e.goalTeam == Team.RED) {
+                        e.goalTeam = Team.BLUE
+                    } else {
+                        e.goalTeam = Team.RED
+                    }
+                }
+            }
+        }
+
+        game.ballEnabled = matchTime.playAbleBall
+
+        if (!game.ballEnabled && game.ball != null && !game.ball!!.isDead) {
+            game.ball!!.remove()
+        }
+
+        game.ingamePlayersStorage.keys.toTypedArray().asSequence().map { p -> p as Player }.forEach { p ->
+            if (matchTime.respawnEnabled || game.matchTimeIndex == 0) {
+                gameExecutionService.respawn(game, p)
+            }
+
+            if (!matchTime.startMessageTitle.isBlank() || !matchTime.startMessageSubTitle.isBlank()) {
+                concurrencyService.runTaskSync(20L*3) {
+                    screenMessageService.setTitle(
+                        p,
+                        matchTime.startMessageTitle.replaceGamePlaceholder(game),
+                        matchTime.startMessageSubTitle.replaceGamePlaceholder(game)
+                    )
+                }
+            }
+
+            p.exp = 1.0F
         }
     }
 
@@ -421,64 +487,9 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     }
 
     /**
-     * Starts the game.
-     */
-    private fun startGame(game: MiniGame) {
-        game.status = GameStatus.RUNNING
-        game.ingamePlayersStorage.keys.toTypedArray().map { p -> p as Player }.forEach { p ->
-            val stats = game.ingamePlayersStorage[p]
-
-            if (stats!!.team == null) {
-                if (game.redTeam.size < game.blueTeam.size) {
-                    stats.team = Team.RED
-                    joinTeam(game, p, Team.RED, game.arena.meta.redTeamMeta)
-                } else {
-                    stats.team = Team.BLUE
-                    joinTeam(game, p, Team.BLUE, game.arena.meta.blueTeamMeta)
-                }
-            }
-
-            gameExecutionService.respawn(game, p)
-        }
-    }
-
-    /**
-     * Returns the amount of queues players.
-     */
-    private fun getAmountOfQueuedPlayersInThisTeam(game: MiniGame, team: Team): Int {
-        var amount = 0
-
-        game.ingamePlayersStorage.values.forEach { p ->
-            if (p.team != null && p.team == team) {
-                amount++
-            }
-        }
-
-        return amount
-    }
-
-    /**
-     * Returns if the lobby countdown can already be started.
-     * @return canStart
-     */
-    private fun canStartLobbyCountdown(game: MiniGame): Boolean {
-        val amount = game.arena.meta.redTeamMeta.minAmount + game.arena.meta.blueTeamMeta.minAmount
-
-        if (!game.playing && game.ingamePlayersStorage.size >= amount && game.ingamePlayersStorage.isNotEmpty()) {
-            return true
-        }
-
-        return false
-    }
-
-    /**
      * Gets called when the game ends.
      */
-    private fun timesUpGame(game: MiniGame) {
-        if (game.ball != null) {
-            game.ball!!.remove()
-        }
-
+    private fun timeAlmostUp(game: MiniGame) {
         when {
             game.redScore == game.blueScore -> {
                 gameSoccerService.onMatchEnd<Player>(game, null, null)
@@ -493,24 +504,15 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 gameSoccerService.onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             }
         }
+
+        // OnWin sets game.closing to true.
+        game.closing = false
     }
 
     /**
-     * Sets the game ending with 10 seconds cooldown.
+     * Get notified players.
      */
-    private fun setEndGame(game: MiniGame) {
-        if (!game.endGameActive) {
-            game.gameCountdown = 10
-        }
-
-        game.endGameActive = true
-        game.ballSpawning = true
-    }
-
-    /**
-     * Get nofified players.
-     */
-    private fun getNofifiedPlayers(game: MiniGame): List<Pair<Any, Boolean>> {
+    private fun getNotifiedPlayers(game: MiniGame): List<Pair<Any, Boolean>> {
         val players = ArrayList<Pair<Any, Boolean>>()
 
         if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
@@ -553,5 +555,34 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         }
 
         loggingService.debug("The inventory of player " + player.name + " was restored.")
+    }
+
+    /**
+     * Returns if the lobby countdown can already be started.
+     * @return canStart
+     */
+    private fun canStartLobbyCountdown(game: MiniGame): Boolean {
+        val amount = game.arena.meta.redTeamMeta.minAmount + game.arena.meta.blueTeamMeta.minAmount
+
+        if (!game.playing && game.ingamePlayersStorage.size >= amount && game.ingamePlayersStorage.isNotEmpty()) {
+            return true
+        }
+
+        return false
+    }
+
+    /**
+     * Returns the amount of queues players.
+     */
+    private fun getAmountOfQueuedPlayersInThisTeam(game: MiniGame, team: Team): Int {
+        var amount = 0
+
+        game.ingamePlayersStorage.values.forEach { p ->
+            if (p.team != null && p.team == team) {
+                amount++
+            }
+        }
+
+        return amount
     }
 }

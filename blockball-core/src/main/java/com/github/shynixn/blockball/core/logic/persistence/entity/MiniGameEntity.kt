@@ -52,12 +52,10 @@ open class MiniGameEntity(
      * Actual game coutndown.
      */
     override var gameCountdown: Int = 20
-
     /**
-     * Is the endgame active.
+     * Index of the current match time.
      */
-    override var endGameActive: Boolean = false
-
+    override var matchTimeIndex: Int = 0
 
     /**
      * Returns if the lobby is full.

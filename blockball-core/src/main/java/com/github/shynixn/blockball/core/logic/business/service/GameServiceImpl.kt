@@ -1,27 +1,19 @@
-package com.github.shynixn.blockball.bukkit.logic.business.service
+package com.github.shynixn.blockball.core.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.business.service.GameActionService
-import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.business.service.PersistenceArenaService
+import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
-import com.github.shynixn.blockball.bukkit.logic.business.extension.isLocationInSelection
+import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.github.shynixn.blockball.core.logic.business.extension.thenAcceptSafely
 import com.github.shynixn.blockball.core.logic.persistence.entity.BungeeCordGameEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.HubGameEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.MiniGameEntity
 import com.google.inject.Inject
-import org.bukkit.Bukkit
-import org.bukkit.Location
-import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
-import org.bukkit.scheduler.BukkitTask
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.logging.Level
 import kotlin.collections.ArrayList
 
 /**
@@ -52,13 +44,24 @@ import kotlin.collections.ArrayList
  * SOFTWARE.
  */
 class GameServiceImpl @Inject constructor(
-    private val plugin: Plugin,
     private val persistenceArenaService: PersistenceArenaService,
-    private val gameActionService: GameActionService
+    private val gameActionService: GameActionService,
+    private val proxyService: ProxyService,
+    private val configurationService: ConfigurationService,
+    private val loggingService: LoggingService,
+    concurrencyService: ConcurrencyService
 ) : GameService, Runnable {
-    private var task: BukkitTask? = null
     private val games = ArrayList<Game>()
     private var ticks: Int = 0
+
+    /**
+     * Init.
+     */
+    init {
+        sync(concurrencyService, 0L, 1L) {
+            this.run()
+        }
+    }
 
     /**
      * Restarts all games on the server.
@@ -66,13 +69,8 @@ class GameServiceImpl @Inject constructor(
     override fun restartGames(): CompletableFuture<Void?> {
         val completableFuture = CompletableFuture<Void?>()
 
-        if (task == null) {
-            task = plugin.server.scheduler.runTaskTimer(plugin, this, 0L, 1L)
-        }
-
         close()
-
-        plugin.reloadConfig()
+        configurationService.reload()
 
         persistenceArenaService.refresh().thenAcceptSafely {
             persistenceArenaService.getArenas().forEach { arena ->
@@ -100,7 +98,7 @@ class GameServiceImpl @Inject constructor(
     override fun run() {
         games.toTypedArray().forEach { game ->
             if (game.closed) {
-                if(game !is BungeeCordGame){
+                if (game !is BungeeCordGame) {
                     games.remove(game)
                     initGame(game.arena)
                 }
@@ -133,9 +131,7 @@ class GameServiceImpl @Inject constructor(
      * Returns the game if the given [player] is playing a game.
      */
     override fun <P> getGameFromPlayer(player: P): Optional<Game> {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
+        require(player is Any)
 
         games.forEach { p ->
             if (p.ingamePlayersStorage.containsKey(player)) {
@@ -150,9 +146,7 @@ class GameServiceImpl @Inject constructor(
      * Returns the game if the given [player] is spectating a game.
      */
     override fun <P> getGameFromSpectatingPlayer(player: P): Optional<Game> {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
+        require(player is Any)
 
         games.forEach { g ->
             if (g is MiniGame) {
@@ -169,12 +163,12 @@ class GameServiceImpl @Inject constructor(
      * Returns the game at the given location.
      */
     override fun <L> getGameFromLocation(location: L): Optional<Game> {
-        if (location !is Location) {
-            throw IllegalArgumentException("Location has to be a BukkitLocation!")
-        }
+        require(location is Any)
+
+        val position = proxyService.toPosition(location)
 
         games.forEach { g ->
-            if (g.arena.isLocationInSelection(location)) {
+            if (g.arena.isLocationInSelection(position)) {
                 return Optional.of(g)
             }
         }
@@ -197,29 +191,29 @@ class GameServiceImpl @Inject constructor(
             try {
                 gameActionService.closeGame(game)
             } catch (e: Exception) {
-                plugin.logger.log(Level.WARNING, "Failed to dispose game.", e)
+                loggingService.error("Failed to dispose game.", e)
             }
         }
 
         games.clear()
     }
 
-
+    /**
+     * Initialises a new game from the given arena.
+     */
     private fun initGame(arena: Arena) {
-        val game: Game = when {
-            arena.gameType == GameType.HUBGAME -> HubGameEntity(arena)
-            arena.gameType == GameType.MINIGAME -> MiniGameEntity(arena)
+        val game: Game = when (arena.gameType) {
+            GameType.HUBGAME -> HubGameEntity(arena)
+            GameType.MINIGAME -> MiniGameEntity(arena)
             else -> BungeeCordGameEntity(arena)
         }
 
         if (game is BungeeCordGame && game.arena.enabled) {
             games.add(game)
 
-            for (world in Bukkit.getWorlds()) {
-                for (player in world.players) {
-                    if (!getGameFromPlayer(player).isPresent) {
-                        gameActionService.joinGame(game, player)
-                    }
+            for (player in proxyService.getOnlinePlayers<Any>()) {
+                if (!getGameFromPlayer(player).isPresent) {
+                    gameActionService.joinGame(game, player)
                 }
             }
         } else {

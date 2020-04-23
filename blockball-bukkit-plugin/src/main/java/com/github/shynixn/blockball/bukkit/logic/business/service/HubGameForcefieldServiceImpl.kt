@@ -67,7 +67,10 @@ class HubGameForcefieldServiceImpl @Inject constructor(
         val gameInternal = gameService.getGameFromPlayer(player)
 
         if (gameInternal.isPresent) {
-            if (gameInternal.get().arena.gameType == GameType.HUBGAME && !gameInternal.get().arena.isLocationInSelection(player.location)) {
+            if (gameInternal.get().arena.gameType == GameType.HUBGAME && !gameInternal.get().arena.isLocationInSelection(
+                    player.location.toPosition()
+                )
+            ) {
                 gameActionService.leaveGame(gameInternal.get(), player)
             }
             return
@@ -76,7 +79,10 @@ class HubGameForcefieldServiceImpl @Inject constructor(
         var inArea = false
 
         gameService.getAllGames().forEach { game ->
-            if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(location)) {
+            if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(
+                    location.toPosition()
+                )
+            ) {
                 inArea = true
                 if (game.arena.meta.hubLobbyMeta.instantForcefieldJoin) {
                     gameActionService.joinGame(game, player)
@@ -95,7 +101,8 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                     if (interactionCache.movementCounter > 20) {
                         player.velocity = game.arena.meta.protectionMeta.rejoinProtection.toVector()
                     } else {
-                        val knockback = interactionCache.lastPosition!!.toLocation().toVector().subtract(player.location.toVector())
+                        val knockback =
+                            interactionCache.lastPosition!!.toLocation().toVector().subtract(player.location.toVector())
                         player.location.direction = knockback
                         player.velocity = knockback
                         player.allowFlight = true
@@ -103,22 +110,35 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                         if (!interactionCache.toggled) {
                             val joinCommand = configurationService.findValue<String>("global-join.command")
 
-                            val b = ChatBuilderEntity().text(prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].translateChatColors())
-                                .nextLine()
-                                .component(game.arena.meta.hubLobbyMeta.joinMessage[1].replaceGamePlaceholder(game, game.arena.meta.redTeamMeta))
-                                .setClickAction(
-                                    ChatClickAction.RUN_COMMAND
-                                    , "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.redTeamMeta.displayName.stripChatColors()
-                                )
-                                .setHoverText(" ")
-                                .builder().text(" ")
-                                .component(game.arena.meta.hubLobbyMeta.joinMessage[2].replaceGamePlaceholder(game, game.arena.meta.blueTeamMeta))
-                                .setClickAction(
-                                    ChatClickAction.RUN_COMMAND
-                                    , "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.blueTeamMeta.displayName.stripChatColors()
-                                )
-                                .setHoverText(" ")
-                                .builder()
+                            val b =
+                                ChatBuilderEntity().text(prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].translateChatColors())
+                                    .nextLine()
+                                    .component(
+                                        game.arena.meta.hubLobbyMeta.joinMessage[1].replaceGamePlaceholder(
+                                            game,
+                                            game.arena.meta.redTeamMeta
+                                        )
+                                    )
+                                    .setClickAction(
+                                        ChatClickAction.RUN_COMMAND
+                                        ,
+                                        "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.redTeamMeta.displayName.stripChatColors()
+                                    )
+                                    .setHoverText(" ")
+                                    .builder().text(" ")
+                                    .component(
+                                        game.arena.meta.hubLobbyMeta.joinMessage[2].replaceGamePlaceholder(
+                                            game,
+                                            game.arena.meta.blueTeamMeta
+                                        )
+                                    )
+                                    .setClickAction(
+                                        ChatClickAction.RUN_COMMAND
+                                        ,
+                                        "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.blueTeamMeta.displayName.stripChatColors()
+                                    )
+                                    .setHoverText(" ")
+                                    .builder()
 
                             proxyService.sendMessage(player, b)
 

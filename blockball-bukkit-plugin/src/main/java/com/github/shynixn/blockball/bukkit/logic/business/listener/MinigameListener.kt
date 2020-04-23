@@ -1,9 +1,13 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
+import com.github.shynixn.blockball.api.bukkit.event.GameGoalEvent
 import com.github.shynixn.blockball.api.business.enumeration.GameType
+import com.github.shynixn.blockball.api.business.enumeration.MatchTimeCloseType
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
+import com.github.shynixn.blockball.api.business.service.GameMiniGameActionService
 import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
 import com.google.inject.Inject
 import org.bukkit.event.EventHandler
@@ -38,7 +42,11 @@ import org.bukkit.event.player.PlayerInteractEvent
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class MinigameListener @Inject constructor(private val gameService: GameService, private val configurationService: ConfigurationService) : Listener {
+class MinigameListener @Inject constructor(
+    private val gameService: GameService,
+    private val miniGameActionService: GameMiniGameActionService,
+    private val configurationService: ConfigurationService
+) : Listener {
 
     /**
      * Cancels actions in minigame and bungeecord games to restrict destroying the arena.
@@ -57,14 +65,38 @@ class MinigameListener @Inject constructor(private val gameService: GameService,
     }
 
     /**
+     * Gets called when a player scores a goal.
+     */
+    @EventHandler
+    fun onPlayerGoalEvent(event: GameGoalEvent) {
+        if (event.game !is MiniGame) {
+            return
+        }
+
+        val miniGame = event.game as MiniGame
+        val matchTimes = miniGame.arena.meta.minigameMeta.matchTimes
+
+        if (miniGame.matchTimeIndex < 0 || miniGame.matchTimeIndex >= matchTimes.size) {
+            return
+        }
+
+        val matchTime = matchTimes[miniGame.matchTimeIndex]
+
+        if (matchTime.closeType == MatchTimeCloseType.NEXT_GOAL) {
+            miniGameActionService.switchToNextMatchTime(miniGame)
+        }
+    }
+
+    /**
      * Cancels commands in minigame and bungeecord games to restrict destroying the arena.
      */
     @EventHandler
     fun onPlayerExecuteCommand(event: PlayerCommandPreprocessEvent) {
         if (event.message.startsWith("/blockball")
-                || event.message.startsWith("/" + configurationService.findValue<String>("global-leave.command"))
-                || Permission.STAFF.hasPermission(event.player) || Permission.ADMIN.hasPermission(event.player)
-                || event.player.isOp) {
+            || event.message.startsWith("/" + configurationService.findValue<String>("global-leave.command"))
+            || Permission.STAFF.hasPermission(event.player) || Permission.ADMIN.hasPermission(event.player)
+            || event.player.isOp
+        ) {
 
             return
         }

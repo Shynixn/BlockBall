@@ -93,6 +93,14 @@ open class GameEntity(
      */
     override var ballBumperCounter: Int = 0
     /**
+     * Is the ball currently enabled to spawn?
+     */
+    override var ballEnabled: Boolean = true
+    /**
+     * Are the goals mirrored?
+     */
+    override var mirroredGoals: Boolean = false
+    /**
      * Ball bumper.
      */
     override var ballBumper: Int = 20

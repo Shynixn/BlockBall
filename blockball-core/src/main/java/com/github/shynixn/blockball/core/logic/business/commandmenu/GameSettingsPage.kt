@@ -34,7 +34,8 @@ import com.google.inject.Inject
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameSettingsPage @Inject constructor(private val proxyService: ProxyService) : Page(GameSettingsPage.ID, MainSettingsPage.ID) {
+class GameSettingsPage @Inject constructor(private val proxyService: ProxyService) :
+    Page(ID, MainSettingsPage.ID) {
 
     companion object {
         /** Id of the page. */
@@ -55,13 +56,20 @@ class GameSettingsPage @Inject constructor(private val proxyService: ProxyServic
      *
      * @param cache cache
      */
-    override fun <P> execute(player: P, command: MenuCommand, cache: Array<Any?>, args: Array<String>): MenuCommandResult {
+    override fun <P> execute(
+        player: P,
+        command: MenuCommand,
+        cache: Array<Any?>,
+        args: Array<String>
+    ): MenuCommandResult {
         val arena = cache[0] as Arena
 
         if (command == MenuCommand.GAMESETTINGS_LEAVESPAWNPOINT) {
-            arena.meta.lobbyMeta.leaveSpawnpoint = proxyService.toPosition(proxyService.getPlayerLocation<Any, P>(player))
+            arena.meta.lobbyMeta.leaveSpawnpoint =
+                proxyService.toPosition(proxyService.getPlayerLocation<Any, P>(player))
         } else if (command == MenuCommand.GAMESETTINGS_LOBBYSPAWNPOINT) {
-            arena.meta.minigameMeta.lobbySpawnpoint = proxyService.toPosition(proxyService.getPlayerLocation<Any, P>(player))
+            arena.meta.minigameMeta.lobbySpawnpoint =
+                proxyService.toPosition(proxyService.getPlayerLocation<Any, P>(player))
         } else if (command == MenuCommand.GAMESETTINGS_TOGGLE_EVENTEAMS) {
             arena.meta.lobbyMeta.onlyAllowEventTeams = !arena.meta.lobbyMeta.onlyAllowEventTeams
         } else if (command == MenuCommand.GAMESETTINGS_TOGGLE_INSTATFORCEFIELD) {
@@ -76,12 +84,10 @@ class GameSettingsPage @Inject constructor(private val proxyService: ProxyServic
             arena.meta.bungeeCordMeta.fallbackServer = mergeArgs(2, args)
         } else if (command == MenuCommand.GAMESETTINGS_MAXSCORE && args.size == 3 && args[2].toIntOrNull() != null) {
             arena.meta.lobbyMeta.maxScore = args[2].toInt()
-        } else if (command == MenuCommand.GAMESETTINGS_MAXDURATION && args.size == 3 && args[2].toIntOrNull() != null) {
-            arena.meta.minigameMeta.matchDuration = args[2].toInt()
         } else if (command == MenuCommand.GAMESETTINGS_LOBBYDURATION && args.size == 3 && args[2].toIntOrNull() != null) {
             arena.meta.minigameMeta.lobbyDuration = args[2].toInt()
         } else if (command == MenuCommand.GAMESETTINGS_CALLBACK_BUKKITGAMEMODES && args.size == 3 && args[2].toIntOrNull() != null) {
-            arena.meta.lobbyMeta.gamemode = com.github.shynixn.blockball.api.business.enumeration.GameMode.values()[args[2].toInt()]
+            arena.meta.lobbyMeta.gamemode = GameMode.values()[args[2].toInt()]
         } else if (command == MenuCommand.GAMESETTINGS_REMAININGPLAYERSMESSAGE && args.size > 3) {
             arena.meta.minigameMeta.playersRequiredToStartMessage = mergeArgs(2, args)
         } else if (command == MenuCommand.GAMESETTINGS_TOGGLE_TELEPORTONJOIN) {
@@ -135,11 +141,10 @@ class GameSettingsPage @Inject constructor(private val proxyService: ProxyServic
             .builder().nextLine()
 
         if (arena.gameType == GameType.MINIGAME || arena.gameType == GameType.BUNGEE) {
-            builder.component("- Match Duration: " + arena.meta.minigameMeta.matchDuration).builder()
-                .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
-                .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.GAMESETTINGS_MAXDURATION.command)
-                .setHoverText("Amount of seconds a game is going to last until it ends. The team with the highest score wins the match.")
-                .builder().nextLine()
+            builder.component("- Match Times:").builder()
+                .component(" [page..]").setColor(ChatColor.YELLOW)
+                .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.MATCHTIMES_OPEN.command)
+                .setHoverText("Opens the match times page.").builder().nextLine()
             builder.component("- Lobby Duration: " + arena.meta.minigameMeta.lobbyDuration).builder()
                 .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
                 .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.GAMESETTINGS_LOBBYDURATION.command)
@@ -154,27 +159,36 @@ class GameSettingsPage @Inject constructor(private val proxyService: ProxyServic
                 .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
                 .setHoverText(arena.meta.minigameMeta.playersRequiredToStartMessage).builder()
                 .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
-                .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.GAMESETTINGS_REMAININGPLAYERSMESSAGE.command)
+                .setClickAction(
+                    ChatClickAction.SUGGEST_COMMAND,
+                    MenuCommand.GAMESETTINGS_REMAININGPLAYERSMESSAGE.command
+                )
                 .setHoverText(ChatColor.UNDERLINE.toString() + "Minigame exclusive\n" + ChatColor.RESET + "Message being send to the action bar of players who wait for more players in the lobby.")
                 .builder().nextLine()
         }
         if (arena.gameType == GameType.BUNGEE) {
             builder.component("- Full Server Kick Message: ").builder()
-                .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color).setHoverText(arena.meta.bungeeCordMeta.kickMessage)
+                .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
+                .setHoverText(arena.meta.bungeeCordMeta.kickMessage)
                 .builder()
                 .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
                 .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.GAMESETTINGS_BUNGEEKICKMESSAGE.command)
                 .setHoverText(ChatColor.UNDERLINE.toString() + "BungeeCord exclusive\n" + ChatColor.RESET + "Message being send to players who try to join a running or a full server.")
                 .builder().nextLine()
             builder.component("- Leave Server Kick Message: ").builder()
-                .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color).setHoverText(arena.meta.bungeeCordMeta.leaveKickMessage)
+                .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
+                .setHoverText(arena.meta.bungeeCordMeta.leaveKickMessage)
                 .builder()
                 .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
-                .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.GAMESETTINGS_BUNGEELEAVEKICKMESSAGE.command)
+                .setClickAction(
+                    ChatClickAction.SUGGEST_COMMAND,
+                    MenuCommand.GAMESETTINGS_BUNGEELEAVEKICKMESSAGE.command
+                )
                 .setHoverText(ChatColor.UNDERLINE.toString() + "BungeeCord exclusive\n" + ChatColor.RESET + "Message being send to players who leave a game. Can be used with third party BungeeCord plugins to determine the fallback servers.")
                 .builder().nextLine()
             builder.component("- Fallback Server: ").builder()
-                .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color).setHoverText(arena.meta.bungeeCordMeta.fallbackServer)
+                .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
+                .setHoverText(arena.meta.bungeeCordMeta.fallbackServer)
                 .builder()
                 .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
                 .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.GAMESETTINGS_BUNGEEFALLBACKSERVER.command)
