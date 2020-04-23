@@ -13,6 +13,8 @@
 
   
   
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+  
   
   
 
@@ -206,14 +208,14 @@ in order to use the Bossbar.</p>
 <h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to open the <a class="reference external" href="../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui">Settings</a> page of your arena chat UI.</p>
 <ol class="arabic simple">
-<li><p>Go to the <strong>Settings Page</strong> of your arena</p></li>
-<li><p>Open the <strong>Effects Page</strong></p></li>
-<li><p>Open the <strong>Bossbar Page</strong></p></li>
+<li>Go to the <strong>Settings Page</strong> of your arena</li>
+<li>Open the <strong>Effects Page</strong></li>
+<li>Open the <strong>Bossbar Page</strong></li>
 </ol>
 <img alt="../_images/bossbar2.JPG" src="../_images/bossbar2.JPG" />
 <ol class="arabic simple" start="4">
-<li><p>Now continue by enabling or disabling the bossbar by clicking <strong>toggle</strong> with your mouse.</p></li>
-<li><p>Customize the other available options to your own needs.</p></li>
+<li>Now continue by enabling or disabling the bossbar by clicking <strong>toggle</strong> with your mouse.</li>
+<li>Customize the other available options to your own needs.</li>
 </ol>
 <p>You can find all options explained at the bottom of this page.</p>
 </div>
@@ -221,34 +223,34 @@ in order to use the Bossbar.</p>
 <h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
 <ol class="arabic simple">
-<li><p>Go to the <strong>Open the arena_x.yml</strong> of your arena</p></li>
-<li><p>Search for the following section:</p></li>
+<li>Go to the <strong>Open the arena_x.yml</strong> of your arena</li>
+<li>Search for the following section:</li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">bossbar</span><span class="p">:</span>
-  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="nt">text</span><span class="p">:</span> <span class="s">&#39;&lt;redcolor&gt;&lt;red&gt;</span><span class="nv"> </span><span class="s">&lt;redscore&gt;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&lt;bluecolor&gt;&lt;bluescore&gt;</span><span class="nv"> </span><span class="s">&lt;blue&gt;&#39;</span>
-  <span class="nt">percentage</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">50.0</span>
-  <span class="nt">color</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">WHITE</span>
-  <span class="nt">style</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SOLID</span>
-  <span class="nt">flags</span><span class="p">:</span>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">bossbar</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">enabled</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="s">&#39;&lt;redcolor&gt;&lt;red&gt;</span><span class="nv"> </span><span class="s">&lt;redscore&gt;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&lt;bluecolor&gt;&lt;bluescore&gt;</span><span class="nv"> </span><span class="s">&lt;blue&gt;&#39;</span>
+  <span class="l l-Scalar l-Scalar-Plain">percentage</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">50.0</span>
+  <span class="l l-Scalar l-Scalar-Plain">color</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">WHITE</span>
+  <span class="l l-Scalar l-Scalar-Plain">style</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">SOLID</span>
+  <span class="l l-Scalar l-Scalar-Plain">flags</span><span class="p p-Indicator">:</span>
     <span class="s">&#39;1&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">DARKEN_SKY</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>Now continue by enabling or disabling the bossbar by changing the <strong>enabled</strong> value.</p></li>
-<li><p>Customize the other available options to your own needs.</p></li>
+<li>Now continue by enabling or disabling the bossbar by changing the <strong>enabled</strong> value.</li>
+<li>Customize the other available options to your own needs.</li>
 </ol>
 </div>
 <div class="section" id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>Message: Message being displayed as title above the boss health bar. Supports all available placeholders.</p></li>
-<li><p>Enabled: Enable or disable the bossbar</p></li>
-<li><p>Percentage: Percentage how much the boss health bar is filled (0-100)</p></li>
-<li><p>Color: Color of the bossbar</p></li>
-<li><p>Style: Different displaying styles of the bossbar</p></li>
-<li><p>Flags: Additional flags</p></li>
+<li>Message: Message being displayed as title above the boss health bar. Supports all available placeholders.</li>
+<li>Enabled: Enable or disable the bossbar</li>
+<li>Percentage: Percentage how much the boss health bar is filled (0-100)</li>
+<li>Color: Color of the bossbar</li>
+<li>Style: Different displaying styles of the bossbar</li>
+<li>Flags: Additional flags</li>
 </ul>
 </div>
 </div>
@@ -307,7 +309,6 @@ in order to use the Bossbar.</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

@@ -13,6 +13,8 @@
 
   
   
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+  
   
   
 
@@ -185,30 +187,30 @@
 <p>Sometimes the ball is not synchronized with your world or simply requires another relocation distance
 for your server version.</p>
 <ol class="arabic simple">
-<li><p>Make sure the thickness of the ground is at least <strong>2 or more blocks</strong></p></li>
-<li><p>If the ball does still fall through the ground you can try to modify the hidden <strong>hitbox-relocation</strong> value of the ball.</p></li>
+<li>Make sure the thickness of the ground is at least <strong>2 or more blocks</strong></li>
+<li>If the ball does still fall through the ground you can try to modify the hidden <strong>hitbox-relocation</strong> value of the ball.</li>
 </ol>
 <p><strong>before - arena_x.yml</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ball</span><span class="p">:</span>
-   <span class="nt">skin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
-   <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SMALL</span>
-   <span class="nt">hitbox-size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3.0</span>
-   <span class="nt">hitbox-relocation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-   <span class="nt">carry-able</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="nt">always-bounce</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="nt">rotating</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">ball</span><span class="p p-Indicator">:</span>
+   <span class="l l-Scalar l-Scalar-Plain">skin</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
+   <span class="l l-Scalar l-Scalar-Plain">size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">SMALL</span>
+   <span class="l l-Scalar l-Scalar-Plain">hitbox-size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">3.0</span>
+   <span class="l l-Scalar l-Scalar-Plain">hitbox-relocation</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+   <span class="l l-Scalar l-Scalar-Plain">carry-able</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="l l-Scalar l-Scalar-Plain">always-bounce</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="l l-Scalar l-Scalar-Plain">rotating</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <p>Test it with different values like 0.2, 0.5 and take a look what fits best with your server.</p>
 <p><strong>after - arena_x.yml</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ball</span><span class="p">:</span>
-   <span class="nt">skin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
-   <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SMALL</span>
-   <span class="nt">hitbox-size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3.0</span>
-   <span class="nt">hitbox-relocation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.2</span>
-   <span class="nt">carry-able</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="nt">always-bounce</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="nt">rotating</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">ball</span><span class="p p-Indicator">:</span>
+   <span class="l l-Scalar l-Scalar-Plain">skin</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
+   <span class="l l-Scalar l-Scalar-Plain">size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">SMALL</span>
+   <span class="l l-Scalar l-Scalar-Plain">hitbox-size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">3.0</span>
+   <span class="l l-Scalar l-Scalar-Plain">hitbox-relocation</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.2</span>
+   <span class="l l-Scalar l-Scalar-Plain">carry-able</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="l l-Scalar l-Scalar-Plain">always-bounce</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="l l-Scalar l-Scalar-Plain">rotating</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 </div>
@@ -267,7 +269,6 @@ for your server version.</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 
