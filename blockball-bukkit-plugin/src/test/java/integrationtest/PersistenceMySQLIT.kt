@@ -197,6 +197,13 @@ class PersistenceMySQLIT {
             get() = ArrayList()
 
         /**
+         * Kicks the given player with the given message.
+         */
+        override fun <P> kickPlayer(player: P, message: String) {
+            throw IllegalArgumentException()
+        }
+
+        /**
          * Performs a player command.
          */
         override fun <P> performPlayerCommand(player: P, command: String) {

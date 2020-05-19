@@ -115,6 +115,17 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
         }
 
     /**
+     * Kicks the given player with the given message.
+     */
+    override fun <P> kickPlayer(player: P, message: String) {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        player.kickPlayer(message)
+    }
+
+    /**
      * Performs a player command.
      */
     override fun <P> performPlayerCommand(player: P, command: String) {
@@ -211,9 +222,11 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
 
             val packet = if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_12_R1)) {
                 val chatEnumMessage = findClazz("net.minecraft.server.VERSION.ChatMessageType")
-                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage).newInstance(chatComponent, chatEnumMessage.enumConstants[0])
+                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage)
+                    .newInstance(chatComponent, chatEnumMessage.enumConstants[0])
             } else {
-                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Byte::class.javaPrimitiveType as Class<*>).newInstance(chatComponent, 0.toByte())
+                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Byte::class.javaPrimitiveType as Class<*>)
+                    .newInstance(chatComponent, 0.toByte())
             }
 
             sender.sendPacket(packet)

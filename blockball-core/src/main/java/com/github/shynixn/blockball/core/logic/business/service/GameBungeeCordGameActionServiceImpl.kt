@@ -1,14 +1,13 @@
-package com.github.shynixn.blockball.bukkit.logic.business.service
+package com.github.shynixn.blockball.core.logic.business.service
 
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.BungeeCordService
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.GameBungeeCordGameActionService
+import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
 import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
-import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 
 /**
  * Created by Shynixn 2018.
@@ -40,7 +39,8 @@ import org.bukkit.entity.Player
 class GameBungeeCordGameActionServiceImpl @Inject constructor(
     private val plugin: PluginProxy,
     private val concurrencyService: ConcurrencyService,
-    private val bungeeCordService: BungeeCordService
+    private val bungeeCordService: BungeeCordService,
+    private val proxyService: ProxyService
 ) :
     GameBungeeCordGameActionService {
     /**
@@ -49,8 +49,12 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(
     override fun closeGame(game: BungeeCordGame) {
         plugin.setMotd(bungeeCordService.bungeeCordConfiguration.restartingMotd)
 
+        if (!plugin.isEnabled()) {
+            return
+        }
+
         sync(concurrencyService, 20 * 20L) {
-            Bukkit.getServer().shutdown()
+            plugin.shutdownServer()
         }
     }
 
@@ -59,12 +63,8 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(
      * Does nothing if the player is not in the game.
      */
     override fun <P> leaveGame(game: BungeeCordGame, player: P) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
         if (game.arena.meta.bungeeCordMeta.fallbackServer.isEmpty()) {
-            player.kickPlayer(game.arena.meta.bungeeCordMeta.leaveKickMessage)
+            proxyService.kickPlayer(player, game.arena.meta.bungeeCordMeta.leaveKickMessage)
         } else {
             bungeeCordService.connectToServer(player, game.arena.meta.bungeeCordMeta.fallbackServer)
         }

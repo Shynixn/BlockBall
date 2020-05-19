@@ -230,6 +230,21 @@ class BlockBallPlugin : PluginProxy {
     }
 
     /**
+     * Shutdowns the server.
+     */
+    override fun shutdownServer() {
+        TODO("Not yet implemented")
+        throw IllegalArgumentException("This method is not implemented!")
+    }
+
+    /**
+     * Is the plugin enabled?
+     */
+    override fun isEnabled(): Boolean {
+        return true
+    }
+
+    /**
      * Gets a business logic from the BlockBall plugin.
      * All types in the service package can be accessed.
      * Throws a [IllegalArgumentException] if the service could not be found.

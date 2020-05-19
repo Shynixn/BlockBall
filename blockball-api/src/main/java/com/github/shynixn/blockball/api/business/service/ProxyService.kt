@@ -37,6 +37,11 @@ interface ProxyService {
     val gameModes: List<String>
 
     /**
+     * Kicks the given player with the given message.
+     */
+    fun <P> kickPlayer(player : P, message : String)
+
+    /**
      * Performs a player command.
      */
     fun <P> performPlayerCommand(player: P, command: String)

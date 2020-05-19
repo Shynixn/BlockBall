@@ -306,6 +306,13 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     }
 
     /**
+     * Shutdowns the server.
+     */
+    override fun shutdownServer() {
+        Bukkit.getServer().shutdown()
+    }
+
+    /**
      * Sends a console message from this plugin.
      */
     override fun sendConsoleMessage(message: String) {
