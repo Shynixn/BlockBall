@@ -201,12 +201,23 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 }
 
 task generateJavaDocPages(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    outputFormat = 'javadoc'
+    outputFormat = "javadoc"
     outputDirectory = "docs/apidocs"
-    sourceDirs = files(new File(this.projectDir as File, '/blockball-api/src/main/java')
-            , new File(this.projectDir as File, '/blockball-bukkit-api/src/main/java')
-            , new File(this.projectDir as File, '/blockball-core/src/main/java')
-            , new File(this.projectDir as File, '/blockball-bukkit-plugin/src/main/java'))
+
+    configuration {
+        sourceRoot{
+            path = "blockball-api/src/main/java"
+        }
+        sourceRoot {
+            path = "blockball-bukkit-api/src/main/java"
+        }
+        sourceRoot {
+            path = "blockball-core/src/main/java"
+        }
+        sourceRoot {
+            path = "blockball-bukkit-plugin/src/main/java"
+        }
+    }
 }
 
 task downloadDependencies(type: Exec) {
