@@ -150,6 +150,10 @@ subprojects {
         mavenLocal()
         jcenter()
         maven {
+            name = "jitpack"
+            url = "https://jitpack.io"
+        }
+        maven {
             name = 'sponge'
             url = 'https://repo.spongepowered.org/maven'
         }

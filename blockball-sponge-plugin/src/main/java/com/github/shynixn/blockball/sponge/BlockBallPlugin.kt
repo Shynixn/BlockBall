@@ -8,10 +8,10 @@ import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.core.logic.business.commandexecutor.*
+import com.github.shynixn.blockball.sponge.logic.business.dependency.Metrics2
 import com.github.shynixn.blockball.sponge.logic.business.extension.sendMessage
 import com.google.inject.Inject
 import com.google.inject.Injector
-import org.bstats.sponge.Metrics2
 import org.slf4j.Logger
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.event.Listener

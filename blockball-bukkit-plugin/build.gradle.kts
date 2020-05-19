@@ -41,9 +41,9 @@ tasks.register<Exec>("dockerJar") {
 }
 
 repositories {
-    maven("https://jitpack.io")
     maven("http://repo.extendedclip.com/content/repositories/placeholderapi")
     maven("http://maven.sk89q.com/repo")
+    maven("https://repo.codemc.org/repository/maven-public")
 }
 
 dependencies {
@@ -62,12 +62,11 @@ dependencies {
     implementation("org.slf4j:slf4j-jdk14:1.7.25")
     implementation("com.zaxxer:HikariCP:3.2.0")
     implementation("com.google.inject:guice:4.1.0")
-    implementation("org.bstats.bStats-Metrics:bstats-bukkit:1.3")
+    implementation("org.bstats:bstats-bukkit:1.7")
     implementation("commons-io:commons-io:2.6")
 
     compileOnly("me.clip:placeholderapi:2.9.2")
     compileOnly("net.milkbowlvault:VaultAPI:1.7")
-
     compileOnly("org.spigotmc:spigot114R1:1.14.4-R1.0")
 
     testCompile("org.xerial:sqlite-jdbc:3.23.1")

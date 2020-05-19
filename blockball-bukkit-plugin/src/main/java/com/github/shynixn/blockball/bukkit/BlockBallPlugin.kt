@@ -62,6 +62,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
 
     private var injector: Injector? = null
     private var serverVersion: Version? = null
+    private val bstatsPluginId = 1317
 
     /**
      * Gets the installed version of the plugin.
@@ -181,7 +182,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         )
 
         if (enableMetrics) {
-            Metrics(this)
+            Metrics(this, bstatsPluginId)
         }
 
         if (enableBungeeCord) {
@@ -335,7 +336,8 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     override fun <E> create(entity: Class<E>): E {
         try {
             val entityName = entity.simpleName + "Entity"
-            return Class.forName("com.github.shynixn.blockball.bukkit.logic.persistence.entity.$entityName").newInstance() as E
+            return Class.forName("com.github.shynixn.blockball.bukkit.logic.persistence.entity.$entityName")
+                .newInstance() as E
         } catch (e: Exception) {
             throw IllegalArgumentException("Entity could not be created.", e)
         }
