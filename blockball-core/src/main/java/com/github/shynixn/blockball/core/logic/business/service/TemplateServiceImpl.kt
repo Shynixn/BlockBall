@@ -49,7 +49,7 @@ class TemplateServiceImpl @Inject constructor(
     private val yamlSerializationService: YamlSerializationService,
     private val persistenceArenaService: PersistenceArenaService
 ) : TemplateService {
-    private val templateNames = arrayOf("arena-de.yml", "arena-en.yml", "arena-pl.yml", "arena-ko.yml")
+    private val templateNames = arrayOf("arena-de.yml", "arena-en.yml", "arena-pl.yml", "arena-ko.yml", "arena-hu.yml")
 
     /**
      * Returns a [List] of available
