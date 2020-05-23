@@ -50,13 +50,24 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) :
+class BallDesign(
+    location: Location,
+    ballMeta: BallMeta,
+    persistent: Boolean,
+    uuid: UUID = UUID.randomUUID(),
+    owner: LivingEntity?
+) :
     EntityArmorStand((location.world as CraftWorld).handle, location.x, location.y, location.z), NMSBallProxy {
 
     private var internalProxy: BallProxy? = null
     private var entityBukkit: Any? = null // BukkitEntity has to be self cached since 1.14.
     private val itemService = BlockBallApi.resolve(ItemService::class.java)
     private val hitBox = BallHitBox(this, ballMeta, location)
+
+    private val locFieldX = Entity::class.java.getDeclaredField("locX")
+    private val locFieldY = Entity::class.java.getDeclaredField("locY")
+    private val locFieldZ = Entity::class.java.getDeclaredField("locZ")
+
     /**
      * Proxy handler.
      */
@@ -66,6 +77,10 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
      * Initializes the nms design.
      */
     init {
+        locFieldX.isAccessible = true
+        locFieldY.isAccessible = true
+        locFieldZ.isAccessible = true
+
         val mcWorld = (location.world as CraftWorld).handle
         this.setPositionRotation(location.x, location.y, location.z, location.yaw, location.pitch)
         mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
@@ -79,7 +94,14 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
                 LivingEntity::class.java,
                 Boolean::class.java
             )
-            .newInstance(ballMeta, this.bukkitEntity as LivingEntity, hitBox.bukkitEntity as LivingEntity, uuid, owner, persistent) as BallProxy
+            .newInstance(
+                ballMeta,
+                this.bukkitEntity as LivingEntity,
+                hitBox.bukkitEntity as LivingEntity,
+                uuid,
+                owner,
+                persistent
+            ) as BallProxy
 
         val compound = NBTTagCompound()
         compound.setBoolean("invulnerable", true)
@@ -142,7 +164,10 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             debugPosition()
         }
 
-        setPositionRaw(locX, locY, locZ)
+        // This way of setting the locations fields ensures compatibility with PaperSpigot.
+        this.locFieldX.set(this, locX)
+        this.locFieldY.set(this, locY)
+        this.locFieldZ.set(this, locZ)
     }
 
     /**
@@ -152,7 +177,8 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         var vec3d = vec3dmp
         var collision = false
         val motionVector = Vector(this.mot.x, this.mot.y, this.mot.z)
-        val optSourceVector = proxy.calculateMoveSourceVectors(Vector(vec3d.x, vec3d.y, vec3d.z), motionVector, this.onGround)
+        val optSourceVector =
+            proxy.calculateMoveSourceVectors(Vector(vec3d.x, vec3d.y, vec3d.z), motionVector, this.onGround)
 
         if (!optSourceVector.isPresent) {
             return
@@ -233,8 +259,13 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
 
             if (this.positionChanged) {
                 try {
-                    val sourceBlock = this.world.world.getBlockAt(MathHelper.floor(this.locX()), MathHelper.floor(this.locY()), MathHelper.floor(this.locZ()))
-                    collision = proxy.calculateKnockBack(sourceVector, sourceBlock, vec3d1.x, vec3d1.z, vec3d.x, vec3d.z)
+                    val sourceBlock = this.world.world.getBlockAt(
+                        MathHelper.floor(this.locX()),
+                        MathHelper.floor(this.locY()),
+                        MathHelper.floor(this.locZ())
+                    )
+                    collision =
+                        proxy.calculateKnockBack(sourceVector, sourceBlock, vec3d1.x, vec3d1.z, vec3d.x, vec3d.z)
                 } catch (e: Exception) {
                     Bukkit.getLogger().log(Level.WARNING, "Critical exception.", e)
                 }
@@ -270,6 +301,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
      */
     private fun debugPosition() {
         val loc = bukkitEntity.location
-        BlockBallApi.resolve(LoggingService::class.java).debug("Design at ${loc.x.toFloat()} ${loc.y.toFloat()} ${loc.z.toFloat()}")
+        BlockBallApi.resolve(LoggingService::class.java)
+            .debug("Design at ${loc.x.toFloat()} ${loc.y.toFloat()} ${loc.z.toFloat()}")
     }
 }
