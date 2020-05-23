@@ -48,6 +48,7 @@ subprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'java-library'
     apply plugin: "de.marcphilipp.nexus-publish"
+    apply plugin: 'org.jetbrains.dokka'
 
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
