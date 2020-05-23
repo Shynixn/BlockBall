@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import java.util.*
@@ -48,7 +49,7 @@ interface GameStorage {
     /**
      * Actual exp of the player.
      */
-    var exp: Float
+    var exp: Double
 
     /**
      * Owner uuid.
@@ -78,7 +79,7 @@ interface GameStorage {
     /**
      * Gamemode of the player.
      */
-    var gameMode: Any
+    var gameMode: GameMode
 
     /**
      * Scoreboard of the player.
@@ -88,7 +89,7 @@ interface GameStorage {
     /**
      * Walking Speed of the player.
      */
-    var walkingSpeed: Float
+    var walkingSpeed: Double
 
     /**
      * Was the player flying?

@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.api.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.Position
 
@@ -39,7 +40,7 @@ interface ProxyService {
     /**
      * Kicks the given player with the given message.
      */
-    fun <P> kickPlayer(player : P, message : String)
+    fun <P> kickPlayer(player: P, message: String)
 
     /**
      * Performs a player command.
@@ -80,6 +81,106 @@ interface ProxyService {
      * Gets a copy of the player armor inventory.
      */
     fun <P> getPlayerInventoryArmorCopy(player: P): Array<Any?>
+
+    /**
+     * Sets the player gameMode.
+     */
+    fun <P> setGameMode(player: P, gameMode: GameMode)
+
+    /**
+     * Gets the player gameMode.
+     */
+    fun <P> getPlayerGameMode(player: P): GameMode
+
+    /**
+     * Sets the player flying.
+     */
+    fun <P> setPlayerFlying(player: P, enabled: Boolean)
+
+    /**
+     * Gets if the player is flying.
+     */
+    fun <P> getPlayerFlying(player: P): Boolean
+
+    /**
+     * Sets the player walkingSpeed.
+     */
+    fun <P> setPlayerWalkingSpeed(player: P, speed: Double)
+
+    /**
+     * Gets the player walkingSpeed.
+     */
+    fun <P> getPlayerWalkingSpeed(player: P): Double
+
+    /**
+     * Generates a new scoreboard.
+     */
+    fun <S> generateNewScoreboard(): S
+
+    /**
+     * Gets if the given instance is a player instance.
+     */
+    fun <P> isPlayerInstance(player: P): Boolean
+
+    /**
+     * Sets the player scoreboard.
+     */
+    fun <P, S> setPlayerScoreboard(player: P, scoreboard: S)
+
+    /**
+     * Sets the player velocity.
+     */
+    fun <P> setPlayerVelocity(player: P, position: Position)
+
+    /**
+     * Gets the player direction.
+     */
+    fun <P> getPlayerDirection(player: P): Position
+
+    /**
+     * Gets the player scoreboard.
+     */
+    fun <P, S> getPlayerScoreboard(player: P): S
+
+    /**
+     * Sets if the player is allowed to fly.
+     */
+    fun <P> setPlayerAllowFlying(player: P, enabled: Boolean)
+
+    /**
+     * Gets if the player is allowed to fly.
+     */
+    fun <P> getPlayerAllowFlying(player: P): Boolean
+
+    /**
+     * Gets the player level.
+     */
+    fun <P> getPlayerLevel(player: P): Int
+
+    /**
+     * Gets the player exp.
+     */
+    fun <P> getPlayerExp(player: P): Double
+
+    /**
+     * Gets the player max health.
+     */
+    fun <P> getPlayerMaxHealth(player: P): Double
+
+    /**
+     * Gets the player health.
+     */
+    fun <P> getPlayerHealth(player: P): Double
+
+    /**
+     * Gets the player hunger.
+     */
+    fun <P> getPlayerHunger(player: P): Int
+
+    /**
+     * Sets the given inventory items.
+     */
+    fun <P, I> setInventoryContents(player: P, mainInventory: Array<I>, armorInventory: Array<I>)
 
     /**
      * Gets a list of all online players.

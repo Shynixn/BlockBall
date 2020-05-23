@@ -3,6 +3,7 @@
 package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
@@ -183,6 +184,11 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
 
         if (enableMetrics) {
             Metrics(this, bstatsPluginId)
+        }
+
+        if (dependencyService.isInstalled(PluginDependency.PLACEHOLDERAPI)) {
+            val placeHolderService = resolve(DependencyPlaceholderApiService::class.java)
+            placeHolderService.registerListener()
         }
 
         if (enableBungeeCord) {

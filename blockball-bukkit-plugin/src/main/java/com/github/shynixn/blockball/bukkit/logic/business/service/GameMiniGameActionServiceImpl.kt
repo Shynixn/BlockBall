@@ -11,7 +11,6 @@ import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.GameStorage
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toGameMode
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.updateInventory
@@ -61,7 +60,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private val gameSoccerService: GameSoccerService,
     private val gameExecutionService: GameExecutionService,
     private val loggingService: LoggingService,
-    private val concurrencyService: ConcurrencyService
+    private val concurrencyService: ConcurrencyService,
+    private val placeholderService: PlaceholderService
 ) : GameMiniGameActionService {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
@@ -88,10 +88,18 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
         if (game.playing || game.isLobbyFull) {
             val b = ChatBuilderEntity().text(
-                prefix + game.arena.meta.spectatorMeta.spectateStartMessage[0].replaceGamePlaceholder(game)
+                prefix + placeholderService.replacePlaceHolders(
+                    game.arena.meta.spectatorMeta.spectateStartMessage[0],
+                    game
+                )
             )
                 .nextLine()
-                .component(prefix + game.arena.meta.spectatorMeta.spectateStartMessage[1].replaceGamePlaceholder(game))
+                .component(
+                    prefix + placeholderService.replacePlaceHolders(
+                        game.arena.meta.spectatorMeta.spectateStartMessage[1],
+                        game
+                    )
+                )
                 .setClickAction(
                     ChatClickAction.RUN_COMMAND
                     , "/" + plugin.config.getString("global-spectate.command") + " " + game.arena.name
@@ -217,23 +225,23 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         additionalPlayers.forEach { p ->
             screenMessageService.setTitle(
                 p,
-                game.arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(game),
-                game.arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)
+                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageSubTitle, game)
             )
         }
 
         game.redTeam.forEach { p ->
             screenMessageService.setTitle(
                 p,
-                game.arena.meta.redTeamMeta.drawMessageTitle.replaceGamePlaceholder(game),
-                game.arena.meta.redTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)
+                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageSubTitle, game)
             )
         }
         game.blueTeam.forEach { p ->
             screenMessageService.setTitle(
                 p,
-                game.arena.meta.blueTeamMeta.drawMessageTitle.replaceGamePlaceholder(game),
-                game.arena.meta.blueTeamMeta.drawMessageSubTitle.replaceGamePlaceholder(game)
+                placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageTitle, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageSubTitle, game)
             )
         }
     }
@@ -314,7 +322,10 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
                     screenMessageService.setActionBar(
                         p,
-                        game.arena.meta.minigameMeta.playersRequiredToStartMessage.replaceGamePlaceholder(game)
+                        placeholderService.replacePlaceHolders(
+                            game.arena.meta.minigameMeta.playersRequiredToStartMessage,
+                            game
+                        )
                     )
                 }
             }
@@ -393,11 +404,11 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             }
 
             if (!matchTime.startMessageTitle.isBlank() || !matchTime.startMessageSubTitle.isBlank()) {
-                concurrencyService.runTaskSync(20L*3) {
+                concurrencyService.runTaskSync(20L * 3) {
                     screenMessageService.setTitle(
                         p,
-                        matchTime.startMessageTitle.replaceGamePlaceholder(game),
-                        matchTime.startMessageSubTitle.replaceGamePlaceholder(game)
+                        placeholderService.replacePlaceHolders(matchTime.startMessageTitle, game),
+                        placeholderService.replacePlaceHolders(matchTime.startMessageSubTitle, game)
                     )
                 }
             }
@@ -407,20 +418,21 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     }
 
     private fun createPlayerStorage(game: MiniGame, player: Player): GameStorage {
-        val stats = GameStorageEntity(player.uniqueId, Bukkit.getScoreboardManager()!!.newScoreboard)
+        val stats = GameStorageEntity(player.uniqueId)
+        stats.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
 
         loggingService.debug("Created a temporary storage for player " + player.name + ".")
 
         with(stats) {
-            gameMode = player.gameMode
+            gameMode = proxyService.getPlayerGameMode(player)
             armorContents = player.inventory.armorContents.clone() as Array<Any?>
             flying = player.isFlying
             allowedFlying = player.allowFlight
-            walkingSpeed = player.walkSpeed
+            walkingSpeed = player.walkSpeed.toDouble()
             scoreboard = player.scoreboard
             inventoryContents = player.inventory.contents.clone() as Array<Any?>
             level = player.level
-            exp = player.exp
+            exp = player.exp.toDouble()
             @Suppress("DEPRECATION")
             maxHealth = player.maxHealth
             health = player.health
@@ -458,7 +470,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
             player.inventory.contents = teamMeta.inventoryContents.clone().map { d -> d as ItemStack? }.toTypedArray()
-            player.inventory.setArmorContents(teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray())
+            player.inventory.setArmorContents(teamMeta.armorContents.clone().map { d -> d as ItemStack? }
+                .toTypedArray())
             player.inventory.updateInventory()
         }
 
@@ -468,7 +481,14 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             game.blueTeam as List<Player>
         }
 
-        player.sendMessage(prefix + teamMeta.joinMessage.replaceGamePlaceholder(game, teamMeta, players))
+        player.sendMessage(
+            prefix + placeholderService.replacePlaceHolders(
+                teamMeta.joinMessage,
+                game,
+                teamMeta,
+                players.size
+            )
+        )
     }
 
     /**
@@ -534,14 +554,15 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Resets the storage of the given [player].
      */
     private fun resetStorage(player: Player, game: Game, stats: GameStorage) {
+        proxyService.setGameMode(player, stats.gameMode)
+
         with(player) {
-            gameMode = stats.gameMode as GameMode
             allowFlight = stats.allowedFlying
             isFlying = stats.flying
-            walkSpeed = stats.walkingSpeed
+            walkSpeed = stats.walkingSpeed.toFloat()
             scoreboard = stats.scoreboard as Scoreboard
             level = stats.level
-            exp = stats.exp
+            exp = stats.exp.toFloat()
             @Suppress("DEPRECATION")
             maxHealth = stats.maxHealth
             health = stats.health

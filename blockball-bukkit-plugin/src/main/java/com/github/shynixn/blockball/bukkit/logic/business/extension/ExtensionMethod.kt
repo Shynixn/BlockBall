@@ -9,7 +9,6 @@ import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.api.persistence.entity.*
-import com.github.shynixn.blockball.bukkit.BlockBallPlugin
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import org.bukkit.*
@@ -17,7 +16,6 @@ import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
-import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
 
 /**
@@ -77,58 +75,6 @@ fun ItemStack.setDisplayName(displayName: String): ItemStack {
     return this
 }
 
-/**
- * Converts all placeholders.
- */
-internal fun String.replaceGamePlaceholder(game: Game, teamMeta: TeamMeta? = null, team: List<Player>? = null): String {
-    val plugin = JavaPlugin.getPlugin(BlockBallPlugin::class.java)
-    var cache = this.replace(PlaceHolder.TEAM_RED.placeHolder, game.arena.meta.redTeamMeta.displayName)
-        .replace(PlaceHolder.ARENA_DISPLAYNAME.placeHolder, game.arena.displayName)
-        .replace(PlaceHolder.TEAM_BLUE.placeHolder, game.arena.meta.blueTeamMeta.displayName)
-        .replace(PlaceHolder.RED_COLOR.placeHolder, game.arena.meta.redTeamMeta.prefix)
-        .replace(PlaceHolder.BLUE_COLOR.placeHolder, game.arena.meta.blueTeamMeta.prefix)
-        .replace(PlaceHolder.RED_GOALS.placeHolder, game.redScore.toString())
-        .replace(PlaceHolder.BLUE_GOALS.placeHolder, game.blueScore.toString())
-        .replace(PlaceHolder.ARENA_SUM_CURRENTPLAYERS.placeHolder, game.ingamePlayersStorage.size.toString())
-        .replace(PlaceHolder.ARENA_SUM_MAXPLAYERS.placeHolder, (game.arena.meta.blueTeamMeta.maxAmount + game.arena.meta.redTeamMeta.maxAmount).toString())
-
-
-    if (teamMeta != null) {
-        cache = cache.replace(PlaceHolder.ARENA_TEAMCOLOR.placeHolder, teamMeta.prefix)
-            .replace(PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder, teamMeta.displayName)
-            .replace(PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder, teamMeta.maxAmount.toString())
-    }
-
-    if (team != null) {
-        cache = cache.replace(PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder, team.size.toString())
-    }
-
-    val stateSignEnabled = plugin.config.getString("messages.state-sign-enabled")!!.translateChatColors()
-    val stateSignDisabled = plugin.config.getString("messages.state-sign-disabled")!!.translateChatColors()
-    val stateSignRunning = plugin.config.getString("messages.state-sign-running")!!.translateChatColors()
-
-    when {
-        game.status == GameStatus.RUNNING -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, stateSignRunning)
-        game.status == GameStatus.ENABLED -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, stateSignEnabled)
-        game.status == GameStatus.DISABLED -> cache = cache.replace(PlaceHolder.ARENA_STATE.placeHolder, stateSignDisabled)
-    }
-
-    if (game.arena.gameType == GameType.HUBGAME) {
-        cache = cache.replace(PlaceHolder.TIME.placeHolder, "∞")
-    } else if (game is MiniGame) {
-        cache = cache.replace(PlaceHolder.TIME.placeHolder, game.gameCountdown.toString())
-            .replace(
-                PlaceHolder.REMAINING_PLAYERS_TO_START.placeHolder,
-                (game.arena.meta.redTeamMeta.minAmount + game.arena.meta.blueTeamMeta.minAmount - game.ingamePlayersStorage.size).toString()
-            )
-    }
-
-    if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
-        cache = cache.replace(PlaceHolder.LASTHITBALL.placeHolder, (game.lastInteractedEntity as Player).name)
-    }
-
-    return cache.translateChatColors()
-}
 
 /**
  * Returns if the given [player] has got this [Permission].
@@ -203,4 +149,11 @@ internal fun Position.toLocation(): Location {
  */
 internal fun Position.toVector(): Vector {
     return Vector(this.x, this.y, this.z)
+}
+
+/**
+ * Converts the given bukkit vector to a position.
+ */
+internal fun Vector.toPosition(): Position {
+    return PositionEntity(this.x, this.y, this.z)
 }
