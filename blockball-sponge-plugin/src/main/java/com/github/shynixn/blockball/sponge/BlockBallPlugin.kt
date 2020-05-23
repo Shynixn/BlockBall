@@ -118,7 +118,10 @@ class BlockBallPlugin : PluginProxy {
 
         commandService.registerCommandExecutor("blockballstop", resolve(StopCommandExecutor::class.java))
         commandService.registerCommandExecutor("blockballreload", resolve(ReloadCommandExecutor::class.java))
-        commandService.registerCommandExecutor("blockballbungeecord", resolve(BungeeCordSignCommandExecutor::class.java))
+        commandService.registerCommandExecutor(
+            "blockballbungeecord",
+            resolve(BungeeCordSignCommandExecutor::class.java)
+        )
         commandService.registerCommandExecutor("blockball", resolve(ArenaCommandExecutor::class.java))
         commandService.registerCommandExecutor(
             configurationService.findValue<Map<String, String>>("global-spectate"),
@@ -224,17 +227,14 @@ class BlockBallPlugin : PluginProxy {
      * Sets the motd of the server.
      */
     override fun setMotd(message: String) {
-        // TODO: Implement
-
-        throw IllegalArgumentException("This method is not implemented!")
+        sendConsoleMessage("BlockBall does currently not support changing the server motd.")
     }
 
     /**
      * Shutdowns the server.
      */
     override fun shutdownServer() {
-        TODO("Not yet implemented")
-        throw IllegalArgumentException("This method is not implemented!")
+        Sponge.getServer().shutdown()
     }
 
     /**
@@ -268,7 +268,8 @@ class BlockBallPlugin : PluginProxy {
     override fun <E> create(entity: Class<E>): E {
         try {
             val entityName = entity.simpleName + "Entity"
-            return Class.forName("com.github.shynixn.blockball.bukkit.logic.persistence.entity.$entityName").newInstance() as E
+            return Class.forName("com.github.shynixn.blockball.bukkit.logic.persistence.entity.$entityName")
+                .newInstance() as E
         } catch (e: Exception) {
             throw IllegalArgumentException("Entity could not be created.", e)
         }

@@ -64,6 +64,7 @@ dependencies {
     implementation("com.google.inject:guice:4.1.0")
     implementation("org.bstats:bstats-bukkit:1.7")
     implementation("commons-io:commons-io:2.6")
+    implementation("com.google.code.gson:gson:2.8.6")
 
     compileOnly("me.clip:placeholderapi:2.9.2")
     compileOnly("net.milkbowlvault:VaultAPI:1.7")

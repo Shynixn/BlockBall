@@ -3,6 +3,7 @@
 package integrationtest
 
 import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.PersistenceStatsService
@@ -244,6 +245,146 @@ class PersistenceSQLiteIT {
          * Gets a copy of the player armor inventory.
          */
         override fun <P> getPlayerInventoryArmorCopy(player: P): Array<Any?> {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets the player gameMode.
+         */
+        override fun <P> setGameMode(player: P, gameMode: GameMode) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets the player gameMode.
+         */
+        override fun <P> getPlayerGameMode(player: P): GameMode {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets the player flying.
+         */
+        override fun <P> setPlayerFlying(player: P, enabled: Boolean) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets if the player is flying.
+         */
+        override fun <P> getPlayerFlying(player: P): Boolean {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets the player walkingSpeed.
+         */
+        override fun <P> setPlayerWalkingSpeed(player: P, speed: Double) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets the player walkingSpeed.
+         */
+        override fun <P> getPlayerWalkingSpeed(player: P): Double {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Generates a new scoreboard.
+         */
+        override fun <S> generateNewScoreboard(): S {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets if the given instance is a player instance.
+         */
+        override fun <P> isPlayerInstance(player: P): Boolean {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets the player scoreboard.
+         */
+        override fun <P, S> setPlayerScoreboard(player: P, scoreboard: S) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets the player velocity.
+         */
+        override fun <P> setPlayerVelocity(player: P, position: Position) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets the player direction.
+         */
+        override fun <P> getPlayerDirection(player: P): Position {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets the player scoreboard.
+         */
+        override fun <P, S> getPlayerScoreboard(player: P): S {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets if the player is allowed to fly.
+         */
+        override fun <P> setPlayerAllowFlying(player: P, enabled: Boolean) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets if the player is allowed to fly.
+         */
+        override fun <P> getPlayerAllowFlying(player: P): Boolean {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets the player level.
+         */
+        override fun <P> getPlayerLevel(player: P): Int {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets the player exp.
+         */
+        override fun <P> getPlayerExp(player: P): Double {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets the player max health.
+         */
+        override fun <P> getPlayerMaxHealth(player: P): Double {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets the player health.
+         */
+        override fun <P> getPlayerHealth(player: P): Double {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets the player hunger.
+         */
+        override fun <P> getPlayerHunger(player: P): Int {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets the given inventory items.
+         */
+        override fun <P, I> setInventoryContents(player: P, mainInventory: Array<I>, armorInventory: Array<I>) {
             throw IllegalArgumentException()
         }
 

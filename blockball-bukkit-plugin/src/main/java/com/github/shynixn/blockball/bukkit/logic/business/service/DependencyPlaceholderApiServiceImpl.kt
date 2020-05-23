@@ -88,7 +88,7 @@ class DependencyPlaceholderApiServiceImpl @Inject constructor(
         }
 
         try {
-            PlaceHolder.values().asSequence().filter { p -> s != null && s.startsWith(p.placeHolder) }.forEach { p ->
+            PlaceHolder.values().asSequence().filter { p -> s != null && s.startsWith(p.placeHolder) }.forEach { _ ->
                 val data = s!!.split("_")
                 val game = gameService.getGameFromName(data[1])
 

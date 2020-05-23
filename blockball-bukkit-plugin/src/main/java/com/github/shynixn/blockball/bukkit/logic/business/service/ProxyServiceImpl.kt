@@ -1,4 +1,4 @@
-@file:Suppress("UNCHECKED_CAST", "UNCHECKED_CAST")
+@file:Suppress("UNCHECKED_CAST", "UNCHECKED_CAST", "DEPRECATION")
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
