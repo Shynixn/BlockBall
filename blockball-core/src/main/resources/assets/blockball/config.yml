@@ -81,7 +81,7 @@ sql:
 ############################
 
 game:
-  always-use-blockballaxe: false
+  always-use-blockballaxe: true
   allow-server-linking: false
   ignore-ticking-settings: false
 
