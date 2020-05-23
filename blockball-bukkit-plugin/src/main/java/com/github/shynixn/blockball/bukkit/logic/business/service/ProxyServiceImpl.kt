@@ -349,8 +349,8 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        player.inventory.contents = mainInventory as Array<ItemStack>
-        player.inventory.setArmorContents(armorInventory as Array<out ItemStack>)
+        player.inventory.contents = mainInventory.clone().map { d -> d as ItemStack? }.toTypedArray()
+        player.inventory.setArmorContents(armorInventory.clone().map { d -> d as ItemStack? }.toTypedArray())
         player.inventory.updateInventory()
     }
 

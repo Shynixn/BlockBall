@@ -149,8 +149,8 @@ class GameHubGameActionServiceImpl @Inject constructor(
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
             proxyService.setInventoryContents(
                 player,
-                teamMeta.inventoryContents.clone(),
-                teamMeta.armorContents.clone()
+                teamMeta.inventoryContents,
+                teamMeta.armorContents
             )
         }
 
