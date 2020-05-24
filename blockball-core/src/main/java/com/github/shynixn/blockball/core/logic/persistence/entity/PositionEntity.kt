@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.core.logic.persistence.entity
 
 import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import kotlin.math.sqrt
 
 /**
  * Created by Shynixn 2018.
@@ -60,6 +61,27 @@ class PositionEntity() : Position {
         get() = z.toInt()
 
     /**
+     * Normalizes the position and returns the same position.
+     */
+    override fun normalize(): Position {
+        val length: Double = this.length()
+        x /= length
+        y /= length
+        z /= length
+        return this
+    }
+
+    /**
+     * Multiplies the position and returns the same position.
+     */
+    override fun multiply(multiplier: Double): Position {
+        x *= multiplier
+        y *= multiplier
+        z *= multiplier
+        return this
+    }
+
+    /**
      * Optional constructor.
      */
     constructor(x: Double, y: Double, z: Double) : this() {
@@ -106,5 +128,19 @@ class PositionEntity() : Position {
             return false
         }
         return super.equals(other)
+    }
+
+    /**
+     * Returns the vector length.
+     */
+    private fun length(): Double {
+        return sqrt(square(x) + square(y) + square(z))
+    }
+
+    /**
+     * Multiplies the given number with itself.
+     */
+    private fun square(num: Double): Double {
+        return num * num
     }
 }

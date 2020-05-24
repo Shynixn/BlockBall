@@ -51,6 +51,16 @@ interface PluginProxy {
     fun setMotd(message: String)
 
     /**
+     * Shutdowns the server.
+     */
+    fun shutdownServer()
+
+    /**
+     * Is the plugin enabled?
+     */
+    fun isEnabled() : Boolean
+
+    /**
      * Gets a business logic from the BlockBall plugin.
      * All types in the service package can be accessed.
      * Throws a [IllegalArgumentException] if the service could not be found.

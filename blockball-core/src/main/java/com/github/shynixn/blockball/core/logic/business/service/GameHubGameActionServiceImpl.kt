@@ -1,23 +1,14 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.github.shynixn.blockball.bukkit.logic.business.service
+package com.github.shynixn.blockball.core.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
-import com.github.shynixn.blockball.api.business.service.GameExecutionService
-import com.github.shynixn.blockball.api.business.service.GameHubGameActionService
+import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.HubGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toGameMode
-import com.github.shynixn.blockball.bukkit.logic.business.extension.updateInventory
 import com.github.shynixn.blockball.core.logic.persistence.entity.GameStorageEntity
 import com.google.inject.Inject
-import org.bukkit.Bukkit
-import org.bukkit.GameMode
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.scoreboard.Scoreboard
+import java.util.*
 
 /**
  * Created by Shynixn 2018.
@@ -46,20 +37,20 @@ import org.bukkit.scoreboard.Scoreboard
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameHubGameActionServiceImpl @Inject constructor(configurationService: ConfigurationService, private val gameExecutionService: GameExecutionService) :
+class GameHubGameActionServiceImpl @Inject constructor(
+    private val configurationService: ConfigurationService,
+    private val proxyService: ProxyService,
+    private val gameExecutionService: GameExecutionService,
+    private val placeholderService: PlaceholderService
+) :
     GameHubGameActionService {
-    private val prefix = configurationService.findValue<String>("messages.prefix")
-
     /**
      * Lets the given [player] leave join the given [game]. Optional can the prefered
      * [team] be specified but the team can still change because of arena settings.
      * Does nothing if the player is already in a Game.
      */
     override fun <P> joinGame(game: HubGame, player: P, team: Team?): Boolean {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
+        require(player is Any)
         var joiningTeam = team
 
         if (game.arena.meta.lobbyMeta.onlyAllowEventTeams) {
@@ -94,28 +85,21 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
      * Does nothing if the player is not in the game.
      */
     override fun <P> leaveGame(game: HubGame, player: P) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
+        require(player is Any)
 
         if (!game.ingamePlayersStorage.containsKey(player)) {
             return
         }
 
         val stats = game.ingamePlayersStorage[player]!!
-
-        with(player as Player) {
-            gameMode = stats.gameMode as GameMode
-            allowFlight = stats.allowedFlying
-            isFlying = stats.flying
-            walkSpeed = stats.walkingSpeed
-            scoreboard = stats.scoreboard as Scoreboard
-        }
+        proxyService.setGameMode(player, stats.gameMode)
+        proxyService.setPlayerAllowFlying(player, stats.allowedFlying)
+        proxyService.setPlayerFlying(player, stats.flying)
+        proxyService.setPlayerWalkingSpeed(player, stats.walkingSpeed)
+        proxyService.setPlayerScoreboard(player, stats.scoreboard)
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
-            player.inventory.contents = stats.inventoryContents as Array<out ItemStack>
-            player.inventory.setArmorContents(stats.armorContents as Array<out ItemStack>)
-            player.inventory.updateInventory()
+            proxyService.setInventoryContents(player, stats.inventoryContents, stats.armorContents)
         }
     }
 
@@ -136,46 +120,49 @@ class GameHubGameActionServiceImpl @Inject constructor(configurationService: Con
     /**
      * Prepares the storage for a hubgame.
      */
-    private fun prepareLobbyStorageForPlayer(game: HubGame, player: Player, team: Team, teamMeta: TeamMeta) {
-        val stats = GameStorageEntity(player.uniqueId, Bukkit.getScoreboardManager()!!.newScoreboard)
-
-        with(stats) {
-            this.team = team
-            this.goalTeam = team
-            gameMode = player.gameMode
-            armorContents = player.inventory.armorContents.clone() as Array<Any?>
-            flying = player.isFlying
-            allowedFlying = player.allowFlight
-            walkingSpeed = player.walkSpeed
-            scoreboard = player.scoreboard
-            inventoryContents = player.inventory.contents.clone() as Array<Any?>
-            level = player.level
-            exp = player.exp
-            @Suppress("DEPRECATION")
-            maxHealth = player.maxHealth
-            health = player.health
-            hunger = player.foodLevel
-        }
-
+    private fun prepareLobbyStorageForPlayer(game: HubGame, player: Any, team: Team, teamMeta: TeamMeta) {
+        val uuid = proxyService.getPlayerUUID(player)
+        val stats = GameStorageEntity(UUID.fromString(uuid))
         game.ingamePlayersStorage[player] = stats
 
-        player.gameMode = game.arena.meta.lobbyMeta.gamemode.toGameMode()
-        player.allowFlight = false
-        player.isFlying = false
-        player.walkSpeed = teamMeta.walkingSpeed.toFloat()
+        stats.scoreboard = proxyService.generateNewScoreboard()
+        stats.team = team
+        stats.goalTeam = team
+        stats.gameMode = proxyService.getPlayerGameMode(player)
+        stats.flying = proxyService.getPlayerFlying(player)
+        stats.allowedFlying = proxyService.getPlayerAllowFlying(player)
+        stats.walkingSpeed = proxyService.getPlayerWalkingSpeed(player)
+        stats.scoreboard = proxyService.getPlayerScoreboard(player)
+        stats.armorContents = proxyService.getPlayerInventoryArmorCopy(player)
+        stats.inventoryContents = proxyService.getPlayerInventoryCopy(player)
+        stats.level = proxyService.getPlayerLevel(player)
+        stats.exp = proxyService.getPlayerExp(player)
+        stats.maxHealth = proxyService.getPlayerMaxHealth(player)
+        stats.health = proxyService.getPlayerHealth(player)
+        stats.hunger = proxyService.getPlayerHunger(player)
+
+        proxyService.setGameMode(player, game.arena.meta.lobbyMeta.gamemode)
+        proxyService.setPlayerAllowFlying(player, false)
+        proxyService.setPlayerFlying(player, false)
+        proxyService.setPlayerWalkingSpeed(player, teamMeta.walkingSpeed)
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
-            player.inventory.contents = teamMeta.inventoryContents.clone().map { d -> d as ItemStack? }.toTypedArray()
-            player.inventory.setArmorContents(teamMeta.armorContents.clone().map { d -> d as ItemStack? }.toTypedArray())
-            player.inventory.updateInventory()
+            proxyService.setInventoryContents(
+                player,
+                teamMeta.inventoryContents,
+                teamMeta.armorContents
+            )
         }
 
         if (game.arena.meta.hubLobbyMeta.teleportOnJoin) {
             this.gameExecutionService.respawn(game, player)
         } else {
-            player.velocity = player.location.direction.normalize().multiply(0.5)
+            val velocityIntoArena = proxyService.getPlayerDirection(player).normalize().multiply(0.5)
+            proxyService.setPlayerVelocity(player, velocityIntoArena)
         }
 
-        player.sendMessage(prefix + teamMeta.joinMessage.replaceGamePlaceholder(game, teamMeta))
+        val prefix = configurationService.findValue<String>("messages.prefix")
+        val message = prefix + placeholderService.replacePlaceHolders(teamMeta.joinMessage, game, teamMeta)
+        proxyService.sendMessage(player, message)
     }
 }

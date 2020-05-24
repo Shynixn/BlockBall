@@ -60,7 +60,7 @@ class GameExecutionServiceTest {
         val game = GameEntity(ArenaEntity())
         val player = "Player"
         var position: Position = PositionEntity(0.0, 0.0, 0.0)
-        val storage = GameStorageEntity(UUID.randomUUID(), "")
+        val storage = GameStorageEntity(UUID.randomUUID())
         storage.team = Team.RED
         storage.goalTeam = Team.RED
         game.ingamePlayersStorage[player] = storage
@@ -96,7 +96,7 @@ class GameExecutionServiceTest {
         val game = GameEntity(ArenaEntity())
         val player = "Player"
         var position: Position = PositionEntity(0.0, 0.0, 0.0)
-        val storage = GameStorageEntity(UUID.randomUUID(), "")
+        val storage = GameStorageEntity(UUID.randomUUID())
         storage.team = Team.BLUE
         storage.goalTeam = Team.BLUE
         game.ingamePlayersStorage[player] = storage

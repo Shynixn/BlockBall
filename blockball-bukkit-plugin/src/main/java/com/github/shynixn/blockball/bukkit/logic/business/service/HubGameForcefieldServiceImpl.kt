@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.business.enumeration.ChatClickAction
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.InteractionCache
 import com.github.shynixn.blockball.bukkit.logic.business.extension.*
 import com.github.shynixn.blockball.core.logic.persistence.entity.ChatBuilderEntity
@@ -45,7 +44,8 @@ class HubGameForcefieldServiceImpl @Inject constructor(
     private val gameService: GameService,
     private val configurationService: ConfigurationService,
     private val gameActionService: GameActionService,
-    private val proxyService: ProxyService
+    private val proxyService: ProxyService,
+    private val placeholderService: PlaceholderService
 ) : HubGameForcefieldService {
     private val cache = HashMap<Player, InteractionCache>()
 
@@ -114,7 +114,8 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                                 ChatBuilderEntity().text(prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].translateChatColors())
                                     .nextLine()
                                     .component(
-                                        game.arena.meta.hubLobbyMeta.joinMessage[1].replaceGamePlaceholder(
+                                        placeholderService.replacePlaceHolders(
+                                            game.arena.meta.hubLobbyMeta.joinMessage[1],
                                             game,
                                             game.arena.meta.redTeamMeta
                                         )
@@ -127,7 +128,8 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                                     .setHoverText(" ")
                                     .builder().text(" ")
                                     .component(
-                                        game.arena.meta.hubLobbyMeta.joinMessage[2].replaceGamePlaceholder(
+                                        placeholderService.replacePlaceHolders(
+                                            game.arena.meta.hubLobbyMeta.joinMessage[2],
                                             game,
                                             game.arena.meta.blueTeamMeta
                                         )

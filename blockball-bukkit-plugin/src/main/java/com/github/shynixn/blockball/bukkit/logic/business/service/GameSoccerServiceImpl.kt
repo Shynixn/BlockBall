@@ -11,7 +11,6 @@ import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.core.logic.business.extension.sync
@@ -51,7 +50,8 @@ class GameSoccerServiceImpl @Inject constructor(
     private val concurrencyService: ConcurrencyService,
     private val screenMessageService: ScreenMessageService,
     private val dependencyService: DependencyService,
-    private val ballEntityService: BallEntityService
+    private val ballEntityService: BallEntityService,
+    private val placeholderService: PlaceholderService
 ) : GameSoccerService {
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
@@ -260,8 +260,8 @@ class GameSoccerServiceImpl @Inject constructor(
         players.forEach { p ->
             screenMessageService.setTitle(
                 p,
-                scoreMessageTitle.replaceGamePlaceholder(game),
-                scoreMessageSubTitle.replaceGamePlaceholder(game)
+                placeholderService.replacePlaceHolders(scoreMessageTitle, game),
+                placeholderService.replacePlaceHolders(scoreMessageSubTitle, game)
             )
         }
     }
@@ -361,8 +361,8 @@ class GameSoccerServiceImpl @Inject constructor(
         players.forEach { p ->
             screenMessageService.setTitle(
                 p,
-                winMessageTitle.replaceGamePlaceholder(game),
-                winMessageSubTitle.replaceGamePlaceholder(game)
+                placeholderService.replacePlaceHolders(winMessageTitle, game),
+                placeholderService.replacePlaceHolders(winMessageSubTitle, game)
             )
         }
 
@@ -398,15 +398,16 @@ class GameSoccerServiceImpl @Inject constructor(
         }
         when {
             meta.mode == CommandMode.PER_PLAYER -> players.forEach { p ->
-                p.performCommand(command.replaceGamePlaceholder(game))
+                p.performCommand(placeholderService.replacePlaceHolders(command, game))
             }
             meta.mode == CommandMode.CONSOLE_PER_PLAYER -> players.forEach { p ->
                 game.lastInteractedEntity = p
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command.replaceGamePlaceholder(game))
+                Bukkit.getServer()
+                    .dispatchCommand(Bukkit.getConsoleSender(), placeholderService.replacePlaceHolders(command, game))
             }
             meta.mode == CommandMode.CONSOLE_SINGLE -> Bukkit.getServer().dispatchCommand(
                 Bukkit.getConsoleSender(),
-                command.replaceGamePlaceholder(game)
+                placeholderService.replacePlaceHolders(command, game)
             )
         }
     }

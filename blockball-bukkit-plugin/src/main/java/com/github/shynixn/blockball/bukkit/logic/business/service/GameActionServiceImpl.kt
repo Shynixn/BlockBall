@@ -9,7 +9,6 @@ import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.*
-import com.github.shynixn.blockball.bukkit.logic.business.extension.replaceGamePlaceholder
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
@@ -65,7 +64,8 @@ class GameActionServiceImpl @Inject constructor(
     private val scoreboardService: ScoreboardService,
     private val dependencyService: DependencyService,
     private val dependencyBossBarApiService: DependencyBossBarApiService,
-    private val gameSoccerService: GameSoccerService
+    private val gameSoccerService: GameSoccerService,
+    private val placeholderService: PlaceholderService
 ) : GameActionService {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
@@ -329,8 +329,8 @@ class GameActionServiceImpl @Inject constructor(
         val sign = location.block.state as Sign
 
         for (i in lines.indices) {
-            val text = lines[i]
-            sign.setLine(i, text.replaceGamePlaceholder(game, teamMeta, players as List<Player>))
+            val text = placeholderService.replacePlaceHolders(lines[i], game, teamMeta, players.size)
+            sign.setLine(i, text)
         }
 
         sign.update(true)
@@ -385,7 +385,7 @@ class GameActionServiceImpl @Inject constructor(
             val lines = ArrayList(game.arena.meta.hologramMetas[i].lines)
 
             for (k in lines.indices) {
-                lines[k] = lines[k].replaceGamePlaceholder(game)
+                lines[k] = placeholderService.replacePlaceHolders(lines[k], game)
             }
 
             holo.lines = lines
@@ -404,7 +404,7 @@ class GameActionServiceImpl @Inject constructor(
             }
 
             if (game.bossBar != null) {
-                bossBarService.changeConfiguration(game.bossBar, meta.message.replaceGamePlaceholder(game), meta, null)
+                bossBarService.changeConfiguration(game.bossBar, placeholderService.replacePlaceHolders(meta.message, game), meta, null)
 
                 val players = ArrayList(game.inTeamPlayers)
                 val additionalPlayers = getAdditionalNotificationPlayers(game)
@@ -437,7 +437,7 @@ class GameActionServiceImpl @Inject constructor(
                 players.forEach { p ->
                     dependencyBossBarApiService.setBossbarMessage(
                         p,
-                        meta.message.replaceGamePlaceholder(game),
+                        placeholderService.replacePlaceHolders(meta.message, game),
                         percentage
                     )
                 }
@@ -499,7 +499,7 @@ class GameActionServiceImpl @Inject constructor(
 
                 var j = lines.size
                 for (i in 0 until lines.size) {
-                    val line = lines[i].replaceGamePlaceholder(game)
+                    val line = placeholderService.replacePlaceHolders(lines[i], game)
                     scoreboardService.setLine(game.scoreboard, j, line)
                     j--
                 }

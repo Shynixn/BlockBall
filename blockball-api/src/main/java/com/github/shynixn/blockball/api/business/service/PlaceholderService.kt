@@ -1,13 +1,16 @@
-package com.github.shynixn.blockball.api.persistence.entity
+package com.github.shynixn.blockball.api.business.service
+
+import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2020.
  * <p>
- * Version 1.2
+ * Version 1.5
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2020 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,41 +30,9 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Position {
-    /** [worldName] which world the location is. */
-    var worldName: String?
-
-    /** [x] coordinate. */
-    var x: Double
-
-    /** [y] coordinate. */
-    var y: Double
-
-    /** [z] coordinate. */
-    var z: Double
-
-    /** [yaw] rotation yaw. */
-    var yaw: Double
-
-    /** [pitch] rotation pitch. */
-    var pitch: Double
-
-    /** [blockX] coordinate as Int. */
-    val blockX: Int
-
-    /** [blockY] coordinate as Int. */
-    val blockY: Int
-
-    /** [blockZ] coordinate as Int. */
-    val blockZ: Int
-
+interface PlaceholderService {
     /**
-     * Normalizes the position and returns the same position.
+     * Replaces the given text with properties from the given [game], optional [teamMeta] and optional size.
      */
-    fun normalize(): Position
-
-    /**
-     * Multiplies the position and returns the same position.
-     */
-    fun multiply(multiplier: Double): Position
+    fun replacePlaceHolders(text: String, game: Game, teamMeta: TeamMeta? = null, currentTeamSize: Int? = null): String
 }

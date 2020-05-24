@@ -3,6 +3,7 @@
 package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
@@ -62,6 +63,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
 
     private var injector: Injector? = null
     private var serverVersion: Version? = null
+    private val bstatsPluginId = 1317
 
     /**
      * Gets the installed version of the plugin.
@@ -181,7 +183,12 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         )
 
         if (enableMetrics) {
-            Metrics(this)
+            Metrics(this, bstatsPluginId)
+        }
+
+        if (dependencyService.isInstalled(PluginDependency.PLACEHOLDERAPI)) {
+            val placeHolderService = resolve(DependencyPlaceholderApiService::class.java)
+            placeHolderService.registerListener()
         }
 
         if (enableBungeeCord) {
@@ -305,6 +312,13 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     }
 
     /**
+     * Shutdowns the server.
+     */
+    override fun shutdownServer() {
+        Bukkit.getServer().shutdown()
+    }
+
+    /**
      * Sends a console message from this plugin.
      */
     override fun sendConsoleMessage(message: String) {
@@ -335,7 +349,8 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     override fun <E> create(entity: Class<E>): E {
         try {
             val entityName = entity.simpleName + "Entity"
-            return Class.forName("com.github.shynixn.blockball.bukkit.logic.persistence.entity.$entityName").newInstance() as E
+            return Class.forName("com.github.shynixn.blockball.bukkit.logic.persistence.entity.$entityName")
+                .newInstance() as E
         } catch (e: Exception) {
             throw IllegalArgumentException("Entity could not be created.", e)
         }

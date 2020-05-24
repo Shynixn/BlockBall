@@ -80,7 +80,7 @@ class GameListenerTest {
         val rightClickService = MockedRightClickService()
         val classUnderTest = createWithDependencies(gameService, rightClickService)
 
-        val storage = GameStorageEntity(UUID.randomUUID(), "")
+        val storage = GameStorageEntity(UUID.randomUUID())
         storage.team = Team.RED
 
         val game = GameEntity(ArenaEntity())
@@ -119,7 +119,7 @@ class GameListenerTest {
         val rightClickService = MockedRightClickService()
         val classUnderTest = createWithDependencies(gameService, rightClickService)
 
-        val storage = GameStorageEntity(UUID.randomUUID(), "")
+        val storage = GameStorageEntity(UUID.randomUUID())
         storage.team = Team.BLUE
 
         val game = GameEntity(ArenaEntity())

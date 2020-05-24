@@ -1,4 +1,4 @@
-@file:Suppress("UNCHECKED_CAST")
+@file:Suppress("UNCHECKED_CAST", "UNCHECKED_CAST", "DEPRECATION")
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
@@ -7,17 +7,16 @@ import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
-import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.bukkit.logic.business.extension.*
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
+import org.bukkit.scoreboard.Scoreboard
 import java.util.logging.Level
 
 /**
@@ -115,6 +114,17 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
         }
 
     /**
+     * Kicks the given player with the given message.
+     */
+    override fun <P> kickPlayer(player: P, message: String) {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        player.kickPlayer(message)
+    }
+
+    /**
      * Performs a player command.
      */
     override fun <P> performPlayerCommand(player: P, command: String) {
@@ -180,6 +190,171 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
     }
 
     /**
+     * Sets the player gameMode.
+     */
+    override fun <P> setGameMode(player: P, gameMode: com.github.shynixn.blockball.api.business.enumeration.GameMode) {
+        require(player is Player)
+        player.gameMode = GameMode.values().first { g -> g.name == player.gameMode.name }
+    }
+
+    /**
+     * Gets the player gameMode.
+     */
+    override fun <P> getPlayerGameMode(player: P): com.github.shynixn.blockball.api.business.enumeration.GameMode {
+        require(player is Player)
+        return com.github.shynixn.blockball.api.business.enumeration.GameMode.values()
+            .first { g -> g.name == player.gameMode.name }
+    }
+
+    /**
+     * Sets the player flying.
+     */
+    override fun <P> setPlayerFlying(player: P, enabled: Boolean) {
+        require(player is Player)
+        player.isFlying = enabled
+    }
+
+    /**
+     * Gets if the player is flying.
+     */
+    override fun <P> getPlayerFlying(player: P): Boolean {
+        require(player is Player)
+        return player.isFlying
+    }
+
+    /**
+     * Sets the player walkingSpeed.
+     */
+    override fun <P> setPlayerWalkingSpeed(player: P, speed: Double) {
+        require(player is Player)
+        player.walkSpeed = speed.toFloat()
+    }
+
+    /**
+     * Gets the player walkingSpeed.
+     */
+    override fun <P> getPlayerWalkingSpeed(player: P): Double {
+        require(player is Player)
+        return player.walkSpeed.toDouble()
+    }
+
+    /**
+     * Generates a new scoreboard.
+     */
+    override fun <S> generateNewScoreboard(): S {
+        return Bukkit.getScoreboardManager()!!.newScoreboard as S
+    }
+
+    /**
+     * Gets if the given instance is a player instance.
+     */
+    override fun <P> isPlayerInstance(player: P): Boolean {
+        return player != null && player is Player
+    }
+
+    /**
+     * Sets the player scoreboard.
+     */
+    override fun <P, S> setPlayerScoreboard(player: P, scoreboard: S) {
+        require(player is Player)
+        require(scoreboard is Scoreboard)
+        player.scoreboard = scoreboard
+    }
+
+    /**
+     * Sets the player velocity.
+     */
+    override fun <P> setPlayerVelocity(player: P, position: Position) {
+        require(player is Player)
+        player.velocity = position.toVector()
+    }
+
+    /**
+     * Gets the player direction.
+     */
+    override fun <P> getPlayerDirection(player: P): Position {
+        require(player is Player)
+        return player.location.direction.toPosition()
+    }
+
+    /**
+     * Gets the player scoreboard.
+     */
+    override fun <P, S> getPlayerScoreboard(player: P): S {
+        require(player is Player)
+        return player.scoreboard as S
+    }
+
+    /**
+     * Sets if the player is allowed to fly.
+     */
+    override fun <P> setPlayerAllowFlying(player: P, enabled: Boolean) {
+        require(player is Player)
+        player.allowFlight = enabled
+    }
+
+    /**
+     * Gets if the player is allowed to fly.
+     */
+    override fun <P> getPlayerAllowFlying(player: P): Boolean {
+        require(player is Player)
+        return player.allowFlight
+    }
+
+    /**
+     * Gets the player level.
+     */
+    override fun <P> getPlayerLevel(player: P): Int {
+        require(player is Player)
+        return player.level
+    }
+
+    /**
+     * Gets the player exp.
+     */
+    override fun <P> getPlayerExp(player: P): Double {
+        require(player is Player)
+        return player.exp.toDouble()
+    }
+
+    /**
+     * Gets the player max health.
+     */
+    override fun <P> getPlayerMaxHealth(player: P): Double {
+        require(player is Player)
+        return player.maxHealth
+    }
+
+    /**
+     * Gets the player health.
+     */
+    override fun <P> getPlayerHealth(player: P): Double {
+        require(player is Player)
+        return player.health
+    }
+
+    /**
+     * Gets the player hunger.
+     */
+    override fun <P> getPlayerHunger(player: P): Int {
+        require(player is Player)
+        return player.foodLevel
+    }
+
+    /**
+     * Sets the given inventory items.
+     */
+    override fun <P, I> setInventoryContents(player: P, mainInventory: Array<I>, armorInventory: Array<I>) {
+        if (player !is Player) {
+            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        player.inventory.contents = mainInventory.clone().map { d -> d as ItemStack? }.toTypedArray()
+        player.inventory.setArmorContents(armorInventory.clone().map { d -> d as ItemStack? }.toTypedArray())
+        player.inventory.updateInventory()
+    }
+
+    /**
      * Converts the given [location] to a [Position].
      */
     override fun <L> toPosition(location: L): Position {
@@ -211,9 +386,11 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
 
             val packet = if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_12_R1)) {
                 val chatEnumMessage = findClazz("net.minecraft.server.VERSION.ChatMessageType")
-                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage).newInstance(chatComponent, chatEnumMessage.enumConstants[0])
+                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage)
+                    .newInstance(chatComponent, chatEnumMessage.enumConstants[0])
             } else {
-                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Byte::class.javaPrimitiveType as Class<*>).newInstance(chatComponent, 0.toByte())
+                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Byte::class.javaPrimitiveType as Class<*>)
+                    .newInstance(chatComponent, 0.toByte())
             }
 
             sender.sendPacket(packet)

@@ -9,12 +9,12 @@ buildscript {
     }
     dependencies {
         classpath group: 'org.jetbrains.kotlin', name: 'kotlin-gradle-plugin', version: kotlinVersion
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.17"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.10.1"
     }
 }
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.3.31'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
     id 'io.codearte.nexus-staging' version '0.20.0'
     id "de.marcphilipp.nexus-publish" version '0.2.0'
 }
@@ -39,7 +39,7 @@ allprojects {
 
 subprojects {
     group 'com.github.shynixn.blockball'
-    version '6.14.0'
+    version '6.15.0'
 
     sourceCompatibility = 1.8
 
@@ -48,6 +48,7 @@ subprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'java-library'
     apply plugin: "de.marcphilipp.nexus-publish"
+    apply plugin: 'org.jetbrains.dokka'
 
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
@@ -150,6 +151,10 @@ subprojects {
         mavenLocal()
         jcenter()
         maven {
+            name = "jitpack"
+            url = "https://jitpack.io"
+        }
+        maven {
             name = 'sponge'
             url = 'https://repo.spongepowered.org/maven'
         }
@@ -157,14 +162,14 @@ subprojects {
 
     dependencies {
         implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2'
 
         testCompile 'org.jetbrains.kotlin:kotlin-test'
         testCompile 'org.jetbrains.kotlin:kotlin-test-junit'
-        testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-        testCompile 'org.mockito:mockito-core:2.23.0'
+        testCompile 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+        testCompile 'org.mockito:mockito-core:3.3.3'
 
-        testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+        testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
     }
 }
 
@@ -197,12 +202,23 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 }
 
 task generateJavaDocPages(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    outputFormat = 'javadoc'
+    outputFormat = "javadoc"
     outputDirectory = "docs/apidocs"
-    sourceDirs = files(new File(this.projectDir as File, '/blockball-api/src/main/java')
-            , new File(this.projectDir as File, '/blockball-bukkit-api/src/main/java')
-            , new File(this.projectDir as File, '/blockball-core/src/main/java')
-            , new File(this.projectDir as File, '/blockball-bukkit-plugin/src/main/java'))
+
+    configuration {
+        sourceRoot{
+            path = "blockball-api/src/main/java"
+        }
+        sourceRoot {
+            path = "blockball-bukkit-api/src/main/java"
+        }
+        sourceRoot {
+            path = "blockball-core/src/main/java"
+        }
+        sourceRoot {
+            path = "blockball-bukkit-plugin/src/main/java"
+        }
+    }
 }
 
 task downloadDependencies(type: Exec) {
