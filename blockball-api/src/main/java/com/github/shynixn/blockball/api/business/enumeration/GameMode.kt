@@ -39,7 +39,12 @@ enum class GameMode {
     SURVIVAL,
 
     /**
+     * Spectator gamemode
+     */
+    SPECTATOR,
+
+    /**
      * Adventure gamemode.
      */
-    ADVENTURE
+    ADVENTURE;
 }
