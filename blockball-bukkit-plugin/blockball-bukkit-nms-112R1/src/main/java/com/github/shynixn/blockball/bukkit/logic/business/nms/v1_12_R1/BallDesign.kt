@@ -85,6 +85,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         compound.setBoolean("Invisible", true)
         compound.setBoolean("PersistenceRequired", true)
         compound.setBoolean("NoBasePlate", true)
+        compound.setInt("DisabledSlots", 2039583)
         this.a(compound)
 
         val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
