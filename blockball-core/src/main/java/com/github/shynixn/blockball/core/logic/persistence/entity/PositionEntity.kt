@@ -35,30 +35,58 @@ class PositionEntity() : Position {
     /** [worldName] which world the location is. */
     @YamlSerialize(orderNumber = 1, value = "world")
     override var worldName: String? = null
+
     /** [x] coordinate. */
     @YamlSerialize(orderNumber = 2, value = "x")
     override var x: Double = 0.0
+
     /** [y] coordinate. */
     @YamlSerialize(orderNumber = 2, value = "y")
     override var y: Double = 0.0
+
     /** [z] coordinate. */
     @YamlSerialize(orderNumber = 2, value = "z")
     override var z: Double = 0.0
+
     /** [yaw] rotation yaw. */
     @YamlSerialize(orderNumber = 2, value = "yaw")
     override var yaw: Double = 0.0
+
     /** [pitch] rotation pitch. */
     @YamlSerialize(orderNumber = 2, value = "pitch")
     override var pitch: Double = 0.0
+
     /** [blockX] coordinate as Int. */
     override val blockX: Int
         get() = x.toInt()
+
     /** [blockY] coordinate as Int. */
     override val blockY: Int
         get() = y.toInt()
+
     /** [blockZ] coordinate as Int. */
     override val blockZ: Int
         get() = z.toInt()
+
+    /**
+     * Calculates the distance to the other location.
+     */
+    override fun distance(o: Position): Double {
+        return sqrt(distanceSquared(o))
+    }
+
+    /**
+     * Calculates the square distance to the other location.
+     */
+    override fun distanceSquared(o: Position): Double {
+        if (this.worldName != null && o.worldName != null) {
+            if (this.worldName != o.worldName) {
+                return Double.MAX_VALUE
+            }
+        }
+
+        return square(x - o.x) + square(y - o.y) + square(z - o.z)
+    }
 
     /**
      * Normalizes the position and returns the same position.

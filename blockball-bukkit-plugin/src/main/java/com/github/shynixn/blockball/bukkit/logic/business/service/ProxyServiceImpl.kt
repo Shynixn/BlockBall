@@ -114,6 +114,22 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
         }
 
     /**
+     * Teleports the player to the given location.
+     */
+    override fun <P, L> teleport(player: P, location: L) {
+        require(player is Player)
+
+        if (location is Location) {
+            player.teleport(location)
+            return
+        }
+
+        if (location is Position) {
+            player.teleport(location.toLocation())
+        }
+    }
+
+    /**
      * Kicks the given player with the given message.
      */
     override fun <P> kickPlayer(player: P, message: String) {
@@ -155,7 +171,6 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
 
         throw IllegalArgumentException("Location has to be a position or location!")
     }
-
     /**
      * Gets the location of the player.
      */
@@ -318,6 +333,22 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
     }
 
     /**
+     * Sets the player exp.
+     */
+    override fun <P> setPlayerExp(player: P, exp: Double) {
+        require(player is Player)
+        player.exp = exp.toFloat()
+    }
+
+    /**
+     * Sets the player level.
+     */
+    override fun <P> setPlayerLevel(player: P, level: Int) {
+        require(player is Player)
+        player.level = level
+    }
+
+    /**
      * Gets the player max health.
      */
     override fun <P> getPlayerMaxHealth(player: P): Double {
@@ -366,6 +397,33 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
     }
 
     /**
+     * Gets a list of players in the given world of the given location.
+     */
+    override fun <P, L> getPlayersInWorld(location: L): List<P> {
+        val actualLocation = when (location) {
+            is Location -> {
+                location
+            }
+            is Position -> {
+                location.toLocation()
+            }
+            else -> {
+                throw IllegalArgumentException("Parameter $location is not a location!")
+            }
+        }
+
+        return actualLocation.world!!.players as List<P>
+    }
+
+    /**
+     * Has player permission?
+     */
+    override fun <P> hasPermission(player: P, permission: String): Boolean {
+        require(player is Player)
+        return player.hasPermission(permission)
+    }
+
+    /**
      * Sends a chat message to the [sender].
      */
     override fun <S> sendMessage(sender: S, chatBuilder: ChatBuilder) {
@@ -411,5 +469,29 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
         if (sender is Player) {
             sender.sendMessage(message)
         }
+    }
+
+    /**
+     * Sets the player max health.
+     */
+    override fun setPlayerMaxHealth(player: Any, health: Double) {
+        require(player is Player)
+        player.maxHealth = health
+    }
+
+    /**
+     * Sets the player health.
+     */
+    override fun setPlayerHealth(player: Any, health: Double) {
+        require(player is Player)
+        player.health = health
+    }
+
+    /**
+     * Sets the player hunger.
+     */
+    override fun setPlayerHunger(player: Any, hunger: Int) {
+        require(player is Player)
+        player.foodLevel = hunger
     }
 }

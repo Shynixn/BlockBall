@@ -1,13 +1,22 @@
-package com.github.shynixn.blockball.api.persistence.entity
+@file:Suppress("UNCHECKED_CAST")
+
+package com.github.shynixn.blockball.sponge.logic.business.service
+
+import com.github.shynixn.blockball.api.business.service.YamlService
+import org.yaml.snakeyaml.DumperOptions
+import org.yaml.snakeyaml.Yaml
+import java.io.FileInputStream
+import java.io.FileWriter
+import java.nio.file.Path
 
 /**
- * Created by Shynixn 2018.
+ * Created by Shynixn 2020.
  * <p>
  * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2018 by Shynixn
+ * Copyright (c) 2020 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,51 +36,30 @@ package com.github.shynixn.blockball.api.persistence.entity
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface Position {
-    /** [worldName] which world the location is. */
-    var worldName: String?
+class YamlServiceImpl : YamlService {
+    /**
+     * Writes the given [content] to the given [path].
+     */
+    override fun write(path: Path, content: Map<String, Any?>) {
+        val options = DumperOptions()
+        options.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
+        options.isPrettyFlow = true
 
-    /** [x] coordinate. */
-    var x: Double
+        val yaml = Yaml(options)
 
-    /** [y] coordinate. */
-    var y: Double
-
-    /** [z] coordinate. */
-    var z: Double
-
-    /** [yaw] rotation yaw. */
-    var yaw: Double
-
-    /** [pitch] rotation pitch. */
-    var pitch: Double
-
-    /** [blockX] coordinate as Int. */
-    val blockX: Int
-
-    /** [blockY] coordinate as Int. */
-    val blockY: Int
-
-    /** [blockZ] coordinate as Int. */
-    val blockZ: Int
+        FileWriter(path.toFile()).use { stream ->
+            yaml.dump(content, stream)
+        }
+    }
 
     /**
-     * Calculates the distance to the other location.
+     * Reads the content from the given [path].
      */
-    fun distance(o: Position): Double
+    override fun read(path: Path): Map<String, Any?> {
+        val yaml = Yaml()
 
-    /**
-     * Calculates the square distance to the other location.
-     */
-    fun distanceSquared(o: Position): Double
-
-    /**
-     * Normalizes the position and returns the same position.
-     */
-    fun normalize(): Position
-
-    /**
-     * Multiplies the position and returns the same position.
-     */
-    fun multiply(multiplier: Double): Position
+        FileInputStream(path.toFile()).use { stream ->
+            return yaml.load(stream) as Map<String, Any>
+        }
+    }
 }
