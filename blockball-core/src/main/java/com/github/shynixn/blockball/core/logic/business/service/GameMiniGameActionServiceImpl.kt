@@ -1,28 +1,18 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.github.shynixn.blockball.bukkit.logic.business.service
+package com.github.shynixn.blockball.core.logic.business.service
 
-import com.github.shynixn.blockball.api.business.enumeration.ChatClickAction
-import com.github.shynixn.blockball.api.business.enumeration.GameStatus
-import com.github.shynixn.blockball.api.business.enumeration.Permission
-import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.GameStorage
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toGameMode
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
-import com.github.shynixn.blockball.bukkit.logic.business.extension.updateInventory
 import com.github.shynixn.blockball.core.logic.persistence.entity.ChatBuilderEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.GameStorageEntity
 import com.google.inject.Inject
-import org.bukkit.Bukkit
-import org.bukkit.GameMode
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.Plugin
-import org.bukkit.scoreboard.Scoreboard
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by Shynixn 2018.
@@ -52,7 +42,6 @@ import org.bukkit.scoreboard.Scoreboard
  * SOFTWARE.
  */
 class GameMiniGameActionServiceImpl @Inject constructor(
-    private val plugin: Plugin,
     private val configurationService: ConfigurationService,
     private val screenMessageService: ScreenMessageService,
     private val soundService: SoundService,
@@ -69,7 +58,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Closes the given game and all underlying resources.
      */
     override fun closeGame(game: MiniGame) {
-        game.spectatorPlayers.map { p -> p as Player }.forEach { p ->
+        game.spectatorPlayers.forEach { p ->
             leaveGame(game, p)
         }
     }
@@ -80,11 +69,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Does nothing if the player is already in a Game.
      */
     override fun <P> joinGame(game: MiniGame, player: P, team: Team?): Boolean {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        loggingService.debug("Player " + player.name + " has joined game " + game.arena.name + " " + game.arena.displayName)
+        require(player is Any)
 
         if (game.playing || game.isLobbyFull) {
             val b = ChatBuilderEntity().text(
@@ -102,7 +87,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 )
                 .setClickAction(
                     ChatClickAction.RUN_COMMAND
-                    , "/" + plugin.config.getString("global-spectate.command") + " " + game.arena.name
+                    , "/" + configurationService.findValue<String>("global-spectate.command") + " " + game.arena.name
                 )
                 .setHoverText(" ")
                 .builder()
@@ -147,8 +132,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         }
 
         val storage = this.createPlayerStorage(game, player)
-        @Suppress("USELESS_CAST")
-        game.ingamePlayersStorage[player as Player] = storage
+        game.ingamePlayersStorage[player] = storage
 
         if (team != null) {
             joinGame(game, player, team)
@@ -162,24 +146,16 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Does nothing if the player is not in the game.
      */
     override fun <P> leaveGame(game: MiniGame, player: P) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        loggingService.debug("Player " + player.name + " tries to leave game " + game.arena.name + " " + game.arena.displayName)
+        require(player is Any)
 
         if (game.spectatorPlayers.contains(player)) {
             resetStorage(player, game, game.spectatorPlayersStorage[player]!!)
-            player.teleport(game.arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation())
+            proxyService.teleport(player, game.arena.meta.lobbyMeta.leaveSpawnpoint!!)
             game.spectatorPlayersStorage.remove(player)
-
-            loggingService.debug("Player " + player.name + " has left as spectator.")
-
             return
         }
 
         if (!game.ingamePlayersStorage.containsKey(player)) {
-            loggingService.debug("Player " + player.name + " has left without restorring storage.")
             return
         }
 
@@ -192,9 +168,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Does nothing if the player is already spectating a Game.
      */
     override fun <P> spectateGame(game: MiniGame, player: P) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
+        require(player is Any)
 
         if (game.spectatorPlayers.contains(player)) {
             return
@@ -205,16 +179,14 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         }
 
         if (game.arena.meta.spectatorMeta.spectateSpawnpoint != null) {
-            player.teleport(game.arena.meta.spectatorMeta.spectateSpawnpoint!!.toLocation())
+            proxyService.teleport(player, game.arena.meta.spectatorMeta.spectateSpawnpoint!!)
         } else {
-            player.teleport(game.arena.meta.ballMeta.spawnpoint!!.toLocation())
+            proxyService.teleport(player, game.arena.meta.ballMeta.spawnpoint!!)
         }
 
         val storage = createPlayerStorage(game, player)
-        @Suppress("USELESS_CAST")
-        game.spectatorPlayersStorage[player as Player] = storage
-
-        player.gameMode = GameMode.SPECTATOR
+        game.spectatorPlayersStorage[player] = storage
+        proxyService.setGameMode(player, GameMode.SPECTATOR)
     }
 
     /**
@@ -266,27 +238,27 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
             game.lobbyCountdown--
 
-            game.ingamePlayersStorage.keys.toTypedArray().map { p -> p as Player }.forEach { p ->
+            game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
                 if (game.lobbyCountdown <= 10) {
-                    p.exp = 1.0F - (game.lobbyCountdown.toFloat() / 10.0F)
+                    proxyService.setPlayerExp(p, 1.0 - (game.lobbyCountdown.toFloat() / 10.0))
                 }
 
-                p.level = game.lobbyCountdown
+                proxyService.setPlayerLevel(p, game.lobbyCountdown)
             }
 
             if (game.lobbyCountdown < 5) {
-                game.ingamePlayersStorage.keys.map { p -> p as Player }.forEach { p ->
-                    soundService.playSound(p.location, game.blingSound, arrayListOf(p))
+                game.ingamePlayersStorage.keys.forEach { p ->
+                    soundService.playSound(proxyService.getPlayerLocation<Any, Any>(p), game.blingSound, arrayListOf(p))
                 }
             }
 
             if (game.lobbyCountdown <= 0) {
-                game.ingamePlayersStorage.keys.map { p -> p as Player }.toTypedArray().forEach { p ->
+                game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
                     if (game.lobbyCountdown <= 10) {
-                        p.exp = 1.0F
+                        proxyService.setPlayerExp(p, 1.0)
                     }
 
-                    p.level = 0
+                    proxyService.setPlayerLevel(p, 0)
                 }
 
                 game.lobbyCountDownActive = false
@@ -294,7 +266,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 game.status = GameStatus.RUNNING
                 game.matchTimeIndex = -1
 
-                game.ingamePlayersStorage.keys.toTypedArray().map { p -> p as Player }.forEach { p ->
+                game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
                     val stats = game.ingamePlayersStorage[p]
 
                     if (stats!!.team == null) {
@@ -334,16 +306,16 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         if (game.playing) {
             game.gameCountdown--
 
-            game.ingamePlayersStorage.keys.toTypedArray().asSequence().map { p -> p as Player }.forEach { p ->
+            game.ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
                 if (game.gameCountdown <= 10) {
-                    p.exp = (game.gameCountdown.toFloat() / 10.0F)
+                    proxyService.setPlayerExp(p, game.gameCountdown.toFloat() / 10.0)
                 }
 
                 if (game.gameCountdown <= 5) {
-                    soundService.playSound(p.location, game.blingSound, arrayListOf(p))
+                    soundService.playSound(proxyService.getPlayerLocation<Any, Any>(p), game.blingSound, arrayListOf(p))
                 }
 
-                p.level = game.gameCountdown
+                proxyService.setPlayerLevel(p, game.gameCountdown)
             }
 
             if (game.gameCountdown <= 0) {
@@ -398,7 +370,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             game.ball!!.remove()
         }
 
-        game.ingamePlayersStorage.keys.toTypedArray().asSequence().map { p -> p as Player }.forEach { p ->
+        game.ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
             if (matchTime.respawnEnabled || game.matchTimeIndex == 0) {
                 gameExecutionService.respawn(game, p)
             }
@@ -413,76 +385,63 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 }
             }
 
-            p.exp = 1.0F
+            proxyService.setPlayerExp(p, 1.0)
         }
     }
 
-    private fun createPlayerStorage(game: MiniGame, player: Player): GameStorage {
-        val stats = GameStorageEntity(player.uniqueId)
-        stats.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
+    private fun createPlayerStorage(game: MiniGame, player: Any): GameStorage {
+        val stats = GameStorageEntity(UUID.fromString(proxyService.getPlayerUUID(player)))
+        stats.gameMode = proxyService.getPlayerGameMode(player)
+        stats.armorContents = proxyService.getPlayerInventoryArmorCopy(player)
+        stats.inventoryContents = proxyService.getPlayerInventoryCopy(player)
+        stats.flying = proxyService.getPlayerFlying(player)
+        stats.allowedFlying = proxyService.getPlayerAllowFlying(player)
+        stats.walkingSpeed = proxyService.getPlayerWalkingSpeed(player)
+        stats.scoreboard = proxyService.getPlayerScoreboard(player)
+        stats.level = proxyService.getPlayerLevel(player)
+        stats.exp = proxyService.getPlayerExp(player)
+        stats.maxHealth = proxyService.getPlayerMaxHealth(player)
+        stats.health = proxyService.getPlayerHealth(player)
+        stats.hunger = proxyService.getPlayerHunger(player)
 
-        loggingService.debug("Created a temporary storage for player " + player.name + ".")
-
-        with(stats) {
-            gameMode = proxyService.getPlayerGameMode(player)
-            armorContents = player.inventory.armorContents.clone() as Array<Any?>
-            flying = player.isFlying
-            allowedFlying = player.allowFlight
-            walkingSpeed = player.walkSpeed.toDouble()
-            scoreboard = player.scoreboard
-            inventoryContents = player.inventory.contents.clone() as Array<Any?>
-            level = player.level
-            exp = player.exp.toDouble()
-            @Suppress("DEPRECATION")
-            maxHealth = player.maxHealth
-            health = player.health
-            hunger = player.foodLevel
-        }
-
-        loggingService.debug("PlayerStorage was filled for player " + player.name + ".")
-
-        player.allowFlight = false
-        player.isFlying = false
-        @Suppress("DEPRECATION")
-        player.maxHealth = 20.0
-        player.health = 20.0
-        player.foodLevel = 20
-        player.level = 0
-        player.exp = 0.0F
-        player.gameMode = game.arena.meta.lobbyMeta.gamemode.toGameMode()
+        proxyService.setPlayerAllowFlying(player, false)
+        proxyService.setPlayerFlying(player, false)
+        proxyService.setPlayerMaxHealth(player, 20.0)
+        proxyService.setPlayerHunger(player, 20)
+        proxyService.setPlayerLevel(player, 0)
+        proxyService.setPlayerExp(player, 0.0)
+        proxyService.setGameMode(player, game.arena.meta.lobbyMeta.gamemode)
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
-            player.inventory.setArmorContents(arrayOfNulls(4))
-            player.inventory.clear()
-            player.inventory.updateInventory()
+            proxyService.setInventoryContents(player, arrayOfNulls<Any?>(36), arrayOfNulls<Any?>(4))
         }
 
-        player.teleport(game.arena.meta.minigameMeta.lobbySpawnpoint!!.toLocation())
-
+        proxyService.teleport(player, game.arena.meta.minigameMeta.lobbySpawnpoint!!)
         return stats
     }
 
     /**
      * Joins the [player] to the given [teamMeta].
      */
-    private fun joinTeam(game: MiniGame, player: Player, team: Team, teamMeta: TeamMeta) {
-        player.walkSpeed = teamMeta.walkingSpeed.toFloat()
+    private fun joinTeam(game: MiniGame, player: Any, team: Team, teamMeta: TeamMeta) {
+        proxyService.setPlayerWalkingSpeed(player, teamMeta.walkingSpeed)
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
-            player.inventory.contents = teamMeta.inventoryContents.clone().map { d -> d as ItemStack? }.toTypedArray()
-            player.inventory.setArmorContents(teamMeta.armorContents.clone().map { d -> d as ItemStack? }
-                .toTypedArray())
-            player.inventory.updateInventory()
+            proxyService.setInventoryContents(
+                player,
+                teamMeta.inventoryContents.clone(),
+                teamMeta.armorContents.clone()
+            )
         }
 
         val players = if (team == Team.RED) {
-            game.redTeam as List<Player>
+            game.redTeam
         } else {
-            game.blueTeam as List<Player>
+            game.blueTeam
         }
 
-        player.sendMessage(
-            prefix + placeholderService.replacePlaceHolders(
+        proxyService.sendMessage(
+            player, prefix + placeholderService.replacePlaceHolders(
                 teamMeta.joinMessage,
                 game,
                 teamMeta,
@@ -494,14 +453,18 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     /**
      * Returns if the given [player] is allowed to spectate the match.
      */
-    private fun isAllowedToSpectateWithPermissions(game: MiniGame, player: Player): Boolean {
-        if (player.hasPermission(Permission.SPECTATE.permission + ".all")
-            || player.hasPermission(Permission.SPECTATE.permission + "." + game.arena.name)
-        ) {
+    private fun isAllowedToSpectateWithPermissions(game: MiniGame, player: Any): Boolean {
+        val hasSpectatingPermission = proxyService.hasPermission(player, Permission.SPECTATE.permission + ".all")
+                || proxyService.hasPermission(player, Permission.SPECTATE.permission + "." + game.arena.name)
+
+        if (hasSpectatingPermission) {
             return true
         }
 
-        player.sendMessage(prefix + configurationService.findValue<String>("messages.no-permission-spectate-game"))
+        proxyService.sendMessage(
+            player,
+            prefix + configurationService.findValue<String>("messages.no-permission-spectate-game")
+        )
 
         return false
     }
@@ -512,15 +475,15 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private fun timeAlmostUp(game: MiniGame) {
         when {
             game.redScore == game.blueScore -> {
-                gameSoccerService.onMatchEnd<Player>(game, null, null)
+                gameSoccerService.onMatchEnd<Any>(game, null, null)
                 this.onDraw(game)
             }
             game.redScore > game.blueScore -> {
-                gameSoccerService.onMatchEnd(game, game.redTeam as List<Player>, game.blueTeam as List<Player>)
+                gameSoccerService.onMatchEnd(game, game.redTeam, game.blueTeam)
                 gameSoccerService.onWin(game, Team.RED, game.arena.meta.redTeamMeta)
             }
             else -> {
-                gameSoccerService.onMatchEnd(game, game.blueTeam as List<Player>, game.redTeam as List<Player>)
+                gameSoccerService.onMatchEnd(game, game.blueTeam, game.redTeam)
                 gameSoccerService.onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             }
         }
@@ -536,8 +499,10 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         val players = ArrayList<Pair<Any, Boolean>>()
 
         if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
-            game.arena.center.toLocation().world!!.players.forEach { p ->
-                if (p.location.distance(game.arena.center.toLocation()) <= game.arena.meta.spectatorMeta.notificationRadius) {
+            val playersInWorld = proxyService.getPlayersInWorld<Any, Any>(game.arena.center as Any)
+            for (p in playersInWorld) {
+                val position = proxyService.toPosition(proxyService.getPlayerLocation<Any, Any>(p))
+                if (position.distance(game.arena.center) <= game.arena.meta.spectatorMeta.notificationRadius) {
                     players.add(Pair(p, true))
                 } else {
                     players.add(Pair(p, false))
@@ -553,29 +518,21 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     /**
      * Resets the storage of the given [player].
      */
-    private fun resetStorage(player: Player, game: Game, stats: GameStorage) {
+    private fun resetStorage(player: Any, game: Game, stats: GameStorage) {
         proxyService.setGameMode(player, stats.gameMode)
-
-        with(player) {
-            allowFlight = stats.allowedFlying
-            isFlying = stats.flying
-            walkSpeed = stats.walkingSpeed.toFloat()
-            scoreboard = stats.scoreboard as Scoreboard
-            level = stats.level
-            exp = stats.exp.toFloat()
-            @Suppress("DEPRECATION")
-            maxHealth = stats.maxHealth
-            health = stats.health
-            foodLevel = stats.hunger
-        }
+        proxyService.setPlayerAllowFlying(player, stats.allowedFlying)
+        proxyService.setPlayerFlying(player, stats.flying)
+        proxyService.setPlayerWalkingSpeed(player, stats.walkingSpeed)
+        proxyService.setPlayerScoreboard(player, stats.scoreboard)
+        proxyService.setPlayerLevel(player, stats.level)
+        proxyService.setPlayerExp(player, stats.exp)
+        proxyService.setPlayerMaxHealth(player, stats.maxHealth)
+        proxyService.setPlayerHealth(player, stats.health)
+        proxyService.setPlayerHunger(player, stats.hunger)
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
-            player.inventory.contents = stats.inventoryContents as Array<out ItemStack>
-            player.inventory.setArmorContents(stats.armorContents as Array<out ItemStack>)
-            player.inventory.updateInventory()
+            proxyService.setInventoryContents(player, stats.inventoryContents, stats.armorContents)
         }
-
-        loggingService.debug("The inventory of player " + player.name + " was restored.")
     }
 
     /**

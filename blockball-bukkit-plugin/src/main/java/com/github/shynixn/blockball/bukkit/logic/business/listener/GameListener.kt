@@ -21,10 +21,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
-import org.bukkit.event.player.PlayerDropItemEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.event.player.PlayerRespawnEvent
+import org.bukkit.event.player.*
 
 /**
  * Created by Shynixn 2018.
@@ -80,6 +77,37 @@ class GameListener @Inject constructor(
         }
 
         rightClickManageService.cleanResources(event.player)
+    }
+
+    /**
+     * Gets called when the player teleports and handles leaving the blockgame under certain conditions.
+     */
+    @EventHandler
+    fun onPlayerTeleportEvent(event: PlayerTeleportEvent) {
+        if (event.to == null) {
+            return
+        }
+
+        val optPlayerGame = gameService.getGameFromPlayer(event.player)
+        val optSpectatorGame = gameService.getGameFromSpectatingPlayer(event.player)
+
+        val game = when {
+            optPlayerGame.isPresent -> {
+                optPlayerGame.get()
+            }
+            optSpectatorGame.isPresent -> {
+                optSpectatorGame.get()
+            }
+            else -> {
+                return
+            }
+        }
+
+        if (game.arena.isLocationInSelection(event.to!!.toPosition())) {
+            return
+        }
+
+        gameActionService.leaveGame(game, event.player)
     }
 
     /**

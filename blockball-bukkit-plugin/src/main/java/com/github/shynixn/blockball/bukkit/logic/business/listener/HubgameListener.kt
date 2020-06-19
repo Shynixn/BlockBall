@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.player.PlayerToggleFlightEvent
 
 /**
@@ -41,6 +42,18 @@ class HubgameListener @Inject constructor(private val hubGameForcefieldService: 
     @EventHandler
     fun onPlayerMoveAgainstHubForceField(event: PlayerMoveEvent) {
         if (event.to == null || event.to!!.distance(event.from) <= 0) {
+            return
+        }
+
+        hubGameForcefieldService.checkForForcefieldInteractions(event.player, event.to)
+    }
+
+    /**
+     * Gets called when the player teleports into the hubfield directly.
+     */
+    @EventHandler
+    fun onPlayerTeleportEvent(event: PlayerTeleportEvent) {
+        if (event.to == null) {
             return
         }
 

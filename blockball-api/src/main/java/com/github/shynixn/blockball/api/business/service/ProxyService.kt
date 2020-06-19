@@ -38,6 +38,11 @@ interface ProxyService {
     val gameModes: List<String>
 
     /**
+     * Teleports the player to the given location.
+     */
+    fun <P,L> teleport(player : P, location : L)
+
+    /**
      * Kicks the given player with the given message.
      */
     fun <P> kickPlayer(player: P, message: String)
@@ -163,6 +168,16 @@ interface ProxyService {
     fun <P> getPlayerExp(player: P): Double
 
     /**
+     * Sets the player exp.
+     */
+    fun <P> setPlayerExp(player : P, exp : Double)
+
+    /**
+     * Sets the player level.
+     */
+    fun <P> setPlayerLevel(player : P, level : Int)
+
+    /**
      * Gets the player max health.
      */
     fun <P> getPlayerMaxHealth(player: P): Double
@@ -198,6 +213,16 @@ interface ProxyService {
     fun <L> toPosition(location: L): Position
 
     /**
+     * Gets a list of players in the given world of the given location.
+     */
+    fun <P, L> getPlayersInWorld(location : L) : List<P>
+
+    /**
+     * Has player permission?
+     */
+    fun <P> hasPermission(player : P ,permission : String) : Boolean
+
+    /**
      * Sends a chat message to the [sender].
      */
     fun <S> sendMessage(sender: S, chatBuilder: ChatBuilder)
@@ -206,4 +231,19 @@ interface ProxyService {
      * Sends a message to the [sender].
      */
     fun <S> sendMessage(sender: S, message: String)
+
+    /**
+     * Sets the player max health.
+     */
+    fun setPlayerMaxHealth(player: Any, health: Double)
+
+    /**
+     * Sets the player health.
+     */
+    fun setPlayerHealth(player: Any, health: Double)
+
+    /**
+     * Sets the player hunger.
+     */
+    fun setPlayerHunger(player: Any, hunger: Int)
 }

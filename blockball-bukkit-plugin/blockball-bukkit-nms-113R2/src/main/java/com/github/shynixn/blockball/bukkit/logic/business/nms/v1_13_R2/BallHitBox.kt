@@ -3,6 +3,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2
 
 import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_13_R2.AxisAlignedBB
@@ -94,11 +95,15 @@ class BallHitBox(
         entity.isCollidable = false
 
         val mcWorld = (location.world as CraftWorld).handle
-        this.setPosition(location.x, location.y, location.z)
+        this.setPosition(location.x, location.y - 200, location.z)
         mcWorld.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
 
-        updatePosition()
-        debugPosition()
+        // Fix the spawn location afterwards.
+        val targetLocation = location.clone()
+        BlockBallApi.resolve(ConcurrencyService::class.java).runTaskSync(20L) {
+            this.setPosition(targetLocation.x, targetLocation.y, targetLocation.z)
+            updatePosition()
+        }
     }
 
     /**

@@ -198,6 +198,13 @@ class PersistenceMySQLIT {
             get() = ArrayList()
 
         /**
+         * Teleports the player to the given location.
+         */
+        override fun <P, L> teleport(player: P, location: L) {
+            throw IllegalArgumentException()
+        }
+
+        /**
          * Kicks the given player with the given message.
          */
         override fun <P> kickPlayer(player: P, message: String) {
@@ -366,6 +373,20 @@ class PersistenceMySQLIT {
         }
 
         /**
+         * Sets the player exp.
+         */
+        override fun <P> setPlayerExp(player: P, exp: Double) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets the player level.
+         */
+        override fun <P> setPlayerLevel(player: P, level: Int) {
+            throw IllegalArgumentException()
+        }
+
+        /**
          * Gets the player max health.
          */
         override fun <P> getPlayerMaxHealth(player: P): Double {
@@ -415,6 +436,20 @@ class PersistenceMySQLIT {
         }
 
         /**
+         * Gets a list of players in the given world of the given location.
+         */
+        override fun <P, L> getPlayersInWorld(location: L): List<P> {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Has player permission?
+         */
+        override fun <P> hasPermission(player: P, permission: String): Boolean {
+            throw IllegalArgumentException()
+        }
+
+        /**
          * Sends a chat message to the [sender].
          */
         override fun <S> sendMessage(sender: S, chatBuilder: ChatBuilder) {
@@ -424,6 +459,27 @@ class PersistenceMySQLIT {
          * Sends a message to the [sender].
          */
         override fun <S> sendMessage(sender: S, message: String) {
+        }
+
+        /**
+         * Sets the player max health.
+         */
+        override fun setPlayerMaxHealth(player: Any, health: Double) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets the player health.
+         */
+        override fun setPlayerHealth(player: Any, health: Double) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets the player hunger.
+         */
+        override fun setPlayerHunger(player: Any, hunger: Int) {
+            throw IllegalArgumentException()
         }
     }
 }

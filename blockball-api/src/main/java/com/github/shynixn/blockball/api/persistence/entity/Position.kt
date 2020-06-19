@@ -56,6 +56,16 @@ interface Position {
     val blockZ: Int
 
     /**
+     * Calculates the distance to the other location.
+     */
+    fun distance(o: Position): Double
+
+    /**
+     * Calculates the square distance to the other location.
+     */
+    fun distanceSquared(o: Position): Double
+
+    /**
      * Normalizes the position and returns the same position.
      */
     fun normalize(): Position
