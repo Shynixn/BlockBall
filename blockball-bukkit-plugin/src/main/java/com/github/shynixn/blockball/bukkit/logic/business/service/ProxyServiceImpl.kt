@@ -209,7 +209,7 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
      */
     override fun <P> setGameMode(player: P, gameMode: com.github.shynixn.blockball.api.business.enumeration.GameMode) {
         require(player is Player)
-        player.gameMode = GameMode.values().first { g -> g.name == player.gameMode.name }
+        player.gameMode = GameMode.values().first { g -> g.name == gameMode.name }
     }
 
     /**
