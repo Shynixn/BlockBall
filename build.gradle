@@ -31,6 +31,8 @@ nexusStaging {
     packageGroup = "com.github.shynixn"
     username = project.hasProperty("ossrhUsername") ? project.findProperty("ossrhUsername") : System.getenv('SONATYPE_USERNAME')
     password = project.hasProperty("ossrhPassword") ? project.findProperty("ossrhPassword") : System.getenv('SONATYPE_PASSWORD')
+    delayBetweenRetriesInMillis = 10000
+    numberOfRetries = 100
 }
 
 allprojects {
