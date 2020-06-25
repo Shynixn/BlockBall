@@ -50,30 +50,37 @@ enum class Version(
      * Version 1.8.0 - 1.8.2.
      */
     VERSION_1_8_R1("v1_8_R1", "1.8.2", 1.081),
+
     /**
      * Version 1.8.3 - 1.8.4.
      */
     VERSION_1_8_R2("v1_8_R2", "1.8.3", 1.082),
+
     /**
      * Version 1.8.5 - 1.8.9.
      */
     VERSION_1_8_R3("v1_8_R3", "1.8.9", 1.083),
+
     /**
      * Version 1.9.0 - 1.9.1.
      */
     VERSION_1_9_R1("v1_9_R1", "1.9.1", 1.091),
+
     /**
      * Version 1.9.2 - 1.9.4
      */
     VERSION_1_9_R2("v1_9_R2", "1.9.4", 1.092),
+
     /**
      * Version 1.10.0 - 1.10.2.
      */
     VERSION_1_10_R1("v1_10_R1", "1.10.2", 1.10),
+
     /**
      * Version 1.11.0 - 1.11.2.
      */
     VERSION_1_11_R1("v1_11_R1", "1.11.2", 1.11),
+
     /**
      * Version 1.12.0 - 1.12.2.
      */
@@ -97,7 +104,12 @@ enum class Version(
     /**
      * Version 1.15.0 - 1.15.2.
      */
-    VERSION_1_15_R1("v1_15_R1", "1.15.2", 1.150);
+    VERSION_1_15_R1("v1_15_R1", "1.15.2", 1.150),
+
+    /**
+     * Version 1.16.0 - 1.16.1.
+     */
+    VERSION_1_16_R1("v1_16_R1", "1.16.1", 1.160);
 
     /**
      * Gets if this version is same or greater than the given version by parameter.

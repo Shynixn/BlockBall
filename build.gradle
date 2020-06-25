@@ -41,7 +41,7 @@ allprojects {
 
 subprojects {
     group 'com.github.shynixn.blockball'
-    version '6.16.0'
+    version '6.17.0-SNAPSHOT'
 
     sourceCompatibility = 1.8
 
@@ -261,21 +261,23 @@ task downloadDependencies(type: Exec) {
     def text = "cd build/buildtools"
     text += " && mvn install:install-file -Dfile=Vault.jar -DgroupId=net.milkbowlvault -DartifactId=VaultAPI -Dversion=1.7 -Dpackaging=jar"
     text += " && java -jar BuildTools.jar --rev 1.8.8"
-    text += " && java -jar BuildTools.jar --rev 1.9.4"
-    text += " && java -jar BuildTools.jar --rev 1.10"
-    text += " && java -jar BuildTools.jar --rev 1.11"
-    text += " && java -jar BuildTools.jar --rev 1.12"
-    text += " && java -jar BuildTools.jar --rev 1.13.2"
-    text += " && java -jar BuildTools.jar --rev 1.14.4"
-    text += " && java -jar BuildTools.jar --rev 1.15"
     text += " && mvn install:install-file -Dfile=spigot-1.8.8.jar -DgroupId=org.spigotmc -DartifactId=spigot18R3 -Dversion=1.8.8-R3.0 -Dpackaging=jar"
+    text += " && java -jar BuildTools.jar --rev 1.9.4"
     text += " && mvn install:install-file -Dfile=spigot-1.9.4.jar -DgroupId=org.spigotmc -DartifactId=spigot19R2 -Dversion=1.9.4-R2.0 -Dpackaging=jar"
+    text += " && java -jar BuildTools.jar --rev 1.10"
     text += " && mvn install:install-file -Dfile=spigot-1.10.2.jar -DgroupId=org.spigotmc -DartifactId=spigot110R1 -Dversion=1.10.2-R1.0 -Dpackaging=jar"
+    text += " && java -jar BuildTools.jar --rev 1.11"
     text += " && mvn install:install-file -Dfile=spigot-1.11.jar -DgroupId=org.spigotmc -DartifactId=spigot111R1 -Dversion=1.11.0-R1.0 -Dpackaging=jar"
+    text += " && java -jar BuildTools.jar --rev 1.12"
     text += " && mvn install:install-file -Dfile=spigot-1.12.jar -DgroupId=org.spigotmc -DartifactId=spigot112R1 -Dversion=1.12.0-R1.0 -Dpackaging=jar"
+    text += " && java -jar BuildTools.jar --rev 1.13.2"
     text += " && mvn install:install-file -Dfile=spigot-1.13.2.jar -DgroupId=org.spigotmc -DartifactId=spigot113R2 -Dversion=1.13.2-R2.0 -Dpackaging=jar"
+    text += " && java -jar BuildTools.jar --rev 1.14.4"
     text += " && mvn install:install-file -Dfile=spigot-1.14.4.jar -DgroupId=org.spigotmc -DartifactId=spigot114R1 -Dversion=1.14.4-R1.0 -Dpackaging=jar"
+    text += " && java -jar BuildTools.jar --rev 1.15"
     text += " && mvn install:install-file -Dfile=spigot-1.15.jar -DgroupId=org.spigotmc -DartifactId=spigot115R1 -Dversion=1.15.0-R1.0 -Dpackaging=jar"
+    text += " && java -jar BuildTools.jar --rev 1.16.1"
+    text += " && mvn install:install-file -Dfile=spigot-1.16.1.jar -DgroupId=org.spigotmc -DartifactId=spigot116R1 -Dversion=1.16.0-R1.0 -Dpackaging=jar"
 
     standardOutput = new ByteArrayOutputStream()
 
