@@ -15,6 +15,7 @@ import com.github.shynixn.blockball.core.logic.business.commandexecutor.*
 import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.google.inject.Guice
 import com.google.inject.Injector
+import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
@@ -118,16 +119,13 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             return
         }
 
-        if (isArmorStandTickingDisabled()) {
-            sendConsoleMessage(ChatColor.RED.toString() + "================================================")
-            sendConsoleMessage(ChatColor.RED.toString() + "BlockBall does only work with armor-stands-tick: true")
-            sendConsoleMessage(ChatColor.RED.toString() + "Please enable it in your paper.yml file!")
-            sendConsoleMessage(ChatColor.GRAY.toString() + "You can disable this security check on your own risk by")
-            sendConsoleMessage(ChatColor.GRAY.toString() + "setting ignore-ticking-settings: true in the config.yml of BlockBall.")
-            sendConsoleMessage(ChatColor.RED.toString() + "Plugin gets now disabled!")
-            sendConsoleMessage(ChatColor.RED.toString() + "================================================")
-
-            Bukkit.getPluginManager().disablePlugin(this)
+        if (hasArmorstandTickingChanged()) {
+            sendConsoleMessage(ChatColor.YELLOW.toString() + "================================================")
+            sendConsoleMessage(ChatColor.YELLOW.toString() + "BlockBall has automatically changed your paper.yml file.")
+            sendConsoleMessage(ChatColor.YELLOW.toString() + "The setting armor-stand-tick: true has changed.")
+            sendConsoleMessage(ChatColor.YELLOW.toString() + "Please restart the server.")
+            sendConsoleMessage(ChatColor.YELLOW.toString() + "================================================")
+            Bukkit.getServer().shutdown()
             return
         }
 
@@ -377,8 +375,8 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     /**
      * Checks if armorStand ticking is disabled when PaperSpigot is being used.
      */
-    private fun isArmorStandTickingDisabled(): Boolean {
-        if (config.getBoolean("game.ignore-ticking-settings")) {
+    private fun hasArmorstandTickingChanged(): Boolean {
+        if (config.getBoolean("global-configuration.ignore-ticking-settings")) {
             return false
         }
 
@@ -388,10 +386,11 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             return false
         }
 
-        for (line in Files.readAllLines(path)) {
-            if (line.contains("armor-stands-tick: false")) {
-                return true
-            }
+        val text = FileUtils.readFileToString(path.toFile(), "UTF-8")
+
+        if (text.contains("armor-stands-tick: false")) {
+            FileUtils.writeStringToFile(path.toFile(), text.replace("armor-stands-tick: false", "armor-stands-tick: true"), "UTF-8")
+            return true
         }
 
         return false
