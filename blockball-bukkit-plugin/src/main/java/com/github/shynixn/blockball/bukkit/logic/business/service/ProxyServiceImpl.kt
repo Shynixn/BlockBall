@@ -17,7 +17,9 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scoreboard.Scoreboard
+import java.util.*
 import java.util.logging.Level
+import kotlin.collections.ArrayList
 
 /**
  * Created by Shynixn 2019.
@@ -171,6 +173,7 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
 
         throw IllegalArgumentException("Location has to be a position or location!")
     }
+
     /**
      * Gets the location of the player.
      */
@@ -442,13 +445,23 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
             val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
             val chatComponent = clazz.getDeclaredMethod("a", String::class.java).invoke(null, chatBuilder.toString())
 
-            val packet = if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_12_R1)) {
-                val chatEnumMessage = findClazz("net.minecraft.server.VERSION.ChatMessageType")
-                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage)
-                    .newInstance(chatComponent, chatEnumMessage.enumConstants[0])
-            } else {
-                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Byte::class.javaPrimitiveType as Class<*>)
-                    .newInstance(chatComponent, 0.toByte())
+            val packet = when {
+                pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_16_R1) -> {
+                    val systemUtilsClazz = findClazz("net.minecraft.server.VERSION.SystemUtils")
+                    val defaultUUID = systemUtilsClazz.getDeclaredField("b").get(null) as UUID
+                    val chatEnumMessage = findClazz("net.minecraft.server.VERSION.ChatMessageType")
+                    packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage, UUID::class.java)
+                        .newInstance(chatComponent, chatEnumMessage.enumConstants[0], defaultUUID)
+                }
+                pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_12_R1) -> {
+                    val chatEnumMessage = findClazz("net.minecraft.server.VERSION.ChatMessageType")
+                    packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage)
+                        .newInstance(chatComponent, chatEnumMessage.enumConstants[0])
+                }
+                else -> {
+                    packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Byte::class.javaPrimitiveType as Class<*>)
+                        .newInstance(chatComponent, 0.toByte())
+                }
             }
 
             sender.sendPacket(packet)
