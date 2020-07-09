@@ -258,6 +258,10 @@ class BallProxyImpl(
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
+        if (!meta.enabledKick) {
+            return
+        }
+
         kickByPlayer(player, false)
     }
 
@@ -270,6 +274,10 @@ class BallProxyImpl(
     override fun <E> passByPlayer(player: E) {
         if (player !is Player) {
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
+        }
+
+        if (!meta.enabledPass) {
+            return
         }
 
         kickByPlayer(player, true)
@@ -706,7 +714,7 @@ class BallProxyImpl(
      * Checks movement interactions with the ball.
      */
     private fun checkMovementInteractions(): Boolean {
-        if (this.skipCounter <= 0) {
+        if (meta.enabledInteract && this.skipCounter <= 0) {
             this.skipCounter = 2
             val ballLocation = getCalculationEntity<Entity>().location
             for (entity in ballLocation.chunk.entities) {
