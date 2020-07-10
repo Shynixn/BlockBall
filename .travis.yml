@@ -10,7 +10,6 @@ cache:
 before_install:
   - chmod +x gradlew
   - chmod +x blockball-tools/travis-status.sh
-  - python -V
   - sudo /etc/init.d/mysql stop
   - if [[ $TRAVIS_COMMIT_MESSAGE == *"--refresh-dependencies"* ]]; then ./gradlew downloadDependencies; fi ;
   - sudo apt-get install python3-pip
