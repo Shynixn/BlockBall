@@ -31,6 +31,20 @@ import com.github.shynixn.blockball.api.business.enumeration.BallSize
  * SOFTWARE.
  */
 interface BallMeta {
+    /**
+     * Is leftclick kicking the ball enabled?
+     */
+    var enabledKick: Boolean
+
+    /**
+     * Is the rightclick passing the ball enabled?
+     */
+    var enabledPass: Boolean
+
+    /**
+     * Is the moving into the ball enabled?
+     */
+    var enabledInteract: Boolean
 
     /** Spawning delay. */
     var delayInTicks: Int
@@ -46,10 +60,12 @@ interface BallMeta {
 
     /** Should the ball rotate? */
     var rotating: Boolean
+
     /**
      * Hitbox relocation value for ground heights.
      */
     var hitBoxRelocation: Double
+
     /**
      * Size of the hitbox used for interaction detecting.
      */

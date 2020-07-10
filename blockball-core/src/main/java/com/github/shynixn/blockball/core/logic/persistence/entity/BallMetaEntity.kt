@@ -52,52 +52,70 @@ class BallMetaEntity(
     override var rotating: Boolean = true
 
     /**
+     * Is leftclick kicking the ball enabled?
+     */
+    @YamlSerialize(orderNumber = 5, value = "enable-kick")
+    override var enabledKick: Boolean = true
+
+    /**
+     * Is the rightclick passing the ball enabled?
+     */
+    @YamlSerialize(orderNumber = 6, value = "enable-pass")
+    override var enabledPass: Boolean = true
+
+    /**
+     * Is the moving into the ball enabled?
+     */
+    @YamlSerialize(orderNumber = 7, value = "enable-interact")
+    override var enabledInteract: Boolean = true
+
+    /**
      * Hitbox relocation value for ground heights.
      */
-    @YamlSerialize(orderNumber = 5, value = "hitbox-relocation")
+    @YamlSerialize(orderNumber = 8, value = "hitbox-relocation")
     override var hitBoxRelocation: Double = 0.0
 
     /**
      * Should the ball be able to carry.
      */
-    @YamlSerialize(orderNumber = 6, value = "carry-able")
+    @YamlSerialize(orderNumber = 9, value = "carry-able")
     override var carryAble: Boolean = false
 
     /**
      * Should the ball always bounce of walls?
      */
-    @YamlSerialize(orderNumber = 7, value = "always-bounce")
+    @YamlSerialize(orderNumber = 10, value = "always-bounce")
     override var alwaysBounce: Boolean = true
 
     /**
      * Bouncing off from objects modifiers.
      */
-    @YamlSerialize(orderNumber = 8, value = "wall-bouncing")
+    @YamlSerialize(orderNumber = 11, value = "wall-bouncing")
     override val bounceModifiers: MutableList<BounceConfiguration> = ArrayList()
 
     /**
      * Movement modifier.
      */
-    @YamlSerialize(orderNumber = 9, value = "modifiers")
+    @YamlSerialize(orderNumber = 12, value = "modifiers")
     override val movementModifier: MovementConfigurationEntity = MovementConfigurationEntity()
 
     /**
      * Particle effects.
      */
-    @YamlSerialize(orderNumber = 10, value = "particle-effects", implementation = ParticleEntity::class)
+    @YamlSerialize(orderNumber = 13, value = "particle-effects", implementation = ParticleEntity::class)
     override val particleEffects: MutableMap<BallActionType, Particle> = HashMap()
 
     /**
      * Particle effects.
      */
-    @YamlSerialize(orderNumber = 11, value = "sound-effects", implementation = SoundEntity::class)
+    @YamlSerialize(orderNumber = 14, value = "sound-effects", implementation = SoundEntity::class)
     override val soundEffects: MutableMap<BallActionType, Sound> = HashMap()
 
     /** Spawning delay. */
-    @YamlSerialize(orderNumber = 12, value = "spawn-delay")
+    @YamlSerialize(orderNumber = 15, value = "spawn-delay")
     override var delayInTicks: Int = 0
 
     /** Spawnpoint of the ball. */
-    @YamlSerialize(orderNumber = 13, value = "spawnpoint", implementation = PositionEntity::class)
+    @YamlSerialize(orderNumber = 16, value = "spawnpoint", implementation = PositionEntity::class)
     override var spawnpoint: Position? = null
 }

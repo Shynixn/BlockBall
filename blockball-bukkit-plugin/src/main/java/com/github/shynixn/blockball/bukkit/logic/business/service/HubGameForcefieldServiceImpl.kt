@@ -68,7 +68,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
 
         if (gameInternal.isPresent) {
             if (gameInternal.get().arena.gameType == GameType.HUBGAME && !gameInternal.get().arena.isLocationInSelection(
-                    player.location.toPosition()
+                    location.toPosition()
                 )
             ) {
                 gameActionService.leaveGame(gameInternal.get(), player)
