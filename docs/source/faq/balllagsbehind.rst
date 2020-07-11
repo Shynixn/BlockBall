@@ -22,7 +22,7 @@ Open the arena file and change the following values:
 Play around with the **hitbox-size** and **hitbox-relocation** value and try different values. You can see the hitbox
 by entering the spectator gamemode **/gamemode spectator** while participating in a game.
 
-.. image:: ../_static/images/sign3.JPG
+.. image:: ../_static/images/slimehitbox.PNG
 
 **after - arena_x.yml**
 
