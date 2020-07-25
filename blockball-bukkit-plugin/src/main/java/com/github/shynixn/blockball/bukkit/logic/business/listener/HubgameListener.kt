@@ -57,7 +57,7 @@ class HubgameListener @Inject constructor(private val hubGameForcefieldService: 
             return
         }
 
-        // TODO: Disabled to try out if it is related to kicking. hubGameForcefieldService.checkForForcefieldInteractions(event.player, event.to)
+        hubGameForcefieldService.checkForForcefieldInteractions(event.player, event.to)
     }
 
     /**

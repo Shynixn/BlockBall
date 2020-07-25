@@ -318,7 +318,7 @@ class GameActionServiceImpl @Inject constructor(
 
         val location = signPosition.toLocation()
 
-        if (!location.chunk.isLoaded) {
+        if (!location.world!!.isChunkLoaded(location.blockX shr 4, location.blockZ shr 4)) {
             return true
         }
 
@@ -404,11 +404,17 @@ class GameActionServiceImpl @Inject constructor(
             }
 
             if (game.bossBar != null) {
-                bossBarService.changeConfiguration(game.bossBar, placeholderService.replacePlaceHolders(meta.message, game), meta, null)
+                bossBarService.changeConfiguration(
+                    game.bossBar,
+                    placeholderService.replacePlaceHolders(meta.message, game),
+                    meta,
+                    null
+                )
 
                 val players = ArrayList(game.inTeamPlayers)
                 val additionalPlayers = getAdditionalNotificationPlayers(game)
-                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
+                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }
+                    .toList())
 
                 val bossbarPlayers = bossBarService.getPlayers<Any, Player>(game.bossBar!!)
 
@@ -428,7 +434,8 @@ class GameActionServiceImpl @Inject constructor(
 
                 val players = ArrayList(game.inTeamPlayers)
                 val additionalPlayers = getAdditionalNotificationPlayers(game)
-                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
+                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }
+                    .toList())
 
                 additionalPlayers.filter { p -> !p.second }.forEach { p ->
                     dependencyBossBarApiService.removeBossbarMessage(p.first)

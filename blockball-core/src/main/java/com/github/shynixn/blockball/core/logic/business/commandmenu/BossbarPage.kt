@@ -38,12 +38,13 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
         /** Id of the page. */
         const val ID = 9
     }
+
     /**
      * Returns the key of the command when this page should be executed.
      *
      * @return key
      */
-    override fun getCommandKey(): MenuPageKey{
+    override fun getCommandKey(): MenuPageKey {
         return MenuPageKey.BOSSBAR
     }
 
@@ -52,7 +53,12 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
      *
      * @param cache cache
      */
-    override fun <P> execute(player: P, command: MenuCommand, cache: Array<Any?>, args: Array<String>): MenuCommandResult {
+    override fun <P> execute(
+        player: P,
+        command: MenuCommand,
+        cache: Array<Any?>,
+        args: Array<String>
+    ): MenuCommandResult {
         val arena = cache[0] as Arena
         val bossbar = arena.meta.bossBarMeta
         cache[5] = bossbar.flags.map { p -> p.name }
@@ -103,24 +109,21 @@ class BossbarPage : Page(BossbarPage.ID, EffectsSettingsPage.ID) {
             .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.BOSSBAR_PERCENT.command)
             .setHoverText("Edit the amount of percentage the bossbar is filled.")
             .builder()
-        /*if (version.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
-            builder.nextLine() TODO: Enable this.
-            builder.component("- Color: " + bossbar.color).builder()
-                .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
-                .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BOSSBARCOLORS.command)
-                .setHoverText("Opens the selectionbox for colors.")
-                .builder().nextLine()
-                .component("- Style: " + bossbar.style).builder()
-                .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
-                .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BOSSBARSTYLES.command)
-                .setHoverText("Opens the selectionbox for styles.")
-                .builder().nextLine()
-                .component("- Flags: " + bossbar.flags[0]).builder()
-                .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
-                .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BOSSBARFLAGS.command)
-                .setHoverText("Opens the selectionbox for flags.")
-                .builder().nextLine()
-        }*/
+            .nextLine().component("- Color: " + bossbar.color).builder()
+            .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
+            .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BOSSBARCOLORS.command)
+            .setHoverText("Opens the selectionbox for colors.")
+            .builder().nextLine()
+            .component("- Style: " + bossbar.style).builder()
+            .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
+            .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BOSSBARSTYLES.command)
+            .setHoverText("Opens the selectionbox for styles.")
+            .builder().nextLine()
+            .component("- Flags: " + bossbar.flags[0]).builder()
+            .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
+            .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BOSSBARFLAGS.command)
+            .setHoverText("Opens the selectionbox for flags.")
+            .builder().nextLine()
         return builder
     }
 }
