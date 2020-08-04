@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.InteractionCache
 import com.github.shynixn.blockball.bukkit.logic.business.extension.*
+import com.github.shynixn.blockball.core.logic.business.extension.stripChatColors
 import com.github.shynixn.blockball.core.logic.persistence.entity.ChatBuilderEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.InteractionCacheEntity
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors

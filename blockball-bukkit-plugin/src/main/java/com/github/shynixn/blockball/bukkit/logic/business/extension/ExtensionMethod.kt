@@ -3,16 +3,15 @@
 package com.github.shynixn.blockball.bukkit.logic.business.extension
 
 import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.enumeration.GameMode
+import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.business.service.PackageService
-import com.github.shynixn.blockball.api.persistence.entity.*
-import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
+import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
-import org.bukkit.*
-import org.bukkit.ChatColor
+import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
+import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
@@ -91,13 +90,6 @@ fun Player.sendPacket(packet: Any) {
 }
 
 /**
- * Removes the chatColors.
- */
-internal fun String.stripChatColors(): String {
-    return ChatColor.stripColor(this)!!
-}
-
-/**
  * Sets the skin of an itemstack.
  */
 internal fun ItemStack.setSkin(skin: String) {
@@ -128,13 +120,6 @@ internal fun Location.toPosition(): Position {
  */
 fun findClazz(name: String): Class<*> {
     return Class.forName(name.replace("VERSION", BlockBallApi.resolve(PluginProxy::class.java).getServerVersion().bukkitId))
-}
-
-/**
- * Converts the given gamemode to a bukkit gamemode.
- */
-internal fun GameMode.toGameMode(): org.bukkit.GameMode {
-    return org.bukkit.GameMode.valueOf(this.name)
 }
 
 /**

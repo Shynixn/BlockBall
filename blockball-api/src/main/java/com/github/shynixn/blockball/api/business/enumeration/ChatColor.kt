@@ -2,8 +2,10 @@
 
 package com.github.shynixn.blockball.api.business.enumeration
 
+import java.util.regex.Pattern
+
 /**
- * Created by Shynixn 2018.
+ * Cross Platform ChatColors.
  * <p>
  * Version 1.2
  * <p>
@@ -30,106 +32,128 @@ package com.github.shynixn.blockball.api.business.enumeration
  * SOFTWARE.
  */
 enum class ChatColor(
-        /**
-         * Unique code.
-         */
-        val code: Char,
-        /**
-         * Unique int code.
-         */
-        val internalCode: Int,
-        /**
-         * Is color being used for formatting.
-         */
-        val isFormatting: Boolean = false,
-        /**
-         * Internal string description of the color.
-         */
-        private val internalString: String = String(charArrayOf('§', code))) {
+    /**
+     * Unique code.
+     */
+    val code: Char,
+    /**
+     * Unique int code.
+     */
+    val internalCode: Int,
+    /**
+     * Is color being used for formatting.
+     */
+    val isFormatting: Boolean = false,
+    /**
+     * Internal string description of the color.
+     */
+    private val internalString: String = String(charArrayOf('§', code))
+) {
     /**
      * Black.
      */
     BLACK('0', 0),
+
     /**
      * Dark_Blue.
      */
     DARK_BLUE('1', 1),
+
     /**
      * Dark_Green.
      */
     DARK_GREEN('2', 2),
+
     /**
      * Dark_Aqua.
      */
     DARK_AQUA('3', 3),
+
     /**
      * Dark_Red.
      */
     DARK_RED('4', 4),
+
     /**
      * Dark_Purple.
      */
     DARK_PURPLE('5', 5),
+
     /**
      * Gold.
      */
     GOLD('6', 6),
+
     /**
      * Gray.
      */
     GRAY('7', 7),
+
     /**
      * Dark Gray.
      */
     DARK_GRAY('8', 8),
+
     /**
      * Blue.
      */
     BLUE('9', 9),
+
     /**
      * Green.
      */
     GREEN('a', 10),
+
     /**
      * Aqua.
      */
     AQUA('b', 11),
+
     /**
      * Red.
      */
     RED('c', 12),
+
     /**
      * Light_Purple.
      */
     LIGHT_PURPLE('d', 13),
+
     /**
      * Yellow.
      */
     YELLOW('e', 14),
+
     /**
      * White.
      */
     WHITE('f', 15),
+
     /**
      * Magic.
      */
     MAGIC('k', 16, true),
+
     /**
      * Bold.
      */
     BOLD('l', 17, true),
+
     /**
      * Strikethrough.
      */
     STRIKETHROUGH('m', 18, true),
+
     /**
      * Underline.
      */
     UNDERLINE('n', 19, true),
+
     /**
      * Italic.
      */
     ITALIC('o', 20, true),
+
     /**
      * Reset.
      */
@@ -143,20 +167,47 @@ enum class ChatColor(
     }
 
     companion object {
+        private val STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + '§'.toString() + "[0-9A-FK-OR]")
+        private val HEX_PATTERN = Pattern.compile("(#\\w{6})")
+        private const val COLOR_CHAR = '\u00A7'
+
+        /**
+         * Strips the chat colors from the string.
+         */
+        fun stripChatColors(text: String): String {
+            return STRIP_COLOR_PATTERN.matcher(text).replaceAll("")
+        }
+
         /**
          * Translates the given [colorCodeChar] in the given [text] to the color code chars of minecraft.
          */
         fun translateChatColorCodes(colorCodeChar: Char, text: String): String {
-            val letters = text.toCharArray()
+            val letters = text.toMutableList()
 
             for (i in 0 until letters.size - 1) {
                 if (letters[i] == colorCodeChar && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(letters[i + 1]) > -1) {
                     letters[i] = 167.toChar()
-                    letters[i + 1] = Character.toLowerCase(letters[i + 1])
+                    letters[i + 1] = (letters[i + 1]).toLowerCase()
                 }
             }
 
-            return String(letters)
+            val standardColorCodes = String(letters.toCharArray())
+            val matcher = HEX_PATTERN.matcher(standardColorCodes)
+            val buffer = StringBuffer()
+
+            while (matcher.find()) {
+                val group = matcher.group(1)
+                val stringBuilder = StringBuilder(COLOR_CHAR + "x")
+
+                for (c in group.substring(1).toCharArray()) {
+                    stringBuilder.append(COLOR_CHAR)
+                    stringBuilder.append(c)
+                }
+
+                matcher.appendReplacement(buffer, stringBuilder.toString())
+            }
+
+            return matcher.appendTail(buffer).toString()
         }
     }
 }

@@ -4,15 +4,14 @@ import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.EntityType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
-import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.BallEntityService
 import com.github.shynixn.blockball.api.business.service.EntityRegistrationService
 import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
+import com.github.shynixn.blockball.core.logic.business.extension.stripChatColors
 import com.google.inject.Inject
-import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
@@ -49,7 +48,6 @@ import kotlin.collections.ArrayList
  * SOFTWARE.
  */
 class BallEntityServiceImpl @Inject constructor(
-    private val pluginProxy: PluginProxy,
     private val plugin: Plugin,
     private val entityRegistry: EntityRegistrationService
 ) : BallEntityService, Runnable {
@@ -122,7 +120,7 @@ class BallEntityServiceImpl @Inject constructor(
                 if (boots!!.itemMeta != null && boots.itemMeta!!.lore != null && boots.itemMeta!!.lore!!.size > 0) {
                     val lore = boots.itemMeta!!.lore!![0]
 
-                    if (ChatColor.stripColor(lore) == "BlockBallHologram") {
+                    if (lore.stripChatColors() == "BlockBallHologram") {
                         var exists = false
 
                         for (game in BlockBallApi.resolve(GameService::class.java).getAllGames()) {

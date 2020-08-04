@@ -2,15 +2,16 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.setDisplayName
 import com.github.shynixn.blockball.core.logic.business.extension.cast
+import com.github.shynixn.blockball.core.logic.business.extension.stripChatColors
 import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
-import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -53,7 +54,8 @@ class BlockSelectionServiceImpl @Inject constructor(
     private val dependencyService: DependencyService,
     private val dependencyWorldEditService: DependencyWorldEditService
 ) : BlockSelectionService {
-    private val axeName = ChatColor.WHITE.toString() + ChatColor.BOLD + ">>" + ChatColor.YELLOW + "BlockBall" + ChatColor.WHITE + ChatColor.BOLD + "<<"
+    private val axeName =
+        ChatColor.WHITE.toString() + ChatColor.BOLD + ">>" + ChatColor.YELLOW + "BlockBall" + ChatColor.WHITE + ChatColor.BOLD + "<<"
     private val playerSelection = HashMap<Player, Array<Location?>>()
     private val goldenAxeType = itemService.getMaterialFromMaterialType<Material>(MaterialType.GOLDEN_AXE)
     private val prefix = configurationService.findValue<String>("messages.prefix")
@@ -174,7 +176,7 @@ class BlockSelectionServiceImpl @Inject constructor(
             return false
         }
 
-        if (ChatColor.stripColor(itemMeta.displayName) != ChatColor.stripColor(this.axeName)) {
+        if (itemMeta.displayName.stripChatColors() != this.axeName.stripChatColors()) {
             return false
         }
 
@@ -204,9 +206,8 @@ class BlockSelectionServiceImpl @Inject constructor(
             if (player.inventory.contents[0] != null) {
                 val item = player.inventory.contents[0]
 
-                if (item.type == goldenAxeType && item.itemMeta!!.displayName.cast<String?>() != null && ChatColor.stripColor(item.itemMeta!!.displayName) == ChatColor.stripColor(
-                        this.axeName
-                    )
+                if (item.type == goldenAxeType && item.itemMeta!!.displayName.cast<String?>() != null
+                    && item.itemMeta!!.displayName.stripChatColors() == this.axeName.stripChatColors()
                 ) {
                     return
                 }
