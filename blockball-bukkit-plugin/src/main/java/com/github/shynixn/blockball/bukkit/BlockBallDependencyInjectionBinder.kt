@@ -73,6 +73,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
 
         // Services
         bind(SqlDbContext::class.java).to(SqlDbContextImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(EventService::class.java).to(EventServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ItemService::class.java).to(ItemServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(VirtualArenaService::class.java).to(VirtualArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -87,12 +88,14 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(GameActionService::class.java).to(GameActionServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameHubGameActionService::class.java).to(GameHubGameActionServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameMiniGameActionService::class.java).to(GameMiniGameActionServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(GameBungeeCordGameActionService::class.java).to(GameBungeeCordGameActionServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(GameBungeeCordGameActionService::class.java).to(GameBungeeCordGameActionServiceImpl::class.java)
+            .`in`(Scopes.SINGLETON)
         bind(GameSoccerService::class.java).to(GameSoccerServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(RightclickManageService::class.java).to(RightclickManageServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(HubGameForcefieldService::class.java).to(HubGameForcefieldServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BungeeCordService::class.java).to(BungeeCordServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(BungeeCordConnectionService::class.java).to(BungeeCordConnectionServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(BungeeCordConnectionService::class.java).to(BungeeCordConnectionServiceImpl::class.java)
+            .`in`(Scopes.SINGLETON)
         bind(BallEntityService::class.java).to(BallEntityServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BlockSelectionService::class.java).to(BlockSelectionServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BallForceFieldService::class.java).to(BallForceFieldServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -103,45 +106,58 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(ProxyService::class.java).to(ProxyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(CommandService::class.java).to(CommandServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameExecutionService::class.java).to(GameExecutionServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(PersistenceLinkSignService::class.java).to(PersistenceLinkSignServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(PersistenceLinkSignService::class.java).to(PersistenceLinkSignServiceImpl::class.java)
+            .`in`(Scopes.SINGLETON)
         bind(PersistenceArenaService::class.java).to(PersistenceArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PersistenceStatsService::class.java).to(PersistenceStatsServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
+            .`in`(Scopes.SINGLETON)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PackageService::class.java).to(PackageServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PlaceholderService::class.java).to(PlaceholderServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         when {
             version.isVersionSameOrGreaterThan(Version.VERSION_1_16_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration116R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            -> bind(EntityRegistrationService::class.java).to(EntityRegistration116R1ServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_15_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration115R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            -> bind(EntityRegistrationService::class.java).to(EntityRegistration115R1ServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration114R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            -> bind(EntityRegistrationService::class.java).to(EntityRegistration114R1ServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration113R2ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            -> bind(EntityRegistrationService::class.java).to(EntityRegistration113R2ServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_11_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration111R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            -> bind(EntityRegistrationService::class.java).to(EntityRegistration111R1ServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_10_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration110R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
-            else -> bind(EntityRegistrationService::class.java).to(EntityRegistrationLegacyServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            -> bind(EntityRegistrationService::class.java).to(EntityRegistration110R1ServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
+            else -> bind(EntityRegistrationService::class.java).to(EntityRegistrationLegacyServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
         }
 
         when {
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2) -> bind(ParticleService::class.java).to(Particle113R2ServiceImpl::class.java).`in`(
+            version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2) -> bind(ParticleService::class.java).to(
+                Particle113R2ServiceImpl::class.java
+            ).`in`(
                 Scopes.SINGLETON
             )
             else -> bind(ParticleService::class.java).to(Particle18R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
         }
 
-        if(dependencyService.isInstalled(PluginDependency.PLACEHOLDERAPI)){
+        if (dependencyService.isInstalled(PluginDependency.PLACEHOLDERAPI)) {
             bind(DependencyPlaceholderApiService::class.java).to(DependencyPlaceholderApiServiceImpl::class.java)
         }
 
         if (dependencyService.isInstalled(PluginDependency.WORLEDIT, "7")) {
-            bind(DependencyWorldEditService::class.java).to(DependencyWorldEdit7ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            bind(DependencyWorldEditService::class.java).to(DependencyWorldEdit7ServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
         } else {
-            bind(DependencyWorldEditService::class.java).to(DependencyWorldEdit6ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            bind(DependencyWorldEditService::class.java).to(DependencyWorldEdit6ServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
         }
 
         if (dependencyService.isInstalled(PluginDependency.VAULT)) {

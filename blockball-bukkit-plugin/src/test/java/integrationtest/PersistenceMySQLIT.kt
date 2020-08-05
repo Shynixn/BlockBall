@@ -160,7 +160,8 @@ class PersistenceMySQLIT {
                 }
             }
 
-            dbContext = SqlDbContextImpl(ConfigurationServiceImpl(plugin), LoggingUtilServiceImpl(Logger.getAnonymousLogger()))
+            dbContext =
+                SqlDbContextImpl(ConfigurationServiceImpl(plugin), LoggingUtilServiceImpl(Logger.getAnonymousLogger()))
 
             val sqlite = StatsSqlRepository(dbContext!!)
             return PersistenceStatsServiceImpl(sqlite, MockedProxyService(), MockedConcurrencyService())
@@ -215,6 +216,13 @@ class PersistenceMySQLIT {
          * Performs a player command.
          */
         override fun <P> performPlayerCommand(player: P, command: String) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Performs a server command.
+         */
+        override fun performServerCommand(command: String) {
             throw IllegalArgumentException()
         }
 
@@ -432,6 +440,27 @@ class PersistenceMySQLIT {
          * Converts the given [location] to a [Position].
          */
         override fun <L> toPosition(location: L): Position {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Converts the given [position] to a [Location].
+         */
+        override fun <L> toLocation(position: Position): L {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Converts the given [position] to a [Vector].
+         */
+        override fun <V> toVector(position: Position): V {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets the location direction.
+         */
+        override fun <L> setLocationDirection(location: L, position: Position) {
             throw IllegalArgumentException()
         }
 
