@@ -306,8 +306,8 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val setModtMethod = minecraftServerClazz.getDeclaredMethod("setMotd", String::class.java)
         val getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")
 
-        val console = getServerConsoleMethod!!.invoke(Bukkit.getServer())
-        setModtMethod!!.invoke(console, builder.toString().translateChatColors())
+        val console = getServerConsoleMethod.invoke(Bukkit.getServer())
+        setModtMethod.invoke(console, builder.toString().translateChatColors())
     }
 
     /**
@@ -348,7 +348,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     override fun <E> create(entity: Class<E>): E {
         try {
             val entityName = entity.simpleName + "Entity"
-            return Class.forName("com.github.shynixn.blockball.bukkit.logic.persistence.entity.$entityName")
+            return Class.forName("com.github.shynixn.blockball.core.logic.persistence.entity.$entityName")
                 .newInstance() as E
         } catch (e: Exception) {
             throw IllegalArgumentException("Entity could not be created.", e)
