@@ -6,7 +6,6 @@ import com.github.shynixn.blockball.api.bukkit.event.GameJoinEvent
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.PersistenceStatsService
-import com.github.shynixn.blockball.api.business.service.StatsCollectingService
 import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.github.shynixn.blockball.core.logic.business.extension.thenAcceptSafely
 import com.google.inject.Inject
@@ -47,7 +46,6 @@ import java.util.*
  */
 class StatsListener @Inject constructor(
     private val persistenceStatsService: PersistenceStatsService,
-    private val statsCollectingService: StatsCollectingService,
     private val concurrencyService: ConcurrencyService
 ) :
     Listener {
@@ -81,7 +79,6 @@ class StatsListener @Inject constructor(
      */
     @EventHandler
     fun playerQuitEvent(event: PlayerQuitEvent) {
-        this.statsCollectingService.cleanResources(event.player)
         this.persistenceStatsService.clearResources(event.player)
     }
 
@@ -93,7 +90,6 @@ class StatsListener @Inject constructor(
     @EventHandler
     fun onPlayerShootGoalEvent(event: GameGoalEvent) {
         persistenceStatsService.getStatsFromPlayer(event.player).amountOfGoals += 1
-        statsCollectingService.setStatsScoreboard(event.player)
     }
 
     /**
@@ -104,7 +100,6 @@ class StatsListener @Inject constructor(
     @EventHandler
     fun onPlayerJoinGameEvent(event: GameJoinEvent) {
         persistenceStatsService.getStatsFromPlayer(event.player).amountOfPlayedGames += 1
-        statsCollectingService.setStatsScoreboard(event.player)
     }
 
     /**
@@ -122,7 +117,6 @@ class StatsListener @Inject constructor(
 
         winningPlayers.forEach { p ->
             persistenceStatsService.getStatsFromPlayer(p).amountOfWins += 1
-            statsCollectingService.setStatsScoreboard(p)
         }
     }
 
@@ -138,8 +132,6 @@ class StatsListener @Inject constructor(
             if (alreadyLoading.contains(player.uniqueId)) {
                 alreadyLoading.remove(player.uniqueId)
             }
-
-            statsCollectingService.setStatsScoreboard(player)
         }
     }
 }

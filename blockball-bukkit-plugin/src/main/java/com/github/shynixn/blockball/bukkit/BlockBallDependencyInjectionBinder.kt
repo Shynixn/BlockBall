@@ -81,7 +81,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(ScreenMessageService::class.java).to(ScreenMessageServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(UpdateCheckService::class.java).to(UpdateCheckServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ConfigurationService::class.java).to(ConfigurationServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(StatsCollectingService::class.java).to(StatsCollectingServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(SoundService::class.java).to(SoundServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BossBarService::class.java).to(BossBarServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameService::class.java).to(GameServiceImpl::class.java).`in`(Scopes.SINGLETON)

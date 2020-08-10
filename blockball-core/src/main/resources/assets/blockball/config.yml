@@ -137,38 +137,3 @@ security:
     z: 0.0
     yaw: 0.0
     pitch: 0.0
-
-############################
-
-# Stats settings
-
-# Settings to adjust the scoreboard which displays certain player stats of BlockBall.
-
-# enabled: Should scoreboard be displayed when a player joins your server?
-# title: Title of the scoreboard.
-# lines: Add or remove lines which are converted into the scoreboard lines.
-
-# placeholders:
-# <player> - Name of the player
-# <winrate> - Winrate of the player
-# <playedgames> - Amount of played games
-# <goalspergame> - Amount of goals per game
-
-############################
-
-stats-scoreboard:
-  enabled: false
-  title: '&f&lBlockBall Stats'
-  lines:
-    - ''
-    - '&e<playername>'
-    - '&m           '
-    - '&bWinrate: '
-    - '&f&l<winrate> '
-    - ''
-    - '&6Goals:'
-    - '&f&l<goalspergame>'
-    - ''
-    - '&aPlayed games:'
-    - '&f&l<playedgames>'
-    - '&m           '
