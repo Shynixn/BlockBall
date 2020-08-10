@@ -4,6 +4,9 @@ import com.github.shynixn.blockball.api.business.proxy.EntityBallProxy
 import net.minecraft.server.v1_8_R3.EntityArmorStand
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftEntityEquipment
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack
+import org.bukkit.inventory.ItemStack
 
 /**
  * Created by Shynixn 2019.
@@ -32,11 +35,9 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class CraftBallArmorstand(server: CraftServer, nmsBall: EntityArmorStand) : CraftArmorStand(server, nmsBall), EntityBallProxy {
-    /**
-     * Boots marker.
-     */
-    override var bootsItemStack: Any? = null
+class CraftBallArmorstand(server: CraftServer, private val nmsBall: EntityArmorStand) :
+    CraftArmorStand(server, nmsBall),
+    EntityBallProxy {
 
     /**
      * Removes this entity.
@@ -44,6 +45,19 @@ class CraftBallArmorstand(server: CraftServer, nmsBall: EntityArmorStand) : Craf
     override fun deleteFromWorld() {
         super.remove()
     }
+
+    /**
+     * Helmet itemStack.
+     */
+    override var helmetItemStack: Any?
+        get() {
+            return this.helmet
+        }
+        set(value) {
+            if (nmsBall is BallDesign) {
+                this.nmsBall.setSecureSlot(4, CraftItemStack.asNMSCopy(value as ItemStack?))
+            }
+        }
 
     /**
      * Hides the true type of the ball from everyone else.

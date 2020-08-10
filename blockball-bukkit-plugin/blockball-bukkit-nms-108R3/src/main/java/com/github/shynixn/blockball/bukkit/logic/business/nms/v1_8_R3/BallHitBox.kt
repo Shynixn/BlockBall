@@ -37,7 +37,8 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallHitBox(private val ballDesign: BallDesign, location: Location) : EntityArmorStand((location.world as CraftWorld).handle) {
+class BallHitBox(private val ballDesign: BallDesign, location: Location) :
+    EntityArmorStand((location.world as CraftWorld).handle) {
     /**
      * Initializes the hitbox.
      */
@@ -52,6 +53,12 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location) : Entit
         compound.setBoolean("PersistenceRequired", true)
         compound.setBoolean("NoBasePlate", true)
         this.a(compound)
+    }
+
+    /**
+     * Disable setting slots.
+     */
+    override fun setEquipment(i: Int, itemstack: net.minecraft.server.v1_8_R3.ItemStack?) {
     }
 
     /**
@@ -70,7 +77,8 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location) : Entit
     override fun move(d0m: Double, d1m: Double, d2m: Double) {
         var collision = false
         val motionVector = Vector(motX, motY, motZ)
-        val optSourceVector = ballDesign.proxy.calculateMoveSourceVectors(Vector(d0m, d1m, d2m), motionVector, this.onGround)
+        val optSourceVector =
+            ballDesign.proxy.calculateMoveSourceVectors(Vector(d0m, d1m, d2m), motionVector, this.onGround)
 
         if (!optSourceVector.isPresent) {
             return
@@ -289,7 +297,11 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location) : Entit
 
             if (this.positionChanged) {
                 try {
-                    val sourceBlock = this.world.world.getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ))
+                    val sourceBlock = this.world.world.getBlockAt(
+                        MathHelper.floor(this.locX),
+                        MathHelper.floor(this.locY),
+                        MathHelper.floor(this.locZ)
+                    )
                     collision = this.ballDesign.proxy.calculateKnockBack(sourceVector, sourceBlock, d0, d2, d6, d8)
                 } catch (e: Exception) {
                     Bukkit.getLogger().log(Level.WARNING, "Critical exception.", e)

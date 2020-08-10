@@ -34,7 +34,7 @@ interface EntityBallProxy {
     fun deleteFromWorld()
 
     /**
-     * Boots marker.
+     * Helmet itemStack.
      */
-    var bootsItemStack : Any?
+    var helmetItemStack: Any?
 }

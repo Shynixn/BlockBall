@@ -82,17 +82,19 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         compound.setBoolean("NoBasePlate", true)
         compound.setInt("DisabledSlots", 2039583)
         this.a(compound)
+    }
 
-        val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
-        itemService.setSkin(itemStack, proxy.meta.skin)
+    /**
+     * Disable setting slots.
+     */
+    override fun setEquipment(i: Int, itemstack: net.minecraft.server.v1_8_R3.ItemStack?) {
+    }
 
-        when (proxy.meta.size) {
-            BallSize.SMALL -> {
-                (bukkitEntity as ArmorStand).isSmall = true
-                (bukkitEntity as ArmorStand).helmet = itemStack
-            }
-            BallSize.NORMAL -> (bukkitEntity as ArmorStand).helmet = itemStack
-        }
+    /**
+     * Sets the slot securely.
+     */
+    fun setSecureSlot(enumitemslot: Int, itemstack: net.minecraft.server.v1_8_R3.ItemStack?) {
+        super.setEquipment(enumitemslot, itemstack)
     }
 
     /**

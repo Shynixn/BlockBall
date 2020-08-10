@@ -51,12 +51,19 @@ import kotlin.math.abs
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) :
+class BallDesign(
+    location: Location,
+    ballMeta: BallMeta,
+    persistent: Boolean,
+    uuid: UUID = UUID.randomUUID(),
+    owner: LivingEntity?
+) :
     EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
 
     private var internalProxy: BallProxy? = null
     private val itemService = BlockBallApi.resolve(ItemService::class.java)
     private val hitbox = BallHitBox(this, ballMeta, location)
+
     /**
      * Proxy handler.
      */
@@ -79,7 +86,14 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
                 LivingEntity::class.java,
                 Boolean::class.java
             )
-            .newInstance(ballMeta, this.getBukkitEntity() as LivingEntity, hitbox.bukkitEntity as LivingEntity, uuid, owner, persistent) as BallProxy
+            .newInstance(
+                ballMeta,
+                this.getBukkitEntity() as LivingEntity,
+                hitbox.bukkitEntity as LivingEntity,
+                uuid,
+                owner,
+                persistent
+            ) as BallProxy
 
         val compound = NBTTagCompound()
         compound.setBoolean("invulnerable", true)
@@ -89,19 +103,21 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         compound.setInt("DisabledSlots", 2039583)
         this.a(compound)
 
-        val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
-        itemService.setSkin(itemStack, proxy.meta.skin)
-
-        when (proxy.meta.size) {
-            BallSize.SMALL -> {
-                (bukkitEntity as ArmorStand).isSmall = true
-                (bukkitEntity as ArmorStand).setHelmet(itemStack)
-            }
-            BallSize.NORMAL -> (bukkitEntity as ArmorStand).setHelmet(itemStack)
-        }
-
         updatePosition()
         debugPosition()
+    }
+
+    /**
+     * Disable setting slots.
+     */
+    override fun setSlot(enumitemslot: EnumItemSlot?, itemstack: net.minecraft.server.v1_13_R2.ItemStack?) {
+    }
+
+    /**
+     * Sets the slot securely.
+     */
+    fun setSecureSlot(enumitemslot: EnumItemSlot?, itemstack: net.minecraft.server.v1_13_R2.ItemStack?) {
+        super.setSlot(enumitemslot, itemstack)
     }
 
     /**
@@ -423,7 +439,11 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
 
             if (this.positionChanged) {
                 try {
-                    val sourceBlock = this.world.world.getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ))
+                    val sourceBlock = this.world.world.getBlockAt(
+                        MathHelper.floor(this.locX),
+                        MathHelper.floor(this.locY),
+                        MathHelper.floor(this.locZ)
+                    )
                     collision = proxy.calculateKnockBack(sourceVector, sourceBlock, x, z, d7, d9)
                 } catch (e: Exception) {
                     Bukkit.getLogger().log(Level.WARNING, "Critical exception.", e)
@@ -460,6 +480,7 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
      */
     private fun debugPosition() {
         val loc = getBukkitEntity().location
-        BlockBallApi.resolve(LoggingService::class.java).debug("Design at ${loc.x.toFloat()} ${loc.y.toFloat()} ${loc.z.toFloat()}")
+        BlockBallApi.resolve(LoggingService::class.java)
+            .debug("Design at ${loc.x.toFloat()} ${loc.y.toFloat()} ${loc.z.toFloat()}")
     }
 }

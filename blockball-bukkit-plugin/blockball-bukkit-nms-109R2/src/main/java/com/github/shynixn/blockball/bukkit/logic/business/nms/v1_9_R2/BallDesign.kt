@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_9_R2.EntityArmorStand
+import net.minecraft.server.v1_9_R2.EnumItemSlot
 import net.minecraft.server.v1_9_R2.NBTTagCompound
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_9_R2.CraftWorld
@@ -82,17 +83,19 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
         compound.setBoolean("NoBasePlate", true)
         compound.setInt("DisabledSlots", 2039583)
         this.a(compound)
+    }
 
-        val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
-        itemService.setSkin(itemStack, proxy.meta.skin)
+    /**
+     * Disable setting slots.
+     */
+    override fun setSlot(enumitemslot: EnumItemSlot?, itemstack: net.minecraft.server.v1_9_R2.ItemStack?) {
+    }
 
-        when (proxy.meta.size) {
-            BallSize.SMALL -> {
-                (bukkitEntity as ArmorStand).isSmall = true
-                (bukkitEntity as ArmorStand).helmet = itemStack
-            }
-            BallSize.NORMAL -> (bukkitEntity as ArmorStand).helmet = itemStack
-        }
+    /**
+     * Sets the slot securely.
+     */
+    fun setSecureSlot(enumitemslot: EnumItemSlot?, itemstack: net.minecraft.server.v1_9_R2.ItemStack?) {
+        super.setSlot(enumitemslot, itemstack)
     }
 
     /**
