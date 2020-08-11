@@ -63,7 +63,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: PluginContainer, pr
         // TODO: bind(ScoreboardService::class.java).to(ScoreboardServiceImpl::class.java)
         // TODO: bind(ScreenMessageService::class.java).to(ScreenMessageServiceImpl::class.java)
         // TODO: bind(ConfigurationService::class.java).to(ConfigurationServiceImpl::class.java)
-        // TODO: bind(StatsCollectingService::class.java).to(StatsCollectingServiceImpl::class.java)
         // TODO: bind(ParticleService::class.java).to(ParticleServiceImpl::class.java)
         // TODO: bind(SoundService::class.java).to(SoundServiceImpl::class.java)
         // TODO: bind(BossBarService::class.java).to(BossBarServiceImpl::class.java)

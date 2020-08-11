@@ -1,7 +1,7 @@
 package unittest
 
+import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2.BallDesign
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2.CraftDesignArmorstand
-import net.minecraft.server.v1_13_R2.EntityArmorStand
 import org.bukkit.craftbukkit.v1_13_R2.CraftServer
 import org.bukkit.entity.EntityType
 import org.junit.jupiter.api.Assertions
@@ -20,7 +20,7 @@ class CraftDesignArmorstandTest {
     @Test
     fun deleteFromWorld_CraftBall_ShouldExecuteDie() {
         // Arrange
-        val entityInsentient = Mockito.mock(EntityArmorStand::class.java)
+        val entityInsentient =Mockito.mock(BallDesign::class.java)
         val classUnderTest = createWithDependencies(entityInsentient)
 
         var called = false
@@ -48,7 +48,7 @@ class CraftDesignArmorstandTest {
     @Test
     fun remove_CraftBall_ShouldNotExecuteDie() {
         // Arrange
-        val entityInsentient = Mockito.mock(EntityArmorStand::class.java)
+        val entityInsentient = Mockito.mock(BallDesign::class.java)
         val classUnderTest = createWithDependencies(entityInsentient)
 
         var called = false
@@ -106,7 +106,7 @@ class CraftDesignArmorstandTest {
     }
 
     companion object {
-        fun createWithDependencies(entityInsentient: EntityArmorStand = Mockito.mock(EntityArmorStand::class.java)): CraftDesignArmorstand {
+        fun createWithDependencies(entityInsentient: BallDesign = Mockito.mock(BallDesign::class.java)): CraftDesignArmorstand {
             val server = Mockito.mock(CraftServer::class.java)
 
             return CraftDesignArmorstand(server, entityInsentient)

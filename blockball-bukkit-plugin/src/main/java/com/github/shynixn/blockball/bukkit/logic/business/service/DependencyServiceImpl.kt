@@ -1,9 +1,9 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.service.DependencyService
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 
 /**
  * Created by Shynixn 2018.
@@ -49,11 +49,7 @@ class DependencyServiceImpl : DependencyService {
      * Returns if the given [pluginDependency] is installed.
      */
     override fun isInstalled(pluginDependency: PluginDependency, version: String?): Boolean {
-        val plugin = Bukkit.getPluginManager().getPlugin(pluginDependency.pluginName)
-
-        if (plugin == null) {
-            return false
-        }
+        val plugin = Bukkit.getPluginManager().getPlugin(pluginDependency.pluginName) ?: return false
 
         if (version != null) {
             return plugin.description.version.startsWith(version)

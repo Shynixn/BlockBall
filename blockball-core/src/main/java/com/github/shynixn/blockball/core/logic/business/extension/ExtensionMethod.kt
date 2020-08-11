@@ -8,8 +8,6 @@ import com.github.shynixn.blockball.api.business.executor.CommandExecutor
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.LoggingService
 import java.util.concurrent.CompletableFuture
-import java.util.logging.Level
-import java.util.regex.Pattern
 
 /**
  * Created by Shynixn 2019.
@@ -69,13 +67,11 @@ fun String.translateChatColors(): String {
     return ChatColor.translateChatColorCodes('&', this)
 }
 
-private val STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + '§'.toString() + "[0-9A-FK-OR]")
-
 /**
  * Strips the chat colors from the string.
  */
 fun String.stripChatColors(): String {
-    return STRIP_COLOR_PATTERN.matcher(this).replaceAll("")
+    return ChatColor.stripChatColors(this)
 }
 
 /**

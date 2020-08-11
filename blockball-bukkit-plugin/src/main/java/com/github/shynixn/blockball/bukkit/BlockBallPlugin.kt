@@ -3,6 +3,7 @@
 package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
@@ -19,7 +20,6 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Server
 import org.bukkit.configuration.MemorySection
 import org.bukkit.plugin.java.JavaPlugin
@@ -306,8 +306,8 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val setModtMethod = minecraftServerClazz.getDeclaredMethod("setMotd", String::class.java)
         val getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")
 
-        val console = getServerConsoleMethod!!.invoke(Bukkit.getServer())
-        setModtMethod!!.invoke(console, builder.toString().translateChatColors())
+        val console = getServerConsoleMethod.invoke(Bukkit.getServer())
+        setModtMethod.invoke(console, builder.toString().translateChatColors())
     }
 
     /**
@@ -348,7 +348,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     override fun <E> create(entity: Class<E>): E {
         try {
             val entityName = entity.simpleName + "Entity"
-            return Class.forName("com.github.shynixn.blockball.bukkit.logic.persistence.entity.$entityName")
+            return Class.forName("com.github.shynixn.blockball.core.logic.persistence.entity.$entityName")
                 .newInstance() as E
         } catch (e: Exception) {
             throw IllegalArgumentException("Entity could not be created.", e)

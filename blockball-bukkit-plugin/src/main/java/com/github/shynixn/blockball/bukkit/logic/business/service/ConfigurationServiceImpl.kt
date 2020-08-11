@@ -3,8 +3,8 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.service.ConfigurationService
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.google.inject.Inject
-import org.bukkit.ChatColor
 import org.bukkit.plugin.Plugin
 import java.io.InputStream
 import java.nio.file.Path
@@ -79,7 +79,7 @@ class ConfigurationServiceImpl @Inject constructor(private val plugin: Plugin) :
         var data = this.plugin.config.get(path)
 
         if (data is String) {
-            data = ChatColor.translateAlternateColorCodes('&', data)
+            data = data.translateChatColors()
         }
 
         return data as C

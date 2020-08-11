@@ -40,7 +40,7 @@ interface ProxyService {
     /**
      * Teleports the player to the given location.
      */
-    fun <P,L> teleport(player : P, location : L)
+    fun <P, L> teleport(player: P, location: L)
 
     /**
      * Kicks the given player with the given message.
@@ -51,6 +51,11 @@ interface ProxyService {
      * Performs a player command.
      */
     fun <P> performPlayerCommand(player: P, command: String)
+
+    /**
+     * Performs a server command.
+     */
+    fun performServerCommand(command: String)
 
     /**
      * Gets the location of the player.
@@ -170,12 +175,12 @@ interface ProxyService {
     /**
      * Sets the player exp.
      */
-    fun <P> setPlayerExp(player : P, exp : Double)
+    fun <P> setPlayerExp(player: P, exp: Double)
 
     /**
      * Sets the player level.
      */
-    fun <P> setPlayerLevel(player : P, level : Int)
+    fun <P> setPlayerLevel(player: P, level: Int)
 
     /**
      * Gets the player max health.
@@ -213,14 +218,29 @@ interface ProxyService {
     fun <L> toPosition(location: L): Position
 
     /**
+     * Converts the given [position] to a [Location].
+     */
+    fun <L> toLocation(position: Position): L
+
+    /**
+     * Converts the given [position] to a [Vector].
+     */
+    fun <V> toVector(position: Position): V
+
+    /**
+     * Sets the location direction.
+     */
+    fun <L> setLocationDirection(location: L, position: Position)
+
+    /**
      * Gets a list of players in the given world of the given location.
      */
-    fun <P, L> getPlayersInWorld(location : L) : List<P>
+    fun <P, L> getPlayersInWorld(location: L): List<P>
 
     /**
      * Has player permission?
      */
-    fun <P> hasPermission(player : P ,permission : String) : Boolean
+    fun <P> hasPermission(player: P, permission: String): Boolean
 
     /**
      * Sends a chat message to the [sender].

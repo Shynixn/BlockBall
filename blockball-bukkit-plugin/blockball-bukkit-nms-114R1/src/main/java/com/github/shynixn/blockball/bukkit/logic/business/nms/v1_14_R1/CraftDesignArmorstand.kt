@@ -2,8 +2,11 @@ package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1
 
 import com.github.shynixn.blockball.api.business.proxy.EntityBallProxy
 import net.minecraft.server.v1_14_R1.EntityArmorStand
+import net.minecraft.server.v1_14_R1.EnumItemSlot
 import org.bukkit.craftbukkit.v1_14_R1.CraftServer
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftArmorStand
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack
+import org.bukkit.inventory.ItemStack
 
 /**
  * Created by Shynixn 2019.
@@ -32,11 +35,17 @@ import org.bukkit.craftbukkit.v1_14_R1.entity.CraftArmorStand
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class CraftDesignArmorstand(server: CraftServer, nmsBall: EntityArmorStand) : CraftArmorStand(server, nmsBall), EntityBallProxy {
+class CraftDesignArmorstand(server: CraftServer, private val nmsBall: BallDesign) : CraftArmorStand(server, nmsBall), EntityBallProxy {
     /**
-     * Boots marker.
+     * Helmet itemStack.
      */
-    override var bootsItemStack: Any? = null
+    override var helmetItemStack: Any?
+        get() {
+            return this.helmet
+        }
+        set(value) {
+            this.nmsBall.setSecureSlot(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(value as ItemStack?))
+        }
 
     /**
      * Removes this entity.

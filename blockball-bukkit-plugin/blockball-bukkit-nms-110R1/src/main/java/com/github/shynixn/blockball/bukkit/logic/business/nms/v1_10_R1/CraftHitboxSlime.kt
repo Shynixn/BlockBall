@@ -40,9 +40,9 @@ class CraftHitboxSlime(server: CraftServer, nmsBall: EntitySlime) : CraftSlime(s
     }
 
     /**
-     * Boots marker.
+     * Helmet itemStack.
      */
-    override var bootsItemStack: Any? = null
+    override var helmetItemStack: Any? = null
 
     /**
      * Removes this entity.

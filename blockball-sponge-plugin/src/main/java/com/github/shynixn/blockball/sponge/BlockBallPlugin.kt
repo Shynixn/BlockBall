@@ -269,6 +269,7 @@ class BlockBallPlugin : PluginProxy {
         try {
             val entityName = entity.simpleName + "Entity"
             return Class.forName("com.github.shynixn.blockball.bukkit.logic.persistence.entity.$entityName")
+                .getDeclaredConstructor()
                 .newInstance() as E
         } catch (e: Exception) {
             throw IllegalArgumentException("Entity could not be created.", e)

@@ -137,6 +137,10 @@ class BallProxyImpl(
          */
         this.teleport(this.getLocation<Location>().add(0.0, 1.0, 0.0))
 
+        val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
+        itemService.setSkin(itemStack, meta.skin)
+        setHead(itemStack)
+
         val event = BallSpawnEvent(this)
         Bukkit.getPluginManager().callEvent(event)
     }
@@ -228,7 +232,7 @@ class BallProxyImpl(
         val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
         itemStack.setSkin(meta.skin)
 
-        this.setHelmet(itemStack)
+        this.setHead(itemStack)
         val vector = this.getDirection(livingEntity).normalize().multiply(3)
         this.teleport(livingEntity.location.add(vector))
     }
@@ -431,7 +435,7 @@ class BallProxyImpl(
 
             @Suppress("UsePropertyAccessSyntax")
             entity.equipment!!.setItemInHand(getDesignArmorstand<ArmorStand>().helmet.clone())
-            this.setHelmet(null)
+            this.setHead(null)
             this.skipCounter = 20
             this.isGrabbed = true
         }
@@ -788,15 +792,15 @@ class BallProxyImpl(
     }
 
     /**
-     * Sets the helmet.
+     * Sets the head.
      */
-    private fun setHelmet(itemStack: ItemStack?) {
+    private fun setHead(itemStack: ItemStack?) {
         when (meta.size) {
             BallSize.SMALL -> {
                 getDesignArmorstand<ArmorStand>().isSmall = true
-                getDesignArmorstand<ArmorStand>().setHelmet(itemStack)
+                getDesignArmorstand<EntityBallProxy>().helmetItemStack = itemStack
             }
-            BallSize.NORMAL -> getDesignArmorstand<ArmorStand>().setHelmet(itemStack)
+            BallSize.NORMAL -> getDesignArmorstand<EntityBallProxy>().helmetItemStack = itemStack
         }
     }
 

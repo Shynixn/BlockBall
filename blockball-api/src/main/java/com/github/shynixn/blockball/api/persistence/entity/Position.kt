@@ -56,6 +56,12 @@ interface Position {
     val blockZ: Int
 
     /**
+     * Subtracts the given [position] from this position
+     * and returns this position.
+     */
+    fun subtract(position: Position): Position
+
+    /**
      * Calculates the distance to the other location.
      */
     fun distance(o: Position): Double
@@ -74,4 +80,9 @@ interface Position {
      * Multiplies the position and returns the same position.
      */
     fun multiply(multiplier: Double): Position
+
+    /**
+     * Clones the position.
+     */
+    fun clone(): Position
 }

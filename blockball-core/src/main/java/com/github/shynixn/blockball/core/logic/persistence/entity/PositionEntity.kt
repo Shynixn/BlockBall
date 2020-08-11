@@ -69,6 +69,17 @@ class PositionEntity() : Position {
         get() = z.toInt()
 
     /**
+     * Subtracts the given [position] from this position
+     * and returns this position.
+     */
+    override fun subtract(position: Position): Position {
+        x -= position.x
+        y -= position.y
+        z -= position.z
+        return this
+    }
+
+    /**
      * Calculates the distance to the other location.
      */
     override fun distance(o: Position): Double {
@@ -107,6 +118,20 @@ class PositionEntity() : Position {
         y *= multiplier
         z *= multiplier
         return this
+    }
+
+    /**
+     * Clones the position.
+     */
+    override fun clone(): Position {
+        val positionEntity = PositionEntity()
+        positionEntity.worldName = this.worldName
+        positionEntity.x = this.x
+        positionEntity.y = this.y
+        positionEntity.z = this.z
+        positionEntity.yaw = this.yaw
+        positionEntity.pitch = this.pitch
+        return positionEntity
     }
 
     /**

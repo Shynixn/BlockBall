@@ -154,6 +154,14 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
     }
 
     /**
+     * Performs a server command.
+     */
+    override fun performServerCommand(command: String) {
+        Bukkit.getServer()
+            .dispatchCommand(Bukkit.getConsoleSender(), command)
+    }
+
+    /**
      * Sets the location of the player.
      */
     override fun <L, P> setPlayerLocation(player: P, location: L) {
@@ -400,6 +408,29 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
     }
 
     /**
+     * Converts the given [position] to a [Location].
+     */
+    override fun <L> toLocation(position: Position): L {
+        return position.toLocation() as L
+    }
+
+    /**
+     * Converts the given [position] to a [Vector].
+     */
+    override fun <V> toVector(position: Position): V {
+        return position.toVector() as V
+    }
+
+    /**
+     * Sets the location direction.
+     */
+    override fun <L> setLocationDirection(location: L, position: Position) {
+        require(location is Location)
+        location.direction = position.toVector()
+    }
+
+
+    /**
      * Gets a list of players in the given world of the given location.
      */
     override fun <P, L> getPlayersInWorld(location: L): List<P> {
@@ -459,7 +490,10 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
                         .newInstance(chatComponent, chatEnumMessage.enumConstants[0])
                 }
                 else -> {
-                    packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Byte::class.javaPrimitiveType as Class<*>)
+                    packetClazz.getDeclaredConstructor(
+                        chatBaseComponentClazz,
+                        Byte::class.javaPrimitiveType as Class<*>
+                    )
                         .newInstance(chatComponent, 0.toByte())
                 }
             }

@@ -9,7 +9,6 @@ It is recommend to use the MySQL support if:
 * You want players to have the same pets on different servers (bungeecord) ✔
 * You have already got a MySQL server and want to keep all saves at one places (backups) ✔
 
-
 **before**
 
 .. code-block:: yaml

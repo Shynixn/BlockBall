@@ -55,6 +55,12 @@ class BallHitBox(private val ballDesign: BallDesign, location: Location) : Entit
     }
 
     /**
+     * Disable setting slots.
+     */
+    override fun setSlot(enumitemslot: EnumItemSlot?, itemstack: net.minecraft.server.v1_9_R2.ItemStack?) {
+    }
+
+    /**
      * Recalculates y-axe hitbox offset in the world.
      */
     override fun recalcPosition() {
