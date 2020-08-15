@@ -41,7 +41,7 @@ allprojects {
 
 subprojects {
     group 'com.github.shynixn.blockball'
-    version '6.19.0'
+    version '6.20.0'
 
     sourceCompatibility = 1.8
 
@@ -278,6 +278,8 @@ task downloadDependencies(type: Exec) {
     text += " && mvn install:install-file -Dfile=spigot-1.15.jar -DgroupId=org.spigotmc -DartifactId=spigot115R1 -Dversion=1.15.0-R1.0 -Dpackaging=jar"
     text += " && java -jar BuildTools.jar --rev 1.16.1"
     text += " && mvn install:install-file -Dfile=spigot-1.16.1.jar -DgroupId=org.spigotmc -DartifactId=spigot116R1 -Dversion=1.16.0-R1.0 -Dpackaging=jar"
+    text += " && java -jar BuildTools.jar --rev 1.16.2"
+    text += " && mvn install:install-file -Dfile=spigot-1.16.2.jar -DgroupId=org.spigotmc -DartifactId=spigot116R2 -Dversion=1.16.2-R2.0 -Dpackaging=jar"
 
     standardOutput = new ByteArrayOutputStream()
 

@@ -13,7 +13,7 @@ BlockBall is a spigot plugin to play soccer games in Minecraft.
  
 * Uses blocks as balls in minecraft
 * Games are completely customizable
-* Version support 1.8.R3 - 1.16.R1
+* Version support 1.8.R3 - 1.16.R2
 * Check out the [BlockBall-Spigot-Page](https://www.spigotmc.org/resources/15320/) to get more information. 
 
 ## Installation
@@ -28,11 +28,22 @@ BlockBall is a spigot plugin to play soccer games in Minecraft.
 ## Contributing
 
 * Clone the repository to your local environment
+* Install Java 8 (later versions are not supported by the ``downloadDependencies`` and ``setupDecompWorkspace`` task)
+* Install Apache Maven
+* Make sure ``java`` points to a Java 8 installation (``java -version``)
+* Make sure ``$JAVA_HOME`` points to a Java 8 installation
+* Make sure ``mvn`` points to a Maven installation (``mvn --version``)
 * Execute gradle sync for dependencies
-* Install the additional spigot dependencies by executing the following gradle task
+* Install the additional spigot dependencies by executing the following gradle task (this task can take a very long time)
 
 ```xml
 [./gradlew|gradlew.bat] downloadDependencies
+```
+
+* Install the ForgeGradle development workspace for sponge
+
+```xml
+[./gradlew|gradlew.bat] setupDecompWorkspace
 ```
 
 * Build the plugin by executing

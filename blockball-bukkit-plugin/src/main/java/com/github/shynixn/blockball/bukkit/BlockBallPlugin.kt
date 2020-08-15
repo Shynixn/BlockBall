@@ -106,12 +106,13 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
                 Version.VERSION_1_13_R2,
                 Version.VERSION_1_14_R1,
                 Version.VERSION_1_15_R1,
-                Version.VERSION_1_16_R1
+                Version.VERSION_1_16_R1,
+                Version.VERSION_1_16_R2
             )
         ) {
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
             sendConsoleMessage(ChatColor.RED.toString() + "BlockBall does not support your server version")
-            sendConsoleMessage(ChatColor.RED.toString() + "Install v" + Version.VERSION_1_8_R3.id + " - v" + Version.VERSION_1_16_R1.id)
+            sendConsoleMessage(ChatColor.RED.toString() + "Install v" + Version.VERSION_1_8_R3.id + " - v" + Version.VERSION_1_16_R2.id)
             sendConsoleMessage(ChatColor.RED.toString() + "Plugin gets now disabled!")
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
 
@@ -349,7 +350,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         try {
             val entityName = entity.simpleName + "Entity"
             return Class.forName("com.github.shynixn.blockball.core.logic.persistence.entity.$entityName")
-                .newInstance() as E
+                .getDeclaredConstructor().newInstance() as E
         } catch (e: Exception) {
             throw IllegalArgumentException("Entity could not be created.", e)
         }
@@ -389,7 +390,11 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val text = FileUtils.readFileToString(path.toFile(), "UTF-8")
 
         if (text.contains("armor-stands-tick: false")) {
-            FileUtils.writeStringToFile(path.toFile(), text.replace("armor-stands-tick: false", "armor-stands-tick: true"), "UTF-8")
+            FileUtils.writeStringToFile(
+                path.toFile(),
+                text.replace("armor-stands-tick: false", "armor-stands-tick: true"),
+                "UTF-8"
+            )
             return true
         }
 

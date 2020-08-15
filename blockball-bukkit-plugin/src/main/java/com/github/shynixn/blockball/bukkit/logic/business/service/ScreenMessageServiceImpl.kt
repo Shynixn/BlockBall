@@ -184,7 +184,8 @@ class ScreenMessageServiceImpl @Inject constructor(private val plugin: PluginPro
             findClazz("net.minecraft.server.VERSION.ChatSerializer").getDeclaredMethod("a", String::class.java)
         }
 
-        val packetInstance = findClazz("net.minecraft.server.VERSION.PacketPlayOutPlayerListHeaderFooter").newInstance()
+        val packetInstance = findClazz("net.minecraft.server.VERSION.PacketPlayOutPlayerListHeaderFooter")
+            .getDeclaredConstructor().newInstance()
 
         val headerJson = serializerMethod.invoke("{\"color\": \"\", \"text\": \"$finalHeader\"}")
         val footerJson = serializerMethod.invoke("{\"color\": \"\", \"text\": \"$finalFooter\"}")
