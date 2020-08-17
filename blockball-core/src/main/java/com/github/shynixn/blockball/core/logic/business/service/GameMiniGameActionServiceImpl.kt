@@ -48,7 +48,6 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private val proxyService: ProxyService,
     private val gameSoccerService: GameSoccerService,
     private val gameExecutionService: GameExecutionService,
-    private val loggingService: LoggingService,
     private val concurrencyService: ConcurrencyService,
     private val placeholderService: PlaceholderService
 ) : GameMiniGameActionService {
@@ -150,8 +149,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
         if (game.spectatorPlayers.contains(player)) {
             resetStorage(player, game, game.spectatorPlayersStorage[player]!!)
-            proxyService.teleport(player, game.arena.meta.lobbyMeta.leaveSpawnpoint!!)
             game.spectatorPlayersStorage.remove(player)
+            proxyService.teleport(player, game.arena.meta.lobbyMeta.leaveSpawnpoint!!)
             return
         }
 
