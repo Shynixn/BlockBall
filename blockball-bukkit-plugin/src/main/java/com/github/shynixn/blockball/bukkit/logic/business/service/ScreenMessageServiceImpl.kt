@@ -2,10 +2,10 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
+import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.api.business.service.ScreenMessageService
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
-import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import java.util.*
@@ -37,7 +37,10 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ScreenMessageServiceImpl @Inject constructor(private val plugin: PluginProxy) : ScreenMessageService {
+class ScreenMessageServiceImpl @Inject constructor(
+    private val plugin: PluginProxy,
+    private val packageService: PackageService
+) : ScreenMessageService {
     /**
      * Sets the [title] of the given [player] [P] for the amount of [stay] ticks. Optionally shows a [subTitle] and displays
      * a [fadeIn] and [fadeOut] effect in ticks.
@@ -76,7 +79,7 @@ class ScreenMessageServiceImpl @Inject constructor(private val plugin: PluginPro
             Int::class.java
         )
 
-        if (!finalTitle.isEmpty()) {
+        if (finalTitle.isNotEmpty()) {
             val titleJson = serializerMethod.invoke(null, "{\"text\": \"$finalTitle\"}")
 
             @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
@@ -88,19 +91,18 @@ class ScreenMessageServiceImpl @Inject constructor(private val plugin: PluginPro
             val titlePacket = packetConstructor.newInstance(enumTitleValue, titleJson, fadeIn, stay, fadeOut)
             val lengthPacket = packetConstructor.newInstance(enumTimesValue, titleJson, fadeIn, stay, fadeOut)
 
-            player.sendPacket(titlePacket)
-            player.sendPacket(lengthPacket)
+            packageService.sendPacket(player, titlePacket)
+            packageService.sendPacket(player, lengthPacket)
         }
 
-        if (!finalSubTitle.isEmpty()) {
+        if (finalSubTitle.isNotEmpty()) {
             val subTitleJson = serializerMethod.invoke(null, "{\"text\": \"$finalSubTitle\"}")
 
             @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
             val enumSubTitleValue = java.lang.Enum.valueOf<Any>(titleActionClazz as Class<Any>, "SUBTITLE")
 
             val subIitlePacket = packetConstructor.newInstance(enumSubTitleValue, subTitleJson, fadeIn, stay, fadeOut)
-
-            player.sendPacket(subIitlePacket)
+            packageService.sendPacket(player, subIitlePacket)
         }
     }
 
@@ -160,44 +162,6 @@ class ScreenMessageServiceImpl @Inject constructor(private val plugin: PluginPro
             }
         }
 
-        player.sendPacket(packet)
-    }
-
-    /**
-     * Sets the [header] and [footer] of the given [player] tab bar.
-     */
-    override fun <P> setTabBar(player: P, header: String, footer: String) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        val finalHeader = header.translateChatColors()
-        val finalFooter = footer.translateChatColors()
-        val version = plugin.getServerVersion()
-
-        val serializerMethod = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
-            findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod(
-                "a",
-                String::class.java
-            )
-        } else {
-            findClazz("net.minecraft.server.VERSION.ChatSerializer").getDeclaredMethod("a", String::class.java)
-        }
-
-        val packetInstance = findClazz("net.minecraft.server.VERSION.PacketPlayOutPlayerListHeaderFooter")
-            .getDeclaredConstructor().newInstance()
-
-        val headerJson = serializerMethod.invoke("{\"color\": \"\", \"text\": \"$finalHeader\"}")
-        val footerJson = serializerMethod.invoke("{\"color\": \"\", \"text\": \"$finalFooter\"}")
-
-        val aField = packetInstance::class.java.getDeclaredField("a")
-        aField.isAccessible = true
-        aField.set(packetInstance, headerJson)
-
-        val bField = packetInstance::class.java.getDeclaredField("b")
-        bField.isAccessible = true
-        bField.set(packetInstance, footerJson)
-
-        player.sendPacket(player)
+        packageService.sendPacket(player, packet)
     }
 }

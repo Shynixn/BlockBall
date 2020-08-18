@@ -32,11 +32,6 @@ enum class MenuClickableItem(
         val text: String,
         /*** Returns the displayed color of the component.*/
         val color: ChatColor) {
-
-    /**
-     * Clickable WorldEdit.
-     */
-    WORLDEDIT(" [worldedit..]", ChatColor.GOLD),
     /**
      * Clickable Edit.
      */
@@ -69,6 +64,10 @@ enum class MenuClickableItem(
      * Clickable select.
      */
     SELECT(" [select..]", ChatColor.AQUA),
+    /**
+     * Clickable selection.
+     */
+    SELECTION(" [selection..]", ChatColor.GOLD),
     /**
      * Clickable location.
      */

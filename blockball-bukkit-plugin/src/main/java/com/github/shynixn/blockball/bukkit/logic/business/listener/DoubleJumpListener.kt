@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.SoundService
-import com.github.shynixn.blockball.bukkit.logic.business.extension.isTouchingGround
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
@@ -45,7 +44,7 @@ class DoubleJumpListener @Inject constructor(private val gameService: GameServic
      */
     @EventHandler
     fun onPlayerMoveEvent(event: PlayerMoveEvent) {
-        if (!event.player.isTouchingGround()) {
+        if (!event.player.isOnGround) {
             return
         }
 

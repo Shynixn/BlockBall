@@ -221,7 +221,7 @@ class ItemTypeServiceImpl @Inject constructor(private val version: Version) : It
         }
 
         if (sourceHint is MaterialType) {
-            descHint = sourceHint.name
+            descHint = sourceHint.MinecraftNumericId
         }
 
         val intHint: Int? = if (descHint is Int) {

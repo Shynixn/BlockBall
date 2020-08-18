@@ -4,6 +4,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
+import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.Position
@@ -48,7 +49,10 @@ import kotlin.collections.ArrayList
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy) : ProxyService {
+class ProxyServiceImpl @Inject constructor(
+    private val pluginProxy: PluginProxy,
+    private val packageService: PackageService
+) : ProxyService {
 
     /**
      * Gets the name of the World the player is in.
@@ -393,7 +397,7 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
 
         player.inventory.contents = mainInventory.clone().map { d -> d as ItemStack? }.toTypedArray()
         player.inventory.setArmorContents(armorInventory.clone().map { d -> d as ItemStack? }.toTypedArray())
-        player.inventory.updateInventory()
+        player.updateInventory()
     }
 
     /**
@@ -498,7 +502,7 @@ class ProxyServiceImpl @Inject constructor(private val pluginProxy: PluginProxy)
                 }
             }
 
-            sender.sendPacket(packet)
+            packageService.sendPacket(sender, packet)
         } catch (e: Exception) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to send packet.", e)
         }

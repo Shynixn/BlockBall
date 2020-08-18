@@ -4,10 +4,8 @@ package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_15_R1
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
-import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
-import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_15_R1.*
@@ -15,10 +13,8 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_15_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer
-import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.CreatureSpawnEvent
-import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 import java.util.*
 import java.util.logging.Level
@@ -61,7 +57,6 @@ class BallDesign(
 
     private var internalProxy: BallProxy? = null
     private var entityBukkit: Any? = null // BukkitEntity has to be self cached since 1.14.
-    private val itemService = BlockBallApi.resolve(ItemService::class.java)
     private val hitBox = BallHitBox(this, ballMeta, location)
 
     private val locFieldX = Entity::class.java.getDeclaredField("locX")

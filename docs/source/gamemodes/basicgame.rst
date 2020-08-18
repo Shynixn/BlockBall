@@ -54,12 +54,11 @@ Creating the arena
 * The action *[location..]* copies your current player position.
 * You do not have to remember all of this, all actions provide tooltips by hovering the mouse on top of them.
 
-3. Select the arena via worldedit and press *[worldedit..]* at Center.
+3. Select the arena via the BlockBall axe (press *[selection..]* once to receive it) and press *[selection..]* at Center.
 
 .. image:: ../_static/images/arena7.png
 
-
-4. Select the red goal via worldedit and press *[worldedit..]* at goal red.
+4. Select the red goal via worldedit and press *[selection..]* at goal red.
 
 .. image:: ../_static/images/goal_selection_1.png
 

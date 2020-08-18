@@ -2,21 +2,15 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_8_R3
 
-import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.business.enumeration.BallSize
-import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
-import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_8_R3.EntityArmorStand
 import net.minecraft.server.v1_8_R3.NBTTagCompound
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
-import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.CreatureSpawnEvent
-import org.bukkit.inventory.ItemStack
 import java.util.*
 
 /**
@@ -46,11 +40,16 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uuid: UUID = UUID.randomUUID(), owner: LivingEntity?) : EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
-    private val itemService = BlockBallApi.resolve(ItemService::class.java)
-
+class BallDesign(
+    location: Location,
+    ballMeta: BallMeta,
+    persistent: Boolean,
+    uuid: UUID = UUID.randomUUID(),
+    owner: LivingEntity?
+) : EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
     private val hitbox = BallHitBox(this, location)
     private var internalProxy: BallProxy? = null
+
     /**
      * Proxy handler.
      */
@@ -73,7 +72,14 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
                 LivingEntity::class.java,
                 Boolean::class.java
             )
-            .newInstance(ballMeta, this.getBukkitEntity() as LivingEntity, hitbox.bukkitEntity as LivingEntity, uuid, owner, persistent) as BallProxy
+            .newInstance(
+                ballMeta,
+                this.getBukkitEntity() as LivingEntity,
+                hitbox.bukkitEntity as LivingEntity,
+                uuid,
+                owner,
+                persistent
+            ) as BallProxy
 
         val compound = NBTTagCompound()
         compound.setBoolean("invulnerable", true)
