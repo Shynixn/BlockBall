@@ -224,7 +224,7 @@ class PersistenceSQLiteIT {
         /**
          * Gets the location of the player.
          */
-        override fun <L, P> getPlayerLocation(player: P): L {
+        override fun <L, P> getEntityLocation(player: P): L {
             throw IllegalArgumentException()
         }
 
@@ -329,7 +329,7 @@ class PersistenceSQLiteIT {
         /**
          * Sets the player velocity.
          */
-        override fun <P> setPlayerVelocity(player: P, position: Position) {
+        override fun <P> setEntityVelocity(player: P, position: Position) {
             throw IllegalArgumentException()
         }
 

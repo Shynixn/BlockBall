@@ -158,7 +158,7 @@ class GameHubGameActionServiceImpl @Inject constructor(
             this.gameExecutionService.respawn(game, player)
         } else {
             val velocityIntoArena = proxyService.getPlayerDirection(player).normalize().multiply(0.5)
-            proxyService.setPlayerVelocity(player, velocityIntoArena)
+            proxyService.setEntityVelocity(player, velocityIntoArena)
         }
 
         val prefix = configurationService.findValue<String>("messages.prefix")

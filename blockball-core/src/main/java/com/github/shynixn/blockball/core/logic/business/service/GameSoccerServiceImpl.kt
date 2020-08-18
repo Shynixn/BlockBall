@@ -383,7 +383,7 @@ class GameSoccerServiceImpl @Inject constructor(
 
         if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
             for (player in proxyService.getPlayersInWorld<Any, Any>(proxyService.toLocation(game.arena.center))) {
-                val playerPosition = proxyService.toPosition(proxyService.getPlayerLocation<Any, Any>(player))
+                val playerPosition = proxyService.toPosition(proxyService.getEntityLocation<Any, Any>(player))
 
                 if (playerPosition.distance(game.arena.center) <= game.arena.meta.spectatorMeta.notificationRadius) {
                     players.add(Pair(player, true))

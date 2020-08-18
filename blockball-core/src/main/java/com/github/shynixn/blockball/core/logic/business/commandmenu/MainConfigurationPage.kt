@@ -88,7 +88,7 @@ class MainConfigurationPage @Inject constructor(
             arena.enabled = !arena.enabled
         } else if (command == MenuCommand.ARENA_SETBALLSPAWNPOINT) {
             val arena = cache[0] as Arena
-            arena.meta.ballMeta.spawnpoint = proxyService.toPosition(proxyService.getPlayerLocation<Any, P>(player))
+            arena.meta.ballMeta.spawnpoint = proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
         } else if (command == MenuCommand.ARENA_SETDISPLAYNAME) {
             val arena = cache[0] as Arena
             arena.displayName = this.mergeArgs(2, args)

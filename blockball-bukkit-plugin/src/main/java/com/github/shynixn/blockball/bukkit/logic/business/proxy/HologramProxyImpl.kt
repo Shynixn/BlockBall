@@ -40,21 +40,23 @@ import org.bukkit.inventory.ItemStack
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class HologramProxyImpl(
+class HologramProxyImpl() : HologramProxy {
+    private val packageService: PackageService = BlockBallApi.resolve(PackageService::class.java)
+
     /**
      * Location of the hologram.
      */
-    override var location: Any = Unit,
+    override var location: Any = Unit
+
     /**
      * List of lines being displayed on the hologram.
      */
-    override var lines: MutableList<String> = ArrayList(),
+    override var lines: MutableList<String> = ArrayList()
+
     /**
      * List of players being able to see this hologram.
      */
     override val players: MutableSet<Any> = HashSet()
-) : HologramProxy {
-    private val packageService: PackageService = BlockBallApi.resolve(PackageService::class.java)
 
     /**
      * Armorstands.

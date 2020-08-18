@@ -66,7 +66,7 @@ class TeamSettingsPage @Inject constructor(private val proxyService: ProxyServic
             cache[2] = 1
         } else if (command == MenuCommand.TEAM_SPAWNPOINT) {
             val teamMeta = getTeamMeta(cache)
-            teamMeta.spawnpoint = proxyService.toPosition(proxyService.getPlayerLocation<Any, P>(player))
+            teamMeta.spawnpoint = proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
         } else if (command == MenuCommand.TEAM_NAME) {
             val teamMeta = getTeamMeta(cache)
             val name = mergeArgs(2, args)

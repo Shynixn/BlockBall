@@ -4,23 +4,30 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
+import com.github.shynixn.blockball.api.business.service.ItemTypeService
 import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
+import com.github.shynixn.blockball.api.persistence.entity.Item
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.bukkit.logic.business.extension.*
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
+import org.bukkit.block.Sign
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Entity
+import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scoreboard.Scoreboard
 import java.util.*
 import java.util.logging.Level
+import java.util.stream.Stream
 import kotlin.collections.ArrayList
+import kotlin.streams.asStream
 
 /**
  * Created by Shynixn 2019.
@@ -51,7 +58,8 @@ import kotlin.collections.ArrayList
  */
 class ProxyServiceImpl @Inject constructor(
     private val pluginProxy: PluginProxy,
-    private val packageService: PackageService
+    private val packageService: PackageService,
+    private val itemTypeService: ItemTypeService
 ) : ProxyService {
 
     /**
@@ -63,6 +71,17 @@ class ProxyServiceImpl @Inject constructor(
         }
 
         return player.world.name
+    }
+
+    /**
+     * Gets the world from name.
+     */
+    override fun <W> getWorldFromName(name: String): W? {
+        return try {
+            Bukkit.getWorld(name) as W?
+        } catch (e: Exception) {
+            null
+        }
     }
 
     /**
@@ -187,14 +206,11 @@ class ProxyServiceImpl @Inject constructor(
     }
 
     /**
-     * Gets the location of the player.
+     * Gets the location of the entity.
      */
-    override fun <L, P> getPlayerLocation(player: P): L {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        return player.location as L
+    override fun <L, P> getEntityLocation(entity: P): L {
+        require(entity is Entity)
+        return entity.location as L
     }
 
     /**
@@ -283,6 +299,13 @@ class ProxyServiceImpl @Inject constructor(
     }
 
     /**
+     * Gets if the given instance is an itemFrame instance.
+     */
+    override fun <E> isItemFrameInstance(entity: E): Boolean {
+        return entity !is Item && entity !is ItemFrame
+    }
+
+    /**
      * Sets the player scoreboard.
      */
     override fun <P, S> setPlayerScoreboard(player: P, scoreboard: S) {
@@ -294,9 +317,9 @@ class ProxyServiceImpl @Inject constructor(
     /**
      * Sets the player velocity.
      */
-    override fun <P> setPlayerVelocity(player: P, position: Position) {
-        require(player is Player)
-        player.velocity = position.toVector()
+    override fun <P> setEntityVelocity(entity: P, position: Position) {
+        require(entity is Entity)
+        entity.velocity = position.toVector()
     }
 
     /**
@@ -454,11 +477,27 @@ class ProxyServiceImpl @Inject constructor(
     }
 
     /**
+     * Gets a stream of entities in the given world of the given location.
+     */
+    override fun <P, L> getEntitiesInWorld(location: L): Stream<Any> {
+        require(location is Location)
+        return location.world!!.entities.asSequence().asStream()
+    }
+
+    /**
      * Has player permission?
      */
     override fun <P> hasPermission(player: P, permission: String): Boolean {
         require(player is Player)
         return player.hasPermission(permission)
+    }
+
+    /**
+     * Gets the custom name from an entity.
+     */
+    override fun <E> getCustomNameFromEntity(entity: E): String? {
+        require(entity is Entity)
+        return entity.customName
     }
 
     /**
@@ -544,5 +583,38 @@ class ProxyServiceImpl @Inject constructor(
     override fun setPlayerHunger(player: Any, hunger: Int) {
         require(player is Player)
         player.foodLevel = hunger
+    }
+
+    /**
+     * Sets the block type at the given location from the hint.
+     */
+    override fun <L> setBlockType(location: L, hint: Any) {
+        require(location is Location)
+        location.block.type = itemTypeService.findItemType(hint)
+    }
+
+    /**
+     * Sets the sign lines at the given location if it is a sign and loaded.
+     */
+    override fun <L> setSignLines(location: L, lines: List<String>): Boolean {
+        require(location is Location)
+
+        if (!location.world!!.isChunkLoaded(location.blockX shr 4, location.blockZ shr 4)) {
+            return true
+        }
+
+        if (location.block.state !is Sign) {
+            return false
+        }
+
+        val sign = location.block.state as Sign
+
+        for (i in lines.indices) {
+            val text = lines[i]
+            sign.setLine(i, text)
+        }
+
+        sign.update(true)
+        return true
     }
 }

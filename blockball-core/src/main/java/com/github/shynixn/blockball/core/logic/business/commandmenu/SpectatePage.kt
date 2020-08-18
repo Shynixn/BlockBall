@@ -62,7 +62,7 @@ class SpectatePage @Inject constructor(private val proxyService: ProxyService) :
         if (command == MenuCommand.SPECTATE_TOGGLE) {
             arena.meta.spectatorMeta.spectatorModeEnabled = !arena.meta.spectatorMeta.spectatorModeEnabled
         } else if (command == MenuCommand.SPECTATE_SPAWNPOINT) {
-            arena.meta.spectatorMeta.spectateSpawnpoint = proxyService.toPosition(proxyService.getPlayerLocation<Any, P>(player))
+            arena.meta.spectatorMeta.spectateSpawnpoint = proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
         }
 
         return super.execute(player, command, cache, args)
