@@ -27,6 +27,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.util.*
 import java.util.logging.Logger
+import java.util.stream.Stream
 import kotlin.collections.ArrayList
 
 /**
@@ -188,6 +189,13 @@ class PersistenceSQLiteIT {
         }
 
         /**
+         * Gets the world from name.
+         */
+        override fun <W> getWorldFromName(name: String): W? {
+            throw IllegalArgumentException()
+        }
+
+        /**
          * Gets all available gamemodes.
          */
         override val gameModes: List<String>
@@ -316,6 +324,13 @@ class PersistenceSQLiteIT {
          * Gets if the given instance is a player instance.
          */
         override fun <P> isPlayerInstance(player: P): Boolean {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets if the given instance is an itemFrame instance.
+         */
+        override fun <E> isItemFrameInstance(entity: E): Boolean {
             throw IllegalArgumentException()
         }
 
@@ -467,9 +482,23 @@ class PersistenceSQLiteIT {
         }
 
         /**
+         * Gets a stream of entities in the given world of the given location.
+         */
+        override fun <P, L> getEntitiesInWorld(location: L): Stream<Any> {
+            throw IllegalArgumentException()
+        }
+
+        /**
          * Has player permission?
          */
         override fun <P> hasPermission(player: P, permission: String): Boolean {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets the custom name from an entity.
+         */
+        override fun <E> getCustomNameFromEntity(entity: E): String? {
             throw IllegalArgumentException()
         }
 
@@ -503,6 +532,21 @@ class PersistenceSQLiteIT {
          * Sets the player hunger.
          */
         override fun setPlayerHunger(player: Any, hunger: Int) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets the block type at the given location from the hint.
+         */
+        override fun <L> setBlockType(location: L, hint: Any) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Sets the sign lines at the given location.
+         * Return true if the block is valid sign with changed lines.
+         */
+        override fun <L> setSignLines(location: L, lines: List<String>): Boolean {
             throw IllegalArgumentException()
         }
     }
