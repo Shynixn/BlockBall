@@ -182,14 +182,11 @@ class GameSoccerServiceImpl @Inject constructor(
                 blueTeamSpawnpoint = game.arena.meta.ballMeta.spawnpoint!!
             }
 
-            val redTeamSpawnpointLocation = proxyService.toPosition(redTeamSpawnpoint)
-            val blueTeamSpawnpointLocation = proxyService.toPosition(blueTeamSpawnpoint)
-
             game.ingamePlayersStorage.forEach { i ->
                 if (i.value.team == Team.RED) {
-                    proxyService.teleport(i.key, redTeamSpawnpointLocation)
+                    proxyService.teleport(i.key, redTeamSpawnpoint)
                 } else if (i.value.team == Team.BLUE) {
-                    proxyService.teleport(i.key, blueTeamSpawnpointLocation)
+                    proxyService.teleport(i.key, blueTeamSpawnpoint)
                 }
             }
         }
