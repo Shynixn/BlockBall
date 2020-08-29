@@ -41,7 +41,7 @@ allprojects {
 
 subprojects {
     group 'com.github.shynixn.blockball'
-    version '6.20.0-SNAPSHOT'
+    version '6.20.0'
 
     sourceCompatibility = 1.8
 

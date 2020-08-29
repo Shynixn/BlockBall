@@ -54,7 +54,7 @@ class EntityRegistration116R2ServiceImpl : EntityRegistrationService {
         val size = EntityTypes::class.java.getDeclaredMethod("l").invoke(internalRegistry) as EntitySize
         IRegistry.a(
             entityRegistry,
-            "petblocks_" + key.toLowerCase(),
+            "blockball_" + key.toLowerCase(),
             EntityTypes.Builder.a<Entity>(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key)
         )
 

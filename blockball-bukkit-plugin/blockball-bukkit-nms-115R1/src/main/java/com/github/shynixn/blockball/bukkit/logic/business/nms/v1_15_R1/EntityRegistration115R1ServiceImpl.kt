@@ -5,7 +5,7 @@ import com.github.shynixn.blockball.api.business.service.EntityRegistrationServi
 import net.minecraft.server.v1_15_R1.*
 
 /**
- * The EntityRegistration114R1ServiceImpl handles registering the custom PetBlocks entities into Minecraft.
+ * The EntityRegistration114R1ServiceImpl handles registering the custom BlockBall entities into Minecraft.
  * <p>
  * Version 1.3
  * <p>
@@ -54,7 +54,7 @@ class EntityRegistration115R1ServiceImpl : EntityRegistrationService {
         val size =  EntityTypes::class.java.getDeclaredMethod("k").invoke(internalRegistry) as EntitySize
 
         val entityTypes =
-            IRegistry.a(entityRegistry, "petblocks_" + key.toLowerCase(), EntityTypes.a.a<Entity>(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key))
+            IRegistry.a(entityRegistry, "blockball_" + key.toLowerCase(), EntityTypes.a.a<Entity>(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key))
 
         val registryMaterialsField = RegistryMaterials::class.java.getDeclaredField("b")
         registryMaterialsField.isAccessible = true
