@@ -66,10 +66,10 @@ class GameSettingsPage @Inject constructor(private val proxyService: ProxyServic
 
         if (command == MenuCommand.GAMESETTINGS_LEAVESPAWNPOINT) {
             arena.meta.lobbyMeta.leaveSpawnpoint =
-                proxyService.toPosition(proxyService.getPlayerLocation<Any, P>(player))
+                proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
         } else if (command == MenuCommand.GAMESETTINGS_LOBBYSPAWNPOINT) {
             arena.meta.minigameMeta.lobbySpawnpoint =
-                proxyService.toPosition(proxyService.getPlayerLocation<Any, P>(player))
+                proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
         } else if (command == MenuCommand.GAMESETTINGS_TOGGLE_EVENTEAMS) {
             arena.meta.lobbyMeta.onlyAllowEventTeams = !arena.meta.lobbyMeta.onlyAllowEventTeams
         } else if (command == MenuCommand.GAMESETTINGS_TOGGLE_INSTATFORCEFIELD) {

@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.ScoreboardDisplaySlot
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -31,7 +33,7 @@ interface ScoreboardService {
     /**
      * Sets the configuration of the given scoreboard.
      */
-    fun <S> setConfiguration(scoreboard: S, displaySlot: Any, title: String)
+    fun <S> setConfiguration(scoreboard: S, displaySlot: ScoreboardDisplaySlot, title: String)
 
     /**
      * Sets the [text] at the given [scoreboard] and [lineNumber].

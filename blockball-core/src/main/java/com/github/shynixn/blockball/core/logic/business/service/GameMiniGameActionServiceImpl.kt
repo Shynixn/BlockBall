@@ -48,7 +48,6 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private val proxyService: ProxyService,
     private val gameSoccerService: GameSoccerService,
     private val gameExecutionService: GameExecutionService,
-    private val loggingService: LoggingService,
     private val concurrencyService: ConcurrencyService,
     private val placeholderService: PlaceholderService
 ) : GameMiniGameActionService {
@@ -150,8 +149,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
         if (game.spectatorPlayers.contains(player)) {
             resetStorage(player, game, game.spectatorPlayersStorage[player]!!)
-            proxyService.teleport(player, game.arena.meta.lobbyMeta.leaveSpawnpoint!!)
             game.spectatorPlayersStorage.remove(player)
+            proxyService.teleport(player, game.arena.meta.lobbyMeta.leaveSpawnpoint!!)
             return
         }
 
@@ -248,7 +247,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
             if (game.lobbyCountdown < 5) {
                 game.ingamePlayersStorage.keys.forEach { p ->
-                    soundService.playSound(proxyService.getPlayerLocation<Any, Any>(p), game.blingSound, arrayListOf(p))
+                    soundService.playSound(proxyService.getEntityLocation<Any, Any>(p), game.blingSound, arrayListOf(p))
                 }
             }
 
@@ -312,7 +311,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 }
 
                 if (game.gameCountdown <= 5) {
-                    soundService.playSound(proxyService.getPlayerLocation<Any, Any>(p), game.blingSound, arrayListOf(p))
+                    soundService.playSound(proxyService.getEntityLocation<Any, Any>(p), game.blingSound, arrayListOf(p))
                 }
 
                 proxyService.setPlayerLevel(p, game.gameCountdown)
@@ -501,7 +500,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
             val playersInWorld = proxyService.getPlayersInWorld<Any, Any>(game.arena.center as Any)
             for (p in playersInWorld) {
-                val position = proxyService.toPosition(proxyService.getPlayerLocation<Any, Any>(p))
+                val position = proxyService.toPosition(proxyService.getEntityLocation<Any, Any>(p))
                 if (position.distance(game.arena.center) <= game.arena.meta.spectatorMeta.notificationRadius) {
                     players.add(Pair(p, true))
                 } else {

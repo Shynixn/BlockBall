@@ -2,9 +2,10 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
+import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.proxy.HologramProxy
+import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
-import com.github.shynixn.blockball.bukkit.logic.business.extension.sendPacket
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import org.bukkit.Location
 import org.bukkit.Material
@@ -39,20 +40,24 @@ import org.bukkit.inventory.ItemStack
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class HologramProxyImpl(
+class HologramProxyImpl() : HologramProxy {
+    private val packageService: PackageService = BlockBallApi.resolve(PackageService::class.java)
+
     /**
      * Location of the hologram.
      */
-    override var location: Any = Unit,
+    override var location: Any = Unit
+
     /**
      * List of lines being displayed on the hologram.
      */
-    override var lines: MutableList<String> = ArrayList(),
+    override var lines: MutableList<String> = ArrayList()
+
     /**
      * List of players being able to see this hologram.
      */
     override val players: MutableSet<Any> = HashSet()
-) : HologramProxy {
+
     /**
      * Armorstands.
      */
@@ -138,7 +143,7 @@ class HologramProxyImpl(
             armorstand.customName = lines[i]
 
             for (watcher in visibleTo) {
-                watcher.sendPacket(packet)
+                packageService.sendPacket(watcher, packet)
             }
         }
     }
@@ -151,12 +156,24 @@ class HologramProxyImpl(
         val upSet = index * 0.23
         val locationInWorld = location as Location
         val targetLocation =
-            Location(locationInWorld.world, locationInWorld.x, locationInWorld.y - upSet, locationInWorld.z, locationInWorld.yaw, locationInWorld.pitch)
+            Location(
+                locationInWorld.world,
+                locationInWorld.x,
+                locationInWorld.y - upSet,
+                locationInWorld.z,
+                locationInWorld.yaw,
+                locationInWorld.pitch
+            )
 
         val nmsWorld = findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld").getDeclaredMethod("getHandle")
             .invoke(targetLocation.world)
         val entityArmorstand = findClazz("net.minecraft.server.VERSION.EntityArmorStand")
-            .getDeclaredConstructor(findClazz("net.minecraft.server.VERSION.World"), Double::class.java, Double::class.java, Double::class.java)
+            .getDeclaredConstructor(
+                findClazz("net.minecraft.server.VERSION.World"),
+                Double::class.java,
+                Double::class.java,
+                Double::class.java
+            )
             .newInstance(nmsWorld, targetLocation.x, targetLocation.y, targetLocation.z)
         val bukkitArmorstand =
             findClazz("net.minecraft.server.VERSION.Entity").getDeclaredMethod("getBukkitEntity").invoke(
@@ -218,7 +235,7 @@ class HologramProxyImpl(
                         .invoke(armorstand)
                 )
 
-            player.sendPacket(packet)
+            packageService.sendPacket(player, packet)
         }
 
         if (!visibleTo.contains(player)) {
@@ -233,7 +250,7 @@ class HologramProxyImpl(
         val packet = findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy")
             .getDeclaredConstructor(IntArray::class.java)
             .newInstance(armorstands.map { a -> a.entityId }.toIntArray())
-        player.sendPacket(packet)
+        packageService.sendPacket(player, packet)
 
         if (visibleTo.contains(player)) {
             visibleTo.remove(player)

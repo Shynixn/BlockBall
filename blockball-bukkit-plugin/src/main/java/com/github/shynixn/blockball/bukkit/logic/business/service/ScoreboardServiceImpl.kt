@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.ScoreboardDisplaySlot
 import com.github.shynixn.blockball.api.business.service.ScoreboardService
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.github.shynixn.blockball.core.logic.business.extension.cast
@@ -36,7 +37,6 @@ import org.bukkit.scoreboard.Team
  * SOFTWARE.
  */
 class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
-
     companion object {
         private const val defaultObjective: String = "def_obj"
     }
@@ -44,18 +44,14 @@ class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
     /**
      * Sets the configuration of the given scoreboard.
      */
-    override fun <S> setConfiguration(scoreboard: S, displaySlot: Any, title: String) {
+    override fun <S> setConfiguration(scoreboard: S, displaySlot: ScoreboardDisplaySlot, title: String) {
         if (scoreboard !is org.bukkit.scoreboard.Scoreboard) {
             throw IllegalArgumentException("Scoreboard has to be a Bukkit Scoreboard!")
         }
 
-        if (displaySlot !is DisplaySlot) {
-            throw IllegalArgumentException("Displayslot has to be a Bukkit Displayslot!")
-        }
-
         @Suppress("DEPRECATION")
         val objective = scoreboard.registerNewObjective(defaultObjective, "dummy")
-        objective.displaySlot = displaySlot
+        objective.displaySlot = DisplaySlot.values().first { v -> v.name == displaySlot.name }
         objective.displayName = title.translateChatColors()
     }
 

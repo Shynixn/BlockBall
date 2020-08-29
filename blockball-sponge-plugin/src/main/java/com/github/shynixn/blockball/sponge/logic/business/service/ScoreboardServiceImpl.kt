@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.sponge.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.ChatColor
+import com.github.shynixn.blockball.api.business.enumeration.ScoreboardDisplaySlot
 import com.github.shynixn.blockball.api.business.service.ScoreboardService
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.github.shynixn.blockball.sponge.logic.business.extension.toText
@@ -46,24 +47,8 @@ class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
     /**
      * Sets the configuration of the given scoreboard.
      */
-    override fun <S> setConfiguration(scoreboard: S, displaySlot: Any, title: String) {
-        if (scoreboard !is Scoreboard) {
-            throw IllegalArgumentException("Scoreboard has to be a SpongeScoreboard!")
-        }
-
-        if (displaySlot !is DisplaySlot) {
-            throw IllegalArgumentException("Displayslot has to be a SpongeDisplayslot!")
-        }
-
-        val objective = Objective
-            .builder()
-            .criterion(Criteria.DUMMY)
-            .name(defaultObjective)
-            .displayName(title.translateChatColors().toText())
-            .build()
-
-        scoreboard.addObjective(objective)
-        scoreboard.updateDisplaySlot(objective, DisplaySlots.SIDEBAR)
+    override fun <S> setConfiguration(scoreboard: S, displaySlot: ScoreboardDisplaySlot, title: String) {
+        // TODO:
     }
 
     /**
@@ -78,18 +63,18 @@ class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
         var team = scoreboard.teams.firstOrNull { t -> t.name == teamFinder.toString().translateChatColors() }
         val objective = scoreboard.getObjective(defaultObjective)
 
-      /*  if (team == null) {
-            team = Team.builder().name(teamFinder.toString().translateChatColors())
-                .TODO
+        /*  if (team == null) {
+              team = Team.builder().name(teamFinder.toString().translateChatColors())
+                  .TODO
 
-            scoreboard.registerTeam()
+              scoreboard.registerTeam()
 
-            team = scoreboard.registerNewTeam()
-            team.addEntry(teamFinder.toString().translateChatColors())
+              team = scoreboard.registerNewTeam()
+              team.addEntry(teamFinder.toString().translateChatColors())
 
-            objective!!.getScore(teamFinder.toString().translateChatColors()).score = lineNumber
-        }
+              objective!!.getScore(teamFinder.toString().translateChatColors()).score = lineNumber
+          }
 
-        team.cast<Team?>()!!.prefix = text.translateChatColors()*/
+          team.cast<Team?>()!!.prefix = text.translateChatColors()*/
     }
 }

@@ -9,12 +9,12 @@ import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.EntityBallProxy
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
-import com.github.shynixn.blockball.api.business.service.ItemService
+import com.github.shynixn.blockball.api.business.service.ItemTypeService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.BounceConfiguration
-import com.github.shynixn.blockball.bukkit.logic.business.extension.setSkin
 import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.github.shynixn.blockball.core.logic.business.extension.sync
+import com.github.shynixn.blockball.core.logic.persistence.entity.ItemEntity
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -68,25 +68,26 @@ class BallProxyImpl(
 ) : BallProxy, Runnable {
 
     companion object {
-        private val itemService = BlockBallApi.resolve(ItemService::class.java)
-        private val excludedRelativeItems = arrayOf(
-            itemService.getMaterialFromMaterialType(MaterialType.OAK_FENCE),
-            itemService.getMaterialFromMaterialType(MaterialType.IRON_BARS),
-            itemService.getMaterialFromMaterialType(MaterialType.GLASS_PANE),
-            itemService.getMaterialFromMaterialType(MaterialType.OAK_FENCE_GATE),
-            itemService.getMaterialFromMaterialType(MaterialType.NETHER_FENCE),
-            itemService.getMaterialFromMaterialType(MaterialType.COBBLESTONE_WALL),
-            itemService.getMaterialFromMaterialType(MaterialType.STAINED_GLASS_PANE),
-            org.bukkit.Material.SPRUCE_FENCE_GATE,
-            org.bukkit.Material.BIRCH_FENCE_GATE,
-            org.bukkit.Material.JUNGLE_FENCE_GATE,
-            org.bukkit.Material.DARK_OAK_FENCE_GATE,
-            org.bukkit.Material.ACACIA_FENCE_GATE,
-            org.bukkit.Material.SPRUCE_FENCE,
-            org.bukkit.Material.BIRCH_FENCE,
-            org.bukkit.Material.JUNGLE_FENCE,
-            org.bukkit.Material.DARK_OAK_FENCE,
-            org.bukkit.Material.ACACIA_FENCE
+        private val itemService = BlockBallApi.resolve(ItemTypeService::class.java)
+        private val excludedRelativeItems: Array<Material> = arrayOf(
+            itemService.findItemType(MaterialType.OAK_FENCE),
+            itemService.findItemType(MaterialType.OAK_FENCE),
+            itemService.findItemType(MaterialType.IRON_BARS),
+            itemService.findItemType(MaterialType.GLASS_PANE),
+            itemService.findItemType(MaterialType.OAK_FENCE_GATE),
+            itemService.findItemType(MaterialType.NETHER_FENCE),
+            itemService.findItemType(MaterialType.COBBLESTONE_WALL),
+            itemService.findItemType(MaterialType.STAINED_GLASS_PANE),
+            Material.SPRUCE_FENCE_GATE,
+            Material.BIRCH_FENCE_GATE,
+            Material.JUNGLE_FENCE_GATE,
+            Material.DARK_OAK_FENCE_GATE,
+            Material.ACACIA_FENCE_GATE,
+            Material.SPRUCE_FENCE,
+            Material.BIRCH_FENCE,
+            Material.JUNGLE_FENCE,
+            Material.DARK_OAK_FENCE,
+            Material.ACACIA_FENCE
         )
     }
 
@@ -137,8 +138,13 @@ class BallProxyImpl(
          */
         this.teleport(this.getLocation<Location>().add(0.0, 1.0, 0.0))
 
-        val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
-        itemService.setSkin(itemStack, meta.skin)
+        val item = ItemEntity {
+            this.type = MaterialType.SKULL_ITEM.MinecraftNumericId.toString()
+            this.dataValue = 3
+            this.skin = meta.skin
+        }
+
+        val itemStack = itemService.toItemStack<ItemStack>(item)
         setHead(itemStack)
 
         val event = BallSpawnEvent(this)
@@ -229,9 +235,14 @@ class BallProxyImpl(
         @Suppress("DEPRECATION", "UsePropertyAccessSyntax")
         livingEntity.equipment!!.setItemInHand(null)
         this.isGrabbed = false
-        val itemStack = itemService.createItemStack<ItemStack>(MaterialType.SKULL_ITEM, 3)
-        itemStack.setSkin(meta.skin)
 
+        val item = ItemEntity {
+            this.type = MaterialType.SKULL_ITEM.MinecraftNumericId.toString()
+            this.dataValue = 3
+            this.skin = meta.skin
+        }
+
+        val itemStack = itemService.toItemStack<ItemStack>(item)
         this.setHead(itemStack)
         val vector = this.getDirection(livingEntity).normalize().multiply(3)
         this.teleport(livingEntity.location.add(vector))

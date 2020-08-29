@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.api.business.service
 import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import java.util.stream.Stream
 
 /**
  * Created by Shynixn 2019.
@@ -58,14 +59,19 @@ interface ProxyService {
     fun performServerCommand(command: String)
 
     /**
-     * Gets the location of the player.
+     * Gets the location of the entity.
      */
-    fun <L, P> getPlayerLocation(player: P): L
+    fun <L, P> getEntityLocation(entity: P): L
 
     /**
      * Gets the name of the World the player is in.
      */
     fun <P> getWorldName(player: P): String
+
+    /**
+     * Gets the world from name.
+     */
+    fun <W> getWorldFromName(name: String): W?
 
     /**
      * Gets the name of a player.
@@ -133,6 +139,11 @@ interface ProxyService {
     fun <P> isPlayerInstance(player: P): Boolean
 
     /**
+     * Gets if the given instance is an itemFrame instance.
+     */
+    fun <E> isItemFrameInstance(entity: E): Boolean
+
+    /**
      * Sets the player scoreboard.
      */
     fun <P, S> setPlayerScoreboard(player: P, scoreboard: S)
@@ -140,7 +151,7 @@ interface ProxyService {
     /**
      * Sets the player velocity.
      */
-    fun <P> setPlayerVelocity(player: P, position: Position)
+    fun <P> setEntityVelocity(entity: P, position: Position)
 
     /**
      * Gets the player direction.
@@ -238,9 +249,19 @@ interface ProxyService {
     fun <P, L> getPlayersInWorld(location: L): List<P>
 
     /**
+     * Gets a stream of entities in the given world of the given location.
+     */
+    fun <P, L> getEntitiesInWorld(location: L): Stream<Any>
+
+    /**
      * Has player permission?
      */
     fun <P> hasPermission(player: P, permission: String): Boolean
+
+    /**
+     * Gets the custom name from an entity.
+     */
+    fun <E> getCustomNameFromEntity(entity: E): String?
 
     /**
      * Sends a chat message to the [sender].
@@ -266,4 +287,15 @@ interface ProxyService {
      * Sets the player hunger.
      */
     fun setPlayerHunger(player: Any, hunger: Int)
+
+    /**
+     * Sets the block type at the given location from the hint.
+     */
+    fun <L> setBlockType(location: L, hint: Any)
+
+    /**
+     * Sets the sign lines at the given location.
+     * Return true if the block is valid sign with changed lines.
+     */
+    fun <L> setSignLines(location: L, lines: List<String>): Boolean
 }

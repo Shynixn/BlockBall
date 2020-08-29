@@ -7,13 +7,12 @@ import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.bukkit.logic.business.extension.setDisplayName
 import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.github.shynixn.blockball.core.logic.business.extension.stripChatColors
 import com.github.shynixn.blockball.core.logic.business.extension.sync
+import com.github.shynixn.blockball.core.logic.persistence.entity.ItemEntity
 import com.google.inject.Inject
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -47,17 +46,17 @@ import kotlin.collections.HashSet
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+@Suppress("DEPRECATION")
 class BlockSelectionServiceImpl @Inject constructor(
     private val concurrencyService: ConcurrencyService,
     private val configurationService: ConfigurationService,
-    itemService: ItemService,
     private val dependencyService: DependencyService,
-    private val dependencyWorldEditService: DependencyWorldEditService
+    private val dependencyWorldEditService: DependencyWorldEditService,
+    private val itemTypeService: ItemTypeService
 ) : BlockSelectionService {
     private val axeName =
         ChatColor.WHITE.toString() + ChatColor.BOLD + ">>" + ChatColor.YELLOW + "BlockBall" + ChatColor.WHITE + ChatColor.BOLD + "<<"
     private val playerSelection = HashMap<Player, Array<Location?>>()
-    private val goldenAxeType = itemService.getMaterialFromMaterialType<Material>(MaterialType.GOLDEN_AXE)
     private val prefix = configurationService.findValue<String>("messages.prefix")
     private val rightClickSelectionCahe = HashSet<Player>()
 
@@ -163,10 +162,11 @@ class BlockSelectionServiceImpl @Inject constructor(
             return false
         }
 
-        @Suppress("DEPRECATION")
         val itemStack = player.itemInHand
 
-        if (itemStack.type != goldenAxeType || itemStack.itemMeta == null) {
+        if (itemTypeService.findItemType<Any>(itemStack.type) != itemTypeService.findItemType(MaterialType.GOLDEN_AXE)
+            || itemStack.itemMeta == null
+        ) {
             return false
         }
 
@@ -206,7 +206,7 @@ class BlockSelectionServiceImpl @Inject constructor(
             if (player.inventory.contents[0] != null) {
                 val item = player.inventory.contents[0]
 
-                if (item.type == goldenAxeType && item.itemMeta!!.displayName.cast<String?>() != null
+                if (itemTypeService.findItemType<Any>(item.type) == itemTypeService.findItemType(MaterialType.GOLDEN_AXE) && item.itemMeta!!.displayName.cast<String?>() != null
                     && item.itemMeta!!.displayName.stripChatColors() == this.axeName.stripChatColors()
                 ) {
                     return
@@ -214,10 +214,12 @@ class BlockSelectionServiceImpl @Inject constructor(
             }
         }
 
-        val itemStack = ItemStack(goldenAxeType)
-        itemStack.setDisplayName(axeName)
-        player.inventory.addItem(itemStack)
+        val item = ItemEntity {
+            this.type = MaterialType.GOLDEN_AXE.MinecraftNumericId.toString()
+            this.displayName = axeName
+        }
 
+        player.inventory.addItem(itemTypeService.toItemStack(item))
         player.sendMessage(prefix + "Take a look into your inventory. Use this golden axe for selection.")
     }
 

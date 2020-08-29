@@ -65,7 +65,7 @@ class HologramPage @Inject constructor(private val proxyService: ProxyService) :
         }
         if (command == MenuCommand.HOLOGRAM_CREATE) {
             val builder = HologramMetaEntity()
-            builder.position = proxyService.toPosition(proxyService.getPlayerLocation<Any, P>(player))
+            builder.position = proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
             holograms.add(builder)
             cache[5] = builder
         }
@@ -81,7 +81,7 @@ class HologramPage @Inject constructor(private val proxyService: ProxyService) :
         }
         if (command == MenuCommand.HOLOGRAM_LOCATION) {
             val hologram = cache[5] as HologramMeta
-            hologram.position = proxyService.toPosition(proxyService.getPlayerLocation<Any, P>(player))
+            hologram.position = proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
         }
         cache[2] = holograms.map { p -> p.position!!.toString() }
         return super.execute(player, command, cache, args)

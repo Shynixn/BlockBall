@@ -38,9 +38,4 @@ interface ScreenMessageService {
      * Sets the [message] for the given [player] at the actionbar.
      */
     fun <P> setActionBar(player: P, message: String)
-
-    /**
-     * Sets the [header] and [footer] of the given [player] tab bar.
-     */
-    fun <P> setTabBar(player: P, header: String, footer: String)
 }

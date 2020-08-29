@@ -1,5 +1,6 @@
 package unittest
 
+import com.github.shynixn.blockball.api.business.enumeration.ScoreboardDisplaySlot
 import com.github.shynixn.blockball.api.business.service.ScoreboardService
 import com.github.shynixn.blockball.bukkit.logic.business.service.ScoreboardServiceImpl
 import org.bukkit.scoreboard.*
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-
 
 /**
  * Created by Shynixn 2018.
@@ -53,7 +53,7 @@ class ScoreboardServiceTest {
         // Arrange
         val classUnderTest = createWithDependencies()
         val scoreboard = mock(Scoreboard::class.java)
-        val displaySlot = DisplaySlot.SIDEBAR
+        val displaySlot = ScoreboardDisplaySlot.SIDEBAR
         val title = "Custom"
         var called = false
 
@@ -71,32 +71,6 @@ class ScoreboardServiceTest {
 
     /**
      * Given
-     *      a valid configuration as parameter and no valid displaySlot
-     * When
-     *      setConfiguration is called
-     * Then
-     *     Exception should be thrown.
-     */
-    @Test
-    fun setConfiguration_NoValidScoreboardDisplaySlotTitle_ShouldRegisterObjective() {
-        // Arrange
-        val classUnderTest = createWithDependencies()
-        val title = "Custom"
-        val scoreboard = mock(Scoreboard::class.java)
-
-        // Act
-        `when`(scoreboard.registerNewObjective(any(), any())).then {
-            mock(Objective::class.java)
-        }
-
-        // Act
-        assertThrows(IllegalArgumentException::class.java) {
-            classUnderTest.setConfiguration(scoreboard, "wrong parameter", title)
-        }
-    }
-
-    /**
-     * Given
      *      a valid configuration as parameter and no valid scoreboard
      * When
      *      setConfiguration is called
@@ -107,7 +81,7 @@ class ScoreboardServiceTest {
     fun setConfiguration_ValidScoreboardNoDisplaySlotTitle_ShouldRegisterObjective() {
         // Arrange
         val classUnderTest = createWithDependencies()
-        val displaySlot = DisplaySlot.SIDEBAR
+        val displaySlot = ScoreboardDisplaySlot.SIDEBAR
         val title = "Custom"
 
         // Act

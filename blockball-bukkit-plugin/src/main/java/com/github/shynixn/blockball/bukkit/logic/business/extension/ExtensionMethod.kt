@@ -5,16 +5,11 @@ package com.github.shynixn.blockball.bukkit.logic.business.extension
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
-import com.github.shynixn.blockball.api.business.service.ItemService
-import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.PlayerInventory
 import org.bukkit.util.Vector
 
 /**
@@ -44,56 +39,11 @@ import org.bukkit.util.Vector
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-/**
- * Updates this inventory.
- */
-fun PlayerInventory.updateInventory() {
-    (this.holder as Player).updateInventory()
-}
-
-/**
- * Is the player touching the ground?
- */
-fun Player.isTouchingGround(): Boolean {
-    return this.isOnGround
-}
-
-/**
- * Set displayname.
- */
-fun ItemStack.setDisplayName(displayName: String): ItemStack {
-    val meta = itemMeta
-
-    if (meta != null) {
-        @Suppress("UsePropertyAccessSyntax")
-        meta.setDisplayName(displayName.translateChatColors())
-        itemMeta = meta
-    }
-
-    return this
-}
-
-
 /**
  * Returns if the given [player] has got this [Permission].
  */
 internal fun Permission.hasPermission(player: Player): Boolean {
     return player.hasPermission(this.permission)
-}
-
-/**
- * Sends the given [packet] to this player.
- */
-fun Player.sendPacket(packet: Any) {
-    BlockBallApi.resolve(PackageService::class.java).sendPacket(this, packet)
-}
-
-/**
- * Sets the skin of an itemstack.
- */
-internal fun ItemStack.setSkin(skin: String) {
-    BlockBallApi.resolve(ItemService::class.java).setSkin(this, skin)
 }
 
 /**
@@ -119,7 +69,12 @@ internal fun Location.toPosition(): Position {
  * Finds the version compatible NMS class.
  */
 fun findClazz(name: String): Class<*> {
-    return Class.forName(name.replace("VERSION", BlockBallApi.resolve(PluginProxy::class.java).getServerVersion().bukkitId))
+    return Class.forName(
+        name.replace(
+            "VERSION",
+            BlockBallApi.resolve(PluginProxy::class.java).getServerVersion().bukkitId
+        )
+    )
 }
 
 /**

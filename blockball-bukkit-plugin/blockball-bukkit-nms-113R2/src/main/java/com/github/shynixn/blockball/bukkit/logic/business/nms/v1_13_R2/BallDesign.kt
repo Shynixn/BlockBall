@@ -4,10 +4,8 @@ package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
-import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
-import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_13_R2.*
@@ -15,10 +13,8 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer
-import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.CreatureSpawnEvent
-import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 import java.util.*
 import java.util.logging.Level
@@ -59,9 +55,7 @@ class BallDesign(
     owner: LivingEntity?
 ) :
     EntityArmorStand((location.world as CraftWorld).handle), NMSBallProxy {
-
     private var internalProxy: BallProxy? = null
-    private val itemService = BlockBallApi.resolve(ItemService::class.java)
     private val hitbox = BallHitBox(this, ballMeta, location)
 
     /**

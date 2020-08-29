@@ -6,7 +6,6 @@ import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
-import com.github.shynixn.blockball.api.business.service.ItemService
 import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import net.minecraft.server.v1_16_R2.*
@@ -58,7 +57,6 @@ class BallDesign(
 
     private var internalProxy: BallProxy? = null
     private var entityBukkit: Any? = null // BukkitEntity has to be self cached since 1.14.
-    private val itemService = BlockBallApi.resolve(ItemService::class.java)
     private val hitBox = BallHitBox(this, ballMeta, location)
 
     private val locField = Entity::class.java.getDeclaredField("loc")
@@ -111,13 +109,13 @@ class BallDesign(
     /**
      * Disable setting slots.
      */
-    override fun setSlot(enumitemslot: EnumItemSlot?, itemstack: net.minecraft.server.v1_16_R2.ItemStack?) {
+    override fun setSlot(enumitemslot: EnumItemSlot?, itemstack: ItemStack?) {
     }
 
     /**
      * Sets the slot securely.
      */
-    fun setSecureSlot(enumitemslot: EnumItemSlot?, itemstack: net.minecraft.server.v1_16_R2.ItemStack?) {
+    fun setSecureSlot(enumitemslot: EnumItemSlot?, itemstack: ItemStack?) {
         super.setSlot(enumitemslot, itemstack)
     }
 

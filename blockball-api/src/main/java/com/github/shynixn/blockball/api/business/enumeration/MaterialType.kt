@@ -35,14 +35,9 @@ enum class MaterialType(
 ) {
 
     /**
-     * Sign post.
+     * Material air.
      */
-    SIGN_POST(63),
-
-    /**
-     * Wall Sign.
-     */
-    WALL_SIGN(68),
+    AIR(0),
 
     /**
      * Skull item.

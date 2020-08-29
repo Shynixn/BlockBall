@@ -56,7 +56,7 @@ class EntityRegistration116R1ServiceImpl : EntityRegistrationService {
         val size =  EntityTypes::class.java.getDeclaredMethod("l").invoke(internalRegistry) as EntitySize
 
         val entityTypes =
-            IRegistry.a(entityRegistry, "petblocks_" + key.toLowerCase(), EntityTypes.Builder.a<Entity>(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key))
+            IRegistry.a(entityRegistry, "blockball_" + key.toLowerCase(), EntityTypes.Builder.a<Entity>(EnumCreatureType.CREATURE).b().a().a(size.width, size.height).a(key))
 
         val registryMaterialsField = RegistryMaterials::class.java.getDeclaredField("b")
         registryMaterialsField.isAccessible = true

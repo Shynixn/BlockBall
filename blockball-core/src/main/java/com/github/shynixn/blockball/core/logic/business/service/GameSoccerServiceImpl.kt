@@ -182,14 +182,11 @@ class GameSoccerServiceImpl @Inject constructor(
                 blueTeamSpawnpoint = game.arena.meta.ballMeta.spawnpoint!!
             }
 
-            val redTeamSpawnpointLocation = proxyService.toPosition(redTeamSpawnpoint)
-            val blueTeamSpawnpointLocation = proxyService.toPosition(blueTeamSpawnpoint)
-
             game.ingamePlayersStorage.forEach { i ->
                 if (i.value.team == Team.RED) {
-                    proxyService.teleport(i.key, redTeamSpawnpointLocation)
+                    proxyService.teleport(i.key, redTeamSpawnpoint)
                 } else if (i.value.team == Team.BLUE) {
-                    proxyService.teleport(i.key, blueTeamSpawnpointLocation)
+                    proxyService.teleport(i.key, blueTeamSpawnpoint)
                 }
             }
         }
@@ -383,7 +380,7 @@ class GameSoccerServiceImpl @Inject constructor(
 
         if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
             for (player in proxyService.getPlayersInWorld<Any, Any>(proxyService.toLocation(game.arena.center))) {
-                val playerPosition = proxyService.toPosition(proxyService.getPlayerLocation<Any, Any>(player))
+                val playerPosition = proxyService.toPosition(proxyService.getEntityLocation<Any, Any>(player))
 
                 if (playerPosition.distance(game.arena.center) <= game.arena.meta.spectatorMeta.notificationRadius) {
                     players.add(Pair(player, true))

@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.enumeration.Version
+import com.github.shynixn.blockball.api.business.proxy.HologramProxy
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
@@ -16,6 +17,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_15_R1.EntityReg
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_16_R1.EntityRegistration116R1ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_16_R2.EntityRegistration116R2ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_8_R3.EntityRegistrationLegacyServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextImpl
@@ -67,6 +69,9 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(PluginProxy::class.java).toInstance(plugin)
         bind(LoggingService::class.java).toInstance(LoggingUtilServiceImpl(plugin.logger))
 
+        // Roots
+        bind(HologramProxy::class.java).to(HologramProxyImpl::class.java)
+
         // Repositories
         bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java).`in`(Scopes.SINGLETON)
         bind(StatsRepository::class.java).to(StatsSqlRepository::class.java).`in`(Scopes.SINGLETON)
@@ -75,7 +80,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         // Services
         bind(SqlDbContext::class.java).to(SqlDbContextImpl::class.java).`in`(Scopes.SINGLETON)
         bind(EventService::class.java).to(EventServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(ItemService::class.java).to(ItemServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(VirtualArenaService::class.java).to(VirtualArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ScoreboardService::class.java).to(ScoreboardServiceImpl::class.java).`in`(Scopes.SINGLETON)
