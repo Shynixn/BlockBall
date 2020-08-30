@@ -167,7 +167,10 @@ class GameActionServiceImpl @Inject constructor(
         }
 
         if (game.ballForceFieldBlockPosition != null) {
-            proxyService.setBlockType(proxyService.toLocation<Any>(game.ballForceFieldBlockPosition!!), MaterialType.AIR)
+            proxyService.setBlockType(
+                proxyService.toLocation<Any>(game.ballForceFieldBlockPosition!!),
+                MaterialType.AIR
+            )
         }
 
         game.status = GameStatus.DISABLED
@@ -326,7 +329,15 @@ class GameActionServiceImpl @Inject constructor(
             .filter { e -> !proxyService.isPlayerInstance(e) }
             .filter { e -> proxyService.getCustomNameFromEntity(e) != "ResourceBallsPlugin" }
             .filter { e -> !proxyService.isItemFrameInstance(e) }
-            .filter { e -> game.arena.isLocationInSelection(proxyService.getEntityLocation(e)) }
+            .filter { e ->
+                game.arena.isLocationInSelection(
+                    proxyService.toPosition(
+                        proxyService.getEntityLocation<Any, Any>(
+                            e
+                        )
+                    )
+                )
+            }
             .forEach { e ->
                 val vector = game.arena.meta.protectionMeta.entityProtection
                 proxyService.setLocationDirection(proxyService.getEntityLocation<Any, Any>(e), vector)
