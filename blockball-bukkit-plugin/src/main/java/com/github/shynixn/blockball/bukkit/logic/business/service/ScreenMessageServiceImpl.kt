@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
-import com.github.shynixn.blockball.api.business.service.PackageService
+import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.business.service.ScreenMessageService
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
@@ -39,7 +39,7 @@ import java.util.*
  */
 class ScreenMessageServiceImpl @Inject constructor(
     private val plugin: PluginProxy,
-    private val packageService: PackageService
+    private val proxyService: ProxyService
 ) : ScreenMessageService {
     /**
      * Sets the [title] of the given [player] [P] for the amount of [stay] ticks. Optionally shows a [subTitle] and displays
@@ -91,8 +91,8 @@ class ScreenMessageServiceImpl @Inject constructor(
             val titlePacket = packetConstructor.newInstance(enumTitleValue, titleJson, fadeIn, stay, fadeOut)
             val lengthPacket = packetConstructor.newInstance(enumTimesValue, titleJson, fadeIn, stay, fadeOut)
 
-            packageService.sendPacket(player, titlePacket)
-            packageService.sendPacket(player, lengthPacket)
+            proxyService.sendPacket(player, titlePacket)
+            proxyService.sendPacket(player, lengthPacket)
         }
 
         if (finalSubTitle.isNotEmpty()) {
@@ -102,7 +102,7 @@ class ScreenMessageServiceImpl @Inject constructor(
             val enumSubTitleValue = java.lang.Enum.valueOf<Any>(titleActionClazz as Class<Any>, "SUBTITLE")
 
             val subIitlePacket = packetConstructor.newInstance(enumSubTitleValue, subTitleJson, fadeIn, stay, fadeOut)
-            packageService.sendPacket(player, subIitlePacket)
+            proxyService.sendPacket(player, subIitlePacket)
         }
     }
 
@@ -162,6 +162,6 @@ class ScreenMessageServiceImpl @Inject constructor(
             }
         }
 
-        packageService.sendPacket(player, packet)
+        proxyService.sendPacket(player, packet)
     }
 }

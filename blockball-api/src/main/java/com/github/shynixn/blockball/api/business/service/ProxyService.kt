@@ -298,4 +298,9 @@ interface ProxyService {
      * Return true if the block is valid sign with changed lines.
      */
     fun <L> setSignLines(location: L, lines: List<String>): Boolean
+
+    /**
+     * Sends the given [packet] to the given [player].
+     */
+    fun <P> sendPacket(player: P, packet: Any)
 }

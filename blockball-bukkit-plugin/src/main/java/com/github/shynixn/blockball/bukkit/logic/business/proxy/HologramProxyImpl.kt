@@ -4,7 +4,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.proxy.HologramProxy
-import com.github.shynixn.blockball.api.business.service.PackageService
+import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import org.bukkit.Location
@@ -41,7 +41,7 @@ import org.bukkit.inventory.ItemStack
  * SOFTWARE.
  */
 class HologramProxyImpl() : HologramProxy {
-    private val packageService: PackageService = BlockBallApi.resolve(PackageService::class.java)
+    private val proxyService: ProxyService = BlockBallApi.resolve(ProxyService::class.java)
 
     /**
      * Location of the hologram.
@@ -143,7 +143,7 @@ class HologramProxyImpl() : HologramProxy {
             armorstand.customName = lines[i]
 
             for (watcher in visibleTo) {
-                packageService.sendPacket(watcher, packet)
+                proxyService.sendPacket(watcher, packet)
             }
         }
     }
@@ -235,7 +235,7 @@ class HologramProxyImpl() : HologramProxy {
                         .invoke(armorstand)
                 )
 
-            packageService.sendPacket(player, packet)
+            proxyService.sendPacket(player, packet)
         }
 
         if (!visibleTo.contains(player)) {
@@ -250,7 +250,7 @@ class HologramProxyImpl() : HologramProxy {
         val packet = findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy")
             .getDeclaredConstructor(IntArray::class.java)
             .newInstance(armorstands.map { a -> a.entityId }.toIntArray())
-        packageService.sendPacket(player, packet)
+        proxyService.sendPacket(player, packet)
 
         if (visibleTo.contains(player)) {
             visibleTo.remove(player)

@@ -117,7 +117,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
             .`in`(Scopes.SINGLETON)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(PackageService::class.java).to(PackageServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(ProxyService::class.java).to(ProxyService::class.java).`in`(Scopes.SINGLETON)
         bind(PlaceholderService::class.java).to(PlaceholderServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         when {
