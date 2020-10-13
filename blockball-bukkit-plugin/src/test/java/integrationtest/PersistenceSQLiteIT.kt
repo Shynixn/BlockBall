@@ -549,5 +549,9 @@ class PersistenceSQLiteIT {
         override fun <L> setSignLines(location: L, lines: List<String>): Boolean {
             throw IllegalArgumentException()
         }
+
+        override fun <P> sendPacket(player: P, packet: Any) {
+            throw IllegalArgumentException()
+        }
     }
 }
