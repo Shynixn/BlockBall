@@ -1,12 +1,11 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.github.shynixn.blockball.bukkit.logic.business.service
+package com.github.shynixn.blockball.core.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.ChatColor
+import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.business.service.RightclickManageService
-import org.bukkit.Location
-import org.bukkit.block.Sign
-import org.bukkit.entity.Player
+import com.google.inject.Inject
 
 /**
  * Created by Shynixn 2018.
@@ -35,14 +34,14 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class RightclickManageServiceImpl : RightclickManageService {
-    private val rightClickListener = HashMap<Player, (Any) -> Unit>()
+class RightclickManageServiceImpl @Inject constructor(private val proxyService: ProxyService) : RightclickManageService {
+    private val rightClickListener = HashMap<Any, (Any) -> Unit>()
 
     /**
      * Gets called one time when a location gets rightlicked by [player].
      */
     override fun <P, L> watchForNextRightClickSign(player: P, f: (L) -> Unit) {
-        if (player !is Player) {
+        if (player !is Any) {
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
@@ -54,7 +53,7 @@ class RightclickManageServiceImpl : RightclickManageService {
      * Executes the watcher for the given [player] if he has registered one.
      */
     override fun <P, L> executeWatchers(player: P, location: L): Boolean {
-        if (player !is Player) {
+        if (player !is Any) {
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
@@ -62,11 +61,8 @@ class RightclickManageServiceImpl : RightclickManageService {
             return false
         }
 
-        if ((location as Location).block.state is Sign) {
-            val sign = location.block.state as Sign
-            sign.setLine(0, ChatColor.BOLD.toString() + "BlockBall")
-            sign.setLine(1, ChatColor.GREEN.toString() + "Loading...")
-            sign.update(true)
+        if (location is Any) {
+            proxyService.setSignLines(location, listOf(ChatColor.BOLD.toString() + "BlockBall", ChatColor.GREEN.toString() + "Loading..."))
 
             rightClickListener[player]!!.invoke(location as Any)
             rightClickListener.remove(player)
@@ -79,7 +75,7 @@ class RightclickManageServiceImpl : RightclickManageService {
      * Clears all resources this [player] has allocated from this service.
      */
     override fun <P> cleanResources(player: P) {
-        if (player !is Player) {
+        if (player !is Any) {
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
