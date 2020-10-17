@@ -158,14 +158,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
             bind(DependencyPlaceholderApiService::class.java).to(DependencyPlaceholderApiServiceImpl::class.java)
         }
 
-        if (dependencyService.isInstalled(PluginDependency.WORLEDIT, "7")) {
-            bind(DependencyWorldEditService::class.java).to(DependencyWorldEdit7ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-        } else {
-            bind(DependencyWorldEditService::class.java).to(DependencyWorldEdit6ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-        }
-
         if (dependencyService.isInstalled(PluginDependency.VAULT)) {
             bind(DependencyVaultService::class.java).to(DependencyVaultServiceImpl::class.java).`in`(Scopes.SINGLETON)
         }
