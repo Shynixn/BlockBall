@@ -319,6 +319,18 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     }
 
     /**
+     * Tries to find a version compatible class.
+     */
+    override fun findClazz(name: String): Class<*> {
+        return Class.forName(
+            name.replace(
+                "VERSION",
+                BlockBallApi.resolve(PluginProxy::class.java).getServerVersion().bukkitId
+            )
+        )
+    }
+
+    /**
      * Sends a console message from this plugin.
      */
     override fun sendConsoleMessage(message: String) {

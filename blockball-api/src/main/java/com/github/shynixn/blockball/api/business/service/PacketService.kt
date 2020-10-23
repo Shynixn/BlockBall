@@ -1,0 +1,42 @@
+package com.github.shynixn.blockball.api.business.service
+
+import com.github.shynixn.blockball.api.persistence.entity.EntityMetaData
+import com.github.shynixn.blockball.api.persistence.entity.Position
+
+interface PacketService {
+    /**
+     * Sends an entity move packet.l
+     */
+    fun <P> sendEntityMovePacket(
+        player: P,
+        entityId: Int,
+        previousPosition: Position,
+        nextPosition: Position,
+        isOnGround: Boolean = false
+    )
+
+    /**
+     * Sends a velocity packet.
+     */
+    fun <P> sendEntityVelocityPacket(player: P, entityId: Int, velocity: Position)
+
+    /**
+     * Sends a destroy packet.
+     */
+    fun <P> sendEntityDestroyPacket(player: P, entityId: Int)
+
+    /**
+     * Sends a teleport packet.
+     */
+    fun <P> sendEntityTeleportPacket(player: P, entityId: Int, position: Position)
+
+    /**
+     * Sends a spawn packet.
+     */
+    fun <P> sendEntitySpawnPacket(player: P, entityId: Int, entityType: String, position: Position)
+
+    /**
+     * Sends a meta data packet.
+     */
+    fun <P> sendEntityMetaDataPacket(player: P, entityId: Int, entityMetaData: EntityMetaData)
+}

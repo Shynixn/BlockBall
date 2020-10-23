@@ -4,11 +4,13 @@ import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.EntityType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
-import com.github.shynixn.blockball.api.business.service.BallEntityService
-import com.github.shynixn.blockball.api.business.service.EntityRegistrationService
-import com.github.shynixn.blockball.api.business.service.GameService
+import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallCrossPlatformProxy
+import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallDesignEntity
+import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallHitboxEntity
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
 import com.github.shynixn.blockball.core.logic.business.extension.stripChatColors
 import com.google.inject.Inject
@@ -49,7 +51,10 @@ import kotlin.collections.ArrayList
  */
 class BallEntityServiceImpl @Inject constructor(
     private val plugin: Plugin,
-    private val entityRegistry: EntityRegistrationService
+    private val entityRegistry: EntityRegistrationService,
+    private val proxyService: ProxyService,
+    private val packetService: PacketService,
+    private val concurrencyService: ConcurrencyService
 ) : BallEntityService, Runnable {
 
     private var registered = false
@@ -63,15 +68,22 @@ class BallEntityServiceImpl @Inject constructor(
      * Spawns a temporary ball.
      */
     override fun <L> spawnTemporaryBall(location: L, meta: BallMeta): BallProxy {
-        val designClazz = findClazz("com.github.shynixn.blockball.bukkit.logic.business.nms.VERSION.BallDesign")
-        val nmsProxy =
-            designClazz.getDeclaredConstructor(Location::class.java, BallMeta::class.java, Boolean::class.java, UUID::class.java, LivingEntity::class.java)
-                .newInstance(location, meta, false, UUID.randomUUID(), null) as NMSBallProxy
+        require(location is Location)
 
-        val ballProxy = nmsProxy.proxy
-        balls.add(ballProxy)
+        val ballHitBoxEntity = BallHitboxEntity(proxyService.createNewEntityId(), location.toPosition(), meta)
+        ballHitBoxEntity.proxyService = proxyService
+        ballHitBoxEntity.concurrencyService = concurrencyService
+        ballHitBoxEntity.packetService = packetService
 
-        return ballProxy
+        val ballDesignEntity = BallDesignEntity(proxyService.createNewEntityId())
+        ballDesignEntity.proxyService = proxyService
+        ballDesignEntity.packetService = packetService
+
+        val ball = BallCrossPlatformProxy(meta, ballDesignEntity, ballHitBoxEntity)
+        ballDesignEntity.ball = ball
+        ballHitBoxEntity.ball = ball
+
+        return ball
     }
 
     /**
@@ -104,9 +116,9 @@ class BallEntityServiceImpl @Inject constructor(
                 if (!optProxy.isPresent) {
                     entity.remove()
 
-                    try{
+                    try {
                         (entity as Any).javaClass.getDeclaredMethod("deleteFromWorld").invoke(entity)
-                    }catch(e : Exception){
+                    } catch (e: Exception) {
                     }
 
                     plugin.logger.log(Level.INFO, "Removed invalid BlockBall in chunk.")
