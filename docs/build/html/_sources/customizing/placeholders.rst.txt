@@ -65,18 +65,6 @@ Uses the teams's current amount of players value                         <player
 Uses the teams's max amount of players value                             <maxplayers>
 ======================================================================   =======
 
-
-**Stats Scoreboard**
-
-======================================================================   =======
-Description                                                              Placeholder
-======================================================================   =======
-Uses the name of the player belonging the stats                          <playername>
-Uses the winrate value of the player                                     <winrate>
-Uses the amount of played games of the player                            <playedgames>
-Uses the amount of scored goals of the player                            <goalspergame>
-======================================================================   =======
-
 **BungeeCord Joining Signs**
 
 ======================================================================   =======
@@ -89,7 +77,7 @@ Uses the name of the target server                                       <server
 
 It is also possible to redirect some values to the `PlaceHolder API plugin. <https://www.spigotmc.org/resources/placeholderapi.6245/>`__.
 
-Simply use the **Games** placeholders and append the prefix **%blockball_** and the suffix **_<id>**.
+Simply use the **Games** placeholders and append the prefix **%blockball_** and **sometimes the** suffix **_<id>**.
 Replace <id> with the id of the arena.
 
 Sample placeholder for the current amount of players in arena 1: **%blockball_<sumplayers>_1%**
@@ -110,4 +98,9 @@ Uses the game's state (Enabled,Running,Disabled)                         %blockb
 Uses the game's current amount of players value                          %blockball_<sumplayers>_<id>%
 Uses the game's max amount of players value                              %blockball_<summaxplayers>_<id>%
 Uses the game's current time value                                       %blockball_<time>_<id>%
+Uses the winrate of the player across all played games                   %blockball_<winrate>%
+Uses the amount of played games of the player across all games           %blockball_<playedgames>%
+Uses the goalrate of the player across all played games                  %blockball_<goalrate>%
+Uses the amount of scored goals of the player across all games           %blockball_<goals>%
+Uses the amount of wins of the player across all games                   %blockball_<wins>%
 ======================================================================   =======

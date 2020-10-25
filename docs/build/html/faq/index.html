@@ -8,12 +8,10 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>FAQ &mdash; BlockBall 6.14.0 documentation</title>
+  <title>FAQ &mdash; BlockBall 6.20.1 documentation</title>
   
 
   
-  
-    <link rel="shortcut icon" href="../_static/favicon.png"/>
   
   
   
@@ -37,8 +35,8 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.14.0 documentation" href="../index.html"/>
-        <link rel="next" title="The ball does not spawn?" href="notspawning.html"/>
+    <link rel="top" title="BlockBall 6.20.1 documentation" href="../index.html"/>
+        <link rel="next" title="The ball takes very long to move when you touch it?" href="balllagsbehind.html"/>
         <link rel="prev" title="Developer API" href="../api/index.html"/> 
 
   
@@ -71,7 +69,7 @@
             
             
               <div class="version">
-                6.14.0
+                6.20.1
               </div>
             
           
@@ -103,10 +101,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../general/index.html">General</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Developer API</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">FAQ</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="notspawning.html">The ball does not spawn?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands.html">How can I automatically execute a command after a game?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="goalgetsnotdetected.html">The ball is inside of the goal but it does not score?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="balllagsbehind.html">The ball takes very long to move when you touch it?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ballfallsthroughmap.html">The ball falls through the ground?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="goalgetsnotdetected.html">The ball is inside of the goal but it does not score?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands.html">How can I automatically execute a command after a game?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="support.html">Can you support Minecraft 1.7.x or below?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howcustomskin.html">How to use a custom skin URL?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howmysql.html">How to use the MySQL database?</a></li>
@@ -184,10 +182,14 @@
 <p>The articles in this section explain how to resolve the most common questions.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="notspawning.html">The ball does not spawn?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="commands.html">How can I automatically execute a command after a game?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="goalgetsnotdetected.html">The ball is inside of the goal but it does not score?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="balllagsbehind.html">The ball takes very long to move when you touch it?</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="balllagsbehind.html#change-the-hitbox">Change the hitbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="balllagsbehind.html#change-the-server-ticks">Change the server ticks</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="ballfallsthroughmap.html">The ball falls through the ground?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="goalgetsnotdetected.html">The ball is inside of the goal but it does not score?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">How can I automatically execute a command after a game?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Can you support Minecraft 1.7.x or below?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="howcustomskin.html">How to use a custom skin URL?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="howmysql.html">How to use the MySQL database?</a></li>
@@ -206,7 +208,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="notspawning.html" class="btn btn-neutral float-right" title="The ball does not spawn?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="balllagsbehind.html" class="btn btn-neutral float-right" title="The ball takes very long to move when you touch it?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../api/index.html" class="btn btn-neutral" title="Developer API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -239,7 +241,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.14.0',
+            VERSION:'6.20.1',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -250,6 +252,7 @@
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

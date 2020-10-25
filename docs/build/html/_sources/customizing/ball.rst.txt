@@ -154,6 +154,9 @@ Properties
 * Skin: Name of a player using this skin or a skin URL.
 * Size: Size of the ball. Can be NORMAL or SMALL.
 * Hitbox Size: Size of the ball hitbox intercepting player movements. Does not have an impact on left or right clicking the ball.
+* Enable Kick: Toggles leftclicking to shoot the ball.
+* Enable Pass: Toggles rightclicking to pass the ball.
+* Enable Interact: Toggles moving into the ball to move the ball.
 * Carry Able: Should the Ball be able to grabbed by players. Should not be used for BlockBall games yet only for fun and testing.
 * Always Bounce: Should the ball bounce on walls?
 * Rotation Animation: Should the ball rotate depending on its direction and speed?
