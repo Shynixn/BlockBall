@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.api.persistence.entity.RaytraceResult
 import com.github.shynixn.blockball.bukkit.logic.business.service.ConfigurationServiceImpl
 import com.github.shynixn.blockball.core.logic.business.service.LoggingUtilServiceImpl
 import com.github.shynixn.blockball.core.logic.business.service.PersistenceStatsServiceImpl
@@ -552,6 +553,20 @@ class PersistenceMySQLIT {
          * Return true if the block is valid sign with changed lines.
          */
         override fun <L> setSignLines(location: L, lines: List<String>): Boolean {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Ray traces in the world for the given motion.
+         */
+        override fun rayTraceMotion(position: Position, motion: Position): RaytraceResult {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Creates a new entity id.
+         */
+        override fun createNewEntityId(): Int {
             throw IllegalArgumentException()
         }
     }
