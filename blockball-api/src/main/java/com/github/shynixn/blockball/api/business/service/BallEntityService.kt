@@ -44,11 +44,6 @@ interface BallEntityService {
     fun registerEntitiesOnServer(): Boolean
 
     /**
-     * Finds Ball from the given entity.
-     */
-    fun <E> findBallFromEntity(entity: E): Optional<BallProxy>
-
-    /**
      * Checks the entity collection for invalid ball entities and removes them.
      */
     fun <E> cleanUpInvalidEntities(entities: Collection<E>)

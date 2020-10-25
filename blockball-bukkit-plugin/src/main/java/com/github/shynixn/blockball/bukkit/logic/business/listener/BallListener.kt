@@ -105,8 +105,8 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerRightClickBallEvent(event: PlayerInteractAtEntityEvent) {
-        val optBall = ballEntityService.findBallFromEntity(event.rightClicked)
-
+     /*   val optBall = ballEntityService.findBallFromEntity(event.rightClicked)
+TODO:
         if (!optBall.isPresent) {
             return
         }
@@ -120,7 +120,7 @@ class BallListener @Inject constructor(
             ball.passByPlayer(event.player)
         }
 
-        event.isCancelled = true
+        event.isCancelled = true*/
     }
 
     /**
@@ -132,8 +132,8 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerDamageBallEvent(event: EntityDamageByEntityEvent) {
-        if (event.damager !is Player) {
-            return
+      /*  if (event.damager !is Player) {
+            return TODO
         }
 
         val optBall = this.ballEntityService.findBallFromEntity(event.entity)
@@ -149,7 +149,7 @@ class BallListener @Inject constructor(
             ball.grab(player)
         } else {
             ball.shootByPlayer(player)
-        }
+        }*/
     }
 
     /**
@@ -161,12 +161,6 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun entityDamageEvent(event: EntityDamageEvent) {
-        val optBall = ballEntityService.findBallFromEntity(event.entity)
-
-        optBall.ifPresent {
-            event.isCancelled = true
-        }
-
         if (event.entity is Player) {
             this.dropBall(event.entity as Player)
         }
@@ -268,21 +262,6 @@ class BallListener @Inject constructor(
     @EventHandler
     fun onSlotChange(event: PlayerItemHeldEvent) {
         this.dropBall(event.player)
-    }
-
-    /**
-     * Gets called when a player tries to leash a ball and cancels all of it.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun entityLeashEvent(event: PlayerLeashEntityEvent) {
-        if (event.entity is LivingEntity) {
-            val optBall = ballEntityService.findBallFromEntity(event.entity)
-            if (optBall.isPresent) {
-                event.isCancelled = true
-            }
-        }
     }
 
     /**

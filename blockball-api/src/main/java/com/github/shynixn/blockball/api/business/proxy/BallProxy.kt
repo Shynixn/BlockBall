@@ -53,16 +53,6 @@ interface BallProxy {
     val isDead: Boolean
 
     /**
-     * Unique id.
-     */
-    val uuid: UUID
-
-    /**
-     * Is the entity persistent and can be stored.
-     */
-    var persistent: Boolean
-
-    /**
      * Remaining time in ticks until players regain the ability to kick this ball.
      */
     var skipKickCounter: Int
@@ -71,21 +61,6 @@ interface BallProxy {
      * Current angular velocity that determines the intensity of Magnus effect.
      */
     var angularVelocity: Double
-
-    /**
-     * Returns the armorstand for the design.
-     */
-    fun <A> getDesignArmorstand(): A
-
-    /**
-     * Returns the hitbox entity.
-     */
-    fun <A> getHitbox(): A
-
-    /**
-     * Gets the optional living entity owner of the ball.
-     */
-    fun <L> getOwner(): Optional<L>
 
     /**
      * Gets the last interaction entity.

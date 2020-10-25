@@ -49,19 +49,6 @@ class BallCrossPlatformProxy(
     override var isDead: Boolean = false
 
     /**
-     * Unique id.
-     */
-    override val uuid: UUID
-        get() = TODO("Not yet implemented")
-
-    /**
-     * Is the entity persistent and can be stored.
-     */
-    override var persistent: Boolean
-        get() = TODO("Not yet implemented")
-        set(value) {}
-
-    /**
      * Remaining time in ticks until players regain the ability to kick this ball.
      */
     override var skipKickCounter: Int
@@ -74,27 +61,6 @@ class BallCrossPlatformProxy(
     override var angularVelocity: Double
         get() = TODO("Not yet implemented")
         set(value) {}
-
-    /**
-     * Returns the armorstand for the design.
-     */
-    override fun <A> getDesignArmorstand(): A {
-        throw IllegalArgumentException("DesignArmorstand!")
-    }
-
-    /**
-     * Returns the hitbox entity.
-     */
-    override fun <A> getHitbox(): A {
-        throw IllegalArgumentException("Hitbox!")
-    }
-
-    /**
-     * Gets the optional living entity owner of the ball.
-     */
-    override fun <L> getOwner(): Optional<L> {
-        TODO("Not yet implemented")
-    }
 
     /**
      * Gets the last interaction entity.

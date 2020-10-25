@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.EntityType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
-import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
@@ -111,20 +110,6 @@ class BallEntityServiceImpl @Inject constructor(
                 continue
             }
 
-            if (entity.customName == "ResourceBallsPlugin") {
-                val optProxy = findBallFromEntity(entity)
-                if (!optProxy.isPresent) {
-                    entity.remove()
-
-                    try {
-                        (entity as Any).javaClass.getDeclaredMethod("deleteFromWorld").invoke(entity)
-                    } catch (e: Exception) {
-                    }
-
-                    plugin.logger.log(Level.INFO, "Removed invalid BlockBall in chunk.")
-                }
-            }
-
             // Holograms hide a boots marker of every spawned armorstand.
             if (entity is ArmorStand && entity.equipment != null && entity.equipment!!.boots != null) {
                 val boots = entity.equipment!!.boots
@@ -153,21 +138,6 @@ class BallEntityServiceImpl @Inject constructor(
                 }
             }
         }
-    }
-
-    /**
-     * Finds Ball from the given entity.
-     */
-    override fun <E> findBallFromEntity(entity: E): Optional<BallProxy> {
-        balls.forEach { ball ->
-            if (!ball.isDead) {
-                if (ball.getDesignArmorstand<E>() == entity || ball.getHitbox<E>() == entity) {
-                    return Optional.of(ball)
-                }
-            }
-        }
-
-        return Optional.empty()
     }
 
     /**

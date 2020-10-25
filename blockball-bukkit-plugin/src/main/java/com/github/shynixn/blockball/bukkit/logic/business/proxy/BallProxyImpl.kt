@@ -60,11 +60,8 @@ import kotlin.math.sin
  */
 class BallProxyImpl(
     override val meta: BallMeta,
-    private val design: LivingEntity,
-    private val hitbox: LivingEntity,
-    override val uuid: UUID = UUID.randomUUID(),
-    private val initialOwner: LivingEntity?,
-    override var persistent: Boolean
+    private val design: ArmorStand,
+    private val hitbox: LivingEntity
 ) : BallProxy, Runnable {
 
     companion object {
@@ -149,20 +146,6 @@ class BallProxyImpl(
 
         val event = BallSpawnEvent(this)
         Bukkit.getPluginManager().callEvent(event)
-    }
-
-    /**
-     * Returns the armorstand for the design.
-     */
-    override fun <A> getDesignArmorstand(): A {
-        return design as A
-    }
-
-    /**
-     * Returns the hitbox entity.
-     */
-    override fun <A> getHitbox(): A {
-        return hitbox as A
     }
 
     /**
@@ -381,13 +364,6 @@ class BallProxyImpl(
     }
 
     /**
-     * Gets the optional living entity owner of the ball.
-     */
-    override fun <L> getOwner(): Optional<L> {
-        return Optional.ofNullable(this.initialOwner as L)
-    }
-
-    /**
      * Sets the velocity of the ball.
      */
     override fun <V> setVelocity(vector: V) {
@@ -403,7 +379,7 @@ class BallProxyImpl(
         this.angularVelocity = 0.0
 
         if (this.meta.rotating) {
-            getDesignArmorstand<ArmorStand>().headPose = EulerAngle(2.0, 0.0, 0.0)
+            design.headPose = EulerAngle(2.0, 0.0, 0.0)
         }
 
         try {
@@ -445,7 +421,7 @@ class BallProxyImpl(
             }
 
             @Suppress("UsePropertyAccessSyntax")
-            entity.equipment!!.setItemInHand(getDesignArmorstand<ArmorStand>().helmet.clone())
+            entity.equipment!!.setItemInHand(design.helmet.clone())
             this.setHead(null)
             this.skipCounter = 20
             this.isGrabbed = true
@@ -779,7 +755,7 @@ class BallProxyImpl(
         val length = getVelocity<Vector>().length()
         var angle: EulerAngle? = null
 
-        val a = getDesignArmorstand<ArmorStand>().headPose
+        val a = design.headPose
         when {
             length > 1.0 -> angle = if (this.backAnimation) {
                 EulerAngle(a.x - 0.5, 0.0, 0.0)
@@ -798,7 +774,7 @@ class BallProxyImpl(
             }
         }
         if (angle != null) {
-            getDesignArmorstand<ArmorStand>().headPose = angle
+            design.headPose = angle
         }
     }
 
@@ -808,10 +784,10 @@ class BallProxyImpl(
     private fun setHead(itemStack: ItemStack?) {
         when (meta.size) {
             BallSize.SMALL -> {
-                getDesignArmorstand<ArmorStand>().isSmall = true
-                getDesignArmorstand<EntityBallProxy>().helmetItemStack = itemStack
+                design.isSmall = true
+                (design as EntityBallProxy).helmetItemStack = itemStack
             }
-            BallSize.NORMAL -> getDesignArmorstand<EntityBallProxy>().helmetItemStack = itemStack
+            BallSize.NORMAL -> (design as EntityBallProxy).helmetItemStack = itemStack
         }
     }
 
@@ -851,9 +827,9 @@ class BallProxyImpl(
      */
     private fun <A> getCalculationEntity(): A {
         return if (hitbox is Slime) {
-            getDesignArmorstand()
+            design as A
         } else {
-            getHitbox()
+            hitbox as A
         }
     }
 
@@ -862,9 +838,9 @@ class BallProxyImpl(
      */
     private fun <A> getSecondaryEntity(): A {
         return if (hitbox is Slime) {
-            getHitbox()
+            hitbox as A
         } else {
-            getDesignArmorstand()
+            design as A
         }
     }
 }
