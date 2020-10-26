@@ -184,6 +184,9 @@ class BallCrossPlatformProxy(
             return
         }
 
+        val players = playerTracker!!.checkAndGet()
+        ballHitBoxEntity.tick(players)
+        ballDesignEntity.tick(players)
     }
 
     /**

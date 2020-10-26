@@ -53,7 +53,8 @@ class BallEntityServiceImpl @Inject constructor(
     private val entityRegistry: EntityRegistrationService,
     private val proxyService: ProxyService,
     private val packetService: PacketService,
-    private val concurrencyService: ConcurrencyService
+    private val concurrencyService: ConcurrencyService,
+    private val itemTypeService: ItemTypeService
 ) : BallEntityService, Runnable {
 
     private var registered = false
@@ -61,6 +62,11 @@ class BallEntityServiceImpl @Inject constructor(
 
     init {
         plugin.server.scheduler.runTaskTimer(plugin, this, 0L, 20L * 60 * 5)
+        plugin.server.scheduler.runTaskTimer(plugin, Runnable {
+            for(ball in balls){
+                ball.run()
+            }
+        }, 0L, 1L)
     }
 
     /**
@@ -77,10 +83,13 @@ class BallEntityServiceImpl @Inject constructor(
         val ballDesignEntity = BallDesignEntity(proxyService.createNewEntityId())
         ballDesignEntity.proxyService = proxyService
         ballDesignEntity.packetService = packetService
+        ballDesignEntity.itemService = itemTypeService
 
         val ball = BallCrossPlatformProxy(meta, ballDesignEntity, ballHitBoxEntity)
         ballDesignEntity.ball = ball
         ballHitBoxEntity.ball = ball
+
+        balls.add(ball)
 
         return ball
     }

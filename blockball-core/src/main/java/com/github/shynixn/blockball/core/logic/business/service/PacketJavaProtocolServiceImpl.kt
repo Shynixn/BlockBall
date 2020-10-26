@@ -5,34 +5,79 @@ import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.api.business.service.PacketService
 import com.github.shynixn.blockball.api.persistence.entity.EntityMetaData
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.google.inject.Inject
 import io.netty.buffer.ByteBuf
+import io.netty.buffer.ByteBufOutputStream
 import io.netty.buffer.Unpooled
+import java.io.ByteArrayOutputStream
+import java.io.OutputStream
 import java.util.*
 import kotlin.math.abs
 
-class PacketJavaProtocolServiceImpl(private val packageService: PackageService, private val pluginProxy: PluginProxy) :
+class PacketJavaProtocolServiceImpl @Inject constructor(
+    private val packageService: PackageService,
+    private val pluginProxy: PluginProxy
+) :
     PacketService {
-    private val dataSerializerClazz = pluginProxy.findClazz("net.minecraft.server.VERSION.PacketDataSerializer")
-    private val dataSerializerConstructor = dataSerializerClazz.getDeclaredConstructor(ByteBuf::class.java)
-    private val dataDeSerializationPacketMethod = pluginProxy.findClazz("net.minecraft.server.VERSION.Packet")
-        .getDeclaredMethod("a", dataSerializerClazz)
-    private val packetPlayOutEntityDestroyClazz =
+    private val dataSerializerClazz by lazy { pluginProxy.findClazz("net.minecraft.server.VERSION.PacketDataSerializer") }
+    private val dataSerializerConstructor by lazy { dataSerializerClazz.getDeclaredConstructor(ByteBuf::class.java) }
+    private val dataDeSerializationPacketMethod by lazy {
+        pluginProxy.findClazz("net.minecraft.server.VERSION.Packet")
+            .getDeclaredMethod("a", dataSerializerClazz)
+    }
+    private val packetPlayOutEntityDestroyClazz by lazy {
         pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy")
-    private val packetPlayOutEntityRelMove =
+    }
+    private val packetPlayOutEntityRelMove by lazy {
         pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntity\$PacketPlayOutRelEntityMove")
-    private val packetPlayOutEntityVelocity =
+    }
+    private val packetPlayOutEntityVelocity by lazy {
         pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityVelocity")
-    private val packetPlayOutEntityTeleport =
+    }
+    private val packetPlayOutEntityTeleport by lazy {
         pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityTeleport")
-    private val packetPlayOutEntitySpawnLiving =
+    }
+    private val packetPlayOutEntitySpawnLiving by lazy {
         pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutSpawnEntityLiving")
-    private val packetPlayOutEntityMetaData =
+    }
+    private val packetPlayOutEntityMetaData by lazy {
         pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityMetadata")
+    }
+    private val packetPlayOutEntityEquipment by lazy {
+        pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityEquipment")
+    }
 
-    private val iRegistryClazz = pluginProxy.findClazz("net.minecraft.server.VERSION.IRegistry")
-    private val entityRegistry = iRegistryClazz.getDeclaredField("ENTITY_TYPE").get(null)
-    private val iRegistryRegisterMethod = iRegistryClazz.getDeclaredMethod("a", Any::class.java)
-    private val entityTypesClazz = pluginProxy.findClazz("net.minecraft.server.VERSION.EntityTypes")
+    private val iRegistryClazz by lazy { pluginProxy.findClazz("net.minecraft.server.VERSION.IRegistry") }
+    private val entityRegistry by lazy { iRegistryClazz.getDeclaredField("ENTITY_TYPE").get(null) }
+    private val iRegistryRegisterMethod by lazy { iRegistryClazz.getDeclaredMethod("a", Any::class.java) }
+    private val entityTypesClazz by lazy { pluginProxy.findClazz("net.minecraft.server.VERSION.EntityTypes") }
+    private val itemIdMethod by lazy {
+        pluginProxy.findClazz("net.minecraft.server.VERSION.Item")
+            .getDeclaredMethod("getId", pluginProxy.findClazz("net.minecraft.server.VERSION.Item"))
+    }
+    private val craftItemStackNmsMethod by lazy {
+        pluginProxy.findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftItemStack")
+            .getDeclaredMethod("asNMSCopy", pluginProxy.findClazz("org.bukkit.inventory.ItemStack"))
+    }
+    private val getItemFromNmsItemMethod by lazy {
+        pluginProxy.findClazz("net.minecraft.server.VERSION.ItemStack")
+            .getDeclaredMethod("getItem")
+    }
+    private val getItemCount by lazy {
+        pluginProxy.findClazz("net.minecraft.server.VERSION.ItemStack")
+            .getDeclaredMethod("getCount")
+    }
+    private val getItemNbt by lazy {
+        pluginProxy.findClazz("net.minecraft.server.VERSION.ItemStack")
+            .getDeclaredMethod("getTag")
+    }
+    private val nbtToOutputStream by lazy {
+        pluginProxy.findClazz("net.minecraft.server.VERSION.NBTCompressedStreamTools")
+            .getDeclaredMethod(
+                "a", pluginProxy.findClazz("net.minecraft.server.VERSION.NBTTagCompound"),
+                OutputStream::class.java
+            )
+    }
 
     /**
      * Sends an entity move packet.
@@ -158,6 +203,35 @@ class PacketJavaProtocolServiceImpl(private val packageService: PackageService, 
         buffer.writeBoolean(false)
         buffer.writeByte(255)
         sendPacket(player, packetPlayOutEntityMetaData, buffer)
+    }
+
+    /**
+     * Sends an equipment packet.
+     */
+    override fun <P, I> sendEntityEquipmentPacket(player: P, entityId: Int, slotId: Int, itemStack: I) {
+        val buffer = Unpooled.buffer()
+        writeId(buffer, entityId)
+        writeId(buffer, slotId)
+
+        if (itemStack == null) {
+            buffer.writeBoolean(false)
+        } else {
+            buffer.writeBoolean(true)
+            val nmsItemStack = craftItemStackNmsMethod.invoke(null, itemStack)
+            val nmsItem = getItemFromNmsItemMethod.invoke(nmsItemStack)
+            val nmsItemId = itemIdMethod.invoke(null, nmsItem) as Int
+            writeId(buffer, nmsItemId)
+            buffer.writeByte(getItemCount.invoke(nmsItemStack) as Int)
+            val nbtTag = getItemNbt.invoke(nmsItemStack)
+
+            if (nbtTag != null) {
+                nbtToOutputStream.invoke(null, nbtTag, ByteBufOutputStream(buffer))
+            } else {
+                buffer.writeByte(0)
+            }
+        }
+
+        sendPacket(player, packetPlayOutEntityEquipment, buffer)
     }
 
     /**

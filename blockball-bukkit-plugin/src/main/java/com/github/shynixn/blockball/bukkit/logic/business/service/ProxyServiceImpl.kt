@@ -15,6 +15,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
+import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.RayTraceResultEntity
 import com.google.inject.Inject
@@ -69,15 +70,15 @@ class ProxyServiceImpl @Inject constructor(
     private val itemTypeService: ItemTypeService
 ) : ProxyService {
 
-    private val craftWorldClazz = findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld")
-    private val craftWorldClazzHandleMethod = craftWorldClazz.getDeclaredMethod("handle")
-    private val vector3dClazz = findClazz("net.minecraft.server.VERSION.Vec3D")
-    private val iBlockAccessClazz = findClazz("net.minecraft.server.VERSION.IBlockAccess")
-    private val blockCollisionOptionClazz = findClazz("net.minecraft.server.VERSION.RayTrace\$BlockCollisionOption")
-    private val fluidCollisionOptionClazz = findClazz("net.minecraft.server.VERSION.RayTrace\$FluidCollisionOption")
-    private val rayTraceClazz = findClazz("net.minecraft.server.VERSION.RayTrace")
-    private val entityClazz = findClazz("net.minecraft.server.VERSION.Entity")
-    private val movingObjectClazz = findClazz("net.minecraft.server.VERSION.MovingObjectPosition")
+    private val craftWorldClazz by lazy { findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld") }
+    private val craftWorldClazzHandleMethod by lazy { craftWorldClazz.getDeclaredMethod("getHandle") }
+    private val vector3dClazz by lazy { findClazz("net.minecraft.server.VERSION.Vec3D") }
+    private val iBlockAccessClazz by lazy { findClazz("net.minecraft.server.VERSION.IBlockAccess") }
+    private val blockCollisionOptionClazz by lazy { findClazz("net.minecraft.server.VERSION.RayTrace\$BlockCollisionOption") }
+    private val fluidCollisionOptionClazz by lazy { findClazz("net.minecraft.server.VERSION.RayTrace\$FluidCollisionOption") }
+    private val rayTraceClazz by lazy { findClazz("net.minecraft.server.VERSION.RayTrace") }
+    private val entityClazz by lazy { findClazz("net.minecraft.server.VERSION.Entity") }
+    private val movingObjectClazz by lazy { findClazz("net.minecraft.server.VERSION.MovingObjectPosition") }
 
     /**
      * Gets the name of the World the player is in.
@@ -686,6 +687,7 @@ class ProxyServiceImpl @Inject constructor(
     override fun createNewEntityId(): Int {
         val atomicInteger = findClazz("net.minecraft.server.VERSION.Entity")
             .getDeclaredField("entityCount")
+            .accessible(true)
             .get(null) as AtomicInteger
         return atomicInteger.incrementAndGet()
     }

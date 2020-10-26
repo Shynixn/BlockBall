@@ -80,7 +80,7 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      * Spawns the ball for the given player.
      */
     fun spawn(player: Player, position: Position) {
-        packetService.sendEntitySpawnPacket(player, entityId, "ARMOR_STAND", position)
+        packetService.sendEntitySpawnPacket(player, entityId, "SLIME", position)
     }
 
     /**

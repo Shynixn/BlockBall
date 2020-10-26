@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.executor.CommandExecutor
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.LoggingService
+import java.lang.reflect.Field
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -72,6 +73,14 @@ fun String.translateChatColors(): String {
  */
 fun String.stripChatColors(): String {
     return ChatColor.stripChatColors(this)
+}
+
+/**
+ * Accessible field.
+ */
+fun Field.accessible(flag: Boolean): Field {
+    this.isAccessible = flag
+    return this
 }
 
 /**

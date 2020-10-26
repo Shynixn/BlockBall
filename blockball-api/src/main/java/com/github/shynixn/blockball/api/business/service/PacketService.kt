@@ -39,4 +39,9 @@ interface PacketService {
      * Sends a meta data packet.
      */
     fun <P> sendEntityMetaDataPacket(player: P, entityId: Int, entityMetaData: EntityMetaData)
+
+    /**
+     * Sends an equipment packet.
+     */
+    fun <P, I> sendEntityEquipmentPacket(player: P, entityId: Int, slotId: Int, itemStack: I)
 }
