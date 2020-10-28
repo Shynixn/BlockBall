@@ -63,6 +63,16 @@ interface BallProxy {
     var angularVelocity: Double
 
     /**
+     * Entity id of the hitbox.
+     */
+    val hitBoxEntityId: Int
+
+    /**
+     * Entity id of the design.
+     */
+    val designEntityId: Int
+
+    /**
      * Gets the last interaction entity.
      * TODO 'interaction' can be interpreted as kick or dribbling
      */
@@ -165,5 +175,12 @@ interface BallProxy {
      *
      * @return if collision was detected and the knockback was applied
      */
-    fun <V, B> calculateKnockBack(sourceVector: V, sourceBlock: B, mot0: Double, mot2: Double, mot6: Double, mot8: Double): Boolean
+    fun <V, B> calculateKnockBack(
+        sourceVector: V,
+        sourceBlock: B,
+        mot0: Double,
+        mot2: Double,
+        mot6: Double,
+        mot8: Double
+    ): Boolean
 }

@@ -107,6 +107,18 @@ class BallProxyImpl(
     override var angularVelocity: Double = 0.0
 
     /**
+     * Entity id of the hitbox.
+     */
+    override val hitBoxEntityId: Int
+        get() = TODO("Not yet implemented")
+
+    /**
+     * Entity id of the design.
+     */
+    override val designEntityId: Int
+        get() = TODO("Not yet implemented")
+
+    /**
      * Remaining time in ticks until players regain the ability to kick this ball.
      */
     override var skipKickCounter = 0

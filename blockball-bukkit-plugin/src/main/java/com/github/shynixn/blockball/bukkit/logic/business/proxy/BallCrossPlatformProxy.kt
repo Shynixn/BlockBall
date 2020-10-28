@@ -63,6 +63,22 @@ class BallCrossPlatformProxy(
         set(value) {}
 
     /**
+     * Entity id of the hitbox.
+     */
+    override val hitBoxEntityId: Int
+        get() {
+            return ballHitBoxEntity.entityId
+        }
+
+    /**
+     * Entity id of the design.
+     */
+    override val designEntityId: Int
+        get() {
+            return ballHitBoxEntity.entityId
+        }
+
+    /**
      * Gets the last interaction entity.
      * TODO 'interaction' can be interpreted as kick or dribbling
      */

@@ -100,7 +100,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             return
         }
 
-
         if (!getServerVersion().isCompatible(
                 Version.VERSION_1_8_R3,
                 Version.VERSION_1_9_R2,
@@ -201,8 +200,14 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
                 .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.DARK_GREEN + "Started server linking.")
         }
 
+        val protocolService = resolve(ProtocolService::class.java)
+
         for (world in Bukkit.getWorlds()) {
             ballEntityService.cleanUpInvalidEntities(world.entities)
+
+            for (player in world.players) {
+                protocolService.register(player)
+            }
         }
 
         Bukkit.getServer()
@@ -219,6 +224,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
 
         resolve(PersistenceStatsService::class.java).close()
         resolve(SqlDbContext::class.java).close()
+        resolve(ProtocolService::class.java).dispose()
 
         try {
             resolve(GameService::class.java).close()

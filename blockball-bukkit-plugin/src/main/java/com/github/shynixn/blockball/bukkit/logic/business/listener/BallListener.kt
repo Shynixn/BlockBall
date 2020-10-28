@@ -7,22 +7,15 @@ import com.github.shynixn.blockball.api.business.enumeration.BallActionType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.BallEntityService
 import com.github.shynixn.blockball.api.business.service.ParticleService
+import com.github.shynixn.blockball.api.business.service.ProtocolService
 import com.github.shynixn.blockball.api.business.service.SoundService
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.google.inject.Inject
 import org.bukkit.Location
-import org.bukkit.entity.Entity
-import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.event.entity.PlayerDeathEvent
-import org.bukkit.event.entity.PlayerLeashEntityEvent
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryOpenEvent
-import org.bukkit.event.player.*
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.world.ChunkLoadEvent
 import org.bukkit.event.world.ChunkUnloadEvent
 
@@ -56,8 +49,47 @@ import org.bukkit.event.world.ChunkUnloadEvent
 class BallListener @Inject constructor(
     private val ballEntityService: BallEntityService,
     private val particleService: ParticleService,
-    private val soundService: SoundService
+    private val soundService: SoundService,
+    private val protocolService: ProtocolService
 ) : Listener {
+    private val packetPlayInUseEntityActionField = findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
+        .getDeclaredField("action")
+    private val packetPlayInUseEntityIdField = findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
+        .getDeclaredField("a")
+
+    /**
+     * Gets called when a packet arrives.
+     */
+    @EventHandler
+    fun onPacketEvent(event: PacketEvent) {
+        val action = packetPlayInUseEntityActionField.get(event.packet)
+        val entityId = packetPlayInUseEntityIdField.get(event.packet) as Int
+        val ball = ballEntityService.findBallByEntityId(entityId) ?: return
+        val isPass = action.toString() != "ATTACK"
+
+        if (isPass) {
+            ball.passByPlayer(event.player)
+        } else {
+            ball.shootByPlayer(event.player)
+        }
+    }
+
+    /**
+     * Registers the player on join.
+     */
+    @EventHandler
+    fun onPlayerJoinEvent(event: PlayerJoinEvent) {
+        protocolService.register(event.player)
+    }
+
+    /**
+     * Unregisters the player on leave.
+     */
+    @EventHandler
+    fun playerQuitEvent(event: PlayerQuitEvent) {
+        protocolService.unRegister(event.player)
+    }
+
     /**
      * Avoids saving the ball into the chunk data.
      *
@@ -77,203 +109,13 @@ class BallListener @Inject constructor(
     }
 
     /**
-     * Gets called when a player interacts on a ball item.
-     * This action generally performs throwing the ball.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onPlayerInteractBallEvent(event: PlayerInteractEvent) {
-        for (ball in this.ballEntityService.getAllBalls()) {
-            if (ball.isGrabbed) {
-                ball.getLastInteractionEntity<Entity>().ifPresent {
-                    if (it is Player && it.uniqueId == event.player.uniqueId) {
-                        ball.throwByPlayer(event.player)
-                        event.isCancelled = true
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Gets called when a player right-click a ball.
-     * 1) Player grabs the ball if he were sneaking (SHIFT)
-     * 2) Otherwise, player performs passing
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onPlayerRightClickBallEvent(event: PlayerInteractAtEntityEvent) {
-     /*   val optBall = ballEntityService.findBallFromEntity(event.rightClicked)
-TODO:
-        if (!optBall.isPresent) {
-            return
-        }
-
-        this.dropBall(event.player)
-        val ball = optBall.get()
-
-        if (event.player.isSneaking) {
-            ball.grab(event.player)
-        } else {
-            ball.passByPlayer(event.player)
-        }
-
-        event.isCancelled = true*/
-    }
-
-    /**
-     * Gets called when a player left-click a ball.
-     * 1) Player grabs the ball if he were sneaking (SHIFT)
-     * 2) Otherwise, player performs shooting
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onPlayerDamageBallEvent(event: EntityDamageByEntityEvent) {
-      /*  if (event.damager !is Player) {
-            return TODO
-        }
-
-        val optBall = this.ballEntityService.findBallFromEntity(event.entity)
-
-        if (!optBall.isPresent) {
-            return
-        }
-
-        val ball = optBall.get()
-        val player = event.damager as Player
-
-        if (player.isSneaking) {
-            ball.grab(player)
-        } else {
-            ball.shootByPlayer(player)
-        }*/
-    }
-
-    /**
-     * Gets called when an entity takes damage.
-     * 1) Cancel all the damage if victim is a ball entity
-     * 2) If victim is a player grabbing a ball, he/she will drop it
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun entityDamageEvent(event: EntityDamageEvent) {
-        if (event.entity is Player) {
-            this.dropBall(event.entity as Player)
-        }
-    }
-
-
-    /**
-     * Drops the ball on command.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onPlayerCommandEvent(event: PlayerCommandPreprocessEvent) {
-        this.dropBall(event.player)
-    }
-
-    /**
-     * Drops the ball on inventory open.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onInventoryOpenEvent(event: InventoryOpenEvent) {
-        this.dropBall(event.player as Player)
-    }
-
-    /**
-     * Drops the ball on interact.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onPlayerEntityEvent(event: PlayerInteractEntityEvent) {
-        this.dropBall(event.player)
-    }
-
-    /**
-     * Drops the ball on death.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onPlayerDeathEvent(event: PlayerDeathEvent) {
-        this.dropBall(event.entity)
-    }
-
-    /**
-     * Drops the ball on left.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onPlayerQuitEvent(event: PlayerQuitEvent) {
-        this.dropBall(event.player)
-    }
-
-    /**
-     * Drops the ball on inventory click.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onInventoryOpen(event: InventoryClickEvent) {
-        for (ball in this.ballEntityService.getAllBalls()) {
-            if (ball.isGrabbed && ball.getLastInteractionEntity<Entity>().isPresent && ball.getLastInteractionEntity<Entity>().get() == event.whoClicked) {
-                ball.deGrab()
-                event.isCancelled = true
-                (event.whoClicked as Player).updateInventory()
-                event.whoClicked.closeInventory()
-            }
-        }
-    }
-
-    /**
-     * Drops the ball on teleport.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onTeleportEvent(event: PlayerTeleportEvent) {
-        this.dropBall(event.player)
-    }
-
-    /**
-     * Drops the ball on item drop.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onPlayerDropItem(event: PlayerDropItemEvent) {
-        this.dropBall(event.player)
-    }
-
-    /**
-     * Drops the ball on Slot change.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onSlotChange(event: PlayerItemHeldEvent) {
-        this.dropBall(event.player)
-    }
-
-    /**
      * Gets called when a player left clicks a ball.
      *
      * @param event event
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     fun ballKickEvent(event: BallKickEvent) {
-        if (!event.isCancelled) {
-            this.playEffects(event.ball, BallActionType.ONKICK)
-        }
+        this.playEffects(event.ball, BallActionType.ONKICK)
     }
 
     /**
@@ -356,17 +198,6 @@ TODO:
                 ball.meta.soundEffects[actionEffect]!!,
                 ball.getLocation<Location>().world!!.players
             )
-        }
-    }
-
-    /**
-     * Drops ball.
-     */
-    private fun dropBall(player: Player) {
-        for (ball in this.ballEntityService.getAllBalls()) {
-            if (ball.isGrabbed && ball.getLastInteractionEntity<Entity>().isPresent && ball.getLastInteractionEntity<Entity>().get() == player) {
-                ball.deGrab()
-            }
         }
     }
 }

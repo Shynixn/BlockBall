@@ -63,7 +63,7 @@ class BallEntityServiceImpl @Inject constructor(
     init {
         plugin.server.scheduler.runTaskTimer(plugin, this, 0L, 20L * 60 * 5)
         plugin.server.scheduler.runTaskTimer(plugin, Runnable {
-            for(ball in balls){
+            for (ball in balls) {
                 ball.run()
             }
         }, 0L, 1L)
@@ -92,6 +92,13 @@ class BallEntityServiceImpl @Inject constructor(
         balls.add(ball)
 
         return ball
+    }
+
+    /**
+     * Tries to locate the ball by the given id.
+     */
+    override fun findBallByEntityId(id: Int): BallProxy? {
+        return balls.firstOrNull { b -> b.hitBoxEntityId == id || b.designEntityId == id }
     }
 
     /**

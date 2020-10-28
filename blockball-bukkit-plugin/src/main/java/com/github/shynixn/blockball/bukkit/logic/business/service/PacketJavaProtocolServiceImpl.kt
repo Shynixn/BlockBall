@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.core.logic.business.service
+package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.PackageService
@@ -9,7 +9,6 @@ import com.google.inject.Inject
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufOutputStream
 import io.netty.buffer.Unpooled
-import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import java.util.*
 import kotlin.math.abs
