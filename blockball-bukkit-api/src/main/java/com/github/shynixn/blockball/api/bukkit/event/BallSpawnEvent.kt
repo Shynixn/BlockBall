@@ -29,4 +29,4 @@ import com.github.shynixn.blockball.api.business.proxy.BallProxy
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BallSpawnEvent(ball : BallProxy) : BallEvent(ball)
+class BallSpawnEvent(ball: BallProxy) : BallCancelableEvent(ball)

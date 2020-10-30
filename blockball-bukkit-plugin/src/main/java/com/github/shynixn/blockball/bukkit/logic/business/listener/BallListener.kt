@@ -109,6 +109,16 @@ class BallListener @Inject constructor(
     }
 
     /**
+     * Gets called when a ball dies.
+     *
+     * @param event event
+     */
+    @EventHandler
+    fun ballDeathEvent(event: BallDeathEvent) {
+        this.ballEntityService.removeTrackedBall(event.ball)
+    }
+
+    /**
      * Gets called when a player left clicks a ball.
      *
      * @param event event

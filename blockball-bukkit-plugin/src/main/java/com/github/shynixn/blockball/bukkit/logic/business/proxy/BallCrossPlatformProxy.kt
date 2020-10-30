@@ -2,6 +2,7 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
+import com.github.shynixn.blockball.api.bukkit.event.BallDeathEvent
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.Position
@@ -18,8 +19,8 @@ import java.util.logging.Level
 
 class BallCrossPlatformProxy(
     override val meta: BallMeta,
-    private val ballDesignEntity: BallDesignEntity,
-    private val ballHitBoxEntity: BallHitboxEntity
+    val ballDesignEntity: BallDesignEntity,
+    val ballHitBoxEntity: BallHitboxEntity
 ) : BallProxy {
     private var playerTracker: PlayerTracker? = PlayerTracker(ballHitBoxEntity.position.toLocation().world!!,
         { player ->
@@ -84,7 +85,7 @@ class BallCrossPlatformProxy(
      */
     override fun <V> setVelocity(vector: V) {
         require(vector is Vector)
-        ballHitBoxEntity.motion = vector.toPosition()
+        ballHitBoxEntity.setVelocity(vector)
     }
 
     /**
@@ -142,6 +143,8 @@ class BallCrossPlatformProxy(
         if (isDead) {
             return
         }
+
+        Bukkit.getPluginManager().callEvent(BallDeathEvent(this))
 
         isDead = true
         playerTracker!!.dispose()

@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
 import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.event.BallKickEvent
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.PacketService
 import com.github.shynixn.blockball.api.business.service.ProxyService
@@ -15,9 +14,7 @@ import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
-import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -43,7 +40,7 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
     /**
      * Ball Proxy.
      */
-    lateinit var ball: BallProxy
+    lateinit var ball: BallCrossPlatformProxy
 
     /**
      * Motion of the ball.
@@ -86,6 +83,9 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      * Returns below 0 if yaw did not change.
      */
     private var yawChange: Float = -1.0F
+    private var times: Int = 0
+    private var reduceVector: Vector? = null
+    private var originVector: Vector? = null
 
     /**
      * Spawns the ball for the given player.
@@ -106,6 +106,19 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      * @param players watching this hitbox.
      */
     fun <P> tick(players: List<P>) {
+        if (skipKickCounter > 0) {
+            skipKickCounter--
+        }
+
+        if (skipCounter > 0) {
+            skipCounter--
+        }
+
+        if (yawChange > 0) {
+            position.yaw = yawChange.toDouble()
+            yawChange = -1.0F
+        }
+
         if (requestTeleport) {
             requestTeleport = false
             packetService.sendEntityTeleportPacket(players, entityId, position)
@@ -167,7 +180,7 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
             kickVector = kickVector.normalize().multiply(horizontalMod)
             kickVector.y = verticalMod
 
-            val event = BallKickEvent(kickVector.toVector(), player, this.ball!!)
+            val event = BallKickEvent(kickVector.toVector(), player, this.ball)
             Bukkit.getPluginManager().callEvent(event)
 
             if (!event.isCancelled) {
@@ -181,7 +194,7 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      * Sets the velocity of the ball.
      */
     fun setVelocity(vector: Vector) {
-        this.backAnimation = false
+        this.ball.ballDesignEntity.backAnimation = false
         this.angularVelocity = 0.0
 
         if (this.meta.rotating) {
@@ -190,7 +203,7 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
 
         try {
             this.times = (50 * this.meta.movementModifier.rollingDistanceModifier).toInt()
-            this.getCalculationEntity<Entity>().velocity = vector
+            this.motion = vector.toPosition()
             val normalized = vector.clone().normalize()
             this.originVector = vector.clone()
             this.reduceVector = Vector(

@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.BlockBallApi
+import com.github.shynixn.blockball.api.bukkit.event.BallSpawnEvent
 import com.github.shynixn.blockball.api.business.enumeration.EntityType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
@@ -13,6 +14,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallHitboxEntity
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
 import com.github.shynixn.blockball.core.logic.business.extension.stripChatColors
 import com.google.inject.Inject
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
@@ -71,8 +73,9 @@ class BallEntityServiceImpl @Inject constructor(
 
     /**
      * Spawns a temporary ball.
+     * Returns a ball or null if the ball spawn event was cancelled.
      */
-    override fun <L> spawnTemporaryBall(location: L, meta: BallMeta): BallProxy {
+    override fun <L> spawnTemporaryBall(location: L, meta: BallMeta): BallProxy? {
         require(location is Location)
 
         val ballHitBoxEntity = BallHitboxEntity(proxyService.createNewEntityId(), location.toPosition(), meta)
@@ -89,6 +92,13 @@ class BallEntityServiceImpl @Inject constructor(
         ballDesignEntity.ball = ball
         ballHitBoxEntity.ball = ball
 
+        val event = BallSpawnEvent(ball)
+        Bukkit.getPluginManager().callEvent(event)
+
+        if (event.isCancelled) {
+            return null
+        }
+
         balls.add(ball)
 
         return ball
@@ -99,6 +109,15 @@ class BallEntityServiceImpl @Inject constructor(
      */
     override fun findBallByEntityId(id: Int): BallProxy? {
         return balls.firstOrNull { b -> b.hitBoxEntityId == id || b.designEntityId == id }
+    }
+
+    /**
+     * Disables a ball from tracking.
+     */
+    override fun removeTrackedBall(ball: BallProxy) {
+        if (balls.contains(ball)) {
+            balls.remove(ball)
+        }
     }
 
     /**
