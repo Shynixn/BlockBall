@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 
 /**

@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.api.business.proxy
 
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
+import com.github.shynixn.blockball.api.persistence.entity.Position
 import java.util.*
 
 /**
@@ -37,30 +38,9 @@ interface BallProxy {
     val meta: BallMeta
 
     /**
-     * Runnable Value yaw change which reprents internal yaw change calculation.
-     * Returns below 0 if yaw did not change.
-     */
-    var yawChange: Float
-
-    /**
-     * Is the ball currently grabbed by some entity?
-     */
-    val isGrabbed: Boolean
-
-    /**
      * Is the entity dead?
      */
     val isDead: Boolean
-
-    /**
-     * Remaining time in ticks until players regain the ability to kick this ball.
-     */
-    var skipKickCounter: Int
-
-    /**
-     * Current angular velocity that determines the intensity of Magnus effect.
-     */
-    var angularVelocity: Double
 
     /**
      * Entity id of the hitbox.
@@ -73,10 +53,9 @@ interface BallProxy {
     val designEntityId: Int
 
     /**
-     * Gets the last interaction entity.
-     * TODO 'interaction' can be interpreted as kick or dribbling
+     * Rotation of the visible ball in euler angles.
      */
-    fun <L> getLastInteractionEntity(): Optional<L>
+    var rotation: Position
 
     /**
      * Teleports the ball to the given [location].
@@ -115,29 +94,11 @@ interface BallProxy {
     fun <E> passByPlayer(player: E)
 
     /**
-     * Throws the ball by the given player.
-     * The calculated velocity can be manipulated by the BallThrowEvent.
-     *
-     * @param player
-     */
-    fun <E> throwByPlayer(player: E)
-
-    /**
-     * Lets the given living entity grab the ball.
-     */
-    fun <L> grab(entity: L)
-
-    /**
      * Calculates the angular velocity in order to spin the ball.
      *
      * @return The angular velocity
      */
     fun <V> calculateSpinVelocity(postVector: V, initVector: V): Double
-
-    /**
-     * DeGrabs the ball.
-     */
-    fun deGrab()
 
     /**
      * Removes the ball.

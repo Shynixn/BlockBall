@@ -120,10 +120,10 @@ class BallDesign(
             this.setPositionRotation(loc.x, loc.y - 1.0, loc.z, loc.yaw, loc.pitch)
         }
 
-        if (proxy.yawChange > 0) {
+       /* if (proxy.yawChange > 0) {
             this.hitbox.yaw = proxy.yawChange
-            proxy.yawChange = -1.0F
-        }
+            proxy.yawChange = -1.0F TODO
+        }*/
 
         proxy.run()
     }

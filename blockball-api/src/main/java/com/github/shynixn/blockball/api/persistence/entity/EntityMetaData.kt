@@ -15,4 +15,9 @@ interface EntityMetaData {
      * Slime size.
      */
     var slimeSize: Int?
+
+    /**
+     * Armorstand head rotation.
+     */
+    var armorstandHeadRotation: Position?
 }

@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.api.business.service.PacketService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
 import com.github.shynixn.blockball.core.logic.business.extension.sync
@@ -16,6 +17,8 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
+import org.bukkit.util.EulerAngle
+import org.bukkit.util.Vector
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -72,9 +75,17 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      * Current angular velocity that determines the intensity of Magnus effect.
      */
     private var angularVelocity: Double = 0.0
+
+    /**
+     * Skips next interaction.
+     */
     private var skipCounter = 20
+
+    /**
+     * Runnable Value yaw change which reprents internal yaw change calculation.
+     * Returns below 0 if yaw did not change.
+     */
     private var yawChange: Float = -1.0F
-    private var interactionEntity: Entity? = null
 
     /**
      * Spawns the ball for the given player.
@@ -101,6 +112,8 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
             motion = PositionEntity(0.0, -0.7, 0.0)
             return
         }
+
+        checkMovementInteractions(players as List<Player>)
 
         if (motion.x == 0.0 && motion.y == 0.0 && motion.z == 0.0) {
             return
@@ -161,6 +174,32 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
                 this.motion = event.resultVelocity.toPosition()
                 this.angularVelocity = spinV
             }
+        }
+    }
+
+    /**
+     * Sets the velocity of the ball.
+     */
+    fun setVelocity(vector: Vector) {
+        this.backAnimation = false
+        this.angularVelocity = 0.0
+
+        if (this.meta.rotating) {
+            ball.rotation = PositionEntity(2.0, 0.0, 0.0)
+        }
+
+        try {
+            this.times = (50 * this.meta.movementModifier.rollingDistanceModifier).toInt()
+            this.getCalculationEntity<Entity>().velocity = vector
+            val normalized = vector.clone().normalize()
+            this.originVector = vector.clone()
+            this.reduceVector = Vector(
+                normalized.x / this.times,
+                0.0784 * meta.movementModifier.gravityModifier,
+                normalized.z / this.times
+            )
+        } catch (ignored: IllegalArgumentException) {
+            // Ignore calculated velocity if it's out of range.
         }
     }
 
@@ -231,5 +270,41 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         val det = s.x * p.z - s.z * p.x
 
         return atan2(det, dot)
+    }
+
+    /**
+     * Checks movement interactions with the ball.
+     */
+    private fun checkMovementInteractions(players: List<Player>) {
+        if (!meta.enabledInteract) {
+            return
+        }
+
+        if (skipKickCounter > 0) {
+            return
+        }
+
+        this.skipCounter = 2
+        val ballLocation = position.toLocation()
+
+        for (player in players) {
+            if (player.location.distance(ballLocation) < meta.hitBoxSize) {
+                val event = BallInteractEvent(player, ball)
+                Bukkit.getPluginManager().callEvent(event)
+
+                if (event.isCancelled) {
+                    continue
+                }
+
+                val vector = ballLocation
+                    .toVector()
+                    .subtract(player.location.toVector())
+                    .normalize().multiply(meta.movementModifier.horizontalTouchModifier)
+                vector.y = 0.1 * meta.movementModifier.verticalTouchModifier
+
+                this.yawChange = player.location.yaw
+                this.setVelocity(vector)
+            }
+        }
     }
 }

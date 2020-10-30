@@ -12,7 +12,7 @@ import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.ItemTypeService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.BounceConfiguration
-import com.github.shynixn.blockball.core.logic.business.extension.cast
+import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.github.shynixn.blockball.core.logic.persistence.entity.ItemEntity
 import org.bukkit.Bukkit
@@ -93,7 +93,7 @@ class BallProxyImpl(
     private var backAnimation = false
     private var interactionEntity: Entity? = null
     private var skipCounter = 20
-    override var yawChange: Float = -1.0F
+    var yawChange: Float = -1.0F
 
     /** HitBox **/
     private var knockBackBumper: Int = 0
@@ -104,7 +104,7 @@ class BallProxyImpl(
     /**
      * Current angular velocity that determines the intensity of Magnus effect.
      */
-    override var angularVelocity: Double = 0.0
+    var angularVelocity: Double = 0.0
 
     /**
      * Entity id of the hitbox.
@@ -119,14 +119,16 @@ class BallProxyImpl(
         get() = TODO("Not yet implemented")
 
     /**
-     * Remaining time in ticks until players regain the ability to kick this ball.
+     * Rotation of the visible ball in euler angles.
      */
-    override var skipKickCounter = 0
+    override var rotation: Position
+        get() = TODO("Not yet implemented")
+        set(value) {}
 
     /**
-     * Is the ball currently grabbed by some entity?
+     * Remaining time in ticks until players regain the ability to kick this ball.
      */
-    override var isGrabbed: Boolean = false
+    var skipKickCounter = 0
 
     /**
      * Is the entity dead?
@@ -185,13 +187,9 @@ class BallProxyImpl(
                 skipCounter--
             }
 
-            if (!isGrabbed) {
-                checkMovementInteractions()
-                if (this.meta.rotating) {
-                    this.playRotationAnimation()
-                }
-            } else {
-                getSecondaryEntity<Entity>().teleport(getCalculationEntity<Entity>())
+            checkMovementInteractions()
+            if (this.meta.rotating) {
+                this.playRotationAnimation()
             }
         } catch (e: Exception) {
             Bukkit.getLogger().log(Level.WARNING, "Entity ticking exception.", e)
@@ -203,7 +201,6 @@ class BallProxyImpl(
      */
     override fun remove() {
         Bukkit.getPluginManager().callEvent(BallDeathEvent(this))
-        this.deGrab()
 
         this.design.remove()
         this.hitbox.remove()
@@ -217,44 +214,11 @@ class BallProxyImpl(
         }
     }
 
-
-    /**
-     * DeGrabs the ball.
-     */
-    override fun deGrab() {
-        if (!this.isGrabbed || this.interactionEntity == null || skipCounter > 0) {
-            return
-        }
-
-        val livingEntity = this.interactionEntity as LivingEntity
-        @Suppress("DEPRECATION", "UsePropertyAccessSyntax")
-        livingEntity.equipment!!.setItemInHand(null)
-        this.isGrabbed = false
-
-        val item = ItemEntity {
-            this.type = MaterialType.SKULL_ITEM.MinecraftNumericId.toString()
-            this.dataValue = 3
-            this.skin = meta.skin
-        }
-
-        val itemStack = itemService.toItemStack<ItemStack>(item)
-        this.setHead(itemStack)
-        val vector = this.getDirection(livingEntity).normalize().multiply(3)
-        this.teleport(livingEntity.location.add(vector))
-    }
-
     /**
      * Gets the velocity of the ball.
      */
     override fun <V> getVelocity(): V {
         return getCalculationEntity<Entity>().velocity as V
-    }
-
-    /**
-     * Gets the last interaction entity.
-     */
-    override fun <L> getLastInteractionEntity(): Optional<L> {
-        return Optional.ofNullable(interactionEntity as L)
     }
 
     /**
@@ -325,37 +289,6 @@ class BallProxyImpl(
     }
 
     /**
-     * Throws the ball by the given player.
-     * The calculated velocity can be manipulated by the BallThrowEvent.
-     *
-     * @param player
-     */
-    override fun <E> throwByPlayer(player: E) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Entity has to be a BukkitPlayer!")
-        }
-
-        if (!this.isGrabbed || this.skipCounter > 0) {
-            return
-        }
-
-        this.deGrab()
-
-        var vector = this.getDirection(player).normalize()
-        val y = vector.y
-        vector = vector.multiply(meta.movementModifier.horizontalThrowModifier)
-        vector.y = y * 2.0 * meta.movementModifier.verticalThrowModifier
-
-        val event = BallThrowEvent(vector, player, this)
-        Bukkit.getPluginManager().callEvent(event)
-
-        if (!event.isCancelled) {
-            this.skipCounter = 2
-            setVelocity(vector)
-        }
-    }
-
-    /**
      * Teleports the ball to the given [location].
      */
     override fun <L> teleport(location: L) {
@@ -363,9 +296,7 @@ class BallProxyImpl(
             throw IllegalArgumentException("Location has to be a BukkitLocation!")
         }
 
-        if (!this.isGrabbed) {
-            this.getCalculationEntity<Entity>().teleport(location)
-        }
+        this.getCalculationEntity<Entity>().teleport(location)
     }
 
     /**
@@ -379,65 +310,7 @@ class BallProxyImpl(
      * Sets the velocity of the ball.
      */
     override fun <V> setVelocity(vector: V) {
-        if (vector !is Vector) {
-            throw IllegalArgumentException("Vector has to be a BukkitVector!")
-        }
-
-        if (this.isGrabbed) {
-            return
-        }
-
-        this.backAnimation = false
-        this.angularVelocity = 0.0
-
-        if (this.meta.rotating) {
-            design.headPose = EulerAngle(2.0, 0.0, 0.0)
-        }
-
-        try {
-            this.times = (50 * this.meta.movementModifier.rollingDistanceModifier).toInt()
-            this.getCalculationEntity<Entity>().velocity = vector
-            val normalized = vector.clone().normalize()
-            this.originVector = vector.clone()
-            this.reduceVector = Vector(
-                normalized.x / this.times,
-                0.0784 * meta.movementModifier.gravityModifier,
-                normalized.z / this.times
-            )
-        } catch (ignored: IllegalArgumentException) {
-            // Ignore calculated velocity if it's out of range.
-        }
-    }
-
-    /**
-     * Lets the given living entity grab the ball.
-     */
-    override fun <L> grab(entity: L) {
-        if (entity !is LivingEntity) {
-            throw IllegalArgumentException("Entity has to be a BukkitLivingEntity!")
-        }
-
-        if (isGrabbed || !meta.carryAble) {
-            return
-        }
-
-        this.interactionEntity = entity
-
-        @Suppress("DEPRECATION")
-        if (entity.equipment!!.itemInHand.cast<ItemStack?>() == null || entity.equipment!!.itemInHand.type == Material.AIR) {
-            val event = BallGrabEvent(entity, this)
-            Bukkit.getPluginManager().callEvent(event)
-
-            if (event.isCancelled) {
-                return
-            }
-
-            @Suppress("UsePropertyAccessSyntax")
-            entity.equipment!!.setItemInHand(design.helmet.clone())
-            this.setHead(null)
-            this.skipCounter = 20
-            this.isGrabbed = true
-        }
+        TODO("Not yet implemented")
     }
 
     override fun <V> calculateMoveSourceVectors(movementVector: V, motionVector: V, onGround: Boolean): Optional<V> {
@@ -621,7 +494,7 @@ class BallProxyImpl(
      * @param pass either pass or shoot
      */
     private fun kickByPlayer(player: Player, pass: Boolean) {
-        if (this.isGrabbed || this.skipKickCounter > 0) {
+        if (this.skipKickCounter > 0) {
             return
         }
 
@@ -742,25 +615,6 @@ class BallProxyImpl(
     }
 
     /**
-     * Returns the launch Direction.
-     *
-     * @param entity entity
-     * @return launchDirection
-     */
-    private fun getDirection(entity: Entity): Vector {
-        val vector = Vector()
-        val rotX = entity.location.yaw.toDouble()
-        val rotY = entity.location.pitch.toDouble()
-        vector.y = -sin(Math.toRadians(rotY))
-        val h = cos(Math.toRadians(rotY))
-        vector.x = -h * sin(Math.toRadians(rotX))
-        vector.z = h * cos(Math.toRadians(rotX))
-        vector.y = 0.5
-        vector.add(entity.velocity)
-        return vector.multiply(3)
-    }
-
-    /**
      * Plays the rotation animation.
      */
     private fun playRotationAnimation() {
@@ -842,17 +696,6 @@ class BallProxyImpl(
             design as A
         } else {
             hitbox as A
-        }
-    }
-
-    /**
-     * Gets the subordinate entity which is not used for calculation.
-     */
-    private fun <A> getSecondaryEntity(): A {
-        return if (hitbox is Slime) {
-            hitbox as A
-        } else {
-            design as A
         }
     }
 }

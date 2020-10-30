@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.core.logic.persistence.entity
 
 import com.github.shynixn.blockball.api.persistence.entity.EntityMetaData
+import com.github.shynixn.blockball.api.persistence.entity.Position
 
 class EntityMetadataImpl : EntityMetaData {
     /**
@@ -17,6 +18,11 @@ class EntityMetadataImpl : EntityMetaData {
      * Slime size.
      */
     override var slimeSize: Int? = null
+
+    /**
+     * Armorstand head rotation.
+     */
+    override var armorstandHeadRotation: Position? = null
 
     constructor(f: EntityMetaData.() -> Unit) {
         f.invoke(this)

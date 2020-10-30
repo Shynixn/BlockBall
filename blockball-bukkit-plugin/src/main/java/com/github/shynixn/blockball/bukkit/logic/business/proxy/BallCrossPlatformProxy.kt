@@ -4,22 +4,23 @@ package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
+import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import java.util.*
+import java.util.logging.Level
 
 class BallCrossPlatformProxy(
     override val meta: BallMeta,
     private val ballDesignEntity: BallDesignEntity,
     private val ballHitBoxEntity: BallHitboxEntity
 ) : BallProxy {
-    private var interactionEntity: Entity? = null
-
     private var playerTracker: PlayerTracker? = PlayerTracker(ballHitBoxEntity.position.toLocation().world!!,
         { player ->
             ballDesignEntity.spawn(player, ballHitBoxEntity.position)
@@ -30,37 +31,9 @@ class BallCrossPlatformProxy(
         })
 
     /**
-     * Runnable Value yaw change which reprents internal yaw change calculation.
-     * Returns below 0 if yaw did not change.
-     */
-    override var yawChange: Float = 0.0F
-
-    /**
-     * Is the ball currently grabbed by some entity?
-     */
-    override val isGrabbed: Boolean
-        get() {
-            return this.ballHitBoxEntity.isGrabbed
-        }
-
-    /**
      * Is the entity dead?
      */
     override var isDead: Boolean = false
-
-    /**
-     * Remaining time in ticks until players regain the ability to kick this ball.
-     */
-    override var skipKickCounter: Int
-        get() = TODO("Not yet implemented")
-        set(value) {}
-
-    /**
-     * Current angular velocity that determines the intensity of Magnus effect.
-     */
-    override var angularVelocity: Double
-        get() = TODO("Not yet implemented")
-        set(value) {}
 
     /**
      * Entity id of the hitbox.
@@ -79,12 +52,16 @@ class BallCrossPlatformProxy(
         }
 
     /**
-     * Gets the last interaction entity.
-     * TODO 'interaction' can be interpreted as kick or dribbling
+     * Rotation of the visible ball in euler angles.
      */
-    override fun <L> getLastInteractionEntity(): Optional<L> {
-        return Optional.ofNullable(interactionEntity as L)
-    }
+    override var rotation: Position
+        get() {
+            return ballDesignEntity.rotation
+        }
+        set(value) {
+            ballDesignEntity.rotation = value
+            ballDesignEntity.requestRotationChange = true
+        }
 
     /**
      * Teleports the ball to the given [location].
@@ -150,33 +127,12 @@ class BallCrossPlatformProxy(
     }
 
     /**
-     * Throws the ball by the given player.
-     * The calculated velocity can be manipulated by the BallThrowEvent.
-     *
-     * @param player
-     */
-    override fun <E> throwByPlayer(player: E) {
-    }
-
-    /**
-     * Lets the given living entity grab the ball.
-     */
-    override fun <L> grab(entity: L) {
-    }
-
-    /**
      * Calculates the angular velocity in order to spin the ball.
      *
      * @return The angular velocity
      */
     override fun <V> calculateSpinVelocity(postVector: V, initVector: V): Double {
         return 0.0
-    }
-
-    /**
-     * DeGrabs the ball.
-     */
-    override fun deGrab() {
     }
 
     /**
@@ -200,9 +156,13 @@ class BallCrossPlatformProxy(
             return
         }
 
-        val players = playerTracker!!.checkAndGet()
-        ballHitBoxEntity.tick(players)
-        ballDesignEntity.tick(players)
+        try {
+            val players = playerTracker!!.checkAndGet()
+            ballHitBoxEntity.tick(players)
+            ballDesignEntity.tick(players)
+        } catch (e: Exception) {
+            Bukkit.getLogger().log(Level.WARNING, "Entity ticking exception.", e)
+        }
     }
 
     /**
