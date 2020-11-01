@@ -186,10 +186,10 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
 
         if (entityMetaData.armorstandHeadRotation != null) {
             buffer.writeByte(15)
+            writeId(buffer, rotationTypeValue)
             buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.x.toFloat())
             buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.y.toFloat())
             buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.z.toFloat())
-            writeId(buffer, rotationTypeValue)
         }
 
         buffer.writeByte(4)

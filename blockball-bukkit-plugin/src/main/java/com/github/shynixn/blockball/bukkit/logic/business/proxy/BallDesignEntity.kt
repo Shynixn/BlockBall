@@ -67,6 +67,7 @@ class BallDesignEntity(val entityId: Int) {
      */
     fun <P> tick(players: List<P>) {
         val position = ball.getLocation<Location>().toPosition()
+        position.y = position.y + ball.meta.hitBoxRelocation - 1.2
 
         for (player in players) {
             packetService.sendEntityTeleportPacket(player, entityId, position)

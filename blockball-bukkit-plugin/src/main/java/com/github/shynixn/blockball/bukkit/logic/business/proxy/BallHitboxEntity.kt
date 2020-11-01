@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
 import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.event.BallKickEvent
+import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.PacketService
 import com.github.shynixn.blockball.api.business.service.ProxyService
@@ -139,7 +140,16 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         val rayTraceResult = proxyService.rayTraceMotion(position, motion)
 
         if (rayTraceResult.hitBlock) {
-            this.motion = PositionEntity(position.worldName!!, 0.0, 0.0, 0.0)
+            if(rayTraceResult.blockdirection == BlockDirection.UP){
+
+            }else{
+                this.motion = PositionEntity(position.worldName!!, 0.0, 0.0, 0.0)
+            }
+
+
+
+            println("Wall: " + rayTraceResult.blockdirection.toString())
+
             return
         }
 

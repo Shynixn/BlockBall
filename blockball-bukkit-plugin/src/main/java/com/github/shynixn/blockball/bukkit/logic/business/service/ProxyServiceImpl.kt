@@ -2,6 +2,7 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ItemTypeService
@@ -19,6 +20,9 @@ import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.RayTraceResultEntity
 import com.google.inject.Inject
+import net.minecraft.server.v1_14_R1.IBlockAccess
+import net.minecraft.server.v1_14_R1.MovingObjectPosition
+import net.minecraft.server.v1_14_R1.MovingObjectPositionBlock
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -79,6 +83,7 @@ class ProxyServiceImpl @Inject constructor(
     private val rayTraceClazz by lazy { findClazz("net.minecraft.server.VERSION.RayTrace") }
     private val entityClazz by lazy { findClazz("net.minecraft.server.VERSION.Entity") }
     private val movingObjectClazz by lazy { findClazz("net.minecraft.server.VERSION.MovingObjectPosition") }
+    private val movingObjectBlockClazz by lazy { findClazz("net.minecraft.server.VERSION.MovingObjectPositionBlock") }
 
     /**
      * Gets the name of the World the player is in.
@@ -672,10 +677,13 @@ class ProxyServiceImpl @Inject constructor(
                 vector3dClazz.getDeclaredMethod("getZ").invoke(resultVector) as Double
             )
 
+            val direction = BlockDirection.valueOf(
+                movingObjectBlockClazz.getDeclaredMethod("getDirection").invoke(movingObjectPosition).toString().toUpperCase()
+            )
+
             val movingObjectType = movingObjectClazz.getDeclaredMethod("getType")
                 .invoke(movingObjectPosition)
-
-            return RayTraceResultEntity(movingObjectType.toString() == "BLOCK", resultPosition)
+            return RayTraceResultEntity(movingObjectType.toString() == "BLOCK", resultPosition, direction)
         }
 
         throw IllegalArgumentException("Version not supported.")
