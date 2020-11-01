@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.bukkit.event.PacketEvent
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ProtocolService
+import com.google.inject.Inject
 import io.netty.channel.Channel
 import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext
@@ -15,12 +16,17 @@ import java.util.logging.Level
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
-class ProtocolServiceImpl(private val plugin: PluginProxy, private val internalPlugin: Plugin) : ProtocolService {
+class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, private val internalPlugin: Plugin) :
+    ProtocolService {
     private val handlerName = "BlockBall " + "-" + UUID.randomUUID().toString()
-    private val playerToNmsPlayer = plugin.findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer")
-        .getDeclaredMethod("getHandle")
-    private val playerConnectionField = plugin.findClazz("net.minecraft.server.VERSION.EntityPlayer")
-        .getDeclaredField("playerConnection")
+    private val playerToNmsPlayer by lazy {
+        plugin.findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer")
+            .getDeclaredMethod("getHandle")
+    }
+    private val playerConnectionField by lazy {
+        plugin.findClazz("net.minecraft.server.VERSION.EntityPlayer")
+            .getDeclaredField("playerConnection")
+    }
     private val cachedPlayerChannels = HashMap<Player, Channel>()
     private val registeredPackets = HashSet<Class<*>>()
 

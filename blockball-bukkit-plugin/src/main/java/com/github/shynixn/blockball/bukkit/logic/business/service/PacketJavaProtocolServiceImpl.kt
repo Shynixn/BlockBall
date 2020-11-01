@@ -1,17 +1,17 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.api.business.service.PacketService
 import com.github.shynixn.blockball.api.persistence.entity.EntityMetaData
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.google.inject.Inject
+import com.mojang.datafixers.util.Pair
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufOutputStream
 import io.netty.buffer.Unpooled
-import net.minecraft.server.v1_14_R1.DataWatcherRegistry
-import net.minecraft.server.v1_14_R1.EntityArmorStand
-import net.minecraft.server.v1_14_R1.PacketPlayOutEntityMetadata
+import net.minecraft.server.v1_14_R1.*
 import java.io.OutputStream
 import java.util.*
 import kotlin.math.abs
@@ -53,32 +53,15 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
     private val entityRegistry by lazy { iRegistryClazz.getDeclaredField("ENTITY_TYPE").get(null) }
     private val iRegistryRegisterMethod by lazy { iRegistryClazz.getDeclaredMethod("a", Any::class.java) }
     private val entityTypesClazz by lazy { pluginProxy.findClazz("net.minecraft.server.VERSION.EntityTypes") }
-    private val itemIdMethod by lazy {
-        pluginProxy.findClazz("net.minecraft.server.VERSION.Item")
-            .getDeclaredMethod("getId", pluginProxy.findClazz("net.minecraft.server.VERSION.Item"))
-    }
     private val craftItemStackNmsMethod by lazy {
         pluginProxy.findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftItemStack")
             .getDeclaredMethod("asNMSCopy", pluginProxy.findClazz("org.bukkit.inventory.ItemStack"))
     }
-    private val getItemFromNmsItemMethod by lazy {
+    private val nmsItemStackClazz by lazy {
         pluginProxy.findClazz("net.minecraft.server.VERSION.ItemStack")
-            .getDeclaredMethod("getItem")
     }
-    private val getItemCount by lazy {
-        pluginProxy.findClazz("net.minecraft.server.VERSION.ItemStack")
-            .getDeclaredMethod("getCount")
-    }
-    private val getItemNbt by lazy {
-        pluginProxy.findClazz("net.minecraft.server.VERSION.ItemStack")
-            .getDeclaredMethod("getTag")
-    }
-    private val nbtToOutputStream by lazy {
-        pluginProxy.findClazz("net.minecraft.server.VERSION.NBTCompressedStreamTools")
-            .getDeclaredMethod(
-                "a", pluginProxy.findClazz("net.minecraft.server.VERSION.NBTTagCompound"),
-                OutputStream::class.java
-            )
+    private val enumItemSlotClazz by lazy {
+        pluginProxy.findClazz("net.minecraft.server.VERSION.EnumItemSlot")
     }
 
     /**
@@ -220,29 +203,21 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
      * Sends an equipment packet.
      */
     override fun <P, I> sendEntityEquipmentPacket(player: P, entityId: Int, slotId: Int, itemStack: I) {
-        val buffer = Unpooled.buffer()
-        writeId(buffer, entityId)
-        writeId(buffer, slotId)
-
-        if (itemStack == null) {
-            buffer.writeBoolean(false)
-        } else {
-            buffer.writeBoolean(true)
+        val packet = if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_16_R1)) {
             val nmsItemStack = craftItemStackNmsMethod.invoke(null, itemStack)
-            val nmsItem = getItemFromNmsItemMethod.invoke(nmsItemStack)
-            val nmsItemId = itemIdMethod.invoke(null, nmsItem) as Int
-            writeId(buffer, nmsItemId)
-            buffer.writeByte(getItemCount.invoke(nmsItemStack) as Int)
-            val nbtTag = getItemNbt.invoke(nmsItemStack)
 
-            if (nbtTag != null) {
-                nbtToOutputStream.invoke(null, nbtTag, ByteBufOutputStream(buffer))
-            } else {
-                buffer.writeByte(0)
-            }
+            val pair = Pair(enumItemSlotClazz.enumConstants[slotId], nmsItemStack)
+            packetPlayOutEntityEquipment
+                .getDeclaredConstructor(Int::class.java, List::class.java)
+                .newInstance(entityId, listOf(pair))
+        } else {
+            val nmsItemStack = craftItemStackNmsMethod.invoke(null, itemStack)
+            packetPlayOutEntityEquipment
+                .getDeclaredConstructor(Int::class.java, nmsItemStackClazz, enumItemSlotClazz)
+                .newInstance(entityId, nmsItemStack, enumItemSlotClazz.enumConstants[slotId])
         }
 
-        sendPacket(player, packetPlayOutEntityEquipment, buffer)
+        packageService.sendPacket(player, packet)
     }
 
     /**

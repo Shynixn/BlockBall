@@ -52,10 +52,14 @@ class BallListener @Inject constructor(
     private val soundService: SoundService,
     private val protocolService: ProtocolService
 ) : Listener {
-    private val packetPlayInUseEntityActionField = findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
-        .getDeclaredField("action")
-    private val packetPlayInUseEntityIdField = findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
-        .getDeclaredField("a")
+    private val packetPlayInUseEntityActionField by lazy {
+        findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
+            .getDeclaredField("action")
+    }
+    private val packetPlayInUseEntityIdField by lazy {
+        findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
+            .getDeclaredField("a")
+    }
 
     /**
      * Gets called when a packet arrives.

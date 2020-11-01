@@ -111,10 +111,6 @@ class BallDesign(location: Location, ballMeta: BallMeta, persistent: Boolean, uu
             return
         }
 
-        if (proxy.yawChange > 0) {
-            this.hitBox.yaw = proxy.yawChange
-            proxy.yawChange = -1.0F
-        }
 
         proxy.run()
     }

@@ -59,11 +59,10 @@ import kotlin.math.sin
  * SOFTWARE.
  */
 class BallProxyImpl(
-    override val meta: BallMeta,
     private val design: ArmorStand,
     private val hitbox: LivingEntity
-) : BallProxy, Runnable {
-
+) {
+/*
     companion object {
         private val itemService = BlockBallApi.resolve(ItemTypeService::class.java)
         private val excludedRelativeItems: Array<Material> = arrayOf(
@@ -351,5 +350,5 @@ class BallProxyImpl(
         } else {
             hitbox as A
         }
-    }
+    }*/
 }

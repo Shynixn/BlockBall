@@ -43,6 +43,7 @@ class EntityRegistration116R2ServiceImpl : EntityRegistrationService {
             throw IllegalArgumentException("CustomEntityClass has to be a Class!")
         }
 
+
         if (classes.containsKey(customEntityClazz)) {
             return
         }

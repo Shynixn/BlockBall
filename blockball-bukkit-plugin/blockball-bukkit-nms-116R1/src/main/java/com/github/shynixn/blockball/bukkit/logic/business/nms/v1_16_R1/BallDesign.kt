@@ -129,10 +129,6 @@ class BallDesign(
             return
         }
 
-        if (proxy.yawChange > 0) {
-            this.hitBox.yaw = proxy.yawChange
-            proxy.yawChange = -1.0F
-        }
 
         proxy.run()
     }

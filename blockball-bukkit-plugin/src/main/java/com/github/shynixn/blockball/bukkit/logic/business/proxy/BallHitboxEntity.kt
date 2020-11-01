@@ -121,7 +121,11 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
 
         if (requestTeleport) {
             requestTeleport = false
-            packetService.sendEntityTeleportPacket(players, entityId, position)
+
+            for (player in players) {
+                packetService.sendEntityTeleportPacket(player, entityId, position)
+            }
+
             motion = PositionEntity(0.0, -0.7, 0.0)
             return
         }
@@ -139,8 +143,10 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
             return
         }
 
-        packetService.sendEntityVelocityPacket(players, entityId, motion)
-        packetService.sendEntityMovePacket(players, entityId, this.position, rayTraceResult.targetPosition)
+        for (player in players) {
+            packetService.sendEntityVelocityPacket(player, entityId, motion)
+            packetService.sendEntityMovePacket(player, entityId, this.position, rayTraceResult.targetPosition)
+        }
 
         this.motion = this.motion.multiply(0.90)
         this.motion.y -= gravity
