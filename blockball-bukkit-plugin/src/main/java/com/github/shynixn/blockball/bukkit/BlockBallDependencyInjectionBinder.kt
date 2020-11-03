@@ -16,6 +16,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1.EntityReg
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_15_R1.EntityRegistration115R1ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_16_R1.EntityRegistration116R1ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_16_R2.EntityRegistration116R2ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_16_R3.EntityRegistration116R3ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_8_R3.EntityRegistrationLegacyServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
@@ -121,6 +122,9 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(PlaceholderService::class.java).to(PlaceholderServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         when {
+            version.isVersionSameOrGreaterThan(Version.VERSION_1_16_R3)
+            -> bind(EntityRegistrationService::class.java).to(EntityRegistration116R3ServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_16_R2)
             -> bind(EntityRegistrationService::class.java).to(EntityRegistration116R2ServiceImpl::class.java)
                 .`in`(Scopes.SINGLETON)

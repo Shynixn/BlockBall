@@ -280,6 +280,8 @@ task downloadDependencies(type: Exec) {
     text += " && mvn install:install-file -Dfile=spigot-1.16.1.jar -DgroupId=org.spigotmc -DartifactId=spigot116R1 -Dversion=1.16.0-R1.0 -Dpackaging=jar"
     text += " && java -jar BuildTools.jar --rev 1.16.2"
     text += " && mvn install:install-file -Dfile=spigot-1.16.2.jar -DgroupId=org.spigotmc -DartifactId=spigot116R2 -Dversion=1.16.2-R2.0 -Dpackaging=jar"
+    text += " && java -jar BuildTools.jar --rev 1.16.4"
+    text += " && mvn install:install-file -Dfile=spigot-1.16.4.jar -DgroupId=org.spigotmc -DartifactId=spigot116R3 -Dversion=1.16.4-R3.0 -Dpackaging=jar"
 
     standardOutput = new ByteArrayOutputStream()
 
