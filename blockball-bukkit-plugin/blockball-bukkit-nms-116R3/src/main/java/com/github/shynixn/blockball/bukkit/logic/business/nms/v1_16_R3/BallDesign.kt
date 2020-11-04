@@ -187,8 +187,8 @@ class BallDesign(
             this.world.methodProfiler.enter("move")
             if (x.g() > 1.0E-7) {
                 vec3d = vec3d.h(x)
-                x = Vec3D.ORIGIN
-                mot = Vec3D.ORIGIN
+                x = Vec3D(0.0, 0.0, 0.0)
+                mot = Vec3D(0.0, 0.0, 0.0)
             }
 
             vec3d = this.a(vec3d, enummovetype)

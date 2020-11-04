@@ -41,7 +41,7 @@ allprojects {
 
 subprojects {
     group 'com.github.shynixn.blockball'
-    version '6.20.1'
+    version '6.21.0'
 
     sourceCompatibility = 1.8
 
@@ -120,6 +120,12 @@ subprojects {
                         developer {
                             name = 'LazoYoung'
                             url = 'https://github.com/LazoYoung'
+                        }
+                    }
+                    contributors {
+                        contributor {
+                            name = 'tildearrow'
+                            url = 'https://github.com/tildearrow'
                         }
                     }
                     scm {
