@@ -51,7 +51,6 @@ class BlockSelectionServiceImpl @Inject constructor(
     private val concurrencyService: ConcurrencyService,
     private val configurationService: ConfigurationService,
     private val dependencyService: DependencyService,
-    private val dependencyWorldEditService: DependencyWorldEditService,
     private val itemTypeService: ItemTypeService
 ) : BlockSelectionService {
     private val axeName =
@@ -114,11 +113,7 @@ class BlockSelectionServiceImpl @Inject constructor(
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        if (isBlockBallAxeEnabled()) {
-            return getCompatibilitySelection(player, 0) as Optional<L>
-        }
-
-        return dependencyWorldEditService.getLeftClickLocation(player)
+        return getCompatibilitySelection(player, 0) as Optional<L>
     }
 
     /**
@@ -129,11 +124,7 @@ class BlockSelectionServiceImpl @Inject constructor(
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        if (isBlockBallAxeEnabled()) {
-            return getCompatibilitySelection(player, 1) as Optional<L>
-        }
-
-        return dependencyWorldEditService.getRightClickLocation(player)
+        return getCompatibilitySelection(player, 1) as Optional<L>
     }
 
     /**
@@ -198,10 +189,6 @@ class BlockSelectionServiceImpl @Inject constructor(
             throw IllegalArgumentException("Player has to be a BukkitPlayer!")
         }
 
-        if (!isBlockBallAxeEnabled()) {
-            return
-        }
-
         for (i in 0..player.inventory.contents.size) {
             if (player.inventory.contents[0] != null) {
                 val item = player.inventory.contents[0]
@@ -232,14 +219,5 @@ class BlockSelectionServiceImpl @Inject constructor(
         }
 
         return Optional.empty()
-    }
-
-    /**
-     * Should the blockballaxe be enabled?
-     */
-    private fun isBlockBallAxeEnabled(): Boolean {
-        return !dependencyService.isInstalled(PluginDependency.WORLEDIT) || (configurationService.containsValue("game.always-use-blockballaxe") && configurationService.findValue(
-            "game.always-use-blockballaxe"
-        ))
     }
 }
