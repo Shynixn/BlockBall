@@ -102,7 +102,7 @@ class GameSoccerServiceImpl @Inject constructor(
 
             val direction =
                 game.arena.meta.ballMeta.spawnpoint!!.clone().subtract(ballPosition)
-            game.ball!!.setVelocity(proxyService.toLocation<Any>(direction.multiply(0.1)))
+            game.ball!!.setVelocity(proxyService.toVector<Any>(direction.multiply(0.1)))
             game.ballBumper = 40
             game.ballBumperCounter++
             if (game.ballBumperCounter == 5) {

@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_16_R2
+package com.github.shynixn.blockball.bukkit.logic.business.nms.v1_16_R3
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
@@ -8,11 +8,11 @@ import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.proxy.NMSBallProxy
 import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import net.minecraft.server.v1_16_R2.*
+import net.minecraft.server.v1_16_R3.*
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.craftbukkit.v1_16_R2.CraftWorld
-import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_16_R3.CraftWorld
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.util.Vector
