@@ -9,10 +9,8 @@ import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.google.inject.Inject
 import com.mojang.datafixers.util.Pair
 import io.netty.buffer.ByteBuf
-import io.netty.buffer.ByteBufOutputStream
 import io.netty.buffer.Unpooled
-import net.minecraft.server.v1_14_R1.*
-import java.io.OutputStream
+import net.minecraft.server.v1_14_R1.PacketPlayOutSpawnEntityLiving
 import java.util.*
 import kotlin.math.abs
 
@@ -31,7 +29,7 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy")
     }
     private val packetPlayOutEntityRelMove by lazy {
-        pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntity\$PacketPlayOutRelEntityMove")
+        pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntity\$PacketPlayOutRelEntityMoveLook")
     }
     private val packetPlayOutEntityVelocity by lazy {
         pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityVelocity")
@@ -92,7 +90,12 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         buffer.writeShort(((nextPosition.x * 32 - previousPosition.x * 32) * 128).toInt())
         buffer.writeShort(((nextPosition.y * 32 - previousPosition.y * 32) * 128).toInt())
         buffer.writeShort(((nextPosition.z * 32 - previousPosition.z * 32) * 128).toInt())
+        buffer.writeByte((nextPosition.yaw * 256.0f / 360.0f).toInt().toByte().toInt())
+        buffer.writeByte((nextPosition.pitch * 256.0f / 360.0f).toInt().toByte().toInt())
         buffer.writeBoolean(isOnGround)
+
+        println(nextPosition.yaw.toString() + "-" + nextPosition.pitch)
+
         sendPacket(player, packetPlayOutEntityRelMove, buffer)
     }
 

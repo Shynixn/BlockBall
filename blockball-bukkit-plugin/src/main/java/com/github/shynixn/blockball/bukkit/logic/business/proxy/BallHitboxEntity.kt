@@ -79,11 +79,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      */
     private var skipCounter = 20
 
-    /**
-     * Runnable Value yaw change which reprents internal yaw change calculation.
-     * Returns below 0 if yaw did not change.
-     */
-    private var yawChange: Float = -1.0F
     private var originVector: Vector? = null
 
     /**
@@ -113,11 +108,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
             skipCounter--
         }
 
-        if (yawChange > 0) {
-            position.yaw = yawChange.toDouble()
-            yawChange = -1.0F
-        }
-
         if (requestTeleport) {
             requestTeleport = false
 
@@ -136,6 +126,9 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         }
 
         val rayTraceResult = proxyService.rayTraceMotion(position, motion)
+        // Raytrace does not transfer rotation.
+        rayTraceResult.targetPosition.yaw = position.yaw
+        rayTraceResult.targetPosition.pitch = position.pitch
 
         if (rayTraceResult.hitBlock) {
             if (rayTraceResult.blockdirection == BlockDirection.UP) {
@@ -153,22 +146,27 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
     }
 
     private fun calculateBallOnGround(players: List<Player>, targetPosition: Position) {
-        println("Ground Calculation.")
-        this.position = PositionEntity(targetPosition.worldName!!, targetPosition.x, this.position.y, targetPosition.z)
-        // this.motion = this.motion.multiply(0.9)
-        this.motion = this.motion.multiply(0.9)
 
-        println("Position: " + this.position)
-        println("Motion: " + this.motion)
+        for (player in players) {
+            packetService.sendEntityVelocityPacket(player, entityId, motion)
+            packetService.sendEntityMovePacket(player, entityId, this.position, targetPosition)
+        }
 
         if (this.motion.x <= 0.00001 && this.motion.z <= 0.00001) {
             this.motion = PositionEntity(0.0, 0.0, 0.0)
-            println("Stillstand.")
         }
+
+        val currentY = this.position.y
+        this.position = targetPosition
+        this.position.y = currentY
+
+        this.motion = this.motion.multiply(0.9)
+
     }
 
     private fun calculateBallOnAir(players: List<Player>, targetPosition: Position) {
-        println("[AirCalculation]")
+        println(this.position)
+        println("Vs" + targetPosition)
 
         for (player in players) {
             packetService.sendEntityVelocityPacket(player, entityId, motion)
@@ -195,7 +193,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         }
 
         val prevEyeLoc = player.eyeLocation.clone()
-        this.yawChange = player.location.yaw
         this.skipCounter = delay + 4
         this.skipKickCounter = delay + 4
         this.motion = player.velocity.toPosition()
@@ -344,7 +341,7 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
                     .normalize().multiply(meta.movementModifier.horizontalTouchModifier)
                 vector.y = 0.1 * meta.movementModifier.verticalTouchModifier
 
-                this.yawChange = player.location.yaw
+                this.position.yaw = player.location.yaw.toDouble()
                 this.setVelocity(vector)
             }
         }
