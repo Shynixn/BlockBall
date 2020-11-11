@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
 import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.event.BallKickEvent
+import com.github.shynixn.blockball.api.bukkit.event.BallRayTraceEvent
 import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.PacketService
@@ -100,7 +101,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      * @param players watching this hitbox.
      */
     fun <P> tick(players: List<P>) {
-        println(this.position)
 
         if (skipKickCounter > 0) {
             skipKickCounter--
@@ -128,23 +128,32 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         }
 
         val rayTraceResult = proxyService.rayTraceMotion(position, motion)
-        // Raytrace does not transfer rotation.
-        rayTraceResult.targetPosition.yaw = position.yaw
-        rayTraceResult.targetPosition.pitch = position.pitch
 
-        if (rayTraceResult.hitBlock) {
-            if (rayTraceResult.blockdirection == BlockDirection.UP) {
-                calculateBallOnGround(players, rayTraceResult.targetPosition)
+        if(rayTraceResult.blockdirection != BlockDirection.UP){
+            println("Determined direction: " + rayTraceResult.blockdirection)
+        }
+
+        val rayTraceEvent = BallRayTraceEvent(
+            ball,
+            rayTraceResult.hitBlock,
+            rayTraceResult.targetPosition,
+            rayTraceResult.blockdirection
+        )
+        Bukkit.getPluginManager().callEvent(rayTraceEvent)
+
+        if (rayTraceEvent.hitBlock) {
+            if (rayTraceEvent.blockDirection == BlockDirection.UP) {
+                calculateBallOnGround(players, rayTraceEvent.targetPosition)
                 return
             } else {
                 this.motion = PositionEntity(position.worldName!!, 0.0, 0.0, 0.0)
-                println("Wall: " + rayTraceResult.blockdirection.toString())
+                println("Wall: " + rayTraceEvent.blockDirection.toString())
             }
 
             return
         }
 
-        calculateBallOnAir(players, rayTraceResult.targetPosition)
+        calculateBallOnAir(players, rayTraceEvent.targetPosition)
     }
 
     private fun calculateBallOnGround(players: List<Player>, targetPosition: Position) {
@@ -167,9 +176,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
     }
 
     private fun calculateBallOnAir(players: List<Player>, targetPosition: Position) {
-        println(this.position)
-        println("Vs" + targetPosition)
-
         for (player in players) {
             packetService.sendEntityVelocityPacket(player, entityId, motion)
             packetService.sendEntityMovePacket(player, entityId, this.position, targetPosition)

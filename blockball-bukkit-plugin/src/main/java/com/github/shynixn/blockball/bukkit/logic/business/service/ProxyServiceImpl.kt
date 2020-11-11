@@ -678,11 +678,15 @@ class ProxyServiceImpl @Inject constructor(
             )
 
             val direction = BlockDirection.valueOf(
-                movingObjectBlockClazz.getDeclaredMethod("getDirection").invoke(movingObjectPosition).toString().toUpperCase()
+                movingObjectBlockClazz.getDeclaredMethod("getDirection").invoke(movingObjectPosition).toString()
+                    .toUpperCase()
             )
 
             val movingObjectType = movingObjectClazz.getDeclaredMethod("getType")
                 .invoke(movingObjectPosition)
+
+            resultPosition.yaw = position.yaw
+            resultPosition.pitch = position.pitch
             return RayTraceResultEntity(movingObjectType.toString() == "BLOCK", resultPosition, direction)
         }
 

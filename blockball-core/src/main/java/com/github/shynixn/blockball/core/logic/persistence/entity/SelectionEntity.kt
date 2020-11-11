@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.core.logic.persistence.entity
 
 import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
+import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.api.persistence.entity.Selection
 
@@ -62,6 +63,7 @@ open class SelectionEntity : Selection {
         get() {
             return this.upperCorner.blockY - this.lowerCorner.blockY + 1
         }
+
     /** Length of the z axe. */
     override val offsetZ: Int
         get() {
@@ -89,6 +91,30 @@ open class SelectionEntity : Selection {
             }
         }
         return false
+    }
+
+    /**
+     * If the given location is outside the arena it returns the block direction
+     * in which the arena can be reached.
+     */
+    override fun getRelativeBlockDirectionToLocation(location: Position): BlockDirection {
+        if (location.blockX >= upperCorner.blockX && this.upperCorner.z >= location.z && this.lowerCorner.z <= location.z) {
+            return BlockDirection.WEST
+        }
+
+        if (location.blockX <= lowerCorner.blockX && this.upperCorner.z >= location.z && this.lowerCorner.z <= location.z) {
+            return BlockDirection.EAST
+        }
+
+        if (location.blockZ >= upperCorner.blockZ && this.upperCorner.x >= location.x && this.lowerCorner.x <= location.x) {
+            return BlockDirection.NORTH
+        }
+
+        if (location.blockZ <= lowerCorner.blockZ && this.upperCorner.x >= location.x && this.lowerCorner.x <= location.x) {
+            return BlockDirection.SOUTH
+        }
+
+        return BlockDirection.DOWN
     }
 
     private fun calculateUpLocation(corner1: Position, corner2: Position) {

@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
 import com.github.shynixn.blockball.api.bukkit.event.BallPostMoveEvent
+import com.github.shynixn.blockball.api.bukkit.event.BallRayTraceEvent
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.*
@@ -55,8 +56,7 @@ class GameListener @Inject constructor(
     private val rightClickManageService: RightclickManageService,
     private val gameActionService: GameActionService,
     private val gameExecutionService: GameExecutionService,
-    private val concurrencyService: ConcurrencyService,
-    private val forceFieldService: BallForceFieldService
+    private val concurrencyService: ConcurrencyService
 ) : Listener {
     private val playerCache = HashSet<Player>()
 
@@ -120,18 +120,6 @@ class GameListener @Inject constructor(
         if (game.isPresent) {
             event.isCancelled = true
         }
-    }
-
-    /**
-     * Gets called when a ball move and calculates forcefield interactions.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onBallPostMoveEvent(event: BallPostMoveEvent) {
-        val game = this.gameService.getAllGames().firstOrNull { g -> g.ball != null && g.ball == event.ball } ?: return
-
-        forceFieldService.calculateForcefieldInteractions(game, event.ball)
     }
 
     /**
@@ -275,6 +263,27 @@ class GameListener @Inject constructor(
             }
 
             game.lastInteractedEntity = event.entity
+        }
+    }
+
+    /**
+     * Is called when the ball requests to move to a target position.
+     * Handles the ball forceField of the arena.
+     */
+    @EventHandler
+    fun onBallRayTraceEvent(event: BallRayTraceEvent) {
+        if (event.hitBlock) {
+            return
+        }
+
+        for (game in gameService.getAllGames()) {
+            if (game.ball == event.ball) {
+                if (!game.arena.isLocationInSelection(event.targetPosition)) {
+                    event.hitBlock = true
+                    event.blockDirection = game.arena.getRelativeBlockDirectionToLocation(event.targetPosition)
+                }
+                return
+            }
         }
     }
 
