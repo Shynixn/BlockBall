@@ -108,23 +108,25 @@ class BallDesignEntity(val entityId: Int) {
      */
     private fun playRotationAnimation() {
         val length = ball.getVelocity<Vector>().length()
-
         val a = rotation
+
+        // 360 0 0 is a full forward rotation.
+        // Length of the velocity is the speed of the ball.
         val angle = when {
             length > 1.0 -> if (this.backAnimation) {
-                PositionEntity(a.x - 0.5, 0.0, 0.0)
+                PositionEntity(rotation.x - 30, 0.0, 0.0)
             } else {
-                PositionEntity(a.x + 0.5, 0.0, 0.0)
+                PositionEntity(rotation.x + 30, 0.0, 0.0)
             }
             length > 0.1 -> if (this.backAnimation) {
-                PositionEntity(a.x - 0.25, 0.0, 0.0)
+                PositionEntity(rotation.x - 10, 0.0, 0.0)
             } else {
-                PositionEntity(a.x + 0.25, 0.0, 0.0)
+                PositionEntity(rotation.x + 10, 0.0, 0.0)
             }
             length > 0.08 -> if (this.backAnimation) {
-                PositionEntity(a.x - 0.025, 0.0, 0.0)
+                PositionEntity(rotation.x - 5, 0.0, 0.0)
             } else {
-                PositionEntity(a.x + 0.025, 0.0, 0.0)
+                PositionEntity(rotation.x + 5, 0.0, 0.0)
             }
             else -> null
         }

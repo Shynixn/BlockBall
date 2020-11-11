@@ -84,8 +84,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      * Returns below 0 if yaw did not change.
      */
     private var yawChange: Float = -1.0F
-    private var times: Int = 0
-    private var reduceVector: Vector? = null
     private var originVector: Vector? = null
 
     /**
@@ -140,27 +138,46 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         val rayTraceResult = proxyService.rayTraceMotion(position, motion)
 
         if (rayTraceResult.hitBlock) {
-            if(rayTraceResult.blockdirection == BlockDirection.UP){
-
-            }else{
+            if (rayTraceResult.blockdirection == BlockDirection.UP) {
+                calculateBallOnGround(players, rayTraceResult.targetPosition)
+                return
+            } else {
                 this.motion = PositionEntity(position.worldName!!, 0.0, 0.0, 0.0)
+                println("Wall: " + rayTraceResult.blockdirection.toString())
             }
-
-
-
-            println("Wall: " + rayTraceResult.blockdirection.toString())
 
             return
         }
 
+        calculateBallOnAir(players, rayTraceResult.targetPosition)
+    }
+
+    private fun calculateBallOnGround(players: List<Player>, targetPosition: Position) {
+        println("Ground Calculation.")
+        this.position = PositionEntity(targetPosition.worldName!!, targetPosition.x, this.position.y, targetPosition.z)
+        // this.motion = this.motion.multiply(0.9)
+        this.motion = this.motion.multiply(0.9)
+
+        println("Position: " + this.position)
+        println("Motion: " + this.motion)
+
+        if (this.motion.x <= 0.00001 && this.motion.z <= 0.00001) {
+            this.motion = PositionEntity(0.0, 0.0, 0.0)
+            println("Stillstand.")
+        }
+    }
+
+    private fun calculateBallOnAir(players: List<Player>, targetPosition: Position) {
+        println("[AirCalculation]")
+
         for (player in players) {
             packetService.sendEntityVelocityPacket(player, entityId, motion)
-            packetService.sendEntityMovePacket(player, entityId, this.position, rayTraceResult.targetPosition)
+            packetService.sendEntityMovePacket(player, entityId, this.position, targetPosition)
         }
 
-        this.motion = this.motion.multiply(0.90)
+        this.motion = this.motion.multiply(0.99)
         this.motion.y -= gravity
-        this.position = rayTraceResult.targetPosition
+        this.position = targetPosition
     }
 
     /**
@@ -212,21 +229,17 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
     fun setVelocity(vector: Vector) {
         this.ball.ballDesignEntity.backAnimation = false
         this.angularVelocity = 0.0
+        // Move the ball a little bit up otherwise wallcollision of ground immidately cancel movement.
+        this.position.y += 0.25
 
         if (this.meta.rotating) {
             ball.rotation = PositionEntity(2.0, 0.0, 0.0)
         }
 
         try {
-            this.times = (50 * this.meta.movementModifier.rollingDistanceModifier).toInt()
             this.motion = vector.toPosition()
             val normalized = vector.clone().normalize()
             this.originVector = vector.clone()
-            this.reduceVector = Vector(
-                normalized.x / this.times,
-                0.0784 * meta.movementModifier.gravityModifier,
-                normalized.z / this.times
-            )
         } catch (ignored: IllegalArgumentException) {
             // Ignore calculated velocity if it's out of range.
         }
