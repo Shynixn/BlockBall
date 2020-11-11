@@ -46,10 +46,10 @@ interface BallMeta {
      */
     var enabledInteract: Boolean
 
-    /** Spawning delay. */
+    /** Spawning delay. TODO: Move this to game. */
     var delayInTicks: Int
 
-    /** Spawnpoint of the ball. */
+    /** Spawnpoint of the ball. TODO: Move this to game. */
     var spawnpoint: Position?
 
     /** Size of the ball.**/
@@ -72,19 +72,9 @@ interface BallMeta {
     var hitBoxSize: Double
 
     /**
-     * Should the ball be able to carry.
-     */
-    var carryAble: Boolean
-
-    /**
      * Should the ball always bounce of walls?
      */
     var alwaysBounce: Boolean
-
-    /**
-     * Bouncing off from objects modifiers.
-     */
-    val bounceModifiers: MutableList<BounceConfiguration>
 
     /**
      * Movement modifier.

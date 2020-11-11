@@ -76,22 +76,10 @@ class BallMetaEntity(
     override var hitBoxRelocation: Double = 0.0
 
     /**
-     * Should the ball be able to carry.
-     */
-    @YamlSerialize(orderNumber = 9, value = "carry-able")
-    override var carryAble: Boolean = false
-
-    /**
      * Should the ball always bounce of walls?
      */
     @YamlSerialize(orderNumber = 10, value = "always-bounce")
     override var alwaysBounce: Boolean = true
-
-    /**
-     * Bouncing off from objects modifiers.
-     */
-    @YamlSerialize(orderNumber = 11, value = "wall-bouncing")
-    override val bounceModifiers: MutableList<BounceConfiguration> = ArrayList()
 
     /**
      * Movement modifier.

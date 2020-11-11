@@ -65,9 +65,7 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             ballMeta.size = BallSize.values()[args[2].toInt()]
         } else if (command == MenuCommand.BALL_HITBOX && args.size == 3 && args[2].toDoubleOrNull() != null) {
             ballMeta.hitBoxSize = args[2].toDouble()
-        } else if (command == MenuCommand.BALL_TOGGLE_CARRYABLE) {
-            ballMeta.carryAble = !ballMeta.carryAble
-        } else if (command == MenuCommand.BALL_TOGGLE_ALWAYSBOUNCE) {
+        }else if (command == MenuCommand.BALL_TOGGLE_ALWAYSBOUNCE) {
             ballMeta.alwaysBounce = !ballMeta.alwaysBounce
         } else if (command == MenuCommand.BALL_TOGGLE_ROTATING) {
             ballMeta.rotating = !ballMeta.rotating
@@ -103,11 +101,6 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
             .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.BALL_HITBOX.command)
             .setHoverText("Changes the hitbox size of the ball.")
-            .builder().nextLine()
-            .component("- Carry Able: " + ballMeta.carryAble).builder()
-            .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
-            .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.BALL_TOGGLE_CARRYABLE.command)
-            .setHoverText("Should the ball be carry able when a player right clicks on it?")
             .builder().nextLine()
             .component("- Always Bounce: " + ballMeta.alwaysBounce).builder()
             .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)

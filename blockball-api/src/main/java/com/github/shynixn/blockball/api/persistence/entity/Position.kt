@@ -77,6 +77,11 @@ interface Position {
     fun normalize(): Position
 
     /**
+     * Calculates the dot product and returns.
+     */
+    fun dot(other: Position) : Double
+
+    /**
      * Multiplies the position and returns the same position.
      */
     fun multiply(multiplier: Double): Position

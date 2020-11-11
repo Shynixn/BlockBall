@@ -111,6 +111,13 @@ class PositionEntity() : Position {
     }
 
     /**
+     * Calculates the dot product and returns.
+     */
+    override fun dot(other: Position): Double {
+        return x * other.x + y * other.y + z * other.z
+    }
+
+    /**
      * Multiplies the position and returns the same position.
      */
     override fun multiply(multiplier: Double): Position {

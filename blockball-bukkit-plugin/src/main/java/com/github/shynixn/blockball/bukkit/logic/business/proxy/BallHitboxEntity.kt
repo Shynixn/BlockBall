@@ -56,29 +56,20 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
     var requestTeleport: Boolean = false
 
     /**
-     * Ball is grabbed.
-     */
-    var isGrabbed: Boolean = false
-
-    /**
-     * Gravity modifier.
-     */
-    private val gravity: Double = 0.07
-
-    /**
      * Remaining time in ticks until players regain the ability to kick this ball.
      */
     private var skipKickCounter: Int = 0
+
+    /**
+     * Remaining time until the players can run into the ball again.
+     */
+    private var skipCounter = 20
 
     /**
      * Current angular velocity that determines the intensity of Magnus effect.
      */
     private var angularVelocity: Double = 0.0
 
-    /**
-     * Skips next interaction.
-     */
-    private var skipCounter = 20
 
     private var originVector: Vector? = null
 
@@ -129,10 +120,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
 
         val rayTraceResult = proxyService.rayTraceMotion(position, motion)
 
-        if(rayTraceResult.blockdirection != BlockDirection.UP){
-            println("Determined direction: " + rayTraceResult.blockdirection)
-        }
-
         val rayTraceEvent = BallRayTraceEvent(
             ball,
             rayTraceResult.hitBlock,
@@ -146,8 +133,12 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
                 calculateBallOnGround(players, rayTraceEvent.targetPosition)
                 return
             } else {
-                this.motion = PositionEntity(position.worldName!!, 0.0, 0.0, 0.0)
-                println("Wall: " + rayTraceEvent.blockDirection.toString())
+                for (player in players) {
+                    packetService.sendEntityVelocityPacket(player, entityId, motion)
+                    packetService.sendEntityMovePacket(player, entityId, this.position, rayTraceEvent.targetPosition)
+                }
+
+                this.motion = calculateWallBounce(this.motion, rayTraceEvent.blockDirection)
             }
 
             return
@@ -165,12 +156,14 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         }
 
         this.position = targetPosition
-        this.motion = this.motion.multiply(0.9)
+
+        val rollingResistance = 1.0 - this.meta.movementModifier.rollingResistance
+        this.motion = this.motion.multiply(rollingResistance)
 
         if (this.motion.x <= 0.00001 && this.motion.z <= 0.00001) {
             this.motion = PositionEntity(0.0, 0.0, 0.0)
-            // Fix slime position when ball is not moving.
-            this.requestTeleport = true
+            // Fix slime position when ball is not moving. TODO:
+            //this.requestTeleport = true
             return
         }
     }
@@ -181,8 +174,9 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
             packetService.sendEntityMovePacket(player, entityId, this.position, targetPosition)
         }
 
-        this.motion = this.motion.multiply(0.99)
-        this.motion.y -= gravity
+        val airResistance = 1.0 - this.meta.movementModifier.airResistance
+        this.motion = this.motion.multiply(airResistance)
+        this.motion.y -= this.meta.movementModifier.gravityModifier
         this.position = targetPosition
     }
 
@@ -190,7 +184,7 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      * Kicks the hitbox for the given player interaction.
      */
     fun kickPlayer(player: Player, delay: Int, baseMultiplier: Double) {
-        if (isGrabbed || skipKickCounter > 0) {
+        if (skipKickCounter > 0) {
             return
         }
 
@@ -243,7 +237,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
 
         try {
             this.motion = vector.toPosition()
-            val normalized = vector.clone().normalize()
             this.originVector = vector.clone()
         } catch (ignored: IllegalArgumentException) {
             // Ignore calculated velocity if it's out of range.
@@ -353,5 +346,32 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
                 this.setVelocity(vector)
             }
         }
+    }
+
+    /**
+     * Calculates the outgoing vector from the incoming vector and the wall block direction.
+     */
+    private fun calculateWallBounce(incomingVector: Position, blockDirection: BlockDirection): Position {
+        val normalVector = when (blockDirection) {
+            BlockDirection.WEST -> {
+                PositionEntity(-1.0, 0.0, 0.0)
+            }
+            BlockDirection.EAST -> {
+                PositionEntity(1.0, 0.0, 0.0)
+            }
+            BlockDirection.NORTH -> {
+                PositionEntity(0.0, 0.0, -1.0)
+            }
+            BlockDirection.SOUTH -> {
+                PositionEntity(0.0, 0.0, 1.0)
+            }
+            else -> if (blockDirection == BlockDirection.DOWN) {
+                PositionEntity(0.0, -1.0, 0.0)
+            } else {
+                PositionEntity(0.0, 1.0, 1.0)
+            }.normalize()
+        }
+
+        return incomingVector.clone().subtract(normalVector.multiply(2 * incomingVector.dot(normalVector)))
     }
 }
