@@ -94,6 +94,9 @@ class BallDesignEntity(val entityId: Int) {
     fun spawn(player: Player, position: Position) {
         packetService.sendEntitySpawnPacket(player, entityId, "ARMOR_STAND", position)
         packetService.sendEntityEquipmentPacket(player, entityId, 5, helmetItemStack)
+        packetService.sendEntityMetaDataPacket(player, entityId, EntityMetadataImpl {
+            this.isInvisible = true
+        })
     }
 
     /**

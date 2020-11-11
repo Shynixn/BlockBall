@@ -15,6 +15,11 @@ class EntityMetadataImpl : EntityMetaData {
     override var customname: String? = null
 
     /**
+     * Sets the visibility flag
+     */
+    override var isInvisible: Boolean? = null
+
+    /**
      * Slime size.
      */
     override var slimeSize: Int? = null

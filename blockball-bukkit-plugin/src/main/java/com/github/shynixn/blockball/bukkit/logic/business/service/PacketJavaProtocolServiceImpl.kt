@@ -10,7 +10,6 @@ import com.google.inject.Inject
 import com.mojang.datafixers.util.Pair
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
-import net.minecraft.server.v1_14_R1.PacketPlayOutSpawnEntityLiving
 import java.util.*
 import kotlin.math.abs
 
@@ -170,6 +169,7 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         // https://wiki.vg/Entity_metadata#Entity_Metadata_Format -> Value of Type field. Type of Value = Boolean -> 7.
         val booleanTypeValue = 7
         val intTypeValue = 1
+        val byteTypeValue = 0
         val rotationTypeValue = 8
 
         val buffer = Unpooled.buffer()
@@ -193,6 +193,12 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
             buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.x.toFloat())
             buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.y.toFloat())
             buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.z.toFloat())
+        }
+
+        if (entityMetaData.isInvisible != null) {
+            buffer.writeByte(0)
+            writeId(buffer, byteTypeValue)
+            buffer.writeByte(0x20)
         }
 
         buffer.writeByte(4)

@@ -12,6 +12,11 @@ interface EntityMetaData {
     var customname: String?
 
     /**
+     * Sets the visibility flag
+     */
+    var isInvisible: Boolean?
+
+    /**
      * Slime size.
      */
     var slimeSize: Int?
