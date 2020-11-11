@@ -100,6 +100,8 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      * @param players watching this hitbox.
      */
     fun <P> tick(players: List<P>) {
+        println(this.position)
+
         if (skipKickCounter > 0) {
             skipKickCounter--
         }
@@ -146,22 +148,22 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
     }
 
     private fun calculateBallOnGround(players: List<Player>, targetPosition: Position) {
+        targetPosition.y = this.position.y
 
         for (player in players) {
             packetService.sendEntityVelocityPacket(player, entityId, motion)
             packetService.sendEntityMovePacket(player, entityId, this.position, targetPosition)
         }
 
-        if (this.motion.x <= 0.00001 && this.motion.z <= 0.00001) {
-            this.motion = PositionEntity(0.0, 0.0, 0.0)
-        }
-
-        val currentY = this.position.y
         this.position = targetPosition
-        this.position.y = currentY
-
         this.motion = this.motion.multiply(0.9)
 
+        if (this.motion.x <= 0.00001 && this.motion.z <= 0.00001) {
+            this.motion = PositionEntity(0.0, 0.0, 0.0)
+            // Fix slime position when ball is not moving.
+            this.requestTeleport = true
+            return
+        }
     }
 
     private fun calculateBallOnAir(players: List<Player>, targetPosition: Position) {

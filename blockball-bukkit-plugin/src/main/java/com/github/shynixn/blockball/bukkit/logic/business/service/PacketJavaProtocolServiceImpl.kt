@@ -93,8 +93,6 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         buffer.writeByte((nextPosition.pitch * 256.0f / 360.0f).toInt().toByte().toInt())
         buffer.writeBoolean(isOnGround)
 
-        println(nextPosition.yaw.toString() + "-" + nextPosition.pitch)
-
         sendPacket(player, packetPlayOutEntityRelMove, buffer)
     }
 
