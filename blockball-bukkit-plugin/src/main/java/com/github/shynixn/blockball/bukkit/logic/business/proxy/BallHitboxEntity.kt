@@ -23,6 +23,7 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
+
 class BallHitboxEntity(val entityId: Int, var position: Position, private val meta: BallMeta) {
     /**
      * Proxy service dependency.
@@ -70,8 +71,7 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      */
     private var angularVelocity: Double = 0.0
 
-
-    private var originVector: Vector? = null
+    private val origin = PositionEntity(0.0, 0.0, -1.0).normalize()
 
     /**
      * Spawns the ball for the given player.
@@ -92,7 +92,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      * @param players watching this hitbox.
      */
     fun <P> tick(players: List<P>) {
-
         if (skipKickCounter > 0) {
             skipKickCounter--
         }
@@ -118,6 +117,7 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
             return
         }
 
+
         val rayTraceResult = proxyService.rayTraceMotion(position, motion)
 
         val rayTraceEvent = BallRayTraceEvent(
@@ -139,6 +139,7 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
                 }
 
                 this.motion = calculateWallBounce(this.motion, rayTraceEvent.blockDirection)
+
             }
 
             return
@@ -147,6 +148,26 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         calculateBallOnAir(players, rayTraceEvent.targetPosition)
     }
 
+    private fun getYawFromVector(origin: Position, position: Position): Double {
+        val x1: Double = origin.x - 0 //Vector 1 - x
+        val y1: Double = origin.z - 0 //Vector 1 - y
+
+        val x2: Double = position.x - 0 //Vector 2 - x
+        val y2: Double = position.z - 0 //Vector 2 - y
+
+
+        var angle = atan2(y1, x1) - atan2(y2, x2)
+        angle = angle * 360 / (2 * Math.PI)
+
+        if (angle < 0) {
+            angle += 360.0
+        }
+
+        return angle
+    }
+
+
+    //https://stackoverflow.com/questions/21483999/using-atan2-to-find-angle-between-two-vectors
     private fun calculateBallOnGround(players: List<Player>, targetPosition: Position) {
         targetPosition.y = this.position.y
 
@@ -156,34 +177,43 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         }
 
         this.position = targetPosition
+        for (player in players) {
+            packetService.sendEntityTeleportPacket(player, entityId, this.position)
+        }
 
         val rollingResistance = 1.0 - this.meta.movementModifier.rollingResistance
         this.motion = this.motion.multiply(rollingResistance)
 
         if (this.motion.x <= 0.00001 && this.motion.z <= 0.00001) {
-            this.motion = PositionEntity(0.0, 0.0, 0.0)
+           // this.motion = PositionEntity(0.0, 0.0, 0.0)
             // Fix slime position when ball is not moving. TODO:
             //this.requestTeleport = true
+         //   println("STILL")
             return
         }
     }
 
     private fun calculateBallOnAir(players: List<Player>, targetPosition: Position) {
-        for (player in players) {
-            packetService.sendEntityVelocityPacket(player, entityId, motion)
-            packetService.sendEntityMovePacket(player, entityId, this.position, targetPosition)
-        }
-
         val airResistance = 1.0 - this.meta.movementModifier.airResistance
         this.motion = this.motion.multiply(airResistance)
         this.motion.y -= this.meta.movementModifier.gravityModifier
         this.position = targetPosition
+
+        for (player in players) {
+            packetService.sendEntityTeleportPacket(player, entityId, this.position)
+        }
     }
 
     /**
      * Kicks the hitbox for the given player interaction.
      */
     fun kickPlayer(player: Player, delay: Int, baseMultiplier: Double) {
+        println("KICK[]")
+
+        if (true) {
+            return
+        }
+
         if (skipKickCounter > 0) {
             return
         }
@@ -230,16 +260,10 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         this.angularVelocity = 0.0
         // Move the ball a little bit up otherwise wallcollision of ground immidately cancel movement.
         this.position.y += 0.25
+        this.motion = vector.toPosition()
 
         if (this.meta.rotating) {
             ball.rotation = PositionEntity(2.0, 0.0, 0.0)
-        }
-
-        try {
-            this.motion = vector.toPosition()
-            this.originVector = vector.clone()
-        } catch (ignored: IllegalArgumentException) {
-            // Ignore calculated velocity if it's out of range.
         }
     }
 
@@ -342,7 +366,7 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
                     .normalize().multiply(meta.movementModifier.horizontalTouchModifier)
                 vector.y = 0.1 * meta.movementModifier.verticalTouchModifier
 
-                this.position.yaw = player.location.yaw.toDouble()
+                this.position.yaw = getYawFromVector(origin, vector.clone().toPosition().normalize()) * -1
                 this.setVelocity(vector)
             }
         }
@@ -351,7 +375,10 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
     /**
      * Calculates the outgoing vector from the incoming vector and the wall block direction.
      */
-    private fun calculateWallBounce(incomingVector: Position, blockDirection: BlockDirection): Position {
+    private fun calculateWallBounce(
+        incomingVector: Position,
+        blockDirection: BlockDirection
+    ): Position {
         val normalVector = when (blockDirection) {
             BlockDirection.WEST -> {
                 PositionEntity(-1.0, 0.0, 0.0)
@@ -372,6 +399,12 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
             }.normalize()
         }
 
-        return incomingVector.clone().subtract(normalVector.multiply(2 * incomingVector.dot(normalVector)))
+        val radianAngle = 2 * incomingVector.dot(normalVector)
+        val outgoingVector =
+            incomingVector.clone().subtract(normalVector.multiply(radianAngle))
+
+        this.position.yaw = getYawFromVector(origin, outgoingVector.clone().normalize()) * -1
+
+        return outgoingVector
     }
 }

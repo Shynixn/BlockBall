@@ -193,7 +193,7 @@ class PositionEntity() : Position {
     /**
      * Returns the vector length.
      */
-    private fun length(): Double {
+    override fun length(): Double {
         return sqrt(square(x) + square(y) + square(z))
     }
 

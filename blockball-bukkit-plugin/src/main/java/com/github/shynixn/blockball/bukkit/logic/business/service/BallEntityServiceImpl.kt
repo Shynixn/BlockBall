@@ -13,6 +13,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallDesignEntity
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallHitboxEntity
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
 import com.github.shynixn.blockball.core.logic.business.extension.stripChatColors
+import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -78,7 +79,13 @@ class BallEntityServiceImpl @Inject constructor(
     override fun <L> spawnTemporaryBall(location: L, meta: BallMeta): BallProxy? {
         require(location is Location)
 
-        val ballHitBoxEntity = BallHitboxEntity(proxyService.createNewEntityId(), location.toPosition(), meta)
+        location.yaw = 0.0F
+
+        val ballHitBoxEntity = BallHitboxEntity(
+            proxyService.createNewEntityId(),
+            PositionEntity(location.world!!.name, location.x, location.y, location.z),
+            meta
+        )
         ballHitBoxEntity.proxyService = proxyService
         ballHitBoxEntity.concurrencyService = concurrencyService
         ballHitBoxEntity.packetService = packetService
