@@ -120,12 +120,18 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
 
         val rayTraceResult = proxyService.rayTraceMotion(position, motion)
 
+        if (rayTraceResult.hitBlock && rayTraceResult.blockdirection != BlockDirection.UP) {
+            println("Solid: " + rayTraceResult.blockdirection)
+        }
+
         val rayTraceEvent = BallRayTraceEvent(
             ball,
             rayTraceResult.hitBlock,
             rayTraceResult.targetPosition,
             rayTraceResult.blockdirection
         )
+
+
         Bukkit.getPluginManager().callEvent(rayTraceEvent)
 
         if (rayTraceEvent.hitBlock) {
@@ -133,16 +139,9 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
                 calculateBallOnGround(players, rayTraceEvent.targetPosition)
                 return
             } else {
-                for (player in players) {
-                    packetService.sendEntityVelocityPacket(player, entityId, motion)
-                    packetService.sendEntityMovePacket(player, entityId, this.position, rayTraceEvent.targetPosition)
-                }
-
                 this.motion = calculateWallBounce(this.motion, rayTraceEvent.blockDirection)
-
+                return
             }
-
-            return
         }
 
         calculateBallOnAir(players, rayTraceEvent.targetPosition)
@@ -166,10 +165,9 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         return angle
     }
 
-
-    //https://stackoverflow.com/questions/21483999/using-atan2-to-find-angle-between-two-vectors
     private fun calculateBallOnGround(players: List<Player>, targetPosition: Position) {
         targetPosition.y = this.position.y
+        motion.y = 0.0
 
         for (player in players) {
             packetService.sendEntityVelocityPacket(player, entityId, motion)
@@ -183,14 +181,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
 
         val rollingResistance = 1.0 - this.meta.movementModifier.rollingResistance
         this.motion = this.motion.multiply(rollingResistance)
-
-        if (this.motion.x <= 0.00001 && this.motion.z <= 0.00001) {
-           // this.motion = PositionEntity(0.0, 0.0, 0.0)
-            // Fix slime position when ball is not moving. TODO:
-            //this.requestTeleport = true
-         //   println("STILL")
-            return
-        }
     }
 
     private fun calculateBallOnAir(players: List<Player>, targetPosition: Position) {
@@ -256,7 +246,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      * Sets the velocity of the ball.
      */
     fun setVelocity(vector: Vector) {
-        this.ball.ballDesignEntity.backAnimation = false
         this.angularVelocity = 0.0
         // Move the ball a little bit up otherwise wallcollision of ground immidately cancel movement.
         this.position.y += 0.25

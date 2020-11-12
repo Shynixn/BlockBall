@@ -27,11 +27,6 @@ class BallDesignEntity(val entityId: Int) {
     var requestRotationChange: Boolean = false
 
     /**
-     * Plays animation backwards or forwards.
-     */
-    var backAnimation = false
-
-    /**
      * Proxy service dependency.
      */
     lateinit var proxyService: ProxyService
@@ -95,7 +90,7 @@ class BallDesignEntity(val entityId: Int) {
         packetService.sendEntitySpawnPacket(player, entityId, "ARMOR_STAND", position)
         packetService.sendEntityEquipmentPacket(player, entityId, 5, helmetItemStack)
         packetService.sendEntityMetaDataPacket(player, entityId, EntityMetadataImpl {
-           // this.isInvisible = true
+            // this.isInvisible = true
         })
     }
 
@@ -110,27 +105,15 @@ class BallDesignEntity(val entityId: Int) {
      * Plays the rotation animation.
      */
     private fun playRotationAnimation() {
-        val length = ball.getVelocity<Vector>().length()
-        val a = rotation
-
         // 360 0 0 is a full forward rotation.
         // Length of the velocity is the speed of the ball.
+        val velocity = ball.getVelocity<Vector>()
+        val length = PositionEntity(velocity.x, 0.0, velocity.z).length()
+
         val angle = when {
-            length > 1.0 -> if (this.backAnimation) {
-                PositionEntity(rotation.x - 30, 0.0, 0.0)
-            } else {
-                PositionEntity(rotation.x + 30, 0.0, 0.0)
-            }
-            length > 0.1 -> if (this.backAnimation) {
-                PositionEntity(rotation.x - 10, 0.0, 0.0)
-            } else {
-                PositionEntity(rotation.x + 10, 0.0, 0.0)
-            }
-            length > 0.08 -> if (this.backAnimation) {
-                PositionEntity(rotation.x - 5, 0.0, 0.0)
-            } else {
-                PositionEntity(rotation.x + 5, 0.0, 0.0)
-            }
+            length > 1.0 -> PositionEntity(rotation.x - 30, 0.0, 0.0)
+            length > 0.1 ->  PositionEntity(rotation.x - 10, 0.0, 0.0)
+            length > 0.08 ->  PositionEntity(rotation.x - 5, 0.0, 0.0)
             else -> null
         }
 

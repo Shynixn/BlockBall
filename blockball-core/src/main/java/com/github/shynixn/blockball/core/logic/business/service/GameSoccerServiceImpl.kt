@@ -67,47 +67,8 @@ class GameSoccerServiceImpl @Inject constructor(
         if (game.ball == null || game.ball!!.isDead) {
             return
         }
-
-        val ballPosition = proxyService.toPosition(game.ball!!.getLocation<Any>())
-
-        if (!game.arena.isLocationInSelection(ballPosition)
-            && !game.arena.meta.redTeamMeta.goal.isLocationInSelection(ballPosition)
-            && !game.arena.meta.blueTeamMeta.goal.isLocationInSelection(ballPosition)
-        ) {
-            if (game.ballBumper == 0) {
-                rescueBall(game)
-            }
-        } else {
-            game.ballBumperCounter = 0
-            game.lastBallLocation = proxyService.toLocation(proxyService.toPosition(game.ball!!.getLocation<Any>()))
-        }
-
         if (game.ingamePlayersStorage.isEmpty()) {
             game.ball!!.remove()
-        }
-
-        if (game.ballBumper > 0) {
-            game.ballBumper--
-        }
-    }
-
-    private fun rescueBall(game: Game) {
-        if (game.lastBallLocation != null) {
-            val ballPosition = proxyService.toPosition(game.ball!!.getLocation<Any>())
-            val ballLastPosition = proxyService.toPosition(game.lastBallLocation!!)
-
-            val knockBackPosition = ballLastPosition.subtract(ballPosition)
-            proxyService.setLocationDirection(proxyService.toLocation<Any>(ballPosition), knockBackPosition)
-            game.ball!!.setVelocity(proxyService.toVector<Any>(knockBackPosition))
-
-            val direction =
-                game.arena.meta.ballMeta.spawnpoint!!.clone().subtract(ballPosition)
-            game.ball!!.setVelocity(proxyService.toVector<Any>(direction.multiply(0.1)))
-            game.ballBumper = 40
-            game.ballBumperCounter++
-            if (game.ballBumperCounter == 5) {
-                (game.ball as BallProxy).teleport(proxyService.toLocation<Any>(game.arena.meta.ballMeta.spawnpoint!!))
-            }
         }
     }
 

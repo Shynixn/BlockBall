@@ -272,15 +272,13 @@ class GameListener @Inject constructor(
      */
     @EventHandler
     fun onBallRayTraceEvent(event: BallRayTraceEvent) {
-        if (event.hitBlock) {
-            return
-        }
-
         for (game in gameService.getAllGames()) {
             if (game.ball == event.ball) {
+                println(event.targetPosition)
                 if (!game.arena.isLocationInSelection(event.targetPosition)) {
                     event.hitBlock = true
                     event.blockDirection = game.arena.getRelativeBlockDirectionToLocation(event.targetPosition)
+                    println("DirectionVirtual: " + event.blockDirection)
                 }
                 return
             }
