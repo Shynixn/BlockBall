@@ -78,7 +78,7 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
             try {
                 channel.pipeline().remove(handlerName)
             } catch (e: Exception) {
-                e.printStackTrace()
+                // Ignored
             }
         }
         cachedPlayerChannels.remove(player)
