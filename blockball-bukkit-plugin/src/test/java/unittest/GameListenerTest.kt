@@ -693,18 +693,8 @@ class GameListenerTest {
                 rightclickManageService,
                 gameActionService,
                 MockedGameExecutionService(),
-                Mockito.mock(ConcurrencyService::class.java),
-                MockedBallForceFieldService()
+                Mockito.mock(ConcurrencyService::class.java)
             )
-        }
-    }
-
-    class MockedBallForceFieldService : BallForceFieldService {
-        /**
-         * Calculates forcefield interactions and applies correct knockback
-         * velocity regarding on the enabled game ball forcefield and the velocity of the ball.
-         */
-        override fun calculateForcefieldInteractions(game: Game, ball: BallProxy) {
         }
     }
 

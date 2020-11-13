@@ -2,8 +2,8 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
-import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.api.business.service.PacketService
+import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.EntityMetaData
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.google.inject.Inject
@@ -14,7 +14,7 @@ import java.util.*
 import kotlin.math.abs
 
 class PacketJavaProtocolServiceImpl @Inject constructor(
-    private val packageService: PackageService,
+    private val proxyService: ProxyService,
     private val pluginProxy: PluginProxy
 ) :
     PacketService {
@@ -233,7 +233,7 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
                 .newInstance(entityId, enumItemSlotClazz.enumConstants[slotId], nmsItemStack)
         }
 
-        packageService.sendPacket(player, packet)
+        proxyService.sendPacket(player, packet)
     }
 
     /**
@@ -243,7 +243,7 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         val packet = packetClazz.newInstance()
         val dataSerializer = dataSerializerConstructor.newInstance(byteBuf)
         dataDeSerializationPacketMethod.invoke(packet, dataSerializer)
-        packageService.sendPacket(player, packet)
+        proxyService.sendPacket(player, packet)
     }
 
     /**

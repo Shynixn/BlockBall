@@ -550,6 +550,13 @@ class PersistenceSQLiteIT {
             throw IllegalArgumentException()
         }
 
+        /**
+         * Creates a new entity id.
+         */
+        override fun createNewEntityId(): Int {
+            throw IllegalArgumentException()
+        }
+
         override fun <P> sendPacket(player: P, packet: Any) {
             throw IllegalArgumentException()
         }
