@@ -82,10 +82,9 @@ class BallEntityServiceImpl @Inject constructor(
         location.yaw = 0.0F
 
         val ballHitBoxEntity = BallHitboxEntity(
-            proxyService.createNewEntityId(),
-            PositionEntity(location.world!!.name, location.x, location.y, location.z),
-            meta
+            proxyService.createNewEntityId()
         )
+        ballHitBoxEntity.position = PositionEntity(location.world!!.name, location.x, location.y, location.z)
         ballHitBoxEntity.proxyService = proxyService
         ballHitBoxEntity.concurrencyService = concurrencyService
         ballHitBoxEntity.packetService = packetService

@@ -53,6 +53,11 @@ interface BallProxy {
     val designEntityId: Int
 
     /**
+     * Gets if the ball is on ground.
+     */
+    val isOnGround: Boolean
+
+    /**
      * Rotation of the visible ball in euler angles.
      */
     var rotation: Position
@@ -66,11 +71,6 @@ interface BallProxy {
      * Gets the location of the ball.
      */
     fun <L> getLocation(): L
-
-    /**
-     * Sets the velocity of the ball.
-     */
-    fun <V> setVelocity(vector: V)
 
     /**
      * Gets the velocity of the ball.
