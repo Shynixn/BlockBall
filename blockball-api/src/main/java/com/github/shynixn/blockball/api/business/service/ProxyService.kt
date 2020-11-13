@@ -304,4 +304,9 @@ interface ProxyService {
      * Creates a new entity id.
      */
     fun createNewEntityId(): Int
+
+    /**
+     * Sends the given [packet] to the given [player].
+     */
+    fun <P> sendPacket(player: P, packet: Any)
 }

@@ -5,7 +5,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ItemTypeService
-import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.Item
@@ -63,9 +62,9 @@ import kotlin.streams.asStream
  */
 class ProxyServiceImpl @Inject constructor(
     private val pluginProxy: PluginProxy,
-    private val packageService: PackageService,
     private val itemTypeService: ItemTypeService
 ) : ProxyService {
+
     /**
      * Gets the name of the World the player is in.
      */
@@ -545,7 +544,7 @@ class ProxyServiceImpl @Inject constructor(
                 }
             }
 
-            packageService.sendPacket(sender, packet)
+            sendPacket(sender, packet)
         } catch (e: Exception) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to send packet.", e)
         }
@@ -640,5 +639,24 @@ class ProxyServiceImpl @Inject constructor(
             entityCountField.set(null, intNumber)
             intNumber
         }
+    }
+
+    /**
+     * Sends the given [packet] to the given [player].
+     */
+    override fun <P> sendPacket(player: P, packet: Any) {
+        val craftPlayerClazz = findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer")
+        val getHandleMethod = craftPlayerClazz.getDeclaredMethod("getHandle")
+        val nmsPlayer = getHandleMethod.invoke(player)
+
+        val nmsPlayerClazz = findClazz("net.minecraft.server.VERSION.EntityPlayer")
+        val playerConnectionField = nmsPlayerClazz.getDeclaredField("playerConnection")
+        playerConnectionField.isAccessible = true
+        val connection = playerConnectionField.get(nmsPlayer)
+
+        val playerConnectionClazz = findClazz("net.minecraft.server.VERSION.PlayerConnection")
+        val packetClazz = findClazz("net.minecraft.server.VERSION.Packet")
+        val sendPacketMethod = playerConnectionClazz.getDeclaredMethod("sendPacket", packetClazz)
+        sendPacketMethod.invoke(connection, packet)
     }
 }

@@ -60,6 +60,7 @@ dependencies {
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-115R1"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-116R1"))
     implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-116R2"))
+    implementation(project(":blockball-bukkit-plugin:blockball-bukkit-nms-116R3"))
 
     implementation("org.slf4j:slf4j-jdk14:1.7.25")
     implementation("com.zaxxer:HikariCP:3.2.0")

@@ -112,7 +112,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
             .`in`(Scopes.SINGLETON)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(PackageService::class.java).to(PackageServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PlaceholderService::class.java).to(PlaceholderServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PacketService::class.java).to(PacketJavaProtocolServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ProtocolService::class.java).to(ProtocolServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -136,14 +135,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
 
         if (dependencyService.isInstalled(PluginDependency.PLACEHOLDERAPI)) {
             bind(DependencyPlaceholderApiService::class.java).to(DependencyPlaceholderApiServiceImpl::class.java)
-        }
-
-        if (dependencyService.isInstalled(PluginDependency.WORLEDIT, "7")) {
-            bind(DependencyWorldEditService::class.java).to(DependencyWorldEdit7ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-        } else {
-            bind(DependencyWorldEditService::class.java).to(DependencyWorldEdit6ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
         }
 
         if (dependencyService.isInstalled(PluginDependency.VAULT)) {

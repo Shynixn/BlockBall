@@ -5,8 +5,8 @@ package com.github.shynixn.blockball.service
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.service.LoggingService
-import com.github.shynixn.blockball.api.business.service.PackageService
 import com.github.shynixn.blockball.api.business.service.ParticleService
+import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.google.inject.Inject
@@ -45,9 +45,9 @@ import java.util.logging.Level
  * SOFTWARE.
  */
 class Particle18R1ServiceImpl @Inject constructor(
-    private val logger: LoggingService,
-    private val packageService: PackageService,
-    private val version: Version
+        private val logger: LoggingService,
+        private val proxyService: ProxyService,
+        private val version: Version
 ) : ParticleService {
     private val getIdFromMaterialMethod: Method = { Material::class.java.getDeclaredMethod("getId") }.invoke()
 
@@ -189,7 +189,7 @@ class Particle18R1ServiceImpl @Inject constructor(
 
         try {
             players.forEach { p ->
-                packageService.sendPacket(p, packet)
+                proxyService.sendPacket(p, packet)
             }
         } catch (e: Exception) {
             Bukkit.getServer().logger.log(Level.WARNING, "Failed to send particle.", e)
