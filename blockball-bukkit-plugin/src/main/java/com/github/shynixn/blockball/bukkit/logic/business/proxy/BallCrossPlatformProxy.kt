@@ -11,9 +11,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
-import org.bukkit.util.Vector
 import java.util.*
 import java.util.logging.Level
 
@@ -53,6 +51,14 @@ class BallCrossPlatformProxy(
         }
 
     /**
+     * Gets if the ball is on ground.
+     */
+    override val isOnGround: Boolean
+        get() {
+            return ballHitBoxEntity.isOnGround
+        }
+
+    /**
      * Rotation of the visible ball in euler angles.
      */
     override var rotation: Position
@@ -78,14 +84,6 @@ class BallCrossPlatformProxy(
      */
     override fun <L> getLocation(): L {
         return ballHitBoxEntity.position.toLocation() as L
-    }
-
-    /**
-     * Sets the velocity of the ball.
-     */
-    override fun <V> setVelocity(vector: V) {
-        require(vector is Vector)
-        ballHitBoxEntity.setVelocity(vector)
     }
 
     /**

@@ -108,12 +108,17 @@ class BallDesignEntity(val entityId: Int) {
         // 360 0 0 is a full forward rotation.
         // Length of the velocity is the speed of the ball.
         val velocity = ball.getVelocity<Vector>()
-        val length = PositionEntity(velocity.x, 0.0, velocity.z).length()
+
+        val length = if (ball.isOnGround) {
+            PositionEntity(velocity.x, 0.0, velocity.z).length()
+        } else {
+            PositionEntity(velocity.x, velocity.y, velocity.z).length()
+        }
 
         val angle = when {
             length > 1.0 -> PositionEntity(rotation.x - 30, 0.0, 0.0)
-            length > 0.1 ->  PositionEntity(rotation.x - 10, 0.0, 0.0)
-            length > 0.08 ->  PositionEntity(rotation.x - 5, 0.0, 0.0)
+            length > 0.1 -> PositionEntity(rotation.x - 10, 0.0, 0.0)
+            length > 0.08 -> PositionEntity(rotation.x - 5, 0.0, 0.0)
             else -> null
         }
 

@@ -16,6 +16,8 @@ import com.github.shynixn.blockball.core.logic.business.extension.translateChatC
 import com.google.inject.Guice
 import com.google.inject.Injector
 import net.minecraft.server.v1_14_R1.Item
+import net.minecraft.server.v1_14_R1.PacketPlayInEntityAction
+import net.minecraft.server.v1_14_R1.PacketPlayInUseEntity
 import net.minecraft.server.v1_14_R1.PacketPlayOutEntityEquipment
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
@@ -209,6 +211,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
                 protocolService.register(player)
             }
         }
+        protocolService.registerPackets(listOf(findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")))
 
         Bukkit.getServer()
             .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn, LazoYoung")

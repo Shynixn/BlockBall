@@ -17,14 +17,14 @@ import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
-import org.bukkit.util.Vector
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-
 class BallHitboxEntity(val entityId: Int, var position: Position, private val meta: BallMeta) {
+    private val origin = PositionEntity(0.0, 0.0, -1.0).normalize()
+
     /**
      * Proxy service dependency.
      */
@@ -57,6 +57,11 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
     var requestTeleport: Boolean = false
 
     /**
+     * Gets if the ball is on ground or in air.
+     */
+    var isOnGround: Boolean = false
+
+    /**
      * Remaining time in ticks until players regain the ability to kick this ball.
      */
     private var skipKickCounter: Int = 0
@@ -70,8 +75,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
      * Current angular velocity that determines the intensity of Magnus effect.
      */
     private var angularVelocity: Double = 0.0
-
-    private val origin = PositionEntity(0.0, 0.0, -1.0).normalize()
 
     /**
      * Spawns the ball for the given player.
@@ -117,12 +120,7 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
             return
         }
 
-
         val rayTraceResult = proxyService.rayTraceMotion(position, motion)
-
-        if (rayTraceResult.hitBlock && rayTraceResult.blockdirection != BlockDirection.UP) {
-            println("Solid: " + rayTraceResult.blockdirection)
-        }
 
         val rayTraceEvent = BallRayTraceEvent(
             ball,
@@ -130,7 +128,6 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
             rayTraceResult.targetPosition,
             rayTraceResult.blockdirection
         )
-
 
         Bukkit.getPluginManager().callEvent(rayTraceEvent)
 
@@ -147,24 +144,9 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         calculateBallOnAir(players, rayTraceEvent.targetPosition)
     }
 
-    private fun getYawFromVector(origin: Position, position: Position): Double {
-        val x1: Double = origin.x - 0 //Vector 1 - x
-        val y1: Double = origin.z - 0 //Vector 1 - y
-
-        val x2: Double = position.x - 0 //Vector 2 - x
-        val y2: Double = position.z - 0 //Vector 2 - y
-
-
-        var angle = atan2(y1, x1) - atan2(y2, x2)
-        angle = angle * 360 / (2 * Math.PI)
-
-        if (angle < 0) {
-            angle += 360.0
-        }
-
-        return angle
-    }
-
+    /**
+     * Handles movement of the ball on ground.
+     */
     private fun calculateBallOnGround(players: List<Player>, targetPosition: Position) {
         targetPosition.y = this.position.y
         motion.y = 0.0
@@ -181,8 +163,12 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
 
         val rollingResistance = 1.0 - this.meta.movementModifier.rollingResistance
         this.motion = this.motion.multiply(rollingResistance)
+        this.isOnGround = true
     }
 
+    /**
+     * Handles movement of the ball in air.
+     */
     private fun calculateBallOnAir(players: List<Player>, targetPosition: Position) {
         val airResistance = 1.0 - this.meta.movementModifier.airResistance
         this.motion = this.motion.multiply(airResistance)
@@ -192,31 +178,27 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         for (player in players) {
             packetService.sendEntityTeleportPacket(player, entityId, this.position)
         }
+
+        this.isOnGround = false
     }
 
     /**
      * Kicks the hitbox for the given player interaction.
      */
     fun kickPlayer(player: Player, delay: Int, baseMultiplier: Double) {
-        println("KICK[]")
-
-        if (true) {
-            return
-        }
-
         if (skipKickCounter > 0) {
             return
         }
 
-        val preEvent = BallInteractEvent(player, this.ball!!)
+        val preEvent = BallInteractEvent(player, this.ball)
         Bukkit.getPluginManager().callEvent(preEvent)
         if (preEvent.isCancelled) {
             return
         }
 
         val prevEyeLoc = player.eyeLocation.clone()
-        this.skipCounter = delay + 4
-        this.skipKickCounter = delay + 4
+        this.skipCounter = delay + 20
+        this.skipKickCounter = delay + 20
         this.motion = player.velocity.toPosition()
 
         sync(concurrencyService, delay.toLong()) {
@@ -236,23 +218,15 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
             Bukkit.getPluginManager().callEvent(event)
 
             if (!event.isCancelled) {
+                // Move the ball a little bit up otherwise wallcollision of ground immidately cancel movement.
+                this.position.y += 0.25
                 this.motion = event.resultVelocity.toPosition()
                 this.angularVelocity = spinV
+
+                if (this.meta.rotating) {
+                    ball.rotation = PositionEntity(2.0, 0.0, 0.0)
+                }
             }
-        }
-    }
-
-    /**
-     * Sets the velocity of the ball.
-     */
-    fun setVelocity(vector: Vector) {
-        this.angularVelocity = 0.0
-        // Move the ball a little bit up otherwise wallcollision of ground immidately cancel movement.
-        this.position.y += 0.25
-        this.motion = vector.toPosition()
-
-        if (this.meta.rotating) {
-            ball.rotation = PositionEntity(2.0, 0.0, 0.0)
         }
     }
 
@@ -337,11 +311,14 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
             return
         }
 
-        this.skipCounter = 2
+        this.skipCounter = 20
         val ballLocation = position.toLocation()
 
+        // Reduce hitbox size in order to stay compatible to old arena files.
+        val hitboxSize = (meta.hitBoxSize - 2)
+
         for (player in players) {
-            if (player.location.distance(ballLocation) < meta.hitBoxSize) {
+            if (player.location.distance(ballLocation) < hitboxSize) {
                 val event = BallInteractEvent(player, ball)
                 Bukkit.getPluginManager().callEvent(event)
 
@@ -356,7 +333,14 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
                 vector.y = 0.1 * meta.movementModifier.verticalTouchModifier
 
                 this.position.yaw = getYawFromVector(origin, vector.clone().toPosition().normalize()) * -1
-                this.setVelocity(vector)
+                this.angularVelocity = 0.0
+                // Move the ball a little bit up otherwise wallcollision of ground immidately cancel movement.
+                this.position.y += 0.25
+                this.motion = vector.toPosition()
+
+                if (this.meta.rotating) {
+                    ball.rotation = PositionEntity(2.0, 0.0, 0.0)
+                }
             }
         }
     }
@@ -395,5 +379,19 @@ class BallHitboxEntity(val entityId: Int, var position: Position, private val me
         this.position.yaw = getYawFromVector(origin, outgoingVector.clone().normalize()) * -1
 
         return outgoingVector
+    }
+
+    /**
+     * Gets the angle in degrees from 0 - 360 between the given 2 vectors.
+     */
+    private fun getYawFromVector(origin: Position, position: Position): Double {
+        var angle = atan2(origin.z, origin.x) - atan2(position.z, position.x)
+        angle = angle * 360 / (2 * Math.PI)
+
+        if (angle < 0) {
+            angle += 360.0
+        }
+
+        return angle
     }
 }

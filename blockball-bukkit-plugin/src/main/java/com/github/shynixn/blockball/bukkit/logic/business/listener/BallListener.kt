@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.ProtocolService
 import com.github.shynixn.blockball.api.business.service.SoundService
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
+import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.event.EventHandler
@@ -54,11 +55,11 @@ class BallListener @Inject constructor(
 ) : Listener {
     private val packetPlayInUseEntityActionField by lazy {
         findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
-            .getDeclaredField("action")
+            .getDeclaredField("action").accessible(true)
     }
     private val packetPlayInUseEntityIdField by lazy {
         findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
-            .getDeclaredField("a")
+            .getDeclaredField("a").accessible(true)
     }
 
     /**
