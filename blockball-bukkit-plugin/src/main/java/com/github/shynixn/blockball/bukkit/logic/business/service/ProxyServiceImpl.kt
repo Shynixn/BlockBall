@@ -626,10 +626,19 @@ class ProxyServiceImpl @Inject constructor(
      * Creates a new entity id.
      */
     override fun createNewEntityId(): Int {
-        val atomicInteger = findClazz("net.minecraft.server.VERSION.Entity")
-            .getDeclaredField("entityCount")
-            .accessible(true)
-            .get(null) as AtomicInteger
-        return atomicInteger.incrementAndGet()
+        return if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
+            val atomicInteger = findClazz("net.minecraft.server.VERSION.Entity")
+                .getDeclaredField("entityCount")
+                .accessible(true)
+                .get(null) as AtomicInteger
+            atomicInteger.incrementAndGet()
+        } else {
+            val entityCountField = findClazz("net.minecraft.server.VERSION.Entity")
+                .getDeclaredField("entityCount")
+                .accessible(true)
+            val intNumber = (entityCountField.get(null) as Int) + 1
+            entityCountField.set(null, intNumber)
+            intNumber
+        }
     }
 }

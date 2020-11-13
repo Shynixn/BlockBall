@@ -18,7 +18,7 @@ import kotlin.collections.HashSet
 
 class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, private val internalPlugin: Plugin) :
     ProtocolService {
-    private val handlerName = "BlockBall " + "-" + UUID.randomUUID().toString()
+    private val handlerName = "BlockBall" + "-" + UUID.randomUUID().toString()
     private val playerToNmsPlayer by lazy {
         plugin.findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer")
             .getDeclaredMethod("getHandle")

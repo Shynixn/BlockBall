@@ -157,6 +157,12 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
         buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
 
+        // 1.13.2 D 30 https://wiki.vg/index.php?title=Entity_metadata&oldid=13595
+        // https://wiki.vg/index.php?title=Protocol&oldid=14424#Spawn_Global_Entity
+        // Abfangen.
+        buffer.writeByte(255)
+
+
         sendPacket(player, packetPlayOutEntitySpawnLiving, buffer)
     }
 
@@ -220,11 +226,11 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         } else {
             val nmsItemStack = craftItemStackNmsMethod.invoke(null, itemStack)
             packetPlayOutEntityEquipment
-                .getDeclaredConstructor(Int::class.java, nmsItemStackClazz, enumItemSlotClazz)
-                .newInstance(entityId, nmsItemStack, enumItemSlotClazz.enumConstants[slotId])
+                .getDeclaredConstructor(Int::class.java, enumItemSlotClazz, nmsItemStackClazz)
+                .newInstance(entityId, enumItemSlotClazz.enumConstants[slotId], nmsItemStack)
         }
 
-        packageService.sendPacket(player, packet)
+       // packageService.sendPacket(player, packet)
     }
 
     /**
