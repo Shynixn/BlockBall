@@ -93,6 +93,13 @@ internal fun Position.toVector(): Vector {
 }
 
 /**
+ * Converts the position to euler angles.
+ */
+internal fun Position.toEulerAngle(): EulerAngle {
+    return EulerAngle(this.x, this.y, this.z)
+}
+
+/**
  * Converts the given bukkit vector to a position.
  */
 internal fun Vector.toPosition(): Position {

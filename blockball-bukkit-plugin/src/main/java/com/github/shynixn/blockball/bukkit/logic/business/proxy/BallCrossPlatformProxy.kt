@@ -5,14 +5,13 @@ package com.github.shynixn.blockball.bukkit.logic.business.proxy
 import com.github.shynixn.blockball.api.bukkit.event.BallDeathEvent
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toEulerAngle
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
-import java.util.*
 import java.util.logging.Level
 
 class BallCrossPlatformProxy(
@@ -59,18 +58,6 @@ class BallCrossPlatformProxy(
         }
 
     /**
-     * Rotation of the visible ball in euler angles.
-     */
-    override var rotation: Position
-        get() {
-            return ballDesignEntity.rotation
-        }
-        set(value) {
-            ballDesignEntity.rotation = value
-            ballDesignEntity.requestRotationChange = true
-        }
-
-    /**
      * Teleports the ball to the given [location].
      */
     override fun <L> teleport(location: L) {
@@ -91,6 +78,13 @@ class BallCrossPlatformProxy(
      */
     override fun <V> getVelocity(): V {
         return ballHitBoxEntity.motion.toVector() as V
+    }
+
+    /**
+     * Rotation of the visible ball in euler angles.
+     */
+    override fun <V> getRotation(): V {
+        return ballDesignEntity.rotation.toEulerAngle() as V
     }
 
     /**
@@ -126,15 +120,6 @@ class BallCrossPlatformProxy(
     }
 
     /**
-     * Calculates the angular velocity in order to spin the ball.
-     *
-     * @return The angular velocity
-     */
-    override fun <V> calculateSpinVelocity(postVector: V, initVector: V): Double {
-        return 0.0
-    }
-
-    /**
      * Removes the ball.
      */
     override fun remove() {
@@ -164,46 +149,5 @@ class BallCrossPlatformProxy(
         } catch (e: Exception) {
             Bukkit.getLogger().log(Level.WARNING, "Entity ticking exception.", e)
         }
-    }
-
-    /**
-     * Calculates post movement.
-     *
-     * @param collision if knockback were applied during the movement
-     */
-    override fun calculatePostMovement(collision: Boolean) {
-    }
-
-    /**
-     * Calculates spin movement. The spinning will slow down
-     * if the ball stops moving, hits the ground or hits the wall.
-     *
-     * @param collision if knockback were applied
-     */
-    override fun calculateSpinMovement(collision: Boolean) {
-    }
-
-    /**
-     * Calculates the movement vectors.
-     */
-    override fun <V> calculateMoveSourceVectors(movementVector: V, motionVector: V, onGround: Boolean): Optional<V> {
-        return Optional.empty()
-    }
-
-    /**
-     * Calculates the knockback for the given [sourceVector] and [sourceBlock]. Uses the motion values to correctly adjust the
-     * wall.
-     *
-     * @return if collision was detected and the knockback was applied
-     */
-    override fun <V, B> calculateKnockBack(
-        sourceVector: V,
-        sourceBlock: B,
-        mot0: Double,
-        mot2: Double,
-        mot6: Double,
-        mot8: Double
-    ): Boolean {
-        return true
     }
 }

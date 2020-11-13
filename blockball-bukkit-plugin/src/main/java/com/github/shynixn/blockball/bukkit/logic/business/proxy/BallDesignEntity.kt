@@ -16,15 +16,20 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 
 class BallDesignEntity(val entityId: Int) {
+    private val helmetItemStack by lazy {
+        val item = ItemEntity {
+            this.type = MaterialType.SKULL_ITEM.MinecraftNumericId.toString()
+            this.dataValue = 3
+            this.skin = ball.meta.skin
+        }
+
+        itemService.toItemStack<ItemStack>(item)
+    }
+
     /**
      * Rotation of the design in euler angles.
      */
     var rotation: Position = PositionEntity(0.0, 0.0, 0.0)
-
-    /**
-     * Requests a change of rotations.
-     */
-    var requestRotationChange: Boolean = false
 
     /**
      * Proxy service dependency.
@@ -46,43 +51,6 @@ class BallDesignEntity(val entityId: Int) {
      */
     lateinit var ball: BallProxy
 
-    private val helmetItemStack by lazy {
-        val item = ItemEntity {
-            this.type = MaterialType.SKULL_ITEM.MinecraftNumericId.toString()
-            this.dataValue = 3
-            this.skin = ball.meta.skin
-        }
-
-        itemService.toItemStack<ItemStack>(item)
-    }
-
-    /**
-     * Ticks the hitbox.
-     * @param players watching this hitbox.
-     */
-    fun <P> tick(players: List<P>) {
-        val position = ball.getLocation<Location>().toPosition()
-        position.y = position.y + ball.meta.hitBoxRelocation - 1.2
-
-        for (player in players) {
-            packetService.sendEntityTeleportPacket(player, entityId, position)
-        }
-
-        if (ball.meta.rotating) {
-            playRotationAnimation()
-        }
-
-        if (requestRotationChange) {
-            for (player in players) {
-                packetService.sendEntityMetaDataPacket(player, entityId, EntityMetadataImpl {
-                    this.armorstandHeadRotation = rotation
-                })
-            }
-
-            requestRotationChange = false
-        }
-    }
-
     /**
      * Spawns the ball for the given player.
      */
@@ -102,9 +70,26 @@ class BallDesignEntity(val entityId: Int) {
     }
 
     /**
+     * Ticks the hitbox.
+     * @param players watching this hitbox.
+     */
+    fun <P> tick(players: List<P>) {
+        val position = ball.getLocation<Location>().toPosition()
+        position.y = position.y + ball.meta.hitBoxRelocation - 1.2
+
+        for (player in players) {
+            packetService.sendEntityTeleportPacket(player, entityId, position)
+        }
+
+        if (ball.meta.rotating) {
+            playRotationAnimation(players as List<Player>)
+        }
+    }
+
+    /**
      * Plays the rotation animation.
      */
-    private fun playRotationAnimation() {
+    private fun playRotationAnimation(players: List<Player>) {
         // 360 0 0 is a full forward rotation.
         // Length of the velocity is the speed of the ball.
         val velocity = ball.getVelocity<Vector>()
@@ -124,7 +109,12 @@ class BallDesignEntity(val entityId: Int) {
 
         if (angle != null) {
             rotation = angle
-            requestRotationChange = true
+
+            for (player in players) {
+                packetService.sendEntityMetaDataPacket(player, entityId, EntityMetadataImpl {
+                    this.armorstandHeadRotation = rotation
+                })
+            }
         }
     }
 }

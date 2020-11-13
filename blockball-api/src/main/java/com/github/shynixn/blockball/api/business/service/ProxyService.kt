@@ -301,11 +301,6 @@ interface ProxyService {
     fun <L> setSignLines(location: L, lines: List<String>): Boolean
 
     /**
-     * Ray traces in the world for the given motion.
-     */
-    fun rayTraceMotion(position: Position, motion: Position): RaytraceResult
-
-    /**
      * Creates a new entity id.
      */
     fun createNewEntityId(): Int

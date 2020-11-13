@@ -9,21 +9,17 @@ import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.api.persistence.repository.LinkSignRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_10_R1.EntityRegistration110R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_11_R1.EntityRegistration111R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2.EntityRegistration113R2ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1.EntityRegistration114R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_15_R1.EntityRegistration115R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_16_R1.EntityRegistration116R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_16_R2.EntityRegistration116R2ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_8_R3.EntityRegistrationLegacyServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
+import com.github.shynixn.blockball.bukkit.service.Particle113R2ServiceImpl
+import com.github.shynixn.blockball.bukkit.service.RayTracingService113R2Impl
+import com.github.shynixn.blockball.bukkit.service.RayTracingService114R1Impl
 import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextImpl
 import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
 import com.github.shynixn.blockball.core.logic.persistence.repository.LinkSignFileRepository
 import com.github.shynixn.blockball.core.logic.persistence.repository.StatsSqlRepository
+import com.github.shynixn.blockball.service.Particle18R1ServiceImpl
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
 import org.bukkit.plugin.Plugin
@@ -122,28 +118,10 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(ProtocolService::class.java).to(ProtocolServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         when {
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_16_R2)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration116R2ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_16_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration116R1ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_15_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration115R1ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration114R1ServiceImpl::class.java)
+            -> bind(RayTracingService::class.java).to(RayTracingService114R1Impl::class.java)
                 .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration113R2ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_11_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration111R1ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_10_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration110R1ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-            else -> bind(EntityRegistrationService::class.java).to(EntityRegistrationLegacyServiceImpl::class.java)
+            else -> bind(RayTracingService::class.java).to(RayTracingService113R2Impl::class.java)
                 .`in`(Scopes.SINGLETON)
         }
 

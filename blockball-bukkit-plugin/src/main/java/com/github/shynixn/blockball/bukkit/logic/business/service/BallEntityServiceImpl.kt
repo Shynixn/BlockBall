@@ -2,12 +2,9 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.bukkit.event.BallSpawnEvent
-import com.github.shynixn.blockball.api.business.enumeration.EntityType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallCrossPlatformProxy
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallDesignEntity
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallHitboxEntity
@@ -20,9 +17,7 @@ import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
 import org.bukkit.plugin.Plugin
-import java.util.*
 import java.util.logging.Level
-import kotlin.collections.ArrayList
 
 /**
  * Created by Shynixn 2018.
@@ -53,11 +48,11 @@ import kotlin.collections.ArrayList
  */
 class BallEntityServiceImpl @Inject constructor(
     private val plugin: Plugin,
-    private val entityRegistry: EntityRegistrationService,
     private val proxyService: ProxyService,
     private val packetService: PacketService,
     private val concurrencyService: ConcurrencyService,
-    private val itemTypeService: ItemTypeService
+    private val itemTypeService: ItemTypeService,
+    private val rayTracingService: RayTracingService
 ) : BallEntityService, Runnable {
 
     private var registered = false
@@ -85,7 +80,7 @@ class BallEntityServiceImpl @Inject constructor(
             proxyService.createNewEntityId()
         )
         ballHitBoxEntity.position = PositionEntity(location.world!!.name, location.x, location.y, location.z)
-        ballHitBoxEntity.proxyService = proxyService
+        ballHitBoxEntity.rayTracingService = rayTracingService
         ballHitBoxEntity.concurrencyService = concurrencyService
         ballHitBoxEntity.packetService = packetService
 
@@ -124,22 +119,6 @@ class BallEntityServiceImpl @Inject constructor(
         if (balls.contains(ball)) {
             balls.remove(ball)
         }
-    }
-
-    /**
-     * Registers entities on the server when not already registered.
-     * Returns true if registered. Returns false when not registered.
-     */
-    override fun registerEntitiesOnServer(): Boolean {
-        if (registered) {
-            return false
-        }
-
-        val slimeClazz = findClazz("com.github.shynixn.blockball.bukkit.logic.business.nms.VERSION.BallHitBox")
-
-        entityRegistry.register(slimeClazz, EntityType.SLIME)
-        registered = true
-        return true
     }
 
     /**

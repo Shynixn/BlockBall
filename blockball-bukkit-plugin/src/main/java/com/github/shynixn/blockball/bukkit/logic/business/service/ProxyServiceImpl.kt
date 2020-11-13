@@ -2,7 +2,6 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ItemTypeService
@@ -11,18 +10,12 @@ import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.Item
 import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.api.persistence.entity.RaytraceResult
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
 import com.github.shynixn.blockball.core.logic.business.extension.accessible
-import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
-import com.github.shynixn.blockball.core.logic.persistence.entity.RayTraceResultEntity
 import com.google.inject.Inject
-import net.minecraft.server.v1_14_R1.IBlockAccess
-import net.minecraft.server.v1_14_R1.MovingObjectPosition
-import net.minecraft.server.v1_14_R1.MovingObjectPositionBlock
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -73,18 +66,6 @@ class ProxyServiceImpl @Inject constructor(
     private val packageService: PackageService,
     private val itemTypeService: ItemTypeService
 ) : ProxyService {
-
-    private val craftWorldClazz by lazy { findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld") }
-    private val craftWorldClazzHandleMethod by lazy { craftWorldClazz.getDeclaredMethod("getHandle") }
-    private val vector3dClazz by lazy { findClazz("net.minecraft.server.VERSION.Vec3D") }
-    private val iBlockAccessClazz by lazy { findClazz("net.minecraft.server.VERSION.IBlockAccess") }
-    private val blockCollisionOptionClazz by lazy { findClazz("net.minecraft.server.VERSION.RayTrace\$BlockCollisionOption") }
-    private val fluidCollisionOptionClazz by lazy { findClazz("net.minecraft.server.VERSION.RayTrace\$FluidCollisionOption") }
-    private val rayTraceClazz by lazy { findClazz("net.minecraft.server.VERSION.RayTrace") }
-    private val entityClazz by lazy { findClazz("net.minecraft.server.VERSION.Entity") }
-    private val movingObjectClazz by lazy { findClazz("net.minecraft.server.VERSION.MovingObjectPosition") }
-    private val movingObjectBlockClazz by lazy { findClazz("net.minecraft.server.VERSION.MovingObjectPositionBlock") }
-
     /**
      * Gets the name of the World the player is in.
      */
@@ -639,58 +620,6 @@ class ProxyServiceImpl @Inject constructor(
 
         sign.update(true)
         return true
-    }
-
-    /**
-     * Ray traces in the world for the given motion.
-     */
-    override fun rayTraceMotion(position: Position, motion: Position): RaytraceResult {
-        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
-            val nmsWorld = craftWorldClazzHandleMethod.invoke(position.toLocation().world)
-            val startVector = vector3dClazz
-                .getDeclaredConstructor(Double::class.java, Double::class.java, Double::class.java)
-                .newInstance(position.x, position.y, position.z)
-            val endVector = vector3dClazz
-                .getDeclaredConstructor(Double::class.java, Double::class.java, Double::class.java)
-                .newInstance(position.x + motion.x, position.y + motion.y, position.z + motion.z)
-            val rayTrace = rayTraceClazz.getDeclaredConstructor(
-                vector3dClazz,
-                vector3dClazz,
-                blockCollisionOptionClazz,
-                fluidCollisionOptionClazz,
-                entityClazz
-            ).newInstance(
-                startVector,
-                endVector,
-                blockCollisionOptionClazz.enumConstants.first { e -> e.toString() == "COLLIDER" },
-                fluidCollisionOptionClazz.enumConstants.first { e -> e.toString() == "NONE" },
-                null
-            )
-            val movingObjectPosition = iBlockAccessClazz.getDeclaredMethod("rayTrace", rayTraceClazz)
-                .invoke(nmsWorld, rayTrace)
-            val resultVector = movingObjectClazz.getDeclaredMethod("getPos").invoke(movingObjectPosition)
-
-            val resultPosition = PositionEntity(
-                position.worldName!!,
-                vector3dClazz.getDeclaredMethod("getX").invoke(resultVector) as Double,
-                vector3dClazz.getDeclaredMethod("getY").invoke(resultVector) as Double,
-                vector3dClazz.getDeclaredMethod("getZ").invoke(resultVector) as Double
-            )
-
-            val direction = BlockDirection.valueOf(
-                movingObjectBlockClazz.getDeclaredMethod("getDirection").invoke(movingObjectPosition).toString()
-                    .toUpperCase()
-            )
-
-            val movingObjectType = movingObjectClazz.getDeclaredMethod("getType")
-                .invoke(movingObjectPosition)
-
-            resultPosition.yaw = position.yaw
-            resultPosition.pitch = position.pitch
-            return RayTraceResultEntity(movingObjectType.toString() == "BLOCK", resultPosition, direction)
-        }
-
-        throw IllegalArgumentException("Version not supported.")
     }
 
     /**

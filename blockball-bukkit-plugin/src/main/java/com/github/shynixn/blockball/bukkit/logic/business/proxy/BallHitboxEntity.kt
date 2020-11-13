@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.PacketService
 import com.github.shynixn.blockball.api.business.service.ProxyService
+import com.github.shynixn.blockball.api.business.service.RayTracingService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
@@ -64,9 +65,9 @@ class BallHitboxEntity(val entityId: Int) {
     var isOnGround: Boolean = false
 
     /**
-     * Proxy service dependency.
+     * Raytracing service dependency.
      */
-    lateinit var proxyService: ProxyService
+    lateinit var rayTracingService: RayTracingService
 
     /**
      * Proxy packet dependency.
@@ -176,7 +177,7 @@ class BallHitboxEntity(val entityId: Int) {
             return
         }
 
-        val rayTraceResult = proxyService.rayTraceMotion(position, motion)
+        val rayTraceResult = rayTracingService.rayTraceMotion(position, motion)
 
         val rayTraceEvent = BallRayTraceEvent(
             ball,
