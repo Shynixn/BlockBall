@@ -14,6 +14,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
 import com.github.shynixn.blockball.core.logic.business.extension.sync
+import com.github.shynixn.blockball.core.logic.persistence.entity.EntityMetadataImpl
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -97,6 +98,9 @@ class BallHitboxEntity(val entityId: Int) {
      */
     fun spawn(player: Player, position: Position) {
         packetService.sendEntitySpawnPacket(player, entityId, "SLIME", position)
+        packetService.sendEntityMetaDataPacket(player, entityId, EntityMetadataImpl {
+            this.isInvisible = true
+        })
     }
 
     /**

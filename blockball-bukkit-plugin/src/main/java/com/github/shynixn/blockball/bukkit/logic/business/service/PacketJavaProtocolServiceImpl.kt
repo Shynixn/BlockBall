@@ -157,11 +157,14 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
         buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
 
-        // 1.13.2 D 30 https://wiki.vg/index.php?title=Entity_metadata&oldid=13595
-        // https://wiki.vg/index.php?title=Protocol&oldid=14424#Spawn_Global_Entity
-        // Abfangen.
-        buffer.writeByte(255)
-
+        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
+            // TODO:
+        } else {
+            // 1.13.2 D 30 https://wiki.vg/index.php?title=Entity_metadata&oldid=13595
+            // https://wiki.vg/index.php?title=Protocol&oldid=14424#Spawn_Global_Entity
+            // Abfangen.
+            buffer.writeByte(255)
+        }
 
         sendPacket(player, packetPlayOutEntitySpawnLiving, buffer)
     }
@@ -230,7 +233,7 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
                 .newInstance(entityId, enumItemSlotClazz.enumConstants[slotId], nmsItemStack)
         }
 
-       // packageService.sendPacket(player, packet)
+        packageService.sendPacket(player, packet)
     }
 
     /**
