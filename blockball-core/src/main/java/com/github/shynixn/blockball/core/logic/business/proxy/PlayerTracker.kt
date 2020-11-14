@@ -1,20 +1,21 @@
-package com.github.shynixn.blockball.bukkit.logic.business.proxy
+package com.github.shynixn.blockball.core.logic.business.proxy
 
-import org.bukkit.World
-import org.bukkit.entity.Player
+import com.github.shynixn.blockball.api.business.service.ProxyService
+import com.github.shynixn.blockball.api.persistence.entity.Position
 
 class PlayerTracker(
-    private val world: World,
-    private val newPlayerFunction: (Player) -> Unit,
-    private val oldPlayerFunction: (Player) -> Unit
+    private val location: Position,
+    private val newPlayerFunction: (Any) -> Unit,
+    private val oldPlayerFunction: (Any) -> Unit
 ) {
-    private val cache = HashSet<Player>()
+    private val cache = HashSet<Any>()
+    lateinit var proxyService: ProxyService
 
     /**
      * Checks the players inthe world and returns the interesing ones.
      */
-    fun checkAndGet(): List<Player> {
-        val players = world.players
+    fun checkAndGet(): List<Any> {
+        val players = proxyService.getPlayersInWorld<Any, Any>(location)
 
         for (player in players) {
             if (!cache.contains(player)) {

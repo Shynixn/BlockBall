@@ -5,9 +5,9 @@ import com.github.shynixn.blockball.api.bukkit.event.BallSpawnEvent
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallCrossPlatformProxy
-import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallDesignEntity
-import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallHitboxEntity
+import com.github.shynixn.blockball.core.logic.business.proxy.BallCrossPlatformProxy
+import com.github.shynixn.blockball.core.logic.business.proxy.BallDesignEntity
+import com.github.shynixn.blockball.core.logic.business.proxy.BallHitboxEntity
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
 import com.github.shynixn.blockball.core.logic.business.extension.stripChatColors
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
@@ -52,10 +52,10 @@ class BallEntityServiceImpl @Inject constructor(
     private val packetService: PacketService,
     private val concurrencyService: ConcurrencyService,
     private val itemTypeService: ItemTypeService,
-    private val rayTracingService: RayTracingService
+    private val rayTracingService: RayTracingService,
+    private val loggingService: LoggingService
 ) : BallEntityService, Runnable {
 
-    private var registered = false
     private val balls = ArrayList<BallProxy>()
 
     init {
@@ -92,6 +92,7 @@ class BallEntityServiceImpl @Inject constructor(
         val ball = BallCrossPlatformProxy(meta, ballDesignEntity, ballHitBoxEntity)
         ballDesignEntity.ball = ball
         ballHitBoxEntity.ball = ball
+        ball.loggingService = loggingService
 
         val event = BallSpawnEvent(ball)
         Bukkit.getPluginManager().callEvent(event)

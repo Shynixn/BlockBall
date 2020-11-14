@@ -1,25 +1,19 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.github.shynixn.blockball.bukkit.logic.business.proxy
+package com.github.shynixn.blockball.core.logic.business.proxy
 
-import com.github.shynixn.blockball.api.bukkit.event.BallDeathEvent
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
+import com.github.shynixn.blockball.api.business.service.EventService
+import com.github.shynixn.blockball.api.business.service.LoggingService
+import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toEulerAngle
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
-import org.bukkit.Bukkit
-import org.bukkit.Location
-import org.bukkit.entity.Player
-import java.util.logging.Level
 
 class BallCrossPlatformProxy(
     override val meta: BallMeta,
     val ballDesignEntity: BallDesignEntity,
     val ballHitBoxEntity: BallHitboxEntity
 ) : BallProxy {
-    private var playerTracker: PlayerTracker? = PlayerTracker(ballHitBoxEntity.position.toLocation().world!!,
+    private var playerTracker: PlayerTracker? = PlayerTracker(ballHitBoxEntity.position,
         { player ->
             ballDesignEntity.spawn(player, ballHitBoxEntity.position)
             ballHitBoxEntity.spawn(player, ballHitBoxEntity.position)
@@ -27,6 +21,21 @@ class BallCrossPlatformProxy(
             ballDesignEntity.destroy(player)
             ballHitBoxEntity.destroy(player)
         })
+
+    /**
+     * Logging dependency.
+     */
+    lateinit var loggingService: LoggingService
+
+    /**
+     * Proxy dependency.
+     */
+    lateinit var proxyService: ProxyService
+
+    /**
+     * Event dependency.
+     */
+    lateinit var eventService: EventService // TODO:
 
     /**
      * Is the entity dead?
@@ -61,8 +70,7 @@ class BallCrossPlatformProxy(
      * Teleports the ball to the given [location].
      */
     override fun <L> teleport(location: L) {
-        require(location is Location)
-        ballHitBoxEntity.position = location.toPosition()
+        ballHitBoxEntity.position = proxyService.toPosition(location)
         ballHitBoxEntity.requestTeleport = true
     }
 
@@ -70,21 +78,21 @@ class BallCrossPlatformProxy(
      * Gets the location of the ball.
      */
     override fun <L> getLocation(): L {
-        return ballHitBoxEntity.position.toLocation() as L
+        return proxyService.toLocation(ballHitBoxEntity.position)
     }
 
     /**
      * Gets the velocity of the ball.
      */
     override fun <V> getVelocity(): V {
-        return ballHitBoxEntity.motion.toVector() as V
+        return proxyService.toVector(ballHitBoxEntity.motion)
     }
 
     /**
      * Rotation of the visible ball in euler angles.
      */
     override fun <V> getRotation(): V {
-        return ballDesignEntity.rotation.toEulerAngle() as V
+        return proxyService.toVector(ballDesignEntity.rotation)
     }
 
     /**
@@ -94,8 +102,6 @@ class BallCrossPlatformProxy(
      * @param player
      */
     override fun <E> shootByPlayer(player: E) {
-        require(player is Player)
-
         if (!meta.enabledKick) {
             return
         }
@@ -110,8 +116,6 @@ class BallCrossPlatformProxy(
      * @param player
      */
     override fun <E> passByPlayer(player: E) {
-        require(player is Player)
-
         if (!meta.enabledPass) {
             return
         }
@@ -127,7 +131,7 @@ class BallCrossPlatformProxy(
             return
         }
 
-        Bukkit.getPluginManager().callEvent(BallDeathEvent(this))
+        // TODO: Bukkit.getPluginManager().callEvent(BallDeathEvent(this))
 
         isDead = true
         playerTracker!!.dispose()
@@ -147,7 +151,7 @@ class BallCrossPlatformProxy(
             ballHitBoxEntity.tick(players)
             ballDesignEntity.tick(players)
         } catch (e: Exception) {
-            Bukkit.getLogger().log(Level.WARNING, "Entity ticking exception.", e)
+            loggingService.warn("Entity ticking exception.", e)
         }
     }
 }

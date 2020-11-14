@@ -1,4 +1,6 @@
-package com.github.shynixn.blockball.bukkit.logic.business.proxy
+@file:Suppress("UNCHECKED_CAST")
+
+package com.github.shynixn.blockball.core.logic.business.proxy
 
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
@@ -6,14 +8,9 @@ import com.github.shynixn.blockball.api.business.service.ItemTypeService
 import com.github.shynixn.blockball.api.business.service.PacketService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.core.logic.persistence.entity.EntityMetadataImpl
 import com.github.shynixn.blockball.core.logic.persistence.entity.ItemEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
-import org.bukkit.Location
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
 
 class BallDesignEntity(val entityId: Int) {
     private val helmetItemStack by lazy {
@@ -23,7 +20,7 @@ class BallDesignEntity(val entityId: Int) {
             this.skin = ball.meta.skin
         }
 
-        itemService.toItemStack<ItemStack>(item)
+        itemService.toItemStack<Any>(item)
     }
 
     /**
@@ -54,7 +51,7 @@ class BallDesignEntity(val entityId: Int) {
     /**
      * Spawns the ball for the given player.
      */
-    fun spawn(player: Player, position: Position) {
+    fun spawn(player: Any, position: Position) {
         packetService.sendEntitySpawnPacket(player, entityId, "ARMOR_STAND", position)
         packetService.sendEntityEquipmentPacket(player, entityId, 5, helmetItemStack)
         packetService.sendEntityMetaDataPacket(player, entityId, EntityMetadataImpl {
@@ -65,7 +62,7 @@ class BallDesignEntity(val entityId: Int) {
     /**
      * Destroys the ball for the given player.
      */
-    fun destroy(player: Player) {
+    fun destroy(player: Any) {
         packetService.sendEntityDestroyPacket(player, entityId)
     }
 
@@ -74,7 +71,7 @@ class BallDesignEntity(val entityId: Int) {
      * @param players watching this hitbox.
      */
     fun <P> tick(players: List<P>) {
-        val position = ball.getLocation<Location>().toPosition()
+        val position = proxyService.toPosition(ball.getLocation<Any>())
         position.y = position.y + ball.meta.hitBoxRelocation - 1.2
 
         for (player in players) {
@@ -82,17 +79,17 @@ class BallDesignEntity(val entityId: Int) {
         }
 
         if (ball.meta.rotating) {
-            playRotationAnimation(players as List<Player>)
+            playRotationAnimation(players as List<Any>)
         }
     }
 
     /**
      * Plays the rotation animation.
      */
-    private fun playRotationAnimation(players: List<Player>) {
+    private fun playRotationAnimation(players: List<Any>) {
         // 360 0 0 is a full forward rotation.
         // Length of the velocity is the speed of the ball.
-        val velocity = ball.getVelocity<Vector>()
+        val velocity = proxyService.toPosition(ball.getVelocity<Any>())
 
         val length = if (ball.isOnGround) {
             PositionEntity(velocity.x, 0.0, velocity.z).length()

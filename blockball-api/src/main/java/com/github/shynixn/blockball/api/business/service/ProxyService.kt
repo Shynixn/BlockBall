@@ -65,6 +65,11 @@ interface ProxyService {
     fun <L, P> getEntityLocation(entity: P): L
 
     /**
+     * Gets the player eye location.
+     */
+    fun <P> getPlayerEyeLocation(player: P): Position
+
+    /**
      * Gets the name of the World the player is in.
      */
     fun <P> getWorldName(player: P): String
