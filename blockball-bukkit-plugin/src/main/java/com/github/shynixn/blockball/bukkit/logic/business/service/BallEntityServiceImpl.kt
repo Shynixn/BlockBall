@@ -53,7 +53,8 @@ class BallEntityServiceImpl @Inject constructor(
     private val concurrencyService: ConcurrencyService,
     private val itemTypeService: ItemTypeService,
     private val rayTracingService: RayTracingService,
-    private val loggingService: LoggingService
+    private val loggingService: LoggingService,
+    private val eventService: EventService
 ) : BallEntityService, Runnable {
 
     private val balls = ArrayList<BallProxy>()
@@ -83,6 +84,8 @@ class BallEntityServiceImpl @Inject constructor(
         ballHitBoxEntity.rayTracingService = rayTracingService
         ballHitBoxEntity.concurrencyService = concurrencyService
         ballHitBoxEntity.packetService = packetService
+        ballHitBoxEntity.eventService = eventService
+        ballHitBoxEntity.proxyService = proxyService
 
         val ballDesignEntity = BallDesignEntity(proxyService.createNewEntityId())
         ballDesignEntity.proxyService = proxyService
@@ -93,6 +96,8 @@ class BallEntityServiceImpl @Inject constructor(
         ballDesignEntity.ball = ball
         ballHitBoxEntity.ball = ball
         ball.loggingService = loggingService
+        ball.eventService = eventService
+        ball.proxyService = proxyService
 
         val event = BallSpawnEvent(ball)
         Bukkit.getPluginManager().callEvent(event)

@@ -26,6 +26,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scoreboard.Scoreboard
+import org.bukkit.util.Vector
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.logging.Level
@@ -446,11 +447,15 @@ class ProxyServiceImpl @Inject constructor(
      * Converts the given [location] to a [Position].
      */
     override fun <L> toPosition(location: L): Position {
-        if (location !is Location) {
-            throw IllegalArgumentException("Location has to be a BukkitLocation!")
+        if (location is Location) {
+            return location.toPosition()
         }
 
-        return location.toPosition()
+        if (location is Vector) {
+            return location.toPosition()
+        }
+
+        throw IllegalArgumentException("Location is not a BukkitLocation or BukkitVector!")
     }
 
     /**

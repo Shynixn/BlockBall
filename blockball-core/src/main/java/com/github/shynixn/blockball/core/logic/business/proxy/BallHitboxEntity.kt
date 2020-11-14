@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.core.logic.business.proxy
 
 import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
+import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.Position
@@ -198,7 +199,7 @@ class BallHitboxEntity(val entityId: Int) {
             return
         }
 
-        val targetPosition = proxyService.toPosition(rayTraceEvent)
+        val targetPosition = proxyService.toPosition(rayTraceEvent.targetLocation)
 
         if (rayTraceEvent.hitBlock) {
             if (rayTraceEvent.blockDirection == BlockDirection.UP) {
@@ -229,7 +230,9 @@ class BallHitboxEntity(val entityId: Int) {
         for (player in players) {
             val playerLocation = proxyService.toPosition(proxyService.getEntityLocation<Any, Any>(player))
 
-            if (playerLocation.distance(position) < hitboxSize) {
+            if (proxyService.getPlayerGameMode(player) != GameMode.SPECTATOR &&
+                playerLocation.distance(position) < hitboxSize
+            ) {
                 val vector = position
                     .clone()
                     .subtract(playerLocation)
