@@ -67,7 +67,7 @@ interface ProxyService {
     /**
      * Gets the player eye location.
      */
-    fun <P> getPlayerEyeLocation(player: P): Position
+    fun <P, L> getPlayerEyeLocation(player: P): L
 
     /**
      * Gets the name of the World the player is in.
@@ -163,6 +163,11 @@ interface ProxyService {
      * Gets the player direction.
      */
     fun <P> getPlayerDirection(player: P): Position
+
+    /**
+     * Gets the location direction.
+     */
+    fun <L> getLocationDirection(location: L): Position
 
     /**
      * Gets the player scoreboard.

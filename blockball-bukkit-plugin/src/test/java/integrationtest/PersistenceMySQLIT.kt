@@ -242,6 +242,13 @@ class PersistenceMySQLIT {
         }
 
         /**
+         * Gets the player eye location.
+         */
+        override fun <P, L> getPlayerEyeLocation(player: P): L {
+            throw IllegalArgumentException()
+        }
+
+        /**
          * Gets the name of a player.
          */
         override fun <P> getPlayerName(player: P): String {
@@ -358,6 +365,13 @@ class PersistenceMySQLIT {
          */
         override fun <P> getPlayerDirection(player: P): Position {
             throw IllegalArgumentException()
+        }
+
+        /**
+         * Gets the location direction.
+         */
+        override fun <L> getLocationDirection(location: L): Position {
+            TODO("Not yet implemented")
         }
 
         /**

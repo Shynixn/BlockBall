@@ -5,9 +5,9 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 
 /**
- * Event which gets called when the ball is kicked.
+ * Event which gets called when the ball is passed.
  */
-class BallKickEvent(
+class BallPassEvent(
     ball: BallProxy,
     player: Player,
     velocity: Vector

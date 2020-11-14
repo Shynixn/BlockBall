@@ -219,11 +219,10 @@ class ProxyServiceImpl @Inject constructor(
     /**
      * Gets the player eye location.
      */
-    override fun <P> getPlayerEyeLocation(player: P): Position {
+    override fun <P, L> getPlayerEyeLocation(player: P): L {
         require(player is Player)
-        return player.eyeLocation.toPosition()
+        return player.eyeLocation.clone() as L
     }
-
 
     /**
      * Gets a copy of the player inventory.
@@ -340,6 +339,14 @@ class ProxyServiceImpl @Inject constructor(
     override fun <P> getPlayerDirection(player: P): Position {
         require(player is Player)
         return player.location.direction.toPosition()
+    }
+
+    /**
+     * Gets the location direction.
+     */
+    override fun <L> getLocationDirection(location: L): Position {
+        require(location is Location)
+        return location.direction.toPosition()
     }
 
     /**

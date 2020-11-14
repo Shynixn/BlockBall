@@ -57,7 +57,7 @@ interface BallProxy {
      *
      * @param player
      */
-    fun <E> shootByPlayer(player: E)
+    fun <P> kickByPlayer(player: P)
 
     /**
      * Pass the ball by the given player.
@@ -65,7 +65,7 @@ interface BallProxy {
      *
      * @param player
      */
-    fun <E> passByPlayer(player: E)
+    fun <P> passByPlayer(player: P)
 
     /**
      * Removes the ball.

@@ -7,11 +7,13 @@ import com.github.shynixn.blockball.api.business.service.EventService
 import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
+import com.github.shynixn.blockball.core.logic.persistence.event.BallDeathEventEntity
+import com.github.shynixn.blockball.core.logic.persistence.event.BallTeleportEventEntity
 
 class BallCrossPlatformProxy(
     override val meta: BallMeta,
-    val ballDesignEntity: BallDesignEntity,
-    val ballHitBoxEntity: BallHitboxEntity
+    private val ballDesignEntity: BallDesignEntity,
+    private val ballHitBoxEntity: BallHitboxEntity
 ) : BallProxy {
     private var playerTracker: PlayerTracker? = PlayerTracker(ballHitBoxEntity.position,
         { player ->
@@ -35,7 +37,7 @@ class BallCrossPlatformProxy(
     /**
      * Event dependency.
      */
-    lateinit var eventService: EventService // TODO:
+    lateinit var eventService: EventService
 
     /**
      * Is the entity dead?
@@ -70,7 +72,14 @@ class BallCrossPlatformProxy(
      * Teleports the ball to the given [location].
      */
     override fun <L> teleport(location: L) {
-        ballHitBoxEntity.position = proxyService.toPosition(location)
+        val ballTeleportEvent = BallTeleportEventEntity(this, location as Any)
+        eventService.sendEvent(ballTeleportEvent)
+
+        if (ballTeleportEvent.isCancelled) {
+            return
+        }
+
+        ballHitBoxEntity.position = proxyService.toPosition(ballTeleportEvent.targetLocation)
         ballHitBoxEntity.requestTeleport = true
     }
 
@@ -101,12 +110,14 @@ class BallCrossPlatformProxy(
      *
      * @param player
      */
-    override fun <E> shootByPlayer(player: E) {
+    override fun <P> kickByPlayer(player: P) {
+        require(player is Any)
+
         if (!meta.enabledKick) {
             return
         }
 
-        ballHitBoxEntity.kickPlayer(player, 6, meta.movementModifier.shotVelocity)
+        ballHitBoxEntity.kickPlayer(player, 6, meta.movementModifier.shotVelocity, false)
     }
 
     /**
@@ -115,12 +126,14 @@ class BallCrossPlatformProxy(
      *
      * @param player
      */
-    override fun <E> passByPlayer(player: E) {
+    override fun <P> passByPlayer(player: P) {
+        require(player is Any)
+
         if (!meta.enabledPass) {
             return
         }
 
-        ballHitBoxEntity.kickPlayer(player, 4, meta.movementModifier.passVelocity)
+        ballHitBoxEntity.kickPlayer(player, 4, meta.movementModifier.passVelocity, true)
     }
 
     /**
@@ -131,7 +144,12 @@ class BallCrossPlatformProxy(
             return
         }
 
-        // TODO: Bukkit.getPluginManager().callEvent(BallDeathEvent(this))
+        val ballDeathEvent = BallDeathEventEntity(this)
+        eventService.sendEvent(ballDeathEvent)
+
+        if (ballDeathEvent.isCancelled) {
+            return
+        }
 
         isDead = true
         playerTracker!!.dispose()

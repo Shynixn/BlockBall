@@ -4,14 +4,13 @@ package com.github.shynixn.blockball.core.logic.business.service
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.core.logic.business.extension.sync
-import com.github.shynixn.blockball.core.logic.persistence.entity.GameEndEventEntity
-import com.github.shynixn.blockball.core.logic.persistence.entity.GameGoalEventEntity
+import com.github.shynixn.blockball.core.logic.persistence.event.GameEndEventEntity
+import com.github.shynixn.blockball.core.logic.persistence.event.GameGoalEventEntity
 import com.google.inject.Inject
 
 /**
@@ -207,7 +206,7 @@ class GameSoccerServiceImpl @Inject constructor(
             game.lastInteractedEntity = interactionEntity
         }
 
-        val gameGoalEntityEvent = GameGoalEventEntity(interactionEntity, team, game)
+        val gameGoalEntityEvent = GameGoalEventEntity(game, interactionEntity, team)
         eventService.sendEvent(gameGoalEntityEvent)
 
         if (gameGoalEntityEvent.isCancelled) {
@@ -312,8 +311,12 @@ class GameSoccerServiceImpl @Inject constructor(
      * Gets called when the given [game] gets win by the given [team].
      */
     override fun onWin(game: Game, team: Team, teamMeta: TeamMeta) {
-        val event = GameEndEventEntity(team, game)
+        val event = GameEndEventEntity(game, team)
         eventService.sendEvent(event)
+
+        if (event.isCancelled) {
+            return
+        }
 
         val winMessageTitle = teamMeta.winMessageTitle
         val winMessageSubTitle = teamMeta.winMessageSubTitle

@@ -1,10 +1,10 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
-import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
-import com.github.shynixn.blockball.api.bukkit.event.BallPostMoveEvent
 import com.github.shynixn.blockball.api.bukkit.event.BallRayTraceEvent
+import com.github.shynixn.blockball.api.bukkit.event.BallTouchEvent
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
+import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
@@ -254,15 +254,11 @@ class GameListener @Inject constructor(
      * Caches the last interacting entity with the ball.
      */
     @EventHandler
-    fun onBallInteractEvent(event: BallInteractEvent) {
+    fun onBallInteractEvent(event: BallTouchEvent) {
         val game = gameService.getAllGames().find { p -> p.ball != null && p.ball!! == event.ball }
 
         if (game != null) {
-            if (event.entity is Player && (event.entity as Player).gameMode == GameMode.SPECTATOR) {
-                event.isCancelled = true
-            }
-
-            game.lastInteractedEntity = event.entity
+            game.lastInteractedEntity = event.player
         }
     }
 
@@ -274,9 +270,9 @@ class GameListener @Inject constructor(
     fun onBallRayTraceEvent(event: BallRayTraceEvent) {
         for (game in gameService.getAllGames()) {
             if (game.ball == event.ball) {
-                if (!game.arena.isLocationInSelection(event.targetPosition)) {
+                if (!game.arena.isLocationInSelection(event.targetLocation.toPosition())) {
                     event.hitBlock = true
-                    event.blockDirection = game.arena.getRelativeBlockDirectionToLocation(event.targetPosition)
+                    event.blockDirection = game.arena.getRelativeBlockDirectionToLocation(event.targetLocation.toPosition())
                 }
                 return
             }
