@@ -49,11 +49,6 @@ interface BallEntityService {
     fun removeTrackedBall(ball: BallProxy)
 
     /**
-     * Checks the entity collection for invalid ball entities and removes them.
-     */
-    fun <E> cleanUpInvalidEntities(entities: Collection<E>)
-
-    /**
      * Returns all balls managed by the plugin.
      */
     fun getAllBalls(): List<BallProxy>

@@ -4,10 +4,10 @@ package com.github.shynixn.blockball.core.logic.business.service
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.proxy.HologramProxy
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.*
+import com.github.shynixn.blockball.core.logic.business.proxy.PacketHologram
 import com.github.shynixn.blockball.core.logic.persistence.event.GameJoinEventEntity
 import com.github.shynixn.blockball.core.logic.persistence.event.GameLeaveEventEntity
 import com.google.inject.Inject
@@ -54,7 +54,8 @@ class GameActionServiceImpl @Inject constructor(
     private val placeholderService: PlaceholderService,
     private val eventService: EventService,
     private val proxyService: ProxyService,
-    private val loggingService: LoggingService
+    private val loggingService: LoggingService,
+    private val packetService: PacketService
 ) : GameActionService {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
@@ -354,7 +355,10 @@ class GameActionServiceImpl @Inject constructor(
             game.holograms.clear()
 
             game.arena.meta.hologramMetas.forEach { meta ->
-                val hologram = BlockBallApi.resolve(HologramProxy::class.java)
+                val hologram = PacketHologram()
+                hologram.proxyService = proxyService
+                hologram.packetService = packetService
+
                 hologram.lines = meta.lines
                 hologram.location = proxyService.toLocation(meta.position!!)
                 game.holograms.add(hologram)

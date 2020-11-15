@@ -15,7 +15,10 @@ class BallCrossPlatformProxy(
     private val ballDesignEntity: BallDesignEntity,
     private val ballHitBoxEntity: BallHitboxEntity
 ) : BallProxy {
-    private var playerTracker: PlayerTracker = PlayerTracker(ballHitBoxEntity.position,
+    private var allPlayerTracker: AllPlayerTracker = AllPlayerTracker(
+        {
+            ballHitBoxEntity.position
+        },
         { player ->
             ballDesignEntity.spawn(player, ballHitBoxEntity.position)
             ballHitBoxEntity.spawn(player, ballHitBoxEntity.position)
@@ -32,12 +35,12 @@ class BallCrossPlatformProxy(
     /**
      * Proxy dependency.
      */
-    var proxyService : ProxyService
+    var proxyService: ProxyService
         set(value) {
-            this.playerTracker.proxyService = value
+            this.allPlayerTracker.proxyService = value
         }
         get() {
-            return playerTracker.proxyService
+            return allPlayerTracker.proxyService
         }
 
     /**
@@ -158,7 +161,7 @@ class BallCrossPlatformProxy(
         }
 
         isDead = true
-        playerTracker.dispose()
+        allPlayerTracker.dispose()
     }
 
     /**
@@ -170,7 +173,7 @@ class BallCrossPlatformProxy(
         }
 
         try {
-            val players = playerTracker.checkAndGet()
+            val players = allPlayerTracker.checkAndGet()
             ballHitBoxEntity.tick(players)
             ballDesignEntity.tick(players)
         } catch (e: Exception) {

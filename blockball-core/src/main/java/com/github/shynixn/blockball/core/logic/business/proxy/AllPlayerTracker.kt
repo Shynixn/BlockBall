@@ -3,10 +3,11 @@ package com.github.shynixn.blockball.core.logic.business.proxy
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.Position
 
-class PlayerTracker(
-    private val location: Position,
+class AllPlayerTracker(
+    private val locationFunction: () -> Position,
     private val newPlayerFunction: (Any) -> Unit,
-    private val oldPlayerFunction: (Any) -> Unit
+    private val oldPlayerFunction: (Any) -> Unit,
+    private val filterPlayerFunction: (Any) -> Boolean = { true }
 ) {
     private val cache = HashSet<Any>()
     lateinit var proxyService: ProxyService
@@ -15,7 +16,13 @@ class PlayerTracker(
      * Checks the players inthe world and returns the interesing ones.
      */
     fun checkAndGet(): List<Any> {
-        val players = proxyService.getPlayersInWorld<Any, Any>(location)
+        val players = proxyService.getPlayersInWorld<Any, Any>(locationFunction.invoke()).toMutableList()
+
+        for (player in players.toTypedArray()) {
+            if (!filterPlayerFunction.invoke(player)) {
+                players.remove(player)
+            }
+        }
 
         for (player in players) {
             if (!cache.contains(player)) {

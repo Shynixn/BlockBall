@@ -199,8 +199,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val protocolService = resolve(ProtocolService::class.java)
 
         for (world in Bukkit.getWorlds()) {
-            ballEntityService.cleanUpInvalidEntities(world.entities)
-
             for (player in world.players) {
                 protocolService.register(player)
             }

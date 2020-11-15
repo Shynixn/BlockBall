@@ -155,10 +155,6 @@ class BlockBallPlugin : PluginProxy {
             Sponge.getServer().console.sendMessage(PREFIX_CONSOLE + ChatColor.DARK_GREEN + "Started server linking.")
         }
 
-        for (world in Sponge.getGame().server.worlds) {
-            ballEntitySerivice.cleanUpInvalidEntities(world.entities)
-        }
-
         Sponge.getServer().console.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.plugin.version.get() + " by Shynixn")
     }
 

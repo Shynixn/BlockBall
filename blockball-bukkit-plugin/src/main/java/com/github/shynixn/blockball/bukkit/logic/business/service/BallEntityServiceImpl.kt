@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.bukkit.event.BallSpawnEvent
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
@@ -8,16 +7,11 @@ import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.core.logic.business.proxy.BallCrossPlatformProxy
 import com.github.shynixn.blockball.core.logic.business.proxy.BallDesignEntity
 import com.github.shynixn.blockball.core.logic.business.proxy.BallHitboxEntity
-import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
-import com.github.shynixn.blockball.core.logic.business.extension.stripChatColors
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.LivingEntity
 import org.bukkit.plugin.Plugin
-import java.util.logging.Level
 
 /**
  * Created by Shynixn 2018.
@@ -124,45 +118,6 @@ class BallEntityServiceImpl @Inject constructor(
     override fun removeTrackedBall(ball: BallProxy) {
         if (balls.contains(ball)) {
             balls.remove(ball)
-        }
-    }
-
-    /**
-     * Checks the entity collection for invalid ball entities and removes them.
-     */
-    override fun <E> cleanUpInvalidEntities(entities: Collection<E>) {
-        for (entity in entities) {
-            if (entity !is LivingEntity) {
-                continue
-            }
-
-            // Holograms hide a boots marker of every spawned armorstand.
-            if (entity is ArmorStand && entity.equipment != null && entity.equipment!!.boots != null) {
-                val boots = entity.equipment!!.boots
-
-                if (boots!!.itemMeta != null && boots.itemMeta!!.lore != null && boots.itemMeta!!.lore!!.size > 0) {
-                    val lore = boots.itemMeta!!.lore!![0]
-
-                    if (lore.stripChatColors() == "BlockBallHologram") {
-                        var exists = false
-
-                        for (game in BlockBallApi.resolve(GameService::class.java).getAllGames()) {
-                            for (hologram in game.holograms) {
-                                if ((hologram as HologramProxyImpl).armorstands.contains(entity)) {
-                                    exists = true
-                                }
-
-                            }
-                        }
-
-                        if (!exists) {
-                            entity.remove()
-                        }
-
-                        plugin.logger.log(Level.INFO, "Removed invalid Hologram in chunk.")
-                    }
-                }
-            }
         }
     }
 

@@ -10,6 +10,10 @@ import com.google.inject.Inject
 import com.mojang.datafixers.util.Pair
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
+import net.minecraft.server.v1_14_R1.DataWatcherRegistry
+import net.minecraft.server.v1_14_R1.IChatBaseComponent
+import net.minecraft.server.v1_14_R1.PacketPlayOutEntityDestroy
+import java.nio.charset.Charset
 import java.util.*
 import kotlin.math.abs
 
@@ -177,6 +181,7 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         val booleanTypeValue = 7
         val intTypeValue = 1
         val byteTypeValue = 0
+        val optChatTypeValue = 5
         val rotationTypeValue = 8
 
         val buffer = Unpooled.buffer()
@@ -186,6 +191,16 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
             buffer.writeByte(3)
             writeId(buffer, booleanTypeValue)
             buffer.writeBoolean(entityMetaData.customNameVisible!!)
+        }
+
+        if (entityMetaData.customname != null) {
+            val payload = "{\"text\": \"${entityMetaData.customname}\"}".toByteArray(Charset.forName("UTF-8"))
+
+            buffer.writeByte(2)
+            writeId(buffer, optChatTypeValue)
+            buffer.writeBoolean(true)
+            writeId(buffer, payload.size)
+            buffer.writeBytes(payload)
         }
 
         if (entityMetaData.slimeSize != null) {

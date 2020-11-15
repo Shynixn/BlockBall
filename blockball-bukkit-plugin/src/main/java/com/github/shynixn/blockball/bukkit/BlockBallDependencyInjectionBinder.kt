@@ -9,11 +9,11 @@ import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.api.persistence.repository.LinkSignRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
-import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.bukkit.service.Particle113R2ServiceImpl
 import com.github.shynixn.blockball.bukkit.service.RayTracingService113R2Impl
 import com.github.shynixn.blockball.bukkit.service.RayTracingService114R1Impl
+import com.github.shynixn.blockball.core.logic.business.proxy.PacketHologram
 import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextImpl
 import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
@@ -64,9 +64,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(Version::class.java).toInstance(version)
         bind(PluginProxy::class.java).toInstance(plugin)
         bind(LoggingService::class.java).toInstance(LoggingUtilServiceImpl(plugin.logger))
-
-        // Roots
-        bind(HologramProxy::class.java).to(HologramProxyImpl::class.java)
 
         // Repositories
         bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java).`in`(Scopes.SINGLETON)
