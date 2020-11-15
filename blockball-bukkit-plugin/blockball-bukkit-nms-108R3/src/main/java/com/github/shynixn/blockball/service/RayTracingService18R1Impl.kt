@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.service
+package com.github.shynixn.blockball.service
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
@@ -6,29 +6,51 @@ import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.RayTracingService
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.api.persistence.entity.RaytraceResult
+import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.RayTraceResultEntity
-import net.minecraft.server.v1_13_R2.*
 import org.bukkit.Bukkit
-import org.bukkit.craftbukkit.v1_13_R2.CraftWorld
 
-class RayTracingService113R2Impl : RayTracingService {
+class RayTracingService18R1Impl : RayTracingService {
+    private val craftWorldClazz by lazy { findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld") }
+    private val craftWorldClazzHandleMethod by lazy { craftWorldClazz.getDeclaredMethod("getHandle") }
+    private val nmsWorldClazz by lazy { findClazz("net.minecraft.server.VERSION.World") }
     private val vector3dClazz by lazy { findClazz("net.minecraft.server.VERSION.Vec3D") }
     private val movingObjectClazz by lazy { findClazz("net.minecraft.server.VERSION.MovingObjectPosition") }
+    private val fluidCollisionOptionClazz by lazy { findClazz("net.minecraft.server.VERSION.FluidCollisionOption") }
 
     /**
      * Ray traces in the world for the given motion.
      */
     override fun rayTraceMotion(position: Position, motion: Position): RaytraceResult {
         val bukkitWorld = Bukkit.getWorld(position.worldName!!)
-
-        val nmsWorld = (bukkitWorld as CraftWorld).handle
-        val startVector = Vec3D(position.x, position.y, position.z)
+        val nmsWorld = craftWorldClazzHandleMethod.invoke(bukkitWorld)
+        val startVector = vector3dClazz
+            .getDeclaredConstructor(Double::class.java, Double::class.java, Double::class.java)
+            .newInstance(position.x, position.y, position.z)
         val endPosition =
             PositionEntity(position.worldName!!, position.x + motion.x, position.y + motion.y, position.z + motion.z)
-        val endVector = Vec3D(endPosition.x, endPosition.y, endPosition.z)
+        val endVector = vector3dClazz
+            .getDeclaredConstructor(Double::class.java, Double::class.java, Double::class.java)
+            .newInstance(endPosition.x, endPosition.y, endPosition.z)
 
-        val movingObjectPosition = nmsWorld.rayTrace(startVector, endVector, FluidCollisionOption.NEVER, false, false)
+        val movingObjectPosition = nmsWorldClazz
+            .getDeclaredMethod(
+                "rayTrace",
+                vector3dClazz,
+                vector3dClazz,
+                fluidCollisionOptionClazz,
+                Boolean::class.java,
+                Boolean::class.java
+            )
+            .invoke(
+                nmsWorld,
+                startVector,
+                endVector,
+                fluidCollisionOptionClazz.enumConstants.first { e -> e.toString() == "NEVER" },
+                false,
+                false
+            )
 
         if (movingObjectPosition == null) {
             endPosition.yaw = position.yaw
@@ -36,7 +58,7 @@ class RayTracingService113R2Impl : RayTracingService {
             return RayTraceResultEntity(false, endPosition, BlockDirection.DOWN)
         }
 
-        val resultVector = movingObjectPosition.pos
+        val resultVector = movingObjectClazz.getDeclaredField("pos").accessible(true).get(movingObjectPosition)
 
         val resultPosition = PositionEntity(
             position.worldName!!,

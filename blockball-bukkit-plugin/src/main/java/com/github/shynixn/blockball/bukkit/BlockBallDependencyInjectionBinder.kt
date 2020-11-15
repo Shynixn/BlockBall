@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.enumeration.Version
-import com.github.shynixn.blockball.api.business.proxy.HologramProxy
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
@@ -11,9 +10,8 @@ import com.github.shynixn.blockball.api.persistence.repository.LinkSignRepositor
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.bukkit.service.Particle113R2ServiceImpl
-import com.github.shynixn.blockball.bukkit.service.RayTracingService113R2Impl
+import com.github.shynixn.blockball.service.RayTracingService18R1Impl
 import com.github.shynixn.blockball.bukkit.service.RayTracingService114R1Impl
-import com.github.shynixn.blockball.core.logic.business.proxy.PacketHologram
 import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextImpl
 import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
@@ -117,7 +115,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
             version.isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)
             -> bind(RayTracingService::class.java).to(RayTracingService114R1Impl::class.java)
                 .`in`(Scopes.SINGLETON)
-            else -> bind(RayTracingService::class.java).to(RayTracingService113R2Impl::class.java)
+            else -> bind(RayTracingService::class.java).to(RayTracingService18R1Impl::class.java)
                 .`in`(Scopes.SINGLETON)
         }
 
