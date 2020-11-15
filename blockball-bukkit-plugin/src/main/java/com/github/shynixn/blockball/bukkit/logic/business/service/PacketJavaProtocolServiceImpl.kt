@@ -6,13 +6,11 @@ import com.github.shynixn.blockball.api.business.service.PacketService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.EntityMetaData
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.google.inject.Inject
 import com.mojang.datafixers.util.Pair
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
-import net.minecraft.server.v1_14_R1.DataWatcherRegistry
-import net.minecraft.server.v1_14_R1.IChatBaseComponent
-import net.minecraft.server.v1_14_R1.PacketPlayOutEntityDestroy
 import java.nio.charset.Charset
 import java.util.*
 import kotlin.math.abs
@@ -63,6 +61,14 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
     }
     private val enumItemSlotClazz by lazy {
         pluginProxy.findClazz("net.minecraft.server.VERSION.EnumItemSlot")
+    }
+
+    private val dataWatcherClazz by lazy {
+        pluginProxy.findClazz("net.minecraft.server.VERSION.DataWatcher")
+    }
+
+    private val dataWatcherConstructor by lazy {
+        dataWatcherClazz.getDeclaredConstructor(pluginProxy.findClazz("net.minecraft.server.VERSION.Entity"))
     }
 
     /**
@@ -162,15 +168,17 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
 
         if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
-            // TODO:
+            sendPacket(player, packetPlayOutEntitySpawnLiving, buffer)
         } else {
-            // 1.13.2 D 30 https://wiki.vg/index.php?title=Entity_metadata&oldid=13595
-            // https://wiki.vg/index.php?title=Protocol&oldid=14424#Spawn_Global_Entity
-            // Abfangen.
+            // Packet needs Mocked DataWatcher below 1.14.
             buffer.writeByte(255)
+            val packet = packetPlayOutEntitySpawnLiving.newInstance()
+            val dataSerializer = dataSerializerConstructor.newInstance(buffer)
+            dataDeSerializationPacketMethod.invoke(packet, dataSerializer)
+            packetPlayOutEntitySpawnLiving.getDeclaredField("m")
+                .accessible(true).set(packet, dataWatcherConstructor.newInstance(null))
+            proxyService.sendPacket(player, packet)
         }
-
-        sendPacket(player, packetPlayOutEntitySpawnLiving, buffer)
     }
 
     /**
