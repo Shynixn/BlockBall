@@ -218,7 +218,12 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         }
 
         if (entityMetaData.armorstandHeadRotation != null) {
-            buffer.writeByte(15)
+            if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
+                buffer.writeByte(15)
+            } else {
+                buffer.writeByte(12)
+            }
+
             writeId(buffer, rotationTypeValue)
             buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.x.toFloat())
             buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.y.toFloat())

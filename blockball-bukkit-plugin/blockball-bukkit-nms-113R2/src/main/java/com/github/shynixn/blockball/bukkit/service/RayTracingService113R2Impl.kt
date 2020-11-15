@@ -24,10 +24,17 @@ class RayTracingService113R2Impl : RayTracingService {
 
         val nmsWorld = (bukkitWorld as CraftWorld).handle
         val startVector = Vec3D(position.x, position.y, position.z)
-        val endVector = Vec3D(position.x + motion.x, position.y + motion.y, position.z + motion.z)
+        val endPosition =
+            PositionEntity(position.worldName!!, position.x + motion.x, position.y + motion.y, position.z + motion.z)
+        val endVector = Vec3D(endPosition.x, endPosition.y, endPosition.z)
 
         val movingObjectPosition = nmsWorld.rayTrace(startVector, endVector, FluidCollisionOption.NEVER, false, false)
-            ?: return RayTraceResultEntity(false, position, BlockDirection.DOWN)
+
+        if (movingObjectPosition == null) {
+            endPosition.yaw = position.yaw
+            endPosition.pitch = position.pitch
+            return RayTraceResultEntity(false, endPosition, BlockDirection.DOWN)
+        }
 
         val resultVector = movingObjectPosition.pos
 
