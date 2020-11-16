@@ -14,12 +14,15 @@ import io.netty.buffer.Unpooled
 import java.nio.charset.Charset
 import java.util.*
 import kotlin.math.abs
+import kotlin.math.floor
 
 class PacketJavaProtocolServiceImpl @Inject constructor(
     private val proxyService: ProxyService,
     private val pluginProxy: PluginProxy
 ) :
     PacketService {
+    private val entityCompatibilityCache = hashMapOf<String, Int>("ARMOR_STAND" to 30)
+
     private val dataSerializerClazz by lazy { pluginProxy.findClazz("net.minecraft.server.VERSION.PacketDataSerializer") }
     private val dataSerializerConstructor by lazy { dataSerializerClazz.getDeclaredConstructor(ByteBuf::class.java) }
     private val dataDeSerializationPacketMethod by lazy {
@@ -147,35 +150,62 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
      * Sends a spawn packet.
      */
     override fun <P> sendEntitySpawnPacket(player: P, entityId: Int, entityType: String, position: Position) {
-        val entityUUID = UUID.randomUUID()
         val buffer = Unpooled.buffer()
         writeId(buffer, entityId)
-        buffer.writeLong(entityUUID.mostSignificantBits)
-        buffer.writeLong(entityUUID.leastSignificantBits)
 
-        val nmsEntityType = entityTypesClazz.getDeclaredField(entityType).get(null)
-        val nmsEntityId = iRegistryRegisterMethod.invoke(entityRegistry, nmsEntityType) as Int
-        writeId(buffer, nmsEntityId)
+        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)) {
+            val entityUUID = UUID.randomUUID()
+            buffer.writeLong(entityUUID.mostSignificantBits)
+            buffer.writeLong(entityUUID.leastSignificantBits)
 
-        buffer.writeDouble(position.x)
-        buffer.writeDouble(position.y)
-        buffer.writeDouble(position.z)
-        buffer.writeByte((position.yaw * 256.0f / 360.0f).toInt().toByte().toInt())
-        buffer.writeByte((position.pitch * 256.0f / 360.0f).toInt().toByte().toInt())
-        buffer.writeByte(0)
-        buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
-        buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
-        buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
+            val nmsEntityId = try {
+                val nmsEntityType = entityTypesClazz.getDeclaredField(entityType).get(null)
+                iRegistryRegisterMethod.invoke(entityRegistry, nmsEntityType) as Int
+            } catch (e: Exception) {
+                entityCompatibilityCache[entityType]!!
+            }
 
-        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
-            sendPacket(player, packetPlayOutEntitySpawnLiving, buffer)
+            writeId(buffer, nmsEntityId)
+
+            buffer.writeDouble(position.x)
+            buffer.writeDouble(position.y)
+            buffer.writeDouble(position.z)
+            buffer.writeByte((position.yaw * 256.0f / 360.0f).toInt().toByte().toInt())
+            buffer.writeByte((position.pitch * 256.0f / 360.0f).toInt().toByte().toInt())
+            buffer.writeByte(0)
+            buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
+            buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
+            buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
+
+            if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
+                sendPacket(player, packetPlayOutEntitySpawnLiving, buffer)
+            } else {
+                // Packet needs Mocked DataWatcher below 1.14.
+                buffer.writeByte(255)
+                val packet = packetPlayOutEntitySpawnLiving.newInstance()
+                val dataSerializer = dataSerializerConstructor.newInstance(buffer)
+                dataDeSerializationPacketMethod.invoke(packet, dataSerializer)
+                packetPlayOutEntitySpawnLiving.getDeclaredField("m")
+                    .accessible(true).set(packet, dataWatcherConstructor.newInstance(null))
+                proxyService.sendPacket(player, packet)
+            }
         } else {
-            // Packet needs Mocked DataWatcher below 1.14.
-            buffer.writeByte(255)
+            buffer.writeByte(entityCompatibilityCache[entityType]!! and 255)
+            buffer.writeInt(floor(position.blockX * 32.0).toInt())
+            buffer.writeInt(floor(position.blockY * 32.0).toInt())
+            buffer.writeInt(floor(position.blockZ * 32.0).toInt())
+            buffer.writeByte((position.yaw * 256.0f / 360.0f).toInt().toByte().toInt())
+            buffer.writeByte((position.pitch * 256.0f / 360.0f).toInt().toByte().toInt())
+            buffer.writeByte(0)
+            buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
+            buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
+            buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
+
+            buffer.writeByte(127)
             val packet = packetPlayOutEntitySpawnLiving.newInstance()
             val dataSerializer = dataSerializerConstructor.newInstance(buffer)
             dataDeSerializationPacketMethod.invoke(packet, dataSerializer)
-            packetPlayOutEntitySpawnLiving.getDeclaredField("m")
+            packetPlayOutEntitySpawnLiving.getDeclaredField("l")
                 .accessible(true).set(packet, dataWatcherConstructor.newInstance(null))
             proxyService.sendPacket(player, packet)
         }
