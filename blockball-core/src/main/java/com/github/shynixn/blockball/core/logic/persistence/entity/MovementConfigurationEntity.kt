@@ -35,8 +35,8 @@ class MovementConfigurationEntity : MovementConfiguration {
      * The gravity modifier how fast a ball falls to the ground after being kicked or
      * thrown in to the sky.
      */
-    @YamlSerialize(orderNumber = 1, value = "gravity")
-    override var gravityModifier: Double = 0.7
+    @YamlSerialize(orderNumber = 1, value = "gravity-mod")
+    override var gravityModifier: Double = 0.07
 
     /**
      * The speed reducement of the ball in the air is calculated by
@@ -52,7 +52,7 @@ class MovementConfigurationEntity : MovementConfiguration {
      * NewVelocity = Current Velocity * (1.0-groundDrag)
      */
     @YamlSerialize(orderNumber = 3, value = "rolling-resistance")
-    override var rollingResistance: Double = 0.01
+    override var rollingResistance: Double = 0.1
 
     /**
      * Horizontal touch modifier.

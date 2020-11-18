@@ -102,7 +102,7 @@ class BallHitboxEntity(val entityId: Int) {
     fun spawn(player: Any, position: Position) {
         packetService.sendEntitySpawnPacket(player, entityId, "SLIME", position)
         packetService.sendEntityMetaDataPacket(player, entityId, EntityMetadataImpl {
-            //    this.isInvisible = true
+            this.isInvisible = true
             this.slimeSize = meta.kickPassHitBoxSize.toInt()
         })
     }
