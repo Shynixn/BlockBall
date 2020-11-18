@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.service
+package com.github.shynixn.blockball.bukkit.service
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
@@ -11,12 +11,13 @@ import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.RayTraceResultEntity
 import org.bukkit.Bukkit
 
-class RayTracingService18R1Impl : RayTracingService {
+class RayTracingService113R1Impl : RayTracingService {
     private val craftWorldClazz by lazy { findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld") }
     private val craftWorldClazzHandleMethod by lazy { craftWorldClazz.getDeclaredMethod("getHandle") }
     private val nmsWorldClazz by lazy { findClazz("net.minecraft.server.VERSION.World") }
     private val vector3dClazz by lazy { findClazz("net.minecraft.server.VERSION.Vec3D") }
     private val movingObjectClazz by lazy { findClazz("net.minecraft.server.VERSION.MovingObjectPosition") }
+    private val fluidCollisionOptionClazz by lazy { findClazz("net.minecraft.server.VERSION.FluidCollisionOption") }
 
     /**
      * Ray traces in the world for the given motion.
@@ -38,7 +39,7 @@ class RayTracingService18R1Impl : RayTracingService {
                 "rayTrace",
                 vector3dClazz,
                 vector3dClazz,
-                Boolean::class.java,
+                fluidCollisionOptionClazz,
                 Boolean::class.java,
                 Boolean::class.java
             )
@@ -46,7 +47,7 @@ class RayTracingService18R1Impl : RayTracingService {
                 nmsWorld,
                 startVector,
                 endVector,
-                false,
+                fluidCollisionOptionClazz.enumConstants.first { e -> e.toString() == "NEVER" },
                 false,
                 false
             )
@@ -61,9 +62,9 @@ class RayTracingService18R1Impl : RayTracingService {
 
         val resultPosition = PositionEntity(
             position.worldName!!,
-            vector3dClazz.getDeclaredField("a").get(resultVector) as Double,
-            vector3dClazz.getDeclaredField("b").get(resultVector) as Double,
-            vector3dClazz.getDeclaredField("c").get(resultVector) as Double
+            vector3dClazz.getDeclaredField("x").get(resultVector) as Double,
+            vector3dClazz.getDeclaredField("y").get(resultVector) as Double,
+            vector3dClazz.getDeclaredField("z").get(resultVector) as Double
         )
 
         val direction = BlockDirection.valueOf(

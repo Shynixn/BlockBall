@@ -6,7 +6,9 @@ import com.github.shynixn.blockball.api.business.service.PacketService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.EntityMetaData
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.core.logic.business.extension.accessible
+import com.github.shynixn.blockball.service.WrappedDataWatcher18R1
 import com.google.inject.Inject
 import com.mojang.datafixers.util.Pair
 import io.netty.buffer.ByteBuf
@@ -21,7 +23,7 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
     private val pluginProxy: PluginProxy
 ) :
     PacketService {
-    private val entityCompatibilityCache = hashMapOf<String, Int>("ARMOR_STAND" to 30)
+    private val entityCompatibilityCache = hashMapOf<String, Int>("ARMOR_STAND" to 30, "SLIME" to 55)
 
     private val dataSerializerClazz by lazy { pluginProxy.findClazz("net.minecraft.server.VERSION.PacketDataSerializer") }
     private val dataSerializerConstructor by lazy { dataSerializerClazz.getDeclaredConstructor(ByteBuf::class.java) }
@@ -215,62 +217,91 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
      * Sends a meta data packet.
      */
     override fun <P> sendEntityMetaDataPacket(player: P, entityId: Int, entityMetaData: EntityMetaData) {
-        // https://wiki.vg/Entity_metadata#Entity_Metadata_Format -> Value of Type field. Type of Value = Boolean -> 7.
-        val booleanTypeValue = 7
-        val intTypeValue = 1
-        val byteTypeValue = 0
-        val optChatTypeValue = 5
-        val rotationTypeValue = 8
+        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)) {
+            val buffer = Unpooled.buffer()
+            writeId(buffer, entityId)
 
-        val buffer = Unpooled.buffer()
-        writeId(buffer, entityId)
+            // https://wiki.vg/Entity_metadata#Entity_Metadata_Format -> Value of Type field. Type of Value = Boolean -> 7.
+            val booleanTypeValue = 7
+            val intTypeValue = 1
+            val byteTypeValue = 0
+            val optChatTypeValue = 5
+            val rotationTypeValue = 8
+
+            if (entityMetaData.customNameVisible != null) {
+                buffer.writeByte(3)
+                writeId(buffer, booleanTypeValue)
+                buffer.writeBoolean(entityMetaData.customNameVisible!!)
+            }
+
+            if (entityMetaData.customname != null) {
+                val payload = "{\"text\": \"${entityMetaData.customname}\"}".toByteArray(Charset.forName("UTF-8"))
+
+                buffer.writeByte(2)
+                writeId(buffer, optChatTypeValue)
+                buffer.writeBoolean(true)
+                writeId(buffer, payload.size)
+                buffer.writeBytes(payload)
+            }
+
+            if (entityMetaData.slimeSize != null) {
+                buffer.writeByte(15)
+                writeId(buffer, intTypeValue)
+                writeId(buffer, entityMetaData.slimeSize!!)
+            }
+
+            if (entityMetaData.armorstandHeadRotation != null) {
+                if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
+                    buffer.writeByte(15)
+                } else {
+                    buffer.writeByte(12)
+                }
+
+                writeId(buffer, rotationTypeValue)
+                buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.x.toFloat())
+                buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.y.toFloat())
+                buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.z.toFloat())
+            }
+
+            if (entityMetaData.isInvisible != null) {
+                buffer.writeByte(0)
+                writeId(buffer, byteTypeValue)
+                buffer.writeByte(0x20)
+            }
+
+            buffer.writeByte(4)
+            writeId(buffer, booleanTypeValue)
+            buffer.writeBoolean(false)
+            buffer.writeByte(255)
+            sendPacket(player, packetPlayOutEntityMetaData, buffer)
+            return
+        }
+        // https://wiki.vg/index.php?title=Entity_metadata&oldid=6611 -> Value of Type field. Type of Value = Boolean -> 7.
+
+        val dataWatcher = WrappedDataWatcher18R1()
 
         if (entityMetaData.customNameVisible != null) {
-            buffer.writeByte(3)
-            writeId(buffer, booleanTypeValue)
-            buffer.writeBoolean(entityMetaData.customNameVisible!!)
+            dataWatcher.set(3, boolToInt(entityMetaData.customNameVisible!!).toByte())
         }
 
         if (entityMetaData.customname != null) {
-            val payload = "{\"text\": \"${entityMetaData.customname}\"}".toByteArray(Charset.forName("UTF-8"))
-
-            buffer.writeByte(2)
-            writeId(buffer, optChatTypeValue)
-            buffer.writeBoolean(true)
-            writeId(buffer, payload.size)
-            buffer.writeBytes(payload)
-        }
-
-        if (entityMetaData.slimeSize != null) {
-            buffer.writeByte(15)
-            writeId(buffer, intTypeValue)
-            writeId(buffer, entityMetaData.slimeSize!!)
-        }
-
-        if (entityMetaData.armorstandHeadRotation != null) {
-            if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
-                buffer.writeByte(15)
-            } else {
-                buffer.writeByte(12)
-            }
-
-            writeId(buffer, rotationTypeValue)
-            buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.x.toFloat())
-            buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.y.toFloat())
-            buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.z.toFloat())
+            dataWatcher.set(2, entityMetaData.customname)
         }
 
         if (entityMetaData.isInvisible != null) {
-            buffer.writeByte(0)
-            writeId(buffer, byteTypeValue)
-            buffer.writeByte(0x20)
+            if (entityMetaData.isInvisible!!) {
+                dataWatcher.set(0, (0 or (1 shl 5)).toByte())
+            } else {
+                dataWatcher.set(0, (0 and (1 shl 5)).toByte())
+            }
         }
 
-        buffer.writeByte(4)
-        writeId(buffer, booleanTypeValue)
-        buffer.writeBoolean(false)
-        buffer.writeByte(255)
-        sendPacket(player, packetPlayOutEntityMetaData, buffer)
+        val packet = packetPlayOutEntityMetaData.getDeclaredConstructor(
+            Int::class.java,
+            findClazz("net.minecraft.server.VERSION.DataWatcher"),
+            Boolean::class.java
+        ).newInstance(entityId, dataWatcher.getHandle(), true)
+        proxyService.sendPacket(player, packet)
     }
 
     /**
@@ -284,11 +315,16 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
             packetPlayOutEntityEquipment
                 .getDeclaredConstructor(Int::class.java, List::class.java)
                 .newInstance(entityId, listOf(pair))
-        } else {
+        } else if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)) {
             val nmsItemStack = craftItemStackNmsMethod.invoke(null, itemStack)
             packetPlayOutEntityEquipment
                 .getDeclaredConstructor(Int::class.java, enumItemSlotClazz, nmsItemStackClazz)
                 .newInstance(entityId, enumItemSlotClazz.enumConstants[slotId], nmsItemStack)
+        } else {
+            val nmsItemStack = craftItemStackNmsMethod.invoke(null, itemStack)
+            packetPlayOutEntityEquipment
+                .getDeclaredConstructor(Int::class.java, Int::class.java, nmsItemStackClazz)
+                .newInstance(entityId, slotId, nmsItemStack)
         }
 
         proxyService.sendPacket(player, packet)
@@ -321,6 +357,16 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
      */
     private fun absoluteDifference(value1: Double, value2: Double): Double {
         return abs(value1 - value2)
+    }
+
+    /**
+     * Bool to int helper.
+     */
+    private fun boolToInt(boolean: Boolean): Int {
+        if (boolean) {
+            return 1
+        }
+        return 0
     }
 
     /**
