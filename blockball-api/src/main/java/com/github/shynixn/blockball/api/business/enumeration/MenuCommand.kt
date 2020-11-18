@@ -109,7 +109,8 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     BALL_SOUNDACTION_CALLBACK(MenuPageKey.BALL, "sound-callback"),
 
     BALL_SKIN(MenuPageKey.BALL, "skin"),
-    BALL_HITBOX(MenuPageKey.BALL, "hitbox"),
+    BALL_INTERACTION_HITBOX(MenuPageKey.BALL, "inhitbox"),
+    BALL_KICKPASS_HITBOX(MenuPageKey.BALL, "kphitbox"),
     BALL_TOGGLE_CARRYABLE(MenuPageKey.BALL, "tgl-car"),
     BALL_TOGGLE_ALWAYSBOUNCE(MenuPageKey.BALL, "tgl-bounce"),
     BALL_TOGGLE_ROTATING(MenuPageKey.BALL, "tgl-rotate"),

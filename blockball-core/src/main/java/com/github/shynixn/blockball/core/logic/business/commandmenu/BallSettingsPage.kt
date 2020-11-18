@@ -55,7 +55,12 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
      *
      * @param cache cache
      */
-    override fun <P> execute(player: P, command: MenuCommand, cache: Array<Any?>, args: Array<String>): MenuCommandResult {
+    override fun <P> execute(
+        player: P,
+        command: MenuCommand,
+        cache: Array<Any?>,
+        args: Array<String>
+    ): MenuCommandResult {
         val ballMeta = (cache[0] as Arena).meta.ballMeta
         if (command == MenuCommand.BALL_OPEN) {
             cache[5] = null
@@ -63,9 +68,11 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             ballMeta.skin = args[2]
         } else if (command == MenuCommand.BALL_SIZE_CALLBACK && args.size == 3) {
             ballMeta.size = BallSize.values()[args[2].toInt()]
-        } else if (command == MenuCommand.BALL_HITBOX && args.size == 3 && args[2].toDoubleOrNull() != null) {
-            ballMeta.hitBoxSize = args[2].toDouble()
-        }else if (command == MenuCommand.BALL_TOGGLE_ALWAYSBOUNCE) {
+        } else if (command == MenuCommand.BALL_INTERACTION_HITBOX && args.size == 3 && args[2].toDoubleOrNull() != null) {
+            ballMeta.interactionHitBoxSize = args[2].toDouble()
+        } else if (command == MenuCommand.BALL_KICKPASS_HITBOX && args.size == 3 && args[2].toDoubleOrNull() != null) {
+            ballMeta.kickPassHitBoxSize = args[2].toDouble()
+        } else if (command == MenuCommand.BALL_TOGGLE_ALWAYSBOUNCE) {
             ballMeta.alwaysBounce = !ballMeta.alwaysBounce
         } else if (command == MenuCommand.BALL_TOGGLE_ROTATING) {
             ballMeta.rotating = !ballMeta.rotating
@@ -87,7 +94,8 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
         val ballMeta = (cache[0] as Arena).meta.ballMeta
         val builder = ChatBuilderEntity()
             .component("- Skin: ").builder()
-            .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color).setHoverText(ballMeta.skin).builder()
+            .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
+            .setHoverText(ballMeta.skin).builder()
             .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
             .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.BALL_SKIN.command)
             .setHoverText("Changes the skin of the ball. Can be the name of a skin or a skin URL.")
@@ -97,10 +105,15 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BALLSIZES.command)
             .setHoverText("Opens the selectionbox for ball sizes.")
             .builder().nextLine()
-            .component("- Hitbox Size: " + ballMeta.hitBoxSize).builder()
+            .component("- Interaction Hitbox Size: " + ballMeta.interactionHitBoxSize).builder()
             .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
-            .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.BALL_HITBOX.command)
-            .setHoverText("Changes the hitbox size of the ball.")
+            .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.BALL_INTERACTION_HITBOX.command)
+            .setHoverText("Changes the hitbox size when running into the ball.")
+            .builder().nextLine()
+            .component("- KickPass Hitbox Size: " + ballMeta.kickPassHitBoxSize).builder()
+            .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
+            .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.BALL_KICKPASS_HITBOX.command)
+            .setHoverText("Changes the hitbox size when left or rightclicking the ball.")
             .builder().nextLine()
             .component("- Always Bounce: " + ballMeta.alwaysBounce).builder()
             .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
@@ -128,12 +141,14 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             .setHoverText("Opens the selection page for action binders.")
             .builder().nextLine()
         if (cache[5] != null && cache[5] is Sound) {
-            builder.component("- Selected Sound-effect: ").builder().component(MenuClickableItem.PAGE.text).setColor(MenuClickableItem.PAGE.color)
+            builder.component("- Selected Sound-effect: ").builder().component(MenuClickableItem.PAGE.text)
+                .setColor(MenuClickableItem.PAGE.color)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.SOUND_BALL.command)
                 .setHoverText("Opens the page for editing sound effects.")
                 .builder().nextLine()
         } else if (cache[5] != null && cache[5] is Particle) {
-            builder.component("- Selected Particle-effect: ").builder().component(MenuClickableItem.PAGE.text).setColor(MenuClickableItem.PAGE.color)
+            builder.component("- Selected Particle-effect: ").builder().component(MenuClickableItem.PAGE.text)
+                .setColor(MenuClickableItem.PAGE.color)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.PARTICLE_BALL.command)
                 .setHoverText("Opens the page for editing particle effects.")
                 .builder().nextLine()

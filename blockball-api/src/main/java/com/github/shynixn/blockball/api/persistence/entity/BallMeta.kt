@@ -69,7 +69,12 @@ interface BallMeta {
     /**
      * Size of the hitbox used for interaction detecting.
      */
-    var hitBoxSize: Double
+    var interactionHitBoxSize: Double
+
+    /**
+     * Size of the hitbox used for kicking and passing detecting.
+     */
+    var kickPassHitBoxSize: Double
 
     /**
      * Should the ball always bounce of walls?

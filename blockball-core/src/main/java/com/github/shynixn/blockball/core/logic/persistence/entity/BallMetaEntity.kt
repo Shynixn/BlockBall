@@ -33,9 +33,10 @@ import com.github.shynixn.blockball.api.persistence.entity.*
  * SOFTWARE.
  */
 class BallMetaEntity(
-        /** Skin of the ball.**/
-        @YamlSerialize(orderNumber = 2, value = "skin")
-        override var skin: String = "") : BallMeta {
+    /** Skin of the ball.**/
+    @YamlSerialize(orderNumber = 2, value = "skin")
+    override var skin: String = ""
+) : BallMeta {
 
     /** Size of the ball.**/
     @YamlSerialize(orderNumber = 1, value = "size")
@@ -44,8 +45,15 @@ class BallMetaEntity(
     /**
      * Size of the hitbox used for interaction detecting.
      */
-    @YamlSerialize(orderNumber = 3, value = "hitbox-size")
-    override var hitBoxSize: Double = 2.0
+    @YamlSerialize(orderNumber = 3, value = "interaction-hitbox-size")
+    override var interactionHitBoxSize: Double = 2.0
+
+    /**
+     * Size of the hitbox used for kicking and passing detecting.
+     */
+    @YamlSerialize(orderNumber = 4, value = "kickpass-hitbox-size")
+    override var kickPassHitBoxSize: Double = 5.0
+
 
     /** Should the ball rotate? */
     @YamlSerialize(orderNumber = 4, value = "rotating")

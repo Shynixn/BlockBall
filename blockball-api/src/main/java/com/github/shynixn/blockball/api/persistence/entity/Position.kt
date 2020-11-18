@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import java.io.DataOutput
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -54,6 +56,11 @@ interface Position {
 
     /** [blockZ] coordinate as Int. */
     val blockZ: Int
+
+    /**
+     * Adds to this position. Returns this position.
+     */
+    fun add(x : Double, y : Double, z : Double) : Position
 
     /**
      * Subtracts the given [position] from this position

@@ -102,7 +102,8 @@ class BallHitboxEntity(val entityId: Int) {
     fun spawn(player: Any, position: Position) {
         packetService.sendEntitySpawnPacket(player, entityId, "SLIME", position)
         packetService.sendEntityMetaDataPacket(player, entityId, EntityMetadataImpl {
-            this.isInvisible = true
+            //    this.isInvisible = true
+            this.slimeSize = meta.kickPassHitBoxSize.toInt()
         })
     }
 
@@ -172,8 +173,10 @@ class BallHitboxEntity(val entityId: Int) {
         if (requestTeleport) {
             requestTeleport = false
 
+            // Visible position makes the slime hitbox better align with the ball.
+            val visiblePosition = position.clone().add(0.0, -0.5, 0.0)
             for (player in players) {
-                packetService.sendEntityTeleportPacket(player, entityId, position)
+                packetService.sendEntityTeleportPacket(player, entityId, visiblePosition)
             }
 
             motion = PositionEntity(0.0, -0.7, 0.0)
@@ -225,7 +228,7 @@ class BallHitboxEntity(val entityId: Int) {
         }
 
         // Reduce hitbox size in order to stay compatible to old arena files.
-        val hitboxSize = (meta.hitBoxSize - 1)
+        val hitboxSize = (meta.interactionHitBoxSize - 1)
 
         for (player in players) {
             val playerLocation = proxyService.toPosition(proxyService.getEntityLocation<Any, Any>(player))
@@ -270,8 +273,11 @@ class BallHitboxEntity(val entityId: Int) {
         }
 
         this.position = targetPosition
+
+        // Visible position makes the slime hitbox better align with the ball.
+        val visiblePosition = position.clone().add(0.0, -0.5, 0.0)
         for (player in players) {
-            packetService.sendEntityTeleportPacket(player, entityId, this.position)
+            packetService.sendEntityTeleportPacket(player, entityId, visiblePosition)
         }
 
         val rollingResistance = 1.0 - this.meta.movementModifier.rollingResistance
@@ -289,8 +295,10 @@ class BallHitboxEntity(val entityId: Int) {
         this.position = targetPosition
         this.isOnGround = false
 
+        // Visible position makes the slime hitbox better align with the ball.
+        val visiblePosition = position.clone().add(0.0, -0.5, 0.0)
         for (player in players) {
-            packetService.sendEntityTeleportPacket(player, entityId, this.position)
+            packetService.sendEntityTeleportPacket(player, entityId, visiblePosition)
         }
 
         // Handles angular velocity spinning in air.

@@ -69,6 +69,16 @@ class PositionEntity() : Position {
         get() = z.toInt()
 
     /**
+     * Adds to this position. Returns this position.
+     */
+    override fun add(x: Double, y: Double, z: Double): Position {
+        this.x += x
+        this.y += y
+        this.z += z
+        return this
+    }
+
+    /**
      * Subtracts the given [position] from this position
      * and returns this position.
      */
