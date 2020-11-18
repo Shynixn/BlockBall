@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.CompatibilityArmorSlotType
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.PacketService
@@ -139,9 +140,21 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
     override fun <P> sendEntityTeleportPacket(player: P, entityId: Int, position: Position) {
         val buffer = Unpooled.buffer()
         writeId(buffer, entityId)
-        buffer.writeDouble(position.x)
-        buffer.writeDouble(position.y)
-        buffer.writeDouble(position.z)
+
+        if(pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)){
+            buffer.writeDouble(position.x)
+            buffer.writeDouble(position.y)
+            buffer.writeDouble(position.z)
+            buffer.writeByte((position.yaw * 256.0f / 360.0f).toInt().toByte().toInt())
+            buffer.writeByte((position.pitch * 256.0f / 360.0f).toInt().toByte().toInt())
+            buffer.writeBoolean(false)
+            sendPacket(player, packetPlayOutEntityTeleport, buffer)
+            return
+        }
+
+        buffer.writeInt(floor(position.x * 32.0).toInt())
+        buffer.writeInt(floor(position.y * 32.0).toInt())
+        buffer.writeInt(floor(position.z * 32.0).toInt())
         buffer.writeByte((position.yaw * 256.0f / 360.0f).toInt().toByte().toInt())
         buffer.writeByte((position.pitch * 256.0f / 360.0f).toInt().toByte().toInt())
         buffer.writeBoolean(false)
@@ -193,9 +206,9 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
             }
         } else {
             buffer.writeByte(entityCompatibilityCache[entityType]!! and 255)
-            buffer.writeInt(floor(position.blockX * 32.0).toInt())
-            buffer.writeInt(floor(position.blockY * 32.0).toInt())
-            buffer.writeInt(floor(position.blockZ * 32.0).toInt())
+            buffer.writeInt(floor(position.x * 32.0).toInt())
+            buffer.writeInt(floor(position.y * 32.0).toInt())
+            buffer.writeInt(floor(position.z * 32.0).toInt())
             buffer.writeByte((position.yaw * 256.0f / 360.0f).toInt().toByte().toInt())
             buffer.writeByte((position.pitch * 256.0f / 360.0f).toInt().toByte().toInt())
             buffer.writeByte(0)
@@ -307,11 +320,11 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
     /**
      * Sends an equipment packet.
      */
-    override fun <P, I> sendEntityEquipmentPacket(player: P, entityId: Int, slotId: Int, itemStack: I) {
+    override fun <P, I> sendEntityEquipmentPacket(player: P, entityId: Int, slot : CompatibilityArmorSlotType, itemStack: I) {
         val packet = if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_16_R1)) {
             val nmsItemStack = craftItemStackNmsMethod.invoke(null, itemStack)
 
-            val pair = Pair(enumItemSlotClazz.enumConstants[slotId], nmsItemStack)
+            val pair = Pair(enumItemSlotClazz.enumConstants[slot.id116], nmsItemStack)
             packetPlayOutEntityEquipment
                 .getDeclaredConstructor(Int::class.java, List::class.java)
                 .newInstance(entityId, listOf(pair))
@@ -319,12 +332,12 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
             val nmsItemStack = craftItemStackNmsMethod.invoke(null, itemStack)
             packetPlayOutEntityEquipment
                 .getDeclaredConstructor(Int::class.java, enumItemSlotClazz, nmsItemStackClazz)
-                .newInstance(entityId, enumItemSlotClazz.enumConstants[slotId], nmsItemStack)
+                .newInstance(entityId, enumItemSlotClazz.enumConstants[slot.id116], nmsItemStack)
         } else {
             val nmsItemStack = craftItemStackNmsMethod.invoke(null, itemStack)
             packetPlayOutEntityEquipment
                 .getDeclaredConstructor(Int::class.java, Int::class.java, nmsItemStackClazz)
-                .newInstance(entityId, slotId, nmsItemStack)
+                .newInstance(entityId, slot.id18, nmsItemStack)
         }
 
         proxyService.sendPacket(player, packet)

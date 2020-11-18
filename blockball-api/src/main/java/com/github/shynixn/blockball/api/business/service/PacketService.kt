@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.api.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.CompatibilityArmorSlotType
 import com.github.shynixn.blockball.api.persistence.entity.EntityMetaData
 import com.github.shynixn.blockball.api.persistence.entity.Position
 
@@ -43,5 +44,5 @@ interface PacketService {
     /**
      * Sends an equipment packet.
      */
-    fun <P, I> sendEntityEquipmentPacket(player: P, entityId: Int, slotId: Int, itemStack: I)
+    fun <P, I> sendEntityEquipmentPacket(player: P, entityId: Int, slot : CompatibilityArmorSlotType, itemStack: I)
 }

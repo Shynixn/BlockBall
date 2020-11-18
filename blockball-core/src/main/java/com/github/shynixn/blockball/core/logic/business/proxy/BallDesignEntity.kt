@@ -2,6 +2,7 @@
 
 package com.github.shynixn.blockball.core.logic.business.proxy
 
+import com.github.shynixn.blockball.api.business.enumeration.CompatibilityArmorSlotType
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.ItemTypeService
@@ -53,7 +54,7 @@ class BallDesignEntity(val entityId: Int) {
      */
     fun spawn(player: Any, position: Position) {
         packetService.sendEntitySpawnPacket(player, entityId, "ARMOR_STAND", position)
-        packetService.sendEntityEquipmentPacket(player, entityId, 5, helmetItemStack)
+        packetService.sendEntityEquipmentPacket(player, entityId,  CompatibilityArmorSlotType.HELMET, helmetItemStack)
         packetService.sendEntityMetaDataPacket(player, entityId, EntityMetadataImpl {
             this.isInvisible = true
         })
