@@ -267,7 +267,6 @@ class BallHitboxEntity(val entityId: Int) {
 
         for (player in players) {
             packetService.sendEntityVelocityPacket(player, entityId, motion)
-            packetService.sendEntityMovePacket(player, entityId, this.position, targetPosition)
         }
 
         this.position = targetPosition

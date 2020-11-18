@@ -17,6 +17,8 @@ import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextI
 import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
 import com.github.shynixn.blockball.core.logic.persistence.repository.LinkSignFileRepository
 import com.github.shynixn.blockball.core.logic.persistence.repository.StatsSqlRepository
+import com.github.shynixn.blockball.service.InternalVersionPacket18R1ServiceImpl
+import com.github.shynixn.blockball.service.InternalVersionPacket19R2ServiceImpl
 import com.github.shynixn.blockball.service.Particle18R1ServiceImpl
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
@@ -116,6 +118,14 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
             -> bind(RayTracingService::class.java).to(RayTracingService114R1Impl::class.java)
                 .`in`(Scopes.SINGLETON)
             else -> bind(RayTracingService::class.java).to(RayTracingService18R1Impl::class.java)
+                .`in`(Scopes.SINGLETON)
+        }
+
+        when {
+            version.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)
+            -> bind(InternalVersionPacketService::class.java).to(InternalVersionPacket19R2ServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
+            else -> bind(InternalVersionPacketService::class.java).to(InternalVersionPacket18R1ServiceImpl::class.java)
                 .`in`(Scopes.SINGLETON)
         }
 

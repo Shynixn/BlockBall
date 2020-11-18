@@ -6,17 +6,6 @@ import com.github.shynixn.blockball.api.persistence.entity.Position
 
 interface PacketService {
     /**
-     * Sends an entity move packet.l
-     */
-    fun <P> sendEntityMovePacket(
-        player: P,
-        entityId: Int,
-        previousPosition: Position,
-        nextPosition: Position,
-        isOnGround: Boolean = false
-    )
-
-    /**
      * Sends a velocity packet.
      */
     fun <P> sendEntityVelocityPacket(player: P, entityId: Int, velocity: Position)
