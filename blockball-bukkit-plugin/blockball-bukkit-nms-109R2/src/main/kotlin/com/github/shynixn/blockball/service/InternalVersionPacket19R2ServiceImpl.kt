@@ -111,14 +111,27 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
      */
     override fun createEntityMetaDataPacket(entityId: Int, entityMetaData: EntityMetaData): Any {
         // https://wiki.vg/Entity_metadata#Entity_Metadata_Format -> Value of Type field. Type of Value = Boolean -> 7.
+        // 1.9.4 -> https://wiki.vg/index.php?title=Entity_metadata&oldid=7864
         val buffer = Unpooled.buffer()
         buffer.writeId(entityId)
 
-        val booleanTypeValue = 7
-        val intTypeValue = 1
         val byteTypeValue = 0
+        val intTypeValue = 1
+
+        val booleanTypeValue = if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R1)) {
+            7
+        } else {
+            6
+        }
+
         val optChatTypeValue = 5
-        val rotationTypeValue = 8
+
+        val rotationTypeValue =
+            if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R1)) {
+                8
+            } else {
+                7
+            }
 
         if (entityMetaData.customNameVisible != null) {
             buffer.writeByte(3)
@@ -127,26 +140,47 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
         }
 
         if (entityMetaData.customname != null) {
-            val payload = "{\"text\": \"${entityMetaData.customname}\"}".toByteArray(Charset.forName("UTF-8"))
-
-            buffer.writeByte(2)
-            buffer.writeId(optChatTypeValue)
-            buffer.writeBoolean(true)
-            buffer.writeId(payload.size)
-            buffer.writeBytes(payload)
+            if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R1)) {
+                val payload = "{\"text\": \"${entityMetaData.customname}\"}".toByteArray(Charset.forName("UTF-8"))
+                buffer.writeByte(2)
+                buffer.writeId(optChatTypeValue)
+                buffer.writeBoolean(true)
+                buffer.writeId(payload.size)
+                buffer.writeBytes(payload)
+            } else {
+                val stringType = 3
+                val payload = entityMetaData.customname!!.toByteArray(Charset.forName("UTF-8"))
+                buffer.writeByte(2)
+                buffer.writeId(stringType)
+                buffer.writeId(payload.size)
+                buffer.writeBytes(payload)
+            }
         }
 
         if (entityMetaData.slimeSize != null) {
-            buffer.writeByte(15)
+            val slimeSizeIndex =
+                if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R1)) {
+                    15
+                } else {
+                    11
+                }
+
+            buffer.writeByte(slimeSizeIndex)
             buffer.writeId(intTypeValue)
             buffer.writeId(entityMetaData.slimeSize!!)
         }
 
         if (entityMetaData.armorstandHeadRotation != null) {
-            if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
-                buffer.writeByte(15)
-            } else {
-                buffer.writeByte(12)
+            when {
+                pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1) -> {
+                    buffer.writeByte(15)
+                }
+                pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R1) -> {
+                    buffer.writeByte(12)
+                }
+                else -> {
+                    buffer.writeByte(11)
+                }
             }
 
             buffer.writeId(rotationTypeValue)
@@ -161,9 +195,6 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
             buffer.writeByte(0x20)
         }
 
-        buffer.writeByte(4)
-        buffer.writeId(booleanTypeValue)
-        buffer.writeBoolean(false)
         buffer.writeByte(255)
 
         return createPacketFromBuffer(packetPlayOutEntityMetaData, buffer)

@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.service
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
+import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.RayTracingService
 import com.github.shynixn.blockball.api.persistence.entity.Position
@@ -9,9 +10,10 @@ import com.github.shynixn.blockball.api.persistence.entity.RaytraceResult
 import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.RayTraceResultEntity
+import com.google.inject.Inject
 import org.bukkit.Bukkit
 
-class RayTracingService18R1Impl : RayTracingService {
+class RayTracingService18R1Impl @Inject constructor(private val pluginProxy: PluginProxy) : RayTracingService {
     private val craftWorldClazz by lazy { findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld") }
     private val craftWorldClazzHandleMethod by lazy { craftWorldClazz.getDeclaredMethod("getHandle") }
     private val nmsWorldClazz by lazy { findClazz("net.minecraft.server.VERSION.World") }
@@ -59,12 +61,21 @@ class RayTracingService18R1Impl : RayTracingService {
 
         val resultVector = movingObjectClazz.getDeclaredField("pos").accessible(true).get(movingObjectPosition)
 
-        val resultPosition = PositionEntity(
-            position.worldName!!,
-            vector3dClazz.getDeclaredField("a").get(resultVector) as Double,
-            vector3dClazz.getDeclaredField("b").get(resultVector) as Double,
-            vector3dClazz.getDeclaredField("c").get(resultVector) as Double
-        )
+        val resultPosition = if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
+            PositionEntity(
+                position.worldName!!,
+                vector3dClazz.getDeclaredField("x").get(resultVector) as Double,
+                vector3dClazz.getDeclaredField("y").get(resultVector) as Double,
+                vector3dClazz.getDeclaredField("z").get(resultVector) as Double
+            )
+        } else {
+            PositionEntity(
+                position.worldName!!,
+                vector3dClazz.getDeclaredField("a").get(resultVector) as Double,
+                vector3dClazz.getDeclaredField("b").get(resultVector) as Double,
+                vector3dClazz.getDeclaredField("c").get(resultVector) as Double
+            )
+        }
 
         val direction = BlockDirection.valueOf(
             movingObjectClazz.getDeclaredField("direction").get(movingObjectPosition).toString().toUpperCase()
