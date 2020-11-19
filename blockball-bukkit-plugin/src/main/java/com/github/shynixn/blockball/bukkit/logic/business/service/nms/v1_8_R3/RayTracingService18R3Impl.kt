@@ -13,7 +13,7 @@ import com.github.shynixn.blockball.core.logic.persistence.entity.RayTraceResult
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 
-class RayTracingService18R1Impl @Inject constructor(private val pluginProxy: PluginProxy) : RayTracingService {
+class RayTracingService18R3Impl @Inject constructor(private val pluginProxy: PluginProxy) : RayTracingService {
     private val craftWorldClazz by lazy { findClazz("org.bukkit.craftbukkit.VERSION.CraftWorld") }
     private val craftWorldClazzHandleMethod by lazy { craftWorldClazz.getDeclaredMethod("getHandle") }
     private val nmsWorldClazz by lazy { findClazz("net.minecraft.server.VERSION.World") }

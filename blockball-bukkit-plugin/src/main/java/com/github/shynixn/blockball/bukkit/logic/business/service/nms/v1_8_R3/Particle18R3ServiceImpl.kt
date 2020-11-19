@@ -44,7 +44,7 @@ import java.util.logging.Level
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class Particle18R1ServiceImpl @Inject constructor(
+class Particle18R3ServiceImpl @Inject constructor(
         private val logger: LoggingService,
         private val proxyService: ProxyService,
         private val version: Version

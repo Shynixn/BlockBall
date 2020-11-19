@@ -11,9 +11,9 @@ import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.Particle113R2ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.RayTracingService113R2Impl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.InternalVersionPacket18R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.Particle18R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.RayTracingService18R1Impl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.InternalVersionPacket18R3ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.Particle18R3ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.RayTracingService18R3Impl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_9_R2.InternalVersionPacket19R2ServiceImpl
 import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextImpl
@@ -117,7 +117,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
             version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)
             -> bind(RayTracingService::class.java).to(RayTracingService113R2Impl::class.java)
                 .`in`(Scopes.SINGLETON)
-            else -> bind(RayTracingService::class.java).to(RayTracingService18R1Impl::class.java)
+            else -> bind(RayTracingService::class.java).to(RayTracingService18R3Impl::class.java)
                 .`in`(Scopes.SINGLETON)
         }
 
@@ -125,7 +125,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
             version.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)
             -> bind(InternalVersionPacketService::class.java).to(InternalVersionPacket19R2ServiceImpl::class.java)
                 .`in`(Scopes.SINGLETON)
-            else -> bind(InternalVersionPacketService::class.java).to(InternalVersionPacket18R1ServiceImpl::class.java)
+            else -> bind(InternalVersionPacketService::class.java).to(InternalVersionPacket18R3ServiceImpl::class.java)
                 .`in`(Scopes.SINGLETON)
         }
 
@@ -135,7 +135,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
             ).`in`(
                 Scopes.SINGLETON
             )
-            else -> bind(ParticleService::class.java).to(Particle18R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            else -> bind(ParticleService::class.java).to(Particle18R3ServiceImpl::class.java).`in`(Scopes.SINGLETON)
         }
 
         if (dependencyService.isInstalled(PluginDependency.PLACEHOLDERAPI)) {

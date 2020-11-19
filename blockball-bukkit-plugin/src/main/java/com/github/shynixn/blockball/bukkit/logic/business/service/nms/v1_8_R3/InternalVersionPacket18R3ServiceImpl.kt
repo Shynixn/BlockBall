@@ -11,7 +11,7 @@ import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import kotlin.math.floor
 
-class InternalVersionPacket18R1ServiceImpl @Inject constructor(private val pluginProxy: PluginProxy) :
+class InternalVersionPacket18R3ServiceImpl @Inject constructor(private val pluginProxy: PluginProxy) :
     InternalVersionPacketService {
     private val entityCompatibilityCache = hashMapOf("ARMOR_STAND" to 30, "SLIME" to 55)
     private val dataSerializerClazz by lazy { pluginProxy.findClazz("net.minecraft.server.VERSION.PacketDataSerializer") }
