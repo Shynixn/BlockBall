@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.github.shynixn.blockball.service
+package com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3
 
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.business.enumeration.Version

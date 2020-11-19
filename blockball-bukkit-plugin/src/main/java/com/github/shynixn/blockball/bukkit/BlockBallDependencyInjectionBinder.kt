@@ -9,18 +9,17 @@ import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.api.persistence.repository.LinkSignRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
-import com.github.shynixn.blockball.bukkit.service.Particle113R2ServiceImpl
-import com.github.shynixn.blockball.bukkit.service.RayTracingService113R1Impl
-import com.github.shynixn.blockball.service.RayTracingService18R1Impl
-import com.github.shynixn.blockball.bukkit.service.RayTracingService114R1Impl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.Particle113R2ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.RayTracingService113R2Impl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.InternalVersionPacket18R1ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.Particle18R1ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.RayTracingService18R1Impl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_9_R2.InternalVersionPacket19R2ServiceImpl
 import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextImpl
 import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
 import com.github.shynixn.blockball.core.logic.persistence.repository.LinkSignFileRepository
 import com.github.shynixn.blockball.core.logic.persistence.repository.StatsSqlRepository
-import com.github.shynixn.blockball.service.InternalVersionPacket18R1ServiceImpl
-import com.github.shynixn.blockball.service.InternalVersionPacket19R2ServiceImpl
-import com.github.shynixn.blockball.service.Particle18R1ServiceImpl
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
 import org.bukkit.plugin.Plugin
@@ -115,11 +114,8 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(ProtocolService::class.java).to(ProtocolServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         when {
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)
-            -> bind(RayTracingService::class.java).to(RayTracingService114R1Impl::class.java)
-                .`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)
-            -> bind(RayTracingService::class.java).to(RayTracingService113R1Impl::class.java)
+            -> bind(RayTracingService::class.java).to(RayTracingService113R2Impl::class.java)
                 .`in`(Scopes.SINGLETON)
             else -> bind(RayTracingService::class.java).to(RayTracingService18R1Impl::class.java)
                 .`in`(Scopes.SINGLETON)

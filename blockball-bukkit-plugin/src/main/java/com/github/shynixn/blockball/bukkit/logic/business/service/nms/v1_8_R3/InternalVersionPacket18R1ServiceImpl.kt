@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.service
+package com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3
 
 import com.github.shynixn.blockball.api.business.enumeration.CompatibilityArmorSlotType
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
@@ -9,7 +9,6 @@ import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.google.inject.Inject
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
-import net.minecraft.server.v1_8_R3.DataWatcher
 import kotlin.math.floor
 
 class InternalVersionPacket18R1ServiceImpl @Inject constructor(private val pluginProxy: PluginProxy) :
@@ -46,6 +45,11 @@ class InternalVersionPacket18R1ServiceImpl @Inject constructor(private val plugi
     private val nmsItemStackClazz by lazy {
         pluginProxy.findClazz("net.minecraft.server.VERSION.ItemStack")
     }
+
+    companion object {
+
+    }
+
     private val packetPlayOutEntityEquipment by lazy {
         pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityEquipment")
     }
@@ -97,7 +101,7 @@ class InternalVersionPacket18R1ServiceImpl @Inject constructor(private val plugi
      */
     override fun createEntityMetaDataPacket(entityId: Int, entityMetaData: EntityMetaData): Any {
         // https://wiki.vg/index.php?title=Entity_metadata&oldid=6611 -> Value of Type field. Type of Value = Boolean -> 7.
-        val dataWatcher = WrappedDataWatcher18R1()
+        val dataWatcher = WrappedDataWatcher18R1(pluginProxy)
 
         if (entityMetaData.customNameVisible != null) {
             dataWatcher.set(3, boolToInt(entityMetaData.customNameVisible!!).toByte())
@@ -190,14 +194,23 @@ class InternalVersionPacket18R1ServiceImpl @Inject constructor(private val plugi
         return 0
     }
 
-    class WrappedDataWatcher18R1 {
-        private val dataWatcher = DataWatcher(null)
+    class WrappedDataWatcher18R1(private val pluginProxy: PluginProxy) {
+        private val dataWatcherClazz by lazy {
+            pluginProxy.findClazz("net.minecraft.server.VERSION.DataWatcher")
+        }
+        private val dataWatcherConstructor by lazy {
+            dataWatcherClazz.getDeclaredConstructor(pluginProxy.findClazz("net.minecraft.server.VERSION.Entity"))
+        }
+        private val dataWatcher = dataWatcherConstructor.newInstance(null)
+        private val dataWatcherMethod by lazy {
+            dataWatcherClazz.getDeclaredMethod("a", Int::class.java, Any::class.java)
+        }
 
         /**
          * Sets the value at the given index.
          */
         fun <T> set(index: Int, value: T) {
-            dataWatcher.a(index, value)
+            dataWatcherMethod.invoke(index, value)
         }
 
         /**

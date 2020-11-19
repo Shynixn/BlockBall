@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION", "UNCHECKED_CAST")
 
-package com.github.shynixn.blockball.bukkit.service
+package com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2
 
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
 import com.github.shynixn.blockball.api.business.service.ConfigurationService

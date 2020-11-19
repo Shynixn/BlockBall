@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.service
+package com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_9_R2
 
 import com.github.shynixn.blockball.api.business.enumeration.CompatibilityArmorSlotType
 import com.github.shynixn.blockball.api.business.enumeration.Version
