@@ -159,10 +159,16 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
 
         if (entityMetaData.slimeSize != null) {
             val slimeSizeIndex =
-                if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R1)) {
-                    15
-                } else {
-                    11
+                when {
+                    pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R1) -> {
+                        15
+                    }
+                    pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_10_R1) -> {
+                        12
+                    }
+                    else -> {
+                        11
+                    }
                 }
 
             buffer.writeByte(slimeSizeIndex)
@@ -175,7 +181,7 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
                 pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1) -> {
                     buffer.writeByte(15)
                 }
-                pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R1) -> {
+                pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_10_R1) -> {
                     buffer.writeByte(12)
                 }
                 else -> {
