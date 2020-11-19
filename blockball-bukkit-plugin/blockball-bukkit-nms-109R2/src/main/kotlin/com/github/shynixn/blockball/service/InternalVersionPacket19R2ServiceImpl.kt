@@ -50,6 +50,10 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
     private val enumItemSlotClazz by lazy {
         pluginProxy.findClazz("net.minecraft.server.VERSION.EnumItemSlot")
     }
+    private val iRegistryClazz by lazy { pluginProxy.findClazz("net.minecraft.server.VERSION.IRegistry") }
+    private val entityRegistry by lazy { iRegistryClazz.getDeclaredField("ENTITY_TYPE").get(null) }
+    private val iRegistryRegisterMethod by lazy { iRegistryClazz.getDeclaredMethod("a", Any::class.java) }
+    private val entityTypesClazz by lazy { pluginProxy.findClazz("net.minecraft.server.VERSION.EntityTypes") }
 
     /**
      * Creates a new teleport packet.
@@ -77,10 +81,18 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
         buffer.writeLong(entityUUID.mostSignificantBits)
         buffer.writeLong(entityUUID.leastSignificantBits)
 
-        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_11_R1)) {
-            buffer.writeId(entityCompatibilityCache[entityType]!!)
-        } else {
-            buffer.writeByte(entityCompatibilityCache[entityType]!! and 255)
+        when {
+            pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R1) -> {
+                val nmsEntityType = entityTypesClazz.getDeclaredField(entityType).get(null)
+                val nmsEntityId = iRegistryRegisterMethod.invoke(entityRegistry, nmsEntityType) as Int
+                buffer.writeId(nmsEntityId)
+            }
+            pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_11_R1) -> {
+                buffer.writeId(entityCompatibilityCache[entityType]!!)
+            }
+            else -> {
+                buffer.writeByte(entityCompatibilityCache[entityType]!! and 255)
+            }
         }
 
         buffer.writeDouble(position.x)
@@ -160,7 +172,7 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
         if (entityMetaData.slimeSize != null) {
             val slimeSizeIndex =
                 when {
-                    pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_13_R1) -> {
+                    pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1) -> {
                         15
                     }
                     pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_10_R1) -> {
