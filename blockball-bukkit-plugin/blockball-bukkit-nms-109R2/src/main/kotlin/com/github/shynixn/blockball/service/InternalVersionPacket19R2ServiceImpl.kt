@@ -54,6 +54,9 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
     private val entityRegistry by lazy { iRegistryClazz.getDeclaredField("ENTITY_TYPE").get(null) }
     private val iRegistryRegisterMethod by lazy { iRegistryClazz.getDeclaredMethod("a", Any::class.java) }
     private val entityTypesClazz by lazy { pluginProxy.findClazz("net.minecraft.server.VERSION.EntityTypes") }
+    private val mojangPairClazz by lazy {
+        pluginProxy.findClazz("com.mojang.datafixers.util.Pair")
+    }
 
     /**
      * Creates a new teleport packet.
@@ -225,7 +228,8 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
         val nmsItemStack = craftItemStackNmsMethod.invoke(null, itemStack)
 
         if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_16_R1)) {
-            val pair = Pair(enumItemSlotClazz.enumConstants[slot.id116], nmsItemStack)
+            val pair = mojangPairClazz.getDeclaredConstructor(Any::class.java, Any::class.java)
+                .newInstance(enumItemSlotClazz.enumConstants[slot.id116], nmsItemStack)
             return packetPlayOutEntityEquipment
                 .getDeclaredConstructor(Int::class.java, List::class.java)
                 .newInstance(entityId, listOf(pair))
