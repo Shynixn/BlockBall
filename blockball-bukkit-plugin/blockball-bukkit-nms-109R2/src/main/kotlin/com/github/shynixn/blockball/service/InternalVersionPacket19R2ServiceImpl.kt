@@ -105,7 +105,7 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
         buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
         buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
 
-        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
+        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_15_R1)) {
             return createPacketFromBuffer(packetPlayOutEntitySpawnLiving, buffer)
         }
 
@@ -172,7 +172,7 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
         if (entityMetaData.slimeSize != null) {
             val slimeSizeIndex =
                 when {
-                    pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1) -> {
+                    pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_15_R1) -> {
                         15
                     }
                     pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_10_R1) -> {
@@ -190,7 +190,7 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
 
         if (entityMetaData.armorstandHeadRotation != null) {
             when {
-                pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1) -> {
+                pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_15_R1) -> {
                     buffer.writeByte(15)
                 }
                 pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_10_R1) -> {
