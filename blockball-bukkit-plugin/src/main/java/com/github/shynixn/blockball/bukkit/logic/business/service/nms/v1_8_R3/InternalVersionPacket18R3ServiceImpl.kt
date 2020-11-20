@@ -210,7 +210,7 @@ class InternalVersionPacket18R3ServiceImpl @Inject constructor(private val plugi
          * Sets the value at the given index.
          */
         fun <T> set(index: Int, value: T) {
-            dataWatcherMethod.invoke(index, value)
+            dataWatcherMethod.invoke(dataWatcher, index, value)
         }
 
         /**
