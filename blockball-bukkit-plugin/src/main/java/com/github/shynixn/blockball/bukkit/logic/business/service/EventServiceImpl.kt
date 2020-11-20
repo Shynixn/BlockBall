@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
+import com.github.shynixn.blockball.api.bukkit.event.BallSpawnEvent
 import com.github.shynixn.blockball.api.business.service.EventService
 import com.github.shynixn.blockball.core.logic.persistence.event.*
 import org.bukkit.Bukkit
@@ -51,6 +52,11 @@ class EventServiceImpl : EventService {
                 event.blockDirection = bukkitEvent.blockDirection
                 event.hitBlock = bukkitEvent.hitBlock
                 event.targetLocation = bukkitEvent.targetLocation
+            }
+            is BallSpawnEventEntity -> {
+                val bukkitEvent = BallSpawnEvent(event.ballProxy)
+                Bukkit.getServer().pluginManager.callEvent(bukkitEvent)
+                event.isCancelled = bukkitEvent.isCancelled
             }
             is BallTeleportEventEntity -> {
                 val bukkitEvent = com.github.shynixn.blockball.api.bukkit.event.BallTeleportEvent(

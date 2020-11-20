@@ -66,7 +66,7 @@ class BallCrossPlatformProxy(
      */
     override val designEntityId: Int
         get() {
-            return ballHitBoxEntity.entityId
+            return ballDesignEntity.entityId
         }
 
     /**
