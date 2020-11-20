@@ -44,6 +44,7 @@ repositories {
     maven("http://repo.extendedclip.com/content/repositories/placeholderapi")
     maven("http://maven.sk89q.com/repo")
     maven("https://repo.codemc.org/repository/maven-public")
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
 }
 
 dependencies {
@@ -60,9 +61,9 @@ dependencies {
 
     compileOnly("me.clip:placeholderapi:2.9.2")
     compileOnly("net.milkbowlvault:VaultAPI:1.7")
-    compileOnly("org.spigotmc:spigot114R1:1.14.4-R1.0")
+    compileOnly("org.spigotmc:spigot116R3:1.16.4-R3.0")
 
     testCompile("org.xerial:sqlite-jdbc:3.23.1")
     testCompile("ch.vorburger.mariaDB4j:mariaDB4j:2.2.3")
-    testCompile("org.spigotmc:spigot18R3:1.8.8-R3.0")
+    testCompile("org.spigotmc:spigot116R3:1.16.4-R3.0")
 }

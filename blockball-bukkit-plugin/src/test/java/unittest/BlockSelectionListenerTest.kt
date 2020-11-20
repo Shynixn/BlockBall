@@ -3,6 +3,7 @@ package unittest
 import com.github.shynixn.blockball.api.business.service.BlockSelectionService
 import com.github.shynixn.blockball.bukkit.logic.business.listener.BlockSelectionListener
 import org.bukkit.block.Block
+import org.bukkit.block.BlockFace
 import org.bukkit.entity.Player
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
@@ -54,7 +55,7 @@ class BlockSelectionListenerTest {
         val mockedBlockSelectionService = MockedBlockSelectionService(true)
         val classUnderTest = createWithDependencies(mockedBlockSelectionService)
         val player = Mockito.mock(Player::class.java)
-        val playerInteractEvent = PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, null, Mockito.mock(Block::class.java), null)
+        val playerInteractEvent = PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, null, Mockito.mock(Block::class.java), BlockFace.DOWN)
 
         // Act
         classUnderTest.onPlayerInteractEvent(playerInteractEvent)
@@ -79,7 +80,7 @@ class BlockSelectionListenerTest {
         val mockedBlockSelectionService = MockedBlockSelectionService(true)
         val classUnderTest = createWithDependencies(mockedBlockSelectionService)
         val player = Mockito.mock(Player::class.java)
-        val playerInteractEvent = PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, null, Mockito.mock(Block::class.java), null)
+        val playerInteractEvent = PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, null, Mockito.mock(Block::class.java), BlockFace.DOWN)
 
         // Act
         classUnderTest.onPlayerInteractEvent(playerInteractEvent)
@@ -104,7 +105,7 @@ class BlockSelectionListenerTest {
         val mockedBlockSelectionService = MockedBlockSelectionService(false)
         val classUnderTest = createWithDependencies(mockedBlockSelectionService)
         val player = Mockito.mock(Player::class.java)
-        val playerInteractEvent = PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, null, Mockito.mock(Block::class.java), null)
+        val playerInteractEvent = PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, null, Mockito.mock(Block::class.java), BlockFace.DOWN)
 
         // Act
         classUnderTest.onPlayerInteractEvent(playerInteractEvent)
@@ -129,7 +130,7 @@ class BlockSelectionListenerTest {
         val mockedBlockSelectionService = MockedBlockSelectionService(false)
         val classUnderTest = createWithDependencies(mockedBlockSelectionService)
         val player = Mockito.mock(Player::class.java)
-        val playerInteractEvent = PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, null, Mockito.mock(Block::class.java), null)
+        val playerInteractEvent = PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, null, Mockito.mock(Block::class.java), BlockFace.DOWN)
 
         // Act
         classUnderTest.onPlayerInteractEvent(playerInteractEvent)
@@ -154,7 +155,7 @@ class BlockSelectionListenerTest {
         val mockedBlockSelectionService = MockedBlockSelectionService(false)
         val classUnderTest = createWithDependencies(mockedBlockSelectionService)
         val player = Mockito.mock(Player::class.java)
-        val playerInteractEvent = PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, null, Mockito.mock(Block::class.java), null)
+        val playerInteractEvent = PlayerInteractEvent(player, Action.LEFT_CLICK_BLOCK, null, Mockito.mock(Block::class.java), BlockFace.DOWN)
         playerInteractEvent.isCancelled = true
 
         // Act
@@ -180,7 +181,7 @@ class BlockSelectionListenerTest {
         val mockedBlockSelectionService = MockedBlockSelectionService(false)
         val classUnderTest = createWithDependencies(mockedBlockSelectionService)
         val player = Mockito.mock(Player::class.java)
-        val playerInteractEvent = PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, null, Mockito.mock(Block::class.java), null)
+        val playerInteractEvent = PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, null, Mockito.mock(Block::class.java), BlockFace.DOWN)
         playerInteractEvent.isCancelled = true
 
         // Act
