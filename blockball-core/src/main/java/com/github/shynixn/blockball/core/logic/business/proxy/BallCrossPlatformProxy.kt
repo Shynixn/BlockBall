@@ -126,7 +126,7 @@ class BallCrossPlatformProxy(
             return
         }
 
-        ballHitBoxEntity.kickPlayer(player, 6, meta.movementModifier.shotVelocity, false)
+        ballHitBoxEntity.kickPlayer(player, meta.movementModifier.shotVelocity, false)
     }
 
     /**
@@ -142,7 +142,7 @@ class BallCrossPlatformProxy(
             return
         }
 
-        ballHitBoxEntity.kickPlayer(player, 4, meta.movementModifier.passVelocity, true)
+        ballHitBoxEntity.kickPlayer(player, meta.movementModifier.passVelocity, true)
     }
 
     /**

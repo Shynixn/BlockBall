@@ -77,6 +77,18 @@ interface BallMeta {
     var kickPassHitBoxSize: Double
 
     /**
+     * Delay in ticks until the ball executes the kick pass request by the player.
+     * Is useful for magnus force calculation.
+     */
+    var kickPassDelay: Int
+
+    /**
+     * Amount of ticks until the ball can intercept interaction again after
+     * performing 1 interaction.
+     */
+    var interactionCoolDown: Int
+
+    /**
      * Should the ball always bounce of walls?
      */
     var alwaysBounce: Boolean

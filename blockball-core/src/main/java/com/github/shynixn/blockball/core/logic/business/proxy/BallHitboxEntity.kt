@@ -117,46 +117,19 @@ class BallHitboxEntity(val entityId: Int) {
     /**
      * Kicks the hitbox for the given player interaction.
      */
-    fun kickPlayer(player: Any, delay: Int, baseMultiplier: Double, isPass: Boolean) {
+    fun kickPlayer(player: Any, baseMultiplier: Double, isPass: Boolean) {
         if (skipCounter > 0) {
             return
         }
 
         val prevEyeLoc = proxyService.getPlayerEyeLocation<Any, Any>(player)
-        this.skipCounter = delay + 20
+        this.skipCounter = meta.interactionCoolDown
 
-        sync(concurrencyService, delay.toLong()) {
-            var kickVector = proxyService.getLocationDirection(prevEyeLoc)
-            val eyeLocation = proxyService.getPlayerEyeLocation<Any, Any>(player)
-            val spinV = calculateSpinVelocity(proxyService.getLocationDirection(eyeLocation), kickVector)
-
-            val spinDrag = 1.0 - abs(spinV) / (3.0 * meta.movementModifier.maximumSpinVelocity)
-            val angle =
-                calculatePitchToLaunch(proxyService.toPosition(prevEyeLoc), proxyService.toPosition(eyeLocation))
-
-            val verticalMod = baseMultiplier * spinDrag * sin(angle)
-            val horizontalMod = baseMultiplier * spinDrag * cos(angle)
-            kickVector = kickVector.normalize().multiply(horizontalMod)
-            kickVector.y = verticalMod
-
-            val event = if (isPass) {
-                val event = BallPassEventEntity(ball, player, proxyService.toVector(kickVector))
-                eventService.sendEvent(event)
-                Pair(event, proxyService.toPosition(event.velocity))
-            } else {
-                val event = BallKickEventEntity(ball, player, proxyService.toVector(kickVector))
-                eventService.sendEvent(event)
-                Pair(event, proxyService.toPosition(event.velocity))
-            }
-
-            if (!event.first.isCancelled) {
-                this.motion = event.second
-                // Move the ball a little bit up otherwise wallcollision of ground immidately cancel movement.
-                this.position.y += 0.25
-                // Multiply the angular velocity by 2 to make it more visible.
-                this.angularVelocity = spinV * 2
-                // Correct the yaw of the ball after bouncing.
-                this.position.yaw = getYawFromVector(origin, this.motion.clone().normalize()) * -1
+        if (meta.kickPassDelay == 0) {
+            executeKickPass(player, prevEyeLoc, baseMultiplier, isPass)
+        } else {
+            sync(concurrencyService, meta.kickPassDelay.toLong()) {
+                executeKickPass(player, prevEyeLoc, baseMultiplier, isPass)
             }
         }
     }
@@ -220,6 +193,44 @@ class BallHitboxEntity(val entityId: Int) {
     }
 
     /**
+     * Executes the kick.
+     */
+    private fun executeKickPass(player: Any, prevEyeLoc: Any, baseMultiplier: Double, isPass: Boolean) {
+        var kickVector = proxyService.getLocationDirection(prevEyeLoc)
+        val eyeLocation = proxyService.getPlayerEyeLocation<Any, Any>(player)
+        val spinV = calculateSpinVelocity(proxyService.getLocationDirection(eyeLocation), kickVector)
+
+        val spinDrag = 1.0 - abs(spinV) / (3.0 * meta.movementModifier.maximumSpinVelocity)
+        val angle =
+            calculatePitchToLaunch(proxyService.toPosition(prevEyeLoc), proxyService.toPosition(eyeLocation))
+
+        val verticalMod = baseMultiplier * spinDrag * sin(angle)
+        val horizontalMod = baseMultiplier * spinDrag * cos(angle)
+        kickVector = kickVector.normalize().multiply(horizontalMod)
+        kickVector.y = verticalMod
+
+        val event = if (isPass) {
+            val event = BallPassEventEntity(ball, player, proxyService.toVector(kickVector))
+            eventService.sendEvent(event)
+            Pair(event, proxyService.toPosition(event.velocity))
+        } else {
+            val event = BallKickEventEntity(ball, player, proxyService.toVector(kickVector))
+            eventService.sendEvent(event)
+            Pair(event, proxyService.toPosition(event.velocity))
+        }
+
+        if (!event.first.isCancelled) {
+            this.motion = event.second
+            // Move the ball a little bit up otherwise wallcollision of ground immidately cancel movement.
+            this.position.y += 0.25
+            // Multiply the angular velocity by 2 to make it more visible.
+            this.angularVelocity = spinV * 2
+            // Correct the yaw of the ball after bouncing.
+            this.position.yaw = getYawFromVector(origin, this.motion.clone().normalize()) * -1
+        }
+    }
+
+    /**
      * Checks movement interactions with the ball.
      */
     private fun checkMovementInteractions(players: List<Any>) {
@@ -256,7 +267,7 @@ class BallHitboxEntity(val entityId: Int) {
                 // Move the ball a little bit up otherwise wallcollision of ground immidately cancel movement.
                 this.position.y += 0.25
                 this.motion = proxyService.toPosition(ballTouchEvent.velocity)
-                this.skipCounter = 10
+                this.skipCounter = meta.interactionCoolDown
             }
         }
     }

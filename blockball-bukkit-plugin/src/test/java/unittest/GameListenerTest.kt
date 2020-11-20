@@ -3,7 +3,6 @@
 package unittest
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
@@ -693,7 +692,9 @@ class GameListenerTest {
                 rightclickManageService,
                 gameActionService,
                 MockedGameExecutionService(),
-                Mockito.mock(ConcurrencyService::class.java)
+                Mockito.mock(ConcurrencyService::class.java),
+                Mockito.mock(GameSoccerService::class.java),
+                Mockito.mock(ProxyService::class.java)
             )
         }
     }

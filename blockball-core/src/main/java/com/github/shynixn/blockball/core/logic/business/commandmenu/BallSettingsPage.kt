@@ -72,6 +72,10 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             ballMeta.interactionHitBoxSize = args[2].toDouble()
         } else if (command == MenuCommand.BALL_KICKPASS_HITBOX && args.size == 3 && args[2].toDoubleOrNull() != null) {
             ballMeta.kickPassHitBoxSize = args[2].toDouble()
+        } else if (command == MenuCommand.BALL_INTERACT_COOLDOWN && args.size == 3 && args[2].toIntOrNull() != null) {
+            ballMeta.interactionCoolDown = args[2].toInt()
+        } else if (command == MenuCommand.BALL_KICKPASS_DELAY && args.size == 3 && args[2].toIntOrNull() != null) {
+            ballMeta.kickPassDelay = args[2].toInt()
         } else if (command == MenuCommand.BALL_TOGGLE_ALWAYSBOUNCE) {
             ballMeta.alwaysBounce = !ballMeta.alwaysBounce
         } else if (command == MenuCommand.BALL_TOGGLE_ROTATING) {
@@ -124,6 +128,16 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.BALL_TOGGLE_ROTATING.command)
             .setHoverText("Should the ball play a rotation animation?")
+            .builder().nextLine()
+            .component("- KickPass Delay: " + ballMeta.kickPassDelay).builder()
+            .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
+            .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.BALL_KICKPASS_DELAY.command)
+            .setHoverText("Delay in ticks until a kick or pass is executed.")
+            .builder().nextLine()
+            .component("- Interaction Cooldown: " + ballMeta.interactionCoolDown).builder()
+            .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
+            .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.BALL_INTERACT_COOLDOWN.command)
+            .setHoverText("Cooldown in ticks until the next player can interact with the ball again.")
             .builder().nextLine()
             .component("- Ball Modifiers: ").builder()
             .component(MenuClickableItem.PAGE.text).setColor(MenuClickableItem.PAGE.color)
