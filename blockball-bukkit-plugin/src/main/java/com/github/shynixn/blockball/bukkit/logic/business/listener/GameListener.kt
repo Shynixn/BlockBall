@@ -4,14 +4,12 @@ import com.github.shynixn.blockball.api.bukkit.event.BallRayTraceEvent
 import com.github.shynixn.blockball.api.bukkit.event.BallTouchEvent
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
-import org.bukkit.GameMode
 import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -56,7 +54,9 @@ class GameListener @Inject constructor(
     private val rightClickManageService: RightclickManageService,
     private val gameActionService: GameActionService,
     private val gameExecutionService: GameExecutionService,
-    private val concurrencyService: ConcurrencyService
+    private val concurrencyService: ConcurrencyService,
+    private val gameSoccerService: GameSoccerService,
+    private val proxyService: ProxyService
 ) : Listener {
     private val playerCache = HashSet<Player>()
 
@@ -270,10 +270,33 @@ class GameListener @Inject constructor(
     fun onBallRayTraceEvent(event: BallRayTraceEvent) {
         for (game in gameService.getAllGames()) {
             if (game.ball == event.ball) {
-                if (!game.arena.isLocationInSelection(event.targetLocation.toPosition())) {
-                    event.hitBlock = true
-                    event.blockDirection = game.arena.getRelativeBlockDirectionToLocation(event.targetLocation.toPosition())
+                val targetPosition = event.targetLocation.toPosition()
+                val sourcePosition = proxyService.toPosition(event.ball.getLocation<Any>())
+
+                if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(sourcePosition)) {
+                    gameSoccerService.notifyBallInGoal(game, Team.RED)
+                    return
                 }
+
+                if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(sourcePosition)) {
+                    gameSoccerService.notifyBallInGoal(game, Team.BLUE)
+                    return
+                }
+
+                if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(targetPosition)) {
+                    return
+                }
+
+                if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(targetPosition)) {
+                    return
+                }
+
+                if (!game.arena.isLocationInSelection(targetPosition)) {
+                    event.hitBlock = true
+                    event.blockDirection = game.arena.getRelativeBlockDirectionToLocation(targetPosition)
+                    return
+                }
+
                 return
             }
         }
