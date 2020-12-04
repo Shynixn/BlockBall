@@ -1,1 +1,1 @@
-sphinx-autobuild -b html -i '*.sw[pmnox]' -i '*~' -i '*/4913' -i '4913' source build/html
+sphinx-autobuild -b html source build/html
