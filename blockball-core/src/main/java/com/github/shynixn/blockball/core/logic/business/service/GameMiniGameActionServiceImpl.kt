@@ -85,8 +85,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                     )
                 )
                 .setClickAction(
-                    ChatClickAction.RUN_COMMAND
-                    , "/" + configurationService.findValue<String>("global-spectate.command") + " " + game.arena.name
+                    ChatClickAction.RUN_COMMAND,
+                    "/" + configurationService.findValue<String>("global-spectate.command") + " " + game.arena.name
                 )
                 .setHoverText(" ")
                 .builder()
@@ -186,6 +186,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         val storage = createPlayerStorage(game, player)
         game.spectatorPlayersStorage[player] = storage
         proxyService.setGameMode(player, GameMode.SPECTATOR)
+        proxyService.setPlayerFlying(player, true)
     }
 
     /**

@@ -695,7 +695,8 @@ class GameListenerTest {
                 MockedGameExecutionService(),
                 Mockito.mock(ConcurrencyService::class.java),
                 Mockito.mock(GameSoccerService::class.java),
-                Mockito.mock(ProxyService::class.java)
+                Mockito.mock(ProxyService::class.java),
+                Mockito.mock(BallEntityService::class.java)
             )
         }
     }

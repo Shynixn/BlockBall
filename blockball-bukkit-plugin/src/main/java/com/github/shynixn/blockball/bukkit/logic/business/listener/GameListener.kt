@@ -2,12 +2,15 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.bukkit.event.BallRayTraceEvent
 import com.github.shynixn.blockball.api.bukkit.event.BallTouchEvent
+import com.github.shynixn.blockball.api.bukkit.event.PacketEvent
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
 import org.bukkit.block.Sign
@@ -56,9 +59,45 @@ class GameListener @Inject constructor(
     private val gameExecutionService: GameExecutionService,
     private val concurrencyService: ConcurrencyService,
     private val gameSoccerService: GameSoccerService,
-    private val proxyService: ProxyService
+    private val proxyService: ProxyService,
+    private val ballEntityService: BallEntityService
 ) : Listener {
     private val playerCache = HashSet<Player>()
+    private val packetPlayInUseEntityActionField by lazy {
+        findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
+            .getDeclaredField("action").accessible(true)
+    }
+    private val packetPlayInUseEntityIdField by lazy {
+        findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
+            .getDeclaredField("a").accessible(true)
+    }
+
+    /**
+     * Gets called when a packet arrives.
+     */
+    @EventHandler
+    fun onPacketEvent(event: PacketEvent) {
+        val game = gameService.getGameFromPlayer(event.player)
+
+        if (!game.isPresent) {
+            return
+        }
+
+        val action = packetPlayInUseEntityActionField.get(event.packet)
+        val entityId = packetPlayInUseEntityIdField.get(event.packet) as Int
+        val ball = ballEntityService.findBallByEntityId(entityId) ?: return
+        val isPass = action.toString() != "ATTACK"
+
+        if (game.get().ball != ball) {
+            return
+        }
+
+        if (isPass) {
+            ball.passByPlayer(event.player)
+        } else {
+            ball.kickByPlayer(event.player)
+        }
+    }
 
     /**
      * Gets called when a player leaves the server and the game.

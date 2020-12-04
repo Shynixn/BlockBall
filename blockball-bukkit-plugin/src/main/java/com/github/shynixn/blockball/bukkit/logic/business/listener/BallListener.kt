@@ -27,32 +27,6 @@ class BallListener @Inject constructor(
     private val soundService: SoundService,
     private val protocolService: ProtocolService
 ) : Listener {
-    private val packetPlayInUseEntityActionField by lazy {
-        findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
-            .getDeclaredField("action").accessible(true)
-    }
-    private val packetPlayInUseEntityIdField by lazy {
-        findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
-            .getDeclaredField("a").accessible(true)
-    }
-
-    /**
-     * Gets called when a packet arrives.
-     */
-    @EventHandler
-    fun onPacketEvent(event: PacketEvent) {
-        val action = packetPlayInUseEntityActionField.get(event.packet)
-        val entityId = packetPlayInUseEntityIdField.get(event.packet) as Int
-        val ball = ballEntityService.findBallByEntityId(entityId) ?: return
-        val isPass = action.toString() != "ATTACK"
-
-        if (isPass) {
-            ball.passByPlayer(event.player)
-        } else {
-            ball.kickByPlayer(event.player)
-        }
-    }
-
     /**
      * Registers the player on join.
      */
