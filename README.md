@@ -40,7 +40,7 @@ BlockBall is a spigot plugin to play soccer games in Minecraft.
 [./gradlew|gradlew.bat] downloadDependencies
 ```
 
-(If the downloadDependencies task fails for some reason, you can manually download [BuildTools.jar](https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar) and execute [the commands on this page](https://github.com/Shynixn/BlockBall/blob/bb7a65745440ef5578f6495a7380354cb64870c4/build.gradle#L262). You do not have to execute ``mvn install:install-file -Dfile=Vault.jar``.
+(If the downloadDependencies task fails for some reason, you can manually download [BuildTools.jar](https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar) and execute [the commands on this page](https://github.com/Shynixn/BlockBall/blob/033270ba68329bf0197d9b088d4005deb09fbb2f/build.gradle#L267). You do not have to execute ``mvn install:install-file -Dfile=Vault.jar``.
 
 
 * Install the ForgeGradle development workspace for sponge
