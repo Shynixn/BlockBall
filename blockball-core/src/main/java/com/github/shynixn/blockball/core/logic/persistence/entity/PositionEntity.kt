@@ -69,6 +69,16 @@ class PositionEntity() : Position {
         get() = z.toInt()
 
     /**
+     * Adds to this position. Returns this position.
+     */
+    override fun add(x: Double, y: Double, z: Double): Position {
+        this.x += x
+        this.y += y
+        this.z += z
+        return this
+    }
+
+    /**
      * Subtracts the given [position] from this position
      * and returns this position.
      */
@@ -108,6 +118,13 @@ class PositionEntity() : Position {
         y /= length
         z /= length
         return this
+    }
+
+    /**
+     * Calculates the dot product and returns.
+     */
+    override fun dot(other: Position): Double {
+        return x * other.x + y * other.y + z * other.z
     }
 
     /**
@@ -155,10 +172,10 @@ class PositionEntity() : Position {
      */
     override fun toString(): String {
         if (worldName != null) {
-            return "$worldName ${x.toInt()} ${y.toInt()} ${z.toInt()}"
+            return "$worldName ${x.toInt()} ${y.toInt()} ${z.toInt()} $yaw $pitch"
         }
 
-        return "${x.toInt()} ${y.toInt()} ${z.toInt()}"
+        return "${x.toInt()} ${y.toInt()} ${z.toInt()} $yaw $pitch"
     }
 
     /**
@@ -186,7 +203,7 @@ class PositionEntity() : Position {
     /**
      * Returns the vector length.
      */
-    private fun length(): Double {
+    override fun length(): Double {
         return sqrt(square(x) + square(y) + square(z))
     }
 

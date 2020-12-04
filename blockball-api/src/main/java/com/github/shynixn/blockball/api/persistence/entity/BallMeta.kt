@@ -46,10 +46,10 @@ interface BallMeta {
      */
     var enabledInteract: Boolean
 
-    /** Spawning delay. */
+    /** Spawning delay. TODO: Move this to game. */
     var delayInTicks: Int
 
-    /** Spawnpoint of the ball. */
+    /** Spawnpoint of the ball. TODO: Move this to game. */
     var spawnpoint: Position?
 
     /** Size of the ball.**/
@@ -69,22 +69,29 @@ interface BallMeta {
     /**
      * Size of the hitbox used for interaction detecting.
      */
-    var hitBoxSize: Double
+    var interactionHitBoxSize: Double
 
     /**
-     * Should the ball be able to carry.
+     * Size of the hitbox used for kicking and passing detecting.
      */
-    var carryAble: Boolean
+    var kickPassHitBoxSize: Double
+
+    /**
+     * Delay in ticks until the ball executes the kick pass request by the player.
+     * Is useful for magnus force calculation.
+     */
+    var kickPassDelay: Int
+
+    /**
+     * Amount of ticks until the ball can intercept interaction again after
+     * performing 1 interaction.
+     */
+    var interactionCoolDown: Int
 
     /**
      * Should the ball always bounce of walls?
      */
     var alwaysBounce: Boolean
-
-    /**
-     * Bouncing off from objects modifiers.
-     */
-    val bounceModifiers: MutableList<BounceConfiguration>
 
     /**
      * Movement modifier.

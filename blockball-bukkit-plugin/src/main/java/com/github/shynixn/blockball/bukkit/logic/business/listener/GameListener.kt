@@ -1,16 +1,18 @@
 package com.github.shynixn.blockball.bukkit.logic.business.listener
 
-import com.github.shynixn.blockball.api.bukkit.event.BallInteractEvent
-import com.github.shynixn.blockball.api.bukkit.event.BallPostMoveEvent
+import com.github.shynixn.blockball.api.bukkit.event.BallRayTraceEvent
+import com.github.shynixn.blockball.api.bukkit.event.BallTouchEvent
+import com.github.shynixn.blockball.api.bukkit.event.PacketEvent
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
-import org.bukkit.GameMode
 import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -56,9 +58,46 @@ class GameListener @Inject constructor(
     private val gameActionService: GameActionService,
     private val gameExecutionService: GameExecutionService,
     private val concurrencyService: ConcurrencyService,
-    private val forceFieldService: BallForceFieldService
+    private val gameSoccerService: GameSoccerService,
+    private val proxyService: ProxyService,
+    private val ballEntityService: BallEntityService
 ) : Listener {
     private val playerCache = HashSet<Player>()
+    private val packetPlayInUseEntityActionField by lazy {
+        findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
+            .getDeclaredField("action").accessible(true)
+    }
+    private val packetPlayInUseEntityIdField by lazy {
+        findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
+            .getDeclaredField("a").accessible(true)
+    }
+
+    /**
+     * Gets called when a packet arrives.
+     */
+    @EventHandler
+    fun onPacketEvent(event: PacketEvent) {
+        val game = gameService.getGameFromPlayer(event.player)
+
+        if (!game.isPresent) {
+            return
+        }
+
+        val action = packetPlayInUseEntityActionField.get(event.packet)
+        val entityId = packetPlayInUseEntityIdField.get(event.packet) as Int
+        val ball = ballEntityService.findBallByEntityId(entityId) ?: return
+        val isPass = action.toString() != "ATTACK"
+
+        if (game.get().ball != ball) {
+            return
+        }
+
+        if (isPass) {
+            ball.passByPlayer(event.player)
+        } else {
+            ball.kickByPlayer(event.player)
+        }
+    }
 
     /**
      * Gets called when a player leaves the server and the game.
@@ -120,18 +159,6 @@ class GameListener @Inject constructor(
         if (game.isPresent) {
             event.isCancelled = true
         }
-    }
-
-    /**
-     * Gets called when a ball move and calculates forcefield interactions.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun onBallPostMoveEvent(event: BallPostMoveEvent) {
-        val game = this.gameService.getAllGames().firstOrNull { g -> g.ball != null && g.ball == event.ball } ?: return
-
-        forceFieldService.calculateForcefieldInteractions(game, event.ball)
     }
 
     /**
@@ -266,15 +293,51 @@ class GameListener @Inject constructor(
      * Caches the last interacting entity with the ball.
      */
     @EventHandler
-    fun onBallInteractEvent(event: BallInteractEvent) {
+    fun onBallInteractEvent(event: BallTouchEvent) {
         val game = gameService.getAllGames().find { p -> p.ball != null && p.ball!! == event.ball }
 
         if (game != null) {
-            if (event.entity is Player && (event.entity as Player).gameMode == GameMode.SPECTATOR) {
-                event.isCancelled = true
-            }
+            game.lastInteractedEntity = event.player
+        }
+    }
 
-            game.lastInteractedEntity = event.entity
+    /**
+     * Is called when the ball requests to move to a target position.
+     * Handles the ball forceField of the arena.
+     */
+    @EventHandler
+    fun onBallRayTraceEvent(event: BallRayTraceEvent) {
+        for (game in gameService.getAllGames()) {
+            if (game.ball == event.ball) {
+                val targetPosition = event.targetLocation.toPosition()
+                val sourcePosition = proxyService.toPosition(event.ball.getLocation<Any>())
+
+                if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(sourcePosition)) {
+                    gameSoccerService.notifyBallInGoal(game, Team.RED)
+                    return
+                }
+
+                if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(sourcePosition)) {
+                    gameSoccerService.notifyBallInGoal(game, Team.BLUE)
+                    return
+                }
+
+                if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(targetPosition)) {
+                    return
+                }
+
+                if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(targetPosition)) {
+                    return
+                }
+
+                if (!game.arena.isLocationInSelection(targetPosition)) {
+                    event.hitBlock = true
+                    event.blockDirection = game.arena.getRelativeBlockDirectionToLocation(targetPosition)
+                    return
+                }
+
+                return
+            }
         }
     }
 

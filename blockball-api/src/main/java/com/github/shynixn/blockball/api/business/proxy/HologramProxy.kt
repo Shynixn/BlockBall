@@ -36,7 +36,7 @@ interface HologramProxy {
     /**
      * List of lines being displayed on the hologram.
      */
-    var lines: MutableList<String>
+    var lines: List<String>
 
     /**
      * Location of the hologram.

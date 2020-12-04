@@ -32,23 +32,27 @@ import com.github.shynixn.blockball.api.persistence.entity.MovementConfiguration
  */
 class MovementConfigurationEntity : MovementConfiguration {
     /**
-     * Bounceeffect from default objects.
-     */
-    @YamlSerialize(orderNumber = 1, value = "bouncing")
-    override var defaultBounceModifier: Double = 1.0
-
-    /**
      * The gravity modifier how fast a ball falls to the ground after being kicked or
      * thrown in to the sky.
      */
-    @YamlSerialize(orderNumber = 2, value = "gravity")
-    override var gravityModifier: Double = 0.7
+    @YamlSerialize(orderNumber = 1, value = "gravity-mod")
+    override var gravityModifier: Double = 0.07
 
     /**
-     * Rolling distance.
+     * The speed reducement of the ball in the air is calculated by
+     *
+     * NewVelocity = Current Velocity * (1.0-airDrag)
      */
-    @YamlSerialize(orderNumber = 3, value = "rolling-distance")
-    override var rollingDistanceModifier: Double = 1.5
+    @YamlSerialize(orderNumber = 2, value = "air-resistance")
+    override var airResistance: Double = 0.001
+
+    /**
+     * The speed reducement of the ball on the ground is calculated by
+     *
+     * NewVelocity = Current Velocity * (1.0-groundDrag)
+     */
+    @YamlSerialize(orderNumber = 3, value = "rolling-resistance")
+    override var rollingResistance: Double = 0.1
 
     /**
      * Horizontal touch modifier.
@@ -79,18 +83,6 @@ class MovementConfigurationEntity : MovementConfiguration {
      */
     @YamlSerialize(orderNumber = 8, value = "max-spin")
     override var maximumSpinVelocity: Double = 0.08
-
-    /**
-     * Horizontal throw modifier.
-     */
-    @YamlSerialize(orderNumber = 9, value = "horizontal-throw")
-    override var horizontalThrowModifier: Double = 1.0
-
-    /**
-     * Vertical throw modifier.
-     */
-    @YamlSerialize(orderNumber = 10, value = "vertical-throw")
-    override var verticalThrowModifier: Double = 1.0
 
     /**
      * Maximum vertical angle (in degrees) when launching a ball

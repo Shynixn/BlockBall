@@ -9,7 +9,11 @@ import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.Item
 import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.bukkit.logic.business.extension.*
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
+import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
@@ -22,7 +26,9 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scoreboard.Scoreboard
+import org.bukkit.util.Vector
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.logging.Level
 import java.util.stream.Stream
 import kotlin.collections.ArrayList
@@ -212,6 +218,14 @@ class ProxyServiceImpl @Inject constructor(
     }
 
     /**
+     * Gets the player eye location.
+     */
+    override fun <P, L> getPlayerEyeLocation(player: P): L {
+        require(player is Player)
+        return player.eyeLocation.clone() as L
+    }
+
+    /**
      * Gets a copy of the player inventory.
      */
     override fun <P> getPlayerInventoryCopy(player: P): Array<Any?> {
@@ -329,6 +343,14 @@ class ProxyServiceImpl @Inject constructor(
     }
 
     /**
+     * Gets the location direction.
+     */
+    override fun <L> getLocationDirection(location: L): Position {
+        require(location is Location)
+        return location.direction.toPosition()
+    }
+
+    /**
      * Gets the player scoreboard.
      */
     override fun <P, S> getPlayerScoreboard(player: P): S {
@@ -425,11 +447,15 @@ class ProxyServiceImpl @Inject constructor(
      * Converts the given [location] to a [Position].
      */
     override fun <L> toPosition(location: L): Position {
-        if (location !is Location) {
-            throw IllegalArgumentException("Location has to be a BukkitLocation!")
+        if (location is Location) {
+            return location.toPosition()
         }
 
-        return location.toPosition()
+        if (location is Vector) {
+            return location.toPosition()
+        }
+
+        throw IllegalArgumentException("Location is not a BukkitLocation or BukkitVector!")
     }
 
     /**
@@ -614,6 +640,26 @@ class ProxyServiceImpl @Inject constructor(
 
         sign.update(true)
         return true
+    }
+
+    /**
+     * Creates a new entity id.
+     */
+    override fun createNewEntityId(): Int {
+        return if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
+            val atomicInteger = findClazz("net.minecraft.server.VERSION.Entity")
+                .getDeclaredField("entityCount")
+                .accessible(true)
+                .get(null) as AtomicInteger
+            atomicInteger.incrementAndGet()
+        } else {
+            val entityCountField = findClazz("net.minecraft.server.VERSION.Entity")
+                .getDeclaredField("entityCount")
+                .accessible(true)
+            val intNumber = (entityCountField.get(null) as Int) + 1
+            entityCountField.set(null, intNumber)
+            intNumber
+        }
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import java.io.DataOutput
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -56,6 +58,11 @@ interface Position {
     val blockZ: Int
 
     /**
+     * Adds to this position. Returns this position.
+     */
+    fun add(x : Double, y : Double, z : Double) : Position
+
+    /**
      * Subtracts the given [position] from this position
      * and returns this position.
      */
@@ -75,6 +82,16 @@ interface Position {
      * Normalizes the position and returns the same position.
      */
     fun normalize(): Position
+
+    /**
+     * Calculates the dot product and returns.
+     */
+    fun dot(other: Position) : Double
+
+    /**
+     * Returns the vector length.
+     */
+    fun length(): Double
 
     /**
      * Multiplies the position and returns the same position.

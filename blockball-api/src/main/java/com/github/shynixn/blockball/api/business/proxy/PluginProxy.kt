@@ -61,6 +61,11 @@ interface PluginProxy {
     fun isEnabled() : Boolean
 
     /**
+     * Tries to find a version compatible class.
+     */
+    fun findClazz(name : String) : Class<*>
+
+    /**
      * Gets a business logic from the BlockBall plugin.
      * All types in the service package can be accessed.
      * Throws a [IllegalArgumentException] if the service could not be found.

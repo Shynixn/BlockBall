@@ -3,7 +3,6 @@
 package unittest
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
@@ -17,6 +16,7 @@ import org.bukkit.Location
 import org.bukkit.Server
 import org.bukkit.World
 import org.bukkit.block.Block
+import org.bukkit.block.BlockFace
 import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 import org.bukkit.event.block.Action
@@ -90,7 +90,7 @@ class GameListenerTest {
 
         val event = PlayerRespawnEvent(
             gameService.players[0],
-            null,
+            Location(null, 2.0, 2.0, 2.0),
             false
         )
 
@@ -129,7 +129,7 @@ class GameListenerTest {
 
         val event = PlayerRespawnEvent(
             gameService.players[0],
-            null,
+            Location(null, 2.0, 2.0, 2.0),
             false
         )
 
@@ -158,7 +158,7 @@ class GameListenerTest {
 
         val event = PlayerRespawnEvent(
             Mockito.mock(Player::class.java),
-            null,
+            Location(null, 2.0, 2.0, 2.0),
             false
         )
 
@@ -166,7 +166,7 @@ class GameListenerTest {
         classUnderTest.onPlayerRespawnEvent(event)
 
         // Assert
-        Assertions.assertNull(event.respawnLocation)
+        Assertions.assertEquals(2.0, event.respawnLocation.x)
     }
 
     // endregion
@@ -195,7 +195,7 @@ class GameListenerTest {
                 Action.LEFT_CLICK_AIR,
                 null,
                 null,
-                null
+                BlockFace.DOWN
             )
         )
         classUnderTest.onClickOnPlacedSign(
@@ -204,7 +204,7 @@ class GameListenerTest {
                 Action.LEFT_CLICK_BLOCK,
                 null,
                 null,
-                null
+                BlockFace.DOWN
             )
         )
         classUnderTest.onClickOnPlacedSign(
@@ -213,7 +213,7 @@ class GameListenerTest {
                 Action.PHYSICAL,
                 null,
                 null,
-                null
+                BlockFace.DOWN
             )
         )
         classUnderTest.onClickOnPlacedSign(
@@ -222,7 +222,7 @@ class GameListenerTest {
                 Action.RIGHT_CLICK_AIR,
                 null,
                 null,
-                null
+                BlockFace.DOWN
             )
         )
 
@@ -257,7 +257,7 @@ class GameListenerTest {
                 Action.RIGHT_CLICK_BLOCK,
                 null,
                 block,
-                null
+                BlockFace.DOWN
             )
         )
 
@@ -298,7 +298,7 @@ class GameListenerTest {
                 Action.RIGHT_CLICK_BLOCK,
                 null,
                 block,
-                null
+                BlockFace.DOWN
             )
         )
 
@@ -342,7 +342,7 @@ class GameListenerTest {
                 Action.RIGHT_CLICK_BLOCK,
                 null,
                 block,
-                null
+                BlockFace.DOWN
             )
         )
 
@@ -385,7 +385,7 @@ class GameListenerTest {
                 Action.RIGHT_CLICK_BLOCK,
                 null,
                 block,
-                null
+                BlockFace.DOWN
             )
         )
 
@@ -419,7 +419,7 @@ class GameListenerTest {
 
         rightClickService.watcherReturns = false
         val game = GameEntity(ArenaEntity())
-        game.arena.meta.blueTeamMeta.signs.add(location.toPosition())
+        game.arena.meta.blueTeamMeta.signs.add(PositionEntity(location.x, location.y, location.z))
         gameService.games.add(game)
 
         // Act
@@ -429,7 +429,7 @@ class GameListenerTest {
                 Action.RIGHT_CLICK_BLOCK,
                 null,
                 block,
-                null
+                BlockFace.DOWN
             )
         )
 
@@ -694,17 +694,10 @@ class GameListenerTest {
                 gameActionService,
                 MockedGameExecutionService(),
                 Mockito.mock(ConcurrencyService::class.java),
-                MockedBallForceFieldService()
+                Mockito.mock(GameSoccerService::class.java),
+                Mockito.mock(ProxyService::class.java),
+                Mockito.mock(BallEntityService::class.java)
             )
-        }
-    }
-
-    class MockedBallForceFieldService : BallForceFieldService {
-        /**
-         * Calculates forcefield interactions and applies correct knockback
-         * velocity regarding on the enabled game ball forcefield and the velocity of the ball.
-         */
-        override fun calculateForcefieldInteractions(game: Game, ball: BallProxy) {
         }
     }
 

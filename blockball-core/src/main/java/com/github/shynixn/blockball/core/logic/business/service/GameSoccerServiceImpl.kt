@@ -4,43 +4,15 @@ package com.github.shynixn.blockball.core.logic.business.service
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.core.logic.business.extension.sync
-import com.github.shynixn.blockball.core.logic.persistence.entity.GameEndEventEntity
-import com.github.shynixn.blockball.core.logic.persistence.entity.GameGoalEventEntity
+import com.github.shynixn.blockball.core.logic.persistence.event.GameEndEventEntity
+import com.github.shynixn.blockball.core.logic.persistence.event.GameGoalEventEntity
 import com.google.inject.Inject
 
-/**
- * Created by Shynixn 2018.
- * <p>
- * Version 1.2
- * <p>
- * MIT License
- * <p>
- * Copyright (c) 2018 by Shynixn
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of game software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and game permission notice shall be included in all
- * copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 class GameSoccerServiceImpl @Inject constructor(
     private val concurrencyService: ConcurrencyService,
     private val screenMessageService: ScreenMessageService,
@@ -56,81 +28,31 @@ class GameSoccerServiceImpl @Inject constructor(
      */
     override fun handle(game: Game, ticks: Int) {
         this.fixBallPositionSpawn(game)
-        this.checkBallInGoal(game)
 
         if (ticks >= 20) {
             this.handleBallSpawning(game)
         }
     }
 
-    private fun fixBallPositionSpawn(game: Game) {
-        if (game.ball == null || game.ball!!.isDead) {
+    /**
+     * Notifies that the ball is inside of the goal of the given team.
+     * This team has to be the default goal of the team. Mirroring
+     * is handled inside of the method.
+     */
+    override fun notifyBallInGoal(game: Game, team: Team) {
+        if (game.ballSpawning) {
             return
         }
 
-        val ballPosition = proxyService.toPosition(game.ball!!.getLocation<Any>())
+        var teamOfGoal = team
 
-        if (!game.arena.isLocationInSelection(ballPosition)
-            && !game.arena.meta.redTeamMeta.goal.isLocationInSelection(ballPosition)
-            && !game.arena.meta.blueTeamMeta.goal.isLocationInSelection(ballPosition)
-        ) {
-            if (game.ballBumper == 0) {
-                rescueBall(game)
-            }
-        } else {
-            game.ballBumperCounter = 0
-            game.lastBallLocation = proxyService.toLocation(proxyService.toPosition(game.ball!!.getLocation<Any>()))
+        if (teamOfGoal == Team.BLUE && game.mirroredGoals) {
+            teamOfGoal = Team.RED
+        } else if (teamOfGoal == Team.RED && game.mirroredGoals) {
+            teamOfGoal = Team.BLUE
         }
 
-        if (game.ingamePlayersStorage.isEmpty()) {
-            game.ball!!.remove()
-        }
-
-        if (game.ballBumper > 0) {
-            game.ballBumper--
-        }
-    }
-
-    private fun rescueBall(game: Game) {
-        if (game.lastBallLocation != null) {
-            val ballPosition = proxyService.toPosition(game.ball!!.getLocation<Any>())
-            val ballLastPosition = proxyService.toPosition(game.lastBallLocation!!)
-
-            val knockBackPosition = ballLastPosition.subtract(ballPosition)
-            proxyService.setLocationDirection(proxyService.toLocation<Any>(ballPosition), knockBackPosition)
-            game.ball!!.setVelocity(proxyService.toVector<Any>(knockBackPosition))
-
-            val direction =
-                game.arena.meta.ballMeta.spawnpoint!!.clone().subtract(ballPosition)
-            game.ball!!.setVelocity(proxyService.toVector<Any>(direction.multiply(0.1)))
-            game.ballBumper = 40
-            game.ballBumperCounter++
-            if (game.ballBumperCounter == 5) {
-                (game.ball as BallProxy).teleport(proxyService.toLocation<Any>(game.arena.meta.ballMeta.spawnpoint!!))
-            }
-        }
-    }
-
-    private fun checkBallInGoal(game: Game) {
-        if (game.ball == null || game.ball!!.isDead || game.ballSpawning) {
-            return
-        }
-
-        val ballPosition = proxyService.toPosition(game.ball!!.getLocation<Any>())
-        var isBallInRedGoal =
-            game.arena.meta.redTeamMeta.goal.isLocationInSelection(ballPosition)
-        var isBallInBlueGoal =
-            game.arena.meta.blueTeamMeta.goal.isLocationInSelection(ballPosition)
-
-        if (isBallInBlueGoal && game.mirroredGoals) {
-            isBallInBlueGoal = false
-            isBallInRedGoal = true
-        } else if (isBallInRedGoal && game.mirroredGoals) {
-            isBallInBlueGoal = true
-            isBallInRedGoal = false
-        }
-
-        if (isBallInRedGoal) {
+        if (teamOfGoal == Team.RED) {
             game.blueScore += game.arena.meta.blueTeamMeta.pointsPerGoal
             onScore(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             onScoreReward(game, game.blueTeam)
@@ -144,7 +66,7 @@ class GameSoccerServiceImpl @Inject constructor(
             return
         }
 
-        if (isBallInBlueGoal) {
+        if (teamOfGoal == Team.BLUE) {
             game.redScore += game.arena.meta.redTeamMeta.pointsPerGoal
             onScore(game, Team.RED, game.arena.meta.redTeamMeta)
             onScoreReward(game, game.redTeam)
@@ -154,6 +76,15 @@ class GameSoccerServiceImpl @Inject constructor(
                 onMatchEnd(game, game.redTeam, game.blueTeam)
                 onWin(game, Team.RED, game.arena.meta.redTeamMeta)
             }
+        }
+    }
+
+    private fun fixBallPositionSpawn(game: Game) {
+        if (game.ball == null || game.ball!!.isDead) {
+            return
+        }
+        if (game.ingamePlayersStorage.isEmpty()) {
+            game.ball!!.remove()
         }
     }
 
@@ -217,7 +148,7 @@ class GameSoccerServiceImpl @Inject constructor(
                 game.ballSpawnCounter = 0
             }
         } else if ((game.ball == null || game.ball!!.isDead)
-            && (!game.redTeam.isEmpty() || !game.blueTeam.isEmpty())
+            && (game.redTeam.isNotEmpty() || game.blueTeam.isNotEmpty())
         ) {
 
             if (game.arena.gameType != GameType.HUBGAME || game.redTeam.size >= game.arena.meta.redTeamMeta.minAmount && game.blueTeam.size >= game.arena.meta.blueTeamMeta.minAmount) {
@@ -246,7 +177,7 @@ class GameSoccerServiceImpl @Inject constructor(
             game.lastInteractedEntity = interactionEntity
         }
 
-        val gameGoalEntityEvent = GameGoalEventEntity(interactionEntity, team, game)
+        val gameGoalEntityEvent = GameGoalEventEntity(game, interactionEntity, team)
         eventService.sendEvent(gameGoalEntityEvent)
 
         if (gameGoalEntityEvent.isCancelled) {
@@ -351,8 +282,12 @@ class GameSoccerServiceImpl @Inject constructor(
      * Gets called when the given [game] gets win by the given [team].
      */
     override fun onWin(game: Game, team: Team, teamMeta: TeamMeta) {
-        val event = GameEndEventEntity(team, game)
+        val event = GameEndEventEntity(game, team)
         eventService.sendEvent(event)
+
+        if (event.isCancelled) {
+            return
+        }
 
         val winMessageTitle = teamMeta.winMessageTitle
         val winMessageSubTitle = teamMeta.winMessageSubTitle

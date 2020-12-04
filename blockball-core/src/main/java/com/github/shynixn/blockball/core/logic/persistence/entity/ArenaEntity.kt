@@ -1,8 +1,10 @@
 package com.github.shynixn.blockball.core.logic.persistence.entity
 
 import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
+import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.persistence.entity.Arena
+import com.github.shynixn.blockball.api.persistence.entity.Position
 
 /**
  * Created by Shynixn 2018.

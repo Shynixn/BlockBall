@@ -28,12 +28,6 @@ package com.github.shynixn.blockball.api.persistence.entity
  * SOFTWARE.
  */
 interface MovementConfiguration {
-
-    /**
-     * Bounce-effect from default objects.
-     */
-    var defaultBounceModifier: Double
-
     /**
      * The gravity modifier how fast a ball falls to the ground after being kicked or
      * thrown in to the sky.
@@ -41,9 +35,18 @@ interface MovementConfiguration {
     var gravityModifier: Double
 
     /**
-     * Rolling distance.
+     * The speed reducement of the ball in the air is calculated by
+     *
+     * NewVelocity = Current Velocity * (1.0-airDrag)
      */
-    var rollingDistanceModifier: Double
+    var airResistance: Double
+
+    /**
+     * The speed reducement of the ball on the ground is calculated by
+     *
+     * NewVelocity = Current Velocity * (1.0-groundDrag)
+     */
+    var rollingResistance: Double
 
     /**
      * Horizontal touch modifier.
@@ -54,16 +57,6 @@ interface MovementConfiguration {
      * Vertical touch modifier.
      */
     var verticalTouchModifier: Double
-
-    /**
-     * Horizontal throw modifier.
-     */
-    var horizontalThrowModifier: Double
-
-    /**
-     * Vertical throw modifier.
-     */
-    var verticalThrowModifier: Double
 
     /**
      * The overall shot velocity.

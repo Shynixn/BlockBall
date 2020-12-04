@@ -34,24 +34,19 @@ import java.util.*
 interface BallEntityService {
     /**
      * Spawns a temporary ball.
+     * Returns a ball or null if the ball spawn event was cancelled.
      */
-    fun <L> spawnTemporaryBall(location: L, meta: BallMeta): BallProxy
+    fun <L> spawnTemporaryBall(location: L, meta: BallMeta): BallProxy?
 
     /**
-     * Registers entities on the server when not already registered.
-     * Returns true if registered. Returns false when not registered.
+     * Tries to locate the ball by the given id.
      */
-    fun registerEntitiesOnServer(): Boolean
+    fun findBallByEntityId(id: Int): BallProxy?
 
     /**
-     * Finds Ball from the given entity.
+     * Disables a ball from tracking.
      */
-    fun <E> findBallFromEntity(entity: E): Optional<BallProxy>
-
-    /**
-     * Checks the entity collection for invalid ball entities and removes them.
-     */
-    fun <E> cleanUpInvalidEntities(entities: Collection<E>)
+    fun removeTrackedBall(ball: BallProxy)
 
     /**
      * Returns all balls managed by the plugin.

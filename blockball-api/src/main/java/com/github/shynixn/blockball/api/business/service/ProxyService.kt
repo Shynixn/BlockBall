@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.api.business.service
 import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.api.persistence.entity.RaytraceResult
 import java.util.stream.Stream
 
 /**
@@ -62,6 +63,11 @@ interface ProxyService {
      * Gets the location of the entity.
      */
     fun <L, P> getEntityLocation(entity: P): L
+
+    /**
+     * Gets the player eye location.
+     */
+    fun <P, L> getPlayerEyeLocation(player: P): L
 
     /**
      * Gets the name of the World the player is in.
@@ -157,6 +163,11 @@ interface ProxyService {
      * Gets the player direction.
      */
     fun <P> getPlayerDirection(player: P): Position
+
+    /**
+     * Gets the location direction.
+     */
+    fun <L> getLocationDirection(location: L): Position
 
     /**
      * Gets the player scoreboard.
@@ -298,6 +309,11 @@ interface ProxyService {
      * Return true if the block is valid sign with changed lines.
      */
     fun <L> setSignLines(location: L, lines: List<String>): Boolean
+
+    /**
+     * Creates a new entity id.
+     */
+    fun createNewEntityId(): Int
 
     /**
      * Sends the given [packet] to the given [player].

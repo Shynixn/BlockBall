@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
+
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -50,6 +52,12 @@ interface Selection {
      * Is location inside of this selection.
      */
     fun isLocationInSelection(location: Position): Boolean
+
+    /**
+     * If the given location is outside the arena it returns the block direction
+     * in which the arena can be reached.
+     */
+    fun getRelativeBlockDirectionToLocation(location: Position) : BlockDirection
 
     /**
      * Sets the corners of the selection.

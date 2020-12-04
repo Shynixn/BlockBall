@@ -9,11 +9,10 @@ import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
-import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
-import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
 import com.github.shynixn.blockball.core.logic.business.commandexecutor.*
 import com.github.shynixn.blockball.core.logic.business.extension.cast
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.google.inject.Guice
 import com.google.inject.Injector
 import org.apache.commons.io.FileUtils
@@ -154,7 +153,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         val ballEntityService = resolve(BallEntityService::class.java)
         val bungeeCordConnectionService = resolve(BungeeCordConnectionService::class.java)
 
-        ballEntityService.registerEntitiesOnServer()
         updateCheckService.checkForUpdates()
         dependencyService.checkForInstalledDependencies()
 
@@ -198,9 +196,14 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
                 .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.DARK_GREEN + "Started server linking.")
         }
 
+        val protocolService = resolve(ProtocolService::class.java)
+
         for (world in Bukkit.getWorlds()) {
-            ballEntityService.cleanUpInvalidEntities(world.entities)
+            for (player in world.players) {
+                protocolService.register(player)
+            }
         }
+        protocolService.registerPackets(listOf(findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")))
 
         Bukkit.getServer()
             .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn, LazoYoung")
@@ -216,10 +219,10 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
 
         resolve(PersistenceStatsService::class.java).close()
         resolve(SqlDbContext::class.java).close()
+        resolve(ProtocolService::class.java).dispose()
 
         try {
             resolve(GameService::class.java).close()
-            resolve(EntityRegistrationService::class.java).clearResources()
         } catch (e: Exception) {
             // Ignored.
         }
@@ -317,6 +320,18 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
      */
     override fun shutdownServer() {
         Bukkit.getServer().shutdown()
+    }
+
+    /**
+     * Tries to find a version compatible class.
+     */
+    override fun findClazz(name: String): Class<*> {
+        return Class.forName(
+            name.replace(
+                "VERSION",
+                BlockBallApi.resolve(PluginProxy::class.java).getServerVersion().bukkitId
+            )
+        )
     }
 
     /**

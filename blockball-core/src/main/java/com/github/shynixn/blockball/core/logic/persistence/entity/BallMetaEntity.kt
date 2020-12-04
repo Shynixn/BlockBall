@@ -33,9 +33,10 @@ import com.github.shynixn.blockball.api.persistence.entity.*
  * SOFTWARE.
  */
 class BallMetaEntity(
-        /** Skin of the ball.**/
-        @YamlSerialize(orderNumber = 2, value = "skin")
-        override var skin: String = "") : BallMeta {
+    /** Skin of the ball.**/
+    @YamlSerialize(orderNumber = 2, value = "skin")
+    override var skin: String = ""
+) : BallMeta {
 
     /** Size of the ball.**/
     @YamlSerialize(orderNumber = 1, value = "size")
@@ -44,78 +45,87 @@ class BallMetaEntity(
     /**
      * Size of the hitbox used for interaction detecting.
      */
-    @YamlSerialize(orderNumber = 3, value = "hitbox-size")
-    override var hitBoxSize: Double = 2.0
+    @YamlSerialize(orderNumber = 3, value = "interaction-hitbox-size")
+    override var interactionHitBoxSize: Double = 2.0
+
+    /**
+     * Size of the hitbox used for kicking and passing detecting.
+     */
+    @YamlSerialize(orderNumber = 4, value = "kickpass-hitbox-size")
+    override var kickPassHitBoxSize: Double = 5.0
+
+    /**
+     * Delay in ticks until the ball executes the kick pass request by the player.
+     * Is useful for magnus force calculation.
+     */
+    @YamlSerialize(orderNumber = 5, value = "kickpass-delay-ticks")
+    override var kickPassDelay: Int = 5
+
+    /**
+     * Amount of ticks until the ball can intercept interaction again after
+     * performing 1 interaction.
+     */
+    @YamlSerialize(orderNumber = 6, value = "interaction-cooldown-ticks")
+    override var interactionCoolDown: Int = 20
+
 
     /** Should the ball rotate? */
-    @YamlSerialize(orderNumber = 4, value = "rotating")
+    @YamlSerialize(orderNumber = 7, value = "rotating")
     override var rotating: Boolean = true
 
     /**
      * Is leftclick kicking the ball enabled?
      */
-    @YamlSerialize(orderNumber = 5, value = "enable-kick")
+    @YamlSerialize(orderNumber = 8, value = "enable-kick")
     override var enabledKick: Boolean = true
 
     /**
      * Is the rightclick passing the ball enabled?
      */
-    @YamlSerialize(orderNumber = 6, value = "enable-pass")
+    @YamlSerialize(orderNumber = 9, value = "enable-pass")
     override var enabledPass: Boolean = true
 
     /**
      * Is the moving into the ball enabled?
      */
-    @YamlSerialize(orderNumber = 7, value = "enable-interact")
+    @YamlSerialize(orderNumber = 10, value = "enable-interact")
     override var enabledInteract: Boolean = true
 
     /**
      * Hitbox relocation value for ground heights.
      */
-    @YamlSerialize(orderNumber = 8, value = "hitbox-relocation")
+    @YamlSerialize(orderNumber = 11, value = "hitbox-relocation")
     override var hitBoxRelocation: Double = 0.0
-
-    /**
-     * Should the ball be able to carry.
-     */
-    @YamlSerialize(orderNumber = 9, value = "carry-able")
-    override var carryAble: Boolean = false
 
     /**
      * Should the ball always bounce of walls?
      */
-    @YamlSerialize(orderNumber = 10, value = "always-bounce")
+    @YamlSerialize(orderNumber = 12, value = "always-bounce")
     override var alwaysBounce: Boolean = true
-
-    /**
-     * Bouncing off from objects modifiers.
-     */
-    @YamlSerialize(orderNumber = 11, value = "wall-bouncing")
-    override val bounceModifiers: MutableList<BounceConfiguration> = ArrayList()
 
     /**
      * Movement modifier.
      */
-    @YamlSerialize(orderNumber = 12, value = "modifiers")
+    @YamlSerialize(orderNumber = 13, value = "modifiers")
     override val movementModifier: MovementConfigurationEntity = MovementConfigurationEntity()
 
     /**
      * Particle effects.
      */
-    @YamlSerialize(orderNumber = 13, value = "particle-effects", implementation = ParticleEntity::class)
+    @YamlSerialize(orderNumber = 14, value = "particle-effects", implementation = ParticleEntity::class)
     override val particleEffects: MutableMap<BallActionType, Particle> = HashMap()
 
     /**
      * Particle effects.
      */
-    @YamlSerialize(orderNumber = 14, value = "sound-effects", implementation = SoundEntity::class)
+    @YamlSerialize(orderNumber = 15, value = "sound-effects", implementation = SoundEntity::class)
     override val soundEffects: MutableMap<BallActionType, Sound> = HashMap()
 
     /** Spawning delay. */
-    @YamlSerialize(orderNumber = 15, value = "spawn-delay")
+    @YamlSerialize(orderNumber = 16, value = "spawn-delay")
     override var delayInTicks: Int = 0
 
     /** Spawnpoint of the ball. */
-    @YamlSerialize(orderNumber = 16, value = "spawnpoint", implementation = PositionEntity::class)
+    @YamlSerialize(orderNumber = 17, value = "spawnpoint", implementation = PositionEntity::class)
     override var spawnpoint: Position? = null
 }

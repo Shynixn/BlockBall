@@ -2,24 +2,19 @@ package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.enumeration.Version
-import com.github.shynixn.blockball.api.business.proxy.HologramProxy
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.api.persistence.repository.LinkSignRepository
 import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_10_R1.EntityRegistration110R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_11_R1.EntityRegistration111R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_13_R2.EntityRegistration113R2ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_14_R1.EntityRegistration114R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_15_R1.EntityRegistration115R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_16_R1.EntityRegistration116R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_16_R2.EntityRegistration116R2ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_16_R3.EntityRegistration116R3ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.nms.v1_8_R3.EntityRegistrationLegacyServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.proxy.HologramProxyImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.Particle113R2ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.RayTracingService113R2Impl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.InternalVersionPacket18R3ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.Particle18R3ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.RayTracingService18R3Impl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_9_R2.InternalVersionPacket19R2ServiceImpl
 import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextImpl
 import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
@@ -70,9 +65,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(PluginProxy::class.java).toInstance(plugin)
         bind(LoggingService::class.java).toInstance(LoggingUtilServiceImpl(plugin.logger))
 
-        // Roots
-        bind(HologramProxy::class.java).to(HologramProxyImpl::class.java)
-
         // Repositories
         bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java).`in`(Scopes.SINGLETON)
         bind(StatsRepository::class.java).to(StatsSqlRepository::class.java).`in`(Scopes.SINGLETON)
@@ -103,11 +95,11 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
             .`in`(Scopes.SINGLETON)
         bind(BallEntityService::class.java).to(BallEntityServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(BlockSelectionService::class.java).to(BlockSelectionServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(BallForceFieldService::class.java).to(BallForceFieldServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(YamlSerializationService::class.java).to(YamlSerializationServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(YamlService::class.java).to(YamlServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ItemTypeService::class.java).to(ItemTypeServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ConcurrencyService::class.java).to(ConcurrencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(ProxyService::class.java).to(ProxyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(CommandService::class.java).to(CommandServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameExecutionService::class.java).to(GameExecutionServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PersistenceLinkSignService::class.java).to(PersistenceLinkSignServiceImpl::class.java)
@@ -117,35 +109,23 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
             .`in`(Scopes.SINGLETON)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(ProxyService::class.java).to(ProxyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PlaceholderService::class.java).to(PlaceholderServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(PacketService::class.java).to(PacketJavaProtocolServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(ProtocolService::class.java).to(ProtocolServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         when {
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_16_R3)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration116R3ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_16_R2)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration116R2ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_16_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration116R1ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_15_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration115R1ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration114R1ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration113R2ServiceImpl::class.java)
+            -> bind(RayTracingService::class.java).to(RayTracingService113R2Impl::class.java)
                 .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_11_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration111R1ServiceImpl::class.java)
+            else -> bind(RayTracingService::class.java).to(RayTracingService18R3Impl::class.java)
                 .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_10_R1)
-            -> bind(EntityRegistrationService::class.java).to(EntityRegistration110R1ServiceImpl::class.java)
+        }
+
+        when {
+            version.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)
+            -> bind(InternalVersionPacketService::class.java).to(InternalVersionPacket19R2ServiceImpl::class.java)
                 .`in`(Scopes.SINGLETON)
-            else -> bind(EntityRegistrationService::class.java).to(EntityRegistrationLegacyServiceImpl::class.java)
+            else -> bind(InternalVersionPacketService::class.java).to(InternalVersionPacket18R3ServiceImpl::class.java)
                 .`in`(Scopes.SINGLETON)
         }
 
@@ -155,7 +135,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
             ).`in`(
                 Scopes.SINGLETON
             )
-            else -> bind(ParticleService::class.java).to(Particle18R1ServiceImpl::class.java).`in`(Scopes.SINGLETON)
+            else -> bind(ParticleService::class.java).to(Particle18R3ServiceImpl::class.java).`in`(Scopes.SINGLETON)
         }
 
         if (dependencyService.isInstalled(PluginDependency.PLACEHOLDERAPI)) {
