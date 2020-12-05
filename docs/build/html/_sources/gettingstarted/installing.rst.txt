@@ -19,7 +19,7 @@ Spigot/CraftBukkit/Sponge
 PlaceholderAPI
 ~~~~~~~~~
 
-This plugin `broadcasts values <../customizing/placeholders.html> to the PlaceHolderAPI plugin.
+This plugin `broadcasts values <../customizing/placeholders.html>`__ to the PlaceHolderAPI plugin.
 
 Download
 ~~~~~~~~
