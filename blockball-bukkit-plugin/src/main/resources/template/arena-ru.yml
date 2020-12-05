@@ -96,7 +96,7 @@ arena:
       - '&f&l<game>'
       - '<teamcolor><team>'
       - '<players>/<maxplayers>'
-      score-message-title: '<redcolor><redscore> : <bluecolor><bluescore>'
+      score-message-title: '<redcolor><redscore> &7: <bluecolor><bluescore>'
       score-message-subtitle: '<redcolor><player> &7забил мяч за <red>'
       win-message-title: '<redcolor><red>'
       win-message-subtitle: '<redcolor><red> &7выйграли матч!'
@@ -159,7 +159,7 @@ arena:
       - '&f&l<game>'
       - '<teamcolor><team>'
       - '<players>/<maxplayers>'
-      score-message-title: '<bluecolor><bluescore> : <redcolor><redscore>'
+      score-message-title: '<bluecolor><bluescore> &7: <redcolor><redscore>'
       score-message-subtitle: '<bluecolor><player> &7забил мяч за <blue>'
       win-message-title: '<bluecolor><blue>'
       win-message-subtitle: '<bluecolor><blue> &7выйграли матч!'
@@ -323,7 +323,7 @@ arena:
       - '&m           &r'
     bossbar:
       enabled: false
-      text: '<redcolor><red> <redscore> : <bluecolor><bluescore> <blue>'
+      text: '<redcolor><red> <redscore> &7: <bluecolor><bluescore> <blue>'
       percentage: 100.0
       color: WHITE
       style: SOLID
