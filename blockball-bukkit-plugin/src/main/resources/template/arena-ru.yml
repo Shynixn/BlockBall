@@ -24,12 +24,12 @@ arena:
       even-teams: false
       join-sign-lines:
       - '&lBlockBall'
-      - '&f&l<game>'
+      - '<game>'
       - '<state>'
       - '<sumplayers>/<summaxplayers>'
       leave-sign-lines:
       - '&lBlockBall'
-      - '&f&l<game>'
+      - '<game>'
       - '§fВыйти'
       - '<sumplayers>/<summaxplayers>'
       gamemode: ADVENTURE
@@ -93,7 +93,7 @@ arena:
       leave-message: 'Вы вышли из игры.'
       lines:
       - '&lBlockBall'
-      - '&f&l<game>'
+      - '<game>'
       - '<teamcolor><team>'
       - '<players>/<maxplayers>'
       score-message-title: '<redcolor><redscore> &7: <bluecolor><bluescore>'
@@ -156,7 +156,7 @@ arena:
       leave-message: 'Вы вышли из игры.'
       lines:
       - '&lBlockBall'
-      - '&f&l<game>'
+      - '<game>'
       - '<teamcolor><team>'
       - '<players>/<maxplayers>'
       score-message-title: '<bluecolor><bluescore> &7: <redcolor><redscore>'
