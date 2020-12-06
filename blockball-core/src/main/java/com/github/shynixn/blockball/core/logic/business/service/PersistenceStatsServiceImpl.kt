@@ -16,7 +16,7 @@ class PersistenceStatsServiceImpl @Inject constructor(
     private val proxyService: ProxyService,
     private val coroutineSessionService: CoroutineSessionService
 ) : PersistenceStatsService {
-    private val cacheInternal = HashMap<String, Deferred<Stats>>()
+    private val cacheInternal = HashMap<Any, Deferred<Stats>>()
     private var queryPlayersInterval = 1000 * 60 * 5L
 
     /**
@@ -47,19 +47,21 @@ class PersistenceStatsServiceImpl @Inject constructor(
      * This call will never return null.
      */
     override suspend fun <P> getStatsFromPlayerAsync(player: P): Deferred<Stats> {
+        require(player is Any)
+
         val playerUUID = proxyService.getPlayerUUID(player)
         val playerName = proxyService.getPlayerName(player)
 
-        if (cacheInternal.containsKey(playerUUID)) {
-            return cacheInternal[playerUUID]!!
+        if (cacheInternal.containsKey(player)) {
+            return cacheInternal[player]!!
         }
 
         return coroutineScope {
-            cacheInternal[playerUUID] = async(coroutineSessionService.asyncDispatcher) {
+            cacheInternal[player] = async(coroutineSessionService.asyncDispatcher) {
                 statsRepository.getOrCreateFromPlayer(playerName, playerUUID)
             }
 
-            cacheInternal[playerUUID]!!
+            cacheInternal[player]!!
         }
     }
 
