@@ -24,12 +24,12 @@ arena:
       even-teams: false
       join-sign-lines:
       - '&lBlockBall'
-      - '<game>'
+      - '&f&l<game>'
       - '<state>'
       - '<sumplayers>/<summaxplayers>'
       leave-sign-lines:
       - '&lBlockBall'
-      - '<game>'
+      - '&f&l<game>'
       - '§fВыйти'
       - '<sumplayers>/<summaxplayers>'
       gamemode: ADVENTURE
@@ -93,11 +93,11 @@ arena:
       leave-message: 'Вы вышли из игры.'
       lines:
       - '&lBlockBall'
-      - '<game>'
+      - '&f&l<game>'
       - '<teamcolor><team>'
       - '<players>/<maxplayers>'
       score-message-title: '<redcolor><redscore> &7: <bluecolor><bluescore>'
-      score-message-subtitle: '<redcolor><player> &7забил мяч за <red>'
+      score-message-subtitle: '<redcolor><player> &7забил мяч за <redcolor><red>&7!'
       win-message-title: '<redcolor><red>'
       win-message-subtitle: '<redcolor><red> &7выйграли матч!'
       draw-message-title: '<redcolor><red>'
@@ -156,11 +156,11 @@ arena:
       leave-message: 'Вы вышли из игры.'
       lines:
       - '&lBlockBall'
-      - '<game>'
+      - '&f&l<game>'
       - '<teamcolor><team>'
       - '<players>/<maxplayers>'
       score-message-title: '<bluecolor><bluescore> &7: <redcolor><redscore>'
-      score-message-subtitle: '<bluecolor><player> &7забил мяч за <blue>'
+      score-message-subtitle: '<bluecolor><player> &7забил мяч за <bluecolor><blue>&7!'
       win-message-title: '<bluecolor><blue>'
       win-message-subtitle: '<bluecolor><blue> &7выйграли матч!'
       draw-message-title: '<bluecolor><blue>'
