@@ -55,7 +55,8 @@ class GameActionServiceImpl @Inject constructor(
     private val eventService: EventService,
     private val proxyService: ProxyService,
     private val loggingService: LoggingService,
-    private val packetService: PacketService
+    private val packetService: PacketService,
+    private val concurrencyService: ConcurrencyService
 ) : GameActionService {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 
@@ -147,7 +148,10 @@ class GameActionServiceImpl @Inject constructor(
         }
 
         if (game.arena.meta.lobbyMeta.leaveSpawnpoint != null) {
-            proxyService.teleport(player, proxyService.toLocation<Any>(game.arena.meta.lobbyMeta.leaveSpawnpoint!!))
+            // Otherwise spigot detects it as too many operations at once.
+            concurrencyService.runTaskSync(5L) {
+                proxyService.teleport(player, proxyService.toLocation<Any>(game.arena.meta.lobbyMeta.leaveSpawnpoint!!))
+            }
         }
     }
 
