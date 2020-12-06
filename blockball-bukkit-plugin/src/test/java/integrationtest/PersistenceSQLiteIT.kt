@@ -16,6 +16,8 @@ import com.github.shynixn.blockball.core.logic.business.service.LoggingUtilServi
 import com.github.shynixn.blockball.core.logic.business.service.PersistenceStatsServiceImpl
 import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextImpl
 import com.github.shynixn.blockball.core.logic.persistence.repository.StatsSqlRepository
+import helper.MockedCoroutineSessionService
+import kotlinx.coroutines.runBlocking
 import org.apache.commons.io.FileUtils
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
@@ -76,7 +78,9 @@ class PersistenceSQLiteIT {
         Mockito.`when`(player.uniqueId).thenReturn(uuid)
 
         // Act
-        val actual = classUnderTest.getStatsFromPlayer(player)
+        val actual = runBlocking {
+            classUnderTest.getStatsFromPlayerAsync(player).await()
+        }
 
         // Assert
         Assertions.assertEquals(1, actual.id)
@@ -105,15 +109,18 @@ class PersistenceSQLiteIT {
         Mockito.`when`(player.uniqueId).thenReturn(uuid)
 
         // Act
-        val stats = classUnderTest.getStatsFromPlayer(player)
+        val stats = runBlocking {
+            classUnderTest.getStatsFromPlayerAsync(player).await()
+        }
 
         stats.amountOfPlayedGames = 5
         stats.amountOfGoals = 4
         stats.amountOfWins = 1
         stats.playerMeta.name = "Superman"
 
-        classUnderTest.save(stats).get()
-        val actual = classUnderTest.getStatsFromPlayer(player)
+        val actual = runBlocking {
+            classUnderTest.getStatsFromPlayerAsync(player).await()
+        }
 
         // Assert
         Assertions.assertEquals(1, actual.id)
@@ -160,23 +167,7 @@ class PersistenceSQLiteIT {
                 SqlDbContextImpl(ConfigurationServiceImpl(plugin), LoggingUtilServiceImpl(Logger.getAnonymousLogger()))
 
             val sqlite = StatsSqlRepository(dbContext!!)
-            return PersistenceStatsServiceImpl(sqlite, MockedProxyService(), MockedConcurrencyService())
-        }
-    }
-
-    class MockedConcurrencyService : ConcurrencyService {
-        /**
-         * Runs the given [function] synchronised with the given [delayTicks] and [repeatingTicks].
-         */
-        override fun runTaskSync(delayTicks: Long, repeatingTicks: Long, function: () -> Unit) {
-            function.invoke()
-        }
-
-        /**
-         * Runs the given [function] asynchronous with the given [delayTicks] and [repeatingTicks].
-         */
-        override fun runTaskAsync(delayTicks: Long, repeatingTicks: Long, function: () -> Unit) {
-            function.invoke()
+            return PersistenceStatsServiceImpl(sqlite, MockedProxyService(), MockedCoroutineSessionService())
         }
     }
 
@@ -212,6 +203,13 @@ class PersistenceSQLiteIT {
          * Kicks the given player with the given message.
          */
         override fun <P> kickPlayer(player: P, message: String) {
+            throw IllegalArgumentException()
+        }
+
+        /**
+         * Is player online.
+         */
+        override fun <P> isPlayerOnline(player: P): Boolean {
             throw IllegalArgumentException()
         }
 

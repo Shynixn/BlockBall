@@ -88,7 +88,7 @@ class InternalVersionPacket18R3ServiceImpl @Inject constructor(private val plugi
         buffer.writeShort((mathhelperA(0.0, -3.9, 3.9) * 8000.0).toInt())
 
         buffer.writeByte(127)
-        val packet = packetPlayOutEntitySpawnLiving.newInstance()
+        val packet = packetPlayOutEntitySpawnLiving.getDeclaredConstructor().newInstance()
         val dataSerializer = dataSerializerConstructor.newInstance(buffer)
         dataDeSerializationPacketMethod.invoke(packet, dataSerializer)
         packetPlayOutEntitySpawnLiving.getDeclaredField("l")
@@ -155,7 +155,7 @@ class InternalVersionPacket18R3ServiceImpl @Inject constructor(private val plugi
      * Creates a packet from buffer.
      */
     private fun createPacketFromBuffer(packetClazz: Class<*>, byteBuf: ByteBuf): Any {
-        val packet = packetClazz.newInstance()
+        val packet = packetClazz.getDeclaredConstructor().newInstance()
         val dataSerializer = dataSerializerConstructor.newInstance(byteBuf)
         dataDeSerializationPacketMethod.invoke(packet, dataSerializer)
         return packet

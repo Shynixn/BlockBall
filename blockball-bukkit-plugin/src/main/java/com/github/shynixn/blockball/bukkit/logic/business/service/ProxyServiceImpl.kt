@@ -170,6 +170,14 @@ class ProxyServiceImpl @Inject constructor(
     }
 
     /**
+     * Is player online.
+     */
+    override fun <P> isPlayerOnline(player: P): Boolean {
+        require(player is Player)
+        return player.isOnline
+    }
+
+    /**
      * Performs a player command.
      */
     override fun <P> performPlayerCommand(player: P, command: String) {

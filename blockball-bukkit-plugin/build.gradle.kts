@@ -19,6 +19,7 @@ tasks.withType<ShadowJar> {
     relocate("org.aopalliance", "com.github.shynixn.blockball.lib.org.aopalliance")
     relocate("org.slf4j", "com.github.shynixn.blockball.lib.org.slf4j")
 
+    relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
     relocate("com.google", "com.github.shynixn.blockball.lib.com.google")
     relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
     relocate("org.apache", "com.github.shynixn.blockball.lib.org.apache")
@@ -51,6 +52,12 @@ dependencies {
     implementation(project(":blockball-api"))
     implementation(project(":blockball-bukkit-api"))
     implementation(project(":blockball-core"))
+
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:0.0.5")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:0.0.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.9")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.72")
 
     implementation("org.slf4j:slf4j-jdk14:1.7.25")
     implementation("com.zaxxer:HikariCP:3.2.0")
