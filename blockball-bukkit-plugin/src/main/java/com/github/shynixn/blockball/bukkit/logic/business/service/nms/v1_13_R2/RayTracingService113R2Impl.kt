@@ -25,6 +25,13 @@ class RayTracingService113R2Impl : RayTracingService {
             position.pitch = Math.round((position.pitch % 360.0F) * 100.0) / 100.0
         }
 
+        position.x = fixFiniteDomain(position.x)
+        position.y = fixFiniteDomain(position.y)
+        position.z = fixFiniteDomain(position.z)
+        motion.x = fixFiniteDomain(motion.x)
+        motion.y = fixFiniteDomain(motion.y)
+        motion.z = fixFiniteDomain(motion.z)
+
         val endPosition =
             PositionEntity(position.worldName!!, position.x + motion.x, position.y + motion.y, position.z + motion.z)
         val sourceLocation = position.toLocation()
@@ -51,5 +58,13 @@ class RayTracingService113R2Impl : RayTracingService {
         targetPosition.pitch = position.pitch
 
         return RayTraceResultEntity(true, targetPosition, direction)
+    }
+
+    private fun fixFiniteDomain(value: Double): Double {
+        if (!NumberConversions.isFinite(value)) {
+            return Math.round(value * 100.0) / 100.0
+        }
+
+        return value
     }
 }
