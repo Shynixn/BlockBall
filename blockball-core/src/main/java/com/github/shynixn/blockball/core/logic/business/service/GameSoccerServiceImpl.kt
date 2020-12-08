@@ -191,11 +191,23 @@ class GameSoccerServiceImpl @Inject constructor(
         val additionalPlayers = getNofifiedPlayers(game)
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
+        val scoreTeamMeta = if (game.ingamePlayersStorage.containsKey(interactionEntity)) {
+            val scorerGameStory = game.ingamePlayersStorage[interactionEntity]!!
+
+            if (scorerGameStory.team == Team.RED) {
+                game.arena.meta.redTeamMeta
+            } else {
+                game.arena.meta.blueTeamMeta
+            }
+        } else {
+            null
+        }
+
         players.forEach { p ->
             screenMessageService.setTitle(
                 p,
-                placeholderService.replacePlaceHolders(scoreMessageTitle, game),
-                placeholderService.replacePlaceHolders(scoreMessageSubTitle, game)
+                placeholderService.replacePlaceHolders(scoreMessageTitle, game, scoreTeamMeta),
+                placeholderService.replacePlaceHolders(scoreMessageSubTitle, game, scoreTeamMeta)
             )
         }
     }

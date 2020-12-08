@@ -148,10 +148,7 @@ class GameActionServiceImpl @Inject constructor(
         }
 
         if (game.arena.meta.lobbyMeta.leaveSpawnpoint != null) {
-            // Otherwise spigot detects it as too many operations at once.
-            concurrencyService.runTaskSync(5L) {
-                proxyService.teleport(player, proxyService.toLocation<Any>(game.arena.meta.lobbyMeta.leaveSpawnpoint!!))
-            }
+            proxyService.teleport(player, proxyService.toLocation<Any>(game.arena.meta.lobbyMeta.leaveSpawnpoint!!))
         }
     }
 
