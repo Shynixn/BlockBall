@@ -25,9 +25,11 @@ class PersistenceStatsServiceImpl @Inject constructor(
     init {
         coroutineSessionService.launch {
             while (true) {
+                val stats = cacheInternal.values.toTypedArray()
+
                 withContext(coroutineSessionService.asyncDispatcher) {
-                    for (stats in cacheInternal.values) {
-                        statsRepository.save(stats.await())
+                    for (stat in stats){
+                        statsRepository.save(stat.await())
                     }
                 }
 
