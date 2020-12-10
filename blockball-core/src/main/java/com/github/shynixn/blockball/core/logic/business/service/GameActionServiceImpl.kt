@@ -55,7 +55,8 @@ class GameActionServiceImpl @Inject constructor(
     private val eventService: EventService,
     private val proxyService: ProxyService,
     private val loggingService: LoggingService,
-    private val packetService: PacketService
+    private val packetService: PacketService,
+    private val concurrencyService: ConcurrencyService
 ) : GameActionService {
     private val prefix = configurationService.findValue<String>("messages.prefix")
 

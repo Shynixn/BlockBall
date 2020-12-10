@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.bukkit.event.PacketEvent
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.persistence.entity.HubGame
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
@@ -128,18 +129,15 @@ class GameListener @Inject constructor(
         }
 
         val optPlayerGame = gameService.getGameFromPlayer(event.player)
-        val optSpectatorGame = gameService.getGameFromSpectatingPlayer(event.player)
 
-        val game = when {
-            optPlayerGame.isPresent -> {
-                optPlayerGame.get()
-            }
-            optSpectatorGame.isPresent -> {
-                optSpectatorGame.get()
-            }
-            else -> {
-                return
-            }
+        if (!optPlayerGame.isPresent) {
+            return
+        }
+
+        val game = optPlayerGame.get()
+
+        if (game !is HubGame) {
+            return
         }
 
         if (game.arena.isLocationInSelection(event.to!!.toPosition())) {

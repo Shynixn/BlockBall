@@ -112,6 +112,7 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(PlaceholderService::class.java).to(PlaceholderServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PacketService::class.java).to(PacketJavaProtocolServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ProtocolService::class.java).to(ProtocolServiceImpl::class.java).`in`(Scopes.SINGLETON)
+        bind(CoroutineSessionService::class.java).to(CoroutineSessionServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         when {
             version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)

@@ -50,6 +50,11 @@ interface ProxyService {
     fun <P> kickPlayer(player: P, message: String)
 
     /**
+     * Is player online.
+     */
+    fun <P> isPlayerOnline(player: P): Boolean
+
+    /**
      * Performs a player command.
      */
     fun <P> performPlayerCommand(player: P, command: String)
