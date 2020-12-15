@@ -100,6 +100,6 @@ dependencies {
     implementation project(':blockball-sponge-api')
     implementation project(':blockball-sponge-plugin')
 
-    compileOnly 'com.zaxxer:HikariCP:3.2.0'
+    compileOnly 'com.zaxxer:HikariCP:3.4.5'
     compileOnly 'org.spongepowered:spongeapi:7.1.0'
 }
