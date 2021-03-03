@@ -40,6 +40,13 @@ jobs:
           path: /home/runner/.gradle/caches/minecraft
           key: forge-dependencies
 
+      - name: Cache Vault Dependency
+        id: cache-forge-dependencies
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/.m2/repository/net/milkbowlvault
+          key: forge-dependencies
+
       - name: Build Java Application
         run: |
           chmod +x gradlew
