@@ -130,4 +130,4 @@ jobs:
           git add docs
           git add -f docs/build
           git commit --message "Automatic CI Documentation."
-          git push --quiet https://Shynixn:${{ secrets.GITHUB_TOKEN }}@github.com/Shynixn/PetBlocks.git HEAD:master
+          git push --quiet https://Shynixn:${{ secrets.GITHUB_TOKEN }}@github.com/Shynixn/BlockBall.git HEAD:master
