@@ -41,7 +41,7 @@ jobs:
           key: forge-dependencies
 
       - name: Cache Vault Dependency
-        id: cache-forge-dependencies
+        id: cache-vault-dependency
         uses: actions/cache@v2
         with:
           path: /home/runner/.m2/repository/net/milkbowlvault
