@@ -107,8 +107,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/work/BlockBall/BlockBall/petblocks-bukkit-plugin/build/libs/petblocks-bukkit-plugin-${{ env.RELEASE_VERSION }}.jar
-          asset_name: PetBlocks-Bukkit.jar
+          asset_path: /home/runner/work/BlockBall/BlockBall/blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin-${{ env.RELEASE_VERSION }}.jar
+          asset_name: BlockBall-Bukkit.jar
           asset_content_type: application/jar
 
   Documentation:
