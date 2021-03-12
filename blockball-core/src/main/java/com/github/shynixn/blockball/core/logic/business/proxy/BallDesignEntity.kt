@@ -2,6 +2,7 @@
 
 package com.github.shynixn.blockball.core.logic.business.proxy
 
+import com.github.shynixn.blockball.api.business.enumeration.BallSize
 import com.github.shynixn.blockball.api.business.enumeration.CompatibilityArmorSlotType
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
@@ -54,9 +55,10 @@ class BallDesignEntity(val entityId: Int) {
      */
     fun spawn(player: Any, position: Position) {
         packetService.sendEntitySpawnPacket(player, entityId, "ARMOR_STAND", position)
-        packetService.sendEntityEquipmentPacket(player, entityId,  CompatibilityArmorSlotType.HELMET, helmetItemStack)
+        packetService.sendEntityEquipmentPacket(player, entityId, CompatibilityArmorSlotType.HELMET, helmetItemStack)
         packetService.sendEntityMetaDataPacket(player, entityId, EntityMetadataImpl {
             this.isInvisible = true
+            this.isSmall = ball.meta.size == BallSize.SMALL
         })
     }
 
@@ -73,7 +75,12 @@ class BallDesignEntity(val entityId: Int) {
      */
     fun <P> tick(players: List<P>) {
         val position = proxyService.toPosition(ball.getLocation<Any>())
-        position.y = position.y + ball.meta.hitBoxRelocation - 1.2
+
+        position.y = if (ball.meta.size == BallSize.NORMAL) {
+            position.y + ball.meta.hitBoxRelocation - 1.2
+        } else {
+            position.y + ball.meta.hitBoxRelocation - 0.4
+        }
 
         for (player in players) {
             packetService.sendEntityTeleportPacket(player, entityId, position)

@@ -216,6 +216,12 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
             buffer.writeByte(0x20)
         }
 
+        if (entityMetaData.isSmall != null && entityMetaData.isSmall!!) {
+            buffer.writeByte(14)
+            buffer.writeId(byteTypeValue)
+            buffer.writeByte(0x01)
+        }
+
         buffer.writeByte(255)
 
         return createPacketFromBuffer(packetPlayOutEntityMetaData, buffer)
