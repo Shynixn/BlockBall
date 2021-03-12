@@ -8,7 +8,7 @@ tasks.withType<ShadowJar> {
     archiveName = "$baseName-$version.$extension"
 
     // Change the output folder of the plugin.
-    // destinationDir = File("D:\\Benutzer\\Temp\\plugins")
+    // destinationDir = File("C:\\temp\\plugins")
 
     relocate("kotlin", "com.github.shynixn.blockball.lib.kotlin")
 
@@ -57,7 +57,6 @@ dependencies {
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:0.0.5")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.9")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.72")
 
     implementation("org.slf4j:slf4j-jdk14:1.7.25")
     implementation("com.zaxxer:HikariCP:3.2.0")
