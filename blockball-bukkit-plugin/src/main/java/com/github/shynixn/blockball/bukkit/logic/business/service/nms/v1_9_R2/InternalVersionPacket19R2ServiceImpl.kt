@@ -217,7 +217,18 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
         }
 
         if (entityMetaData.isSmall != null && entityMetaData.isSmall!!) {
-            buffer.writeByte(14)
+            when {
+                pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_15_R1) -> {
+                    buffer.writeByte(14)
+                }
+                pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_10_R1) -> {
+                    buffer.writeByte(11)
+                }
+                else -> {
+                    buffer.writeByte(10)
+                }
+            }
+
             buffer.writeId(byteTypeValue)
             buffer.writeByte(0x01)
         }
