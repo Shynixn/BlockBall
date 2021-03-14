@@ -108,7 +108,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: /home/runner/work/BlockBall/BlockBall/blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin-${{ env.RELEASE_VERSION }}.jar
-          asset_name: BlockBall-Bukkit.jar
+          asset_name: BlockBall.jar
           asset_content_type: application/jar
 
   Documentation:
