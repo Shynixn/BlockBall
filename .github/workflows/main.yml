@@ -40,6 +40,13 @@ jobs:
           path: /home/runner/.gradle/caches/minecraft
           key: forge-dependencies
 
+      - name: Cache Vault Dependency
+        id: cache-vault-dependency
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/.m2/repository/net/milkbowlvault
+          key: forge-dependencies
+
       - name: Build Java Application
         run: |
           chmod +x gradlew
@@ -100,8 +107,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/work/BlockBall/BlockBall/petblocks-bukkit-plugin/build/libs/petblocks-bukkit-plugin-${{ env.RELEASE_VERSION }}.jar
-          asset_name: PetBlocks-Bukkit.jar
+          asset_path: /home/runner/work/BlockBall/BlockBall/blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin-${{ env.RELEASE_VERSION }}.jar
+          asset_name: BlockBall.jar
           asset_content_type: application/jar
 
   Documentation:
@@ -130,4 +137,4 @@ jobs:
           git add docs
           git add -f docs/build
           git commit --message "Automatic CI Documentation."
-          git push --quiet https://Shynixn:${{ secrets.GITHUB_TOKEN }}@github.com/Shynixn/PetBlocks.git HEAD:master
+          git push --quiet https://Shynixn:${{ secrets.GITHUB_TOKEN }}@github.com/Shynixn/BlockBall.git HEAD:master

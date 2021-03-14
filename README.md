@@ -63,7 +63,7 @@ BlockBall is a spigot plugin to play soccer games in Minecraft.
 
 ## Licence
 
-Copyright 2015-2020 Shynixn
+Copyright 2015-2021 Shynixn
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

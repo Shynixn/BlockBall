@@ -4,16 +4,24 @@ import com.github.shynixn.blockball.api.business.enumeration.CompatibilityArmorS
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.InternalVersionPacketService
+import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.persistence.entity.EntityMetaData
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.google.inject.Inject
+import com.mojang.authlib.GameProfile
+import com.mojang.authlib.properties.Property
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
+import org.bukkit.inventory.ItemStack
 import java.nio.charset.Charset
 import java.util.*
 
-class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val pluginProxy: PluginProxy) :
+class InternalVersionPacket19R2ServiceImpl @Inject constructor(
+    private val pluginProxy: PluginProxy,
+    private val loggingService: LoggingService
+) :
     InternalVersionPacketService {
     private val entityCompatibilityCache = hashMapOf("ARMOR_STAND" to 30, "SLIME" to 55)
     private val dataSerializerClazz by lazy { pluginProxy.findClazz("net.minecraft.server.VERSION.PacketDataSerializer") }
@@ -216,6 +224,23 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
             buffer.writeByte(0x20)
         }
 
+        if (entityMetaData.isSmall != null && entityMetaData.isSmall!!) {
+            when {
+                pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_15_R1) -> {
+                    buffer.writeByte(14)
+                }
+                pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_10_R1) -> {
+                    buffer.writeByte(11)
+                }
+                else -> {
+                    buffer.writeByte(10)
+                }
+            }
+
+            buffer.writeId(byteTypeValue)
+            buffer.writeByte(0x01)
+        }
+
         buffer.writeByte(255)
 
         return createPacketFromBuffer(packetPlayOutEntityMetaData, buffer)
@@ -225,11 +250,23 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(private val plugi
      * Creates an entity equipment packet.
      */
     override fun <I> createEntityEquipmentPacket(entityId: Int, slot: CompatibilityArmorSlotType, itemStack: I): Any {
+        val skullMeta = (itemStack as ItemStack).itemMeta;
+        val gameProfile = findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftMetaSkull")
+            .getDeclaredField("profile")
+            .accessible(true)
+            .get(skullMeta) as GameProfile
+
         val nmsItemStack = craftItemStackNmsMethod.invoke(null, itemStack)
 
         if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_16_R1)) {
             val pair = mojangPairClazz.getDeclaredConstructor(Any::class.java, Any::class.java)
                 .newInstance(enumItemSlotClazz.enumConstants[slot.id116], nmsItemStack)
+            loggingService.debug("Sending ball skin: '$gameProfile'")
+
+            gameProfile.properties.get("textures").toList().forEach { e ->
+                loggingService.debug(e.name + " " + e.value)
+            }
+
             return packetPlayOutEntityEquipment
                 .getDeclaredConstructor(Int::class.java, List::class.java)
                 .newInstance(entityId, listOf(pair))

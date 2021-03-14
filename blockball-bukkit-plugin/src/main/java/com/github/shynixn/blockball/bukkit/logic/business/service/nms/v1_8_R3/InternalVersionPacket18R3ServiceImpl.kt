@@ -133,6 +133,10 @@ class InternalVersionPacket18R3ServiceImpl @Inject constructor(private val plugi
             dataWatcher.set(11, vector3f)
         }
 
+        if (entityMetaData.isSmall != null && entityMetaData.isSmall!!) {
+            dataWatcher.set(10, 1.toByte())
+        }
+
         val packet = packetPlayOutEntityMetaData.getDeclaredConstructor(
             Int::class.java,
             pluginProxy.findClazz("net.minecraft.server.VERSION.DataWatcher"),

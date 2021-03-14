@@ -41,7 +41,7 @@ allprojects {
 
 subprojects {
     group 'com.github.shynixn.blockball'
-    version '6.22.1'
+    version '6.23.0'
 
     sourceCompatibility = 1.8
 
@@ -182,9 +182,9 @@ subprojects {
 
 gradle.taskGraph.whenReady { taskGraph ->
     if (project.findProperty("signing.keyId") == null) {
-        ext."signing.keyId" = System.getenv('SIGNING_KEYID')
-        ext."signing.password" = System.getenv('SIGNING_KEYPASSWORD')
-        ext."signing.secretKeyRingFile" = '/home/travis/build/Shynixn/BlockBall/travis_secret_key'
+        ext."signing.keyId" = System.getenv('SIGNING_KEY_ID')
+        ext."signing.password" = System.getenv('SIGNING_KEY_PASSWORD')
+        ext."signing.secretKeyRingFile" = System.getenv('SIGNING_KEY_FILE')
     }
 }
 

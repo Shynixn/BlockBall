@@ -65,7 +65,10 @@ class ArenaFileRepository @Inject constructor(
                     val file = getFolder().resolve(s)
                     val data = yamlService.read(file)
 
-                    val arenaEntity = yamlSerializationService.deserialize(ArenaEntity::class.java, data["arena"] as Map<String, Any?>)
+                    val arenaEntity = yamlSerializationService.deserialize(
+                        ArenaEntity::class.java,
+                        data["arena"] as Map<String, Any?>
+                    )
 
                     // Compatibility added in v6.1.0
                     if (!arenaEntity.meta.ballMeta.soundEffects.containsKey(BallActionType.ONGOAL)) {
@@ -75,6 +78,16 @@ class ArenaFileRepository @Inject constructor(
                     // Compatibility added in v6.1.0
                     if (!arenaEntity.meta.ballMeta.particleEffects.containsKey(BallActionType.ONGOAL)) {
                         arenaEntity.meta.ballMeta.particleEffects[BallActionType.ONGOAL] = ParticleEntity()
+                    }
+
+                    // Compatibility added in v6.22.1
+                    if (!arenaEntity.meta.ballMeta.particleEffects.containsKey(BallActionType.ONPASS)) {
+                        arenaEntity.meta.ballMeta.particleEffects[BallActionType.ONPASS] = ParticleEntity()
+                    }
+
+                    // Compatibility added in v6.22.1
+                    if (!arenaEntity.meta.ballMeta.soundEffects.containsKey(BallActionType.ONPASS)) {
+                        arenaEntity.meta.ballMeta.soundEffects[BallActionType.ONPASS] = SoundEntity()
                     }
 
                     if (arenaEntity.name.toIntOrNull() == null) {
@@ -116,6 +129,20 @@ class ArenaFileRepository @Inject constructor(
 
         if (Files.exists(file)) {
             Files.delete(file)
+        }
+
+        // Compatibility added in v6.22.1
+        if (arena.meta.ballMeta.particleEffects.containsKey(BallActionType.ONGRAB)) {
+            arena.meta.ballMeta.particleEffects.remove(BallActionType.ONGRAB)
+        }
+        if (arena.meta.ballMeta.particleEffects.containsKey(BallActionType.ONTHROW)) {
+            arena.meta.ballMeta.particleEffects.remove(BallActionType.ONTHROW)
+        }
+        if (arena.meta.ballMeta.soundEffects.containsKey(BallActionType.ONGRAB)) {
+            arena.meta.ballMeta.soundEffects.remove(BallActionType.ONGRAB)
+        }
+        if (arena.meta.ballMeta.soundEffects.containsKey(BallActionType.ONTHROW)) {
+            arena.meta.ballMeta.soundEffects.remove(BallActionType.ONTHROW)
         }
 
         val data = yamlSerializationService.serialize(arena)

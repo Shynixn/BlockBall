@@ -25,4 +25,9 @@ interface EntityMetaData {
      * Armorstand head rotation.
      */
     var armorstandHeadRotation: Position?
+
+    /**
+     * Is the armorstand small?
+     */
+    var isSmall: Boolean?
 }

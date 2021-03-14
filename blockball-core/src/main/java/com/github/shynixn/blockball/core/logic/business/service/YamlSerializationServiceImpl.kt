@@ -7,7 +7,7 @@ import com.github.shynixn.blockball.api.business.serializer.YamlSerializer
 import com.github.shynixn.blockball.api.business.service.YamlSerializationService
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
-import java.util.LinkedHashMap
+import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.set
 
@@ -99,7 +99,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
                     collection.add(
                         java.lang.Enum.valueOf<Any>(
                             getArgumentType(field, 0) as Class<Any>,
-                            value.toString().toUpperCase()
+                            value.toString().toUpperCase(Locale.ENGLISH)
                         )
                     )
                 } else if (isPrimitive(value.javaClass)) {
@@ -132,7 +132,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
 
             val finalKey = if (keyClazz.isEnum) {
                 @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
-                java.lang.Enum.valueOf<Any>(keyClazz as Class<Any>, key.toUpperCase())
+                java.lang.Enum.valueOf<Any>(keyClazz as Class<Any>, key.toUpperCase(Locale.ENGLISH))
             } else if (isPrimitive(keyClazz)) {
                 key
             } else {
@@ -185,7 +185,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
                 } else if (field.type.componentType.isEnum) {
                     @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
                     array[keyPlace] =
-                        java.lang.Enum.valueOf<Any>(field.type as Class<Any>, value.toString().toUpperCase())
+                        java.lang.Enum.valueOf<Any>(field.type as Class<Any>, value.toString().toUpperCase(Locale.ENGLISH))
                 } else if (isPrimitive(value.javaClass)) {
                     array[keyPlace] = value
                 } else {
@@ -243,7 +243,7 @@ class YamlSerializationServiceImpl : YamlSerializationService {
             field.set(instance, value)
         } else if (field.type.isEnum) run {
             @Suppress("UPPER_BOUND_VIOLATED", "UNCHECKED_CAST")
-            field.set(instance, java.lang.Enum.valueOf<Any>(field.type as Class<Any>, value.toString().toUpperCase()))
+            field.set(instance, java.lang.Enum.valueOf<Any>(field.type as Class<Any>, value.toString().toUpperCase(Locale.ENGLISH)))
         }
         else if (field.type.isArray) {
             val array = field.get(instance)

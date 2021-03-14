@@ -29,6 +29,11 @@ class EntityMetadataImpl : EntityMetaData {
      */
     override var armorstandHeadRotation: Position? = null
 
+    /**
+     * Is the armorstand small?
+     */
+    override var isSmall: Boolean? = null
+
     constructor(f: EntityMetaData.() -> Unit) {
         f.invoke(this)
     }

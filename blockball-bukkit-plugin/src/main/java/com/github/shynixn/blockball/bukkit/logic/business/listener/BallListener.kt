@@ -9,8 +9,6 @@ import com.github.shynixn.blockball.api.business.service.BallEntityService
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.ProtocolService
 import com.github.shynixn.blockball.api.business.service.SoundService
-import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
-import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.event.EventHandler
@@ -69,6 +67,14 @@ class BallListener @Inject constructor(
     @EventHandler
     fun ballKickEvent(event: BallKickEvent) {
         this.playEffects(event.ball, BallActionType.ONKICK)
+    }
+
+    /**
+     * Gets called when a player right clicks a ball.
+     */
+    @EventHandler
+    fun ballPassEvent(event: BallPassEvent) {
+        this.playEffects(event.ball, BallActionType.ONPASS)
     }
 
     /**
