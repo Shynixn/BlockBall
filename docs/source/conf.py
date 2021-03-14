@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'BlockBall'
-copyright = '2015 - 2020, Shynixn'
+copyright = '2015 - 2021, Shynixn'
 author = 'Shynixn'
 
 # The version info for the project you're documenting, acts as replacement for
