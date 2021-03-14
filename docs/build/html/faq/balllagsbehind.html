@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The ball takes very long to move when you touch it? &mdash; BlockBall 6.23.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="BlockBall 6.23.0 documentation" href="../index.html"/>
+        <link rel="up" title="FAQ" href="index.html"/>
+        <link rel="next" title="The ball falls through the ground?" href="ballfallsthroughmap.html"/>
+        <link rel="prev" title="FAQ" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BlockBall
+          
+
+          
+            
+            <img src="../_static/BlockBall-small.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                6.23.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../gettingstarted/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gamemodes/index.html">Game Modes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../customizing/index.html">Customizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/index.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Developer API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">FAQ</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">The ball takes very long to move when you touch it?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#change-the-hitbox">Change the hitbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#change-the-server-ticks">Change the server ticks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ballfallsthroughmap.html">The ball falls through the ground?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="goalgetsnotdetected.html">The ball is inside of the goal but it does not score?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands.html">How can I automatically execute a command after a game?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support.html">Can you support Minecraft 1.7.x or below?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howcustomskin.html">How to use a custom skin URL?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howmysql.html">How to use the MySQL database?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="caniusereload.html">Can I use the /reload command?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing to BlockBall</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BlockBall</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">FAQ</a> &raquo;</li>
+        
+      <li>The ball takes very long to move when you touch it?</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/Shynixn/BlockBall/tree/master/docs/source/faq/balllagsbehind.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-ball-takes-very-long-to-move-when-you-touch-it">
+<h1>The ball takes very long to move when you touch it?<a class="headerlink" href="#the-ball-takes-very-long-to-move-when-you-touch-it" title="Permalink to this headline">¶</a></h1>
+<p>The check how often interaction is detected with the ball is bound to the amount of ticks an armorstand is ticked and the hitbox size of the invisible slime.</p>
+<div class="section" id="change-the-hitbox">
+<h2>Change the hitbox<a class="headerlink" href="#change-the-hitbox" title="Permalink to this headline">¶</a></h2>
+<p>The hitbox can be customized using BlockBall which is the first thing you should try out.
+Open the arena file and change the following values:</p>
+<p><strong>before - arena_x.yml</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">ball</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">NORMAL</span>
+  <span class="l l-Scalar l-Scalar-Plain">skin</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
+  <span class="l l-Scalar l-Scalar-Plain">hitbox-size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">3.0</span>
+  <span class="l l-Scalar l-Scalar-Plain">hitbox-relocation</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+</pre></div>
+</div>
+<p>Play around with the <strong>hitbox-size</strong> and <strong>hitbox-relocation</strong> value and try different values. You can see the hitbox
+by entering the spectator gamemode <strong>/gamemode spectator</strong> while participating in a game.</p>
+<img alt="../_images/slimehitbox.PNG" src="../_images/slimehitbox.PNG" />
+<p><strong>after - arena_x.yml</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">ball</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">NORMAL</span>
+  <span class="l l-Scalar l-Scalar-Plain">skin</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
+  <span class="l l-Scalar l-Scalar-Plain">hitbox-size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5.0</span>
+  <span class="l l-Scalar l-Scalar-Plain">hitbox-relocation</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.2</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="change-the-server-ticks">
+<h2>Change the server ticks<a class="headerlink" href="#change-the-server-ticks" title="Permalink to this headline">¶</a></h2>
+<p>Open the <strong>spigot.yml</strong> and (if it exists) <strong>paper.yml</strong> files and customize the ticking values of entities (armorstands).</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ballfallsthroughmap.html" class="btn btn-neutral float-right" title="The ball falls through the ground?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="FAQ" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015 - 2021, Shynixn.
+
+    </p>
+  </div>
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'6.23.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111364476-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-111364476-1');
+</script>
+
+
+</body>
+</html>

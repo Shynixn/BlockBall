@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Ball &mdash; BlockBall 6.22.1 documentation</title>
+  <title>Ball &mdash; BlockBall 6.23.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.22.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.23.0 documentation" href="../index.html"/>
         <link rel="up" title="Customizing" href="index.html"/>
         <link rel="next" title="Teams" href="teams.html"/>
         <link rel="prev" title="Customizing" href="index.html"/> 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                6.22.1
+                6.23.0
               </div>
             
           
@@ -218,139 +218,139 @@ the engine was completely redesigned from scratch to fully run on packets only i
 <li><p>Search for the following section:</p></li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ball</span><span class="p">:</span>
-  <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NORMAL</span>
-  <span class="nt">skin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
-  <span class="nt">interaction-hitbox-size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-  <span class="nt">kickpass-hitbox-size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5.0</span>
-  <span class="nt">kickpass-delay-ticks</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
-  <span class="nt">interaction-cooldown-ticks</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
-  <span class="nt">rotating</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="nt">enable-kick</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="nt">enable-pass</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="nt">enable-interact</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="nt">hitbox-relocation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-  <span class="nt">always-bounce</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="nt">modifiers</span><span class="p">:</span>
-    <span class="nt">gravity-mod</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.07</span>
-    <span class="nt">air-resistance</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.001</span>
-    <span class="nt">rolling-resistance</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
-    <span class="nt">horizontal-touch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
-    <span class="nt">vertical-touch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
-    <span class="nt">shot-velocity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.5</span>
-    <span class="nt">pass-velocity</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.2</span>
-    <span class="nt">max-spin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.08</span>
-    <span class="nt">max-pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span>
-    <span class="nt">min-pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-    <span class="nt">default-pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
-  <span class="nt">particle-effects</span><span class="p">:</span>
-    <span class="nt">ONINTERACTION</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NONE</span>
-      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">offset</span><span class="p">:</span>
-        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">data</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-    <span class="nt">ONMOVE</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NONE</span>
-      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">offset</span><span class="p">:</span>
-        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">data</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-    <span class="nt">ONSPAWN</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EXPLOSION_NORMAL</span>
-      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
-      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
-      <span class="nt">offset</span><span class="p">:</span>
-        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-      <span class="nt">data</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-    <span class="nt">ONKICK</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EXPLOSION_LARGE</span>
-      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
-      <span class="nt">offset</span><span class="p">:</span>
-        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
-        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
-        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
-      <span class="nt">data</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-    <span class="nt">ONGOAL</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NONE</span>
-      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">offset</span><span class="p">:</span>
-        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">data</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-    <span class="nt">ONTHROW</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NONE</span>
-      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">offset</span><span class="p">:</span>
-        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">data</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-    <span class="nt">ONGRAB</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NONE</span>
-      <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-      <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">offset</span><span class="p">:</span>
-        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">data</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-  <span class="nt">sound-effects</span><span class="p">:</span>
-    <span class="nt">ONINTERACTION</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
-      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-    <span class="nt">ONMOVE</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
-      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-    <span class="nt">ONSPAWN</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
-      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-    <span class="nt">ONKICK</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ENTITY_ZOMBIE_ATTACK_DOOR_WOOD</span>
-      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
-      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10.0</span>
-      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-    <span class="nt">ONGOAL</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
-      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-    <span class="nt">ONTHROW</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
-      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-    <span class="nt">ONGRAB</span><span class="p">:</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
-      <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-      <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-  <span class="nt">spawn-delay</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-  <span class="nt">spawnpoint</span><span class="p">:</span>
-    <span class="nt">world</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">world</span>
-    <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1587.4580324859699</span>
-    <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4.0</span>
-    <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-1606.6457980542893</span>
-    <span class="nt">yaw</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">169.0550537109375</span>
-    <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">28.3505802154541</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">ball</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">NORMAL</span>
+  <span class="l l-Scalar l-Scalar-Plain">skin</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
+  <span class="l l-Scalar l-Scalar-Plain">interaction-hitbox-size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+  <span class="l l-Scalar l-Scalar-Plain">kickpass-hitbox-size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5.0</span>
+  <span class="l l-Scalar l-Scalar-Plain">kickpass-delay-ticks</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+  <span class="l l-Scalar l-Scalar-Plain">interaction-cooldown-ticks</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
+  <span class="l l-Scalar l-Scalar-Plain">rotating</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="l l-Scalar l-Scalar-Plain">enable-kick</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="l l-Scalar l-Scalar-Plain">enable-pass</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="l l-Scalar l-Scalar-Plain">enable-interact</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="l l-Scalar l-Scalar-Plain">hitbox-relocation</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+  <span class="l l-Scalar l-Scalar-Plain">always-bounce</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="l l-Scalar l-Scalar-Plain">modifiers</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">gravity-mod</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.07</span>
+    <span class="l l-Scalar l-Scalar-Plain">air-resistance</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.001</span>
+    <span class="l l-Scalar l-Scalar-Plain">rolling-resistance</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
+    <span class="l l-Scalar l-Scalar-Plain">horizontal-touch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+    <span class="l l-Scalar l-Scalar-Plain">vertical-touch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+    <span class="l l-Scalar l-Scalar-Plain">shot-velocity</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1.5</span>
+    <span class="l l-Scalar l-Scalar-Plain">pass-velocity</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1.2</span>
+    <span class="l l-Scalar l-Scalar-Plain">max-spin</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.08</span>
+    <span class="l l-Scalar l-Scalar-Plain">max-pitch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span>
+    <span class="l l-Scalar l-Scalar-Plain">min-pitch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="l l-Scalar l-Scalar-Plain">default-pitch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
+  <span class="l l-Scalar l-Scalar-Plain">particle-effects</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONINTERACTION</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">NONE</span>
+      <span class="l l-Scalar l-Scalar-Plain">amount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="l l-Scalar l-Scalar-Plain">speed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">offset</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">z</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">data</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONMOVE</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">NONE</span>
+      <span class="l l-Scalar l-Scalar-Plain">amount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="l l-Scalar l-Scalar-Plain">speed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">offset</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">z</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">data</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONSPAWN</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">EXPLOSION_NORMAL</span>
+      <span class="l l-Scalar l-Scalar-Plain">amount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+      <span class="l l-Scalar l-Scalar-Plain">speed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
+      <span class="l l-Scalar l-Scalar-Plain">offset</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">z</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">data</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONKICK</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">EXPLOSION_LARGE</span>
+      <span class="l l-Scalar l-Scalar-Plain">amount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+      <span class="l l-Scalar l-Scalar-Plain">speed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
+      <span class="l l-Scalar l-Scalar-Plain">offset</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
+        <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
+        <span class="l l-Scalar l-Scalar-Plain">z</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
+      <span class="l l-Scalar l-Scalar-Plain">data</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONGOAL</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">NONE</span>
+      <span class="l l-Scalar l-Scalar-Plain">amount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="l l-Scalar l-Scalar-Plain">speed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">offset</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">z</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">data</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONTHROW</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">NONE</span>
+      <span class="l l-Scalar l-Scalar-Plain">amount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="l l-Scalar l-Scalar-Plain">speed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">offset</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">z</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">data</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONGRAB</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">NONE</span>
+      <span class="l l-Scalar l-Scalar-Plain">amount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="l l-Scalar l-Scalar-Plain">speed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">offset</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">z</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">data</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+  <span class="l l-Scalar l-Scalar-Plain">sound-effects</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONINTERACTION</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="l l-Scalar l-Scalar-Plain">pitch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">volume</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">effecting</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONMOVE</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="l l-Scalar l-Scalar-Plain">pitch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">volume</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">effecting</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONSPAWN</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="l l-Scalar l-Scalar-Plain">pitch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">volume</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">effecting</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONKICK</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ENTITY_ZOMBIE_ATTACK_DOOR_WOOD</span>
+      <span class="l l-Scalar l-Scalar-Plain">pitch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">volume</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">effecting</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONGOAL</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="l l-Scalar l-Scalar-Plain">pitch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">volume</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">effecting</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONTHROW</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="l l-Scalar l-Scalar-Plain">pitch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">volume</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">effecting</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+    <span class="l l-Scalar l-Scalar-Plain">ONGRAB</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="l l-Scalar l-Scalar-Plain">pitch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">volume</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+      <span class="l l-Scalar l-Scalar-Plain">effecting</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+  <span class="l l-Scalar l-Scalar-Plain">spawn-delay</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+  <span class="l l-Scalar l-Scalar-Plain">spawnpoint</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">world</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">world</span>
+    <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1587.4580324859699</span>
+    <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">4.0</span>
+    <span class="l l-Scalar l-Scalar-Plain">z</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">-1606.6457980542893</span>
+    <span class="l l-Scalar l-Scalar-Plain">yaw</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">169.0550537109375</span>
+    <span class="l l-Scalar l-Scalar-Plain">pitch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">28.3505802154541</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
@@ -419,7 +419,7 @@ the engine was completely redesigned from scratch to fully run on packets only i
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015 - 2020, Shynixn.
+        &copy; Copyright 2015 - 2021, Shynixn.
 
     </p>
   </div>
@@ -440,7 +440,7 @@ the engine was completely redesigned from scratch to fully run on packets only i
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.22.1',
+            VERSION:'6.23.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -451,7 +451,6 @@ the engine was completely redesigned from scratch to fully run on packets only i
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 
