@@ -8,11 +8,18 @@ import io.netty.channel.Channel
 import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
+import org.apache.commons.io.FileUtils
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.io.PrintWriter
+import java.io.StringWriter
+import java.nio.charset.Charset
+import java.nio.file.Files
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.logging.Level
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
@@ -29,6 +36,16 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
     }
     private val cachedPlayerChannels = HashMap<Player, Channel>()
     private val registeredPackets = HashSet<Class<*>>()
+
+    companion object {
+        val messageFlush = ArrayList<String>()
+        var timeOut = 0L
+        var pluginRef: Plugin? = null
+    }
+
+    init {
+        pluginRef = internalPlugin
+    }
 
     /**
      * Registers the following packets classes for events.
@@ -123,23 +140,44 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
         /**
          * Incoming packet.
          */
-        override fun channelRead(ctx: ChannelHandlerContext?, msg: Any?) {
-            if (ctx != null && msg != null) {
-                val cancelled = try {
-                    protocolServiceImpl.onMessageReceive(player, msg)
-                } catch (e: Exception) {
-                    Bukkit.getServer().logger.log(Level.SEVERE, "Failed to read packet.", e)
-                    false
-                }
-
-                if (!cancelled) {
-                    super.channelRead(ctx, msg)
-                }
-
-                return
+        override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
+            val cancelled = try {
+                protocolServiceImpl.onMessageReceive(player, msg)
+            } catch (e: Exception) {
+                Bukkit.getServer().logger.log(Level.SEVERE, "Failed to read packet.", e)
+                false
             }
 
-            super.channelRead(ctx, msg)
+            if (!cancelled) {
+                super.channelRead(ctx, msg)
+            }
+        }
+
+        /**
+         * Outgoing packet.
+         */
+        override fun write(ctx: ChannelHandlerContext?, msg: Any, promise: ChannelPromise?) {
+            val stringerWriter = StringWriter()
+            stringerWriter.write(SimpleDateFormat("dd HH-mm-ss").format(Date()) + " ")
+            stringerWriter.write(player.name + " ")
+            stringerWriter.write(msg.javaClass.name + "" + System.lineSeparator())
+            messageFlush.add(stringerWriter.toString());
+
+            if (System.currentTimeMillis() - timeOut > 2000) {
+                for (data in messageFlush) {
+                    FileUtils.write(
+                        pluginRef!!.dataFolder.resolve("packet.log"),
+                        data,
+                        Charset.forName("UTF-8"),
+                        true
+                    )
+                }
+
+                messageFlush.clear()
+                timeOut = System.currentTimeMillis()
+            }
+
+            super.write(ctx, msg, promise)
         }
     }
 }
