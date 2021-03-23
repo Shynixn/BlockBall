@@ -152,32 +152,5 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
                 super.channelRead(ctx, msg)
             }
         }
-
-        /**
-         * Outgoing packet.
-         */
-        override fun write(ctx: ChannelHandlerContext?, msg: Any, promise: ChannelPromise?) {
-            val stringerWriter = StringWriter()
-            stringerWriter.write(SimpleDateFormat("dd HH-mm-ss").format(Date()) + " ")
-            stringerWriter.write(player.name + " ")
-            stringerWriter.write(msg.javaClass.name + "" + System.lineSeparator())
-            messageFlush.add(stringerWriter.toString());
-
-            if (System.currentTimeMillis() - timeOut > 2000) {
-                for (data in messageFlush) {
-                    FileUtils.write(
-                        pluginRef!!.dataFolder.resolve("packet.log"),
-                        data,
-                        Charset.forName("UTF-8"),
-                        true
-                    )
-                }
-
-                messageFlush.clear()
-                timeOut = System.currentTimeMillis()
-            }
-
-            super.write(ctx, msg, promise)
-        }
     }
 }
