@@ -123,33 +123,23 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
         /**
          * Incoming packet.
          */
-        override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
-            val cancelled = try {
-                protocolServiceImpl.onMessageReceive(player, msg)
-            } catch (e: Exception) {
-                Bukkit.getServer().logger.log(Level.SEVERE, "Failed to read packet.", e)
-                false
+        override fun channelRead(ctx: ChannelHandlerContext?, msg: Any?) {
+            if (ctx != null && msg != null) {
+                val cancelled = try {
+                    protocolServiceImpl.onMessageReceive(player, msg)
+                } catch (e: Exception) {
+                    Bukkit.getServer().logger.log(Level.SEVERE, "Failed to read packet.", e)
+                    false
+                }
+
+                if (!cancelled) {
+                    super.channelRead(ctx, msg)
+                }
+
+                return
             }
 
-            if (!cancelled) {
-                super.channelRead(ctx, msg)
-            }
-        }
-
-        /**
-         * Outgoing packet.
-         */
-        override fun write(ctx: ChannelHandlerContext?, msg: Any, promise: ChannelPromise?) {
-            val cancelled = try {
-                protocolServiceImpl.onMessageReceive(player, msg)
-            } catch (e: Exception) {
-                Bukkit.getServer().logger.log(Level.SEVERE, "Failed to write packet.", e)
-                false
-            }
-
-            if (!cancelled) {
-                super.write(ctx, msg, promise)
-            }
+            super.channelRead(ctx, msg)
         }
     }
 }
