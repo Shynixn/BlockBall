@@ -261,12 +261,6 @@ class InternalVersionPacket19R2ServiceImpl @Inject constructor(
         if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_16_R1)) {
             val pair = mojangPairClazz.getDeclaredConstructor(Any::class.java, Any::class.java)
                 .newInstance(enumItemSlotClazz.enumConstants[slot.id116], nmsItemStack)
-            loggingService.debug("Sending ball skin: '$gameProfile'")
-
-            gameProfile.properties.get("textures").toList().forEach { e ->
-                loggingService.debug(e.name + " " + e.value)
-            }
-
             return packetPlayOutEntityEquipment
                 .getDeclaredConstructor(Int::class.java, List::class.java)
                 .newInstance(entityId, listOf(pair))
