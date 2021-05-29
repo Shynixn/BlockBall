@@ -7,14 +7,11 @@ import com.google.inject.Inject
 import io.netty.channel.Channel
 import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext
-import io.netty.channel.ChannelPromise
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.*
 import java.util.logging.Level
-import kotlin.collections.HashMap
-import kotlin.collections.HashSet
 
 class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, private val internalPlugin: Plugin) :
     ProtocolService {
@@ -133,22 +130,6 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
 
             if (!cancelled) {
                 super.channelRead(ctx, msg)
-            }
-        }
-
-        /**
-         * Outgoing packet.
-         */
-        override fun write(ctx: ChannelHandlerContext?, msg: Any, promise: ChannelPromise?) {
-            val cancelled = try {
-                protocolServiceImpl.onMessageReceive(player, msg)
-            } catch (e: Exception) {
-                Bukkit.getServer().logger.log(Level.SEVERE, "Failed to write packet.", e)
-                false
-            }
-
-            if (!cancelled) {
-                super.write(ctx, msg, promise)
             }
         }
     }

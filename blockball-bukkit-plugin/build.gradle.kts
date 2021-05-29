@@ -60,7 +60,7 @@ dependencies {
 
     implementation("org.slf4j:slf4j-jdk14:1.7.25")
     implementation("com.zaxxer:HikariCP:3.2.0")
-    implementation("com.google.inject:guice:4.1.0")
+    implementation("com.google.inject:guice:5.0.1")
     implementation("org.bstats:bstats-bukkit:1.7")
     implementation("commons-io:commons-io:2.6")
     implementation("com.google.code.gson:gson:2.8.6")
