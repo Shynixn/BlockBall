@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>AreaProtection &mdash; BlockBall 6.23.0 documentation</title>
@@ -29,6 +30,10 @@
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
 
+  
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
 
   
@@ -194,11 +199,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="areaprotection">
+  <section id="areaprotection">
 <h1>AreaProtection<a class="headerlink" href="#areaprotection" title="Permalink to this headline">¶</a></h1>
 <p>BlockBall does not offer a block or region protection like Worldguard but it contains a system to protect entities like
 players, animals and monsters to enter the arena.</p>
-<div class="section" id="configuring-ingame">
+<section id="configuring-ingame">
 <h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to open the <a class="reference external" href="../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui">Settings</a> page of your arena chat UI.</p>
 <ol class="arabic simple">
@@ -214,8 +219,8 @@ players, animals and monsters to enter the arena.</p>
 <p>It is recommend to leave these settings on default. Do only change the velocity values if your server cannot not adjust
 to the configured default speed or entities should fly to a specific location.</p>
 <p>You can find all options explained at the bottom of this page.</p>
-</div>
-<div class="section" id="configuring-in-your-arena-x-yml">
+</section>
+<section id="configuring-in-your-arena-x-yml">
 <h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
 <ol class="arabic simple">
@@ -223,25 +228,25 @@ to the configured default speed or entities should fly to a specific location.</
 <li><p>Search for the following section:</p></li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">protection</span><span class="p p-Indicator">:</span>
-   <span class="l l-Scalar l-Scalar-Plain">entity-protection-enabled</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="l l-Scalar l-Scalar-Plain">entity-protection</span><span class="p p-Indicator">:</span>
-     <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5.0</span>
-     <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-     <span class="l l-Scalar l-Scalar-Plain">z</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5.0</span>
-   <span class="l l-Scalar l-Scalar-Plain">rejoin-protection-enabled</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="l l-Scalar l-Scalar-Plain">rejoin-protection</span><span class="p p-Indicator">:</span>
-     <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-     <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-     <span class="l l-Scalar l-Scalar-Plain">z</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">protection</span><span class="p">:</span>
+   <span class="nt">entity-protection-enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">entity-protection</span><span class="p">:</span>
+     <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5.0</span>
+     <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+     <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5.0</span>
+   <span class="nt">rejoin-protection-enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">rejoin-protection</span><span class="p">:</span>
+     <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+     <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+     <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
 <li><p>Now continue by enabling or disabling the protections by changing the <strong>enabled</strong> value.</p></li>
 <li><p>Customize the other available options to your own needs.</p></li>
 </ol>
-</div>
-<div class="section" id="properties">
+</section>
+<section id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Animal and Monster protection enabled: Should animals and monster be thrown out of the arena with the given velocity when they try to enter it?</p></li>
@@ -249,8 +254,8 @@ to the configured default speed or entities should fly to a specific location.</
 <li><p>Join protection enabled: Should player be the certain velocity being applied when they get stuck in the forcefield?</p></li>
 <li><p>Join protection velocity: Velocity being applied when they get stuck in the forcefield.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -303,6 +308,7 @@ to the configured default speed or entities should fly to a specific location.</
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>

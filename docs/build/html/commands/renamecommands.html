@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Rename Commands &mdash; BlockBall 6.23.0 documentation</title>
@@ -29,6 +30,10 @@
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
 
+  
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
 
   
@@ -174,7 +179,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="rename-commands">
+  <section id="rename-commands">
 <h1>Rename Commands<a class="headerlink" href="#rename-commands" title="Permalink to this headline">¶</a></h1>
 <p>You are also allowed to rename the user commands /bbjoin and /bbleave in the config.yml. You can even customize the permissions.</p>
 <p><strong>config.yml</strong></p>
@@ -190,23 +195,23 @@
 
 <span class="c1">############################</span>
 
-<span class="l l-Scalar l-Scalar-Plain">global-join</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">enabled</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bbjoin</span>
-  <span class="l l-Scalar l-Scalar-Plain">useage</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">/&lt;command&gt; &lt;game&gt; &lt;team&gt;</span>
-  <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Join a game.</span>
-  <span class="l l-Scalar l-Scalar-Plain">permission</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">blockball.command.use</span>
-  <span class="l l-Scalar l-Scalar-Plain">permission-message</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">You don&#39;t have permission</span>
-<span class="l l-Scalar l-Scalar-Plain">global-leave</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">enabled</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bbleave</span>
-  <span class="l l-Scalar l-Scalar-Plain">useage</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">/&lt;command&gt;</span>
-  <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Leaves current game.</span>
-  <span class="l l-Scalar l-Scalar-Plain">permission</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">blockball.command.use</span>
-  <span class="l l-Scalar l-Scalar-Plain">permission-message</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">You don&#39;t have permission</span>
+<span class="nt">global-join</span><span class="p">:</span>
+  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">command</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bbjoin</span>
+  <span class="nt">useage</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/&lt;command&gt; &lt;game&gt; &lt;team&gt;</span>
+  <span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Join a game.</span>
+  <span class="nt">permission</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blockball.command.use</span>
+  <span class="nt">permission-message</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">You don&#39;t have permission</span>
+<span class="nt">global-leave</span><span class="p">:</span>
+  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">command</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bbleave</span>
+  <span class="nt">useage</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/&lt;command&gt;</span>
+  <span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Leaves current game.</span>
+  <span class="nt">permission</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blockball.command.use</span>
+  <span class="nt">permission-message</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">You don&#39;t have permission</span>
 </pre></div>
 </div>
-</div>
+</section>
 
 
            </div>
@@ -259,6 +264,7 @@
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>

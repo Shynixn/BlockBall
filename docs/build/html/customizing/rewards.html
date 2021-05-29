@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Rewards &mdash; BlockBall 6.23.0 documentation</title>
@@ -29,6 +30,10 @@
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
 
+  
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
 
   
@@ -185,7 +190,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="rewards">
+  <section id="rewards">
 <h1>Rewards<a class="headerlink" href="#rewards" title="Permalink to this headline">¶</a></h1>
 <p>It is always a good game design to reward your players for certain action. So does BlockBall support this and you can give your players
 certain rewards for the following actions.</p>
@@ -195,7 +200,7 @@ certain rewards for the following actions.</p>
 <li><p>Shooting a goal</p></li>
 <li><p>Loosing a match</p></li>
 </ul>
-<div class="section" id="configuring-ingame">
+<section id="configuring-ingame">
 <h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
 <p>There are 2 available ways how to reward your players. Via <strong>money</strong> or by using <strong>commands</strong>.</p>
 <p>At this stage, you should be able to open the <a class="reference external" href="../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui">Settings</a> page of your arena chat UI.</p>
@@ -228,8 +233,8 @@ certain rewards for the following actions.</p>
 <li><p>PER_PLAYER: Each player automatically executes the command. The player has to have got the permission to the command.</p></li>
 </ul>
 <p>You can set the command to <strong>none</strong> to disable it.</p>
-</div>
-<div class="section" id="configuring-in-your-arena-x-yml">
+</section>
+<section id="configuring-in-your-arena-x-yml">
 <h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
 <ol class="arabic simple">
@@ -237,32 +242,32 @@ certain rewards for the following actions.</p>
 <li><p>Search for the following section:</p></li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">reward-meta</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">money-reward</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">WIN_MATCH</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
-    <span class="l l-Scalar l-Scalar-Plain">SHOOT_GOAL</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-    <span class="l l-Scalar l-Scalar-Plain">PARTICIPATE_MATCH</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-    <span class="l l-Scalar l-Scalar-Plain">LOOSING_MATCH</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-  <span class="l l-Scalar l-Scalar-Plain">command-reward</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">WIN_MATCH</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">mode</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">CONSOLE_SINGLE</span>
-      <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span> <span class="s">&#39;/say</span><span class="nv"> </span><span class="s">Hello</span><span class="nv"> </span><span class="s">World&#39;</span>
-    <span class="l l-Scalar l-Scalar-Plain">SHOOT_GOAL</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">mode</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">PER_PLAYER</span>
-      <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span> <span class="s">&#39;none&#39;</span>
-    <span class="l l-Scalar l-Scalar-Plain">PARTICIPATE_MATCH</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">mode</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">CONSOLE_PER_PLAYER</span>
-      <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span> <span class="s">&#39;none&#39;</span>
-    <span class="l l-Scalar l-Scalar-Plain">LOOSING_MATCH</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">mode</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">CONSOLE_SINGLE</span>
-      <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span> <span class="s">&#39;none&#39;</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">reward-meta</span><span class="p">:</span>
+  <span class="nt">money-reward</span><span class="p">:</span>
+    <span class="nt">WIN_MATCH</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+    <span class="nt">SHOOT_GOAL</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="nt">PARTICIPATE_MATCH</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+    <span class="nt">LOOSING_MATCH</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+  <span class="nt">command-reward</span><span class="p">:</span>
+    <span class="nt">WIN_MATCH</span><span class="p">:</span>
+      <span class="nt">mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CONSOLE_SINGLE</span>
+      <span class="nt">command</span><span class="p">:</span> <span class="s">&#39;/say</span><span class="nv"> </span><span class="s">Hello</span><span class="nv"> </span><span class="s">World&#39;</span>
+    <span class="nt">SHOOT_GOAL</span><span class="p">:</span>
+      <span class="nt">mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PER_PLAYER</span>
+      <span class="nt">command</span><span class="p">:</span> <span class="s">&#39;none&#39;</span>
+    <span class="nt">PARTICIPATE_MATCH</span><span class="p">:</span>
+      <span class="nt">mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CONSOLE_PER_PLAYER</span>
+      <span class="nt">command</span><span class="p">:</span> <span class="s">&#39;none&#39;</span>
+    <span class="nt">LOOSING_MATCH</span><span class="p">:</span>
+      <span class="nt">mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CONSOLE_SINGLE</span>
+      <span class="nt">command</span><span class="p">:</span> <span class="s">&#39;none&#39;</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
 <li><p>Customize all available options to your own needs.</p></li>
 </ol>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -315,6 +320,7 @@ certain rewards for the following actions.</p>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>

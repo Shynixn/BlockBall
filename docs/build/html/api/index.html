@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Developer API &mdash; BlockBall 6.23.0 documentation</title>
@@ -29,6 +30,10 @@
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
 
+  
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
 
   
@@ -174,13 +179,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="developer-api">
+  <section id="developer-api">
 <h1>Developer API<a class="headerlink" href="#developer-api" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="javadocs">
+<section id="javadocs">
 <h2>JavaDocs<a class="headerlink" href="#javadocs" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="https://shynixn.github.io/BlockBall/apidocs/">https://shynixn.github.io/BlockBall/apidocs/</a></p>
-</div>
-<div class="section" id="including-the-blockball-api">
+</section>
+<section id="including-the-blockball-api">
 <h2>Including the BlockBall API<a class="headerlink" href="#including-the-blockball-api" title="Permalink to this headline">¶</a></h2>
 <a class="reference external image-reference" href="https://maven-badges.herokuapp.com/maven-central/com.github.shynixn.blockball/blockball-api"><img alt="https://maven-badges.herokuapp.com/maven-central/com.github.shynixn.blockball/blockball-api/badge.svg?style=flat-square" src="https://maven-badges.herokuapp.com/maven-central/com.github.shynixn.blockball/blockball-api/badge.svg?style=flat-square" /></a>
 <p>BlockBall is using gradle as build system and is available in the central repository.</p>
@@ -216,25 +221,25 @@
 <li><p><a class="reference external" href="http://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&amp;g=com.github.shynixn.blockball&amp;a=blockball-api&amp;v=LATEST">Download BlockBall-Api</a></p></li>
 <li><p><a class="reference external" href="http://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&amp;g=com.github.shynixn.blockball&amp;a=blockball-bukkit-api&amp;v=LATEST">Download BlockBall-Bukkit-Api</a></p></li>
 </ul>
-</div>
-<div class="section" id="registering-the-dependency">
+</section>
+<section id="registering-the-dependency">
 <h2>Registering the dependency<a class="headerlink" href="#registering-the-dependency" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>Bukkit</strong> - Add the following tag to your plugin.yml if you <strong>optionally</strong> want to use BlockBall.</p>
 </div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">softdepend</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="nv">BlockBall</span><span class="p p-Indicator">]</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">softdepend</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">BlockBall</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>Bukkit</strong> - Add the following tag to your plugin.yml if your plugin  <strong>requires</strong> BlockBall to work.</p>
 </div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">depend</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="nv">BlockBall</span><span class="p p-Indicator">]</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">depend</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">BlockBall</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="working-with-the-blockball-api">
+</section>
+<section id="working-with-the-blockball-api">
 <h2>Working with the BlockBall API<a class="headerlink" href="#working-with-the-blockball-api" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -299,8 +304,8 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <span class="o">});</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="listen-to-events">
+</section>
+<section id="listen-to-events">
 <h2>Listen to Events<a class="headerlink" href="#listen-to-events" title="Permalink to this headline">¶</a></h2>
 <p>There are many BlockBall events in order to listen to actions. Please take a look into the <a class="reference external" href="https://shynixn.github.io/BlockBall/apidocs/">JavaDocs</a>  for all events.</p>
 <div class="admonition note">
@@ -315,8 +320,8 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <span class="o">}</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -369,6 +374,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>

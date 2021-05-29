@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>DoubleJump &mdash; BlockBall 6.23.0 documentation</title>
@@ -29,6 +30,10 @@
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
 
+  
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
 
   
@@ -191,13 +196,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="doublejump">
+  <section id="doublejump">
 <h1>DoubleJump<a class="headerlink" href="#doublejump" title="Permalink to this headline">¶</a></h1>
 <p>It is possible to use a double jump per default during a match. It looks like that:</p>
 <img alt="../_images/doublejump1.JPG" src="../_images/doublejump1.JPG" />
 <p>You can use it to offer you players another way of moving around in the arena.</p>
 <p><strong>Note:</strong> You might need to adjust the horizontal strength value when your arena is bigger or smaller than the sample arena.</p>
-<div class="section" id="configuring-ingame">
+<section id="configuring-ingame">
 <h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to open the <a class="reference external" href="../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui">Settings</a> page of your arena chat UI.</p>
 <ol class="arabic simple">
@@ -211,8 +216,8 @@
 <li><p>Customize the other available options to your own needs.</p></li>
 </ol>
 <p>You can find all options explained at the bottom of this page.</p>
-</div>
-<div class="section" id="configuring-in-your-arena-x-yml">
+</section>
+<section id="configuring-in-your-arena-x-yml">
 <h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
 <ol class="arabic simple">
@@ -220,33 +225,33 @@
 <li><p>Search for the following section:</p></li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">double-jump</span><span class="p p-Indicator">:</span>
-   <span class="l l-Scalar l-Scalar-Plain">enabled</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="l l-Scalar l-Scalar-Plain">cooldown</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-   <span class="l l-Scalar l-Scalar-Plain">vertical-strength</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
-   <span class="l l-Scalar l-Scalar-Plain">horizontal-strength</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-   <span class="l l-Scalar l-Scalar-Plain">particle-effect</span><span class="p p-Indicator">:</span>
-     <span class="l l-Scalar l-Scalar-Plain">effecting</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-     <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">explosion</span>
-     <span class="l l-Scalar l-Scalar-Plain">amount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
-     <span class="l l-Scalar l-Scalar-Plain">speed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-     <span class="l l-Scalar l-Scalar-Plain">offset</span><span class="p p-Indicator">:</span>
-       <span class="l l-Scalar l-Scalar-Plain">x</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-       <span class="l l-Scalar l-Scalar-Plain">y</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-       <span class="l l-Scalar l-Scalar-Plain">z</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-   <span class="l l-Scalar l-Scalar-Plain">sound-effect</span><span class="p p-Indicator">:</span>
-     <span class="l l-Scalar l-Scalar-Plain">effecting</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-     <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">GHAST_FIREBALL</span>
-     <span class="l l-Scalar l-Scalar-Plain">volume</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">100.0</span>
-     <span class="l l-Scalar l-Scalar-Plain">pitch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">double-jump</span><span class="p">:</span>
+   <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">cooldown</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+   <span class="nt">vertical-strength</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+   <span class="nt">horizontal-strength</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+   <span class="nt">particle-effect</span><span class="p">:</span>
+     <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">explosion</span>
+     <span class="nt">amount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+     <span class="nt">speed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+     <span class="nt">offset</span><span class="p">:</span>
+       <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+       <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+       <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
+   <span class="nt">sound-effect</span><span class="p">:</span>
+     <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GHAST_FIREBALL</span>
+     <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100.0</span>
+     <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
 <li><p>Now continue by enabling or disabling the doubleJump by changing the <strong>enabled</strong> value.</p></li>
 <li><p>Customize the other available options to your own needs.</p></li>
 </ol>
-</div>
-<div class="section" id="properties">
+</section>
+<section id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Enabled: Enable or disable the doubleJump</p></li>
@@ -256,8 +261,8 @@
 <li><p>Particleeffect: <a class="reference external" href="particleeffect.html">Particleeffect</a>  being played when a player clicks space a second time</p></li>
 <li><p>Soundeffect: <a class="reference external" href="soundeffect.html">Soundeffect</a>  being played when a player clicks space a second time</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -310,6 +315,7 @@
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>

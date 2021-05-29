@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Scoreboard &mdash; BlockBall 6.23.0 documentation</title>
@@ -29,6 +30,10 @@
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
 
+  
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   
 
   
@@ -195,12 +200,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="scoreboard">
+  <section id="scoreboard">
 <h1>Scoreboard<a class="headerlink" href="#scoreboard" title="Permalink to this headline">¶</a></h1>
 <p>It is possible to display a scoreboard during a match on a players screen. It looks like that:</p>
 <img alt="../_images/scoreboard1.JPG" src="../_images/scoreboard1.JPG" />
 <p>You can use it to display team names, the remaining time, scores for each team and more. You can find all available placeholders <a class="reference external" href="placeholders.html">here</a>.</p>
-<div class="section" id="configuring-ingame">
+<section id="configuring-ingame">
 <h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to open the <a class="reference external" href="../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui">Settings</a> page of your arena chat UI.</p>
 <ol class="arabic simple">
@@ -215,8 +220,8 @@
 </ol>
 <img alt="../_images/scoreboard3.JPG" src="../_images/scoreboard3.JPG" />
 <p>You can find all options explained at the bottom of this page.</p>
-</div>
-<div class="section" id="configuring-in-your-arena-x-yml">
+</section>
+<section id="configuring-in-your-arena-x-yml">
 <h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
 <ol class="arabic simple">
@@ -224,16 +229,16 @@
 <li><p>Search for the following section:</p></li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">scoreboard</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">title</span><span class="p p-Indicator">:</span> <span class="s">&#39;&amp;aBlockBall&#39;</span>
-  <span class="l l-Scalar l-Scalar-Plain">enabled</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="l l-Scalar l-Scalar-Plain">lines</span><span class="p p-Indicator">:</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">scoreboard</span><span class="p">:</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="s">&#39;&amp;aBlockBall&#39;</span>
+  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">lines</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="s">&#39;&#39;</span>
-  <span class="p p-Indicator">-</span> <span class="s">&#39;&amp;6Time:</span><span class="nv"> </span><span class="s">&#39;</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">&lt;time&gt;</span>
-  <span class="p p-Indicator">-</span> <span class="s">&#39;&#39;</span>
-  <span class="p p-Indicator">-</span> <span class="s">&#39;&amp;m</span><span class="nv">           </span><span class="s">&amp;r&#39;</span>
-  <span class="p p-Indicator">-</span> <span class="s">&#39;&lt;redcolor&gt;&lt;red&gt;:&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="nt">&#39;&amp;6Time</span><span class="p">:</span> <span class="s">&#39;</span>
+  <span class="s">-</span><span class="nv"> </span><span class="s">&lt;time&gt;</span>
+  <span class="s">-</span><span class="nv"> </span><span class="se">&#39;&#39;</span>
+  <span class="s">-</span><span class="nv"> </span><span class="s">&#39;</span><span class="nl">&amp;m</span>           <span class="nl">&amp;r</span><span class="s">&#39;</span>
+  <span class="s">-</span><span class="nv"> </span><span class="s">&#39;</span><span class="l l-Scalar l-Scalar-Plain">&lt;redcolor&gt;&lt;red&gt;:&#39;</span>
   <span class="p p-Indicator">-</span> <span class="s">&#39;&amp;l&lt;redscore&gt;&#39;</span>
   <span class="p p-Indicator">-</span> <span class="s">&#39;&#39;</span>
   <span class="p p-Indicator">-</span> <span class="s">&#39;&lt;bluecolor&gt;&lt;blue&gt;:&#39;</span>
@@ -245,16 +250,16 @@
 <li><p>Now continue by enabling or disabling the scoreboard by changing the <strong>enabled</strong> value.</p></li>
 <li><p>Customize the other available options to your own needs.</p></li>
 </ol>
-</div>
-<div class="section" id="properties">
+</section>
+<section id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Title: Title of the scoreboard. Supports all available placeholders.</p></li>
 <li><p>Enabled: Enable or disable the scoreboard</p></li>
 <li><p>Lines: You can add or remove lines and all lines support chatcolors and placeholders.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -307,6 +312,7 @@
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
