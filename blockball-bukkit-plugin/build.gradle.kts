@@ -16,6 +16,8 @@ tasks.withType<ShadowJar> {
     relocate("org.jetbrains", "com.github.shynixn.blockball.lib.org.jetbrains")
     relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
     relocate("javax.inject", "com.github.shynixn.blockball.lib.javax.inject")
+    relocate("javax.annotation", "com.github.shynixn.blockball.lib.javax.annotation")
+    relocate("org.checkerframework", "com.github.shynixn.blockball.lib.org.checkerframework")
     relocate("org.aopalliance", "com.github.shynixn.blockball.lib.org.aopalliance")
     relocate("org.slf4j", "com.github.shynixn.blockball.lib.org.slf4j")
 
@@ -23,6 +25,9 @@ tasks.withType<ShadowJar> {
     relocate("com.google", "com.github.shynixn.blockball.lib.com.google")
     relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
     relocate("org.apache", "com.github.shynixn.blockball.lib.org.apache")
+
+    exclude("DebugProbesKt.bin")
+    exclude("module-info.class")
 }
 
 publishing {
