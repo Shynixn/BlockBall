@@ -7,8 +7,6 @@ apply plugin: 'application'
 
 shadowJar{
     archiveName = 'Deploy.jar'
-    classifier = null
-    version = null
     mergeServiceFiles{
         path='META-INF/cxf'
     }
