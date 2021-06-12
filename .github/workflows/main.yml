@@ -33,9 +33,10 @@ jobs:
           path: /home/runner/.m2/repository/org/spigotmc
           key: spigot-dependency
 
+
       - name: Validate Spigot Dependencies
         run: |
-          test -f ~/.m2/repository/org/spigotmc/spigot/1.9.4-R0.1-SNAPSHOT/spigot-1.9.4-R0.1-SNAPSHOT.jar && echo "DEPENDENCIES=true" >> $GITHUB_ENV || echo "DEPENDENCIES=false" >> $GITHUB_ENV
+          test -f ~/.m2/repository/org/spigotmc/spigot/1.16.4-R0.1-SNAPSHOT/1.16.4-R0.1-SNAPSHOT.jar && echo "DEPENDENCIES=true" >> $GITHUB_ENV || echo "DEPENDENCIES=false" >> $GITHUB_ENV
 
       - name: Build Spigot Dependencies
         if: ${{ env.DEPENDENCIES != 'true' }}
