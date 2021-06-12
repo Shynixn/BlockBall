@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.bukkit.logic.business.service
+package com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3
 
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
@@ -37,9 +37,7 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-// TODO:
-class ScreenMessageServiceImpl @Inject constructor(
+class ScreenMessage18R3ServiceImpl @Inject constructor(
     private val plugin: PluginProxy,
     private val proxyService: ProxyService
 ) : ScreenMessageService {
@@ -57,12 +55,7 @@ class ScreenMessageServiceImpl @Inject constructor(
         val version = plugin.getServerVersion()
 
         val serializerMethod =
-            if (version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
-                findClazz("net.minecraft.network.chat.IChatBaseComponent\$ChatSerializer").getDeclaredMethod(
-                    "a",
-                    String::class.java
-                )
-            } else if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
+           if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
                 findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod(
                     "a",
                     String::class.java
@@ -75,11 +68,6 @@ class ScreenMessageServiceImpl @Inject constructor(
             findClazz("net.minecraft.network.chat.IChatBaseComponent")
         } else {
             findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
-        }
-
-        if (version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
-            println("Problem!")
-            return;
         }
 
         val titleActionClazz = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
@@ -134,11 +122,6 @@ class ScreenMessageServiceImpl @Inject constructor(
 
         val finalMessage = message.translateChatColors()
         val version = plugin.getServerVersion()
-        if (version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
-            println("Problem!")
-            return;
-        }
-
         val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
         val packetClazz = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat")
 
