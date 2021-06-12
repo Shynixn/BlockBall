@@ -37,6 +37,8 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+// TODO:
 class ScreenMessageServiceImpl @Inject constructor(
     private val plugin: PluginProxy,
     private val proxyService: ProxyService
@@ -54,22 +56,38 @@ class ScreenMessageServiceImpl @Inject constructor(
         val finalSubTitle = subTitle.translateChatColors()
         val version = plugin.getServerVersion()
 
-        val serializerMethod = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
-            findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod(
-                "a",
-                String::class.java
-            )
+        val serializerMethod =
+            if (version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
+                findClazz("net.minecraft.network.chat.IChatBaseComponent\$ChatSerializer").getDeclaredMethod(
+                    "a",
+                    String::class.java
+                )
+            } else if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
+                findClazz("net.minecraft.server.VERSION.IChatBaseComponent\$ChatSerializer").getDeclaredMethod(
+                    "a",
+                    String::class.java
+                )
+            } else {
+                findClazz("net.minecraft.server.VERSION.ChatSerializer").getDeclaredMethod("a", String::class.java)
+            }
+
+        val chatBaseComponentClazz = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
+            findClazz("net.minecraft.network.chat.IChatBaseComponent")
         } else {
-            findClazz("net.minecraft.server.VERSION.ChatSerializer").getDeclaredMethod("a", String::class.java)
+            findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
         }
 
-        val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
+        if (version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
+            println("Problem!")
+            return;
+        }
 
         val titleActionClazz = if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
             findClazz("net.minecraft.server.VERSION.PacketPlayOutTitle\$EnumTitleAction")
         } else {
             findClazz("net.minecraft.server.VERSION.EnumTitleAction")
         }
+
 
         val packetConstructor = findClazz("net.minecraft.server.VERSION.PacketPlayOutTitle").getDeclaredConstructor(
             titleActionClazz,
@@ -116,6 +134,11 @@ class ScreenMessageServiceImpl @Inject constructor(
 
         val finalMessage = message.translateChatColors()
         val version = plugin.getServerVersion()
+        if (version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
+            println("Problem!")
+            return;
+        }
+
         val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
         val packetClazz = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat")
 

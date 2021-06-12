@@ -28,31 +28,8 @@ import java.io.FileOutputStream
 import java.util.logging.Level
 
 /**
- * Plugin Main Type.
- * <p>
- * Version 1.2
- * <p>
- * MIT License
- * <p>
- * Copyright (c) 2018-2019 by Shynixn
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Plugin Main.
+ * @author Shynixn
  */
 class BlockBallPlugin : JavaPlugin(), PluginProxy {
     companion object {
@@ -106,12 +83,13 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
                 Version.VERSION_1_15_R1,
                 Version.VERSION_1_16_R1,
                 Version.VERSION_1_16_R2,
-                Version.VERSION_1_16_R3
+                Version.VERSION_1_16_R3,
+                Version.VERSION_1_17_R1
             )
         ) {
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
             sendConsoleMessage(ChatColor.RED.toString() + "BlockBall does not support your server version")
-            sendConsoleMessage(ChatColor.RED.toString() + "Install v" + Version.VERSION_1_8_R3.id + " - v" + Version.VERSION_1_16_R3.id)
+            sendConsoleMessage(ChatColor.RED.toString() + "Install v" + Version.VERSION_1_8_R3.id + " - v" + Version.VERSION_1_17_R1.id)
             sendConsoleMessage(ChatColor.RED.toString() + "Plugin gets now disabled!")
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
 
@@ -191,7 +169,14 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
                 protocolService.register(player)
             }
         }
-        protocolService.registerPackets(listOf(findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")))
+
+        val packetPlayInUseClazz = try {
+            findClazz("net.minecraft.network.protocol.game.PacketPlayInUseEntity")
+        } catch (e: Exception) {
+            findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
+        }
+
+        protocolService.registerPackets(listOf(packetPlayInUseClazz))
 
         Bukkit.getServer()
             .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn, LazoYoung")
@@ -297,7 +282,12 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         builder.append(ChatColor.RESET.toString())
         builder.append("]")
 
-        val minecraftServerClazz = findClazz("net.minecraft.server.VERSION.MinecraftServer")
+        val minecraftServerClazz = try {
+            findClazz("net.minecraft.server.MinecraftServer")
+        } catch (e: Exception) {
+            findClazz("net.minecraft.server.VERSION.MinecraftServer")
+        }
+
         val craftServerClazz = findClazz("org.bukkit.craftbukkit.VERSION.CraftServer")
         val setModtMethod = minecraftServerClazz.getDeclaredMethod("setMotd", String::class.java)
         val getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")

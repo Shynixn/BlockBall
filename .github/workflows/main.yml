@@ -24,40 +24,41 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
-          java-version: '8'
+          java-version: '16'
 
       - name: Cache Spigot Dependencies
         id: cache-spigot-dependencies
         uses: actions/cache@v2
         with:
           path: /home/runner/.m2/repository/org/spigotmc
-          key: spigot-dependencies
+          key: spigot-dependency
 
-      - name: Cache Forge Dependencies
-        id: cache-forge-dependencies
-        uses: actions/cache@v2
-        with:
-          path: /home/runner/.gradle/caches/minecraft
-          key: forge-dependencies
+      - name: Validate Spigot Dependencies
+        run: |
+          test -f ~/.m2/repository/org/spigotmc/spigot/1.9.4-R0.1-SNAPSHOT/spigot-1.9.4-R0.1-SNAPSHOT.jar && echo "DEPENDENCIES=true" >> $GITHUB_ENV || echo "DEPENDENCIES=false" >> $GITHUB_ENV
 
-      - name: Cache Vault Dependency
-        id: cache-vault-dependency
-        uses: actions/cache@v2
-        with:
-          path: /home/runner/.m2/repository/net/milkbowlvault
-          key: forge-dependencies
+      - name: Build Spigot Dependencies
+        if: ${{ env.DEPENDENCIES != 'true' }}
+        run: |
+          mkdir -p ~/.m2/repository/org/spigotmc/
+          docker build --target dependencies-jdk8 -t blockball-dependencies-jdk8 .
+          docker create --name blockball-dependencies-jdk8 blockball-dependencies-jdk8 bash
+          docker cp blockball-dependencies-jdk8:/root/.m2/repository/org/spigotmc ~/.m2/repository/org/
+          docker rm -f blockball-dependencies-jdk8
+          docker build --target dependencies-jdk16 -t blockball-dependencies-jdk16 .
+          docker create --name blockball-dependencies-jdk16 blockball-dependencies-jdk16 bash
+          docker cp blockball-dependencies-jdk16:/root/.m2/repository/org/spigotmc ~/.m2/repository/org/
+          docker rm -f blockball-dependencies-jdk16
 
       - name: Build Java Application
         run: |
           chmod +x gradlew
-          ./gradlew assemble || ./gradlew setupDecompWorkspace && ./gradlew assemble || ./gradlew downloadDependencies
-          ./gradlew clean build shadowJar
+          ./gradlew build pluginJar
 
       - name: Publish Test Report
         run: |
           ./gradlew jacocoTestReport
           bash <(curl -s https://codecov.io/bash)
-        # Disabled ./travis-status.sh success $WEBHOOK_URL # TODO: Replace it with new BOT
 
       - name: Publish Snapshot
         if: "contains(github.event.head_commit.message, '--snapshot')"
@@ -73,8 +74,8 @@ jobs:
           java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_SNAPSHOT }}
           java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_CHANNEL }}
 
-      - name: Publish Release
-        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
+      - name: Publish Release to Maven Central
+        if: ${{ github.ref == 'refs/heads/main' }}
         env:
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
@@ -84,6 +85,8 @@ jobs:
         run: |
           gpg2 --batch --cipher-algo AES256 --passphrase ${{ secrets.SIGNING_KEY_PASSWORD }} travis_secret_key.gpg
           echo "RELEASE_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_ENV
+          ./gradlew clean publishToNexus
+          ./gradlew closeAndReleaseRepository
           java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_SNAPSHOT }}
           java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_CHANNEL }}
 
@@ -116,6 +119,9 @@ jobs:
     if: "contains(github.ref, 'master')"
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '8'
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
@@ -131,6 +137,7 @@ jobs:
           sudo pip3 install sphinx
           rm -rf docs/build
           rm -rf docs/apidocs
+          mkdir -p docs/apidocs
           chmod +x gradlew
           ./gradlew generateJavaDocPages > /dev/null
           sudo python3 -msphinx -M html docs/source docs/build

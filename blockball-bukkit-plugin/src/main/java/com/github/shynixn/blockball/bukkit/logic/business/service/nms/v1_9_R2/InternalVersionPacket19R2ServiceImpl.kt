@@ -11,7 +11,6 @@ import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.google.inject.Inject
 import com.mojang.authlib.GameProfile
-import com.mojang.authlib.properties.Property
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import org.bukkit.inventory.ItemStack

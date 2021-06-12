@@ -21,9 +21,33 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
             .getDeclaredMethod("getHandle")
     }
     private val playerConnectionField by lazy {
-        plugin.findClazz("net.minecraft.server.VERSION.EntityPlayer")
-            .getDeclaredField("playerConnection")
+        try {
+            plugin.findClazz("net.minecraft.server.level.EntityPlayer")
+                .getDeclaredField("b")
+        } catch (e: Exception) {
+            plugin.findClazz("net.minecraft.server.VERSION.EntityPlayer")
+                .getDeclaredField("playerConnection")
+        }
     }
+    private val networkManagerField by lazy {
+        try {
+            plugin.findClazz("net.minecraft.server.network.PlayerConnection")
+                .getDeclaredField("a")
+        } catch (e: Exception) {
+            plugin.findClazz("net.minecraft.server.VERSION.PlayerConnection")
+                .getDeclaredField("networkManager")
+        }
+    }
+    private val channelField by lazy {
+        try {
+            plugin.findClazz("net.minecraft.network.NetworkManager")
+                .getDeclaredField("k")
+        } catch (e: Exception) {
+            plugin.findClazz("net.minecraft.server.VERSION.NetworkManager")
+                .getDeclaredField("channel")
+        }
+    }
+
     private val cachedPlayerChannels = HashMap<Player, Channel>()
     private val registeredPackets = HashSet<Class<*>>()
 
@@ -48,11 +72,8 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
             .invoke(player)
         val connection = playerConnectionField
             .get(nmsPlayer)
-        val netWorkManager = plugin.findClazz("net.minecraft.server.VERSION.PlayerConnection")
-            .getDeclaredField("networkManager")
-            .get(connection)
-        val channel = plugin.findClazz("net.minecraft.server.VERSION.NetworkManager")
-            .getDeclaredField("channel")
+        val netWorkManager = networkManagerField.get(connection)
+        val channel = channelField
             .get(netWorkManager) as Channel
 
         val internalInterceptor = PacketInterceptor(player, this)

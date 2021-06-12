@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.business.service.PacketService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.EntityMetaData
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.google.inject.Inject
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
@@ -17,17 +18,36 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
     private val pluginProxy: PluginProxy
 ) :
     PacketService {
-    private val dataSerializerClazz by lazy { pluginProxy.findClazz("net.minecraft.server.VERSION.PacketDataSerializer") }
+    private val dataSerializerClazz by lazy {
+        try {
+            pluginProxy.findClazz("net.minecraft.network.PacketDataSerializer")
+        } catch (e: Exception) {
+            pluginProxy.findClazz("net.minecraft.server.VERSION.PacketDataSerializer")
+        }
+    }
     private val dataSerializerConstructor by lazy { dataSerializerClazz.getDeclaredConstructor(ByteBuf::class.java) }
     private val dataDeSerializationPacketMethod by lazy {
-        pluginProxy.findClazz("net.minecraft.server.VERSION.Packet")
-            .getDeclaredMethod("a", dataSerializerClazz)
+        try {
+            pluginProxy.findClazz("net.minecraft.network.protocol.Packet")
+                .getDeclaredMethod("a", dataSerializerClazz)
+        } catch (e: Exception) {
+            pluginProxy.findClazz("net.minecraft.server.VERSION.Packet")
+                .getDeclaredMethod("a", dataSerializerClazz)
+        }
     }
     private val packetPlayOutEntityDestroyClazz by lazy {
-        pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy")
+        try {
+            pluginProxy.findClazz("net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy")
+        } catch (e: Exception) {
+            pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy")
+        }
     }
     private val packetPlayOutEntityVelocity by lazy {
-        pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityVelocity")
+        try {
+            pluginProxy.findClazz("net.minecraft.network.protocol.game.PacketPlayOutEntityVelocity")
+        } catch (e: Exception) {
+            pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy")
+        }
     }
 
     /**
@@ -93,7 +113,18 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
      * Sends a packet.
      */
     private fun <P> sendPacket(player: P, packetClazz: Class<*>, byteBuf: ByteBuf) {
-        val packet = packetClazz.newInstance()
+        val packet = if (packetClazz == packetPlayOutEntityVelocity) {
+            packetClazz.getDeclaredConstructor(Int::class.java, findClazz("net.minecraft.world.phys.Vec3D"))
+                .newInstance(
+                    0, findClazz("net.minecraft.world.phys.Vec3D")
+                        .getDeclaredConstructor(Double::class.java, Double::class.java, Double::class.java)
+                        .newInstance(0, 0, 0)
+                )
+        } else if (packetClazz == packetPlayOutEntityDestroyClazz) {
+            packetClazz.getDeclaredConstructor(Int::class.java).newInstance(1)
+        } else {
+            packetClazz.newInstance()
+        }
         val dataSerializer = dataSerializerConstructor.newInstance(byteBuf)
         dataDeSerializationPacketMethod.invoke(packet, dataSerializer)
         proxyService.sendPacket(player, packet)
