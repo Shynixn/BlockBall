@@ -53,6 +53,8 @@ jobs:
       - name: Build Java Application
         run: |
           chmod +x gradlew
+          wget "https://jitpack.io/com/github/MilkBowl/VaultAPI/1.7/VaultAPI-1.7.jar"
+          mvn install:install-file -Dfile=VaultAPI-1.7.jar -DgroupId=net.milkbowlvault -DartifactId=VaultAPI -Dversion=1.7 -Dpackaging=jar
           ./gradlew build pluginJar
 
       - name: Publish Test Report

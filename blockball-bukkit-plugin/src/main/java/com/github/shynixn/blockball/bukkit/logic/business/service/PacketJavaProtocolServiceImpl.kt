@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.CompatibilityArmorSlotType
+import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.InternalVersionPacketService
 import com.github.shynixn.blockball.api.business.service.PacketService
@@ -54,12 +55,25 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
      * Sends a velocity packet.
      */
     override fun <P> sendEntityVelocityPacket(player: P, entityId: Int, velocity: Position) {
-        val buffer = Unpooled.buffer()
-        writeId(buffer, entityId)
-        buffer.writeShort((mathhelperA(velocity.x, -3.9, 3.9) * 8000.0).toInt())
-        buffer.writeShort((mathhelperA(velocity.y, -3.9, 3.9) * 8000.0).toInt())
-        buffer.writeShort((mathhelperA(velocity.z, -3.9, 3.9) * 8000.0).toInt())
-        sendPacket(player, packetPlayOutEntityVelocity, buffer)
+        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
+            val packet = packetPlayOutEntityVelocity.getDeclaredConstructor(
+                Int::class.java,
+                findClazz("net.minecraft.world.phys.Vec3D")
+            )
+                .newInstance(
+                    entityId, findClazz("net.minecraft.world.phys.Vec3D")
+                        .getDeclaredConstructor(Double::class.java, Double::class.java, Double::class.java)
+                        .newInstance(velocity.x, velocity.y, velocity.z)
+                )
+            proxyService.sendPacket(player, packet)
+        } else {
+            val buffer = Unpooled.buffer()
+            writeId(buffer, entityId)
+            buffer.writeShort((mathhelperA(velocity.x, -3.9, 3.9) * 8000.0).toInt())
+            buffer.writeShort((mathhelperA(velocity.y, -3.9, 3.9) * 8000.0).toInt())
+            buffer.writeShort((mathhelperA(velocity.z, -3.9, 3.9) * 8000.0).toInt())
+            sendPacket(player, packetPlayOutEntityVelocity, buffer)
+        }
     }
 
     /**
@@ -67,9 +81,16 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
      */
     override fun <P> sendEntityDestroyPacket(player: P, entityId: Int) {
         val buffer = Unpooled.buffer()
-        writeId(buffer, 1)
-        writeId(buffer, entityId)
-        sendPacket(player, packetPlayOutEntityDestroyClazz, buffer)
+
+        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
+            val packet = packetPlayOutEntityDestroyClazz.getDeclaredConstructor(Int::class.java)
+                .newInstance(entityId)
+            proxyService.sendPacket(player, packet)
+        } else {
+            writeId(buffer, 1)
+            writeId(buffer, entityId)
+            sendPacket(player, packetPlayOutEntityDestroyClazz, buffer)
+        }
     }
 
     /**
@@ -113,18 +134,7 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
      * Sends a packet.
      */
     private fun <P> sendPacket(player: P, packetClazz: Class<*>, byteBuf: ByteBuf) {
-        val packet = if (packetClazz == packetPlayOutEntityVelocity) {
-            packetClazz.getDeclaredConstructor(Int::class.java, findClazz("net.minecraft.world.phys.Vec3D"))
-                .newInstance(
-                    0, findClazz("net.minecraft.world.phys.Vec3D")
-                        .getDeclaredConstructor(Double::class.java, Double::class.java, Double::class.java)
-                        .newInstance(0, 0, 0)
-                )
-        } else if (packetClazz == packetPlayOutEntityDestroyClazz) {
-            packetClazz.getDeclaredConstructor(Int::class.java).newInstance(1)
-        } else {
-            packetClazz.newInstance()
-        }
+        val packet = packetClazz.newInstance()
         val dataSerializer = dataSerializerConstructor.newInstance(byteBuf)
         dataDeSerializationPacketMethod.invoke(packet, dataSerializer)
         proxyService.sendPacket(player, packet)
