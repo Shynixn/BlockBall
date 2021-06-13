@@ -25,33 +25,10 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
+import java.util.function.Function
 
 /**
- * Created by Shynixn 2018.
- * <p>
- * Version 1.2
- * <p>
- * MIT License
- * <p>
- * Copyright (c) 2018 by Shynixn
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Game Listener for the most important game events.
  */
 class GameListener @Inject constructor(
     private val gameService: GameService,
@@ -64,13 +41,32 @@ class GameListener @Inject constructor(
     private val ballEntityService: BallEntityService
 ) : Listener {
     private val playerCache = HashSet<Player>()
-    private val packetPlayInUseEntityActionField by lazy {
-        findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
-            .getDeclaredField("action").accessible(true)
+    private val packetPlayInUseEntityActionFun: Function<Any, Any> by lazy {
+        try {
+            val field = findClazz("net.minecraft.network.protocol.game.PacketPlayInUseEntity")
+                .getDeclaredField("b").accessible(true)
+            Function<Any, Any> { packet ->
+                val data = field.get(packet)
+                val method = data::class.java.getDeclaredMethod("a")
+                method.isAccessible = true
+                method.invoke(data)
+            }
+        } catch (e: Exception) {
+            val field = findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
+                .getDeclaredField("action").accessible(true)
+            Function<Any, Any> { packet ->
+                field.get(packet)
+            }
+        }
     }
     private val packetPlayInUseEntityIdField by lazy {
-        findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
-            .getDeclaredField("a").accessible(true)
+        try {
+            findClazz("net.minecraft.network.protocol.game.PacketPlayInUseEntity")
+                .getDeclaredField("a").accessible(true)
+        } catch (e: Exception) {
+            findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
+                .getDeclaredField("a").accessible(true)
+        }
     }
 
     /**
@@ -84,7 +80,7 @@ class GameListener @Inject constructor(
             return
         }
 
-        val action = packetPlayInUseEntityActionField.get(event.packet)
+        val action = packetPlayInUseEntityActionFun.apply(event.packet)
         val entityId = packetPlayInUseEntityIdField.get(event.packet) as Int
         val ball = ballEntityService.findBallByEntityId(entityId) ?: return
         val isPass = action.toString() != "ATTACK"

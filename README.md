@@ -13,7 +13,7 @@ BlockBall is a spigot plugin to play soccer games in Minecraft.
  
 * Uses blocks as balls in minecraft
 * Games are completely customizable
-* Version support 1.8.R3 - 1.16.R3
+* Version support 1.8.R3 - 1.17.R1
 * Check out the [BlockBall-Spigot-Page](https://www.spigotmc.org/resources/15320/) to get more information. 
 
 ## Installation
@@ -27,39 +27,48 @@ BlockBall is a spigot plugin to play soccer games in Minecraft.
 
 ## Contributing
 
-* Clone the repository to your local environment
-* Install Java 8 (later versions are not supported by the ``downloadDependencies`` and ``setupDecompWorkspace`` task)
-* Install Apache Maven
-* Make sure ``java`` points to a Java 8 installation (``java -version``)
-* Make sure ``$JAVA_HOME`` points to a Java 8 installation
-* Make sure ``mvn`` points to a Maven installation (``mvn --version``)
-* Execute gradle sync for dependencies
-* Install the additional spigot dependencies by executing the following gradle task (this task can take a very long time)
+### Setting up development environment
 
-```xml
-[./gradlew|gradlew.bat] downloadDependencies
-```
+* Install Java 16 or higher
+* Fork the BlockBall project on github and clone it to your local environment.
+* BlockBall requires spigot server implementations from 1.8.8 to 1.17 to be correctly installed in your local Maven cache.
+  As this requires multiple java version to build different versions, a Dockerfile is provided to build these dependencies in a docker container
+  and then copy it to your local Maven cache.
 
-(If the downloadDependencies task fails for some reason, you can manually download [BuildTools.jar](https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar) and execute [the commands on this page](https://github.com/Shynixn/BlockBall/blob/033270ba68329bf0197d9b088d4005deb09fbb2f/build.gradle#L267). You do not have to execute ``mvn install:install-file -Dfile=Vault.jar``.
+Note: If using Windows, execute the commands using Git Bash.
+````sh
+mkdir -p ~/.m2/repository/org/spigotmc/
+docker build --target dependencies-jdk8 -t blockball-dependencies-jdk8 .
+docker create --name blockball-dependencies-jdk8 blockball-dependencies-jdk8 bash
+docker cp blockball-dependencies-jdk8:/root/.m2/repository/org/spigotmc ~/.m2/repository/org/
+docker rm -f blockball-dependencies-jdk8
+docker build --target dependencies-jdk16 -t blockball-dependencies-jdk16 .
+docker create --name blockball-dependencies-jdk16 blockball-dependencies-jdk16 bash
+docker cp blockball-dependencies-jdk16:/root/.m2/repository/org/spigotmc ~/.m2/repository/org/
+docker rm -f blockball-dependencies-jdk16
+````
 
+* Open the project with an IDE, gradle sync for dependencies.
 
-* Install the ForgeGradle development workspace for sponge
+### Testing
 
-```xml
-[./gradlew|gradlew.bat] setupDecompWorkspace
-```
+#### Option 1
 
-* Build the plugin by executing
+* Setup your own minecraft server
+* Change ``// val destinationDir = File("C:/temp/plugins")`` to your plugins folder in the ``structureblocklib-bukkit-sample/build.gradle.kts`` file.
+* Run the ``pluginJar`` task to generate a plugin.jar file.
+* Run your minecraft server
 
-```xml
-[./gradlew|gradlew.bat] shadowJar
-```
+#### Option 2 :whale:
 
-* The .jar file gets generated at ``blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin.jar``
+* Run the provided docker file.
+* The source code is copied to a new docker container and built to a plugin.
+* This plugin is installed on a new minecraft server which is accessible on the host machine on the default port on ``localhost``.
 
-### Docker (Optional)
-
-* You can also use the provided `Dockerfile` to launch a container with a pre configured server and plugin.
+````sh
+docker build -t blockball .
+docker run --name=blockball -p 25565:25565 -p 5005:5005 blockball
+````
 
 ## Licence
 

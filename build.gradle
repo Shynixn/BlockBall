@@ -8,8 +8,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'org.jetbrains.kotlin', name: 'kotlin-gradle-plugin', version: kotlinVersion
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.10.1"
+        classpath group: 'org.jetbrains.kotlin', name: 'kotlin-gradle-plugin', version: '1.3.72'
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.32"
     }
 }
 
@@ -18,8 +18,6 @@ plugins {
     id 'io.codearte.nexus-staging' version '0.20.0'
     id "de.marcphilipp.nexus-publish" version '0.2.0'
 }
-
-apply plugin: 'org.jetbrains.dokka'
 
 repositories {
     mavenCentral()
@@ -37,6 +35,7 @@ nexusStaging {
 
 allprojects {
     apply plugin: 'jacoco'
+    apply plugin: 'org.jetbrains.dokka'
 }
 
 tasks.register("printVersion") {
@@ -45,7 +44,7 @@ tasks.register("printVersion") {
 
 subprojects {
     group 'com.github.shynixn.blockball'
-    version '6.24.1'
+    version '6.25.0'
 
     sourceCompatibility = 1.8
 
@@ -54,7 +53,9 @@ subprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'java-library'
     apply plugin: "de.marcphilipp.nexus-publish"
-    apply plugin: 'org.jetbrains.dokka'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
@@ -90,12 +91,11 @@ subprojects {
         classifier = 'sources'
     }
 
-    task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
-        outputFormat = 'javadoc'
-        outputDirectory = "$buildDir/javadoc"
+    tasks.named("dokkaHtml") {
+        outputDirectory = file("$buildDir/javadoc")
     }
 
-    task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    task javadocJar(type: Jar, dependsOn: dokkaHtml) {
         from javadoc
         classifier = 'javadoc'
     }
@@ -193,90 +193,19 @@ gradle.taskGraph.whenReady { taskGraph ->
 }
 
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
-    additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
-    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
-    classDirectories = files(subprojects.sourceSets.main.output)
-    executionData = files(subprojects.jacocoTestReport.executionData)
     reports {
         html.enabled = true
         xml.enabled = true
         csv.enabled = false
     }
-    onlyIf = {
-        true
-    }
-    doFirst {
-        executionData = files(executionData.findAll {
-            it.exists()
-        })
-    }
 }
 
 task generateJavaDocPages(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    outputFormat = "javadoc"
-    outputDirectory = "docs/apidocs"
-
-    configuration {
-        sourceRoot{
-            path = "blockball-api/src/main/java"
+    dokkaSourceSets {
+        named("main") {
+            outputDirectory = file("docs/apidocs")
+            sourceRoots.from(file("blockball-api/src/main/java"))
+            sourceRoots.from(file("blockball-bukkit-api/src/main/java"))
         }
-        sourceRoot {
-            path = "blockball-bukkit-api/src/main/java"
-        }
-        sourceRoot {
-            path = "blockball-core/src/main/java"
-        }
-        sourceRoot {
-            path = "blockball-bukkit-plugin/src/main/java"
-        }
-    }
-}
-
-task downloadDependencies(type: Exec) {
-    def build = new File('build')
-
-    if (!build.exists()) {
-        build.mkdir()
-    }
-
-    def folder = new File(build, 'buildtools')
-
-    if (!folder.exists()) {
-        folder.mkdir()
-    }
-
-    def file = new File(folder, "BuildTools.jar")
-
-    if (!file.exists()) {
-        new URL('https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar').withInputStream { i ->
-            file.withOutputStream {
-                it << i
-            }
-        }
-    }
-
-    def vaultFile = new File(folder, "Vault.jar")
-
-    if (!vaultFile.exists()) {
-        def connection = new URL('https://jitpack.io/com/github/MilkBowl/VaultAPI/1.7/VaultAPI-1.7.jar').openConnection()
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.1.2; en-us; GT-N8013 Build/JZO54K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30")
-
-        def out = new BufferedOutputStream(new FileOutputStream(vaultFile))
-        out << connection.inputStream
-
-        out.close()
-    }
-
-    def text = "cd build/buildtools"
-    text += " && mvn install:install-file -Dfile=Vault.jar -DgroupId=net.milkbowlvault -DartifactId=VaultAPI -Dversion=1.7 -Dpackaging=jar"
-    text += " && java -jar BuildTools.jar --rev 1.16.4"
-    text += " && mvn install:install-file -Dfile=spigot-1.16.4.jar -DgroupId=org.spigotmc -DartifactId=spigot116R3 -Dversion=1.16.4-R3.0 -Dpackaging=jar"
-
-    standardOutput = new ByteArrayOutputStream()
-
-    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-        commandLine 'cmd', '/c', text
-    } else {
-        commandLine 'sh', '-c', text
     }
 }

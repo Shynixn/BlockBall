@@ -11,9 +11,12 @@ import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.Particle113R2ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.RayTracingService113R2Impl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_17_R1.InternalVersionPacket117R1ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_17_R1.ScreenMessage117R1ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.InternalVersionPacket18R3ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.Particle18R3ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.RayTracingService18R3Impl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.ScreenMessage18R3ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_9_R2.InternalVersionPacket19R2ServiceImpl
 import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextImpl
@@ -76,7 +79,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(VirtualArenaService::class.java).to(VirtualArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ScoreboardService::class.java).to(ScoreboardServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(ScreenMessageService::class.java).to(ScreenMessageServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(UpdateCheckService::class.java).to(UpdateCheckServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ConfigurationService::class.java).to(ConfigurationServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(SoundService::class.java).to(SoundServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -123,6 +125,17 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         }
 
         when {
+            version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)
+            -> bind(ScreenMessageService::class.java).to(ScreenMessage117R1ServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
+            else -> bind(ScreenMessageService::class.java).to(ScreenMessage18R3ServiceImpl::class.java)
+                .`in`(Scopes.SINGLETON)
+        }
+
+        when {
+            version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1) ->
+                bind(InternalVersionPacketService::class.java).to(InternalVersionPacket117R1ServiceImpl::class.java)
+                    .`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)
             -> bind(InternalVersionPacketService::class.java).to(InternalVersionPacket19R2ServiceImpl::class.java)
                 .`in`(Scopes.SINGLETON)

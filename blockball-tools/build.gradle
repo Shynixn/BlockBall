@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '4.0.1'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
 apply plugin: 'kotlin-platform-jvm'
@@ -7,8 +7,6 @@ apply plugin: 'application'
 
 shadowJar{
     archiveName = 'Deploy.jar'
-    classifier = null
-    version = null
     mergeServiceFiles{
         path='META-INF/cxf'
     }

@@ -1,0 +1,9 @@
+server.basics:
+  description: Basic permissions for my server.
+  default: true
+  children:
+    blockball.command.admin: true
+    blockball.command.staff: true
+    blockball.command.use: true
+    blockball.game.join.all: true
+    blockball.game.spectate.all: true

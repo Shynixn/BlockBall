@@ -3,6 +3,7 @@
 package integrationtest
 
 import ch.vorburger.mariadb4j.DB
+import ch.vorburger.mariadb4j.DBConfigurationBuilder
 import com.github.shynixn.blockball.api.business.enumeration.GameMode
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
 import com.github.shynixn.blockball.api.business.service.PersistenceStatsService
@@ -148,7 +149,10 @@ class PersistenceMySQLIT {
                 database!!.stop()
             }
 
-            database = DB.newEmbeddedDB(3306)
+            val config = DBConfigurationBuilder.newBuilder()
+            config.setPort(3306)
+            config.addArg("--user=root")
+            database = DB.newEmbeddedDB(config.build())
             database!!.start()
 
             DriverManager.getConnection("jdbc:mysql://localhost:3306/?user=root&password=").use { conn ->
