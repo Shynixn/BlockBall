@@ -119,14 +119,14 @@ class InternalVersionPacket117R1ServiceImpl @Inject constructor(
         }
 
         if (entityMetaData.slimeSize != null) {
-            val slimeSizeIndex = 15
+            val slimeSizeIndex = 16
             buffer.writeByte(slimeSizeIndex)
             buffer.writeId(intTypeValue)
             buffer.writeId(entityMetaData.slimeSize!!)
         }
 
         if (entityMetaData.armorstandHeadRotation != null) {
-            buffer.writeByte(15)
+            buffer.writeByte(16)
             buffer.writeId(rotationTypeValue)
             buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.x.toFloat())
             buffer.writeFloat(entityMetaData.armorstandHeadRotation!!.y.toFloat())
