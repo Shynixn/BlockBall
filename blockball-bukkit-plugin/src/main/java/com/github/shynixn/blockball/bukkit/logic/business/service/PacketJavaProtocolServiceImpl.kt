@@ -47,7 +47,7 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         try {
             pluginProxy.findClazz("net.minecraft.network.protocol.game.PacketPlayOutEntityVelocity")
         } catch (e: Exception) {
-            pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityDestroy")
+            pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityVelocity")
         }
     }
 
