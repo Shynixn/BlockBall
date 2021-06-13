@@ -8,7 +8,8 @@ plugins {
 }
 
 tasks.withType<ShadowJar> {
-    archiveName = "$baseName-$version.$extension"
+    dependsOn("jar")
+    archiveName = "${baseName}-${version}-mojangmapping.${extension}"
 
     // Change the output folder of the plugin.
     // destinationDir = File("C:\\temp\\plugins")
