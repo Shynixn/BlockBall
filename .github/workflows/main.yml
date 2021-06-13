@@ -37,7 +37,7 @@ jobs:
         run: |
           ls ~/.m2/repository/org/spigotmc/spigot
           ls ~/.m2/repository/org/spigotmc/spigot/1.16.4-R0.1-SNAPSHOT
-          test -f ~/.m2/repository/org/spigotmc/spigot/1.16.4-R0.1-SNAPSHOT/1.16.4-R0.1-SNAPSHOT.jar && echo "DEPENDENCIES=true" >> $GITHUB_ENV || echo "DEPENDENCIES=false" >> $GITHUB_ENV
+          test -f ~/.m2/repository/org/spigotmc/spigot/1.16.4-R0.1-SNAPSHOT/spigot-1.16.4-R0.1-SNAPSHOT.jar && echo "DEPENDENCIES=true" >> $GITHUB_ENV || echo "DEPENDENCIES=false" >> $GITHUB_ENV
 
       - name: Build Spigot Dependencies
         if: ${{ env.DEPENDENCIES != 'true' }}
