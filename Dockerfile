@@ -6,6 +6,8 @@ RUN apt-get update
 RUN apt-get install maven -y
 RUN wget "https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
 RUN java -jar BuildTools.jar --rev 1.16.4
+RUN wget "https://jitpack.io/com/github/MilkBowl/VaultAPI/1.7/VaultAPI-1.7.jar"
+RUN mvn install:install-file -Dfile=VaultAPI-1.7.jar -DgroupId=net.milkbowlvault -DartifactId=VaultAPI -Dversion=1.7 -Dpackaging=jar
 CMD ["sh","-c","/bin/bash"]
 
 # 2. Resolve minecraft-dependencies for 1.17 - latest with jdk16
@@ -24,8 +26,7 @@ WORKDIR /tmp
 RUN apt-get update
 RUN apt-get install maven -y
 RUN apt-get install dos2unix -y
-RUN wget "https://jitpack.io/com/github/MilkBowl/VaultAPI/1.7/VaultAPI-1.7.jar"
-RUN mvn install:install-file -Dfile=VaultAPI-1.7.jar -DgroupId=net.milkbowlvault -DartifactId=VaultAPI -Dversion=1.7 -Dpackaging=jar
+COPY --from=dependencies-jdk8 /root/.m2/repository/net/milkbowlvault /root/.m2/repository/net/milkbowlvault/
 COPY --from=dependencies-jdk8 /root/.m2/repository/org/spigotmc /root/.m2/repository/org/spigotmc/
 COPY --from=dependencies-jdk16 /root/.m2/repository/org/spigotmc /root/.m2/repository/org/spigotmc/
 COPY . /tmp
