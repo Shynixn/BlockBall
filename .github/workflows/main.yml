@@ -91,6 +91,8 @@ jobs:
           echo "RELEASE_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_ENV
           ./gradlew clean publishToNexus
           ./gradlew closeAndReleaseRepository
+          ./gradlew clean
+          ./gradlew pluginJar
           java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_SNAPSHOT }}
           java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_CHANNEL }}
 

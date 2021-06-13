@@ -36,7 +36,7 @@ RUN ./gradlew build pluginJar --no-daemon
 # 4. Launch a minecraft server with jdk16 and plugin
 FROM adoptopenjdk/openjdk16
 # Change to the current plugin version present in build.gradle
-ENV PLUGIN_VERSION=6.25.0-SNAPSHOT
+ENV PLUGIN_VERSION=6.25.0
 # Change to the server version you want to test.
 ENV SERVER_VERSION=1.17-R0.1-SNAPSHOT/spigot-1.17-R0.1-SNAPSHOT.jar
 # Port of the Minecraft Server.
