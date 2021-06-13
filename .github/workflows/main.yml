@@ -90,7 +90,7 @@ jobs:
           ./gradlew clean publishToNexus
           ./gradlew closeAndReleaseRepository
           ./gradlew clean
-          ./gradlew pluginJar
+          ./gradlew shadowJar pluginJar
           java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_SNAPSHOT }}
           java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_CHANNEL }}
 
