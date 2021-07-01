@@ -11,9 +11,6 @@ tasks.withType<ShadowJar> {
     dependsOn("jar")
     archiveName = "${baseName}-${version}-mojangmapping.${extension}"
 
-    // Change the output folder of the plugin.
-    // destinationDir = File("C:\\temp\\plugins")
-
     relocate("kotlin", "com.github.shynixn.blockball.lib.kotlin")
 
     relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intelli")
