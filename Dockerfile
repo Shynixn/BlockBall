@@ -18,7 +18,7 @@ RUN apt-get install maven -y
 RUN apt-get install wget -y
 RUN apt-get install git -y
 RUN wget "https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
-RUN java -jar BuildTools.jar --rev 1.17 --remapped
+RUN java -jar BuildTools.jar --rev 1.17.1 --remapped
 
 # 3. Build plugin for 1.8 - 1.17 with jdk16
 FROM adoptopenjdk/openjdk16 AS plugin-jdk16
@@ -37,9 +37,9 @@ RUN ./gradlew build pluginJar --no-daemon
 # 4. Launch a minecraft server with jdk16 and plugin
 FROM adoptopenjdk/openjdk16
 # Change to the current plugin version present in build.gradle
-ENV PLUGIN_VERSION=6.25.2
+ENV PLUGIN_VERSION=6.25.3
 # Change to the server version you want to test.
-ENV SERVER_VERSION=1.17-R0.1-SNAPSHOT/spigot-1.17-R0.1-SNAPSHOT.jar
+ENV SERVER_VERSION=1.17.1-R0.1-SNAPSHOT/spigot-1.17.1-R0.1-SNAPSHOT.jar
 # Port of the Minecraft Server.
 EXPOSE 25565
 # Port for Remote Debugging
