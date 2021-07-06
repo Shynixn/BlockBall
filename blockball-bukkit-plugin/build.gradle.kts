@@ -15,7 +15,7 @@ tasks.withType<ShadowJar> {
 
     relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intelli")
     relocate("org.jetbrains", "com.github.shynixn.blockball.lib.org.jetbrains")
-    relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
+    relocate("org.bstats", "com.github.shynixn.blockball.externallib.org.bstats")
     relocate("javax.inject", "com.github.shynixn.blockball.lib.javax.inject")
     relocate("javax.annotation", "com.github.shynixn.blockball.lib.javax.annotation")
     relocate("org.checkerframework", "com.github.shynixn.blockball.lib.org.checkerframework")
@@ -75,6 +75,33 @@ tasks.register("pluginJar", Exec::class.java) {
     } else {
         commandLine = listOf("sh", "-c", obsMapping)
     }
+}
+
+tasks.register("pluginJarSlim", ShadowJar::class.java) {
+    // Change the output folder of the plugin.
+    //destinationDir = File("C:/temp/plugins")
+    dependsOn("pluginJar")
+    from(zipTree(File(projectDir.absolutePath + "/build/libs/" + (tasks.getByName("jar") as Jar).archiveName)))
+    archiveName = "${baseName}-${version}-slim.${extension}"
+
+    relocate("com.github.shynixn.blockball.lib.kotlin", "kotlin")
+
+    relocate("com.github.shynixn.blockball.lib.org.intellij", "org.intellij")
+    relocate("com.github.shynixn.blockball.lib.org.jetbrains", "org.jetbrains")
+    relocate("com.github.shynixn.blockball.lib.javax.inject", "javax.inject")
+    relocate("com.github.shynixn.blockball.lib.javax.annotation", "javax.annotation")
+    relocate("com.github.shynixn.blockball.lib.org.checkerframework", "org.checkerframework")
+    relocate("com.github.shynixn.blockball.lib.org.aopalliance", "org.aopalliance")
+    relocate("com.github.shynixn.blockball.lib.org.slf4j", "org.slf4j")
+
+    relocate("com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine", "com.github.shynixn.mccoroutine")
+    relocate("com.github.shynixn.blockball.lib.com.google", "com.google")
+    relocate("com.github.shynixn.blockball.lib.com.zaxxer", "com.zaxxer")
+    relocate("com.github.shynixn.blockball.lib.org.apache", "org.apache")
+
+    exclude("com/github/shynixn/blockball/lib/**/*")
+    exclude("plugin.yml")
+    rename("plugin-1.17.yml", "plugin.yml")
 }
 
 repositories {

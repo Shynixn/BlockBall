@@ -50,6 +50,13 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
             pluginProxy.findClazz("net.minecraft.server.VERSION.PacketPlayOutEntityVelocity")
         }
     }
+    private val intArrayListConstructor by lazy {
+        pluginProxy.findClazz("org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.IntArrayList")
+            .getDeclaredConstructor(IntArray::class.java)
+    }
+    private val packetPlayOutEntityDestroyIntListConstructor by lazy {
+        packetPlayOutEntityDestroyClazz.getDeclaredConstructor(pluginProxy.findClazz("org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.IntList"))
+    }
 
     /**
      * Sends a velocity packet.
@@ -83,8 +90,13 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         val buffer = Unpooled.buffer()
 
         if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
-            val packet = packetPlayOutEntityDestroyClazz.getDeclaredConstructor(Int::class.java)
-                .newInstance(entityId)
+            val packet = try {
+                val intList = intArrayListConstructor.newInstance(intArrayOf(entityId))
+                packetPlayOutEntityDestroyIntListConstructor.newInstance(intList)
+            } catch (e: Exception) {
+                throw RuntimeException("BlockBall does not support 1.17.0. Upgrade to 1.17.1.!", e)
+            }
+
             proxyService.sendPacket(player, packet)
         } else {
             writeId(buffer, 1)

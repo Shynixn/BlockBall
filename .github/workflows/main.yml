@@ -55,7 +55,7 @@ jobs:
           chmod +x gradlew
           wget "https://jitpack.io/com/github/MilkBowl/VaultAPI/1.7/VaultAPI-1.7.jar"
           mvn install:install-file -Dfile=VaultAPI-1.7.jar -DgroupId=net.milkbowlvault -DartifactId=VaultAPI -Dversion=1.7 -Dpackaging=jar
-          ./gradlew build pluginJar
+          ./gradlew build pluginJarSlim
 
       - name: Publish Test Report
         run: |
@@ -90,7 +90,7 @@ jobs:
           ./gradlew clean publishToNexus
           ./gradlew closeAndReleaseRepository
           ./gradlew clean
-          ./gradlew shadowJar pluginJar
+          ./gradlew shadowJar pluginJarSlim
           java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_SNAPSHOT }}
           java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_CHANNEL }}
 
@@ -116,6 +116,17 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: /home/runner/work/BlockBall/BlockBall/blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin-${{ env.RELEASE_VERSION }}.jar
           asset_name: BlockBall.jar
+          asset_content_type: application/jar
+
+      - name: Upload Bukkit Slim Release to Github
+        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /home/runner/work/BlockBall/BlockBall/blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin-${{ env.RELEASE_VERSION }}-slim.jar
+          asset_name: BlockBall-Slim.jar
           asset_content_type: application/jar
 
   Documentation:

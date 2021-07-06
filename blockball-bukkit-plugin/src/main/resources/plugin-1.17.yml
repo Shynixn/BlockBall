@@ -25,3 +25,14 @@ commands:
       usage: /<command>
       permission: blockball.command.reload
       permission-message: You don't have permission.
+libraries:
+   - 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.20'
+   - 'com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:1.5.0'
+   - 'com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:1.5.0'
+   - 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
+   - 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.9'
+   - 'org.slf4j:slf4j-jdk14:1.7.25'
+   - 'com.zaxxer:HikariCP:3.2.0'
+   - 'com.google.inject:guice:5.0.1'
+   - 'commons-io:commons-io:2.6'
+   - 'com.google.code.gson:gson:2.8.6'
