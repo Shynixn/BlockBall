@@ -80,9 +80,8 @@ tasks.register("pluginJar", Exec::class.java) {
 tasks.register("pluginJarSlim", ShadowJar::class.java) {
     // Change the output folder of the plugin.
     //destinationDir = File("C:/temp/plugins")
-
     dependsOn("pluginJar")
-    from(zipTree(File("/build/libs/" + (tasks.getByName("jar") as Jar).archiveName)))
+    from(zipTree(File(projectDir.absolutePath + "/build/libs/" + (tasks.getByName("jar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-slim.${extension}"
 
     relocate("com.github.shynixn.blockball.lib.kotlin", "kotlin")
