@@ -51,11 +51,22 @@ class PacketJavaProtocolServiceImpl @Inject constructor(
         }
     }
     private val intArrayListConstructor by lazy {
-        pluginProxy.findClazz("org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.IntArrayList")
-            .getDeclaredConstructor(IntArray::class.java)
+        try {
+            // Paper Spigot shades a different IntList
+            pluginProxy.findClazz("org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.IntArrayList")
+                .getDeclaredConstructor(IntArray::class.java)
+        } catch (e: Exception) {
+            pluginProxy.findClazz("it.unimi.dsi.fastutil.ints.IntArrayList")
+                .getDeclaredConstructor(IntArray::class.java)
+        }
     }
     private val packetPlayOutEntityDestroyIntListConstructor by lazy {
-        packetPlayOutEntityDestroyClazz.getDeclaredConstructor(pluginProxy.findClazz("org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.IntList"))
+        try {
+            // Paper Spigot shades a different IntList
+            packetPlayOutEntityDestroyClazz.getDeclaredConstructor(pluginProxy.findClazz("org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.IntList"))
+        } catch (e: Exception) {
+            packetPlayOutEntityDestroyClazz.getDeclaredConstructor(pluginProxy.findClazz("it.unimi.dsi.fastutil.ints.IntList"))
+        }
     }
 
     /**
