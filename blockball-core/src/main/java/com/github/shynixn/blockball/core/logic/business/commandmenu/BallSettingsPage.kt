@@ -68,6 +68,8 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             ballMeta.skin = args[2]
         } else if (command == MenuCommand.BALL_SIZE_CALLBACK && args.size == 3) {
             ballMeta.size = BallSize.values()[args[2].toInt()]
+        } else if (command == MenuCommand.BALL_SLIME) {
+            ballMeta.isSlimeVisible = !ballMeta.isSlimeVisible
         } else if (command == MenuCommand.BALL_INTERACTION_HITBOX && args.size == 3 && args[2].toDoubleOrNull() != null) {
             ballMeta.interactionHitBoxSize = args[2].toDouble()
         } else if (command == MenuCommand.BALL_KICKPASS_HITBOX && args.size == 3 && args[2].toDoubleOrNull() != null) {
@@ -108,6 +110,11 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BALLSIZES.command)
             .setHoverText("Opens the selectionbox for ball sizes.")
+            .builder().nextLine()
+            .component("- Slime Visible: " + ballMeta.isSlimeVisible).builder()
+            .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.TOGGLE.color)
+            .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.BALL_SLIME.command)
+            .setHoverText("Toggles if the slime hitbox is rendered instead of the ball helmet.")
             .builder().nextLine()
             .component("- Interaction Hitbox Size: " + ballMeta.interactionHitBoxSize).builder()
             .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)

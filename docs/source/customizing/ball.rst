@@ -181,6 +181,7 @@ Properties
 
 * Size: Size of the ball. Can be NORMAL or SMALL.
 * Skin: Name of a player using this skin or a skin URL.
+* Slime Visible: Should a slime be rendered instead of the ball skin? A good option for Bedrock based servers. Adjust the size of the ball using the 'KickPass Hitbox Size' value and the position of the hitbox using the 'hitbox-relocation' (can only be found in the arena_x.yml file) value.
 * Interaction Hitbox Size: Size of the ball hitbox intercepting player movements. Does not have an impact on left or right clicking the ball.
 * KickPass Hitbox Size: Size of the ball hitbox intercepting player left clicks and right clicks. Does not have an impact on player movements.
 * KickPass Delay: Delay in ticks until the ball executes the movement action after being clicked.

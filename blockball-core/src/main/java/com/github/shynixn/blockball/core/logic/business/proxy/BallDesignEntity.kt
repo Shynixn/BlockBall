@@ -55,7 +55,16 @@ class BallDesignEntity(val entityId: Int) {
      */
     fun spawn(player: Any, position: Position) {
         packetService.sendEntitySpawnPacket(player, entityId, "ARMOR_STAND", position)
-        packetService.sendEntityEquipmentPacket(player, entityId, CompatibilityArmorSlotType.HELMET, helmetItemStack)
+
+        if (!ball.meta.isSlimeVisible) {
+            packetService.sendEntityEquipmentPacket(
+                player,
+                entityId,
+                CompatibilityArmorSlotType.HELMET,
+                helmetItemStack
+            )
+        }
+
         packetService.sendEntityMetaDataPacket(player, entityId, EntityMetadataImpl {
             this.isInvisible = true
             this.isSmall = ball.meta.size == BallSize.SMALL
@@ -114,6 +123,10 @@ class BallDesignEntity(val entityId: Int) {
 
         if (angle != null) {
             rotation = angle
+
+            if (ball.meta.isSlimeVisible) {
+                return
+            }
 
             for (player in players) {
                 packetService.sendEntityMetaDataPacket(player, entityId, EntityMetadataImpl {
