@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installing &mdash; BlockBall 6.25.4 documentation</title>
+  <title>Installing &mdash; BlockBall 6.26.0 documentation</title>
   
 
   
@@ -40,7 +40,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.25.4 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.26.0 documentation" href="../index.html"/>
         <link rel="up" title="Getting Started" href="index.html"/>
         <link rel="next" title="Configuring Permissions" href="permissions.html"/>
         <link rel="prev" title="Getting Started" href="index.html"/> 
@@ -75,7 +75,7 @@
             
             
               <div class="version">
-                6.25.4
+                6.26.0
               </div>
             
           
@@ -103,7 +103,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Getting Started</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Installing</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#java">Java</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#spigot-craftbukkit-sponge">Spigot/CraftBukkit/Sponge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spigot">Spigot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sponge">Sponge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bedrock">Bedrock</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#placeholderapi">PlaceholderAPI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#download">Download</a></li>
 </ul>
@@ -193,13 +195,25 @@
 <h2>Java<a class="headerlink" href="#java" title="Permalink to this headline">¶</a></h2>
 <p>Java 8 - Java Latest can be used to run BlockBall.</p>
 </section>
-<section id="spigot-craftbukkit-sponge">
-<h2>Spigot/CraftBukkit/Sponge<a class="headerlink" href="#spigot-craftbukkit-sponge" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Spigot ✔</p></li>
-<li><p>PaperSpigot ✔</p></li>
-<li><p>Sponge ✘ (not compatible)</p></li>
-</ul>
+<section id="spigot">
+<h2>Spigot<a class="headerlink" href="#spigot" title="Permalink to this headline">¶</a></h2>
+<p>The plugin is fully compatible to Spigot and Paper (Spigot) ✔</p>
+</section>
+<section id="sponge">
+<h2>Sponge<a class="headerlink" href="#sponge" title="Permalink to this headline">¶</a></h2>
+<p>The plugin is not compatible to sponge.  ✘</p>
+</section>
+<section id="bedrock">
+<h2>Bedrock<a class="headerlink" href="#bedrock" title="Permalink to this headline">¶</a></h2>
+<p>The plugin is partially compatible to Bedrock using <a class="reference external" href="https://geysermc.org/">Geyser</a>.  ✔</p>
+<ol class="arabic simple">
+<li><p>Continue with the BlockBall guide and come back here once you can play a game on a Java server</p></li>
+<li><p>Setup <a class="reference external" href="https://geysermc.org/">Geyser</a></p></li>
+<li><p>Join the server using a Bedrock based Minecraft client (e.g. Smartphone, Windows)</p></li>
+<li><p>Join a game and observe that it is fully playable (ball skin is not rendered)</p></li>
+<li><p>Switch the ball to a slime. See ball wiki page.</p></li>
+<li><p>Play with a slime ball instead of the player head.</p></li>
+</ol>
 </section>
 <section id="placeholderapi">
 <h2>PlaceholderAPI<a class="headerlink" href="#placeholderapi" title="Permalink to this headline">¶</a></h2>
@@ -256,7 +270,7 @@ to check the signature or download the javadocs from the <a class="reference ext
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.25.4',
+            VERSION:'6.26.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
