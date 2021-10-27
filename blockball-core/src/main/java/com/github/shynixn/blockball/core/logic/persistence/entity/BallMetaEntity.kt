@@ -43,6 +43,12 @@ class BallMetaEntity(
     override var size: BallSize = BallSize.NORMAL
 
     /**
+     * Optional nbt applied to the item of the ball. e.g. Skull.
+     */
+    @YamlSerialize(orderNumber = 2, value = "item-nbt")
+    override var itemNbt: String? = null
+
+    /**
      * If set to true, the slime is visible instead of the ball.
      */
     @YamlSerialize(orderNumber = 3, value = "slime-visible")

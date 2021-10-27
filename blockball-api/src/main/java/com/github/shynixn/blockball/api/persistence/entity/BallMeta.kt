@@ -13,6 +13,11 @@ interface BallMeta {
     var enabledKick: Boolean
 
     /**
+     * Optional nbt applied to the item of the ball. e.g. Skull.
+     */
+    var itemNbt: String?
+
+    /**
      * Is the rightclick passing the ball enabled?
      */
     var enabledPass: Boolean

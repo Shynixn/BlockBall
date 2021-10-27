@@ -35,7 +35,8 @@ class ItemEntity(
     override var unbreakable: Boolean = false,
     override var displayName: String? = null,
     override var lore: List<String>? = null,
-    override var skin: String? = null
+    override var skin: String? = null,
+    override var nbt: String? = null
 ) : Item {
     constructor(init: ItemEntity.() -> Unit) : this() {
         init.invoke(this)

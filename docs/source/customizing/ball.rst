@@ -43,6 +43,7 @@ At this stage, you should be able to find your arena save file. If not, please t
     ball:
       size: NORMAL
       skin: http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d
+      item-nbt: '{CustomModelData:mycustommodelname}'
       interaction-hitbox-size: 2.0
       kickpass-hitbox-size: 5.0
       kickpass-delay-ticks: 5
@@ -181,6 +182,7 @@ Properties
 
 * Size: Size of the ball. Can be NORMAL or SMALL.
 * Skin: Name of a player using this skin or a skin URL.
+* Item-Nbt: Optional property which allows to apply NBT tags to the skull sitting on top of the armorstand. Is useful for custom models.
 * Slime Visible: Should a slime be rendered instead of the ball skin? A good option for Bedrock based servers. Adjust the size of the ball using the 'KickPass Hitbox Size' value and the position of the hitbox using the 'hitbox-relocation' (can only be found in the arena_x.yml file) value.
 * Interaction Hitbox Size: Size of the ball hitbox intercepting player movements. Does not have an impact on left or right clicking the ball.
 * KickPass Hitbox Size: Size of the ball hitbox intercepting player left clicks and right clicks. Does not have an impact on player movements.

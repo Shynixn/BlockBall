@@ -57,4 +57,9 @@ interface Item {
      * Item skin.
      */
     var skin: String?
+
+    /**
+     * Optional nbt tags.
+     */
+    var nbt: String?
 }

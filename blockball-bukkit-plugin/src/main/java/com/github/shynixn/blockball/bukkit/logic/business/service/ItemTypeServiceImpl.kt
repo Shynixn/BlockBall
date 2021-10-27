@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.service.ItemTypeService
 import com.github.shynixn.blockball.api.persistence.entity.Item
+import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.github.shynixn.blockball.core.logic.persistence.entity.ItemEntity
 import com.google.inject.Inject
@@ -67,7 +68,11 @@ class ItemTypeServiceImpl @Inject constructor(private val version: Version) : It
      * Converts the given item to an ItemStack.
      */
     override fun <I> toItemStack(item: Item): I {
-        val itemStack = ItemStack(findItemType(item.type), 1, item.dataValue.toShort())
+        var itemStack = ItemStack(findItemType(item.type), 1, item.dataValue.toShort())
+
+        if (item.nbt != null) {
+            itemStack = parseNBTTags(itemStack, item.nbt!!)
+        }
 
         if (itemStack.itemMeta != null) {
             var currentMeta = itemStack.itemMeta
@@ -230,5 +235,96 @@ class ItemTypeServiceImpl @Inject constructor(private val version: Version) : It
         }
 
         throw IllegalArgumentException("Hint $sourceHint does not exist!")
+    }
+
+    private fun parseNBTTags(itemStack: ItemStack, nbtText: String): ItemStack {
+        if (version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
+            val nmsItemStackClass = findClazz("net.minecraft.world.item.ItemStack")
+            val craftItemStackClass = findClazz("org.bukkit.craftbukkit.VERSION.inventory.CraftItemStack")
+            val nmsCopyMethod = craftItemStackClass.getDeclaredMethod("asNMSCopy", ItemStack::class.java)
+            val nmsToBukkitMethod = craftItemStackClass.getDeclaredMethod("asBukkitCopy", nmsItemStackClass)
+
+            val nbtTagClass = findClazz("net.minecraft.nbt.NBTTagCompound")
+            val getNBTTag = nmsItemStackClass.getDeclaredMethod("getTag")
+            val setNBTTag = nmsItemStackClass.getDeclaredMethod("setTag", nbtTagClass)
+
+            val nmsItemStack = nmsCopyMethod.invoke(null, itemStack)
+            var targetNbtTag = getNBTTag.invoke(nmsItemStack)
+
+            if (targetNbtTag == null) {
+                targetNbtTag = nbtTagClass.newInstance()
+            }
+
+            val compoundMapField = nbtTagClass.getDeclaredField("x")
+            compoundMapField.isAccessible = true
+            val targetNbtMap = compoundMapField.get(targetNbtTag) as MutableMap<Any?, Any?>
+
+            try {
+                val sourceNbtTag = findClazz(
+                    "net.minecraft.nbt.MojangsonParser"
+                )
+                    .getDeclaredMethod("parse", String::class.java).invoke(null, nbtText)
+                val sourceNbtMap = compoundMapField.get(sourceNbtTag) as MutableMap<Any?, Any?>
+
+                for (key in sourceNbtMap.keys) {
+                    targetNbtMap[key] = sourceNbtMap[key]
+                }
+
+                setNBTTag.invoke(nmsItemStack, targetNbtTag)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return nmsToBukkitMethod.invoke(null, nmsItemStack) as ItemStack
+        } else {
+            val nmsItemStackClass =
+                Class.forName("net.minecraft.server.VERSION.ItemStack".replace("VERSION", version.bukkitId))
+            val craftItemStackClass =
+                Class.forName(
+                    "org.bukkit.craftbukkit.VERSION.inventory.CraftItemStack".replace(
+                        "VERSION",
+                        version.bukkitId
+                    )
+                )
+            val nmsCopyMethod = craftItemStackClass.getDeclaredMethod("asNMSCopy", ItemStack::class.java)
+            val nmsToBukkitMethod = craftItemStackClass.getDeclaredMethod("asBukkitCopy", nmsItemStackClass)
+
+            val nbtTagClass =
+                Class.forName("net.minecraft.server.VERSION.NBTTagCompound".replace("VERSION", version.bukkitId))
+            val getNBTTag = nmsItemStackClass.getDeclaredMethod("getTag")
+            val setNBTTag = nmsItemStackClass.getDeclaredMethod("setTag", nbtTagClass)
+
+            val nmsItemStack = nmsCopyMethod.invoke(null, itemStack)
+            var targetNbtTag = getNBTTag.invoke(nmsItemStack)
+
+            if (targetNbtTag == null) {
+                targetNbtTag = nbtTagClass.newInstance()
+            }
+
+            val compoundMapField = nbtTagClass.getDeclaredField("map")
+            compoundMapField.isAccessible = true
+            val targetNbtMap = compoundMapField.get(targetNbtTag) as MutableMap<Any?, Any?>
+
+            try {
+                val sourceNbtTag = Class.forName(
+                    "net.minecraft.server.VERSION.MojangsonParser".replace(
+                        "VERSION",
+                        version.bukkitId
+                    )
+                )
+                    .getDeclaredMethod("parse", String::class.java).invoke(null, nbtText)
+                val sourceNbtMap = compoundMapField.get(sourceNbtTag) as MutableMap<Any?, Any?>
+
+                for (key in sourceNbtMap.keys) {
+                    targetNbtMap[key] = sourceNbtMap[key]
+                }
+
+                setNBTTag.invoke(nmsItemStack, targetNbtTag)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return nmsToBukkitMethod.invoke(null, nmsItemStack) as ItemStack
+        }
     }
 }
