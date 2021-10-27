@@ -2822,6 +2822,7 @@ $dokka.location:com.github.shynixn.blockball.api.persistence.entity/BallMeta/hit
 $dokka.location:com.github.shynixn.blockball.api.persistence.entity/BallMeta/interactionCoolDown/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-ball-meta/interaction-cool-down.html
 $dokka.location:com.github.shynixn.blockball.api.persistence.entity/BallMeta/interactionHitBoxSize/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-ball-meta/interaction-hit-box-size.html
 $dokka.location:com.github.shynixn.blockball.api.persistence.entity/BallMeta/isSlimeVisible/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-ball-meta/is-slime-visible.html
+$dokka.location:com.github.shynixn.blockball.api.persistence.entity/BallMeta/itemNbt/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-ball-meta/item-nbt.html
 $dokka.location:com.github.shynixn.blockball.api.persistence.entity/BallMeta/kickPassDelay/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-ball-meta/kick-pass-delay.html
 $dokka.location:com.github.shynixn.blockball.api.persistence.entity/BallMeta/kickPassHitBoxSize/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-ball-meta/kick-pass-hit-box-size.html
 $dokka.location:com.github.shynixn.blockball.api.persistence.entity/BallMeta/movementModifier/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-ball-meta/movement-modifier.html
@@ -2956,6 +2957,7 @@ $dokka.location:com.github.shynixn.blockball.api.persistence.entity/Item///Point
 $dokka.location:com.github.shynixn.blockball.api.persistence.entity/Item/dataValue/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-item/data-value.html
 $dokka.location:com.github.shynixn.blockball.api.persistence.entity/Item/displayName/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-item/display-name.html
 $dokka.location:com.github.shynixn.blockball.api.persistence.entity/Item/lore/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-item/lore.html
+$dokka.location:com.github.shynixn.blockball.api.persistence.entity/Item/nbt/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-item/nbt.html
 $dokka.location:com.github.shynixn.blockball.api.persistence.entity/Item/skin/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-item/skin.html
 $dokka.location:com.github.shynixn.blockball.api.persistence.entity/Item/type/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-item/type.html
 $dokka.location:com.github.shynixn.blockball.api.persistence.entity/Item/unbreakable/#/PointingToDeclaration/blockball-root/com.github.shynixn.blockball.api.persistence.entity/-item/unbreakable.html
