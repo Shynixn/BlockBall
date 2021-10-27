@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Teams &mdash; BlockBall 6.22.1 documentation</title>
+  <title>Teams &mdash; BlockBall 6.26.0 documentation</title>
   
 
   
@@ -30,12 +31,16 @@
   
 
   
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.22.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.26.0 documentation" href="../index.html"/>
         <link rel="up" title="Customizing" href="index.html"/>
         <link rel="next" title="Periods" href="matchtimes.html"/>
         <link rel="prev" title="Ball" href="ball.html"/> 
@@ -70,7 +75,7 @@
             
             
               <div class="version">
-                6.22.1
+                6.26.0
               </div>
             
           
@@ -186,13 +191,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="teams">
+  <section id="teams">
 <h1>Teams<a class="headerlink" href="#teams" title="Permalink to this headline">¶</a></h1>
 <p>There are 2 available Teams in BlockBall who play against each other. They are named blue and red per default and will also
 be associated like that in the Chat UI and in this guide.</p>
 <p>Of course it is possible to recolor them to something like yellow or pink, but all placeholders and the chat navigation will always stay like they are.</p>
 <img alt="../_images/team0.png" src="../_images/team0.png" />
-<div class="section" id="configuring-ingame">
+<section id="configuring-ingame">
 <h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to open the <a class="reference external" href="../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui">Settings</a> page of your arena chat UI.</p>
 <ol class="arabic simple">
@@ -211,8 +216,8 @@ be associated like that in the Chat UI and in this guide.</p>
 <li><p>The Teams also provide so called <a class="reference external" href="textbook.html">Textbook Settings</a> which are Team specific messages.</p></li>
 </ol>
 <p>You can find all options explained at the bottom of this page.</p>
-</div>
-<div class="section" id="configuring-in-your-arena-x-yml">
+</section>
+<section id="configuring-in-your-arena-x-yml">
 <h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
 <ol class="arabic simple">
@@ -242,7 +247,7 @@ be associated like that in the Chat UI and in this guide.</p>
        <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
        <span class="nt">world</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">world</span>
    <span class="nt">armor</span><span class="p">:</span>
-     <span class="s">&#39;1&#39;</span><span class="p p-Indicator">:</span>
+     <span class="nt">&#39;1&#39;</span><span class="p">:</span>
        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LEATHER_BOOTS</span>
        <span class="nt">meta</span><span class="p">:</span>
          <span class="nt">==</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ItemMeta</span>
@@ -252,13 +257,13 @@ be associated like that in the Chat UI and in this guide.</p>
            <span class="nt">RED</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">255</span>
            <span class="nt">BLUE</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
            <span class="nt">GREEN</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-     <span class="s">&#39;2&#39;</span><span class="p p-Indicator">:</span>
+     <span class="nt">&#39;2&#39;</span><span class="p">:</span>
        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LEATHER_LEGGINGS</span>
        <span class="nt">meta</span><span class="p">:</span>
          <span class="nt">==</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ItemMeta</span>
          <span class="nt">meta-type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LEATHER_ARMOR</span>
          <span class="nt">color</span><span class="p">:</span> <span class="nv">*id001</span>
-     <span class="s">&#39;3&#39;</span><span class="p p-Indicator">:</span>
+     <span class="nt">&#39;3&#39;</span><span class="p">:</span>
        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LEATHER_CHESTPLATE</span>
        <span class="nt">meta</span><span class="p">:</span>
          <span class="nt">==</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ItemMeta</span>
@@ -271,7 +276,7 @@ be associated like that in the Chat UI and in this guide.</p>
    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">&lt;game&gt;</span>
    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">&lt;teamcolor&gt;&lt;team&gt;</span>
    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">&lt;players&gt;/&lt;maxplayers&gt;</span>
-   <span class="nt">score-message-title</span><span class="p">:</span> <span class="s">&#39;&lt;redcolor&gt;&lt;redscore&gt;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&lt;bluecolor&gt;&lt;bluescore&gt;&#39;</span>
+   <span class="nt">score-message-title</span><span class="p">:</span> <span class="nt">&#39;&lt;redcolor&gt;&lt;redscore&gt; </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;bluecolor&gt;&lt;bluescore&gt;&#39;</span>
    <span class="nt">score-message-subtitle</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;redcolor&gt;&lt;player&gt; scored for &lt;red&gt;</span>
    <span class="nt">win-message-title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;redcolor&gt;&lt;red&gt;</span>
    <span class="nt">win-message-subtitle</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;red&gt;&amp;a has won the match</span>
@@ -300,7 +305,7 @@ be associated like that in the Chat UI and in this guide.</p>
        <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
        <span class="nt">world</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">world</span>
    <span class="nt">armor</span><span class="p">:</span>
-     <span class="s">&#39;1&#39;</span><span class="p p-Indicator">:</span>
+     <span class="nt">&#39;1&#39;</span><span class="p">:</span>
        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LEATHER_BOOTS</span>
        <span class="nt">meta</span><span class="p">:</span>
          <span class="nt">==</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ItemMeta</span>
@@ -310,13 +315,13 @@ be associated like that in the Chat UI and in this guide.</p>
            <span class="nt">RED</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
            <span class="nt">BLUE</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">255</span>
            <span class="nt">GREEN</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-     <span class="s">&#39;2&#39;</span><span class="p p-Indicator">:</span>
+     <span class="nt">&#39;2&#39;</span><span class="p">:</span>
        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LEATHER_LEGGINGS</span>
        <span class="nt">meta</span><span class="p">:</span>
          <span class="nt">==</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ItemMeta</span>
          <span class="nt">meta-type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LEATHER_ARMOR</span>
          <span class="nt">color</span><span class="p">:</span> <span class="nv">*id002</span>
-     <span class="s">&#39;3&#39;</span><span class="p p-Indicator">:</span>
+     <span class="nt">&#39;3&#39;</span><span class="p">:</span>
        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LEATHER_CHESTPLATE</span>
        <span class="nt">meta</span><span class="p">:</span>
          <span class="nt">==</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ItemMeta</span>
@@ -329,7 +334,7 @@ be associated like that in the Chat UI and in this guide.</p>
    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">&lt;game&gt;</span>
    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">&lt;teamcolor&gt;&lt;team&gt;</span>
    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">&lt;players&gt;/&lt;maxplayers&gt;</span>
-   <span class="nt">score-message-title</span><span class="p">:</span> <span class="s">&#39;&lt;bluecolor&gt;&lt;bluescore&gt;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&lt;redcolor&gt;&lt;redscore&gt;&#39;</span>
+   <span class="nt">score-message-title</span><span class="p">:</span> <span class="nt">&#39;&lt;bluecolor&gt;&lt;bluescore&gt; </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;redcolor&gt;&lt;redscore&gt;&#39;</span>
    <span class="nt">score-message-subtitle</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;bluecolor&gt;&lt;player&gt; scored for &lt;blue&gt;</span>
    <span class="nt">win-message-title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;bluecolor&gt;&lt;blue&gt;</span>
    <span class="nt">win-message-subtitle</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;blue&gt;&amp;a has won the match</span>
@@ -339,8 +344,8 @@ be associated like that in the Chat UI and in this guide.</p>
 <li><p>Customize the available options to your own needs.</p></li>
 </ol>
 <p>It is recommend to use the ingame one-click armor creation instead of trying to understand the Itemstack format in the arena.yml.</p>
-</div>
-<div class="section" id="properties">
+</section>
+<section id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Name: Name of the team (Placeholder: &lt;blueteam&gt;/&lt;redteam&gt;)</p></li>
@@ -352,8 +357,8 @@ be associated like that in the Chat UI and in this guide.</p>
 <li><p>Spawnpoint: Optional spawnpoint for the team if you do not want the players to join at the ball spawnpoint.</p></li>
 <li><p>Textbook: All team specific messages which can be found <a class="reference external" href="textbook.html">here</a> .</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -377,7 +382,7 @@ be associated like that in the Chat UI and in this guide.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015 - 2020, Shynixn.
+        &copy; Copyright 2015 - 2021, Shynixn.
 
     </p>
   </div>
@@ -398,7 +403,7 @@ be associated like that in the Chat UI and in this guide.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.22.1',
+            VERSION:'6.26.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -406,10 +411,10 @@ be associated like that in the Chat UI and in this guide.</p>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

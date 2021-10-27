@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Holograms &mdash; BlockBall 6.22.1 documentation</title>
+  <title>Holograms &mdash; BlockBall 6.26.0 documentation</title>
   
 
   
@@ -30,12 +31,16 @@
   
 
   
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.22.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.26.0 documentation" href="../index.html"/>
         <link rel="up" title="Effects" href="effects.html"/>
         <link rel="next" title="Particleeffect" href="particleeffect.html"/>
         <link rel="prev" title="Scoreboard" href="scoreboard.html"/> 
@@ -70,7 +75,7 @@
             
             
               <div class="version">
-                6.22.1
+                6.26.0
               </div>
             
           
@@ -195,14 +200,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="holograms">
+  <section id="holograms">
 <h1>Holograms<a class="headerlink" href="#holograms" title="Permalink to this headline">¶</a></h1>
 <p>It is possible to display multiple holograms during a match all around of the arena. It looks like that:</p>
 <img alt="../_images/hologram1.JPG" src="../_images/hologram1.JPG" />
 <p>You can use it to display team names, the remaining time, scores for each team and more. You can find all available placeholders <a class="reference external" href="placeholders.html">here</a>.</p>
 <p>Holograms do even support multiple lines:</p>
 <img alt="../_images/hologram2.JPG" src="../_images/hologram2.JPG" />
-<div class="section" id="configuring-ingame">
+<section id="configuring-ingame">
 <h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to open the <a class="reference external" href="../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui">Settings</a> page of your arena chat UI.</p>
 <ol class="arabic simple">
@@ -217,8 +222,8 @@
 </ol>
 <img alt="../_images/hologram4.JPG" src="../_images/hologram4.JPG" />
 <p>You can find all options explained at the bottom of this page.</p>
-</div>
-<div class="section" id="configuring-in-your-arena-x-yml">
+</section>
+<section id="configuring-in-your-arena-x-yml">
 <h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
 <p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
 <ol class="arabic simple">
@@ -227,9 +232,9 @@
 </ol>
 <p><strong>arena_x.yml</strong></p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">holograms</span><span class="p">:</span>
-   <span class="s">&#39;1&#39;</span><span class="p p-Indicator">:</span>
+   <span class="nt">&#39;1&#39;</span><span class="p">:</span>
      <span class="nt">lines</span><span class="p">:</span>
-     <span class="p p-Indicator">-</span> <span class="s">&#39;&lt;redcolor&gt;&lt;red&gt;</span><span class="nv"> </span><span class="s">&lt;redscore&gt;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&lt;bluecolor&gt;&lt;bluescore&gt;</span><span class="nv"> </span><span class="s">&lt;blue&gt;&#39;</span>
+     <span class="p p-Indicator">-</span> <span class="nt">&#39;&lt;redcolor&gt;&lt;red&gt; &lt;redscore&gt; </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;bluecolor&gt;&lt;bluescore&gt; &lt;blue&gt;&#39;</span>
      <span class="nt">location</span><span class="p">:</span>
        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">89.47854663146359</span>
        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">66.0</span>
@@ -237,9 +242,9 @@
        <span class="nt">yaw</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">197.9395294189453</span>
        <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">21.89979362487793</span>
        <span class="nt">world</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">world</span>
-   <span class="s">&#39;2&#39;</span><span class="p p-Indicator">:</span>
+   <span class="nt">&#39;2&#39;</span><span class="p">:</span>
      <span class="nt">lines</span><span class="p">:</span>
-     <span class="p p-Indicator">-</span> <span class="s">&#39;&lt;redcolor&gt;&lt;red&gt;</span><span class="nv"> </span><span class="s">&lt;redscore&gt;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&lt;bluecolor&gt;&lt;bluescore&gt;</span><span class="nv"> </span><span class="s">&lt;blue&gt;&#39;</span>
+     <span class="p p-Indicator">-</span> <span class="nt">&#39;&lt;redcolor&gt;&lt;red&gt; &lt;redscore&gt; </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;bluecolor&gt;&lt;bluescore&gt; &lt;blue&gt;&#39;</span>
      <span class="nt">location</span><span class="p">:</span>
        <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">83.53704438102707</span>
        <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">66.0</span>
@@ -253,15 +258,15 @@
 <li><p>Now continue by using one of the templates.</p></li>
 <li><p>Customize the other available options to your own needs.</p></li>
 </ol>
-</div>
-<div class="section" id="properties">
+</section>
+<section id="properties">
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Location: Default location where the hologram is going to appear during a match</p></li>
 <li><p>Lines: All lines of text of the hologram.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -285,7 +290,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015 - 2020, Shynixn.
+        &copy; Copyright 2015 - 2021, Shynixn.
 
     </p>
   </div>
@@ -306,7 +311,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.22.1',
+            VERSION:'6.26.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -314,10 +319,10 @@
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

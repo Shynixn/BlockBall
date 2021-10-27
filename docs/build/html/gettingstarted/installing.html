@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installing &mdash; BlockBall 6.22.1 documentation</title>
+  <title>Installing &mdash; BlockBall 6.26.0 documentation</title>
   
 
   
@@ -30,12 +31,16 @@
   
 
   
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.22.1 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.26.0 documentation" href="../index.html"/>
         <link rel="up" title="Getting Started" href="index.html"/>
         <link rel="next" title="Configuring Permissions" href="permissions.html"/>
         <link rel="prev" title="Getting Started" href="index.html"/> 
@@ -70,7 +75,7 @@
             
             
               <div class="version">
-                6.22.1
+                6.26.0
               </div>
             
           
@@ -98,7 +103,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Getting Started</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Installing</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#java">Java</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#spigot-craftbukkit-sponge">Spigot/CraftBukkit/Sponge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spigot">Spigot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sponge">Sponge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bedrock">Bedrock</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#placeholderapi">PlaceholderAPI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#download">Download</a></li>
 </ul>
@@ -181,32 +188,44 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="installing">
+  <section id="installing">
 <h1>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h1>
 <p>The following items have to be installed in order to use BlockBall:</p>
-<div class="section" id="java">
+<section id="java">
 <h2>Java<a class="headerlink" href="#java" title="Permalink to this headline">¶</a></h2>
 <p>Java 8 - Java Latest can be used to run BlockBall.</p>
-</div>
-<div class="section" id="spigot-craftbukkit-sponge">
-<h2>Spigot/CraftBukkit/Sponge<a class="headerlink" href="#spigot-craftbukkit-sponge" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Spigot ✔</p></li>
-<li><p>PaperSpigot ✔</p></li>
-<li><p>Sponge ✘ (not compatible)</p></li>
-</ul>
-</div>
-<div class="section" id="placeholderapi">
+</section>
+<section id="spigot">
+<h2>Spigot<a class="headerlink" href="#spigot" title="Permalink to this headline">¶</a></h2>
+<p>The plugin is fully compatible to Spigot and Paper (Spigot) ✔</p>
+</section>
+<section id="sponge">
+<h2>Sponge<a class="headerlink" href="#sponge" title="Permalink to this headline">¶</a></h2>
+<p>The plugin is not compatible to sponge.  ✘</p>
+</section>
+<section id="bedrock">
+<h2>Bedrock<a class="headerlink" href="#bedrock" title="Permalink to this headline">¶</a></h2>
+<p>The plugin is partially compatible to Bedrock using <a class="reference external" href="https://geysermc.org/">Geyser</a>.  ✔</p>
+<ol class="arabic simple">
+<li><p>Continue with the BlockBall guide and come back here once you can play a game on a Java server</p></li>
+<li><p>Setup <a class="reference external" href="https://geysermc.org/">Geyser</a></p></li>
+<li><p>Join the server using a Bedrock based Minecraft client (e.g. Smartphone, Windows)</p></li>
+<li><p>Join a game and observe that it is fully playable (ball skin is not rendered)</p></li>
+<li><p>Switch the ball to a slime. See ball wiki page.</p></li>
+<li><p>Play with a slime ball instead of the player head.</p></li>
+</ol>
+</section>
+<section id="placeholderapi">
 <h2>PlaceholderAPI<a class="headerlink" href="#placeholderapi" title="Permalink to this headline">¶</a></h2>
 <p>This plugin <a class="reference external" href="../customizing/placeholders.html">broadcasts values</a> to the PlaceHolderAPI plugin.</p>
-</div>
-<div class="section" id="download">
+</section>
+<section id="download">
 <h2>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
 <p>You can download the <a class="reference external" href="https://github.com/Shynixn/BlockBall/releases">latest release</a>  of BlockBall from github. It is also possible
 to check the signature or download the javadocs from the <a class="reference external" href="https://oss.sonatype.org/content/repositories/releases/com/github/shynixn/blockball/blockball-bukkit-plugin/">repository</a> .</p>
 <p>If you always want to be the first person to test the latest features, you can also download <a class="reference external" href="https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/">snapshots</a> for future versions.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -230,7 +249,7 @@ to check the signature or download the javadocs from the <a class="reference ext
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015 - 2020, Shynixn.
+        &copy; Copyright 2015 - 2021, Shynixn.
 
     </p>
   </div>
@@ -251,7 +270,7 @@ to check the signature or download the javadocs from the <a class="reference ext
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.22.1',
+            VERSION:'6.26.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -259,10 +278,10 @@ to check the signature or download the javadocs from the <a class="reference ext
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

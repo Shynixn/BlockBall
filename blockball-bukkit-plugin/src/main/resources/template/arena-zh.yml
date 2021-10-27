@@ -1,0 +1,357 @@
+arena:
+  name: '1'
+  displayname: 'Arena: 1'
+  translator: 'Katorly'
+  enabled: true
+  gamemode: HUBGAME
+  corner-1:
+    x: 160.0
+    y: 64.0
+    z: 59.0
+    yaw: 0.0
+    pitch: 0.0
+    world: world
+  corner-2:
+    x: 160.0
+    y: 64.0
+    z: 59.0
+    yaw: 0.0
+    pitch: 0.0
+    world: world
+  meta:
+    meta:
+      max-score: 10
+      even-teams: false
+      join-sign-lines:
+      - '&lBlockBall'
+      - <game>
+      - <state>
+      - <sumplayers>/<summaxplayers>
+      leave-sign-lines:
+      - '&lBlockBall'
+      - <game>
+      - §fLeave
+      - <sumplayers>/<summaxplayers>
+      gamemode: ADVENTURE
+      signs:
+        joining: {}
+        leaving: {}
+    hubgame-meta:
+      join-selection:
+      - 点击队伍以加入游戏.
+      - <redcolor>[<red>]
+      - <bluecolor>[<blue>]
+      instant-forcefield-join: false
+      reset-arena-on-empty: false
+    team-red:
+      displayname: 红队
+      prefix: '&c'
+      min-amount: 0
+      max-amount: 10
+      walking-speed: 0.2
+      goal:
+        corner-1:
+          x: 160.0
+          y: 64.0
+          z: 59.0
+          yaw: 0.0
+          pitch: 0.0
+          world: world
+        corner-2:
+          x: 160.0
+          y: 64.0
+          z: 59.0
+          yaw: 0.0
+          pitch: 0.0
+          world: world
+      armor:
+        '1':
+          type: LEATHER_BOOTS
+          meta:
+            ==: ItemMeta
+            meta-type: LEATHER_ARMOR
+            color: &id001
+              ==: Color
+              RED: 255
+              BLUE: 0
+              GREEN: 0
+        '2':
+          type: LEATHER_LEGGINGS
+          meta:
+            ==: ItemMeta
+            meta-type: LEATHER_ARMOR
+            color: *id001
+        '3':
+          type: LEATHER_CHESTPLATE
+          meta:
+            ==: ItemMeta
+            meta-type: LEATHER_ARMOR
+            color: *id001
+        '4': null
+      join-message: 您加入了游戏中的 <teamcolor><team>.
+      signs: {}
+      leave-message: 您离开了游戏.
+      lines:
+      - '&lBlockBall'
+      - <game>
+      - <teamcolor><team>
+      - <players>/<maxplayers>
+      score-message-title: '<redcolor><redscore> : <bluecolor><bluescore>'
+      score-message-subtitle: <redcolor><player> 为 <red> 得分!
+      win-message-title: <redcolor><red>
+      win-message-subtitle: <redcolor><red>&a 赢得了游戏!
+      draw-message-title: <redcolor><red>
+      draw-message-subtitle: '&e游戏以平局结束.'
+    minigame-meta:
+      match-duration: 300
+      lobby-duration: 20
+      remaining-players-message: '&a等待 &c<remaining>&a 名玩家的加入......'
+    team-blue:
+      displayname: 蓝队
+      prefix: '&9'
+      min-amount: 0
+      max-amount: 10
+      walking-speed: 0.2
+      goal:
+        corner-1:
+          x: 160.0
+          y: 64.0
+          z: 59.0
+          yaw: 0.0
+          pitch: 0.0
+          world: world
+        corner-2:
+          x: 160.0
+          y: 64.0
+          z: 59.0
+          yaw: 0.0
+          pitch: 0.0
+          world: world
+      armor:
+        '1':
+          type: LEATHER_BOOTS
+          meta:
+            ==: ItemMeta
+            meta-type: LEATHER_ARMOR
+            color: &id002
+              ==: Color
+              RED: 0
+              BLUE: 255
+              GREEN: 0
+        '2':
+          type: LEATHER_LEGGINGS
+          meta:
+            ==: ItemMeta
+            meta-type: LEATHER_ARMOR
+            color: *id002
+        '3':
+          type: LEATHER_CHESTPLATE
+          meta:
+            ==: ItemMeta
+            meta-type: LEATHER_ARMOR
+            color: *id002
+        '4': null
+      join-message: 您加入了游戏中的 <teamcolor><team>.
+      signs: {}
+      leave-message: 您离开了游戏.
+      lines:
+      - '&lBlockBall'
+      - <game>
+      - <teamcolor><team>
+      - <players>/<maxplayers>
+      score-message-title: '<bluecolor><bluescore> : <redcolor><redscore>'
+      score-message-subtitle: <bluecolor><player> 为 <blue> 得分!
+      win-message-title: <bluecolor><blue>
+      win-message-subtitle: <bluecolor><blue>&a 赢得了游戏!
+      draw-message-title: <bluecolor><blue>
+      draw-message-subtitle: '&e游戏以平局结束.'
+    bungeecord-meta:
+      kick-message: 服务器已满.
+    ball:
+      skin: http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d
+      size: NORMAL
+      hitbox-size: 3.0
+      hitbox-relocation: 0.0
+      carry-able: false
+      always-bounce: true
+      rotating: true
+      modifiers:
+        bouncing: 1.0
+        horizontal-touch: 1.0
+        vertical-touch: 1.0
+        horizontal-kick: 1.5
+        vertical-kick: 6.0
+        horizontal-throw: 1.0
+        vertical-throw: 1.0
+        rolling-distance: 1.5
+        gravity: 0.7
+      particle-effects:
+        onspawn:
+          effecting: EVERYONE
+          name: explosion
+          amount: 10
+          speed: 0.1
+          offset:
+            x: 2.0
+            y: 2.0
+            z: 2.0
+        oninteraction:
+          effecting: EVERYONE
+          name: none
+          amount: 0
+          speed: 0.0
+          offset:
+            x: 0.0
+            y: 0.0
+            z: 0.0
+        ongrab:
+          effecting: EVERYONE
+          name: none
+          amount: 0
+          speed: 0.0
+          offset:
+            x: 0.0
+            y: 0.0
+            z: 0.0
+        onkick:
+          effecting: EVERYONE
+          name: large_explosion
+          amount: 2
+          speed: 0.1
+          offset:
+            x: 0.1
+            y: 0.1
+            z: 0.1
+        onthrow:
+          effecting: EVERYONE
+          name: none
+          amount: 0
+          speed: 0.0
+          offset:
+            x: 0.0
+            y: 0.0
+            z: 0.0
+        onmove:
+          effecting: EVERYONE
+          name: none
+          amount: 0
+          speed: 0.0
+          offset:
+            x: 0.0
+            y: 0.0
+            z: 0.0
+        ongoal:
+          effecting: EVERYONE
+          name: none
+          amount: 0
+          speed: 0.0
+          offset:
+            x: 0.0
+            y: 0.0
+            z: 0.0
+      sound-effects:
+        onspawn:
+          effecting: EVERYONE
+          name: none
+          volume: 0.0
+          pitch: 0.0
+        oninteraction:
+          effecting: EVERYONE
+          name: none
+          volume: 0.0
+          pitch: 0.0
+        ongrab:
+          effecting: EVERYONE
+          name: none
+          volume: 0.0
+          pitch: 0.0
+        onkick:
+          effecting: EVERYONE
+          name: ENTITY_ZOMBIE_ATTACK_DOOR_WOOD
+          volume: 10.0
+          pitch: 1.0
+        onthrow:
+          effecting: EVERYONE
+          name: none
+          volume: 0.0
+          pitch: 0.0
+        onmove:
+          effecting: EVERYONE
+          name: none
+          volume: 0.0
+          pitch: 0.0
+        ongoal:
+          effecting: EVERYONE
+          name: none
+          volume: 0.0
+          pitch: 0.0
+      wall-bouncing: {}
+      interaction-skip: 2
+      spawn-delay: 0
+      spawnpoint:
+        x: 162.0042862705688
+        y: 65.0
+        z: 59.52243890544361
+        yaw: 87.83740234375
+        pitch: 44.2502555847168
+        world: world
+    protection:
+      entity-protection-enabled: true
+      entity-protection:
+        x: 5.0
+        y: 2.0
+        z: 5.0
+      rejoin-protection-enabled: true
+      rejoin-protection:
+        x: 0.0
+        y: 2.0
+        z: 0.0
+    scoreboard:
+      title: '&aBlockBall'
+      enabled: false
+      lines:
+      - ''
+      - '&6剩余时间: '
+      - <time>
+      - ''
+      - '&m           &r'
+      - '<redcolor><red>:'
+      - '&l<redscore>'
+      - ''
+      - '<bluecolor><blue>:'
+      - '&l<bluescore>'
+      - '&m           &r'
+    bossbar:
+      enabled: false
+      text: '<redcolor><red> <redscore> : <bluecolor><bluescore> <blue>'
+      percentage: 100.0
+      color: WHITE
+      style: SOLID
+      flags: {}
+    double-jump:
+      enabled: true
+      cooldown: 2
+      vertical-strength: 1.0
+      horizontal-strength: 2.0
+      particle-effect:
+        effecting: EVERYONE
+        name: explosion
+        amount: 4
+        speed: 2.0E-4
+        offset:
+          x: 2.0
+          y: 2.0
+          z: 2.0
+      sound-effect:
+        effecting: EVERYONE
+        name: ENTITY_GHAST_SHOOT
+        volume: 10.0
+        pitch: 1.0
+    holograms: {}
+    reward-meta:
+      money-reward: {}
+      command-reward: {}
+    customizing-meta:
+      damage-enabled: false
+      score-back-teleport: false
+      score-back-teleport-delay: 2
