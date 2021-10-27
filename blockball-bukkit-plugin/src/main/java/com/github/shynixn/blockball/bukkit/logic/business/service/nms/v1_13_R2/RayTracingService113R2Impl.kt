@@ -37,8 +37,18 @@ class RayTracingService113R2Impl : RayTracingService {
         val sourceLocation = position.toLocation()
 
         val directionVector = motion.toVector().normalize()
-        val distance = motion.length()
+        var distance = motion.length()
         val world = sourceLocation.world!!
+
+        sourceLocation.x = fixFiniteDomain(sourceLocation.x)
+        sourceLocation.y = fixFiniteDomain(sourceLocation.y)
+        sourceLocation.z = fixFiniteDomain(sourceLocation.z)
+        sourceLocation.yaw = fixFiniteDomain(sourceLocation.yaw.toDouble()).toFloat()
+        sourceLocation.pitch = fixFiniteDomain(sourceLocation.pitch.toDouble()).toFloat()
+        directionVector.x = fixFiniteDomain(directionVector.x)
+        directionVector.y = fixFiniteDomain(directionVector.y)
+        directionVector.z = fixFiniteDomain(directionVector.z)
+        distance = fixFiniteDomain(distance)
 
         val movingObjectPosition =
             world.rayTraceBlocks(sourceLocation, directionVector, distance, FluidCollisionMode.NEVER, false)
