@@ -20,6 +20,7 @@ class BallDesignEntity(val entityId: Int) {
             this.type = MaterialType.SKULL_ITEM.MinecraftNumericId.toString()
             this.dataValue = 3
             this.skin = ball.meta.skin
+            this.nbt = ball.meta.itemNbt
         }
 
         itemService.toItemStack<Any>(item)
