@@ -175,11 +175,11 @@ subprojects {
     dependencies {
         implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.32'
 
-        testImplementation 'org.jetbrains.kotlin:kotlin-test'
-        testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
+        testImplementation 'org.jetbrains.kotlin:kotlin-test:1.5.32'
+        testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5:1.5.32'
+
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
         testImplementation 'org.mockito:mockito-core:3.5.13'
-
         testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
     }
 }
