@@ -72,8 +72,7 @@ class InternalVersionPacket118R1ServiceImpl @Inject constructor(
             EntityType.SLIME
         }
 
-        val nmsEntityId = Registry.ENTITY_TYPE::class.java.getDeclaredMethod("getId", Any::class.java)
-            .invoke(Registry.ENTITY_TYPE, nmsEntityType) as Int
+        val nmsEntityId = Registry.ENTITY_TYPE.getId(nmsEntityType)
 
         buffer.writeId(nmsEntityId)
         buffer.writeDouble(position.x)
@@ -140,7 +139,7 @@ class InternalVersionPacket118R1ServiceImpl @Inject constructor(
         }
 
         if (entityMetaData.isSmall != null && entityMetaData.isSmall!!) {
-            buffer.writeByte(14)
+            buffer.writeByte(15)
             buffer.writeId(byteTypeValue)
             buffer.writeByte(0x01)
         }

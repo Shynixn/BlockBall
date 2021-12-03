@@ -60,15 +60,26 @@ tasks.register("pluginJar", Exec::class.java) {
     }
 
     val shadowJar = tasks.findByName("shadowJar")!! as ShadowJar
-    val obfArchiveName = "${shadowJar.baseName}-${shadowJar.version}-obfuscated.${shadowJar.extension}"
-    val archiveName = "${shadowJar.baseName}-${shadowJar.version}.${shadowJar.extension}"
     val sourceJarFile = File(buildDir, "libs/" + shadowJar.archiveName)
-    val obfJarFile = File(buildDir, "libs/$obfArchiveName")
+    val archiveName = "${shadowJar.baseName}-${shadowJar.version}.${shadowJar.extension}"
     val targetJarFile = File(destinationDir, archiveName)
 
-    val obsMapping =
-        "java -jar ${file.absolutePath} -i \"$sourceJarFile\" -o \"$obfJarFile\" -m \"\$HOME/.m2/repository/org/spigotmc/minecraft-server/1.17.1-R0.1-SNAPSHOT/minecraft-server-1.17.1-R0.1-SNAPSHOT-maps-mojang.txt\" --reverse" +
-                "&& java -jar ${file.absolutePath} -i \"$obfJarFile\" -o \"$targetJarFile\" -m \"\$HOME/.m2/repository/org/spigotmc/minecraft-server/1.17.1-R0.1-SNAPSHOT/minecraft-server-1.17.1-R0.1-SNAPSHOT-maps-spigot.csrg\""
+    var obsMapping = createCommand(
+        "1.17.1-R0.1-SNAPSHOT",
+        "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_17_R1",
+        file,
+        shadowJar,
+        sourceJarFile,
+        targetJarFile
+    )
+    obsMapping = "$obsMapping && " + createCommand(
+        "1.18-R0.1-SNAPSHOT",
+        "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_18_R1",
+        file,
+        shadowJar,
+        targetJarFile,
+        targetJarFile
+    )
 
     if (System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")) {
         commandLine = listOf("cmd", "/c", obsMapping.replace("\$HOME", "%userprofile%"))
@@ -77,31 +88,19 @@ tasks.register("pluginJar", Exec::class.java) {
     }
 }
 
-tasks.register("pluginJarSlim", ShadowJar::class.java) {
-    // Change the output folder of the plugin.
-    //destinationDir = File("C:/temp/plugins")
-    dependsOn("pluginJar")
-    from(zipTree(File(projectDir.absolutePath + "/build/libs/" + (tasks.getByName("jar") as Jar).archiveName)))
-    archiveName = "${baseName}-${version}-slim.${extension}"
+fun createCommand(
+    version: String,
+    include: String,
+    file: File,
+    shadowJar: ShadowJar,
+    sourceJarFile: File,
+    targetJarFile: File
+): String {
+    val obfArchiveName = "${shadowJar.baseName}-${shadowJar.version}-obfuscated.${shadowJar.extension}"
+    val obfJarFile = File(buildDir, "libs/$obfArchiveName")
 
-    relocate("com.github.shynixn.blockball.lib.kotlin", "kotlin")
-
-    relocate("com.github.shynixn.blockball.lib.org.intellij", "org.intellij")
-    relocate("com.github.shynixn.blockball.lib.org.jetbrains", "org.jetbrains")
-    relocate("com.github.shynixn.blockball.lib.javax.inject", "javax.inject")
-    relocate("com.github.shynixn.blockball.lib.javax.annotation", "javax.annotation")
-    relocate("com.github.shynixn.blockball.lib.org.checkerframework", "org.checkerframework")
-    relocate("com.github.shynixn.blockball.lib.org.aopalliance", "org.aopalliance")
-    relocate("com.github.shynixn.blockball.lib.org.slf4j", "org.slf4j")
-
-    relocate("com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine", "com.github.shynixn.mccoroutine")
-    relocate("com.github.shynixn.blockball.lib.com.google", "com.google")
-    relocate("com.github.shynixn.blockball.lib.com.zaxxer", "com.zaxxer")
-    relocate("com.github.shynixn.blockball.lib.org.apache", "org.apache")
-
-    exclude("com/github/shynixn/blockball/lib/**/*")
-    exclude("plugin.yml")
-    rename("plugin-1.17.yml", "plugin.yml")
+    return "java -jar ${file.absolutePath} -i \"$sourceJarFile\" -o \"$obfJarFile\"  -only \"$include\" -m \"\$HOME/.m2/repository/org/spigotmc/minecraft-server/${version}/minecraft-server-${version}-maps-mojang.txt\" --reverse" +
+            "&& java -jar ${file.absolutePath} -i \"$obfJarFile\" -o \"$targetJarFile\"  -only \"$include\" -m \"\$HOME/.m2/repository/org/spigotmc/minecraft-server/${version}/minecraft-server-${version}-maps-spigot.csrg\""
 }
 
 repositories {
@@ -134,7 +133,7 @@ dependencies {
     compileOnly("net.milkbowlvault:VaultAPI:1.7")
     compileOnly("org.spigotmc:spigot:1.16.4-R0.1-SNAPSHOT")
 
-    testCompile("org.xerial:sqlite-jdbc:3.23.1")
-    testCompile("ch.vorburger.mariaDB4j:mariaDB4j:2.2.3")
-    testCompile("org.spigotmc:spigot:1.16.4-R0.1-SNAPSHOT")
+    testImplementation("org.xerial:sqlite-jdbc:3.23.1")
+    testImplementation("ch.vorburger.mariaDB4j:mariaDB4j:2.2.3")
+    testImplementation("org.spigotmc:spigot:1.16.4-R0.1-SNAPSHOT")
 }
