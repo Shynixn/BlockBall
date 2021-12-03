@@ -84,12 +84,13 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
                 Version.VERSION_1_16_R1,
                 Version.VERSION_1_16_R2,
                 Version.VERSION_1_16_R3,
-                Version.VERSION_1_17_R1
+                Version.VERSION_1_17_R1,
+                Version.VERSION_1_18_R1
             )
         ) {
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
             sendConsoleMessage(ChatColor.RED.toString() + "BlockBall does not support your server version")
-            sendConsoleMessage(ChatColor.RED.toString() + "Install v" + Version.VERSION_1_8_R3.id + " - v" + Version.VERSION_1_17_R1.id)
+            sendConsoleMessage(ChatColor.RED.toString() + "Install v" + Version.VERSION_1_8_R3.id + " - v" + Version.VERSION_1_18_R1.id)
             sendConsoleMessage(ChatColor.RED.toString() + "Plugin gets now disabled!")
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
 

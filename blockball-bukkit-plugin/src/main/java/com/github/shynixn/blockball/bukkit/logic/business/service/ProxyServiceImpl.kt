@@ -678,8 +678,14 @@ class ProxyServiceImpl @Inject constructor(
 
             val playerConnectionClazz = findClazz("net.minecraft.server.network.PlayerConnection")
             val packetClazz = findClazz("net.minecraft.network.protocol.Packet")
-            val sendPacketMethod = playerConnectionClazz.getDeclaredMethod("sendPacket", packetClazz)
-            sendPacketMethod.invoke(connection, packet)
+
+            if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_18_R1)) {
+                val sendPacketMethod = playerConnectionClazz.getDeclaredMethod("a", packetClazz)
+                sendPacketMethod.invoke(connection, packet)
+            } else {
+                val sendPacketMethod = playerConnectionClazz.getDeclaredMethod("sendPacket", packetClazz)
+                sendPacketMethod.invoke(connection, packet)
+            }
         } else {
             val nmsPlayerClazz = findClazz("net.minecraft.server.VERSION.EntityPlayer")
             val playerConnectionField = nmsPlayerClazz.getDeclaredField("playerConnection")

@@ -117,6 +117,10 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
      * On Message receive.
      */
     private fun onMessageReceive(player: Player, packet: Any): Boolean {
+        if (!plugin.isEnabled()) {
+            return false
+        }
+
         if (cachedPlayerChannels.isEmpty()) {
             return false
         }
