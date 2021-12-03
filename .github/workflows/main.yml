@@ -2,7 +2,7 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
-          java-version: '16'
+          java-version: '17'
 
       - name: Cache Spigot Dependencies
         id: cache-spigot-dependencies
@@ -45,10 +45,10 @@ jobs:
           docker create --name blockball-dependencies-jdk8 blockball-dependencies-jdk8 bash
           docker cp blockball-dependencies-jdk8:/root/.m2/repository/org/spigotmc ~/.m2/repository/org/
           docker rm -f blockball-dependencies-jdk8
-          docker build --target dependencies-jdk16 -t blockball-dependencies-jdk16 .
-          docker create --name blockball-dependencies-jdk16 blockball-dependencies-jdk16 bash
-          docker cp blockball-dependencies-jdk16:/root/.m2/repository/org/spigotmc ~/.m2/repository/org/
-          docker rm -f blockball-dependencies-jdk16
+          docker build --target dependencies-jdk17 -t blockball-dependencies-jdk17 .
+          docker create --name blockball-dependencies-jdk17 blockball-dependencies-jdk17 bash
+          docker cp blockball-dependencies-jdk17:/root/.m2/repository/org/spigotmc ~/.m2/repository/org/
+          docker rm -f blockball-dependencies-jdk17
 
       - name: Build Java Application
         run: |

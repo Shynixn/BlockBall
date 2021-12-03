@@ -116,6 +116,7 @@ dependencies {
     implementation(project(":blockball-bukkit-api"))
     implementation(project(":blockball-core"))
     implementation(project(":blockball-bukkit-plugin:bukkit-nms-117R1"))
+    implementation(project(":blockball-bukkit-plugin:bukkit-nms-118R1"))
 
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:1.5.0")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:1.5.0")
