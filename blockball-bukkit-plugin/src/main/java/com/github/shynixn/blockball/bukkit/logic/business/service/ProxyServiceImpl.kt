@@ -351,7 +351,7 @@ class ProxyServiceImpl @Inject constructor(
      */
     override fun <P> getPlayerAllowFlying(player: P): Boolean {
         require(player is Player)
-        return player.allowFlight
+        return player.allowFlight && player.gameMode == GameMode.CREATIVE
     }
 
     /**
