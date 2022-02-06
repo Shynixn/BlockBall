@@ -114,9 +114,9 @@ class GameSoccerServiceImpl @Inject constructor(
             }
 
             game.ingamePlayersStorage.forEach { i ->
-                if (i.value.team == Team.RED) {
+                if (i.value.goalTeam == Team.RED) {
                     proxyService.teleport(i.key, redTeamSpawnpoint)
-                } else if (i.value.team == Team.BLUE) {
+                } else if (i.value.goalTeam == Team.BLUE) {
                     proxyService.teleport(i.key, blueTeamSpawnpoint)
                 }
             }

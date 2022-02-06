@@ -207,9 +207,9 @@ class GameListener @Inject constructor(
             return
         }
 
-        val playerStorage = game.get().ingamePlayersStorage[event.player]!!
+        val team = game.get().ingamePlayersStorage[event.player]!!.goalTeam
 
-        val teamMeta = if (playerStorage.team == Team.RED) {
+        val teamMeta = if (team == Team.RED) {
             game.get().arena.meta.redTeamMeta
         } else {
             game.get().arena.meta.blueTeamMeta
