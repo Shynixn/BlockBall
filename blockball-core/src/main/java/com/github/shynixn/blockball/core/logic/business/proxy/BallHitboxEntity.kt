@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.shynixn.blockball.core.logic.business.proxy
 
 import com.github.shynixn.blockball.api.business.enumeration.BlockDirection

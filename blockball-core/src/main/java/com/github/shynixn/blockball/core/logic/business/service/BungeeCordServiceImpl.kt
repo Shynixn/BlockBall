@@ -187,7 +187,7 @@ class BungeeCordServiceImpl @Inject constructor(
      * Gets the current server status.
      */
     private fun getServerInformation(server: String, hostname: String, port: Int): BungeeCordServerStatus {
-        var data: String? = null
+        var data: String?
         val serverStatus = BungeeCordServerStatusEntity(server)
 
         try {

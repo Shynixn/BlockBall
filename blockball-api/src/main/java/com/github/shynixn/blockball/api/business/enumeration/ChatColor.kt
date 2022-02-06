@@ -187,7 +187,7 @@ enum class ChatColor(
             for (i in 0 until letters.size - 1) {
                 if (letters[i] == colorCodeChar && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(letters[i + 1]) > -1) {
                     letters[i] = 167.toChar()
-                    letters[i + 1] = (letters[i + 1]).toLowerCase()
+                    letters[i + 1] = (letters[i + 1]).lowercaseChar()
                 }
             }
 

@@ -94,13 +94,13 @@ class ChatBuilderComponentEntity(private val builder: ChatBuilder, payloadtext: 
 
         if (this.color != null) {
             builder.append(", \"color\": \"")
-            builder.append(this.color!!.name.toLowerCase())
+            builder.append(this.color!!.name.lowercase())
             builder.append('"')
         }
 
         if (this.clickAction != null) {
             builder.append(", \"clickEvent\": {\"action\": \"")
-            builder.append(this.clickAction!!.name.toLowerCase())
+            builder.append(this.clickAction!!.name.lowercase())
             builder.append("\" , \"value\" : \"")
             builder.append(this.clickActionData)
             builder.append("\"}")

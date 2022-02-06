@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_17_R1
 
 import com.github.shynixn.blockball.api.business.enumeration.CompatibilityArmorSlotType
