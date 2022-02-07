@@ -58,6 +58,56 @@ jobs:
           echo "RELEASE_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_ENV
           ./gradlew build pluginJar
 
+      - name: Deploy BlockBall-Api Artifact
+        uses: Shynixn/repository-m2-deploy-action@v1.1.0
+        with:
+          # Required - Set the relative file path from the repository root to the jar file you want to deploy.
+          # The name does not need to follow any naming conventions, it is automatically renamed according to the maven.
+          primary-jar-file: 'blockball-api/build/libs/blockball-api-${{ env.RELEASE_VERSION }}.jar'
+          # Required - Set the maven group id.
+          group-id: 'com.github.shynixn.blockball'
+          # Required - Set the maven artifact id.
+          artifact-id: 'blockball-api'
+          # Required - Set the maven version id.
+          # Existing releases are simply overwritten if the jar file with this version was already deployed.
+          # You can use the github.run_number environment variable to have automatically incrementing version: 1.0.${{ github.run_number }}
+          version-id: ${{ env.RELEASE_VERSION }}
+          # Required - Used to access another repository of your or another github account to pull and push data from.
+          # We cannot use GITHUB_TOKEN because the GITHUB_TOKEN does not have permissions to post to other private repositories.
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          # Required - Owner of the github repository you are using as maven repository.
+          github-username: 'Shynixn'
+          # Required - Name of the github repository you are using as maven repository.
+          github-repository: 'm2'
+          # Optional - Base64 Encoded Ascii armored version of the secret key.
+          signing-key: ${{ secrets.SIGNING_KEY }}
+          # Optional - Password of the secret key.
+          signing-password: ${{ secrets.SIGNING_PASSWORD }}
+          # Optional - Directories containing java or kotlin source files. Separated by ; to specify multiple directories.
+          source-directories: 'blockball-api/src/main/java'
+          # Optional - If true and specifying source directories, a javadocs jar file containing kotlin docs gets generated.
+          generate-kotlin-docs-jar: true
+          # Optional - If true and specifying source directories, a sources jar file containing source files gets generated.
+          generate-sources-jar: true
+          # Optional - Value for pom.xml.
+          project-name: 'BlockBall'
+          # Optional - Value for pom.xml.
+          project-description: 'BlockBall is a spigot plugin to play soccer games in Minecraft.'
+          # Optional - Value for pom.xml
+          project-url: 'https://github.com/Shynixn/BlockBall'
+          # Optional - Value for pom.xml
+          licence-name: 'Apache 2.0 License'
+          # Optional - Value for pom.xml
+          licence-url: 'https://www.apache.org/licenses/LICENSE-2.0'
+          # Optional - Value for pom.xml
+          developer-name: 'Shynixn'
+          # Optional - Value for pom.xml
+          developer-url: 'https://github.com/Shynixn'
+          # Optional - Value for pom.xml
+          scm-connection: 'scm:git:git://github.com/Shynixn/BlockBall.git'
+          # Optional - Value for pom.xml
+          scm-url: 'http://github.com/Shynixn/BlockBall.git/tree/main'
+
       - name: Create Github Release
         if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
         id: create_release
