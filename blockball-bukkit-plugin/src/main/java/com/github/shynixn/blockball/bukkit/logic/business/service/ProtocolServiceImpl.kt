@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.bukkit.event.PacketEvent
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ProtocolService
+import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.google.inject.Inject
 import io.netty.channel.Channel
 import io.netty.channel.ChannelDuplexHandler
@@ -41,10 +42,17 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
     private val channelField by lazy {
         try {
             plugin.findClazz("net.minecraft.network.NetworkManager")
-                .getDeclaredField("k")
+                .getDeclaredField("m")
+                .accessible(true)
         } catch (e: Exception) {
-            plugin.findClazz("net.minecraft.server.VERSION.NetworkManager")
-                .getDeclaredField("channel")
+            try {
+                plugin.findClazz("net.minecraft.network.NetworkManager")
+                    .getDeclaredField("k")
+                    .accessible(true)
+            }catch (e1 : Exception){
+                plugin.findClazz("net.minecraft.server.VERSION.NetworkManager")
+                    .getDeclaredField("channel")
+            }
         }
     }
 

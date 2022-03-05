@@ -34,7 +34,7 @@ tasks.withType<ShadowJar> {
 
 tasks.register("pluginJar", Exec::class.java) {
     // Change the output folder of the plugin.
-    //val destinationDir = File("C:/temp/plugins")
+    // val destinationDir = File("C:/temp/plugins")
     val destinationDir = File(buildDir, "libs")
 
     dependsOn("shadowJar")
@@ -80,6 +80,14 @@ tasks.register("pluginJar", Exec::class.java) {
         targetJarFile,
         targetJarFile
     )
+    obsMapping = "$obsMapping && " + createCommand(
+        "1.18.2-R0.1-SNAPSHOT",
+        "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_18_R2",
+        file,
+        shadowJar,
+        targetJarFile,
+        targetJarFile
+    )
 
     if (System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")) {
         commandLine = listOf("cmd", "/c", obsMapping.replace("\$HOME", "%userprofile%"))
@@ -116,6 +124,7 @@ dependencies {
     implementation(project(":blockball-core"))
     implementation(project(":blockball-bukkit-plugin:bukkit-nms-117R1"))
     implementation(project(":blockball-bukkit-plugin:bukkit-nms-118R1"))
+    implementation(project(":blockball-bukkit-plugin:bukkit-nms-118R2"))
 
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:1.5.0")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:1.5.0")
