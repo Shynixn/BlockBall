@@ -344,7 +344,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
      * @param entity entityClazz
      * @param <E>    type
      * @return entity.
-    </E> */
+     */
     override fun <E> create(entity: Class<E>): E {
         try {
             val entityName = entity.simpleName + "Entity"
