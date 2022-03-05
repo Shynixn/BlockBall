@@ -57,43 +57,6 @@ jobs:
           mvn install:install-file -Dfile=VaultAPI-1.7.jar -DgroupId=net.milkbowlvault -DartifactId=VaultAPI -Dversion=1.7 -Dpackaging=jar
           ./gradlew build pluginJar
 
-      - name: Publish Test Report
-        run: |
-          ./gradlew jacocoTestReport
-          bash <(curl -s https://codecov.io/bash)
-
-      - name: Publish Snapshot
-        if: "contains(github.event.head_commit.message, '--snapshot')"
-        env:
-          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          SIGNING_KEY_FILE: ${{ secrets.SIGNING_KEY_FILE }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-        run: |
-          gpg2 --batch --cipher-algo AES256 --passphrase ${{ secrets.SIGNING_KEY_PASSWORD }} travis_secret_key.gpg
-          ./gradlew publish > /dev/null
-          java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_SNAPSHOT }}
-          java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_CHANNEL }}
-
-      - name: Publish Release to Maven Central
-        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
-        env:
-          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          SIGNING_KEY_FILE: ${{ secrets.SIGNING_KEY_FILE }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-        run: |
-          gpg2 --batch --cipher-algo AES256 --passphrase ${{ secrets.SIGNING_KEY_PASSWORD }} travis_secret_key.gpg
-          echo "RELEASE_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_ENV
-          ./gradlew clean publishToNexus
-          ./gradlew closeAndReleaseRepository
-          ./gradlew clean
-          ./gradlew shadowJar pluginJar
-          java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_SNAPSHOT }}
-          java -jar blockball-tools/build/libs/Deploy.jar --snapshot ${{ secrets.DISCORD_WEBHOOK_CHANNEL }}
-
       - name: Create Github Release
         if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
         id: create_release
