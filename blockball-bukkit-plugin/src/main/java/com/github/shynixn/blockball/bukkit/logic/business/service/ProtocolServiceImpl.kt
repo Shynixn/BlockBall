@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.bukkit.event.PacketEvent
+import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ProtocolService
 import com.github.shynixn.blockball.core.logic.business.extension.accessible
@@ -41,18 +42,20 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
     }
     private val channelField by lazy {
         try {
-            plugin.findClazz("net.minecraft.network.NetworkManager")
-                .getDeclaredField("m")
-                .accessible(true)
-        } catch (e: Exception) {
-            try {
+            if (plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_18_R2)) {
+                plugin.findClazz("net.minecraft.network.NetworkManager")
+                    .getDeclaredField("m")
+                    .accessible(true)
+            } else if (plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
                 plugin.findClazz("net.minecraft.network.NetworkManager")
                     .getDeclaredField("k")
                     .accessible(true)
-            }catch (e1 : Exception){
-                plugin.findClazz("net.minecraft.server.VERSION.NetworkManager")
-                    .getDeclaredField("channel")
+            } else {
+                throw RuntimeException("Impl not found!")
             }
+        } catch (e1: Exception) {
+            plugin.findClazz("net.minecraft.server.VERSION.NetworkManager")
+                .getDeclaredField("channel")
         }
     }
 
