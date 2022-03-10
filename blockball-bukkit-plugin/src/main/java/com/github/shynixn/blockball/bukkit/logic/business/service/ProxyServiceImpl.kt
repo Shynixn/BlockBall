@@ -520,7 +520,11 @@ class ProxyServiceImpl @Inject constructor(
                 val chatComponent =
                     clazz.getDeclaredMethod("a", String::class.java).invoke(null, chatBuilder.toString())
                 val systemUtilsClazz = findClazz("net.minecraft.SystemUtils")
-                val defaultUUID = systemUtilsClazz.getDeclaredField("b").get(null) as UUID
+                val defaultUUID = if(pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_18_R2)){
+                    systemUtilsClazz.getDeclaredField("c").get(null) as UUID
+                }else{
+                    systemUtilsClazz.getDeclaredField("b").get(null) as UUID
+                }
                 val chatEnumMessage = findClazz("net.minecraft.network.chat.ChatMessageType")
                 packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage, UUID::class.java)
                     .newInstance(chatComponent, chatEnumMessage.enumConstants[0], defaultUUID)
