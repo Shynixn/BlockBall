@@ -249,7 +249,12 @@ class ProxyServiceImpl @Inject constructor(
      */
     override fun <P> setPlayerFlying(player: P, enabled: Boolean) {
         require(player is Player)
-        player.isFlying = enabled
+
+        if (enabled) {
+            player.isFlying = player.allowFlight
+        } else {
+            player.isFlying = false
+        }
     }
 
     /**
@@ -520,11 +525,12 @@ class ProxyServiceImpl @Inject constructor(
                 val chatComponent =
                     clazz.getDeclaredMethod("a", String::class.java).invoke(null, chatBuilder.toString())
                 val systemUtilsClazz = findClazz("net.minecraft.SystemUtils")
-                val defaultUUID = if(pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_18_R2)){
-                    systemUtilsClazz.getDeclaredField("c").get(null) as UUID
-                }else{
-                    systemUtilsClazz.getDeclaredField("b").get(null) as UUID
-                }
+                val defaultUUID =
+                    if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_18_R2)) {
+                        systemUtilsClazz.getDeclaredField("c").get(null) as UUID
+                    } else {
+                        systemUtilsClazz.getDeclaredField("b").get(null) as UUID
+                    }
                 val chatEnumMessage = findClazz("net.minecraft.network.chat.ChatMessageType")
                 packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage, UUID::class.java)
                     .newInstance(chatComponent, chatEnumMessage.enumConstants[0], defaultUUID)
@@ -650,8 +656,7 @@ class ProxyServiceImpl @Inject constructor(
                 .accessible(true)
                 .get(null) as AtomicInteger
             atomicInteger.incrementAndGet()
-        }
-        else if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
+        } else if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
             val atomicInteger = findClazz("net.minecraft.world.entity.Entity")
                 .getDeclaredField("b")
                 .accessible(true)
