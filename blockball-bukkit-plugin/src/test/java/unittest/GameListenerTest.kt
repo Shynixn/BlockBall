@@ -396,50 +396,6 @@ class GameListenerTest {
         Assertions.assertEquals(Team.RED, gameActionService.joinedTeam)
     }
 
-    /**
-     * Given
-     *     a rightclick on a blue team sign.
-     * When
-     *     onClickOnPlacedSign
-     * Then
-     *    should join blue team.
-     */
-    @Test
-    fun onClickOnPlacedSign_RightClickOnBlueTeamSign_ShouldJoinBlueTeamGame() {
-        // Arrange
-        val gameService = MockedGameService()
-        val rightClickService = MockedRightClickService()
-        val gameActionService = MockedGameActionService()
-        val classUnderTest = createWithDependencies(gameService, rightClickService, gameActionService)
-        val location = Location(Mockito.mock(World::class.java), 5.0, 28.0, 392.0)
-        val block = Mockito.mock(Block::class.java)
-        Mockito.`when`(block.type).thenReturn(null)
-        Mockito.`when`(block.state).thenReturn(Mockito.mock(Sign::class.java))
-        Mockito.`when`(block.location).thenReturn(location)
-
-        rightClickService.watcherReturns = false
-        val game = GameEntity(ArenaEntity())
-        game.arena.meta.blueTeamMeta.signs.add(PositionEntity(location.x, location.y, location.z))
-        gameService.games.add(game)
-
-        // Act
-        classUnderTest.onClickOnPlacedSign(
-            PlayerInteractEvent(
-                gameService.players[0],
-                Action.RIGHT_CLICK_BLOCK,
-                null,
-                block,
-                BlockFace.DOWN
-            )
-        )
-
-        // Assert
-        Assertions.assertTrue(rightClickService.called)
-        Assertions.assertTrue(gameActionService.joinCalled)
-        Assertions.assertFalse(gameActionService.leaveCalled)
-        Assertions.assertEquals(Team.BLUE, gameActionService.joinedTeam)
-    }
-
     //endregion
 
     //region onPlayerHungerEvent
