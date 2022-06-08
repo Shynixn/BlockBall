@@ -5,11 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Developer API &mdash; BlockBall 6.29.3 documentation</title>
+  <title>Developer API &mdash; BlockBall 6.30.0 documentation</title>
   
 
   
@@ -40,7 +40,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.29.3 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.30.0 documentation" href="../index.html"/>
         <link rel="next" title="FAQ" href="../faq/index.html"/>
         <link rel="prev" title="Datacollecting" href="../general/datacollecting.html"/> 
 
@@ -74,7 +74,7 @@
             
             
               <div class="version">
-                6.29.3
+                6.30.0
               </div>
             
           
@@ -180,13 +180,13 @@
            <div itemprop="articleBody">
             
   <section id="developer-api">
-<h1>Developer API<a class="headerlink" href="#developer-api" title="Permalink to this headline">¶</a></h1>
+<h1>Developer API<a class="headerlink" href="#developer-api" title="Permalink to this heading">¶</a></h1>
 <section id="javadocs">
-<h2>JavaDocs<a class="headerlink" href="#javadocs" title="Permalink to this headline">¶</a></h2>
+<h2>JavaDocs<a class="headerlink" href="#javadocs" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference external" href="https://shynixn.github.io/BlockBall/apidocs/">https://shynixn.github.io/BlockBall/apidocs/</a></p>
 </section>
 <section id="including-the-blockball-api">
-<h2>Including the BlockBall API<a class="headerlink" href="#including-the-blockball-api" title="Permalink to this headline">¶</a></h2>
+<h2>Including the BlockBall API<a class="headerlink" href="#including-the-blockball-api" title="Permalink to this heading">¶</a></h2>
 <a class="reference external image-reference" href="https://maven-badges.herokuapp.com/maven-central/com.github.shynixn.blockball/blockball-api"><img alt="https://maven-badges.herokuapp.com/maven-central/com.github.shynixn.blockball/blockball-api/badge.svg?style=flat-square" src="https://maven-badges.herokuapp.com/maven-central/com.github.shynixn.blockball/blockball-api/badge.svg?style=flat-square" /></a>
 <p>BlockBall is using gradle as build system and is available in the central repository.</p>
 <div class="admonition note">
@@ -196,13 +196,13 @@
 <pre class="literal-block">&lt;dependency&gt;
     &lt;groupId&gt;com.github.shynixn.blockball&lt;/groupId&gt;
     &lt;artifactId&gt;blockball-api&lt;/artifactId&gt;
-    &lt;version&gt;6.29.3&lt;/version&gt;
+    &lt;version&gt;6.30.0&lt;/version&gt;
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;com.github.shynixn.blockball&lt;/groupId&gt;
     &lt;artifactId&gt;blockball-bukkit-api&lt;/artifactId&gt;
-    &lt;version&gt;6.29.3&lt;/version&gt;
+    &lt;version&gt;6.30.0&lt;/version&gt;
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;</pre>
 <div class="admonition note">
@@ -210,8 +210,8 @@
 <p><strong>Gradle</strong> - Bukkit</p>
 </div>
 <pre class="literal-block">dependencies {
-    compileOnly 'com.github.shynixn.blockball:blockball-api:6.29.3'
-    compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:6.29.3'
+    compileOnly 'com.github.shynixn.blockball:blockball-api:6.30.0'
+    compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:6.30.0'
 }</pre>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -223,7 +223,7 @@
 </ul>
 </section>
 <section id="registering-the-dependency">
-<h2>Registering the dependency<a class="headerlink" href="#registering-the-dependency" title="Permalink to this headline">¶</a></h2>
+<h2>Registering the dependency<a class="headerlink" href="#registering-the-dependency" title="Permalink to this heading">¶</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>Bukkit</strong> - Add the following tag to your plugin.yml if you <strong>optionally</strong> want to use BlockBall.</p>
@@ -240,7 +240,7 @@
 </div>
 </section>
 <section id="working-with-the-blockball-api">
-<h2>Working with the BlockBall API<a class="headerlink" href="#working-with-the-blockball-api" title="Permalink to this headline">¶</a></h2>
+<h2>Working with the BlockBall API<a class="headerlink" href="#working-with-the-blockball-api" title="Permalink to this heading">¶</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>There are 4 simple steps to access the <strong>whole</strong> business logic of BlockBall.</p>
@@ -306,7 +306,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 </div>
 </section>
 <section id="listen-to-events">
-<h2>Listen to Events<a class="headerlink" href="#listen-to-events" title="Permalink to this headline">¶</a></h2>
+<h2>Listen to Events<a class="headerlink" href="#listen-to-events" title="Permalink to this heading">¶</a></h2>
 <p>There are many BlockBall events in order to listen to actions. Please take a look into the <a class="reference external" href="https://shynixn.github.io/BlockBall/apidocs/">JavaDocs</a>  for all events.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -366,8 +366,8 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.29.3',
-            LANGUAGE:'None',
+            VERSION:'6.30.0',
+            LANGUAGE:'en',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -377,6 +377,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
       <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
 
   
