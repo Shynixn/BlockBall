@@ -65,7 +65,7 @@ class OpenPage @Inject constructor(private val arenaRepository: PersistenceArena
                 }
                 builder.component("- Arena: Id: " + arena.name + " Name: " + arena.displayName).builder()
                     .component(" [page..]").setColor(ChatColor.YELLOW)
-                    .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.ARENA_EDIT.command + " " + arena.name)
+                    .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.ARENA_EDIT.command + arena.name)
                     .setHoverText("Opens the arena with the id " + arena.name + ".").builder().nextLine()
             }
 
@@ -83,7 +83,7 @@ class OpenPage @Inject constructor(private val arenaRepository: PersistenceArena
                 }
                 builder.component("- Arena: Id: " + arena.name + " Name: " + arena.displayName).builder()
                     .component(" [delete..]").setColor(ChatColor.DARK_RED)
-                    .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.ARENA_DELETE.command + " " + arena.name)
+                    .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.ARENA_DELETE.command + arena.name)
                     .setHoverText("Deletes the arena with the id " + arena.name + ".").builder().nextLine()
             }
 

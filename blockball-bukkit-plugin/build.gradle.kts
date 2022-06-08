@@ -88,6 +88,14 @@ tasks.register("pluginJar", Exec::class.java) {
         targetJarFile,
         targetJarFile
     )
+    obsMapping = "$obsMapping && " + createCommand(
+        "1.19-R0.1-SNAPSHOT",
+        "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_19_R1",
+        file,
+        shadowJar,
+        targetJarFile,
+        targetJarFile
+    )
 
     if (System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")) {
         commandLine = listOf("cmd", "/c", obsMapping.replace("\$HOME", "%userprofile%"))
@@ -113,7 +121,6 @@ fun createCommand(
 
 repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi")
-    maven("https://maven.sk89q.com/repo")
     maven("https://repo.codemc.org/repository/maven-public")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
 }
@@ -125,7 +132,9 @@ dependencies {
     implementation(project(":blockball-bukkit-plugin:bukkit-nms-117R1"))
     implementation(project(":blockball-bukkit-plugin:bukkit-nms-118R1"))
     implementation(project(":blockball-bukkit-plugin:bukkit-nms-118R2"))
+    implementation(project(":blockball-bukkit-plugin:bukkit-nms-119R1"))
 
+    implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:1.5.0")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:1.5.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
@@ -134,7 +143,6 @@ dependencies {
     implementation("org.slf4j:slf4j-jdk14:1.7.25")
     implementation("com.zaxxer:HikariCP:3.2.0")
     implementation("com.google.inject:guice:5.0.1")
-    implementation("org.bstats:bstats-bukkit:1.7")
     implementation("commons-io:commons-io:2.6")
     implementation("com.google.code.gson:gson:2.8.6")
 

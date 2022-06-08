@@ -154,7 +154,7 @@ class ListablePage @Inject constructor(
         } else {
             infoList.forEachIndexed { index, p ->
                 builder.component((index + 1).toString() + ": [$p]")
-                    .setClickAction(ChatClickAction.RUN_COMMAND, callBackCommand.command + " " + index)
+                    .setClickAction(ChatClickAction.RUN_COMMAND, callBackCommand.command + index)
                     .setHoverText("").builder().nextLine().nextLine()
             }
         }
