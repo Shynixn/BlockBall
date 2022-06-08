@@ -33,8 +33,14 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
     }
     private val networkManagerField by lazy {
         try {
-            plugin.findClazz("net.minecraft.server.network.PlayerConnection")
-                .getDeclaredField("a")
+            if(plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R1)){
+                plugin.findClazz("net.minecraft.server.network.PlayerConnection")
+                    .getDeclaredField("b")
+                    .accessible(true)
+            }else{
+                plugin.findClazz("net.minecraft.server.network.PlayerConnection")
+                    .getDeclaredField("a")
+            }
         } catch (e: Exception) {
             plugin.findClazz("net.minecraft.server.VERSION.PlayerConnection")
                 .getDeclaredField("networkManager")
@@ -54,6 +60,7 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
                 throw RuntimeException("Impl not found!")
             }
         } catch (e1: Exception) {
+            e1.printStackTrace()
             plugin.findClazz("net.minecraft.server.VERSION.NetworkManager")
                 .getDeclaredField("channel")
         }

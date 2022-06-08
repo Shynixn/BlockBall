@@ -162,7 +162,7 @@ class ArenaCommandExecutor @Inject constructor(
             } else {
                 builder.component(">>Back<<")
                     .setColor(ChatColor.RED)
-                    .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.BACK.command + " " + usedPage.getPreviousIdFrom(cache!!))
+                    .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.BACK.command + usedPage.getPreviousIdFrom(cache!!))
                     .setHoverText("Goes back to the previous page.")
                     .builder()
             }
