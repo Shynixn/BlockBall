@@ -524,8 +524,15 @@ class ProxyServiceImpl @Inject constructor(
                 val chatBaseComponentClazz = findClazz("net.minecraft.network.chat.IChatBaseComponent")
                 val chatComponent =
                     clazz.getDeclaredMethod("a", String::class.java).invoke(null, chatBuilder.toString())
-                packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Int::class.java)
-                    .newInstance(chatComponent,1)
+                try {
+                    // 1.19.1
+                    packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Boolean::class.java)
+                        .newInstance(chatComponent, false)
+                } catch (e: Exception) {
+                    // 1.19.0
+                    packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Int::class.java)
+                        .newInstance(chatComponent, 1)
+                }
             } else if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
                 val clazz = Class.forName("net.minecraft.network.chat.IChatBaseComponent\$ChatSerializer")
                 val packetClazz = findClazz("net.minecraft.network.protocol.game.PacketPlayOutChat")
