@@ -16,6 +16,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_17_R1.S
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_18_R1.InternalVersionPacket118R1ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_18_R2.InternalVersionPacket118R2ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_19_R1.InternalVersionPacket119R1ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_19_R2.InternalVersionPacket119R2ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.InternalVersionPacket18R3ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.Particle18R3ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.RayTracingService18R3Impl
@@ -112,6 +113,9 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         }
 
         when {
+            version.isVersionSameOrGreaterThan(Version.VERSION_1_19_R2) ->
+                bind(InternalVersionPacketService::class.java).to(InternalVersionPacket119R2ServiceImpl::class.java)
+                    .`in`(Scopes.SINGLETON)
             version.isVersionSameOrGreaterThan(Version.VERSION_1_19_R1) ->
                 bind(InternalVersionPacketService::class.java).to(InternalVersionPacket119R1ServiceImpl::class.java)
                     .`in`(Scopes.SINGLETON)
