@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Placeholders &mdash; BlockBall 6.31.0 documentation</title>
+  <title>Placeholders &mdash; BlockBall 6.32.0 documentation</title>
   
 
   
@@ -40,7 +40,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.31.0 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.32.0 documentation" href="../index.html"/>
         <link rel="up" title="Misc" href="misc.html"/>
         <link rel="next" title="Commands" href="../commands/index.html"/>
         <link rel="prev" title="Textbook" href="textbook.html"/> 
@@ -75,7 +75,7 @@
             
             
               <div class="version">
-                6.31.0
+                6.32.0
               </div>
             
           
@@ -361,6 +361,18 @@ Replace &lt;id&gt; with the id of the arena.</p>
 <tr class="row-even"><td><p>Uses the game’s current time value</p></td>
 <td><p>%blockball_&lt;time&gt;_&lt;id&gt;%</p></td>
 </tr>
+<tr class="row-odd"><td><p>Uses the name of the current team of the player</p></td>
+<td><p>%blockball_&lt;team&gt;_&lt;id&gt;%</p></td>
+</tr>
+<tr class="row-even"><td><p>Uses the prefix (default color) of the current team of the player</p></td>
+<td><p>%blockball_&lt;teamcolor&gt;_&lt;id&gt;%</p></td>
+</tr>
+<tr class="row-odd"><td><p>Uses the current amount of players in the current team of the player</p></td>
+<td><p>%blockball_&lt;players&gt;_&lt;id&gt;%</p></td>
+</tr>
+<tr class="row-even"><td><p>Uses the max amount of players in the current team of the player</p></td>
+<td><p>%blockball_&lt;maxplayers&gt;_&lt;id&gt;%</p></td>
+</tr>
 <tr class="row-odd"><td><p>Uses the winrate of the player across all played games</p></td>
 <td><p>%blockball_&lt;winrate&gt;%</p></td>
 </tr>
@@ -424,7 +436,7 @@ Replace &lt;id&gt; with the id of the arena.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.31.0',
+            VERSION:'6.32.0',
             LANGUAGE:'en',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
