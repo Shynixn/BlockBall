@@ -86,10 +86,24 @@ class DependencyPlaceholderApiServiceImpl @Inject constructor(
                             result = stats.amountOfWins.toString()
                         } else {
                             val data = s!!.split("_")
-                            val game = gameService.getGameFromName(data[1])
+                            val optGame = gameService.getGameFromName(data[1])
 
-                            if (game.isPresent) {
-                                result = placeHolderService.replacePlaceHolders(data[0], game.get())
+                            if (optGame.isPresent) {
+                                val game = optGame.get()
+                                val teamData = if (game.redTeam.contains(player)) {
+                                    Pair(game.arena.meta.redTeamMeta, game.redTeam.size)
+                                } else if (game.blueTeam.contains(player)) {
+                                    Pair(game.arena.meta.blueTeamMeta, game.blueTeam.size)
+                                } else {
+                                    Pair(null, null)
+                                }
+
+                                result = placeHolderService.replacePlaceHolders(
+                                    data[0],
+                                    optGame.get(),
+                                    teamData.first,
+                                    teamData.second
+                                )
                             }
                         }
                     }

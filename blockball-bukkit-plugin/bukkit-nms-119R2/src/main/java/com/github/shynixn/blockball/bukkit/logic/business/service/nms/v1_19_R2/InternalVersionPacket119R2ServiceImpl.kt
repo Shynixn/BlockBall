@@ -9,7 +9,6 @@ import com.google.inject.Inject
 import com.mojang.datafixers.util.Pair
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
-import net.minecraft.core.DefaultedRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.FriendlyByteBuf
@@ -100,9 +99,9 @@ class InternalVersionPacket119R2ServiceImpl @Inject constructor(
 
         val byteTypeValue = 0
         val intTypeValue = 1
-        val booleanTypeValue = 7
-        val optChatTypeValue = 5
-        val rotationTypeValue = 8
+        val booleanTypeValue = 8
+        val optChatTypeValue = 6
+        val rotationTypeValue = 9
 
        if (entityMetaData.customNameVisible != null) {
             buffer.writeByte(3)
@@ -117,7 +116,7 @@ class InternalVersionPacket119R2ServiceImpl @Inject constructor(
             buffer.writeBoolean(true)
             buffer.writeId(payload.size)
             buffer.writeBytes(payload)
-        }/*
+        }
 
         if (entityMetaData.slimeSize != null) {
             val slimeSizeIndex = 16
@@ -144,7 +143,7 @@ class InternalVersionPacket119R2ServiceImpl @Inject constructor(
             buffer.writeByte(15)
             buffer.writeId(byteTypeValue)
             buffer.writeByte(0x01)
-        }*/
+        }
 
         buffer.writeByte(255)
         return ClientboundSetEntityDataPacket(buffer)
