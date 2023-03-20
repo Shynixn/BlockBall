@@ -33,7 +33,12 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
     }
     private val networkManagerField by lazy {
         try {
-            if(plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R1)){
+            if(plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R3)){
+                plugin.findClazz("net.minecraft.server.network.PlayerConnection")
+                    .getDeclaredField("h")
+                    .accessible(true)
+            }
+            else if(plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R1)){
                 plugin.findClazz("net.minecraft.server.network.PlayerConnection")
                     .getDeclaredField("b")
                     .accessible(true)
