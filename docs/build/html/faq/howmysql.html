@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>How to use the MySQL database? &mdash; BlockBall 6.32.0 documentation</title>
+  <title>How to use the MySQL database? &mdash; BlockBall 6.33.0 documentation</title>
   
 
   
@@ -40,7 +40,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.32.0 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.33.0 documentation" href="../index.html"/>
         <link rel="up" title="FAQ" href="index.html"/>
         <link rel="next" title="Can I use the /reload command?" href="caniusereload.html"/>
         <link rel="prev" title="How to use a custom skin URL?" href="howcustomskin.html"/> 
@@ -66,16 +66,13 @@
           
 
           
-            
-            <img src="../_static/BlockBall-small.png" class="logo" />
-          
           </a>
 
           
             
             
               <div class="version">
-                6.32.0
+                6.33.0
               </div>
             
           
@@ -195,44 +192,44 @@
 <li><p>You have already got a MySQL server and want to keep all saves at one places (backups) ✔</p></li>
 </ul>
 <p><strong>before</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span>
 
-<span class="c1"># Database settings</span><span class="w"></span>
+<span class="c1"># Database settings</span>
 
-<span class="c1"># All player stats are stored in a local file by default.</span><span class="w"></span>
-<span class="c1"># It is recommend to edit these settings when you are using a MySQL database</span><span class="w"></span>
-<span class="c1"># and have got a bigger player-base.</span><span class="w"></span>
+<span class="c1"># All player stats are stored in a local file by default.</span>
+<span class="c1"># It is recommend to edit these settings when you are using a MySQL database</span>
+<span class="c1"># and have got a bigger player-base.</span>
 
-<span class="c1">############################</span><span class="w"></span>
+<span class="c1">############################</span>
 
-<span class="nt">sql</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span><span class="w"></span>
-<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3306</span><span class="w"></span>
-<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
+<span class="nt">sql</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3306</span>
+<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
 </pre></div>
 </div>
 <p>You can get the data from your MySQL database host.</p>
 <p><strong>after</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">############################</span>
 
-<span class="c1"># Database settings</span><span class="w"></span>
+<span class="c1"># Database settings</span>
 
-<span class="c1"># All player stats are stored in a local file by default.</span><span class="w"></span>
-<span class="c1"># It is recommend to edit these settings when you are using a MySQL database</span><span class="w"></span>
-<span class="c1"># and have got a bigger player-base.</span><span class="w"></span>
+<span class="c1"># All player stats are stored in a local file by default.</span>
+<span class="c1"># It is recommend to edit these settings when you are using a MySQL database</span>
+<span class="c1"># and have got a bigger player-base.</span>
 
-<span class="c1">############################</span><span class="w"></span>
+<span class="c1">############################</span>
 
-<span class="nt">sql</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_db_host_address&#39;</span><span class="w"></span>
-<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3306</span><span class="w"></span>
-<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_db_name&#39;</span><span class="w"></span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_db_login_username&#39;</span><span class="w"></span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_db_login_password&#39;</span><span class="w"></span>
+<span class="nt">sql</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_db_host_address&#39;</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3306</span>
+<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_db_name&#39;</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_db_login_username&#39;</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_db_login_password&#39;</span>
 </pre></div>
 </div>
 </section>
@@ -259,7 +256,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015 - 2022, Shynixn.
+        &copy; Copyright 2015 - 2023, Shynixn.
 
     </p>
   </div>
@@ -280,7 +277,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.32.0',
+            VERSION:'6.33.0',
             LANGUAGE:'en',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -289,9 +286,6 @@
         };
     </script>
       <script type="text/javascript" src="../_static/documentation_options.js"></script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
       <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
 
