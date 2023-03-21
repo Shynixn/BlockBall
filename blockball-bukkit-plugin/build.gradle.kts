@@ -104,6 +104,14 @@ tasks.register("pluginJar", Exec::class.java) {
         targetJarFile,
         targetJarFile
     )
+    obsMapping = "$obsMapping && " + createCommand(
+        "1.19.4-R0.1-SNAPSHOT",
+        "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_19_R3",
+        file,
+        shadowJar,
+        targetJarFile,
+        targetJarFile
+    )
 
     if (System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")) {
         commandLine = listOf("cmd", "/c", obsMapping.replace("\$HOME", "%userprofile%"))
@@ -142,6 +150,7 @@ dependencies {
     implementation(project(":blockball-bukkit-plugin:bukkit-nms-118R2"))
     implementation(project(":blockball-bukkit-plugin:bukkit-nms-119R1"))
     implementation(project(":blockball-bukkit-plugin:bukkit-nms-119R2"))
+    implementation(project(":blockball-bukkit-plugin:bukkit-nms-119R3"))
 
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:1.5.0")
