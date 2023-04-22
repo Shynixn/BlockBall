@@ -65,7 +65,6 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
                 throw RuntimeException("Impl not found!")
             }
         } catch (e1: Exception) {
-            e1.printStackTrace()
             plugin.findClazz("net.minecraft.server.VERSION.NetworkManager")
                 .getDeclaredField("channel")
         }
