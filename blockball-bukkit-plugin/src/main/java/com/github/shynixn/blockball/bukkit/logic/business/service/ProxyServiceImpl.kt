@@ -671,8 +671,7 @@ class ProxyServiceImpl @Inject constructor(
                 .accessible(true)
                 .get(null) as AtomicInteger
             atomicInteger.incrementAndGet()
-        }
-        else if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_18_R2)) {
+        } else if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_18_R2)) {
             val atomicInteger = findClazz("net.minecraft.world.entity.Entity")
                 .getDeclaredField("c")
                 .accessible(true)
@@ -710,7 +709,12 @@ class ProxyServiceImpl @Inject constructor(
 
         if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
             val nmsPlayerClazz = findClazz("net.minecraft.server.level.EntityPlayer")
-            val playerConnectionField = nmsPlayerClazz.getDeclaredField("b")
+            val playerConnectionField =
+                if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_20_R1)) {
+                    nmsPlayerClazz.getDeclaredField("c")
+                } else {
+                    nmsPlayerClazz.getDeclaredField("b")
+                }
             playerConnectionField.isAccessible = true
             val connection = playerConnectionField.get(nmsPlayer)
 

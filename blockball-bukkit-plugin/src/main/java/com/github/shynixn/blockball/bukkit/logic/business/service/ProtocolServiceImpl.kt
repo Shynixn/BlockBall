@@ -25,24 +25,28 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
     private val playerConnectionField by lazy {
         try {
             plugin.findClazz("net.minecraft.server.level.EntityPlayer")
-                .getDeclaredField("b")
+                .getDeclaredField("c")
         } catch (e: Exception) {
-            plugin.findClazz("net.minecraft.server.VERSION.EntityPlayer")
-                .getDeclaredField("playerConnection")
+            try {
+                plugin.findClazz("net.minecraft.server.level.EntityPlayer")
+                    .getDeclaredField("b")
+            } catch (e: Exception) {
+                plugin.findClazz("net.minecraft.server.VERSION.EntityPlayer")
+                    .getDeclaredField("playerConnection")
+            }
         }
     }
     private val networkManagerField by lazy {
         try {
-            if(plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R3)){
+            if (plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R3)) {
                 plugin.findClazz("net.minecraft.server.network.PlayerConnection")
                     .getDeclaredField("h")
                     .accessible(true)
-            }
-            else if(plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R1)){
+            } else if (plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R1)) {
                 plugin.findClazz("net.minecraft.server.network.PlayerConnection")
                     .getDeclaredField("b")
                     .accessible(true)
-            }else{
+            } else {
                 plugin.findClazz("net.minecraft.server.network.PlayerConnection")
                     .getDeclaredField("a")
             }
@@ -65,7 +69,6 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
                 throw RuntimeException("Impl not found!")
             }
         } catch (e1: Exception) {
-            e1.printStackTrace()
             plugin.findClazz("net.minecraft.server.VERSION.NetworkManager")
                 .getDeclaredField("channel")
         }
