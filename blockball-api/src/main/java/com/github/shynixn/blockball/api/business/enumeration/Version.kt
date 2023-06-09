@@ -125,7 +125,12 @@ enum class Version(
     /**
      * Version 1.19.4 - 1.19.4.
      */
-    VERSION_1_19_R3("v1_19_R3", "1.19.4", 1.194);
+    VERSION_1_19_R3("v1_19_R3", "1.19.4", 1.194),
+
+    /**
+     * Version 1.20 - 1.20.
+     */
+    VERSION_1_20_R1("v1_20_R1", "1.20.0", 1.20);
 
     /**
      * Gets if this version is same or greater than the given version by parameter.
