@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.bukkit.event.PacketEvent
-import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ProtocolService
 import com.github.shynixn.blockball.core.logic.business.extension.accessible
@@ -25,52 +24,41 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
     private val playerConnectionField by lazy {
         try {
             plugin.findClazz("net.minecraft.server.level.EntityPlayer")
-                .getDeclaredField("c")
-        } catch (e: Exception) {
-            try {
-                plugin.findClazz("net.minecraft.server.level.EntityPlayer")
-                    .getDeclaredField("b")
-            } catch (e: Exception) {
-                plugin.findClazz("net.minecraft.server.VERSION.EntityPlayer")
-                    .getDeclaredField("playerConnection")
-            }
+                .declaredFields.first { e -> e.type.name == "net.minecraft.server.network.PlayerConnection" }
+                .accessible(true)
+        } catch (ex: Exception) {
+            plugin.findClazz("net.minecraft.server.VERSION.EntityPlayer")
+                .declaredFields.first { e ->
+                    e.type.name == "net.minecraft.server.VERSION.PlayerConnection".replace(
+                        "VERSION",
+                        plugin.getServerVersion().bukkitId
+                    )
+                }.accessible(true)
         }
     }
     private val networkManagerField by lazy {
         try {
-            if (plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R3)) {
-                plugin.findClazz("net.minecraft.server.network.PlayerConnection")
-                    .getDeclaredField("h")
-                    .accessible(true)
-            } else if (plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R1)) {
-                plugin.findClazz("net.minecraft.server.network.PlayerConnection")
-                    .getDeclaredField("b")
-                    .accessible(true)
-            } else {
-                plugin.findClazz("net.minecraft.server.network.PlayerConnection")
-                    .getDeclaredField("a")
-            }
-        } catch (e: Exception) {
+            plugin.findClazz("net.minecraft.server.network.PlayerConnection")
+                .declaredFields.first { e -> e.type.name == "net.minecraft.network.NetworkManager" }.accessible(true)
+        } catch (ex: Exception) {
             plugin.findClazz("net.minecraft.server.VERSION.PlayerConnection")
-                .getDeclaredField("networkManager")
+                .declaredFields.first { e ->
+                    e.type.name == "net.minecraft.server.VERSION.NetworkManager".replace(
+                        "VERSION",
+                        plugin.getServerVersion().bukkitId
+                    )
+                }.accessible(true)
         }
     }
     private val channelField by lazy {
         try {
-            if (plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_18_R2)) {
-                plugin.findClazz("net.minecraft.network.NetworkManager")
-                    .getDeclaredField("m")
-                    .accessible(true)
-            } else if (plugin.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
-                plugin.findClazz("net.minecraft.network.NetworkManager")
-                    .getDeclaredField("k")
-                    .accessible(true)
-            } else {
-                throw RuntimeException("Impl not found!")
-            }
-        } catch (e1: Exception) {
+            plugin.findClazz("net.minecraft.network.NetworkManager")
+                .declaredFields.first { e -> e.type.name == Channel::class.java.name }.accessible(true)
+        } catch (ex: Exception) {
             plugin.findClazz("net.minecraft.server.VERSION.NetworkManager")
-                .getDeclaredField("channel")
+                .declaredFields.first { e ->
+                    e.type.name == Channel::class.java.name
+                }.accessible(true)
         }
     }
 
