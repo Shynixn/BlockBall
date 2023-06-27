@@ -76,6 +76,9 @@ class TeamMetaEntity(
     /** Max amount of players in this team to start the match for this team. */
     @YamlSerialize(orderNumber = 4, value = "max-amount")
     override var maxAmount: Int = 10
+    /** Minimum amount of players in this team to keep the game running. **/
+    @YamlSerialize(orderNumber = 3, value = "min-amount-playing")
+    override var minPlayingPlayers: Int = 0
     /** Goal properties of the team. */
     @YamlSerialize(orderNumber = 7, value = "goal")
     override val goal: SelectionEntity = SelectionEntity()
