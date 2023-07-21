@@ -91,7 +91,11 @@ class ProtocolServiceImpl @Inject constructor(private val plugin: PluginProxy, p
             .get(netWorkManager) as Channel
 
         val internalInterceptor = PacketInterceptor(player, this)
-        channel.pipeline().addBefore("packet_handler", handlerName, internalInterceptor)
+        try {
+            channel.pipeline().addBefore("packet_handler", handlerName, internalInterceptor)
+        } catch (e: NoSuchElementException) {
+            channel.pipeline().addFirst(handlerName, internalInterceptor)
+        }
         cachedPlayerChannels[player] = channel
     }
 
