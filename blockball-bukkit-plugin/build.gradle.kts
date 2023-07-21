@@ -162,13 +162,7 @@ dependencies {
     implementation(project(":blockball-bukkit-plugin:bukkit-nms-120R1"))
 
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
-    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:1.5.0")
-    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:1.5.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.9")
-
     implementation("org.slf4j:slf4j-jdk14:1.7.25")
-    implementation("com.zaxxer:HikariCP:3.2.0")
     implementation("com.google.inject:guice:5.0.1")
     implementation("commons-io:commons-io:2.6")
     implementation("com.google.code.gson:gson:2.8.6")
@@ -178,6 +172,5 @@ dependencies {
     compileOnly("org.spigotmc:spigot:1.16.4-R0.1-SNAPSHOT")
 
     testImplementation("org.xerial:sqlite-jdbc:3.23.1")
-    testImplementation("ch.vorburger.mariaDB4j:mariaDB4j:2.2.3")
     testImplementation("org.spigotmc:spigot:1.16.4-R0.1-SNAPSHOT")
 }

@@ -8,15 +8,12 @@ import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
 import com.github.shynixn.blockball.core.logic.business.commandexecutor.*
 import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
-import com.github.shynixn.mccoroutine.registerSuspendingEvents
 import com.google.inject.Guice
 import com.google.inject.Injector
-import kotlinx.coroutines.runBlocking
 import org.apache.commons.io.IOUtils
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
@@ -112,7 +109,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         Bukkit.getPluginManager().registerEvents(resolve(HubgameListener::class.java), this)
         Bukkit.getPluginManager().registerEvents(resolve(MinigameListener::class.java), this)
         Bukkit.getPluginManager().registerEvents(resolve(BungeeCordgameListener::class.java), this)
-        Bukkit.getPluginManager().registerSuspendingEvents(resolve(StatsListener::class.java), this)
         Bukkit.getPluginManager().registerEvents(resolve(BallListener::class.java), this)
         Bukkit.getPluginManager().registerEvents(resolve(BlockSelectionListener::class.java), this)
 
@@ -196,11 +192,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             return
         }
 
-        runBlocking {
-            resolve(PersistenceStatsService::class.java).close()
-        }
-
-        resolve(SqlDbContext::class.java).close()
         resolve(ProtocolService::class.java).dispose()
 
         try {
