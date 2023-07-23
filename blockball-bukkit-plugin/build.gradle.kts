@@ -113,7 +113,7 @@ tasks.register("pluginJar", Exec::class.java) {
         targetJarFile
     )
     obsMapping = "$obsMapping && " + createCommand(
-        "1.20-R0.1-SNAPSHOT",
+        "1.20.1-R0.1-SNAPSHOT",
         "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_20_R1",
         file,
         shadowJar,
