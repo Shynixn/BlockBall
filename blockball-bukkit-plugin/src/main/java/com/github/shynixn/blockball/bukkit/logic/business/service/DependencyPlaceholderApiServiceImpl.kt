@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.bukkit.logic.business.service
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.business.service.*
 import com.google.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -14,9 +13,7 @@ import org.bukkit.plugin.Plugin
 class DependencyPlaceholderApiServiceImpl @Inject constructor(
     private val plugin: Plugin,
     private val gameService: GameService,
-    private val placeHolderService: PlaceholderService,
-    private val persistenceStatsService: PersistenceStatsService,
-    private val coroutineSessionService: CoroutineSessionService
+    private val placeHolderService: PlaceholderService
 ) : PlaceholderExpansion(),
     DependencyPlaceholderApiService {
     private var registerd: Boolean = false
@@ -62,54 +59,32 @@ class DependencyPlaceholderApiServiceImpl @Inject constructor(
     override fun onPlaceholderRequest(player: Player?, s: String?): String? {
         var result: String? = null
 
-        coroutineSessionService.launch(Dispatchers.Unconfined) {
-            try {
-                val stats = persistenceStatsService.getStatsFromPlayerAsync(player!!).await()
+        try {
+            PlaceHolder.values().asSequence().filter { p -> s != null && s.startsWith(p.placeHolder) }
+                .forEach { p ->
+                    val data = s!!.split("_")
+                    val optGame = gameService.getGameFromName(data[1])
 
-                PlaceHolder.values().asSequence().filter { p -> s != null && s.startsWith(p.placeHolder) }
-                    .forEach { p ->
-                        if (p == PlaceHolder.STATS_WINRATE) {
-                            result = String.format(
-                                "%.2f",
-                                stats.winRate
-                            )
-                        } else if (p == PlaceHolder.STATS_PLAYEDGAMES) {
-                            result = stats.amountOfPlayedGames.toString()
-                        } else if (p == PlaceHolder.STATS_GOALS_PER_GAME) {
-                            result = String.format(
-                                "%.2f",
-                                stats.goalsPerGame
-                            )
-                        } else if (p == PlaceHolder.STATS_GOALS_AMOUNT) {
-                            result = stats.amountOfGoals.toString()
-                        } else if (p == PlaceHolder.STATS_WINS_AMOUNT) {
-                            result = stats.amountOfWins.toString()
+                    if (optGame.isPresent) {
+                        val game = optGame.get()
+                        val teamData = if (game.redTeam.contains(player!!)) {
+                            Pair(game.arena.meta.redTeamMeta, game.redTeam.size)
+                        } else if (game.blueTeam.contains(player!!)) {
+                            Pair(game.arena.meta.blueTeamMeta, game.blueTeam.size)
                         } else {
-                            val data = s!!.split("_")
-                            val optGame = gameService.getGameFromName(data[1])
-
-                            if (optGame.isPresent) {
-                                val game = optGame.get()
-                                val teamData = if (game.redTeam.contains(player)) {
-                                    Pair(game.arena.meta.redTeamMeta, game.redTeam.size)
-                                } else if (game.blueTeam.contains(player)) {
-                                    Pair(game.arena.meta.blueTeamMeta, game.blueTeam.size)
-                                } else {
-                                    Pair(null, null)
-                                }
-
-                                result = placeHolderService.replacePlaceHolders(
-                                    data[0],
-                                    optGame.get(),
-                                    teamData.first,
-                                    teamData.second
-                                )
-                            }
+                            Pair(null, null)
                         }
-                    }
-            } catch (ignored: Exception) {
 
-            }
+                        result = placeHolderService.replacePlaceHolders(
+                            data[0],
+                            optGame.get(),
+                            teamData.first,
+                            teamData.second
+                        )
+                    }
+                }
+        } catch (ignored: Exception) {
+
         }
 
         return result

@@ -46,6 +46,8 @@ interface TeamMeta {
 
     /** Max amount of players in this team to start the match for this team. */
     var maxAmount: Int
+    /** Minimum amount of players in this team to keep the game running. **/
+    var minPlayingPlayers : Int
 
     /** Amount of points this team receives when a goal gets scored. */
     var pointsPerGoal: Int

@@ -100,32 +100,6 @@ enum class PlaceHolder(
     REMAINING_PLAYERS_TO_START("<remaining>"),
 
     /**
-     * Replaces this placeholder with the player winrate of the current selected stats.
-     */
-    STATS_WINRATE("<winrate>"),
-
-    /**
-     * Replaces this placeholder with the player played games of the current selected stats.
-     */
-    STATS_PLAYEDGAMES("<playedgames>"),
-
-    /**
-     * Replaces this placeholder with the player goals of the current selected stats.
-     */
-    STATS_GOALS_PER_GAME("<goalrate>"),
-
-    /**
-     * Amount of goals short.
-     */
-    STATS_GOALS_AMOUNT("<goals>"),
-
-    /**
-     * Amount of wins.
-     */
-    STATS_WINS_AMOUNT("<wins>"),
-
-
-    /**
      * Replaces this placeholder with the server name of the current bungeecord server.
      */
     BUNGEECORD_SERVER_NAME("<server>"),

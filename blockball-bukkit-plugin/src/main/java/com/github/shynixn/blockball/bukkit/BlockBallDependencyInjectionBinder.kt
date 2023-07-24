@@ -4,10 +4,8 @@ import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.context.SqlDbContext
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.api.persistence.repository.LinkSignRepository
-import com.github.shynixn.blockball.api.persistence.repository.StatsRepository
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.Particle113R2ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.RayTracingService113R2Impl
@@ -25,10 +23,8 @@ import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.Ra
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.ScreenMessage18R3ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_9_R2.InternalVersionPacket19R2ServiceImpl
 import com.github.shynixn.blockball.core.logic.business.service.*
-import com.github.shynixn.blockball.core.logic.persistence.context.SqlDbContextImpl
 import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
 import com.github.shynixn.blockball.core.logic.persistence.repository.LinkSignFileRepository
-import com.github.shynixn.blockball.core.logic.persistence.repository.StatsSqlRepository
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
 import org.bukkit.plugin.Plugin
@@ -52,11 +48,9 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
 
         // Repositories
         bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java).`in`(Scopes.SINGLETON)
-        bind(StatsRepository::class.java).to(StatsSqlRepository::class.java).`in`(Scopes.SINGLETON)
         bind(LinkSignRepository::class.java).to(LinkSignFileRepository::class.java).`in`(Scopes.SINGLETON)
 
         // Services
-        bind(SqlDbContext::class.java).to(SqlDbContextImpl::class.java).`in`(Scopes.SINGLETON)
         bind(EventService::class.java).to(EventServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(VirtualArenaService::class.java).to(VirtualArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -89,14 +83,12 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(PersistenceLinkSignService::class.java).to(PersistenceLinkSignServiceImpl::class.java)
             .`in`(Scopes.SINGLETON)
         bind(PersistenceArenaService::class.java).to(PersistenceArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(PersistenceStatsService::class.java).to(PersistenceStatsServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
             .`in`(Scopes.SINGLETON)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PlaceholderService::class.java).to(PlaceholderServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PacketService::class.java).to(PacketJavaProtocolServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ProtocolService::class.java).to(ProtocolServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(CoroutineSessionService::class.java).to(CoroutineSessionServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         when {
             version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)

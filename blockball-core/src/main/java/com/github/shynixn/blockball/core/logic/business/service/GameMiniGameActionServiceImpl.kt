@@ -323,7 +323,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 switchToNextMatchTime(game)
             }
 
-            if (game.ingamePlayersStorage.isEmpty()) {
+            if (game.ingamePlayersStorage.isEmpty() || game.redTeam.size < game.arena.meta.redTeamMeta.minPlayingPlayers || game.blueTeam.size < game.arena.meta.blueTeamMeta.minPlayingPlayers) {
                 game.closing = true
             }
         }
