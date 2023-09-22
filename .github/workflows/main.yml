@@ -68,10 +68,10 @@ jobs:
           body: "This release was automatically created by Github Actions. Please wait until the author manually sets the patchnotes for this release."
           tag_name: ${{ env.RELEASE_VERSION }}
           release_name: Release ${{ env.RELEASE_VERSION }}
-          draft: false
+          draft: true
           prerelease: false
 
-      - name: Upload Bukkit Release to Github
+      - name: Upload Latest Bukkit Release to Github
         if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
         uses: actions/upload-release-asset@v1
         env:
@@ -80,6 +80,22 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: /home/runner/work/BlockBall/BlockBall/blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin-${{ env.RELEASE_VERSION }}.jar
           asset_name: BlockBall.jar
+          asset_content_type: application/jar
+
+      - name: Build Java Application with all flag
+        run: |
+          sed -i "s/###VERSION###/all/g" ./blockball-bukkit-plugin/src/main/java/com/github/shynixn/blockball/bukkit/BlockBallPlugin.kt
+          ./gradlew build pluginJar      
+
+      - name: Upload All Bukkit Release to Github
+        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /home/runner/work/BlockBall/BlockBall/blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin-${{ env.RELEASE_VERSION }}.jar
+          asset_name: BlockBall-All.jar
           asset_content_type: application/jar
 
   Documentation:
