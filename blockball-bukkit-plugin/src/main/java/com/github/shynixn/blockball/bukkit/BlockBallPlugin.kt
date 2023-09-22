@@ -37,6 +37,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     private var injector: Injector? = null
     private var serverVersion: Version? = null
     private val bstatsPluginId = 1317
+    private val versionFlag = "###VERSION###"
 
     /**
      * Gets the installed version of the plugin.
@@ -69,7 +70,8 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             return
         }
 
-        if (!getServerVersion().isCompatible(
+        val versions = if (versionFlag == "all") {
+            arrayOf(
                 Version.VERSION_1_8_R3,
                 Version.VERSION_1_9_R2,
                 Version.VERSION_1_10_R1,
@@ -89,10 +91,16 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
                 Version.VERSION_1_19_R3,
                 Version.VERSION_1_20_R1,
             )
-        ) {
+        } else {
+            arrayOf(
+                Version.VERSION_1_20_R1,
+            )
+        }
+
+        if (!getServerVersion().isCompatible(*versions)) {
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
             sendConsoleMessage(ChatColor.RED.toString() + "BlockBall does not support your server version")
-            sendConsoleMessage(ChatColor.RED.toString() + "Install v" + Version.VERSION_1_8_R3.id + " - v" + Version.VERSION_1_20_R1.id)
+            sendConsoleMessage(ChatColor.RED.toString() + "Install v" + versions[0].id + " - v" + versions[versions.size - 1].id)
             sendConsoleMessage(ChatColor.RED.toString() + "Plugin gets now disabled!")
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
 
