@@ -15,7 +15,7 @@ tasks.withType<ShadowJar> {
 
     relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intelli")
     relocate("org.jetbrains", "com.github.shynixn.blockball.lib.org.jetbrains")
-    relocate("org.bstats", "com.github.shynixn.blockball.externallib.org.bstats")
+    relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
     relocate("javax.inject", "com.github.shynixn.blockball.lib.javax.inject")
     relocate("javax.annotation", "com.github.shynixn.blockball.lib.javax.annotation")
     relocate("org.checkerframework", "com.github.shynixn.blockball.lib.org.checkerframework")

@@ -4,7 +4,6 @@ author: Shynixn
 website: https://www.spigotmc.org/members/shynixn.63455/
 main: com.github.shynixn.blockball.bukkit.BlockBallPlugin
 softdepend: [WorldEdit, BossBarAPI, PlaceholderAPI, Vault]
-api-version: '1.20'
 commands:
    blockball:
       description: Opens the arena creation UI.
