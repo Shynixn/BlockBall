@@ -89,7 +89,8 @@ class ItemTypeServiceImpl @Inject constructor(private val version: Version) : It
                     )
                     val real = cls.cast(currentMeta)
                     val field = real.javaClass.getDeclaredField("profile")
-                    val newSkinProfile = GameProfile(UUID.randomUUID(), null)
+                    val profileUUID = UUID.randomUUID()
+                    val newSkinProfile = GameProfile(profileUUID, profileUUID.toString().substring(0, 10))
 
                     if (newSkin.contains("textures.minecraft.net")) {
                         if (!newSkin.startsWith("http://")) {

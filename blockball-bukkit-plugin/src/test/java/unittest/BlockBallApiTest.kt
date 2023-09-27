@@ -3,8 +3,8 @@
 package unittest
 
 import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
+import com.github.shynixn.mcutils.common.Version
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

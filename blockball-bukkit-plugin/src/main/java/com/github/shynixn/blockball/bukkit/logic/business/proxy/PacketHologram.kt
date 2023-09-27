@@ -130,7 +130,7 @@ class PacketHologram : HologramProxy {
             packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
                 it.entityId = entityIds[i]
                 it.entityType = EntityType.ARMOR_STAND
-                it.target = PositionEntity(this.position!!.x, this.position!!.y - upSet, this.position!!.z).toLocation()
+                it.target = PositionEntity(this.position!!.worldName!!, this.position!!.x, this.position!!.y - upSet, this.position!!.z).toLocation()
             })
         }
     }

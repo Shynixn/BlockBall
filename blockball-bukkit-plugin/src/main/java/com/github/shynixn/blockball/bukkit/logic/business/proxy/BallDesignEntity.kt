@@ -9,8 +9,10 @@ import com.github.shynixn.blockball.api.business.service.ItemTypeService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
+import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
 import com.github.shynixn.blockball.core.logic.persistence.entity.ItemEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
+import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.toEulerAngle
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.ArmorSlotType
@@ -133,14 +135,14 @@ class BallDesignEntity(val entityId: Int) {
         }
 
         val angle = when {
-            length > 1.0 -> PositionEntity(rotation.x - 30, 0.0, 0.0)
-            length > 0.1 -> PositionEntity(rotation.x - 10, 0.0, 0.0)
-            length > 0.08 -> PositionEntity(rotation.x - 5, 0.0, 0.0)
+            length > 1.0 -> Vector3d(rotation.x - 30, 0.0, 0.0)
+            length > 0.1 -> Vector3d(rotation.x - 10, 0.0, 0.0)
+            length > 0.08 -> Vector3d(rotation.x - 5, 0.0, 0.0)
             else -> null
         }
 
         if (angle != null) {
-            rotation = angle
+            rotation = PositionEntity(angle.x, angle.y, angle.z)
 
             if (ball.meta.isSlimeVisible) {
                 return
@@ -149,7 +151,8 @@ class BallDesignEntity(val entityId: Int) {
             for (player in players) {
                 require(player is Player)
                 packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
-                    it.armorStandHeadRotation = rotation.toLocation().toVector3d().toEulerAngle()
+                    it.armorStandHeadRotation = angle.toEulerAngle()
+                    it.entityId = entityId
                 })
             }
         }
