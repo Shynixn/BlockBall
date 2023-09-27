@@ -5,13 +5,16 @@ package com.github.shynixn.blockball.bukkit
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
-import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.listener.*
 import com.github.shynixn.blockball.core.logic.business.commandexecutor.*
 import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
+import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.packet.api.PacketInType
+import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.impl.PacketServiceImpl
 import com.google.inject.Guice
 import com.google.inject.Injector
 import org.apache.commons.io.IOUtils
@@ -37,7 +40,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     private var injector: Injector? = null
     private var serverVersion: Version? = null
     private val bstatsPluginId = 1317
-    private val versionFlag = "###VERSION###"
+    private var packetService : PacketService? = null
 
     /**
      * Gets the installed version of the plugin.
@@ -70,7 +73,11 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             return
         }
 
-        val versions = if (versionFlag == "all") {
+        val useLegacy = getResource("plugin.yml")!!.bufferedReader().use { reader ->
+            !reader.readText().contains("api-version")
+        }
+
+        val versions = if (useLegacy) {
             arrayOf(
                 Version.VERSION_1_8_R3,
                 Version.VERSION_1_9_R2,
@@ -90,14 +97,15 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
                 Version.VERSION_1_19_R2,
                 Version.VERSION_1_19_R3,
                 Version.VERSION_1_20_R1,
+                Version.VERSION_1_20_R2,
             )
         } else {
             arrayOf(
-                Version.VERSION_1_20_R1,
+                Version.VERSION_1_20_R2,
             )
         }
 
-        if (!getServerVersion().isCompatible(*versions)) {
+        if (!Version.serverVersion.isCompatible(*versions)) {
             sendConsoleMessage(ChatColor.RED.toString() + "================================================")
             sendConsoleMessage(ChatColor.RED.toString() + "BlockBall does not support your server version")
             sendConsoleMessage(ChatColor.RED.toString() + "Install v" + versions[0].id + " - v" + versions[versions.size - 1].id)
@@ -108,7 +116,8 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             return
         }
 
-        this.injector = Guice.createInjector(BlockBallDependencyInjectionBinder(this))
+        this.packetService = PacketServiceImpl(this)
+        this.injector = Guice.createInjector(BlockBallDependencyInjectionBinder(this, packetService!!))
         this.reloadConfig()
 
         // Register Listeners
@@ -172,24 +181,10 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
                 .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.DARK_GREEN + "Started server linking.")
         }
 
-        val protocolService = resolve(ProtocolService::class.java)
-
-        for (world in Bukkit.getWorlds()) {
-            for (player in world.players) {
-                protocolService.register(player)
-            }
-        }
-
-        val packetPlayInUseClazz = try {
-            findClazz("net.minecraft.network.protocol.game.PacketPlayInUseEntity")
-        } catch (e: Exception) {
-            findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
-        }
-
-        protocolService.registerPackets(listOf(packetPlayInUseClazz))
+        packetService!!.registerPacketListening(PacketInType.USEENTITY)
 
         Bukkit.getServer()
-            .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn, LazoYoung")
+            .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")
     }
 
     /**
@@ -200,7 +195,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             return
         }
 
-        resolve(ProtocolService::class.java).dispose()
+        packetService!!.close()
 
         try {
             resolve(GameService::class.java).close()
@@ -315,7 +310,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         return Class.forName(
             name.replace(
                 "VERSION",
-                BlockBallApi.resolve(PluginProxy::class.java).getServerVersion().bukkitId
+                (BlockBallApi.resolve(PluginProxy::class.java).getServerVersion() as Version).bukkitId
             )
         )
     }

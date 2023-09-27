@@ -40,231 +40,226 @@ enum class ParticleType(
         /**
          * Minecraft Id for 1.12.
          */
-        val minecraftId_112: String,
-
-        /**
-         * Version where this effect was added.
-         */
-        val sinceVersion: Version) {
+        val minecraftId_112: String) {
 
     /**
      * No Particle.
      */
-    NONE("none", "none", "none", Version.VERSION_1_8_R1),
+    NONE("none", "none", "none"),
     /**
      * Explosion.
      */
-    EXPLOSION_NORMAL("explode", "poof", "explosion", Version.VERSION_1_8_R1),
+    EXPLOSION_NORMAL("explode", "poof", "explosion"),
     /**
      * Large explosion.
      */
-    EXPLOSION_LARGE("largeexplode", "explosion", "large_explosion", Version.VERSION_1_8_R1),
+    EXPLOSION_LARGE("largeexplode", "explosion", "large_explosion"),
     /**
      * Huge explosion.
      */
-    EXPLOSION_HUGE("hugeexplosion", "explosion_emitter", "huge_explosion", Version.VERSION_1_8_R1),
+    EXPLOSION_HUGE("hugeexplosion", "explosion_emitter", "huge_explosion"),
     /**
      * Firework.
      */
-    FIREWORKS_SPARK("fireworksSpark", "firework", "fireworks_spark", Version.VERSION_1_8_R1),
+    FIREWORKS_SPARK("fireworksSpark", "firework", "fireworks_spark"),
     /**
      * Water Bubble simple.
      */
-    WATER_BUBBLE("bubble", "bubble", "water_bubble", Version.VERSION_1_8_R1),
+    WATER_BUBBLE("bubble", "bubble", "water_bubble"),
     /**
      * Water Bubble up.
      */
-    WATER_BUBBLE_UP("bubble_column_up", "bubble_column_up", "bubble_column_up", Version.VERSION_1_13_R1),
+    WATER_BUBBLE_UP("bubble_column_up", "bubble_column_up", "bubble_column_up"),
     /**
      * Water Bubble pop.
      */
-    WATER_BUBBLE_POP("bubble_pop", "bubble_pop", "bubble_pop", Version.VERSION_1_13_R1),
+    WATER_BUBBLE_POP("bubble_pop", "bubble_pop", "bubble_pop"),
     /**
      * Water Splash.
      */
-    WATER_SPLASH("splash", "splash", "water_splash", Version.VERSION_1_8_R1),
+    WATER_SPLASH("splash", "splash", "water_splash"),
     /**
      * Fishing effect.
      */
-    WATER_WAKE("wake", "fishing", "water_wake", Version.VERSION_1_8_R1),
+    WATER_WAKE("wake", "fishing", "water_wake"),
     /**
      * Underwater bubbles.
      */
-    SUSPENDED("suspended", "underwater", "suspended", Version.VERSION_1_8_R1),
+    SUSPENDED("suspended", "underwater", "suspended"),
     /**
      * Unused effect.
      */
-    SUSPENDED_DEPTH("depthsuspend", "depthsuspend", "suspended_depth", Version.VERSION_1_8_R1),
+    SUSPENDED_DEPTH("depthsuspend", "depthsuspend", "suspended_depth"),
     /**
      * Critical damage.
      */
-    CRIT("crit", "crit", "critical_hit", Version.VERSION_1_8_R1),
+    CRIT("crit", "crit", "critical_hit"),
     /**
      * Critical magical damage.
      */
-    CRIT_MAGIC("magicCrit", "enchanted_hit", "magic_critical_hit", Version.VERSION_1_8_R1),
+    CRIT_MAGIC("magicCrit", "enchanted_hit", "magic_critical_hit"),
     /**
      * Water effect.
      */
-    CURRENTDOWN("current_down", "current_down", "current_down", Version.VERSION_1_13_R1),
+    CURRENTDOWN("current_down", "current_down", "current_down"),
     /**
      * Smoke.
      */
-    SMOKE_NORMAL("smoke", "smoke", "smoke", Version.VERSION_1_8_R1),
+    SMOKE_NORMAL("smoke", "smoke", "smoke"),
     /**
      * Large Smoke.
      */
-    SMOKE_LARGE("largesmoke", "large_smoke", "large_smoke", Version.VERSION_1_8_R1),
+    SMOKE_LARGE("largesmoke", "large_smoke", "large_smoke"),
     /**
      * Spell.
      */
-    SPELL("spell", "effect", "spell", Version.VERSION_1_8_R1),
+    SPELL("spell", "effect", "spell"),
     /**
      * Instant Spell.
      */
-    SPELL_INSTANT("instantSpell", "instant_effect", "instant_spell", Version.VERSION_1_8_R1),
+    SPELL_INSTANT("instantSpell", "instant_effect", "instant_spell"),
     /**
      * Mob Spell.
      */
-    SPELL_MOB("mobSpell", "entity_effect", "instant_spell", Version.VERSION_1_8_R1),
+    SPELL_MOB("mobSpell", "entity_effect", "instant_spell"),
     /**
      * Mob Ambient Spell.
      */
-    SPELL_MOB_AMBIENT("mobSpellAmbient", "mob_spell", "mob_spell", Version.VERSION_1_8_R1),
+    SPELL_MOB_AMBIENT("mobSpellAmbient", "mob_spell", "mob_spell"),
     /**
      * Witch Spell.
      */
-    SPELL_WITCH("witchMagic", "witch", "witch_spell", Version.VERSION_1_8_R1),
+    SPELL_WITCH("witchMagic", "witch", "witch_spell"),
     /**
      * Drip water.
      */
-    DRIP_WATER("dripWater", "dripping_water", "drip_water", Version.VERSION_1_8_R1),
+    DRIP_WATER("dripWater", "dripping_water", "drip_water"),
     /**
      * Drip lava.
      */
-    DRIP_LAVA("dripLava", "dripping_lava", "drip_lava", Version.VERSION_1_8_R1),
+    DRIP_LAVA("dripLava", "dripping_lava", "drip_lava"),
     /**
      * Angry villager.
      */
-    VILLAGER_ANGRY("angryVillager", "angry_villager", "angry_villager", Version.VERSION_1_8_R1),
+    VILLAGER_ANGRY("angryVillager", "angry_villager", "angry_villager"),
     /**
      * Happy villager.
      */
-    VILLAGER_HAPPY("happyVillager", "happy_villager", "happy_villager", Version.VERSION_1_8_R1),
+    VILLAGER_HAPPY("happyVillager", "happy_villager", "happy_villager"),
     /**
      * Mycelium.
      */
-    TOWN_AURA("townaura", "mycelium", "town_aura", Version.VERSION_1_8_R1),
+    TOWN_AURA("townaura", "mycelium", "town_aura"),
     /**
      * Note..
      */
-    NOTE("note", "note", "note", Version.VERSION_1_8_R1),
+    NOTE("note", "note", "note"),
     /**
      * Portal.
      */
-    PORTAL("portal", "portal", "portal", Version.VERSION_1_8_R1),
+    PORTAL("portal", "portal", "portal"),
     /**
      * Nautilus.
      */
-    NAUTILUS("nautilus", "nautilus", "nautilus", Version.VERSION_1_13_R1),
+    NAUTILUS("nautilus", "nautilus", "nautilus"),
     /**
      * Enchantment.
      */
-    ENCHANTMENT_TABLE("enchantmenttable", "enchant", "enchanting_glyphs", Version.VERSION_1_8_R1),
+    ENCHANTMENT_TABLE("enchantmenttable", "enchant", "enchanting_glyphs"),
     /**
      * Flame.
      */
-    FLAME("flame", "flame", "flame", Version.VERSION_1_8_R1),
+    FLAME("flame", "flame", "flame"),
     /**
      * Lava.
      */
-    LAVA("lava", "lava", "lava", Version.VERSION_1_8_R1),
+    LAVA("lava", "lava", "lava"),
     /**
      * Squid.
      */
-    SQUID_INK("squid_ink", "squid_ink", "squid_ink", Version.VERSION_1_13_R1),
+    SQUID_INK("squid_ink", "squid_ink", "squid_ink"),
     /**
      * Footstep.
      */
-    FOOTSTEP("footstep", "footstep", "footstep", Version.VERSION_1_8_R1),
+    FOOTSTEP("footstep", "footstep", "footstep"),
     /**
      * Cloud.
      */
-    CLOUD("cloud", "cloud", "cloud", Version.VERSION_1_8_R1),
+    CLOUD("cloud", "cloud", "cloud"),
     /**
      * Redstone.
      */
-    REDSTONE("reddust", "dust", "redstone_dust", Version.VERSION_1_8_R1),
+    REDSTONE("reddust", "dust", "redstone_dust"),
     /**
      * Snowball.
      */
-    SNOWBALL("snowballpoof", "item_snowball", "snowball", Version.VERSION_1_8_R1),
+    SNOWBALL("snowballpoof", "item_snowball", "snowball"),
     /**
      * Snowshovel.
      */
-    SNOW_SHOVEL("snowshovel", "snowshovel", "snow_shovel", Version.VERSION_1_8_R1),
+    SNOW_SHOVEL("snowshovel", "snowshovel", "snow_shovel"),
     /**
      * Slime.
      */
-    SLIME("slime", "item_slime", "slime", Version.VERSION_1_8_R1),
+    SLIME("slime", "item_slime", "slime"),
     /**
      * Heart.
      */
-    HEART("heart", "heart", "heart", Version.VERSION_1_8_R1),
+    HEART("heart", "heart", "heart"),
     /**
      * Barrier.
      */
-    BARRIER("barrier", "barrier", "barrier", Version.VERSION_1_8_R1),
+    BARRIER("barrier", "barrier", "barrier"),
     /**
      * ItemCrack.
      */
-    ITEM_CRACK("iconcrack", "item", "item_crack", Version.VERSION_1_8_R1),
+    ITEM_CRACK("iconcrack", "item", "item_crack"),
     /**
      * BlockCrack.
      */
-    BLOCK_CRACK("blockcrack", "block", "block_crack", Version.VERSION_1_8_R1),
+    BLOCK_CRACK("blockcrack", "block", "block_crack"),
     /**
      * Blockdust.
      */
-    BLOCK_DUST("blockdust", "block", "block_dust", Version.VERSION_1_8_R1),
+    BLOCK_DUST("blockdust", "block", "block_dust"),
     /**
      * Rain.
      */
-    WATER_DROP("droplet", "rain", "water_drop", Version.VERSION_1_8_R1),
+    WATER_DROP("droplet", "rain", "water_drop"),
     /**
      * Unknown.
      */
-    TEM_TAKE("take", "take", "instant_spell", Version.VERSION_1_8_R1),
+    TEM_TAKE("take", "take", "instant_spell"),
     /**
      * Guardian scare.
      */
-    MOB_APPEARANCE("mobappearance", "elder_guardian", "guardian_appearance", Version.VERSION_1_8_R1),
+    MOB_APPEARANCE("mobappearance", "elder_guardian", "guardian_appearance"),
     /**
      * Dragon Breath.
      */
-    DRAGON_BREATH("dragonbreath", "dragon_breath", "dragon_breath", Version.VERSION_1_9_R1),
+    DRAGON_BREATH("dragonbreath", "dragon_breath", "dragon_breath"),
     /**
      * End rod.
      */
-    END_ROD("endRod", "end_rod", "end_rod", Version.VERSION_1_9_R1),
+    END_ROD("endRod", "end_rod", "end_rod"),
     /**
      * Damage Indicator.
      */
-    DAMAGE_INDICATOR("damageIndicator", "damage_indicator", "damage_indicator", Version.VERSION_1_9_R1),
+    DAMAGE_INDICATOR("damageIndicator", "damage_indicator", "damage_indicator"),
     /**
      * Sweep Attack.
      */
-    SWEEP_ATTACK("sweepAttack", "sweep_attack", "sweep_attack", Version.VERSION_1_9_R1),
+    SWEEP_ATTACK("sweepAttack", "sweep_attack", "sweep_attack"),
     /**
      * Falling Dust.
      */
-    FALLING_DUST("fallingdust", "falling_dust", "falling_dust", Version.VERSION_1_10_R1),
+    FALLING_DUST("fallingdust", "falling_dust", "falling_dust"),
     /**
      * Totem.
      */
-    TOTEM("totem", "totem_of_undying", "instant_spell", Version.VERSION_1_11_R1),
+    TOTEM("totem", "totem_of_undying", "instant_spell"),
     /**
      * Spit.
      */
-    SPIT("spit", "spit", "instant_spell", Version.VERSION_1_11_R1);
+    SPIT("spit", "spit", "instant_spell");
 }

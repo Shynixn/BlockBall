@@ -7,14 +7,11 @@ import com.github.shynixn.blockball.api.business.enumeration.BallActionType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.BallEntityService
 import com.github.shynixn.blockball.api.business.service.ParticleService
-import com.github.shynixn.blockball.api.business.service.ProtocolService
 import com.github.shynixn.blockball.api.business.service.SoundService
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerQuitEvent
 
 /**
  * Handles common ball events.
@@ -22,25 +19,8 @@ import org.bukkit.event.player.PlayerQuitEvent
 class BallListener @Inject constructor(
     private val ballEntityService: BallEntityService,
     private val particleService: ParticleService,
-    private val soundService: SoundService,
-    private val protocolService: ProtocolService
+    private val soundService: SoundService
 ) : Listener {
-    /**
-     * Registers the player on join.
-     */
-    @EventHandler
-    fun onPlayerJoinEvent(event: PlayerJoinEvent) {
-        protocolService.register(event.player)
-    }
-
-    /**
-     * Unregisters the player on leave.
-     */
-    @EventHandler
-    fun playerQuitEvent(event: PlayerQuitEvent) {
-        protocolService.unRegister(event.player)
-    }
-
     /**
      * Gets called when the ball raytraces in the world.
      */

@@ -3,12 +3,13 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.BossBarFlag
-import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.BossBarService
 import com.github.shynixn.blockball.api.business.service.DependencyBossBarApiService
 import com.github.shynixn.blockball.api.persistence.entity.BossBarMeta
+import com.github.shynixn.blockball.bukkit.logic.business.extension.getCompatibilityServerVersion
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
+import com.github.shynixn.mcutils.common.Version
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -49,7 +50,7 @@ class BossBarServiceImpl @Inject constructor(private val plugin: PluginProxy, pr
      * Does nothing if the player is already added.
      */
     override fun <B, P> addPlayer(bossBar: B, player: P) {
-        if (plugin.getServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
+        if (plugin.getCompatibilityServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
             dependencyBossBarService.setBossbarMessage(player, "", 1.0)
         } else {
             if (!getPlayers<B, P>(bossBar).contains(player)) {
@@ -63,7 +64,7 @@ class BossBarServiceImpl @Inject constructor(private val plugin: PluginProxy, pr
      * Does nothing if the player is already removed.
      */
     override fun <B, P> removePlayer(bossBar: B, player: P) {
-        if (plugin.getServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
+        if (plugin.getCompatibilityServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
             dependencyBossBarService.removeBossbarMessage(player)
         } else {
             if (getPlayers<B, P>(bossBar).contains(player)) {
@@ -76,7 +77,7 @@ class BossBarServiceImpl @Inject constructor(private val plugin: PluginProxy, pr
      * Returns a list of all players watching thie bossbar.
      */
     override fun <B, P> getPlayers(bossBar: B): List<P> {
-        return if (plugin.getServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
+        return if (plugin.getCompatibilityServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
             ArrayList()
         } else {
             getBossBarMethod("getPlayers").invoke(bossBar) as List<P>
@@ -87,7 +88,7 @@ class BossBarServiceImpl @Inject constructor(private val plugin: PluginProxy, pr
      * Changes the style of the bossbar with given [bossBarMeta].
      */
     override fun <B, P> changeConfiguration(bossBar: B, title: String, bossBarMeta: BossBarMeta, player: P) {
-        if (plugin.getServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3) && player != null) {
+        if (plugin.getCompatibilityServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3) && player != null) {
             dependencyBossBarService.setBossbarMessage(player, bossBarMeta.message.translateChatColors(), bossBarMeta.percentage)
         } else {
             getBossBarMethod("setVisible", Boolean::class.java).invoke(bossBar, bossBarMeta.enabled)

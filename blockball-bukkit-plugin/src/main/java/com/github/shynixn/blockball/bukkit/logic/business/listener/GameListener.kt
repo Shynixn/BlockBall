@@ -2,17 +2,18 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.bukkit.event.BallRayTraceEvent
 import com.github.shynixn.blockball.api.bukkit.event.BallTouchEvent
-import com.github.shynixn.blockball.api.bukkit.event.PacketEvent
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.HubGame
-import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.bukkit.logic.business.extension.hasPermission
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
-import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.github.shynixn.blockball.core.logic.business.extension.sync
+import com.github.shynixn.mcutils.packet.api.InteractionType
+import com.github.shynixn.mcutils.packet.api.PacketInType
+import com.github.shynixn.mcutils.packet.api.event.PacketEvent
+import com.github.shynixn.mcutils.packet.api.packet.PacketInInteractEntity
 import com.google.inject.Inject
 import org.bukkit.block.Sign
 import org.bukkit.entity.Player
@@ -25,7 +26,6 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
-import java.util.function.Function
 
 /**
  * Game Listener for the most important game events.
@@ -41,55 +41,30 @@ class GameListener @Inject constructor(
     private val ballEntityService: BallEntityService
 ) : Listener {
     private val playerCache = HashSet<Player>()
-    private val packetPlayInUseEntityActionFun: Function<Any, Any> by lazy {
-        try {
-            val field = findClazz("net.minecraft.network.protocol.game.PacketPlayInUseEntity")
-                .getDeclaredField("b").accessible(true)
-            Function<Any, Any> { packet ->
-                val data = field.get(packet)
-                val method = data::class.java.getDeclaredMethod("a")
-                method.isAccessible = true
-                method.invoke(data)
-            }
-        } catch (e: Exception) {
-            val field = findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
-                .getDeclaredField("action").accessible(true)
-            Function<Any, Any> { packet ->
-                field.get(packet)
-            }
-        }
-    }
-    private val packetPlayInUseEntityIdField by lazy {
-        try {
-            findClazz("net.minecraft.network.protocol.game.PacketPlayInUseEntity")
-                .getDeclaredField("a").accessible(true)
-        } catch (e: Exception) {
-            findClazz("net.minecraft.server.VERSION.PacketPlayInUseEntity")
-                .getDeclaredField("a").accessible(true)
-        }
-    }
 
     /**
      * Gets called when a packet arrives.
      */
     @EventHandler
     fun onPacketEvent(event: PacketEvent) {
+        if (event.packetType != PacketInType.USEENTITY) {
+            return
+        }
+
         val game = gameService.getGameFromPlayer(event.player)
 
         if (!game.isPresent) {
             return
         }
 
-        val action = packetPlayInUseEntityActionFun.apply(event.packet)
-        val entityId = packetPlayInUseEntityIdField.get(event.packet) as Int
-        val ball = ballEntityService.findBallByEntityId(entityId) ?: return
-        val isPass = action.toString() != "ATTACK"
+        val packet = event.packet as PacketInInteractEntity
+        val ball = ballEntityService.findBallByEntityId(packet.entityId) ?: return
 
         if (game.get().ball != ball) {
             return
         }
 
-        if (isPass) {
+        if (packet.actionType == InteractionType.RIGHT_CLICK) {
             ball.passByPlayer(event.player)
         } else {
             ball.kickByPlayer(event.player)

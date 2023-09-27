@@ -2,14 +2,15 @@ package com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3
 
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
-import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.RayTracingService
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.api.persistence.entity.RaytraceResult
+import com.github.shynixn.blockball.bukkit.logic.business.extension.getCompatibilityServerVersion
 import com.github.shynixn.blockball.core.logic.business.extension.accessible
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.RayTraceResultEntity
+import com.github.shynixn.mcutils.common.Version
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 
@@ -61,7 +62,7 @@ class RayTracingService18R3Impl @Inject constructor(private val pluginProxy: Plu
 
         val resultVector = movingObjectClazz.getDeclaredField("pos").accessible(true).get(movingObjectPosition)
 
-        val resultPosition = if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
+        val resultPosition = if (pluginProxy.getCompatibilityServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
             PositionEntity(
                 position.worldName!!,
                 vector3dClazz.getDeclaredField("x").get(resultVector) as Double,
@@ -96,7 +97,7 @@ class RayTracingService18R3Impl @Inject constructor(private val pluginProxy: Plu
         return Class.forName(
             name.replace(
                 "VERSION",
-                BlockBallApi.resolve(PluginProxy::class.java).getServerVersion().bukkitId
+                BlockBallApi.resolve(PluginProxy::class.java).getCompatibilityServerVersion().bukkitId
             )
         )
     }

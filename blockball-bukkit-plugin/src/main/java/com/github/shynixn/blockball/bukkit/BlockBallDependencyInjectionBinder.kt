@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.bukkit
 
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
-import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
@@ -9,22 +8,17 @@ import com.github.shynixn.blockball.api.persistence.repository.LinkSignRepositor
 import com.github.shynixn.blockball.bukkit.logic.business.service.*
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.Particle113R2ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.RayTracingService113R2Impl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_17_R1.InternalVersionPacket117R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_17_R1.ScreenMessage117R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_18_R1.InternalVersionPacket118R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_18_R2.InternalVersionPacket118R2ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_19_R1.InternalVersionPacket119R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_19_R2.InternalVersionPacket119R2ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_19_R3.InternalVersionPacket119R3ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_20_R1.InternalVersionPacket120R1ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.InternalVersionPacket18R3ServiceImpl
+import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_13_R2.ScreenMessage113R1ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.Particle18R3ServiceImpl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.RayTracingService18R3Impl
 import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3.ScreenMessage18R3ServiceImpl
-import com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_9_R2.InternalVersionPacket19R2ServiceImpl
 import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
 import com.github.shynixn.blockball.core.logic.persistence.repository.LinkSignFileRepository
+import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.packet.api.EntityService
+import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.impl.service.EntityServiceImpl
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
 import org.bukkit.plugin.Plugin
@@ -32,7 +26,10 @@ import org.bukkit.plugin.Plugin
 /**
  * BlockBall dependency locator.
  */
-class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : AbstractModule() {
+class BlockBallDependencyInjectionBinder(
+    private val plugin: BlockBallPlugin,
+    private val packetService: PacketService
+) : AbstractModule() {
 
     /**
      * Configures the business logic tree.
@@ -51,6 +48,8 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
         bind(LinkSignRepository::class.java).to(LinkSignFileRepository::class.java).`in`(Scopes.SINGLETON)
 
         // Services
+        bind(PacketService::class.java).toInstance(packetService)
+        bind(EntityService::class.java).toInstance(EntityServiceImpl())
         bind(EventService::class.java).to(EventServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(VirtualArenaService::class.java).to(VirtualArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -87,8 +86,6 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
             .`in`(Scopes.SINGLETON)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PlaceholderService::class.java).to(PlaceholderServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(PacketService::class.java).to(PacketJavaProtocolServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(ProtocolService::class.java).to(ProtocolServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         when {
             version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)
@@ -100,38 +97,9 @@ class BlockBallDependencyInjectionBinder(private val plugin: BlockBallPlugin) : 
 
         when {
             version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)
-            -> bind(ScreenMessageService::class.java).to(ScreenMessage117R1ServiceImpl::class.java)
+            -> bind(ScreenMessageService::class.java).to(ScreenMessage113R1ServiceImpl::class.java)
                 .`in`(Scopes.SINGLETON)
             else -> bind(ScreenMessageService::class.java).to(ScreenMessage18R3ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-        }
-
-        when {
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_20_R1) ->
-                bind(InternalVersionPacketService::class.java).to(InternalVersionPacket120R1ServiceImpl::class.java)
-                    .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_19_R3) ->
-                bind(InternalVersionPacketService::class.java).to(InternalVersionPacket119R3ServiceImpl::class.java)
-                    .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_19_R2) ->
-                bind(InternalVersionPacketService::class.java).to(InternalVersionPacket119R2ServiceImpl::class.java)
-                    .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_19_R1) ->
-                bind(InternalVersionPacketService::class.java).to(InternalVersionPacket119R1ServiceImpl::class.java)
-                    .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_18_R2) ->
-                bind(InternalVersionPacketService::class.java).to(InternalVersionPacket118R2ServiceImpl::class.java)
-                    .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_18_R1) ->
-                bind(InternalVersionPacketService::class.java).to(InternalVersionPacket118R1ServiceImpl::class.java)
-                    .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1) ->
-                bind(InternalVersionPacketService::class.java).to(InternalVersionPacket117R1ServiceImpl::class.java)
-                    .`in`(Scopes.SINGLETON)
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)
-            -> bind(InternalVersionPacketService::class.java).to(InternalVersionPacket19R2ServiceImpl::class.java)
-                .`in`(Scopes.SINGLETON)
-            else -> bind(InternalVersionPacketService::class.java).to(InternalVersionPacket18R3ServiceImpl::class.java)
                 .`in`(Scopes.SINGLETON)
         }
 
