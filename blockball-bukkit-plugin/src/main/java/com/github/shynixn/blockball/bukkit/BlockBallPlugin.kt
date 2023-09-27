@@ -74,7 +74,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         }
 
         val useLegacy = getResource("plugin.yml")!!.bufferedReader().use { reader ->
-            !reader.readText().contains("api-version")
+            !reader.readText().contains("libraries")
         }
 
         val versions = if (useLegacy) {
