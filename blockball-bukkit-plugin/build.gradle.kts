@@ -31,7 +31,7 @@ tasks.register("pluginJars") {
  */
 tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     dependsOn("shadowJar")
-    from(zipTree(File("/build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
+    from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-legacy-relocate.${extension}"
     relocate("kotlin", "com.github.shynixn.blockball.lib.kotlin")
     relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intelli")
@@ -57,7 +57,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
  */
 tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     dependsOn("relocateLegacyPluginJar")
-    from(zipTree(File("/build/libs/" + (tasks.getByName("relocateLegacyPluginJar") as Jar).archiveName)))
+    from(zipTree(File("./build/libs/" + (tasks.getByName("relocateLegacyPluginJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-legacy.${extension}"
     // destinationDir = File("C:\\temp\\plugins")
     exclude("kotlin/**")
@@ -74,7 +74,7 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
  */
 tasks.register("relocatePluginJar", ShadowJar::class.java) {
     dependsOn("shadowJar")
-    from(zipTree(File("/build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
+    from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-relocate.${extension}"
     relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
@@ -85,7 +85,7 @@ tasks.register("relocatePluginJar", ShadowJar::class.java) {
  */
 tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
-    from(zipTree(File("/build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveName)))
+    from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-latest.${extension}"
    // destinationDir = File("C:\\temp\\plugins")
 
