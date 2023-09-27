@@ -55,7 +55,7 @@ jobs:
           chmod +x gradlew
           wget "https://jitpack.io/com/github/MilkBowl/VaultAPI/1.7/VaultAPI-1.7.jar"
           mvn install:install-file -Dfile=VaultAPI-1.7.jar -DgroupId=net.milkbowlvault -DartifactId=VaultAPI -Dversion=1.7 -Dpackaging=jar
-          ./gradlew build pluginJar
+          ./gradlew build pluginJars
           echo "RELEASE_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_ENV
 
       - name: Create Github Release
@@ -78,24 +78,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/work/BlockBall/BlockBall/blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin-${{ env.RELEASE_VERSION }}.jar
+          asset_path: /home/runner/work/BlockBall/BlockBall/blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin-${{ env.RELEASE_VERSION }}-latest.jar
           asset_name: BlockBall.jar
           asset_content_type: application/jar
 
-      - name: Build Java Application with all flag
-        run: |
-          sed -i "s/###VERSION###/all/g" ./blockball-bukkit-plugin/src/main/java/com/github/shynixn/blockball/bukkit/BlockBallPlugin.kt
-          ./gradlew build pluginJar      
-
-      - name: Upload All Bukkit Release to Github
+      - name: Upload Legacy Bukkit Release to Github
         if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/work/BlockBall/BlockBall/blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin-${{ env.RELEASE_VERSION }}.jar
-          asset_name: BlockBall-All.jar
+          asset_path: /home/runner/work/BlockBall/BlockBall/blockball-bukkit-plugin/build/libs/blockball-bukkit-plugin-${{ env.RELEASE_VERSION }}-legacy.jar
+          asset_name: BlockBall-Legacy.jar
           asset_content_type: application/jar
 
   Documentation:

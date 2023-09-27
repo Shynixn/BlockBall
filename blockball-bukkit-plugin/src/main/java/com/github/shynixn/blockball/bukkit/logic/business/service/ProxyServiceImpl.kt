@@ -2,18 +2,19 @@
 
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
-import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ItemTypeService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.Item
 import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
+import com.github.shynixn.blockball.bukkit.logic.business.extension.*
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
-import com.github.shynixn.blockball.core.logic.business.extension.accessible
+import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.packet.api.EntityService
+import com.github.shynixn.mcutils.packet.api.PacketService
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
@@ -28,16 +29,16 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scoreboard.Scoreboard
 import org.bukkit.util.Vector
 import java.util.*
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.logging.Level
 import java.util.stream.Stream
 import kotlin.streams.asStream
 
 class ProxyServiceImpl @Inject constructor(
     private val pluginProxy: PluginProxy,
-    private val itemTypeService: ItemTypeService
+    private val itemTypeService: ItemTypeService,
+    private val entityService: EntityService,
+    private val packetService : PacketService
 ) : ProxyService {
-
     /**
      * Gets the name of the World the player is in.
      */
@@ -518,7 +519,7 @@ class ProxyServiceImpl @Inject constructor(
         }
 
         try {
-            val packet = if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R1)) {
+            val packet = if (pluginProxy.getCompatibilityServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R1)) {
                 val clazz = Class.forName("net.minecraft.network.chat.IChatBaseComponent\$ChatSerializer")
                 val packetClazz = findClazz("net.minecraft.network.protocol.game.ClientboundSystemChatPacket")
                 val chatBaseComponentClazz = findClazz("net.minecraft.network.chat.IChatBaseComponent")
@@ -533,7 +534,7 @@ class ProxyServiceImpl @Inject constructor(
                     packetClazz.getDeclaredConstructor(chatBaseComponentClazz, Int::class.java)
                         .newInstance(chatComponent, 1)
                 }
-            } else if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
+            } else if (pluginProxy.getCompatibilityServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
                 val clazz = Class.forName("net.minecraft.network.chat.IChatBaseComponent\$ChatSerializer")
                 val packetClazz = findClazz("net.minecraft.network.protocol.game.PacketPlayOutChat")
                 val chatBaseComponentClazz = findClazz("net.minecraft.network.chat.IChatBaseComponent")
@@ -541,7 +542,7 @@ class ProxyServiceImpl @Inject constructor(
                     clazz.getDeclaredMethod("a", String::class.java).invoke(null, chatBuilder.toString())
                 val systemUtilsClazz = findClazz("net.minecraft.SystemUtils")
                 val defaultUUID =
-                    if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_18_R2)) {
+                    if (pluginProxy.getCompatibilityServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_18_R2)) {
                         systemUtilsClazz.getDeclaredField("c").get(null) as UUID
                     } else {
                         systemUtilsClazz.getDeclaredField("b").get(null) as UUID
@@ -562,14 +563,14 @@ class ProxyServiceImpl @Inject constructor(
                     clazz.getDeclaredMethod("a", String::class.java).invoke(null, chatBuilder.toString())
 
                 when {
-                    pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_16_R1) -> {
+                    pluginProxy.getCompatibilityServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_16_R1) -> {
                         val systemUtilsClazz = findClazz("net.minecraft.server.VERSION.SystemUtils")
                         val defaultUUID = systemUtilsClazz.getDeclaredField("b").get(null) as UUID
                         val chatEnumMessage = findClazz("net.minecraft.server.VERSION.ChatMessageType")
                         packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage, UUID::class.java)
                             .newInstance(chatComponent, chatEnumMessage.enumConstants[0], defaultUUID)
                     }
-                    pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_12_R1) -> {
+                    pluginProxy.getCompatibilityServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_12_R1) -> {
                         val chatEnumMessage = findClazz("net.minecraft.server.VERSION.ChatMessageType")
                         packetClazz.getDeclaredConstructor(chatBaseComponentClazz, chatEnumMessage)
                             .newInstance(chatComponent, chatEnumMessage.enumConstants[0])
@@ -665,79 +666,14 @@ class ProxyServiceImpl @Inject constructor(
      * Creates a new entity id.
      */
     override fun createNewEntityId(): Int {
-        return if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_19_R3)) {
-            val atomicInteger = findClazz("net.minecraft.world.entity.Entity")
-                .getDeclaredField("d")
-                .accessible(true)
-                .get(null) as AtomicInteger
-            atomicInteger.incrementAndGet()
-        } else if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_18_R2)) {
-            val atomicInteger = findClazz("net.minecraft.world.entity.Entity")
-                .getDeclaredField("c")
-                .accessible(true)
-                .get(null) as AtomicInteger
-            atomicInteger.incrementAndGet()
-        } else if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
-            val atomicInteger = findClazz("net.minecraft.world.entity.Entity")
-                .getDeclaredField("b")
-                .accessible(true)
-                .get(null) as AtomicInteger
-            atomicInteger.incrementAndGet()
-        } else if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_14_R1)) {
-            val atomicInteger = findClazz("net.minecraft.server.VERSION.Entity")
-                .getDeclaredField("entityCount")
-                .accessible(true)
-                .get(null) as AtomicInteger
-            atomicInteger.incrementAndGet()
-        } else {
-            val entityCountField = findClazz("net.minecraft.server.VERSION.Entity")
-                .getDeclaredField("entityCount")
-                .accessible(true)
-            val intNumber = (entityCountField.get(null) as Int) + 1
-            entityCountField.set(null, intNumber)
-            intNumber
-        }
+        return entityService.createNewEntityId()
     }
 
     /**
      * Sends the given [packet] to the given [player].
      */
     override fun <P> sendPacket(player: P, packet: Any) {
-        val craftPlayerClazz = findClazz("org.bukkit.craftbukkit.VERSION.entity.CraftPlayer")
-        val getHandleMethod = craftPlayerClazz.getDeclaredMethod("getHandle")
-        val nmsPlayer = getHandleMethod.invoke(player)
-
-        if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)) {
-            val nmsPlayerClazz = findClazz("net.minecraft.server.level.EntityPlayer")
-            val playerConnectionField =
-                if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_20_R1)) {
-                    nmsPlayerClazz.getDeclaredField("c")
-                } else {
-                    nmsPlayerClazz.getDeclaredField("b")
-                }
-            playerConnectionField.isAccessible = true
-            val connection = playerConnectionField.get(nmsPlayer)
-
-            val playerConnectionClazz = findClazz("net.minecraft.server.network.PlayerConnection")
-            val packetClazz = findClazz("net.minecraft.network.protocol.Packet")
-
-            if (pluginProxy.getServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_18_R1)) {
-                val sendPacketMethod = playerConnectionClazz.getDeclaredMethod("a", packetClazz)
-                sendPacketMethod.invoke(connection, packet)
-            } else {
-                val sendPacketMethod = playerConnectionClazz.getDeclaredMethod("sendPacket", packetClazz)
-                sendPacketMethod.invoke(connection, packet)
-            }
-        } else {
-            val nmsPlayerClazz = findClazz("net.minecraft.server.VERSION.EntityPlayer")
-            val playerConnectionField = nmsPlayerClazz.getDeclaredField("playerConnection")
-            playerConnectionField.isAccessible = true
-            val connection = playerConnectionField.get(nmsPlayer)
-
-            val playerConnectionClazz = findClazz("net.minecraft.server.VERSION.PlayerConnection")
-            val packetClazz = findClazz("net.minecraft.server.VERSION.Packet")
-            val sendPacketMethod = playerConnectionClazz.getDeclaredMethod("sendPacket", packetClazz)
-            sendPacketMethod.invoke(connection, packet)
-        }
+        require(player is Player)
+        packetService.sendNativePacket(player, packet)
     }
 }

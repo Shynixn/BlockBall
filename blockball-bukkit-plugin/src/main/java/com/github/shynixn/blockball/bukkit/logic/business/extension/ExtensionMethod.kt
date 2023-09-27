@@ -7,9 +7,11 @@ import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
+import com.github.shynixn.mcutils.common.Version
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import org.bukkit.util.Vector
 
 /**
@@ -45,9 +47,13 @@ fun findClazz(name: String): Class<*> {
     return Class.forName(
         name.replace(
             "VERSION",
-            BlockBallApi.resolve(PluginProxy::class.java).getServerVersion().bukkitId
+            (BlockBallApi.resolve(PluginProxy::class.java).getServerVersion() as Version).bukkitId
         )
     )
+}
+
+fun PluginProxy.getCompatibilityServerVersion(): Version {
+    return (this as PluginProxy).getServerVersion() as Version
 }
 
 /**

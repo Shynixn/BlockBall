@@ -3,12 +3,12 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service
 
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
-import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.service.ItemTypeService
 import com.github.shynixn.blockball.api.persistence.entity.Item
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.github.shynixn.blockball.core.logic.persistence.entity.ItemEntity
+import com.github.shynixn.mcutils.common.Version
 import com.google.inject.Inject
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
@@ -89,7 +89,8 @@ class ItemTypeServiceImpl @Inject constructor(private val version: Version) : It
                     )
                     val real = cls.cast(currentMeta)
                     val field = real.javaClass.getDeclaredField("profile")
-                    val newSkinProfile = GameProfile(UUID.randomUUID(), null)
+                    val profileUUID = UUID.randomUUID()
+                    val newSkinProfile = GameProfile(profileUUID, profileUUID.toString().substring(0, 10))
 
                     if (newSkin.contains("textures.minecraft.net")) {
                         if (!newSkin.startsWith("http://")) {

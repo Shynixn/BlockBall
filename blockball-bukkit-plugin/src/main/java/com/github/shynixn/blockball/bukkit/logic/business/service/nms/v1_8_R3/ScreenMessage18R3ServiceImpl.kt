@@ -1,11 +1,12 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3
 
-import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.business.service.ScreenMessageService
 import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.github.shynixn.blockball.bukkit.logic.business.extension.findClazz
+import com.github.shynixn.blockball.bukkit.logic.business.extension.getCompatibilityServerVersion
+import com.github.shynixn.mcutils.common.Version
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import java.util.*
@@ -52,7 +53,7 @@ class ScreenMessage18R3ServiceImpl @Inject constructor(
 
         val finalTitle = title.translateChatColors()
         val finalSubTitle = subTitle.translateChatColors()
-        val version = plugin.getServerVersion()
+        val version = plugin.getCompatibilityServerVersion()
 
         val serializerMethod =
            if (version.isVersionSameOrGreaterThan(Version.VERSION_1_8_R2)) {
@@ -121,7 +122,7 @@ class ScreenMessage18R3ServiceImpl @Inject constructor(
         }
 
         val finalMessage = message.translateChatColors()
-        val version = plugin.getServerVersion()
+        val version = plugin.getCompatibilityServerVersion()
         val chatBaseComponentClazz = findClazz("net.minecraft.server.VERSION.IChatBaseComponent")
         val packetClazz = findClazz("net.minecraft.server.VERSION.PacketPlayOutChat")
 

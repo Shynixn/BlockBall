@@ -3,12 +3,12 @@
 package com.github.shynixn.blockball.bukkit.logic.business.service.nms.v1_8_R3
 
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
-import com.github.shynixn.blockball.api.business.enumeration.Version
 import com.github.shynixn.blockball.api.business.service.LoggingService
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.mcutils.common.Version
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -194,13 +194,6 @@ class Particle18R3ServiceImpl @Inject constructor(
         } catch (e: Exception) {
             Bukkit.getServer().logger.log(Level.WARNING, "Failed to send particle.", e)
         }
-    }
-
-    /**
-     * Finds the version dependent class.
-     */
-    private fun findClazz(name: String): Class<*> {
-        return Class.forName(name.replace("VERSION", version.bukkitId))
     }
 
     private fun isLongDistance(location: Location, players: Array<out Player>): Boolean {

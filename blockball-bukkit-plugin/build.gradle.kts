@@ -1,165 +1,117 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import java.net.URL
-import java.nio.file.Files
-import java.util.*
 
 plugins {
     id("com.github.johnrengelman.shadow") version ("7.0.0")
 }
 
+tasks.withType<Jar> {
+    archiveName = "${baseName}-${version}-raw.${extension}"
+}
+
+/**
+ * Include all blockball-api, blockball-bukkit-api and exclude debugging classes.
+ */
 tasks.withType<ShadowJar> {
     dependsOn("jar")
-    archiveName = "${baseName}-${version}-mojangmapping.${extension}"
+    archiveName = "${baseName}-${version}-shadowjar.${extension}"
+    exclude("DebugProbesKt.bin")
+    exclude("module-info.class")
+}
 
+/**
+ * Create all plugin jar files.
+ */
+tasks.register("pluginJars") {
+    dependsOn("pluginJarLatest")
+    dependsOn("pluginJarLegacy")
+}
+
+/**
+ * Create legacy plugin jar file.
+ */
+tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
+    dependsOn("shadowJar")
+    from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
+    archiveName = "${baseName}-${version}-legacy-relocate.${extension}"
     relocate("kotlin", "com.github.shynixn.blockball.lib.kotlin")
-
     relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intelli")
     relocate("org.jetbrains", "com.github.shynixn.blockball.lib.org.jetbrains")
-    relocate("org.bstats", "com.github.shynixn.blockball.externallib.org.bstats")
+    relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
     relocate("javax.inject", "com.github.shynixn.blockball.lib.javax.inject")
     relocate("javax.annotation", "com.github.shynixn.blockball.lib.javax.annotation")
     relocate("org.checkerframework", "com.github.shynixn.blockball.lib.org.checkerframework")
     relocate("org.aopalliance", "com.github.shynixn.blockball.lib.org.aopalliance")
     relocate("org.slf4j", "com.github.shynixn.blockball.lib.org.slf4j")
-
     relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
     relocate("com.google", "com.github.shynixn.blockball.lib.com.google")
     relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
     relocate("org.apache", "com.github.shynixn.blockball.lib.org.apache")
+    relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
 
-    exclude("DebugProbesKt.bin")
-    exclude("module-info.class")
+    exclude("plugin.yml")
+    rename("plugin-legacy.yml", "plugin.yml")
+}
+
+/**
+ * Create legacy plugin jar file.
+ */
+tasks.register("pluginJarLegacy", ShadowJar::class.java) {
+    dependsOn("relocateLegacyPluginJar")
+    from(zipTree(File("./build/libs/" + (tasks.getByName("relocateLegacyPluginJar") as Jar).archiveName)))
+    archiveName = "${baseName}-${version}-legacy.${extension}"
+    // destinationDir = File("C:\\temp\\plugins")
+    exclude("kotlin/**")
+    exclude("org/**")
+    exclude("javax/**")
+    exclude("com/google/**")
+    exclude("com/github/shynixn/mcutils/**")
+    exclude("plugin-legacy.yml")
 }
 
 
-tasks.register("pluginJar", Exec::class.java) {
-    // Change the output folder of the plugin.
-    // val destinationDir = File("C:/temp/plugins")
-    val destinationDir = File(buildDir, "libs")
-
+/**
+ * Create legacy plugin jar file.
+ */
+tasks.register("relocatePluginJar", ShadowJar::class.java) {
     dependsOn("shadowJar")
-    workingDir = buildDir
-
-    if (!workingDir.exists()) {
-        workingDir.mkdir();
-    }
-
-    val folder = File(workingDir, "mapping")
-
-    if (!folder.exists()) {
-        folder.mkdir()
-    }
-
-    val file = File(folder, "SpecialSources.jar")
-
-    if (!file.exists()) {
-        URL("https://repo.maven.apache.org/maven2/net/md-5/SpecialSource/1.10.0/SpecialSource-1.10.0-shaded.jar").openStream()
-            .use {
-                Files.copy(it, file.toPath())
-            }
-    }
-
-    val shadowJar = tasks.findByName("shadowJar")!! as ShadowJar
-    val sourceJarFile = File(buildDir, "libs/" + shadowJar.archiveName)
-    val archiveName = "${shadowJar.baseName}-${shadowJar.version}.${shadowJar.extension}"
-    val targetJarFile = File(destinationDir, archiveName)
-
-    var obsMapping = createCommand(
-        "1.17.1-R0.1-SNAPSHOT",
-        "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_17_R1",
-        file,
-        shadowJar,
-        sourceJarFile,
-        targetJarFile
-    )
-    obsMapping = "$obsMapping && " + createCommand(
-        "1.18-R0.1-SNAPSHOT",
-        "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_18_R1",
-        file,
-        shadowJar,
-        targetJarFile,
-        targetJarFile
-    )
-    obsMapping = "$obsMapping && " + createCommand(
-        "1.18.2-R0.1-SNAPSHOT",
-        "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_18_R2",
-        file,
-        shadowJar,
-        targetJarFile,
-        targetJarFile
-    )
-    obsMapping = "$obsMapping && " + createCommand(
-        "1.19-R0.1-SNAPSHOT",
-        "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_19_R1",
-        file,
-        shadowJar,
-        targetJarFile,
-        targetJarFile
-    )
-    obsMapping = "$obsMapping && " + createCommand(
-        "1.19.3-R0.1-SNAPSHOT",
-        "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_19_R2",
-        file,
-        shadowJar,
-        targetJarFile,
-        targetJarFile
-    )
-    obsMapping = "$obsMapping && " + createCommand(
-        "1.19.4-R0.1-SNAPSHOT",
-        "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_19_R3",
-        file,
-        shadowJar,
-        targetJarFile,
-        targetJarFile
-    )
-    obsMapping = "$obsMapping && " + createCommand(
-        "1.20.1-R0.1-SNAPSHOT",
-        "com/github/shynixn/blockball/bukkit/logic/business/service/nms/v1_20_R1",
-        file,
-        shadowJar,
-        targetJarFile,
-        targetJarFile
-    )
-
-    if (System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")) {
-        commandLine = listOf("cmd", "/c", obsMapping.replace("\$HOME", "%userprofile%"))
-    } else {
-        commandLine = listOf("sh", "-c", obsMapping)
-    }
+    from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
+    archiveName = "${baseName}-${version}-relocate.${extension}"
+    relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
+    relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
 }
 
-fun createCommand(
-    version: String,
-    include: String,
-    file: File,
-    shadowJar: ShadowJar,
-    sourceJarFile: File,
-    targetJarFile: File
-): String {
-    val obfArchiveName = "${shadowJar.baseName}-${shadowJar.version}-obfuscated.${shadowJar.extension}"
-    val obfJarFile = File(buildDir, "libs/$obfArchiveName")
+/**
+ * Create latest plugin jar file.
+ */
+tasks.register("pluginJarLatest", ShadowJar::class.java) {
+    dependsOn("relocatePluginJar")
+    from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveName)))
+    archiveName = "${baseName}-${version}-latest.${extension}"
+   // destinationDir = File("C:\\temp\\plugins")
 
-    return "java -jar ${file.absolutePath} -i \"$sourceJarFile\" -o \"$obfJarFile\"  -only \"$include\" -m \"\$HOME/.m2/repository/org/spigotmc/minecraft-server/${version}/minecraft-server-${version}-maps-mojang.txt\" --reverse" +
-            "&& java -jar ${file.absolutePath} -i \"$obfJarFile\" -o \"$targetJarFile\"  -only \"$include\" -m \"\$HOME/.m2/repository/org/spigotmc/minecraft-server/${version}/minecraft-server-${version}-maps-spigot.csrg\""
+    exclude("com/github/shynixn/mcutils/**")
+    exclude("org/**")
+    exclude("kotlin/**")
+    exclude("javax/**")
+    exclude("com/google/**")
+    exclude("plugin-legacy.yml")
 }
+
 
 repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi")
     maven("https://repo.codemc.org/repository/maven-public")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven("https://shynixn.github.io/m2/repository/mcutils")
 }
 
 dependencies {
     implementation(project(":blockball-api"))
     implementation(project(":blockball-bukkit-api"))
     implementation(project(":blockball-core"))
-    implementation(project(":blockball-bukkit-plugin:bukkit-nms-117R1"))
-    implementation(project(":blockball-bukkit-plugin:bukkit-nms-118R1"))
-    implementation(project(":blockball-bukkit-plugin:bukkit-nms-118R2"))
-    implementation(project(":blockball-bukkit-plugin:bukkit-nms-119R1"))
-    implementation(project(":blockball-bukkit-plugin:bukkit-nms-119R2"))
-    implementation(project(":blockball-bukkit-plugin:bukkit-nms-119R3"))
-    implementation(project(":blockball-bukkit-plugin:bukkit-nms-120R1"))
+
+    implementation("com.github.shynixn.mcutils:common:1.0.23")
+    implementation("com.github.shynixn.mcutils:packet:1.0.47")
 
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
     implementation("org.slf4j:slf4j-jdk14:1.7.25")

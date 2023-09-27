@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.api.business.proxy
 
-import com.github.shynixn.blockball.api.business.enumeration.Version
-
 /**
  * Created by Shynixn 2018.
  * <p>
@@ -38,7 +36,7 @@ interface PluginProxy {
     /**
      * Gets the server version this plugin is currently running on.
      */
-    fun getServerVersion(): Version
+    fun getServerVersion(): Any
 
     /**
      * Sends a console message from this plugin.
