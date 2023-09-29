@@ -38,7 +38,13 @@ class GameExecutionServiceImpl @Inject constructor(private val proxyService: Pro
      * Applies points to the belonging teams when the given [player] dies in the given [game].
      */
     override fun <P, G : Game> applyDeathPoints(game: G, player: P) {
-        val team = game.ingamePlayersStorage[player as Any]!!.team!!
+        require(player is Any)
+
+        if (!game.ingamePlayersStorage.containsKey(player)) {
+            return
+        }
+
+        val team = game.ingamePlayersStorage[player]!!.team
 
         if (team == Team.RED) {
             game.blueScore += game.arena.meta.blueTeamMeta.pointsPerEnemyDeath
@@ -51,7 +57,13 @@ class GameExecutionServiceImpl @Inject constructor(private val proxyService: Pro
      * Lets the given [player] in the given [game] respawn at the specified spawnpoint.
      */
     override fun <P, G : Game> respawn(game: G, player: P) {
-        val team = game.ingamePlayersStorage[player as Any]!!.goalTeam!!
+        require(player is Any)
+
+        if (!game.ingamePlayersStorage.containsKey(player)) {
+            return
+        }
+
+        val team = game.ingamePlayersStorage[player]!!.goalTeam
 
         val teamMeta = if (team == Team.RED) {
             game.arena.meta.redTeamMeta
