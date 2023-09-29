@@ -173,7 +173,7 @@ class BallHitboxEntity(val entityId: Int) {
             val visiblePosition = position.clone().add(0.0, -0.5, 0.0).add(0.0, meta.hitBoxRelocation, 0.0)
             for (player in players) {
                 require(player is Player)
-                packetService.sendPacketOutTeleport(player, PacketOutEntityTeleport().also {
+                packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
                     it.entityId = entityId
                     it.target = visiblePosition.toLocation()
                 })
@@ -308,7 +308,7 @@ class BallHitboxEntity(val entityId: Int) {
 
         for (player in players) {
             require(player is Player)
-            packetService.sendPacketOutVelocity(player, PacketOutEntityVelocity().also {
+            packetService.sendPacketOutEntityVelocity(player, PacketOutEntityVelocity().also {
                 it.entityId = entityId
                 it.target = motion.toVector()
             })
@@ -320,7 +320,7 @@ class BallHitboxEntity(val entityId: Int) {
         val visiblePosition = position.clone().add(0.0, -0.5, 0.0).add(0.0, meta.hitBoxRelocation, 0.0)
         for (player in players) {
             require(player is Player)
-            packetService.sendPacketOutTeleport(player, PacketOutEntityTeleport().also {
+            packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
                 it.entityId = entityId
                 it.target = visiblePosition.toLocation()
             })
@@ -345,7 +345,7 @@ class BallHitboxEntity(val entityId: Int) {
         val visiblePosition = position.clone().add(0.0, -0.5, 0.0).add(0.0, meta.hitBoxRelocation, 0.0)
         for (player in players) {
             require(player is Player)
-            packetService.sendPacketOutTeleport(player, PacketOutEntityTeleport().also {
+            packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
                 it.entityId = entityId
                 it.target = visiblePosition.toLocation()
             })

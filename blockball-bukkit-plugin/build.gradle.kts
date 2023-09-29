@@ -111,7 +111,7 @@ dependencies {
     implementation(project(":blockball-core"))
 
     implementation("com.github.shynixn.mcutils:common:1.0.23")
-    implementation("com.github.shynixn.mcutils:packet:1.0.47")
+    implementation("com.github.shynixn.mcutils:packet:1.0.52")
 
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
     implementation("org.slf4j:slf4j-jdk14:1.7.25")

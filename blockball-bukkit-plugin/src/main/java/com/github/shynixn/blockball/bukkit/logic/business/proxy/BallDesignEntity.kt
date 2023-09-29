@@ -109,7 +109,7 @@ class BallDesignEntity(val entityId: Int) {
 
         for (player in players) {
             require(player is Player)
-            packetService.sendPacketOutTeleport(player, PacketOutEntityTeleport().also {
+            packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
                 it.entityId = entityId
                 it.target = position.toLocation()
             })
