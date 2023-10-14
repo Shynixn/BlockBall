@@ -70,6 +70,7 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     TEAM_NAME(MenuPageKey.TEAMMETA, "name"),
     TEAM_PREFIX(MenuPageKey.TEAMMETA, "prefix"),
     TEAM_SPAWNPOINT(MenuPageKey.TEAMMETA, "spawnpoint"),
+    TEAM_LOBBY(MenuPageKey.TEAMMETA, "lobby"),
     TEAM_MINAMOUNT(MenuPageKey.TEAMMETA, "mina"),
     TEAM_MAXAMOUNT(MenuPageKey.TEAMMETA, "maxa"),
     TEAM_ARMOR(MenuPageKey.TEAMMETA, "armor"),

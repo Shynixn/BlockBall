@@ -173,7 +173,7 @@ Properties
 * Walking Speed: A highly requested option to allow playing on large fields by changing the players default speed value.
 * Spawnpoint: Optional spawnpoint for the team if you do not want the players to join at the ball spawnpoint.
 * Textbook: All team specific messages which can be found `here <textbook.html>`_ .
-
+* Lobby-Spawnpoint: Optional team lobby spawnpoint when you join this team.
 
 
 
