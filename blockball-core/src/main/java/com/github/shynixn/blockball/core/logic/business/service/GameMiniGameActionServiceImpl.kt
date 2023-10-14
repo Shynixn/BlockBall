@@ -434,6 +434,12 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             )
         }
 
+        if (team == Team.RED && game.arena.meta.redTeamMeta.lobbySpawnpoint != null) {
+            proxyService.teleport(player, game.arena.meta.redTeamMeta.lobbySpawnpoint)
+        } else if (team == Team.BLUE && game.arena.meta.blueTeamMeta.lobbySpawnpoint != null) {
+            proxyService.teleport(player, game.arena.meta.blueTeamMeta.lobbySpawnpoint)
+        }
+
         val players = if (team == Team.RED) {
             game.redTeam
         } else {
