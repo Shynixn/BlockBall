@@ -3,37 +3,24 @@
 package com.github.shynixn.blockball.bukkit.logic.business.proxy
 
 import com.github.shynixn.blockball.api.business.enumeration.BallSize
-import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
-import com.github.shynixn.blockball.api.business.service.ItemTypeService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toLocation
-import com.github.shynixn.blockball.bukkit.logic.business.extension.toVector
-import com.github.shynixn.blockball.core.logic.persistence.entity.ItemEntity
 import com.github.shynixn.blockball.core.logic.persistence.entity.PositionEntity
 import com.github.shynixn.mcutils.common.Vector3d
+import com.github.shynixn.mcutils.common.item.Item
+import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.toEulerAngle
-import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.ArmorSlotType
 import com.github.shynixn.mcutils.packet.api.EntityType
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.packet.*
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
+import java.nio.charset.Charset
+import java.util.*
 
 class BallDesignEntity(val entityId: Int) {
-    private val helmetItemStack by lazy {
-        val item = ItemEntity {
-            this.type = MaterialType.SKULL_ITEM.MinecraftNumericId.toString()
-            this.dataValue = 3
-            this.skin = ball.meta.skin
-            this.nbt = ball.meta.itemNbt
-        }
-
-        itemService.toItemStack<Any>(item)
-    }
-
     /**
      * Rotation of the design in euler angles.
      */
@@ -52,7 +39,7 @@ class BallDesignEntity(val entityId: Int) {
     /**
      * Item service dependency.
      */
-    lateinit var itemService: ItemTypeService
+    lateinit var itemService: ItemService
 
     /**
      * Reference.
@@ -71,9 +58,21 @@ class BallDesignEntity(val entityId: Int) {
         })
 
         if (!ball.meta.isSlimeVisible) {
+            val encodingSkinUrl = Base64.getEncoder().encodeToString(
+                "{\"textures\":{\"SKIN\":{\"url\":\"${ball.meta.skin}\"}}}".toByteArray(
+                    Charset.forName("UTF-8")
+                )
+            )
+            val item = Item().also {
+                it.typeName = "PLAYER_HEAD,397"
+                it.durability = 3
+                it.nbt = "{SkullOwner:{Id:[I;1,1,1,1],Name:\"FootBall\",Properties:{textures:[{Value:\"${encodingSkinUrl}\"}]}}}"
+            }
+            val stack = itemService.toItemStack(item)
+
             packetService.sendPacketOutEntityEquipment(player, PacketOutEntityEquipment().also {
                 it.entityId = entityId
-                it.items = listOf(Pair(ArmorSlotType.HELMET, helmetItemStack as ItemStack))
+                it.items = listOf(Pair(ArmorSlotType.HELMET, stack))
             })
         }
 

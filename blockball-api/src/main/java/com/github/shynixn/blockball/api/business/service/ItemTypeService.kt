@@ -39,14 +39,4 @@ interface ItemTypeService {
      * Tries to find the data value of the given hint.
      */
     fun findItemDataValue(sourceHint: Any): Int
-
-    /**
-     * Converts the given item to an ItemStack.
-     */
-    fun <I> toItemStack(item: Item): I
-
-    /**
-     * Converts the given itemStack ot an item.
-     */
-    fun <I> toItem(itemStack: I): Item
 }

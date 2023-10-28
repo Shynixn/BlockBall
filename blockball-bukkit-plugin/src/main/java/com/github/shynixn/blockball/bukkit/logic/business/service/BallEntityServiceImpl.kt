@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallCrossPlatfor
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallDesignEntity
 import com.github.shynixn.blockball.bukkit.logic.business.proxy.BallHitboxEntity
 import com.github.shynixn.blockball.core.logic.persistence.event.BallSpawnEventEntity
+import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.google.inject.Inject
 
@@ -14,7 +15,7 @@ class BallEntityServiceImpl @Inject constructor(
     private val proxyService: ProxyService,
     private val packetService: PacketService,
     private val concurrencyService: ConcurrencyService,
-    private val itemTypeService: ItemTypeService,
+    private val itemService: ItemService,
     private val rayTracingService: RayTracingService,
     private val loggingService: LoggingService,
     private val eventService: EventService
@@ -51,7 +52,7 @@ class BallEntityServiceImpl @Inject constructor(
         val ballDesignEntity = BallDesignEntity(proxyService.createNewEntityId())
         ballDesignEntity.proxyService = proxyService
         ballDesignEntity.packetService = packetService
-        ballDesignEntity.itemService = itemTypeService
+        ballDesignEntity.itemService = itemService
 
         val ball = BallCrossPlatformProxy(meta, ballDesignEntity, ballHitBoxEntity)
         ballDesignEntity.ball = ball
