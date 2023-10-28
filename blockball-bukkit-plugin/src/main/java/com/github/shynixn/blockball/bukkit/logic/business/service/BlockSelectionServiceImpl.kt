@@ -11,8 +11,10 @@ import com.github.shynixn.blockball.core.logic.business.extension.cast
 import com.github.shynixn.blockball.core.logic.business.extension.stripChatColors
 import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.github.shynixn.blockball.core.logic.persistence.entity.ItemEntity
+import com.github.shynixn.mcutils.common.translateChatColors
 import com.google.inject.Inject
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -201,12 +203,11 @@ class BlockSelectionServiceImpl @Inject constructor(
             }
         }
 
-        val item = ItemEntity {
-            this.type = MaterialType.GOLDEN_AXE.MinecraftNumericId.toString()
-            this.displayName = axeName
-        }
-
-        player.inventory.addItem(itemTypeService.toItemStack(item))
+        val itemStack = ItemStack(itemTypeService.findItemType<Material>(MaterialType.GOLDEN_AXE.MinecraftNumericId.toString()))
+        val meta = itemStack.itemMeta!!
+        meta.setDisplayName(axeName.translateChatColors())
+        itemStack.itemMeta = meta
+        player.inventory.addItem(itemStack)
         player.sendMessage(prefix + "Take a look into your inventory. Use this golden axe for selection.")
     }
 

@@ -8,7 +8,6 @@ import com.github.shynixn.blockball.api.business.service.ItemTypeService
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.core.logic.persistence.entity.ItemEntity
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -157,9 +156,7 @@ class Particle113R2ServiceImpl @Inject constructor(
                         )
                     }
                     ItemStack::class.java -> {
-                        val itemStack =
-                            itemTypeService.toItemStack<ItemStack>(ItemEntity(particle.materialName!!, particle.data))
-
+                        val itemStack = ItemStack(itemTypeService.findItemType(particle.materialName!!), 1, particle.data.toShort())
                         player.spawnParticle(
                             bukkitType,
                             location,

@@ -16,6 +16,8 @@ import com.github.shynixn.blockball.core.logic.business.service.*
 import com.github.shynixn.blockball.core.logic.persistence.repository.ArenaFileRepository
 import com.github.shynixn.blockball.core.logic.persistence.repository.LinkSignFileRepository
 import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.common.item.ItemService
+import com.github.shynixn.mcutils.common.item.ItemServiceImpl
 import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.impl.service.EntityServiceImpl
@@ -63,6 +65,8 @@ class BlockBallDependencyInjectionBinder(
         bind(GameHubGameActionService::class.java).to(GameHubGameActionServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameMiniGameActionService::class.java).to(GameMiniGameActionServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameBungeeCordGameActionService::class.java).to(GameBungeeCordGameActionServiceImpl::class.java)
+            .`in`(Scopes.SINGLETON)
+        bind(ItemService::class.java).to(ItemServiceImpl::class.java)
             .`in`(Scopes.SINGLETON)
         bind(GameSoccerService::class.java).to(GameSoccerServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(RightclickManageService::class.java).to(RightclickManageServiceImpl::class.java).`in`(Scopes.SINGLETON)
