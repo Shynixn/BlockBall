@@ -64,8 +64,8 @@ class BallDesignEntity(val entityId: Int) {
                 )
             )
             val item = Item().also {
-                it.typeName = "PLAYER_HEAD,397"
-                it.durability = 3
+                it.typeName = ball.meta.itemType
+                it.durability = ball.meta.itemDamage
             }
 
             if (ball.meta.itemNbt != null && !ball.meta.itemNbt.isNullOrEmpty()) {
