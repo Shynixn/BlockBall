@@ -44,11 +44,6 @@ interface PluginProxy {
     fun sendConsoleMessage(message: String)
 
     /**
-     * Sets the motd of the server.
-     */
-    fun setMotd(message: String)
-
-    /**
      * Shutdowns the server.
      */
     fun shutdownServer()

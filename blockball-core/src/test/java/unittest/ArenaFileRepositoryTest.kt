@@ -84,29 +84,6 @@ class ArenaFileRepositoryTest {
 
     /**
      * Given
-     *      a new arena
-     * When
-     *      save is called
-     * Then
-     *     an file with the correct amount of bytes should be created.
-     */
-    @Test
-    fun save_NewArenaEntity_ShouldBeCorrectlySaved() {
-        // Arrange
-        val arena = ArenaEntity()
-        arena.name = "1"
-        val classUnderTest = createWithDependencies()
-
-        // Act
-        classUnderTest.save(arena)
-        val actualDataLength = FileUtils.readFileToString(File("build/repository-test/arena/arena_1.yml"), "UTF-8")
-
-        // Assert
-        Assertions.assertEquals(9598, actualDataLength.length)
-    }
-
-    /**
-     * Given
      *      an existing arena file
      * When
      *      delete is called

@@ -274,29 +274,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     }
 
     /**
-     * Sets the motd of the server.
-     */
-    override fun setMotd(message: String) {
-        val builder = java.lang.StringBuilder("[")
-        builder.append((message.replace("[", "").replace("]", "")))
-        builder.append(ChatColor.RESET.toString())
-        builder.append("]")
-
-        val minecraftServerClazz = try {
-            findClazz("net.minecraft.server.MinecraftServer")
-        } catch (e: Exception) {
-            findClazz("net.minecraft.server.VERSION.MinecraftServer")
-        }
-
-        val craftServerClazz = findClazz("org.bukkit.craftbukkit.VERSION.CraftServer")
-        val setModtMethod = minecraftServerClazz.getDeclaredMethod("setMotd", String::class.java)
-        val getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")
-
-        val console = getServerConsoleMethod.invoke(Bukkit.getServer())
-        setModtMethod.invoke(console, builder.toString().translateChatColors())
-    }
-
-    /**
      * Shutdowns the server.
      */
     override fun shutdownServer() {

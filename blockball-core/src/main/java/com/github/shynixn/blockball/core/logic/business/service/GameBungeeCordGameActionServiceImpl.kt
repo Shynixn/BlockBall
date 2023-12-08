@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.core.logic.business.service
 
+import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.BungeeCordService
 import com.github.shynixn.blockball.api.business.service.ConcurrencyService
@@ -7,6 +8,7 @@ import com.github.shynixn.blockball.api.business.service.GameBungeeCordGameActio
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
 import com.github.shynixn.blockball.core.logic.business.extension.sync
+import com.github.shynixn.blockball.core.logic.business.extension.translateChatColors
 import com.google.inject.Inject
 
 /**
@@ -47,7 +49,7 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(
      * Closes the given game and all underlying resources.
      */
     override fun closeGame(game: BungeeCordGame) {
-        plugin.setMotd(bungeeCordService.bungeeCordConfiguration.restartingMotd)
+        setMotd(game, bungeeCordService.bungeeCordConfiguration.restartingMotd)
 
         if (!plugin.isEnabled()) {
             return
@@ -80,9 +82,17 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(
         }
 
         if (game.playing) {
-            plugin.setMotd(bungeeCordService.bungeeCordConfiguration.inGameMotd)
+            setMotd(game, bungeeCordService.bungeeCordConfiguration.inGameMotd)
         } else {
-            plugin.setMotd(bungeeCordService.bungeeCordConfiguration.waitingForPlayersMotd)
+            setMotd(game, bungeeCordService.bungeeCordConfiguration.waitingForPlayersMotd)
         }
+    }
+
+    private fun setMotd(game: BungeeCordGame, message: String) {
+        val builder = java.lang.StringBuilder("[")
+        builder.append((message.replace("[", "").replace("]", "")))
+        builder.append(ChatColor.RESET.toString())
+        builder.append("]")
+        game.modt = builder.toString().translateChatColors()
     }
 }

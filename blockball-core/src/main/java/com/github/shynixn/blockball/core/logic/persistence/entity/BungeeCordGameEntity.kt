@@ -31,7 +31,10 @@ import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
  * SOFTWARE.
  */
 class BungeeCordGameEntity(
-        /**
-         *  Arena of the game.
-         */
-        override val arena: Arena) : MiniGameEntity(arena), BungeeCordGame
+    /**
+     *  Arena of the game.
+     */
+    override val arena: Arena
+) : MiniGameEntity(arena), BungeeCordGame {
+    override var modt: String = ""
+}
