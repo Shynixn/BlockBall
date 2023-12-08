@@ -49,6 +49,18 @@ class BallMetaEntity(
     override var itemNbt: String? = ""
 
     /**
+     * Item Type being used.
+     */
+    @YamlSerialize(orderNumber = 2, value = "item-type")
+    override var itemType: String = "PLAYER_HEAD,397"
+
+    /**
+     * Item Damage.
+     */
+    @YamlSerialize(orderNumber = 2, value = "item-damage")
+    override var itemDamage: Int = 3
+
+    /**
      * If set to true, the slime is visible instead of the ball.
      */
     @YamlSerialize(orderNumber = 3, value = "slime-visible")

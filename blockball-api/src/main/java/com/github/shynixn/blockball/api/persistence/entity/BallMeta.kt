@@ -18,6 +18,16 @@ interface BallMeta {
     var itemNbt: String?
 
     /**
+     * Item Type being used.
+     */
+    var itemType : String
+
+    /**
+     * Item Damage.
+     */
+    var itemDamage: Int
+
+    /**
      * Is the rightclick passing the ball enabled?
      */
     var enabledPass: Boolean
