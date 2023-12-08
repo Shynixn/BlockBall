@@ -32,7 +32,7 @@ interface ScreenMessageService {
      * Sets the [title] of the given [player] [P] for the amount of [stay] ticks. Optionally shows a [subTitle] and displays
      * a [fadeIn] and [fadeOut] effect in ticks.
      */
-    fun <P> setTitle(player: P, title: String, subTitle: String = "", fadeIn: Int = 20, stay: Int = 60, fadeOut: Int = 20)
+    fun <P> setTitle(player: P, title: String, subTitle: String = "", fadeIn: Int, stay: Int, fadeOut: Int)
 
     /**
      * Sets the [message] for the given [player] at the actionbar.

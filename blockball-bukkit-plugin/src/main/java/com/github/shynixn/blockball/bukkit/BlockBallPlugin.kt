@@ -14,7 +14,7 @@ import com.github.shynixn.blockball.core.logic.business.extension.translateChatC
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService
-import com.github.shynixn.mcutils.packet.impl.PacketServiceImpl
+import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
 import com.google.inject.Guice
 import com.google.inject.Injector
 import org.apache.commons.io.IOUtils
@@ -271,29 +271,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         this.serverVersion = Version.VERSION_UNKNOWN
 
         return this.serverVersion!!
-    }
-
-    /**
-     * Sets the motd of the server.
-     */
-    override fun setMotd(message: String) {
-        val builder = java.lang.StringBuilder("[")
-        builder.append((message.replace("[", "").replace("]", "")))
-        builder.append(ChatColor.RESET.toString())
-        builder.append("]")
-
-        val minecraftServerClazz = try {
-            findClazz("net.minecraft.server.MinecraftServer")
-        } catch (e: Exception) {
-            findClazz("net.minecraft.server.VERSION.MinecraftServer")
-        }
-
-        val craftServerClazz = findClazz("org.bukkit.craftbukkit.VERSION.CraftServer")
-        val setModtMethod = minecraftServerClazz.getDeclaredMethod("setMotd", String::class.java)
-        val getServerConsoleMethod = craftServerClazz.getDeclaredMethod("getServer")
-
-        val console = getServerConsoleMethod.invoke(Bukkit.getServer())
-        setModtMethod.invoke(console, builder.toString().translateChatColors())
     }
 
     /**

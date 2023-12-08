@@ -207,7 +207,10 @@ class GameSoccerServiceImpl @Inject constructor(
             screenMessageService.setTitle(
                 p,
                 placeholderService.replacePlaceHolders(scoreMessageTitle, game, scoreTeamMeta),
-                placeholderService.replacePlaceHolders(scoreMessageSubTitle, game, scoreTeamMeta)
+                placeholderService.replacePlaceHolders(scoreMessageSubTitle, game, scoreTeamMeta),
+                teamMeta.scoreMessageFadeIn,
+                teamMeta.scoreMessageStay,
+                teamMeta.scoreMessageFadeOut
             )
         }
     }
@@ -312,7 +315,10 @@ class GameSoccerServiceImpl @Inject constructor(
             screenMessageService.setTitle(
                 p,
                 placeholderService.replacePlaceHolders(winMessageTitle, game),
-                placeholderService.replacePlaceHolders(winMessageSubTitle, game)
+                placeholderService.replacePlaceHolders(winMessageSubTitle, game),
+                teamMeta.winMessageFadeIn,
+                teamMeta.winMessageStay,
+                teamMeta.winMessageFadeOut,
             )
         }
 

@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.bukkit.logic.business.listener
 
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
 import com.github.shynixn.blockball.bukkit.logic.business.extension.toPosition
 import com.github.shynixn.blockball.core.logic.business.extension.sync
 import com.google.inject.Inject
@@ -11,6 +12,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.server.ServerListPingEvent
 
 /**
  * Created by Shynixn 2018.
@@ -63,6 +65,17 @@ class BungeeCordgameListener @Inject constructor(
                         event.player.kickPlayer(game.arena.meta.bungeeCordMeta.kickMessage)
                     }
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    fun onPingServerEven(event: ServerListPingEvent) {
+        val game = gameService.getAllGames().find { p -> p.arena.gameType == GameType.BUNGEE }
+
+        if (game != null && game is BungeeCordGame) {
+            if (game.modt.isNotBlank()) {
+                event.motd = game.modt
             }
         }
     }

@@ -116,12 +116,6 @@ class BlockBallApiTest {
         }
 
         /**
-         * Sets the motd of the server.
-         */
-        override fun setMotd(message: String) {
-        }
-
-        /**
          * Shutdowns the server.
          */
         override fun shutdownServer() {

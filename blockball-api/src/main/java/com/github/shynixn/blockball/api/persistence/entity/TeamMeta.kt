@@ -46,17 +46,35 @@ interface TeamMeta {
     /** Subtitle of the message getting played when a player scores a goal. */
     var scoreMessageSubTitle: String
 
+    var scoreMessageFadeIn : Int
+
+    var scoreMessageStay : Int
+
+    var scoreMessageFadeOut : Int
+
     /** Title of the message getting played when this team wins a match. */
     var winMessageTitle: String
 
     /** Subtitle of the message getting played when this team wins a match. */
     var winMessageSubTitle: String
 
+    var winMessageFadeIn : Int
+
+    var winMessageStay : Int
+
+    var winMessageFadeOut : Int
+
     /** Title of the message getting played when the match ends in a draw.*/
     var drawMessageTitle: String
 
     /** Subtitle of the message getting played when the match ends in a draw. */
     var drawMessageSubTitle: String
+
+    var drawMessageFadeIn : Int
+
+    var drawMessageStay : Int
+
+    var drawMessageFadeOut : Int
 
     /** Message getting played when a player joins a match.*/
     var joinMessage: String

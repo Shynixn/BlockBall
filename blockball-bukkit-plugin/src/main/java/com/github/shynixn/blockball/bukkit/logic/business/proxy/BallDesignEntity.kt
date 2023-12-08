@@ -66,8 +66,15 @@ class BallDesignEntity(val entityId: Int) {
             val item = Item().also {
                 it.typeName = "PLAYER_HEAD,397"
                 it.durability = 3
-                it.nbt = "{SkullOwner:{Id:[I;1,1,1,1],Name:\"FootBall\",Properties:{textures:[{Value:\"${encodingSkinUrl}\"}]}}}"
             }
+
+            if (ball.meta.itemNbt != null && !ball.meta.itemNbt.isNullOrEmpty()) {
+                item.nbt = ball.meta.itemNbt
+            } else {
+                item.nbt =
+                    "{SkullOwner:{Id:[I;1,1,1,1],Name:\"FootBall\",Properties:{textures:[{Value:\"${encodingSkinUrl}\"}]}}}"
+            }
+
             val stack = itemService.toItemStack(item)
 
             packetService.sendPacketOutEntityEquipment(player, PacketOutEntityEquipment().also {
