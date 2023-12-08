@@ -79,6 +79,28 @@ class TeamMetaEntity(
     /** Inventory this team is getting when playing. */
     @YamlSerialize(orderNumber = 9, value = "inventory", customserializer = ItemStackSerializer::class)
     override var inventoryContents: Array<Any?> = arrayOfNulls(36)
+
+    @YamlSerialize(orderNumber = 12, value = "score-message-fadein")
+    override var scoreMessageFadeIn: Int = 20
+    @YamlSerialize(orderNumber = 12, value = "score-message-stay")
+    override var scoreMessageStay: Int = 60
+    @YamlSerialize(orderNumber = 12, value = "score-message-fadeout")
+    override var scoreMessageFadeOut: Int = 20
+
+    @YamlSerialize(orderNumber = 14, value = "win-message-fadein")
+    override var winMessageFadeIn: Int = 20
+    @YamlSerialize(orderNumber = 14, value = "win-message-stay")
+    override var winMessageStay: Int = 60
+    @YamlSerialize(orderNumber = 14, value = "win-message-fadeout")
+    override var winMessageFadeOut: Int = 20
+
+    @YamlSerialize(orderNumber = 16, value = "draw-message-fadein")
+    override var drawMessageFadeIn: Int = 20
+    @YamlSerialize(orderNumber = 16, value = "draw-message-stay")
+    override var drawMessageStay: Int = 60
+    @YamlSerialize(orderNumber = 16, value = "draw-message-fadeout")
+    override var drawMessageFadeOut: Int = 20
+
     /** Spawnpoint of the team inside of the arena. */
     @YamlSerialize(orderNumber = 6, value = "spawnpoint", implementation = PositionEntity::class)
     override var spawnpoint: Position? = null

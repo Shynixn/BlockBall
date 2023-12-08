@@ -14,7 +14,7 @@ import com.github.shynixn.blockball.core.logic.business.extension.translateChatC
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService
-import com.github.shynixn.mcutils.packet.impl.PacketServiceImpl
+import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
 import com.google.inject.Guice
 import com.google.inject.Injector
 import org.apache.commons.io.IOUtils
