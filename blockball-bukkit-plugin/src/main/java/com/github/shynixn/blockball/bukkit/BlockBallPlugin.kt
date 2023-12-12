@@ -98,10 +98,11 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
                 Version.VERSION_1_19_R3,
                 Version.VERSION_1_20_R1,
                 Version.VERSION_1_20_R2,
+                Version.VERSION_1_20_R3,
             )
         } else {
             arrayOf(
-                Version.VERSION_1_20_R2,
+                Version.VERSION_1_20_R3,
             )
         }
 
