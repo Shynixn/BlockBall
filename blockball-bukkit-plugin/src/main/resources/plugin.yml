@@ -1,5 +1,5 @@
 name: BlockBall
-version: 6.37.1
+version: 6.38.0
 author: Shynixn
 website: https://www.spigotmc.org/members/shynixn.63455/
 main: com.github.shynixn.blockball.bukkit.BlockBallPlugin
@@ -7,6 +7,7 @@ softdepend: [WorldEdit, BossBarAPI, PlaceholderAPI, Vault]
 libraries:
    - 'org.slf4j:slf4j-jdk14:1.7.25'
    - 'com.google.inject:guice:5.0.1'
+   - 'aopalliance:aopalliance:1.0'
    - 'commons-io:commons-io:2.6'
    - 'com.google.code.gson:gson:2.8.6'
    - 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.32'

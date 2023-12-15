@@ -110,8 +110,8 @@ dependencies {
     implementation(project(":blockball-bukkit-api"))
     implementation(project(":blockball-core"))
 
-    implementation("com.github.shynixn.mcutils:common:1.0.40")
-    implementation("com.github.shynixn.mcutils:packet:1.0.61")
+    implementation("com.github.shynixn.mcutils:common:1.0.41")
+    implementation("com.github.shynixn.mcutils:packet:1.0.65")
 
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
     implementation("org.slf4j:slf4j-jdk14:1.7.25")
