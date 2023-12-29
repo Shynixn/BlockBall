@@ -1,14 +1,12 @@
-FROM ubuntu:latest
+FROM ghcr.io/shynixn/actions/sphinx-rdt-wiki-action-base:main
 
-RUN apt-get update && apt-get install python3-pip -y && apt-get install python3-setuptools -y \
-    && pip3 install https://github.com/Shynixn/sphinx_rtd_theme/releases/download/C1.0/sphinx_rtd_theme.zip  \
-    && pip3 install sphinx==6.2.1 && pip3 install sphinx-autobuild
+RUN apt-get update && apt install curl -y \
+    && curl -sL deb.nodesource.com/setup_12.x | bash - \
+    && apt install nodejs -y \
+    && npm install --global http-server
 
-WORKDIR /app
+COPY . /tmp
 
-RUN apt install nodejs npm -y && npm install --global http-server
+RUN python3 -msphinx -M html /tmp/source /tmp/site
 
-COPY source /app/source
-RUN sphinx-build -b html /app/source/ /app/build/html
-
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["sh","-c","http-server /tmp/site/html"]
