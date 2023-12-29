@@ -102,9 +102,4 @@ Uses the name of the current team of the player                          %blockb
 Uses the prefix (default color) of the current team of the player        %blockball_<teamcolor>_<id>%
 Uses the current amount of players in the current team of the player     %blockball_<players>_<id>%
 Uses the max amount of players in the current team of the player         %blockball_<maxplayers>_<id>%
-Uses the winrate of the player across all played games                   %blockball_<winrate>%
-Uses the amount of played games of the player across all games           %blockball_<playedgames>%
-Uses the goalrate of the player across all played games                  %blockball_<goalrate>%
-Uses the amount of scored goals of the player across all games           %blockball_<goals>%
-Uses the amount of wins of the player across all games                   %blockball_<wins>%
 ======================================================================   =======
