@@ -95,7 +95,7 @@ jobs:
 
   Wiki:
     runs-on: ubuntu-latest
-    if: "contains(github.ref, 'main')"
+    if: "contains(github.ref, 'master')"
     steps:
       - uses: actions/checkout@v2
       - name: Create Wiki

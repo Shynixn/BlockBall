@@ -47,6 +47,10 @@ object BlockBallApi {
      * Throws a [IllegalArgumentException] if the service could not be found.
      */
     fun <S> resolve(service: Class<S>): S {
+        if (plugin == null) {
+            throw IllegalArgumentException("The BlockBall plugin has not been initialized yet.")
+        }
+
         return plugin!!.resolve(service)
     }
 
@@ -55,6 +59,10 @@ object BlockBallApi {
      * Throws a [IllegalArgumentException] if the entity could not be found.
      */
     fun <E> create(entity: Class<E>): E {
+        if (plugin == null) {
+            throw IllegalArgumentException("The BlockBall plugin has not been initialized yet.")
+        }
+
         return plugin!!.create(entity)
     }
 }
