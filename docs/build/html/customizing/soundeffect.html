@@ -5,11 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Soundeffect &mdash; BlockBall 6.26.0 documentation</title>
+  <title>Soundeffect &mdash; BlockBall 6.38.0 documentation</title>
   
 
   
@@ -40,7 +40,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.26.0 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.38.0 documentation" href="../index.html"/>
         <link rel="up" title="Effects" href="effects.html"/>
         <link rel="next" title="Abilities" href="abilities.html"/>
         <link rel="prev" title="Particleeffect" href="particleeffect.html"/> 
@@ -66,16 +66,13 @@
           
 
           
-            
-            <img src="../_static/BlockBall-small.png" class="logo" />
-          
           </a>
 
           
             
             
               <div class="version">
-                6.26.0
+                6.38.0
               </div>
             
           
@@ -201,13 +198,13 @@
            <div itemprop="articleBody">
             
   <section id="soundeffect">
-<h1>Soundeffect<a class="headerlink" href="#soundeffect" title="Permalink to this headline">¶</a></h1>
+<h1>Soundeffect<a class="headerlink" href="#soundeffect" title="Permalink to this heading">¶</a></h1>
 <p>It is possible to play so called Soundeffects when a certain action appears. This effect cannot be configured
 standalone as it always belongs to another action like DoubleJump.</p>
 <p>You can set whether <strong>all players</strong> can hear the Soundeffect, <strong>only the player belonging to the action</strong> for example DoubleJump
 or <strong>nobody</strong> for performance reasons.</p>
 <section id="configuring-ingame">
-<h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
+<h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this heading">¶</a></h2>
 <p>As the Soundeffect is always a sub page of another action there is no specific page.</p>
 <ol class="arabic simple">
 <li><p>The Soundeffect page looks like that.</p></li>
@@ -220,7 +217,7 @@ or <strong>nobody</strong> for performance reasons.</p>
 <p>You can find all options explained at the bottom of this page.</p>
 </section>
 <section id="configuring-in-your-arena-x-yml">
-<h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
+<h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this heading">¶</a></h2>
 <p>As the Soundeffect is always a sub effect of another action there is no specific section.</p>
 <ol class="arabic simple">
 <li><p>Go to the <strong>Open the arena_x.yml</strong> of your arena</p></li>
@@ -228,10 +225,10 @@ or <strong>nobody</strong> for performance reasons.</p>
 </ol>
 <p><strong>arena_x.yml</strong></p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sound-effect</span><span class="p">:</span>
-  <span class="nt">effecting</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ENTITY_GHAST_SHOOT</span>
-  <span class="nt">volume</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100.0</span>
-  <span class="nt">pitch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">  </span><span class="nt">effecting</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENTITY_GHAST_SHOOT</span>
+<span class="w">  </span><span class="nt">volume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100.0</span>
+<span class="w">  </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
@@ -240,7 +237,7 @@ or <strong>nobody</strong> for performance reasons.</p>
 </ol>
 </section>
 <section id="properties">
-<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Effecting: Whether all players can hear the Soundeffect, only the player belonging to the action or nobody.</p></li>
 <li><p>Name: Name of the Soundeffect. All names can be found <a class="reference external" href="https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html">here.</a></p></li>
@@ -272,7 +269,7 @@ or <strong>nobody</strong> for performance reasons.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015 - 2021, Shynixn.
+        &copy; Copyright 2015 - 2024, Shynixn.
 
     </p>
   </div>
@@ -293,8 +290,8 @@ or <strong>nobody</strong> for performance reasons.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.26.0',
-            LANGUAGE:'None',
+            VERSION:'6.38.0',
+            LANGUAGE:'en',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -302,9 +299,8 @@ or <strong>nobody</strong> for performance reasons.</p>
         };
     </script>
       <script type="text/javascript" src="../_static/documentation_options.js"></script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
 
   
 

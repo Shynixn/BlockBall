@@ -5,11 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The ball falls through the ground? &mdash; BlockBall 6.26.0 documentation</title>
+  <title>The ball falls through the ground? &mdash; BlockBall 6.38.0 documentation</title>
   
 
   
@@ -40,7 +40,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.26.0 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.38.0 documentation" href="../index.html"/>
         <link rel="up" title="FAQ" href="index.html"/>
         <link rel="next" title="The ball is inside of the goal but it does not score?" href="goalgetsnotdetected.html"/>
         <link rel="prev" title="The ball takes very long to move when you touch it?" href="balllagsbehind.html"/> 
@@ -66,16 +66,13 @@
           
 
           
-            
-            <img src="../_static/BlockBall-small.png" class="logo" />
-          
           </a>
 
           
             
             
               <div class="version">
-                6.26.0
+                6.38.0
               </div>
             
           
@@ -113,7 +110,6 @@
 <li class="toctree-l2"><a class="reference internal" href="commands.html">How can I automatically execute a command after a game?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="support.html">Can you support Minecraft 1.7.x or below?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howcustomskin.html">How to use a custom skin URL?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="howmysql.html">How to use the MySQL database?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="caniusereload.html">Can I use the /reload command?</a></li>
 </ul>
 </li>
@@ -186,7 +182,7 @@
            <div itemprop="articleBody">
             
   <section id="the-ball-falls-through-the-ground">
-<h1>The ball falls through the ground?<a class="headerlink" href="#the-ball-falls-through-the-ground" title="Permalink to this headline">¶</a></h1>
+<h1>The ball falls through the ground?<a class="headerlink" href="#the-ball-falls-through-the-ground" title="Permalink to this heading">¶</a></h1>
 <p>Sometimes the ball is not synchronized with your world or simply requires another relocation distance
 for your server version.</p>
 <ol class="arabic simple">
@@ -195,25 +191,25 @@ for your server version.</p>
 </ol>
 <p><strong>before - arena_x.yml</strong></p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ball</span><span class="p">:</span>
-   <span class="nt">skin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
-   <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SMALL</span>
-   <span class="nt">hitbox-size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3.0</span>
-   <span class="nt">hitbox-relocation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-   <span class="nt">carry-able</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="nt">always-bounce</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="nt">rotating</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">   </span><span class="nt">skin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
+<span class="w">   </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SMALL</span>
+<span class="w">   </span><span class="nt">hitbox-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.0</span>
+<span class="w">   </span><span class="nt">hitbox-relocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">   </span><span class="nt">carry-able</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">   </span><span class="nt">always-bounce</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">   </span><span class="nt">rotating</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <p>Test it with different values like 0.2, 0.5 and take a look what fits best with your server.</p>
 <p><strong>after - arena_x.yml</strong></p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ball</span><span class="p">:</span>
-   <span class="nt">skin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
-   <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SMALL</span>
-   <span class="nt">hitbox-size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3.0</span>
-   <span class="nt">hitbox-relocation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.2</span>
-   <span class="nt">carry-able</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="nt">always-bounce</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="nt">rotating</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">   </span><span class="nt">skin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
+<span class="w">   </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SMALL</span>
+<span class="w">   </span><span class="nt">hitbox-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.0</span>
+<span class="w">   </span><span class="nt">hitbox-relocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
+<span class="w">   </span><span class="nt">carry-able</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">   </span><span class="nt">always-bounce</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">   </span><span class="nt">rotating</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 </section>
@@ -240,7 +236,7 @@ for your server version.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015 - 2021, Shynixn.
+        &copy; Copyright 2015 - 2024, Shynixn.
 
     </p>
   </div>
@@ -261,8 +257,8 @@ for your server version.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.26.0',
-            LANGUAGE:'None',
+            VERSION:'6.38.0',
+            LANGUAGE:'en',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -270,9 +266,8 @@ for your server version.</p>
         };
     </script>
       <script type="text/javascript" src="../_static/documentation_options.js"></script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
 
   
 
