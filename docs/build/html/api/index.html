@@ -5,11 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Developer API &mdash; BlockBall 6.38.0 documentation</title>
+  <title>Developer API &mdash; BlockBall 6.38.1 documentation</title>
   
 
   
@@ -40,7 +40,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.38.0 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.38.1 documentation" href="../index.html"/>
         <link rel="next" title="FAQ" href="../faq/index.html"/>
         <link rel="prev" title="Datacollecting" href="../general/datacollecting.html"/> 
 
@@ -65,13 +65,16 @@
           
 
           
+            
+            <img src="../_static/BlockBall-small.png" class="logo" />
+          
           </a>
 
           
             
             
               <div class="version">
-                6.38.0
+                6.38.1
               </div>
             
           
@@ -193,13 +196,13 @@
 <pre class="literal-block">&lt;dependency&gt;
     &lt;groupId&gt;com.github.shynixn.blockball&lt;/groupId&gt;
     &lt;artifactId&gt;blockball-api&lt;/artifactId&gt;
-    &lt;version&gt;6.38.0&lt;/version&gt;
+    &lt;version&gt;6.38.1&lt;/version&gt;
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;com.github.shynixn.blockball&lt;/groupId&gt;
     &lt;artifactId&gt;blockball-bukkit-api&lt;/artifactId&gt;
-    &lt;version&gt;6.38.0&lt;/version&gt;
+    &lt;version&gt;6.38.1&lt;/version&gt;
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;</pre>
 <div class="admonition note">
@@ -207,8 +210,8 @@
 <p><strong>Gradle</strong> - Bukkit</p>
 </div>
 <pre class="literal-block">dependencies {
-    compileOnly 'com.github.shynixn.blockball:blockball-api:6.38.0'
-    compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:6.38.0'
+    compileOnly 'com.github.shynixn.blockball:blockball-api:6.38.1'
+    compileOnly 'com.github.shynixn.blockball:blockball-bukkit-api:6.38.1'
 }</pre>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -225,14 +228,14 @@
 <p class="admonition-title">Note</p>
 <p><strong>Bukkit</strong> - Add the following tag to your plugin.yml if you <strong>optionally</strong> want to use BlockBall.</p>
 </div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">softdepend</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">BlockBall</span><span class="p p-Indicator">]</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">softdepend</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">BlockBall</span><span class="p p-Indicator">]</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>Bukkit</strong> - Add the following tag to your plugin.yml if your plugin  <strong>requires</strong> BlockBall to work.</p>
 </div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">depend</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">BlockBall</span><span class="p p-Indicator">]</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">depend</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">BlockBall</span><span class="p p-Indicator">]</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -246,14 +249,14 @@
 <li><p>Check out the package <strong>com.github.shynixn.blockball.api.business.service</strong> in the JavaDocs to find the part of the business logic you want to access.</p></li>
 <li><p>Get the instance by using the following line.</p></li>
 </ul>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">YourBusinessService</span><span class="w"> </span><span class="n">service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">resolve</span><span class="p">(</span><span class="n">YourBusinessService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">YourBusinessService</span><span class="w"> </span><span class="n">service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">resolve</span><span class="p">(</span><span class="n">YourBusinessService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>If the service methods require additional data entities, check out the JavaDocs to find other services which provide these data entities
 or create new entities by checking out the package <strong>com.github.shynixn.blockball.api.persistence.entity</strong>.</p></li>
 </ul>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">YourPersistenceEntity</span><span class="w"> </span><span class="n">entity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">YourPersistenceEntity</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">YourPersistenceEntity</span><span class="w"> </span><span class="n">entity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">YourPersistenceEntity</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -263,42 +266,42 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <p class="admonition-title">Note</p>
 <p><strong>Ball</strong> - Bukkit - Spawning a ball.</p>
 </div>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Location</span><span class="w"> </span><span class="n">location</span><span class="p">;</span><span class="w"> </span><span class="c1">// Any Location instance</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Location</span><span class="w"> </span><span class="n">location</span><span class="p">;</span><span class="w"> </span><span class="c1">// Any Location instance</span><span class="w"></span>
 
-<span class="n">BallMeta</span><span class="w"> </span><span class="n">ballMeta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">BallMeta</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
-<span class="n">BallEntityService</span><span class="w"> </span><span class="n">ballEntityService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">resolve</span><span class="p">(</span><span class="n">BallEntityService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<span class="n">BallMeta</span><span class="w"> </span><span class="n">ballMeta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">BallMeta</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w"></span>
+<span class="n">BallEntityService</span><span class="w"> </span><span class="n">ballEntityService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">resolve</span><span class="p">(</span><span class="n">BallEntityService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w"></span>
 
-<span class="n">BallProxy</span><span class="w"> </span><span class="n">ballProxy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ballEntityService</span><span class="p">.</span><span class="na">spawnTemporaryBall</span><span class="p">(</span><span class="n">location</span><span class="p">,</span><span class="w"> </span><span class="n">ballMeta</span><span class="p">);</span>
+<span class="n">BallProxy</span><span class="w"> </span><span class="n">ballProxy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ballEntityService</span><span class="p">.</span><span class="na">spawnTemporaryBall</span><span class="p">(</span><span class="n">location</span><span class="p">,</span><span class="w"> </span><span class="n">ballMeta</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>Game</strong> - Bukkit - Accessing games.</p>
 </div>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">GameService</span><span class="w"> </span><span class="n">gameService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">resolve</span><span class="p">(</span><span class="n">GameService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
-<span class="n">GameActionService</span><span class="o">&lt;</span><span class="n">Game</span><span class="o">&gt;</span><span class="w"> </span><span class="n">gameActionService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">resolve</span><span class="p">(</span><span class="n">GameActionService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">GameService</span><span class="w"> </span><span class="n">gameService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">resolve</span><span class="p">(</span><span class="n">GameService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w"></span>
+<span class="n">GameActionService</span><span class="o">&lt;</span><span class="n">Game</span><span class="o">&gt;</span><span class="w"> </span><span class="n">gameActionService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">resolve</span><span class="p">(</span><span class="n">GameActionService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w"></span>
 
-<span class="n">Player</span><span class="w"> </span><span class="n">player</span><span class="p">;</span><span class="w"> </span><span class="c1">// Any player instance</span>
-<span class="n">List</span><span class="o">&lt;</span><span class="n">Game</span><span class="o">&gt;</span><span class="w"> </span><span class="n">games</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gameService</span><span class="p">.</span><span class="na">getAllGames</span><span class="p">();</span>
-<span class="n">Optional</span><span class="o">&lt;</span><span class="n">Game</span><span class="o">&gt;</span><span class="w"> </span><span class="n">targetGame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gameService</span><span class="p">.</span><span class="na">getGameFromName</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">);</span>
+<span class="n">Player</span><span class="w"> </span><span class="n">player</span><span class="p">;</span><span class="w"> </span><span class="c1">// Any player instance</span><span class="w"></span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">Game</span><span class="o">&gt;</span><span class="w"> </span><span class="n">games</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gameService</span><span class="p">.</span><span class="na">getAllGames</span><span class="p">();</span><span class="w"></span>
+<span class="n">Optional</span><span class="o">&lt;</span><span class="n">Game</span><span class="o">&gt;</span><span class="w"> </span><span class="n">targetGame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gameService</span><span class="p">.</span><span class="na">getGameFromName</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">targetGame</span><span class="p">.</span><span class="na">isPresent</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Game</span><span class="w"> </span><span class="n">game</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">targetGame</span><span class="p">.</span><span class="na">get</span><span class="p">();</span>
-<span class="w">    </span><span class="n">gameActionService</span><span class="p">.</span><span class="na">joinGame</span><span class="p">(</span><span class="n">game</span><span class="p">,</span><span class="w"> </span><span class="n">player</span><span class="p">)</span>
-<span class="p">}</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">targetGame</span><span class="p">.</span><span class="na">isPresent</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">Game</span><span class="w"> </span><span class="n">game</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">targetGame</span><span class="p">.</span><span class="na">get</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="n">gameActionService</span><span class="p">.</span><span class="na">joinGame</span><span class="p">(</span><span class="n">game</span><span class="p">,</span><span class="w"> </span><span class="n">player</span><span class="p">)</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>Arena</strong> - Bukkit - Accessing arenas.</p>
 </div>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">final</span><span class="w"> </span><span class="n">PersistenceArenaService</span><span class="w"> </span><span class="n">persistenceArenaService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">resolve</span><span class="p">(</span><span class="n">PersistenceArenaService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
-<span class="kd">final</span><span class="w"> </span><span class="n">CompletableFuture</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">completableFuture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">persistenceArenaService</span><span class="p">.</span><span class="na">refresh</span><span class="p">();</span><span class="w"> </span><span class="c1">// Do you want to refresh the arenas from the files?</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">final</span><span class="w"> </span><span class="n">PersistenceArenaService</span><span class="w"> </span><span class="n">persistenceArenaService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BlockBallApi</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">.</span><span class="na">resolve</span><span class="p">(</span><span class="n">PersistenceArenaService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w"></span>
+<span class="kd">final</span><span class="w"> </span><span class="n">CompletableFuture</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">completableFuture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">persistenceArenaService</span><span class="p">.</span><span class="na">refresh</span><span class="p">();</span><span class="w"> </span><span class="c1">// Do you want to refresh the arenas from the files?</span><span class="w"></span>
 
-<span class="n">completableFuture</span><span class="p">.</span><span class="na">thenAccept</span><span class="p">(</span><span class="n">aVoid</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// Once the arenas are refreshed you can always access them directly.</span>
-<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Arena</span><span class="o">&gt;</span><span class="w"> </span><span class="n">arenas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">persistenceArenaService</span><span class="p">.</span><span class="na">getArenas</span><span class="p">();</span>
-<span class="p">});</span>
+<span class="n">completableFuture</span><span class="p">.</span><span class="na">thenAccept</span><span class="p">(</span><span class="n">aVoid</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// Once the arenas are refreshed you can always access them directly.</span><span class="w"></span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Arena</span><span class="o">&gt;</span><span class="w"> </span><span class="n">arenas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">persistenceArenaService</span><span class="p">.</span><span class="na">getArenas</span><span class="p">();</span><span class="w"></span>
+<span class="p">});</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -309,12 +312,12 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
 <p class="admonition-title">Note</p>
 <p><strong>SpawnEvent</strong> - Bukkit - Listening to the spawn event.</p>
 </div>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@EventHandler</span>
-<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onBallSpawnEvent</span><span class="p">(</span><span class="n">BallSpawnEvent</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">BallProxy</span><span class="w"> </span><span class="n">ball</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">event</span><span class="p">.</span><span class="na">getBall</span><span class="p">();</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@EventHandler</span><span class="w"></span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onBallSpawnEvent</span><span class="p">(</span><span class="n">BallSpawnEvent</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">BallProxy</span><span class="w"> </span><span class="n">ball</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">event</span><span class="p">.</span><span class="na">getBall</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">    </span><span class="c1">// Do Something</span>
-<span class="p">}</span>
+<span class="w">    </span><span class="c1">// Do Something</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -363,7 +366,7 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.38.0',
+            VERSION:'6.38.1',
             LANGUAGE:'en',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -372,8 +375,10 @@ or create new entities by checking out the package <strong>com.github.shynixn.bl
         };
     </script>
       <script type="text/javascript" src="../_static/documentation_options.js"></script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
 
   
 

@@ -5,11 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Periods &mdash; BlockBall 6.38.0 documentation</title>
+  <title>Periods &mdash; BlockBall 6.38.1 documentation</title>
   
 
   
@@ -40,7 +40,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.38.0 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.38.1 documentation" href="../index.html"/>
         <link rel="up" title="Customizing" href="index.html"/>
         <link rel="next" title="Signs" href="signs.html"/>
         <link rel="prev" title="Teams" href="teams.html"/> 
@@ -66,13 +66,16 @@
           
 
           
+            
+            <img src="../_static/BlockBall-small.png" class="logo" />
+          
           </a>
 
           
             
             
               <div class="version">
-                6.38.0
+                6.38.1
               </div>
             
           
@@ -300,55 +303,55 @@ BlockBall supports to add and customize as many periods you like.</p>
 <li><p>Search for the following section:</p></li>
 </ol>
 <p><strong>arena_x.yml</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">match-times</span><span class="p">:</span>
-<span class="w">    </span><span class="s">&#39;1&#39;</span><span class="p p-Indicator">:</span>
-<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span>
-<span class="w">      </span><span class="nt">close-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span>
-<span class="w">      </span><span class="nt">switch-goals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">ball-playable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="nt">respawn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="nt">start-message-title</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
-<span class="w">      </span><span class="nt">start-message-subtitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
-<span class="w">    </span><span class="s">&#39;2&#39;</span><span class="p p-Indicator">:</span>
-<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
-<span class="w">      </span><span class="nt">close-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NEXT_GOAL</span>
-<span class="w">      </span><span class="nt">switch-goals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">ball-playable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="nt">respawn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">start-message-title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">§6Overtime</span>
-<span class="w">      </span><span class="nt">start-message-subtitle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Only a few seconds left</span>
-<span class="w">    </span><span class="s">&#39;3&#39;</span><span class="p p-Indicator">:</span>
-<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">      </span><span class="nt">close-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span>
-<span class="w">      </span><span class="nt">switch-goals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">ball-playable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">respawn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">start-message-title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">§6Break</span>
-<span class="w">      </span><span class="nt">start-message-subtitle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Take a short break</span>
-<span class="w">    </span><span class="s">&#39;4&#39;</span><span class="p p-Indicator">:</span>
-<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span>
-<span class="w">      </span><span class="nt">close-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span>
-<span class="w">      </span><span class="nt">switch-goals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="nt">ball-playable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="nt">respawn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="nt">start-message-title</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
-<span class="w">      </span><span class="nt">start-message-subtitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
-<span class="w">    </span><span class="s">&#39;5&#39;</span><span class="p p-Indicator">:</span>
-<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
-<span class="w">      </span><span class="nt">close-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NEXT_GOAL</span>
-<span class="w">      </span><span class="nt">switch-goals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">ball-playable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="nt">respawn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">start-message-title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">§6Overtime</span>
-<span class="w">      </span><span class="nt">start-message-subtitle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Only a few seconds left</span>
-<span class="w">    </span><span class="s">&#39;6&#39;</span><span class="p p-Indicator">:</span>
-<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">      </span><span class="nt">close-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span>
-<span class="w">      </span><span class="nt">switch-goals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">ball-playable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">respawn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">start-message-title</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
-<span class="w">      </span><span class="nt">start-message-subtitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">match-times</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="s">&#39;1&#39;</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span><span class="w"></span>
+<span class="w">      </span><span class="nt">close-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span><span class="w"></span>
+<span class="w">      </span><span class="nt">switch-goals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ball-playable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">      </span><span class="nt">respawn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">      </span><span class="nt">start-message-title</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
+<span class="w">      </span><span class="nt">start-message-subtitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="s">&#39;2&#39;</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span><span class="w"></span>
+<span class="w">      </span><span class="nt">close-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NEXT_GOAL</span><span class="w"></span>
+<span class="w">      </span><span class="nt">switch-goals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ball-playable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">      </span><span class="nt">respawn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">      </span><span class="nt">start-message-title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">§6Overtime</span><span class="w"></span>
+<span class="w">      </span><span class="nt">start-message-subtitle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Only a few seconds left</span><span class="w"></span>
+<span class="w">    </span><span class="s">&#39;3&#39;</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+<span class="w">      </span><span class="nt">close-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span><span class="w"></span>
+<span class="w">      </span><span class="nt">switch-goals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ball-playable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">      </span><span class="nt">respawn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">      </span><span class="nt">start-message-title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">§6Break</span><span class="w"></span>
+<span class="w">      </span><span class="nt">start-message-subtitle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Take a short break</span><span class="w"></span>
+<span class="w">    </span><span class="s">&#39;4&#39;</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span><span class="w"></span>
+<span class="w">      </span><span class="nt">close-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span><span class="w"></span>
+<span class="w">      </span><span class="nt">switch-goals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ball-playable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">      </span><span class="nt">respawn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">      </span><span class="nt">start-message-title</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
+<span class="w">      </span><span class="nt">start-message-subtitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="s">&#39;5&#39;</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span><span class="w"></span>
+<span class="w">      </span><span class="nt">close-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NEXT_GOAL</span><span class="w"></span>
+<span class="w">      </span><span class="nt">switch-goals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ball-playable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">      </span><span class="nt">respawn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">      </span><span class="nt">start-message-title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">§6Overtime</span><span class="w"></span>
+<span class="w">      </span><span class="nt">start-message-subtitle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Only a few seconds left</span><span class="w"></span>
+<span class="w">    </span><span class="s">&#39;6&#39;</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+<span class="w">      </span><span class="nt">close-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span><span class="w"></span>
+<span class="w">      </span><span class="nt">switch-goals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ball-playable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">      </span><span class="nt">respawn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">      </span><span class="nt">start-message-title</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
+<span class="w">      </span><span class="nt">start-message-subtitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"></span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
@@ -412,7 +415,7 @@ BlockBall supports to add and customize as many periods you like.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.38.0',
+            VERSION:'6.38.1',
             LANGUAGE:'en',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -421,8 +424,10 @@ BlockBall supports to add and customize as many periods you like.</p>
         };
     </script>
       <script type="text/javascript" src="../_static/documentation_options.js"></script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
 
   
 
