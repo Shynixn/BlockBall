@@ -1,5 +1,5 @@
 The ball takes very long to move when you touch it?
-==================================================
+====================================================
 
 The check how often interaction is detected with the ball is bound to the amount of ticks an armorstand is ticked and the hitbox size of the invisible slime.
 

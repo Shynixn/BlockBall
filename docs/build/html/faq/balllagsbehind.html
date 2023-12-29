@@ -5,11 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The ball takes very long to move when you touch it? &mdash; BlockBall 6.26.0 documentation</title>
+  <title>The ball takes very long to move when you touch it? &mdash; BlockBall 6.38.0 documentation</title>
   
 
   
@@ -40,7 +40,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.26.0 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.38.0 documentation" href="../index.html"/>
         <link rel="up" title="FAQ" href="index.html"/>
         <link rel="next" title="The ball falls through the ground?" href="ballfallsthroughmap.html"/>
         <link rel="prev" title="FAQ" href="index.html"/> 
@@ -66,16 +66,13 @@
           
 
           
-            
-            <img src="../_static/BlockBall-small.png" class="logo" />
-          
           </a>
 
           
             
             
               <div class="version">
-                6.26.0
+                6.38.0
               </div>
             
           
@@ -117,7 +114,6 @@
 <li class="toctree-l2"><a class="reference internal" href="commands.html">How can I automatically execute a command after a game?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="support.html">Can you support Minecraft 1.7.x or below?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howcustomskin.html">How to use a custom skin URL?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="howmysql.html">How to use the MySQL database?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="caniusereload.html">Can I use the /reload command?</a></li>
 </ul>
 </li>
@@ -190,18 +186,18 @@
            <div itemprop="articleBody">
             
   <section id="the-ball-takes-very-long-to-move-when-you-touch-it">
-<h1>The ball takes very long to move when you touch it?<a class="headerlink" href="#the-ball-takes-very-long-to-move-when-you-touch-it" title="Permalink to this headline">¶</a></h1>
+<h1>The ball takes very long to move when you touch it?<a class="headerlink" href="#the-ball-takes-very-long-to-move-when-you-touch-it" title="Permalink to this heading">¶</a></h1>
 <p>The check how often interaction is detected with the ball is bound to the amount of ticks an armorstand is ticked and the hitbox size of the invisible slime.</p>
 <section id="change-the-hitbox">
-<h2>Change the hitbox<a class="headerlink" href="#change-the-hitbox" title="Permalink to this headline">¶</a></h2>
+<h2>Change the hitbox<a class="headerlink" href="#change-the-hitbox" title="Permalink to this heading">¶</a></h2>
 <p>The hitbox can be customized using BlockBall which is the first thing you should try out.
 Open the arena file and change the following values:</p>
 <p><strong>before - arena_x.yml</strong></p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ball</span><span class="p">:</span>
-  <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NORMAL</span>
-  <span class="nt">skin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
-  <span class="nt">hitbox-size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3.0</span>
-  <span class="nt">hitbox-relocation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NORMAL</span>
+<span class="w">  </span><span class="nt">skin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
+<span class="w">  </span><span class="nt">hitbox-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.0</span>
+<span class="w">  </span><span class="nt">hitbox-relocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </pre></div>
 </div>
 <p>Play around with the <strong>hitbox-size</strong> and <strong>hitbox-relocation</strong> value and try different values. You can see the hitbox
@@ -209,15 +205,15 @@ by entering the spectator gamemode <strong>/gamemode spectator</strong> while pa
 <img alt="../_images/slimehitbox.PNG" src="../_images/slimehitbox.PNG" />
 <p><strong>after - arena_x.yml</strong></p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ball</span><span class="p">:</span>
-  <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NORMAL</span>
-  <span class="nt">skin</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
-  <span class="nt">hitbox-size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5.0</span>
-  <span class="nt">hitbox-relocation</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.2</span>
+<span class="w">  </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NORMAL</span>
+<span class="w">  </span><span class="nt">skin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d</span>
+<span class="w">  </span><span class="nt">hitbox-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0</span>
+<span class="w">  </span><span class="nt">hitbox-relocation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
 </pre></div>
 </div>
 </section>
 <section id="change-the-server-ticks">
-<h2>Change the server ticks<a class="headerlink" href="#change-the-server-ticks" title="Permalink to this headline">¶</a></h2>
+<h2>Change the server ticks<a class="headerlink" href="#change-the-server-ticks" title="Permalink to this heading">¶</a></h2>
 <p>Open the <strong>spigot.yml</strong> and (if it exists) <strong>paper.yml</strong> files and customize the ticking values of entities (armorstands).</p>
 </section>
 </section>
@@ -244,7 +240,7 @@ by entering the spectator gamemode <strong>/gamemode spectator</strong> while pa
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015 - 2021, Shynixn.
+        &copy; Copyright 2015 - 2024, Shynixn.
 
     </p>
   </div>
@@ -265,8 +261,8 @@ by entering the spectator gamemode <strong>/gamemode spectator</strong> while pa
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.26.0',
-            LANGUAGE:'None',
+            VERSION:'6.38.0',
+            LANGUAGE:'en',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -274,9 +270,8 @@ by entering the spectator gamemode <strong>/gamemode spectator</strong> while pa
         };
     </script>
       <script type="text/javascript" src="../_static/documentation_options.js"></script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
 
   
 

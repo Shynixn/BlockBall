@@ -167,12 +167,13 @@ Properties
 * Name: Name of the team (Placeholder: <blueteam>/<redteam>)
 * Color: Color of the team (Placeholder: <bluecolor>/<redcolor>)
 * Min amount: Min amount of players required to join this team in order to start a match.
+* Min Amount Playing: Minimum amount of players required to keep the game running. (Only for MiniGame)
 * Max amount: Max amount of players who can be on this team at the same time.
 * Armor: Armor of the players wearing during a match.
 * Walking Speed: A highly requested option to allow playing on large fields by changing the players default speed value.
 * Spawnpoint: Optional spawnpoint for the team if you do not want the players to join at the ball spawnpoint.
 * Textbook: All team specific messages which can be found `here <textbook.html>`_ .
-
+* Lobby-Spawnpoint: Optional team lobby spawnpoint when you join this team.
 
 
 

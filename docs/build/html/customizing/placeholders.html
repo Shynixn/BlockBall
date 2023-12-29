@@ -5,11 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Placeholders &mdash; BlockBall 6.26.0 documentation</title>
+  <title>Placeholders &mdash; BlockBall 6.38.0 documentation</title>
   
 
   
@@ -40,7 +40,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.26.0 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.38.0 documentation" href="../index.html"/>
         <link rel="up" title="Misc" href="misc.html"/>
         <link rel="next" title="Commands" href="../commands/index.html"/>
         <link rel="prev" title="Textbook" href="textbook.html"/> 
@@ -66,16 +66,13 @@
           
 
           
-            
-            <img src="../_static/BlockBall-small.png" class="logo" />
-          
           </a>
 
           
             
             
               <div class="version">
-                6.26.0
+                6.38.0
               </div>
             
           
@@ -199,7 +196,7 @@
            <div itemprop="articleBody">
             
   <section id="placeholders">
-<h1>Placeholders<a class="headerlink" href="#placeholders" title="Permalink to this headline">¶</a></h1>
+<h1>Placeholders<a class="headerlink" href="#placeholders" title="Permalink to this heading">¶</a></h1>
 <p>Placeholders are being used in BlockBall to be replace by ingame values. These placeholders should be
 supported by <strong>all</strong> messages you can find ingame. If there are parsing issues where the following placeholders
 cannot be resolved, please report them.</p>
@@ -213,7 +210,7 @@ cannot be resolved, please report them.</p>
 <li><p>…</p></li>
 </ul>
 <section id="samples">
-<h2>Samples<a class="headerlink" href="#samples" title="Permalink to this headline">¶</a></h2>
+<h2>Samples<a class="headerlink" href="#samples" title="Permalink to this heading">¶</a></h2>
 <p><strong>Title message</strong>:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;redcolor&gt;&lt;redscore&gt; : &lt;bluecolor&gt;&lt;bluescore&gt;
 </pre></div>
@@ -225,13 +222,9 @@ cannot be resolved, please report them.</p>
 <p>You can see that redcolor gets replaced by the ChatColor red and the redscore with 2.</p>
 </section>
 <section id="placeholderlist">
-<h2>Placeholderlist<a class="headerlink" href="#placeholderlist" title="Permalink to this headline">¶</a></h2>
+<h2>Placeholderlist<a class="headerlink" href="#placeholderlist" title="Permalink to this heading">¶</a></h2>
 <p><strong>Games</strong></p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 82%" />
-<col style="width: 18%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Description</p></th>
 <th class="head"><p>Placeholder</p></th>
@@ -281,10 +274,6 @@ cannot be resolved, please report them.</p>
 </table>
 <p><strong>Games (Using the team of the player receiving the message)</strong></p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 85%" />
-<col style="width: 15%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Description</p></th>
 <th class="head"><p>Placeholder</p></th>
@@ -307,10 +296,6 @@ cannot be resolved, please report them.</p>
 </table>
 <p><strong>BungeeCord Joining Signs</strong></p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 86%" />
-<col style="width: 14%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Description</p></th>
 <th class="head"><p>Placeholder</p></th>
@@ -328,10 +313,6 @@ cannot be resolved, please report them.</p>
 Replace &lt;id&gt; with the id of the arena.</p>
 <p>Sample placeholder for the current amount of players in arena 1: <strong>%blockball_&lt;sumplayers&gt;_1%</strong></p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 69%" />
-<col style="width: 31%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Description</p></th>
 <th class="head"><p>Placeholder</p></th>
@@ -377,6 +358,18 @@ Replace &lt;id&gt; with the id of the arena.</p>
 <tr class="row-even"><td><p>Uses the game’s current time value</p></td>
 <td><p>%blockball_&lt;time&gt;_&lt;id&gt;%</p></td>
 </tr>
+<tr class="row-odd"><td><p>Uses the name of the current team of the player</p></td>
+<td><p>%blockball_&lt;team&gt;_&lt;id&gt;%</p></td>
+</tr>
+<tr class="row-even"><td><p>Uses the prefix (default color) of the current team of the player</p></td>
+<td><p>%blockball_&lt;teamcolor&gt;_&lt;id&gt;%</p></td>
+</tr>
+<tr class="row-odd"><td><p>Uses the current amount of players in the current team of the player</p></td>
+<td><p>%blockball_&lt;players&gt;_&lt;id&gt;%</p></td>
+</tr>
+<tr class="row-even"><td><p>Uses the max amount of players in the current team of the player</p></td>
+<td><p>%blockball_&lt;maxplayers&gt;_&lt;id&gt;%</p></td>
+</tr>
 <tr class="row-odd"><td><p>Uses the winrate of the player across all played games</p></td>
 <td><p>%blockball_&lt;winrate&gt;%</p></td>
 </tr>
@@ -419,7 +412,7 @@ Replace &lt;id&gt; with the id of the arena.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015 - 2021, Shynixn.
+        &copy; Copyright 2015 - 2024, Shynixn.
 
     </p>
   </div>
@@ -440,8 +433,8 @@ Replace &lt;id&gt; with the id of the arena.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.26.0',
-            LANGUAGE:'None',
+            VERSION:'6.38.0',
+            LANGUAGE:'en',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -449,9 +442,8 @@ Replace &lt;id&gt; with the id of the arena.</p>
         };
     </script>
       <script type="text/javascript" src="../_static/documentation_options.js"></script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
 
   
 

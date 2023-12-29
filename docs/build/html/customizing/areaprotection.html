@@ -5,11 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>AreaProtection &mdash; BlockBall 6.26.0 documentation</title>
+  <title>AreaProtection &mdash; BlockBall 6.38.0 documentation</title>
   
 
   
@@ -40,7 +40,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="BlockBall 6.26.0 documentation" href="../index.html"/>
+    <link rel="top" title="BlockBall 6.38.0 documentation" href="../index.html"/>
         <link rel="up" title="Misc" href="misc.html"/>
         <link rel="next" title="GameProperties" href="othergame.html"/>
         <link rel="prev" title="Misc" href="misc.html"/> 
@@ -66,16 +66,13 @@
           
 
           
-            
-            <img src="../_static/BlockBall-small.png" class="logo" />
-          
           </a>
 
           
             
             
               <div class="version">
-                6.26.0
+                6.38.0
               </div>
             
           
@@ -200,11 +197,11 @@
            <div itemprop="articleBody">
             
   <section id="areaprotection">
-<h1>AreaProtection<a class="headerlink" href="#areaprotection" title="Permalink to this headline">¶</a></h1>
+<h1>AreaProtection<a class="headerlink" href="#areaprotection" title="Permalink to this heading">¶</a></h1>
 <p>BlockBall does not offer a block or region protection like Worldguard but it contains a system to protect entities like
 players, animals and monsters to enter the arena.</p>
 <section id="configuring-ingame">
-<h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this headline">¶</a></h2>
+<h2>Configuring ingame<a class="headerlink" href="#configuring-ingame" title="Permalink to this heading">¶</a></h2>
 <p>At this stage, you should be able to open the <a class="reference external" href="../gamemodes/basicgame.html#getting-in-touch-with-the-chat-ui">Settings</a> page of your arena chat UI.</p>
 <ol class="arabic simple">
 <li><p>Go to the <strong>Settings Page</strong> of your arena</p></li>
@@ -221,7 +218,7 @@ to the configured default speed or entities should fly to a specific location.</
 <p>You can find all options explained at the bottom of this page.</p>
 </section>
 <section id="configuring-in-your-arena-x-yml">
-<h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this headline">¶</a></h2>
+<h2>Configuring in your arena_x.yml<a class="headerlink" href="#configuring-in-your-arena-x-yml" title="Permalink to this heading">¶</a></h2>
 <p>At this stage, you should be able to find your arena save file. If not, please take a look at this <a class="reference external" href="../general/database.html#editing-the-arena-files">page</a>.</p>
 <ol class="arabic simple">
 <li><p>Go to the <strong>Open the arena_x.yml</strong> of your arena</p></li>
@@ -229,16 +226,16 @@ to the configured default speed or entities should fly to a specific location.</
 </ol>
 <p><strong>arena_x.yml</strong></p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">protection</span><span class="p">:</span>
-   <span class="nt">entity-protection-enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="nt">entity-protection</span><span class="p">:</span>
-     <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5.0</span>
-     <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-     <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5.0</span>
-   <span class="nt">rejoin-protection-enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-   <span class="nt">rejoin-protection</span><span class="p">:</span>
-     <span class="nt">x</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-     <span class="nt">y</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2.0</span>
-     <span class="nt">z</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">   </span><span class="nt">entity-protection-enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">   </span><span class="nt">entity-protection</span><span class="p">:</span>
+<span class="w">     </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0</span>
+<span class="w">     </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
+<span class="w">     </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0</span>
+<span class="w">   </span><span class="nt">rejoin-protection-enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">   </span><span class="nt">rejoin-protection</span><span class="p">:</span>
+<span class="w">     </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">     </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
+<span class="w">     </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
@@ -247,7 +244,7 @@ to the configured default speed or entities should fly to a specific location.</
 </ol>
 </section>
 <section id="properties">
-<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Animal and Monster protection enabled: Should animals and monster be thrown out of the arena with the given velocity when they try to enter it?</p></li>
 <li><p>Animal and Monster protection velocity: Velocity being applied when they enter the arena.</p></li>
@@ -279,7 +276,7 @@ to the configured default speed or entities should fly to a specific location.</
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015 - 2021, Shynixn.
+        &copy; Copyright 2015 - 2024, Shynixn.
 
     </p>
   </div>
@@ -300,8 +297,8 @@ to the configured default speed or entities should fly to a specific location.</
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'6.26.0',
-            LANGUAGE:'None',
+            VERSION:'6.38.0',
+            LANGUAGE:'en',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -309,9 +306,8 @@ to the configured default speed or entities should fly to a specific location.</
         };
     </script>
       <script type="text/javascript" src="../_static/documentation_options.js"></script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/sphinx_highlight.js"></script>
 
   
 
