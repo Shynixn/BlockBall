@@ -39,7 +39,6 @@ class DependencyServiceImpl : DependencyService {
      * Checks for installed dependencies and shows console output.
      */
     override fun checkForInstalledDependencies() {
-        printInstallment(PluginDependency.WORLEDIT)
         printInstallment(PluginDependency.PLACEHOLDERAPI)
         printInstallment(PluginDependency.VAULT)
         printInstallment(PluginDependency.BOSSBARAPI)

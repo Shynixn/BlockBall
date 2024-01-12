@@ -124,11 +124,6 @@ interface Game {
     var mirroredGoals : Boolean
 
     /**
-     * Ball bumper.
-     */
-    var ballBumper: Int
-
-    /**
      * Last location of the ball.
      */
     var lastBallLocation: Any?

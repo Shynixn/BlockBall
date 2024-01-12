@@ -302,7 +302,17 @@ class GameListener @Inject constructor(
                 if (!game.arena.isLocationInSelection(targetPosition)) {
                     event.hitBlock = true
                     event.blockDirection = game.arena.getRelativeBlockDirectionToLocation(targetPosition)
+                    game.ballBumperCounter++
+
+                    if (game.ballBumperCounter > 60) {
+                        // Rescue system, if the ball gets stuck in the walls.
+                        event.ball.teleport(game.arena.meta.ballMeta.spawnpoint!!.toLocation())
+                        game.ballBumperCounter = 0
+                    }
+
                     return
+                } else {
+                    game.ballBumperCounter = 0
                 }
 
                 return

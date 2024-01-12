@@ -101,10 +101,6 @@ open class GameEntity(
      */
     override var mirroredGoals: Boolean = false
     /**
-     * Ball bumper.
-     */
-    override var ballBumper: Int = 20
-    /**
      * Marks the game for being closed and will automatically
      * switch to close state once the resources are cleard.
      */
