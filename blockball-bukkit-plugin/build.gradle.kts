@@ -108,7 +108,6 @@ repositories {
 dependencies {
     implementation(project(":blockball-api"))
     implementation(project(":blockball-bukkit-api"))
-    implementation(project(":blockball-core"))
 
     implementation("com.github.shynixn.mcutils:common:1.0.41")
     implementation("com.github.shynixn.mcutils:packet:1.0.65")
