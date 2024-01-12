@@ -408,7 +408,12 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
         proxyService.setPlayerAllowFlying(player, false)
         proxyService.setPlayerFlying(player, false)
-        proxyService.setPlayerMaxHealth(player, 20.0)
+
+        if (!game.arena.meta.customizingMeta.keepHealthEnabled) {
+            proxyService.setPlayerMaxHealth(player, 20.0)
+            proxyService.setPlayerHealth(player, 20.0)
+        }
+
         proxyService.setPlayerHunger(player, 20)
         proxyService.setPlayerLevel(player, 0)
         proxyService.setPlayerExp(player, 0.0)
@@ -529,8 +534,12 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         proxyService.setPlayerScoreboard(player, stats.scoreboard)
         proxyService.setPlayerLevel(player, stats.level)
         proxyService.setPlayerExp(player, stats.exp)
-        proxyService.setPlayerMaxHealth(player, stats.maxHealth)
-        proxyService.setPlayerHealth(player, stats.health)
+
+        if (!game.arena.meta.customizingMeta.keepHealthEnabled) {
+            proxyService.setPlayerMaxHealth(player, stats.maxHealth)
+            proxyService.setPlayerHealth(player, stats.health)
+        }
+
         proxyService.setPlayerHunger(player, stats.hunger)
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {

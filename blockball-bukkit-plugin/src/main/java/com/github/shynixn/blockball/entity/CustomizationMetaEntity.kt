@@ -51,4 +51,9 @@ class CustomizationMetaEntity : CustomizationMeta {
      */
     @YamlSerialize(value = "keep-inventory", orderNumber = 4)
     override var keepInventoryEnabled: Boolean = false
+    /**
+     * Should the players keep their health when they join a game?
+     */
+    @YamlSerialize(value = "keep-health", orderNumber = 5)
+    override var keepHealthEnabled: Boolean = false
 }
