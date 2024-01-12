@@ -50,7 +50,7 @@ Creating the arena
 
 
 * The action *[toggle..]* simply behaves as a switch between true and false.
-* The action *[worledit..]* copies your current worldedit selection.
+* The action *[selection..]* copies your current blockballaxe selection.
 * The action *[location..]* copies your current player position.
 * You do not have to remember all of this, all actions provide tooltips by hovering the mouse on top of them.
 
@@ -58,7 +58,7 @@ Creating the arena
 
 .. image:: ../_static/images/arena7.png
 
-4. Select the red goal via worldedit and press *[selection..]* at goal red.
+4. Select the red goal via the blockball golden axe and press *[selection..]* at goal red.
 
 .. image:: ../_static/images/goal_selection_1.png
 
