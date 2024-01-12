@@ -6,9 +6,9 @@ import com.github.shynixn.blockball.api.business.service.SoundService
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Sound
-import com.github.shynixn.blockball.bukkit.logic.business.listener.DoubleJumpListener
-import com.github.shynixn.blockball.core.logic.persistence.entity.ArenaEntity
-import com.github.shynixn.blockball.core.logic.persistence.entity.GameEntity
+import com.github.shynixn.blockball.entity.ArenaEntity
+import com.github.shynixn.blockball.entity.GameEntity
+import com.github.shynixn.blockball.impl.listener.DoubleJumpListener
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.World

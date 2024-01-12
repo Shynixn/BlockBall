@@ -1,7 +1,7 @@
 package unittest
 
 import com.github.shynixn.blockball.api.business.service.BlockSelectionService
-import com.github.shynixn.blockball.bukkit.logic.business.listener.BlockSelectionListener
+import com.github.shynixn.blockball.impl.listener.BlockSelectionListener
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.Player

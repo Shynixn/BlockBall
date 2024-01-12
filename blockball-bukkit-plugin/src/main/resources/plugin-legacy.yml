@@ -1,9 +1,9 @@
 name: BlockBall
-version: 6.38.1
+version: 6.39.0
 author: Shynixn
 website: https://www.spigotmc.org/members/shynixn.63455/
-main: com.github.shynixn.blockball.bukkit.BlockBallPlugin
-softdepend: [WorldEdit, BossBarAPI, PlaceholderAPI, Vault]
+main: com.github.shynixn.blockball.BlockBallPlugin
+softdepend: [BossBarAPI, PlaceholderAPI, Vault]
 commands:
    blockball:
       description: Opens the arena creation UI.

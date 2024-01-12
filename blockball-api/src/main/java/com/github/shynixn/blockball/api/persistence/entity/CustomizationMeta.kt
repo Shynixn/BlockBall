@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.api.persistence.entity
 
+import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
+
 /**
  * All additional meta data for games which is optionally.
  * <p>
@@ -43,4 +45,8 @@ interface CustomizationMeta {
      * Should the players keep their inventory when they join a game?
      */
     var keepInventoryEnabled: Boolean
+    /**
+     * Should the players keep their health when they join a game?
+     */
+    var keepHealthEnabled: Boolean
 }
