@@ -2,7 +2,7 @@ package unittest
 
 import com.github.shynixn.blockball.api.business.enumeration.ScoreboardDisplaySlot
 import com.github.shynixn.blockball.api.business.service.ScoreboardService
-import com.github.shynixn.blockball.bukkit.logic.business.service.ScoreboardServiceImpl
+import com.github.shynixn.blockball.impl.service.ScoreboardServiceImpl
 import org.bukkit.scoreboard.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertThrows
