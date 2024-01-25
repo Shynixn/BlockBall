@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.api.business.service.PersistenceArenaService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
 
 /**

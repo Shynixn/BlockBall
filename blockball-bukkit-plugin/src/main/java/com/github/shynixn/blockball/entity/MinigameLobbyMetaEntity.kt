@@ -1,12 +1,12 @@
 package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
-import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.MatchTimeCloseType
 import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.MatchTimeMeta
 import com.github.shynixn.blockball.api.persistence.entity.MinigameLobbyMeta
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.mcutils.common.ChatColor
 
 /**
  * Created by Shynixn 2018.

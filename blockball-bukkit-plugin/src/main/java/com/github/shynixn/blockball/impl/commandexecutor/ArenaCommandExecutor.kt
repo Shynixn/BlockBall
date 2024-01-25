@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.impl.commandexecutor
 
 import com.github.shynixn.blockball.api.business.enumeration.ChatClickAction
-import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.MenuCommand
 import com.github.shynixn.blockball.api.business.enumeration.MenuCommandResult
 import com.github.shynixn.blockball.api.business.executor.CommandExecutor
@@ -9,6 +8,7 @@ import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.entity.ChatBuilderEntity
 import com.github.shynixn.blockball.impl.commandmenu.*
+import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level

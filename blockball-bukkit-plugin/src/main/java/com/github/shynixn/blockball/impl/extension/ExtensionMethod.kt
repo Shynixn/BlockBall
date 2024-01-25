@@ -3,12 +3,12 @@
 package com.github.shynixn.blockball.impl.extension
 
 import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.executor.CommandExecutor
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.entity.PositionEntity
+import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.Version
 import org.bukkit.Bukkit
 import org.bukkit.Location

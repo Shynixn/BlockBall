@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.HologramMeta
 import com.github.shynixn.blockball.entity.ChatBuilderEntity
 import com.github.shynixn.blockball.entity.HologramMetaEntity
+import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
 
 /**

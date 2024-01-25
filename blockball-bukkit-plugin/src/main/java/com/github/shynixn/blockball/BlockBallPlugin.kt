@@ -1,12 +1,12 @@
 package com.github.shynixn.blockball
 
 import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.impl.commandexecutor.*
 import com.github.shynixn.blockball.impl.listener.*
+import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService

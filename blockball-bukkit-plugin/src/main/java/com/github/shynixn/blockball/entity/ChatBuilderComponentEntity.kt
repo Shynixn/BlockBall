@@ -1,9 +1,9 @@
 package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.api.business.enumeration.ChatClickAction
-import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilderComponent
+import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.translateChatColors
 
 /**
