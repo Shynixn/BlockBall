@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.bukkit.event
+package com.github.shynixn.blockball.event
 
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event

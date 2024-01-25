@@ -6,15 +6,16 @@ import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.entity.PositionEntity
-import com.github.shynixn.blockball.entity.compatibility.BallKickEventEntity
-import com.github.shynixn.blockball.entity.compatibility.BallPassEventEntity
-import com.github.shynixn.blockball.entity.compatibility.BallRayTraceEventEntity
-import com.github.shynixn.blockball.entity.compatibility.BallTouchEventEntity
+import com.github.shynixn.blockball.event.BallLeftClickEvent
+import com.github.shynixn.blockball.event.BallRightClickEvent
+import com.github.shynixn.blockball.event.BallRayTraceEvent
+import com.github.shynixn.blockball.event.BallTouchPlayerEvent
 import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.blockball.impl.extension.toVector
 import com.github.shynixn.mcutils.packet.api.EntityType
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.packet.*
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -83,11 +84,6 @@ class BallHitboxEntity(val entityId: Int) {
     lateinit var concurrencyService: ConcurrencyService
 
     /**
-     * Event service dependency.
-     */
-    lateinit var eventService: EventService
-
-    /**
      * Ball Proxy.
      */
     lateinit var ball: BallCrossPlatformProxy
@@ -128,8 +124,7 @@ class BallHitboxEntity(val entityId: Int) {
     /**
      * Destroys the ball for the given player.
      */
-    fun destroy(player: Any) {
-        require(player is Player)
+    fun destroy(player: Player) {
         packetService.sendPacketOutEntityDestroy(player, PacketOutEntityDestroy().also {
             it.entityIds = listOf(entityId)
         })
@@ -138,7 +133,7 @@ class BallHitboxEntity(val entityId: Int) {
     /**
      * Kicks the hitbox for the given player interaction.
      */
-    fun kickPlayer(player: Any, baseMultiplier: Double, isPass: Boolean) {
+    fun kickPlayer(player: Player, baseMultiplier: Double, isPass: Boolean) {
         if (skipCounter > 0) {
             return
         }
@@ -159,7 +154,7 @@ class BallHitboxEntity(val entityId: Int) {
      * Ticks the hitbox.
      * @param players watching this hitbox.
      */
-    fun <P> tick(players: List<P>) {
+    fun tick(players: List<Player>) {
         if (skipCounter > 0) {
             skipCounter--
         }
@@ -170,7 +165,6 @@ class BallHitboxEntity(val entityId: Int) {
             // Visible position makes the slime hitbox better align with the ball.
             val visiblePosition = position.clone().add(0.0, -0.5, 0.0).add(0.0, meta.hitBoxRelocation, 0.0)
             for (player in players) {
-                require(player is Player)
                 packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
                     it.entityId = entityId
                     it.target = visiblePosition.toLocation()
@@ -181,7 +175,7 @@ class BallHitboxEntity(val entityId: Int) {
             return
         }
 
-        checkMovementInteractions(players as List<Any>)
+        checkMovementInteractions(players)
 
         if (motion.x == 0.0 && motion.y == 0.0 && motion.z == 0.0) {
             return
@@ -189,12 +183,12 @@ class BallHitboxEntity(val entityId: Int) {
 
         val rayTraceResult = rayTracingService.rayTraceMotion(position, motion)
 
-        val rayTraceEvent = BallRayTraceEventEntity(
+        val rayTraceEvent = BallRayTraceEvent(
             ball, rayTraceResult.hitBlock,
             proxyService.toLocation(rayTraceResult.targetPosition),
             rayTraceResult.blockdirection
         )
-        eventService.sendEvent(rayTraceEvent)
+        Bukkit.getPluginManager().callEvent(rayTraceEvent)
 
         if (rayTraceEvent.isCancelled) {
             return
@@ -220,7 +214,7 @@ class BallHitboxEntity(val entityId: Int) {
     /**
      * Executes the kick.
      */
-    private fun executeKickPass(player: Any, prevEyeLoc: Any, baseMultiplier: Double, isPass: Boolean) {
+    private fun executeKickPass(player: Player, prevEyeLoc: Any, baseMultiplier: Double, isPass: Boolean) {
         var kickVector = proxyService.getLocationDirection(prevEyeLoc)
         val eyeLocation = proxyService.getPlayerEyeLocation<Any, Any>(player)
         val spinV = calculateSpinVelocity(proxyService.getLocationDirection(eyeLocation), kickVector)
@@ -235,12 +229,12 @@ class BallHitboxEntity(val entityId: Int) {
         kickVector.y = verticalMod
 
         val event = if (isPass) {
-            val event = BallPassEventEntity(ball, player, proxyService.toVector(kickVector))
-            eventService.sendEvent(event)
+            val event = BallRightClickEvent(ball, player, proxyService.toVector(kickVector))
+            Bukkit.getPluginManager().callEvent(event)
             Pair(event, proxyService.toPosition(event.velocity))
         } else {
-            val event = BallKickEventEntity(ball, player, proxyService.toVector(kickVector))
-            eventService.sendEvent(event)
+            val event = BallLeftClickEvent(ball, player, proxyService.toVector(kickVector))
+            Bukkit.getPluginManager().callEvent(event)
             Pair(event, proxyService.toPosition(event.velocity))
         }
 
@@ -258,7 +252,7 @@ class BallHitboxEntity(val entityId: Int) {
     /**
      * Checks movement interactions with the ball.
      */
-    private fun checkMovementInteractions(players: List<Any>) {
+    private fun checkMovementInteractions(players: List<Player>) {
         if (!meta.enabledInteract || skipCounter > 0) {
             return
         }
@@ -278,20 +272,20 @@ class BallHitboxEntity(val entityId: Int) {
                     .normalize().multiply(meta.movementModifier.horizontalTouchModifier)
                 vector.y = 0.1 * meta.movementModifier.verticalTouchModifier
 
-                val ballTouchEvent = BallTouchEventEntity(ball, player, proxyService.toVector(vector))
-                eventService.sendEvent(ballTouchEvent)
+                val ballTouchPlayerEvent = BallTouchPlayerEvent(ball, player, proxyService.toVector(vector))
+                Bukkit.getPluginManager().callEvent(ballTouchPlayerEvent)
 
-                if (ballTouchEvent.isCancelled) {
+                if (ballTouchPlayerEvent.isCancelled) {
                     continue
                 }
 
                 // Correct the yaw of the ball after bouncing.
                 this.position.yaw =
-                    getYawFromVector(origin, proxyService.toPosition(ballTouchEvent.velocity).normalize()) * -1
+                    getYawFromVector(origin, proxyService.toPosition(ballTouchPlayerEvent.velocity).normalize()) * -1
                 this.angularVelocity = 0.0
                 // Move the ball a little bit up otherwise wallcollision of ground immidately cancel movement.
                 this.position.y += 0.25
-                this.motion = proxyService.toPosition(ballTouchEvent.velocity)
+                this.motion = proxyService.toPosition(ballTouchPlayerEvent.velocity)
                 this.skipCounter = meta.interactionCoolDown
             }
         }

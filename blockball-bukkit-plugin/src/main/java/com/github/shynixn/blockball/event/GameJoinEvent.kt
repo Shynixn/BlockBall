@@ -1,12 +1,12 @@
-package com.github.shynixn.blockball.api.bukkit.event
+package com.github.shynixn.blockball.event
 
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import org.bukkit.entity.Player
 
 /**
- * Game Leave event.
+ * Game Join event.
  */
-class GameLeaveEvent(
+class GameJoinEvent(
         /**
          * Player joining the game.
          */

@@ -2,21 +2,22 @@ package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import org.bukkit.entity.Player
 
 class AllPlayerTracker(
     private val locationFunction: () -> Position,
-    private val newPlayerFunction: (Any) -> Unit,
-    private val oldPlayerFunction: (Any) -> Unit,
-    private val filterPlayerFunction: (Any) -> Boolean = { true }
+    private val newPlayerFunction: (Player) -> Unit,
+    private val oldPlayerFunction: (Player) -> Unit,
+    private val filterPlayerFunction: (Player) -> Boolean = { true }
 ) {
-    private val cache = HashSet<Any>()
+    private val cache = HashSet<Player>()
     lateinit var proxyService: ProxyService
 
     /**
-     * Checks the players inthe world and returns the interesing ones.
+     * Checks the players in the world and returns the interesting ones.
      */
-    fun checkAndGet(): List<Any> {
-        val players = proxyService.getPlayersInWorld<Any, Any>(locationFunction.invoke()).toMutableList()
+    fun checkAndGet(): List<Player> {
+        val players = proxyService.getPlayersInWorld<Player, Any>(locationFunction.invoke()).toMutableList()
 
         for (player in players.toTypedArray()) {
             if (!filterPlayerFunction.invoke(player)) {

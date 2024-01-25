@@ -51,7 +51,6 @@ class BlockBallDependencyInjectionBinder(
         // Services
         bind(PacketService::class.java).toInstance(packetService)
         bind(EntityService::class.java).toInstance(EntityServiceImpl())
-        bind(EventService::class.java).to(EventServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(VirtualArenaService::class.java).to(VirtualArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ScoreboardService::class.java).to(ScoreboardServiceImpl::class.java).`in`(Scopes.SINGLETON)

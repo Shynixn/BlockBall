@@ -3,13 +3,14 @@ package com.github.shynixn.blockball.impl.service
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.entity.compatibility.BallSpawnEventEntity
+import com.github.shynixn.blockball.event.BallSpawnEvent
 import com.github.shynixn.blockball.impl.BallCrossPlatformProxy
 import com.github.shynixn.blockball.impl.BallDesignEntity
 import com.github.shynixn.blockball.impl.BallHitboxEntity
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.google.inject.Inject
+import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 
 class BallEntityServiceImpl @Inject constructor(
@@ -18,7 +19,6 @@ class BallEntityServiceImpl @Inject constructor(
     private val concurrencyService: ConcurrencyService,
     private val itemService: ItemService,
     private val rayTracingService: RayTracingService,
-    private val eventService: EventService,
     private val plugin: Plugin
 ) : BallEntityService {
 
@@ -47,7 +47,6 @@ class BallEntityServiceImpl @Inject constructor(
         ballHitBoxEntity.rayTracingService = rayTracingService
         ballHitBoxEntity.concurrencyService = concurrencyService
         ballHitBoxEntity.packetService = packetService
-        ballHitBoxEntity.eventService = eventService
         ballHitBoxEntity.proxyService = proxyService
 
         val ballDesignEntity = BallDesignEntity(proxyService.createNewEntityId())
@@ -58,11 +57,10 @@ class BallEntityServiceImpl @Inject constructor(
         val ball = BallCrossPlatformProxy(meta, ballDesignEntity, ballHitBoxEntity, plugin)
         ballDesignEntity.ball = ball
         ballHitBoxEntity.ball = ball
-        ball.eventService = eventService
         ball.proxyService = proxyService
 
-        val event = BallSpawnEventEntity(ball)
-        eventService.sendEvent(event)
+        val event = BallSpawnEvent(ball)
+        Bukkit.getPluginManager().callEvent(event)
 
         if (event.isCancelled) {
             return null

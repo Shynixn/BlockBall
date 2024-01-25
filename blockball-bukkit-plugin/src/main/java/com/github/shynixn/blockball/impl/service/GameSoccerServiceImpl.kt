@@ -6,9 +6,11 @@ import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.entity.compatibility.GameEndEventEntity
-import com.github.shynixn.blockball.entity.compatibility.GameGoalEventEntity
+import com.github.shynixn.blockball.event.GameEndEvent
+import com.github.shynixn.blockball.event.GameGoalEvent
 import com.google.inject.Inject
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 
 class GameSoccerServiceImpl @Inject constructor(
     private val concurrencyService: ConcurrencyService,
@@ -17,7 +19,6 @@ class GameSoccerServiceImpl @Inject constructor(
     private val ballEntityService: BallEntityService,
     private val placeholderService: PlaceholderService,
     private val proxyService: ProxyService,
-    private val eventService: EventService
 ) : GameSoccerService {
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
@@ -173,8 +174,8 @@ class GameSoccerServiceImpl @Inject constructor(
             game.lastInteractedEntity = interactionEntity
         }
 
-        val gameGoalEntityEvent = GameGoalEventEntity(game, interactionEntity, team)
-        eventService.sendEvent(gameGoalEntityEvent)
+        val gameGoalEntityEvent = GameGoalEvent(interactionEntity as Player?, team, game)
+        Bukkit.getPluginManager().callEvent(gameGoalEntityEvent)
 
         if (gameGoalEntityEvent.isCancelled) {
             return
@@ -293,8 +294,8 @@ class GameSoccerServiceImpl @Inject constructor(
      * Gets called when the given [game] gets win by the given [team].
      */
     override fun onWin(game: Game, team: Team, teamMeta: TeamMeta) {
-        val event = GameEndEventEntity(game, team)
-        eventService.sendEvent(event)
+        val event =GameEndEvent(team, game)
+        Bukkit.getPluginManager().callEvent(event)
 
         if (event.isCancelled) {
             return

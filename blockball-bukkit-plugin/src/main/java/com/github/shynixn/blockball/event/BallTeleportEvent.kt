@@ -1,4 +1,4 @@
-package com.github.shynixn.blockball.api.bukkit.event
+package com.github.shynixn.blockball.event
 
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import org.bukkit.Location

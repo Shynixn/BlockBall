@@ -7,13 +7,15 @@ import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.*
-import com.github.shynixn.blockball.entity.compatibility.GameJoinEventEntity
-import com.github.shynixn.blockball.entity.compatibility.GameLeaveEventEntity
+import com.github.shynixn.blockball.event.GameJoinEvent
+import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.blockball.impl.PacketHologram
 import com.github.shynixn.blockball.impl.extension.getCompatibilityServerVersion
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.google.inject.Inject
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 
@@ -57,7 +59,6 @@ class GameActionServiceImpl @Inject constructor(
     private val dependencyBossBarApiService: DependencyBossBarApiService,
     private val gameSoccerService: GameSoccerService,
     private val placeholderService: PlaceholderService,
-    private val eventService: EventService,
     private val proxyService: ProxyService,
     private val packetService: PacketService,
     private val plugin: Plugin,
@@ -85,8 +86,9 @@ class GameActionServiceImpl @Inject constructor(
             this.leaveGame(g, player)
         }
 
-        val event = GameJoinEventEntity(game, player)
-        eventService.sendEvent(event)
+        require(player is Player)
+        val event = GameJoinEvent(player, game)
+        Bukkit.getPluginManager().callEvent(event)
 
         if (event.isCancelled) {
             return false
@@ -107,9 +109,9 @@ class GameActionServiceImpl @Inject constructor(
      * Does nothing if the player is not in the game.
      */
     override fun <P> leaveGame(game: Game, player: P) {
-        require(player is Any)
-        val event = GameLeaveEventEntity(game, player)
-        eventService.sendEvent(event)
+        require(player is Player)
+        val event = GameLeaveEvent(player, game)
+        Bukkit.getPluginManager().callEvent(event)
 
         if (event.isCancelled) {
             return
