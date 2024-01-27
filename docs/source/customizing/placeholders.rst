@@ -1,105 +1,51 @@
 Placeholders
 ============
 
-Placeholders are being used in BlockBall to be replace by ingame values. These placeholders should be
-supported by **all** messages you can find ingame. If there are parsing issues where the following placeholders
-cannot be resolved, please report them.
+The following placeholders are available in BlockBall and can also be used via PlaceHolderApi.
 
-You can use placeholders on:
+.. note:: PlaceHolders can be used in Messages, Signs, Scoreboards, BossBars and Holograms.
 
-* Messages
-* Signs
-* Scoreboards
-* Bossbars
-* Holograms
-* ...
-
-Samples
-~~~~~~~
-
-**Title message**:
-
-.. code-block:: text
-
-    <redcolor><redscore> : <bluecolor><bluescore>
-
-**Placed ingame message**:
-
-.. code-block:: text
-
-    &c2 : &93
-
-You can see that redcolor gets replaced by the ChatColor red and the redscore with 2.
+.. note:: In order to use BlockBall placeholders in external plugins, the player has to be in a BlockBall game or append the id of the arena to the placeholder e.g. "%blockball_game_blueScore_1%".
 
 Placeholderlist
 ~~~~~~~~~~~~~~~
 
-**Games**
+===================================      =====================================================================================================================================
+Placeholder                              Description
+===================================      =====================================================================================================================================
+%blockball_game_name%                    Id of the game
+%blockball_game_displayName%             DisplayName of the game
+%blockball_game_maxPlayers%              Max amount of players who can join this game
+%blockball_game_players%                 Current amount of players in this game
+%blockball_game_redScore%                Score of the red team
+%blockball_game_blueScore%               Score of the blue team
+%blockball_game_redName%                 DisplayName of the red team
+%blockball_game_blueName%                DisplayName of the blue team
+%blockball_game_redColor%                Color of the red team
+%blockball_game_blueColor%               Color of the blue team
+%blockball_game_time%                    Remaining time until the match ends
+%blockball_game_lastHitPlayerName%       Name of the player who was the last one to hit the ball, returns an empty text if no one has hit the ball yet
+%blockball_game_state%                   Returns JOINABLE,RUNNING,DISABLED
+%blockball_game_stateDisplayName%        Returns the state color formatted from the language file
+%blockball_game_isEnabled%               true if the game is enabled, false if not
+%blockball_game_isJoinAble%              true if the game is joinable, false if not
+%blockball_game_remainingPlayers%        Remaining amount of players required to start a match in minigame mode
+===================================      =====================================================================================================================================
 
-======================================================================   =======
-Description                                                              Placeholder
-======================================================================   =======
-Uses the name of the blue team                                           <blue>
-Uses the prefix (default color) of the blue team                         <bluecolor>
-Uses the current score of the blue team                                  <bluescore>
-Uses the game's displayname                                              <game>
-Uses the name of the player who was the last player touching the ball    <player>
-Uses the name of the red team                                            <red>
-Uses the prefix (default color) of the red team                          <redcolor>
-Uses the current score of the red team                                   <redscore>
-Uses the game's remaining players amount to join in order to start       <remaining>
-Uses the game's state (Enabled,Running,Disabled)                         <state>
-Uses the game's current amount of players value                          <sumplayers>
-Uses the game's max amount of players value                              <summaxplayers>
-Uses the game's current time value                                       <time>
-======================================================================   =======
+==================================       ======================================================================
+Team PlaceHolder                         Description
+==================================       ======================================================================
+%blockball_team_name%                    DisplayName of the team.
+%blockball_team_color%                   Color of the team
+%blockball_team_maxPlayers%              Max amount of player who can join this team
+%blockball_team_players%                 Current amount of players in the team
+==================================       ======================================================================
 
-**Games (Using the team of the player receiving the message)**
+==================================       ======================================================================
+Player Placeholder                       Description
+==================================       ======================================================================
+%blockball_player_isInGame%              true if the player is in a game, false if not
+%blockball_player_isInTeamRed%           true if the player is in a game and in team red, false if not
+%blockball_player_isInTeamBlue%          true if the player is in a game and in team blue, false if not
+==================================       ======================================================================
 
-======================================================================   =======
-Description                                                              Placeholder
-======================================================================   =======
-Uses the name of the team                                                <team>
-Uses the prefix (default color) of the team                              <teamcolor>
-Uses the teams's current amount of players value                         <players>
-Uses the teams's max amount of players value                             <maxplayers>
-======================================================================   =======
-
-**BungeeCord Joining Signs**
-
-======================================================================   =======
-Description                                                              Placeholder
-======================================================================   =======
-Uses the name of the target server                                       <server>
-======================================================================   =======
-
-**Placeholder API**
-
-It is also possible to redirect some values to the `PlaceHolder API plugin. <https://www.spigotmc.org/resources/placeholderapi.6245/>`__.
-
-Simply use the **Games** placeholders and append the prefix **%blockball_** and **sometimes the** suffix **_<id>**.
-Replace <id> with the id of the arena.
-
-Sample placeholder for the current amount of players in arena 1: **%blockball_<sumplayers>_1%**
-
-======================================================================   =======
-Description                                                              Placeholder
-======================================================================   =======
-Uses the name of the blue team                                           %blockball_<blue>_<id>%
-Uses the prefix (default color) of the blue team                         %blockball_<bluecolor>_<id>%
-Uses the current score of the blue team                                  %blockball_<bluescore>_<id>%
-Uses the game's displayname                                              %blockball_<game>_<id>%
-Uses the name of the player who was the last player touching the ball    %blockball_<player>_<id>%
-Uses the name of the red team                                            %blockball_<red>_<id>%
-Uses the prefix (default color) of the red team                          %blockball_<redcolor>_<id>%
-Uses the current score of the red team                                   %blockball_<redscore>_<id>%
-Uses the game's remaining players amount to join in order to start       %blockball_<remaining>_<id>%
-Uses the game's state (Enabled,Running,Disabled)                         %blockball_<state>_<id>%
-Uses the game's current amount of players value                          %blockball_<sumplayers>_<id>%
-Uses the game's max amount of players value                              %blockball_<summaxplayers>_<id>%
-Uses the game's current time value                                       %blockball_<time>_<id>%
-Uses the name of the current team of the player                          %blockball_<team>_<id>%
-Uses the prefix (default color) of the current team of the player        %blockball_<teamcolor>_<id>%
-Uses the current amount of players in the current team of the player     %blockball_<players>_<id>%
-Uses the max amount of players in the current team of the player         %blockball_<maxplayers>_<id>%
-======================================================================   =======

@@ -36,6 +36,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-legacy-relocate.${extension}"
     relocate("kotlin", "com.github.shynixn.blockball.lib.kotlin")
+    relocate("kotlinx", "com.github.shynixn.blockball.lib.kotlinx")
     relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intelli")
     relocate("org.jetbrains", "com.github.shynixn.blockball.lib.org.jetbrains")
     relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
@@ -49,6 +50,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
     relocate("org.apache", "com.github.shynixn.blockball.lib.org.apache")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
+    relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
 
     exclude("plugin.yml")
     rename("plugin-legacy.yml", "plugin.yml")
@@ -63,10 +65,12 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     archiveName = "${baseName}-${version}-legacy.${extension}"
     // destinationDir = File("C:\\temp\\plugins")
     exclude("kotlin/**")
+    exclude("kotlinx/**")
     exclude("org/**")
     exclude("javax/**")
     exclude("com/google/**")
     exclude("com/github/shynixn/mcutils/**")
+    exclude("com/github/shynixn/mccoroutine/**")
     exclude("plugin-legacy.yml")
 }
 
