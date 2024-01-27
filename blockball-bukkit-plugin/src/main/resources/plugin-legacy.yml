@@ -1,5 +1,5 @@
 name: BlockBall
-version: 6.39.0
+version: 6.40.0
 author: Shynixn
 website: https://www.spigotmc.org/members/shynixn.63455/
 main: com.github.shynixn.blockball.BlockBallPlugin
@@ -13,11 +13,6 @@ commands:
    blockballstop:
       description: Stops a running blockball game.
       usage: /<command> <id/name>
-      permission: blockball.command.admin
-      permission-message: You don't have permission.
-   blockballbungeecord:
-      description: Adds a new bungeecord sign for connecting to other BlockBall servers.
-      usage: /<command> <server>
       permission: blockball.command.admin
       permission-message: You don't have permission.
    blockballreload:

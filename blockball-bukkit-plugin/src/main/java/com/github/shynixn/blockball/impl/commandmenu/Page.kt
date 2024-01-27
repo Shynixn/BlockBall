@@ -1,10 +1,10 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.MenuCommand
 import com.github.shynixn.blockball.api.business.enumeration.MenuCommandResult
 import com.github.shynixn.blockball.api.business.enumeration.MenuPageKey
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
+import com.github.shynixn.mcutils.common.ChatColor
 
 /**
  * Created by Shynixn 2018.

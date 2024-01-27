@@ -2,12 +2,13 @@
 
 package com.github.shynixn.blockball.impl.listener
 
-import com.github.shynixn.blockball.api.bukkit.event.*
 import com.github.shynixn.blockball.api.business.enumeration.BallActionType
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
 import com.github.shynixn.blockball.api.business.service.BallEntityService
 import com.github.shynixn.blockball.api.business.service.ParticleService
-import com.github.shynixn.blockball.api.business.service.SoundService
+import com.github.shynixn.blockball.event.*
+import com.github.shynixn.blockball.impl.extension.toSoundMeta
+import com.github.shynixn.mcutils.common.sound.SoundService
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.event.EventHandler
@@ -35,7 +36,7 @@ class BallListener @Inject constructor(
      * @param event event
      */
     @EventHandler
-    fun ballDeathEvent(event: BallDeathEvent) {
+    fun ballDeathEvent(event: BallRemoveEvent) {
         this.ballEntityService.removeTrackedBall(event.ball)
     }
 
@@ -45,7 +46,7 @@ class BallListener @Inject constructor(
      * @param event event
      */
     @EventHandler
-    fun ballKickEvent(event: BallKickEvent) {
+    fun ballKickEvent(event: BallLeftClickEvent) {
         this.playEffects(event.ball, BallActionType.ONKICK)
     }
 
@@ -53,7 +54,7 @@ class BallListener @Inject constructor(
      * Gets called when a player right clicks a ball.
      */
     @EventHandler
-    fun ballPassEvent(event: BallPassEvent) {
+    fun ballPassEvent(event: BallRightClickEvent) {
         this.playEffects(event.ball, BallActionType.ONPASS)
     }
 
@@ -63,7 +64,7 @@ class BallListener @Inject constructor(
      * @param event event
      */
     @EventHandler
-    fun ballInteractEvent(event: BallTouchEvent) {
+    fun ballInteractEvent(event: BallTouchPlayerEvent) {
         this.playEffects(event.ball, BallActionType.ONINTERACTION)
     }
 
@@ -101,9 +102,9 @@ class BallListener @Inject constructor(
 
         if (ball.meta.soundEffects.containsKey(actionEffect)) {
             this.soundService.playSound(
-                ball.getLocation<Any>(),
-                ball.meta.soundEffects[actionEffect]!!,
-                ball.getLocation<Location>().world!!.players
+                ball.getLocation(),
+                ball.getLocation<Location>().world!!.players,
+                ball.meta.soundEffects[actionEffect]!!.toSoundMeta(),
             )
         }
     }

@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
-import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.Position
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.impl.serializer.ItemStackSerializer
@@ -58,18 +57,17 @@ class TeamMetaEntity(
     override var walkingSpeed: Double = 0.2
     /** Message getting played when a player joins a match.*/
     @YamlSerialize(orderNumber = 10, value = "join-message")
-    override var joinMessage: String =
-        "You have joined the game for " + PlaceHolder.ARENA_TEAMCOLOR.placeHolder + PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder + "."
+    override var joinMessage: String = "%blockball_lang_joinSuccessMessage%"
     /** Message getting played when a player leave a match.*/
     @YamlSerialize(orderNumber = 12, value = "leave-message")
-    override var leaveMessage: String = "You have left the game."
+    override var leaveMessage: String = "%blockball_lang_leaveMessage%"
     /** Lines displayed on the sign for joining the team. */
     @YamlSerialize(orderNumber = 13, value = "lines")
     override var signLines: List<String> = arrayListOf(
-        "&lBlockBall",
-        PlaceHolder.ARENA_DISPLAYNAME.placeHolder,
-        PlaceHolder.ARENA_TEAMCOLOR.placeHolder + PlaceHolder.ARENA_TEAMDISPLAYNAME.placeHolder,
-        PlaceHolder.ARENA_PLAYERS_ON_TEAM.placeHolder + '/' + PlaceHolder.ARENA_MAX_PLAYERS_ON_TEAM.placeHolder
+        "%blockball_lang_teamSignLine1%",
+        "%blockball_lang_teamSignLine2%",
+        "%blockball_lang_teamSignLine3%",
+        "%blockball_lang_teamSignLine4%",
     )
     /** Armor wearing this team. */
     @YamlSerialize(orderNumber = 8, value = "armor", customserializer = ItemStackSerializer::class)

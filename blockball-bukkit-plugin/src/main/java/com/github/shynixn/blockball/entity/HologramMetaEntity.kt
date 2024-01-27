@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
-import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.HologramMeta
 import com.github.shynixn.blockball.api.persistence.entity.Position
 
@@ -36,13 +35,8 @@ class HologramMetaEntity : HologramMeta {
     /** Position of the hologram. */
     @YamlSerialize("location", orderNumber = 1, implementation = PositionEntity::class)
     override var position: Position? = null
+
     /** Lines of the hologram being rendered. */
     @YamlSerialize("lines", orderNumber = 1)
-    override val lines: MutableList<String> = ArrayList()
-
-    init {
-        this.lines.add(
-            PlaceHolder.RED_COLOR.placeHolder + PlaceHolder.TEAM_RED.placeHolder + ' ' + PlaceHolder.RED_GOALS.placeHolder
-                + " : " + PlaceHolder.BLUE_COLOR.placeHolder + PlaceHolder.BLUE_GOALS.placeHolder + ' ' + PlaceHolder.TEAM_BLUE.placeHolder)
-    }
+    override val lines: MutableList<String> = mutableListOf("%blockball_lang_hologramMessage%")
 }

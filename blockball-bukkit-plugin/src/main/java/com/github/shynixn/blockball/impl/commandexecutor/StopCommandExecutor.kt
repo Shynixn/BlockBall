@@ -1,11 +1,12 @@
 package com.github.shynixn.blockball.impl.commandexecutor
 
+import com.github.shynixn.blockball.BlockBallLanguage
 import com.github.shynixn.blockball.api.business.executor.CommandExecutor
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.impl.extension.mergeArgs
 import com.github.shynixn.blockball.impl.extension.stripChatColors
+import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.google.inject.Inject
 
@@ -39,13 +40,11 @@ import com.google.inject.Inject
 class StopCommandExecutor @Inject constructor(
     private val gameService: GameService,
     private val proxyService: ProxyService,
-    private val configurationService: ConfigurationService
 ) : CommandExecutor {
     /**
      * Gets called when the given [source] executes the defined command with the given [args].
      */
     override fun <S> onExecuteCommand(source: S, args: Array<out String>): Boolean {
-        val prefix = configurationService.findValue<String>("messages.prefix")
         val mergedArgs = mergeArgs(0, args.size, args)
 
         for (game in gameService.getAllGames()) {
@@ -53,14 +52,20 @@ class StopCommandExecutor @Inject constructor(
                 game.closing = true
                 proxyService.sendMessage(
                     source,
-                    prefix + "Stopped game " + (game.arena.name + 1) + " named " + game.arena.displayName.translateChatColors() + "."
+                    BlockBallLanguage.stopGameMessage.format(
+                        game.arena.name + 1,
+                        game.arena.displayName.translateChatColors()
+                    )
                 )
                 return true
             } else if (game.arena.displayName.translateChatColors().stripChatColors().equals(mergedArgs, true)) {
                 game.closing = true
                 proxyService.sendMessage(
                     source,
-                    prefix + "Stopped game " + (game.arena.name + 1) + " named " + game.arena.displayName.translateChatColors() + "."
+                    BlockBallLanguage.stopGameMessage.format(
+                        game.arena.name + 1,
+                        game.arena.displayName.translateChatColors()
+                    )
                 )
                 return true
             }

@@ -1,14 +1,14 @@
 package com.github.shynixn.blockball.impl.commandexecutor
 
 import com.github.shynixn.blockball.api.business.enumeration.ChatClickAction
-import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.MenuCommand
 import com.github.shynixn.blockball.api.business.enumeration.MenuCommandResult
 import com.github.shynixn.blockball.api.business.executor.CommandExecutor
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.entity.ChatBuilderEntity
 import com.github.shynixn.blockball.impl.commandmenu.*
+import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
@@ -174,8 +174,7 @@ class ArenaCommandExecutor @Inject constructor(
             proxyService.sendMessage(source, FOOTER_STANDARD)
         } catch (e: Exception) {
             plugin.logger.log(Level.WARNING, "Command completion failed.", e)
-            val prefix = configurationService.findValue<String>("messages.prefix")
-            proxyService.sendMessage(source, prefix + "Cannot find command.")
+            proxyService.sendMessage(source, "[BlockBall] Cannot find command.")
             val data = StringBuilder()
             args.map { d -> data.append(d).append(" ") }
             plugin.logger.log(Level.INFO, "Cannot find command for args $data.")

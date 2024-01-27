@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
 import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
 
 class TeamSettingsPage @Inject constructor(private val proxyService: ProxyService) :

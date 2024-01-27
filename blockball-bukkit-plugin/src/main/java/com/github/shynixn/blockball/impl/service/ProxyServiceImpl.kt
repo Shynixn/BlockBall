@@ -97,17 +97,6 @@ class ProxyServiceImpl @Inject constructor(
     }
 
     /**
-     * Sends a plugin message through the given channel.
-     */
-    override fun <P> sendPlayerPluginMessage(player: P, channel: String, content: ByteArray) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        player.sendPluginMessage(this.pluginProxy as Plugin, "BungeeCord", content)
-    }
-
-    /**
      * Gets all available gamemodes.
      */
     override val gameModes: List<String>
@@ -129,17 +118,6 @@ class ProxyServiceImpl @Inject constructor(
         if (location is Position) {
             player.teleport(location.toLocation())
         }
-    }
-
-    /**
-     * Kicks the given player with the given message.
-     */
-    override fun <P> kickPlayer(player: P, message: String) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        player.kickPlayer(message)
     }
 
     /**

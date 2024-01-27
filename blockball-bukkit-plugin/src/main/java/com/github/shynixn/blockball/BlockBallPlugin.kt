@@ -1,18 +1,21 @@
 package com.github.shynixn.blockball
 
 import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.impl.commandexecutor.*
 import com.github.shynixn.blockball.impl.listener.*
+import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.common.reloadTranslation
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
 import com.google.inject.Guice
 import com.google.inject.Injector
+import kotlinx.coroutines.runBlocking
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.configuration.MemorySection
@@ -128,21 +131,15 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
 
         val dependencyService = resolve(DependencyService::class.java)
         val configurationService = resolve(ConfigurationService::class.java)
-        val bungeeCordConnectionService = resolve(BungeeCordConnectionService::class.java)
 
         dependencyService.checkForInstalledDependencies()
 
         val enableMetrics = configurationService.findValue<Boolean>("metrics")
-        val enableBungeeCord = configurationService.findValue<Boolean>("game.allow-server-linking")
 
         // Register CommandExecutor
         val commandService = resolve(CommandService::class.java)
         commandService.registerCommandExecutor("blockballstop", resolve(StopCommandExecutor::class.java))
         commandService.registerCommandExecutor("blockballreload", resolve(ReloadCommandExecutor::class.java))
-        commandService.registerCommandExecutor(
-            "blockballbungeecord",
-            resolve(BungeeCordSignCommandExecutor::class.java)
-        )
         commandService.registerCommandExecutor("blockball", resolve(ArenaCommandExecutor::class.java))
         commandService.registerCommandExecutor(
             (config.get("global-spectate") as MemorySection).getValues(false) as Map<String, String>,
@@ -161,21 +158,16 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
             Metrics(this, bstatsPluginId)
         }
 
-        if (dependencyService.isInstalled(PluginDependency.PLACEHOLDERAPI)) {
-            val placeHolderService = resolve(DependencyPlaceholderApiService::class.java)
-            placeHolderService.registerListener()
-        }
-
-        if (enableBungeeCord) {
-            bungeeCordConnectionService.restartChannelListeners()
-            Bukkit.getServer()
-                .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.DARK_GREEN + "Started server linking.")
-        }
-
         packetService!!.registerPacketListening(PacketInType.USEENTITY)
 
-        Bukkit.getServer()
-            .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + this.description.version + " by Shynixn")
+        val plugin = this
+        runBlocking {
+            val language = configurationService.findValue<String>("language")
+            plugin.reloadTranslation(language, BlockBallLanguage::class.java, "en_us")
+            logger.log(Level.INFO, "Loaded language file $language.properties.")
+            Bukkit.getServer()
+                .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
+        }
     }
 
     /**

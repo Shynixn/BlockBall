@@ -6,18 +6,20 @@ import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.entity.compatibility.GameEndEventEntity
-import com.github.shynixn.blockball.entity.compatibility.GameGoalEventEntity
+import com.github.shynixn.blockball.contract.PlaceHolderService
+import com.github.shynixn.blockball.event.GameEndEvent
+import com.github.shynixn.blockball.event.GameGoalEvent
 import com.google.inject.Inject
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 
 class GameSoccerServiceImpl @Inject constructor(
     private val concurrencyService: ConcurrencyService,
     private val screenMessageService: ScreenMessageService,
     private val dependencyService: DependencyService,
     private val ballEntityService: BallEntityService,
-    private val placeholderService: PlaceholderService,
+    private val placeholderService: PlaceHolderService,
     private val proxyService: ProxyService,
-    private val eventService: EventService
 ) : GameSoccerService {
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
@@ -173,8 +175,8 @@ class GameSoccerServiceImpl @Inject constructor(
             game.lastInteractedEntity = interactionEntity
         }
 
-        val gameGoalEntityEvent = GameGoalEventEntity(game, interactionEntity, team)
-        eventService.sendEvent(gameGoalEntityEvent)
+        val gameGoalEntityEvent = GameGoalEvent(interactionEntity as Player?, team, game)
+        Bukkit.getPluginManager().callEvent(gameGoalEntityEvent)
 
         if (gameGoalEntityEvent.isCancelled) {
             return
@@ -200,10 +202,11 @@ class GameSoccerServiceImpl @Inject constructor(
         }
 
         players.forEach { p ->
+            require(p is Player)
             screenMessageService.setTitle(
                 p,
-                placeholderService.replacePlaceHolders(scoreMessageTitle, game, scoreTeamMeta),
-                placeholderService.replacePlaceHolders(scoreMessageSubTitle, game, scoreTeamMeta),
+                placeholderService.replacePlaceHolders(scoreMessageTitle, p, game, scoreTeamMeta),
+                placeholderService.replacePlaceHolders(scoreMessageSubTitle,p, game, scoreTeamMeta),
                 teamMeta.scoreMessageFadeIn,
                 teamMeta.scoreMessageStay,
                 teamMeta.scoreMessageFadeOut
@@ -229,7 +232,7 @@ class GameSoccerServiceImpl @Inject constructor(
                     this.executeCommand(
                         game,
                         game.arena.meta.rewardMeta.commandReward[RewardType.SHOOT_GOAL]!!,
-                        arrayListOf(game.lastInteractedEntity!!)
+                        arrayListOf(game.lastInteractedEntity!! as Player)
                     )
                 }
             }
@@ -268,7 +271,7 @@ class GameSoccerServiceImpl @Inject constructor(
             this.executeCommand(
                 game,
                 game.arena.meta.rewardMeta.commandReward[RewardType.WIN_MATCH]!!,
-                winningPlayers as List<Any>
+                winningPlayers as List<Player>
             )
         }
 
@@ -276,7 +279,7 @@ class GameSoccerServiceImpl @Inject constructor(
             this.executeCommand(
                 game,
                 game.arena.meta.rewardMeta.commandReward[RewardType.LOOSING_MATCH]!!,
-                loosingPlayers as List<Any>
+                loosingPlayers as List<Player>
             )
         }
 
@@ -284,7 +287,7 @@ class GameSoccerServiceImpl @Inject constructor(
             this.executeCommand(
                 game,
                 game.arena.meta.rewardMeta.commandReward[RewardType.PARTICIPATE_MATCH]!!,
-                game.inTeamPlayers
+                game.inTeamPlayers as List<Player>
             )
         }
     }
@@ -293,8 +296,8 @@ class GameSoccerServiceImpl @Inject constructor(
      * Gets called when the given [game] gets win by the given [team].
      */
     override fun onWin(game: Game, team: Team, teamMeta: TeamMeta) {
-        val event = GameEndEventEntity(game, team)
-        eventService.sendEvent(event)
+        val event =GameEndEvent(team, game)
+        Bukkit.getPluginManager().callEvent(event)
 
         if (event.isCancelled) {
             return
@@ -308,10 +311,11 @@ class GameSoccerServiceImpl @Inject constructor(
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
 
         players.forEach { p ->
+            require(p is Player)
             screenMessageService.setTitle(
                 p,
-                placeholderService.replacePlaceHolders(winMessageTitle, game),
-                placeholderService.replacePlaceHolders(winMessageSubTitle, game),
+                placeholderService.replacePlaceHolders(winMessageTitle, p, game),
+                placeholderService.replacePlaceHolders(winMessageSubTitle, p, game),
                 teamMeta.winMessageFadeIn,
                 teamMeta.winMessageStay,
                 teamMeta.winMessageFadeOut,
@@ -345,7 +349,7 @@ class GameSoccerServiceImpl @Inject constructor(
     /**
      * Executes a single command.
      */
-    private fun executeCommand(game: Game, meta: CommandMeta, players: List<Any>) {
+    private fun executeCommand(game: Game, meta: CommandMeta, players: List<Player>) {
         var command = meta.command
         if (command!!.startsWith("/")) {
             command = command.substring(1, command.length)
@@ -355,15 +359,16 @@ class GameSoccerServiceImpl @Inject constructor(
         }
         when {
             meta.mode == CommandMode.PER_PLAYER -> players.forEach { p ->
-                proxyService.performPlayerCommand(p, placeholderService.replacePlaceHolders(command, game))
+                proxyService.performPlayerCommand(p, placeholderService.replacePlaceHolders(command, p ,game))
             }
             meta.mode == CommandMode.CONSOLE_PER_PLAYER -> players.forEach { p ->
                 game.lastInteractedEntity = p
-                proxyService.performServerCommand(placeholderService.replacePlaceHolders(command, game))
+                proxyService.performServerCommand(placeholderService.replacePlaceHolders(command,p, game))
             }
             meta.mode == CommandMode.CONSOLE_SINGLE -> proxyService.performServerCommand(
                 placeholderService.replacePlaceHolders(
                     command,
+                    null,
                     game
                 )
             )

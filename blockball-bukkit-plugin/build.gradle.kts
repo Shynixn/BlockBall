@@ -1,4 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import java.util.*
+import java.io.*
 
 plugins {
     id("com.github.johnrengelman.shadow") version ("7.0.0")
@@ -34,6 +36,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-legacy-relocate.${extension}"
     relocate("kotlin", "com.github.shynixn.blockball.lib.kotlin")
+    relocate("kotlinx", "com.github.shynixn.blockball.lib.kotlinx")
     relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intelli")
     relocate("org.jetbrains", "com.github.shynixn.blockball.lib.org.jetbrains")
     relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
@@ -47,6 +50,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
     relocate("org.apache", "com.github.shynixn.blockball.lib.org.apache")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
+    relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
 
     exclude("plugin.yml")
     rename("plugin-legacy.yml", "plugin.yml")
@@ -61,10 +65,12 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     archiveName = "${baseName}-${version}-legacy.${extension}"
     // destinationDir = File("C:\\temp\\plugins")
     exclude("kotlin/**")
+    exclude("kotlinx/**")
     exclude("org/**")
     exclude("javax/**")
     exclude("com/google/**")
     exclude("com/github/shynixn/mcutils/**")
+    exclude("com/github/shynixn/mccoroutine/**")
     exclude("plugin-legacy.yml")
 }
 
@@ -90,8 +96,10 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     // destinationDir = File("C:\\temp\\plugins")
 
     exclude("com/github/shynixn/mcutils/**")
+    exclude("com/github/shynixn/mccoroutine/**")
     exclude("org/**")
     exclude("kotlin/**")
+    exclude("kotlinx/**")
     exclude("javax/**")
     exclude("com/google/**")
     exclude("plugin-legacy.yml")
@@ -107,9 +115,8 @@ repositories {
 
 dependencies {
     implementation(project(":blockball-api"))
-    implementation(project(":blockball-bukkit-api"))
 
-    implementation("com.github.shynixn.mcutils:common:1.0.41")
+    implementation("com.github.shynixn.mcutils:common:1.0.48")
     implementation("com.github.shynixn.mcutils:packet:1.0.65")
 
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
@@ -117,6 +124,9 @@ dependencies {
     implementation("com.google.inject:guice:5.0.1")
     implementation("commons-io:commons-io:2.6")
     implementation("com.google.code.gson:gson:2.8.6")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.13.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.13.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     compileOnly("me.clip:placeholderapi:2.9.2")
     compileOnly("net.milkbowlvault:VaultAPI:1.7")
@@ -124,4 +134,32 @@ dependencies {
 
     testImplementation("org.xerial:sqlite-jdbc:3.23.1")
     testImplementation("org.spigotmc:spigot:1.16.4-R0.1-SNAPSHOT")
+}
+
+tasks.register("languageFile") {
+    val kotlinSrcFolder = project.sourceSets.toList()[0].allJava.srcDirs.first { e -> e.endsWith("java") }
+    val languageKotlinFile = kotlinSrcFolder.resolve("com/github/shynixn/blockball/BlockBallLanguage.kt")
+    val resourceFile = kotlinSrcFolder.parentFile.resolve("resources").resolve("lang").resolve("en_us.properties")
+    val bundle = FileInputStream(resourceFile).use { stream ->
+        PropertyResourceBundle(stream)
+    }
+
+    val contents = ArrayList<String>()
+    contents.add("package com.github.shynixn.blockball")
+    contents.add("")
+    contents.add("object BlockBallLanguage {")
+    for (key in bundle.keys) {
+        val value = bundle.getString(key)
+        contents.add("  /** $value **/")
+        contents.add("  var ${key} : String = \"$value\"")
+        contents.add("")
+    }
+    contents.removeLast()
+    contents.add("}")
+
+    languageKotlinFile.printWriter().use { out ->
+        for (line in contents) {
+            out.println(line)
+        }
+    }
 }

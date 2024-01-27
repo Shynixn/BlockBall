@@ -1,43 +1,16 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
+import com.github.shynixn.blockball.BlockBallLanguage
 import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.business.service.RightclickManageService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
 
-/**
- * Created by Shynixn 2018.
- * <p>
- * Version 1.2
- * <p>
- * MIT License
- * <p>
- * Copyright (c) 2018 by Shynixn
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 class SignSettingsPage @Inject constructor(
-    private val configurationService: ConfigurationService,
     private val proxyService: ProxyService,
     private val rightclickManageService: RightclickManageService
 ) : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
@@ -62,36 +35,34 @@ class SignSettingsPage @Inject constructor(
      * @param cache cache
      */
     override fun <P> execute(player: P, command: MenuCommand, cache: Array<Any?>, args: Array<String>): MenuCommandResult {
-        val prefix = configurationService.findValue<String>("messages.prefix")
-
         val arena = cache[0] as Arena
         when (command) {
             MenuCommand.SIGNS_ADDTEAMRED -> {
-                proxyService.sendMessage(player, prefix + "Rightclick on a sign.")
+                proxyService.sendMessage(player, BlockBallLanguage.rightClickOnSign)
                 rightclickManageService.watchForNextRightClickSign<P, Any>(player) { location ->
                     arena.meta.redTeamMeta.signs.add(proxyService.toPosition(location))
-                    proxyService.sendMessage(player, prefix + "Save and reload to enable the sign.")
+                    proxyService.sendMessage(player, BlockBallLanguage.saveAndReloadSign)
                 }
             }
             MenuCommand.SIGNS_ADDTEAMBLUE -> {
-                proxyService.sendMessage(player, prefix + "Rightclick on a sign.")
+                proxyService.sendMessage(player,BlockBallLanguage.rightClickOnSign)
                 rightclickManageService.watchForNextRightClickSign<P, Any>(player) { location ->
                     arena.meta.blueTeamMeta.signs.add(proxyService.toPosition(location))
-                    proxyService.sendMessage(player, prefix + "Save and reload to enable the sign.")
+                    proxyService.sendMessage(player, BlockBallLanguage.saveAndReloadSign)
                 }
             }
             MenuCommand.SIGNS_ADDJOINANY -> {
-                proxyService.sendMessage(player, prefix + "Rightclick on a sign.")
+                proxyService.sendMessage(player, BlockBallLanguage.rightClickOnSign)
                 rightclickManageService.watchForNextRightClickSign<P, Any>(player) { location ->
                     arena.meta.lobbyMeta.joinSigns.add(proxyService.toPosition(location))
-                    proxyService.sendMessage(player, prefix + "Save and reload to enable the sign.")
+                    proxyService.sendMessage(player, BlockBallLanguage.saveAndReloadSign)
                 }
             }
             MenuCommand.SIGNS_LEAVE -> {
-                proxyService.sendMessage(player, prefix + "Rightclick on a sign.")
+                proxyService.sendMessage(player,BlockBallLanguage.rightClickOnSign)
                 rightclickManageService.watchForNextRightClickSign<P, Any>(player) { location ->
                     arena.meta.lobbyMeta.leaveSigns.add(proxyService.toPosition(location))
-                    proxyService.sendMessage(player, prefix + "Save and reload to enable the sign.")
+                    proxyService.sendMessage(player, BlockBallLanguage.saveAndReloadSign)
                 }
             }
             else -> {

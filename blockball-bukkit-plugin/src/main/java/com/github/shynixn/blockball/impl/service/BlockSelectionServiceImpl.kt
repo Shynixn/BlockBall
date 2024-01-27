@@ -2,11 +2,11 @@
 
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.MaterialType
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.impl.extension.stripChatColors
+import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.google.inject.Inject
 import org.bukkit.Location
@@ -47,13 +47,11 @@ import kotlin.collections.HashSet
 @Suppress("DEPRECATION", "SENSELESS_COMPARISON")
 class BlockSelectionServiceImpl @Inject constructor(
     private val concurrencyService: ConcurrencyService,
-    configurationService: ConfigurationService,
     private val itemTypeService: ItemTypeService
 ) : BlockSelectionService {
     private val axeName =
         ChatColor.WHITE.toString() + ChatColor.BOLD + ">>" + ChatColor.YELLOW + "BlockBall" + ChatColor.WHITE + ChatColor.BOLD + "<<"
     private val playerSelection = HashMap<Player, Array<Location?>>()
-    private val prefix = configurationService.findValue<String>("messages.prefix")
     private val rightClickSelectionCahe = HashSet<Player>()
 
     /**
@@ -69,7 +67,7 @@ class BlockSelectionServiceImpl @Inject constructor(
         }
 
         if (selectLocation(player, location, 0)) {
-            player.sendMessage(prefix + ChatColor.YELLOW.toString() + "Leftclick: " + location.blockX + " " + location.blockY + " " + location.blockZ)
+            player.sendMessage(ChatColor.YELLOW.toString() + "Leftclick: " + location.blockX + " " + location.blockY + " " + location.blockZ)
             return true
         }
 
@@ -89,7 +87,7 @@ class BlockSelectionServiceImpl @Inject constructor(
         }
 
         if (!rightClickSelectionCahe.contains(player) && selectLocation(player, location, 1)) {
-            player.sendMessage(prefix + ChatColor.YELLOW.toString() + "Rightclick: " + location.blockX + " " + location.blockY + " " + location.blockZ)
+            player.sendMessage(ChatColor.YELLOW.toString() + "Rightclick: " + location.blockX + " " + location.blockY + " " + location.blockZ)
 
             rightClickSelectionCahe.add(player)
             concurrencyService.runTaskSync(10L) {
@@ -203,7 +201,7 @@ class BlockSelectionServiceImpl @Inject constructor(
         meta.setDisplayName(axeName.translateChatColors())
         itemStack.itemMeta = meta
         player.inventory.addItem(itemStack)
-        player.sendMessage(prefix + "Take a look into your inventory. Use this golden axe for selection.")
+        player.sendMessage("Take a look into your inventory. Use this golden axe for selection.")
     }
 
     /**

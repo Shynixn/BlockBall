@@ -5,6 +5,8 @@ import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Arena
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
@@ -72,8 +74,6 @@ class MainConfigurationPage @Inject constructor(
         cache: Array<Any?>,
         args: Array<String>
     ): MenuCommandResult {
-        val prefix = configurationService.findValue<String>("messages.prefix")
-
         if (command == MenuCommand.ARENA_CREATE) {
 
         } else if (command == MenuCommand.ARENA_EDIT) {
@@ -139,10 +139,6 @@ class MainConfigurationPage @Inject constructor(
 
                 arena.meta.redTeamMeta.goal.setCorners(leftPosition, rightPosition)
                 virtualArenaService.displayForPlayer(player, arena)
-                screenMessageService.setActionBar(
-                    player,
-                    prefix + "Changed goal selection. Rendering virtual blocks..."
-                )
             } else {
                 return MenuCommandResult.WESELECTION_MISSING
             }
@@ -173,10 +169,6 @@ class MainConfigurationPage @Inject constructor(
 
                 arena.meta.blueTeamMeta.goal.setCorners(leftPosition, rightPosition)
                 virtualArenaService.displayForPlayer(player, arena)
-                screenMessageService.setActionBar(
-                    player,
-                    prefix + "Changed goal selection. Rendering virtual blocks..."
-                )
             } else {
                 return MenuCommandResult.WESELECTION_MISSING
             }

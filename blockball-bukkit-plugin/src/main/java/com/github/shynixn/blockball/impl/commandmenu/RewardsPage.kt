@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
 import com.github.shynixn.blockball.entity.ChatBuilderEntity
 import com.github.shynixn.blockball.entity.CommandMetaEntity
+import com.github.shynixn.mcutils.common.ChatColor
 
 /**
  * Created by Shynixn 2018.

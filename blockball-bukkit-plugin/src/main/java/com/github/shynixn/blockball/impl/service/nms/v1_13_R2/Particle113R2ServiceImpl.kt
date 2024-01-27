@@ -3,11 +3,11 @@
 package com.github.shynixn.blockball.impl.service.nms.v1_13_R2
 
 import com.github.shynixn.blockball.api.business.enumeration.ParticleType
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.ItemTypeService
 import com.github.shynixn.blockball.api.business.service.ParticleService
 import com.github.shynixn.blockball.api.persistence.entity.Particle
 import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -46,7 +46,6 @@ import java.util.logging.Level
  * SOFTWARE.
  */
 class Particle113R2ServiceImpl @Inject constructor(
-    private val configurationService: ConfigurationService,
     private val itemTypeService: ItemTypeService
 ) :
     ParticleService {

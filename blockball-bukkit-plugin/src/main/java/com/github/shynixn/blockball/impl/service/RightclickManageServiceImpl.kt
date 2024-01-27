@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.business.service.RightclickManageService
+import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
 
 /**

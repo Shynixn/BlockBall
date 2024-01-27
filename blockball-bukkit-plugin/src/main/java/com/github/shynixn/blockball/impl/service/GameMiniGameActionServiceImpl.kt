@@ -1,14 +1,21 @@
 package com.github.shynixn.blockball.impl.service
 
+import com.github.shynixn.blockball.BlockBallLanguage
 import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.Game
 import com.github.shynixn.blockball.api.persistence.entity.GameStorage
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
+import com.github.shynixn.blockball.contract.PlaceHolderService
 import com.github.shynixn.blockball.entity.ChatBuilderEntity
 import com.github.shynixn.blockball.entity.GameStorageEntity
+import com.github.shynixn.blockball.impl.extension.toSoundMeta
+import com.github.shynixn.mcutils.common.ConfigurationService
+import com.github.shynixn.mcutils.common.sound.SoundService
 import com.google.inject.Inject
+import org.bukkit.Location
+import org.bukkit.entity.Player
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -47,9 +54,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private val gameSoccerService: GameSoccerService,
     private val gameExecutionService: GameExecutionService,
     private val concurrencyService: ConcurrencyService,
-    private val placeholderService: PlaceholderService
+    private val placeholderService: PlaceHolderService
 ) : GameMiniGameActionService {
-    private val prefix = configurationService.findValue<String>("messages.prefix")
 
     /**
      * Closes the given game and all underlying resources.
@@ -66,16 +72,16 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Does nothing if the player is already in a Game.
      */
     override fun <P> joinGame(game: MiniGame, player: P, team: Team?): Boolean {
-        require(player is Any)
+        require(player is Player)
 
         if (game.playing || game.isLobbyFull) {
             val b = ChatBuilderEntity().text(
-                prefix + placeholderService.replacePlaceHolders(
-                    game.arena.meta.spectatorMeta.spectateStartMessage[0], game
+                placeholderService.replacePlaceHolders(
+                    game.arena.meta.spectatorMeta.spectateStartMessage[0], player, game
                 )
             ).nextLine().component(
-                prefix + placeholderService.replacePlaceHolders(
-                    game.arena.meta.spectatorMeta.spectateStartMessage[1], game
+                placeholderService.replacePlaceHolders(
+                    game.arena.meta.spectatorMeta.spectateStartMessage[1], player, game
                 )
             ).setClickAction(
                 ChatClickAction.RUN_COMMAND,
@@ -187,10 +193,11 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     override fun onDraw(game: MiniGame) {
         val additionalPlayers = getNotifiedPlayers(game).filter { pair -> pair.second }.map { p -> p.first }
         additionalPlayers.forEach { p ->
+            require(p is Player)
             screenMessageService.setTitle(
                 p,
-                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle, game),
-                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageSubTitle, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle, p, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageSubTitle,p, game),
                 game.arena.meta.redTeamMeta.drawMessageFadeIn,
                 game.arena.meta.redTeamMeta.drawMessageStay,
                 game.arena.meta.redTeamMeta.drawMessageFadeOut,
@@ -198,20 +205,22 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         }
 
         game.redTeam.forEach { p ->
+            require(p is Player)
             screenMessageService.setTitle(
                 p,
-                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle, game),
-                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageSubTitle, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle,p, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageSubTitle,p, game),
                 game.arena.meta.redTeamMeta.drawMessageFadeIn,
                 game.arena.meta.redTeamMeta.drawMessageStay,
                 game.arena.meta.redTeamMeta.drawMessageFadeOut,
             )
         }
         game.blueTeam.forEach { p ->
+            require(p is Player)
             screenMessageService.setTitle(
                 p,
-                placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageTitle, game),
-                placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageSubTitle, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageTitle, p,game),
+                placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageSubTitle,p, game),
                 game.arena.meta.blueTeamMeta.drawMessageFadeIn,
                 game.arena.meta.blueTeamMeta.drawMessageStay,
                 game.arena.meta.blueTeamMeta.drawMessageFadeOut,
@@ -249,7 +258,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
             if (game.lobbyCountdown < 5) {
                 game.ingamePlayersStorage.keys.forEach { p ->
-                    soundService.playSound(proxyService.getEntityLocation<Any, Any>(p), game.blingSound, arrayListOf(p))
+                    require(p is Player)
+                    soundService.playSound(proxyService.getEntityLocation<Location, Any>(p), arrayListOf(p), game.blingSound.toSoundMeta() )
                 }
             }
 
@@ -264,10 +274,11 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
                 game.lobbyCountDownActive = false
                 game.playing = true
-                game.status = GameStatus.RUNNING
+                game.status = GameState.RUNNING
                 game.matchTimeIndex = -1
 
                 game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
+                    require(p is Player)
                     val stats = game.ingamePlayersStorage[p]
 
                     if (stats!!.team == null) {
@@ -293,9 +304,10 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 game.lobbyCountdown = game.arena.meta.minigameMeta.lobbyDuration
             } else if (!game.playing) {
                 game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
+                    require(p is Player)
                     screenMessageService.setActionBar(
                         p, placeholderService.replacePlaceHolders(
-                            game.arena.meta.minigameMeta.playersRequiredToStartMessage, game
+                            game.arena.meta.minigameMeta.playersRequiredToStartMessage, p, game
                         )
                     )
                 }
@@ -311,7 +323,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 }
 
                 if (game.gameCountdown <= 5) {
-                    soundService.playSound(proxyService.getEntityLocation<Any, Any>(p), game.blingSound, arrayListOf(p))
+                    require(p is Player)
+                    soundService.playSound(proxyService.getEntityLocation<Location, Any>(p), arrayListOf(p), game.blingSound.toSoundMeta())
                 }
 
                 proxyService.setPlayerLevel(p, game.gameCountdown)
@@ -378,8 +391,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 concurrencyService.runTaskSync(20L * 3) {
                     screenMessageService.setTitle(
                         p,
-                        placeholderService.replacePlaceHolders(matchTime.startMessageTitle, game),
-                        placeholderService.replacePlaceHolders(matchTime.startMessageSubTitle, game),
+                        placeholderService.replacePlaceHolders(matchTime.startMessageTitle, null, game),
+                        placeholderService.replacePlaceHolders(matchTime.startMessageSubTitle, null, game),
                         matchTime.startMessageFadeIn,
                         matchTime.startMessageStay,
                         matchTime.startMessageFadeOut
@@ -429,7 +442,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     /**
      * Joins the [player] to the given [teamMeta].
      */
-    private fun joinTeam(game: MiniGame, player: Any, team: Team, teamMeta: TeamMeta) {
+    private fun joinTeam(game: MiniGame, player: Player, team: Team, teamMeta: TeamMeta) {
         proxyService.setPlayerWalkingSpeed(player, teamMeta.walkingSpeed)
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
@@ -451,8 +464,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         }
 
         proxyService.sendMessage(
-            player, prefix + placeholderService.replacePlaceHolders(
-                teamMeta.joinMessage, game, teamMeta, players.size
+            player, placeholderService.replacePlaceHolders(
+                teamMeta.joinMessage, player, game, teamMeta, players.size
             )
         )
     }
@@ -470,9 +483,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             return true
         }
 
-        proxyService.sendMessage(
-            player, prefix + configurationService.findValue<String>("messages.no-permission-spectate-game")
-        )
+        proxyService.sendMessage(player, BlockBallLanguage.spectateNoPermission)
 
         return false
     }

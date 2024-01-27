@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.enumeration.ChatColor
 import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
 import com.github.shynixn.blockball.api.business.service.DependencyService
+import com.github.shynixn.mcutils.common.ChatColor
 import org.bukkit.Bukkit
 
 /**

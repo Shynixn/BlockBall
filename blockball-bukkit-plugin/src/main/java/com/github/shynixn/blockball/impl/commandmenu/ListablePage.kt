@@ -2,10 +2,10 @@ package com.github.shynixn.blockball.impl.commandmenu
 
 import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.business.service.SoundService
 import com.github.shynixn.blockball.api.business.service.TemplateService
 import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
 import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.mcutils.common.EffectTargetType
 import com.google.inject.Inject
 
 /**
@@ -38,7 +38,6 @@ import com.google.inject.Inject
 class ListablePage @Inject constructor(
     private val templateService: TemplateService,
     private val proxyService: ProxyService,
-    private val soundService: SoundService
 ) : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
     /**
      * Returns the key of the command when this page should be executed.
@@ -106,7 +105,7 @@ class ListablePage @Inject constructor(
                 cache[3] = MenuCommand.REWARD_CALLBACK_COMMAND
             }
             MenuCommand.LIST_SOUND_TYPES -> {
-                cache[2] = soundService.soundNames
+                cache[2] = org.bukkit.Sound.values().map { s -> s.name }
                 cache[3] = MenuCommand.SOUND_CALLBACK_TYPE
             }
             MenuCommand.LIST_SOUND_EFFECTINGTYPES -> {

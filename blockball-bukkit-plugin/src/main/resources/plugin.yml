@@ -1,34 +1,30 @@
 name: BlockBall
-version: 6.39.0
+version: 6.40.0
 author: Shynixn
 website: https://www.spigotmc.org/members/shynixn.63455/
 main: com.github.shynixn.blockball.BlockBallPlugin
-softdepend: [BossBarAPI, PlaceholderAPI, Vault]
+softdepend: [ BossBarAPI, PlaceholderAPI, Vault ]
 libraries:
-   - 'org.slf4j:slf4j-jdk14:1.7.25'
-   - 'com.google.inject:guice:5.0.1'
-   - 'aopalliance:aopalliance:1.0'
-   - 'commons-io:commons-io:2.6'
-   - 'com.google.code.gson:gson:2.8.6'
-   - 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.32'
+  - 'org.slf4j:slf4j-jdk14:1.7.25'
+  - 'com.google.inject:guice:5.0.1'
+  - 'aopalliance:aopalliance:1.0'
+  - 'commons-io:commons-io:2.6'
+  - 'com.google.code.gson:gson:2.8.6'
+  - 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21'
+  - 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
 commands:
-   blockball:
-      description: Opens the arena creation UI.
-      usage: /<command>
-      permission: blockball.command.admin
-      permission-message: You don't have permission.
-   blockballstop:
-      description: Stops a running blockball game.
-      usage: /<command> <id/name>
-      permission: blockball.command.admin
-      permission-message: You don't have permission.
-   blockballbungeecord:
-      description: Adds a new bungeecord sign for connecting to other BlockBall servers.
-      usage: /<command> <server>
-      permission: blockball.command.admin
-      permission-message: You don't have permission.
-   blockballreload:
-      description: Reloads Blockball configuration and restarts all games.
-      usage: /<command>
-      permission: blockball.command.reload
-      permission-message: You don't have permission.
+  blockball:
+    description: Opens the arena creation UI.
+    usage: /<command>
+    permission: blockball.command.admin
+    permission-message: You don't have permission.
+  blockballstop:
+    description: Stops a running blockball game.
+    usage: /<command> <id/name>
+    permission: blockball.command.admin
+    permission-message: You don't have permission.
+  blockballreload:
+    description: Reloads Blockball configuration and restarts all games.
+    usage: /<command>
+    permission: blockball.command.reload
+    permission-message: You don't have permission.

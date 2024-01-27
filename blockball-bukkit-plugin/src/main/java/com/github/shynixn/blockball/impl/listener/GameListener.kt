@@ -1,11 +1,11 @@
 package com.github.shynixn.blockball.impl.listener
 
-import com.github.shynixn.blockball.api.bukkit.event.BallRayTraceEvent
-import com.github.shynixn.blockball.api.bukkit.event.BallTouchEvent
 import com.github.shynixn.blockball.api.business.enumeration.Permission
 import com.github.shynixn.blockball.api.business.enumeration.Team
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.HubGame
+import com.github.shynixn.blockball.event.BallRayTraceEvent
+import com.github.shynixn.blockball.event.BallTouchPlayerEvent
 import com.github.shynixn.blockball.impl.extension.hasPermission
 import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.blockball.impl.extension.toPosition
@@ -261,7 +261,7 @@ class GameListener @Inject constructor(
      * Caches the last interacting entity with the ball.
      */
     @EventHandler
-    fun onBallInteractEvent(event: BallTouchEvent) {
+    fun onBallInteractEvent(event: BallTouchPlayerEvent) {
         val game = gameService.getAllGames().find { p -> p.ball != null && p.ball!! == event.ball }
 
         if (game != null) {

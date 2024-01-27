@@ -2,53 +2,29 @@
 
 package com.github.shynixn.blockball.impl.service
 
+import com.github.shynixn.blockball.BlockBallLanguage
 import com.github.shynixn.blockball.api.BlockBallApi
 import com.github.shynixn.blockball.api.business.enumeration.*
 import com.github.shynixn.blockball.api.business.proxy.PluginProxy
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.*
-import com.github.shynixn.blockball.entity.compatibility.GameJoinEventEntity
-import com.github.shynixn.blockball.entity.compatibility.GameLeaveEventEntity
+import com.github.shynixn.blockball.contract.PlaceHolderService
+import com.github.shynixn.blockball.event.GameJoinEvent
+import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.blockball.impl.PacketHologram
 import com.github.shynixn.blockball.impl.extension.getCompatibilityServerVersion
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.google.inject.Inject
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 
-/**
- * Created by Shynixn 2018.
- * <p>
- * Version 1.2
- * <p>
- * MIT License
- * <p>
- * Copyright (c) 2018 by Shynixn
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 class GameActionServiceImpl @Inject constructor(
     private val pluginProxy: PluginProxy,
     private val gameHubGameActionService: GameHubGameActionService,
     private val bossBarService: BossBarService,
-    private val configurationService: ConfigurationService,
     private val hubGameActionService: GameHubGameActionService,
     private val minigameActionService: GameMiniGameActionService,
     private val bungeeCordGameActionService: GameBungeeCordGameActionService,
@@ -56,14 +32,11 @@ class GameActionServiceImpl @Inject constructor(
     private val dependencyService: DependencyService,
     private val dependencyBossBarApiService: DependencyBossBarApiService,
     private val gameSoccerService: GameSoccerService,
-    private val placeholderService: PlaceholderService,
-    private val eventService: EventService,
+    private val placeholderService: PlaceHolderService,
     private val proxyService: ProxyService,
     private val packetService: PacketService,
     private val plugin: Plugin,
 ) : GameActionService {
-    private val prefix = configurationService.findValue<String>("messages.prefix")
-
     // Cyclic Reference reason why it cannot be constructor parameter.
     private val gameService: GameService by lazy {
         BlockBallApi.resolve(GameService::class.java)
@@ -85,8 +58,9 @@ class GameActionServiceImpl @Inject constructor(
             this.leaveGame(g, player)
         }
 
-        val event = GameJoinEventEntity(game, player)
-        eventService.sendEvent(event)
+        require(player is Player)
+        val event = GameJoinEvent(player, game)
+        Bukkit.getPluginManager().callEvent(event)
 
         if (event.isCancelled) {
             return false
@@ -107,9 +81,9 @@ class GameActionServiceImpl @Inject constructor(
      * Does nothing if the player is not in the game.
      */
     override fun <P> leaveGame(game: Game, player: P) {
-        require(player is Any)
-        val event = GameLeaveEventEntity(game, player)
-        eventService.sendEvent(event)
+        require(player is Player)
+        val event = GameLeaveEvent(player, game)
+        Bukkit.getPluginManager().callEvent(event)
 
         if (event.isCancelled) {
             return
@@ -143,9 +117,9 @@ class GameActionServiceImpl @Inject constructor(
             val storage = game.ingamePlayersStorage[player]!!
 
             if (storage.team == Team.RED) {
-                proxyService.sendMessage(player, prefix + game.arena.meta.redTeamMeta.leaveMessage)
+                proxyService.sendMessage(player, placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.leaveMessage, player, game, null, null))
             } else if (storage.team == Team.BLUE) {
-                proxyService.sendMessage(player, prefix + game.arena.meta.blueTeamMeta.leaveMessage)
+                proxyService.sendMessage(player, placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.leaveMessage, player, game, null, null))
             }
 
             game.ingamePlayersStorage.remove(player)
@@ -179,7 +153,7 @@ class GameActionServiceImpl @Inject constructor(
             )
         }
 
-        game.status = GameStatus.DISABLED
+        game.status = GameState.DISABLED
         game.closed = true
         game.ingamePlayersStorage.keys.toTypedArray().forEach { p -> leaveGame(game, p) }
         game.ingamePlayersStorage.clear()
@@ -199,7 +173,7 @@ class GameActionServiceImpl @Inject constructor(
      */
     override fun handle(game: Game, ticks: Int) {
         if (!game.arena.enabled || game.closing) {
-            game.status = GameStatus.DISABLED
+            game.status = GameState.DISABLED
             onUpdateSigns(game)
             closeGame(game)
             if (game.ingamePlayersStorage.isNotEmpty() && game.arena.gameType != GameType.BUNGEE) {
@@ -208,8 +182,8 @@ class GameActionServiceImpl @Inject constructor(
             return
         }
 
-        if (game.status == GameStatus.DISABLED) {
-            game.status = GameStatus.ENABLED
+        if (game.status == GameState.DISABLED) {
+            game.status = GameState.JOINABLE
         }
 
         if (proxyService.getWorldFromName<Any?>(game.arena.meta.ballMeta.spawnpoint!!.worldName!!) == null) {
@@ -316,7 +290,7 @@ class GameActionServiceImpl @Inject constructor(
 
         val location = proxyService.toLocation<Any>(signPosition)
         val placeHolderReplacedLines =
-            lines.map { l -> placeholderService.replacePlaceHolders(l, game, teamMeta, players.size) }
+            lines.map { l -> placeholderService.replacePlaceHolders(l, null, game, teamMeta, players.size) }
 
         return proxyService.setSignLines(location, placeHolderReplacedLines)
     }
@@ -384,7 +358,7 @@ class GameActionServiceImpl @Inject constructor(
             val lines = ArrayList(game.arena.meta.hologramMetas[i].lines)
 
             for (k in lines.indices) {
-                lines[k] = placeholderService.replacePlaceHolders(lines[k], game)
+                lines[k] = placeholderService.replacePlaceHolders(lines[k], null, game)
             }
 
             holo.lines = lines
@@ -405,7 +379,7 @@ class GameActionServiceImpl @Inject constructor(
             if (game.bossBar != null) {
                 bossBarService.changeConfiguration(
                     game.bossBar,
-                    placeholderService.replacePlaceHolders(meta.message, game),
+                    placeholderService.replacePlaceHolders(meta.message, null, game),
                     meta,
                     null
                 )
@@ -443,7 +417,7 @@ class GameActionServiceImpl @Inject constructor(
                 players.forEach { p ->
                     dependencyBossBarApiService.setBossbarMessage(
                         p,
-                        placeholderService.replacePlaceHolders(meta.message, game),
+                        placeholderService.replacePlaceHolders(meta.message, null, game),
                         percentage
                     )
                 }
@@ -505,7 +479,7 @@ class GameActionServiceImpl @Inject constructor(
 
                 var j = lines.size
                 for (i in 0 until lines.size) {
-                    val line = placeholderService.replacePlaceHolders(lines[i], game)
+                    val line = placeholderService.replacePlaceHolders(lines[i], null, game)
                     scoreboardService.setLine(game.scoreboard, j, line)
                     j--
                 }
@@ -550,10 +524,7 @@ class GameActionServiceImpl @Inject constructor(
             return true
         }
 
-        val prefix = configurationService.findValue<String>("messages.prefix")
-        val joinGamePermissionMessage = configurationService.findValue<String>("messages.no-permission-join-game")
-
-        proxyService.sendMessage(player, prefix + joinGamePermissionMessage)
+        proxyService.sendMessage(player, BlockBallLanguage.joinNoPermission)
         return false
     }
 }

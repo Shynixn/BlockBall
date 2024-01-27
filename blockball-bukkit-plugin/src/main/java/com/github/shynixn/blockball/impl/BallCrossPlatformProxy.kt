@@ -3,11 +3,13 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.api.business.proxy.BallProxy
-import com.github.shynixn.blockball.api.business.service.EventService
 import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.entity.compatibility.BallDeathEventEntity
-import com.github.shynixn.blockball.entity.compatibility.BallTeleportEventEntity
+import com.github.shynixn.blockball.event.BallRemoveEvent
+import com.github.shynixn.blockball.event.BallTeleportEvent
+import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 
@@ -39,11 +41,6 @@ class BallCrossPlatformProxy(
         get() {
             return allPlayerTracker.proxyService
         }
-
-    /**
-     * Event dependency.
-     */
-    lateinit var eventService: EventService
 
     /**
      * Is the entity dead?
@@ -78,8 +75,9 @@ class BallCrossPlatformProxy(
      * Teleports the ball to the given [location].
      */
     override fun <L> teleport(location: L) {
-        val ballTeleportEvent = BallTeleportEventEntity(this, location as Any)
-        eventService.sendEvent(ballTeleportEvent)
+        require(location is Location)
+        val ballTeleportEvent = BallTeleportEvent(this, location)
+        Bukkit.getPluginManager().callEvent(ballTeleportEvent)
 
         if (ballTeleportEvent.isCancelled) {
             return
@@ -112,12 +110,12 @@ class BallCrossPlatformProxy(
 
     /**
      * Shoot the ball by the given player.
-     * The calculated velocity can be manipulated by the BallKickEvent.
+     * The calculated velocity can be manipulated by the BallLeftClickEvent.
      *
      * @param player
      */
     override fun <P> kickByPlayer(player: P) {
-        require(player is Any)
+        require(player is Player)
 
         if (!meta.enabledKick) {
             return
@@ -128,12 +126,12 @@ class BallCrossPlatformProxy(
 
     /**
      * Pass the ball by the given player.
-     * The calculated velocity can be manipulated by the BallKickEvent
+     * The calculated velocity can be manipulated by the BallLeftClickEvent
      *
      * @param player
      */
     override fun <P> passByPlayer(player: P) {
-        require(player is Any)
+        require(player is Player)
 
         if (!meta.enabledPass) {
             return
@@ -150,8 +148,8 @@ class BallCrossPlatformProxy(
             return
         }
 
-        val ballDeathEvent = BallDeathEventEntity(this)
-        eventService.sendEvent(ballDeathEvent)
+        val ballDeathEvent = BallRemoveEvent(this)
+        Bukkit.getPluginManager().callEvent(ballDeathEvent)
 
         if (ballDeathEvent.isCancelled) {
             return
