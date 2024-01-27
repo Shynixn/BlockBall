@@ -12,4 +12,5 @@ The articles in this section deal with customizing and changing your created Gam
    abilities
    rewards
    spectating
+   placeholders
    misc
