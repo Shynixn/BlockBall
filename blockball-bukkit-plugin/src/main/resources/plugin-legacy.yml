@@ -15,11 +15,6 @@ commands:
       usage: /<command> <id/name>
       permission: blockball.command.admin
       permission-message: You don't have permission.
-   blockballbungeecord:
-      description: Adds a new bungeecord sign for connecting to other BlockBall servers.
-      usage: /<command> <server>
-      permission: blockball.command.admin
-      permission-message: You don't have permission.
    blockballreload:
       description: Reloads Blockball configuration and restarts all games.
       usage: /<command>

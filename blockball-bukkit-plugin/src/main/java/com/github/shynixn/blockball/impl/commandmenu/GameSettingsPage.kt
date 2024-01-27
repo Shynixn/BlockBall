@@ -77,11 +77,7 @@ class GameSettingsPage @Inject constructor(private val proxyService: ProxyServic
             arena.meta.hubLobbyMeta.instantForcefieldJoin = !arena.meta.hubLobbyMeta.instantForcefieldJoin
         } else if (command == MenuCommand.GAMESETTINGS_TOGGLE_RESETEMPTY) {
             arena.meta.hubLobbyMeta.resetArenaOnEmpty = !arena.meta.hubLobbyMeta.resetArenaOnEmpty
-        } else if (command == MenuCommand.GAMESETTINGS_BUNGEEKICKMESSAGE && args.size >= 3) {
-            arena.meta.bungeeCordMeta.kickMessage = mergeArgs(2, args)
-        } else if (command == MenuCommand.GAMESETTINGS_BUNGEELEAVEKICKMESSAGE && args.size >= 3) {
-            arena.meta.bungeeCordMeta.leaveKickMessage = mergeArgs(2, args)
-        } else if (command == MenuCommand.GAMESETTINGS_BUNGEEFALLBACKSERVER && args.size >= 3) {
+        }  else if (command == MenuCommand.GAMESETTINGS_BUNGEEFALLBACKSERVER && args.size >= 3) {
             arena.meta.bungeeCordMeta.fallbackServer = mergeArgs(2, args)
         } else if (command == MenuCommand.GAMESETTINGS_MAXSCORE && args.size == 3 && args[2].toIntOrNull() != null) {
             arena.meta.lobbyMeta.maxScore = args[2].toInt()
@@ -168,25 +164,6 @@ class GameSettingsPage @Inject constructor(private val proxyService: ProxyServic
                 .builder().nextLine()
         }
         if (arena.gameType == GameType.BUNGEE) {
-            builder.component("- Full Server Kick Message: ").builder()
-                .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
-                .setHoverText(arena.meta.bungeeCordMeta.kickMessage)
-                .builder()
-                .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
-                .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.GAMESETTINGS_BUNGEEKICKMESSAGE.command)
-                .setHoverText(ChatColor.UNDERLINE.toString() + "BungeeCord exclusive\n" + ChatColor.RESET + "Message being send to players who try to join a running or a full server.")
-                .builder().nextLine()
-            builder.component("- Leave Server Kick Message: ").builder()
-                .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
-                .setHoverText(arena.meta.bungeeCordMeta.leaveKickMessage)
-                .builder()
-                .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
-                .setClickAction(
-                    ChatClickAction.SUGGEST_COMMAND,
-                    MenuCommand.GAMESETTINGS_BUNGEELEAVEKICKMESSAGE.command
-                )
-                .setHoverText(ChatColor.UNDERLINE.toString() + "BungeeCord exclusive\n" + ChatColor.RESET + "Message being send to players who leave a game. Can be used with third party BungeeCord plugins to determine the fallback servers.")
-                .builder().nextLine()
             builder.component("- Fallback Server: ").builder()
                 .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
                 .setHoverText(arena.meta.bungeeCordMeta.fallbackServer)

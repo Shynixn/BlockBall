@@ -45,11 +45,6 @@ interface ProxyService {
     fun <P, L> teleport(player: P, location: L)
 
     /**
-     * Kicks the given player with the given message.
-     */
-    fun <P> kickPlayer(player: P, message: String)
-
-    /**
      * Is player online.
      */
     fun <P> isPlayerOnline(player: P): Boolean
@@ -233,11 +228,6 @@ interface ProxyService {
      * Gets a list of all online players.
      */
     fun <P> getOnlinePlayers(): List<P>
-
-    /**
-     * Sends a plugin message through the given channel.
-     */
-    fun <P> sendPlayerPluginMessage(player: P, channel: String, content: ByteArray)
 
     /**
      * Converts the given [location] to a [Position].

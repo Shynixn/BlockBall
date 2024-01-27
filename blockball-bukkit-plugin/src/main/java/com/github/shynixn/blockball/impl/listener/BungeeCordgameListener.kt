@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl.listener
 
+import com.github.shynixn.blockball.BlockBallLanguage
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.service.*
 import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
@@ -44,9 +45,7 @@ class BungeeCordgameListener @Inject constructor(
     private val gameService: GameService,
     private val rightClickManageService: RightclickManageService,
     private val gameActionService: GameActionService,
-    private val bungeeCordService: BungeeCordService,
-    private val concurrencyService: ConcurrencyService,
-    private val persistenceLinkSignService: PersistenceLinkSignService
+    private val concurrencyService: ConcurrencyService
 ) : Listener {
     /**
      * Joins the game for a bungeecord player.
@@ -61,7 +60,7 @@ class BungeeCordgameListener @Inject constructor(
                     val success = gameActionService.joinGame(game, event.player)
 
                     if (!success) {
-                        event.player.kickPlayer(game.arena.meta.bungeeCordMeta.kickMessage)
+                        event.player.kickPlayer(BlockBallLanguage.bungeeCordKickMessage)
                     }
                 }
             }
@@ -93,15 +92,6 @@ class BungeeCordgameListener @Inject constructor(
 
         if (event.clickedBlock != null && event.clickedBlock!!.state !is Sign) {
             return
-        }
-
-        val position = event.clickedBlock!!.location.toPosition()
-
-        for (sign in persistenceLinkSignService.getAll()) {
-            if (sign.position == position) {
-                bungeeCordService.connectToServer(event.player, sign.server)
-                break
-            }
         }
 
         rightClickManageService.executeWatchers(event.player, event.clickedBlock!!.location)

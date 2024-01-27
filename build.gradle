@@ -14,7 +14,7 @@ buildscript {
 }
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.5.32'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'io.codearte.nexus-staging' version '0.20.0'
     id "de.marcphilipp.nexus-publish" version '0.2.0'
 }

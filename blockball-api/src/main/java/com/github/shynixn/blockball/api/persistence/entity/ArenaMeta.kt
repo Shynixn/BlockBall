@@ -42,7 +42,7 @@ interface ArenaMeta {
     val minigameMeta: MinigameLobbyMeta
 
     /** Meta data of the bungeecord lobby. */
-    val bungeeCordMeta: BungeeCordLobbyMeta
+    val bungeeCordMeta: BungeeCordMeta
 
     /** Meta data of the redTeam. */
     val redTeamMeta: TeamMeta

@@ -4,7 +4,6 @@ import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
 import com.github.shynixn.blockball.api.business.enumeration.BossBarFlag
 import com.github.shynixn.blockball.api.business.enumeration.BossbarColor
 import com.github.shynixn.blockball.api.business.enumeration.BossbarStyle
-import com.github.shynixn.blockball.api.business.enumeration.PlaceHolder
 import com.github.shynixn.blockball.api.persistence.entity.BossBarMeta
 
 /**
@@ -43,7 +42,7 @@ class BossBarMetaEntity : BossBarMeta {
     override var enabled: Boolean = false
     /** Displaying message. */
     @YamlSerialize("text", orderNumber = 2)
-    override var message: String = PlaceHolder.RED_COLOR.placeHolder + PlaceHolder.TEAM_RED.placeHolder + ' ' + PlaceHolder.RED_GOALS.placeHolder + " : " + PlaceHolder.BLUE_COLOR.placeHolder + PlaceHolder.BLUE_GOALS.placeHolder + ' ' + PlaceHolder.TEAM_BLUE.placeHolder
+    override var message: String = "%blockball_lang_bossBarMessage%"
     /** Percentage filled in the bossbar. */
     @YamlSerialize("percentage", orderNumber = 3)
     override var percentage: Double = 100.0

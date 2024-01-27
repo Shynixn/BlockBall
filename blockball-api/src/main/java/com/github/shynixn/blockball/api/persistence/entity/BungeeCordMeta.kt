@@ -1,7 +1,4 @@
-package com.github.shynixn.blockball.entity
-
-import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
-import com.github.shynixn.blockball.api.persistence.entity.BounceConfiguration
+package com.github.shynixn.blockball.api.persistence.entity
 
 /**
  * Created by Shynixn 2018.
@@ -30,20 +27,9 @@ import com.github.shynixn.blockball.api.persistence.entity.BounceConfiguration
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BounceConfigurationEntity(
-        /**
-         * MaterialType in Id or String format.
-         */
-        @YamlSerialize(value = "id", orderNumber = 1, implementation = Int::class)
-        override var materialType: Any,
-        /**
-         * Material damage value.
-         */
-        @YamlSerialize(value = "damage", orderNumber = 2)
-        override var materialDamage: Int) : BounceConfiguration {
+interface BungeeCordMeta {
     /**
-     * Modifier for this bounce configuration.
+     * FallBack server when a player executes the leave command.
      */
-    @YamlSerialize(value = "modifier", orderNumber = 3)
-    override var modifier: Double = 1.0
+    var fallbackServer: String
 }

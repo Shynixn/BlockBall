@@ -1,45 +1,21 @@
 package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.api.business.service.GameExecutionService
+import com.github.shynixn.blockball.api.business.service.GameHubGameActionService
+import com.github.shynixn.blockball.api.business.service.ProxyService
 import com.github.shynixn.blockball.api.persistence.entity.HubGame
 import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
+import com.github.shynixn.blockball.contract.PlaceHolderService
 import com.github.shynixn.blockball.entity.GameStorageEntity
 import com.google.inject.Inject
+import org.bukkit.entity.Player
 import java.util.*
 
-/**
- * Created by Shynixn 2018.
- * <p>
- * Version 1.2
- * <p>
- * MIT License
- * <p>
- * Copyright (c) 2018 by Shynixn
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 class GameHubGameActionServiceImpl @Inject constructor(
-    private val configurationService: ConfigurationService,
     private val proxyService: ProxyService,
     private val gameExecutionService: GameExecutionService,
-    private val placeholderService: PlaceholderService
+    private val placeholderService: PlaceHolderService
 ) :
     GameHubGameActionService {
     /**
@@ -48,7 +24,7 @@ class GameHubGameActionServiceImpl @Inject constructor(
      * Does nothing if the player is already in a Game.
      */
     override fun <P> joinGame(game: HubGame, player: P, team: Team?): Boolean {
-        require(player is Any)
+        require(player is Player)
         var joiningTeam = team
 
         if (game.arena.meta.lobbyMeta.onlyAllowEventTeams) {
@@ -118,7 +94,7 @@ class GameHubGameActionServiceImpl @Inject constructor(
     /**
      * Prepares the storage for a hubgame.
      */
-    private fun prepareLobbyStorageForPlayer(game: HubGame, player: Any, team: Team, teamMeta: TeamMeta) {
+    private fun prepareLobbyStorageForPlayer(game: HubGame, player: Player, team: Team, teamMeta: TeamMeta) {
         val uuid = proxyService.getPlayerUUID(player)
         val stats = GameStorageEntity(UUID.fromString(uuid))
         game.ingamePlayersStorage[player] = stats
@@ -159,8 +135,7 @@ class GameHubGameActionServiceImpl @Inject constructor(
             proxyService.setEntityVelocity(player, velocityIntoArena)
         }
 
-        val prefix = configurationService.findValue<String>("messages.prefix")
-        val message = prefix + placeholderService.replacePlaceHolders(teamMeta.joinMessage, game, teamMeta)
+        val message = placeholderService.replacePlaceHolders(teamMeta.joinMessage, player, game, teamMeta, 0)
         proxyService.sendMessage(player, message)
     }
 }

@@ -1,4 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.*
+import java.io.*
 
 plugins {
     id("com.github.johnrengelman.shadow") version ("7.0.0")
@@ -46,7 +49,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.google", "com.github.shynixn.blockball.lib.com.google")
     relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
     relocate("org.apache", "com.github.shynixn.blockball.lib.org.apache")
-    relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
+ //   relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
 
     exclude("plugin.yml")
     rename("plugin-legacy.yml", "plugin.yml")
@@ -77,7 +80,7 @@ tasks.register("relocatePluginJar", ShadowJar::class.java) {
     from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-relocate.${extension}"
     relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
-    relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
+ //   relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
 }
 
 /**
@@ -87,9 +90,9 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-latest.${extension}"
-    // destinationDir = File("C:\\temp\\plugins")
+    destinationDir = File("C:\\temp\\plugins")
 
-    exclude("com/github/shynixn/mcutils/**")
+   // exclude("com/github/shynixn/mcutils/**")
     exclude("org/**")
     exclude("kotlin/**")
     exclude("javax/**")
@@ -118,10 +121,41 @@ dependencies {
     implementation("commons-io:commons-io:2.6")
     implementation("com.google.code.gson:gson:2.8.6")
 
+    compileOnly("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.13.0")
+    compileOnly("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.13.0")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     compileOnly("me.clip:placeholderapi:2.9.2")
     compileOnly("net.milkbowlvault:VaultAPI:1.7")
     compileOnly("org.spigotmc:spigot:1.16.4-R0.1-SNAPSHOT")
 
     testImplementation("org.xerial:sqlite-jdbc:3.23.1")
     testImplementation("org.spigotmc:spigot:1.16.4-R0.1-SNAPSHOT")
+}
+
+tasks.register("languageFile") {
+    val kotlinSrcFolder = project.sourceSets.toList()[0].allJava.srcDirs.first { e -> e.endsWith("java") }
+    val languageKotlinFile = kotlinSrcFolder.resolve("com/github/shynixn/blockball/BlockBallLanguage.kt")
+    val resourceFile = kotlinSrcFolder.parentFile.resolve("resources").resolve("lang").resolve("en_us.properties")
+    val bundle = FileInputStream(resourceFile).use { stream ->
+        PropertyResourceBundle(stream)
+    }
+
+    val contents = ArrayList<String>()
+    contents.add("package com.github.shynixn.blockball")
+    contents.add("")
+    contents.add("object BlockBallLanguage {")
+    for (key in bundle.keys) {
+        val value = bundle.getString(key)
+        contents.add("  /** $value **/")
+        contents.add("  var ${key} : String = \"$value\"")
+        contents.add("")
+    }
+    contents.removeLast()
+    contents.add("}")
+
+    languageKotlinFile.printWriter().use { out ->
+        for (line in contents) {
+            out.println(line)
+        }
+    }
 }

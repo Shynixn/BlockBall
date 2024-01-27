@@ -1,8 +1,9 @@
 package com.github.shynixn.blockball.impl.listener
 
-import com.github.shynixn.blockball.api.business.service.HubGameForcefieldService
+import com.github.shynixn.blockball.contract.HubGameForcefieldService
 import com.google.inject.Inject
 import org.bukkit.GameMode
+import org.bukkit.Location
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
@@ -45,7 +46,7 @@ class HubgameListener @Inject constructor(private val hubGameForcefieldService: 
             return
         }
 
-        hubGameForcefieldService.checkForForcefieldInteractions(event.player, event.to)
+        hubGameForcefieldService.checkForForcefieldInteractions(event.player, event.to!!)
     }
 
     /**
@@ -57,7 +58,7 @@ class HubgameListener @Inject constructor(private val hubGameForcefieldService: 
             return
         }
 
-        hubGameForcefieldService.checkForForcefieldInteractions(event.player, event.to)
+        hubGameForcefieldService.checkForForcefieldInteractions(event.player, event.to!!)
     }
 
     /**

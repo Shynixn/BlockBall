@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.api.persistence.entity.Template
 import com.github.shynixn.blockball.entity.ArenaEntity
 import com.github.shynixn.blockball.entity.PositionEntity
 import com.github.shynixn.blockball.entity.TemplateEntity
+import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
 import java.io.File
 import java.nio.file.Files
@@ -17,7 +18,7 @@ class TemplateServiceImpl @Inject constructor(
     private val persistenceArenaService: PersistenceArenaService
 ) : TemplateService {
     private val templateNames = arrayOf(
-        "arena-de.yml", "arena-en.yml", "arena-hu.yml", "arena-ko.yml", "arena-pl.yml", "arena-ru.yml", "arena-zh.yml"
+        "arena.yml"
     )
 
     /**
@@ -59,7 +60,7 @@ class TemplateServiceImpl @Inject constructor(
 
         val filePath = configurationService.applicationDir.resolve(folderName + "/" + template.name + ".yml")
         val data = yamlService.read(filePath)
-        val arena = yamlSerializationService.deserialize(ArenaEntity::class.java, data["arena"] as Map<String, Any?>)
+        val arena = ArenaEntity()
 
         var idGen = 1
         persistenceArenaService.getArenas().forEach { cacheArena ->

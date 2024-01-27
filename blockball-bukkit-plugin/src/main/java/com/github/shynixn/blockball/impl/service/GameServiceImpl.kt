@@ -9,6 +9,7 @@ import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.entity.BungeeCordGameEntity
 import com.github.shynixn.blockball.entity.HubGameEntity
 import com.github.shynixn.blockball.entity.MiniGameEntity
+import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
 import org.bukkit.plugin.Plugin
 import java.util.*

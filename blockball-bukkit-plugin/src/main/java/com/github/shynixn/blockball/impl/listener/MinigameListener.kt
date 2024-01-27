@@ -3,12 +3,12 @@ package com.github.shynixn.blockball.impl.listener
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.enumeration.MatchTimeCloseType
 import com.github.shynixn.blockball.api.business.enumeration.Permission
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.GameMiniGameActionService
 import com.github.shynixn.blockball.api.business.service.GameService
 import com.github.shynixn.blockball.api.persistence.entity.MiniGame
 import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.blockball.impl.extension.hasPermission
+import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

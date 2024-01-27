@@ -24,5 +24,5 @@ class SoundEntity(
      * Which players are effected.
      */
     @YamlSerialize(value = "effecting", orderNumber = 4)
-    override var effectingType: EffectTargetType = EffectTargetType.NOBODY
+    override var effectingType: EffectTargetType = EffectTargetType.RELATED_PLAYER
 }

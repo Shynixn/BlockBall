@@ -3,69 +3,34 @@ package com.github.shynixn.blockball.impl.service
 import com.github.shynixn.blockball.api.business.enumeration.ChatClickAction
 import com.github.shynixn.blockball.api.business.enumeration.GameType
 import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.entity.InteractionCache
+import com.github.shynixn.blockball.contract.HubGameForcefieldService
+import com.github.shynixn.blockball.contract.PlaceHolderService
 import com.github.shynixn.blockball.entity.ChatBuilderEntity
-import com.github.shynixn.blockball.entity.InteractionCacheEntity
+import com.github.shynixn.blockball.entity.InteractionCache
 import com.github.shynixn.blockball.impl.extension.stripChatColors
 import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.blockball.impl.extension.toVector
+import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
-/**
- * Created by Shynixn 2018.
- * <p>
- * Version 1.2
- * <p>
- * MIT License
- * <p>
- * Copyright (c) 2018 by Shynixn
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 class HubGameForcefieldServiceImpl @Inject constructor(
     private val gameService: GameService,
-    private val configurationService: ConfigurationService,
     private val gameActionService: GameActionService,
     private val proxyService: ProxyService,
-    private val placeholderService: PlaceholderService
+    private val placeholderService: PlaceHolderService,
+    private val configurationService: ConfigurationService
 ) : HubGameForcefieldService {
     private val cache = HashMap<Player, InteractionCache>()
-
     /**
      * Checks and executes the forcefield actions if the given [player]
      * is going to the given [location].
      */
-    override fun <P, L> checkForForcefieldInteractions(player: P, location: L) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        if (location !is Location) {
-            throw IllegalArgumentException("Location has to be a BukkitLocation!")
-        }
-
-        val prefix = configurationService.findValue<String>("messages.prefix")
+    override fun checkForForcefieldInteractions(player: Player, location: Location) {
         val interactionCache = getInteractionCache(player)
         val gameInternal = gameService.getGameFromPlayer(player)
 
@@ -114,11 +79,12 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                             val joinCommand = configurationService.findValue<String>("global-join.command")
 
                             val b =
-                                ChatBuilderEntity().text(prefix + game.arena.meta.hubLobbyMeta.joinMessage[0].translateChatColors())
+                                ChatBuilderEntity().text(placeholderService.replacePlaceHolders(game.arena.meta.hubLobbyMeta.joinMessage[0], player, game, null, null))
                                     .nextLine()
                                     .component(
                                         placeholderService.replacePlaceHolders(
                                             game.arena.meta.hubLobbyMeta.joinMessage[1],
+                                            player,
                                             game,
                                             game.arena.meta.redTeamMeta
                                         )
@@ -133,6 +99,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                                     .component(
                                         placeholderService.replacePlaceHolders(
                                             game.arena.meta.hubLobbyMeta.joinMessage[2],
+                                            player,
                                             game,
                                             game.arena.meta.blueTeamMeta
                                         )
@@ -174,13 +141,9 @@ class HubGameForcefieldServiceImpl @Inject constructor(
     /**
      * Returns the interaction cache of the given [player].
      */
-    override fun <P> getInteractionCache(player: P): InteractionCache {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
+    override fun getInteractionCache(player: Player): InteractionCache {
         if (!cache.containsKey(player)) {
-            cache[player] = InteractionCacheEntity()
+            cache[player] = InteractionCache()
         }
 
         return cache[player]!!
@@ -189,11 +152,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
     /**
      * Clears all resources this [player] has allocated from this service.
      */
-    override fun <P> cleanResources(player: P) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
+    override fun cleanResources(player: Player) {
         if (cache.containsKey(player)) {
             cache.remove(player)
         }

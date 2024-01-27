@@ -3,7 +3,6 @@
 package com.github.shynixn.blockball.impl.repository
 
 import com.github.shynixn.blockball.api.business.enumeration.BallActionType
-import com.github.shynixn.blockball.api.business.service.ConfigurationService
 import com.github.shynixn.blockball.api.business.service.YamlSerializationService
 import com.github.shynixn.blockball.api.business.service.YamlService
 import com.github.shynixn.blockball.api.persistence.entity.Arena
@@ -11,6 +10,7 @@ import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
 import com.github.shynixn.blockball.entity.ArenaEntity
 import com.github.shynixn.blockball.entity.ParticleEntity
 import com.github.shynixn.blockball.entity.SoundEntity
+import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
 import org.bukkit.plugin.Plugin
 import java.nio.file.Files
