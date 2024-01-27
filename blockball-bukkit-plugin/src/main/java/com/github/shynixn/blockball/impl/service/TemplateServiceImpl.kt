@@ -60,7 +60,7 @@ class TemplateServiceImpl @Inject constructor(
 
         val filePath = configurationService.applicationDir.resolve(folderName + "/" + template.name + ".yml")
         val data = yamlService.read(filePath)
-        val arena = ArenaEntity()
+        val arena = yamlSerializationService.deserialize(ArenaEntity::class.java, data["arena"] as Map<String, Any?>)
 
         var idGen = 1
         persistenceArenaService.getArenas().forEach { cacheArena ->

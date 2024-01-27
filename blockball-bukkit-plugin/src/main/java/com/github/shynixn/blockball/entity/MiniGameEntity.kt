@@ -47,7 +47,7 @@ open class MiniGameEntity(
     /**
      * Returns the bling sound.
      */
-    override val blingSound: Sound = SoundEntity("NOTE_PLING", 1.0, 2.0)
+    override val blingSound: Sound = SoundEntity("BLOCK_NOTE_BLOCK_PLING,BLOCK_NOTE_PLING,NOTE_PLING", 2.0, 10.0)
     /**
      * Are the players currently waiting in the lobby?
      */

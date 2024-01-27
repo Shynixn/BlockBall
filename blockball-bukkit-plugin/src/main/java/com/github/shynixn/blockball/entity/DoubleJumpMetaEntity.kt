@@ -24,7 +24,7 @@ class DoubleJumpMetaEntity : DoubleJumpMeta {
     override val particleEffect: Particle = ParticleEntity(ParticleType.EXPLOSION_NORMAL.name)
     /** SoundEffect being played when activating this.*/
     @YamlSerialize(orderNumber = 6, value = "sound-effect", implementation = SoundEntity::class)
-    override val soundEffect: Sound = SoundEntity("ENTITY_GHAST_SHOOT,GHAST_FIREBALL", 10.0, 1.0)
+    override val soundEffect: Sound = SoundEntity("ENTITY_GHAST_SHOOT,GHAST_FIREBALL", 1.0, 10.0)
 
     init {
         particleEffect.amount = 4

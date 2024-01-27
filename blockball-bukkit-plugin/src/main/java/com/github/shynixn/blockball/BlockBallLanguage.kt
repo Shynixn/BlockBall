@@ -46,8 +46,8 @@ object BlockBallLanguage {
   /** Save and reload to enable the sign. **/
   var saveAndReloadSign : String = "Save and reload to enable the sign."
 
-  /** %blockball_game_players% / %blockball_game_maxPlayers% **/
-  var joinSignLine4 : String = "%blockball_game_players% / %blockball_game_maxPlayers%"
+  /** %blockball_game_players%/%blockball_game_maxPlayers% **/
+  var joinSignLine4 : String = "%blockball_game_players%/%blockball_game_maxPlayers%"
 
   /** Stopped game %1$1s named %2$1s. **/
   var stopGameMessage : String = "Stopped game %1$1s named %2$1s."
@@ -67,8 +67,8 @@ object BlockBallLanguage {
   /** &fLeave **/
   var leaveSignLine3 : String = "&fLeave"
 
-  /** %blockball_game_players% / %blockball_game_maxPlayers% **/
-  var leaveSignLine4 : String = "%blockball_game_players% / %blockball_game_maxPlayers%"
+  /** %blockball_game_players%/%blockball_game_maxPlayers% **/
+  var leaveSignLine4 : String = "%blockball_game_players%/%blockball_game_maxPlayers%"
 
   /** &cYou do not have permission to join this game. **/
   var joinNoPermission : String = "&cYou do not have permission to join this game."
@@ -88,8 +88,8 @@ object BlockBallLanguage {
   /** Click on the team to join the match. **/
   var hubGameJoinHeader : String = "Click on the team to join the match."
 
-  /** &cTeam Red %blockball_game_redScore% : &9Team Blue %blockball_game_blueScore% **/
-  var bossBarMessage : String = "&cTeam Red %blockball_game_redScore% : &9Team Blue %blockball_game_blueScore%"
+  /** &cTeam Red %blockball_game_redScore% : &9%blockball_game_blueScore% Team Blue **/
+  var bossBarMessage : String = "&cTeam Red %blockball_game_redScore% : &9%blockball_game_blueScore% Team Blue"
 
   /** Shynixn **/
   var translator : String = "Shynixn"
@@ -112,8 +112,8 @@ object BlockBallLanguage {
   /** You have joined the game for %blockball_team_color%%blockball_team_name%. **/
   var joinSuccessMessage : String = "You have joined the game for %blockball_team_color%%blockball_team_name%."
 
-  /** &0&l[&f&lBall&0&l]&7 You have left the game. **/
-  var leaveMessage : String = "&0&l[&f&lBall&0&l]&7 You have left the game."
+  /** &0&l[&f&lBlockBall&0&l]&7 You have left the game. **/
+  var leaveMessage : String = "&0&l[&f&lBlockBall&0&l]&7 You have left the game."
 
   /** &cTeam Red **/
   var teamRedWinTitle : String = "&cTeam Red"
@@ -142,8 +142,8 @@ object BlockBallLanguage {
   /** &cTeam Red %blockball_game_redScore% : &9Team Blue %blockball_game_blueScore% **/
   var hologramMessage : String = "&cTeam Red %blockball_game_redScore% : &9Team Blue %blockball_game_blueScore%"
 
-  /** &0&l[&f&lBall&0&l]&7 &aReloaded BlockBall. **/
-  var reloadMessage : String = "&0&l[&f&lBall&0&l]&7 &aReloaded BlockBall."
+  /** &0&l[&f&lBlockBall&0&l]&7 &aReloaded BlockBall. **/
+  var reloadMessage : String = "&0&l[&f&lBlockBall&0&l]&7 &aReloaded BlockBall."
 
   /** &c%blockball_game_redScore% : &9%blockball_game_blueScore% **/
   var teamRedScoreTitle : String = "&c%blockball_game_redScore% : &9%blockball_game_blueScore%"

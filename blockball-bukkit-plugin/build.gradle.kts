@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
 import java.io.*
 
@@ -49,7 +48,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.google", "com.github.shynixn.blockball.lib.com.google")
     relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
     relocate("org.apache", "com.github.shynixn.blockball.lib.org.apache")
- //   relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
+    relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
 
     exclude("plugin.yml")
     rename("plugin-legacy.yml", "plugin.yml")
@@ -80,7 +79,7 @@ tasks.register("relocatePluginJar", ShadowJar::class.java) {
     from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-relocate.${extension}"
     relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
- //   relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
+    relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
 }
 
 /**
@@ -90,11 +89,13 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-latest.${extension}"
-    destinationDir = File("C:\\temp\\plugins")
+    // destinationDir = File("C:\\temp\\plugins")
 
-   // exclude("com/github/shynixn/mcutils/**")
+    exclude("com/github/shynixn/mcutils/**")
+    exclude("com/github/shynixn/mccoroutine/**")
     exclude("org/**")
     exclude("kotlin/**")
+    exclude("kotlinx/**")
     exclude("javax/**")
     exclude("com/google/**")
     exclude("plugin-legacy.yml")
@@ -110,9 +111,8 @@ repositories {
 
 dependencies {
     implementation(project(":blockball-api"))
-    implementation(project(":blockball-bukkit-api"))
 
-    implementation("com.github.shynixn.mcutils:common:1.0.41")
+    implementation("com.github.shynixn.mcutils:common:1.0.48")
     implementation("com.github.shynixn.mcutils:packet:1.0.65")
 
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
@@ -120,10 +120,10 @@ dependencies {
     implementation("com.google.inject:guice:5.0.1")
     implementation("commons-io:commons-io:2.6")
     implementation("com.google.code.gson:gson:2.8.6")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.13.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.13.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
-    compileOnly("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.13.0")
-    compileOnly("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.13.0")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     compileOnly("me.clip:placeholderapi:2.9.2")
     compileOnly("net.milkbowlvault:VaultAPI:1.7")
     compileOnly("org.spigotmc:spigot:1.16.4-R0.1-SNAPSHOT")

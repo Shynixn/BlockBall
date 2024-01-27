@@ -118,7 +118,11 @@ class PlaceHolderServiceImpl @Inject constructor(private val gameService: GameSe
         currentTeamSize: Int?
     ): String {
         var output = text
-        for(i in 0 until 2){
+        for(i in 0 until 4){
+            if(!output.contains("%")){
+                break
+            }
+
             val locatedPlaceHolders = HashMap<String, String>()
             val characterCache = StringBuilder()
 
