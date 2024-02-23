@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.service.DependencyBossBarApiService
+import com.github.shynixn.blockball.contract.DependencyBossBarApiService
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.google.inject.Inject
 import org.bukkit.entity.Player
@@ -38,11 +38,7 @@ class DependencyBossBarApiServiceImpl @Inject constructor(private val plugin: Pl
     /**
      * Sets the bossbar [message] for the given [player] with the given [percent].
      */
-    override fun <P> setBossbarMessage(player: P, message: String, percent: Double) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
+    override fun setBossbarMessage(player: Player, message: String, percent: Double) {
         try {
             val clazz = Class.forName("org.inventivetalent.bossbar.BossBarAPI")
             clazz.getDeclaredMethod("setMessage", String::class.java, Float::class.java).invoke(null, player, message.translateChatColors(), percent.toFloat())
@@ -54,11 +50,7 @@ class DependencyBossBarApiServiceImpl @Inject constructor(private val plugin: Pl
     /**
      * Removes the bossbar from the given [player].
      */
-    override fun <P> removeBossbarMessage(player: P) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
+    override fun removeBossbarMessage(player: Player) {
         try {
             val clazz = Class.forName("org.inventivetalent.bossbar.BossBarAPI")
             val hasBar = clazz.getDeclaredMethod("hasBar", Player::class.java).invoke(null, player)

@@ -1,10 +1,9 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.TemplateService
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.api.persistence.entity.Template
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.contract.TemplateService
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.entity.Template
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
 
@@ -105,7 +104,7 @@ class TemplateSettingsPage : Page(TemplateSettingsPage.ID, OpenPage.ID) {
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
         val template = cache[3] as Template
 
-        return ChatBuilderEntity()
+        return ChatBuilder()
             .component("- Create arena: ").builder()
             .component(" [create..]").setColor(ChatColor.AQUA)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.ARENA_CREATE.command)

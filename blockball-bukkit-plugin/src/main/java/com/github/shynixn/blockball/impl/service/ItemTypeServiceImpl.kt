@@ -2,8 +2,8 @@
 
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.enumeration.MaterialType
-import com.github.shynixn.blockball.api.business.service.ItemTypeService
+import com.github.shynixn.blockball.contract.ItemTypeService
+import com.github.shynixn.blockball.enumeration.MaterialType
 import com.github.shynixn.mcutils.common.Version
 import com.google.inject.Inject
 import org.bukkit.Material

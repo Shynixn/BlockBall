@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.event
 
-import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.persistence.entity.Game
+import com.github.shynixn.blockball.entity.Game
+import com.github.shynixn.blockball.enumeration.Team
 import org.bukkit.entity.Player
 
 /**

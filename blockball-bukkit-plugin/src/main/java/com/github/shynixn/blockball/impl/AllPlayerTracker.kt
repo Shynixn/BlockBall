@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.Position
 import org.bukkit.entity.Player
 
 class AllPlayerTracker(

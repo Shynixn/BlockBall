@@ -1,11 +1,9 @@
 package com.github.shynixn.blockball.impl.service.nms.v1_13_R2
 
-import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
-import com.github.shynixn.blockball.api.business.service.RayTracingService
-import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.api.persistence.entity.RaytraceResult
-import com.github.shynixn.blockball.entity.PositionEntity
-import com.github.shynixn.blockball.entity.RayTraceResultEntity
+import com.github.shynixn.blockball.contract.RayTracingService
+import com.github.shynixn.blockball.entity.Position
+import com.github.shynixn.blockball.entity.RayTraceResult
+import com.github.shynixn.blockball.enumeration.BlockDirection
 import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.blockball.impl.extension.toVector
@@ -16,7 +14,7 @@ class RayTracingService113R2Impl : RayTracingService {
     /**
      * Ray traces in the world for the given motion.
      */
-    override fun rayTraceMotion(position: Position, motion: Position): RaytraceResult {
+    override fun rayTraceMotion(position: Position, motion: Position): RayTraceResult {
         if (!NumberConversions.isFinite(position.yaw.toFloat())) {
             position.yaw = Math.round((position.yaw % 360.0F) * 100.0) / 100.0
         }
@@ -33,7 +31,7 @@ class RayTracingService113R2Impl : RayTracingService {
         motion.z = fixFiniteDomain(motion.z)
 
         val endPosition =
-            PositionEntity(position.worldName!!, position.x + motion.x, position.y + motion.y, position.z + motion.z)
+            Position(position.worldName!!, position.x + motion.x, position.y + motion.y, position.z + motion.z)
         val sourceLocation = position.toLocation()
 
         val directionVector = motion.toVector().normalize()
@@ -56,7 +54,7 @@ class RayTracingService113R2Impl : RayTracingService {
         if (movingObjectPosition == null) {
             endPosition.yaw = position.yaw
             endPosition.pitch = position.pitch
-            return RayTraceResultEntity(false, endPosition, BlockDirection.DOWN)
+            return RayTraceResult(false, endPosition, BlockDirection.DOWN)
         }
 
         val targetPosition = movingObjectPosition.hitPosition.toLocation(world).toPosition()
@@ -67,7 +65,7 @@ class RayTracingService113R2Impl : RayTracingService {
         targetPosition.yaw = position.yaw
         targetPosition.pitch = position.pitch
 
-        return RayTraceResultEntity(true, targetPosition, direction)
+        return RayTraceResult(true, targetPosition, direction)
     }
 
     private fun fixFiniteDomain(value: Double): Double {

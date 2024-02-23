@@ -1,15 +1,15 @@
 package com.github.shynixn.blockball.impl.commandexecutor
 
-import com.github.shynixn.blockball.api.business.enumeration.ChatClickAction
-import com.github.shynixn.blockball.api.business.enumeration.MenuCommand
-import com.github.shynixn.blockball.api.business.enumeration.MenuCommandResult
-import com.github.shynixn.blockball.api.business.executor.CommandExecutor
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.contract.CommandExecutor
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.enumeration.ChatClickAction
+import com.github.shynixn.blockball.enumeration.MenuCommand
+import com.github.shynixn.blockball.enumeration.MenuCommandResult
 import com.github.shynixn.blockball.impl.commandmenu.*
 import com.github.shynixn.mcutils.common.ChatColor
-import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
+import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 
@@ -41,7 +41,6 @@ import java.util.logging.Level
  * SOFTWARE.
  */
 class ArenaCommandExecutor @Inject constructor(
-    private val configurationService: ConfigurationService,
     private val proxyService: ProxyService,
     private val plugin: Plugin,
     openPage: OpenPage,
@@ -93,12 +92,8 @@ class ArenaCommandExecutor @Inject constructor(
     /**
      * Gets called when the given [source] executes the defined command with the given [args].
      */
-    override fun <S> onExecuteCommand(source: S, args: Array<out String>): Boolean {
+    override fun onExecuteCommand(source: CommandSender, args: Array<out String>): Boolean {
         try {
-            if (source !is Any) {
-                return false
-            }
-
             for (i in 0..19) {
                 proxyService.sendMessage(source, "")
             }
@@ -144,7 +139,7 @@ class ArenaCommandExecutor @Inject constructor(
             }
             if (usedPage == null)
                 throw IllegalArgumentException("Cannot find page with key " + command.key)
-            val builder = ChatBuilderEntity()
+            val builder = ChatBuilder()
                 .text(ChatColor.STRIKETHROUGH.toString() + "----------------------------------------------------").nextLine()
                 .component(" >>Save<< ")
                 .setColor(ChatColor.GREEN)

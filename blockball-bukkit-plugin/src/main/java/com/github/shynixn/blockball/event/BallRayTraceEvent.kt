@@ -1,8 +1,7 @@
 package com.github.shynixn.blockball.event
 
-import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
-import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.contract.Ball
+import com.github.shynixn.blockball.enumeration.BlockDirection
 import org.bukkit.Location
 
 /**
@@ -16,7 +15,7 @@ class BallRayTraceEvent(
     /**
      * Ball.
      */
-    ball: BallProxy,
+    ball: Ball,
     /**
      * Modifies if the raytrace has ended in a block hit.
      */

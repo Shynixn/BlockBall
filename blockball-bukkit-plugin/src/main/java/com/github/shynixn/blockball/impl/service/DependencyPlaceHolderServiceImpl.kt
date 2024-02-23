@@ -1,9 +1,9 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.persistence.entity.Game
-import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
+import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.PlaceHolderService
+import com.github.shynixn.blockball.entity.Game
+import com.github.shynixn.blockball.entity.TeamMeta
 import com.google.inject.Inject
 import me.clip.placeholderapi.PlaceholderAPI
 import me.clip.placeholderapi.expansion.PlaceholderExpansion

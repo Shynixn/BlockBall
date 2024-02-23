@@ -3,26 +3,22 @@
 package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.BlockBallLanguage
-import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.proxy.PluginProxy
-import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.entity.*
-import com.github.shynixn.blockball.contract.PlaceHolderService
+import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.entity.*
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.blockball.impl.PacketHologram
-import com.github.shynixn.blockball.impl.extension.getCompatibilityServerVersion
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import org.bukkit.scoreboard.Scoreboard
 import java.util.logging.Level
 
 class GameActionServiceImpl @Inject constructor(
-    private val pluginProxy: PluginProxy,
     private val gameHubGameActionService: GameHubGameActionService,
     private val bossBarService: BossBarService,
     private val hubGameActionService: GameHubGameActionService,
@@ -37,19 +33,18 @@ class GameActionServiceImpl @Inject constructor(
     private val packetService: PacketService,
     private val plugin: Plugin,
 ) : GameActionService {
-    // Cyclic Reference reason why it cannot be constructor parameter.
-    private val gameService: GameService by lazy {
-        BlockBallApi.resolve(GameService::class.java)
-    }
+    /**
+     * Compatibility reference.
+     * Cyclic Reference reason why it cannot be constructor parameter.
+     */
+    override lateinit var gameService: GameService
 
     /**
      * Lets the given [player] leave join the given [game]. Optional can the prefered
      * [team] be specified but the team can still change because of arena settings.
      * Does nothing if the player is already in a Game.
      */
-    override fun <P> joinGame(game: Game, player: P, team: Team?): Boolean {
-        require(player is Any)
-
+    override fun joinGame(game: Game, player: Player, team: Team?): Boolean {
         if (!isAllowedToJoinWithPermissions(game, player)) {
             return false
         }
@@ -58,7 +53,6 @@ class GameActionServiceImpl @Inject constructor(
             this.leaveGame(g, player)
         }
 
-        require(player is Player)
         val event = GameJoinEvent(player, game)
         Bukkit.getPluginManager().callEvent(event)
 
@@ -80,8 +74,7 @@ class GameActionServiceImpl @Inject constructor(
      * Lets the given [player] leave the given [game].
      * Does nothing if the player is not in the game.
      */
-    override fun <P> leaveGame(game: Game, player: P) {
-        require(player is Player)
+    override fun leaveGame(game: Game, player: Player) {
         val event = GameLeaveEvent(player, game)
         Bukkit.getPluginManager().callEvent(event)
 
@@ -117,9 +110,27 @@ class GameActionServiceImpl @Inject constructor(
             val storage = game.ingamePlayersStorage[player]!!
 
             if (storage.team == Team.RED) {
-                proxyService.sendMessage(player, placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.leaveMessage, player, game, null, null))
+                proxyService.sendMessage(
+                    player,
+                    placeholderService.replacePlaceHolders(
+                        game.arena.meta.redTeamMeta.leaveMessage,
+                        player,
+                        game,
+                        null,
+                        null
+                    )
+                )
             } else if (storage.team == Team.BLUE) {
-                proxyService.sendMessage(player, placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.leaveMessage, player, game, null, null))
+                proxyService.sendMessage(
+                    player,
+                    placeholderService.replacePlaceHolders(
+                        game.arena.meta.redTeamMeta.leaveMessage,
+                        player,
+                        game,
+                        null,
+                        null
+                    )
+                )
             }
 
             game.ingamePlayersStorage.remove(player)
@@ -129,6 +140,7 @@ class GameActionServiceImpl @Inject constructor(
             proxyService.teleport(player, proxyService.toLocation<Any>(game.arena.meta.lobbyMeta.leaveSpawnpoint!!))
         }
     }
+
 
     /**
      * Closes the given game and all underlying resources.
@@ -155,7 +167,10 @@ class GameActionServiceImpl @Inject constructor(
 
         game.status = GameState.DISABLED
         game.closed = true
-        game.ingamePlayersStorage.keys.toTypedArray().forEach { p -> leaveGame(game, p) }
+        game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
+            require(p is Player)
+            leaveGame(game, p)
+        }
         game.ingamePlayersStorage.clear()
         game.ball?.remove()
         game.doubleJumpCoolDownPlayers.clear()
@@ -349,7 +364,7 @@ class GameActionServiceImpl @Inject constructor(
             val additionalPlayers = getAdditionalNotificationPlayers(game)
             players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
 
-            holo.players.addAll(players)
+            holo.players.addAll(players as Collection<Player>)
 
             additionalPlayers.filter { p -> !p.second && holo.players.contains(p.first) }.forEach { p ->
                 holo.players.remove(p.first)
@@ -371,7 +386,7 @@ class GameActionServiceImpl @Inject constructor(
      */
     private fun updateBossBar(game: Game) {
         val meta = game.arena.meta.bossBarMeta
-        if (pluginProxy.getCompatibilityServerVersion().isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
+        if (Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
             if (game.bossBar == null && game.arena.meta.bossBarMeta.enabled) {
                 game.bossBar = bossBarService.createNewBossBar<Any>(game.arena.meta.bossBarMeta)
             }
@@ -411,10 +426,11 @@ class GameActionServiceImpl @Inject constructor(
                     .toList())
 
                 additionalPlayers.filter { p -> !p.second }.forEach { p ->
-                    dependencyBossBarApiService.removeBossbarMessage(p.first)
+                    dependencyBossBarApiService.removeBossbarMessage(p.first as Player)
                 }
 
                 players.forEach { p ->
+                    require(p is Player)
                     dependencyBossBarApiService.setBossbarMessage(
                         p,
                         placeholderService.replacePlaceHolders(meta.message, null, game),
@@ -453,7 +469,7 @@ class GameActionServiceImpl @Inject constructor(
             game.scoreboard = proxyService.generateNewScoreboard()
 
             scoreboardService.setConfiguration(
-                game.scoreboard,
+                game.scoreboard as Scoreboard,
                 ScoreboardDisplaySlot.SIDEBAR,
                 game.arena.meta.scoreboardMeta.title
             )
@@ -480,7 +496,7 @@ class GameActionServiceImpl @Inject constructor(
                 var j = lines.size
                 for (i in 0 until lines.size) {
                     val line = placeholderService.replacePlaceHolders(lines[i], null, game)
-                    scoreboardService.setLine(game.scoreboard, j, line)
+                    scoreboardService.setLine(game.scoreboard as Scoreboard, j, line)
                     j--
                 }
             }

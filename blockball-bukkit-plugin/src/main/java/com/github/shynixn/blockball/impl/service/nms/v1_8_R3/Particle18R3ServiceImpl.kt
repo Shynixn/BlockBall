@@ -2,11 +2,10 @@
 
 package com.github.shynixn.blockball.impl.service.nms.v1_8_R3
 
-import com.github.shynixn.blockball.api.business.enumeration.ParticleType
-import com.github.shynixn.blockball.api.business.service.ParticleService
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.persistence.entity.Particle
-import com.github.shynixn.blockball.api.persistence.entity.Position
+import com.github.shynixn.blockball.contract.ParticleService
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.Particle
+import com.github.shynixn.blockball.enumeration.ParticleType
 import com.github.shynixn.mcutils.common.Version
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -18,9 +17,9 @@ import java.lang.reflect.Method
 import java.util.logging.Level
 
 class Particle18R3ServiceImpl @Inject constructor(
-        private val proxyService: ProxyService,
-        private val version: Version,
-        private val plugin: Plugin
+    private val proxyService: ProxyService,
+    private val version: Version,
+    private val plugin: Plugin
 ) : ParticleService {
     private val getIdFromMaterialMethod: Method = { Material::class.java.getDeclaredMethod("getId") }.invoke()
 
@@ -28,41 +27,14 @@ class Particle18R3ServiceImpl @Inject constructor(
      * Plays the given [particle] at the given [location] for the given [player] or
      * all players in the world if the config option all alwaysVisible is enabled.
      */
-    override fun <L, P> playParticle(location: L, particle: Particle, players: Collection<P>) {
-        when (location) {
-            is Position -> {
-                playParticleInternal(
-                    Location(
-                        Bukkit.getWorld(location.worldName!!),
-                        location.x,
-                        location.y,
-                        location.z,
-                        location.yaw.toFloat(),
-                        location.pitch.toFloat()
-                    ), particle, players
-                )
-            }
-            is Location -> {
-                playParticleInternal(location, particle, players)
-            }
-            else -> {
-                throw IllegalArgumentException("Location has to be a BukkitLocation!")
-            }
-        }
-    }
-
-    /**
-     * Plays the given [particle] at the given [location] for the given [players].
-     */
-    private fun <L, P> playParticleInternal(location: L, particle: Particle, players: Collection<P>) {
-        require(location is Location) { "Location has to be a BukkitLocation!" }
+    override fun playParticle(location: Location, particle: Particle, players: Collection<Player>) {
         val partType = findParticleType(particle.typeName)
 
         if (partType == ParticleType.NONE) {
             return
         }
 
-        val targets = (players as Collection<Player>).toTypedArray()
+        val targets = players.toTypedArray()
 
         if (partType == ParticleType.REDSTONE || partType == ParticleType.NOTE) {
             particle.amount = 0

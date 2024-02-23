@@ -1,19 +1,22 @@
 package com.github.shynixn.blockball.impl.listener
 
-import com.github.shynixn.blockball.api.business.enumeration.Permission
-import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.entity.HubGame
+import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.entity.HubGame
+import com.github.shynixn.blockball.enumeration.Permission
+import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallTouchPlayerEvent
 import com.github.shynixn.blockball.impl.extension.hasPermission
 import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.blockball.impl.extension.toPosition
+import com.github.shynixn.mccoroutine.bukkit.launch
+import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.packet.api.InteractionType
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.event.PacketEvent
 import com.github.shynixn.mcutils.packet.api.packet.PacketInInteractEntity
 import com.google.inject.Inject
+import kotlinx.coroutines.delay
 import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -25,6 +28,7 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
+import org.bukkit.plugin.Plugin
 
 /**
  * Game Listener for the most important game events.
@@ -34,10 +38,10 @@ class GameListener @Inject constructor(
     private val rightClickManageService: RightclickManageService,
     private val gameActionService: GameActionService,
     private val gameExecutionService: GameExecutionService,
-    private val concurrencyService: ConcurrencyService,
     private val gameSoccerService: GameSoccerService,
     private val proxyService: ProxyService,
-    private val ballEntityService: BallEntityService
+    private val ballEntityService: BallEntityService,
+    private val plugin: Plugin
 ) : Listener {
     private val playerCache = HashSet<Player>()
 
@@ -164,7 +168,8 @@ class GameListener @Inject constructor(
         if (game.isPresent && !Permission.INVENTORY.hasPermission(event.player)) {
             event.isCancelled = true
 
-            concurrencyService.runTaskSync(10L) {
+            plugin.launch {
+                delay(10.ticks)
                 event.player.updateInventory()
             }
         }
@@ -252,7 +257,8 @@ class GameListener @Inject constructor(
         gameExecutionService.applyDeathPoints(game.get(), player)
         gameExecutionService.respawn(game.get(), player)
 
-        concurrencyService.runTaskSync(40L) {
+        plugin.launch {
+            delay(40.ticks)
             playerCache.remove(player)
         }
     }
@@ -278,7 +284,7 @@ class GameListener @Inject constructor(
         for (game in gameService.getAllGames()) {
             if (game.ball == event.ball) {
                 val targetPosition = event.targetLocation.toPosition()
-                val sourcePosition = proxyService.toPosition(event.ball.getLocation<Any>())
+                val sourcePosition = proxyService.toPosition(event.ball.getLocation())
 
                 if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(sourcePosition)) {
                     gameSoccerService.notifyBallInGoal(game, Team.RED)

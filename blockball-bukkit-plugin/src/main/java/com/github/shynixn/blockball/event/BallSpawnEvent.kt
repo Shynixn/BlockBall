@@ -1,5 +1,5 @@
 package com.github.shynixn.blockball.event
 
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
+import com.github.shynixn.blockball.contract.Ball
 
-class BallSpawnEvent(ball: BallProxy) : BallEvent(ball)
+class BallSpawnEvent(ball: Ball) : BallEvent(ball)

@@ -1,38 +1,10 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
-import com.github.shynixn.blockball.entity.PositionEntity
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.entity.Position
+import com.github.shynixn.blockball.enumeration.*
 
-/**
- * Created by Shynixn 2018.
- * <p>
- * Version 1.2
- * <p>
- * MIT License
- * <p>
- * Copyright (c) 2018 by Shynixn
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 class AreaProtectionPage : Page(AreaProtectionPage.ID, MiscSettingsPage.ID) {
     companion object {
         /** Id of the page. */
@@ -62,11 +34,11 @@ class AreaProtectionPage : Page(AreaProtectionPage.ID, MiscSettingsPage.ID) {
         } else if (command == MenuCommand.AREAPROTECTION_SET_ENTITYFORCEFIELD && args.size >= 5
             && args[2].toDoubleOrNull() != null && args[3].toDoubleOrNull() != null && args[4].toDoubleOrNull() != null
         ) {
-            arena.meta.protectionMeta.entityProtection = PositionEntity(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
+            arena.meta.protectionMeta.entityProtection = Position(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
         } else if (command == MenuCommand.AREAPROTECTION_SET_PLAYERJOINFORCEFIELD && args.size >= 5
             && args[2].toDoubleOrNull() != null && args[3].toDoubleOrNull() != null && args[4].toDoubleOrNull() != null
         ) {
-            arena.meta.protectionMeta.rejoinProtection = PositionEntity(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
+            arena.meta.protectionMeta.rejoinProtection = Position(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
         }
         return super.execute(player, command, cache, args)
     }
@@ -79,7 +51,7 @@ class AreaProtectionPage : Page(AreaProtectionPage.ID, MiscSettingsPage.ID) {
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
         val arena = cache[0] as Arena
         val meta = arena.meta.protectionMeta
-        return ChatBuilderEntity()
+        return ChatBuilder()
             .component("- Animal and Monster protection enabled: " + meta.entityProtectionEnabled).builder()
             .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.AREAPROTECTION_TOGGLE_ENTITYFORCEFIELD.command)

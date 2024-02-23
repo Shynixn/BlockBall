@@ -1,13 +1,13 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.enumeration.Team
-import com.github.shynixn.blockball.api.business.service.GameExecutionService
-import com.github.shynixn.blockball.api.business.service.GameHubGameActionService
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.persistence.entity.HubGame
-import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
+import com.github.shynixn.blockball.contract.GameExecutionService
+import com.github.shynixn.blockball.contract.GameHubGameActionService
 import com.github.shynixn.blockball.contract.PlaceHolderService
-import com.github.shynixn.blockball.entity.GameStorageEntity
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.GameStorage
+import com.github.shynixn.blockball.entity.HubGame
+import com.github.shynixn.blockball.entity.TeamMeta
+import com.github.shynixn.blockball.enumeration.Team
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 import java.util.*
@@ -23,8 +23,7 @@ class GameHubGameActionServiceImpl @Inject constructor(
      * [team] be specified but the team can still change because of arena settings.
      * Does nothing if the player is already in a Game.
      */
-    override fun <P> joinGame(game: HubGame, player: P, team: Team?): Boolean {
-        require(player is Player)
+    override fun joinGame(game: HubGame, player: Player, team: Team?): Boolean {
         var joiningTeam = team
 
         if (game.arena.meta.lobbyMeta.onlyAllowEventTeams) {
@@ -58,9 +57,7 @@ class GameHubGameActionServiceImpl @Inject constructor(
      * Lets the given [player] leave the given [game].
      * Does nothing if the player is not in the game.
      */
-    override fun <P> leaveGame(game: HubGame, player: P) {
-        require(player is Any)
-
+    override fun leaveGame(game: HubGame, player: Player) {
         if (!game.ingamePlayersStorage.containsKey(player)) {
             return
         }
@@ -96,7 +93,7 @@ class GameHubGameActionServiceImpl @Inject constructor(
      */
     private fun prepareLobbyStorageForPlayer(game: HubGame, player: Player, team: Team, teamMeta: TeamMeta) {
         val uuid = proxyService.getPlayerUUID(player)
-        val stats = GameStorageEntity(UUID.fromString(uuid))
+        val stats = GameStorage(UUID.fromString(uuid))
         game.ingamePlayersStorage[player] = stats
 
         stats.scoreboard = proxyService.generateNewScoreboard()

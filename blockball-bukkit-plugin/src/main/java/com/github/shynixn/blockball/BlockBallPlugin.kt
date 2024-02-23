@@ -1,9 +1,9 @@
 package com.github.shynixn.blockball
 
-import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
-import com.github.shynixn.blockball.api.business.proxy.PluginProxy
-import com.github.shynixn.blockball.api.business.service.*
+import com.github.shynixn.blockball.contract.CommandService
+import com.github.shynixn.blockball.contract.DependencyService
+import com.github.shynixn.blockball.contract.GameActionService
+import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.impl.commandexecutor.*
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.mcutils.common.ChatColor
@@ -26,24 +26,15 @@ import java.util.logging.Level
  * Plugin Main.
  * @author Shynixn
  */
-class BlockBallPlugin : JavaPlugin(), PluginProxy {
+class BlockBallPlugin : JavaPlugin() {
     companion object {
         /** Final Prefix of BlockBall in the console */
         val PREFIX_CONSOLE: String = ChatColor.BLUE.toString() + "[BlockBall] "
     }
 
     private var injector: Injector? = null
-    private var serverVersion: Version? = null
     private val bstatsPluginId = 1317
     private var packetService: PacketService? = null
-
-    /**
-     * Gets the installed version of the plugin.
-     */
-    override val version: String
-        get() {
-            return description.version
-        }
 
     /**
      * Enables the plugin BlockBall.
@@ -114,6 +105,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
 
         this.packetService = PacketServiceImpl(this)
         this.injector = Guice.createInjector(BlockBallDependencyInjectionBinder(this, packetService!!))
+        resolve(GameActionService::class.java).gameService = resolve(GameService::class.java)
         this.reloadConfig()
 
         // Register Listeners
@@ -124,10 +116,6 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
         Bukkit.getPluginManager().registerEvents(resolve(BungeeCordgameListener::class.java), this)
         Bukkit.getPluginManager().registerEvents(resolve(BallListener::class.java), this)
         Bukkit.getPluginManager().registerEvents(resolve(BlockSelectionListener::class.java), this)
-
-        server.messenger.registerOutgoingPluginChannel(this, "BungeeCord")
-
-        startPlugin()
 
         val dependencyService = resolve(DependencyService::class.java)
         val configurationService = resolve(ConfigurationService::class.java)
@@ -188,58 +176,9 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     }
 
     /**
-     * Starts the game mode.
-     */
-    private fun startPlugin() {
-        try {
-            val gameService = resolve(GameService::class.java)
-            gameService.restartGames()
-
-            val method = BlockBallApi::class.java.getDeclaredMethod("initializeBlockBall", PluginProxy::class.java)
-            method.isAccessible = true
-            method.invoke(BlockBallApi, this)
-            logger.log(Level.INFO, "Using NMS Connector " + getServerVersion().bukkitId + ".")
-        } catch (e: Exception) {
-            logger.log(Level.WARNING, "Failed to enable BlockBall.", e)
-        }
-    }
-
-    /**
-     * Gets the server version this plugin is currently running on.
-     */
-    override fun getServerVersion(): Version {
-        if (this.serverVersion != null) {
-            return this.serverVersion!!
-        }
-
-        try {
-            if (Bukkit.getServer() == null || Bukkit.getServer().javaClass.getPackage() == null) {
-                this.serverVersion = Version.VERSION_UNKNOWN
-                return this.serverVersion!!
-            }
-
-            val version = Bukkit.getServer().javaClass.getPackage().name.replace(".", ",").split(",")[3]
-
-            for (versionSupport in Version.values()) {
-                if (versionSupport.bukkitId == version) {
-                    this.serverVersion = versionSupport
-                    return versionSupport
-                }
-            }
-
-        } catch (e: Exception) {
-            // Ignore parsing exceptions.
-        }
-
-        this.serverVersion = Version.VERSION_UNKNOWN
-
-        return this.serverVersion!!
-    }
-
-    /**
      * Shutdowns the server.
      */
-    override fun shutdownServer() {
+    fun shutdownServer() {
         Bukkit.getServer().shutdown()
     }
 
@@ -248,7 +187,7 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
      * All types in the service package can be accessed.
      * Throws a [IllegalArgumentException] if the service could not be found.
      */
-    override fun <S> resolve(service: Class<S>): S {
+    private fun <S> resolve(service: Class<S>): S {
         try {
             return this.injector!!.getBinding(service).provider.get()
         } catch (e: Exception) {
@@ -257,28 +196,10 @@ class BlockBallPlugin : JavaPlugin(), PluginProxy {
     }
 
     /**
-     * Creates a new entity from the given class.
-     * Throws a IllegalArgumentException if not found.
-     *
-     * @param entity entityClazz
-     * @param <E>    type
-     * @return entity.
-     */
-    override fun <E> create(entity: Class<E>): E {
-        try {
-            val entityName = entity.simpleName + "Entity"
-            return Class.forName("com.github.shynixn.blockball.core.logic.persistence.entity.$entityName")
-                .getDeclaredConstructor().newInstance() as E
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Entity could not be created.", e)
-        }
-    }
-
-    /**
      * Disables the plugin for the given version and prints the supported version.
      */
     private fun disableForVersion(version: Version, supportedVersion: Version): Boolean {
-        if (getServerVersion() == version) {
+        if (Version.serverVersion == version) {
             this.logger.log(Level.SEVERE, "================================================")
             this.logger.log(Level.SEVERE, "BlockBall does not support this subversion")
             this.logger.log(Level.SEVERE, "Please upgrade from v" + version.id + " to v" + supportedVersion.id)

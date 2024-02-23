@@ -1,11 +1,10 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.ChatClickAction
-import com.github.shynixn.blockball.api.business.enumeration.MenuClickableItem
-import com.github.shynixn.blockball.api.business.enumeration.MenuCommand
-import com.github.shynixn.blockball.api.business.enumeration.MenuPageKey
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.enumeration.ChatClickAction
+import com.github.shynixn.blockball.enumeration.MenuClickableItem
+import com.github.shynixn.blockball.enumeration.MenuCommand
+import com.github.shynixn.blockball.enumeration.MenuPageKey
 
 /**
  * Created by Shynixn 2018.
@@ -57,7 +56,7 @@ class MiscSettingsPage : Page(MiscSettingsPage.ID, MainSettingsPage.ID) {
      * @return content
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
-        return ChatBuilderEntity()
+        return ChatBuilder()
             .component("- Game Properties:").builder()
             .component(MenuClickableItem.PAGE.text).setColor(MenuClickableItem.PAGE.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.GAMEPROPERTIES_OPEN.command)

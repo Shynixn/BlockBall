@@ -1,13 +1,11 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.DependencyVaultService
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
-import com.github.shynixn.blockball.entity.CommandMetaEntity
+import com.github.shynixn.blockball.contract.DependencyVaultService
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.entity.CommandMeta
+import com.github.shynixn.blockball.enumeration.*
+import com.github.shynixn.blockball.impl.service.DependencyVaultServiceImpl
 import com.github.shynixn.mcutils.common.ChatColor
 
 /**
@@ -73,7 +71,7 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
             val rewardedAction = RewardType.values()[args[2].toInt()]
             cache[5] = rewardedAction
             if (arena.meta.rewardMeta.commandReward[rewardedAction] == null) {
-                val command2 = CommandMetaEntity()
+                val command2 = CommandMeta()
                 command2.command = "none"
                 command2.mode = CommandMode.CONSOLE_SINGLE
                 arena.meta.rewardMeta.commandReward[rewardedAction] = command2
@@ -99,11 +97,9 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
         val selectedReward = cache[4]
         val rewardedAction = cache[5]
-        val builder = ChatBuilderEntity()
+        val builder = ChatBuilder()
 
         try {
-            BlockBallApi.resolve(DependencyVaultService::class.java)
-
             builder.component("- Money reward (Vault): ").builder()
                 .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_REWARDED_MONEY.command)
@@ -123,7 +119,7 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
                 val vaultService: DependencyVaultService
 
                 try {
-                    vaultService = BlockBallApi.resolve(DependencyVaultService::class.java)
+                    vaultService = DependencyVaultServiceImpl()
                 } catch (e: Exception) {
                     return builder
                 }

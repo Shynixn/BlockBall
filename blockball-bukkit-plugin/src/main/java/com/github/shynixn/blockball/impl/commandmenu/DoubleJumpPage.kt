@@ -1,9 +1,8 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.enumeration.*
 
 /**
  * Created by Shynixn 2018.
@@ -74,7 +73,7 @@ class DoubleJumpPage : Page(DoubleJumpPage.ID, OpenPage.ID) {
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
         val arena = cache[0] as Arena
         val meta = arena.meta.doubleJumpMeta
-        return ChatBuilderEntity()
+        return ChatBuilder()
             .component("- Enabled: " + meta.enabled).builder()
             .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.DOUBLEJUMP_TOGGLE.command)

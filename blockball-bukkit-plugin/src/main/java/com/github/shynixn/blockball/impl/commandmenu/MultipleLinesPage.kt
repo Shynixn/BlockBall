@@ -2,10 +2,9 @@
 
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.translateChatColors
 
@@ -124,14 +123,15 @@ class MultipleLinesPage : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
         if (index < infoList.size) {
             selectedLine = infoList[index]
         }
-        return ChatBuilderEntity()
+        return ChatBuilder()
             .component("- Preview:").builder()
             .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
             .setHoverText(infoList.toSingleLine())
             .builder().nextLine()
             .component("- Add line:").builder()
             .component(MenuClickableItem.ADD.text).setColor(MenuClickableItem.ADD.color)
-            .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.MULTILINES_ADD.command)
+            .setClickAction(
+                ChatClickAction.SUGGEST_COMMAND, MenuCommand.MULTILINES_ADD.command)
             .setHoverText("Adds a new line to the list.")
             .builder().nextLine()
             .component("- Edit a line:").builder()

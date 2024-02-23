@@ -2,12 +2,11 @@
 
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.entity.TeamMeta
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
 
@@ -121,7 +120,7 @@ class TeamSettingsPage @Inject constructor(private val proxyService: ProxyServic
             lobby = teamMeta.lobbySpawnpoint!!.toString()
         }
 
-        return ChatBuilderEntity()
+        return ChatBuilder()
             .component("- Name: " + teamMeta.displayName).builder()
             .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
             .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.TEAM_NAME.command)

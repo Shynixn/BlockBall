@@ -2,14 +2,13 @@
 
 package com.github.shynixn.blockball.impl.repository
 
-import com.github.shynixn.blockball.api.business.enumeration.BallActionType
-import com.github.shynixn.blockball.api.business.service.YamlSerializationService
-import com.github.shynixn.blockball.api.business.service.YamlService
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
-import com.github.shynixn.blockball.entity.ArenaEntity
-import com.github.shynixn.blockball.entity.ParticleEntity
-import com.github.shynixn.blockball.entity.SoundEntity
+import com.github.shynixn.blockball.contract.ArenaRepository
+import com.github.shynixn.blockball.deprecated.YamlSerializationService
+import com.github.shynixn.blockball.deprecated.YamlService
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.Particle
+import com.github.shynixn.blockball.entity.Sound
+import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
 import org.bukkit.plugin.Plugin
@@ -42,36 +41,36 @@ class ArenaFileRepository @Inject constructor(
                     val file = getFolder().resolve(s)
                     val data = yamlService.read(file)
 
-                    val arenaEntity = yamlSerializationService.deserialize(
-                        ArenaEntity::class.java,
+                    val arena = yamlSerializationService.deserialize(
+                        Arena::class.java,
                         data["arena"] as Map<String, Any?>
                     )
 
                     // Compatibility added in v6.1.0
-                    if (!arenaEntity.meta.ballMeta.soundEffects.containsKey(BallActionType.ONGOAL)) {
-                        arenaEntity.meta.ballMeta.soundEffects[BallActionType.ONGOAL] = SoundEntity()
+                    if (!arena.meta.ballMeta.soundEffects.containsKey(BallActionType.ONGOAL)) {
+                        arena.meta.ballMeta.soundEffects[BallActionType.ONGOAL] = Sound()
                     }
 
                     // Compatibility added in v6.1.0
-                    if (!arenaEntity.meta.ballMeta.particleEffects.containsKey(BallActionType.ONGOAL)) {
-                        arenaEntity.meta.ballMeta.particleEffects[BallActionType.ONGOAL] = ParticleEntity()
+                    if (!arena.meta.ballMeta.particleEffects.containsKey(BallActionType.ONGOAL)) {
+                        arena.meta.ballMeta.particleEffects[BallActionType.ONGOAL] = Particle()
                     }
 
                     // Compatibility added in v6.22.1
-                    if (!arenaEntity.meta.ballMeta.particleEffects.containsKey(BallActionType.ONPASS)) {
-                        arenaEntity.meta.ballMeta.particleEffects[BallActionType.ONPASS] = ParticleEntity()
+                    if (!arena.meta.ballMeta.particleEffects.containsKey(BallActionType.ONPASS)) {
+                        arena.meta.ballMeta.particleEffects[BallActionType.ONPASS] = Particle()
                     }
 
                     // Compatibility added in v6.22.1
-                    if (!arenaEntity.meta.ballMeta.soundEffects.containsKey(BallActionType.ONPASS)) {
-                        arenaEntity.meta.ballMeta.soundEffects[BallActionType.ONPASS] = SoundEntity()
+                    if (!arena.meta.ballMeta.soundEffects.containsKey(BallActionType.ONPASS)) {
+                        arena.meta.ballMeta.soundEffects[BallActionType.ONPASS] = Sound()
                     }
 
-                    if (arenaEntity.name.toIntOrNull() == null) {
+                    if (arena.name.toIntOrNull() == null) {
                         throw RuntimeException("Arena name has to be a number!")
                     }
 
-                    arenas.add(arenaEntity)
+                    arenas.add(arena)
                 }
             } catch (ex: Exception) {
                 plugin.logger.log(Level.SEVERE, "Cannot read arena file $s.", ex)

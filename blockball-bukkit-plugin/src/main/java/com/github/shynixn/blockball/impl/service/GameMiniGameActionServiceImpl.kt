@@ -1,51 +1,26 @@
 package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.BlockBallLanguage
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.entity.Game
-import com.github.shynixn.blockball.api.persistence.entity.GameStorage
-import com.github.shynixn.blockball.api.persistence.entity.MiniGame
-import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.contract.PlaceHolderService
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
-import com.github.shynixn.blockball.entity.GameStorageEntity
+import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.entity.*
+import com.github.shynixn.blockball.enumeration.ChatClickAction
+import com.github.shynixn.blockball.enumeration.GameState
+import com.github.shynixn.blockball.enumeration.Permission
+import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.impl.extension.toSoundMeta
+import com.github.shynixn.mccoroutine.bukkit.launch
+import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.google.inject.Inject
+import kotlinx.coroutines.delay
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import java.util.*
 import kotlin.collections.ArrayList
 
-/**
- * Created by Shynixn 2018.
- * <p>
- * Version 1.2
- * <p>
- * MIT License
- * <p>
- * Copyright (c) 2018 by Shynixn
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 class GameMiniGameActionServiceImpl @Inject constructor(
     private val configurationService: ConfigurationService,
     private val screenMessageService: ScreenMessageService,
@@ -53,8 +28,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private val proxyService: ProxyService,
     private val gameSoccerService: GameSoccerService,
     private val gameExecutionService: GameExecutionService,
-    private val concurrencyService: ConcurrencyService,
-    private val placeholderService: PlaceHolderService
+    private val placeholderService: PlaceHolderService,
+    private val plugin: Plugin
 ) : GameMiniGameActionService {
 
     /**
@@ -62,7 +37,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      */
     override fun closeGame(game: MiniGame) {
         game.spectatorPlayers.forEach { p ->
-            leaveGame(game, p)
+            leaveGame(game, p as Player)
         }
     }
 
@@ -71,11 +46,9 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * [team] be specified but the team can still change because of arena settings.
      * Does nothing if the player is already in a Game.
      */
-    override fun <P> joinGame(game: MiniGame, player: P, team: Team?): Boolean {
-        require(player is Player)
-
+    override fun joinGame(game: MiniGame, player: Player, team: Team?): Boolean {
         if (game.playing || game.isLobbyFull) {
-            val b = ChatBuilderEntity().text(
+            val b = ChatBuilder().text(
                 placeholderService.replacePlaceHolders(
                     game.arena.meta.spectatorMeta.spectateStartMessage[0], player, game
                 )
@@ -142,7 +115,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Lets the given [player] leave the given [game].
      * Does nothing if the player is not in the game.
      */
-    override fun <P> leaveGame(game: MiniGame, player: P) {
+    override fun leaveGame(game: MiniGame, player: Player) {
         require(player is Any)
 
         if (game.spectatorPlayers.contains(player)) {
@@ -164,8 +137,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Lets the given [player] leave spectate the given [game].
      * Does nothing if the player is already spectating a Game.
      */
-    override fun <P> spectateGame(game: MiniGame, player: P) {
-        require(player is Any)
+    override fun spectateGame(game: MiniGame, player: Player) {
 
         if (game.spectatorPlayers.contains(player)) {
             return
@@ -384,13 +356,14 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
         game.ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
             if (matchTime.respawnEnabled || game.matchTimeIndex == 0) {
-                gameExecutionService.respawn(game, p)
+                gameExecutionService.respawn(game, p as Player)
             }
 
             if (!matchTime.startMessageTitle.isBlank() || !matchTime.startMessageSubTitle.isBlank()) {
-                concurrencyService.runTaskSync(20L * 3) {
+                plugin.launch {
+                    delay(60.ticks)
                     screenMessageService.setTitle(
-                        p,
+                        p as Player,
                         placeholderService.replacePlaceHolders(matchTime.startMessageTitle, null, game),
                         placeholderService.replacePlaceHolders(matchTime.startMessageSubTitle, null, game),
                         matchTime.startMessageFadeIn,
@@ -405,7 +378,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     }
 
     private fun createPlayerStorage(game: MiniGame, player: Any): GameStorage {
-        val stats = GameStorageEntity(UUID.fromString(proxyService.getPlayerUUID(player)))
+        val stats = GameStorage(UUID.fromString(proxyService.getPlayerUUID(player)))
         stats.gameMode = proxyService.getPlayerGameMode(player)
         stats.armorContents = proxyService.getPlayerInventoryArmorCopy(player)
         stats.inventoryContents = proxyService.getPlayerInventoryCopy(player)

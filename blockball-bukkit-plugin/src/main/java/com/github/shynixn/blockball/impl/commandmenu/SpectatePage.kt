@@ -1,11 +1,11 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.enumeration.*
 import com.google.inject.Inject
+import org.bukkit.entity.Player
 
 /**
  * Created by Shynixn 2018.
@@ -62,7 +62,7 @@ class SpectatePage @Inject constructor(private val proxyService: ProxyService) :
         if (command == MenuCommand.SPECTATE_TOGGLE) {
             arena.meta.spectatorMeta.spectatorModeEnabled = !arena.meta.spectatorMeta.spectatorModeEnabled
         } else if (command == MenuCommand.SPECTATE_SPAWNPOINT) {
-            arena.meta.spectatorMeta.spectateSpawnpoint = proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
+            arena.meta.spectatorMeta.spectateSpawnpoint = proxyService.toPosition(proxyService.getEntityLocation<Any, Player>(player as Player))
         }
 
         return super.execute(player, command, cache, args)
@@ -83,7 +83,7 @@ class SpectatePage @Inject constructor(private val proxyService: ProxyService) :
             spectatorSpawnpoint = meta.spectateSpawnpoint!!.toString()
         }
 
-        return ChatBuilderEntity()
+        return ChatBuilder()
             .component("- Spectator mode enabled: " + meta.spectatorModeEnabled).builder()
             .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.SPECTATE_TOGGLE.command)

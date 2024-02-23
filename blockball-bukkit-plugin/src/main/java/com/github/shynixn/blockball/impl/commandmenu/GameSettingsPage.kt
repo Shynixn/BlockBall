@@ -1,12 +1,12 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
+import org.bukkit.GameMode
 
 /**
  * Created by Shynixn 2018.
@@ -115,7 +115,7 @@ class GameSettingsPage @Inject constructor(private val proxyService: ProxyServic
         if (arena.meta.minigameMeta.lobbySpawnpoint != null) {
             lobbySpawnpoint = arena.meta.minigameMeta.lobbySpawnpoint!!.toString()
         }
-        val builder = ChatBuilderEntity()
+        val builder = ChatBuilder()
             .component("- Max Score: " + arena.meta.lobbyMeta.maxScore).builder()
             .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
             .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.GAMESETTINGS_MAXSCORE.command)

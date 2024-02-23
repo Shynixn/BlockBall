@@ -1,10 +1,9 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.business.service.TemplateService
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.contract.TemplateService
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.mcutils.common.EffectTargetType
 import com.google.inject.Inject
 
@@ -146,7 +145,7 @@ class ListablePage @Inject constructor(
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
         val infoList = cache[2] as ArrayList<*>
         val callBackCommand = cache[3] as MenuCommand
-        val builder = ChatBuilderEntity()
+        val builder = ChatBuilder()
 
         if (infoList.size == 0) {
             builder.text("No data found.")

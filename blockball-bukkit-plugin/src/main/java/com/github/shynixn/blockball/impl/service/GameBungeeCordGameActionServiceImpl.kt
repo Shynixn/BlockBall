@@ -2,18 +2,18 @@ package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.BlockBallLanguage
 import com.github.shynixn.blockball.BlockBallPlugin
-import com.github.shynixn.blockball.api.business.service.ConcurrencyService
-import com.github.shynixn.blockball.api.business.service.GameBungeeCordGameActionService
-import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
+import com.github.shynixn.blockball.contract.GameBungeeCordGameActionService
+import com.github.shynixn.blockball.entity.BungeeCordGame
+import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.google.common.io.ByteStreams
 import com.google.inject.Inject
+import kotlinx.coroutines.delay
 import org.bukkit.entity.Player
 
 class GameBungeeCordGameActionServiceImpl @Inject constructor(
     private val plugin: BlockBallPlugin,
-    private val concurrencyService: ConcurrencyService,
 ) :
     GameBungeeCordGameActionService {
     /**
@@ -26,7 +26,8 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(
             return
         }
 
-        concurrencyService.runTaskSync(20 * 20L) {
+        plugin.launch {
+            delay(1000L * 20L)
             plugin.shutdownServer()
         }
     }
@@ -35,8 +36,7 @@ class GameBungeeCordGameActionServiceImpl @Inject constructor(
      * Lets the given [player] leave the given [game].
      * Does nothing if the player is not in the game.
      */
-    override fun <P> leaveGame(game: BungeeCordGame, player: P) {
-        require(player is Player)
+    override fun leaveGame(game: BungeeCordGame, player: Player) {
         if (game.arena.meta.bungeeCordMeta.fallbackServer.isEmpty()) {
             player.kickPlayer(BlockBallLanguage.bungeeCordKickMessage)
         } else {

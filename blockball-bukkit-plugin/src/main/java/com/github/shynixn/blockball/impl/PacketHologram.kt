@@ -1,15 +1,15 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.api.business.proxy.HologramProxy
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.entity.PositionEntity
+import com.github.shynixn.blockball.contract.HologramProxy
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.Position
 import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.mcutils.packet.api.EntityType
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityDestroy
 import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityMetadata
 import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntitySpawn
+import org.bukkit.Location
 import org.bukkit.entity.Player
 
 class PacketHologram : HologramProxy {
@@ -21,12 +21,10 @@ class PacketHologram : HologramProxy {
         {
             position!!
         }, { player ->
-            require(player is Player)
             sendSpawn(player)
             sendUpdateMetaData(player)
         },
         { player ->
-            require(player is Player)
             sendDestroy(player)
 
             if (players.contains(player)) {
@@ -44,7 +42,7 @@ class PacketHologram : HologramProxy {
     /**
      * List of players being able to see this hologram.
      */
-    override val players: MutableSet<Any> = HashSet()
+    override val players: MutableSet<Player> = HashSet()
 
     /**
      * List of lines being displayed on the hologram.
@@ -71,7 +69,7 @@ class PacketHologram : HologramProxy {
     /**
      * Location of the hologram.
      */
-    override var location: Any
+    override var location: Location
         get() {
             return proxyService.toLocation(position!!)
         }
@@ -102,7 +100,6 @@ class PacketHologram : HologramProxy {
         val players = playerTracker.checkAndGet()
 
         for (player in players) {
-            require(player is Player)
             sendUpdateMetaData(player)
         }
     }
@@ -130,7 +127,7 @@ class PacketHologram : HologramProxy {
             packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
                 it.entityId = entityIds[i]
                 it.entityType = EntityType.ARMOR_STAND
-                it.target = PositionEntity(this.position!!.worldName!!, this.position!!.x, this.position!!.y - upSet, this.position!!.z).toLocation()
+                it.target = Position(this.position!!.worldName!!, this.position!!.x, this.position!!.y - upSet, this.position!!.z).toLocation()
             })
         }
     }

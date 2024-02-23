@@ -1,18 +1,15 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.enumeration.ChatClickAction
-import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.contract.HubGameForcefieldService
-import com.github.shynixn.blockball.contract.PlaceHolderService
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.entity.InteractionCache
+import com.github.shynixn.blockball.enumeration.ChatClickAction
+import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.impl.extension.stripChatColors
 import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.blockball.impl.extension.toVector
 import com.github.shynixn.mcutils.common.ConfigurationService
-import com.github.shynixn.mcutils.common.translateChatColors
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -79,7 +76,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                             val joinCommand = configurationService.findValue<String>("global-join.command")
 
                             val b =
-                                ChatBuilderEntity().text(placeholderService.replacePlaceHolders(game.arena.meta.hubLobbyMeta.joinMessage[0], player, game, null, null))
+                                ChatBuilder().text(placeholderService.replacePlaceHolders(game.arena.meta.hubLobbyMeta.joinMessage[0], player, game, null, null))
                                     .nextLine()
                                     .component(
                                         placeholderService.replacePlaceHolders(

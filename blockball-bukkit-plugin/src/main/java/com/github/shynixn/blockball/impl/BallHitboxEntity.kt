@@ -1,22 +1,26 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.api.business.enumeration.BlockDirection
-import com.github.shynixn.blockball.api.business.enumeration.GameMode
-import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta
-import com.github.shynixn.blockball.api.persistence.entity.Position
-import com.github.shynixn.blockball.entity.PositionEntity
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.contract.RayTracingService
+import com.github.shynixn.blockball.entity.BallMeta
+import com.github.shynixn.blockball.entity.Position
+import com.github.shynixn.blockball.enumeration.BlockDirection
 import com.github.shynixn.blockball.event.BallLeftClickEvent
 import com.github.shynixn.blockball.event.BallRightClickEvent
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallTouchPlayerEvent
 import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.blockball.impl.extension.toVector
+import com.github.shynixn.mccoroutine.bukkit.launch
+import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.packet.api.EntityType
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.packet.*
+import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -30,7 +34,7 @@ class BallHitboxEntity(val entityId: Int) {
     /**
      * Origin coordinate to make relative rotations in the world.
      */
-    private val origin = PositionEntity(0.0, 0.0, -1.0).normalize()
+    private val origin = Position(0.0, 0.0, -1.0).normalize()
 
     /**
      * Remaining time until the players can interact with the ball again.
@@ -45,13 +49,13 @@ class BallHitboxEntity(val entityId: Int) {
     /**
      * Position of the ball.
      */
-    var position: Position = PositionEntity()
+    var position: Position = Position()
 
     /**
      * Motion of the ball.
      * Apply gravity at spawn to start with physic calculations.
      */
-    var motion: Position = PositionEntity(0.0, -0.7, 0.0)
+    var motion: Position = Position(0.0, -0.7, 0.0)
 
     /**
      * Request a teleport at next tick.
@@ -79,14 +83,11 @@ class BallHitboxEntity(val entityId: Int) {
     lateinit var proxyService: ProxyService
 
     /**
-     * Concurrency dependency.
-     */
-    lateinit var concurrencyService: ConcurrencyService
-
-    /**
      * Ball Proxy.
      */
     lateinit var ball: BallCrossPlatformProxy
+
+    lateinit var plugin: Plugin
 
     /**
      * Ball Meta.
@@ -144,7 +145,8 @@ class BallHitboxEntity(val entityId: Int) {
         if (meta.kickPassDelay == 0) {
             executeKickPass(player, prevEyeLoc, baseMultiplier, isPass)
         } else {
-            concurrencyService.runTaskSync(meta.kickPassDelay.toLong()) {
+            plugin.launch {
+                delay(meta.kickPassDelay.ticks)
                 executeKickPass(player, prevEyeLoc, baseMultiplier, isPass)
             }
         }
@@ -171,7 +173,7 @@ class BallHitboxEntity(val entityId: Int) {
                 })
             }
 
-            motion = PositionEntity(0.0, -0.7, 0.0)
+            motion = Position(0.0, -0.7, 0.0)
             return
         }
 
@@ -348,8 +350,8 @@ class BallHitboxEntity(val entityId: Int) {
             return
         }
 
-        val addVector = PositionEntity(-motion.z, 0.0, motion.x).multiply(angularVelocity)
-        this.motion = PositionEntity(motion.x + addVector.x, motion.y, motion.z + addVector.z)
+        val addVector = Position(-motion.z, 0.0, motion.x).multiply(angularVelocity)
+        this.motion = Position(motion.x + addVector.x, motion.y, motion.z + addVector.z)
         angularVelocity /= 2
     }
 
@@ -431,21 +433,21 @@ class BallHitboxEntity(val entityId: Int) {
     ): Position {
         val normalVector = when (blockDirection) {
             BlockDirection.WEST -> {
-                PositionEntity(-1.0, 0.0, 0.0)
+                Position(-1.0, 0.0, 0.0)
             }
             BlockDirection.EAST -> {
-                PositionEntity(1.0, 0.0, 0.0)
+                Position(1.0, 0.0, 0.0)
             }
             BlockDirection.NORTH -> {
-                PositionEntity(0.0, 0.0, -1.0)
+                Position(0.0, 0.0, -1.0)
             }
             BlockDirection.SOUTH -> {
-                PositionEntity(0.0, 0.0, 1.0)
+                Position(0.0, 0.0, 1.0)
             }
             else -> if (blockDirection == BlockDirection.DOWN) {
-                PositionEntity(0.0, -1.0, 0.0)
+                Position(0.0, -1.0, 0.0)
             } else {
-                PositionEntity(0.0, 1.0, 1.0)
+                Position(0.0, 1.0, 1.0)
             }.normalize()
         }
 

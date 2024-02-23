@@ -2,15 +2,16 @@
 
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.persistence.entity.BallMeta
+import com.github.shynixn.blockball.contract.Ball
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.BallMeta
 import com.github.shynixn.blockball.event.BallRemoveEvent
 import com.github.shynixn.blockball.event.BallTeleportEvent
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import org.bukkit.util.Vector
 import java.util.logging.Level
 
 class BallCrossPlatformProxy(
@@ -18,7 +19,7 @@ class BallCrossPlatformProxy(
     private val ballDesignEntity: BallDesignEntity,
     private val ballHitBoxEntity: BallHitboxEntity,
     private val plugin: Plugin,
-) : BallProxy {
+) : Ball {
     private var allPlayerTracker: AllPlayerTracker = AllPlayerTracker(
         {
             ballHitBoxEntity.position
@@ -74,8 +75,7 @@ class BallCrossPlatformProxy(
     /**
      * Teleports the ball to the given [location].
      */
-    override fun <L> teleport(location: L) {
-        require(location is Location)
+    override fun teleport(location: Location) {
         val ballTeleportEvent = BallTeleportEvent(this, location)
         Bukkit.getPluginManager().callEvent(ballTeleportEvent)
 
@@ -90,21 +90,21 @@ class BallCrossPlatformProxy(
     /**
      * Gets the location of the ball.
      */
-    override fun <L> getLocation(): L {
+    override fun getLocation(): Location {
         return proxyService.toLocation(ballHitBoxEntity.position)
     }
 
     /**
      * Gets the velocity of the ball.
      */
-    override fun <V> getVelocity(): V {
+    override fun getVelocity(): Vector {
         return proxyService.toVector(ballHitBoxEntity.motion)
     }
 
     /**
      * Rotation of the visible ball in euler angles.
      */
-    override fun <V> getRotation(): V {
+    override fun getRotation(): Vector {
         return proxyService.toVector(ballDesignEntity.rotation)
     }
 
@@ -114,9 +114,7 @@ class BallCrossPlatformProxy(
      *
      * @param player
      */
-    override fun <P> kickByPlayer(player: P) {
-        require(player is Player)
-
+    override fun kickByPlayer(player: Player) {
         if (!meta.enabledKick) {
             return
         }
@@ -130,9 +128,7 @@ class BallCrossPlatformProxy(
      *
      * @param player
      */
-    override fun <P> passByPlayer(player: P) {
-        require(player is Player)
-
+    override fun passByPlayer(player: Player) {
         if (!meta.enabledPass) {
             return
         }

@@ -1,11 +1,12 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.enumeration.ScoreboardDisplaySlot
-import com.github.shynixn.blockball.api.business.service.ScoreboardService
+import com.github.shynixn.blockball.contract.ScoreboardService
+import com.github.shynixn.blockball.enumeration.ScoreboardDisplaySlot
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.scoreboard.DisplaySlot
+import org.bukkit.scoreboard.Scoreboard
 
 /**
  * Created by Shynixn 2018.
@@ -42,11 +43,7 @@ class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
     /**
      * Sets the configuration of the given scoreboard.
      */
-    override fun <S> setConfiguration(scoreboard: S, displaySlot: ScoreboardDisplaySlot, title: String) {
-        if (scoreboard !is org.bukkit.scoreboard.Scoreboard) {
-            throw IllegalArgumentException("Scoreboard has to be a Bukkit Scoreboard!")
-        }
-
+    override fun setConfiguration(scoreboard: Scoreboard, displaySlot: ScoreboardDisplaySlot, title: String) {
         @Suppress("DEPRECATION")
         val objective = scoreboard.registerNewObjective(defaultObjective, "dummy")
         objective.displaySlot = DisplaySlot.values().first { v -> v.name == displaySlot.name }
@@ -56,11 +53,7 @@ class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
     /**
      * Sets the [text] at the given [scoreboard] and [lineNumber].
      */
-    override fun <S> setLine(scoreboard: S, lineNumber: Int, text: String) {
-        if (scoreboard !is org.bukkit.scoreboard.Scoreboard) {
-            throw IllegalArgumentException("Scoreboard has to be a Bukkit Scoreboard!")
-        }
-
+    override fun setLine(scoreboard: Scoreboard, lineNumber: Int, text: String) {
         val teamFinder = StringBuilder(ChatColor.values()[lineNumber].toString()).append("&r")
         var team = scoreboard.teams.firstOrNull { t -> t.name == teamFinder.toString().translateChatColors() }
         val objective = scoreboard.getObjective(defaultObjective)

@@ -2,13 +2,11 @@
 
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.api.persistence.entity.MatchTimeMeta
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
-import com.github.shynixn.blockball.entity.MatchTimeMetaEntity
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.entity.MatchTimeMeta
+import com.github.shynixn.blockball.enumeration.*
 import com.google.inject.Inject
 
 /**
@@ -70,7 +68,7 @@ class MatchTimesPage @Inject constructor(private val proxyService: ProxyService)
         if (command == MenuCommand.MATCHTIMES_OPEN) {
             cache[5] = null
         } else if (command == MenuCommand.MATCHTIMES_CREATE) {
-            val matchTime = MatchTimeMetaEntity()
+            val matchTime = MatchTimeMeta()
             arena.meta.minigameMeta.matchTimes.add(matchTime)
             cache[5] = matchTime
         } else if (command == MenuCommand.MATCHTIMES_CALLBACK && args.size >= 3) {
@@ -123,7 +121,7 @@ class MatchTimesPage @Inject constructor(private val proxyService: ProxyService)
         val selectedMatchTime = cache[5]
         val matchTimeListText = (cache[2] as List<String>).toSingleLine()
 
-        val builder = ChatBuilderEntity()
+        val builder = ChatBuilder()
             .component("- Match Times:").builder()
             .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
             .setHoverText(matchTimeListText)

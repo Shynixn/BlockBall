@@ -1,9 +1,9 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.enumeration.*
+import com.github.shynixn.blockball.enumeration.MenuClickableItem.*
 
 /**
  * Created by Shynixn 2018.
@@ -76,14 +76,14 @@ class NotificationPage : Page(ID, SpectatingSettingsPage.ID) {
         val arena = cache[0] as Arena
         val meta = arena.meta.spectatorMeta
 
-        return ChatBuilderEntity()
+        return ChatBuilder()
             .component("- Notifications enabled: " + meta.notifyNearbyPlayers).builder()
-            .component(MenuClickableItem.TOGGLE.text).setColor(MenuClickableItem.TOGGLE.color)
+            .component(TOGGLE.text).setColor(TOGGLE.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.NOTIFICATIONS_TOGGLE.command)
             .setHoverText("Toggles the notifications for nearby players.")
             .builder().nextLine()
             .component("- Notification radius: " + meta.notificationRadius).builder()
-            .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
+            .component(EDIT.text).setColor(EDIT.color)
             .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.NOTIFICATIONS_RADIUS.command)
             .setHoverText("The amount of blocks a players has to be near an arena to still receive notifications.")
             .builder().nextLine()

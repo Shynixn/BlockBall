@@ -1,13 +1,17 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+
+import com.github.shynixn.blockball.contract.BlockSelectionService
+import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.PersistenceArenaService
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 import kotlin.math.abs
@@ -43,8 +47,6 @@ class MainConfigurationPage @Inject constructor(
     private val configurationService: ConfigurationService,
     private val arenaRepository: PersistenceArenaService,
     private val blockSelectionService: BlockSelectionService,
-    private val virtualArenaService: VirtualArenaService,
-    private val screenMessageService: ScreenMessageService,
     private val gameService: GameService,
     private val proxyService: ProxyService,
     private val plugin: Plugin
@@ -74,6 +76,10 @@ class MainConfigurationPage @Inject constructor(
         cache: Array<Any?>,
         args: Array<String>
     ): MenuCommandResult {
+        if (player !is Player) {
+            return MenuCommandResult.BACK
+        }
+
         if (command == MenuCommand.ARENA_CREATE) {
 
         } else if (command == MenuCommand.ARENA_EDIT) {
@@ -97,8 +103,8 @@ class MainConfigurationPage @Inject constructor(
         } else if (command == MenuCommand.ARENA_SETAREA) {
             val arena = cache[0] as Arena
             blockSelectionService.setSelectionToolForPlayer(player)
-            val left = blockSelectionService.getLeftClickLocation<Any, P>(player)
-            val right = blockSelectionService.getRightClickLocation<Any, P>(player)
+            val left = blockSelectionService.getLeftClickLocation(player)
+            val right = blockSelectionService.getRightClickLocation(player)
             if (left.isPresent && right.isPresent) {
                 val leftPosition = proxyService.toPosition(left.get())
                 val rightPosition = proxyService.toPosition(right.get())
@@ -116,8 +122,8 @@ class MainConfigurationPage @Inject constructor(
             val arena = cache[0] as Arena
 
             blockSelectionService.setSelectionToolForPlayer(player)
-            val left = blockSelectionService.getLeftClickLocation<Any, P>(player)
-            val right = blockSelectionService.getRightClickLocation<Any, P>(player)
+            val left = blockSelectionService.getLeftClickLocation(player)
+            val right = blockSelectionService.getRightClickLocation(player)
             if (left.isPresent && right.isPresent) {
                 val leftPosition = proxyService.toPosition(left.get())
                 val rightPosition = proxyService.toPosition(right.get())
@@ -138,7 +144,6 @@ class MainConfigurationPage @Inject constructor(
                 }
 
                 arena.meta.redTeamMeta.goal.setCorners(leftPosition, rightPosition)
-                virtualArenaService.displayForPlayer(player, arena)
             } else {
                 return MenuCommandResult.WESELECTION_MISSING
             }
@@ -146,8 +151,8 @@ class MainConfigurationPage @Inject constructor(
             val arena = cache[0] as Arena
 
             blockSelectionService.setSelectionToolForPlayer(player)
-            val left = blockSelectionService.getLeftClickLocation<Any, P>(player)
-            val right = blockSelectionService.getRightClickLocation<Any, P>(player)
+            val left = blockSelectionService.getLeftClickLocation(player)
+            val right = blockSelectionService.getRightClickLocation(player)
             if (left.isPresent && right.isPresent) {
                 val leftPosition = proxyService.toPosition(left.get())
                 val rightPosition = proxyService.toPosition(right.get())
@@ -168,13 +173,12 @@ class MainConfigurationPage @Inject constructor(
                 }
 
                 arena.meta.blueTeamMeta.goal.setCorners(leftPosition, rightPosition)
-                virtualArenaService.displayForPlayer(player, arena)
             } else {
                 return MenuCommandResult.WESELECTION_MISSING
             }
         } else if (command == MenuCommand.ARENA_SAVE) {
             if (cache[0] == null || cache[0] !is Arena) {
-                val b = ChatBuilderEntity().text("- ")
+                val b = ChatBuilder().text("- ")
                     .text(ChatColor.RED.toString() + "Please select an arena to perform this action.")
                 proxyService.sendMessage(player, b)
 
@@ -195,7 +199,7 @@ class MainConfigurationPage @Inject constructor(
             }
         } else if (command == MenuCommand.ARENA_RELOAD) {
             if (cache[0] == null || cache[0] !is Arena) {
-                val b = ChatBuilderEntity().text("- ")
+                val b = ChatBuilder().text("- ")
                     .text(ChatColor.RED.toString() + "Please select an arena to perform this action.")
                 proxyService.sendMessage(player, b)
 
@@ -212,11 +216,11 @@ class MainConfigurationPage @Inject constructor(
                     arenaRepository.save(arena).thenAccept {
                         gameService.restartGames().thenAccept {
                             cache[0] = arenaRepository.getArenas().single { a -> a.name == name }
-                        }.exceptionally {ex ->
+                        }.exceptionally { ex ->
                             plugin.logger.log(Level.SEVERE, "Failed persistence arena.", ex)
                             null
                         }
-                    }.exceptionally {ex ->
+                    }.exceptionally { ex ->
                         plugin.logger.log(Level.SEVERE, "Failed persistence arena.", ex)
                         null
                     }
@@ -253,7 +257,7 @@ class MainConfigurationPage @Inject constructor(
         if (arena.meta.ballMeta.spawnpoint != null) {
             ballSpawn = arena.meta.ballMeta.spawnpoint!!.toString()
         }
-        return ChatBuilderEntity()
+        return ChatBuilder()
             .component("- Id: " + arena.name)
             .setColor(ChatColor.GRAY)
             .builder()

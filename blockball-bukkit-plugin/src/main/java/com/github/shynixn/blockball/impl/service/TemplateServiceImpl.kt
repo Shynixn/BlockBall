@@ -1,11 +1,12 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.Template
-import com.github.shynixn.blockball.entity.ArenaEntity
-import com.github.shynixn.blockball.entity.PositionEntity
-import com.github.shynixn.blockball.entity.TemplateEntity
+import com.github.shynixn.blockball.contract.PersistenceArenaService
+import com.github.shynixn.blockball.contract.TemplateService
+import com.github.shynixn.blockball.deprecated.YamlSerializationService
+import com.github.shynixn.blockball.deprecated.YamlService
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.Position
+import com.github.shynixn.blockball.entity.Template
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
 import java.io.File
@@ -32,7 +33,7 @@ class TemplateServiceImpl @Inject constructor(
                 val configuration = yamlService.read(file.toPath())
                 val templateName = file.toPath().fileName.toString().replace(".yml", "")
                 val translator = configuration.getOrDefault("arena.translator", "unknown") as String
-                templates.add(TemplateEntity(templateName, translator, false))
+                templates.add(Template(templateName, translator, false))
             }
         }
 
@@ -41,7 +42,7 @@ class TemplateServiceImpl @Inject constructor(
                 val configuration = yamlService.read(file.toPath())
                 val templateName = file.toPath().fileName.toString().replace(".yml", "")
                 val translator = configuration.getOrDefault("arena.translator", "unknown") as String
-                templates.add(TemplateEntity(templateName, translator, true))
+                templates.add(Template(templateName, translator, true))
             }
         }
 
@@ -60,7 +61,7 @@ class TemplateServiceImpl @Inject constructor(
 
         val filePath = configurationService.applicationDir.resolve(folderName + "/" + template.name + ".yml")
         val data = yamlService.read(filePath)
-        val arena = yamlSerializationService.deserialize(ArenaEntity::class.java, data["arena"] as Map<String, Any?>)
+        val arena = yamlSerializationService.deserialize(Arena::class.java, data["arena"] as Map<String, Any?>)
 
         var idGen = 1
         persistenceArenaService.getArenas().forEach { cacheArena ->
@@ -73,14 +74,14 @@ class TemplateServiceImpl @Inject constructor(
         arena.displayName = "Arena " + arena.name
         arena.meta.lobbyMeta.leaveSpawnpoint = null
         arena.meta.ballMeta.spawnpoint = null
-        arena.lowerCorner = PositionEntity()
-        arena.upperCorner = PositionEntity()
+        arena.lowerCorner = Position()
+        arena.upperCorner = Position()
 
-        arena.meta.redTeamMeta.goal.upperCorner = PositionEntity()
-        arena.meta.blueTeamMeta.goal.upperCorner = PositionEntity()
+        arena.meta.redTeamMeta.goal.upperCorner = Position()
+        arena.meta.blueTeamMeta.goal.upperCorner = Position()
 
-        arena.meta.redTeamMeta.goal.lowerCorner = PositionEntity()
-        arena.meta.blueTeamMeta.goal.lowerCorner = PositionEntity()
+        arena.meta.redTeamMeta.goal.lowerCorner = Position()
+        arena.meta.blueTeamMeta.goal.lowerCorner = Position()
 
         arena.meta.redTeamMeta.spawnpoint = null
         arena.meta.blueTeamMeta.spawnpoint = null

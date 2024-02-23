@@ -114,8 +114,6 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":blockball-api"))
-
     implementation("com.github.shynixn.mcutils:common:1.0.48")
     implementation("com.github.shynixn.mcutils:packet:1.0.65")
 
@@ -126,6 +124,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.6")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.13.0")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.13.0")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.3.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.2.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     compileOnly("me.clip:placeholderapi:2.9.2")

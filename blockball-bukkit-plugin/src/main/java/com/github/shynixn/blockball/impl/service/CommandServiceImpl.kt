@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.executor.CommandExecutor
-import com.github.shynixn.blockball.api.business.service.CommandService
+import com.github.shynixn.blockball.contract.CommandExecutor
+import com.github.shynixn.blockball.contract.CommandService
 import com.github.shynixn.blockball.impl.extension.findClazz
 import com.google.inject.Inject
 import org.bukkit.Bukkit

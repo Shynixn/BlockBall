@@ -1,10 +1,9 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.api.persistence.entity.Sound
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.entity.Sound
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.mcutils.common.EffectTargetType
 
 /**
@@ -88,7 +87,7 @@ class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
         val soundEffect = cache[5] as Sound
-        return ChatBuilderEntity()
+        return ChatBuilder()
                 .component("- Effecting: " + soundEffect.effectingType).builder()
                 .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_SOUND_EFFECTINGTYPES.command)

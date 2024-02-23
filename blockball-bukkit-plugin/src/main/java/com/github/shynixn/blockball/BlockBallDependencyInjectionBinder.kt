@@ -1,11 +1,11 @@
 package com.github.shynixn.blockball
 
-import com.github.shynixn.blockball.api.business.enumeration.PluginDependency
-import com.github.shynixn.blockball.api.business.proxy.PluginProxy
-import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.repository.ArenaRepository
+import com.github.shynixn.blockball.contract.DependencyVaultService
 import com.github.shynixn.blockball.contract.HubGameForcefieldService
-import com.github.shynixn.blockball.contract.PlaceHolderService
+import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.deprecated.YamlSerializationService
+import com.github.shynixn.blockball.deprecated.YamlService
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.impl.repository.ArenaFileRepository
 import com.github.shynixn.blockball.impl.service.DependencyServiceImpl
 import com.github.shynixn.blockball.impl.service.*
@@ -43,11 +43,9 @@ class BlockBallDependencyInjectionBinder(
      * Configures the business logic tree.
      */
     override fun configure() {
-        val version = plugin.getServerVersion()
         val dependencyService = DependencyServiceImpl()
 
-        bind(Version::class.java).toInstance(version)
-        bind(PluginProxy::class.java).toInstance(plugin)
+        bind(Version::class.java).toInstance(Version.serverVersion)
         bind(Plugin::class.java).toInstance(plugin)
         bind(BlockBallPlugin::class.java).toInstance(plugin)
 
@@ -58,7 +56,6 @@ class BlockBallDependencyInjectionBinder(
         bind(PacketService::class.java).toInstance(packetService)
         bind(EntityService::class.java).toInstance(EntityServiceImpl())
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(VirtualArenaService::class.java).to(VirtualArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ScoreboardService::class.java).to(ScoreboardServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ConfigurationService::class.java).toInstance(ConfigurationServiceImpl(plugin))
         bind(SoundService::class.java).toInstance(SoundServiceImpl(plugin))
@@ -79,9 +76,7 @@ class BlockBallDependencyInjectionBinder(
         bind(YamlSerializationService::class.java).to(YamlSerializationServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(YamlService::class.java).to(YamlServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ItemTypeService::class.java).to(ItemTypeServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(ConcurrencyService::class.java).to(ConcurrencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ProxyService::class.java).to(ProxyServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(CommandService::class.java).to(CommandServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameExecutionService::class.java).to(GameExecutionServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PersistenceArenaService::class.java).to(PersistenceArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
@@ -89,7 +84,7 @@ class BlockBallDependencyInjectionBinder(
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
 
         when {
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)
+            Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)
             -> bind(RayTracingService::class.java).to(RayTracingService113R2Impl::class.java)
                 .`in`(Scopes.SINGLETON)
             else -> bind(RayTracingService::class.java).to(RayTracingService18R3Impl::class.java)
@@ -97,7 +92,7 @@ class BlockBallDependencyInjectionBinder(
         }
 
         when {
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)
+            Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)
             -> bind(ScreenMessageService::class.java).to(ScreenMessage113R1ServiceImpl::class.java)
                 .`in`(Scopes.SINGLETON)
             else -> bind(ScreenMessageService::class.java).to(ScreenMessage18R3ServiceImpl::class.java)
@@ -105,7 +100,7 @@ class BlockBallDependencyInjectionBinder(
         }
 
         when {
-            version.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2) -> bind(ParticleService::class.java).to(
+            Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2) -> bind(ParticleService::class.java).to(
                 Particle113R2ServiceImpl::class.java
             ).`in`(
                 Scopes.SINGLETON

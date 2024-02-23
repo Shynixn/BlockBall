@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.annotation.YamlSerialize
-import com.github.shynixn.blockball.api.business.serializer.YamlSerializer
-import com.github.shynixn.blockball.api.business.service.YamlSerializationService
+import com.github.shynixn.blockball.deprecated.YamlSerializationService
+import com.github.shynixn.blockball.deprecated.YamlSerialize
+import com.github.shynixn.blockball.deprecated.YamlSerializer
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 import java.util.*

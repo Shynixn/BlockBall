@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.contract
 
-import com.github.shynixn.blockball.api.persistence.entity.Game
-import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
+import com.github.shynixn.blockball.entity.Game
+import com.github.shynixn.blockball.entity.TeamMeta
 import org.bukkit.entity.Player
 
 interface PlaceHolderService {

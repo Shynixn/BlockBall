@@ -1,25 +1,27 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.BlockBallApi
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.entity.CommandMeta
-import com.github.shynixn.blockball.api.persistence.entity.Game
-import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
-import com.github.shynixn.blockball.contract.PlaceHolderService
+import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.entity.CommandMeta
+import com.github.shynixn.blockball.entity.Game
+import com.github.shynixn.blockball.entity.TeamMeta
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.event.GameEndEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
+import com.github.shynixn.mccoroutine.bukkit.launch
+import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.google.inject.Inject
+import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 
 class GameSoccerServiceImpl @Inject constructor(
-    private val concurrencyService: ConcurrencyService,
     private val screenMessageService: ScreenMessageService,
     private val dependencyService: DependencyService,
     private val ballEntityService: BallEntityService,
     private val placeholderService: PlaceHolderService,
     private val proxyService: ProxyService,
+    private val plugin: Plugin
 ) : GameSoccerService {
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
@@ -96,10 +98,11 @@ class GameSoccerServiceImpl @Inject constructor(
             return
         }
 
-        val delay = 20 * game.arena.meta.customizingMeta.backTeleportDelay
+        val tickDelay = 20 * game.arena.meta.customizingMeta.backTeleportDelay
 
-        respawnBall(game, delay)
-        concurrencyService.runTaskSync(delay.toLong()) {
+        respawnBall(game, tickDelay)
+        plugin.launch {
+            delay(tickDelay.ticks)
             var redTeamSpawnpoint = game.arena.meta.redTeamMeta.spawnpoint
 
             if (redTeamSpawnpoint == null) {
@@ -140,7 +143,7 @@ class GameSoccerServiceImpl @Inject constructor(
                 }
 
                 game.ball = ballEntityService.spawnTemporaryBall(
-                    proxyService.toLocation<Any>(game.arena.meta.ballMeta.spawnpoint!!),
+                    proxyService.toLocation(game.arena.meta.ballMeta.spawnpoint!!),
                     game.arena.meta.ballMeta
                 )
                 game.ballSpawning = false
@@ -222,9 +225,9 @@ class GameSoccerServiceImpl @Inject constructor(
                         RewardType.SHOOT_GOAL
                     )
                 ) {
-                    val vaultService = BlockBallApi.resolve(DependencyVaultService::class.java)
+                    val vaultService = DependencyVaultServiceImpl()
                     vaultService.addMoney(
-                        game.lastInteractedEntity,
+                        game.lastInteractedEntity as Player,
                         game.arena.meta.rewardMeta.moneyReward[RewardType.SHOOT_GOAL]!!.toDouble()
                     )
                 }
@@ -241,16 +244,18 @@ class GameSoccerServiceImpl @Inject constructor(
 
     override fun <P> onMatchEnd(game: Game, winningPlayers: List<P>?, loosingPlayers: List<P>?) {
         if (dependencyService.isInstalled(PluginDependency.VAULT)) {
-            val vaultService = BlockBallApi.resolve(DependencyVaultService::class.java)
+            val vaultService = DependencyVaultServiceImpl()
 
             if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.WIN_MATCH) && winningPlayers != null) {
                 winningPlayers.forEach { p ->
+                    require(p is Player)
                     vaultService.addMoney(p, game.arena.meta.rewardMeta.moneyReward[RewardType.WIN_MATCH]!!.toDouble())
                 }
             }
 
             if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.LOOSING_MATCH) && loosingPlayers != null) {
                 loosingPlayers.forEach { p ->
+                    require(p is Player)
                     vaultService.addMoney(
                         p,
                         game.arena.meta.rewardMeta.moneyReward[RewardType.LOOSING_MATCH]!!.toDouble()
@@ -259,6 +264,7 @@ class GameSoccerServiceImpl @Inject constructor(
             }
             if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.PARTICIPATE_MATCH)) {
                 game.inTeamPlayers.forEach { p ->
+                    require(p is Player)
                     vaultService.addMoney(
                         p,
                         game.arena.meta.rewardMeta.moneyReward[RewardType.PARTICIPATE_MATCH]!!.toDouble()

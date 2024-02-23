@@ -1,10 +1,12 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.PersistenceArenaService
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.contract.PersistenceArenaService
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.enumeration.ChatClickAction
+import com.github.shynixn.blockball.enumeration.MenuCommand
+import com.github.shynixn.blockball.enumeration.MenuCommandResult
+import com.github.shynixn.blockball.enumeration.MenuPageKey
 import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
 
@@ -35,7 +37,9 @@ import com.google.inject.Inject
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class OpenPage @Inject constructor(private val arenaRepository: PersistenceArenaService, private val proxyService: ProxyService) :
+class OpenPage @Inject constructor(private val arenaRepository:
+                                   PersistenceArenaService, private val proxyService: ProxyService
+) :
     Page(OpenPage.ID, OpenPage.ID) {
     /**
      * Returns the key of the command when this page should be executed.
@@ -62,7 +66,7 @@ class OpenPage @Inject constructor(private val arenaRepository: PersistenceArena
 
             for (arena in this.arenaRepository.getArenas()) {
                 if (builder == null) {
-                    builder = ChatBuilderEntity()
+                    builder = ChatBuilder()
                 }
                 builder.component("- Arena: Id: " + arena.name + " Name: " + arena.displayName).builder()
                     .component(" [page..]").setColor(ChatColor.YELLOW)
@@ -80,7 +84,7 @@ class OpenPage @Inject constructor(private val arenaRepository: PersistenceArena
 
             for (arena in this.arenaRepository.getArenas()) {
                 if (builder == null) {
-                    builder = ChatBuilderEntity()
+                    builder = ChatBuilder()
                 }
                 builder.component("- Arena: Id: " + arena.name + " Name: " + arena.displayName).builder()
                     .component(" [delete..]").setColor(ChatColor.DARK_RED)
@@ -105,7 +109,7 @@ class OpenPage @Inject constructor(private val arenaRepository: PersistenceArena
      * @return page
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
-        return ChatBuilderEntity()
+        return ChatBuilder()
             .component("- Create arena:").builder()
             .component(" [create..]").setColor(ChatColor.AQUA)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.TEMPLATE_OPEN.command)

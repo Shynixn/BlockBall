@@ -1,12 +1,11 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
 import com.github.shynixn.blockball.BlockBallLanguage
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.business.service.ProxyService
-import com.github.shynixn.blockball.api.business.service.RightclickManageService
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.contract.RightclickManageService
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
 
@@ -86,7 +85,7 @@ class SignSettingsPage @Inject constructor(
         val leaveSigns = arena.meta.lobbyMeta.leaveSigns.map { p -> p.toString() }
 
         if (arena.gameType == GameType.HUBGAME) {
-            return ChatBuilderEntity()
+            return ChatBuilder()
                 .component("- Signs Team Red: ").builder()
                 .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
                 .setHoverText(teamSignsRed.toSingleLine())
@@ -144,7 +143,7 @@ class SignSettingsPage @Inject constructor(
                 .setHoverText("Opens the page to change the template on signs to join this team.")
                 .builder().nextLine()
         } else if (arena.gameType == GameType.MINIGAME || arena.gameType == GameType.BUNGEE) {
-            return ChatBuilderEntity()
+            return ChatBuilder()
                 .component("- Signs Team Red: ").builder()
                 .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
                 .setHoverText(teamSignsRed.toSingleLine())
@@ -202,6 +201,6 @@ class SignSettingsPage @Inject constructor(
                 .builder().nextLine()
         }
 
-        return ChatBuilderEntity()
+        return ChatBuilder()
     }
 }

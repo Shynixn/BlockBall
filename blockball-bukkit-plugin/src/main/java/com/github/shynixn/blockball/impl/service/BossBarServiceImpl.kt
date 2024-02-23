@@ -2,12 +2,10 @@
 
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.enumeration.BossBarFlag
-import com.github.shynixn.blockball.api.business.proxy.PluginProxy
-import com.github.shynixn.blockball.api.business.service.BossBarService
-import com.github.shynixn.blockball.api.business.service.DependencyBossBarApiService
-import com.github.shynixn.blockball.api.persistence.entity.BossBarMeta
-import com.github.shynixn.blockball.impl.extension.getCompatibilityServerVersion
+import com.github.shynixn.blockball.contract.BossBarService
+import com.github.shynixn.blockball.contract.DependencyBossBarApiService
+import com.github.shynixn.blockball.entity.BossBarMeta
+import com.github.shynixn.blockball.enumeration.BossBarFlag
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.google.inject.Inject
@@ -43,15 +41,15 @@ import java.lang.reflect.Method
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BossBarServiceImpl @Inject constructor(private val plugin: PluginProxy, private val dependencyBossBarService: DependencyBossBarApiService) :
+class BossBarServiceImpl @Inject constructor(private val dependencyBossBarService: DependencyBossBarApiService) :
     BossBarService {
     /**
      * Adds the given [player] to this bossbar.
      * Does nothing if the player is already added.
      */
     override fun <B, P> addPlayer(bossBar: B, player: P) {
-        if (plugin.getCompatibilityServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
-            dependencyBossBarService.setBossbarMessage(player, "", 1.0)
+        if (Version.serverVersion.isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
+            dependencyBossBarService.setBossbarMessage(player as Player, "", 1.0)
         } else {
             if (!getPlayers<B, P>(bossBar).contains(player)) {
                 getBossBarMethod("addPlayer", Player::class.java).invoke(bossBar, player)
@@ -64,8 +62,8 @@ class BossBarServiceImpl @Inject constructor(private val plugin: PluginProxy, pr
      * Does nothing if the player is already removed.
      */
     override fun <B, P> removePlayer(bossBar: B, player: P) {
-        if (plugin.getCompatibilityServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
-            dependencyBossBarService.removeBossbarMessage(player)
+        if (Version.serverVersion.isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
+            dependencyBossBarService.removeBossbarMessage(player as Player)
         } else {
             if (getPlayers<B, P>(bossBar).contains(player)) {
                 getBossBarMethod("removePlayer", Player::class.java).invoke(bossBar, player)
@@ -77,7 +75,7 @@ class BossBarServiceImpl @Inject constructor(private val plugin: PluginProxy, pr
      * Returns a list of all players watching thie bossbar.
      */
     override fun <B, P> getPlayers(bossBar: B): List<P> {
-        return if (plugin.getCompatibilityServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
+        return if (Version.serverVersion.isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
             ArrayList()
         } else {
             getBossBarMethod("getPlayers").invoke(bossBar) as List<P>
@@ -88,8 +86,8 @@ class BossBarServiceImpl @Inject constructor(private val plugin: PluginProxy, pr
      * Changes the style of the bossbar with given [bossBarMeta].
      */
     override fun <B, P> changeConfiguration(bossBar: B, title: String, bossBarMeta: BossBarMeta, player: P) {
-        if (plugin.getCompatibilityServerVersion().isVersionSameOrLowerThan(Version.VERSION_1_8_R3) && player != null) {
-            dependencyBossBarService.setBossbarMessage(player, bossBarMeta.message.translateChatColors(), bossBarMeta.percentage)
+        if (Version.serverVersion.isVersionSameOrLowerThan(Version.VERSION_1_8_R3) && player != null) {
+            dependencyBossBarService.setBossbarMessage(player as Player, bossBarMeta.message.translateChatColors(), bossBarMeta.percentage)
         } else {
             getBossBarMethod("setVisible", Boolean::class.java).invoke(bossBar, bossBarMeta.enabled)
             getBossBarMethod("setTitle", String::class.java).invoke(bossBar, title)

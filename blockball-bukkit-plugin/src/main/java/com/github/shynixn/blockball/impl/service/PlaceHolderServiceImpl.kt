@@ -1,12 +1,12 @@
 package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.BlockBallLanguage
-import com.github.shynixn.blockball.api.business.enumeration.GameState
-import com.github.shynixn.blockball.api.business.service.GameService
-import com.github.shynixn.blockball.api.persistence.entity.Game
-import com.github.shynixn.blockball.api.persistence.entity.MiniGame
-import com.github.shynixn.blockball.api.persistence.entity.TeamMeta
+import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.PlaceHolderService
+import com.github.shynixn.blockball.entity.Game
+import com.github.shynixn.blockball.entity.MiniGame
+import com.github.shynixn.blockball.entity.TeamMeta
+import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.google.inject.Inject

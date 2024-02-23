@@ -1,9 +1,8 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.api.business.enumeration.*
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.ChatBuilderEntity
+import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.enumeration.*
 
 /**
  * Created by Shynixn 2018.
@@ -74,7 +73,7 @@ class ScoreboardPage : Page(ScoreboardPage.ID, EffectsSettingsPage.ID) {
     override fun buildPage(cache: Array<Any?>): ChatBuilder {
         val arena = cache[0] as Arena
         val scoreboard = arena.meta.scoreboardMeta
-        return ChatBuilderEntity()
+        return ChatBuilder()
                 .component("- Title: " + scoreboard.title).builder()
                 .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
                 .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.SCOREBOARD_TITLE.command)

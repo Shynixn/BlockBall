@@ -1,21 +1,19 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.api.business.enumeration.GameType
-import com.github.shynixn.blockball.api.business.service.*
-import com.github.shynixn.blockball.api.persistence.entity.Arena
-import com.github.shynixn.blockball.api.persistence.entity.BungeeCordGame
-import com.github.shynixn.blockball.api.persistence.entity.Game
-import com.github.shynixn.blockball.api.persistence.entity.MiniGame
-import com.github.shynixn.blockball.entity.BungeeCordGameEntity
-import com.github.shynixn.blockball.entity.HubGameEntity
-import com.github.shynixn.blockball.entity.MiniGameEntity
+import com.github.shynixn.blockball.contract.GameActionService
+import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.PersistenceArenaService
+import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.*
+import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
+import org.bukkit.Location
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
-import kotlin.collections.ArrayList
 
 /**
  * Created by Shynixn 2018.
@@ -50,7 +48,6 @@ class GameServiceImpl @Inject constructor(
     private val proxyService: ProxyService,
     private val configurationService: ConfigurationService,
     private val plugin: Plugin,
-    concurrencyService: ConcurrencyService
 ) : GameService, Runnable {
     private val games = ArrayList<Game>()
     private var ticks: Int = 0
@@ -59,9 +56,10 @@ class GameServiceImpl @Inject constructor(
      * Init.
      */
     init {
-        concurrencyService.runTaskSync(0L, 1L) {
-            this.run()
-        }
+        plugin.server.scheduler.runTaskTimer(
+            plugin, Runnable { this.run() },
+            0L, 1L
+        )
     }
 
     /**
@@ -134,9 +132,7 @@ class GameServiceImpl @Inject constructor(
     /**
      * Returns the game if the given [player] is playing a game.
      */
-    override fun <P> getGameFromPlayer(player: P): Optional<Game> {
-        require(player is Any)
-
+    override fun getGameFromPlayer(player: Player): Optional<Game> {
         games.forEach { p ->
             if (p.ingamePlayersStorage.containsKey(player)) {
                 return Optional.of(p)
@@ -149,9 +145,7 @@ class GameServiceImpl @Inject constructor(
     /**
      * Returns the game if the given [player] is spectating a game.
      */
-    override fun <P> getGameFromSpectatingPlayer(player: P): Optional<Game> {
-        require(player is Any)
-
+    override fun getGameFromSpectatingPlayer(player: Player): Optional<Game> {
         games.forEach { g ->
             if (g is MiniGame) {
                 if (g.spectatorPlayers.contains(player)) {
@@ -166,9 +160,7 @@ class GameServiceImpl @Inject constructor(
     /**
      * Returns the game at the given location.
      */
-    override fun <L> getGameFromLocation(location: L): Optional<Game> {
-        require(location is Any)
-
+    override fun getGameFromLocation(location: Location): Optional<Game> {
         val position = proxyService.toPosition(location)
 
         games.forEach { g ->
@@ -207,15 +199,16 @@ class GameServiceImpl @Inject constructor(
      */
     private fun initGame(arena: Arena) {
         val game: Game = when (arena.gameType) {
-            GameType.HUBGAME -> HubGameEntity(arena)
-            GameType.MINIGAME -> MiniGameEntity(arena)
-            else -> BungeeCordGameEntity(arena)
+            GameType.HUBGAME -> HubGame(arena)
+            GameType.MINIGAME -> MiniGame(arena)
+            else -> BungeeCordGame(arena)
         }
 
         if (game is BungeeCordGame && game.arena.enabled) {
             games.add(game)
 
             for (player in proxyService.getOnlinePlayers<Any>()) {
+                require(player is Player)
                 if (!getGameFromPlayer(player).isPresent) {
                     gameActionService.joinGame(game, player)
                 }

@@ -2,15 +2,14 @@
 
 package com.github.shynixn.blockball.impl.listener
 
-import com.github.shynixn.blockball.api.business.enumeration.BallActionType
-import com.github.shynixn.blockball.api.business.proxy.BallProxy
-import com.github.shynixn.blockball.api.business.service.BallEntityService
-import com.github.shynixn.blockball.api.business.service.ParticleService
+import com.github.shynixn.blockball.contract.Ball
+import com.github.shynixn.blockball.contract.BallEntityService
+import com.github.shynixn.blockball.contract.ParticleService
+import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.blockball.event.*
 import com.github.shynixn.blockball.impl.extension.toSoundMeta
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.google.inject.Inject
-import org.bukkit.Location
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
@@ -91,19 +90,19 @@ class BallListener @Inject constructor(
     /**
      * Plays effects.
      */
-    private fun playEffects(ball: BallProxy, actionEffect: BallActionType) {
+    private fun playEffects(ball: Ball, actionEffect: BallActionType) {
         if (ball.meta.particleEffects.containsKey(actionEffect)) {
             this.particleService.playParticle(
-                ball.getLocation<Any>(),
+                ball.getLocation(),
                 ball.meta.particleEffects[actionEffect]!!,
-                ball.getLocation<Location>().world!!.players
+                ball.getLocation().world!!.players
             )
         }
 
         if (ball.meta.soundEffects.containsKey(actionEffect)) {
             this.soundService.playSound(
                 ball.getLocation(),
-                ball.getLocation<Location>().world!!.players,
+                ball.getLocation().world!!.players,
                 ball.meta.soundEffects[actionEffect]!!.toSoundMeta(),
             )
         }
