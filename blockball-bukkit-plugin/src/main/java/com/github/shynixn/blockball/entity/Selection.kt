@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.deprecated.YamlSerialize
-import com.github.shynixn.blockball.enumeration.BlockDirection
+import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 
 open class Selection {
 

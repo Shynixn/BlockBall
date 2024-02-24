@@ -63,7 +63,7 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     dependsOn("relocateLegacyPluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocateLegacyPluginJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-legacy.${extension}"
-    // destinationDir = File("C:\\temp\\plugins")
+    destinationDir = File("C:\\temp\\plugins")
     exclude("kotlin/**")
     exclude("kotlinx/**")
     exclude("org/**")
@@ -93,7 +93,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-latest.${extension}"
-    // destinationDir = File("C:\\temp\\plugins")
+    destinationDir = File("C:\\temp\\plugins")
 
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
@@ -114,8 +114,8 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.shynixn.mcutils:common:1.0.48")
-    implementation("com.github.shynixn.mcutils:packet:1.0.65")
+    implementation("com.github.shynixn.mcutils:common:1.0.61")
+    implementation("com.github.shynixn.mcutils:packet:1.0.82")
 
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
     implementation("org.slf4j:slf4j-jdk14:1.7.25")

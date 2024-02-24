@@ -1,10 +1,8 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.ProxyService
-import com.github.shynixn.blockball.contract.RayTracingService
 import com.github.shynixn.blockball.entity.BallMeta
 import com.github.shynixn.blockball.entity.Position
-import com.github.shynixn.blockball.enumeration.BlockDirection
 import com.github.shynixn.blockball.event.BallLeftClickEvent
 import com.github.shynixn.blockball.event.BallRightClickEvent
 import com.github.shynixn.blockball.event.BallRayTraceEvent
@@ -13,8 +11,12 @@ import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.blockball.impl.extension.toVector
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
-import com.github.shynixn.mcutils.packet.api.EntityType
+import com.github.shynixn.mcutils.common.toLocation
+import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.api.RayTracingService
+import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
+import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.*
 import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
@@ -183,12 +185,12 @@ class BallHitboxEntity(val entityId: Int) {
             return
         }
 
-        val rayTraceResult = rayTracingService.rayTraceMotion(position, motion)
+        val rayTraceResult = rayTracingService.rayTraceMotion(position.toLocation().toVector3d(), motion.toVector().toVector3d())
 
         val rayTraceEvent = BallRayTraceEvent(
             ball, rayTraceResult.hitBlock,
-            proxyService.toLocation(rayTraceResult.targetPosition),
-            rayTraceResult.blockdirection
+            rayTraceResult.targetPosition.toLocation(),
+            rayTraceResult.blockDirection
         )
         Bukkit.getPluginManager().callEvent(rayTraceEvent)
 

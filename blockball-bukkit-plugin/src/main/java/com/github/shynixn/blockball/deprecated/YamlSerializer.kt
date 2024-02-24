@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.deprecated
 
+@Deprecated("Use FastXml serializer.")
 interface YamlSerializer<I, O> {
     /**
      * Gets called on serialization.

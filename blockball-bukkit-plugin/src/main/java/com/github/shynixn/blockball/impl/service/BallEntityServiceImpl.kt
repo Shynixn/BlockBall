@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.impl.service
 import com.github.shynixn.blockball.contract.Ball
 import com.github.shynixn.blockball.contract.BallEntityService
 import com.github.shynixn.blockball.contract.ProxyService
-import com.github.shynixn.blockball.contract.RayTracingService
 import com.github.shynixn.blockball.entity.BallMeta
 import com.github.shynixn.blockball.event.BallSpawnEvent
 import com.github.shynixn.blockball.impl.BallCrossPlatformProxy
@@ -13,6 +12,7 @@ import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.google.inject.Inject
 import kotlinx.coroutines.delay
 import org.bukkit.Bukkit

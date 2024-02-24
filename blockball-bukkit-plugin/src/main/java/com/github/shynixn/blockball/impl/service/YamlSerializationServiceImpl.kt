@@ -36,6 +36,7 @@ import kotlin.collections.LinkedHashMap
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+@Deprecated("Use FastXml serializer.")
 class YamlSerializationServiceImpl : YamlSerializationService {
     /**
      * Serializes the given [instance] to a key value pair map.

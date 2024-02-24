@@ -5,6 +5,7 @@ import org.bukkit.configuration.MemorySection
 import org.bukkit.configuration.file.YamlConfiguration
 import java.nio.file.Path
 
+@Deprecated("Use FastXml serializer.")
 class YamlServiceImpl : YamlService {
     /**
      * Writes the given [content] to the given [path].

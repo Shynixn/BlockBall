@@ -103,6 +103,8 @@ class BlockBallPlugin : JavaPlugin() {
             return
         }
 
+        logger.log(Level.INFO, "Loaded NMS version ${Version.serverVersion.bukkitId}.")
+
         this.packetService = PacketServiceImpl(this)
         this.injector = Guice.createInjector(BlockBallDependencyInjectionBinder(this, packetService!!))
         resolve(GameActionService::class.java).gameService = resolve(GameService::class.java)
@@ -153,6 +155,8 @@ class BlockBallPlugin : JavaPlugin() {
             val language = configurationService.findValue<String>("language")
             plugin.reloadTranslation(language, BlockBallLanguage::class.java, "en_us")
             logger.log(Level.INFO, "Loaded language file $language.properties.")
+            val gameService = resolve(GameService::class.java)
+            gameService.restartGames()
             Bukkit.getServer()
                 .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
         }

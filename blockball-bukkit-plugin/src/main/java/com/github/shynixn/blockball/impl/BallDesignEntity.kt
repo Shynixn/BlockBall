@@ -11,9 +11,9 @@ import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.item.Item
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.toEulerAngle
-import com.github.shynixn.mcutils.packet.api.ArmorSlotType
-import com.github.shynixn.mcutils.packet.api.EntityType
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.api.meta.enumeration.ArmorSlotType
+import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.*
 import org.bukkit.entity.Player
 import java.nio.charset.Charset

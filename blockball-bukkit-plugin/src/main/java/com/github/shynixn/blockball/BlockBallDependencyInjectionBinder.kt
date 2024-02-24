@@ -10,10 +10,8 @@ import com.github.shynixn.blockball.impl.repository.ArenaFileRepository
 import com.github.shynixn.blockball.impl.service.DependencyServiceImpl
 import com.github.shynixn.blockball.impl.service.*
 import com.github.shynixn.blockball.impl.service.nms.v1_13_R2.Particle113R2ServiceImpl
-import com.github.shynixn.blockball.impl.service.nms.v1_13_R2.RayTracingService113R2Impl
 import com.github.shynixn.blockball.impl.service.nms.v1_13_R2.ScreenMessage113R1ServiceImpl
 import com.github.shynixn.blockball.impl.service.nms.v1_8_R3.Particle18R3ServiceImpl
-import com.github.shynixn.blockball.impl.service.nms.v1_8_R3.RayTracingService18R3Impl
 import com.github.shynixn.blockball.impl.service.nms.v1_8_R3.ScreenMessage18R3ServiceImpl
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.ConfigurationServiceImpl
@@ -24,7 +22,9 @@ import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.sound.SoundServiceImpl
 import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.mcutils.packet.impl.service.EntityServiceImpl
+import com.github.shynixn.mcutils.packet.impl.service.RayTracingServiceImpl
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
 import org.bukkit.Bukkit
@@ -53,6 +53,7 @@ class BlockBallDependencyInjectionBinder(
         bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java).`in`(Scopes.SINGLETON)
 
         // Services
+        bind(CommandService::class.java).to(CommandServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(PacketService::class.java).toInstance(packetService)
         bind(EntityService::class.java).toInstance(EntityServiceImpl())
         bind(TemplateService::class.java).to(TemplateServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -82,14 +83,7 @@ class BlockBallDependencyInjectionBinder(
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
             .`in`(Scopes.SINGLETON)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)
-
-        when {
-            Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2)
-            -> bind(RayTracingService::class.java).to(RayTracingService113R2Impl::class.java)
-                .`in`(Scopes.SINGLETON)
-            else -> bind(RayTracingService::class.java).to(RayTracingService18R3Impl::class.java)
-                .`in`(Scopes.SINGLETON)
-        }
+        bind(RayTracingService::class.java).toInstance(RayTracingServiceImpl())
 
         when {
             Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_17_R1)

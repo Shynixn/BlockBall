@@ -4,8 +4,8 @@ import com.github.shynixn.blockball.contract.HologramProxy
 import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Position
 import com.github.shynixn.blockball.impl.extension.toLocation
-import com.github.shynixn.mcutils.packet.api.EntityType
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityDestroy
 import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityMetadata
 import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntitySpawn
