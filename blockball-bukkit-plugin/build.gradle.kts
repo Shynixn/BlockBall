@@ -49,6 +49,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.google", "com.github.shynixn.blockball.lib.com.google")
     relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
     relocate("org.apache", "com.github.shynixn.blockball.lib.org.apache")
+    relocate("com.fasterxml", "com.github.shynixn.blockball.lib.com.fasterxml")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
     relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
 
@@ -63,10 +64,11 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     dependsOn("relocateLegacyPluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocateLegacyPluginJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-legacy.${extension}"
-    destinationDir = File("C:\\temp\\plugins")
+    // destinationDir = File("C:\\temp\\plugins")
     exclude("kotlin/**")
     exclude("kotlinx/**")
     exclude("org/**")
+    exclude("com/fasterxml/**")
     exclude("javax/**")
     exclude("com/google/**")
     exclude("com/github/shynixn/mcutils/**")
@@ -93,7 +95,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-latest.${extension}"
-    destinationDir = File("C:\\temp\\plugins")
+    // destinationDir = File("C:\\temp\\plugins")
 
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
@@ -102,6 +104,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("kotlinx/**")
     exclude("javax/**")
     exclude("com/google/**")
+    exclude("com/fasterxml/**")
     exclude("plugin-legacy.yml")
 }
 
