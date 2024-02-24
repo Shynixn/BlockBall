@@ -1,4 +1,7 @@
 rootProject.name = "blockball-root"
-include("blockball-api")
-include("blockball-bukkit-plugin")
-include("blockball-tools")
+
+pluginManagement {
+    plugins {
+        kotlin("jvm") version "1.6.21"
+    }
+}
