@@ -183,28 +183,6 @@ class ProxyServiceImpl @Inject constructor(
     }
 
     /**
-     * Gets a copy of the player inventory.
-     */
-    override fun <P> getPlayerInventoryCopy(player: P): Array<Any?> {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        return player.inventory.contents.clone() as Array<Any?>
-    }
-
-    /**
-     * Gets a copy of the player armor inventory.
-     */
-    override fun <P> getPlayerInventoryArmorCopy(player: P): Array<Any?> {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        return player.inventory.armorContents.clone() as Array<Any?>
-    }
-
-    /**
      * Sets the player gameMode.
      */
     override fun <P> setGameMode(player: P, gameMode: GameMode) {
@@ -390,19 +368,6 @@ class ProxyServiceImpl @Inject constructor(
     override fun <P> getPlayerHunger(player: P): Int {
         require(player is Player)
         return player.foodLevel
-    }
-
-    /**
-     * Sets the given inventory items.
-     */
-    override fun <P, I> setInventoryContents(player: P, mainInventory: Array<I>, armorInventory: Array<I>) {
-        if (player !is Player) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        player.inventory.contents = mainInventory.clone().map { d -> d as ItemStack? }.toTypedArray()
-        player.inventory.setArmorContents(armorInventory.clone().map { d -> d as ItemStack? }.toTypedArray())
-        player.updateInventory()
     }
 
     /**

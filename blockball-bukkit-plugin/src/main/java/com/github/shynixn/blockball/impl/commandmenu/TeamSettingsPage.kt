@@ -9,6 +9,8 @@ import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
+import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.entity.Player
 
 class TeamSettingsPage @Inject constructor(private val proxyService: ProxyService) :
     Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
@@ -95,10 +97,20 @@ class TeamSettingsPage @Inject constructor(private val proxyService: ProxyServic
             }
         } else if (command == MenuCommand.TEAM_ARMOR) {
             val teamMeta = getTeamMeta(cache)
-            teamMeta.armorContents = proxyService.getPlayerInventoryArmorCopy(player)
+            require(player is Player)
+            teamMeta.armor = player.inventory.armorContents.clone().map { e ->
+                val yamlConfiguration = YamlConfiguration()
+                yamlConfiguration.set("item", e)
+                yamlConfiguration.saveToString()
+            }.toTypedArray()
         } else if (command == MenuCommand.TEAM_INVENTORY) {
             val teamMeta = getTeamMeta(cache)
-            teamMeta.inventoryContents = proxyService.getPlayerInventoryCopy(player)
+            require(player is Player)
+            teamMeta.armor = player.inventory.contents.clone().map { e ->
+                val yamlConfiguration = YamlConfiguration()
+                yamlConfiguration.set("item", e)
+                yamlConfiguration.saveToString()
+            }.toTypedArray()
         }
         return super.execute(player, command, cache, args)
     }
@@ -116,7 +128,7 @@ class TeamSettingsPage @Inject constructor(private val proxyService: ProxyServic
             spawnpoint = teamMeta.spawnpoint!!.toString()
         }
         var lobby = "none"
-        if(teamMeta.lobbySpawnpoint != null){
+        if (teamMeta.lobbySpawnpoint != null) {
             lobby = teamMeta.lobbySpawnpoint!!.toString()
         }
 

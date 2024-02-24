@@ -10,7 +10,6 @@ import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.Team
 import com.google.inject.Inject
 import org.bukkit.entity.Player
-import java.util.*
 
 class GameHubGameActionServiceImpl @Inject constructor(
     private val proxyService: ProxyService,
@@ -70,7 +69,9 @@ class GameHubGameActionServiceImpl @Inject constructor(
         proxyService.setPlayerScoreboard(player, stats.scoreboard)
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
-            proxyService.setInventoryContents(player, stats.inventoryContents, stats.armorContents)
+            player.inventory.contents = stats.inventoryContents.clone()
+            player.inventory.setArmorContents(stats.armorContents.clone())
+            player.updateInventory()
         }
     }
 
@@ -93,7 +94,7 @@ class GameHubGameActionServiceImpl @Inject constructor(
      */
     private fun prepareLobbyStorageForPlayer(game: HubGame, player: Player, team: Team, teamMeta: TeamMeta) {
         val uuid = proxyService.getPlayerUUID(player)
-        val stats = GameStorage(UUID.fromString(uuid))
+        val stats = GameStorage()
         game.ingamePlayersStorage[player] = stats
 
         stats.scoreboard = proxyService.generateNewScoreboard()
@@ -104,8 +105,8 @@ class GameHubGameActionServiceImpl @Inject constructor(
         stats.allowedFlying = proxyService.getPlayerAllowFlying(player)
         stats.walkingSpeed = proxyService.getPlayerWalkingSpeed(player)
         stats.scoreboard = proxyService.getPlayerScoreboard(player)
-        stats.armorContents = proxyService.getPlayerInventoryArmorCopy(player)
-        stats.inventoryContents = proxyService.getPlayerInventoryCopy(player)
+        stats.armorContents = player.inventory.armorContents.clone()
+        stats.inventoryContents = player.inventory.contents.clone()
         stats.level = proxyService.getPlayerLevel(player)
         stats.exp = proxyService.getPlayerExp(player)
         stats.maxHealth = proxyService.getPlayerMaxHealth(player)
@@ -118,11 +119,27 @@ class GameHubGameActionServiceImpl @Inject constructor(
         proxyService.setPlayerWalkingSpeed(player, teamMeta.walkingSpeed)
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
-            proxyService.setInventoryContents(
-                player,
-                teamMeta.inventoryContents,
-                teamMeta.armorContents
+            player.inventory.contents = teamMeta.inventory.map {
+                if (it != null) {
+                    val configuration = org.bukkit.configuration.file.YamlConfiguration()
+                    configuration.loadFromString(it)
+                    configuration.getItemStack("item")
+                } else {
+                    null
+                }
+            }.toTypedArray()
+            player.inventory.setArmorContents(
+                teamMeta.armor.map {
+                    if (it != null) {
+                        val configuration = org.bukkit.configuration.file.YamlConfiguration()
+                        configuration.loadFromString(it)
+                        configuration.getItemStack("item")
+                    } else {
+                        null
+                    }
+                }.toTypedArray()
             )
+            player.updateInventory()
         }
 
         if (game.arena.meta.hubLobbyMeta.teleportOnJoin) {

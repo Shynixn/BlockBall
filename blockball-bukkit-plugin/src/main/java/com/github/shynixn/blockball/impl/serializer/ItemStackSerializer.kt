@@ -5,6 +5,7 @@ package com.github.shynixn.blockball.impl.serializer
 import com.github.shynixn.blockball.deprecated.YamlSerializer
 import java.lang.IllegalArgumentException
 
+@Deprecated("No longer being used")
 class ItemStackSerializer : YamlSerializer<Any, Map<String, Any?>> {
     /**
      * Gets called on serialization.

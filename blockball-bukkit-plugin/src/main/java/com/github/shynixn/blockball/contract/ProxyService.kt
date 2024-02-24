@@ -94,16 +94,6 @@ interface ProxyService {
     fun <L, P> setPlayerLocation(player: P, location: L)
 
     /**
-     * Gets a copy of the player inventory.
-     */
-    fun <P> getPlayerInventoryCopy(player: P): Array<Any?>
-
-    /**
-     * Gets a copy of the player armor inventory.
-     */
-    fun <P> getPlayerInventoryArmorCopy(player: P): Array<Any?>
-
-    /**
      * Sets the player gameMode.
      */
     fun <P> setGameMode(player: P, gameMode: GameMode)
@@ -217,11 +207,6 @@ interface ProxyService {
      * Gets the player hunger.
      */
     fun <P> getPlayerHunger(player: P): Int
-
-    /**
-     * Sets the given inventory items.
-     */
-    fun <P, I> setInventoryContents(player: P, mainInventory: Array<I>, armorInventory: Array<I>)
 
     /**
      * Gets a list of all online players.

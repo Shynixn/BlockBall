@@ -3,9 +3,9 @@ package com.github.shynixn.blockball.entity
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.Team
 import org.bukkit.GameMode
-import java.util.*
+import org.bukkit.inventory.ItemStack
 
-class GameStorage(var uuid: UUID){
+class GameStorage{
     /**
      * Scoreboard of the player.
      */
@@ -72,10 +72,10 @@ class GameStorage(var uuid: UUID){
     /**
      * Inventory cache.
      */
-    var inventoryContents: Array<Any?> = arrayOfNulls(0)
+    var inventoryContents: Array<ItemStack?> = arrayOfNulls(0)
 
     /**
      * Inventory armor cache.
      */
-    var armorContents: Array<Any?> = arrayOfNulls(0)
+    var armorContents: Array<ItemStack?> = arrayOfNulls(0)
 }

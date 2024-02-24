@@ -1,16 +1,21 @@
 package com.github.shynixn.blockball.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.shynixn.blockball.deprecated.YamlSerialize
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 
+@JsonIgnoreProperties("center", "offsetX", "offsetY", "offsetZ")
 open class Selection {
 
     /** [upperCorner] of the selected square arena. */
     @YamlSerialize(value = "corner-1", orderNumber = 5, implementation = Position::class)
+    @JsonProperty("corner1")
     final var upperCorner: Position = Position()
 
     /** [lowerCorner] of the selected square arena. */
     @YamlSerialize(value = "corner-2", orderNumber = 6, implementation = Position::class)
+    @JsonProperty("corner2")
     final var lowerCorner: Position = Position()
 
     /** [center] of the arena */

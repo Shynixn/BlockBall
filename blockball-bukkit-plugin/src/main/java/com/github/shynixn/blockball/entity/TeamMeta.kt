@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.shynixn.blockball.deprecated.YamlSerialize
 import com.github.shynixn.blockball.impl.serializer.ItemStackSerializer
 
@@ -69,10 +71,19 @@ class TeamMeta(
     )
     /** Armor wearing this team. */
     @YamlSerialize(orderNumber = 8, value = "armor", customserializer = ItemStackSerializer::class)
+    @JsonIgnore
+    @Deprecated("Can be removed")
     var armorContents: Array<Any?> = arrayOfNulls(4)
     /** Inventory this team is getting when playing. */
     @YamlSerialize(orderNumber = 9, value = "inventory", customserializer = ItemStackSerializer::class)
+    @JsonIgnore
+    @Deprecated("Can be removed")
     var inventoryContents: Array<Any?> = arrayOfNulls(36)
+
+    @JsonProperty("armor")
+    var armor : Array<String?> = arrayOfNulls(4)
+    @JsonProperty("inventory")
+    var inventory : Array<String?> = arrayOfNulls(36)
 
     @YamlSerialize(orderNumber = 12, value = "score-message-fadein")
     var scoreMessageFadeIn: Int = 20

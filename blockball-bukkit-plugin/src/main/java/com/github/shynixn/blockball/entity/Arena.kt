@@ -1,8 +1,10 @@
 package com.github.shynixn.blockball.entity
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import com.github.shynixn.blockball.deprecated.YamlSerialize
 import com.github.shynixn.blockball.enumeration.GameType
 
+@JsonPropertyOrder("name", "displayName", "enabled", "gameType", "corner1", "corner2", "meta")
 class Arena : Selection(){
     /** Unique [name] of the arena. */
     @YamlSerialize(orderNumber = 1, value = "name")

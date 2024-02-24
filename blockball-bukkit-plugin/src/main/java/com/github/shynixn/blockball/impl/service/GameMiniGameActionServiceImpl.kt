@@ -18,8 +18,6 @@ import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import java.util.*
-import kotlin.collections.ArrayList
 
 class GameMiniGameActionServiceImpl @Inject constructor(
     private val configurationService: ConfigurationService,
@@ -169,7 +167,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             screenMessageService.setTitle(
                 p,
                 placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle, p, game),
-                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageSubTitle,p, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageSubTitle, p, game),
                 game.arena.meta.redTeamMeta.drawMessageFadeIn,
                 game.arena.meta.redTeamMeta.drawMessageStay,
                 game.arena.meta.redTeamMeta.drawMessageFadeOut,
@@ -180,8 +178,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             require(p is Player)
             screenMessageService.setTitle(
                 p,
-                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle,p, game),
-                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageSubTitle,p, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle, p, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageSubTitle, p, game),
                 game.arena.meta.redTeamMeta.drawMessageFadeIn,
                 game.arena.meta.redTeamMeta.drawMessageStay,
                 game.arena.meta.redTeamMeta.drawMessageFadeOut,
@@ -191,8 +189,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             require(p is Player)
             screenMessageService.setTitle(
                 p,
-                placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageTitle, p,game),
-                placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageSubTitle,p, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageTitle, p, game),
+                placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageSubTitle, p, game),
                 game.arena.meta.blueTeamMeta.drawMessageFadeIn,
                 game.arena.meta.blueTeamMeta.drawMessageStay,
                 game.arena.meta.blueTeamMeta.drawMessageFadeOut,
@@ -231,7 +229,11 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             if (game.lobbyCountdown < 5) {
                 game.ingamePlayersStorage.keys.forEach { p ->
                     require(p is Player)
-                    soundService.playSound(proxyService.getEntityLocation<Location, Any>(p), arrayListOf(p), game.blingSound.toSoundMeta() )
+                    soundService.playSound(
+                        proxyService.getEntityLocation<Location, Any>(p),
+                        arrayListOf(p),
+                        game.blingSound.toSoundMeta()
+                    )
                 }
             }
 
@@ -296,7 +298,11 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
                 if (game.gameCountdown <= 5) {
                     require(p is Player)
-                    soundService.playSound(proxyService.getEntityLocation<Location, Any>(p), arrayListOf(p), game.blingSound.toSoundMeta())
+                    soundService.playSound(
+                        proxyService.getEntityLocation<Location, Any>(p),
+                        arrayListOf(p),
+                        game.blingSound.toSoundMeta()
+                    )
                 }
 
                 proxyService.setPlayerLevel(p, game.gameCountdown)
@@ -377,11 +383,11 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         }
     }
 
-    private fun createPlayerStorage(game: MiniGame, player: Any): GameStorage {
-        val stats = GameStorage(UUID.fromString(proxyService.getPlayerUUID(player)))
+    private fun createPlayerStorage(game: MiniGame, player: Player): GameStorage {
+        val stats = GameStorage()
         stats.gameMode = proxyService.getPlayerGameMode(player)
-        stats.armorContents = proxyService.getPlayerInventoryArmorCopy(player)
-        stats.inventoryContents = proxyService.getPlayerInventoryCopy(player)
+        stats.armorContents = player.inventory.armorContents.clone()
+        stats.inventoryContents = player.inventory.contents.clone()
         stats.flying = proxyService.getPlayerFlying(player)
         stats.allowedFlying = proxyService.getPlayerAllowFlying(player)
         stats.walkingSpeed = proxyService.getPlayerWalkingSpeed(player)
@@ -406,7 +412,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         proxyService.setGameMode(player, game.arena.meta.lobbyMeta.gamemode)
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
-            proxyService.setInventoryContents(player, arrayOfNulls<Any?>(36), arrayOfNulls<Any?>(4))
+            player.inventory.clear()
+            player.updateInventory()
         }
 
         return stats
@@ -419,9 +426,27 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         proxyService.setPlayerWalkingSpeed(player, teamMeta.walkingSpeed)
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
-            proxyService.setInventoryContents(
-                player, teamMeta.inventoryContents.clone(), teamMeta.armorContents.clone()
+            player.inventory.contents = teamMeta.inventory.map {
+                if (it != null) {
+                    val configuration = org.bukkit.configuration.file.YamlConfiguration()
+                    configuration.loadFromString(it)
+                    configuration.getItemStack("item")
+                } else {
+                    null
+                }
+            }.toTypedArray()
+            player.inventory.setArmorContents(
+                teamMeta.armor.map {
+                    if (it != null) {
+                        val configuration = org.bukkit.configuration.file.YamlConfiguration()
+                        configuration.loadFromString(it)
+                        configuration.getItemStack("item")
+                    } else {
+                        null
+                    }
+                }.toTypedArray()
             )
+            player.updateInventory()
         }
 
         if (team == Team.RED && game.arena.meta.redTeamMeta.lobbySpawnpoint != null) {
@@ -510,7 +535,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     /**
      * Resets the storage of the given [player].
      */
-    private fun resetStorage(player: Any, game: Game, stats: GameStorage) {
+    private fun resetStorage(player: Player, game: Game, stats: GameStorage) {
         proxyService.setGameMode(player, stats.gameMode)
         proxyService.setPlayerAllowFlying(player, stats.allowedFlying)
         proxyService.setPlayerFlying(player, stats.flying)
@@ -527,7 +552,9 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         proxyService.setPlayerHunger(player, stats.hunger)
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
-            proxyService.setInventoryContents(player, stats.inventoryContents, stats.armorContents)
+            player.inventory.contents = stats.inventoryContents.clone()
+            player.inventory.setArmorContents(stats.armorContents.clone())
+            player.updateInventory()
         }
     }
 
