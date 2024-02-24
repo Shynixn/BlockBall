@@ -119,6 +119,7 @@ repositories {
 dependencies {
     implementation("com.github.shynixn.mcutils:common:1.0.61")
     implementation("com.github.shynixn.mcutils:packet:1.0.82")
+    implementation("com.github.shynixn.mcutils:sign:1.0.17")
 
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
     implementation("org.slf4j:slf4j-jdk14:1.7.25")
