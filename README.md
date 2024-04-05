@@ -4,7 +4,6 @@
 | branch        | status        |  version | download |
 | ------------- | ------------- |  --------| ---------| 
 | master        | [![Build Status](https://github.com/Shynixn/BlockBall/workflows/CI/badge.svg?branch=master)](https://github.com/Shynixn/BlockBall/actions) | ![GitHub license](https://img.shields.io/nexus/r/https/oss.sonatype.org/com.github.shynixn.blockball/blockball-bukkit-plugin.svg?style=flat-square)  |[Download latest release](https://github.com/Shynixn/BlockBall/releases)|
-| development   | [![Build Status](https://github.com/Shynixn/BlockBall/workflows/CI/badge.svg?branch=development)](https://github.com/Shynixn/BlockBall/actions)|![GitHub license](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.github.shynixn.blockball/blockball-bukkit-plugin.svg?style=flat-square) |  [Download snapshots](https://oss.sonatype.org/content/repositories/snapshots/com/github/shynixn/blockball/blockball-bukkit-plugin/) |
 ## Description
 
 BlockBall is a spigot plugin to play soccer games in Minecraft.
