@@ -11,6 +11,7 @@ import com.github.shynixn.blockball.impl.extension.toSoundMeta
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.ConfigurationService
+import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.google.inject.Inject
 import kotlinx.coroutines.delay
@@ -21,7 +22,7 @@ import org.bukkit.plugin.Plugin
 
 class GameMiniGameActionServiceImpl @Inject constructor(
     private val configurationService: ConfigurationService,
-    private val screenMessageService: ScreenMessageService,
+    private val screenMessageService: ChatMessageService,
     private val soundService: SoundService,
     private val proxyService: ProxyService,
     private val gameSoccerService: GameSoccerService,
@@ -114,8 +115,6 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Does nothing if the player is not in the game.
      */
     override fun leaveGame(game: MiniGame, player: Player) {
-        require(player is Any)
-
         if (game.spectatorPlayers.contains(player)) {
             resetStorage(player, game, game.spectatorPlayersStorage[player]!!)
             game.spectatorPlayersStorage.remove(player)
@@ -136,7 +135,6 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Does nothing if the player is already spectating a Game.
      */
     override fun spectateGame(game: MiniGame, player: Player) {
-
         if (game.spectatorPlayers.contains(player)) {
             return
         }
@@ -164,7 +162,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         val additionalPlayers = getNotifiedPlayers(game).filter { pair -> pair.second }.map { p -> p.first }
         additionalPlayers.forEach { p ->
             require(p is Player)
-            screenMessageService.setTitle(
+            screenMessageService.sendTitleMessage(
                 p,
                 placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle, p, game),
                 placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageSubTitle, p, game),
@@ -176,7 +174,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
         game.redTeam.forEach { p ->
             require(p is Player)
-            screenMessageService.setTitle(
+            screenMessageService.sendTitleMessage(
                 p,
                 placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle, p, game),
                 placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageSubTitle, p, game),
@@ -187,7 +185,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         }
         game.blueTeam.forEach { p ->
             require(p is Player)
-            screenMessageService.setTitle(
+            screenMessageService.sendTitleMessage(
                 p,
                 placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageTitle, p, game),
                 placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageSubTitle, p, game),
@@ -279,7 +277,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             } else if (!game.playing) {
                 game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
                     require(p is Player)
-                    screenMessageService.setActionBar(
+                    screenMessageService.sendActionBarMessage(
                         p, placeholderService.replacePlaceHolders(
                             game.arena.meta.minigameMeta.playersRequiredToStartMessage, p, game
                         )
@@ -368,7 +366,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             if (!matchTime.startMessageTitle.isBlank() || !matchTime.startMessageSubTitle.isBlank()) {
                 plugin.launch {
                     delay(60.ticks)
-                    screenMessageService.setTitle(
+                    screenMessageService.sendTitleMessage(
                         p as Player,
                         placeholderService.replacePlaceHolders(matchTime.startMessageTitle, null, game),
                         placeholderService.replacePlaceHolders(matchTime.startMessageSubTitle, null, game),

@@ -56,7 +56,6 @@ class ArenaCommandExecutor @Inject constructor(
     hologramsPage: HologramPage,
     scoreboardPage: ScoreboardPage,
     bossbarPage: BossbarPage,
-    templatePage: TemplateSettingsPage,
     signSettingsPage: SignSettingsPage,
     rewardsPage: RewardsPage,
     particlesPage: ParticleEffectPage,
@@ -85,7 +84,7 @@ class ArenaCommandExecutor @Inject constructor(
     private var pageCache: MutableList<Page> = arrayListOf(
         openPage, mainConfigurationPage, spectatePage, mainSettingsPage, ballSettingsPage
         , ballModifierPage, listablePage, teamSettingsPage, effectsSettingsPage, multipleLinesPage, hologramsPage, scoreboardPage, bossbarPage
-        , templatePage, signSettingsPage, rewardsPage, particlesPage, soundsPage, abilitiesPage, doubleJumpPage, miscPage, gamePropertiesPage
+        ,  signSettingsPage, rewardsPage, particlesPage, soundsPage, abilitiesPage, doubleJumpPage, miscPage, gamePropertiesPage
         , areaProtectionPage, teamTextBookPage, gameSettingsPage, spectatingSettingsPage, notificationPage, matchtimesPage
     )
 

@@ -9,6 +9,7 @@ import com.github.shynixn.blockball.event.GameEndEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.google.inject.Inject
 import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
@@ -16,7 +17,7 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
 class GameSoccerServiceImpl @Inject constructor(
-    private val screenMessageService: ScreenMessageService,
+    private val screenMessageService: ChatMessageService,
     private val dependencyService: DependencyService,
     private val ballEntityService: BallEntityService,
     private val placeholderService: PlaceHolderService,
@@ -206,7 +207,7 @@ class GameSoccerServiceImpl @Inject constructor(
 
         players.forEach { p ->
             require(p is Player)
-            screenMessageService.setTitle(
+            screenMessageService.sendTitleMessage(
                 p,
                 placeholderService.replacePlaceHolders(scoreMessageTitle, p, game, scoreTeamMeta),
                 placeholderService.replacePlaceHolders(scoreMessageSubTitle,p, game, scoreTeamMeta),
@@ -318,7 +319,7 @@ class GameSoccerServiceImpl @Inject constructor(
 
         players.forEach { p ->
             require(p is Player)
-            screenMessageService.setTitle(
+            screenMessageService.sendTitleMessage(
                 p,
                 placeholderService.replacePlaceHolders(winMessageTitle, p, game),
                 placeholderService.replacePlaceHolders(winMessageSubTitle, p, game),
