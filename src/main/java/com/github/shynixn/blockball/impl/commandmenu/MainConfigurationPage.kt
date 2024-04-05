@@ -3,49 +3,22 @@ package com.github.shynixn.blockball.impl.commandmenu
 
 import com.github.shynixn.blockball.contract.BlockSelectionService
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.PersistenceArenaService
 import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.*
+import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ChatColor
-import com.github.shynixn.mcutils.common.ConfigurationService
+import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.google.inject.Inject
+import kotlinx.coroutines.runBlocking
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 import kotlin.math.abs
 
-/**
- * Created by Shynixn 2018.
- * <p>
- * Version 1.2
- * <p>
- * MIT License
- * <p>
- * Copyright (c) 2018 by Shynixn
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 class MainConfigurationPage @Inject constructor(
-    private val configurationService: ConfigurationService,
-    private val arenaRepository: PersistenceArenaService,
+    private val arenaRepository: CacheRepository<Arena>,
     private val blockSelectionService: BlockSelectionService,
     private val gameService: GameService,
     private val proxyService: ProxyService,
@@ -83,12 +56,15 @@ class MainConfigurationPage @Inject constructor(
         if (command == MenuCommand.ARENA_CREATE) {
 
         } else if (command == MenuCommand.ARENA_EDIT) {
-            val arenas = arenaRepository.getArenas()
-            cache[0] = arenas.single { b -> b.name.equals(args[2], true) }
+            plugin.launch {
+                val arenas = arenaRepository.getAll()
+                cache[0] = arenas.single { b -> b.name.equals(args[2], true) }
+            }
         } else if (command == MenuCommand.ARENA_DELETE) {
-            val arenas = arenaRepository.getArenas()
-            cache[0] = arenas.single { b -> b.name.equals(args[2], true) }
-            arenaRepository.remove(cache[0] as Arena)
+            plugin.launch {
+                cache[0] = arenaRepository.getAll().single { b -> b.name.equals(args[2], true) }
+                arenaRepository.delete(cache[0] as Arena)
+            }
             cache[0] = null
             return MenuCommandResult.BACK
         } else if (command == MenuCommand.ARENA_ENABLE) {
@@ -190,7 +166,9 @@ class MainConfigurationPage @Inject constructor(
                 && arena.meta.ballMeta.spawnpoint != null
             ) {
                 if (arena.gameType === GameType.HUBGAME || (arena.meta.minigameMeta.lobbySpawnpoint != null && arena.meta.lobbyMeta.leaveSpawnpoint != null)) {
-                    arenaRepository.save(arena)
+                    plugin.launch {
+                        arenaRepository.save(arena)
+                    }
                 } else {
                     return MenuCommandResult.MINIGAMEARENA_NOTVALID
                 }
@@ -203,7 +181,11 @@ class MainConfigurationPage @Inject constructor(
                     .text(ChatColor.RED.toString() + "Please select an arena to perform this action.")
                 proxyService.sendMessage(player, b)
 
-                gameService.restartGames()
+                // TODO: Should be replaced in command rework.
+                runBlocking {
+                    gameService.reloadAll()
+                }
+
                 return MenuCommandResult.CANCEL_MESSAGE
             }
 
@@ -213,16 +195,14 @@ class MainConfigurationPage @Inject constructor(
             ) {
                 if (arena.gameType === GameType.HUBGAME || (arena.meta.minigameMeta.lobbySpawnpoint != null && arena.meta.lobbyMeta.leaveSpawnpoint != null)) {
                     val name = arena.name
-                    arenaRepository.save(arena).thenAccept {
-                        gameService.restartGames().thenAccept {
-                            cache[0] = arenaRepository.getArenas().single { a -> a.name == name }
-                        }.exceptionally { ex ->
-                            plugin.logger.log(Level.SEVERE, "Failed persistence arena.", ex)
-                            null
+                    plugin.launch {
+                        try {
+                            arenaRepository.save(arena)
+                            gameService.reloadAll()
+                            cache[0] = arenaRepository.getAll().single { a -> a.name == name }
+                        } catch (e: Exception) {
+                            plugin.logger.log(Level.SEVERE, "Failed persistence arena.", e)
                         }
-                    }.exceptionally { ex ->
-                        plugin.logger.log(Level.SEVERE, "Failed persistence arena.", ex)
-                        null
                     }
                 } else {
                     return MenuCommandResult.MINIGAMEARENA_NOTVALID

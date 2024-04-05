@@ -1,14 +1,19 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.contract.PersistenceArenaService
 import com.github.shynixn.blockball.contract.ProxyService
+import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.ChatClickAction
 import com.github.shynixn.blockball.enumeration.MenuCommand
 import com.github.shynixn.blockball.enumeration.MenuCommandResult
 import com.github.shynixn.blockball.enumeration.MenuPageKey
+import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.repository.Repository
 import com.google.inject.Inject
+import kotlinx.coroutines.runBlocking
+import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 
 /**
  * Created by Shynixn 2018.
@@ -37,8 +42,8 @@ import com.google.inject.Inject
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class OpenPage @Inject constructor(private val arenaRepository:
-                                   PersistenceArenaService, private val proxyService: ProxyService
+class OpenPage @Inject constructor(private val plugin: Plugin, private val arenaRepository:
+                                   Repository<Arena>, private val proxyService: ProxyService
 ) :
     Page(OpenPage.ID, OpenPage.ID) {
     /**
@@ -62,41 +67,67 @@ class OpenPage @Inject constructor(private val arenaRepository:
      */
     override fun <P> execute(player: P, command: MenuCommand, cache: Array<Any?>, args: Array<String>): MenuCommandResult {
         if (command == MenuCommand.OPEN_EDIT_ARENA) {
-            var builder: ChatBuilder? = null
-
-            for (arena in this.arenaRepository.getArenas()) {
-                if (builder == null) {
-                    builder = ChatBuilder()
+            // TODO: Should be changed when reworking commands.
+            return runBlocking {
+                var builder: ChatBuilder? = null
+                for (arena in arenaRepository.getAll()) {
+                    if (builder == null) {
+                        builder = ChatBuilder()
+                    }
+                    builder!!.component("- Arena: Id: " + arena.name + " Name: " + arena.displayName).builder()
+                        .component(" [page..]").setColor(ChatColor.YELLOW)
+                        .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.ARENA_EDIT.command + arena.name)
+                        .setHoverText("Opens the arena with the id " + arena.name + ".").builder().nextLine()
                 }
-                builder.component("- Arena: Id: " + arena.name + " Name: " + arena.displayName).builder()
-                    .component(" [page..]").setColor(ChatColor.YELLOW)
-                    .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.ARENA_EDIT.command + arena.name)
-                    .setHoverText("Opens the arena with the id " + arena.name + ".").builder().nextLine()
-            }
 
-            if (builder != null) {
-                proxyService.sendMessage(player, builder)
-            }
-
-            return MenuCommandResult.CANCEL_MESSAGE
-        } else if (command == MenuCommand.OPEN_DELETE_ARENA) {
-            var builder: ChatBuilder? = null
-
-            for (arena in this.arenaRepository.getArenas()) {
-                if (builder == null) {
-                    builder = ChatBuilder()
+                if (builder != null) {
+                    proxyService.sendMessage(player, builder!!)
                 }
-                builder.component("- Arena: Id: " + arena.name + " Name: " + arena.displayName).builder()
-                    .component(" [delete..]").setColor(ChatColor.DARK_RED)
-                    .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.ARENA_DELETE.command + arena.name)
-                    .setHoverText("Deletes the arena with the id " + arena.name + ".").builder().nextLine()
+
+                return@runBlocking MenuCommandResult.CANCEL_MESSAGE
+            }
+        }
+        else if(command == MenuCommand.OPEN_CREATE_ARENA){
+            var idGen = 1
+            runBlocking {
+                for(arena in arenaRepository.getAll()){
+                    if(arena.name == "arena_$idGen"){
+                        idGen++
+                    }
+                }
             }
 
-            if (builder != null) {
-                proxyService.sendMessage(player, builder)
+            val arena = Arena()
+            arena.name = "arena_$idGen"
+            arena.displayName = "Arena $idGen"
+            cache[0] = arena
+            plugin.launch {
+                (player as Player).performCommand(MenuCommand.ARENA_CREATE.command.substring(1))
             }
 
-            return MenuCommandResult.CANCEL_MESSAGE
+            return MenuCommandResult.EXIT_COMP
+        }
+        else if (command == MenuCommand.OPEN_DELETE_ARENA) {
+            // TODO: Should be changed when reworking commands.
+            return runBlocking {
+                var builder: ChatBuilder? = null
+
+                for (arena in arenaRepository.getAll()) {
+                    if (builder == null) {
+                        builder = ChatBuilder()
+                    }
+                    builder!!.component("- Arena: Id: " + arena.name + " Name: " + arena.displayName).builder()
+                        .component(" [delete..]").setColor(ChatColor.DARK_RED)
+                        .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.ARENA_DELETE.command + arena.name)
+                        .setHoverText("Deletes the arena with the id " + arena.name + ".").builder().nextLine()
+                }
+
+                if (builder != null) {
+                    proxyService.sendMessage(player, builder!!)
+                }
+
+                return@runBlocking MenuCommandResult.CANCEL_MESSAGE
+            }
         }
 
         return super.execute(player, command, cache, args)
@@ -112,7 +143,7 @@ class OpenPage @Inject constructor(private val arenaRepository:
         return ChatBuilder()
             .component("- Create arena:").builder()
             .component(" [create..]").setColor(ChatColor.AQUA)
-            .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.TEMPLATE_OPEN.command)
+            .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.OPEN_CREATE_ARENA.command)
             .setHoverText("Creates a new blockball arena.").builder().nextLine()
             .component("- Edit arena:").builder()
             .component(" [page..]").setColor(ChatColor.YELLOW)

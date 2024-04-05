@@ -1,11 +1,9 @@
 package com.github.shynixn.blockball
 
-import com.github.shynixn.blockball.contract.DependencyVaultService
-import com.github.shynixn.blockball.contract.HubGameForcefieldService
+import com.fasterxml.jackson.core.type.TypeReference
 import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.enumeration.*
-import com.github.shynixn.blockball.impl.repository.ArenaFileRepository
-import com.github.shynixn.blockball.impl.service.DependencyServiceImpl
 import com.github.shynixn.blockball.impl.service.*
 import com.github.shynixn.blockball.impl.service.nms.v1_13_R2.Particle113R2ServiceImpl
 import com.github.shynixn.blockball.impl.service.nms.v1_8_R3.Particle18R3ServiceImpl
@@ -15,6 +13,10 @@ import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.item.ItemServiceImpl
+import com.github.shynixn.mcutils.common.repository.CacheRepository
+import com.github.shynixn.mcutils.common.repository.CachedRepositoryImpl
+import com.github.shynixn.mcutils.common.repository.Repository
+import com.github.shynixn.mcutils.common.repository.YamlFileRepositoryImpl
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.sound.SoundServiceImpl
 import com.github.shynixn.mcutils.packet.api.EntityService
@@ -25,6 +27,7 @@ import com.github.shynixn.mcutils.packet.impl.service.EntityServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.RayTracingServiceImpl
 import com.google.inject.AbstractModule
 import com.google.inject.Scopes
+import com.google.inject.TypeLiteral
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
@@ -48,7 +51,14 @@ class BlockBallDependencyInjectionBinder(
         bind(BlockBallPlugin::class.java).toInstance(plugin)
 
         // Repositories
-        bind(ArenaRepository::class.java).to(ArenaFileRepository::class.java).`in`(Scopes.SINGLETON)
+        val arenaRepository = YamlFileRepositoryImpl<Arena>(plugin, "arena",
+            listOf(Pair("arena_sample.yml", "arena_sample.yml")),
+            listOf("arena_sample.yml"),
+            object : TypeReference<Arena>() {}
+        )
+        val cacheArenaRepository = CachedRepositoryImpl(arenaRepository)
+        bind(object : TypeLiteral<Repository<Arena>>() {}).toInstance(cacheArenaRepository)
+        bind(object : TypeLiteral<CacheRepository<Arena>>() {}).toInstance(cacheArenaRepository)
 
         // Services
         bind(CommandService::class.java).to(CommandServiceImpl::class.java).`in`(Scopes.SINGLETON)
@@ -75,7 +85,6 @@ class BlockBallDependencyInjectionBinder(
         bind(ItemTypeService::class.java).to(ItemTypeServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(ProxyService::class.java).to(ProxyServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(GameExecutionService::class.java).to(GameExecutionServiceImpl::class.java).`in`(Scopes.SINGLETON)
-        bind(PersistenceArenaService::class.java).to(PersistenceArenaServiceImpl::class.java).`in`(Scopes.SINGLETON)
         bind(DependencyBossBarApiService::class.java).to(DependencyBossBarApiServiceImpl::class.java)
             .`in`(Scopes.SINGLETON)
         bind(DependencyService::class.java).to(DependencyServiceImpl::class.java).`in`(Scopes.SINGLETON)

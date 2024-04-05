@@ -155,8 +155,11 @@ class BlockBallPlugin : JavaPlugin() {
             val language = configurationService.findValue<String>("language")
             plugin.reloadTranslation(language, BlockBallLanguage::class.java, "en_us")
             logger.log(Level.INFO, "Loaded language file $language.properties.")
+
+            // Load Games
             val gameService = resolve(GameService::class.java)
-            gameService.restartGames()
+            gameService.reloadAll()
+
             Bukkit.getServer()
                 .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
         }

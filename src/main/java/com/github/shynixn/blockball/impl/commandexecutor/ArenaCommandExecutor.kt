@@ -125,6 +125,9 @@ class ArenaCommandExecutor @Inject constructor(
                             proxyService.performPlayerCommand(source, "blockball open back " + usedPage.getPreviousIdFrom(cache))
                             return true
                         }
+                        if (result == MenuCommandResult.EXIT_COMP) {
+                            return true
+                        }
                         if (result != MenuCommandResult.SUCCESS && result != MenuCommandResult.CANCEL_MESSAGE) {
                             proxyService.sendMessage(source, ChatColor.RED.toString() + result.message)
                         }

@@ -4,13 +4,12 @@ import com.github.shynixn.blockball.entity.Game
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import java.util.*
-import java.util.concurrent.CompletableFuture
 
 interface GameService : AutoCloseable {
     /**
-     * Restarts all games on the server.
+     * Reloads all games.
      */
-    fun restartGames() : CompletableFuture<Void?>
+    suspend fun reloadAll()
 
     /**
      * Returns the game if the given [player] is playing a game.
