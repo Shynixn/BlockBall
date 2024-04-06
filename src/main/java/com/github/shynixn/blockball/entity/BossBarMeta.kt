@@ -8,7 +8,7 @@ class BossBarMeta {
     /** Color of the bossbar. */
     var color: BossbarColor = BossbarColor.WHITE
     /** Is bossbar visible. */
-    var enabled: Boolean = false
+    var enabled: Boolean = true
     /** Displaying message. */
     var message: String = "%blockball_lang_bossBarMessage%"
     /** Percentage filled in the bossbar. */

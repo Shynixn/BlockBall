@@ -490,15 +490,15 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     private fun timeAlmostUp(game: MiniGame) {
         when {
             game.redScore == game.blueScore -> {
-                gameSoccerService.onMatchEnd<Any>(game, null, null)
+                gameSoccerService.onMatchEnd(game, null, null)
                 this.onDraw(game)
             }
             game.redScore > game.blueScore -> {
-                gameSoccerService.onMatchEnd(game, game.redTeam, game.blueTeam)
+                gameSoccerService.onMatchEnd(game, game.redTeam as List<Player>, game.blueTeam as List<Player>)
                 gameSoccerService.onWin(game, Team.RED, game.arena.meta.redTeamMeta)
             }
             else -> {
-                gameSoccerService.onMatchEnd(game, game.blueTeam, game.redTeam)
+                gameSoccerService.onMatchEnd(game, game.blueTeam as List<Player>, game.redTeam as List<Player>)
                 gameSoccerService.onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             }
         }

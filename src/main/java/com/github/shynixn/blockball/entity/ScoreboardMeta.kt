@@ -5,7 +5,7 @@ class ScoreboardMeta {
     var title: String = "&aBlockBall"
 
     /** Is the scoreboard visible. */
-    var enabled: Boolean = false
+    var enabled: Boolean = true
 
     /** Lines of the scoreboard being rendered. */
     val lines: ArrayList<String> = arrayListOf(

@@ -495,7 +495,7 @@ class GameActionServiceImpl @Inject constructor(
 
                 var j = lines.size
                 for (i in 0 until lines.size) {
-                    val line = placeholderService.replacePlaceHolders(lines[i], null, game)
+                    val line = placeholderService.replacePlaceHolders(lines[i], p as Player, game)
                     scoreboardService.setLine(game.scoreboard as Scoreboard, j, line)
                     j--
                 }

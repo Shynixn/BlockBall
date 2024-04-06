@@ -38,12 +38,14 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.2.3")
     implementation("com.google.inject:guice:5.0.1")
     implementation("com.google.code.gson:gson:2.8.6")
+    implementation("com.zaxxer:HikariCP:4.0.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
     implementation("com.github.shynixn.mcutils:common:1.0.65")
     implementation("com.github.shynixn.mcutils:packet:1.0.86")
     implementation("com.github.shynixn.mcutils:sign:1.0.17")
+    implementation("com.github.shynixn.mcutils:database:1.0.22")
 }
 
 tasks.test {
@@ -133,6 +135,7 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     exclude("com/google/**")
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
+    exclude("com/zaxxer/**")
     exclude("plugin-legacy.yml")
 }
 
@@ -172,6 +175,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("javax/**")
     exclude("com/google/**")
     exclude("com/fasterxml/**")
+    exclude("com/zaxxer/**")
     exclude("plugin-legacy.yml")
 }
 

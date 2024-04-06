@@ -7,15 +7,14 @@ class MinigameLobbyMeta {
     /**
      * Match Times.
      */
-    val matchTimes: MutableList<MatchTimeMeta>
-        get() {
-            return internalMatchTimes as MutableList<MatchTimeMeta>
-        }
-    private var internalMatchTimes: ArrayList<MatchTimeMeta>
+    var matchTimes: MutableList<MatchTimeMeta> = ArrayList()
+
     /** Duration the match will max last. */
     var lobbyDuration: Int = 20
+
     /** Spawnpoint of the player in the lobby. */
     var lobbySpawnpoint: Position? = null
+
     /** Message being played in the action bar displaying the joined players how many players are remaining to start. */
     var playersRequiredToStartMessage: String =
         "%blockball_lang_miniGameRemainingPlayers%"
@@ -56,7 +55,7 @@ class MinigameLobbyMeta {
         coolDownPeriod.playAbleBall = false
         coolDownPeriod.respawnEnabled = false
 
-        internalMatchTimes = arrayListOf(
+        matchTimes = arrayListOf(
             firstPeriod,
             firstPeriodOverTime,
             breakPeriod,

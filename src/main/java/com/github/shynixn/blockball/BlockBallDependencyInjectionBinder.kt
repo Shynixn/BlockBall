@@ -3,6 +3,7 @@ package com.github.shynixn.blockball
 import com.fasterxml.jackson.core.type.TypeReference
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.impl.service.*
 import com.github.shynixn.blockball.impl.service.nms.v1_13_R2.Particle113R2ServiceImpl
@@ -19,6 +20,11 @@ import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.repository.YamlFileRepositoryImpl
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.sound.SoundServiceImpl
+import com.github.shynixn.mcutils.database.api.CachePlayerRepository
+import com.github.shynixn.mcutils.database.api.PlayerDataRepository
+import com.github.shynixn.mcutils.database.impl.AutoSavePlayerDataRepositoryImpl
+import com.github.shynixn.mcutils.database.impl.CachePlayerDataRepositoryImpl
+import com.github.shynixn.mcutils.database.impl.ConfigSelectedRepositoryImpl
 import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
@@ -39,6 +45,16 @@ class BlockBallDependencyInjectionBinder(
     private val plugin: BlockBallPlugin,
     private val packetService: PacketService
 ) : AbstractModule() {
+    companion object {
+        val areLegacyVersionsIncluded: Boolean by lazy {
+            try {
+                Class.forName("com.github.shynixn.blockball.lib.com.github.shynixn.mcutils.packet.nms.v1_8_R3.PacketSendServiceImpl")
+                true
+            } catch (e: ClassNotFoundException) {
+                false
+            }
+        }
+    }
 
     /**
      * Configures the business logic tree.
@@ -50,7 +66,7 @@ class BlockBallDependencyInjectionBinder(
         bind(Plugin::class.java).toInstance(plugin)
         bind(BlockBallPlugin::class.java).toInstance(plugin)
 
-        // Repositories
+        // Arena Repository
         val arenaRepository = YamlFileRepositoryImpl<Arena>(plugin, "arena",
             listOf(Pair("arena_sample.yml", "arena_sample.yml")),
             listOf("arena_sample.yml"),
@@ -59,6 +75,23 @@ class BlockBallDependencyInjectionBinder(
         val cacheArenaRepository = CachedRepositoryImpl(arenaRepository)
         bind(object : TypeLiteral<Repository<Arena>>() {}).toInstance(cacheArenaRepository)
         bind(object : TypeLiteral<CacheRepository<Arena>>() {}).toInstance(cacheArenaRepository)
+        // PlayerData Repository.
+        val configSelectedPlayerDataRepository = ConfigSelectedRepositoryImpl<PlayerInformation>(
+            plugin,
+            "BlockBall",
+            plugin.dataFolder.toPath().resolve("BlockBall.sqlite"),
+            object : TypeReference<PlayerInformation>() {}
+        )
+        val playerDataRepository = AutoSavePlayerDataRepositoryImpl(
+            "stats",
+            1000 * 60L * plugin.config.getInt("database.autoSaveIntervalMinutes"),
+            CachePlayerDataRepositoryImpl(configSelectedPlayerDataRepository, plugin),
+            plugin
+        )
+        bind(object : TypeLiteral<PlayerDataRepository<PlayerInformation>>() {}).toInstance(playerDataRepository)
+        bind(object : TypeLiteral<CachePlayerRepository<PlayerInformation>>() {}).toInstance(playerDataRepository)
+        bind(PlayerDataRepository::class.java).toInstance(playerDataRepository)
+        bind(CachePlayerRepository::class.java).toInstance(playerDataRepository)
 
         // Services
         bind(CommandService::class.java).to(CommandServiceImpl::class.java).`in`(Scopes.SINGLETON)

@@ -161,7 +161,7 @@ class GameServiceImpl @Inject constructor(
      * Initialises a new game from the given arena.
      */
     private fun initGame(arena: Arena) {
-        if (arena.name.isNullOrBlank()) {
+        if (arena.name.isBlank()) {
             throw Exception("Arena(s) cannot be loaded! If you have an obsolete arena file format, convert your arenas using the plugin found here https://github.com/Shynixn/BlockBall/releases/tag/conversion or delete your BlockBall folder.")
         }
 

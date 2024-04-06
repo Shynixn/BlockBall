@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.contract
 import com.github.shynixn.blockball.entity.Game
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.Team
+import org.bukkit.entity.Player
 
 interface GameSoccerService {
     /**
@@ -22,7 +23,7 @@ interface GameSoccerService {
      * Gets called when the match ends. The [winningPlayers] and [loosingPlayers] parameter
      * can be both null when the match ends in a draw.
      */
-    fun <P> onMatchEnd(game: Game, winningPlayers: List<P>?, loosingPlayers: List<P>?)
+    fun onMatchEnd(game: Game, winningPlayers: List<Player>?, loosingPlayers: List<Player>?)
 
     /**
      * Gets called when the match gets won by the given team.
