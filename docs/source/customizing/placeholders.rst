@@ -41,8 +41,6 @@ Team PlaceHolder                         Description
 %blockball_team_players%                 Current amount of players in the team
 ==================================       ======================================================================
 
-.. note:: Stats tracking is only available in MiniGame mode games. It does not work in HubGame mode games.
-
 =====================================    ===================================================================================
 Player Placeholder                       Description
 =====================================    ===================================================================================
