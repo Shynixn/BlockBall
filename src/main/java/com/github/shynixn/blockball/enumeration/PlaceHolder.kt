@@ -61,13 +61,19 @@ enum class PlaceHolder(
 
     PLAYER_STATS_SCOREDGOALS("%blockball_player_goals%"),
 
-    PLAYER_STATS_PLAYEDGAMES("%blockball_player_games%"),
+    PLAYER_STATS_STARTEDGAMES("%blockball_player_games%"),
+
+    PLAYER_STATS_COMPLETEDGAMES("%blockball_player_gamesFull%"),
 
     PLAYER_STATS_WINS("%blockball_player_wins%"),
 
     PLAYER_STATS_LOSSES("%blockball_player_losses%"),
 
-    PLAYER_STATS_WINRATE("%blockball_player_winrate%"),
+    PLAYER_STATS_STARTEDWINRATE("%blockball_player_winrate%"),
 
-    PLAYER_STATS_GOALSPERGAME("%blockball_player_goalsPerGameRate%")
+    PLAYER_STATS_COMPLETEDWINRATE("%blockball_player_winrateFull%"),
+
+    PLAYER_STATS_STARTEDGOALSPER("%blockball_player_goalsPerGame%"),
+
+    PLAYER_STATS_COMPLETEDGOALSPER("%blockball_player_goalsPerGameFull%")
 }

@@ -7,9 +7,14 @@ class StatsMeta {
     var scoredGoals: Int = 0
 
     /**
-     * Amount of played games.
+     * Amount of completed played games.
      */
     var playedGames: Int = 0
+
+    /**
+     * Amount of games a player has started.
+     */
+    var joinedGames: Int = 0
 
     /**
      * Amount of wins.

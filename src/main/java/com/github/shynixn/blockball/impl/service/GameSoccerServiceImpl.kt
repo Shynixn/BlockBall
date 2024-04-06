@@ -1,11 +1,7 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.BlockBallDependencyInjectionBinder
 import com.github.shynixn.blockball.contract.*
-import com.github.shynixn.blockball.entity.CommandMeta
-import com.github.shynixn.blockball.entity.Game
-import com.github.shynixn.blockball.entity.PlayerInformation
-import com.github.shynixn.blockball.entity.TeamMeta
+import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.event.GameEndEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
@@ -221,13 +217,11 @@ class GameSoccerServiceImpl @Inject constructor(
             )
         }
 
-        if (BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
-            plugin.launch {
-                val playerData = playerDataRepository.getByPlayer(interactionEntity)
+        plugin.launch {
+            val playerData = playerDataRepository.getByPlayer(interactionEntity)
 
-                if (playerData != null) {
-                    playerData.statsMeta.scoredGoals++
-                }
+            if (playerData != null) {
+                playerData.statsMeta.scoredGoals++
             }
         }
     }
@@ -313,18 +307,16 @@ class GameSoccerServiceImpl @Inject constructor(
         val participatingPlayers = game.inTeamPlayers.map { e -> e as Player }.toTypedArray()
         val winningPlayerCache = winningPlayers?.toMutableList()
 
-        if (BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
-            plugin.launch {
-                for (player in participatingPlayers) {
-                    val playerData = playerDataRepository.getByPlayer(player)
+        plugin.launch {
+            for (player in participatingPlayers) {
+                val playerData = playerDataRepository.getByPlayer(player)
 
-                    if (playerData != null) {
-                        playerData.statsMeta.playedGames++
-                        playerData.playerName = player.name
+                if (playerData != null) {
+                    playerData.statsMeta.playedGames++
+                    playerData.playerName = player.name
 
-                        if (winningPlayerCache != null && winningPlayerCache.contains(player)) {
-                            playerData.statsMeta.winsAmount++
-                        }
+                    if (winningPlayerCache != null && winningPlayerCache.contains(player)) {
+                        playerData.statsMeta.winsAmount++
                     }
                 }
             }
