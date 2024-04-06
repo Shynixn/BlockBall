@@ -6,10 +6,13 @@ import com.github.shynixn.blockball.contract.GameActionService
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.impl.commandexecutor.*
 import com.github.shynixn.blockball.impl.listener.*
+import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.reloadTranslation
+import com.github.shynixn.mcutils.database.api.CachePlayerRepository
+import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
@@ -58,12 +61,7 @@ class BlockBallPlugin : JavaPlugin() {
         if (disableForVersion(Version.VERSION_1_13_R1, Version.VERSION_1_13_R2)) {
             return
         }
-
-        val useLegacy = getResource("plugin.yml")!!.bufferedReader().use { reader ->
-            !reader.readText().contains("libraries")
-        }
-
-        val versions = if (useLegacy) {
+        val versions = if (BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
             arrayOf(
                 Version.VERSION_1_8_R3,
                 Version.VERSION_1_9_R2,
@@ -155,10 +153,31 @@ class BlockBallPlugin : JavaPlugin() {
             val language = configurationService.findValue<String>("language")
             plugin.reloadTranslation(language, BlockBallLanguage::class.java, "en_us")
             logger.log(Level.INFO, "Loaded language file $language.properties.")
+
+            // Load Games
             val gameService = resolve(GameService::class.java)
-            gameService.restartGames()
+            gameService.reloadAll()
+
+            // Connect to PlayerData Repository.
+            try {
+                val playerDataRepository = resolve(PlayerDataRepository::class.java)
+                playerDataRepository.createIfNotExist()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                injector = null
+                Bukkit.getPluginManager().disablePlugin(plugin)
+                return@runBlocking
+            }
+
             Bukkit.getServer()
                 .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
+        }
+
+        plugin.launch {
+            val playerDataRepository = resolve(PlayerDataRepository::class.java)
+            for (player in Bukkit.getOnlinePlayers()) {
+                playerDataRepository.getByPlayer(player)
+            }
         }
     }
 
@@ -171,6 +190,13 @@ class BlockBallPlugin : JavaPlugin() {
         }
 
         packetService!!.close()
+
+        val playerDataRepository = resolve(CachePlayerRepository::class.java)
+        runBlocking {
+            playerDataRepository.saveAll()
+            playerDataRepository.clearAll()
+            playerDataRepository.close()
+        }
 
         try {
             resolve(GameService::class.java).close()

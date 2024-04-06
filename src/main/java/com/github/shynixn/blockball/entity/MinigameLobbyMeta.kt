@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.entity
 
-import com.github.shynixn.blockball.deprecated.YamlSerialize
 import com.github.shynixn.blockball.enumeration.MatchTimeCloseType
 import com.github.shynixn.mcutils.common.ChatColor
 
@@ -8,20 +7,15 @@ class MinigameLobbyMeta {
     /**
      * Match Times.
      */
-    val matchTimes: MutableList<MatchTimeMeta>
-        get() {
-            return internalMatchTimes as MutableList<MatchTimeMeta>
-        }
-    @YamlSerialize(orderNumber = 1, value = "match-times")
-    private var internalMatchTimes: ArrayList<MatchTimeMeta>
+    var matchTimes: MutableList<MatchTimeMeta> = ArrayList()
+
     /** Duration the match will max last. */
-    @YamlSerialize(orderNumber = 2, value = "lobby-duration")
     var lobbyDuration: Int = 20
+
     /** Spawnpoint of the player in the lobby. */
-    @YamlSerialize(orderNumber = 3, value = "lobby-spawnpoint", implementation = Position::class)
     var lobbySpawnpoint: Position? = null
+
     /** Message being played in the action bar displaying the joined players how many players are remaining to start. */
-    @YamlSerialize(orderNumber = 4, value = "remaining-players-message")
     var playersRequiredToStartMessage: String =
         "%blockball_lang_miniGameRemainingPlayers%"
 
@@ -61,7 +55,7 @@ class MinigameLobbyMeta {
         coolDownPeriod.playAbleBall = false
         coolDownPeriod.respawnEnabled = false
 
-        internalMatchTimes = arrayListOf(
+        matchTimes = arrayListOf(
             firstPeriod,
             firstPeriodOverTime,
             breakPeriod,

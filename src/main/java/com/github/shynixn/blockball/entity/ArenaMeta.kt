@@ -1,20 +1,16 @@
 package com.github.shynixn.blockball.entity
 
-import com.github.shynixn.blockball.deprecated.YamlSerialize
 import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.blockball.enumeration.ParticleType
 
 class ArenaMeta {
     /** Meta data for spectating setting. */
-    @YamlSerialize(orderNumber = 12, value = "spectator-meta")
     val spectatorMeta: SpectatorMeta = SpectatorMeta()
 
     /** Meta data of the customizing Properties. */
-    @YamlSerialize(orderNumber = 13, value = "customizing-meta")
     val customizingMeta: CustomizationMeta = CustomizationMeta()
 
     /** Meta data for rewards */
-    @YamlSerialize(orderNumber = 10, value = "reward-meta")
     val rewardMeta: Reward = Reward()
 
     /** Meta data of all holograms. */
@@ -22,43 +18,33 @@ class ArenaMeta {
         get() = this.internalHologramMetas as ArrayList<HologramMeta>
 
     /** Meta data of a generic lobby. */
-    @YamlSerialize(orderNumber = 1, value = "meta")
     val lobbyMeta: LobbyMeta = LobbyMeta()
 
     /** Meta data of the hub lobby. */
-    @YamlSerialize(orderNumber = 2, value = "hubgame-meta")
     var hubLobbyMeta: HubLobbyMeta = HubLobbyMeta()
 
     /** Meta data of the minigame lobby. */
-    @YamlSerialize(orderNumber = 3, value = "minigame-meta")
     val minigameMeta: MinigameLobbyMeta = MinigameLobbyMeta()
 
     /** Meta data of the bungeecord lobby. */
-    @YamlSerialize(orderNumber = 4, value = "bungeecord-meta")
     val bungeeCordMeta: BungeeCordMeta = BungeeCordMeta()
 
     /** Meta data of the doubleJump. */
-    @YamlSerialize(orderNumber = 8, value = "double-jump")
     val doubleJumpMeta: DoubleJumpMeta = DoubleJumpMeta()
 
     /** Meta data of the bossbar. */
-    @YamlSerialize(orderNumber = 7, value = "bossbar")
     val bossBarMeta: BossBarMeta = BossBarMeta()
 
     /** Meta data of the scoreboard. */
-    @YamlSerialize(orderNumber = 6, value = "scoreboard")
     val scoreboardMeta: ScoreboardMeta = ScoreboardMeta()
 
     /** Meta data of proection. */
-    @YamlSerialize(orderNumber = 5, value = "protection")
     val protectionMeta: ArenaProtectionMeta = ArenaProtectionMeta()
 
     /** Meta data of the ball. */
-    @YamlSerialize(orderNumber = 4, value = "ball")
     val ballMeta: BallMeta = BallMeta()
 
     /** Meta data of the blueTeam. */
-    @YamlSerialize(orderNumber = 3, value = "team-blue")
     val blueTeamMeta: TeamMeta = TeamMeta(
         "%blockball_lang_teamBlueDisplayName%",
         "%blockball_lang_teamBlueColor%",
@@ -71,7 +57,6 @@ class ArenaMeta {
     )
 
     /** Meta data of the redTeam. */
-    @YamlSerialize(orderNumber = 2, value = "team-red")
     val redTeamMeta: TeamMeta = TeamMeta(
         "%blockball_lang_teamRedDisplayName%",
         "%blockball_lang_teamRedColor%",
@@ -83,7 +68,6 @@ class ArenaMeta {
         "%blockball_lang_teamRedDrawSubTitle%"
     )
 
-    @YamlSerialize(orderNumber = 9, value = "holograms")
     private val internalHologramMetas: ArrayList<HologramMeta> = ArrayList()
 
     init {

@@ -1,14 +1,14 @@
 package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.*
-import com.github.shynixn.blockball.entity.CommandMeta
-import com.github.shynixn.blockball.entity.Game
-import com.github.shynixn.blockball.entity.TeamMeta
+import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.event.GameEndEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mcutils.common.chat.ChatMessageService
+import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.google.inject.Inject
 import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
@@ -16,12 +16,13 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
 class GameSoccerServiceImpl @Inject constructor(
-    private val screenMessageService: ScreenMessageService,
+    private val screenMessageService: ChatMessageService,
     private val dependencyService: DependencyService,
     private val ballEntityService: BallEntityService,
     private val placeholderService: PlaceHolderService,
     private val proxyService: ProxyService,
-    private val plugin: Plugin
+    private val plugin: Plugin,
+    private val playerDataRepository: PlayerDataRepository<PlayerInformation>
 ) : GameSoccerService {
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
@@ -60,7 +61,7 @@ class GameSoccerServiceImpl @Inject constructor(
             relocatePlayersAndBall(game)
 
             if (game.blueScore >= game.arena.meta.lobbyMeta.maxScore) {
-                onMatchEnd(game, game.blueTeam, game.redTeam)
+                onMatchEnd(game, game.blueTeam as List<Player>, game.redTeam as List<Player>)
                 onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             }
 
@@ -74,7 +75,7 @@ class GameSoccerServiceImpl @Inject constructor(
             relocatePlayersAndBall(game)
 
             if (game.redScore >= game.arena.meta.lobbyMeta.maxScore) {
-                onMatchEnd(game, game.redTeam, game.blueTeam)
+                onMatchEnd(game, game.redTeam as List<Player>, game.blueTeam as List<Player>)
                 onWin(game, Team.RED, game.arena.meta.redTeamMeta)
             }
         }
@@ -163,10 +164,10 @@ class GameSoccerServiceImpl @Inject constructor(
      * Gets called when a goal gets scored on the given [game] by the given [team].
      */
     private fun onScore(game: Game, team: Team, teamMeta: TeamMeta) {
-        var interactionEntity: Any? = null
+        var interactionEntity: Player? = null
 
         if (game.lastInteractedEntity != null && proxyService.isPlayerInstance(game.lastInteractedEntity)) {
-            interactionEntity = game.lastInteractedEntity!!
+            interactionEntity = game.lastInteractedEntity!! as Player
         }
 
         if (interactionEntity == null) {
@@ -174,7 +175,7 @@ class GameSoccerServiceImpl @Inject constructor(
                 return
             }
 
-            interactionEntity = game.ingamePlayersStorage.keys.toTypedArray()[0]
+            interactionEntity = game.ingamePlayersStorage.keys.toTypedArray()[0] as Player
             game.lastInteractedEntity = interactionEntity
         }
 
@@ -206,17 +207,24 @@ class GameSoccerServiceImpl @Inject constructor(
 
         players.forEach { p ->
             require(p is Player)
-            screenMessageService.setTitle(
+            screenMessageService.sendTitleMessage(
                 p,
                 placeholderService.replacePlaceHolders(scoreMessageTitle, p, game, scoreTeamMeta),
-                placeholderService.replacePlaceHolders(scoreMessageSubTitle,p, game, scoreTeamMeta),
+                placeholderService.replacePlaceHolders(scoreMessageSubTitle, p, game, scoreTeamMeta),
                 teamMeta.scoreMessageFadeIn,
                 teamMeta.scoreMessageStay,
                 teamMeta.scoreMessageFadeOut
             )
         }
-    }
 
+        plugin.launch {
+            val playerData = playerDataRepository.getByPlayer(interactionEntity)
+
+            if (playerData != null) {
+                playerData.statsMeta.scoredGoals++
+            }
+        }
+    }
 
     private fun onScoreReward(game: Game, players: List<Any>) {
         if (game.lastInteractedEntity != null && proxyService.isPlayerInstance(game.lastInteractedEntity)) {
@@ -242,20 +250,18 @@ class GameSoccerServiceImpl @Inject constructor(
         }
     }
 
-    override fun <P> onMatchEnd(game: Game, winningPlayers: List<P>?, loosingPlayers: List<P>?) {
+    override fun onMatchEnd(game: Game, winningPlayers: List<Player>?, loosingPlayers: List<Player>?) {
         if (dependencyService.isInstalled(PluginDependency.VAULT)) {
             val vaultService = DependencyVaultServiceImpl()
 
             if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.WIN_MATCH) && winningPlayers != null) {
                 winningPlayers.forEach { p ->
-                    require(p is Player)
                     vaultService.addMoney(p, game.arena.meta.rewardMeta.moneyReward[RewardType.WIN_MATCH]!!.toDouble())
                 }
             }
 
             if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.LOOSING_MATCH) && loosingPlayers != null) {
                 loosingPlayers.forEach { p ->
-                    require(p is Player)
                     vaultService.addMoney(
                         p,
                         game.arena.meta.rewardMeta.moneyReward[RewardType.LOOSING_MATCH]!!.toDouble()
@@ -277,7 +283,7 @@ class GameSoccerServiceImpl @Inject constructor(
             this.executeCommand(
                 game,
                 game.arena.meta.rewardMeta.commandReward[RewardType.WIN_MATCH]!!,
-                winningPlayers as List<Player>
+                winningPlayers
             )
         }
 
@@ -285,7 +291,7 @@ class GameSoccerServiceImpl @Inject constructor(
             this.executeCommand(
                 game,
                 game.arena.meta.rewardMeta.commandReward[RewardType.LOOSING_MATCH]!!,
-                loosingPlayers as List<Player>
+                loosingPlayers
             )
         }
 
@@ -296,13 +302,32 @@ class GameSoccerServiceImpl @Inject constructor(
                 game.inTeamPlayers as List<Player>
             )
         }
+
+        // Store playing stats.
+        val participatingPlayers = game.inTeamPlayers.map { e -> e as Player }.toTypedArray()
+        val winningPlayerCache = winningPlayers?.toMutableList()
+
+        plugin.launch {
+            for (player in participatingPlayers) {
+                val playerData = playerDataRepository.getByPlayer(player)
+
+                if (playerData != null) {
+                    playerData.statsMeta.playedGames++
+                    playerData.playerName = player.name
+
+                    if (winningPlayerCache != null && winningPlayerCache.contains(player)) {
+                        playerData.statsMeta.winsAmount++
+                    }
+                }
+            }
+        }
     }
 
     /**
      * Gets called when the given [game] gets win by the given [team].
      */
     override fun onWin(game: Game, team: Team, teamMeta: TeamMeta) {
-        val event =GameEndEvent(team, game)
+        val event = GameEndEvent(team, game)
         Bukkit.getPluginManager().callEvent(event)
 
         if (event.isCancelled) {
@@ -318,7 +343,7 @@ class GameSoccerServiceImpl @Inject constructor(
 
         players.forEach { p ->
             require(p is Player)
-            screenMessageService.setTitle(
+            screenMessageService.sendTitleMessage(
                 p,
                 placeholderService.replacePlaceHolders(winMessageTitle, p, game),
                 placeholderService.replacePlaceHolders(winMessageSubTitle, p, game),
@@ -365,11 +390,11 @@ class GameSoccerServiceImpl @Inject constructor(
         }
         when {
             meta.mode == CommandMode.PER_PLAYER -> players.forEach { p ->
-                proxyService.performPlayerCommand(p, placeholderService.replacePlaceHolders(command, p ,game))
+                proxyService.performPlayerCommand(p, placeholderService.replacePlaceHolders(command, p, game))
             }
             meta.mode == CommandMode.CONSOLE_PER_PLAYER -> players.forEach { p ->
                 game.lastInteractedEntity = p
-                proxyService.performServerCommand(placeholderService.replacePlaceHolders(command,p, game))
+                proxyService.performServerCommand(placeholderService.replacePlaceHolders(command, p, game))
             }
             meta.mode == CommandMode.CONSOLE_SINGLE -> proxyService.performServerCommand(
                 placeholderService.replacePlaceHolders(

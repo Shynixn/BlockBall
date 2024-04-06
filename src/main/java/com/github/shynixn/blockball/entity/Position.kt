@@ -2,33 +2,26 @@ package com.github.shynixn.blockball.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.github.shynixn.blockball.deprecated.YamlSerialize
 
 @JsonIgnoreProperties("blockX", "blockY", "blockZ")
 class Position() {
     /** [worldName] which world the location is. */
-    @YamlSerialize(orderNumber = 1, value = "world")
     @JsonProperty("world")
     var worldName: String? = null
 
     /** [x] coordinate. */
-    @YamlSerialize(orderNumber = 2, value = "x")
     var x: Double = 0.0
 
     /** [y] coordinate. */
-    @YamlSerialize(orderNumber = 2, value = "y")
     var y: Double = 0.0
 
     /** [z] coordinate. */
-    @YamlSerialize(orderNumber = 2, value = "z")
     var z: Double = 0.0
 
     /** [yaw] rotation yaw. */
-    @YamlSerialize(orderNumber = 2, value = "yaw")
     var yaw: Double = 0.0
 
     /** [pitch] rotation pitch. */
-    @YamlSerialize(orderNumber = 2, value = "pitch")
     var pitch: Double = 0.0
 
     /** [blockX] coordinate as Int. */

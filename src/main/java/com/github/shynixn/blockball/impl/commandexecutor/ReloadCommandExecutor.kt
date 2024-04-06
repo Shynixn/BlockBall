@@ -23,10 +23,11 @@ class ReloadCommandExecutor @Inject constructor(
     override fun onExecuteCommand(source: CommandSender, args: Array<out String>): Boolean {
         configurationService.reload()
         val language = configurationService.findValue<String>("language")
+        // TODO: Replace with plugin.launch
         runBlocking {
             plugin.reloadTranslation(language, BlockBallLanguage::class.java, "en_us")
+            gameService.reloadAll()
         }
-        this.gameService.restartGames()
         proxyService.sendMessage(source, BlockBallLanguage.reloadMessage)
         return true
     }

@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.HubGame
+import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.BallRayTraceEvent
@@ -11,6 +12,7 @@ import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.event.PacketEvent
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.InteractionType
@@ -41,7 +43,8 @@ class GameListener @Inject constructor(
     private val gameSoccerService: GameSoccerService,
     private val proxyService: ProxyService,
     private val ballEntityService: BallEntityService,
-    private val plugin: Plugin
+    private val plugin: Plugin,
+    private val playerDataRepository: CachePlayerRepository<PlayerInformation>
 ) : Listener {
     private val playerCache = HashSet<Player>()
 
@@ -79,18 +82,43 @@ class GameListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerQuitEvent(event: PlayerQuitEvent) {
-        val playerGame = gameService.getGameFromPlayer(event.player)
-        val spectateGame = gameService.getGameFromSpectatingPlayer(event.player)
+        val player = event.player
+        val playerGame = gameService.getGameFromPlayer(player)
+        val spectateGame = gameService.getGameFromSpectatingPlayer(player)
 
         if (playerGame.isPresent) {
-            gameActionService.leaveGame(playerGame.get(), event.player)
+            gameActionService.leaveGame(playerGame.get(), player)
         }
 
         if (spectateGame.isPresent) {
-            gameActionService.leaveGame(spectateGame.get(), event.player)
+            gameActionService.leaveGame(spectateGame.get(), player)
         }
 
-        rightClickManageService.cleanResources(event.player)
+        rightClickManageService.cleanResources(player)
+
+        plugin.launch {
+            val existingPlayerData = playerDataRepository.getByPlayer(player)
+
+            if (existingPlayerData != null) {
+                playerDataRepository.save(existingPlayerData)
+                playerDataRepository.clearByPlayer(player)
+            }
+        }
+    }
+
+    @EventHandler
+    fun onPlayerJoinEvent(event: PlayerJoinEvent) {
+        plugin.launch {
+            val player = event.player
+            val existingPlayerData = playerDataRepository.getByPlayer(player)
+
+            if (existingPlayerData == null) {
+                val playerData = PlayerInformation()
+                playerData.playerUUID = player.uniqueId.toString()
+                playerData.playerName = player.name
+                playerDataRepository.save(playerData)
+            }
+        }
     }
 
     /**
@@ -249,8 +277,7 @@ class GameListener @Inject constructor(
             return
         }
 
-        @Suppress("DEPRECATION")
-        player.health = player.maxHealth
+        @Suppress("DEPRECATION") player.health = player.maxHealth
 
         playerCache.add(player)
 

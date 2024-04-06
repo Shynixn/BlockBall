@@ -41,11 +41,21 @@ Team PlaceHolder                         Description
 %blockball_team_players%                 Current amount of players in the team
 ==================================       ======================================================================
 
-==================================       ======================================================================
+.. note:: Stats tracking is only available in MiniGame mode games. It does not work in HubGame mode games.
+
+=====================================    ===================================================================================
 Player Placeholder                       Description
-==================================       ======================================================================
+=====================================    ===================================================================================
 %blockball_player_isInGame%              true if the player is in a game, false if not
 %blockball_player_isInTeamRed%           true if the player is in a game and in team red, false if not
 %blockball_player_isInTeamBlue%          true if the player is in a game and in team blue, false if not
-==================================       ======================================================================
-
+%blockball_player_goals%                 Amount of goals a player has scored
+%blockball_player_games%                 Amount of games a player has started playing
+%blockball_player_gamesFull%             Amount of games a player has fully played
+%blockball_player_wins%                  Amount of wins a player has got by playing
+%blockball_player_losses%                Amount of losses a player has got by playing
+%blockball_player_winrate%               Ratio between amount of games a player has started playing and wins
+%blockball_player_winrateFull%           Ratio between amount of games a player has fully played and wins
+%blockball_player_goalsPerGame%          Ratio between amount of games a player has started playing and scored goals
+%blockball_player_goalsPerGameFull%      Ratio between amount of games a player has fully played and scored goals
+=====================================    ===================================================================================

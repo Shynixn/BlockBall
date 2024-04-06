@@ -33,6 +33,7 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     OPEN(MenuPageKey.OPEN, ""),
     ARENA_RELOAD(MenuPageKey.MAINCONFIGURATION, "reload"),
     OPEN_EDIT_ARENA(MenuPageKey.OPEN, "edit-arenas"),
+    OPEN_CREATE_ARENA(MenuPageKey.OPEN, "create-arena"),
     OPEN_DELETE_ARENA(MenuPageKey.OPEN, "delete-arenas"),
 
     ARENA_CREATE(MenuPageKey.MAINCONFIGURATION, "create-arena"),
@@ -251,9 +252,6 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     TEXTBOOK_WINSUBTITLE(MenuPageKey.TEAMTEXTBOOK, "winstitle"),
     TEXTBOOK_DRAWTIELE(MenuPageKey.TEAMTEXTBOOK, "drawtitle"),
     TEXTBOOK_DRAWSUBTITLE(MenuPageKey.TEAMTEXTBOOK, "drawstitle"),
-
-    TEMPLATE_OPEN(MenuPageKey.TEMPLATEPAGE, "open"),
-    TEMPLATE_SELECT_CALLBACK(MenuPageKey.TEMPLATEPAGE, "calls"),
 
     LIST_TEMPLATES(MenuPageKey.LISTABLE, "show_templates"),
     LIST_BUKKITGAMESMODES(MenuPageKey.LISTABLE, "show_bukkitgamemodes"),

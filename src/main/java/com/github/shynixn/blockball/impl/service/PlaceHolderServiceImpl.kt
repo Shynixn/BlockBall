@@ -1,18 +1,24 @@
 package com.github.shynixn.blockball.impl.service
 
+import com.github.shynixn.blockball.BlockBallDependencyInjectionBinder
 import com.github.shynixn.blockball.BlockBallLanguage
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.PlaceHolderService
 import com.github.shynixn.blockball.entity.Game
 import com.github.shynixn.blockball.entity.MiniGame
+import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.mcutils.common.translateChatColors
+import com.github.shynixn.mcutils.database.api.CachePlayerRepository
+import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 
-class PlaceHolderServiceImpl @Inject constructor(private val gameService: GameService) : PlaceHolderService {
+class PlaceHolderServiceImpl @Inject constructor(
+    private val gameService: GameService, private val playerDataRepository: CachePlayerRepository<PlayerInformation>
+) : PlaceHolderService {
     private val gamePlayerHolderFunctions = HashMap<PlaceHolder, ((Game) -> String)>()
     private val teamPlaceHolderFunctions = HashMap<PlaceHolder, ((Game, TeamMeta, Int) -> String)>()
     private val playerPlaceHolderFunctions = HashMap<PlaceHolder, ((Player) -> String)>()
@@ -105,21 +111,133 @@ class PlaceHolderServiceImpl @Inject constructor(private val gameService: GameSe
             val game = gameService.getGameFromPlayer(player)
             (game.isPresent && game.get().redTeam.contains(player)).toString()
         }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_SCOREDGOALS] = { player ->
+            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                playerData?.statsMeta?.scoredGoals?.toString() ?: ""
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_STARTEDGAMES] = { player ->
+            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                playerData?.statsMeta?.joinedGames?.toString() ?: ""
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_COMPLETEDGAMES] = { player ->
+            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                playerData?.statsMeta?.playedGames?.toString() ?: ""
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_WINS] = { player ->
+            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                playerData?.statsMeta?.winsAmount?.toString() ?: ""
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_LOSSES] = { player ->
+            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                if (playerData != null) {
+                    (playerData.statsMeta.playedGames - playerData.statsMeta.winsAmount).toString()
+                } else {
+                    ""
+                }
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_STARTEDWINRATE] = { player ->
+            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                if (playerData != null) {
+                    if (playerData.statsMeta.joinedGames == 0) {
+                        "0.00"
+                    } else {
+                        val result =
+                            playerData.statsMeta.winsAmount.toDouble() / playerData.statsMeta.joinedGames.toDouble()
+                        String.format("%.2f", result)
+                    }
+                } else {
+                    ""
+                }
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_COMPLETEDWINRATE] = { player ->
+            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                if (playerData != null) {
+                    if (playerData.statsMeta.playedGames == 0) {
+                        "0.00"
+                    } else {
+                        val result =
+                            playerData.statsMeta.winsAmount.toDouble() / playerData.statsMeta.playedGames.toDouble()
+                        String.format("%.2f", result)
+                    }
+                } else {
+                    ""
+                }
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_STARTEDGOALSPER] = { player ->
+            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                if (playerData != null) {
+                    if (playerData.statsMeta.joinedGames == 0) {
+                        "0.00"
+                    } else {
+                        val result =
+                            playerData.statsMeta.scoredGoals.toDouble() / playerData.statsMeta.joinedGames.toDouble()
+                        String.format("%.2f", result)
+                    }
+                } else {
+                    ""
+                }
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_COMPLETEDGOALSPER] = { player ->
+            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                if (playerData != null) {
+                    if (playerData.statsMeta.playedGames == 0) {
+                        "0.00"
+                    } else {
+                        val result =
+                            playerData.statsMeta.scoredGoals.toDouble() / playerData.statsMeta.playedGames.toDouble()
+                        String.format("%.2f", result)
+                    }
+                } else {
+                    ""
+                }
+            }
+        }
     }
 
     /**
      * Replaces the given text with properties from the given [game], optional [teamMeta] and optional size.
      */
     override fun replacePlaceHolders(
-        text: String,
-        player: Player?,
-        game: Game?,
-        teamMeta: TeamMeta?,
-        currentTeamSize: Int?
+        text: String, player: Player?, game: Game?, teamMeta: TeamMeta?, currentTeamSize: Int?
     ): String {
         var output = text
-        for(i in 0 until 4){
-            if(!output.contains("%")){
+        for (i in 0 until 4) {
+            if (!output.contains("%")) {
                 break
             }
 
@@ -149,7 +267,8 @@ class PlaceHolderServiceImpl @Inject constructor(private val gameService: GameSe
                             }
                         }
                     } else if (langPlaceHolderFunctions.containsKey(evaluatedPlaceHolder)) {
-                        locatedPlaceHolders[evaluatedPlaceHolder] = langPlaceHolderFunctions[evaluatedPlaceHolder]!!.invoke()
+                        locatedPlaceHolders[evaluatedPlaceHolder] =
+                            langPlaceHolderFunctions[evaluatedPlaceHolder]!!.invoke()
                     }
 
                     characterCache.clear()

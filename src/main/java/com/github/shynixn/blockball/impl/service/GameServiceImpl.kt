@@ -2,48 +2,20 @@ package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.GameActionService
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.PersistenceArenaService
 import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.mcutils.common.ConfigurationService
+import com.github.shynixn.mcutils.common.repository.Repository
 import com.google.inject.Inject
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.*
-import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 
-/**
- * Created by Shynixn 2018.
- * <p>
- * Version 1.2
- * <p>
- * MIT License
- * <p>
- * Copyright (c) 2018 by Shynixn
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 class GameServiceImpl @Inject constructor(
-    private val persistenceArenaService: PersistenceArenaService,
+    private val arenaRepository: Repository<Arena>,
     private val gameActionService: GameActionService,
     private val proxyService: ProxyService,
     private val configurationService: ConfigurationService,
@@ -63,26 +35,17 @@ class GameServiceImpl @Inject constructor(
     }
 
     /**
-     * Restarts all games on the server.
+     * Reloads all games.
      */
-    override fun restartGames(): CompletableFuture<Void?> {
-        val completableFuture = CompletableFuture<Void?>()
-
+    override suspend fun reloadAll() {
         close()
         configurationService.reload()
 
-        persistenceArenaService.refresh().thenAccept {
-            persistenceArenaService.getArenas().forEach { arena ->
-                initGame(arena)
-            }
+        val arenas = arenaRepository.getAll()
 
-            completableFuture.complete(null)
-        }.exceptionally { ex ->
-            ex.printStackTrace()
-            null
+        for (arena in arenas) {
+            initGame(arena)
         }
-
-        return completableFuture
     }
 
     /**
@@ -198,6 +161,10 @@ class GameServiceImpl @Inject constructor(
      * Initialises a new game from the given arena.
      */
     private fun initGame(arena: Arena) {
+        if (arena.name.isBlank()) {
+            throw Exception("Arena(s) cannot be loaded! If you have an obsolete arena file format, convert your arenas using the plugin found here https://github.com/Shynixn/BlockBall/releases/tag/conversion or delete your BlockBall folder.")
+        }
+
         val game: Game = when (arena.gameType) {
             GameType.HUBGAME -> HubGame(arena)
             GameType.MINIGAME -> MiniGame(arena)

@@ -9,7 +9,9 @@ import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.blockball.impl.PacketHologram
+import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -32,6 +34,7 @@ class GameActionServiceImpl @Inject constructor(
     private val proxyService: ProxyService,
     private val packetService: PacketService,
     private val plugin: Plugin,
+    private val playerDataRepository: PlayerDataRepository<PlayerInformation>
 ) : GameActionService {
     /**
      * Compatibility reference.
@@ -60,14 +63,24 @@ class GameActionServiceImpl @Inject constructor(
             return false
         }
 
-        if (game is HubGame) {
-            return gameHubGameActionService.joinGame(game, player, team)
-        }
-        if (game is MiniGame) {
-            return minigameActionService.joinGame(game, player, team)
+        val result = if (game is HubGame) {
+            gameHubGameActionService.joinGame(game, player, team)
+        } else if (game is MiniGame) {
+            minigameActionService.joinGame(game, player, team)
+        } else {
+            throw RuntimeException("Game not supported!")
         }
 
-        throw RuntimeException("Game not supported!")
+        if (result) {
+            plugin.launch {
+                val playerData = playerDataRepository.getByPlayer(player)
+                if (playerData != null) {
+                    playerData.statsMeta.joinedGames++
+                }
+            }
+        }
+
+        return result
     }
 
     /**
@@ -495,7 +508,7 @@ class GameActionServiceImpl @Inject constructor(
 
                 var j = lines.size
                 for (i in 0 until lines.size) {
-                    val line = placeholderService.replacePlaceHolders(lines[i], null, game)
+                    val line = placeholderService.replacePlaceHolders(lines[i], p as Player, game)
                     scoreboardService.setLine(game.scoreboard as Scoreboard, j, line)
                     j--
                 }

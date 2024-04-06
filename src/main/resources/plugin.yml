@@ -1,21 +1,20 @@
 name: BlockBall
-version: 6.41.0
+version: 6.42.0
 author: Shynixn
 website: https://www.spigotmc.org/members/shynixn.63455/
 main: com.github.shynixn.blockball.BlockBallPlugin
 softdepend: [ BossBarAPI, PlaceholderAPI, Vault ]
 libraries:
-  - 'com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.14.0'
-  - 'com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.14.0'
-  - 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.3.0'
-  - 'com.fasterxml.jackson.core:jackson-databind:2.2.3'
-  - 'org.slf4j:slf4j-jdk14:1.7.25'
-  - 'com.google.inject:guice:5.0.1'
-  - 'aopalliance:aopalliance:1.0'
-  - 'commons-io:commons-io:2.6'
-  - 'com.google.code.gson:gson:2.8.6'
-  - 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21'
-  - 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
+  - com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.15.0
+  - com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.15.0
+  - com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.3.0
+  - com.fasterxml.jackson.core:jackson-databind:2.3.0
+  - com.google.inject:guice:7.0.0
+  - com.google.code.gson:gson:2.10.1
+  - com.zaxxer:HikariCP:5.0.1
+  - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23
+  - org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3
+  - aopalliance:aopalliance:1.0
 commands:
   blockball:
     description: Opens the arena creation UI.

@@ -61,6 +61,5 @@ enum class MenuPageKey(
     NOTIFICATIONS("notif"),
     BALLMODIFIER("ballmod"),
     TEAMTEXTBOOK("teamtext"),
-    TEMPLATEPAGE("template"),
     MAINCONFIGURATION("mcf");
 }

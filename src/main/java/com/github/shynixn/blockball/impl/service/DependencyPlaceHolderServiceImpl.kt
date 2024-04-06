@@ -3,7 +3,9 @@ package com.github.shynixn.blockball.impl.service
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.PlaceHolderService
 import com.github.shynixn.blockball.entity.Game
+import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.TeamMeta
+import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.google.inject.Inject
 import me.clip.placeholderapi.PlaceholderAPI
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
@@ -16,8 +18,9 @@ import org.bukkit.plugin.Plugin
 class DependencyPlaceHolderServiceImpl @Inject constructor(
     private val plugin: Plugin,
     private val gameService: GameService,
+    private val cachePlayerRepository: CachePlayerRepository<PlayerInformation>,
 ) : PlaceholderExpansion(), PlaceHolderService {
-    private val placeHolderService = PlaceHolderServiceImpl(gameService)
+    private val placeHolderService = PlaceHolderServiceImpl(gameService, cachePlayerRepository)
     private var registered: Boolean = false
 
     init {
