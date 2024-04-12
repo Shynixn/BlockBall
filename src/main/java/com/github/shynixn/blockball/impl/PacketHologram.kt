@@ -1,9 +1,10 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.HologramProxy
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Position
 import com.github.shynixn.blockball.impl.extension.toLocation
+import com.github.shynixn.blockball.impl.extension.toPosition
+import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityDestroy
@@ -12,7 +13,7 @@ import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntitySpawn
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
-class PacketHologram : HologramProxy {
+class PacketHologram(private val entityService: EntityService) : HologramProxy {
     private var position: Position? = null
     private var entityIds = ArrayList<Int>()
     private var backedLines: List<String> = emptyList()
@@ -55,7 +56,7 @@ class PacketHologram : HologramProxy {
             if (this.backedLines.size != value.size) {
                 entityIds.clear()
                 for (i in value.indices) {
-                    entityIds.add(proxyService.createNewEntityId())
+                    entityIds.add(entityService.createNewEntityId())
                 }
 
                 this.playerTracker.dispose()
@@ -71,27 +72,16 @@ class PacketHologram : HologramProxy {
      */
     override var location: Location
         get() {
-            return proxyService.toLocation(position!!)
+            return position!!.toLocation()
         }
         set(value) {
-            this.position = proxyService.toPosition(value)
+            this.position = value.toPosition()
         }
 
     /**
      * Packet service dependency.
      */
     lateinit var packetService: PacketService
-
-    /**
-     * Proxy service dependency.
-     */
-    var proxyService: ProxyService
-        get() {
-            return playerTracker.proxyService
-        }
-        set(value) {
-            playerTracker.proxyService = value
-        }
 
     /**
      * Updates changes of the hologram.

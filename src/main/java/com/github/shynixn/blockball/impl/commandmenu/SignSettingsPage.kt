@@ -1,16 +1,16 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
 import com.github.shynixn.blockball.BlockBallLanguage
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.contract.RightclickManageService
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.*
+import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
+import org.bukkit.entity.Player
 
 class SignSettingsPage @Inject constructor(
-    private val proxyService: ProxyService,
     private val rightclickManageService: RightclickManageService
 ) : Page(SignSettingsPage.ID, MainSettingsPage.ID) {
 
@@ -35,33 +35,34 @@ class SignSettingsPage @Inject constructor(
      */
     override fun <P> execute(player: P, command: MenuCommand, cache: Array<Any?>, args: Array<String>): MenuCommandResult {
         val arena = cache[0] as Arena
+        require(player is Player)
         when (command) {
             MenuCommand.SIGNS_ADDTEAMRED -> {
-                proxyService.sendMessage(player, BlockBallLanguage.rightClickOnSign)
-                rightclickManageService.watchForNextRightClickSign<P, Any>(player) { location ->
-                    arena.meta.redTeamMeta.signs.add(proxyService.toPosition(location))
-                    proxyService.sendMessage(player, BlockBallLanguage.saveAndReloadSign)
+                player.sendMessage(BlockBallLanguage.rightClickOnSign)
+                rightclickManageService.watchForNextRightClickSign(player) { location ->
+                    arena.meta.redTeamMeta.signs.add(location.toPosition())
+                    player.sendMessage(BlockBallLanguage.saveAndReloadSign)
                 }
             }
             MenuCommand.SIGNS_ADDTEAMBLUE -> {
-                proxyService.sendMessage(player,BlockBallLanguage.rightClickOnSign)
-                rightclickManageService.watchForNextRightClickSign<P, Any>(player) { location ->
-                    arena.meta.blueTeamMeta.signs.add(proxyService.toPosition(location))
-                    proxyService.sendMessage(player, BlockBallLanguage.saveAndReloadSign)
+                player.sendMessage(BlockBallLanguage.rightClickOnSign)
+                rightclickManageService.watchForNextRightClickSign(player) { location ->
+                    arena.meta.blueTeamMeta.signs.add(location.toPosition())
+                    player.sendMessage(BlockBallLanguage.saveAndReloadSign)
                 }
             }
             MenuCommand.SIGNS_ADDJOINANY -> {
-                proxyService.sendMessage(player, BlockBallLanguage.rightClickOnSign)
-                rightclickManageService.watchForNextRightClickSign<P, Any>(player) { location ->
-                    arena.meta.lobbyMeta.joinSigns.add(proxyService.toPosition(location))
-                    proxyService.sendMessage(player, BlockBallLanguage.saveAndReloadSign)
+                player.sendMessage(BlockBallLanguage.rightClickOnSign)
+                rightclickManageService.watchForNextRightClickSign(player) { location ->
+                    arena.meta.lobbyMeta.joinSigns.add(location.toPosition())
+                    player.sendMessage(BlockBallLanguage.saveAndReloadSign)
                 }
             }
             MenuCommand.SIGNS_LEAVE -> {
-                proxyService.sendMessage(player,BlockBallLanguage.rightClickOnSign)
-                rightclickManageService.watchForNextRightClickSign<P, Any>(player) { location ->
-                    arena.meta.lobbyMeta.leaveSigns.add(proxyService.toPosition(location))
-                    proxyService.sendMessage(player, BlockBallLanguage.saveAndReloadSign)
+                player.sendMessage(BlockBallLanguage.rightClickOnSign)
+                rightclickManageService.watchForNextRightClickSign(player) { location ->
+                    arena.meta.lobbyMeta.leaveSigns.add(location.toPosition())
+                    player.sendMessage(BlockBallLanguage.saveAndReloadSign)
                 }
             }
             else -> {

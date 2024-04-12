@@ -11,6 +11,7 @@ import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.sound.SoundMeta
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.block.Sign
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 
@@ -27,6 +28,28 @@ internal fun Permission.hasPermission(player: Player): Boolean {
  */
 fun String.stripChatColors(): String {
     return ChatColor.stripChatColors(this)
+}
+
+fun Location.setSignLines(lines: List<String>): Boolean {
+    val location = this
+
+    if (!location.world!!.isChunkLoaded(location.blockX shr 4, location.blockZ shr 4)) {
+        return true
+    }
+
+    if (location.block.state !is Sign) {
+        return false
+    }
+
+    val sign = location.block.state as Sign
+
+    for (i in lines.indices) {
+        val text = lines[i]
+        sign.setLine(i, text)
+    }
+
+    sign.update(true)
+    return true
 }
 
 fun Sound.toSoundMeta(): SoundMeta {

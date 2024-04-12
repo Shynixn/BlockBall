@@ -2,15 +2,16 @@ package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.Ball
 import com.github.shynixn.blockball.contract.BallEntityService
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.BallMeta
 import com.github.shynixn.blockball.event.BallSpawnEvent
 import com.github.shynixn.blockball.impl.BallCrossPlatformProxy
 import com.github.shynixn.blockball.impl.BallDesignEntity
 import com.github.shynixn.blockball.impl.BallHitboxEntity
+import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.item.ItemService
+import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.google.inject.Inject
@@ -20,11 +21,11 @@ import org.bukkit.Location
 import org.bukkit.plugin.Plugin
 
 class BallEntityServiceImpl @Inject constructor(
-    private val proxyService: ProxyService,
     private val packetService: PacketService,
     private val itemService: ItemService,
     private val rayTracingService: RayTracingService,
-    private val plugin: Plugin
+    private val plugin: Plugin,
+    private val entityService: EntityService
 ) : BallEntityService {
 
     private val ballHitBoxTracked = HashMap<Int, Ball>()
@@ -47,18 +48,16 @@ class BallEntityServiceImpl @Inject constructor(
      * Returns a ball or null if the ball spawn event was cancelled.
      */
     override fun spawnTemporaryBall(location: Location, meta: BallMeta): Ball? {
-        val position = proxyService.toPosition(location)
+        val position = location.toPosition()
         position.yaw = 0.0
         position.pitch = 0.0
 
-        val ballHitBoxEntity = BallHitboxEntity(proxyService.createNewEntityId())
+        val ballHitBoxEntity = BallHitboxEntity(entityService.createNewEntityId())
         ballHitBoxEntity.position = position
         ballHitBoxEntity.rayTracingService = rayTracingService
         ballHitBoxEntity.packetService = packetService
-        ballHitBoxEntity.proxyService = proxyService
 
-        val ballDesignEntity = BallDesignEntity(proxyService.createNewEntityId())
-        ballDesignEntity.proxyService = proxyService
+        val ballDesignEntity = BallDesignEntity(entityService.createNewEntityId())
         ballDesignEntity.packetService = packetService
         ballDesignEntity.itemService = itemService
 
@@ -66,7 +65,6 @@ class BallEntityServiceImpl @Inject constructor(
         ballDesignEntity.ball = ball
         ballHitBoxEntity.ball = ball
         ballHitBoxEntity.plugin = plugin
-        ball.proxyService = proxyService
 
         val event = BallSpawnEvent(ball)
         Bukkit.getPluginManager().callEvent(event)

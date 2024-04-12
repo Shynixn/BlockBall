@@ -1,9 +1,9 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.*
+import com.github.shynixn.blockball.impl.extension.toPosition
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 
@@ -34,7 +34,7 @@ import org.bukkit.entity.Player
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class SpectatePage @Inject constructor(private val proxyService: ProxyService) : Page(ID, SpectatePage.ID) {
+class SpectatePage @Inject constructor() : Page(ID, SpectatePage.ID) {
 
     companion object {
         /** Id of the page. */
@@ -58,11 +58,12 @@ class SpectatePage @Inject constructor(private val proxyService: ProxyService) :
      */
     override fun <P> execute(player: P, command: MenuCommand, cache: Array<Any?>, args: Array<String>): MenuCommandResult {
         val arena = cache[0] as Arena
+        require(player is Player)
 
         if (command == MenuCommand.SPECTATE_TOGGLE) {
             arena.meta.spectatorMeta.spectatorModeEnabled = !arena.meta.spectatorMeta.spectatorModeEnabled
         } else if (command == MenuCommand.SPECTATE_SPAWNPOINT) {
-            arena.meta.spectatorMeta.spectateSpawnpoint = proxyService.toPosition(proxyService.getEntityLocation<Any, Player>(player as Player))
+            arena.meta.spectatorMeta.spectateSpawnpoint = player.location.toPosition()
         }
 
         return super.execute(player, command, cache, args)

@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.blockball.impl.extension.toVector
 import com.github.shynixn.mcutils.common.ConfigurationService
+import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -18,9 +19,9 @@ import org.bukkit.entity.Player
 class HubGameForcefieldServiceImpl @Inject constructor(
     private val gameService: GameService,
     private val gameActionService: GameActionService,
-    private val proxyService: ProxyService,
     private val placeholderService: PlaceHolderService,
-    private val configurationService: ConfigurationService
+    private val configurationService: ConfigurationService,
+    private val chatMessageService: ChatMessageService
 ) : HubGameForcefieldService {
     private val cache = HashMap<Player, InteractionCache>()
     /**
@@ -108,9 +109,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                                     )
                                     .setHoverText(" ")
                                     .builder()
-
-                            proxyService.sendMessage(player, b)
-
+                            chatMessageService.sendChatMessage(player, b.convertToTextComponent())
                             interactionCache.toggled = true
                         }
                     }

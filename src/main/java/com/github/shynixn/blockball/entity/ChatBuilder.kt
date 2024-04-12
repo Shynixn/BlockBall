@@ -1,18 +1,9 @@
 package com.github.shynixn.blockball.entity
 
-import com.github.shynixn.mcutils.common.ChatColor
-import com.github.shynixn.mcutils.common.translateChatColors
+import com.github.shynixn.mcutils.common.chat.*
 
 class ChatBuilder {
-    private val components = ArrayList<Any>()
-
-    /**
-     * Sets the color of the text.
-     */
-    fun setColor(color: ChatColor): ChatBuilder {
-        this.components.add(color)
-        return this
-    }
+    private val components = ArrayList<ChatBuilderComponent>()
 
     /**
      * Creates a new component with the given [text].
@@ -27,7 +18,7 @@ class ChatBuilder {
      * Appends a line break.
      */
     fun nextLine(): ChatBuilder {
-        this.components.add("\n")
+        this.components.add(ChatBuilderComponent(this, "\n"))
         return this
     }
 
@@ -35,41 +26,36 @@ class ChatBuilder {
      * Appends text to the builder.
      */
     fun text(text: String): ChatBuilder {
-        this.components.add(text)
+        this.components.add(ChatBuilderComponent(this, text))
         return this
     }
 
     /**
-     * ToString.
+     * Compatibility layer. Will be removed in a future update.
      */
-    override fun toString(): String {
-        val finalMessage = StringBuilder()
-        val cache = StringBuilder()
-        finalMessage.append("{\"text\": \"\"")
-        finalMessage.append(", \"extra\" : [")
-        var firstExtra = false
+    fun convertToTextComponent(): TextComponent {
+        val rootComponent = TextComponent()
+
         for (component in this.components) {
-            if (component !is ChatColor && firstExtra) {
-                finalMessage.append(", ")
+            val subComponent = TextComponent().also {
+                it.text = component.text.toString()
+                it.color = component.color
             }
-            when (component) {
-                is ChatColor -> cache.append(component)
-                is String -> {
-                    finalMessage.append("{\"text\": \"")
-                    finalMessage.append((cache.toString() + component).translateChatColors())
-                    finalMessage.append("\"}")
-                    cache.setLength(0)
-                    firstExtra = true
-                }
-                else -> {
-                    finalMessage.append(component)
-                    firstExtra = true
-                }
+            rootComponent.components.add(subComponent)
+
+            if (component.clickAction != null) {
+                subComponent.clickEvent =
+                    ClickEvent(ClickEventType.valueOf(component.clickAction!!.name), component.clickActionData!!)
+            }
+
+            if (component.hoverActionData != null) {
+                subComponent.hoverEvent = HoverEvent(HoverEventType.SHOW_TEXT, TextComponent().also {
+                    it.text = component.hoverActionData!!.text.toString()
+                    it.color = component.hoverActionData!!.color
+                })
             }
         }
 
-        finalMessage.append("]}")
-
-        return finalMessage.toString()
+        return rootComponent
     }
 }

@@ -9,12 +9,18 @@ import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.blockball.impl.PacketHologram
+import com.github.shynixn.blockball.impl.extension.setSignLines
+import com.github.shynixn.blockball.impl.extension.toLocation
+import com.github.shynixn.blockball.impl.extension.toPosition
+import com.github.shynixn.blockball.impl.extension.toVector
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
+import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.google.inject.Inject
 import org.bukkit.Bukkit
+import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scoreboard.Scoreboard
@@ -31,10 +37,11 @@ class GameActionServiceImpl @Inject constructor(
     private val dependencyBossBarApiService: DependencyBossBarApiService,
     private val gameSoccerService: GameSoccerService,
     private val placeholderService: PlaceHolderService,
-    private val proxyService: ProxyService,
     private val packetService: PacketService,
     private val plugin: Plugin,
-    private val playerDataRepository: PlayerDataRepository<PlayerInformation>
+    private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
+    private val entityService: EntityService,
+    private val itemService: ItemTypeService
 ) : GameActionService {
     /**
      * Compatibility reference.
@@ -95,8 +102,8 @@ class GameActionServiceImpl @Inject constructor(
             return
         }
 
-        if (game.scoreboard != null && proxyService.getPlayerScoreboard<Any, Any?>(player) == game.scoreboard) {
-            proxyService.setPlayerScoreboard(player, proxyService.generateNewScoreboard<Any>())
+        if (game.scoreboard != null && player.scoreboard == game.scoreboard) {
+            player.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
         }
 
         if (game.bossBar != null) {
@@ -123,8 +130,7 @@ class GameActionServiceImpl @Inject constructor(
             val storage = game.ingamePlayersStorage[player]!!
 
             if (storage.team == Team.RED) {
-                proxyService.sendMessage(
-                    player,
+                player.sendMessage(
                     placeholderService.replacePlaceHolders(
                         game.arena.meta.redTeamMeta.leaveMessage,
                         player,
@@ -134,8 +140,7 @@ class GameActionServiceImpl @Inject constructor(
                     )
                 )
             } else if (storage.team == Team.BLUE) {
-                proxyService.sendMessage(
-                    player,
+                player.sendMessage(
                     placeholderService.replacePlaceHolders(
                         game.arena.meta.redTeamMeta.leaveMessage,
                         player,
@@ -150,7 +155,7 @@ class GameActionServiceImpl @Inject constructor(
         }
 
         if (game.arena.meta.lobbyMeta.leaveSpawnpoint != null) {
-            proxyService.teleport(player, proxyService.toLocation<Any>(game.arena.meta.lobbyMeta.leaveSpawnpoint!!))
+            player.teleport(game.arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation())
         }
     }
 
@@ -172,16 +177,12 @@ class GameActionServiceImpl @Inject constructor(
         }
 
         if (game.ballForceFieldBlockPosition != null) {
-            proxyService.setBlockType(
-                proxyService.toLocation<Any>(game.ballForceFieldBlockPosition!!),
-                MaterialType.AIR
-            )
+            game.ballForceFieldBlockPosition!!.toLocation().block.type = itemService.findItemType(MaterialType.AIR)
         }
 
         game.status = GameState.DISABLED
         game.closed = true
         game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
-            require(p is Player)
             leaveGame(game, p)
         }
         game.ingamePlayersStorage.clear()
@@ -214,7 +215,7 @@ class GameActionServiceImpl @Inject constructor(
             game.status = GameState.JOINABLE
         }
 
-        if (proxyService.getWorldFromName<Any?>(game.arena.meta.ballMeta.spawnpoint!!.worldName!!) == null) {
+        if (Bukkit.getWorld(game.arena.meta.ballMeta.spawnpoint!!.worldName!!) == null) {
             return
         }
 
@@ -316,11 +317,11 @@ class GameActionServiceImpl @Inject constructor(
             players = game.blueTeam
         }
 
-        val location = proxyService.toLocation<Any>(signPosition)
+        val location = signPosition.toLocation()
         val placeHolderReplacedLines =
             lines.map { l -> placeholderService.replacePlaceHolders(l, null, game, teamMeta, players.size) }
 
-        return proxyService.setSignLines(location, placeHolderReplacedLines)
+        return location.setSignLines(placeHolderReplacedLines)
     }
 
     /**
@@ -331,26 +332,19 @@ class GameActionServiceImpl @Inject constructor(
             return
         }
 
-        val ballSpawnpointLocation = proxyService.toLocation<Any>(game.arena.meta.ballMeta.spawnpoint!!)
+        val ballSpawnpointLocation = game.arena.meta.ballMeta.spawnpoint!!.toLocation()
 
-        proxyService.getEntitiesInWorld<Any, Any>(ballSpawnpointLocation)
-            .filter { e -> !proxyService.isPlayerInstance(e) }
-            .filter { e -> proxyService.getCustomNameFromEntity(e) != "ResourceBallsPlugin" }
-            .filter { e -> !proxyService.isItemFrameInstance(e) }
-            .filter { e ->
-                game.arena.isLocationInSelection(
-                    proxyService.toPosition(
-                        proxyService.getEntityLocation<Any, Any>(
-                            e
-                        )
-                    )
-                )
+        for (entity in ballSpawnpointLocation.world!!.entities) {
+            if (entity is Player || entity is ItemFrame) {
+                continue
             }
-            .forEach { e ->
+
+            if (game.arena.isLocationInSelection(entity.location.toPosition())) {
                 val vector = game.arena.meta.protectionMeta.entityProtection
-                proxyService.setLocationDirection(proxyService.getEntityLocation<Any, Any>(e), vector)
-                proxyService.setEntityVelocity(e, vector)
+                entity.location.setDirection(vector.toVector())
+                entity.velocity = vector.toVector()
             }
+        }
     }
 
     /**
@@ -362,12 +356,11 @@ class GameActionServiceImpl @Inject constructor(
             game.holograms.clear()
 
             game.arena.meta.hologramMetas.forEach { meta ->
-                val hologram = PacketHologram()
-                hologram.proxyService = proxyService
+                val hologram = PacketHologram(entityService)
                 hologram.packetService = packetService
 
                 hologram.lines = meta.lines
-                hologram.location = proxyService.toLocation(meta.position!!)
+                hologram.location = meta.position!!.toLocation()
                 game.holograms.add(hologram)
             }
         }
@@ -375,7 +368,8 @@ class GameActionServiceImpl @Inject constructor(
         game.holograms.forEachIndexed { i, holo ->
             val players = ArrayList(game.inTeamPlayers)
             val additionalPlayers = getAdditionalNotificationPlayers(game)
-            players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
+            players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first as Player }
+                .toList())
 
             holo.players.addAll(players as Collection<Player>)
 
@@ -414,7 +408,8 @@ class GameActionServiceImpl @Inject constructor(
 
                 val players = ArrayList(game.inTeamPlayers)
                 val additionalPlayers = getAdditionalNotificationPlayers(game)
-                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }
+                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }
+                    .map { p -> p.first as Player }
                     .toList())
 
                 val bossbarPlayers = bossBarService.getPlayers<Any, Any>(game.bossBar!!)
@@ -435,7 +430,8 @@ class GameActionServiceImpl @Inject constructor(
 
                 val players = ArrayList(game.inTeamPlayers)
                 val additionalPlayers = getAdditionalNotificationPlayers(game)
-                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }
+                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }
+                    .map { p -> p.first as Player }
                     .toList())
 
                 additionalPlayers.filter { p -> !p.second }.forEach { p ->
@@ -479,7 +475,7 @@ class GameActionServiceImpl @Inject constructor(
         }
 
         if (game.scoreboard == null) {
-            game.scoreboard = proxyService.generateNewScoreboard()
+            game.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
 
             scoreboardService.setConfiguration(
                 game.scoreboard as Scoreboard,
@@ -490,18 +486,19 @@ class GameActionServiceImpl @Inject constructor(
 
         val players = ArrayList(game.inTeamPlayers)
         val additionalPlayers = getAdditionalNotificationPlayers(game)
-        players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first }.toList())
+        players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first as Player }
+            .toList())
 
         additionalPlayers.filter { p -> !p.second }.forEach { p ->
-            if (proxyService.getPlayerScoreboard<Any, Any>(p.first) == game.scoreboard) {
-                proxyService.setPlayerScoreboard(p.first, proxyService.generateNewScoreboard<Any>())
+            if ((p.first as Player).scoreboard == game.scoreboard) {
+                (p.first as Player).scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
             }
         }
 
         players.forEach { p ->
             if (game.scoreboard != null) {
-                if (proxyService.getPlayerScoreboard<Any, Any>(p) != game.scoreboard) {
-                    proxyService.setPlayerScoreboard(p, game.scoreboard)
+                if (p.scoreboard != game.scoreboard) {
+                    p.scoreboard = game.scoreboard as Scoreboard
                 }
 
                 val lines = game.arena.meta.scoreboardMeta.lines
@@ -527,10 +524,11 @@ class GameActionServiceImpl @Inject constructor(
         val players = ArrayList<Pair<Any, Boolean>>()
         val center = game.arena.center
 
-        proxyService.getPlayersInWorld<Any, Any>(proxyService.toLocation(center))
+
+        center.toLocation().world!!.players
             .filter { p -> !game.ingamePlayersStorage.containsKey(p) }
             .forEach { p ->
-                val playerPosition = proxyService.toPosition(proxyService.getEntityLocation<Any, Any>(p))
+                val playerPosition = p.location.toPosition()
                 val distanceToCenter = playerPosition.distance(center)
 
                 if (distanceToCenter <= game.arena.meta.spectatorMeta.notificationRadius) {
@@ -546,14 +544,14 @@ class GameActionServiceImpl @Inject constructor(
     /**
      * Returns if the given [player] is allowed to join the match.
      */
-    private fun isAllowedToJoinWithPermissions(game: Game, player: Any): Boolean {
-        if (proxyService.hasPermission(player, Permission.JOIN.permission + ".all")
-            || proxyService.hasPermission(player, Permission.JOIN.permission + "." + game.arena.name)
+    private fun isAllowedToJoinWithPermissions(game: Game, player: Player): Boolean {
+        if (player.hasPermission(Permission.JOIN.permission + ".all")
+            || player.hasPermission(Permission.JOIN.permission + "." + game.arena.name)
         ) {
             return true
         }
 
-        proxyService.sendMessage(player, BlockBallLanguage.joinNoPermission)
+        player.sendMessage(BlockBallLanguage.joinNoPermission)
         return false
     }
 }

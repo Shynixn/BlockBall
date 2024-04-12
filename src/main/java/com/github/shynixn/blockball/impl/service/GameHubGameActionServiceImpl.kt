@@ -3,16 +3,16 @@ package com.github.shynixn.blockball.impl.service
 import com.github.shynixn.blockball.contract.GameExecutionService
 import com.github.shynixn.blockball.contract.GameHubGameActionService
 import com.github.shynixn.blockball.contract.PlaceHolderService
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.GameStorage
 import com.github.shynixn.blockball.entity.HubGame
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.Team
 import com.google.inject.Inject
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.scoreboard.Scoreboard
 
 class GameHubGameActionServiceImpl @Inject constructor(
-    private val proxyService: ProxyService,
     private val gameExecutionService: GameExecutionService,
     private val placeholderService: PlaceHolderService
 ) :
@@ -62,11 +62,11 @@ class GameHubGameActionServiceImpl @Inject constructor(
         }
 
         val stats = game.ingamePlayersStorage[player]!!
-        proxyService.setGameMode(player, stats.gameMode)
-        proxyService.setPlayerAllowFlying(player, stats.allowedFlying)
-        proxyService.setPlayerFlying(player, stats.flying)
-        proxyService.setPlayerWalkingSpeed(player, stats.walkingSpeed)
-        proxyService.setPlayerScoreboard(player, stats.scoreboard)
+        player.gameMode = stats.gameMode
+        player.allowFlight =  stats.allowedFlying
+        player.isFlying = player.allowFlight
+        player.walkSpeed = stats.walkingSpeed.toFloat()
+        player.scoreboard = stats.scoreboard as Scoreboard
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
             player.inventory.contents = stats.inventoryContents.clone()
@@ -93,30 +93,29 @@ class GameHubGameActionServiceImpl @Inject constructor(
      * Prepares the storage for a hubgame.
      */
     private fun prepareLobbyStorageForPlayer(game: HubGame, player: Player, team: Team, teamMeta: TeamMeta) {
-        val uuid = proxyService.getPlayerUUID(player)
         val stats = GameStorage()
         game.ingamePlayersStorage[player] = stats
 
-        stats.scoreboard = proxyService.generateNewScoreboard()
+        stats.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
         stats.team = team
         stats.goalTeam = team
-        stats.gameMode = proxyService.getPlayerGameMode(player)
-        stats.flying = proxyService.getPlayerFlying(player)
-        stats.allowedFlying = proxyService.getPlayerAllowFlying(player)
-        stats.walkingSpeed = proxyService.getPlayerWalkingSpeed(player)
-        stats.scoreboard = proxyService.getPlayerScoreboard(player)
+        stats.gameMode = player.gameMode
+        stats.flying = player.isFlying
+        stats.allowedFlying = player.allowFlight
+        stats.walkingSpeed = player.walkSpeed.toDouble()
+        stats.scoreboard = player.scoreboard
         stats.armorContents = player.inventory.armorContents.clone()
         stats.inventoryContents = player.inventory.contents.clone()
-        stats.level = proxyService.getPlayerLevel(player)
-        stats.exp = proxyService.getPlayerExp(player)
-        stats.maxHealth = proxyService.getPlayerMaxHealth(player)
-        stats.health = proxyService.getPlayerHealth(player)
-        stats.hunger = proxyService.getPlayerHunger(player)
+        stats.level = player.level
+        stats.exp = player.exp.toDouble()
+        stats.maxHealth = player.maxHealth
+        stats.health = player.health
+        stats.hunger = player.foodLevel
 
-        proxyService.setGameMode(player, game.arena.meta.lobbyMeta.gamemode)
-        proxyService.setPlayerAllowFlying(player, false)
-        proxyService.setPlayerFlying(player, false)
-        proxyService.setPlayerWalkingSpeed(player, teamMeta.walkingSpeed)
+        player.gameMode = game.arena.meta.lobbyMeta.gamemode
+        player.allowFlight = false
+        player.isFlying = false
+        player.walkSpeed = teamMeta.walkingSpeed.toFloat()
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
             player.inventory.contents = teamMeta.inventory.map {
@@ -145,11 +144,11 @@ class GameHubGameActionServiceImpl @Inject constructor(
         if (game.arena.meta.hubLobbyMeta.teleportOnJoin) {
             this.gameExecutionService.respawn(game, player)
         } else {
-            val velocityIntoArena = proxyService.getPlayerDirection(player).normalize().multiply(0.5)
-            proxyService.setEntityVelocity(player, velocityIntoArena)
+            val velocityIntoArena = player.location.direction.normalize().multiply(0.5)
+            player.velocity = velocityIntoArena
         }
 
         val message = placeholderService.replacePlaceHolders(teamMeta.joinMessage, player, game, teamMeta, 0)
-        proxyService.sendMessage(player, message)
+        player.sendMessage(message)
     }
 }

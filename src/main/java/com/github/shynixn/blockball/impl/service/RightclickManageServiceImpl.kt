@@ -1,40 +1,40 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.contract.RightclickManageService
+import com.github.shynixn.blockball.impl.extension.setSignLines
 import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
+import org.bukkit.Location
+import org.bukkit.entity.Player
 
-class RightclickManageServiceImpl @Inject constructor(private val proxyService: ProxyService) :
+class RightclickManageServiceImpl @Inject constructor() :
     RightclickManageService {
-    private val rightClickListener = HashMap<Any, (Any) -> Unit>()
+    private val rightClickListener = HashMap<Player, (Location) -> Unit>()
 
     /**
      * Gets called one time when a location gets rightlicked by [player].
      */
-    override fun <P, L> watchForNextRightClickSign(player: P, f: (L) -> Unit) {
-        require (player is Any) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
-        val func = f as (Any) -> Unit
-        rightClickListener[player] = func
+    override fun watchForNextRightClickSign(player: Player, f: (Location) -> Unit) {
+        rightClickListener[player] = f
     }
 
     /**
      * Executes the watcher for the given [player] if he has registered one.
+     * Returns if watchers has been executed.
      */
-    override fun <P, L> executeWatchers(player: P, location: L): Boolean {
-        require (player is Any) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
+    override fun executeWatchers(player: Player, location: Location): Boolean {
         if (!rightClickListener.containsKey(player)) {
             return false
         }
 
-        if (proxyService.setSignLines(location, listOf(ChatColor.BOLD.toString() + "BlockBall", ChatColor.GREEN.toString() + "Loading..."))) {
-            rightClickListener[player]!!.invoke(location as Any)
+        if (location.setSignLines(
+                listOf(
+                    ChatColor.BOLD.toString() + "BlockBall",
+                    ChatColor.GREEN.toString() + "Loading..."
+                )
+            )
+        ) {
+            rightClickListener[player]!!.invoke(location)
             rightClickListener.remove(player)
         }
 
@@ -44,11 +44,7 @@ class RightclickManageServiceImpl @Inject constructor(private val proxyService: 
     /**
      * Clears all resources this [player] has allocated from this service.
      */
-    override fun <P> cleanResources(player: P) {
-        require (player is Any) {
-            throw IllegalArgumentException("Player has to be a BukkitPlayer!")
-        }
-
+    override fun cleanResources(player: Player) {
         if (rightClickListener.containsKey(player)) {
             rightClickListener.remove(player)
         }

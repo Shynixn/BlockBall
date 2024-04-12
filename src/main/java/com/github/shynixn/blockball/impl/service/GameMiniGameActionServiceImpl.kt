@@ -1,12 +1,17 @@
 package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.BlockBallLanguage
-import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.contract.GameExecutionService
+import com.github.shynixn.blockball.contract.GameMiniGameActionService
+import com.github.shynixn.blockball.contract.GameSoccerService
+import com.github.shynixn.blockball.contract.PlaceHolderService
 import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.ChatClickAction
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.enumeration.Team
+import com.github.shynixn.blockball.impl.extension.toLocation
+import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.blockball.impl.extension.toSoundMeta
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
@@ -16,19 +21,19 @@ import com.github.shynixn.mcutils.common.sound.SoundService
 import com.google.inject.Inject
 import kotlinx.coroutines.delay
 import org.bukkit.GameMode
-import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import org.bukkit.scoreboard.Scoreboard
 
 class GameMiniGameActionServiceImpl @Inject constructor(
     private val configurationService: ConfigurationService,
     private val screenMessageService: ChatMessageService,
     private val soundService: SoundService,
-    private val proxyService: ProxyService,
     private val gameSoccerService: GameSoccerService,
     private val gameExecutionService: GameExecutionService,
     private val placeholderService: PlaceHolderService,
-    private val plugin: Plugin
+    private val plugin: Plugin,
+    private val chatMessageService: ChatMessageService
 ) : GameMiniGameActionService {
 
     /**
@@ -59,9 +64,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 ChatClickAction.RUN_COMMAND,
                 "/" + configurationService.findValue<String>("global-spectate.command") + " " + game.arena.name
             ).setHoverText(" ").builder()
-
-            proxyService.sendMessage(player, b)
-
+            chatMessageService.sendChatMessage(player, b.convertToTextComponent())
             return false
         }
 
@@ -101,7 +104,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
         val storage = this.createPlayerStorage(game, player)
         game.ingamePlayersStorage[player] = storage
-        proxyService.teleport(player, game.arena.meta.minigameMeta.lobbySpawnpoint!!)
+        player.teleport(game.arena.meta.minigameMeta.lobbySpawnpoint!!.toLocation())
 
         if (team != null) {
             joinGame(game, player, team)
@@ -118,7 +121,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         if (game.spectatorPlayers.contains(player)) {
             resetStorage(player, game, game.spectatorPlayersStorage[player]!!)
             game.spectatorPlayersStorage.remove(player)
-            proxyService.teleport(player, game.arena.meta.lobbyMeta.leaveSpawnpoint!!)
+            player.teleport(game.arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation())
             return
         }
 
@@ -145,13 +148,13 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
         val storage = createPlayerStorage(game, player)
         game.spectatorPlayersStorage[player] = storage
-        proxyService.setGameMode(player, GameMode.SPECTATOR)
-        proxyService.setPlayerFlying(player, true)
+        player.gameMode = GameMode.SPECTATOR
+        player.isFlying = true
 
         if (game.arena.meta.spectatorMeta.spectateSpawnpoint != null) {
-            proxyService.teleport(player, game.arena.meta.spectatorMeta.spectateSpawnpoint!!)
+            player.teleport(game.arena.meta.spectatorMeta.spectateSpawnpoint!!.toLocation())
         } else {
-            proxyService.teleport(player, game.arena.meta.ballMeta.spawnpoint!!)
+            player.teleport(game.arena.meta.ballMeta.spawnpoint!!.toLocation())
         }
     }
 
@@ -159,9 +162,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Gets called when the given [game] ends with a draw.
      */
     override fun onDraw(game: MiniGame) {
-        val additionalPlayers = getNotifiedPlayers(game).filter { pair -> pair.second }.map { p -> p.first }
+        val additionalPlayers = getNotifiedPlayers(game).filter { pair -> pair.second }.map { p -> p.first as Player }
         additionalPlayers.forEach { p ->
-            require(p is Player)
             screenMessageService.sendTitleMessage(
                 p,
                 placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle, p, game),
@@ -173,7 +175,6 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         }
 
         game.redTeam.forEach { p ->
-            require(p is Player)
             screenMessageService.sendTitleMessage(
                 p,
                 placeholderService.replacePlaceHolders(game.arena.meta.redTeamMeta.drawMessageTitle, p, game),
@@ -184,7 +185,6 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             )
         }
         game.blueTeam.forEach { p ->
-            require(p is Player)
             screenMessageService.sendTitleMessage(
                 p,
                 placeholderService.replacePlaceHolders(game.arena.meta.blueTeamMeta.drawMessageTitle, p, game),
@@ -218,19 +218,16 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
             game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
                 if (game.lobbyCountdown <= 10) {
-                    proxyService.setPlayerExp(p, 1.0 - (game.lobbyCountdown.toFloat() / 10.0))
+                    p.exp =  1.0F - (game.lobbyCountdown.toFloat() / 10.0F)
                 }
 
-                proxyService.setPlayerLevel(p, game.lobbyCountdown)
+                p.level = game.lobbyCountdown
             }
 
             if (game.lobbyCountdown < 5) {
                 game.ingamePlayersStorage.keys.forEach { p ->
-                    require(p is Player)
                     soundService.playSound(
-                        proxyService.getEntityLocation<Location, Any>(p),
-                        arrayListOf(p),
-                        game.blingSound.toSoundMeta()
+                        p.location, arrayListOf(p), game.blingSound.toSoundMeta()
                     )
                 }
             }
@@ -238,10 +235,10 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             if (game.lobbyCountdown <= 0) {
                 game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
                     if (game.lobbyCountdown <= 10) {
-                        proxyService.setPlayerExp(p, 1.0)
+                        p.exp = 1.0F
                     }
 
-                    proxyService.setPlayerLevel(p, 0)
+                    p.level = 0
                 }
 
                 game.lobbyCountDownActive = false
@@ -291,19 +288,16 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
             game.ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
                 if (game.gameCountdown <= 10) {
-                    proxyService.setPlayerExp(p, game.gameCountdown.toFloat() / 10.0)
+                    p.exp = game.gameCountdown.toFloat() / 10.0F
                 }
 
                 if (game.gameCountdown <= 5) {
-                    require(p is Player)
                     soundService.playSound(
-                        proxyService.getEntityLocation<Location, Any>(p),
-                        arrayListOf(p),
-                        game.blingSound.toSoundMeta()
+                        p.location, arrayListOf(p), game.blingSound.toSoundMeta()
                     )
                 }
 
-                proxyService.setPlayerLevel(p, game.gameCountdown)
+                p.level = game.gameCountdown
             }
 
             if (game.gameCountdown <= 0) {
@@ -377,37 +371,37 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 }
             }
 
-            proxyService.setPlayerExp(p, 1.0)
+            p.exp = 1.0F
         }
     }
 
     private fun createPlayerStorage(game: MiniGame, player: Player): GameStorage {
         val stats = GameStorage()
-        stats.gameMode = proxyService.getPlayerGameMode(player)
+        stats.gameMode = player.gameMode
         stats.armorContents = player.inventory.armorContents.clone()
         stats.inventoryContents = player.inventory.contents.clone()
-        stats.flying = proxyService.getPlayerFlying(player)
-        stats.allowedFlying = proxyService.getPlayerAllowFlying(player)
-        stats.walkingSpeed = proxyService.getPlayerWalkingSpeed(player)
-        stats.scoreboard = proxyService.getPlayerScoreboard(player)
-        stats.level = proxyService.getPlayerLevel(player)
-        stats.exp = proxyService.getPlayerExp(player)
-        stats.maxHealth = proxyService.getPlayerMaxHealth(player)
-        stats.health = proxyService.getPlayerHealth(player)
-        stats.hunger = proxyService.getPlayerHunger(player)
+        stats.flying = player.isFlying
+        stats.allowedFlying = player.allowFlight
+        stats.walkingSpeed = player.walkSpeed.toDouble()
+        stats.scoreboard = player.scoreboard
+        stats.level = player.level
+        stats.exp = player.exp.toDouble()
+        stats.maxHealth = player.maxHealth
+        stats.health = player.health
+        stats.hunger = player.foodLevel
 
-        proxyService.setPlayerAllowFlying(player, false)
-        proxyService.setPlayerFlying(player, false)
+        player.allowFlight = false
+        player.isFlying = false
 
         if (!game.arena.meta.customizingMeta.keepHealthEnabled) {
-            proxyService.setPlayerMaxHealth(player, 20.0)
-            proxyService.setPlayerHealth(player, 20.0)
+            player.maxHealth = 20.0
+            player.health = 20.0
         }
 
-        proxyService.setPlayerHunger(player, 20)
-        proxyService.setPlayerLevel(player, 0)
-        proxyService.setPlayerExp(player, 0.0)
-        proxyService.setGameMode(player, game.arena.meta.lobbyMeta.gamemode)
+        player.foodLevel = 20
+        player.level = 0
+        player.exp = 0.0F
+        player.gameMode = game.arena.meta.lobbyMeta.gamemode
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
             player.inventory.clear()
@@ -421,7 +415,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Joins the [player] to the given [teamMeta].
      */
     private fun joinTeam(game: MiniGame, player: Player, team: Team, teamMeta: TeamMeta) {
-        proxyService.setPlayerWalkingSpeed(player, teamMeta.walkingSpeed)
+        player.walkSpeed = teamMeta.walkingSpeed.toFloat()
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
             player.inventory.contents = teamMeta.inventory.map {
@@ -448,9 +442,9 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         }
 
         if (team == Team.RED && game.arena.meta.redTeamMeta.lobbySpawnpoint != null) {
-            proxyService.teleport(player, game.arena.meta.redTeamMeta.lobbySpawnpoint)
+            player.teleport(game.arena.meta.redTeamMeta.lobbySpawnpoint!!.toLocation())
         } else if (team == Team.BLUE && game.arena.meta.blueTeamMeta.lobbySpawnpoint != null) {
-            proxyService.teleport(player, game.arena.meta.blueTeamMeta.lobbySpawnpoint)
+            player.teleport(game.arena.meta.blueTeamMeta.lobbySpawnpoint!!.toLocation())
         }
 
         val players = if (team == Team.RED) {
@@ -459,8 +453,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             game.blueTeam
         }
 
-        proxyService.sendMessage(
-            player, placeholderService.replacePlaceHolders(
+        player.sendMessage(
+            placeholderService.replacePlaceHolders(
                 teamMeta.joinMessage, player, game, teamMeta, players.size
             )
         )
@@ -469,18 +463,17 @@ class GameMiniGameActionServiceImpl @Inject constructor(
     /**
      * Returns if the given [player] is allowed to spectate the match.
      */
-    private fun isAllowedToSpectateWithPermissions(game: MiniGame, player: Any): Boolean {
+    private fun isAllowedToSpectateWithPermissions(game: MiniGame, player: Player): Boolean {
         val hasSpectatingPermission =
-            proxyService.hasPermission(player, Permission.SPECTATE.permission + ".all") || proxyService.hasPermission(
-                player, Permission.SPECTATE.permission + "." + game.arena.name
+            player.hasPermission(Permission.SPECTATE.permission + ".all") || player.hasPermission(
+                Permission.SPECTATE.permission + "." + game.arena.name
             )
 
         if (hasSpectatingPermission) {
             return true
         }
 
-        proxyService.sendMessage(player, BlockBallLanguage.spectateNoPermission)
-
+        player.sendMessage(BlockBallLanguage.spectateNoPermission)
         return false
     }
 
@@ -514,9 +507,9 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         val players = ArrayList<Pair<Any, Boolean>>()
 
         if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
-            val playersInWorld = proxyService.getPlayersInWorld<Any, Any>(game.arena.center as Any)
+            val playersInWorld = game.arena.center.toLocation().world!!.players
             for (p in playersInWorld) {
-                val position = proxyService.toPosition(proxyService.getEntityLocation<Any, Any>(p))
+                val position = p.location.toPosition()
                 if (position.distance(game.arena.center) <= game.arena.meta.spectatorMeta.notificationRadius) {
                     players.add(Pair(p, true))
                 } else {
@@ -534,20 +527,20 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      * Resets the storage of the given [player].
      */
     private fun resetStorage(player: Player, game: Game, stats: GameStorage) {
-        proxyService.setGameMode(player, stats.gameMode)
-        proxyService.setPlayerAllowFlying(player, stats.allowedFlying)
-        proxyService.setPlayerFlying(player, stats.flying)
-        proxyService.setPlayerWalkingSpeed(player, stats.walkingSpeed)
-        proxyService.setPlayerScoreboard(player, stats.scoreboard)
-        proxyService.setPlayerLevel(player, stats.level)
-        proxyService.setPlayerExp(player, stats.exp)
+        player.gameMode = stats.gameMode
+        player.allowFlight = stats.allowedFlying
+        player.isFlying = player.allowFlight
+        player.walkSpeed = stats.walkingSpeed.toFloat()
+        player.scoreboard = stats.scoreboard as Scoreboard
+        player.level = stats.level
+        player.exp = stats.exp.toFloat()
 
         if (!game.arena.meta.customizingMeta.keepHealthEnabled) {
-            proxyService.setPlayerMaxHealth(player, stats.maxHealth)
-            proxyService.setPlayerHealth(player, stats.health)
+            player.maxHealth = stats.maxHealth
+            player.health = stats.health
         }
 
-        proxyService.setPlayerHunger(player, stats.hunger)
+        player.foodLevel = stats.hunger
 
         if (!game.arena.meta.customizingMeta.keepInventoryEnabled) {
             player.inventory.contents = stats.inventoryContents.clone()

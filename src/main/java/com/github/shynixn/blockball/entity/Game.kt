@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.contract.Ball
 import com.github.shynixn.blockball.contract.HologramProxy
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
+import org.bukkit.entity.Player
 
 open class Game(
     /**
@@ -91,11 +92,11 @@ open class Game(
     /**
      * Storag.
      */
-    val ingamePlayersStorage: MutableMap<Any, GameStorage> = HashMap()
+    val ingamePlayersStorage: MutableMap<Player, GameStorage> = HashMap()
     /**
      * List of players which are already in the [redTeam] or [blueTeam].
      */
-    val inTeamPlayers: List<Any>
+    val inTeamPlayers: List<Player>
         get() {
             val players = ArrayList(redTeam)
             players.addAll(blueTeam)
@@ -105,7 +106,7 @@ open class Game(
     /**
      * All players which are already fix in team red.
      */
-    val redTeam: List<Any>
+    val redTeam: List<Player>
         get() {
             return this.ingamePlayersStorage.filter { p -> p.value.team != null && p.value.team!! == Team.RED }
                 .keys.toList()
@@ -113,7 +114,7 @@ open class Game(
     /**
      * All players which are already fix in team blue.
      */
-    val blueTeam: List<Any>
+    val blueTeam: List<Player>
         get() {
             return this.ingamePlayersStorage.filter { p -> p.value.team != null && p.value.team!! == Team.BLUE }
                 .keys.toList()

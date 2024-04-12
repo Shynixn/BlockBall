@@ -2,12 +2,13 @@ package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.GameActionService
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.GameType
+import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.google.inject.Inject
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -17,7 +18,6 @@ import java.util.logging.Level
 class GameServiceImpl @Inject constructor(
     private val arenaRepository: Repository<Arena>,
     private val gameActionService: GameActionService,
-    private val proxyService: ProxyService,
     private val configurationService: ConfigurationService,
     private val plugin: Plugin,
 ) : GameService, Runnable {
@@ -124,11 +124,11 @@ class GameServiceImpl @Inject constructor(
      * Returns the game at the given location.
      */
     override fun getGameFromLocation(location: Location): Optional<Game> {
-        val position = proxyService.toPosition(location)
+        val position = location.toPosition()
 
-        games.forEach { g ->
-            if (g.arena.isLocationInSelection(position)) {
-                return Optional.of(g)
+        for (game in games) {
+            if (game.arena.isLocationInSelection(position)) {
+                return Optional.of(game)
             }
         }
 
@@ -174,8 +174,7 @@ class GameServiceImpl @Inject constructor(
         if (game is BungeeCordGame && game.arena.enabled) {
             games.add(game)
 
-            for (player in proxyService.getOnlinePlayers<Any>()) {
-                require(player is Player)
+            for (player in Bukkit.getOnlinePlayers()) {
                 if (!getGameFromPlayer(player).isPresent) {
                     gameActionService.joinGame(game, player)
                 }

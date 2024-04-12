@@ -3,7 +3,6 @@ package com.github.shynixn.blockball.impl.commandexecutor
 import com.github.shynixn.blockball.BlockBallLanguage
 import com.github.shynixn.blockball.contract.CommandExecutor
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.impl.extension.mergeArgs
 import com.github.shynixn.blockball.impl.extension.stripChatColors
 import com.github.shynixn.mcutils.common.translateChatColors
@@ -12,8 +11,7 @@ import org.bukkit.command.CommandSender
 
 class StopCommandExecutor @Inject constructor(
     private val gameService: GameService,
-    private val proxyService: ProxyService,
-): CommandExecutor {
+) : CommandExecutor {
     /**
      * Gets called when the given [source] executes the defined command with the given [args].
      */
@@ -23,8 +21,7 @@ class StopCommandExecutor @Inject constructor(
         for (game in gameService.getAllGames()) {
             if (game.arena.name.equals(mergedArgs, true)) {
                 game.closing = true
-                proxyService.sendMessage(
-                    source,
+                source.sendMessage(
                     BlockBallLanguage.stopGameMessage.format(
                         game.arena.name + 1,
                         game.arena.displayName.translateChatColors()
@@ -33,8 +30,7 @@ class StopCommandExecutor @Inject constructor(
                 return true
             } else if (game.arena.displayName.translateChatColors().stripChatColors().equals(mergedArgs, true)) {
                 game.closing = true
-                proxyService.sendMessage(
-                    source,
+                source.sendMessage(
                     BlockBallLanguage.stopGameMessage.format(
                         game.arena.name + 1,
                         game.arena.displayName.translateChatColors()

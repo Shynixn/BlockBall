@@ -3,10 +3,10 @@
 package com.github.shynixn.blockball.impl.service.nms.v1_8_R3
 
 import com.github.shynixn.blockball.contract.ParticleService
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Particle
 import com.github.shynixn.blockball.enumeration.ParticleType
 import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.packet.api.PacketService
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -17,9 +17,9 @@ import java.lang.reflect.Method
 import java.util.logging.Level
 
 class Particle18R3ServiceImpl @Inject constructor(
-    private val proxyService: ProxyService,
     private val version: Version,
-    private val plugin: Plugin
+    private val plugin: Plugin,
+    private val packetService: PacketService
 ) : ParticleService {
     private val getIdFromMaterialMethod: Method = { Material::class.java.getDeclaredMethod("getId") }.invoke()
 
@@ -134,7 +134,7 @@ class Particle18R3ServiceImpl @Inject constructor(
 
         try {
             players.forEach { p ->
-                proxyService.sendPacket(p, packet)
+                packetService.sendNativePacket(p, packet)
             }
         } catch (e: Exception) {
             Bukkit.getServer().logger.log(Level.WARNING, "Failed to send particle.", e)

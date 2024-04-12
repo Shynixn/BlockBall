@@ -3,10 +3,10 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.Ball
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Position
 import com.github.shynixn.blockball.enumeration.BallSize
 import com.github.shynixn.blockball.impl.extension.toLocation
+import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.item.Item
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -24,11 +24,6 @@ class BallDesignEntity(val entityId: Int) {
      * Rotation of the design in euler angles.
      */
     var rotation: Position = Position(0.0, 0.0, 0.0)
-
-    /**
-     * Proxy service dependency.
-     */
-    lateinit var proxyService: ProxyService
 
     /**
      * Packet service dependency.
@@ -104,7 +99,7 @@ class BallDesignEntity(val entityId: Int) {
      * @param players watching this hitbox.
      */
     fun tick(players: List<Player>) {
-        val position = proxyService.toPosition(ball.getLocation())
+        val position = ball.getLocation().toPosition()
 
         position.y = if (ball.meta.size == BallSize.NORMAL) {
             position.y + ball.meta.hitBoxRelocation - 1.2
@@ -130,7 +125,7 @@ class BallDesignEntity(val entityId: Int) {
     private fun playRotationAnimation(players: List<Any>) {
         // 360 0 0 is a full forward rotation.
         // Length of the velocity is the speed of the ball.
-        val velocity = proxyService.toPosition(ball.getVelocity())
+        val velocity = ball.getVelocity().toPosition()
 
         val length = if (ball.isOnGround) {
             Position(velocity.x, 0.0, velocity.z).length()

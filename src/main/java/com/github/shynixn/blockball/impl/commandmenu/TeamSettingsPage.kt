@@ -2,17 +2,17 @@
 
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
+import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 
-class TeamSettingsPage @Inject constructor(private val proxyService: ProxyService) :
+class TeamSettingsPage @Inject constructor() :
     Page(TeamSettingsPage.ID, MainSettingsPage.ID) {
 
     companion object {
@@ -40,6 +40,7 @@ class TeamSettingsPage @Inject constructor(private val proxyService: ProxyServic
         cache: Array<Any?>,
         args: Array<String>
     ): MenuCommandResult {
+        require(player is Player)
         if (command == MenuCommand.TEAM_RED_CONFIGURE) {
             cache[2] = 0
         }
@@ -47,10 +48,10 @@ class TeamSettingsPage @Inject constructor(private val proxyService: ProxyServic
             cache[2] = 1
         } else if (command == MenuCommand.TEAM_SPAWNPOINT) {
             val teamMeta = getTeamMeta(cache)
-            teamMeta.spawnpoint = proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
+            teamMeta.spawnpoint = player.location.toPosition()
         } else if (command == MenuCommand.TEAM_LOBBY) {
             val teamMeta = getTeamMeta(cache)
-            teamMeta.lobbySpawnpoint = proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
+            teamMeta.lobbySpawnpoint = player.location.toPosition()
         } else if (command == MenuCommand.TEAM_NAME) {
             val teamMeta = getTeamMeta(cache)
             val name = mergeArgs(2, args)

@@ -3,12 +3,13 @@ package com.github.shynixn.blockball.impl.commandmenu
 
 import com.github.shynixn.blockball.contract.BlockSelectionService
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.*
+import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.google.inject.Inject
 import kotlinx.coroutines.runBlocking
@@ -21,8 +22,8 @@ class MainConfigurationPage @Inject constructor(
     private val arenaRepository: CacheRepository<Arena>,
     private val blockSelectionService: BlockSelectionService,
     private val gameService: GameService,
-    private val proxyService: ProxyService,
-    private val plugin: Plugin
+    private val plugin: Plugin,
+    private val chatMessageService: ChatMessageService
 ) : Page(ID, OpenPage.ID) {
     companion object {
         /** Id of the page. */
@@ -72,7 +73,7 @@ class MainConfigurationPage @Inject constructor(
             arena.enabled = !arena.enabled
         } else if (command == MenuCommand.ARENA_SETBALLSPAWNPOINT) {
             val arena = cache[0] as Arena
-            arena.meta.ballMeta.spawnpoint = proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
+            arena.meta.ballMeta.spawnpoint = player.location.toPosition()
         } else if (command == MenuCommand.ARENA_SETDISPLAYNAME) {
             val arena = cache[0] as Arena
             arena.displayName = this.mergeArgs(2, args)
@@ -82,8 +83,8 @@ class MainConfigurationPage @Inject constructor(
             val left = blockSelectionService.getLeftClickLocation(player)
             val right = blockSelectionService.getRightClickLocation(player)
             if (left.isPresent && right.isPresent) {
-                val leftPosition = proxyService.toPosition(left.get())
-                val rightPosition = proxyService.toPosition(right.get())
+                val leftPosition = left.get().toPosition()
+                val rightPosition = right.get().toPosition()
                 val yDistance = abs(leftPosition.y - rightPosition.y)
 
                 if (yDistance < 10) {
@@ -101,8 +102,8 @@ class MainConfigurationPage @Inject constructor(
             val left = blockSelectionService.getLeftClickLocation(player)
             val right = blockSelectionService.getRightClickLocation(player)
             if (left.isPresent && right.isPresent) {
-                val leftPosition = proxyService.toPosition(left.get())
-                val rightPosition = proxyService.toPosition(right.get())
+                val leftPosition = left.get().toPosition()
+                val rightPosition =right.get().toPosition()
                 val xDistance = abs(leftPosition.x - rightPosition.x)
                 val yDistance = abs(leftPosition.y - rightPosition.y)
                 val zDistance = abs(leftPosition.z - rightPosition.z)
@@ -130,8 +131,8 @@ class MainConfigurationPage @Inject constructor(
             val left = blockSelectionService.getLeftClickLocation(player)
             val right = blockSelectionService.getRightClickLocation(player)
             if (left.isPresent && right.isPresent) {
-                val leftPosition = proxyService.toPosition(left.get())
-                val rightPosition = proxyService.toPosition(right.get())
+                val leftPosition = left.get().toPosition()
+                val rightPosition = right.get().toPosition()
                 val xDistance = abs(leftPosition.x - rightPosition.x)
                 val yDistance = abs(leftPosition.y - rightPosition.y)
                 val zDistance = abs(leftPosition.z - rightPosition.z)
@@ -156,8 +157,7 @@ class MainConfigurationPage @Inject constructor(
             if (cache[0] == null || cache[0] !is Arena) {
                 val b = ChatBuilder().text("- ")
                     .text(ChatColor.RED.toString() + "Please select an arena to perform this action.")
-                proxyService.sendMessage(player, b)
-
+                chatMessageService.sendChatMessage(player, b.convertToTextComponent())
                 return MenuCommandResult.CANCEL_MESSAGE
             }
 
@@ -179,7 +179,7 @@ class MainConfigurationPage @Inject constructor(
             if (cache[0] == null || cache[0] !is Arena) {
                 val b = ChatBuilder().text("- ")
                     .text(ChatColor.RED.toString() + "Please select an arena to perform this action.")
-                proxyService.sendMessage(player, b)
+                chatMessageService.sendChatMessage(player, b.convertToTextComponent())
 
                 // TODO: Should be replaced in command rework.
                 runBlocking {
