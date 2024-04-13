@@ -69,7 +69,7 @@ class GameListener @Inject constructor(
             return
         }
 
-        if (packet.actionType == InteractionType.RIGHT_CLICK) {
+        if (packet.actionType == InteractionType.RIGHT_CLICK || packet.actionType == InteractionType.OTHER) {
             ball.passByPlayer(event.player)
         } else {
             ball.kickByPlayer(event.player)
