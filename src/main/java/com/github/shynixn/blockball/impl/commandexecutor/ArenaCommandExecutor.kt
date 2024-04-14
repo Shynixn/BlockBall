@@ -1,48 +1,22 @@
 package com.github.shynixn.blockball.impl.commandexecutor
 
 import com.github.shynixn.blockball.contract.CommandExecutor
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.ChatClickAction
 import com.github.shynixn.blockball.enumeration.MenuCommand
 import com.github.shynixn.blockball.enumeration.MenuCommandResult
 import com.github.shynixn.blockball.impl.commandmenu.*
 import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.google.inject.Inject
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 
-/**
- * Created by Shynixn 2018.
- * <p>
- * Version 1.2
- * <p>
- * MIT License
- * <p>
- * Copyright (c) 2018 by Shynixn
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 class ArenaCommandExecutor @Inject constructor(
-    private val proxyService: ProxyService,
     private val plugin: Plugin,
+    private val chatMessageService: ChatMessageService,
     openPage: OpenPage,
     mainConfigurationPage: MainConfigurationPage,
     spectatePage: SpectatePage,
@@ -69,7 +43,7 @@ class ArenaCommandExecutor @Inject constructor(
     gameSettingsPage: GameSettingsPage,
     spectatingSettingsPage: SpectatingSettingsPage,
     notificationPage: NotificationPage,
-    matchtimesPage : MatchTimesPage
+    matchtimesPage: MatchTimesPage
 ) : CommandExecutor {
 
 
@@ -82,10 +56,33 @@ class ArenaCommandExecutor @Inject constructor(
 
     private val cache = HashMap<Any, Array<Any?>>()
     private var pageCache: MutableList<Page> = arrayListOf(
-        openPage, mainConfigurationPage, spectatePage, mainSettingsPage, ballSettingsPage
-        , ballModifierPage, listablePage, teamSettingsPage, effectsSettingsPage, multipleLinesPage, hologramsPage, scoreboardPage, bossbarPage
-        ,  signSettingsPage, rewardsPage, particlesPage, soundsPage, abilitiesPage, doubleJumpPage, miscPage, gamePropertiesPage
-        , areaProtectionPage, teamTextBookPage, gameSettingsPage, spectatingSettingsPage, notificationPage, matchtimesPage
+        openPage,
+        mainConfigurationPage,
+        spectatePage,
+        mainSettingsPage,
+        ballSettingsPage,
+        ballModifierPage,
+        listablePage,
+        teamSettingsPage,
+        effectsSettingsPage,
+        multipleLinesPage,
+        hologramsPage,
+        scoreboardPage,
+        bossbarPage,
+        signSettingsPage,
+        rewardsPage,
+        particlesPage,
+        soundsPage,
+        abilitiesPage,
+        doubleJumpPage,
+        miscPage,
+        gamePropertiesPage,
+        areaProtectionPage,
+        teamTextBookPage,
+        gameSettingsPage,
+        spectatingSettingsPage,
+        notificationPage,
+        matchtimesPage
     )
 
     /**
@@ -94,10 +91,10 @@ class ArenaCommandExecutor @Inject constructor(
     override fun onExecuteCommand(source: CommandSender, args: Array<out String>): Boolean {
         try {
             for (i in 0..19) {
-                proxyService.sendMessage(source, "")
+                source.sendMessage("")
             }
-            proxyService.sendMessage(source, HEADER_STANDARD)
-            proxyService.sendMessage(source, "\n")
+            source.sendMessage(HEADER_STANDARD)
+            source.sendMessage("\n")
             if (!this.cache.containsKey(source)) {
                 val anyArray = arrayOfNulls<Any>(8)
                 this.cache[source] = anyArray
@@ -112,28 +109,35 @@ class ArenaCommandExecutor @Inject constructor(
                     if (command == MenuCommand.BACK) {
                         val newPage = this.getPageById(Integer.parseInt(args[2]))
                         val b = newPage.buildPage(cache!!)!!
-                        proxyService.sendMessage(source, b)
+                        if (source is Player) {
+                            chatMessageService.sendChatMessage(source, b.convertToTextComponent())
+                        }
                     } else if (command == MenuCommand.CLOSE) {
                         this.cache.remove(source)
                         for (i in 0..19) {
-                            proxyService.sendMessage(source, "")
+                            source.sendMessage("")
                         }
                         return true
                     } else {
-                        @Suppress("UNCHECKED_CAST") val result = page.execute(source, command, cache!!, args as Array<String>)
+                        @Suppress("UNCHECKED_CAST") val result =
+                            page.execute(source, command, cache!!, args as Array<String>)
                         if (result == MenuCommandResult.BACK) {
-                            proxyService.performPlayerCommand(source, "blockball open back " + usedPage.getPreviousIdFrom(cache))
+                            if (source is Player) {
+                                source.performCommand("blockball open back " + usedPage.getPreviousIdFrom(cache))
+                            }
                             return true
                         }
                         if (result == MenuCommandResult.EXIT_COMP) {
                             return true
                         }
                         if (result != MenuCommandResult.SUCCESS && result != MenuCommandResult.CANCEL_MESSAGE) {
-                            proxyService.sendMessage(source, ChatColor.RED.toString() + result.message)
+                            source.sendMessage(ChatColor.RED.toString() + result.message)
                         }
                         if (result != MenuCommandResult.CANCEL_MESSAGE) {
                             val b = page.buildPage(cache)!!
-                            proxyService.sendMessage(source, b)
+                            if (source is Player) {
+                                chatMessageService.sendChatMessage(source, b.convertToTextComponent())
+                            }
                         }
                     }
                     break
@@ -142,7 +146,8 @@ class ArenaCommandExecutor @Inject constructor(
             if (usedPage == null)
                 throw IllegalArgumentException("Cannot find page with key " + command.key)
             val builder = ChatBuilder()
-                .text(ChatColor.STRIKETHROUGH.toString() + "----------------------------------------------------").nextLine()
+                .text(ChatColor.STRIKETHROUGH.toString() + "----------------------------------------------------")
+                .nextLine()
                 .component(" >>Save<< ")
                 .setColor(ChatColor.GREEN)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.ARENA_SAVE.command)
@@ -157,7 +162,10 @@ class ArenaCommandExecutor @Inject constructor(
             } else {
                 builder.component(">>Back<<")
                     .setColor(ChatColor.RED)
-                    .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.BACK.command + usedPage.getPreviousIdFrom(cache!!))
+                    .setClickAction(
+                        ChatClickAction.RUN_COMMAND,
+                        MenuCommand.BACK.command + usedPage.getPreviousIdFrom(cache!!)
+                    )
                     .setHoverText("Goes back to the previous page.")
                     .builder()
             }
@@ -167,11 +175,13 @@ class ArenaCommandExecutor @Inject constructor(
                 .setHoverText("Saves the current arena and reloads all games on the server.")
                 .builder()
 
-            proxyService.sendMessage(source, b)
-            proxyService.sendMessage(source, FOOTER_STANDARD)
+            if (source is Player) {
+                chatMessageService.sendChatMessage(source, b.convertToTextComponent())
+                source.sendMessage(FOOTER_STANDARD)
+            }
         } catch (e: Exception) {
             plugin.logger.log(Level.WARNING, "Command completion failed.", e)
-            proxyService.sendMessage(source, "[BlockBall] Cannot find command.")
+            source.sendMessage("[BlockBall] Cannot find command.")
             val data = StringBuilder()
             args.map { d -> data.append(d).append(" ") }
             plugin.logger.log(Level.INFO, "Cannot find command for args $data.")

@@ -1,13 +1,12 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.mcutils.common.EffectTargetType
 import com.google.inject.Inject
+import org.bukkit.GameMode
 
 class ListablePage @Inject constructor(
-    private val proxyService: ProxyService,
 ) : Page(MainSettingsPage.ID, MainConfigurationPage.ID) {
     /**
      * Returns the key of the command when this page should be executed.
@@ -39,7 +38,7 @@ class ListablePage @Inject constructor(
                 cache[3] = MenuCommand.PARTICLE_CALLBACK_EFFECTING
             }
             MenuCommand.LIST_BUKKITGAMESMODES -> {
-                cache[2] = proxyService.gameModes.filterNot { g -> g == "SPECTATOR" }
+                cache[2] = GameMode.values().map { e -> e.name }.filterNot { g -> g == "SPECTATOR" }
                 cache[3] = MenuCommand.GAMESETTINGS_CALLBACK_BUKKITGAMEMODES
             }
             MenuCommand.LIST_BALL_PARTICLEFFECTS -> {

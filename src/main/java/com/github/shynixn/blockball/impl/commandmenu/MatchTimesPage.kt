@@ -2,7 +2,6 @@
 
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.entity.MatchTimeMeta
@@ -36,7 +35,7 @@ import com.google.inject.Inject
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class MatchTimesPage @Inject constructor(private val proxyService: ProxyService) : Page(ID, GameSettingsPage.ID) {
+class MatchTimesPage @Inject constructor() : Page(ID, GameSettingsPage.ID) {
 
     companion object {
         /** Id of the page. */

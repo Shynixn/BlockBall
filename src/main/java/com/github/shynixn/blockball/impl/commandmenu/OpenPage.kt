@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.ChatClickAction
@@ -9,6 +8,7 @@ import com.github.shynixn.blockball.enumeration.MenuCommandResult
 import com.github.shynixn.blockball.enumeration.MenuPageKey
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.google.inject.Inject
 import kotlinx.coroutines.runBlocking
@@ -42,8 +42,11 @@ import org.bukkit.plugin.Plugin
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class OpenPage @Inject constructor(private val plugin: Plugin, private val arenaRepository:
-                                   Repository<Arena>, private val proxyService: ProxyService
+class OpenPage @Inject constructor(
+    private val plugin: Plugin,
+    private val arenaRepository:
+    Repository<Arena>,
+    private val chatMessageService: ChatMessageService
 ) :
     Page(OpenPage.ID, OpenPage.ID) {
     /**
@@ -65,7 +68,12 @@ class OpenPage @Inject constructor(private val plugin: Plugin, private val arena
      *
      * @param cache cache
      */
-    override fun <P> execute(player: P, command: MenuCommand, cache: Array<Any?>, args: Array<String>): MenuCommandResult {
+    override fun <P> execute(
+        player: P,
+        command: MenuCommand,
+        cache: Array<Any?>,
+        args: Array<String>
+    ): MenuCommandResult {
         if (command == MenuCommand.OPEN_EDIT_ARENA) {
             // TODO: Should be changed when reworking commands.
             return runBlocking {
@@ -81,17 +89,17 @@ class OpenPage @Inject constructor(private val plugin: Plugin, private val arena
                 }
 
                 if (builder != null) {
-                    proxyService.sendMessage(player, builder!!)
+                    require(player is Player)
+                    chatMessageService.sendChatMessage(player, builder!!.convertToTextComponent())
                 }
 
                 return@runBlocking MenuCommandResult.CANCEL_MESSAGE
             }
-        }
-        else if(command == MenuCommand.OPEN_CREATE_ARENA){
+        } else if (command == MenuCommand.OPEN_CREATE_ARENA) {
             var idGen = 1
             runBlocking {
-                for(arena in arenaRepository.getAll()){
-                    if(arena.name == "arena_$idGen"){
+                for (arena in arenaRepository.getAll()) {
+                    if (arena.name == "arena_$idGen") {
                         idGen++
                     }
                 }
@@ -106,8 +114,7 @@ class OpenPage @Inject constructor(private val plugin: Plugin, private val arena
             }
 
             return MenuCommandResult.EXIT_COMP
-        }
-        else if (command == MenuCommand.OPEN_DELETE_ARENA) {
+        } else if (command == MenuCommand.OPEN_DELETE_ARENA) {
             // TODO: Should be changed when reworking commands.
             return runBlocking {
                 var builder: ChatBuilder? = null
@@ -123,7 +130,8 @@ class OpenPage @Inject constructor(private val plugin: Plugin, private val arena
                 }
 
                 if (builder != null) {
-                    proxyService.sendMessage(player, builder!!)
+                    require(player is Player)
+                    chatMessageService.sendChatMessage(player, builder!!.convertToTextComponent())
                 }
 
                 return@runBlocking MenuCommandResult.CANCEL_MESSAGE

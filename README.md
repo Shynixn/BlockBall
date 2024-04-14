@@ -50,27 +50,3 @@ docker rm -f blockball-dependencies-jdk17
 ````
 
 * Open the project with an IDE, gradle sync for dependencies.
-
-### Testing
-
-#### Option 1
-
-* Setup your own minecraft server
-* Change ``// val destinationDir = File("C:/temp/plugins")`` to your plugins folder in the ``structureblocklib-bukkit-sample/build.gradle.kts`` file.
-* Run the ``pluginJar`` task to generate a plugin.jar file.
-* Run your minecraft server
-
-#### Option 2 :whale:
-
-* Run the provided docker file.
-* The source code is copied to a new docker container and built to a plugin.
-* This plugin is installed on a new minecraft server which is accessible on the host machine on the default port on ``localhost``.
-
-````sh
-docker build -t blockball .
-docker run --name=blockball -p 25565:25565 -p 5005:5005 blockball
-````
-
-## Licence
-
-The source code is licensed under the Apache 2.0 license.

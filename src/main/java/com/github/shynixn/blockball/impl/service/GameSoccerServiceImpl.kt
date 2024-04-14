@@ -5,6 +5,8 @@ import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.event.GameEndEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
+import com.github.shynixn.blockball.impl.extension.toLocation
+import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -20,7 +22,6 @@ class GameSoccerServiceImpl @Inject constructor(
     private val dependencyService: DependencyService,
     private val ballEntityService: BallEntityService,
     private val placeholderService: PlaceHolderService,
-    private val proxyService: ProxyService,
     private val plugin: Plugin,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>
 ) : GameSoccerService {
@@ -61,7 +62,7 @@ class GameSoccerServiceImpl @Inject constructor(
             relocatePlayersAndBall(game)
 
             if (game.blueScore >= game.arena.meta.lobbyMeta.maxScore) {
-                onMatchEnd(game, game.blueTeam as List<Player>, game.redTeam as List<Player>)
+                onMatchEnd(game, game.blueTeam, game.redTeam)
                 onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             }
 
@@ -75,7 +76,7 @@ class GameSoccerServiceImpl @Inject constructor(
             relocatePlayersAndBall(game)
 
             if (game.redScore >= game.arena.meta.lobbyMeta.maxScore) {
-                onMatchEnd(game, game.redTeam as List<Player>, game.blueTeam as List<Player>)
+                onMatchEnd(game, game.redTeam, game.blueTeam)
                 onWin(game, Team.RED, game.arena.meta.redTeamMeta)
             }
         }
@@ -118,9 +119,9 @@ class GameSoccerServiceImpl @Inject constructor(
 
             game.ingamePlayersStorage.forEach { i ->
                 if (i.value.goalTeam == Team.RED) {
-                    proxyService.teleport(i.key, redTeamSpawnpoint)
+                    i.key.teleport(redTeamSpawnpoint.toLocation())
                 } else if (i.value.goalTeam == Team.BLUE) {
-                    proxyService.teleport(i.key, blueTeamSpawnpoint)
+                    i.key.teleport(blueTeamSpawnpoint.toLocation())
                 }
             }
         }
@@ -144,7 +145,7 @@ class GameSoccerServiceImpl @Inject constructor(
                 }
 
                 game.ball = ballEntityService.spawnTemporaryBall(
-                    proxyService.toLocation(game.arena.meta.ballMeta.spawnpoint!!),
+                    game.arena.meta.ballMeta.spawnpoint!!.toLocation(),
                     game.arena.meta.ballMeta
                 )
                 game.ballSpawning = false
@@ -166,7 +167,7 @@ class GameSoccerServiceImpl @Inject constructor(
     private fun onScore(game: Game, team: Team, teamMeta: TeamMeta) {
         var interactionEntity: Player? = null
 
-        if (game.lastInteractedEntity != null && proxyService.isPlayerInstance(game.lastInteractedEntity)) {
+        if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
             interactionEntity = game.lastInteractedEntity!! as Player
         }
 
@@ -175,7 +176,7 @@ class GameSoccerServiceImpl @Inject constructor(
                 return
             }
 
-            interactionEntity = game.ingamePlayersStorage.keys.toTypedArray()[0] as Player
+            interactionEntity = game.ingamePlayersStorage.keys.toTypedArray()[0]
             game.lastInteractedEntity = interactionEntity
         }
 
@@ -191,7 +192,7 @@ class GameSoccerServiceImpl @Inject constructor(
 
         val players = ArrayList(game.inTeamPlayers)
         val additionalPlayers = getNofifiedPlayers(game)
-        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first as Player })
 
         val scoreTeamMeta = if (game.ingamePlayersStorage.containsKey(interactionEntity)) {
             val scorerGameStory = game.ingamePlayersStorage[interactionEntity]!!
@@ -227,7 +228,7 @@ class GameSoccerServiceImpl @Inject constructor(
     }
 
     private fun onScoreReward(game: Game, players: List<Any>) {
-        if (game.lastInteractedEntity != null && proxyService.isPlayerInstance(game.lastInteractedEntity)) {
+        if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
             if (players.contains(game.lastInteractedEntity!!)) {
                 if (dependencyService.isInstalled(PluginDependency.VAULT) && game.arena.meta.rewardMeta.moneyReward.containsKey(
                         RewardType.SHOOT_GOAL
@@ -270,7 +271,6 @@ class GameSoccerServiceImpl @Inject constructor(
             }
             if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.PARTICIPATE_MATCH)) {
                 game.inTeamPlayers.forEach { p ->
-                    require(p is Player)
                     vaultService.addMoney(
                         p,
                         game.arena.meta.rewardMeta.moneyReward[RewardType.PARTICIPATE_MATCH]!!.toDouble()
@@ -299,12 +299,12 @@ class GameSoccerServiceImpl @Inject constructor(
             this.executeCommand(
                 game,
                 game.arena.meta.rewardMeta.commandReward[RewardType.PARTICIPATE_MATCH]!!,
-                game.inTeamPlayers as List<Player>
+                game.inTeamPlayers
             )
         }
 
         // Store playing stats.
-        val participatingPlayers = game.inTeamPlayers.map { e -> e as Player }.toTypedArray()
+        val participatingPlayers = game.inTeamPlayers.toTypedArray()
         val winningPlayerCache = winningPlayers?.toMutableList()
 
         plugin.launch {
@@ -339,7 +339,7 @@ class GameSoccerServiceImpl @Inject constructor(
 
         val players = ArrayList(game.inTeamPlayers)
         val additionalPlayers = getNofifiedPlayers(game)
-        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first })
+        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first as Player })
 
         players.forEach { p ->
             require(p is Player)
@@ -363,8 +363,8 @@ class GameSoccerServiceImpl @Inject constructor(
         val players = ArrayList<Pair<Any, Boolean>>()
 
         if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
-            for (player in proxyService.getPlayersInWorld<Any, Any>(proxyService.toLocation(game.arena.center))) {
-                val playerPosition = proxyService.toPosition(proxyService.getEntityLocation<Any, Any>(player))
+            for (player in game.arena.center.toLocation().world!!.players) {
+                val playerPosition = player.location.toPosition()
 
                 if (playerPosition.distance(game.arena.center) <= game.arena.meta.spectatorMeta.notificationRadius) {
                     players.add(Pair(player, true))
@@ -390,19 +390,23 @@ class GameSoccerServiceImpl @Inject constructor(
         }
         when {
             meta.mode == CommandMode.PER_PLAYER -> players.forEach { p ->
-                proxyService.performPlayerCommand(p, placeholderService.replacePlaceHolders(command, p, game))
+                p.performCommand(placeholderService.replacePlaceHolders(command, p, game))
             }
             meta.mode == CommandMode.CONSOLE_PER_PLAYER -> players.forEach { p ->
                 game.lastInteractedEntity = p
-                proxyService.performServerCommand(placeholderService.replacePlaceHolders(command, p, game))
+                Bukkit.getServer()
+                    .dispatchCommand(
+                        Bukkit.getConsoleSender(),
+                        placeholderService.replacePlaceHolders(command, p, game)
+                    )
             }
-            meta.mode == CommandMode.CONSOLE_SINGLE -> proxyService.performServerCommand(
-                placeholderService.replacePlaceHolders(
-                    command,
-                    null,
-                    game
-                )
-            )
+            meta.mode == CommandMode.CONSOLE_SINGLE ->
+                Bukkit.getServer()
+                    .dispatchCommand(
+                        Bukkit.getConsoleSender(),
+                        placeholderService.replacePlaceHolders(command, null, game)
+                    )
+
         }
     }
 }

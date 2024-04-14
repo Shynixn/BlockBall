@@ -1,12 +1,12 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.*
+import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.ChatColor
-import com.google.inject.Inject
 import org.bukkit.GameMode
+import org.bukkit.entity.Player
 
 /**
  * Created by Shynixn 2018.
@@ -35,7 +35,7 @@ import org.bukkit.GameMode
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class GameSettingsPage @Inject constructor(private val proxyService: ProxyService) :
+class GameSettingsPage :
     Page(ID, MainSettingsPage.ID) {
 
     companion object {
@@ -64,13 +64,12 @@ class GameSettingsPage @Inject constructor(private val proxyService: ProxyServic
         args: Array<String>
     ): MenuCommandResult {
         val arena = cache[0] as Arena
+        require(player is Player)
 
         if (command == MenuCommand.GAMESETTINGS_LEAVESPAWNPOINT) {
-            arena.meta.lobbyMeta.leaveSpawnpoint =
-                proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
+            arena.meta.lobbyMeta.leaveSpawnpoint = player.location.toPosition()
         } else if (command == MenuCommand.GAMESETTINGS_LOBBYSPAWNPOINT) {
-            arena.meta.minigameMeta.lobbySpawnpoint =
-                proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
+            arena.meta.minigameMeta.lobbySpawnpoint  = player.location.toPosition()
         } else if (command == MenuCommand.GAMESETTINGS_TOGGLE_EVENTEAMS) {
             arena.meta.lobbyMeta.onlyAllowEventTeams = !arena.meta.lobbyMeta.onlyAllowEventTeams
         } else if (command == MenuCommand.GAMESETTINGS_TOGGLE_INSTATFORCEFIELD) {

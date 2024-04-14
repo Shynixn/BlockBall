@@ -41,7 +41,6 @@ class GameListener @Inject constructor(
     private val gameActionService: GameActionService,
     private val gameExecutionService: GameExecutionService,
     private val gameSoccerService: GameSoccerService,
-    private val proxyService: ProxyService,
     private val ballEntityService: BallEntityService,
     private val plugin: Plugin,
     private val playerDataRepository: CachePlayerRepository<PlayerInformation>
@@ -70,7 +69,7 @@ class GameListener @Inject constructor(
             return
         }
 
-        if (packet.actionType == InteractionType.RIGHT_CLICK) {
+        if (packet.actionType == InteractionType.RIGHT_CLICK || packet.actionType == InteractionType.OTHER) {
             ball.passByPlayer(event.player)
         } else {
             ball.kickByPlayer(event.player)
@@ -311,7 +310,7 @@ class GameListener @Inject constructor(
         for (game in gameService.getAllGames()) {
             if (game.ball == event.ball) {
                 val targetPosition = event.targetLocation.toPosition()
-                val sourcePosition = proxyService.toPosition(event.ball.getLocation())
+                val sourcePosition = event.ball.getLocation().toPosition()
 
                 if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(sourcePosition)) {
                     gameSoccerService.notifyBallInGoal(game, Team.RED)

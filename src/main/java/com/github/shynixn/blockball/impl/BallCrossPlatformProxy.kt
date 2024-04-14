@@ -3,10 +3,12 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.Ball
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.BallMeta
 import com.github.shynixn.blockball.event.BallRemoveEvent
 import com.github.shynixn.blockball.event.BallTeleportEvent
+import com.github.shynixn.blockball.impl.extension.toLocation
+import com.github.shynixn.blockball.impl.extension.toPosition
+import com.github.shynixn.blockball.impl.extension.toVector
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -31,17 +33,6 @@ class BallCrossPlatformProxy(
             ballDesignEntity.destroy(player)
             ballHitBoxEntity.destroy(player)
         })
-
-    /**
-     * Proxy dependency.
-     */
-    var proxyService: ProxyService
-        set(value) {
-            this.allPlayerTracker.proxyService = value
-        }
-        get() {
-            return allPlayerTracker.proxyService
-        }
 
     /**
      * Is the entity dead?
@@ -83,7 +74,7 @@ class BallCrossPlatformProxy(
             return
         }
 
-        ballHitBoxEntity.position = proxyService.toPosition(ballTeleportEvent.targetLocation)
+        ballHitBoxEntity.position = ballTeleportEvent.targetLocation.toPosition()
         ballHitBoxEntity.requestTeleport = true
     }
 
@@ -91,21 +82,21 @@ class BallCrossPlatformProxy(
      * Gets the location of the ball.
      */
     override fun getLocation(): Location {
-        return proxyService.toLocation(ballHitBoxEntity.position)
+        return ballHitBoxEntity.position.toLocation()
     }
 
     /**
      * Gets the velocity of the ball.
      */
     override fun getVelocity(): Vector {
-        return proxyService.toVector(ballHitBoxEntity.motion)
+        return ballHitBoxEntity.motion.toVector()
     }
 
     /**
      * Rotation of the visible ball in euler angles.
      */
     override fun getRotation(): Vector {
-        return proxyService.toVector(ballDesignEntity.rotation)
+        return ballDesignEntity.rotation.toVector()
     }
 
     /**

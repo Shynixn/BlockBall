@@ -149,7 +149,7 @@ class BlockBallPlugin : JavaPlugin() {
         packetService!!.registerPacketListening(PacketInType.USEENTITY)
 
         val plugin = this
-        runBlocking {
+        plugin.launch {
             val language = configurationService.findValue<String>("language")
             plugin.reloadTranslation(language, BlockBallLanguage::class.java, "en_us")
             logger.log(Level.INFO, "Loaded language file $language.properties.")
@@ -166,18 +166,16 @@ class BlockBallPlugin : JavaPlugin() {
                 e.printStackTrace()
                 injector = null
                 Bukkit.getPluginManager().disablePlugin(plugin)
-                return@runBlocking
+                return@launch
             }
 
-            Bukkit.getServer()
-                .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
-        }
-
-        plugin.launch {
             val playerDataRepository = resolve(PlayerDataRepository::class.java)
             for (player in Bukkit.getOnlinePlayers()) {
                 playerDataRepository.getByPlayer(player)
             }
+
+            Bukkit.getServer()
+                .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
         }
     }
 

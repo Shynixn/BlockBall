@@ -1,15 +1,15 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.entity.HologramMeta
 import com.github.shynixn.blockball.enumeration.*
+import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.ChatColor
 import com.google.inject.Inject
+import org.bukkit.entity.Player
 
-class HologramPage @Inject constructor(private val proxyService: ProxyService) : Page(HologramPage.ID, EffectsSettingsPage.ID) {
-
+class HologramPage @Inject constructor() : Page(HologramPage.ID, EffectsSettingsPage.ID) {
     companion object {
         /** Id of the page. */
         const val ID = 17
@@ -30,6 +30,7 @@ class HologramPage @Inject constructor(private val proxyService: ProxyService) :
      * @param cache cache
      */
     override fun <P> execute(player: P, command: MenuCommand, cache: Array<Any?>, args: Array<String>): MenuCommandResult {
+        require(player is Player)
         val arena = cache[0] as Arena
         val holograms = arena.meta.hologramMetas
         if (command == MenuCommand.HOLOGRAM_OPEN) {
@@ -37,7 +38,7 @@ class HologramPage @Inject constructor(private val proxyService: ProxyService) :
         }
         if (command == MenuCommand.HOLOGRAM_CREATE) {
             val builder = HologramMeta()
-            builder.position = proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
+            builder.position = player.location.toPosition()
             holograms.add(builder)
             cache[5] = builder
         }
@@ -53,7 +54,7 @@ class HologramPage @Inject constructor(private val proxyService: ProxyService) :
         }
         if (command == MenuCommand.HOLOGRAM_LOCATION) {
             val hologram = cache[5] as HologramMeta
-            hologram.position = proxyService.toPosition(proxyService.getEntityLocation<Any, P>(player))
+            hologram.position = player.location.toPosition()
         }
         cache[2] = holograms.map { p -> p.position!!.toString() }
         return super.execute(player, command, cache, args)

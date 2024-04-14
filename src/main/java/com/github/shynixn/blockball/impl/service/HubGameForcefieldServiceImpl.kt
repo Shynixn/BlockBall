@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.blockball.impl.extension.toVector
 import com.github.shynixn.mcutils.common.ConfigurationService
+import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -18,11 +19,12 @@ import org.bukkit.entity.Player
 class HubGameForcefieldServiceImpl @Inject constructor(
     private val gameService: GameService,
     private val gameActionService: GameActionService,
-    private val proxyService: ProxyService,
     private val placeholderService: PlaceHolderService,
-    private val configurationService: ConfigurationService
+    private val configurationService: ConfigurationService,
+    private val chatMessageService: ChatMessageService
 ) : HubGameForcefieldService {
     private val cache = HashMap<Player, InteractionCache>()
+
     /**
      * Checks and executes the forcefield actions if the given [player]
      * is going to the given [location].
@@ -76,7 +78,15 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                             val joinCommand = configurationService.findValue<String>("global-join.command")
 
                             val b =
-                                ChatBuilder().text(placeholderService.replacePlaceHolders(game.arena.meta.hubLobbyMeta.joinMessage[0], player, game, null, null))
+                                ChatBuilder().text(
+                                    placeholderService.replacePlaceHolders(
+                                        game.arena.meta.hubLobbyMeta.joinMessage[0],
+                                        player,
+                                        game,
+                                        null,
+                                        null
+                                    )
+                                )
                                     .nextLine()
                                     .component(
                                         placeholderService.replacePlaceHolders(
@@ -87,9 +97,12 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                                         )
                                     )
                                     .setClickAction(
-                                        ChatClickAction.RUN_COMMAND
-                                        ,
-                                        "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.redTeamMeta.displayName.stripChatColors()
+                                        ChatClickAction.RUN_COMMAND,
+                                        placeholderService.replacePlaceHolders(
+                                            "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.redTeamMeta.displayName.stripChatColors(),
+                                            player,
+                                            game
+                                        )
                                     )
                                     .setHoverText(" ")
                                     .builder().text(" ")
@@ -102,15 +115,16 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                                         )
                                     )
                                     .setClickAction(
-                                        ChatClickAction.RUN_COMMAND
-                                        ,
-                                        "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.blueTeamMeta.displayName.stripChatColors()
+                                        ChatClickAction.RUN_COMMAND,
+                                        placeholderService.replacePlaceHolders(
+                                            "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.blueTeamMeta.displayName.stripChatColors(),
+                                            player,
+                                            game
+                                        )
                                     )
                                     .setHoverText(" ")
                                     .builder()
-
-                            proxyService.sendMessage(player, b)
-
+                            chatMessageService.sendChatMessage(player, b.convertToTextComponent())
                             interactionCache.toggled = true
                         }
                     }

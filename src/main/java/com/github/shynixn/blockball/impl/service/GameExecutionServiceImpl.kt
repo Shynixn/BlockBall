@@ -1,13 +1,12 @@
 package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.GameExecutionService
-import com.github.shynixn.blockball.contract.ProxyService
 import com.github.shynixn.blockball.entity.Game
 import com.github.shynixn.blockball.enumeration.Team
-import com.google.inject.Inject
+import com.github.shynixn.blockball.impl.extension.toLocation
 import org.bukkit.entity.Player
 
-class GameExecutionServiceImpl @Inject constructor(private val proxyService: ProxyService) : GameExecutionService {
+class GameExecutionServiceImpl : GameExecutionService {
     /**
      * Applies points to the belonging teams when the given [player] dies in the given [game].
      */
@@ -42,9 +41,9 @@ class GameExecutionServiceImpl @Inject constructor(private val proxyService: Pro
         }
 
         if (teamMeta.spawnpoint == null) {
-            proxyService.setPlayerLocation(player, game.arena.meta.ballMeta.spawnpoint!!)
+            player.teleport(game.arena.meta.ballMeta.spawnpoint!!.toLocation())
         } else {
-            proxyService.setPlayerLocation(player, teamMeta.spawnpoint!!)
+            player.teleport(teamMeta.spawnpoint!!.toLocation())
         }
     }
 }
