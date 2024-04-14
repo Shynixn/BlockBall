@@ -33,7 +33,9 @@ import kotlin.math.sin
  * LICENCE: This code in this file licenced differently and is not allowed to
  * be used commercially.
  */
-class BallHitboxEntity(val entityId: Int) {
+class BallHitboxEntity(val entityId: Int, val spawnpoint: Position) {
+    private var stuckCounter = 0
+
     /**
      * Origin coordinate to make relative rotations in the world.
      */
@@ -181,7 +183,8 @@ class BallHitboxEntity(val entityId: Int) {
             return
         }
 
-        val rayTraceResult = rayTracingService.rayTraceMotion(position.toLocation().toVector3d(), motion.toVector().toVector3d())
+        val rayTraceResult =
+            rayTracingService.rayTraceMotion(position.toLocation().toVector3d(), motion.toVector().toVector3d())
 
         val rayTraceEvent = BallRayTraceEvent(
             ball, rayTraceResult.hitBlock,
@@ -198,16 +201,27 @@ class BallHitboxEntity(val entityId: Int) {
 
         if (rayTraceEvent.hitBlock) {
             if (rayTraceEvent.blockDirection == BlockDirection.UP) {
+                this.stuckCounter = 0
                 calculateBallOnGround(players, targetPosition)
                 return
             } else {
+                stuckCounter++
                 this.motion = calculateWallBounce(this.motion, rayTraceEvent.blockDirection)
+                // Fix ball getting stuck in wall by moving back in the direction of its spawnpoint.
+                if (stuckCounter > 4) {
+                    val velocity = this.spawnpoint.clone().subtract(this.position).normalize().multiply(0.5)
+                    this.motion = velocity
+                    this.motion.y = 0.1
+                    this.position = this.position.add(this.motion.x, this.motion.y, this.motion.z)
+                }
+
                 // Correct the yaw of the ball after bouncing.
                 this.position.yaw = getYawFromVector(origin, this.motion.clone().normalize()) * -1
                 return
             }
         }
 
+        this.stuckCounter = 0
         calculateBallOnAir(players, targetPosition)
     }
 

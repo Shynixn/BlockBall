@@ -52,7 +52,7 @@ class BallEntityServiceImpl @Inject constructor(
         position.yaw = 0.0
         position.pitch = 0.0
 
-        val ballHitBoxEntity = BallHitboxEntity(entityService.createNewEntityId())
+        val ballHitBoxEntity = BallHitboxEntity(entityService.createNewEntityId(), meta.spawnpoint!!)
         ballHitBoxEntity.position = position
         ballHitBoxEntity.rayTracingService = rayTracingService
         ballHitBoxEntity.packetService = packetService
