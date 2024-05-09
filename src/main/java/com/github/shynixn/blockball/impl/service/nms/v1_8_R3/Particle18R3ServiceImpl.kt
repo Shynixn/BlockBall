@@ -17,7 +17,6 @@ import java.lang.reflect.Method
 import java.util.logging.Level
 
 class Particle18R3ServiceImpl @Inject constructor(
-    private val version: Version,
     private val plugin: Plugin,
     private val packetService: PacketService
 ) : ParticleService {
@@ -65,12 +64,7 @@ class Particle18R3ServiceImpl @Inject constructor(
                 red = Float.MIN_VALUE
             }
 
-            val constructor = Class.forName(
-                "net.minecraft.server.VERSION.PacketPlayOutWorldParticles".replace(
-                    "VERSION",
-                    version.bukkitId
-                )
-            )
+            val constructor = Version.findClass(  "net.minecraft.server.VERSION.PacketPlayOutWorldParticles")
                 .getDeclaredConstructor(
                     internalParticleType.javaClass,
                     Boolean::class.javaPrimitiveType,
@@ -98,12 +92,7 @@ class Particle18R3ServiceImpl @Inject constructor(
                 additionalPayload
             )
         } else {
-            val constructor = Class.forName(
-                "net.minecraft.server.VERSION.PacketPlayOutWorldParticles".replace(
-                    "VERSION",
-                    version.bukkitId
-                )
-            )
+            val constructor = Version.findClass("net.minecraft.server.VERSION.PacketPlayOutWorldParticles")
                 .getDeclaredConstructor(
                     internalParticleType.javaClass,
                     Boolean::class.javaPrimitiveType,
@@ -161,7 +150,7 @@ class Particle18R3ServiceImpl @Inject constructor(
     private fun getInternalEnumValue(particle: ParticleType): Any {
         try {
             val clazz =
-                Class.forName("net.minecraft.server.VERSION.EnumParticle".replace("VERSION", version.bukkitId))
+                Version.findClass("net.minecraft.server.VERSION.EnumParticle")
             val method = clazz.getDeclaredMethod("valueOf", String::class.java)
             return method.invoke(null, particle.name)
         } catch (e: Exception) {

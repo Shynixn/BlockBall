@@ -32,8 +32,8 @@ dependencies {
 
     // Library dependencies with legacy compatibility, we can use more up-to-date version in the plugin.yml
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
-    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.13.0")
-    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.13.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.16.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.16.0")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.3.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.2.3")
     implementation("com.google.inject:guice:5.0.1")
@@ -42,10 +42,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcutils:common:1.0.70")
-    implementation("com.github.shynixn.mcutils:packet:1.0.91")
-    implementation("com.github.shynixn.mcutils:sign:1.0.17")
+    implementation("com.github.shynixn.mcutils:common:1.0.83")
+    implementation("com.github.shynixn.mcutils:packet:1.0.111")
     implementation("com.github.shynixn.mcutils:database:1.0.23")
+    implementation("com.github.shynixn.mcutils:sign:1.0.19")
+    implementation("com.github.shynixn.mcutils:guice:1.0.6")
 }
 
 tasks.test {
