@@ -9,6 +9,7 @@ import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.Team
 import com.google.inject.Inject
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.scoreboard.Scoreboard
 
@@ -63,8 +64,8 @@ class GameHubGameActionServiceImpl @Inject constructor(
 
         val stats = game.ingamePlayersStorage[player]!!
         player.gameMode = stats.gameMode
-        player.allowFlight =  stats.allowedFlying
-        player.isFlying = player.allowFlight
+        player.allowFlight = stats.gameMode == GameMode.CREATIVE
+        player.isFlying = false
         player.walkSpeed = stats.walkingSpeed.toFloat()
         player.scoreboard = stats.scoreboard as Scoreboard
 

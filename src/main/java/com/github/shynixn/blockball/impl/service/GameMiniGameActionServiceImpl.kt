@@ -528,8 +528,8 @@ class GameMiniGameActionServiceImpl @Inject constructor(
      */
     private fun resetStorage(player: Player, game: Game, stats: GameStorage) {
         player.gameMode = stats.gameMode
-        player.allowFlight = stats.allowedFlying
-        player.isFlying = player.allowFlight
+        player.allowFlight = stats.gameMode == GameMode.CREATIVE
+        player.isFlying = false
         player.walkSpeed = stats.walkingSpeed.toFloat()
         player.scoreboard = stats.scoreboard as Scoreboard
         player.level = stats.level
