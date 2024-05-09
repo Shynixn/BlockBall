@@ -69,7 +69,6 @@ class BlockBallDependencyInjectionModule(
             object : TypeReference<PlayerInformation>() {}
         )
         val playerDataRepository = AutoSavePlayerDataRepositoryImpl(
-            "stats",
             1000 * 60L * plugin.config.getInt("database.autoSaveIntervalMinutes"),
             CachePlayerDataRepositoryImpl(configSelectedPlayerDataRepository, plugin),
             plugin

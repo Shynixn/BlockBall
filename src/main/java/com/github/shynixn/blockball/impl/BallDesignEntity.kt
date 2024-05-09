@@ -8,7 +8,6 @@ import com.github.shynixn.blockball.enumeration.BallSize
 import com.github.shynixn.blockball.impl.extension.toLocation
 import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.Vector3d
-import com.github.shynixn.mcutils.common.item.Item
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.toEulerAngle
 import com.github.shynixn.mcutils.packet.api.PacketService
@@ -16,8 +15,6 @@ import com.github.shynixn.mcutils.packet.api.meta.enumeration.ArmorSlotType
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.*
 import org.bukkit.entity.Player
-import java.nio.charset.Charset
-import java.util.*
 
 class BallDesignEntity(val entityId: Int) {
     /**
@@ -52,25 +49,7 @@ class BallDesignEntity(val entityId: Int) {
         })
 
         if (!ball.meta.isSlimeVisible) {
-            val encodingSkinUrl = Base64.getEncoder().encodeToString(
-                "{\"textures\":{\"SKIN\":{\"url\":\"${ball.meta.skin}\"}}}".toByteArray(
-                    Charset.forName("UTF-8")
-                )
-            )
-            val item = Item().also {
-                it.typeName = ball.meta.itemType
-                it.durability = ball.meta.itemDamage
-            }
-
-            if (ball.meta.itemNbt != null && !ball.meta.itemNbt.isNullOrEmpty()) {
-                item.nbt = ball.meta.itemNbt
-            } else {
-                item.nbt =
-                    "{SkullOwner:{Id:[I;1,1,1,1],Name:\"FootBall\",Properties:{textures:[{Value:\"${encodingSkinUrl}\"}]}}}"
-            }
-
-            val stack = itemService.toItemStack(item)
-
+            val stack = itemService.toItemStack(ball.meta.item)
             packetService.sendPacketOutEntityEquipment(player, PacketOutEntityEquipment().also {
                 it.entityId = entityId
                 it.items = listOf(Pair(ArmorSlotType.HELMET, stack))

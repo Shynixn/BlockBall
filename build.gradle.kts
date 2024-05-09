@@ -42,9 +42,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcutils:common:1.0.83")
+    implementation("com.github.shynixn.mcutils:common:1.0.84")
     implementation("com.github.shynixn.mcutils:packet:1.0.111")
-    implementation("com.github.shynixn.mcutils:database:1.0.23")
+    implementation("com.github.shynixn.mcutils:database:1.0.25")
     implementation("com.github.shynixn.mcutils:sign:1.0.19")
     implementation("com.github.shynixn.mcutils:guice:1.0.6")
 }

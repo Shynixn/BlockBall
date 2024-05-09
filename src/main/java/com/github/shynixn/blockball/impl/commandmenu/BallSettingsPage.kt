@@ -37,7 +37,7 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
         if (command == MenuCommand.BALL_OPEN) {
             cache[5] = null
         } else if (command == MenuCommand.BALL_SKIN && args.size == 3) {
-            ballMeta.skin = args[2]
+            ballMeta.item.skinBase64 = args[2]
         } else if (command == MenuCommand.BALL_SIZE_CALLBACK && args.size == 3) {
             ballMeta.size = BallSize.values()[args[2].toInt()]
         } else if (command == MenuCommand.BALL_SLIME) {
@@ -73,10 +73,10 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
         val builder = ChatBuilder()
             .component("- Skin: ").builder()
             .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
-            .setHoverText(ballMeta.skin).builder()
+            .setHoverText(ballMeta.item.skinBase64!!).builder()
             .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
             .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.BALL_SKIN.command)
-            .setHoverText("Changes the skin of the ball. Can be the name of a skin or a skin URL.")
+            .setHoverText("Changes the skin of the ball. Needs to be a Base64Encoded Skin URL.")
             .builder().nextLine()
             .component("- Skin Size: " + ballMeta.size.name).builder()
             .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)

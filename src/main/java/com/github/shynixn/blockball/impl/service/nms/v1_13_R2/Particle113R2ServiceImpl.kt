@@ -24,7 +24,7 @@ class Particle113R2ServiceImpl @Inject constructor(
      * Plays the given [particle] at the given [location] for the given [player] or
      * all players in the world if the config option all alwaysVisible is enabled.
      */
-    override fun  playParticle(location: Location, particle: Particle, players: Collection<Player>) {
+    override fun playParticle(location: Location, particle: Particle, players: Collection<Player>) {
         try {
             if (particle.typeName.equals("NONE", true)) {
                 return
@@ -32,7 +32,12 @@ class Particle113R2ServiceImpl @Inject constructor(
 
             val partType = findParticleType(particle.typeName)
             val bukkitType = org.bukkit.Particle.values().asSequence()
-                .first { p -> p.name.equals(particle.typeName, true) || partType.name == p.name }
+                .firstOrNull() { p -> p.name.equals(particle.typeName, true) || partType.name == p.name }
+
+            if (bukkitType == null) {
+                return
+            }
+
             val dataType = bukkitType.dataType
 
             for (player in players) {
@@ -87,7 +92,8 @@ class Particle113R2ServiceImpl @Inject constructor(
                         )
                     }
                     ItemStack::class.java -> {
-                        val itemStack = ItemStack(itemTypeService.findItemType(particle.materialName!!), 1, particle.data.toShort())
+                        val itemStack =
+                            ItemStack(itemTypeService.findItemType(particle.materialName!!), 1, particle.data.toShort())
                         player.spawnParticle(
                             bukkitType,
                             location,
