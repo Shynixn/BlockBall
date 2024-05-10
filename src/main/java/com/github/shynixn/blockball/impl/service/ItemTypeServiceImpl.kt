@@ -9,7 +9,7 @@ import com.google.inject.Inject
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-class ItemTypeServiceImpl @Inject constructor(private val version: Version) : ItemTypeService {
+class ItemTypeServiceImpl : ItemTypeService {
     private val cache = HashMap<Any, Any>()
 
     /**

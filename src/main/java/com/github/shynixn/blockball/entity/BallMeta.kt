@@ -2,30 +2,20 @@ package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.blockball.enumeration.BallSize
+import com.github.shynixn.mcutils.common.item.Item
 
 class BallMeta {
-
-    /** Skin of the ball.**/
-    var skin: String = "http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d"
-
     /** Size of the ball.**/
     var size: BallSize = BallSize.NORMAL
 
     /**
-     * Optional nbt applied to the item of the ball. e.g. Skull.
+     * Item.
      */
-    var itemNbt: String? = ""
-
-    /**
-     * Item Type being used.
-     */
-    var itemType: String = "PLAYER_HEAD,397"
-
-    /**
-     * Item Damage.
-     */
-    var itemDamage: Int = 3
-
+    var item: Item = Item().also {
+        it.typeName = "PLAYER_HEAD,397"
+        it.durability = 3
+        it.skinBase64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ=="
+    }
     /**
      * If set to true, the slime is visible instead of the ball.
      */

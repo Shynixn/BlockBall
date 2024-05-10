@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "6.42.1"
+version = "6.43.0"
 
 repositories {
     mavenLocal()
@@ -32,8 +32,8 @@ dependencies {
 
     // Library dependencies with legacy compatibility, we can use more up-to-date version in the plugin.yml
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
-    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.13.0")
-    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.13.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.16.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.16.0")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.3.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.2.3")
     implementation("com.google.inject:guice:5.0.1")
@@ -42,10 +42,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcutils:common:1.0.70")
-    implementation("com.github.shynixn.mcutils:packet:1.0.91")
-    implementation("com.github.shynixn.mcutils:sign:1.0.17")
-    implementation("com.github.shynixn.mcutils:database:1.0.23")
+    implementation("com.github.shynixn.mcutils:common:1.0.84")
+    implementation("com.github.shynixn.mcutils:packet:1.0.111")
+    implementation("com.github.shynixn.mcutils:database:1.0.25")
+    implementation("com.github.shynixn.mcutils:sign:1.0.19")
+    implementation("com.github.shynixn.mcutils:guice:1.0.6")
 }
 
 tasks.test {
@@ -157,7 +158,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-latest.${extension}"
-    // destinationDir = File("C:\\temp\\plugins")
+    destinationDir = File("C:\\temp\\plugins")
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_9_R2/**")

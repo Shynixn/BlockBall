@@ -281,16 +281,19 @@ meta:
     rejoinProtectionEnabled: true
   # All ball configuration options.
   ballMeta:
-    # Skin url.
-    skin: "http://textures.minecraft.net/texture/8e4a70b7bbcd7a8c322d522520491a27ea6b83d60ecf961d2b4efbbf9f605d"
+    item:
+      # TypeName the ball is represented. For version compatibility, multiple identifiers can be added by separating with a comma.
+      typeName: "minecraft:player_head,397"
+      # Optional durability tag.
+      durability: 3
+      # Optional NBT Tags in standard Minecraft NBT format. This works in versions below Minecraft 1.20.5.
+      nbt: '{SkullOwner:{Id:[I;-679733089,1513112343,-1218902292,1830955974],Name:"BlockBall",Properties:{textures:[{Value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ=="}]}}}'
+      # Optional Data Components in Minecraft Data Component JSON format. This has replaced NBT since Minecraft 1.20.5. See https://minecraft.wiki/w/Data_component_format.
+      component: '{"minecraft:profile":{"properties":[{"name":"textures","value":"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ=="}]}}'
+      # Optional SkinBase64 tag. This overwrites any skin specified in nbt or component.
+      skinBase64: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ=='
     # Size of the ball NORMAL, SMALL. Check the hitBoxRelocation value when you set this to SMALL.
     size: "NORMAL"
-    # Optional NBT tags in the standard nbt format e.g. {CustomModel:mymodel}
-    itemNbt: ""
-    # Item type to use for the ball.
-    itemType: "PLAYER_HEAD,397"
-    # Item damage.
-    itemDamage: 3
     # The ball uses a virtual hitbox for tracking movement interactions. You can increase this hitbox to make it easier to run into the ball.
     interactionHitBoxSize: 2.0
     # The ball uses an invisible slime as a hitbox. You can increase this hitbox to make it easier to hit the ball.

@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.BlockBallDependencyInjectionBinder
+import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.BlockBallLanguage
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.PlaceHolderService
@@ -12,7 +12,6 @@ import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
-import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 
@@ -112,7 +111,7 @@ class PlaceHolderServiceImpl @Inject constructor(
             (game.isPresent && game.get().redTeam.contains(player)).toString()
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_SCOREDGOALS] = { player ->
-            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
                 val playerData = playerDataRepository.getCachedByPlayer(player)
@@ -120,7 +119,7 @@ class PlaceHolderServiceImpl @Inject constructor(
             }
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_STARTEDGAMES] = { player ->
-            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
                 val playerData = playerDataRepository.getCachedByPlayer(player)
@@ -128,7 +127,7 @@ class PlaceHolderServiceImpl @Inject constructor(
             }
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_COMPLETEDGAMES] = { player ->
-            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
                 val playerData = playerDataRepository.getCachedByPlayer(player)
@@ -136,7 +135,7 @@ class PlaceHolderServiceImpl @Inject constructor(
             }
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_WINS] = { player ->
-            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
                 val playerData = playerDataRepository.getCachedByPlayer(player)
@@ -144,7 +143,7 @@ class PlaceHolderServiceImpl @Inject constructor(
             }
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_LOSSES] = { player ->
-            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
                 val playerData = playerDataRepository.getCachedByPlayer(player)
@@ -156,7 +155,7 @@ class PlaceHolderServiceImpl @Inject constructor(
             }
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_STARTEDWINRATE] = { player ->
-            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
                 val playerData = playerDataRepository.getCachedByPlayer(player)
@@ -174,7 +173,7 @@ class PlaceHolderServiceImpl @Inject constructor(
             }
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_COMPLETEDWINRATE] = { player ->
-            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
                 val playerData = playerDataRepository.getCachedByPlayer(player)
@@ -192,7 +191,7 @@ class PlaceHolderServiceImpl @Inject constructor(
             }
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_STARTEDGOALSPER] = { player ->
-            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
                 val playerData = playerDataRepository.getCachedByPlayer(player)
@@ -210,7 +209,7 @@ class PlaceHolderServiceImpl @Inject constructor(
             }
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_COMPLETEDGOALSPER] = { player ->
-            if (!BlockBallDependencyInjectionBinder.areLegacyVersionsIncluded) {
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
                 val playerData = playerDataRepository.getCachedByPlayer(player)
