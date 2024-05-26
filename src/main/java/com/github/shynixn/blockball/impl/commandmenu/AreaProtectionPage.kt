@@ -2,8 +2,8 @@ package com.github.shynixn.blockball.impl.commandmenu
 
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.Position
 import com.github.shynixn.blockball.enumeration.*
+import com.github.shynixn.mcutils.common.Vector3d
 
 class AreaProtectionPage : Page(AreaProtectionPage.ID, MiscSettingsPage.ID) {
     companion object {
@@ -34,11 +34,11 @@ class AreaProtectionPage : Page(AreaProtectionPage.ID, MiscSettingsPage.ID) {
         } else if (command == MenuCommand.AREAPROTECTION_SET_ENTITYFORCEFIELD && args.size >= 5
             && args[2].toDoubleOrNull() != null && args[3].toDoubleOrNull() != null && args[4].toDoubleOrNull() != null
         ) {
-            arena.meta.protectionMeta.entityProtection = Position(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
+            arena.meta.protectionMeta.entityProtection = Vector3d(  args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
         } else if (command == MenuCommand.AREAPROTECTION_SET_PLAYERJOINFORCEFIELD && args.size >= 5
             && args[2].toDoubleOrNull() != null && args[3].toDoubleOrNull() != null && args[4].toDoubleOrNull() != null
         ) {
-            arena.meta.protectionMeta.rejoinProtection = Position(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
+            arena.meta.protectionMeta.rejoinProtection = Vector3d(args[2].toDouble(), args[3].toDouble(), args[4].toDouble())
         }
         return super.execute(player, command, cache, args)
     }

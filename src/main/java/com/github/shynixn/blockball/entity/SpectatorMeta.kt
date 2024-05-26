@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.entity
 
+import com.github.shynixn.mcutils.common.Vector3d
+
 class SpectatorMeta  {
     /**
      * Should nearby players inside of the [notificationRadius] be messaged by title messages, scoreboard, holograms and bossbar.
@@ -23,5 +25,5 @@ class SpectatorMeta  {
     /**
      *  Spawnpoint of the spectatorPlayers.
      */
-    var spectateSpawnpoint: Position? = null
+    var spectateSpawnpoint: Vector3d? = null
 }

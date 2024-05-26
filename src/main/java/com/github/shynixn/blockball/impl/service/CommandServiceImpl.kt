@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.CommandExecutor
 import com.github.shynixn.blockball.contract.CommandService
-import com.github.shynixn.blockball.impl.extension.findClazz
+import com.github.shynixn.mcutils.common.Version
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -76,14 +76,14 @@ class CommandServiceImpl @Inject constructor(private val plugin: Plugin) : Comma
         val permissionMessage = commandConfiguration["permission-message"] as String
 
         val internalExecutor = InternalBukkitCommand(command, description, usage, permission, permissionMessage, commandExecutor)
-        val clazz = findClazz("org.bukkit.craftbukkit.VERSION.CraftServer")
+        val clazz = Version.findClass("org.bukkit.craftbukkit.VERSION.CraftServer")
         val server = clazz.cast(Bukkit.getServer())
         val map = server.javaClass.getDeclaredMethod("getCommandMap").invoke(server) as SimpleCommandMap
         map.register(command, internalExecutor)
     }
 
     /**
-     * Registers a command executor from a pre defined [command] with gets executed by the [commandExecutor].
+     * Registers a command executor from a pre-defined [command] with gets executed by the [commandExecutor].
      */
     override fun registerCommandExecutor(command: String, commandExecutor: CommandExecutor) {
         if (plugin !is JavaPlugin) {

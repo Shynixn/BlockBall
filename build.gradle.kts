@@ -16,8 +16,8 @@ repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi")
-    maven("https://shynixn.github.io/m2/repository/mcutils")
     maven("https://repo.opencollab.dev/main/")
+    maven(System.getenv("SHYNIXN_MCUTILS_REPOSITORY")) // All MCUTILS libraries are private and not OpenSource.
 }
 
 tasks.register("printVersion") {
@@ -42,11 +42,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcutils:common:1.0.84")
-    implementation("com.github.shynixn.mcutils:packet:1.0.111")
-    implementation("com.github.shynixn.mcutils:database:1.0.25")
-    implementation("com.github.shynixn.mcutils:sign:1.0.19")
-    implementation("com.github.shynixn.mcutils:guice:1.0.6")
+    implementation("com.github.shynixn.mcutils:common:2024.9")
+    implementation("com.github.shynixn.mcutils:packet:2024.7")
+    implementation("com.github.shynixn.mcutils:database:2024.2")
+    implementation("com.github.shynixn.mcutils:sign:2024.2")
+    implementation("com.github.shynixn.mcutils:guice:2024.2")
 }
 
 tasks.test {
@@ -88,11 +88,76 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
  */
 tasks.register("pluginJars") {
     dependsOn("pluginJarLatest")
+    dependsOn("pluginJarPremium")
     dependsOn("pluginJarLegacy")
 }
 
 /**
- * Create legacy plugin jar file.
+ * Relocate Plugin Jar.
+ */
+tasks.register("relocatePluginJar", ShadowJar::class.java) {
+    dependsOn("shadowJar")
+    from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
+    archiveName = "${baseName}-${version}-relocate.${extension}"
+    relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
+    relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
+}
+
+/**
+ * Create latest plugin jar file.
+ */
+tasks.register("pluginJarLatest", ShadowJar::class.java) {
+    dependsOn("relocatePluginJar")
+    from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveName)))
+    archiveName = "${baseName}-${version}-latest.${extension}"
+    // destinationDir = File("C:\\temp\\plugins")
+
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_9_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_17_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_18_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_18_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_19_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_19_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_19_R3/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R3/**")
+    exclude("com/github/shynixn/mcutils/**")
+    exclude("com/github/shynixn/mccoroutine/**")
+    exclude("org/**")
+    exclude("kotlin/**")
+    exclude("kotlinx/**")
+    exclude("javax/**")
+    exclude("com/google/**")
+    exclude("com/fasterxml/**")
+    exclude("com/zaxxer/**")
+    exclude("plugin-legacy.yml")
+}
+
+/**
+ * Create premium plugin jar file.
+ */
+tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar::class.java) {
+    dependsOn("relocatePluginJar")
+    from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
+    archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-premium.${archiveExtension.get()}")
+    // destinationDir = File("C:\\temp\\plugins")
+
+    exclude("com/github/shynixn/mcutils/**")
+    exclude("com/github/shynixn/mccoroutine/**")
+    exclude("org/**")
+    exclude("kotlin/**")
+    exclude("kotlinx/**")
+    exclude("javax/**")
+    exclude("com/google/**")
+    exclude("com/fasterxml/**")
+    exclude("com/zaxxer/**")
+    exclude("plugin-legacy.yml")
+}
+
+/**
+ * Relocate legacy plugin jar file.
  */
 tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     dependsOn("shadowJar")
@@ -128,46 +193,6 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocateLegacyPluginJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-legacy.${extension}"
     // destinationDir = File("C:\\temp\\plugins")
-    exclude("kotlin/**")
-    exclude("kotlinx/**")
-    exclude("org/**")
-    exclude("com/fasterxml/**")
-    exclude("javax/**")
-    exclude("com/google/**")
-    exclude("com/github/shynixn/mcutils/**")
-    exclude("com/github/shynixn/mccoroutine/**")
-    exclude("com/zaxxer/**")
-    exclude("plugin-legacy.yml")
-}
-
-/**
- * Create legacy plugin jar file.
- */
-tasks.register("relocatePluginJar", ShadowJar::class.java) {
-    dependsOn("shadowJar")
-    from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
-    archiveName = "${baseName}-${version}-relocate.${extension}"
-    relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
-    relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
-}
-
-/**
- * Create latest plugin jar file.
- */
-tasks.register("pluginJarLatest", ShadowJar::class.java) {
-    dependsOn("relocatePluginJar")
-    from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveName)))
-    archiveName = "${baseName}-${version}-latest.${extension}"
-    // destinationDir = File("C:\\temp\\plugins")
-
-    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
-    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_9_R2/**")
-    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_18_R1/**")
-    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_18_R2/**")
-    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_19_R1/**")
-    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_19_R2/**")
-    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_19_R3/**")
-    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R1/**")
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("org/**")

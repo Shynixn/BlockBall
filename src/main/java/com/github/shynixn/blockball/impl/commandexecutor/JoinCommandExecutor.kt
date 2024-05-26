@@ -29,11 +29,11 @@ class JoinCommandExecutor @Inject constructor(
 
         val mergedArgs = mergeArgs(0, args.size, args)
         gameService.getAllGames().forEach { g ->
-            if (g.arena.name.equals(mergedArgs, true) && source is Player) {
+            if (g.arena.name.equals(mergedArgs, true)) {
                 gameActionService.joinGame(g, source)
                 return true
             } else if (g.arena.displayName.translateChatColors().stripChatColors()
-                    .equals(mergedArgs, true) && source is Player
+                    .equals(mergedArgs, true)
             ) {
                 gameActionService.joinGame(g, source)
                 return true

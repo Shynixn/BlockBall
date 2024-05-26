@@ -10,11 +10,8 @@ import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.blockball.impl.PacketHologram
 import com.github.shynixn.blockball.impl.extension.setSignLines
-import com.github.shynixn.blockball.impl.extension.toLocation
-import com.github.shynixn.blockball.impl.extension.toPosition
-import com.github.shynixn.blockball.impl.extension.toVector
 import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
@@ -40,8 +37,7 @@ class GameActionServiceImpl @Inject constructor(
     private val packetService: PacketService,
     private val plugin: Plugin,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
-    private val entityService: EntityService,
-    private val itemService: ItemTypeService
+    private val entityService: EntityService
 ) : GameActionService {
     /**
      * Compatibility reference.
@@ -176,10 +172,6 @@ class GameActionServiceImpl @Inject constructor(
             bungeeCordGameActionService.closeGame(game)
         }
 
-        if (game.ballForceFieldBlockPosition != null) {
-            game.ballForceFieldBlockPosition!!.toLocation().block.type = itemService.findItemType(MaterialType.AIR)
-        }
-
         game.status = GameState.DISABLED
         game.closed = true
         game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
@@ -215,7 +207,7 @@ class GameActionServiceImpl @Inject constructor(
             game.status = GameState.JOINABLE
         }
 
-        if (Bukkit.getWorld(game.arena.meta.ballMeta.spawnpoint!!.worldName!!) == null) {
+        if (Bukkit.getWorld(game.arena.meta.ballMeta.spawnpoint!!.world!!) == null) {
             return
         }
 
@@ -307,7 +299,7 @@ class GameActionServiceImpl @Inject constructor(
      */
     private fun replaceTextOnSign(
         game: Game,
-        signPosition: Position,
+        signPosition: Vector3d,
         lines: List<String>,
         teamMeta: TeamMeta?
     ): Boolean {
@@ -339,7 +331,7 @@ class GameActionServiceImpl @Inject constructor(
                 continue
             }
 
-            if (game.arena.isLocationInSelection(entity.location.toPosition())) {
+            if (game.arena.isLocationInSelection(entity.location.toVector3d())) {
                 val vector = game.arena.meta.protectionMeta.entityProtection
                 entity.location.setDirection(vector.toVector())
                 entity.velocity = vector.toVector()
@@ -528,7 +520,7 @@ class GameActionServiceImpl @Inject constructor(
         center.toLocation().world!!.players
             .filter { p -> !game.ingamePlayersStorage.containsKey(p) }
             .forEach { p ->
-                val playerPosition = p.location.toPosition()
+                val playerPosition = p.location.toVector3d()
                 val distanceToCenter = playerPosition.distance(center)
 
                 if (distanceToCenter <= game.arena.meta.spectatorMeta.notificationRadius) {

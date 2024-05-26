@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.entity
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.github.shynixn.mcutils.common.Vector3d
 
 class TeamMeta(
     /** DisplayName of the team which gets used in the placeholder <red> or <blue>. */
@@ -25,8 +26,8 @@ class TeamMeta(
     /** Amount of points this team receives when a player of the opposite team dies. */
     var pointsPerEnemyDeath: Int = 0
     /** List of signs which can be clicked to join the team.*/
-    val signs: MutableList<Position>
-        get() = this.internalSigns as MutableList<Position>
+    val signs: MutableList<Vector3d>
+        get() = this.internalSigns
     /** Min amount of players in this team to start the match for this team. */
     var minAmount: Int = 0
     /** Max amount of players in this team to start the match for this team. */
@@ -66,12 +67,12 @@ class TeamMeta(
     var drawMessageStay: Int = 60
     var drawMessageFadeOut: Int = 20
 
-    /** Spawnpoint of the team inside of the arena. */
-    var spawnpoint: Position? = null
+    /** Spawnpoint of the team inside the arena. */
+    var spawnpoint: Vector3d? = null
 
     /** Optional lobby spawnpoint */
-    var lobbySpawnpoint: Position? = null
+    var lobbySpawnpoint: Vector3d? = null
 
     /** List of signs for this team */
-    private var internalSigns: MutableList<Position> = ArrayList()
+    private var internalSigns: MutableList<Vector3d> = ArrayList()
 }

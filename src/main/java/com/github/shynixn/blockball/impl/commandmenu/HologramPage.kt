@@ -4,8 +4,8 @@ import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.entity.HologramMeta
 import com.github.shynixn.blockball.enumeration.*
-import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.toVector3d
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 
@@ -38,7 +38,7 @@ class HologramPage @Inject constructor() : Page(HologramPage.ID, EffectsSettings
         }
         if (command == MenuCommand.HOLOGRAM_CREATE) {
             val builder = HologramMeta()
-            builder.position = player.location.toPosition()
+            builder.position = player.location.toVector3d()
             holograms.add(builder)
             cache[5] = builder
         }
@@ -54,7 +54,7 @@ class HologramPage @Inject constructor() : Page(HologramPage.ID, EffectsSettings
         }
         if (command == MenuCommand.HOLOGRAM_LOCATION) {
             val hologram = cache[5] as HologramMeta
-            hologram.position = player.location.toPosition()
+            hologram.position = player.location.toVector3d()
         }
         cache[2] = holograms.map { p -> p.position!!.toString() }
         return super.execute(player, command, cache, args)

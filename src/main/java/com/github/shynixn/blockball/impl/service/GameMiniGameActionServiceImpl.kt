@@ -10,14 +10,14 @@ import com.github.shynixn.blockball.enumeration.ChatClickAction
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.enumeration.Team
-import com.github.shynixn.blockball.impl.extension.toLocation
-import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.blockball.impl.extension.toSoundMeta
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.sound.SoundService
+import com.github.shynixn.mcutils.common.toLocation
+import com.github.shynixn.mcutils.common.toVector3d
 import com.google.inject.Inject
 import kotlinx.coroutines.delay
 import org.bukkit.GameMode
@@ -247,7 +247,6 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 game.matchTimeIndex = -1
 
                 game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
-                    require(p is Player)
                     val stats = game.ingamePlayersStorage[p]
 
                     if (stats!!.team == null) {
@@ -273,7 +272,6 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 game.lobbyCountdown = game.arena.meta.minigameMeta.lobbyDuration
             } else if (!game.playing) {
                 game.ingamePlayersStorage.keys.toTypedArray().forEach { p ->
-                    require(p is Player)
                     screenMessageService.sendActionBarMessage(
                         p, placeholderService.replacePlaceHolders(
                             game.arena.meta.minigameMeta.playersRequiredToStartMessage, p, game
@@ -354,14 +352,14 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
         game.ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
             if (matchTime.respawnEnabled || game.matchTimeIndex == 0) {
-                gameExecutionService.respawn(game, p as Player)
+                gameExecutionService.respawn(game, p)
             }
 
             if (!matchTime.startMessageTitle.isBlank() || !matchTime.startMessageSubTitle.isBlank()) {
                 plugin.launch {
                     delay(60.ticks)
                     screenMessageService.sendTitleMessage(
-                        p as Player,
+                        p,
                         placeholderService.replacePlaceHolders(matchTime.startMessageTitle, null, game),
                         placeholderService.replacePlaceHolders(matchTime.startMessageSubTitle, null, game),
                         matchTime.startMessageFadeIn,
@@ -487,11 +485,11 @@ class GameMiniGameActionServiceImpl @Inject constructor(
                 this.onDraw(game)
             }
             game.redScore > game.blueScore -> {
-                gameSoccerService.onMatchEnd(game, game.redTeam as List<Player>, game.blueTeam as List<Player>)
+                gameSoccerService.onMatchEnd(game, game.redTeam, game.blueTeam)
                 gameSoccerService.onWin(game, Team.RED, game.arena.meta.redTeamMeta)
             }
             else -> {
-                gameSoccerService.onMatchEnd(game, game.blueTeam as List<Player>, game.redTeam as List<Player>)
+                gameSoccerService.onMatchEnd(game, game.blueTeam, game.redTeam)
                 gameSoccerService.onWin(game, Team.BLUE, game.arena.meta.blueTeamMeta)
             }
         }
@@ -509,7 +507,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
         if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
             val playersInWorld = game.arena.center.toLocation().world!!.players
             for (p in playersInWorld) {
-                val position = p.location.toPosition()
+                val position = p.location.toVector3d()
                 if (position.distance(game.arena.center) <= game.arena.meta.spectatorMeta.notificationRadius) {
                     players.add(Pair(p, true))
                 } else {

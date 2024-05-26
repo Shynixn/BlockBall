@@ -5,11 +5,11 @@ import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.event.GameEndEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
-import com.github.shynixn.blockball.impl.extension.toLocation
-import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
+import com.github.shynixn.mcutils.common.toLocation
+import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.google.inject.Inject
 import kotlinx.coroutines.delay
@@ -364,7 +364,7 @@ class GameSoccerServiceImpl @Inject constructor(
 
         if (game.arena.meta.spectatorMeta.notifyNearbyPlayers) {
             for (player in game.arena.center.toLocation().world!!.players) {
-                val playerPosition = player.location.toPosition()
+                val playerPosition = player.location.toVector3d()
 
                 if (playerPosition.distance(game.arena.center) <= game.arena.meta.spectatorMeta.notificationRadius) {
                     players.add(Pair(player, true))

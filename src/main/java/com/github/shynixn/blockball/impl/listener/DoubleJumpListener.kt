@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.GameService

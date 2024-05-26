@@ -15,7 +15,7 @@ class ArenaMeta {
 
     /** Meta data of all holograms. */
     val hologramMetas: ArrayList<HologramMeta>
-        get() = this.internalHologramMetas as ArrayList<HologramMeta>
+        get() = this.internalHologramMetas
 
     /** Meta data of a generic lobby. */
     val lobbyMeta: LobbyMeta = LobbyMeta()

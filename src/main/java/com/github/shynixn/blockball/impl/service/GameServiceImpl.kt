@@ -4,9 +4,9 @@ import com.github.shynixn.blockball.contract.GameActionService
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.GameType
-import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.repository.Repository
+import com.github.shynixn.mcutils.common.toVector3d
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -124,7 +124,7 @@ class GameServiceImpl @Inject constructor(
      * Returns the game at the given location.
      */
     override fun getGameFromLocation(location: Location): Optional<Game> {
-        val position = location.toPosition()
+        val position = location.toVector3d()
 
         for (game in games) {
             if (game.arena.isLocationInSelection(position)) {

@@ -1,11 +1,11 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.entity.Position
-import com.github.shynixn.blockball.impl.extension.toLocation
+import com.github.shynixn.mcutils.common.Vector3d
+import com.github.shynixn.mcutils.common.toLocation
 import org.bukkit.entity.Player
 
 class AllPlayerTracker(
-    private val locationFunction: () -> Position,
+    private val locationFunction: () -> Vector3d,
     private val newPlayerFunction: (Player) -> Unit,
     private val oldPlayerFunction: (Player) -> Unit,
     private val filterPlayerFunction: (Player) -> Boolean = { true }

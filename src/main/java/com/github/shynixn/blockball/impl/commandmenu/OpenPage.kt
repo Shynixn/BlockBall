@@ -82,7 +82,7 @@ class OpenPage @Inject constructor(
                     if (builder == null) {
                         builder = ChatBuilder()
                     }
-                    builder!!.component("- Arena: Id: " + arena.name + " Name: " + arena.displayName).builder()
+                    builder.component("- Arena: Id: " + arena.name + " Name: " + arena.displayName).builder()
                         .component(" [page..]").setColor(ChatColor.YELLOW)
                         .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.ARENA_EDIT.command + arena.name)
                         .setHoverText("Opens the arena with the id " + arena.name + ".").builder().nextLine()
@@ -90,7 +90,7 @@ class OpenPage @Inject constructor(
 
                 if (builder != null) {
                     require(player is Player)
-                    chatMessageService.sendChatMessage(player, builder!!.convertToTextComponent())
+                    chatMessageService.sendChatMessage(player, builder.convertToTextComponent())
                 }
 
                 return@runBlocking MenuCommandResult.CANCEL_MESSAGE
@@ -147,7 +147,7 @@ class OpenPage @Inject constructor(
      * @param cache cache.
      * @return page
      */
-    override fun buildPage(cache: Array<Any?>): ChatBuilder? {
+    override fun buildPage(cache: Array<Any?>): ChatBuilder {
         return ChatBuilder()
             .component("- Create arena:").builder()
             .component(" [create..]").setColor(ChatColor.AQUA)

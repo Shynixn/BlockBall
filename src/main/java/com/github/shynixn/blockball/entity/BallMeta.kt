@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.blockball.enumeration.BallSize
+import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.item.Item
 
 class BallMeta {
@@ -91,5 +92,5 @@ class BallMeta {
     var delayInTicks: Int = 0
 
     /** Spawnpoint of the ball. */
-    var spawnpoint: Position? = null
+    var spawnpoint: Vector3d? = null
 }

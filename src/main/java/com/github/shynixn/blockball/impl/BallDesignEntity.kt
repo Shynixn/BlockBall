@@ -3,13 +3,12 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.Ball
-import com.github.shynixn.blockball.entity.Position
 import com.github.shynixn.blockball.enumeration.BallSize
-import com.github.shynixn.blockball.impl.extension.toLocation
-import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.toEulerAngle
+import com.github.shynixn.mcutils.common.toLocation
+import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.ArmorSlotType
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
@@ -20,7 +19,7 @@ class BallDesignEntity(val entityId: Int) {
     /**
      * Rotation of the design in euler angles.
      */
-    var rotation: Position = Position(0.0, 0.0, 0.0)
+    var rotation: Vector3d = Vector3d(0.0, 0.0, 0.0)
 
     /**
      * Packet service dependency.
@@ -40,7 +39,7 @@ class BallDesignEntity(val entityId: Int) {
     /**
      * Spawns the ball for the given player.
      */
-    fun spawn(player: Any, position: Position) {
+    fun spawn(player: Any, position: Vector3d) {
         require(player is Player)
         packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
             it.target = position.toLocation()
@@ -78,7 +77,7 @@ class BallDesignEntity(val entityId: Int) {
      * @param players watching this hitbox.
      */
     fun tick(players: List<Player>) {
-        val position = ball.getLocation().toPosition()
+        val position = ball.getLocation().toVector3d()
 
         position.y = if (ball.meta.size == BallSize.NORMAL) {
             position.y + ball.meta.hitBoxRelocation - 1.2
@@ -104,12 +103,12 @@ class BallDesignEntity(val entityId: Int) {
     private fun playRotationAnimation(players: List<Any>) {
         // 360 0 0 is a full forward rotation.
         // Length of the velocity is the speed of the ball.
-        val velocity = ball.getVelocity().toPosition()
+        val velocity = ball.getVelocity().toVector3d()
 
         val length = if (ball.isOnGround) {
-            Position(velocity.x, 0.0, velocity.z).length()
+            Vector3d(velocity.x, 0.0, velocity.z).length()
         } else {
-            Position(velocity.x, velocity.y, velocity.z).length()
+            Vector3d(velocity.x, velocity.y, velocity.z).length()
         }
 
         val angle = when {
@@ -120,7 +119,7 @@ class BallDesignEntity(val entityId: Int) {
         }
 
         if (angle != null) {
-            rotation = Position(angle.x, angle.y, angle.z)
+            rotation = Vector3d(angle.x, angle.y, angle.z)
 
             if (ball.meta.isSlimeVisible) {
                 return

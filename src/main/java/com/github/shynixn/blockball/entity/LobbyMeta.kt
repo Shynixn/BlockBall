@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.entity
 
+import com.github.shynixn.mcutils.common.Vector3d
 import org.bukkit.GameMode
 
 class LobbyMeta {
@@ -10,8 +11,8 @@ class LobbyMeta {
     var onlyAllowEventTeams: Boolean = false
 
     /** List of signs which can be clicked to join the game. */
-    val joinSigns: MutableList<Position>
-        get() = sign.joinSigns as MutableList<Position>
+    val joinSigns: MutableList<Vector3d>
+        get() = sign.joinSigns
 
     /** Lines displayed on the sign for leaving the match. */
     var joinSignLines: List<String> = arrayListOf(
@@ -29,11 +30,11 @@ class LobbyMeta {
     )
 
     /** List of signs which can be clicked to leave the game. */
-    val leaveSigns: MutableList<Position>
-        get() = sign.leaveSigns as MutableList<Position>
+    val leaveSigns: MutableList<Vector3d>
+        get() = sign.leaveSigns
 
     /** Spawnpoint when someone leaves the hub game. */
-    var leaveSpawnpoint: Position? = null
+    var leaveSpawnpoint: Vector3d? = null
 
     /** Minecraft gamemode (Survival, Adventure, Creative) the players should be */
     var gamemode: GameMode = GameMode.ADVENTURE

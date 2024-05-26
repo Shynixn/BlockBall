@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.impl.service
 import com.github.shynixn.blockball.contract.GameExecutionService
 import com.github.shynixn.blockball.entity.Game
 import com.github.shynixn.blockball.enumeration.Team
-import com.github.shynixn.blockball.impl.extension.toLocation
+import com.github.shynixn.mcutils.common.toLocation
 import org.bukkit.entity.Player
 
 class GameExecutionServiceImpl : GameExecutionService {
