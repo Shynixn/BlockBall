@@ -35,6 +35,7 @@ class ChatBuilder {
      */
     fun convertToTextComponent(): TextComponent {
         val rootComponent = TextComponent()
+        rootComponent.text = ""
 
         for (component in this.components) {
             val subComponent = TextComponent().also {

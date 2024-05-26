@@ -3,7 +3,6 @@
 package com.github.shynixn.blockball.impl.extension
 
 import com.github.shynixn.blockball.contract.CommandExecutor
-import com.github.shynixn.blockball.entity.Sound
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.sound.SoundMeta
@@ -45,16 +44,6 @@ fun Location.setSignLines(lines: List<String>): Boolean {
 
     sign.update(true)
     return true
-}
-
-fun Sound.toSoundMeta(): SoundMeta {
-    val input = this
-    return SoundMeta().also {
-        it.name = input.name
-        it.pitch = input.pitch
-        it.volume = input.volume
-        it.effectType = input.effectingType
-    }
 }
 
 /**

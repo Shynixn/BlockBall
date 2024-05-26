@@ -10,7 +10,6 @@ import com.github.shynixn.blockball.enumeration.ChatClickAction
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.enumeration.Team
-import com.github.shynixn.blockball.impl.extension.toSoundMeta
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.ConfigurationService
@@ -227,7 +226,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
             if (game.lobbyCountdown < 5) {
                 game.ingamePlayersStorage.keys.forEach { p ->
                     soundService.playSound(
-                        p.location, arrayListOf(p), game.blingSound.toSoundMeta()
+                        p.location, arrayListOf(p), game.blingSound
                     )
                 }
             }
@@ -291,7 +290,7 @@ class GameMiniGameActionServiceImpl @Inject constructor(
 
                 if (game.gameCountdown <= 5) {
                     soundService.playSound(
-                        p.location, arrayListOf(p), game.blingSound.toSoundMeta()
+                        p.location, arrayListOf(p), game.blingSound
                     )
                 }
 

@@ -19,7 +19,6 @@ import org.bukkit.plugin.Plugin
 
 class GameSoccerServiceImpl @Inject constructor(
     private val screenMessageService: ChatMessageService,
-    private val dependencyService: DependencyService,
     private val ballEntityService: BallEntityService,
     private val placeholderService: PlaceHolderService,
     private val plugin: Plugin,
@@ -230,16 +229,6 @@ class GameSoccerServiceImpl @Inject constructor(
     private fun onScoreReward(game: Game, players: List<Any>) {
         if (game.lastInteractedEntity != null && game.lastInteractedEntity is Player) {
             if (players.contains(game.lastInteractedEntity!!)) {
-                if (dependencyService.isInstalled(PluginDependency.VAULT) && game.arena.meta.rewardMeta.moneyReward.containsKey(
-                        RewardType.SHOOT_GOAL
-                    )
-                ) {
-                    val vaultService = DependencyVaultServiceImpl()
-                    vaultService.addMoney(
-                        game.lastInteractedEntity as Player,
-                        game.arena.meta.rewardMeta.moneyReward[RewardType.SHOOT_GOAL]!!.toDouble()
-                    )
-                }
                 if (game.arena.meta.rewardMeta.commandReward.containsKey(RewardType.SHOOT_GOAL)) {
                     this.executeCommand(
                         game,
@@ -252,33 +241,6 @@ class GameSoccerServiceImpl @Inject constructor(
     }
 
     override fun onMatchEnd(game: Game, winningPlayers: List<Player>?, loosingPlayers: List<Player>?) {
-        if (dependencyService.isInstalled(PluginDependency.VAULT)) {
-            val vaultService = DependencyVaultServiceImpl()
-
-            if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.WIN_MATCH) && winningPlayers != null) {
-                winningPlayers.forEach { p ->
-                    vaultService.addMoney(p, game.arena.meta.rewardMeta.moneyReward[RewardType.WIN_MATCH]!!.toDouble())
-                }
-            }
-
-            if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.LOOSING_MATCH) && loosingPlayers != null) {
-                loosingPlayers.forEach { p ->
-                    vaultService.addMoney(
-                        p,
-                        game.arena.meta.rewardMeta.moneyReward[RewardType.LOOSING_MATCH]!!.toDouble()
-                    )
-                }
-            }
-            if (game.arena.meta.rewardMeta.moneyReward.containsKey(RewardType.PARTICIPATE_MATCH)) {
-                game.inTeamPlayers.forEach { p ->
-                    vaultService.addMoney(
-                        p,
-                        game.arena.meta.rewardMeta.moneyReward[RewardType.PARTICIPATE_MATCH]!!.toDouble()
-                    )
-                }
-            }
-        }
-
         if (game.arena.meta.rewardMeta.commandReward.containsKey(RewardType.WIN_MATCH) && winningPlayers != null) {
             this.executeCommand(
                 game,

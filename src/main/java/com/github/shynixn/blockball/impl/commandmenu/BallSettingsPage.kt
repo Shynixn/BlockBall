@@ -3,8 +3,8 @@ package com.github.shynixn.blockball.impl.commandmenu
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.entity.Particle
-import com.github.shynixn.blockball.entity.Sound
 import com.github.shynixn.blockball.enumeration.*
+import com.github.shynixn.mcutils.common.sound.SoundMeta
 
 class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
 
@@ -133,7 +133,7 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BALL_PARTICLEFFECTS.command)
             .setHoverText("Opens the selection page for action binders.")
             .builder().nextLine()
-        if (cache[5] != null && cache[5] is Sound) {
+        if (cache[5] != null && cache[5] is SoundMeta) {
             builder.component("- Selected Sound-effect: ").builder().component(MenuClickableItem.PAGE.text)
                 .setColor(MenuClickableItem.PAGE.color)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.SOUND_BALL.command)

@@ -101,7 +101,6 @@ class BlockBallDependencyInjectionModule(
         addService<BlockSelectionService, BlockSelectionServiceImpl>()
         addService<GameExecutionService, GameExecutionServiceImpl>()
         addService<DependencyBossBarApiService, DependencyBossBarApiServiceImpl>()
-        addService<DependencyService, DependencyServiceImpl>()
         addService<RayTracingService, RayTracingServiceImpl>()
 
         when {
@@ -114,10 +113,6 @@ class BlockBallDependencyInjectionModule(
             plugin.logger.log(Level.INFO, "Loaded dependency ${PluginDependency.PLACEHOLDERAPI.pluginName}.")
         } else {
             addService<PlaceHolderService, PlaceHolderServiceImpl>()
-        }
-
-        if (Bukkit.getPluginManager().getPlugin(PluginDependency.VAULT.pluginName) != null) {
-            addService<DependencyVaultService, DependencyVaultServiceImpl>()
         }
     }
 }

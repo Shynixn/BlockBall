@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "6.43.0"
+version = "6.44.0"
 
 repositories {
     mavenLocal()
@@ -27,8 +27,7 @@ tasks.register("printVersion") {
 dependencies {
     // Compile Only
     compileOnly("me.clip:placeholderapi:2.9.2")
-    compileOnly("net.milkbowlvault:VaultAPI:1.7")
-    compileOnly("org.spigotmc:spigot:1.16.4-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT")
 
     // Library dependencies with legacy compatibility, we can use more up-to-date version in the plugin.yml
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
@@ -43,7 +42,7 @@ dependencies {
 
     // Custom dependencies
     implementation("com.github.shynixn.mcutils:common:2024.9")
-    implementation("com.github.shynixn.mcutils:packet:2024.7")
+    implementation("com.github.shynixn.mcutils:packet:2024.11")
     implementation("com.github.shynixn.mcutils:database:2024.2")
     implementation("com.github.shynixn.mcutils:sign:2024.2")
     implementation("com.github.shynixn.mcutils:guice:2024.2")

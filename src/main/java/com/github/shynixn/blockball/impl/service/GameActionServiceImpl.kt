@@ -30,7 +30,6 @@ class GameActionServiceImpl @Inject constructor(
     private val minigameActionService: GameMiniGameActionService,
     private val bungeeCordGameActionService: GameBungeeCordGameActionService,
     private val scoreboardService: ScoreboardService,
-    private val dependencyService: DependencyService,
     private val dependencyBossBarApiService: DependencyBossBarApiService,
     private val gameSoccerService: GameSoccerService,
     private val placeholderService: PlaceHolderService,
@@ -416,7 +415,7 @@ class GameActionServiceImpl @Inject constructor(
                     bossBarService.addPlayer(game.bossBar, p)
                 }
             }
-        } else if (dependencyService.isInstalled(PluginDependency.BOSSBARAPI)) {
+        } else if (Bukkit.getPluginManager().getPlugin("BossBarAPI") != null) {
             if (game.arena.meta.bossBarMeta.enabled) {
                 val percentage = meta.percentage
 
