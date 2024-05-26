@@ -25,6 +25,8 @@ jobs:
           java-version: '8'
 
       - name: Build Java Application
+        env:
+          SHYNIXN_MCUTILS_REPOSITORY: ${{ secrets.SHYNIXN_MCUTILS_REPOSITORY }}
         run: |
           chmod +x gradlew
           ./gradlew build pluginJars
