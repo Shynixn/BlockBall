@@ -46,7 +46,7 @@ class MinigameListener @Inject constructor(
             return
         }
 
-        val miniGame = event.game as MiniGame
+        val miniGame = event.game
         val matchTimes = miniGame.arena.meta.minigameMeta.matchTimes
 
         if (miniGame.matchTimeIndex < 0 || miniGame.matchTimeIndex >= matchTimes.size) {

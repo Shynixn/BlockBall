@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.enumeration.MatchTimeCloseType
 import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.Vector3d
 
 class MinigameLobbyMeta {
     /**
@@ -13,7 +14,7 @@ class MinigameLobbyMeta {
     var lobbyDuration: Int = 20
 
     /** Spawnpoint of the player in the lobby. */
-    var lobbySpawnpoint: Position? = null
+    var lobbySpawnpoint: Vector3d? = null
 
     /** Message being played in the action bar displaying the joined players how many players are remaining to start. */
     var playersRequiredToStartMessage: String =

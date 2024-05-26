@@ -1,6 +1,4 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI
+name: BlockBall
 
 # Controls when the action will run.
 on:
@@ -24,37 +22,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
-          java-version: '17'
-
-      - name: Cache Spigot Dependencies
-        id: cache-spigot-dependencies
-        uses: actions/cache@v2
-        with:
-          path: /home/runner/.m2/repository/org/spigotmc
-          key: spigot-dependency
-
-      - name: Validate Spigot Dependencies
-        run: |
-          test -f ~/.m2/repository/org/spigotmc/spigot/1.16.4-R0.1-SNAPSHOT/spigot-1.16.4-R0.1-SNAPSHOT.jar && echo "DEPENDENCIES=true" >> $GITHUB_ENV || echo "DEPENDENCIES=false" >> $GITHUB_ENV
-
-      - name: Build Spigot Dependencies
-        if: ${{ env.DEPENDENCIES != 'true' }}
-        run: |
-          mkdir -p ~/.m2/repository/org/spigotmc/
-          docker build --target dependencies-jdk8 -t blockball-dependencies-jdk8 .
-          docker create --name blockball-dependencies-jdk8 blockball-dependencies-jdk8 bash
-          docker cp blockball-dependencies-jdk8:/root/.m2/repository/org/spigotmc ~/.m2/repository/org/
-          docker rm -f blockball-dependencies-jdk8
-          docker build --target dependencies-jdk17 -t blockball-dependencies-jdk17 .
-          docker create --name blockball-dependencies-jdk17 blockball-dependencies-jdk17 bash
-          docker cp blockball-dependencies-jdk17:/root/.m2/repository/org/spigotmc ~/.m2/repository/org/
-          docker rm -f blockball-dependencies-jdk17
+          java-version: '8'
 
       - name: Build Java Application
+        env:
+          SHYNIXN_MCUTILS_REPOSITORY: ${{ secrets.SHYNIXN_MCUTILS_REPOSITORY }}
         run: |
           chmod +x gradlew
-          wget "https://jitpack.io/com/github/MilkBowl/VaultAPI/1.7/VaultAPI-1.7.jar"
-          mvn install:install-file -Dfile=VaultAPI-1.7.jar -DgroupId=net.milkbowlvault -DartifactId=VaultAPI -Dversion=1.7 -Dpackaging=jar
           ./gradlew build pluginJars
           echo "RELEASE_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_ENV
 
@@ -80,6 +54,17 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-root-${{ env.RELEASE_VERSION }}-latest.jar
           asset_name: BlockBall.jar
+          asset_content_type: application/jar
+
+      - name: Upload Premium Bukkit Release to Github
+        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-root-${{ env.RELEASE_VERSION }}-premium.jar
+          asset_name: BlockBall-Premium.jar
           asset_content_type: application/jar
 
       - name: Upload Legacy Bukkit Release to Github

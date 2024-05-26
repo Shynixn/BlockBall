@@ -6,11 +6,11 @@ import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.*
-import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
+import com.github.shynixn.mcutils.common.toVector3d
 import com.google.inject.Inject
 import kotlinx.coroutines.runBlocking
 import org.bukkit.entity.Player
@@ -65,6 +65,7 @@ class MainConfigurationPage @Inject constructor(
             plugin.launch {
                 cache[0] = arenaRepository.getAll().single { b -> b.name.equals(args[2], true) }
                 arenaRepository.delete(cache[0] as Arena)
+                gameService.reloadAll()
             }
             cache[0] = null
             return MenuCommandResult.BACK
@@ -73,7 +74,7 @@ class MainConfigurationPage @Inject constructor(
             arena.enabled = !arena.enabled
         } else if (command == MenuCommand.ARENA_SETBALLSPAWNPOINT) {
             val arena = cache[0] as Arena
-            arena.meta.ballMeta.spawnpoint = player.location.toPosition()
+            arena.meta.ballMeta.spawnpoint = player.location.toVector3d()
         } else if (command == MenuCommand.ARENA_SETDISPLAYNAME) {
             val arena = cache[0] as Arena
             arena.displayName = this.mergeArgs(2, args)
@@ -83,8 +84,8 @@ class MainConfigurationPage @Inject constructor(
             val left = blockSelectionService.getLeftClickLocation(player)
             val right = blockSelectionService.getRightClickLocation(player)
             if (left.isPresent && right.isPresent) {
-                val leftPosition = left.get().toPosition()
-                val rightPosition = right.get().toPosition()
+                val leftPosition = left.get().toVector3d()
+                val rightPosition = right.get().toVector3d()
                 val yDistance = abs(leftPosition.y - rightPosition.y)
 
                 if (yDistance < 10) {
@@ -102,8 +103,8 @@ class MainConfigurationPage @Inject constructor(
             val left = blockSelectionService.getLeftClickLocation(player)
             val right = blockSelectionService.getRightClickLocation(player)
             if (left.isPresent && right.isPresent) {
-                val leftPosition = left.get().toPosition()
-                val rightPosition =right.get().toPosition()
+                val leftPosition = left.get().toVector3d()
+                val rightPosition =right.get().toVector3d()
                 val xDistance = abs(leftPosition.x - rightPosition.x)
                 val yDistance = abs(leftPosition.y - rightPosition.y)
                 val zDistance = abs(leftPosition.z - rightPosition.z)
@@ -131,8 +132,8 @@ class MainConfigurationPage @Inject constructor(
             val left = blockSelectionService.getLeftClickLocation(player)
             val right = blockSelectionService.getRightClickLocation(player)
             if (left.isPresent && right.isPresent) {
-                val leftPosition = left.get().toPosition()
-                val rightPosition = right.get().toPosition()
+                val leftPosition = left.get().toVector3d()
+                val rightPosition = right.get().toVector3d()
                 val xDistance = abs(leftPosition.x - rightPosition.x)
                 val yDistance = abs(leftPosition.y - rightPosition.y)
                 val zDistance = abs(leftPosition.z - rightPosition.z)
@@ -162,7 +163,7 @@ class MainConfigurationPage @Inject constructor(
             }
 
             val arena = cache[0] as Arena
-            if (arena.lowerCorner.worldName != null && arena.meta.blueTeamMeta.goal.lowerCorner.worldName != null && arena.meta.redTeamMeta.goal.lowerCorner.worldName != null
+            if (arena.lowerCorner.world != null && arena.meta.blueTeamMeta.goal.lowerCorner.world != null && arena.meta.redTeamMeta.goal.lowerCorner.world != null
                 && arena.meta.ballMeta.spawnpoint != null
             ) {
                 if (arena.gameType === GameType.HUBGAME || (arena.meta.minigameMeta.lobbySpawnpoint != null && arena.meta.lobbyMeta.leaveSpawnpoint != null)) {
@@ -190,7 +191,7 @@ class MainConfigurationPage @Inject constructor(
             }
 
             val arena = cache[0] as Arena
-            if (arena.lowerCorner.worldName != null && arena.meta.blueTeamMeta.goal.lowerCorner.worldName != null && arena.meta.redTeamMeta.goal.lowerCorner.worldName != null
+            if (arena.lowerCorner.world != null && arena.meta.blueTeamMeta.goal.lowerCorner.world != null && arena.meta.redTeamMeta.goal.lowerCorner.world != null
                 && arena.meta.ballMeta.spawnpoint != null
             ) {
                 if (arena.gameType === GameType.HUBGAME || (arena.meta.minigameMeta.lobbySpawnpoint != null && arena.meta.lobbyMeta.leaveSpawnpoint != null)) {
@@ -225,13 +226,13 @@ class MainConfigurationPage @Inject constructor(
         var goal1 = "none"
         var goal2 = "none"
         var ballSpawn = "none"
-        if (arena.upperCorner.worldName != null && arena.lowerCorner.worldName != null) {
+        if (arena.upperCorner.world != null && arena.lowerCorner.world != null) {
             corners = arena.center.toString()
         }
-        if (arena.meta.redTeamMeta.goal.lowerCorner.worldName != null) {
+        if (arena.meta.redTeamMeta.goal.lowerCorner.world != null) {
             goal1 = arena.meta.redTeamMeta.goal.center.toString()
         }
-        if (arena.meta.blueTeamMeta.goal.lowerCorner.worldName != null) {
+        if (arena.meta.blueTeamMeta.goal.lowerCorner.world != null) {
             goal2 = arena.meta.blueTeamMeta.goal.center.toString()
         }
         if (arena.meta.ballMeta.spawnpoint != null) {

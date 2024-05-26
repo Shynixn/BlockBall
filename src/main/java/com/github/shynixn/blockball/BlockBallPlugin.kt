@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball
 
 import com.github.shynixn.blockball.contract.CommandService
-import com.github.shynixn.blockball.contract.DependencyService
 import com.github.shynixn.blockball.contract.GameActionService
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.entity.PlayerInformation
@@ -101,9 +100,7 @@ class BlockBallPlugin : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(module.getService<BallListener>(), this)
         Bukkit.getPluginManager().registerEvents(module.getService<BlockSelectionListener>(), this)
 
-        val dependencyService = module.getService<DependencyService>()
         val configurationService = module.getService<ConfigurationService>()
-        dependencyService.checkForInstalledDependencies()
         val enableMetrics = configurationService.findValue<Boolean>("metrics")
 
         // Register CommandExecutor

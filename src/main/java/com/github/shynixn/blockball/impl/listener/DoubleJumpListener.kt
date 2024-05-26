@@ -1,8 +1,9 @@
+@file:Suppress("DEPRECATION")
+
 package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.ParticleService
-import com.github.shynixn.blockball.impl.extension.toSoundMeta
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.google.inject.Inject
 import org.bukkit.GameMode
@@ -61,7 +62,7 @@ class DoubleJumpListener @Inject constructor(private val gameService: GameServic
                 .multiply(meta.horizontalStrength)
                 .setY(meta.verticalStrength)
 
-        soundService.playSound(player.location,player.world.players, meta.soundEffect.toSoundMeta() )
+        soundService.playSound(player.location,player.world.players, meta.soundEffect)
         particleService.playParticle(player.location, meta.particleEffect, player.world.players)
     }
 }

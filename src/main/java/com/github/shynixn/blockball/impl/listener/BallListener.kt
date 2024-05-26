@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.Ball
@@ -7,7 +5,6 @@ import com.github.shynixn.blockball.contract.BallEntityService
 import com.github.shynixn.blockball.contract.ParticleService
 import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.blockball.event.*
-import com.github.shynixn.blockball.impl.extension.toSoundMeta
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.google.inject.Inject
 import org.bukkit.event.EventHandler
@@ -103,7 +100,7 @@ class BallListener @Inject constructor(
             this.soundService.playSound(
                 ball.getLocation(),
                 ball.getLocation().world!!.players,
-                ball.meta.soundEffects[actionEffect]!!.toSoundMeta(),
+                ball.meta.soundEffects[actionEffect]!!,
             )
         }
     }

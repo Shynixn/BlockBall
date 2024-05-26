@@ -2,7 +2,9 @@ package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.blockball.enumeration.BallSize
+import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.item.Item
+import com.github.shynixn.mcutils.common.sound.SoundMeta
 
 class BallMeta {
     /** Size of the ball.**/
@@ -85,11 +87,11 @@ class BallMeta {
     /**
      * Particle effects.
      */
-    val soundEffects: MutableMap<BallActionType, Sound> = HashMap()
+    val soundEffects: MutableMap<BallActionType, SoundMeta> = HashMap()
 
     /** Spawning delay. */
     var delayInTicks: Int = 0
 
     /** Spawnpoint of the ball. */
-    var spawnpoint: Position? = null
+    var spawnpoint: Vector3d? = null
 }

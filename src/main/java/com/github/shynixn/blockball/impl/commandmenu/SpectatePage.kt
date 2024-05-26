@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.impl.commandmenu
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.*
-import com.github.shynixn.blockball.impl.extension.toPosition
+import com.github.shynixn.mcutils.common.toVector3d
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 
@@ -63,7 +63,7 @@ class SpectatePage @Inject constructor() : Page(ID, SpectatePage.ID) {
         if (command == MenuCommand.SPECTATE_TOGGLE) {
             arena.meta.spectatorMeta.spectatorModeEnabled = !arena.meta.spectatorMeta.spectatorModeEnabled
         } else if (command == MenuCommand.SPECTATE_SPAWNPOINT) {
-            arena.meta.spectatorMeta.spectateSpawnpoint = player.location.toPosition()
+            arena.meta.spectatorMeta.spectateSpawnpoint = player.location.toVector3d()
         }
 
         return super.execute(player, command, cache, args)

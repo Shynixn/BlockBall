@@ -3,8 +3,8 @@ package com.github.shynixn.blockball.impl.commandmenu
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.*
-import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.toVector3d
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 
@@ -67,9 +67,9 @@ class GameSettingsPage :
         require(player is Player)
 
         if (command == MenuCommand.GAMESETTINGS_LEAVESPAWNPOINT) {
-            arena.meta.lobbyMeta.leaveSpawnpoint = player.location.toPosition()
+            arena.meta.lobbyMeta.leaveSpawnpoint = player.location.toVector3d()
         } else if (command == MenuCommand.GAMESETTINGS_LOBBYSPAWNPOINT) {
-            arena.meta.minigameMeta.lobbySpawnpoint  = player.location.toPosition()
+            arena.meta.minigameMeta.lobbySpawnpoint  = player.location.toVector3d()
         } else if (command == MenuCommand.GAMESETTINGS_TOGGLE_EVENTEAMS) {
             arena.meta.lobbyMeta.onlyAllowEventTeams = !arena.meta.lobbyMeta.onlyAllowEventTeams
         } else if (command == MenuCommand.GAMESETTINGS_TOGGLE_INSTATFORCEFIELD) {

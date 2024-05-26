@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.blockball.enumeration.ParticleType
+import com.github.shynixn.mcutils.common.sound.SoundMeta
 
 class ArenaMeta {
     /** Meta data for spectating setting. */
@@ -15,7 +16,7 @@ class ArenaMeta {
 
     /** Meta data of all holograms. */
     val hologramMetas: ArrayList<HologramMeta>
-        get() = this.internalHologramMetas as ArrayList<HologramMeta>
+        get() = this.internalHologramMetas
 
     /** Meta data of a generic lobby. */
     val lobbyMeta: LobbyMeta = LobbyMeta()
@@ -111,7 +112,7 @@ class ArenaMeta {
 
         ballMeta.particleEffects[BallActionType.ONPASS] = partMetaShoot
 
-        val soundMetaKick = Sound()
+        val soundMetaKick = SoundMeta()
         soundMetaKick.name = "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR,ENTITY_ZOMBIE_ATTACK_DOOR_WOOD,ZOMBIE_WOOD"
         soundMetaKick.volume = 10.0
         soundMetaKick.pitch = 1.5

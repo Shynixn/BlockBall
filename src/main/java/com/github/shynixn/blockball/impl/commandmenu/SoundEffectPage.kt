@@ -2,9 +2,9 @@ package com.github.shynixn.blockball.impl.commandmenu
 
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.Sound
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.mcutils.common.EffectTargetType
+import com.github.shynixn.mcutils.common.sound.SoundMeta
 
 /**
  * Created by Shynixn 2018.
@@ -65,16 +65,16 @@ class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
         } else if (command == MenuCommand.SOUND_BALL) {
             cache[4] = BallSettingsPage.ID
         } else if (command == MenuCommand.SOUND_CALLBACK_TYPE) {
-            val soundEffect = cache[5] as Sound
+            val soundEffect = cache[5] as SoundMeta
             soundEffect.name = args[2]
         } else if (command == MenuCommand.SOUND_CALLBACK_EFFECTING && args.size >= 3 && args[2].toIntOrNull() != null) {
-            val soundEffect = cache[5] as Sound
-            soundEffect.effectingType = EffectTargetType.values()[args[2].toInt()]
+            val soundEffect = cache[5] as SoundMeta
+            soundEffect.effectType = EffectTargetType.values()[args[2].toInt()]
         } else if (command == MenuCommand.SOUND_PITCH && args[2].toDoubleOrNull() != null) {
-            val soundEffect = cache[5] as Sound
+            val soundEffect = cache[5] as SoundMeta
             soundEffect.pitch = args[2].toDouble()
         } else if (command == MenuCommand.SOUND_VOLUME && args[2].toDoubleOrNull() != null) {
-            val soundEffect = cache[5] as Sound
+            val soundEffect = cache[5] as SoundMeta
             soundEffect.volume = args[2].toDouble()
         }
         return super.execute(player, command, cache, args)
@@ -86,9 +86,9 @@ class SoundEffectPage : Page(SoundEffectPage.ID, MainConfigurationPage.ID) {
      * @return page
      */
     override fun buildPage(cache: Array<Any?>): ChatBuilder? {
-        val soundEffect = cache[5] as Sound
+        val soundEffect = cache[5] as SoundMeta
         return ChatBuilder()
-                .component("- Effecting: " + soundEffect.effectingType).builder()
+                .component("- Effecting: " + soundEffect.effectType).builder()
                 .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_SOUND_EFFECTINGTYPES.command)
                 .setHoverText("Opens the selectionbox for effecting types.")

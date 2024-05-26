@@ -5,8 +5,8 @@ import com.github.shynixn.blockball.contract.RightclickManageService
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.enumeration.*
-import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.toVector3d
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 
@@ -40,28 +40,28 @@ class SignSettingsPage @Inject constructor(
             MenuCommand.SIGNS_ADDTEAMRED -> {
                 player.sendMessage(BlockBallLanguage.rightClickOnSign)
                 rightclickManageService.watchForNextRightClickSign(player) { location ->
-                    arena.meta.redTeamMeta.signs.add(location.toPosition())
+                    arena.meta.redTeamMeta.signs.add(location.toVector3d())
                     player.sendMessage(BlockBallLanguage.saveAndReloadSign)
                 }
             }
             MenuCommand.SIGNS_ADDTEAMBLUE -> {
                 player.sendMessage(BlockBallLanguage.rightClickOnSign)
                 rightclickManageService.watchForNextRightClickSign(player) { location ->
-                    arena.meta.blueTeamMeta.signs.add(location.toPosition())
+                    arena.meta.blueTeamMeta.signs.add(location.toVector3d())
                     player.sendMessage(BlockBallLanguage.saveAndReloadSign)
                 }
             }
             MenuCommand.SIGNS_ADDJOINANY -> {
                 player.sendMessage(BlockBallLanguage.rightClickOnSign)
                 rightclickManageService.watchForNextRightClickSign(player) { location ->
-                    arena.meta.lobbyMeta.joinSigns.add(location.toPosition())
+                    arena.meta.lobbyMeta.joinSigns.add(location.toVector3d())
                     player.sendMessage(BlockBallLanguage.saveAndReloadSign)
                 }
             }
             MenuCommand.SIGNS_LEAVE -> {
                 player.sendMessage(BlockBallLanguage.rightClickOnSign)
                 rightclickManageService.watchForNextRightClickSign(player) { location ->
-                    arena.meta.lobbyMeta.leaveSigns.add(location.toPosition())
+                    arena.meta.lobbyMeta.leaveSigns.add(location.toVector3d())
                     player.sendMessage(BlockBallLanguage.saveAndReloadSign)
                 }
             }

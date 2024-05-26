@@ -13,15 +13,6 @@ open class Game(
     val arena: Arena
 ) {
     /**
-     * Cached block position for the ball forcefield.
-     */
-    var ballForceFieldBlockPosition: Position? = null
-    /**
-     * Cached in arena position for the ball forcefield.
-     */
-    var ballForceFieldArenaPosition: Position? = null
-
-    /**
      * Status.
      */
     var status: GameState = GameState.JOINABLE

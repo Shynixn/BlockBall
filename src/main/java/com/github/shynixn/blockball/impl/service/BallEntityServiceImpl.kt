@@ -7,10 +7,10 @@ import com.github.shynixn.blockball.event.BallSpawnEvent
 import com.github.shynixn.blockball.impl.BallCrossPlatformProxy
 import com.github.shynixn.blockball.impl.BallDesignEntity
 import com.github.shynixn.blockball.impl.BallHitboxEntity
-import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.item.ItemService
+import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
@@ -48,7 +48,7 @@ class BallEntityServiceImpl @Inject constructor(
      * Returns a ball or null if the ball spawn event was cancelled.
      */
     override fun spawnTemporaryBall(location: Location, meta: BallMeta): Ball? {
-        val position = location.toPosition()
+        val position = location.toVector3d()
         position.yaw = 0.0
         position.pitch = 0.0
 

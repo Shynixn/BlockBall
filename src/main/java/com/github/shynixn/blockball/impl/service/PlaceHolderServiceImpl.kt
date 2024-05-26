@@ -84,16 +84,16 @@ class PlaceHolderServiceImpl @Inject constructor(
         }
 
         // Team PlaceHolders
-        teamPlaceHolderFunctions[PlaceHolder.TEAM_NAME] = { game, team, teamSize ->
+        teamPlaceHolderFunctions[PlaceHolder.TEAM_NAME] = { _, team, _ ->
             team.displayName
         }
-        teamPlaceHolderFunctions[PlaceHolder.TEAM_COLOR] = { game, team, teamSize ->
+        teamPlaceHolderFunctions[PlaceHolder.TEAM_COLOR] = { _, team, _ ->
             team.prefix
         }
-        teamPlaceHolderFunctions[PlaceHolder.TEAM_MAX_PLAYERS] = { game, team, teamSize ->
+        teamPlaceHolderFunctions[PlaceHolder.TEAM_MAX_PLAYERS] = { _, team, _ ->
             team.maxAmount.toString()
         }
-        teamPlaceHolderFunctions[PlaceHolder.TEAM_PLAYERS] = { game, team, teamSize ->
+        teamPlaceHolderFunctions[PlaceHolder.TEAM_PLAYERS] = { _, _, teamSize ->
             teamSize.toString()
         }
 

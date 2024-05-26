@@ -31,6 +31,7 @@ import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.mcutils.packet.impl.service.*
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
+import java.util.concurrent.Executor
 import java.util.logging.Level
 
 class BlockBallDependencyInjectionModule(
@@ -78,7 +79,9 @@ class BlockBallDependencyInjectionModule(
 
         // Services
         addService<CommandService, CommandServiceImpl>()
-        addService<PacketService>(PacketServiceImpl(plugin))
+        addService<PacketService>(PacketServiceImpl(
+            plugin
+        ) { command -> plugin.server.scheduler.runTask(plugin, command) })
         addService<EntityService>(EntityServiceImpl())
         addService<ScoreboardService, ScoreboardServiceImpl>()
         addService<ConfigurationService>(ConfigurationServiceImpl(plugin))
@@ -96,10 +99,8 @@ class BlockBallDependencyInjectionModule(
         addService<HubGameForcefieldService, HubGameForcefieldServiceImpl>()
         addService<BallEntityService, BallEntityServiceImpl>()
         addService<BlockSelectionService, BlockSelectionServiceImpl>()
-        addService<ItemTypeService, ItemTypeServiceImpl>()
         addService<GameExecutionService, GameExecutionServiceImpl>()
         addService<DependencyBossBarApiService, DependencyBossBarApiServiceImpl>()
-        addService<DependencyService, DependencyServiceImpl>()
         addService<RayTracingService, RayTracingServiceImpl>()
 
         when {
@@ -112,10 +113,6 @@ class BlockBallDependencyInjectionModule(
             plugin.logger.log(Level.INFO, "Loaded dependency ${PluginDependency.PLACEHOLDERAPI.pluginName}.")
         } else {
             addService<PlaceHolderService, PlaceHolderServiceImpl>()
-        }
-
-        if (Bukkit.getPluginManager().getPlugin(PluginDependency.VAULT.pluginName) != null) {
-            addService<DependencyVaultService, DependencyVaultServiceImpl>()
         }
     }
 }

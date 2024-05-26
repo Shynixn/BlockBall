@@ -6,8 +6,8 @@ import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
-import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.toVector3d
 import com.google.inject.Inject
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
@@ -48,10 +48,10 @@ class TeamSettingsPage @Inject constructor() :
             cache[2] = 1
         } else if (command == MenuCommand.TEAM_SPAWNPOINT) {
             val teamMeta = getTeamMeta(cache)
-            teamMeta.spawnpoint = player.location.toPosition()
+            teamMeta.spawnpoint = player.location.toVector3d()
         } else if (command == MenuCommand.TEAM_LOBBY) {
             val teamMeta = getTeamMeta(cache)
-            teamMeta.lobbySpawnpoint = player.location.toPosition()
+            teamMeta.lobbySpawnpoint = player.location.toVector3d()
         } else if (command == MenuCommand.TEAM_NAME) {
             val teamMeta = getTeamMeta(cache)
             val name = mergeArgs(2, args)
@@ -98,7 +98,6 @@ class TeamSettingsPage @Inject constructor() :
             }
         } else if (command == MenuCommand.TEAM_ARMOR) {
             val teamMeta = getTeamMeta(cache)
-            require(player is Player)
             teamMeta.armor = player.inventory.armorContents.clone().map { e ->
                 val yamlConfiguration = YamlConfiguration()
                 yamlConfiguration.set("item", e)
@@ -106,7 +105,6 @@ class TeamSettingsPage @Inject constructor() :
             }.toTypedArray()
         } else if (command == MenuCommand.TEAM_INVENTORY) {
             val teamMeta = getTeamMeta(cache)
-            require(player is Player)
             teamMeta.armor = player.inventory.contents.clone().map { e ->
                 val yamlConfiguration = YamlConfiguration()
                 yamlConfiguration.set("item", e)

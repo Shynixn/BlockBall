@@ -6,9 +6,9 @@ import com.github.shynixn.blockball.contract.Ball
 import com.github.shynixn.blockball.entity.BallMeta
 import com.github.shynixn.blockball.event.BallRemoveEvent
 import com.github.shynixn.blockball.event.BallTeleportEvent
-import com.github.shynixn.blockball.impl.extension.toLocation
-import com.github.shynixn.blockball.impl.extension.toPosition
-import com.github.shynixn.blockball.impl.extension.toVector
+import com.github.shynixn.mcutils.common.toLocation
+import com.github.shynixn.mcutils.common.toVector
+import com.github.shynixn.mcutils.common.toVector3d
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -74,7 +74,7 @@ class BallCrossPlatformProxy(
             return
         }
 
-        ballHitBoxEntity.position = ballTeleportEvent.targetLocation.toPosition()
+        ballHitBoxEntity.position = ballTeleportEvent.targetLocation.toVector3d()
         ballHitBoxEntity.requestTeleport = true
     }
 

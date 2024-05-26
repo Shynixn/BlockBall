@@ -1,12 +1,9 @@
 package com.github.shynixn.blockball.impl.commandmenu
 
-import com.github.shynixn.blockball.contract.DependencyVaultService
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
 import com.github.shynixn.blockball.entity.CommandMeta
 import com.github.shynixn.blockball.enumeration.*
-import com.github.shynixn.blockball.impl.service.DependencyVaultServiceImpl
-import com.github.shynixn.mcutils.common.ChatColor
 
 /**
  * Created by Shynixn 2018.
@@ -99,15 +96,6 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
         val rewardedAction = cache[5]
         val builder = ChatBuilder()
 
-        try {
-            builder.component("- Money reward (Vault): ").builder()
-                .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
-                .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_REWARDED_MONEY.command)
-                .setHoverText("Opens the selectionbox for rewarded actions.")
-                .builder().nextLine()
-        } catch (e: Exception) {
-        }
-
         builder.component("- Command reward: ").builder()
             .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_REWARDED_COMMAND.command)
@@ -115,22 +103,7 @@ class RewardsPage : Page(SoundEffectPage.ID, MainSettingsPage.ID) {
             .builder().nextLine()
 
         if (selectedReward != null) {
-            if (selectedReward is Int) {
-                val vaultService: DependencyVaultService
-
-                try {
-                    vaultService = DependencyVaultServiceImpl()
-                } catch (e: Exception) {
-                    return builder
-                }
-
-                builder.component("- Selected Money reward (Vault): " + (rewardedAction as RewardType).name).builder().nextLine()
-                    .component("- " + vaultService.getPluralCurrencyName() + ": " + ChatColor.WHITE + selectedReward).builder()
-                    .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
-                    .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.REWARD_EDIT_MONEY.command)
-                    .setHoverText("Changes the amount of money the players receive on the selected action.")
-                    .builder()
-            } else if (selectedReward is CommandMeta) {
+            if (selectedReward is CommandMeta) {
                 builder.component("- Selected Command reward: " + (rewardedAction as RewardType).name).builder().nextLine()
                     .component("- Command: " + selectedReward.command).builder()
                     .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)

@@ -8,10 +8,10 @@ import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallTouchPlayerEvent
 import com.github.shynixn.blockball.impl.extension.hasPermission
-import com.github.shynixn.blockball.impl.extension.toLocation
-import com.github.shynixn.blockball.impl.extension.toPosition
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mcutils.common.toLocation
+import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.event.PacketEvent
@@ -141,7 +141,7 @@ class GameListener @Inject constructor(
             return
         }
 
-        if (game.arena.isLocationInSelection(event.to!!.toPosition())) {
+        if (game.arena.isLocationInSelection(event.to!!.toVector3d())) {
             return
         }
 
@@ -276,7 +276,8 @@ class GameListener @Inject constructor(
             return
         }
 
-        @Suppress("DEPRECATION") player.health = player.maxHealth
+        @Suppress("DEPRECATION")
+        player.health = player.maxHealth
 
         playerCache.add(player)
 
@@ -309,8 +310,8 @@ class GameListener @Inject constructor(
     fun onBallRayTraceEvent(event: BallRayTraceEvent) {
         for (game in gameService.getAllGames()) {
             if (game.ball == event.ball) {
-                val targetPosition = event.targetLocation.toPosition()
-                val sourcePosition = event.ball.getLocation().toPosition()
+                val targetPosition = event.targetLocation.toVector3d()
+                val sourcePosition = event.ball.getLocation().toVector3d()
 
                 if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(sourcePosition)) {
                     gameSoccerService.notifyBallInGoal(game, Team.RED)
@@ -364,7 +365,7 @@ class GameListener @Inject constructor(
             return
         }
 
-        val location = event.clickedBlock!!.location.toPosition()
+        val location = event.clickedBlock!!.location.toVector3d()
 
         if (rightClickManageService.executeWatchers(event.player, event.clickedBlock!!.location)) {
             return

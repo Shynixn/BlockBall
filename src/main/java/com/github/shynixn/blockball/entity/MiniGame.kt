@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.entity
 
+import com.github.shynixn.mcutils.common.sound.SoundMeta
+
 open class MiniGame(
         /**
          *  Arena of the game.
@@ -42,7 +44,11 @@ open class MiniGame(
     /**
      * Returns the bling sound.
      */
-    val blingSound: Sound = Sound("BLOCK_NOTE_BLOCK_PLING,BLOCK_NOTE_PLING,NOTE_PLING", 2.0, 10.0)
+    val blingSound: SoundMeta = SoundMeta().also {
+        it.name = "BLOCK_NOTE_BLOCK_PLING,BLOCK_NOTE_PLING,NOTE_PLING"
+        it.volume = 10.0
+        it.pitch = 2.0
+    }
     /**
      * Are the players currently waiting in the lobby?
      */

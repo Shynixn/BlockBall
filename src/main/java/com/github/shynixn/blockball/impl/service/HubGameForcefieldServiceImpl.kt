@@ -6,11 +6,11 @@ import com.github.shynixn.blockball.entity.InteractionCache
 import com.github.shynixn.blockball.enumeration.ChatClickAction
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.impl.extension.stripChatColors
-import com.github.shynixn.blockball.impl.extension.toLocation
-import com.github.shynixn.blockball.impl.extension.toPosition
-import com.github.shynixn.blockball.impl.extension.toVector
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
+import com.github.shynixn.mcutils.common.toLocation
+import com.github.shynixn.mcutils.common.toVector
+import com.github.shynixn.mcutils.common.toVector3d
 import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -35,7 +35,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
 
         if (gameInternal.isPresent) {
             if (gameInternal.get().arena.gameType == GameType.HUBGAME && !gameInternal.get().arena.isLocationInSelection(
-                    location.toPosition()
+                    location.toVector3d()
                 )
             ) {
                 gameActionService.leaveGame(gameInternal.get(), player)
@@ -47,7 +47,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
 
         gameService.getAllGames().forEach { game ->
             if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(
-                    location.toPosition()
+                    location.toVector3d()
                 )
             ) {
                 inArea = true
@@ -146,7 +146,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
             }
         }
 
-        interactionCache.lastPosition = player.location.toPosition()
+        interactionCache.lastPosition = player.location.toVector3d()
     }
 
     /**

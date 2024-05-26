@@ -1,9 +1,9 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.HologramProxy
-import com.github.shynixn.blockball.entity.Position
-import com.github.shynixn.blockball.impl.extension.toLocation
-import com.github.shynixn.blockball.impl.extension.toPosition
+import com.github.shynixn.mcutils.common.Vector3d
+import com.github.shynixn.mcutils.common.toLocation
+import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
@@ -14,7 +14,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 
 class PacketHologram(private val entityService: EntityService) : HologramProxy {
-    private var position: Position? = null
+    private var position: Vector3d? = null
     private var entityIds = ArrayList<Int>()
     private var backedLines: List<String> = emptyList()
     private var linesChanged = false
@@ -75,7 +75,7 @@ class PacketHologram(private val entityService: EntityService) : HologramProxy {
             return position!!.toLocation()
         }
         set(value) {
-            this.position = value.toPosition()
+            this.position = value.toVector3d()
         }
 
     /**
@@ -117,7 +117,7 @@ class PacketHologram(private val entityService: EntityService) : HologramProxy {
             packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
                 it.entityId = entityIds[i]
                 it.entityType = EntityType.ARMOR_STAND
-                it.target = Position(this.position!!.worldName!!, this.position!!.x, this.position!!.y - upSet, this.position!!.z).toLocation()
+                it.target = Vector3d(this.position!!.world!!, this.position!!.x, this.position!!.y - upSet, this.position!!.z).toLocation()
             })
         }
     }

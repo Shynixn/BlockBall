@@ -3,29 +3,25 @@
 package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.BlockSelectionService
-import com.github.shynixn.blockball.contract.ItemTypeService
-import com.github.shynixn.blockball.enumeration.MaterialType
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.impl.extension.stripChatColors
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.item.Item
+import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.google.inject.Inject
 import kotlinx.coroutines.delay
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import java.util.*
-import kotlin.collections.HashMap
-import kotlin.collections.HashSet
 
 @Suppress("DEPRECATION", "SENSELESS_COMPARISON")
 class BlockSelectionServiceImpl @Inject constructor(
-    private val itemTypeService: ItemTypeService,
-    private val plugin: Plugin
+    private val plugin: Plugin,
+    private val itemService: ItemService
 ) : BlockSelectionService {
     private val axeName =
         ChatColor.WHITE.toString() + ChatColor.BOLD + ">>" + ChatColor.YELLOW + "BlockBall" + ChatColor.WHITE + ChatColor.BOLD + "<<"
@@ -100,14 +96,12 @@ class BlockSelectionServiceImpl @Inject constructor(
         }
 
         val itemStack = player.itemInHand
+        val itemMeta = itemStack.itemMeta
 
-        if (itemTypeService.findItemType<Any>(itemStack.type) != itemTypeService.findItemType(MaterialType.GOLDEN_AXE)
-            || itemStack.itemMeta == null
-        ) {
+        if (itemMeta == null) {
             return false
         }
 
-        val itemMeta = itemStack.itemMeta!!
 
         if (itemMeta.displayName == null) {
             return false
@@ -134,21 +128,23 @@ class BlockSelectionServiceImpl @Inject constructor(
         for (i in 0..player.inventory.contents.size) {
             if (player.inventory.contents[0] != null) {
                 val item = player.inventory.contents[0]
+                val itemMeta = item.itemMeta
 
-                if (itemTypeService.findItemType<Any>(item.type) == itemTypeService.findItemType(MaterialType.GOLDEN_AXE) && item.itemMeta!!.displayName != null
-                    && item.itemMeta!!.displayName.stripChatColors() == this.axeName.stripChatColors()
-                ) {
-                    return
+                if (itemMeta != null) {
+                    if (itemMeta.displayName != null
+                        && itemMeta.displayName.stripChatColors() == this.axeName.stripChatColors()
+                    ) {
+                        return
+                    }
                 }
             }
         }
 
-        val itemStack =
-            ItemStack(itemTypeService.findItemType<Material>(MaterialType.GOLDEN_AXE.MinecraftNumericId.toString()))
-        val meta = itemStack.itemMeta!!
-        meta.setDisplayName(axeName.translateChatColors())
-        itemStack.itemMeta = meta
-        player.inventory.addItem(itemStack)
+        val item = Item().also {
+            it.typeName = "minecraft:golden_axe,286"
+            it.displayName = axeName.translateChatColors()
+        }
+        player.inventory.addItem(itemService.toItemStack(item))
         player.sendMessage("Take a look into your inventory. Use this golden axe for selection.")
     }
 

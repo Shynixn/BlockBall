@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.enumeration.ParticleType
+import com.github.shynixn.mcutils.common.sound.SoundMeta
 
 
 class DoubleJumpMeta {
@@ -15,7 +16,11 @@ class DoubleJumpMeta {
     /** ParticleEffect being played when activating this.*/
     val particleEffect: Particle = Particle(ParticleType.EXPLOSION_NORMAL.name)
     /** SoundEffect being played when activating this.*/
-    val soundEffect: Sound = Sound("ENTITY_GHAST_SHOOT,GHAST_FIREBALL", 1.0, 10.0)
+    val soundEffect: SoundMeta = SoundMeta().also {
+        it.name = "ENTITY_GHAST_SHOOT,GHAST_FIREBALL"
+        it.pitch = 1.0
+        it.volume = 10.0
+    }
 
     init {
         particleEffect.amount = 4
