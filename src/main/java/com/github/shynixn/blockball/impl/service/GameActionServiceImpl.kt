@@ -13,7 +13,6 @@ import com.github.shynixn.blockball.impl.extension.setSignLines
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
-import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.google.inject.Inject
 import org.bukkit.Bukkit
@@ -35,8 +34,7 @@ class GameActionServiceImpl @Inject constructor(
     private val placeholderService: PlaceHolderService,
     private val packetService: PacketService,
     private val plugin: Plugin,
-    private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
-    private val entityService: EntityService
+    private val playerDataRepository: PlayerDataRepository<PlayerInformation>
 ) : GameActionService {
     /**
      * Compatibility reference.
@@ -347,7 +345,7 @@ class GameActionServiceImpl @Inject constructor(
             game.holograms.clear()
 
             game.arena.meta.hologramMetas.forEach { meta ->
-                val hologram = PacketHologram(entityService)
+                val hologram = PacketHologram()
                 hologram.packetService = packetService
 
                 hologram.lines = meta.lines

@@ -25,13 +25,14 @@ import com.github.shynixn.mcutils.database.impl.AutoSavePlayerDataRepositoryImpl
 import com.github.shynixn.mcutils.database.impl.CachePlayerDataRepositoryImpl
 import com.github.shynixn.mcutils.database.impl.ConfigSelectedRepositoryImpl
 import com.github.shynixn.mcutils.guice.DependencyInjectionModule
-import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
-import com.github.shynixn.mcutils.packet.impl.service.*
+import com.github.shynixn.mcutils.packet.impl.service.ChatMessageServiceImpl
+import com.github.shynixn.mcutils.packet.impl.service.ItemServiceImpl
+import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
+import com.github.shynixn.mcutils.packet.impl.service.RayTracingServiceImpl
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
-import java.util.concurrent.Executor
 import java.util.logging.Level
 
 class BlockBallDependencyInjectionModule(
@@ -79,10 +80,7 @@ class BlockBallDependencyInjectionModule(
 
         // Services
         addService<CommandService, CommandServiceImpl>()
-        addService<PacketService>(PacketServiceImpl(
-            plugin
-        ) { command -> plugin.server.scheduler.runTask(plugin, command) })
-        addService<EntityService>(EntityServiceImpl())
+        addService<PacketService>(PacketServiceImpl(plugin))
         addService<ScoreboardService, ScoreboardServiceImpl>()
         addService<ConfigurationService>(ConfigurationServiceImpl(plugin))
         addService<SoundService>(SoundServiceImpl(plugin))
@@ -93,7 +91,7 @@ class BlockBallDependencyInjectionModule(
         addService<GameMiniGameActionService, GameMiniGameActionServiceImpl>()
         addService<GameBungeeCordGameActionService, GameBungeeCordGameActionServiceImpl>()
         addService<ItemService>(ItemServiceImpl())
-        addService<ChatMessageService, ChatMessageServiceImpl>()
+        addService<ChatMessageService>(ChatMessageServiceImpl(plugin))
         addService<GameSoccerService, GameSoccerServiceImpl>()
         addService<RightclickManageService, RightclickManageServiceImpl>()
         addService<HubGameForcefieldService, HubGameForcefieldServiceImpl>()

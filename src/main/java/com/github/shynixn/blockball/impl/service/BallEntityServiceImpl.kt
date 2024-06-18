@@ -11,7 +11,6 @@ import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.toVector3d
-import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.google.inject.Inject
@@ -24,8 +23,7 @@ class BallEntityServiceImpl @Inject constructor(
     private val packetService: PacketService,
     private val itemService: ItemService,
     private val rayTracingService: RayTracingService,
-    private val plugin: Plugin,
-    private val entityService: EntityService
+    private val plugin: Plugin
 ) : BallEntityService {
 
     private val ballHitBoxTracked = HashMap<Int, Ball>()
@@ -52,12 +50,12 @@ class BallEntityServiceImpl @Inject constructor(
         position.yaw = 0.0
         position.pitch = 0.0
 
-        val ballHitBoxEntity = BallHitboxEntity(entityService.createNewEntityId(), meta.spawnpoint!!)
+        val ballHitBoxEntity = BallHitboxEntity(packetService.getNextEntityId(), meta.spawnpoint!!)
         ballHitBoxEntity.position = position
         ballHitBoxEntity.rayTracingService = rayTracingService
         ballHitBoxEntity.packetService = packetService
 
-        val ballDesignEntity = BallDesignEntity(entityService.createNewEntityId())
+        val ballDesignEntity = BallDesignEntity(packetService.getNextEntityId())
         ballDesignEntity.packetService = packetService
         ballDesignEntity.itemService = itemService
 
