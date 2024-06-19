@@ -5,7 +5,7 @@ The following placeholders are available in BlockBall and can also be used via P
 
 .. note:: PlaceHolders can be used in Messages, Signs, Scoreboards, BossBars and Holograms.
 
-.. note:: In order to use BlockBall placeholders in external plugins, the player has to be in a BlockBall game or append the id of the arena to the placeholder e.g. "%blockball_game_blueScore_1%".
+.. note:: In order to use BlockBall placeholders in external plugins, the player has to be in a BlockBall game or append the id of the arena to the placeholder e.g. "%blockball_game_blueScore_arena_1%".
 
 Placeholderlist
 ~~~~~~~~~~~~~~~
