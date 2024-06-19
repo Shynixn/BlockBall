@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.enumeration.BallActionType
-import com.github.shynixn.blockball.enumeration.ParticleType
 import com.github.shynixn.mcutils.common.sound.SoundMeta
 
 class ArenaMeta {
@@ -72,46 +71,6 @@ class ArenaMeta {
     private val internalHologramMetas: ArrayList<HologramMeta> = ArrayList()
 
     init {
-        val partMetaSpawn = Particle()
-        partMetaSpawn.typeName = ParticleType.EXPLOSION_NORMAL.name
-        partMetaSpawn.amount = 10
-        partMetaSpawn.speed = 0.1
-        partMetaSpawn.offset.x = 2.0
-        partMetaSpawn.offset.y = 2.0
-        partMetaSpawn.offset.z = 2.0
-
-        ballMeta.particleEffects[BallActionType.ONSPAWN] = partMetaSpawn
-
-        val partMetaInteraction = Particle()
-        partMetaInteraction.typeName = ParticleType.CRIT.name
-        partMetaInteraction.amount = 5
-        partMetaInteraction.speed = 0.1
-        partMetaInteraction.offset.x = 2.0
-        partMetaInteraction.offset.y = 2.0
-        partMetaInteraction.offset.z = 2.0
-
-        ballMeta.particleEffects[BallActionType.ONINTERACTION] = partMetaInteraction
-
-        val partMetaKick = Particle()
-        partMetaKick.typeName = ParticleType.EXPLOSION_LARGE.name
-        partMetaKick.amount = 5
-        partMetaKick.speed = 0.1
-        partMetaKick.offset.x = 0.2
-        partMetaKick.offset.y = 0.2
-        partMetaKick.offset.z = 0.2
-
-        ballMeta.particleEffects[BallActionType.ONKICK] = partMetaKick
-
-        val partMetaShoot = Particle()
-        partMetaShoot.typeName = ParticleType.EXPLOSION_NORMAL.name
-        partMetaShoot.amount = 5
-        partMetaShoot.speed = 0.1
-        partMetaShoot.offset.x = 0.1
-        partMetaShoot.offset.y = 0.1
-        partMetaShoot.offset.z = 0.1
-
-        ballMeta.particleEffects[BallActionType.ONPASS] = partMetaShoot
-
         val soundMetaKick = SoundMeta()
         soundMetaKick.name = "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR,ENTITY_ZOMBIE_ATTACK_DOOR_WOOD,ZOMBIE_WOOD"
         soundMetaKick.volume = 10.0

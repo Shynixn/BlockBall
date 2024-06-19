@@ -32,8 +32,9 @@ class BlockBallPlugin : JavaPlugin() {
         /** Final Prefix of BlockBall in the console */
         val PREFIX_CONSOLE: String = ChatColor.BLUE.toString() + "[BlockBall] "
     }
+
     private val bstatsPluginId = 1317
-    private lateinit var module : DependencyInjectionModule
+    private lateinit var module: DependencyInjectionModule
     private var immidiateDisable = false
 
     /**
@@ -65,10 +66,11 @@ class BlockBallPlugin : JavaPlugin() {
                 Version.VERSION_1_20_R2,
                 Version.VERSION_1_20_R3,
                 Version.VERSION_1_20_R4,
+                Version.VERSION_1_21_R1,
             )
         } else {
             arrayOf(
-                Version.VERSION_1_20_R4,
+                Version.VERSION_1_21_R1,
             )
         }
 
@@ -106,7 +108,7 @@ class BlockBallPlugin : JavaPlugin() {
         // Register CommandExecutor
         val commandService = module.getService<CommandService>()
         commandService.registerCommandExecutor("blockballstop", module.getService<StopCommandExecutor>())
-        commandService.registerCommandExecutor("blockballreload",  module.getService<ReloadCommandExecutor>())
+        commandService.registerCommandExecutor("blockballreload", module.getService<ReloadCommandExecutor>())
         commandService.registerCommandExecutor("blockball", module.getService<ArenaCommandExecutor>())
         commandService.registerCommandExecutor(
             (config.get("global-spectate") as MemorySection).getValues(false) as Map<String, String>,

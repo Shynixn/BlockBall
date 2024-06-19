@@ -4,7 +4,6 @@ import com.github.shynixn.blockball.contract.HologramProxy
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector3d
-import com.github.shynixn.mcutils.packet.api.EntityService
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityDestroy
@@ -13,7 +12,7 @@ import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntitySpawn
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
-class PacketHologram(private val entityService: EntityService) : HologramProxy {
+class PacketHologram : HologramProxy {
     private var position: Vector3d? = null
     private var entityIds = ArrayList<Int>()
     private var backedLines: List<String> = emptyList()
@@ -56,7 +55,7 @@ class PacketHologram(private val entityService: EntityService) : HologramProxy {
             if (this.backedLines.size != value.size) {
                 entityIds.clear()
                 for (i in value.indices) {
-                    entityIds.add(entityService.createNewEntityId())
+                    entityIds.add(packetService.getNextEntityId())
                 }
 
                 this.playerTracker.dispose()

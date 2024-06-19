@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.Ball
 import com.github.shynixn.blockball.contract.BallEntityService
-import com.github.shynixn.blockball.contract.ParticleService
 import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.blockball.event.*
 import com.github.shynixn.mcutils.common.sound.SoundService
@@ -15,7 +14,6 @@ import org.bukkit.event.Listener
  */
 class BallListener @Inject constructor(
     private val ballEntityService: BallEntityService,
-    private val particleService: ParticleService,
     private val soundService: SoundService
 ) : Listener {
     /**
@@ -88,14 +86,6 @@ class BallListener @Inject constructor(
      * Plays effects.
      */
     private fun playEffects(ball: Ball, actionEffect: BallActionType) {
-        if (ball.meta.particleEffects.containsKey(actionEffect)) {
-            this.particleService.playParticle(
-                ball.getLocation(),
-                ball.meta.particleEffects[actionEffect]!!,
-                ball.getLocation().world!!.players
-            )
-        }
-
         if (ball.meta.soundEffects.containsKey(actionEffect)) {
             this.soundService.playSound(
                 ball.getLocation(),

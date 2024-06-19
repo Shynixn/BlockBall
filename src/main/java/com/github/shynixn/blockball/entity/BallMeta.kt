@@ -15,7 +15,7 @@ class BallMeta {
      */
     var item: Item = Item().also {
         it.typeName = "PLAYER_HEAD,397"
-        it.durability = 3
+        it.durability = "3"
         it.skinBase64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ=="
     }
     /**
@@ -78,11 +78,6 @@ class BallMeta {
      * Movement modifier.
      */
     val movementModifier: MovementConfiguration = MovementConfiguration()
-
-    /**
-     * Particle effects.
-     */
-    val particleEffects: MutableMap<BallActionType, Particle> = HashMap()
 
     /**
      * Particle effects.

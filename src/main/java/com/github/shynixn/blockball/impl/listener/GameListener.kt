@@ -14,7 +14,7 @@ import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.mcutils.packet.api.PacketInType
-import com.github.shynixn.mcutils.packet.api.event.PacketEvent
+import com.github.shynixn.mcutils.packet.api.event.PacketAsyncEvent
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.InteractionType
 import com.github.shynixn.mcutils.packet.api.packet.PacketInInteractEntity
 import com.google.inject.Inject
@@ -51,28 +51,30 @@ class GameListener @Inject constructor(
      * Gets called when a packet arrives.
      */
     @EventHandler
-    fun onPacketEvent(event: PacketEvent) {
+    fun onPacketEvent(event: PacketAsyncEvent) {
         if (event.packetType != PacketInType.USEENTITY) {
             return
         }
 
-        val game = gameService.getGameFromPlayer(event.player)
+        plugin.launch {
+            val game = gameService.getGameFromPlayer(event.player)
 
-        if (!game.isPresent) {
-            return
-        }
+            if (!game.isPresent) {
+                return@launch
+            }
 
-        val packet = event.packet as PacketInInteractEntity
-        val ball = ballEntityService.findBallByEntityId(packet.entityId) ?: return
+            val packet = event.packet as PacketInInteractEntity
+            val ball = ballEntityService.findBallByEntityId(packet.entityId) ?: return@launch
 
-        if (game.get().ball != ball) {
-            return
-        }
+            if (game.get().ball != ball) {
+                return@launch
+            }
 
-        if (packet.actionType == InteractionType.RIGHT_CLICK || packet.actionType == InteractionType.OTHER) {
-            ball.passByPlayer(event.player)
-        } else {
-            ball.kickByPlayer(event.player)
+            if (packet.actionType == InteractionType.RIGHT_CLICK || packet.actionType == InteractionType.OTHER) {
+                ball.passByPlayer(event.player)
+            } else {
+                ball.kickByPlayer(event.player)
+            }
         }
     }
 

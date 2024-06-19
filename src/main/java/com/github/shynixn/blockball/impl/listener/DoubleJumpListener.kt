@@ -3,7 +3,6 @@
 package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.ParticleService
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.google.inject.Inject
 import org.bukkit.GameMode
@@ -12,7 +11,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerToggleFlightEvent
 
-class DoubleJumpListener @Inject constructor(private val gameService: GameService, private val soundService: SoundService, private val particleService: ParticleService) : Listener {
+class DoubleJumpListener @Inject constructor(private val gameService: GameService, private val soundService: SoundService) : Listener {
     /**
      * Gets called when a player moves. Allows the executing player to start flying
      * for double jump calculation if the action is enabled and the player is in a game.
@@ -63,6 +62,5 @@ class DoubleJumpListener @Inject constructor(private val gameService: GameServic
                 .setY(meta.verticalStrength)
 
         soundService.playSound(player.location,player.world.players, meta.soundEffect)
-        particleService.playParticle(player.location, meta.particleEffect, player.world.players)
     }
 }

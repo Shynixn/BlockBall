@@ -11,22 +11,38 @@ import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.item.Item
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.translateChatColors
+import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.api.packet.PacketOutDebugMarker
 import com.google.inject.Inject
 import kotlinx.coroutines.delay
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.awt.Color
 import java.util.*
 
 @Suppress("DEPRECATION", "SENSELESS_COMPARISON")
 class BlockSelectionServiceImpl @Inject constructor(
     private val plugin: Plugin,
-    private val itemService: ItemService
+    private val itemService: ItemService,
+    private val packetService: PacketService
 ) : BlockSelectionService {
     private val axeName =
         ChatColor.WHITE.toString() + ChatColor.BOLD + ">>" + ChatColor.YELLOW + "BlockBall" + ChatColor.WHITE + ChatColor.BOLD + "<<"
     private val playerSelection = HashMap<Player, Array<Location?>>()
     private val rightClickSelectionCahe = HashSet<Player>()
+
+    init {
+        plugin.launch {
+            while (true) {
+                for (player in playerSelection.keys.toTypedArray()) {
+                    updateSelection(player, playerSelection[player]!!)
+                }
+                delay(2000)
+            }
+        }
+    }
+
 
     /**
      * Selects the left location internally.
@@ -116,6 +132,7 @@ class BlockSelectionServiceImpl @Inject constructor(
         }
 
         playerSelection[player]!![index] = location
+        updateSelection(player, playerSelection[player]!!)
 
         return true
     }
@@ -146,6 +163,24 @@ class BlockSelectionServiceImpl @Inject constructor(
         }
         player.inventory.addItem(itemService.toItemStack(item))
         player.sendMessage("Take a look into your inventory. Use this golden axe for selection.")
+    }
+
+    private fun updateSelection(player: Player, locations: Array<Location?>) {
+        for (i in 0 until locations.size) {
+            if (i == 0 && locations[i] != null) {
+                packetService.sendPacketOutDebugMarker(
+                    player,
+                    PacketOutDebugMarker(locations[i]!!, 2200, Color.YELLOW.rgb, "BlockBall [LEFT]")
+                )
+            }
+
+            if (i == 1 && locations[i] != null) {
+                packetService.sendPacketOutDebugMarker(
+                    player,
+                    PacketOutDebugMarker(locations[i]!!, 2200, Color.YELLOW.rgb, "BlockBall [RIGHT]")
+                )
+            }
+        }
     }
 
     /**

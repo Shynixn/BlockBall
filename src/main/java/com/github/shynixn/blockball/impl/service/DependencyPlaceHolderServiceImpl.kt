@@ -64,10 +64,25 @@ class DependencyPlaceHolderServiceImpl @Inject constructor(
         }
 
         val parts = params.split("_")
-        val finalPart = parts[parts.size - 1]
-        val newParams = parts.dropLast(1).joinToString("_")
+        val gamePart = StringBuilder()
+        val newParams = StringBuilder()
+        for (i in parts.indices) {
+            if (i < 2) {
+                if (newParams.isNotEmpty()) {
+                    newParams.append("_")
+                }
 
-        var optSelectedGame = gameService.getGameFromName(finalPart)
+                newParams.append(parts[i])
+            } else {
+                if (gamePart.isNotEmpty()) {
+                    gamePart.append("_")
+                }
+
+                gamePart.append(parts[i])
+            }
+        }
+
+        var optSelectedGame = gameService.getGameFromName(gamePart.toString())
         if (optSelectedGame.isPresent) {
             val selectedGame = optSelectedGame.get()
             val teamPair = if (player != null && selectedGame.redTeam.contains(player)) {

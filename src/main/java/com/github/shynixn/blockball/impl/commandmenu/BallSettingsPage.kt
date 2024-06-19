@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.impl.commandmenu
 
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.ChatBuilder
-import com.github.shynixn.blockball.entity.Particle
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.mcutils.common.sound.SoundMeta
 
@@ -54,8 +53,6 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             ballMeta.alwaysBounce = !ballMeta.alwaysBounce
         } else if (command == MenuCommand.BALL_TOGGLE_ROTATING) {
             ballMeta.rotating = !ballMeta.rotating
-        } else if (command == MenuCommand.BALL_PARTICLEACTION_CALLBACK && args.size == 3) {
-            cache[5] = ballMeta.particleEffects[BallActionType.values()[args[2].toInt()]]
         } else if (command == MenuCommand.BALL_SOUNDACTION_CALLBACK && args.size == 3) {
             cache[5] = ballMeta.soundEffects[BallActionType.values()[args[2].toInt()]]
         }
@@ -128,22 +125,11 @@ class BallSettingsPage : Page(BallSettingsPage.ID, MainSettingsPage.ID) {
             .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BALL_SOUNDEFFECTS.command)
             .setHoverText("Opens the selection page for action binders.")
             .builder().nextLine()
-            .component("- Particle Effect: ").builder()
-            .component(MenuClickableItem.SELECT.text).setColor(MenuClickableItem.SELECT.color)
-            .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.LIST_BALL_PARTICLEFFECTS.command)
-            .setHoverText("Opens the selection page for action binders.")
-            .builder().nextLine()
         if (cache[5] != null && cache[5] is SoundMeta) {
             builder.component("- Selected Sound-effect: ").builder().component(MenuClickableItem.PAGE.text)
                 .setColor(MenuClickableItem.PAGE.color)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.SOUND_BALL.command)
                 .setHoverText("Opens the page for editing sound effects.")
-                .builder().nextLine()
-        } else if (cache[5] != null && cache[5] is Particle) {
-            builder.component("- Selected Particle-effect: ").builder().component(MenuClickableItem.PAGE.text)
-                .setColor(MenuClickableItem.PAGE.color)
-                .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.PARTICLE_BALL.command)
-                .setHoverText("Opens the page for editing particle effects.")
                 .builder().nextLine()
         }
         return builder
