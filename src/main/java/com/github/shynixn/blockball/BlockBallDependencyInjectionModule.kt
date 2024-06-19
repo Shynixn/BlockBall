@@ -6,11 +6,8 @@ import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.enumeration.PluginDependency
 import com.github.shynixn.blockball.impl.service.*
-import com.github.shynixn.blockball.impl.service.nms.v1_13_R2.Particle113R2ServiceImpl
-import com.github.shynixn.blockball.impl.service.nms.v1_8_R3.Particle18R3ServiceImpl
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.ConfigurationServiceImpl
-import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
@@ -100,11 +97,6 @@ class BlockBallDependencyInjectionModule(
         addService<GameExecutionService, GameExecutionServiceImpl>()
         addService<DependencyBossBarApiService, DependencyBossBarApiServiceImpl>()
         addService<RayTracingService, RayTracingServiceImpl>()
-
-        when {
-            Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_13_R2) -> addService<ParticleService, Particle113R2ServiceImpl>()
-            else -> addService<ParticleService, Particle18R3ServiceImpl>()
-        }
 
         if (Bukkit.getPluginManager().getPlugin(PluginDependency.PLACEHOLDERAPI.pluginName) != null) {
             addService<PlaceHolderService, DependencyPlaceHolderServiceImpl>()

@@ -82,11 +82,6 @@ class BallMeta {
     /**
      * Particle effects.
      */
-    val particleEffects: MutableMap<BallActionType, Particle> = HashMap()
-
-    /**
-     * Particle effects.
-     */
     val soundEffects: MutableMap<BallActionType, SoundMeta> = HashMap()
 
     /** Spawning delay. */
