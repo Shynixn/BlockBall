@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.PlayerInformation
-import com.github.shynixn.blockball.enumeration.PluginDependency
 import com.github.shynixn.blockball.impl.service.*
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.ConfigurationServiceImpl
@@ -91,9 +90,9 @@ class BlockBallDependencyInjectionModule(
         addService<BlockSelectionService, BlockSelectionServiceImpl>()
         addService<RayTracingService, RayTracingServiceImpl>()
 
-        if (Bukkit.getPluginManager().getPlugin(PluginDependency.PLACEHOLDERAPI.pluginName) != null) {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             addService<PlaceHolderService, DependencyPlaceHolderServiceImpl>()
-            plugin.logger.log(Level.INFO, "Loaded dependency ${PluginDependency.PLACEHOLDERAPI.pluginName}.")
+            plugin.logger.log(Level.INFO, "Loaded dependency PlaceholderAPI.")
         } else {
             addService<PlaceHolderService, PlaceHolderServiceImpl>()
         }

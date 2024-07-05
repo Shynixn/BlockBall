@@ -57,10 +57,6 @@ class ListablePage @Inject constructor(
                 cache[2] = CommandMode.values().map { p -> p.name }
                 cache[3] = MenuCommand.REWARD_CALLBACK_COMMANDMODE
             }
-            MenuCommand.LIST_PARTICLE_TYPES -> {
-                cache[2] = ParticleType.values().map { p -> p.name }
-                cache[3] = MenuCommand.PARTICLE_CALLBACK_TYPE
-            }
             MenuCommand.LIST_REWARDED_MONEY -> {
                 cache[2] = RewardType.values().map { p -> p.name }
                 cache[3] = MenuCommand.REWARD_CALLBACK_MONEY
