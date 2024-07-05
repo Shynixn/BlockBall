@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.impl.service
 
+import com.github.shynixn.blockball.contract.BlockBallGame
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.PlaceHolderService
-import com.github.shynixn.blockball.entity.Game
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
@@ -82,9 +82,8 @@ class DependencyPlaceHolderServiceImpl @Inject constructor(
             }
         }
 
-        var optSelectedGame = gameService.getGameFromName(gamePart.toString())
-        if (optSelectedGame.isPresent) {
-            val selectedGame = optSelectedGame.get()
+        var selectedGame = gameService.getGameFromName(gamePart.toString())
+        if (selectedGame != null) {
             val teamPair = if (player != null && selectedGame.redTeam.contains(player)) {
                 Pair(selectedGame.arena.meta.redTeamMeta, selectedGame.redTeam.size)
             } else if (player != null && selectedGame.blueTeam.contains(player)) {
@@ -98,19 +97,18 @@ class DependencyPlaceHolderServiceImpl @Inject constructor(
         }
 
         if (player != null) {
-            optSelectedGame = gameService.getGameFromPlayer(player)
+            val optSelectedGame = gameService.getGameFromPlayer(player)
 
-            if (optSelectedGame.isPresent) {
-                val selectedGame = optSelectedGame.get()
-                val teamPair = if (selectedGame.redTeam.contains(player)) {
-                    Pair(selectedGame.arena.meta.redTeamMeta, selectedGame.redTeam.size)
-                } else if (selectedGame.blueTeam.contains(player)) {
-                    Pair(selectedGame.arena.meta.blueTeamMeta, selectedGame.blueTeam.size)
+            if (optSelectedGame != null) {
+                val teamPair = if (optSelectedGame.redTeam.contains(player)) {
+                    Pair(optSelectedGame.arena.meta.redTeamMeta, optSelectedGame.redTeam.size)
+                } else if (optSelectedGame.blueTeam.contains(player)) {
+                    Pair(optSelectedGame.arena.meta.blueTeamMeta, optSelectedGame.blueTeam.size)
                 } else {
                     Pair(null, null)
                 }
                 return replacePlaceHolders(
-                    "%blockball_${params}%", player, selectedGame, teamPair.first, teamPair.second
+                    "%blockball_${params}%", player, optSelectedGame, teamPair.first, teamPair.second
                 )
             } else {
                 return replacePlaceHolders("%blockball_${params}%", player, null, null, null)
@@ -124,7 +122,7 @@ class DependencyPlaceHolderServiceImpl @Inject constructor(
      * Replaces the given text with properties from the given [game], optional [teamMeta] and optional size.
      */
     override fun replacePlaceHolders(
-        text: String, player: Player?, game: Game?, teamMeta: TeamMeta?, currentTeamSize: Int?
+        text: String, player: Player?, game: BlockBallGame?, teamMeta: TeamMeta?, currentTeamSize: Int?
     ): String {
         val replacedInput = placeHolderService.replacePlaceHolders(text, player, game, teamMeta, currentTeamSize)
         return PlaceholderAPI.setPlaceholders(player, replacedInput)

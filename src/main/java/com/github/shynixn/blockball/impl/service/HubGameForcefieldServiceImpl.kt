@@ -18,7 +18,6 @@ import org.bukkit.entity.Player
 
 class HubGameForcefieldServiceImpl @Inject constructor(
     private val gameService: GameService,
-    private val gameActionService: GameActionService,
     private val placeholderService: PlaceHolderService,
     private val configurationService: ConfigurationService,
     private val chatMessageService: ChatMessageService
@@ -33,12 +32,12 @@ class HubGameForcefieldServiceImpl @Inject constructor(
         val interactionCache = getInteractionCache(player)
         val gameInternal = gameService.getGameFromPlayer(player)
 
-        if (gameInternal.isPresent) {
-            if (gameInternal.get().arena.gameType == GameType.HUBGAME && !gameInternal.get().arena.isLocationInSelection(
+        if (gameInternal != null) {
+            if (gameInternal.arena.gameType == GameType.HUBGAME && !gameInternal.arena.isLocationInSelection(
                     location.toVector3d()
                 )
             ) {
-                gameActionService.leaveGame(gameInternal.get(), player)
+                gameInternal.leave(player)
             }
             return
         }
@@ -52,7 +51,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
             ) {
                 inArea = true
                 if (game.arena.meta.hubLobbyMeta.instantForcefieldJoin) {
-                    gameActionService.joinGame(game, player)
+                    game.join(player)
                     return
                 }
 

@@ -11,7 +11,10 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerToggleFlightEvent
 
-class DoubleJumpListener @Inject constructor(private val gameService: GameService, private val soundService: SoundService) : Listener {
+class DoubleJumpListener @Inject constructor(
+    private val gameService: GameService,
+    private val soundService: SoundService
+) : Listener {
     /**
      * Gets called when a player moves. Allows the executing player to start flying
      * for double jump calculation if the action is enabled and the player is in a game.
@@ -22,9 +25,9 @@ class DoubleJumpListener @Inject constructor(private val gameService: GameServic
             return
         }
 
-        val game = gameService.getGameFromPlayer(event.player)
+        val game = gameService.getGameFromPlayer(event.player) ?: return
 
-        if (game.isPresent && game.get().arena.meta.doubleJumpMeta.enabled) {
+        if (game.arena.meta.doubleJumpMeta.enabled) {
             event.player.allowFlight = true
         }
     }
@@ -39,28 +42,28 @@ class DoubleJumpListener @Inject constructor(private val gameService: GameServic
             return
         }
 
-        val game = gameService.getGameFromPlayer(event.player)
+        val game = gameService.getGameFromPlayer(event.player) ?: return
 
-        if (!game.isPresent || !game.get().arena.meta.doubleJumpMeta.enabled) {
+        if (!game.arena.meta.doubleJumpMeta.enabled) {
             return
         }
 
         val player = event.player
-        val meta = game.get().arena.meta.doubleJumpMeta
+        val meta = game.arena.meta.doubleJumpMeta
 
         player.allowFlight = false
         player.isFlying = false
         event.isCancelled = true
 
-        if (game.get().doubleJumpCoolDownPlayers.containsKey(player)) {
+        if (game.doubleJumpCoolDownPlayers.containsKey(player)) {
             return
         }
 
-        game.get().doubleJumpCoolDownPlayers[player] = meta.cooldown
+        game.doubleJumpCoolDownPlayers[player] = meta.cooldown
         player.velocity = player.location.direction
-                .multiply(meta.horizontalStrength)
-                .setY(meta.verticalStrength)
+            .multiply(meta.horizontalStrength)
+            .setY(meta.verticalStrength)
 
-        soundService.playSound(player.location,player.world.players, meta.soundEffect)
+        soundService.playSound(player.location, player.world.players, meta.soundEffect)
     }
 }

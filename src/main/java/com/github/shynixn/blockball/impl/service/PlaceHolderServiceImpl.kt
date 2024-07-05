@@ -2,10 +2,10 @@ package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.BlockBallLanguage
+import com.github.shynixn.blockball.contract.BlockBallGame
+import com.github.shynixn.blockball.contract.BlockBallMiniGame
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.PlaceHolderService
-import com.github.shynixn.blockball.entity.Game
-import com.github.shynixn.blockball.entity.MiniGame
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.GameState
@@ -18,8 +18,8 @@ import org.bukkit.entity.Player
 class PlaceHolderServiceImpl @Inject constructor(
     private val gameService: GameService, private val playerDataRepository: CachePlayerRepository<PlayerInformation>
 ) : PlaceHolderService {
-    private val gamePlayerHolderFunctions = HashMap<PlaceHolder, ((Game) -> String)>()
-    private val teamPlaceHolderFunctions = HashMap<PlaceHolder, ((Game, TeamMeta, Int) -> String)>()
+    private val gamePlayerHolderFunctions = HashMap<PlaceHolder, ((BlockBallGame) -> String)>()
+    private val teamPlaceHolderFunctions = HashMap<PlaceHolder, ((BlockBallGame, TeamMeta, Int) -> String)>()
     private val playerPlaceHolderFunctions = HashMap<PlaceHolder, ((Player) -> String)>()
     private val langPlaceHolderFunctions = HashMap<String, (() -> String)>()
     private val placeHolders = HashMap<String, PlaceHolder>()
@@ -49,7 +49,7 @@ class PlaceHolderServiceImpl @Inject constructor(
         gamePlayerHolderFunctions[PlaceHolder.GAME_TEAM_RED_COLOR] = { game -> game.arena.meta.redTeamMeta.prefix }
         gamePlayerHolderFunctions[PlaceHolder.GAME_TEAM_BLUE_COLOR] = { game -> game.arena.meta.blueTeamMeta.prefix }
         gamePlayerHolderFunctions[PlaceHolder.GAME_TIME] = { game ->
-            if (game is MiniGame) {
+            if (game is BlockBallMiniGame) {
                 game.gameCountdown.toString()
             } else {
                 "∞"
@@ -100,15 +100,15 @@ class PlaceHolderServiceImpl @Inject constructor(
         // Player PlaceHolders
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_IS_INGAME] = { player ->
             val game = gameService.getGameFromPlayer(player)
-            game.isPresent.toString()
+            game?.ingamePlayersStorage?.containsKey(player).toString()
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_IS_IN_TEAM_BLUE] = { player ->
             val game = gameService.getGameFromPlayer(player)
-            (game.isPresent && game.get().blueTeam.contains(player)).toString()
+            game?.blueTeam?.contains(player).toString()
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_IS_IN_TEAM_RED] = { player ->
             val game = gameService.getGameFromPlayer(player)
-            (game.isPresent && game.get().redTeam.contains(player)).toString()
+            game?.redTeam?.contains(player).toString()
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_SCOREDGOALS] = { player ->
             if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
@@ -232,7 +232,7 @@ class PlaceHolderServiceImpl @Inject constructor(
      * Replaces the given text with properties from the given [game], optional [teamMeta] and optional size.
      */
     override fun replacePlaceHolders(
-        text: String, player: Player?, game: Game?, teamMeta: TeamMeta?, currentTeamSize: Int?
+        text: String, player: Player?, game: BlockBallGame?, teamMeta: TeamMeta?, currentTeamSize: Int?
     ): String {
         var output = text
         for (i in 0 until 4) {
