@@ -30,7 +30,7 @@ class MinigameListener @Inject constructor(
             game = gameService.getGameFromSpectatingPlayer(event.player)
         }
 
-        if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE)) {
+        if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME)) {
             event.isCancelled = true
         }
     }
@@ -78,7 +78,7 @@ class MinigameListener @Inject constructor(
             game = gameService.getGameFromSpectatingPlayer(event.player)
         }
 
-        if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME || game.arena.gameType == GameType.BUNGEE)) {
+        if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME)) {
             event.isCancelled = true
         }
     }

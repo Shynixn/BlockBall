@@ -47,7 +47,7 @@ class GameStorage{
     /**
      * Storage belongs to this [GameType].
      */
-    var gameType: GameType = GameType.BUNGEE
+    var gameType: GameType = GameType.HUBGAME
 
     /**
      * Gamemode of the player.

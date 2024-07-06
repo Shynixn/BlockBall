@@ -312,7 +312,7 @@ class BlockBallMiniGameImpl constructor(
             status = GameState.DISABLED
             onUpdateSigns()
             close()
-            if (ingamePlayersStorage.isNotEmpty() && arena.gameType != GameType.BUNGEE) {
+            if (ingamePlayersStorage.isNotEmpty()) {
                 closing = true
             }
             return

@@ -143,7 +143,7 @@ class SignSettingsPage @Inject constructor(
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.MULTILINES_TEAMSIGNTEMPLATE.command + " leave")
                 .setHoverText("Opens the page to change the template on signs to join this team.")
                 .builder().nextLine()
-        } else if (arena.gameType == GameType.MINIGAME || arena.gameType == GameType.BUNGEE) {
+        } else if (arena.gameType == GameType.MINIGAME) {
             return ChatBuilder()
                 .component("- Signs Team Red: ").builder()
                 .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)

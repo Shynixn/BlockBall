@@ -91,7 +91,7 @@ class DependencyPlaceHolderServiceImpl @Inject constructor(
             } else {
                 Pair(null, null)
             }
-            return replacePlaceHolders(
+            return placeHolderService.replacePlaceHolders(
                 "%blockball_${newParams}%", player, selectedGame, teamPair.first, teamPair.second
             )
         }
@@ -107,11 +107,11 @@ class DependencyPlaceHolderServiceImpl @Inject constructor(
                 } else {
                     Pair(null, null)
                 }
-                return replacePlaceHolders(
+                return placeHolderService.replacePlaceHolders(
                     "%blockball_${params}%", player, optSelectedGame, teamPair.first, teamPair.second
                 )
             } else {
-                return replacePlaceHolders("%blockball_${params}%", player, null, null, null)
+                return placeHolderService.replacePlaceHolders("%blockball_${params}%", player, null, null, null)
             }
         }
 

@@ -236,8 +236,8 @@ abstract class BlockBallGameImpl(
             require(p is Player)
             chatMessageService.sendTitleMessage(
                 p,
-                placeHolderService.replacePlaceHolders(winMessageTitle, p),
-                placeHolderService.replacePlaceHolders(winMessageSubTitle, p),
+                placeHolderService.replacePlaceHolders(winMessageTitle, p, this),
+                placeHolderService.replacePlaceHolders(winMessageSubTitle, p, this),
                 teamMeta.winMessageFadeIn,
                 teamMeta.winMessageStay,
                 teamMeta.winMessageFadeOut,
@@ -533,7 +533,7 @@ abstract class BlockBallGameImpl(
 
                 var j = lines.size
                 for (i in 0 until lines.size) {
-                    val line = placeHolderService.replacePlaceHolders(lines[i], p as Player)
+                    val line = placeHolderService.replacePlaceHolders(lines[i], p as Player, this)
                     scoreboardService.setLine(scoreboard as Scoreboard, j, line)
                     j--
                 }
@@ -601,18 +601,18 @@ abstract class BlockBallGameImpl(
         }
         when {
             meta.mode == CommandMode.PER_PLAYER -> players.forEach { p ->
-                p.performCommand(placeHolderService.replacePlaceHolders(command, p))
+                p.performCommand(placeHolderService.replacePlaceHolders(command, p, this))
             }
 
             meta.mode == CommandMode.CONSOLE_PER_PLAYER -> players.forEach { p ->
                 lastInteractedEntity = p
                 Bukkit.getServer().dispatchCommand(
-                    Bukkit.getConsoleSender(), placeHolderService.replacePlaceHolders(command, p)
+                    Bukkit.getConsoleSender(), placeHolderService.replacePlaceHolders(command, p, this)
                 )
             }
 
             meta.mode == CommandMode.CONSOLE_SINGLE -> Bukkit.getServer().dispatchCommand(
-                Bukkit.getConsoleSender(), placeHolderService.replacePlaceHolders(command, null)
+                Bukkit.getConsoleSender(), placeHolderService.replacePlaceHolders(command, null, this)
             )
 
         }

@@ -136,7 +136,7 @@ class GameSettingsPage :
             .setHoverText("Forces players to join the other team regardless of their choice to have the same amount of players on both teams.")
             .builder().nextLine()
 
-        if (arena.gameType == GameType.MINIGAME || arena.gameType == GameType.BUNGEE) {
+        if (arena.gameType == GameType.MINIGAME) {
             builder.component("- Match Times:").builder()
                 .component(" [page..]").setColor(ChatColor.YELLOW)
                 .setClickAction(ChatClickAction.RUN_COMMAND, MenuCommand.MATCHTIMES_OPEN.command)
@@ -162,16 +162,7 @@ class GameSettingsPage :
                 .setHoverText(ChatColor.UNDERLINE.toString() + "Minigame exclusive\n" + ChatColor.RESET + "Message being send to the action bar of players who wait for more players in the lobby.")
                 .builder().nextLine()
         }
-        if (arena.gameType == GameType.BUNGEE) {
-            builder.component("- Fallback Server: ").builder()
-                .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
-                .setHoverText(arena.meta.bungeeCordMeta.fallbackServer)
-                .builder()
-                .component(MenuClickableItem.EDIT.text).setColor(MenuClickableItem.EDIT.color)
-                .setClickAction(ChatClickAction.SUGGEST_COMMAND, MenuCommand.GAMESETTINGS_BUNGEEFALLBACKSERVER.command)
-                .setHoverText(ChatColor.UNDERLINE.toString() + "BungeeCord exclusive\n" + ChatColor.RESET + "Fallback server when a player leaves the match.")
-                .builder().nextLine()
-        } else if (arena.gameType == GameType.HUBGAME) {
+        if (arena.gameType == GameType.HUBGAME) {
             builder.component("- Join Message: ").builder()
                 .component(MenuClickableItem.PREVIEW.text).setColor(MenuClickableItem.PREVIEW.color)
                 .setHoverText(arena.meta.hubLobbyMeta.joinMessage.toSingleLine()).builder()
