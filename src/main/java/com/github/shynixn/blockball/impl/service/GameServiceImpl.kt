@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.impl.BlockBallHubGameImpl
 import com.github.shynixn.blockball.impl.BlockBallMiniGameImpl
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
+import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.toVector3d
@@ -31,6 +32,7 @@ class GameServiceImpl @Inject constructor(
     private val soundService: SoundService,
     private val packetService: PacketService,
     private val scoreboardService: ScoreboardService,
+    private val commandService: CommandService,
     private val ballEntityService: BallEntityService
 ) : GameService, Runnable {
     private val games = ArrayList<BlockBallGame>()
@@ -185,7 +187,8 @@ class GameServiceImpl @Inject constructor(
                 packetService,
                 scoreboardService,
                 ballEntityService,
-                chatMessageService
+                chatMessageService,
+                commandService
             )
 
             GameType.MINIGAME -> BlockBallMiniGameImpl(
@@ -200,6 +203,7 @@ class GameServiceImpl @Inject constructor(
                 soundService,
                 packetService,
                 scoreboardService,
+                commandService,
                 ballEntityService
             )
 

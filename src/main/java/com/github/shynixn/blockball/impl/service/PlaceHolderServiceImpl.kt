@@ -98,6 +98,9 @@ class PlaceHolderServiceImpl @Inject constructor(
         }
 
         // Player PlaceHolders
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_NAME] = { player ->
+            player.name
+        }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_IS_INGAME] = { player ->
             val game = gameService.getGameFromPlayer(player)
             game?.ingamePlayersStorage?.containsKey(player).toString()

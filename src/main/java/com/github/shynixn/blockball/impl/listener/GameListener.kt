@@ -62,10 +62,10 @@ class GameListener @Inject constructor(
                 return@launch
             }
 
-            if (packet.actionType == InteractionType.RIGHT_CLICK || packet.actionType == InteractionType.OTHER) {
-                ball.passByPlayer(event.player)
-            } else {
+            if (packet.actionType == InteractionType.ATTACK) {
                 ball.kickByPlayer(event.player)
+            } else {
+                ball.passByPlayer(event.player)
             }
         }
     }

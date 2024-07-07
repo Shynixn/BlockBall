@@ -10,7 +10,6 @@ The articles in this section deal with customizing and changing your created Gam
    signs
    effects
    abilities
-   rewards
    spectating
    placeholders
    misc

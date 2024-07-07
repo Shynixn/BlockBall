@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
+import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
@@ -26,7 +27,8 @@ class BlockBallHubGameImpl(
     packetService: PacketService,
     scoreboardService: ScoreboardService,
     ballEntityService: BallEntityService,
-    chatMessageService: ChatMessageService
+    chatMessageService: ChatMessageService,
+    commandService: CommandService
 ) : BlockBallGameImpl(
     arena,
     gameService,
@@ -37,6 +39,7 @@ class BlockBallHubGameImpl(
     scoreboardService,
     ballEntityService,
     chatMessageService,
+    commandService,
     playerDataRepository
 ),
     BlockBallHubGame {
@@ -83,9 +86,11 @@ class BlockBallHubGameImpl(
 
         val result = if (joiningTeam == Team.RED && redTeam.size < arena.meta.redTeamMeta.maxAmount) {
             this.prepareLobbyStorageForPlayer(player, joiningTeam, arena.meta.redTeamMeta)
+            executeCommandsWithPlaceHolder(listOf(player), arena.meta.redTeamMeta.joinCommands)
             JoinResult.SUCCESS_RED
         } else if (joiningTeam == Team.BLUE && blueTeam.size < arena.meta.blueTeamMeta.maxAmount) {
             this.prepareLobbyStorageForPlayer(player, joiningTeam, arena.meta.blueTeamMeta)
+            executeCommandsWithPlaceHolder(listOf(player), arena.meta.blueTeamMeta.joinCommands)
             JoinResult.SUCCESS_BLUE
         } else {
             JoinResult.TEAM_FULL
@@ -148,6 +153,7 @@ class BlockBallHubGameImpl(
         }
 
         if (stats.team == Team.RED) {
+            executeCommandsWithPlaceHolder(listOf(player), arena.meta.redTeamMeta.leaveCommands)
             player.sendMessage(
                 placeHolderService.replacePlaceHolders(
                     arena.meta.redTeamMeta.leaveMessage,
@@ -158,6 +164,7 @@ class BlockBallHubGameImpl(
                 )
             )
         } else if (stats.team == Team.BLUE) {
+            executeCommandsWithPlaceHolder(listOf(player), arena.meta.blueTeamMeta.leaveCommands)
             player.sendMessage(
                 placeHolderService.replacePlaceHolders(
                     arena.meta.redTeamMeta.leaveMessage,

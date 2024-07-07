@@ -5,8 +5,10 @@ import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.impl.service.*
+import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.ConfigurationServiceImpl
+import com.github.shynixn.mcutils.common.CoroutineExecutor
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
@@ -76,6 +78,14 @@ class BlockBallDependencyInjectionModule(
 
         // Services
         addService<CommandService, CommandServiceImpl>()
+        addService<com.github.shynixn.mcutils.common.command.CommandService>(
+            com.github.shynixn.mcutils.common.command.CommandServiceImpl(
+                object : CoroutineExecutor {
+                    override fun execute(f: suspend () -> Unit) {
+                        plugin.launch { f.invoke() }
+                    }
+                })
+        )
         addService<PacketService>(PacketServiceImpl(plugin))
         addService<ScoreboardService, ScoreboardServiceImpl>()
         addService<ConfigurationService>(ConfigurationServiceImpl(plugin))

@@ -11,6 +11,8 @@ import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
+import com.github.shynixn.mcutils.common.command.CommandMeta
+import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
 import kotlinx.coroutines.delay
@@ -34,6 +36,7 @@ abstract class BlockBallGameImpl(
     private val scoreboardService: ScoreboardService,
     private val ballEntityService: BallEntityService,
     private val chatMessageService: ChatMessageService,
+    private val commandService: CommandService,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>
 ) : BlockBallGame {
     /**
@@ -175,28 +178,30 @@ abstract class BlockBallGameImpl(
     }
 
 
-    fun onMatchEnd(winningPlayers: List<Player>?, loosingPlayers: List<Player>?) {
-        if (arena.meta.rewardMeta.commandReward.containsKey(RewardType.WIN_MATCH) && winningPlayers != null) {
-            this.executeCommand(
-                arena.meta.rewardMeta.commandReward[RewardType.WIN_MATCH]!!, winningPlayers
-            )
-        }
+    fun onMatchEnd(team: Team? = null) {
+        val winningPlayers = HashSet<Player>()
 
-        if (arena.meta.rewardMeta.commandReward.containsKey(RewardType.LOOSING_MATCH) && loosingPlayers != null) {
-            this.executeCommand(
-                arena.meta.rewardMeta.commandReward[RewardType.LOOSING_MATCH]!!, loosingPlayers
-            )
-        }
+        when (team) {
+            Team.BLUE -> {
+                executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.looseCommands)
+                executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.winCommands)
+                winningPlayers.addAll(blueTeam)
+            }
 
-        if (arena.meta.rewardMeta.commandReward.containsKey(RewardType.PARTICIPATE_MATCH)) {
-            this.executeCommand(
-                arena.meta.rewardMeta.commandReward[RewardType.PARTICIPATE_MATCH]!!, inTeamPlayers
-            )
+            Team.RED -> {
+                executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.winCommands)
+                executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.looseCommands)
+                winningPlayers.addAll(redTeam)
+            }
+
+            else -> {
+                executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.drawCommands)
+                executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.drawCommands)
+            }
         }
 
         // Store playing stats.
         val participatingPlayers = inTeamPlayers.toTypedArray()
-        val winningPlayerCache = winningPlayers?.toMutableList()
 
         plugin.launch {
             for (player in participatingPlayers) {
@@ -206,7 +211,7 @@ abstract class BlockBallGameImpl(
                     playerData.statsMeta.playedGames++
                     playerData.playerName = player.name
 
-                    if (winningPlayerCache != null && winningPlayerCache.contains(player)) {
+                    if (winningPlayers.contains(player)) {
                         playerData.statsMeta.winsAmount++
                     }
                 }
@@ -589,36 +594,6 @@ abstract class BlockBallGameImpl(
     }
 
     /**
-     * Executes a single command.
-     */
-    private fun executeCommand(meta: CommandMeta, players: List<Player>) {
-        var command = meta.command
-        if (command!!.startsWith("/")) {
-            command = command.substring(1, command.length)
-        }
-        if (command.equals("none", true)) {
-            return
-        }
-        when {
-            meta.mode == CommandMode.PER_PLAYER -> players.forEach { p ->
-                p.performCommand(placeHolderService.replacePlaceHolders(command, p, this))
-            }
-
-            meta.mode == CommandMode.CONSOLE_PER_PLAYER -> players.forEach { p ->
-                lastInteractedEntity = p
-                Bukkit.getServer().dispatchCommand(
-                    Bukkit.getConsoleSender(), placeHolderService.replacePlaceHolders(command, p, this)
-                )
-            }
-
-            meta.mode == CommandMode.CONSOLE_SINGLE -> Bukkit.getServer().dispatchCommand(
-                Bukkit.getConsoleSender(), placeHolderService.replacePlaceHolders(command, null, this)
-            )
-
-        }
-    }
-
-    /**
      * Gets called when the given [game] ends with a draw.
      */
     fun onDraw() {
@@ -677,11 +652,11 @@ abstract class BlockBallGameImpl(
         if (teamOfGoal == Team.RED) {
             blueScore += arena.meta.blueTeamMeta.pointsPerGoal
             onScore(Team.BLUE, arena.meta.blueTeamMeta)
-            onScoreReward(blueTeam)
+            onScoreReward(Team.BLUE, blueTeam)
             relocatePlayersAndBall()
 
             if (blueScore >= arena.meta.lobbyMeta.maxScore) {
-                onMatchEnd(blueTeam, redTeam)
+                onMatchEnd(Team.BLUE)
                 onWin(Team.BLUE, arena.meta.blueTeamMeta)
             }
 
@@ -691,11 +666,11 @@ abstract class BlockBallGameImpl(
         if (teamOfGoal == Team.BLUE) {
             redScore += arena.meta.redTeamMeta.pointsPerGoal
             onScore(Team.RED, arena.meta.redTeamMeta)
-            onScoreReward(redTeam)
+            onScoreReward(Team.BLUE, redTeam)
             relocatePlayersAndBall()
 
             if (redScore >= arena.meta.lobbyMeta.maxScore) {
-                onMatchEnd(redTeam, blueTeam)
+                onMatchEnd(Team.RED)
                 onWin(Team.RED, arena.meta.redTeamMeta)
             }
         }
@@ -785,19 +760,22 @@ abstract class BlockBallGameImpl(
         }
     }
 
-    private fun onScoreReward(players: List<Any>) {
+    private fun onScoreReward(team: Team, players: List<Player>) {
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
             if (players.contains(lastInteractedEntity!!)) {
-                if (arena.meta.rewardMeta.commandReward.containsKey(RewardType.SHOOT_GOAL)) {
-                    this.executeCommand(
-                        arena.meta.rewardMeta.commandReward[RewardType.SHOOT_GOAL]!!,
-                        arrayListOf(lastInteractedEntity!! as Player)
-                    )
-                }
+                val teamMeta = getTeamMetaFromTeam(team)
+                executeCommandsWithPlaceHolder(listOf(lastInteractedEntity!! as Player), teamMeta.goalCommands)
             }
         }
     }
 
+    fun executeCommandsWithPlaceHolder(players: List<Player>, commands: List<CommandMeta>) {
+        commandService.executeCommands(players, commands) { c, p ->
+            placeHolderService.replacePlaceHolders(
+                c, p, this
+            )
+        }
+    }
 
     /**
      * Teleports all players and ball back to their spawnpoint if [game] has got back teleport enabled.
@@ -816,7 +794,7 @@ abstract class BlockBallGameImpl(
             var redTeamSpawnpoint = arena.meta.redTeamMeta.spawnpoint
 
             if (redTeamSpawnpoint == null) {
-                redTeamSpawnpoint =arena.meta.ballMeta.spawnpoint!!
+                redTeamSpawnpoint = arena.meta.ballMeta.spawnpoint!!
             }
 
             var blueTeamSpawnpoint = arena.meta.blueTeamMeta.spawnpoint
@@ -842,5 +820,13 @@ abstract class BlockBallGameImpl(
 
         ballSpawning = true
         ballSpawnCounter = delayInTicks / 20
+    }
+
+    fun getTeamMetaFromTeam(team: Team): TeamMeta {
+        if (team == Team.RED) {
+            return arena.meta.redTeamMeta
+        }
+
+        return arena.meta.blueTeamMeta
     }
 }

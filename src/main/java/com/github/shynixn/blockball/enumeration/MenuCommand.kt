@@ -186,20 +186,7 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     SIGNS_LEAVE(MenuPageKey.SIGNS, "leave"),
     SIGNS_ADDTEAMBLUE(MenuPageKey.SIGNS, "adteamb"),
 
-    PARTICLE_DOUBLEJUMP(MenuPageKey.PARTICLEFFECTS, "doub"),
     SOUND_DOUBLEJUMP(MenuPageKey.SOUNDEFFECTS, "doub"),
-
-    PARTICLE_BALL(MenuPageKey.PARTICLEFFECTS, "ball-par"),
-    PARTICLE_CALLBACK_EFFECTING(MenuPageKey.PARTICLEFFECTS, "caleffecting"),
-    PARTICLE_CALLBACK_TYPE(MenuPageKey.PARTICLEFFECTS, "caltype"),
-    PARTICLE_OPEN(MenuPageKey.PARTICLEFFECTS, "open"),
-    PARTICLE_EFFECTING(MenuPageKey.PARTICLEFFECTS, "ef"),
-    PARTICLE_TYPE(MenuPageKey.PARTICLEFFECTS, "type"),
-    PARTICLE_AMOUNT(MenuPageKey.PARTICLEFFECTS, "amount"),
-    PARTICLE_SPEED(MenuPageKey.PARTICLEFFECTS, "speed"),
-    PARTICLE_OFFSET_X(MenuPageKey.PARTICLEFFECTS, "offx"),
-    PARTICLE_OFFSET_Y(MenuPageKey.PARTICLEFFECTS, "offy"),
-    PARTICLE_OFFSET_Z(MenuPageKey.PARTICLEFFECTS, "offz"),
 
     SOUND_BALL(MenuPageKey.SOUNDEFFECTS, "ball-sound"),
     SOUND_OPEN(MenuPageKey.SOUNDEFFECTS, "open"),
@@ -209,13 +196,6 @@ enum class MenuCommand(val key: MenuPageKey, private val internalCommand: String
     SOUND_PITCH(MenuPageKey.SOUNDEFFECTS, "pitch"),
     SOUND_CALLBACK_EFFECTING(MenuPageKey.SOUNDEFFECTS, "caleffecting"),
     SOUND_CALLBACK_TYPE(MenuPageKey.SOUNDEFFECTS, "caltype"),
-
-    REWARD_OPEN(MenuPageKey.REWARDSPAGE, "open"),
-    REWARD_EDIT_MONEY(MenuPageKey.REWARDSPAGE, "money"),
-    REWARD_EDIT_COMMAND(MenuPageKey.REWARDSPAGE, "command"),
-    REWARD_CALLBACK_MONEY(MenuPageKey.REWARDSPAGE, "calmoney"),
-    REWARD_CALLBACK_COMMAND(MenuPageKey.REWARDSPAGE, "calcommand"),
-    REWARD_CALLBACK_COMMANDMODE(MenuPageKey.REWARDSPAGE, "calcommode"),
 
     SPECTATOR_OPEN(MenuPageKey.SPECTATING, "open"),
 

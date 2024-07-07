@@ -10,6 +10,7 @@ import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
+import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.sound.SoundMeta
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.toLocation
@@ -34,6 +35,7 @@ class BlockBallMiniGameImpl constructor(
     private val soundService: SoundService,
     packetService: PacketService,
     scoreboardService: ScoreboardService,
+    commandService: CommandService,
     ballEntityService: BallEntityService
 ) : BlockBallGameImpl(
     arena,
@@ -45,6 +47,7 @@ class BlockBallMiniGameImpl constructor(
     scoreboardService,
     ballEntityService,
     chatMessageService,
+    commandService,
     playerDataRepository
 ), BlockBallMiniGame {
 
@@ -202,8 +205,10 @@ class BlockBallMiniGameImpl constructor(
             ingamePlayersStorage[player]!!.goalTeam = targetTeam
 
             if (targetTeam == Team.BLUE) {
+                executeCommandsWithPlaceHolder(listOf(player), arena.meta.blueTeamMeta.joinCommands)
                 return JoinResult.SUCCESS_BLUE
             } else {
+                executeCommandsWithPlaceHolder(listOf(player), arena.meta.redTeamMeta.joinCommands)
                 return JoinResult.SUCCESS_RED
             }
         }
@@ -272,6 +277,7 @@ class BlockBallMiniGameImpl constructor(
             val storage = ingamePlayersStorage[player]!!
 
             if (storage.team == Team.RED) {
+                executeCommandsWithPlaceHolder(listOf(player), arena.meta.redTeamMeta.leaveCommands)
                 player.sendMessage(
                     placeHolderService.replacePlaceHolders(
                         arena.meta.redTeamMeta.leaveMessage,
@@ -282,6 +288,7 @@ class BlockBallMiniGameImpl constructor(
                     )
                 )
             } else if (storage.team == Team.BLUE) {
+                executeCommandsWithPlaceHolder(listOf(player), arena.meta.blueTeamMeta.leaveCommands)
                 player.sendMessage(
                     placeHolderService.replacePlaceHolders(
                         arena.meta.redTeamMeta.leaveMessage,
@@ -671,17 +678,17 @@ class BlockBallMiniGameImpl constructor(
     private fun timeAlmostUp() {
         when {
             redScore == blueScore -> {
-                onMatchEnd(null, null)
+                onMatchEnd(null)
                 onDraw()
             }
 
             redScore > blueScore -> {
-                onMatchEnd(redTeam, blueTeam)
+                onMatchEnd(Team.RED)
                 onWin(Team.RED, arena.meta.redTeamMeta)
             }
 
             else -> {
-                onMatchEnd(blueTeam, redTeam)
+                onMatchEnd(Team.BLUE)
                 onWin(Team.BLUE, arena.meta.blueTeamMeta)
             }
         }

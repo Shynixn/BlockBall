@@ -33,10 +33,6 @@ class ListablePage @Inject constructor(
                 cache[2] = GameType.values().map { p -> p.name }
                 cache[3] = MenuCommand.SETTINGS_OPEN
             }
-            MenuCommand.LIST_PARTICLE_EFFECTINGTYPES -> {
-                cache[2] = EffectTargetType.values().map { p -> p.name }
-                cache[3] = MenuCommand.PARTICLE_CALLBACK_EFFECTING
-            }
             MenuCommand.LIST_BUKKITGAMESMODES -> {
                 cache[2] = GameMode.values().map { e -> e.name }.filterNot { g -> g == "SPECTATOR" }
                 cache[3] = MenuCommand.GAMESETTINGS_CALLBACK_BUKKITGAMEMODES
@@ -52,18 +48,6 @@ class ListablePage @Inject constructor(
             MenuCommand.LIST_BALLSIZES -> {
                 cache[2] = BallSize.values().map { p -> p.name }
                 cache[3] = MenuCommand.BALL_SIZE_CALLBACK
-            }
-            MenuCommand.LIST_COMMANDMODES -> {
-                cache[2] = CommandMode.values().map { p -> p.name }
-                cache[3] = MenuCommand.REWARD_CALLBACK_COMMANDMODE
-            }
-            MenuCommand.LIST_REWARDED_MONEY -> {
-                cache[2] = RewardType.values().map { p -> p.name }
-                cache[3] = MenuCommand.REWARD_CALLBACK_MONEY
-            }
-            MenuCommand.LIST_REWARDED_COMMAND -> {
-                cache[2] = RewardType.values().map { p -> p.name }
-                cache[3] = MenuCommand.REWARD_CALLBACK_COMMAND
             }
             MenuCommand.LIST_SOUND_TYPES -> {
                 cache[2] = org.bukkit.Sound.values().map { s -> s.name }
