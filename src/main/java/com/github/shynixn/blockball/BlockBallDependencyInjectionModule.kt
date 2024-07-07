@@ -4,10 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.Arena
 import com.github.shynixn.blockball.entity.PlayerInformation
-import com.github.shynixn.blockball.enumeration.PluginDependency
 import com.github.shynixn.blockball.impl.service.*
+import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.ConfigurationServiceImpl
+import com.github.shynixn.mcutils.common.CoroutineExecutor
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
@@ -77,30 +78,31 @@ class BlockBallDependencyInjectionModule(
 
         // Services
         addService<CommandService, CommandServiceImpl>()
+        addService<com.github.shynixn.mcutils.common.command.CommandService>(
+            com.github.shynixn.mcutils.common.command.CommandServiceImpl(
+                object : CoroutineExecutor {
+                    override fun execute(f: suspend () -> Unit) {
+                        plugin.launch { f.invoke() }
+                    }
+                })
+        )
         addService<PacketService>(PacketServiceImpl(plugin))
         addService<ScoreboardService, ScoreboardServiceImpl>()
         addService<ConfigurationService>(ConfigurationServiceImpl(plugin))
         addService<SoundService>(SoundServiceImpl(plugin))
         addService<BossBarService, BossBarServiceImpl>()
         addService<GameService, GameServiceImpl>()
-        addService<GameActionService, GameActionServiceImpl>()
-        addService<GameHubGameActionService, GameHubGameActionServiceImpl>()
-        addService<GameMiniGameActionService, GameMiniGameActionServiceImpl>()
-        addService<GameBungeeCordGameActionService, GameBungeeCordGameActionServiceImpl>()
         addService<ItemService>(ItemServiceImpl())
         addService<ChatMessageService>(ChatMessageServiceImpl(plugin))
-        addService<GameSoccerService, GameSoccerServiceImpl>()
         addService<RightclickManageService, RightclickManageServiceImpl>()
         addService<HubGameForcefieldService, HubGameForcefieldServiceImpl>()
         addService<BallEntityService, BallEntityServiceImpl>()
         addService<BlockSelectionService, BlockSelectionServiceImpl>()
-        addService<GameExecutionService, GameExecutionServiceImpl>()
-        addService<DependencyBossBarApiService, DependencyBossBarApiServiceImpl>()
         addService<RayTracingService, RayTracingServiceImpl>()
 
-        if (Bukkit.getPluginManager().getPlugin(PluginDependency.PLACEHOLDERAPI.pluginName) != null) {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             addService<PlaceHolderService, DependencyPlaceHolderServiceImpl>()
-            plugin.logger.log(Level.INFO, "Loaded dependency ${PluginDependency.PLACEHOLDERAPI.pluginName}.")
+            plugin.logger.log(Level.INFO, "Loaded dependency PlaceholderAPI.")
         } else {
             addService<PlaceHolderService, PlaceHolderServiceImpl>()
         }

@@ -53,6 +53,8 @@ enum class PlaceHolder(
 
     // Player PlaceHolders
 
+    PLAYER_NAME("%blockball_player_name%"),
+
     PLAYER_IS_INGAME("%blockball_player_isInGame%"),
 
     PLAYER_IS_IN_TEAM_RED("%blockball_player_isInTeamRed%"),

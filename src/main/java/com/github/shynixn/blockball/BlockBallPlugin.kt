@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball
 
 import com.github.shynixn.blockball.contract.CommandService
-import com.github.shynixn.blockball.contract.GameActionService
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.impl.commandexecutor.*
@@ -93,12 +92,10 @@ class BlockBallPlugin : JavaPlugin() {
         this.reloadConfig()
 
         // Register Listeners
-        module.getService<GameActionService>().gameService = module.getService()
         Bukkit.getPluginManager().registerEvents(module.getService<GameListener>(), this)
         Bukkit.getPluginManager().registerEvents(module.getService<DoubleJumpListener>(), this)
         Bukkit.getPluginManager().registerEvents(module.getService<HubgameListener>(), this)
         Bukkit.getPluginManager().registerEvents(module.getService<MinigameListener>(), this)
-        Bukkit.getPluginManager().registerEvents(module.getService<BungeeCordgameListener>(), this)
         Bukkit.getPluginManager().registerEvents(module.getService<BallListener>(), this)
         Bukkit.getPluginManager().registerEvents(module.getService<BlockSelectionListener>(), this)
 

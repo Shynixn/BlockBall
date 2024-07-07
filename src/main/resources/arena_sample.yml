@@ -56,10 +56,6 @@ meta:
     keepInventoryEnabled: false
     # Should players keep their health when they join the game?
     keepHealthEnabled: false
-  # Will be replaced in the future.
-  rewardMeta:
-    moneyReward: {}
-    commandReward: {}
   # Settings for all types of games.
   lobbyMeta:
     # Max score a team can score before the game resets.
@@ -133,7 +129,7 @@ meta:
     playersRequiredToStartMessage: "%blockball_lang_miniGameRemainingPlayers%"
     # Also called periods, are the sections (half times) you want to split your game in. You can remove/add as many stages as you want.
     matchTimes:
-        # Duration in seconds until this stage completes.
+      # Duration in seconds until this stage completes.
       - duration: 150
         # TIME_OVER, this stage only completes, when the duration has passed. NEXT_GOAL, this stage completes when someone scores a goal OR if the duration has passed.
         closeType: "TIME_OVER"
@@ -450,6 +446,21 @@ meta:
     maxAmount: 10
     # Minimum amount of players to keep playing a game.
     minPlayingPlayers: 0
+    # Commands which are executed when a player joins this team.
+    # Types are:
+    #  SERVER_PER_PLAYER (executes a command with server level permission)
+    #  PER_PLAYER (executes a command with player level permission)
+    joinCommands:
+      - type: 'SERVER_PER_PLAYER'
+        command: '/say Hello %blockball_player_name%'
+    # Commands which are executed when a player leaves this team.
+    leaveCommands:
+      - type: 'SERVER_PER_PLAYER'
+        command: '/say Bye %blockball_player_name%'
+    winCommands: []
+    looseCommands: []
+    drawCommands: []
+    goalCommands: []
     # Goal locations.
     goal:
       corner1:
@@ -481,7 +492,7 @@ meta:
       - null
       - null
       - null
-   # The inventory a player receives when joining a game. Should only be set inGame.
+    # The inventory a player receives when joining a game. Should only be set inGame.
     inventory:
       - null
       - null
@@ -628,5 +639,5 @@ meta:
     drawMessageFadeOut: 20
     spawnpoint: null
     lobbySpawnpoint: null
-    signs: []
-  hologramMetas: []
+    signs: [ ]
+  hologramMetas: [ ]

@@ -1,8 +1,7 @@
 package com.github.shynixn.blockball.impl.listener
 
-import com.github.shynixn.blockball.contract.GameMiniGameActionService
+import com.github.shynixn.blockball.contract.BlockBallMiniGame
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.entity.MiniGame
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.MatchTimeCloseType
 import com.github.shynixn.blockball.enumeration.Permission
@@ -17,7 +16,6 @@ import org.bukkit.event.player.PlayerInteractEvent
 
 class MinigameListener @Inject constructor(
     private val gameService: GameService,
-    private val miniGameActionService: GameMiniGameActionService,
     private val configurationService: ConfigurationService
 ) : Listener {
 
@@ -28,11 +26,11 @@ class MinigameListener @Inject constructor(
     fun onPlayerInteractEvent(event: PlayerInteractEvent) {
         var game = gameService.getGameFromPlayer(event.player)
 
-        if (!game.isPresent) {
+        if (game == null) {
             game = gameService.getGameFromSpectatingPlayer(event.player)
         }
 
-        if (game.isPresent && game.get().arena.enabled && (game.get().arena.gameType == GameType.MINIGAME || game.get().arena.gameType == GameType.BUNGEE)) {
+        if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME)) {
             event.isCancelled = true
         }
     }
@@ -42,21 +40,22 @@ class MinigameListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerGoalEvent(event: GameGoalEvent) {
-        if (event.game !is MiniGame) {
+        val game = event.game
+
+        if (game !is BlockBallMiniGame) {
             return
         }
 
-        val miniGame = event.game
-        val matchTimes = miniGame.arena.meta.minigameMeta.matchTimes
+        val matchTimes = game.arena.meta.minigameMeta.matchTimes
 
-        if (miniGame.matchTimeIndex < 0 || miniGame.matchTimeIndex >= matchTimes.size) {
+        if (game.matchTimeIndex < 0 || game.matchTimeIndex >= matchTimes.size) {
             return
         }
 
-        val matchTime = matchTimes[miniGame.matchTimeIndex]
+        val matchTime = matchTimes[game.matchTimeIndex]
 
         if (matchTime.closeType == MatchTimeCloseType.NEXT_GOAL) {
-            miniGameActionService.switchToNextMatchTime(miniGame)
+            game.switchToNextMatchTime()
         }
     }
 
@@ -75,11 +74,11 @@ class MinigameListener @Inject constructor(
         }
 
         var game = gameService.getGameFromPlayer(event.player)
-        if (game.isPresent) {
+        if (game != null) {
             game = gameService.getGameFromSpectatingPlayer(event.player)
         }
 
-        if (game.isPresent && game.get().arena.enabled && (game.get().arena.gameType == GameType.MINIGAME || game.get().arena.gameType == GameType.BUNGEE)) {
+        if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME)) {
             event.isCancelled = true
         }
     }

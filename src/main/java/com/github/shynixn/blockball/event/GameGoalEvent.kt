@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.event
 
-import com.github.shynixn.blockball.entity.Game
+import com.github.shynixn.blockball.contract.BlockBallGame
 import com.github.shynixn.blockball.enumeration.Team
 import org.bukkit.entity.Player
 
@@ -15,5 +15,5 @@ class GameGoalEvent(
     /**
      * Team scoring the goal.
      */
-    val team: Team, game: Game
+    val team: Team, game: BlockBallGame
 ) : GameEvent(game)

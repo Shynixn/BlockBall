@@ -148,8 +148,8 @@ object BlockBallLanguage {
   /** &c%blockball_game_redScore% : &9%blockball_game_blueScore% **/
   var teamRedScoreTitle : String = "&c%blockball_game_redScore% : &9%blockball_game_blueScore%"
 
-  /** &c%blockball_game_lastHitPlayerName% scored for Team Red **/
-  var teamRedScoreSubTitle : String = "&c%blockball_game_lastHitPlayerName% scored for Team Red"
+  /** &c%blockball_game_lastHitPlayerName% scored for %blockball_game_redName% **/
+  var teamRedScoreSubTitle : String = "&c%blockball_game_lastHitPlayerName% scored for %blockball_game_redName%"
 
   /** Game is full! Do you want to spectate? **/
   var spectateJoinHeader : String = "Game is full! Do you want to spectate?"

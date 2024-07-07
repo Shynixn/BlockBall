@@ -10,9 +10,6 @@ class ArenaMeta {
     /** Meta data of the customizing Properties. */
     val customizingMeta: CustomizationMeta = CustomizationMeta()
 
-    /** Meta data for rewards */
-    val rewardMeta: Reward = Reward()
-
     /** Meta data of all holograms. */
     val hologramMetas: ArrayList<HologramMeta>
         get() = this.internalHologramMetas

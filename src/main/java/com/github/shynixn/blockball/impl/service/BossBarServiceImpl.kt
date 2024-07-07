@@ -3,11 +3,8 @@
 package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.BossBarService
-import com.github.shynixn.blockball.contract.DependencyBossBarApiService
 import com.github.shynixn.blockball.entity.BossBarMeta
 import com.github.shynixn.blockball.enumeration.BossBarFlag
-import com.github.shynixn.mcutils.common.Version
-import com.github.shynixn.mcutils.common.translateChatColors
 import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -41,19 +38,15 @@ import java.lang.reflect.Method
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class BossBarServiceImpl @Inject constructor(private val dependencyBossBarService: DependencyBossBarApiService) :
+class BossBarServiceImpl @Inject constructor() :
     BossBarService {
     /**
      * Adds the given [player] to this bossbar.
      * Does nothing if the player is already added.
      */
     override fun <B, P> addPlayer(bossBar: B, player: P) {
-        if (Version.serverVersion.isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
-            dependencyBossBarService.setBossbarMessage(player as Player, "", 1.0)
-        } else {
-            if (!getPlayers<B, P>(bossBar).contains(player)) {
-                getBossBarMethod("addPlayer", Player::class.java).invoke(bossBar, player)
-            }
+        if (!getPlayers<B, P>(bossBar).contains(player)) {
+            getBossBarMethod("addPlayer", Player::class.java).invoke(bossBar, player)
         }
     }
 
@@ -62,12 +55,8 @@ class BossBarServiceImpl @Inject constructor(private val dependencyBossBarServic
      * Does nothing if the player is already removed.
      */
     override fun <B, P> removePlayer(bossBar: B, player: P) {
-        if (Version.serverVersion.isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
-            dependencyBossBarService.removeBossbarMessage(player as Player)
-        } else {
-            if (getPlayers<B, P>(bossBar).contains(player)) {
-                getBossBarMethod("removePlayer", Player::class.java).invoke(bossBar, player)
-            }
+        if (getPlayers<B, P>(bossBar).contains(player)) {
+            getBossBarMethod("removePlayer", Player::class.java).invoke(bossBar, player)
         }
     }
 
@@ -75,40 +64,35 @@ class BossBarServiceImpl @Inject constructor(private val dependencyBossBarServic
      * Returns a list of all players watching thie bossbar.
      */
     override fun <B, P> getPlayers(bossBar: B): List<P> {
-        return if (Version.serverVersion.isVersionSameOrLowerThan(Version.VERSION_1_8_R3)) {
-            ArrayList()
-        } else {
-            getBossBarMethod("getPlayers").invoke(bossBar) as List<P>
-        }
+        return getBossBarMethod("getPlayers").invoke(bossBar) as List<P>
     }
 
     /**
      * Changes the style of the bossbar with given [bossBarMeta].
      */
     override fun <B, P> changeConfiguration(bossBar: B, title: String, bossBarMeta: BossBarMeta, player: P) {
-        if (Version.serverVersion.isVersionSameOrLowerThan(Version.VERSION_1_8_R3) && player != null) {
-            dependencyBossBarService.setBossbarMessage(player as Player, bossBarMeta.message.translateChatColors(), bossBarMeta.percentage)
-        } else {
-            getBossBarMethod("setVisible", Boolean::class.java).invoke(bossBar, bossBarMeta.enabled)
-            getBossBarMethod("setTitle", String::class.java).invoke(bossBar, title)
-            getBossBarMethod("setProgress", Double::class.java).invoke(bossBar, bossBarMeta.percentage / 100.0)
-            getBossBarMethod("setColor", Class.forName("org.bukkit.boss.BarColor"))
-                .invoke(
-                    bossBar,
-                    Class.forName("org.bukkit.boss.BarColor").getDeclaredMethod("valueOf", String::class.java).invoke(null, bossBarMeta.color.name)
-                )
-            getBossBarMethod("setStyle", Class.forName("org.bukkit.boss.BarStyle"))
-                .invoke(
-                    bossBar,
-                    Class.forName("org.bukkit.boss.BarStyle").getDeclaredMethod("valueOf", String::class.java).invoke(null, bossBarMeta.style.name)
-                )
+        getBossBarMethod("setVisible", Boolean::class.java).invoke(bossBar, bossBarMeta.enabled)
+        getBossBarMethod("setTitle", String::class.java).invoke(bossBar, title)
+        getBossBarMethod("setProgress", Double::class.java).invoke(bossBar, bossBarMeta.percentage / 100.0)
+        getBossBarMethod("setColor", Class.forName("org.bukkit.boss.BarColor"))
+            .invoke(
+                bossBar,
+                Class.forName("org.bukkit.boss.BarColor").getDeclaredMethod("valueOf", String::class.java)
+                    .invoke(null, bossBarMeta.color.name)
+            )
+        getBossBarMethod("setStyle", Class.forName("org.bukkit.boss.BarStyle"))
+            .invoke(
+                bossBar,
+                Class.forName("org.bukkit.boss.BarStyle").getDeclaredMethod("valueOf", String::class.java)
+                    .invoke(null, bossBarMeta.style.name)
+            )
 
-            val convertFlagMethod = Class.forName("org.bukkit.boss.BarFlag").getDeclaredMethod("valueOf", String::class.java)
-            val flagsMethod = getBossBarMethod("addFlag", Class.forName("org.bukkit.boss.BarFlag"))
+        val convertFlagMethod =
+            Class.forName("org.bukkit.boss.BarFlag").getDeclaredMethod("valueOf", String::class.java)
+        val flagsMethod = getBossBarMethod("addFlag", Class.forName("org.bukkit.boss.BarFlag"))
 
-            bossBarMeta.flags.filter { f -> f != BossBarFlag.NONE }.forEach { f ->
-                flagsMethod.invoke(bossBar, convertFlagMethod.invoke(null, f.name))
-            }
+        bossBarMeta.flags.filter { f -> f != BossBarFlag.NONE }.forEach { f ->
+            flagsMethod.invoke(bossBar, convertFlagMethod.invoke(null, f.name))
         }
     }
 
@@ -123,10 +107,18 @@ class BossBarServiceImpl @Inject constructor(private val dependencyBossBarServic
             Class.forName("org.bukkit.boss.BarStyle"),
             Class.forName("[Lorg.bukkit.boss.BarFlag;")
         )
-        val color = Class.forName("org.bukkit.boss.BarColor").getDeclaredMethod("valueOf", String::class.java).invoke(null, bossBarMeta.color.name)
-        val style = Class.forName("org.bukkit.boss.BarStyle").getDeclaredMethod("valueOf", String::class.java).invoke(null, bossBarMeta.style.name)
+        val color = Class.forName("org.bukkit.boss.BarColor").getDeclaredMethod("valueOf", String::class.java)
+            .invoke(null, bossBarMeta.color.name)
+        val style = Class.forName("org.bukkit.boss.BarStyle").getDeclaredMethod("valueOf", String::class.java)
+            .invoke(null, bossBarMeta.style.name)
 
-        val bossBar = method.invoke(null, bossBarMeta.message, color, style, Array.newInstance(Class.forName("org.bukkit.boss.BarFlag"), 0)) as B
+        val bossBar = method.invoke(
+            null,
+            bossBarMeta.message,
+            color,
+            style,
+            Array.newInstance(Class.forName("org.bukkit.boss.BarFlag"), 0)
+        ) as B
         changeConfiguration(bossBar, bossBarMeta.message, bossBarMeta, null)
 
         return bossBar

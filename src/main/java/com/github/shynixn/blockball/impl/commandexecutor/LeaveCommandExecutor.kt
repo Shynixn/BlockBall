@@ -1,15 +1,13 @@
 package com.github.shynixn.blockball.impl.commandexecutor
 
 import com.github.shynixn.blockball.contract.CommandExecutor
-import com.github.shynixn.blockball.contract.GameActionService
 import com.github.shynixn.blockball.contract.GameService
 import com.google.inject.Inject
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class LeaveCommandExecutor @Inject constructor(
-    private val gameService: GameService,
-    private val gameActionService: GameActionService
+    private val gameService: GameService
 ) : CommandExecutor {
     /**
      * Gets called when the given [source] executes the defined command with the given [args].
@@ -21,14 +19,14 @@ class LeaveCommandExecutor @Inject constructor(
 
         val playerGame = gameService.getGameFromPlayer(source)
 
-        if (playerGame.isPresent) {
-            gameActionService.leaveGame(playerGame.get(), source)
+        if (playerGame != null) {
+            playerGame.leave(source)
         }
 
         val spectatorGame = gameService.getGameFromSpectatingPlayer(source)
 
-        if (spectatorGame.isPresent) {
-            gameActionService.leaveGame(spectatorGame.get(), source)
+        if (spectatorGame != null) {
+            spectatorGame.leave(source)
         }
 
         return true

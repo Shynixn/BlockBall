@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.*
-import com.github.shynixn.blockball.entity.HubGame
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.enumeration.Team
@@ -38,9 +37,6 @@ import org.bukkit.plugin.Plugin
 class GameListener @Inject constructor(
     private val gameService: GameService,
     private val rightClickManageService: RightclickManageService,
-    private val gameActionService: GameActionService,
-    private val gameExecutionService: GameExecutionService,
-    private val gameSoccerService: GameSoccerService,
     private val ballEntityService: BallEntityService,
     private val plugin: Plugin,
     private val playerDataRepository: CachePlayerRepository<PlayerInformation>
@@ -57,23 +53,19 @@ class GameListener @Inject constructor(
         }
 
         plugin.launch {
-            val game = gameService.getGameFromPlayer(event.player)
-
-            if (!game.isPresent) {
-                return@launch
-            }
+            val game = gameService.getGameFromPlayer(event.player) ?: return@launch
 
             val packet = event.packet as PacketInInteractEntity
             val ball = ballEntityService.findBallByEntityId(packet.entityId) ?: return@launch
 
-            if (game.get().ball != ball) {
+            if (game.ball != ball) {
                 return@launch
             }
 
-            if (packet.actionType == InteractionType.RIGHT_CLICK || packet.actionType == InteractionType.OTHER) {
-                ball.passByPlayer(event.player)
-            } else {
+            if (packet.actionType == InteractionType.ATTACK) {
                 ball.kickByPlayer(event.player)
+            } else {
+                ball.passByPlayer(event.player)
             }
         }
     }
@@ -84,16 +76,12 @@ class GameListener @Inject constructor(
     @EventHandler
     fun onPlayerQuitEvent(event: PlayerQuitEvent) {
         val player = event.player
+
         val playerGame = gameService.getGameFromPlayer(player)
+        playerGame?.leave(player)
+
         val spectateGame = gameService.getGameFromSpectatingPlayer(player)
-
-        if (playerGame.isPresent) {
-            gameActionService.leaveGame(playerGame.get(), player)
-        }
-
-        if (spectateGame.isPresent) {
-            gameActionService.leaveGame(spectateGame.get(), player)
-        }
+        spectateGame?.leave(player)
 
         rightClickManageService.cleanResources(player)
 
@@ -131,15 +119,9 @@ class GameListener @Inject constructor(
             return
         }
 
-        val optPlayerGame = gameService.getGameFromPlayer(event.player)
+        val game = gameService.getGameFromPlayer(event.player) ?: return
 
-        if (!optPlayerGame.isPresent) {
-            return
-        }
-
-        val game = optPlayerGame.get()
-
-        if (game !is HubGame) {
+        if (game !is BlockBallHubGame) {
             return
         }
 
@@ -147,7 +129,7 @@ class GameListener @Inject constructor(
             return
         }
 
-        gameActionService.leaveGame(game, event.player)
+        game.leave(event.player)
     }
 
     /**
@@ -157,7 +139,7 @@ class GameListener @Inject constructor(
     fun onPlayerHungerEvent(event: FoodLevelChangeEvent) {
         val game = gameService.getGameFromPlayer(event.entity as Player)
 
-        if (game.isPresent) {
+        if (game != null) {
             event.isCancelled = true
         }
     }
@@ -169,7 +151,7 @@ class GameListener @Inject constructor(
     fun onPlayerClickInventoryEvent(event: InventoryClickEvent) {
         val game = gameService.getGameFromPlayer(event.whoClicked as Player)
 
-        if (game.isPresent && !Permission.INVENTORY.hasPermission(event.whoClicked as Player)) {
+        if (game != null && !Permission.INVENTORY.hasPermission(event.whoClicked as Player)) {
             event.isCancelled = true
             event.whoClicked.closeInventory()
         }
@@ -182,7 +164,7 @@ class GameListener @Inject constructor(
     fun onPlayerOpenInventoryEvent(event: InventoryOpenEvent) {
         val game = gameService.getGameFromPlayer(event.player as Player)
 
-        if (game.isPresent && !Permission.INVENTORY.hasPermission(event.player as Player)) {
+        if (game != null && !Permission.INVENTORY.hasPermission(event.player as Player)) {
             event.isCancelled = true
         }
     }
@@ -194,7 +176,7 @@ class GameListener @Inject constructor(
     fun onPlayerDropItemEvent(event: PlayerDropItemEvent) {
         val game = gameService.getGameFromPlayer(event.player)
 
-        if (game.isPresent && !Permission.INVENTORY.hasPermission(event.player)) {
+        if (game != null && !Permission.INVENTORY.hasPermission(event.player)) {
             event.isCancelled = true
 
             plugin.launch {
@@ -209,22 +191,18 @@ class GameListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerRespawnEvent(event: PlayerRespawnEvent) {
-        val game = gameService.getGameFromPlayer(event.player)
+        val game = gameService.getGameFromPlayer(event.player) ?: return
 
-        if (!game.isPresent) {
-            return
-        }
-
-        val team = game.get().ingamePlayersStorage[event.player]!!.goalTeam
+        val team = game.ingamePlayersStorage[event.player]!!.goalTeam
 
         val teamMeta = if (team == Team.RED) {
-            game.get().arena.meta.redTeamMeta
+            game.arena.meta.redTeamMeta
         } else {
-            game.get().arena.meta.blueTeamMeta
+            game.arena.meta.blueTeamMeta
         }
 
         if (teamMeta.spawnpoint == null) {
-            event.respawnLocation = game.get().arena.meta.ballMeta.spawnpoint!!.toLocation()
+            event.respawnLocation = game.arena.meta.ballMeta.spawnpoint!!.toLocation()
         } else {
             event.respawnLocation = teamMeta.spawnpoint!!.toLocation()
         }
@@ -235,17 +213,13 @@ class GameListener @Inject constructor(
      */
     @EventHandler
     fun onPlayerDeathEvent(event: PlayerDeathEvent) {
-        val game = gameService.getGameFromPlayer(event.entity)
-
-        if (!game.isPresent) {
-            return
-        }
+        val game = gameService.getGameFromPlayer(event.entity) ?: return
 
         if (playerCache.contains(event.entity)) {
             return
         }
 
-        gameExecutionService.applyDeathPoints(game.get(), event.entity)
+        game.applyDeathPoints(event.entity)
     }
 
     /**
@@ -258,18 +232,14 @@ class GameListener @Inject constructor(
         }
 
         val player = event.entity as Player
-        val game = gameService.getGameFromPlayer(player)
-
-        if (!game.isPresent) {
-            return
-        }
+        val game = gameService.getGameFromPlayer(player) ?: return
 
         if (event.cause == EntityDamageEvent.DamageCause.FALL) {
             event.isCancelled = true
             return
         }
 
-        if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.get().arena.meta.customizingMeta.damageEnabled) {
+        if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.arena.meta.customizingMeta.damageEnabled) {
             event.isCancelled = true
             return
         }
@@ -283,8 +253,8 @@ class GameListener @Inject constructor(
 
         playerCache.add(player)
 
-        gameExecutionService.applyDeathPoints(game.get(), player)
-        gameExecutionService.respawn(game.get(), player)
+        game.applyDeathPoints(player)
+        game.respawn(player)
 
         plugin.launch {
             delay(40.ticks)
@@ -316,12 +286,12 @@ class GameListener @Inject constructor(
                 val sourcePosition = event.ball.getLocation().toVector3d()
 
                 if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(sourcePosition)) {
-                    gameSoccerService.notifyBallInGoal(game, Team.RED)
+                    game.notifyBallInGoal(Team.RED)
                     return
                 }
 
                 if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(sourcePosition)) {
-                    gameSoccerService.notifyBallInGoal(game, Team.BLUE)
+                    game.notifyBallInGoal(Team.BLUE)
                     return
                 }
 
@@ -376,16 +346,19 @@ class GameListener @Inject constructor(
         for (game in gameService.getAllGames()) {
             when {
                 game.arena.meta.lobbyMeta.joinSigns.contains(location) -> {
-                    gameActionService.joinGame(game, event.player)
+                    game.join(event.player)
                 }
+
                 game.arena.meta.redTeamMeta.signs.contains(location) -> {
-                    gameActionService.joinGame(game, event.player, Team.RED)
+                    game.join(event.player, Team.RED)
                 }
+
                 game.arena.meta.blueTeamMeta.signs.contains(location) -> {
-                    gameActionService.joinGame(game, event.player, Team.BLUE)
+                    game.join(event.player, Team.BLUE)
                 }
+
                 game.arena.meta.lobbyMeta.leaveSigns.contains(location) -> {
-                    gameActionService.leaveGame(game, event.player)
+                    game.join(event.player)
                 }
             }
         }

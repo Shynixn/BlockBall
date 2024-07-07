@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.impl.commandexecutor
 
 import com.github.shynixn.blockball.contract.CommandExecutor
-import com.github.shynixn.blockball.contract.GameActionService
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.impl.extension.mergeArgs
@@ -12,8 +11,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class JoinCommandExecutor @Inject constructor(
-    private val gameService: GameService,
-    private val gameActionService: GameActionService
+    private val gameService: GameService
 ) : CommandExecutor {
     /**
      * Gets called when the given [source] executes the defined command with the given [args].
@@ -30,12 +28,12 @@ class JoinCommandExecutor @Inject constructor(
         val mergedArgs = mergeArgs(0, args.size, args)
         gameService.getAllGames().forEach { g ->
             if (g.arena.name.equals(mergedArgs, true)) {
-                gameActionService.joinGame(g, source)
+                g.join(source)
                 return true
             } else if (g.arena.displayName.translateChatColors().stripChatColors()
                     .equals(mergedArgs, true)
             ) {
-                gameActionService.joinGame(g, source)
+                g.join(source)
                 return true
             }
         }
@@ -72,7 +70,7 @@ class JoinCommandExecutor @Inject constructor(
                     team = Team.BLUE
                 }
 
-                gameActionService.joinGame(g, player, team)
+                g.join(player, team)
                 return true
             }
         }
