@@ -56,17 +56,10 @@ class JoinCommandExecutor @Inject constructor(
                     .equals(args[0], true)
             ) {
                 var team: Team? = null
-                if (args[1].equals(
-                        g.arena.meta.redTeamMeta.displayName.translateChatColors().stripChatColors(),
-                        true
-                    )
-                ) {
+                // TODO:  Work around will be removed with the command rework
+                if (args[1].equals("team red", true) || args[1].equals("red", true)) {
                     team = Team.RED
-                } else if (args[1].equals(
-                        g.arena.meta.blueTeamMeta.displayName.translateChatColors().stripChatColors(),
-                        true
-                    )
-                ) {
+                } else if (args[1].equals("team blue", true) || args[1].equals("blue", true)) {
                     team = Team.BLUE
                 }
 
