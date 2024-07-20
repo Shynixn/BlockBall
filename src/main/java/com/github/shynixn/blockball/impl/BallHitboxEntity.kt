@@ -33,6 +33,7 @@ import kotlin.math.sin
  */
 class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d) {
     private var stuckCounter = 0
+    private var cachedLength = 0.5
 
     /**
      * Origin coordinate to make relative rotations in the world.
@@ -200,6 +201,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d) {
         if (rayTraceEvent.hitBlock) {
             if (rayTraceEvent.blockDirection == BlockDirection.UP) {
                 this.stuckCounter = 0
+                this.cachedLength = this.motion.length()
                 calculateBallOnGround(players, targetPosition)
                 return
             } else {
@@ -207,7 +209,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d) {
                 this.motion = calculateWallBounce(this.motion, rayTraceEvent.blockDirection)
                 // Fix ball getting stuck in wall by moving back in the direction of its spawnpoint.
                 if (stuckCounter > 4) {
-                    val velocity = this.spawnpoint.copy().subtract(this.position).normalize().multiply(0.5)
+                    val velocity = this.spawnpoint.copy().subtract(this.position).normalize().multiply(cachedLength)
                     this.motion = velocity
                     this.motion.y = 0.1
                     this.position = this.position.add(this.motion.x, this.motion.y, this.motion.z)
@@ -220,6 +222,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d) {
         }
 
         this.stuckCounter = 0
+        this.cachedLength = this.motion.length()
         calculateBallOnAir(players, targetPosition)
     }
 
