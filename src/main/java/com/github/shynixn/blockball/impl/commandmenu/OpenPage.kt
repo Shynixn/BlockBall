@@ -96,9 +96,13 @@ class OpenPage @Inject constructor(
                 return@runBlocking MenuCommandResult.CANCEL_MESSAGE
             }
         } else if (command == MenuCommand.OPEN_CREATE_ARENA) {
-            var idGen = 1
+            var idGen: Int
+
             runBlocking {
-                for (arena in arenaRepository.getAll()) {
+                val arenas = arenaRepository.getAll()
+                idGen = arenas.size + 1
+
+                for (arena in arenas) {
                     if (arena.name == "arena_$idGen") {
                         idGen++
                     }
