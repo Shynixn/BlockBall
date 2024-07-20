@@ -172,55 +172,20 @@ class BlockBallMiniGameImpl constructor(
             return JoinResult.GAME_FULL
         }
 
-        if (ingamePlayersStorage.containsKey(player) && team != null) {
-            var targetTeam = team
-            val amount = getAmountOfQueuedPlayersInThisTeam(targetTeam)
-
-            if (arena.meta.lobbyMeta.onlyAllowEventTeams) {
-                val blueTeamAmount = getAmountOfQueuedPlayersInThisTeam(Team.BLUE)
-                val redTeamAmount = getAmountOfQueuedPlayersInThisTeam(Team.RED)
-
-                if (blueTeamAmount > redTeamAmount) {
-                    targetTeam = Team.RED
-                } else if (blueTeamAmount < redTeamAmount) {
-                    targetTeam = Team.BLUE
-                }
-            }
-
-            if (targetTeam == Team.RED) {
-                if (amount >= arena.meta.redTeamMeta.maxAmount) {
-                    return JoinResult.TEAM_FULL
-                }
-
-                joinTeam(player, Team.RED, arena.meta.redTeamMeta)
-            } else if (targetTeam == Team.BLUE) {
-                if (amount >= arena.meta.blueTeamMeta.maxAmount) {
-                    return JoinResult.TEAM_FULL
-                }
-
-                joinTeam(player, Team.BLUE, arena.meta.blueTeamMeta)
-            }
-
-            ingamePlayersStorage[player]!!.team = targetTeam
-            ingamePlayersStorage[player]!!.goalTeam = targetTeam
-
-            if (targetTeam == Team.BLUE) {
-                executeCommandsWithPlaceHolder(listOf(player), arena.meta.blueTeamMeta.joinCommands)
-                return JoinResult.SUCCESS_BLUE
-            } else {
-                executeCommandsWithPlaceHolder(listOf(player), arena.meta.redTeamMeta.joinCommands)
-                return JoinResult.SUCCESS_RED
-            }
-        }
-
+        var joinResult = JoinResult.SUCCESS_QUEUED
         val storage = this.createPlayerStorage(player)
         ingamePlayersStorage[player] = storage
         player.teleport(arena.meta.minigameMeta.lobbySpawnpoint!!.toLocation())
 
         if (team != null) {
-            val innerResult = join(player, team)
-            if (innerResult != JoinResult.SUCCESS_BLUE && innerResult != JoinResult.SUCCESS_RED) {
-                return innerResult
+            if (team == Team.RED && redTeam.size < arena.meta.redTeamMeta.maxAmount) {
+                joinTeam(player, team, arena.meta.redTeamMeta)
+                storage.team = team
+                joinResult = JoinResult.SUCCESS_RED
+            } else if (team == Team.BLUE && blueTeam.size < arena.meta.blueTeamMeta.maxAmount) {
+                joinTeam(player, team, arena.meta.blueTeamMeta)
+                storage.team = team
+                joinResult = JoinResult.SUCCESS_BLUE
             }
         }
 
@@ -231,7 +196,7 @@ class BlockBallMiniGameImpl constructor(
             }
         }
 
-        return JoinResult.SUCCESS_QUEUED
+        return joinResult
     }
 
     /**
@@ -655,21 +620,6 @@ class BlockBallMiniGameImpl constructor(
             player.inventory.setArmorContents(stats.armorContents.clone())
             player.updateInventory()
         }
-    }
-
-    /**
-     * Returns the amount of queues players.
-     */
-    private fun getAmountOfQueuedPlayersInThisTeam(team: Team): Int {
-        var amount = 0
-
-        ingamePlayersStorage.values.forEach { p ->
-            if (p.team != null && p.team == team) {
-                amount++
-            }
-        }
-
-        return amount
     }
 
     /**
