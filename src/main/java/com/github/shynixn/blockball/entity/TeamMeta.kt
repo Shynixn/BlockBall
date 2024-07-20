@@ -61,10 +61,8 @@ class TeamMeta(
         "%blockball_lang_teamSignLine4%",
     )
 
-    @JsonProperty("armor")
     var armor: Array<String?> = arrayOfNulls(4)
 
-    @JsonProperty("inventory")
     var inventory: Array<String?> = arrayOfNulls(36)
 
     var scoreMessageFadeIn: Int = 20

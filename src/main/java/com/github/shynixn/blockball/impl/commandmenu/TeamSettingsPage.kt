@@ -105,7 +105,7 @@ class TeamSettingsPage @Inject constructor() :
             }.toTypedArray()
         } else if (command == MenuCommand.TEAM_INVENTORY) {
             val teamMeta = getTeamMeta(cache)
-            teamMeta.armor = player.inventory.contents.clone().map { e ->
+            teamMeta.inventory = player.inventory.contents.clone().map { e ->
                 val yamlConfiguration = YamlConfiguration()
                 yamlConfiguration.set("item", e)
                 yamlConfiguration.saveToString()
