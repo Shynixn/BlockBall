@@ -181,10 +181,12 @@ class BlockBallMiniGameImpl constructor(
             if (team == Team.RED && redTeam.size < arena.meta.redTeamMeta.maxAmount) {
                 joinTeam(player, team, arena.meta.redTeamMeta)
                 storage.team = team
+                storage.goalTeam = team
                 joinResult = JoinResult.SUCCESS_RED
             } else if (team == Team.BLUE && blueTeam.size < arena.meta.blueTeamMeta.maxAmount) {
                 joinTeam(player, team, arena.meta.blueTeamMeta)
                 storage.team = team
+                storage.goalTeam = team
                 joinResult = JoinResult.SUCCESS_BLUE
             }
         }
