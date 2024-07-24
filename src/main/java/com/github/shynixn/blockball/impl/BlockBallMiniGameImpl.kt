@@ -488,6 +488,8 @@ class BlockBallMiniGameImpl constructor(
             blueTeam
         }
 
+        executeCommandsWithPlaceHolder(listOf(player), teamMeta.joinCommands)
+
         player.sendMessage(
             placeHolderService.replacePlaceHolders(
                 teamMeta.joinMessage, player, this, teamMeta, players.size
