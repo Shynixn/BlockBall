@@ -358,7 +358,7 @@ class GameListener @Inject constructor(
                 }
 
                 game.arena.meta.lobbyMeta.leaveSigns.contains(location) -> {
-                    game.join(event.player)
+                    game.leave(event.player)
                 }
             }
         }
