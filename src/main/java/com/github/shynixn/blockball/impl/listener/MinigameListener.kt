@@ -1,12 +1,11 @@
 package com.github.shynixn.blockball.impl.listener
 
-import com.github.shynixn.blockball.contract.BlockBallMiniGame
+import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.MatchTimeCloseType
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.event.GameGoalEvent
-import com.github.shynixn.blockball.impl.extension.hasPermission
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.google.inject.Inject
 import org.bukkit.event.EventHandler
@@ -20,15 +19,11 @@ class MinigameListener @Inject constructor(
 ) : Listener {
 
     /**
-     * Cancels actions in minigame and bungeecord games to restrict destroying the arena.
+     * Cancels actions in minigame and bungeecord games to restrict destroying the soccerArena.
      */
     @EventHandler
     fun onPlayerInteractEvent(event: PlayerInteractEvent) {
-        var game = gameService.getGameFromPlayer(event.player)
-
-        if (game == null) {
-            game = gameService.getGameFromSpectatingPlayer(event.player)
-        }
+        val game = gameService.getByPlayer(event.player)
 
         if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME)) {
             event.isCancelled = true
@@ -42,7 +37,7 @@ class MinigameListener @Inject constructor(
     fun onPlayerGoalEvent(event: GameGoalEvent) {
         val game = event.game
 
-        if (game !is BlockBallMiniGame) {
+        if (game !is SoccerMiniGame) {
             return
         }
 
@@ -60,23 +55,19 @@ class MinigameListener @Inject constructor(
     }
 
     /**
-     * Cancels commands in minigame and bungeecord games to restrict destroying the arena.
+     * Cancels commands in minigame and bungeecord games to restrict destroying the soccerArena.
      */
     @EventHandler
     fun onPlayerExecuteCommand(event: PlayerCommandPreprocessEvent) {
         if (event.message.startsWith("/blockball")
-            || event.message.startsWith("/" + configurationService.findValue<String>("global-leave.command"))
-            || Permission.STAFF.hasPermission(event.player) || Permission.ADMIN.hasPermission(event.player)
+            || event.player.hasPermission(Permission.OBSOLETE_STAFF.permission) || event.player.hasPermission(Permission.EDIT_GAME.permission)
             || event.player.isOp
         ) {
 
             return
         }
 
-        var game = gameService.getGameFromPlayer(event.player)
-        if (game != null) {
-            game = gameService.getGameFromSpectatingPlayer(event.player)
-        }
+        val game = gameService.getByPlayer(event.player)
 
         if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME)) {
             event.isCancelled = true

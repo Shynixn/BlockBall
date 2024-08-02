@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.contract.BlockBallGame
+import com.github.shynixn.blockball.contract.SoccerGame
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.PlaceHolderService
 import com.github.shynixn.blockball.entity.PlayerInformation
@@ -18,7 +18,7 @@ import org.bukkit.plugin.Plugin
 class DependencyPlaceHolderServiceImpl @Inject constructor(
     private val plugin: Plugin,
     private val gameService: GameService,
-    private val cachePlayerRepository: CachePlayerRepository<PlayerInformation>,
+    cachePlayerRepository: CachePlayerRepository<PlayerInformation>,
 ) : PlaceholderExpansion(), PlaceHolderService {
     private val placeHolderService = PlaceHolderServiceImpl(gameService, cachePlayerRepository)
     private var registered: Boolean = false
@@ -82,7 +82,7 @@ class DependencyPlaceHolderServiceImpl @Inject constructor(
             }
         }
 
-        var selectedGame = gameService.getGameFromName(gamePart.toString())
+        val selectedGame = gameService.getByName(gamePart.toString())
         if (selectedGame != null) {
             val teamPair = if (player != null && selectedGame.redTeam.contains(player)) {
                 Pair(selectedGame.arena.meta.redTeamMeta, selectedGame.redTeam.size)
@@ -97,7 +97,7 @@ class DependencyPlaceHolderServiceImpl @Inject constructor(
         }
 
         if (player != null) {
-            val optSelectedGame = gameService.getGameFromPlayer(player)
+            val optSelectedGame = gameService.getByPlayer(player)
 
             if (optSelectedGame != null) {
                 val teamPair = if (optSelectedGame.redTeam.contains(player)) {
@@ -122,7 +122,7 @@ class DependencyPlaceHolderServiceImpl @Inject constructor(
      * Replaces the given text with properties from the given [game], optional [teamMeta] and optional size.
      */
     override fun replacePlaceHolders(
-        text: String, player: Player?, game: BlockBallGame?, teamMeta: TeamMeta?, currentTeamSize: Int?
+        text: String, player: Player?, game: SoccerGame?, teamMeta: TeamMeta?, currentTeamSize: Int?
     ): String {
         val replacedInput = placeHolderService.replacePlaceHolders(text, player, game, teamMeta, currentTeamSize)
         return PlaceholderAPI.setPlaceholders(player, replacedInput)

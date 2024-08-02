@@ -44,7 +44,7 @@ dependencies {
     implementation("com.github.shynixn.mcutils:common:2024.19")
     implementation("com.github.shynixn.mcutils:packet:2024.32")
     implementation("com.github.shynixn.mcutils:database:2024.2")
-    implementation("com.github.shynixn.mcutils:sign:2024.2")
+    implementation("com.github.shynixn.mcutils:sign:2024.3")
     implementation("com.github.shynixn.mcutils:guice:2024.2")
 }
 
@@ -207,20 +207,50 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
 
 tasks.register("languageFile") {
     val kotlinSrcFolder = project.sourceSets.toList()[0].allJava.srcDirs.first { e -> e.endsWith("java") }
-    val languageKotlinFile = kotlinSrcFolder.resolve("com/github/shynixn/blockball/BlockBallLanguage.kt")
-    val resourceFile = kotlinSrcFolder.parentFile.resolve("resources").resolve("lang").resolve("en_us.properties")
-    val bundle = FileInputStream(resourceFile).use { stream ->
+
+    // Contract file
+    var languageKotlinFile = kotlinSrcFolder.resolve("com/github/shynixn/blockball/contract/BlockBallLanguage.kt")
+    var resourceFile = kotlinSrcFolder.parentFile.resolve("resources").resolve("lang").resolve("en_us.properties")
+    var bundle = FileInputStream(resourceFile).use { stream ->
         PropertyResourceBundle(stream)
     }
 
-    val contents = ArrayList<String>()
-    contents.add("package com.github.shynixn.blockball")
+    var contents = ArrayList<String>()
+    contents.add("package com.github.shynixn.blockball.contract")
     contents.add("")
-    contents.add("object BlockBallLanguage {")
+    contents.add("interface BlockBallLanguage {")
     for (key in bundle.keys) {
         val value = bundle.getString(key)
         contents.add("  /** $value **/")
-        contents.add("  var ${key} : String = \"$value\"")
+        contents.add("  var ${key} : String")
+        contents.add("")
+    }
+    contents.removeLast()
+    contents.add("}")
+
+    languageKotlinFile.printWriter().use { out ->
+        for (line in contents) {
+            out.println(line)
+        }
+    }
+
+    // Impl File
+    languageKotlinFile = kotlinSrcFolder.resolve("com/github/shynixn/blockball/BlockBallLanguageImpl.kt")
+    resourceFile = kotlinSrcFolder.parentFile.resolve("resources").resolve("lang").resolve("en_us.properties")
+    bundle = FileInputStream(resourceFile).use { stream ->
+        PropertyResourceBundle(stream)
+    }
+
+    contents = ArrayList<String>()
+    contents.add("package com.github.shynixn.blockball")
+    contents.add("")
+    contents.add("import com.github.shynixn.blockball.contract.BlockBallLanguage")
+    contents.add("")
+    contents.add("object BlockBallLanguageImpl : BlockBallLanguage {")
+    for (key in bundle.keys) {
+        val value = bundle.getString(key)
+        contents.add("  /** $value **/")
+        contents.add("  override var ${key} : String = \"$value\"")
         contents.add("")
     }
     contents.removeLast()

@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.mcutils.common.sound.SoundMeta
+import com.github.shynixn.mcutils.sign.SignMeta
 
 class ArenaMeta {
     /** Meta data for spectating setting. */
@@ -23,9 +24,6 @@ class ArenaMeta {
     /** Meta data of the minigame lobby. */
     val minigameMeta: MinigameLobbyMeta = MinigameLobbyMeta()
 
-    /** Meta data of the bungeecord lobby. */
-    val bungeeCordMeta: BungeeCordMeta = BungeeCordMeta()
-
     /** Meta data of the doubleJump. */
     val doubleJumpMeta: DoubleJumpMeta = DoubleJumpMeta()
 
@@ -42,28 +40,10 @@ class ArenaMeta {
     val ballMeta: BallMeta = BallMeta()
 
     /** Meta data of the blueTeam. */
-    val blueTeamMeta: TeamMeta = TeamMeta(
-        "%blockball_lang_teamBlueDisplayName%",
-        "%blockball_lang_teamBlueColor%",
-        "%blockball_lang_teamBlueScoreTitle%",
-        "%blockball_lang_teamBlueScoreSubTitle%",
-        "%blockball_lang_teamBlueWinTitle%",
-        "%blockball_lang_teamBlueWinSubTitle%",
-        "%blockball_lang_teamBlueDrawTitle%",
-        "%blockball_lang_teamBlueDrawSubTitle%"
-    )
+    val blueTeamMeta: TeamMeta = TeamMeta()
 
     /** Meta data of the redTeam. */
-    val redTeamMeta: TeamMeta = TeamMeta(
-        "%blockball_lang_teamRedDisplayName%",
-        "%blockball_lang_teamRedColor%",
-        "%blockball_lang_teamRedScoreTitle%",
-        "%blockball_lang_teamRedScoreSubTitle%",
-        "%blockball_lang_teamRedWinTitle%",
-        "%blockball_lang_teamRedWinSubTitle%",
-        "%blockball_lang_teamRedDrawTitle%",
-        "%blockball_lang_teamRedDrawSubTitle%"
-    )
+    val redTeamMeta: TeamMeta = TeamMeta()
 
     private val internalHologramMetas: ArrayList<HologramMeta> = ArrayList()
 
@@ -75,4 +55,17 @@ class ArenaMeta {
 
         ballMeta.soundEffects[BallActionType.ONKICK] = soundMetaKick
     }
+
+    /**
+     * Compatibility until signs are refactored to external addon.
+     */
+    fun getAllSigns(): List<SignMeta> {
+        val signs = ArrayList<SignMeta>()
+        signs.addAll(lobbyMeta.joinSigns)
+        signs.addAll(lobbyMeta.leaveSigns)
+        signs.addAll(redTeamMeta.teamSigns)
+        signs.addAll(blueTeamMeta.teamSigns)
+        return signs
+    }
+
 }

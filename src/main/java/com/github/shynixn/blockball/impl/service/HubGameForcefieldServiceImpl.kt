@@ -1,13 +1,15 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.contract.*
-import com.github.shynixn.blockball.entity.ChatBuilder
+import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.HubGameForcefieldService
+import com.github.shynixn.blockball.contract.PlaceHolderService
 import com.github.shynixn.blockball.entity.InteractionCache
-import com.github.shynixn.blockball.enumeration.ChatClickAction
 import com.github.shynixn.blockball.enumeration.GameType
-import com.github.shynixn.blockball.impl.extension.stripChatColors
-import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
+import com.github.shynixn.mcutils.common.chat.ClickEvent
+import com.github.shynixn.mcutils.common.chat.ClickEventType
+import com.github.shynixn.mcutils.common.chat.TextComponent
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector
 import com.github.shynixn.mcutils.common.toVector3d
@@ -19,7 +21,7 @@ import org.bukkit.entity.Player
 class HubGameForcefieldServiceImpl @Inject constructor(
     private val gameService: GameService,
     private val placeholderService: PlaceHolderService,
-    private val configurationService: ConfigurationService,
+    private val language: BlockBallLanguage,
     private val chatMessageService: ChatMessageService
 ) : HubGameForcefieldService {
     private val cache = HashMap<Player, InteractionCache>()
@@ -30,7 +32,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
      */
     override fun checkForForcefieldInteractions(player: Player, location: Location) {
         val interactionCache = getInteractionCache(player)
-        val gameInternal = gameService.getGameFromPlayer(player)
+        val gameInternal = gameService.getByPlayer(player)
 
         if (gameInternal != null) {
             if (gameInternal.arena.gameType == GameType.HUBGAME && !gameInternal.arena.isLocationInSelection(
@@ -44,7 +46,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
 
         var inArea = false
 
-        gameService.getAllGames().forEach { game ->
+        gameService.getAll().forEach { game ->
             if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(
                     location.toVector3d()
                 )
@@ -74,56 +76,45 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                         player.allowFlight = true
 
                         if (!interactionCache.toggled) {
-                            val joinCommand = configurationService.findValue<String>("global-join.command")
-
-                            val b =
-                                ChatBuilder().text(
-                                    placeholderService.replacePlaceHolders(
-                                        game.arena.meta.hubLobbyMeta.joinMessage[0],
-                                        player,
-                                        game,
-                                        null,
-                                        null
-                                    )
+                            chatMessageService.sendChatMessage(player, TextComponent().also {
+                                it.components = mutableListOf(
+                                    TextComponent().also {
+                                        it.text = placeholderService.replacePlaceHolders(
+                                            language.hubGameJoinHeader,
+                                            player,
+                                            game,
+                                            null,
+                                            null
+                                        ) + "\n"
+                                    },
+                                    TextComponent().also {
+                                        it.text = placeholderService.replacePlaceHolders(
+                                            language.hubGameJoinRed,
+                                            player,
+                                            game,
+                                            null,
+                                            null
+                                        ) + "\n"
+                                        it.clickEvent = ClickEvent(
+                                            ClickEventType.RUN_COMMAND,
+                                            "/blockball join ${game.arena.name} red"
+                                        )
+                                    },
+                                    TextComponent().also {
+                                        it.text = placeholderService.replacePlaceHolders(
+                                            language.hubGameJoinBlue,
+                                            player,
+                                            game,
+                                            null,
+                                            null
+                                        )
+                                        it.clickEvent = ClickEvent(
+                                            ClickEventType.RUN_COMMAND,
+                                            "/blockball join ${game.arena.name} blue"
+                                        )
+                                    }
                                 )
-                                    .nextLine()
-                                    .component(
-                                        placeholderService.replacePlaceHolders(
-                                            game.arena.meta.hubLobbyMeta.joinMessage[1],
-                                            player,
-                                            game,
-                                            game.arena.meta.redTeamMeta
-                                        )
-                                    )
-                                    .setClickAction(
-                                        ChatClickAction.RUN_COMMAND,
-                                        placeholderService.replacePlaceHolders(
-                                            "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.redTeamMeta.displayName.stripChatColors(),
-                                            player,
-                                            game
-                                        )
-                                    )
-                                    .setHoverText(" ")
-                                    .builder().text(" ")
-                                    .component(
-                                        placeholderService.replacePlaceHolders(
-                                            game.arena.meta.hubLobbyMeta.joinMessage[2],
-                                            player,
-                                            game,
-                                            game.arena.meta.blueTeamMeta
-                                        )
-                                    )
-                                    .setClickAction(
-                                        ChatClickAction.RUN_COMMAND,
-                                        placeholderService.replacePlaceHolders(
-                                            "/" + joinCommand + " " + game.arena.name + "|" + game.arena.meta.blueTeamMeta.displayName.stripChatColors(),
-                                            player,
-                                            game
-                                        )
-                                    )
-                                    .setHoverText(" ")
-                                    .builder()
-                            chatMessageService.sendChatMessage(player, b.convertToTextComponent())
+                            })
                             interactionCache.toggled = true
                         }
                     }

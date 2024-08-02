@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.event
 
-import com.github.shynixn.blockball.contract.BlockBallGame
+import com.github.shynixn.blockball.contract.SoccerGame
 import com.github.shynixn.blockball.enumeration.Team
 
 
@@ -11,5 +11,5 @@ class GameEndEvent(
         /**
          * Winning [Team]. Is null when the match ended in a draw.
          */
-        val winningTeam: Team?, game: BlockBallGame
+        val winningTeam: Team?, game: SoccerGame
 ) : GameEvent(game)

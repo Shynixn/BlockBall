@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.impl.listener
 
-import com.github.shynixn.blockball.contract.Ball
-import com.github.shynixn.blockball.contract.BallEntityService
+import com.github.shynixn.blockball.contract.SoccerBall
+import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.blockball.event.*
 import com.github.shynixn.mcutils.common.sound.SoundService
@@ -13,7 +13,7 @@ import org.bukkit.event.Listener
  * Handles common ball events.
  */
 class BallListener @Inject constructor(
-    private val ballEntityService: BallEntityService,
+    private val soccerBallFactory: SoccerBallFactory,
     private val soundService: SoundService
 ) : Listener {
     /**
@@ -31,7 +31,7 @@ class BallListener @Inject constructor(
      */
     @EventHandler
     fun ballDeathEvent(event: BallRemoveEvent) {
-        this.ballEntityService.removeTrackedBall(event.ball)
+        this.soccerBallFactory.removeTrackedBall(event.ball)
     }
 
     /**
@@ -85,7 +85,7 @@ class BallListener @Inject constructor(
     /**
      * Plays effects.
      */
-    private fun playEffects(ball: Ball, actionEffect: BallActionType) {
+    private fun playEffects(ball: SoccerBall, actionEffect: BallActionType) {
         if (ball.meta.soundEffects.containsKey(actionEffect)) {
             this.soundService.playSound(
                 ball.getLocation(),

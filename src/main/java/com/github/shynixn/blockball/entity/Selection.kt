@@ -8,15 +8,15 @@ import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 @JsonIgnoreProperties("center", "offsetX", "offsetY", "offsetZ")
 open class Selection {
 
-    /** [upperCorner] of the selected square arena. */
+    /** [upperCorner] of the selected square soccerArena. */
     @JsonProperty("corner1")
     final var upperCorner: Vector3d = Vector3d()
 
-    /** [lowerCorner] of the selected square arena. */
+    /** [lowerCorner] of the selected square soccerArena. */
     @JsonProperty("corner2")
     final var lowerCorner: Vector3d = Vector3d()
 
-    /** [center] of the arena */
+    /** [center] of the soccerArena */
     val center: Vector3d
         get() {
             return Vector3d(
@@ -68,8 +68,8 @@ open class Selection {
     }
 
     /**
-     * If the given location is outside the arena it returns the block direction
-     * in which the arena can be reached.
+     * If the given location is outside the soccerArena it returns the block direction
+     * in which the soccerArena can be reached.
      */
     fun getRelativeBlockDirectionToLocation(location: Vector3d): BlockDirection {
         if (location.blockX >= upperCorner.blockX && this.upperCorner.z >= location.z && this.lowerCorner.z <= location.z) {

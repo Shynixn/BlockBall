@@ -70,11 +70,6 @@ class BallMeta {
     var hitBoxRelocation: Double = 0.0
 
     /**
-     * Should the ball always bounce of walls?
-     */
-    var alwaysBounce: Boolean = true
-
-    /**
      * Movement modifier.
      */
     val movementModifier: MovementConfiguration = MovementConfiguration()

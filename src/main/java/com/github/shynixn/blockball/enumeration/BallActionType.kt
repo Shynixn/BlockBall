@@ -6,32 +6,32 @@ package com.github.shynixn.blockball.enumeration
  */
 enum class BallActionType {
     /**
-     * Ball Pass.
+     * SoccerBall Pass.
      */
     ONPASS,
 
     /**
-     * Ball Kick.
+     * SoccerBall Kick.
      */
     ONKICK,
 
     /**
-     * Ball Touch.
+     * SoccerBall Touch.
      */
     ONINTERACTION,
 
     /**
-     * Ball Spawn.
+     * SoccerBall Spawn.
      */
     ONSPAWN,
 
     /**
-     * Ball Score.
+     * SoccerBall Score.
      */
     ONGOAL,
 
     /**
-     * Ball Move.
+     * SoccerBall Move.
      */
     ONMOVE,
 

@@ -1,41 +1,36 @@
 package com.github.shynixn.blockball.contract
 
-import org.bukkit.Location
+import com.github.shynixn.blockball.entity.SoccerArena
 import org.bukkit.entity.Player
 
-interface GameService : AutoCloseable {
+interface GameService {
     /**
      * Reloads all games.
      */
     suspend fun reloadAll()
 
     /**
-     * Returns the game if the given [player] is playing a game.
+     * Reloads the specific game.
      */
-    fun getGameFromPlayer(player: Player): BlockBallGame?
+    suspend fun reload(arena: SoccerArena)
 
     /**
-     * Returns the game if the given [player] is spectating a game.
+     * Gets all running games.
      */
-    fun getGameFromSpectatingPlayer(player: Player):BlockBallGame?
+    fun getAll(): List<SoccerGame>
 
     /**
-     * Returns the game at the given location.
+     * Tries to locate a game this player is playing.
      */
-    fun getGameFromLocation(location: Location): BlockBallGame?
+    fun getByPlayer(player: Player): SoccerGame?
 
     /**
-     * Returns the game with the given name or displayName.
+     * Tries to locate a game of the given name.
      */
-    fun getGameFromName(name: String): BlockBallGame?
+    fun getByName(name: String): SoccerGame?
 
     /**
-     * Returns all currently loaded games on the server.
+     * Disposes all running games.
      */
-    fun getAllGames(): List<BlockBallGame>
-
-    /**
-     * Closes all games permanently and should be executed on server shutdown.
-     */
-    override fun close()
+    fun close()
 }

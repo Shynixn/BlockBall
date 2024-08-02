@@ -4,14 +4,18 @@
 #######################################################################
 
 ############################
-# Notes
-############################
-# You can find the permissions at https://shynixn.github.io/BlockBall/build/html/gettingstarted/permissions.html#permissionlist
-
-############################
 # Language settings
 ############################
 language: "en_us"
+
+############################
+# Command settings
+############################
+commands:
+  blockball:
+    aliases:
+      - "soccer"
+      - "football"
 
 ############################
 # Debug settings
@@ -54,38 +58,9 @@ database:
       - "prepStmtCacheSqlLimit=2048"
 
 ############################
-# Command settings
-# Instead of setting the commands inside of the plugin.yml, I believe you should be able to customize
-# the whole command by yourself. Name, description, permission customize it to your needs.
-# global-join: Settings for the command to join games from any world on your server.
-# global-leave: Settings for the command to leave games from any world on your server.
-############################
-global-join:
-  enabled: true
-  command: bbjoin
-  useage: /<command> <game> <team>
-  description: Join a game.
-  permission: blockball.command.use
-  permission-message: You don't have permission
-global-spectate:
-  enabled: true
-  command: bbspectate
-  useage: /<command> <game>
-  description: Spectate a game.
-  permission: blockball.command.use
-  permission-message: You don't have permission
-global-leave:
-  enabled: true
-  command: bbleave
-  useage: /<command>
-  description: Leaves current game.
-  permission: blockball.command.use
-  permission-message: You don't have permission
-
-############################
 # Security settings
 # Settings to adjust the position of players.
-# fallback-spawnpoint: Spawnpoint for players who try to spawn in an blockball field.
+# fallback-spawnpoint: Spawnpoint for players who try to spawn in a blockball field.
 ############################
 security:
   fallback-spawnpoint:

@@ -2,7 +2,7 @@ package com.github.shynixn.blockball
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.github.shynixn.blockball.contract.*
-import com.github.shynixn.blockball.entity.Arena
+import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.impl.service.*
 import com.github.shynixn.mccoroutine.bukkit.launch
@@ -54,14 +54,14 @@ class BlockBallDependencyInjectionModule(
         addService<Plugin>(plugin)
 
         // Repositories
-        val arenaRepository = YamlFileRepositoryImpl<Arena>(plugin, "arena",
+        val arenaRepository = YamlFileRepositoryImpl<SoccerArena>(plugin, "soccerArena",
             listOf(Pair("arena_sample.yml", "arena_sample.yml")),
             listOf("arena_sample.yml"),
-            object : TypeReference<Arena>() {}
+            object : TypeReference<SoccerArena>() {}
         )
         val cacheArenaRepository = CachedRepositoryImpl(arenaRepository)
-        addService<Repository<Arena>>(cacheArenaRepository)
-        addService<CacheRepository<Arena>>(cacheArenaRepository)
+        addService<Repository<SoccerArena>>(cacheArenaRepository)
+        addService<CacheRepository<SoccerArena>>(cacheArenaRepository)
         val configSelectedPlayerDataRepository = ConfigSelectedRepositoryImpl<PlayerInformation>(
             plugin,
             "BlockBall",
@@ -75,9 +75,9 @@ class BlockBallDependencyInjectionModule(
         )
         addService<PlayerDataRepository<PlayerInformation>>(playerDataRepository)
         addService<CachePlayerRepository<PlayerInformation>>(playerDataRepository)
+        addService<BlockBallLanguage>(BlockBallLanguageImpl)
 
         // Services
-        addService<CommandService, CommandServiceImpl>()
         addService<com.github.shynixn.mcutils.common.command.CommandService>(
             com.github.shynixn.mcutils.common.command.CommandServiceImpl(
                 object : CoroutineExecutor {
@@ -94,9 +94,8 @@ class BlockBallDependencyInjectionModule(
         addService<GameService, GameServiceImpl>()
         addService<ItemService>(ItemServiceImpl())
         addService<ChatMessageService>(ChatMessageServiceImpl(plugin))
-        addService<RightclickManageService, RightclickManageServiceImpl>()
         addService<HubGameForcefieldService, HubGameForcefieldServiceImpl>()
-        addService<BallEntityService, BallEntityServiceImpl>()
+        addService<SoccerBallFactory, SoccerBallFactoryImpl>()
         addService<BlockSelectionService, BlockSelectionServiceImpl>()
         addService<RayTracingService, RayTracingServiceImpl>()
 

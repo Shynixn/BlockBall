@@ -82,14 +82,14 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d) {
     lateinit var packetService: PacketService
 
     /**
-     * Ball Proxy.
+     * SoccerBall Proxy.
      */
-    lateinit var ball: BallCrossPlatformProxy
+    lateinit var ball: SoccerBallCrossPlatformProxy
 
     lateinit var plugin: Plugin
 
     /**
-     * Ball Meta.
+     * SoccerBall Meta.
      */
     val meta: BallMeta
         get() {
@@ -272,7 +272,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d) {
             return
         }
 
-        // Reduce hitbox size in order to stay compatible to old arena files.
+        // Reduce hitbox size in order to stay compatible to old soccerArena files.
         val hitboxSize = (meta.interactionHitBoxSize - 1)
 
         for (player in players) {

@@ -1,14 +1,14 @@
 package com.github.shynixn.blockball.event
 
-import com.github.shynixn.blockball.contract.Ball
+import com.github.shynixn.blockball.contract.SoccerBall
 
 
 /**
- * Base Event for all Ball events.
+ * Base Event for all SoccerBall events.
  */
 open class BallEvent(
     /**
-     * Ball.
+     * SoccerBall.
      */
-    val ball: Ball
+    val ball: SoccerBall
 ) : BlockBallEvent()

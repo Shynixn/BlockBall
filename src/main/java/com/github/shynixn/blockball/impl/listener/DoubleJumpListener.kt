@@ -25,7 +25,7 @@ class DoubleJumpListener @Inject constructor(
             return
         }
 
-        val game = gameService.getGameFromPlayer(event.player) ?: return
+        val game = gameService.getByPlayer(event.player) ?: return
 
         if (game.arena.meta.doubleJumpMeta.enabled) {
             event.player.allowFlight = true
@@ -42,7 +42,7 @@ class DoubleJumpListener @Inject constructor(
             return
         }
 
-        val game = gameService.getGameFromPlayer(event.player) ?: return
+        val game = gameService.getByPlayer(event.player) ?: return
 
         if (!game.arena.meta.doubleJumpMeta.enabled) {
             return

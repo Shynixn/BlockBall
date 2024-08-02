@@ -45,11 +45,6 @@ class GameStorage{
     var hunger: Int = 10
 
     /**
-     * Storage belongs to this [GameType].
-     */
-    var gameType: GameType = GameType.HUBGAME
-
-    /**
      * Gamemode of the player.
      */
     var gameMode: GameMode = GameMode.SURVIVAL

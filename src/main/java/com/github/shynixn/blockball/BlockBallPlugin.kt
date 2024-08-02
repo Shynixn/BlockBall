@@ -1,24 +1,28 @@
 package com.github.shynixn.blockball
 
-import com.github.shynixn.blockball.contract.CommandService
 import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.PlaceHolderService
+import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.entity.PlayerInformation
-import com.github.shynixn.blockball.impl.commandexecutor.*
+import com.github.shynixn.blockball.entity.SoccerArena
+import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.reloadTranslation
+import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.guice.DependencyInjectionModule
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.sign.SignService
 import kotlinx.coroutines.runBlocking
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
-import org.bukkit.configuration.MemorySection
+import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
 
@@ -27,11 +31,7 @@ import java.util.logging.Level
  * @author Shynixn
  */
 class BlockBallPlugin : JavaPlugin() {
-    companion object {
-        /** Final Prefix of BlockBall in the console */
-        val PREFIX_CONSOLE: String = ChatColor.BLUE.toString() + "[BlockBall] "
-    }
-
+    private val prefix: String = ChatColor.BLUE.toString() + "[BlockBall] "
     private val bstatsPluginId = 1317
     private lateinit var module: DependencyInjectionModule
     private var immidiateDisable = false
@@ -40,7 +40,7 @@ class BlockBallPlugin : JavaPlugin() {
      * Enables the plugin BlockBall.
      */
     override fun onEnable() {
-        Bukkit.getServer().consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Loading BlockBall ...")
+        Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Loading BlockBall ...")
         this.saveDefaultConfig()
         val versions = if (BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
             arrayOf(
@@ -91,6 +91,9 @@ class BlockBallPlugin : JavaPlugin() {
         this.module = BlockBallDependencyInjectionModule(this).build()
         this.reloadConfig()
 
+        // Register Packet
+        module.getService<PacketService>().registerPacketListening(PacketInType.USEENTITY)
+
         // Register Listeners
         Bukkit.getPluginManager().registerEvents(module.getService<GameListener>(), this)
         Bukkit.getPluginManager().registerEvents(module.getService<DoubleJumpListener>(), this)
@@ -99,37 +102,33 @@ class BlockBallPlugin : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(module.getService<BallListener>(), this)
         Bukkit.getPluginManager().registerEvents(module.getService<BlockSelectionListener>(), this)
 
-        val configurationService = module.getService<ConfigurationService>()
-        val enableMetrics = configurationService.findValue<Boolean>("metrics")
-
         // Register CommandExecutor
-        val commandService = module.getService<CommandService>()
-        commandService.registerCommandExecutor("blockballstop", module.getService<StopCommandExecutor>())
-        commandService.registerCommandExecutor("blockballreload", module.getService<ReloadCommandExecutor>())
-        commandService.registerCommandExecutor("blockball", module.getService<ArenaCommandExecutor>())
-        commandService.registerCommandExecutor(
-            (config.get("global-spectate") as MemorySection).getValues(false) as Map<String, String>,
-            module.getService<SpectateCommandExecutor>()
-        )
-        commandService.registerCommandExecutor(
-            (config.get("global-leave") as MemorySection).getValues(false) as Map<String, String>,
-            module.getService<LeaveCommandExecutor>()
-        )
-        commandService.registerCommandExecutor(
-            (config.get("global-join") as MemorySection).getValues(false) as Map<String, String>,
-            module.getService<JoinCommandExecutor>()
-        )
+        module.getService<BlockBallCommandExecutor>()
 
-        if (enableMetrics) {
-            Metrics(this, bstatsPluginId)
-        }
-
-        module.getService<PacketService>().registerPacketListening(PacketInType.USEENTITY)
+        // Service dependencies
+        Bukkit.getServicesManager().register(
+            SoccerBallFactory::class.java,
+            module.getService<SoccerBallFactory>(),
+            this,
+            ServicePriority.Normal
+        )
+        Bukkit.getServicesManager()
+            .register(GameService::class.java, module.getService<GameService>(), this, ServicePriority.Normal)
 
         val plugin = this
         plugin.launch {
+            val configurationService = module.getService<ConfigurationService>()
+
+            // Enable Metrics
+            val enableMetrics = configurationService.findValue<Boolean>("metrics")
+
+            if (enableMetrics) {
+                Metrics(plugin, bstatsPluginId)
+            }
+
+            // Load Language
             val language = configurationService.findValue<String>("language")
-            plugin.reloadTranslation(language, BlockBallLanguage::class.java, "en_us")
+            plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us")
             logger.log(Level.INFO, "Loaded language file $language.properties.")
 
             // Load Games
@@ -147,13 +146,57 @@ class BlockBallPlugin : JavaPlugin() {
                 return@launch
             }
 
+            // Load Signs
+            val placeHolderService = module.getService<PlaceHolderService>()
+            val signService = module.getService<SignService>()
+            val arenaService = module.getService<Repository<SoccerArena>>()
+            signService.onSignDestroy = { signMeta ->
+                plugin.launch {
+                    val arenas = arenaService.getAll()
+                    for (arena in arenas) {
+                        for (signToRemove in arena.meta.lobbyMeta.joinSigns.filter { e -> e.isSameSign(signMeta) }) {
+                            arena.meta.lobbyMeta.joinSigns.remove(signToRemove)
+                            arenaService.save(arena)
+                        }
+                        for (signToRemove in arena.meta.lobbyMeta.leaveSigns.filter { e -> e.isSameSign(signMeta) }) {
+                            arena.meta.lobbyMeta.leaveSigns.remove(signToRemove)
+                            arenaService.save(arena)
+                        }
+                        for (signToRemove in arena.meta.redTeamMeta.teamSigns.filter { e -> e.isSameSign(signMeta) }) {
+                            arena.meta.lobbyMeta.joinSigns.remove(signToRemove)
+                            arenaService.save(arena)
+                        }
+                        for (signToRemove in arena.meta.blueTeamMeta.teamSigns.filter { e -> e.isSameSign(signMeta) }) {
+                            arena.meta.lobbyMeta.leaveSigns.remove(signToRemove)
+                            arenaService.save(arena)
+                        }
+                    }
+                }
+            }
+            signService.onPlaceHolderResolve = { signMeta, text ->
+                var resolvedText: String? = null
+
+                if (signMeta.tag != null) {
+                    val game = gameService.getByName(signMeta.tag!!)
+                    if (game != null) {
+                        resolvedText = placeHolderService.replacePlaceHolders(text, null, game)
+                    }
+                }
+
+                if (resolvedText == null) {
+                    resolvedText = placeHolderService.replacePlaceHolders(text)
+                }
+
+                resolvedText
+            }
+
             val playerDataRepository = module.getService<PlayerDataRepository<PlayerInformation>>()
             for (player in Bukkit.getOnlinePlayers()) {
                 playerDataRepository.getByPlayer(player)
             }
 
             Bukkit.getServer()
-                .consoleSender.sendMessage(PREFIX_CONSOLE + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
+                .consoleSender.sendMessage(prefix + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
         }
     }
 
@@ -179,12 +222,5 @@ class BlockBallPlugin : JavaPlugin() {
         } catch (e: Exception) {
             // Ignored.
         }
-    }
-
-    /**
-     * Shutdowns the server.
-     */
-    fun shutdownServer() {
-        Bukkit.getServer().shutdown()
     }
 }

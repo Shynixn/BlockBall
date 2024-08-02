@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.event
 
-import com.github.shynixn.blockball.contract.Ball
+import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 import org.bukkit.Location
 
@@ -13,9 +13,9 @@ import org.bukkit.Location
  */
 class BallRayTraceEvent(
     /**
-     * Ball.
+     * SoccerBall.
      */
-    ball: Ball,
+    ball: SoccerBall,
     /**
      * Modifies if the raytrace has ended in a block hit.
      */

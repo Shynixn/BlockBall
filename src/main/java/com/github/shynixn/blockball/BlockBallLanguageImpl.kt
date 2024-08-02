@@ -1,0 +1,173 @@
+package com.github.shynixn.blockball
+
+import com.github.shynixn.blockball.contract.BlockBallLanguage
+
+object BlockBallLanguageImpl : BlockBallLanguage {
+  /** %2$1s scored for &cTeam Red. **/
+  override var scoreRedSubTitle : String = "%2$1s scored for &cTeam Red."
+
+  /** &9&l%1$1s **/
+  override var scoreBlueTitle : String = "&9&l%1$1s"
+
+  /** &cTeam Red **/
+  override var winRedTitle : String = "&cTeam Red"
+
+  /** &0&l[&f&lBlockBall&0&l]&c Game %1$1s already exists. **/
+  override var gameAlreadyExistsMessage : String = "&0&l[&f&lBlockBall&0&l]&c Game %1$1s already exists."
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Successfully joined team blue. **/
+  override var joinTeamBlueMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Successfully joined team blue."
+
+  /** &0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist. **/
+  override var teamDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist."
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s. **/
+  override var reloadedGameMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s."
+
+  /** &0&l[&f&lBlockBall&0&l]&7 A sign was added to the game. **/
+  override var addedSignMessage : String = "&0&l[&f&lBlockBall&0&l]&7 A sign was added to the game."
+
+  /** &9Team Blue &ahas won the match **/
+  override var winBlueSubTitle : String = "&9Team Blue &ahas won the match"
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Left the game. **/
+  override var leftGameMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Left the game."
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Reloaded all games. **/
+  override var reloadedAllGamesMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Reloaded all games."
+
+  /** 20 **/
+  override var scoreRedFadeIn : String = "20"
+
+  /** &1Running **/
+  override var gameStatusRunning : String = "&1Running"
+
+  /** &0&l[&f&lBlockBall&0&l]&c You do not have permission to join game %1$1s. **/
+  override var noPermissionForGameMessage : String = "&0&l[&f&lBlockBall&0&l]&c You do not have permission to join game %1$1s."
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Updated armor of game. **/
+  override var updatedArmorMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Updated armor of game."
+
+  /** 20 **/
+  override var winBlueFadeOut : String = "20"
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Use /blockball help to see more info about the plugin. **/
+  override var commandUsage : String = "&0&l[&f&lBlockBall&0&l]&7 Use /blockball help to see more info about the plugin."
+
+  /** &0&l[&f&lBlockBall&0&l]&7 RightClick on a sign to convert it into a game sign. **/
+  override var rightClickOnSignMessage : String = "&0&l[&f&lBlockBall&0&l]&7 RightClick on a sign to convert it into a game sign."
+
+  /** &c&l%1$1s **/
+  override var scoreRedTitle : String = "&c&l%1$1s"
+
+  /** &c[Team Red] **/
+  override var hubGameJoinRed : String = "&c[Team Red]"
+
+  /** 20 **/
+  override var winRedFadeIn : String = "20"
+
+  /** 60 **/
+  override var winBlueStay : String = "60"
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Created game %1$1s. **/
+  override var gameCreatedMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Created game %1$1s."
+
+  /** 20 **/
+  override var winDrawFadeOut : String = "20"
+
+  /** 20 **/
+  override var scoreBlueFadeOut : String = "20"
+
+  /** 20 **/
+  override var scoreRedFadeOut : String = "20"
+
+  /** 20 **/
+  override var winBlueFadeIn : String = "20"
+
+  /** 60 **/
+  override var winRedStay : String = "60"
+
+  /** 60 **/
+  override var scoreRedStay : String = "60"
+
+  /** All commands for the BlockBall plugin. **/
+  override var commandDescription : String = "All commands for the BlockBall plugin."
+
+  /** &0&l[&f&lBlockBall&0&l]&c This location type is not known. For more locations, open the arena.yml. **/
+  override var locationTypeDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c This location type is not known. For more locations, open the arena.yml."
+
+  /** &0&l[&f&lBlockBall&0&l]&c You do not have permission. **/
+  override var noPermissionMessage : String = "&0&l[&f&lBlockBall&0&l]&c You do not have permission."
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Game enable state was set to %1$1s. **/
+  override var enabledArenaMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Game enable state was set to %1$1s."
+
+  /** &cTeam Red &ahas won the match **/
+  override var winRedSubTitle : String = "&cTeam Red &ahas won the match"
+
+  /** Click on the team to join the match. **/
+  override var hubGameJoinHeader : String = "Click on the team to join the match."
+
+  /** &0&l[&f&lBlockBall&0&l]&c The text length has to be less than 20 characters. **/
+  override var maxLength20Characters : String = "&0&l[&f&lBlockBall&0&l]&c The text length has to be less than 20 characters."
+
+  /** &0&l[&f&lBlockBall&0&l]&c This sign type is not known. **/
+  override var signTypeDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c This sign type is not known."
+
+  /** %2$1s scored for &9Team Blue. **/
+  override var scoreBlueSubTitle : String = "%2$1s scored for &9Team Blue."
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Successfully joined team red. **/
+  override var joinTeamRedMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Successfully joined team red."
+
+  /** &aJoin **/
+  override var gameStatusJoinAble : String = "&aJoin"
+
+  /** &0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist. **/
+  override var gameDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist."
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Deleted game %1$1s. **/
+  override var deletedGameMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Deleted game %1$1s."
+
+  /** &0&l[&f&lBlockBall&0&l]&c Game is already full. **/
+  override var gameIsFullMessage : String = "&0&l[&f&lBlockBall&0&l]&c Game is already full."
+
+  /** &9[Team Blue] **/
+  override var hubGameJoinBlue : String = "&9[Team Blue]"
+
+  /** &9Team Blue **/
+  override var winBlueTitle : String = "&9Team Blue"
+
+  /** 60 **/
+  override var winDrawStay : String = "60"
+
+  /** &4Disabled **/
+  override var gameStatusDisabled : String = "&4Disabled"
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Updated inventory of game. **/
+  override var updatedInventoryMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Updated inventory of game."
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Location %1$1s was set on %2$1s. **/
+  override var spawnPointSetMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Location %1$1s was set on %2$1s."
+
+  /** 20 **/
+  override var scoreBlueFadeIn : String = "20"
+
+  /** &aThe game has ended in a draw **/
+  override var winDrawSubTitle : String = "&aThe game has ended in a draw"
+
+  /** &0&l[&f&lBlockBall&0&l]&c The command sender has to be a player! **/
+  override var commandSenderHasToBePlayer : String = "&0&l[&f&lBlockBall&0&l]&c The command sender has to be a player!"
+
+  /** 20 **/
+  override var winRedFadeOut : String = "20"
+
+  /** 20 **/
+  override var winDrawFadeIn : String = "20"
+
+  /** &fDraw **/
+  override var winDrawTitle : String = "&fDraw"
+
+  /** 60 **/
+  override var scoreBlueStay : String = "60"
+}

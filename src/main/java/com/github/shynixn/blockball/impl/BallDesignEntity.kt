@@ -2,7 +2,7 @@
 
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.contract.Ball
+import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.enumeration.BallSize
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -34,7 +34,7 @@ class BallDesignEntity(val entityId: Int) {
     /**
      * Reference.
      */
-    lateinit var ball: Ball
+    lateinit var ball: SoccerBall
 
     /**
      * Spawns the ball for the given player.

@@ -3,8 +3,9 @@ package com.github.shynixn.blockball.impl.service
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.GameType
-import com.github.shynixn.blockball.impl.BlockBallHubGameImpl
-import com.github.shynixn.blockball.impl.BlockBallMiniGameImpl
+import com.github.shynixn.blockball.impl.SoccerHubGameImpl
+import com.github.shynixn.blockball.impl.SoccerMiniGameImpl
+import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
@@ -13,8 +14,9 @@ import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.sign.SignService
 import com.google.inject.Inject
-import org.bukkit.Bukkit
+import kotlinx.coroutines.runBlocking
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -22,7 +24,7 @@ import java.util.*
 import java.util.logging.Level
 
 class GameServiceImpl @Inject constructor(
-    private val arenaRepository: Repository<Arena>,
+    private val arenaRepository: Repository<SoccerArena>,
     private val configurationService: ConfigurationService,
     private val plugin: Plugin,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
@@ -33,9 +35,11 @@ class GameServiceImpl @Inject constructor(
     private val packetService: PacketService,
     private val scoreboardService: ScoreboardService,
     private val commandService: CommandService,
-    private val ballEntityService: BallEntityService
+    private val soccerBallFactory: SoccerBallFactory,
+    private val language: BlockBallLanguage,
+    private val signService: SignService
 ) : GameService, Runnable {
-    private val games = ArrayList<BlockBallGame>()
+    private val games = ArrayList<SoccerGame>()
     private var ticks: Int = 0
 
     /**
@@ -52,12 +56,74 @@ class GameServiceImpl @Inject constructor(
      */
     override suspend fun reloadAll() {
         close()
-        configurationService.reload()
 
         val arenas = arenaRepository.getAll()
 
         for (arena in arenas) {
-            initGame(arena)
+            reload(arena)
+        }
+    }
+
+    /**
+     * Reloads the specific game.
+     */
+    override suspend fun reload(arena: SoccerArena) {
+        // A game with the same arena name is currently running. Stop it and reboot it.
+        val existingGame = getByName(arena.name)
+
+        if (existingGame != null) {
+            existingGame.close()
+            games.remove(existingGame)
+            plugin.logger.log(Level.INFO, "Stopped game '" + arena.name + "'.")
+        }
+
+        // Enable signs, if they are already added, the call does nothing.
+        for (sign in arena.meta.getAllSigns()) {
+            sign.tag = arena.name
+            signService.addSign(sign)
+        }
+
+        if (arena.enabled) {
+            validateGame(arena)
+
+            val game: SoccerGame = when (arena.gameType) {
+                GameType.HUBGAME -> SoccerHubGameImpl(
+                    arena,
+                    playerDataRepository,
+                    plugin,
+                    placeHolderService,
+                    bossBarService,
+                    language,
+                    packetService,
+                    scoreboardService,
+                    soccerBallFactory,
+                    chatMessageService,
+                    commandService
+                )
+
+                GameType.MINIGAME -> SoccerMiniGameImpl(
+                    arena,
+                    playerDataRepository,
+                    plugin,
+                    placeHolderService,
+                    bossBarService,
+                    chatMessageService,
+                    configurationService,
+                    soundService,
+                    language,
+                    packetService,
+                    scoreboardService,
+                    commandService,
+                    soccerBallFactory
+                )
+
+                else -> throw RuntimeException("GameType ${arena.gameType} not supported!")
+            }
+
+            games.add(game)
+            plugin.logger.log(Level.INFO, "Game '" + arena.name + "' is ready.")
+        } else {
+            plugin.logger.log(Level.INFO, "Cannot boot game '" + arena.name + "' because it is not enabled.")
         }
     }
 
@@ -76,8 +142,9 @@ class GameServiceImpl @Inject constructor(
     override fun run() {
         games.toTypedArray().forEach { game ->
             if (game.closed) {
-                games.remove(game)
-                initGame(game.arena)
+                runBlocking {
+                    reload(game.arena)
+                }
             } else {
                 game.handle(ticks)
             }
@@ -91,22 +158,16 @@ class GameServiceImpl @Inject constructor(
     }
 
     /**
-     * Returns the game with the given name or displayName.
+     * Returns all currently loaded games on the server.
      */
-    override fun getGameFromName(name: String): BlockBallGame? {
-        for (game in games) {
-            if (game.arena.name.equals(name, true) || game.arena.displayName.equals(name, true)) {
-                return game
-            }
-        }
-
-        return null
+    override fun getAll(): List<SoccerGame> {
+        return games
     }
 
     /**
-     * Returns the game if the given [player] is playing a game.
+     * Tries to locate a game this player is playing.
      */
-    override fun getGameFromPlayer(player: Player): BlockBallGame? {
+    override fun getByPlayer(player: Player): SoccerGame? {
         for (game in games) {
             if (game.ingamePlayersStorage.containsKey(player)) {
                 return game
@@ -117,40 +178,16 @@ class GameServiceImpl @Inject constructor(
     }
 
     /**
-     * Returns the game if the given [player] is spectating a game.
+     * Tries to locate a game of the given name.
      */
-    override fun getGameFromSpectatingPlayer(player: Player): BlockBallGame? {
-        for (g in this.games) {
-            if (g is BlockBallMiniGame) {
-                if (g.spectatorPlayers.contains(player)) {
-                    return g
-                }
-            }
-        }
-
-        return null
-    }
-
-    /**
-     * Returns the game at the given location.
-     */
-    override fun getGameFromLocation(location: Location): BlockBallGame? {
-        val position = location.toVector3d()
-
+    override fun getByName(name: String): SoccerGame? {
         for (game in games) {
-            if (game.arena.isLocationInSelection(position)) {
+            if (game.arena.name.equals(name, true)) {
                 return game
             }
         }
 
         return null
-    }
-
-    /**
-     * Returns all currently loaded games on the server.
-     */
-    override fun getAllGames(): List<BlockBallGame> {
-        return games.filter { g -> (!g.closing && !g.closed) }
     }
 
     /**
@@ -168,48 +205,10 @@ class GameServiceImpl @Inject constructor(
         games.clear()
     }
 
-    /**
-     * Initialises a new game from the given arena.
-     */
-    private fun initGame(arena: Arena) {
-        if (arena.name.isBlank()) {
-            throw Exception("Arena(s) cannot be loaded! If you have an obsolete arena file format, convert your arenas using the plugin found here https://github.com/Shynixn/BlockBall/releases/tag/conversion or delete your BlockBall folder.")
+
+    private fun validateGame(arena: SoccerArena) {
+        if (arena.meta.ballMeta.spawnpoint == null) {
+            throw SoccerGameException(arena, "Set the leave spawnpoint values in arena ${arena.name}!")
         }
-
-        val game: BlockBallGame = when (arena.gameType) {
-            GameType.HUBGAME -> BlockBallHubGameImpl(
-                arena,
-                this,
-                playerDataRepository,
-                plugin,
-                placeHolderService,
-                bossBarService,
-                packetService,
-                scoreboardService,
-                ballEntityService,
-                chatMessageService,
-                commandService
-            )
-
-            GameType.MINIGAME -> BlockBallMiniGameImpl(
-                arena,
-                this,
-                playerDataRepository,
-                plugin,
-                placeHolderService,
-                bossBarService,
-                chatMessageService,
-                configurationService,
-                soundService,
-                packetService,
-                scoreboardService,
-                commandService,
-                ballEntityService
-            )
-
-            else -> throw RuntimeException("GameType ${arena.gameType} not supported!")
-        }
-
-        games.add(game)
     }
 }

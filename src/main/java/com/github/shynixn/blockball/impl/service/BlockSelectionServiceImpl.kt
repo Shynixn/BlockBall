@@ -4,7 +4,6 @@ package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.BlockSelectionService
 import com.github.shynixn.blockball.enumeration.Permission
-import com.github.shynixn.blockball.impl.extension.stripChatColors
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.ChatColor
@@ -102,7 +101,7 @@ class BlockSelectionServiceImpl @Inject constructor(
      * Select location and returns if success.
      */
     private fun selectLocation(player: Player, location: Location, index: Int): Boolean {
-        if (!player.hasPermission(Permission.ADMIN.permission)) {
+        if (!player.hasPermission(Permission.EDIT_GAME.permission)) {
             return false
         }
 
@@ -123,7 +122,7 @@ class BlockSelectionServiceImpl @Inject constructor(
             return false
         }
 
-        if (itemMeta.displayName.stripChatColors() != this.axeName.stripChatColors()) {
+        if (org.bukkit.ChatColor.stripColor(itemMeta.displayName) != org.bukkit.ChatColor.stripColor(this.axeName)) {
             return false
         }
 
@@ -149,7 +148,7 @@ class BlockSelectionServiceImpl @Inject constructor(
 
                 if (itemMeta != null) {
                     if (itemMeta.displayName != null
-                        && itemMeta.displayName.stripChatColors() == this.axeName.stripChatColors()
+                        && org.bukkit.ChatColor.stripColor(itemMeta.displayName) == org.bukkit.ChatColor.stripColor(this.axeName)
                     ) {
                         return
                     }

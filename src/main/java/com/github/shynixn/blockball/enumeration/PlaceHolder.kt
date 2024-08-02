@@ -19,14 +19,6 @@ enum class PlaceHolder(
 
     GAME_BLUE_SCORE("%blockball_game_blueScore%"),
 
-    GAME_TEAM_RED_NAME("%blockball_game_redName%"),
-
-    GAME_TEAM_BLUE_NAME("%blockball_game_blueName%"),
-
-    GAME_TEAM_RED_COLOR("%blockball_game_redColor%"),
-
-    GAME_TEAM_BLUE_COLOR("%blockball_game_blueColor%"),
-
     GAME_TIME("%blockball_game_time%"),
 
     GAME_LASTHITPLAYER_NAME("%blockball_game_lastHitPlayerName%"),

@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.event
 
-import com.github.shynixn.blockball.contract.BlockBallGame
+import com.github.shynixn.blockball.contract.SoccerGame
 import org.bukkit.entity.Player
 
 /**
@@ -10,5 +10,5 @@ class GameLeaveEvent(
         /**
          * Player joining the game.
          */
-        val player: Player, game: BlockBallGame
+        val player: Player, game: SoccerGame
 ) : GameEvent(game)

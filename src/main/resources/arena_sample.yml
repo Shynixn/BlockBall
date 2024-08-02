@@ -1,7 +1,7 @@
 # Unique identifier of a game.
 name: "1"
 # Arbitrary name which supports color codes and can be used as placeholder
-displayName: "Arena 3"
+displayName: "SoccerArena 3"
 # Is the game enabled or not.
 enabled: true
 # Type of game. Accepts HUBGAME, MINIGAME and BUNGEE
@@ -414,7 +414,7 @@ meta:
         effectingType: "RELATED_PLAYER"
     # Spawn delay of the ball in ticks.
     delayInTicks: 0
-    # Ball spawnpoint.
+    # SoccerBall spawnpoint.
     spawnpoint:
       x: 1625.4287132686636
       y: 4.0

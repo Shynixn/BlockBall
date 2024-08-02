@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.event
 
-import com.github.shynixn.blockball.contract.BlockBallGame
+import com.github.shynixn.blockball.contract.SoccerGame
 
 
 /**
@@ -10,5 +10,5 @@ open class GameEvent(
     /**
      * Game firing this event.
      */
-    val game: BlockBallGame
+    val game: SoccerGame
 ) : BlockBallEvent()
