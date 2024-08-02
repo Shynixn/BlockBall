@@ -24,6 +24,11 @@ import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
+import java.util.UUID
 import java.util.logging.Level
 
 /**
@@ -128,8 +133,23 @@ class BlockBallPlugin : JavaPlugin() {
 
             // Load Language
             val language = configurationService.findValue<String>("language")
-            plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us")
-            logger.log(Level.INFO, "Loaded language file $language.properties.")
+            try {
+                plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us")
+                logger.log(Level.INFO, "Loaded language file $language.properties.")
+            } catch (e: Exception) {
+                // Compatibility to < 6.46.3
+                Files.move(
+                    plugin.dataFolder.toPath().resolve("lang").resolve("en_us.properties"),
+                    plugin.dataFolder.toPath().resolve("lang").resolve("old_" + UUID.randomUUID().toString() + ".properties"),
+                    StandardCopyOption.REPLACE_EXISTING
+                )
+                plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us")
+                logger.log(
+                    Level.WARNING,
+                    "Your language file is not compatible. Your existing file has been renamed and the original file has been reset."
+                )
+            }
+
 
             // Load Games
             val gameService = module.getService<GameService>()

@@ -29,6 +29,8 @@ import com.github.shynixn.mcutils.packet.impl.service.ChatMessageServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.ItemServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.RayTracingServiceImpl
+import com.github.shynixn.mcutils.sign.SignService
+import com.github.shynixn.mcutils.sign.SignServiceImpl
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
@@ -54,7 +56,7 @@ class BlockBallDependencyInjectionModule(
         addService<Plugin>(plugin)
 
         // Repositories
-        val arenaRepository = YamlFileRepositoryImpl<SoccerArena>(plugin, "soccerArena",
+        val arenaRepository = YamlFileRepositoryImpl<SoccerArena>(plugin, "arena",
             listOf(Pair("arena_sample.yml", "arena_sample.yml")),
             listOf("arena_sample.yml"),
             object : TypeReference<SoccerArena>() {}
@@ -76,6 +78,9 @@ class BlockBallDependencyInjectionModule(
         addService<PlayerDataRepository<PlayerInformation>>(playerDataRepository)
         addService<CachePlayerRepository<PlayerInformation>>(playerDataRepository)
         addService<BlockBallLanguage>(BlockBallLanguageImpl)
+        addService<SignService> {
+            SignServiceImpl(plugin, getService(), BlockBallLanguageImpl.noPermissionMessage)
+        }
 
         // Services
         addService<com.github.shynixn.mcutils.common.command.CommandService>(
