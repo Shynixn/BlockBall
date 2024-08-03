@@ -208,6 +208,7 @@ class GameServiceImpl @Inject constructor(
 
     private fun validateGame(arena: SoccerArena) {
         if (arena.meta.ballMeta.spawnpoint == null) {
+            arena.enabled = false
             throw SoccerGameException(arena, "Set the leave spawnpoint values in arena ${arena.name}!")
         }
     }

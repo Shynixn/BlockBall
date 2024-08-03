@@ -161,6 +161,7 @@ class BlockBallCommandExecutor @Inject constructor(
             permissionMessage(language.noPermissionMessage.translateChatColors())
             subCommand("create") {
                 permission(Permission.EDIT_GAME)
+                toolTip { language.commandCreateToolTip }
                 builder().argument("name").validator(maxLengthValidator).validator(maxLengthValidator)
                     .validator(gameMustNotExistValidator).tabs { listOf("<name>") }.argument("displayName")
                     .validator(remainingStringValidator).tabs { listOf("<displayName>") }
@@ -168,20 +169,24 @@ class BlockBallCommandExecutor @Inject constructor(
             }
             subCommand("delete") {
                 permission(Permission.EDIT_GAME)
+                toolTip { language.commandDeleteToolTip }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .execute { sender, arena -> deleteArena(sender, arena) }
             }
             subCommand("list") {
                 permission(Permission.EDIT_GAME)
+                toolTip { language.commandListToolTip }
                 builder().execute { sender -> listArena(sender) }
             }
             subCommand("toggle") {
                 permission(Permission.EDIT_GAME)
+                toolTip { language.commandToggleToolTip }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .execute { sender, arena -> toggleGame(sender, arena) }
             }
             subCommand("join") {
                 noPermission()
+                toolTip { language.commandJoinToolTip }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .executePlayer({ language.commandSenderHasToBePlayer }) { sender, arena ->
                         joinGame(
@@ -194,11 +199,13 @@ class BlockBallCommandExecutor @Inject constructor(
             }
             subCommand("leave") {
                 noPermission()
+                toolTip { language.commandLeaveToolTip }
                 builder().executePlayer({ language.commandSenderHasToBePlayer }) { sender -> leaveGame(sender) }
             }
             helpCommand()
             subCommand("location") {
                 permission(Permission.EDIT_GAME)
+                toolTip { language.commandLocationToolTip }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .argument("type").validator(locationTypeValidator).tabs { LocationType.values().map { e -> e.id } }
                     .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, locationType ->
@@ -207,6 +214,7 @@ class BlockBallCommandExecutor @Inject constructor(
             }
             subCommand("inventory") {
                 permission(Permission.EDIT_GAME)
+                toolTip { language.commandInventoryToolTip }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .argument("team").validator(teamMetaValidator).tabs { listOf("red", "blue") }
                     .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, meta ->
@@ -215,6 +223,7 @@ class BlockBallCommandExecutor @Inject constructor(
             }
             subCommand("armor") {
                 permission(Permission.EDIT_GAME)
+                toolTip { language.commandArmorToolTip }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .argument("team").validator(teamMetaValidator).tabs { listOf("red", "blue") }
                     .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, meta ->
@@ -223,6 +232,7 @@ class BlockBallCommandExecutor @Inject constructor(
             }
             subCommand("sign") {
                 permission(Permission.EDIT_GAME)
+                toolTip { language.commandSignToolTip }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .argument("type").validator(signTypeValidator).tabs { listOf("join", "leave") }
                     .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, signType ->
@@ -231,6 +241,7 @@ class BlockBallCommandExecutor @Inject constructor(
             }
             subCommand("reload") {
                 permission(Permission.EDIT_GAME)
+                toolTip { language.commandReloadToolTip }
                 builder()
                     .execute { sender ->
                         reloadArena(sender, null)
@@ -302,18 +313,47 @@ class BlockBallCommandExecutor @Inject constructor(
     private suspend fun listArena(sender: CommandSender) {
         val existingArenas = arenaRepository.getAll()
 
-        sender.sendMessage("---------BlockBall---------")
+        val headerBuilder = StringBuilder()
+        headerBuilder.append(org.bukkit.ChatColor.GRAY)
+        headerBuilder.append(org.bukkit.ChatColor.STRIKETHROUGH)
+        for (i in 0 until (30 - plugin.name.length) / 2) {
+            headerBuilder.append(" ")
+        }
+        headerBuilder.append(org.bukkit.ChatColor.RESET)
+        headerBuilder.append(org.bukkit.ChatColor.WHITE)
+        headerBuilder.append(org.bukkit.ChatColor.BOLD)
+        headerBuilder.append(plugin.name)
+        headerBuilder.append(org.bukkit.ChatColor.RESET)
+        headerBuilder.append(org.bukkit.ChatColor.GRAY)
+        headerBuilder.append(org.bukkit.ChatColor.STRIKETHROUGH)
+        for (i in 0 until (30 - plugin.name.length) / 2) {
+            headerBuilder.append(" ")
+        }
+        sender.sendMessage(headerBuilder.toString())
         for (arena in existingArenas) {
             if (arena.enabled) {
-                sender.sendMessage(ChatColor.GRAY.toString() + arena.name + " [${arena.displayName.translateChatColors()}" + ChatColor.GRAY + "] " + ChatColor.GREEN + "[enabled]")
+                sender.sendMessage(ChatColor.YELLOW.toString() + arena.name + " [${arena.displayName.translateChatColors()}" + ChatColor.GRAY + "] " + ChatColor.GREEN + "[enabled]")
             } else {
-                sender.sendMessage(ChatColor.GRAY.toString() + arena.name + " [${arena.displayName.translateChatColors()}" + ChatColor.GRAY + "] " + ChatColor.RED + "[disabled]")
+                sender.sendMessage(ChatColor.YELLOW.toString() + arena.name + " [${arena.displayName.translateChatColors()}" + ChatColor.GRAY + "] " + ChatColor.RED + "[disabled]")
 
             }
 
             sender.sendMessage()
         }
-        sender.sendMessage("----------┌1/1┐----------")
+
+        val footerBuilder = java.lang.StringBuilder()
+        footerBuilder.append(org.bukkit.ChatColor.GRAY)
+        footerBuilder.append(org.bukkit.ChatColor.STRIKETHROUGH)
+        footerBuilder.append("               ")
+        footerBuilder.append(org.bukkit.ChatColor.RESET)
+        footerBuilder.append(org.bukkit.ChatColor.WHITE)
+        footerBuilder.append(org.bukkit.ChatColor.BOLD)
+        footerBuilder.append("1/1")
+        footerBuilder.append(org.bukkit.ChatColor.RESET)
+        footerBuilder.append(org.bukkit.ChatColor.GRAY)
+        footerBuilder.append(org.bukkit.ChatColor.STRIKETHROUGH)
+        footerBuilder.append("               ")
+        sender.sendMessage(footerBuilder.toString())
     }
 
     private fun joinGame(player: Player, name: String, team: Team? = null) {
@@ -396,14 +436,14 @@ class BlockBallCommandExecutor @Inject constructor(
             sender.sendMessage(language.rightClickOnSignMessage)
             signService.addSignByRightClick(sender) { sign ->
                 sign.let {
-                    it.line1 = "%mctennis_lang_joinSignLine1%"
-                    it.line2 = "%mctennis_lang_joinSignLine2%"
-                    it.line3 = "%mctennis_lang_joinSignLine3%"
-                    it.line4 = "%mctennis_lang_joinSignLine4%"
+                    it.line1 = "%blockball_lang_joinSignLine1%"
+                    it.line2 = "%blockball_lang_joinSignLine2%"
+                    it.line3 = "%blockball_lang_joinSignLine3%"
+                    it.line4 = "%blockball_lang_joinSignLine4%"
                     it.cooldown = 20
                     it.update = 40
                     it.commands = mutableListOf(CommandMeta().also {
-                        it.command = "/mctennis join ${arena.name}"
+                        it.command = "/blockball join ${arena.name}"
                         it.type = CommandType.PER_PLAYER
                     })
                 }
@@ -422,14 +462,14 @@ class BlockBallCommandExecutor @Inject constructor(
             sender.sendMessage(language.rightClickOnSignMessage)
             signService.addSignByRightClick(sender) { sign ->
                 sign.let {
-                    it.line1 = "%mctennis_lang_leaveSignLine1%"
-                    it.line2 = "%mctennis_lang_leaveSignLine2%"
-                    it.line3 = "%mctennis_lang_leaveSignLine3%"
-                    it.line4 = "%mctennis_lang_leaveSignLine4%"
+                    it.line1 = "%blockball_lang_leaveSignLine1%"
+                    it.line2 = "%blockball_lang_leaveSignLine2%"
+                    it.line3 = "%blockball_lang_leaveSignLine3%"
+                    it.line4 = "%blockball_lang_leaveSignLine4%"
                     it.cooldown = 20
                     it.update = 40
                     it.commands = mutableListOf(CommandMeta().also {
-                        it.command = "/mctennis leave"
+                        it.command = "/blockball leave"
                         it.type = CommandType.PER_PLAYER
                     })
                 }

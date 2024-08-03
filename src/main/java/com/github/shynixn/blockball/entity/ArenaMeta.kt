@@ -37,7 +37,7 @@ class ArenaMeta {
     val protectionMeta: ArenaProtectionMeta = ArenaProtectionMeta()
 
     /** Meta data of the ball. */
-    val ballMeta: BallMeta = BallMeta()
+    val ballMeta: SoccerBallSettings = SoccerBallSettings()
 
     /** Meta data of the blueTeam. */
     val blueTeamMeta: TeamMeta = TeamMeta()

@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.entity.BallMeta
+import com.github.shynixn.blockball.entity.SoccerBallSettings
 import com.github.shynixn.blockball.event.BallLeftClickEvent
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallRightClickEvent
@@ -91,7 +91,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d) {
     /**
      * SoccerBall Meta.
      */
-    val meta: BallMeta
+    val meta: SoccerBallSettings
         get() {
             return ball.meta
         }

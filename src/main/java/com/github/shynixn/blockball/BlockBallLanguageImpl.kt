@@ -42,6 +42,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &1Running **/
   override var gameStatusRunning : String = "&1Running"
 
+  /** Creates a new arena for a BlockBall game. **/
+  override var commandCreateToolTip : String = "Creates a new arena for a BlockBall game."
+
   /** &0&l[&f&lBlockBall&0&l]&c You do not have permission to join game %1$1s. **/
   override var noPermissionForGameMessage : String = "&0&l[&f&lBlockBall&0&l]&c You do not have permission to join game %1$1s."
 
@@ -60,6 +63,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &c&l%1$1s **/
   override var scoreRedTitle : String = "&c&l%1$1s"
 
+  /** Deletes a BlockBall game. **/
+  override var commandDeleteToolTip : String = "Deletes a BlockBall game."
+
   /** &c[Team Red] **/
   override var hubGameJoinRed : String = "&c[Team Red]"
 
@@ -72,6 +78,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&7 Created game %1$1s. **/
   override var gameCreatedMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Created game %1$1s."
 
+  /** Copies the armor inventory of the player executing the command. This copy will be applied to players when they join a game. **/
+  override var commandArmorToolTip : String = "Copies the armor inventory of the player executing the command. This copy will be applied to players when they join a game."
+
   /** 20 **/
   override var winDrawFadeOut : String = "20"
 
@@ -81,14 +90,26 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** 20 **/
   override var scoreRedFadeOut : String = "20"
 
+  /** Lets the player executing the command leave the game. **/
+  override var commandLeaveToolTip : String = "Lets the player executing the command leave the game."
+
   /** 20 **/
   override var winBlueFadeIn : String = "20"
 
   /** 60 **/
   override var winRedStay : String = "60"
 
+  /** Enables the player to add a specific sign by right-clicking any sign. You can remove signs by simply breaking the block. **/
+  override var commandSignToolTip : String = "Enables the player to add a specific sign by right-clicking any sign. You can remove signs by simply breaking the block."
+
   /** 60 **/
   override var scoreRedStay : String = "60"
+
+  /** Copies the inventory of the player executing the command. This copy will be applied to players when they join a game. **/
+  override var commandInventoryToolTip : String = "Copies the inventory of the player executing the command. This copy will be applied to players when they join a game."
+
+  /** Enables or disables your game. If a game is disabled, nobody can join. **/
+  override var commandToggleToolTip : String = "Enables or disables your game. If a game is disabled, nobody can join."
 
   /** All commands for the BlockBall plugin. **/
   override var commandDescription : String = "All commands for the BlockBall plugin."
@@ -123,6 +144,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &aJoin **/
   override var gameStatusJoinAble : String = "&aJoin"
 
+  /** Lets the player executing the command join the game. The optional team argument allows to directly join a specific team. If the team is full, the other team will be chosen. If no team is specified, a random team will be selected. **/
+  override var commandJoinToolTip : String = "Lets the player executing the command join the game. The optional team argument allows to directly join a specific team. If the team is full, the other team will be chosen. If no team is specified, a random team will be selected."
+
   /** &0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist. **/
   override var gameDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist."
 
@@ -135,11 +159,17 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &9[Team Blue] **/
   override var hubGameJoinBlue : String = "&9[Team Blue]"
 
+  /** Updates the location of a part of the arena. **/
+  override var commandLocationToolTip : String = "Updates the location of a part of the arena."
+
   /** &9Team Blue **/
   override var winBlueTitle : String = "&9Team Blue"
 
   /** 60 **/
   override var winDrawStay : String = "60"
+
+  /** Allows to reload all games or a specific single one. **/
+  override var commandReloadToolTip : String = "Allows to reload all games or a specific single one."
 
   /** &4Disabled **/
   override var gameStatusDisabled : String = "&4Disabled"
@@ -164,6 +194,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
 
   /** 20 **/
   override var winDrawFadeIn : String = "20"
+
+  /** Lists all games you have created. **/
+  override var commandListToolTip : String = "Lists all games you have created."
 
   /** &fDraw **/
   override var winDrawTitle : String = "&fDraw"

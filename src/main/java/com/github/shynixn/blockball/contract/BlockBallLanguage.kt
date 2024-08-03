@@ -40,6 +40,9 @@ interface BlockBallLanguage {
   /** &1Running **/
   var gameStatusRunning : String
 
+  /** Creates a new arena for a BlockBall game. **/
+  var commandCreateToolTip : String
+
   /** &0&l[&f&lBlockBall&0&l]&c You do not have permission to join game %1$1s. **/
   var noPermissionForGameMessage : String
 
@@ -58,6 +61,9 @@ interface BlockBallLanguage {
   /** &c&l%1$1s **/
   var scoreRedTitle : String
 
+  /** Deletes a BlockBall game. **/
+  var commandDeleteToolTip : String
+
   /** &c[Team Red] **/
   var hubGameJoinRed : String
 
@@ -70,6 +76,9 @@ interface BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&7 Created game %1$1s. **/
   var gameCreatedMessage : String
 
+  /** Copies the armor inventory of the player executing the command. This copy will be applied to players when they join a game. **/
+  var commandArmorToolTip : String
+
   /** 20 **/
   var winDrawFadeOut : String
 
@@ -79,14 +88,26 @@ interface BlockBallLanguage {
   /** 20 **/
   var scoreRedFadeOut : String
 
+  /** Lets the player executing the command leave the game. **/
+  var commandLeaveToolTip : String
+
   /** 20 **/
   var winBlueFadeIn : String
 
   /** 60 **/
   var winRedStay : String
 
+  /** Enables the player to add a specific sign by right-clicking any sign. You can remove signs by simply breaking the block. **/
+  var commandSignToolTip : String
+
   /** 60 **/
   var scoreRedStay : String
+
+  /** Copies the inventory of the player executing the command. This copy will be applied to players when they join a game. **/
+  var commandInventoryToolTip : String
+
+  /** Enables or disables your game. If a game is disabled, nobody can join. **/
+  var commandToggleToolTip : String
 
   /** All commands for the BlockBall plugin. **/
   var commandDescription : String
@@ -121,6 +142,9 @@ interface BlockBallLanguage {
   /** &aJoin **/
   var gameStatusJoinAble : String
 
+  /** Lets the player executing the command join the game. The optional team argument allows to directly join a specific team. If the team is full, the other team will be chosen. If no team is specified, a random team will be selected. **/
+  var commandJoinToolTip : String
+
   /** &0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist. **/
   var gameDoesNotExistMessage : String
 
@@ -133,11 +157,17 @@ interface BlockBallLanguage {
   /** &9[Team Blue] **/
   var hubGameJoinBlue : String
 
+  /** Updates the location of a part of the arena. **/
+  var commandLocationToolTip : String
+
   /** &9Team Blue **/
   var winBlueTitle : String
 
   /** 60 **/
   var winDrawStay : String
+
+  /** Allows to reload all games or a specific single one. **/
+  var commandReloadToolTip : String
 
   /** &4Disabled **/
   var gameStatusDisabled : String
@@ -162,6 +192,9 @@ interface BlockBallLanguage {
 
   /** 20 **/
   var winDrawFadeIn : String
+
+  /** Lists all games you have created. **/
+  var commandListToolTip : String
 
   /** &fDraw **/
   var winDrawTitle : String

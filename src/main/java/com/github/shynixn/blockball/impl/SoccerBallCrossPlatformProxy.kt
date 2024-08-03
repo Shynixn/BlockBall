@@ -3,7 +3,7 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.SoccerBall
-import com.github.shynixn.blockball.entity.BallMeta
+import com.github.shynixn.blockball.entity.SoccerBallSettings
 import com.github.shynixn.blockball.event.BallRemoveEvent
 import com.github.shynixn.blockball.event.BallTeleportEvent
 import com.github.shynixn.mcutils.common.toLocation
@@ -17,7 +17,7 @@ import org.bukkit.util.Vector
 import java.util.logging.Level
 
 class SoccerBallCrossPlatformProxy(
-    override val meta: BallMeta,
+    override val meta: SoccerBallSettings,
     private val ballDesignEntity: BallDesignEntity,
     private val ballHitBoxEntity: BallHitboxEntity,
     private val plugin: Plugin,

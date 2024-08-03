@@ -13,7 +13,7 @@ class SoccerArena : Selection(), Element{
     var displayName: String = ""
 
     /** Is the soccerArena ready to be placed. */
-    var enabled: Boolean = true
+    var enabled: Boolean = false
 
     /** [gameType] of the soccerArena */
     var gameType: GameType = GameType.HUBGAME

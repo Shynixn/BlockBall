@@ -2,7 +2,7 @@ package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.contract.SoccerBallFactory
-import com.github.shynixn.blockball.entity.BallMeta
+import com.github.shynixn.blockball.entity.SoccerBallSettings
 import com.github.shynixn.blockball.event.BallSpawnEvent
 import com.github.shynixn.blockball.impl.SoccerBallCrossPlatformProxy
 import com.github.shynixn.blockball.impl.BallDesignEntity
@@ -44,7 +44,7 @@ class SoccerBallFactoryImpl @Inject constructor(
     /**
      * Creates a new SoccerBall.
      */
-    override fun createSoccerBall(location: Location, meta: BallMeta): SoccerBall {
+    override fun createSoccerBall(location: Location, meta: SoccerBallSettings): SoccerBall {
         val position = location.toVector3d()
         position.yaw = 0.0
         position.pitch = 0.0
