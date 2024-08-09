@@ -1,29 +1,25 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.*
-import com.github.shynixn.blockball.entity.*
-import com.github.shynixn.blockball.enumeration.*
-import com.github.shynixn.blockball.event.GameJoinEvent
-import com.github.shynixn.blockball.event.GameLeaveEvent
-import com.github.shynixn.mccoroutine.bukkit.launch
+import com.github.shynixn.blockball.entity.PlayerInformation
+import com.github.shynixn.blockball.entity.SoccerArena
+import com.github.shynixn.blockball.enumeration.GameState
+import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
-import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
 import org.bukkit.Bukkit
-import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import org.bukkit.scoreboard.Scoreboard
 
 class SoccerHubGameImpl(
     arena: SoccerArena,
-    private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
-    private val plugin: Plugin,
-    private val placeHolderService: PlaceHolderService,
+    playerDataRepository: PlayerDataRepository<PlayerInformation>,
+    plugin: Plugin,
+    placeHolderService: PlaceHolderService,
     private val bossBarService: BossBarService,
-    private val language: BlockBallLanguage,
+    language: BlockBallLanguage,
     packetService: PacketService,
     scoreboardService: ScoreboardService,
     soccerBallFactory: SoccerBallFactory,
@@ -43,129 +39,6 @@ class SoccerHubGameImpl(
     playerDataRepository
 ),
     SoccerHubGame {
-
-    /**
-     * Lets the given [player] leave join. Optional can the prefered
-     * [team] be specified but the team can still change because of soccerArena settings.
-     * Does nothing if the player is already in a Game.
-     */
-    override fun join(player: Player, team: Team?): JoinResult {
-        val event = GameJoinEvent(player, this)
-        Bukkit.getPluginManager().callEvent(event)
-
-        if (event.isCancelled) {
-            return JoinResult.EVENT_CANCELLED
-        }
-
-        var joiningTeam = team
-
-        if (arena.meta.lobbyMeta.onlyAllowEventTeams) {
-            if (joiningTeam == Team.RED && redTeam.size > blueTeam.size) {
-                joiningTeam = null
-            } else if (joiningTeam == Team.BLUE && blueTeam.size > redTeam.size) {
-                joiningTeam = null
-            }
-        }
-
-        if (joiningTeam == null) {
-            joiningTeam = Team.BLUE
-            if (redTeam.size < blueTeam.size) {
-                joiningTeam = Team.RED
-            }
-        }
-
-        val result = if (joiningTeam == Team.RED && redTeam.size < arena.meta.redTeamMeta.maxAmount) {
-            this.prepareLobbyStorageForPlayer(player, joiningTeam, arena.meta.redTeamMeta)
-            executeCommandsWithPlaceHolder(listOf(player), arena.meta.redTeamMeta.joinCommands)
-            JoinResult.SUCCESS_RED
-        } else if (joiningTeam == Team.BLUE && blueTeam.size < arena.meta.blueTeamMeta.maxAmount) {
-            this.prepareLobbyStorageForPlayer(player, joiningTeam, arena.meta.blueTeamMeta)
-            executeCommandsWithPlaceHolder(listOf(player), arena.meta.blueTeamMeta.joinCommands)
-            JoinResult.SUCCESS_BLUE
-        } else {
-            JoinResult.TEAM_FULL
-        }
-
-        if (result == JoinResult.TEAM_FULL) {
-            return result
-        }
-
-        plugin.launch {
-            val playerData = playerDataRepository.getByPlayer(player)
-            if (playerData != null) {
-                playerData.statsMeta.joinedGames++
-            }
-        }
-
-        return result
-    }
-
-    /**
-     * Leaves the given player.
-     */
-    override fun leave(player: Player): LeaveResult {
-        if (!ingamePlayersStorage.containsKey(player)) {
-            return LeaveResult.NOT_IN_MATCH
-        }
-
-        val event = GameLeaveEvent(player, this)
-        Bukkit.getPluginManager().callEvent(event)
-
-        if (event.isCancelled) {
-            return LeaveResult.EVENT_CANCELLED
-        }
-
-        if (scoreboard != null && player.scoreboard == scoreboard) {
-            player.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
-        }
-
-        if (bossBar != null) {
-            bossBarService.removePlayer(bossBar, player)
-        }
-
-        for (hologram in holograms) {
-            if (hologram.players.contains(player)) {
-                hologram.players.remove(player)
-            }
-        }
-
-        val stats = ingamePlayersStorage[player]!!
-        player.gameMode = stats.gameMode
-        player.allowFlight = stats.gameMode == GameMode.CREATIVE
-        player.isFlying = false
-        player.walkSpeed = stats.walkingSpeed.toFloat()
-        player.scoreboard = stats.scoreboard as Scoreboard
-
-        if (!arena.meta.customizingMeta.keepInventoryEnabled) {
-            player.inventory.contents = stats.inventoryContents.clone()
-            player.inventory.setArmorContents(stats.armorContents.clone())
-            player.updateInventory()
-        }
-
-        if (stats.team == Team.RED) {
-            executeCommandsWithPlaceHolder(listOf(player), arena.meta.redTeamMeta.leaveCommands)
-        } else if (stats.team == Team.BLUE) {
-            executeCommandsWithPlaceHolder(listOf(player), arena.meta.blueTeamMeta.leaveCommands)
-        }
-
-        player.sendMessage(
-            placeHolderService.replacePlaceHolders(
-                language.leftGameMessage,
-                player,
-                this,
-                null,
-                null
-            )
-        )
-        ingamePlayersStorage.remove(player)
-
-        if (arena.meta.lobbyMeta.leaveSpawnpoint != null) {
-            player.teleport(arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation())
-        }
-
-        return LeaveResult.SUCCESS
-    }
-
     /**
      * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
      * 0 - 20 for each second.
@@ -199,7 +72,7 @@ class SoccerHubGameImpl(
             this.handleBallSpawning()
         }
 
-        // Update signs and protections.
+        // TODO: Minigame essentials. Update signs and protections.
         super.handle(ticks)
     }
 
@@ -227,71 +100,12 @@ class SoccerHubGameImpl(
         }
     }
 
-    /**
-     * Prepares the storage for a hubgame.
-     */
-    private fun prepareLobbyStorageForPlayer(player: Player, team: Team, teamMeta: TeamMeta) {
-        val stats = GameStorage()
-        ingamePlayersStorage[player] = stats
-
-        stats.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
-        stats.team = team
-        stats.goalTeam = team
-        stats.gameMode = player.gameMode
-        stats.flying = player.isFlying
-        stats.allowedFlying = player.allowFlight
-        stats.walkingSpeed = player.walkSpeed.toDouble()
-        stats.scoreboard = player.scoreboard
-        stats.armorContents = player.inventory.armorContents.clone()
-        stats.inventoryContents = player.inventory.contents.clone()
-        stats.level = player.level
-        stats.exp = player.exp.toDouble()
-        stats.maxHealth = player.maxHealth
-        stats.health = player.health
-        stats.hunger = player.foodLevel
-
-        player.gameMode = arena.meta.lobbyMeta.gamemode
-        player.allowFlight = false
-        player.isFlying = false
-        player.walkSpeed = teamMeta.walkingSpeed.toFloat()
-
-        if (!arena.meta.customizingMeta.keepInventoryEnabled) {
-            player.inventory.contents = teamMeta.inventory.map {
-                if (it != null) {
-                    val configuration = org.bukkit.configuration.file.YamlConfiguration()
-                    configuration.loadFromString(it)
-                    configuration.getItemStack("item")
-                } else {
-                    null
-                }
-            }.toTypedArray()
-            player.inventory.setArmorContents(
-                teamMeta.armor.map {
-                    if (it != null) {
-                        val configuration = org.bukkit.configuration.file.YamlConfiguration()
-                        configuration.loadFromString(it)
-                        configuration.getItemStack("item")
-                    } else {
-                        null
-                    }
-                }.toTypedArray()
-            )
-            player.updateInventory()
-        }
-
+    override fun setPlayerToArena(player: Player, team: Team) {
         if (arena.meta.hubLobbyMeta.teleportOnJoin) {
             this.respawn(player)
         } else {
             val velocityIntoArena = player.location.direction.normalize().multiply(0.5)
             player.velocity = velocityIntoArena
         }
-
-        val message = if(team == Team.RED) {
-            placeHolderService.replacePlaceHolders(language.joinTeamRedMessage, player, this, teamMeta, 0)
-        }else{
-            placeHolderService.replacePlaceHolders(language.joinTeamBlueMessage, player, this, teamMeta, 0)
-        }
-
-        player.sendMessage(message)
     }
 }

@@ -5,9 +5,9 @@ nav:
   - 'BlockBall Wiki':
       - Introduction: README.md
       - Permission: permission.md
-      - Commands: commands.md
       - Creating the game: game.md
       - Interactions: interaction.md
+      - Commands: commands.md
       - PlaceHolders: placeholders.md
       - Developer Api: api.md
 theme:

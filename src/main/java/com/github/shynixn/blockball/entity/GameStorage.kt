@@ -1,16 +1,10 @@
 package com.github.shynixn.blockball.entity
 
-import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.Team
 import org.bukkit.GameMode
 import org.bukkit.inventory.ItemStack
 
-class GameStorage{
-    /**
-     * Scoreboard of the player.
-     */
-    var scoreboard: Any = ""
-
+class GameStorage {
     /** Team of the player. */
     var team: Team? = null
 
@@ -53,16 +47,6 @@ class GameStorage{
      * Walking Speed of the player.
      */
     var walkingSpeed: Double = 1.0
-
-    /**
-     * Was the player flying?
-     */
-    var flying: Boolean = false
-
-    /**
-     * Was the player allowed to fly?
-     */
-    var allowedFlying: Boolean = false
 
     /**
      * Inventory cache.

@@ -65,16 +65,34 @@ If the team is full, the other team will be chosen. If no team is specified, a r
 
 Lets the player executing the command leave the game.
 
-### /blockball location
+### /blockball axe
 
 ```
-/blockball location <name> <type>
+/blockball axe
 ```
 
-Updates the location of a part of the arena. Setting all locations is necessary to create an arena.
+Adds the BlockBall axe for selection to your inventory.
+
+### /blockball select
+
+```
+/blockball select <name>
+```
+
+Sets a selected location for your arena.
 
 * Name: Identifier of a game
-* Type of location to set. Possible values: spawnRed1, spawnRed2, lobbyRed, lobbyBlue, leave, cornerBlue1, cornerBlue2, cornerRed1, cornerRed2 // TODO:
+* Type: Type of selection to set: ball, field, blue_goal, red_goal, red_spawn, blue_spawn, leave_spawn, red_lobby, blue_lobby
+
+### /blockball highlight
+
+```
+/blockball highlight <name>
+```
+
+Starts highlighting your arena. When executing this command a second time, you stop highlighting an arena.
+
+* Name: Identifier of a game
 
 ### /blockball inventory
 

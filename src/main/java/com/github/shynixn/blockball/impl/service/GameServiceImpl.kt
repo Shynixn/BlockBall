@@ -109,7 +109,6 @@ class GameServiceImpl @Inject constructor(
                     placeHolderService,
                     bossBarService,
                     chatMessageService,
-                    configurationService,
                     soundService,
                     language,
                     packetService,
@@ -117,8 +116,6 @@ class GameServiceImpl @Inject constructor(
                     commandService,
                     soccerBallFactory
                 )
-
-                else -> throw RuntimeException("GameType ${arena.gameType} not supported!")
             }
 
             games.add(game)
