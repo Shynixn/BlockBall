@@ -1,10 +1,10 @@
 package com.github.shynixn.blockball.contract
 
 interface BlockBallLanguage {
-  /** %2$1s scored for &cTeam Red. **/
+  /** &7%1$1s scored for &cTeam Red. **/
   var scoreRedSubTitle : String
 
-  /** &9&l%1$1s **/
+  /** &9%blockball_game_blueScore% : &c%blockball_game_redScore% **/
   var scoreBlueTitle : String
 
   /** &cTeam Red **/
@@ -19,7 +19,7 @@ interface BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist. **/
   var teamDoesNotExistMessage : String
 
-  /** &0&l[&f&lBlockBall&0&l]&c This selection type is not known.  **/
+  /** &0&l[&f&lBlockBall&0&l]&c This selection type is not known. **/
   var selectionTypeDoesNotExistMessage : String
 
   /** &0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s. **/
@@ -61,13 +61,13 @@ interface BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&7 RightClick on a sign to convert it into a game sign. **/
   var rightClickOnSignMessage : String
 
-  /** &c&l%1$1s **/
+  /** &c%blockball_game_redScore% : &9%blockball_game_blueScore% **/
   var scoreRedTitle : String
 
   /** Deletes a BlockBall game. **/
   var commandDeleteToolTip : String
 
-  /** &c[Team Red] **/
+  /** &0&l[&f&lBlockBall&0&l]&7 &c[Team Red] **/
   var hubGameJoinRed : String
 
   /** 20 **/
@@ -115,6 +115,9 @@ interface BlockBallLanguage {
   /** Enables or disables your game. If a game is disabled, nobody can join. **/
   var commandToggleToolTip : String
 
+  /** &0&l[&f&lBlockBall&0&l]&7 Toggled highlighting the important areas. **/
+  var toggleHighlightMessage : String
+
   /** All commands for the BlockBall plugin. **/
   var commandDescription : String
 
@@ -124,19 +127,25 @@ interface BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&7 Game enable state was set to %1$1s. **/
   var enabledArenaMessage : String
 
+  /** &0&l[&f&lBlockBall&0&l]&7 The BlockBall axe has been added to your inventory. **/
+  var axeReceivedMessage : String
+
   /** &cTeam Red &ahas won the match **/
   var winRedSubTitle : String
 
-  /** Click on the team to join the match. **/
+  /** &0&l[&f&lBlockBall&0&l]&7 Click on the team to join the match. **/
   var hubGameJoinHeader : String
 
   /** &0&l[&f&lBlockBall&0&l]&c The text length has to be less than 20 characters. **/
   var maxLength20Characters : String
 
+  /** &cTeam Red %blockball_game_redScore% : &9%blockball_game_blueScore% Team Blue **/
+  var bossBarMessage : String
+
   /** &0&l[&f&lBlockBall&0&l]&c This sign type is not known. **/
   var signTypeDoesNotExistMessage : String
 
-  /** %2$1s scored for &9Team Blue. **/
+  /** &7%1$1s scored for &9Team Blue. **/
   var scoreBlueSubTitle : String
 
   /** &0&l[&f&lBlockBall&0&l]&7 Successfully joined team red. **/
@@ -160,7 +169,7 @@ interface BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&c Game is already full. **/
   var gameIsFullMessage : String
 
-  /** &9[Team Blue] **/
+  /** &0&l[&f&lBlockBall&0&l]&7 &9[Team Blue] **/
   var hubGameJoinBlue : String
 
   /** &9Team Blue **/
@@ -183,6 +192,9 @@ interface BlockBallLanguage {
 
   /** &4Disabled **/
   var gameStatusDisabled : String
+
+  /** &cTeam Red %blockball_game_redScore% : &9Team Blue %blockball_game_blueScore% **/
+  var hologramMessage : String
 
   /** &0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with left click. **/
   var noLeftClickSelectionMessage : String

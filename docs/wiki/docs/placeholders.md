@@ -1,37 +1,39 @@
 # PlaceHolders
 
-The following placeholders are available in MCTennis and can also be used via PlaceHolderApi.
+The following placeholders are available in BlockBall and can also be used via PlaceHolderApi.
 
 !!! note "PlaceHolder Api"
-    As MCTennis supports multiple games per server, you need to specify the name of the game in external plugins. You can do this by appending the name of the game ``_game1`` ``_mygame``.
-    This results into placeholders such as e.g. ``%mctennis_game_isEnabled_game1%`` or ``%mctennis_game_displayName_mygame%``. This is only relevant in external plugins. For placeholders in MCTennis, you can directly use the placeholders below.
+    As BlockBall supports multiple games per server, you need to specify the name of the game in external plugins. You can do this by appending the name of the game ``_game1`` ``_mygame``.
+    This results into placeholders such as e.g. ``%blockball_game_displayName_game1%`` or ``%blockball_game_blueScore_mygame%``. This is only relevant in external plugins. For placeholders in BlockBall, you can directly use the placeholders below.
 
-| Game PlaceHolders                | Description                                    |   
-|----------------------------------|------------------------------------------------|
-| %mctennis_game_isEnabled%        | true if the game enabled, false if not         |   
-| %mctennis_game_isJoinAble%       | true if the game can be joined, false if not   |   
-| %mctennis_game_isRunning%        | true if the game is running, false if not      |
-| %mctennis_game_displayName%      | DisplayName of a game.                         |
-| %mctennis_game_rawScoreTeamRed%  | Score of team red                              |
-| %mctennis_game_rawScoreTeamBlue% | Score of team blue                             |
-| %mctennis_game_score%            | Overall game score                             |
-| %mctennis_game_state%            | State of the game: DISABLED, JOINABLE, RUNNING |
-| %mctennis_game_stateDisplayName% | State of the game with color codes             |
-| %mctennis_game_players%          | Current amount of players in the game          |
-| %mctennis_game_maxPlayers%       | Max amount of players who can join this game   |
-| %mctennis_ball_locationWorld%    | Name of the world the ball has spawned         |
-| %mctennis_ball_locationX%        | X coordinate location of the ball              |
-| %mctennis_ball_locationY%        | Y coordinate location of the ball              |
-| %mctennis_ball_locationZ%        | Z coordinate location of the ball              |
-| %mctennis_ball_locationYaw%      | Yaw rotation of the ball                       |
-| %mctennis_ball_locationPitch%    | Pitch rotation of the ball                     |
-
-| Player PlaceHolders        | Description                                     |   
-|----------------------------|-------------------------------------------------|
-| %mctennis_player_isInGame% | true if the player is in the game, false if not |
-| %mctennis_player_name%     | Name of the player                              |
-
-| Game and Player PlaceHolders     | Description                                      |   
-|----------------------------------|--------------------------------------------------|
-| %mctennis_game_isTeamRedPlayer%  | true if the player is in team red, false if not  |
-| %mctennis_game_isTeamBluePlayer% | true if the player is in team blue, false if not |
+| Placeholders                         | Description                                                                                              |
+|--------------------------------------|----------------------------------------------------------------------------------------------------------|
+| %blockball_game_displayName%         | DisplayName of the game                                                                                  |
+| %blockball_game_name%                | Id of the game                                                                                           |
+| %blockball_game_maxPlayers%          | Max amount of players who can join this game                                                             |
+| %blockball_game_players%             | Current amount of players in this game                                                                   |
+| %blockball_game_redScore%            | Score of the red team                                                                                    |
+| %blockball_game_blueScore%           | Score of the blue team                                                                                   |
+| %blockball_game_time%                | Remaining time until the match ends                                                                      |
+| %blockball_game_lastHitPlayerName%   | Name of the player who was the last one to hit the ball, returns an empty text if no one has hit the ball yet |
+| %blockball_game_state%               | Returns JOINABLE,RUNNING,DISABLED                                                                        |
+| %blockball_game_stateDisplayName%    | Returns the state color formatted from the language file                                                 |
+| %blockball_game_isEnabled%           | true if the game is enabled, false if not                                                                |
+| %blockball_game_isJoinAble%          | true if the game is joinable, false if not                                                               |
+| %blockball_game_remainingPlayers%    | Remaining amount of players required to start a match in minigame mode                                   |
+| %blockball_team_name%                | DisplayName of the team.                                                                                 |
+| %blockball_team_maxPlayers%          | Max amount of player who can join this team                                                              |
+| %blockball_team_players%             | Current amount of players in the team                                                                    |
+| %blockball_player_name%              | Name of the player during a BlockBall event e.g. scoring goal                                            |
+| %blockball_player_isInGame%          | true if the player is in a game, false if not                                                            |
+| %blockball_player_isInTeamRed%       | true if the player is in a game and in team red, false if not                                            |
+| %blockball_player_isInTeamBlue%      | true if the player is in a game and in team blue, false if not                                           |
+| %blockball_player_goals%             | Amount of goals a player has scored                                                                      |
+| %blockball_player_games%             | Amount of games a player has started playing                                                             |
+| %blockball_player_gamesFull%         | Amount of games a player has fully played                                                                |
+| %blockball_player_wins%              | Amount of wins a player has got by playing                                                               |
+| %blockball_player_losses%            | Amount of losses a player has got by playing|
+| %blockball_player_winrate%           | Ratio between amount of games a player has started playing and wins|
+| %blockball_player_winrateFull%       | Ratio between amount of games a player has fully played and wins|
+| %blockball_player_goalsPerGame%      | Ratio between amount of games a player has started playing and scored goals|
+| %blockball_player_goalsPerGameFull%  | Ratio between amount of games a player has fully played and scored goals|

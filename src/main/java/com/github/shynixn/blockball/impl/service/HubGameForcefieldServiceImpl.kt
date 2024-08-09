@@ -35,11 +35,12 @@ class HubGameForcefieldServiceImpl @Inject constructor(
         val gameInternal = gameService.getByPlayer(player)
 
         if (gameInternal != null) {
-            if (gameInternal.arena.gameType == GameType.HUBGAME && !gameInternal.arena.isLocationInSelection(
+            if (gameInternal.arena.gameType == GameType.HUBGAME && !gameInternal.arena.isLocationIn2dSelection(
                     location.toVector3d()
                 )
             ) {
                 gameInternal.leave(player)
+                player.sendMessage(language.leftGameMessage)
             }
             return
         }
@@ -47,7 +48,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
         var inArea = false
 
         gameService.getAll().forEach { game ->
-            if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(
+            if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationIn2dSelection(
                     location.toVector3d()
                 )
             ) {

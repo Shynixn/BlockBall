@@ -3,11 +3,11 @@ package com.github.shynixn.blockball
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 
 object BlockBallLanguageImpl : BlockBallLanguage {
-  /** %2$1s scored for &cTeam Red. **/
-  override var scoreRedSubTitle : String = "%2$1s scored for &cTeam Red."
+  /** &7%1$1s scored for &cTeam Red. **/
+  override var scoreRedSubTitle : String = "&7%1$1s scored for &cTeam Red."
 
-  /** &9&l%1$1s **/
-  override var scoreBlueTitle : String = "&9&l%1$1s"
+  /** &9%blockball_game_blueScore% : &c%blockball_game_redScore% **/
+  override var scoreBlueTitle : String = "&9%blockball_game_blueScore% : &c%blockball_game_redScore%"
 
   /** &cTeam Red **/
   override var winRedTitle : String = "&cTeam Red"
@@ -21,8 +21,8 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist. **/
   override var teamDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist."
 
-  /** &0&l[&f&lBlockBall&0&l]&c This selection type is not known.  **/
-  override var selectionTypeDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c This selection type is not known. "
+  /** &0&l[&f&lBlockBall&0&l]&c This selection type is not known. **/
+  override var selectionTypeDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c This selection type is not known."
 
   /** &0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s. **/
   override var reloadedGameMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s."
@@ -63,14 +63,14 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&7 RightClick on a sign to convert it into a game sign. **/
   override var rightClickOnSignMessage : String = "&0&l[&f&lBlockBall&0&l]&7 RightClick on a sign to convert it into a game sign."
 
-  /** &c&l%1$1s **/
-  override var scoreRedTitle : String = "&c&l%1$1s"
+  /** &c%blockball_game_redScore% : &9%blockball_game_blueScore% **/
+  override var scoreRedTitle : String = "&c%blockball_game_redScore% : &9%blockball_game_blueScore%"
 
   /** Deletes a BlockBall game. **/
   override var commandDeleteToolTip : String = "Deletes a BlockBall game."
 
-  /** &c[Team Red] **/
-  override var hubGameJoinRed : String = "&c[Team Red]"
+  /** &0&l[&f&lBlockBall&0&l]&7 &c[Team Red] **/
+  override var hubGameJoinRed : String = "&0&l[&f&lBlockBall&0&l]&7 &c[Team Red]"
 
   /** 20 **/
   override var winRedFadeIn : String = "20"
@@ -117,6 +117,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** Enables or disables your game. If a game is disabled, nobody can join. **/
   override var commandToggleToolTip : String = "Enables or disables your game. If a game is disabled, nobody can join."
 
+  /** &0&l[&f&lBlockBall&0&l]&7 Toggled highlighting the important areas. **/
+  override var toggleHighlightMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Toggled highlighting the important areas."
+
   /** All commands for the BlockBall plugin. **/
   override var commandDescription : String = "All commands for the BlockBall plugin."
 
@@ -126,20 +129,26 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&7 Game enable state was set to %1$1s. **/
   override var enabledArenaMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Game enable state was set to %1$1s."
 
+  /** &0&l[&f&lBlockBall&0&l]&7 The BlockBall axe has been added to your inventory. **/
+  override var axeReceivedMessage : String = "&0&l[&f&lBlockBall&0&l]&7 The BlockBall axe has been added to your inventory."
+
   /** &cTeam Red &ahas won the match **/
   override var winRedSubTitle : String = "&cTeam Red &ahas won the match"
 
-  /** Click on the team to join the match. **/
-  override var hubGameJoinHeader : String = "Click on the team to join the match."
+  /** &0&l[&f&lBlockBall&0&l]&7 Click on the team to join the match. **/
+  override var hubGameJoinHeader : String = "&0&l[&f&lBlockBall&0&l]&7 Click on the team to join the match."
 
   /** &0&l[&f&lBlockBall&0&l]&c The text length has to be less than 20 characters. **/
   override var maxLength20Characters : String = "&0&l[&f&lBlockBall&0&l]&c The text length has to be less than 20 characters."
 
+  /** &cTeam Red %blockball_game_redScore% : &9%blockball_game_blueScore% Team Blue **/
+  override var bossBarMessage : String = "&cTeam Red %blockball_game_redScore% : &9%blockball_game_blueScore% Team Blue"
+
   /** &0&l[&f&lBlockBall&0&l]&c This sign type is not known. **/
   override var signTypeDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c This sign type is not known."
 
-  /** %2$1s scored for &9Team Blue. **/
-  override var scoreBlueSubTitle : String = "%2$1s scored for &9Team Blue."
+  /** &7%1$1s scored for &9Team Blue. **/
+  override var scoreBlueSubTitle : String = "&7%1$1s scored for &9Team Blue."
 
   /** &0&l[&f&lBlockBall&0&l]&7 Successfully joined team red. **/
   override var joinTeamRedMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Successfully joined team red."
@@ -162,8 +171,8 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&c Game is already full. **/
   override var gameIsFullMessage : String = "&0&l[&f&lBlockBall&0&l]&c Game is already full."
 
-  /** &9[Team Blue] **/
-  override var hubGameJoinBlue : String = "&9[Team Blue]"
+  /** &0&l[&f&lBlockBall&0&l]&7 &9[Team Blue] **/
+  override var hubGameJoinBlue : String = "&0&l[&f&lBlockBall&0&l]&7 &9[Team Blue]"
 
   /** &9Team Blue **/
   override var winBlueTitle : String = "&9Team Blue"
@@ -185,6 +194,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
 
   /** &4Disabled **/
   override var gameStatusDisabled : String = "&4Disabled"
+
+  /** &cTeam Red %blockball_game_redScore% : &9Team Blue %blockball_game_blueScore% **/
+  override var hologramMessage : String = "&cTeam Red %blockball_game_redScore% : &9Team Blue %blockball_game_blueScore%"
 
   /** &0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with left click. **/
   override var noLeftClickSelectionMessage : String = "&0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with left click."

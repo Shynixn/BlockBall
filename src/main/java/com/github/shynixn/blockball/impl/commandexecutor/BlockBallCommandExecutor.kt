@@ -213,6 +213,7 @@ class BlockBallCommandExecutor @Inject constructor(
                 toolTip { language.commandAxeToolTip }
                 builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
                     selectionService.addSelectionItemToInventory(player)
+                    player.sendMessage(language.axeReceivedMessage)
                 }
             }
             subCommand("select") {
@@ -235,7 +236,8 @@ class BlockBallCommandExecutor @Inject constructor(
                 toolTip { language.commandHighlightToolTip }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena ->
-
+                      setHighlights(player, arena)
+                        player.sendMessage(language.toggleHighlightMessage)
                     }
             }
             subCommand("inventory") {
@@ -303,7 +305,7 @@ class BlockBallCommandExecutor @Inject constructor(
             gameService.reload(arena)
             sender.sendMessage(language.enabledArenaMessage.format(arena.enabled.toString()))
         } catch (e: SoccerGameException) {
-            arena.enabled = !arena.enabled
+            arena.enabled = false
             sender.sendMessage(ChatColor.RED.toString() + "Failed to reload soccerArena ${e.arena.name}.")
             sender.sendMessage(e.message)
             return
@@ -480,12 +482,14 @@ class BlockBallCommandExecutor @Inject constructor(
             }
 
             if (selectionType == SelectionType.BALL) {
-                arena.meta.ballMeta.spawnpoint = selectionLeft.toVector3d()
+                arena.meta.ballMeta.spawnpoint = selectionLeft.toVector3d().add(0.0, 1.0, 0.0)
             }
         }
 
         arenaRepository.save(arena)
-        player.sendMessage(language.selectionSetMessage.format(selectionType.name.uppercase()))
+        setHighlights(player, arena)
+        setHighlights(player, arena)
+        player.sendMessage(language.selectionSetMessage.format(selectionType.name.lowercase()))
     }
 
 

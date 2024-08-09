@@ -121,7 +121,7 @@ class GameListener @Inject constructor(
             return
         }
 
-        if (game.arena.isLocationInSelection(event.to!!.toVector3d())) {
+        if (game.arena.isLocationIn2dSelection(event.to!!.toVector3d())) {
             return
         }
 
@@ -299,7 +299,7 @@ class GameListener @Inject constructor(
                     return
                 }
 
-                if (!game.arena.isLocationInSelection(targetPosition)) {
+                if (!game.arena.isLocationIn2dSelection(targetPosition)) {
                     event.hitBlock = true
                     event.blockDirection = game.arena.getRelativeBlockDirectionToLocation(targetPosition)
                     game.ballBumperCounter++

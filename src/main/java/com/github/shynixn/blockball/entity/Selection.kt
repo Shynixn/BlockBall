@@ -10,7 +10,7 @@ open class Selection {
 
     /** [upperCorner] of the selected square soccerArena. */
     @JsonProperty("corner1")
-     var upperCorner: Vector3d? = null
+    var upperCorner: Vector3d? = null
 
     /** [lowerCorner] of the selected square soccerArena. */
     @JsonProperty("corner2")
@@ -22,7 +22,8 @@ open class Selection {
             return Vector3d(
                 this.lowerCorner!!.world!!,
                 (this.lowerCorner!!.blockX + this.offsetX / 2).toDouble(),
-                (this.lowerCorner!!.blockY + offsetX / 2).toDouble(), (this.lowerCorner!!.blockZ + offsetZ / 2).toDouble()
+                (this.lowerCorner!!.blockY + offsetX / 2).toDouble(),
+                (this.lowerCorner!!.blockZ + offsetZ / 2).toDouble()
             )
         }
 
@@ -49,6 +50,21 @@ open class Selection {
     fun setCorners(corner1: Vector3d, corner2: Vector3d) {
         this.calculateDownLocation(corner1, corner2)
         this.calculateUpLocation(corner1, corner2)
+    }
+
+    /**
+     * Is location inside of this selection.
+     */
+
+    fun isLocationIn2dSelection(location: Vector3d): Boolean {
+        if (location.world != null && location.world == this.upperCorner!!.world) {
+            if (this.upperCorner!!.x >= location.x && this.lowerCorner!!.x <= location.x) {
+                if (this.upperCorner!!.z >= location.z && this.lowerCorner!!.z <= location.z) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     /**

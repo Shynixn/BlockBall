@@ -417,7 +417,7 @@ abstract class SoccerGameImpl(
                 continue
             }
 
-            if (arena.isLocationInSelection(entity.location.toVector3d())) {
+            if (arena.isLocationIn2dSelection(entity.location.toVector3d())) {
                 val vector = arena.meta.protectionMeta.entityProtection
                 entity.location.setDirection(vector.toVector())
                 entity.velocity = vector.toVector()
@@ -739,7 +739,7 @@ abstract class SoccerGameImpl(
                 chatMessageService.sendTitleMessage(
                     player,
                     placeHolderService.replacePlaceHolders(language.scoreRedTitle, player, this, scoreTeamMeta),
-                    placeHolderService.replacePlaceHolders(language.scoreRedSubTitle, player, this, scoreTeamMeta),
+                    placeHolderService.replacePlaceHolders(language.scoreRedSubTitle.format(player.name), player, this, scoreTeamMeta),
                     language.scoreRedFadeIn.toIntOrNull() ?: 20,
                     language.scoreRedStay.toIntOrNull() ?: 60,
                     language.scoreRedFadeOut.toIntOrNull() ?: 20
@@ -750,7 +750,7 @@ abstract class SoccerGameImpl(
                 chatMessageService.sendTitleMessage(
                     player,
                     placeHolderService.replacePlaceHolders(language.scoreBlueTitle, player, this, scoreTeamMeta),
-                    placeHolderService.replacePlaceHolders(language.scoreBlueSubTitle, player, this, scoreTeamMeta),
+                    placeHolderService.replacePlaceHolders(language.scoreBlueSubTitle.format(player.name), player, this, scoreTeamMeta),
                     language.scoreBlueFadeIn.toIntOrNull() ?: 20,
                     language.scoreBlueStay.toIntOrNull() ?: 60,
                     language.scoreBlueFadeOut.toIntOrNull() ?: 20

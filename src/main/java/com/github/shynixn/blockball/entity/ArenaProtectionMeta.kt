@@ -9,7 +9,7 @@ class ArenaProtectionMeta  {
     /** Should a velocity be applied to entities which are not an player or armorstand. */
     var entityProtectionEnabled: Boolean = true
     /** Velocity being applied when a player rejoins the server into a field of an arena. */
-    var rejoinProtection: Vector3d = Vector3d(0.0, 2.0, 0.0)
+    var rejoinProtection: Vector3d = Vector3d(1.0, 2.0, 0.0)
     /** Should a velocity be applied to players which rejoin on the field of the arena. */
     var rejoinProtectionEnabled: Boolean = true
 }
