@@ -21,6 +21,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist. **/
   override var teamDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist."
 
+  /** &0&l[&f&lBlockBall&0&l]&c This selection type is not known.  **/
+  override var selectionTypeDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c This selection type is not known. "
+
   /** &0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s. **/
   override var reloadedGameMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s."
 
@@ -75,6 +78,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** 60 **/
   override var winBlueStay : String = "60"
 
+  /** Updates a location selection of a part of the arena. **/
+  override var commandSelectionToolTip : String = "Updates a location selection of a part of the arena."
+
   /** &0&l[&f&lBlockBall&0&l]&7 Created game %1$1s. **/
   override var gameCreatedMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Created game %1$1s."
 
@@ -114,9 +120,6 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** All commands for the BlockBall plugin. **/
   override var commandDescription : String = "All commands for the BlockBall plugin."
 
-  /** &0&l[&f&lBlockBall&0&l]&c This location type is not known. For more locations, open the arena.yml. **/
-  override var locationTypeDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c This location type is not known. For more locations, open the arena.yml."
-
   /** &0&l[&f&lBlockBall&0&l]&c You do not have permission. **/
   override var noPermissionMessage : String = "&0&l[&f&lBlockBall&0&l]&c You do not have permission."
 
@@ -144,6 +147,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &aJoin **/
   override var gameStatusJoinAble : String = "&aJoin"
 
+  /** Gives you the BlockBall selection axe. **/
+  override var commandAxeToolTip : String = "Gives you the BlockBall selection axe."
+
   /** Lets the player executing the command join the game. The optional team argument allows to directly join a specific team. If the team is full, the other team will be chosen. If no team is specified, a random team will be selected. **/
   override var commandJoinToolTip : String = "Lets the player executing the command join the game. The optional team argument allows to directly join a specific team. If the team is full, the other team will be chosen. If no team is specified, a random team will be selected."
 
@@ -159,11 +165,17 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &9[Team Blue] **/
   override var hubGameJoinBlue : String = "&9[Team Blue]"
 
-  /** Updates the location of a part of the arena. **/
-  override var commandLocationToolTip : String = "Updates the location of a part of the arena."
-
   /** &9Team Blue **/
   override var winBlueTitle : String = "&9Team Blue"
+
+  /** Toggles highlighting the important areas of your arena. **/
+  override var commandHighlightToolTip : String = "Toggles highlighting the important areas of your arena."
+
+  /** Sets a selected location for your arena. **/
+  override var commandSelectToolTip : String = "Sets a selected location for your arena."
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Selection %1$1s was set. **/
+  override var selectionSetMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Selection %1$1s was set."
 
   /** 60 **/
   override var winDrawStay : String = "60"
@@ -174,11 +186,14 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &4Disabled **/
   override var gameStatusDisabled : String = "&4Disabled"
 
+  /** &0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with left click. **/
+  override var noLeftClickSelectionMessage : String = "&0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with left click."
+
   /** &0&l[&f&lBlockBall&0&l]&7 Updated inventory of game. **/
   override var updatedInventoryMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Updated inventory of game."
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Location %1$1s was set on %2$1s. **/
-  override var spawnPointSetMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Location %1$1s was set on %2$1s."
+  /** &0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with right click. **/
+  override var noRightClickSelectionMessage : String = "&0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with right click."
 
   /** 20 **/
   override var scoreBlueFadeIn : String = "20"

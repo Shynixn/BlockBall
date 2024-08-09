@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.PlayerInformation
+import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.impl.service.*
 import com.github.shynixn.mccoroutine.bukkit.launch
+import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.ConfigurationServiceImpl
 import com.github.shynixn.mcutils.common.CoroutineExecutor
@@ -15,6 +17,7 @@ import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.repository.CachedRepositoryImpl
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.repository.YamlFileRepositoryImpl
+import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.sound.SoundServiceImpl
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
@@ -23,14 +26,17 @@ import com.github.shynixn.mcutils.database.impl.AutoSavePlayerDataRepositoryImpl
 import com.github.shynixn.mcutils.database.impl.CachePlayerDataRepositoryImpl
 import com.github.shynixn.mcutils.database.impl.ConfigSelectedRepositoryImpl
 import com.github.shynixn.mcutils.guice.DependencyInjectionModule
+import com.github.shynixn.mcutils.packet.api.Packet
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.mcutils.packet.impl.service.ChatMessageServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.ItemServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.RayTracingServiceImpl
+import com.github.shynixn.mcutils.packet.nms.v1_21_R1.AreaSelectionServiceImpl
 import com.github.shynixn.mcutils.sign.SignService
 import com.github.shynixn.mcutils.sign.SignServiceImpl
+import kotlinx.coroutines.CoroutineDispatcher
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
@@ -101,7 +107,25 @@ class BlockBallDependencyInjectionModule(
         addService<ChatMessageService>(ChatMessageServiceImpl(plugin))
         addService<HubGameForcefieldService, HubGameForcefieldServiceImpl>()
         addService<SoccerBallFactory, SoccerBallFactoryImpl>()
-        addService<BlockSelectionService, BlockSelectionServiceImpl>()
+        addService<AreaSelectionService> {
+            AreaSelectionServiceImpl(
+                Permission.EDIT_GAME.permission,
+                plugin,
+                getService<ItemService>(),
+                getService<PacketService>(),
+                object : CoroutineExecutor {
+                    override fun execute(f: suspend () -> Unit) {
+                        plugin.launch { f.invoke() }
+                    }
+                },
+                plugin.minecraftDispatcher as CoroutineDispatcher,
+                object : CoroutineExecutor {
+                    override fun execute(f: suspend () -> Unit) {
+                        plugin.launch { f.invoke() }
+                    }
+                }
+            )
+        }
         addService<RayTracingService, RayTracingServiceImpl>()
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {

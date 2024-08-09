@@ -19,6 +19,9 @@ interface BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist. **/
   var teamDoesNotExistMessage : String
 
+  /** &0&l[&f&lBlockBall&0&l]&c This selection type is not known.  **/
+  var selectionTypeDoesNotExistMessage : String
+
   /** &0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s. **/
   var reloadedGameMessage : String
 
@@ -73,6 +76,9 @@ interface BlockBallLanguage {
   /** 60 **/
   var winBlueStay : String
 
+  /** Updates a location selection of a part of the arena. **/
+  var commandSelectionToolTip : String
+
   /** &0&l[&f&lBlockBall&0&l]&7 Created game %1$1s. **/
   var gameCreatedMessage : String
 
@@ -112,9 +118,6 @@ interface BlockBallLanguage {
   /** All commands for the BlockBall plugin. **/
   var commandDescription : String
 
-  /** &0&l[&f&lBlockBall&0&l]&c This location type is not known. For more locations, open the arena.yml. **/
-  var locationTypeDoesNotExistMessage : String
-
   /** &0&l[&f&lBlockBall&0&l]&c You do not have permission. **/
   var noPermissionMessage : String
 
@@ -142,6 +145,9 @@ interface BlockBallLanguage {
   /** &aJoin **/
   var gameStatusJoinAble : String
 
+  /** Gives you the BlockBall selection axe. **/
+  var commandAxeToolTip : String
+
   /** Lets the player executing the command join the game. The optional team argument allows to directly join a specific team. If the team is full, the other team will be chosen. If no team is specified, a random team will be selected. **/
   var commandJoinToolTip : String
 
@@ -157,11 +163,17 @@ interface BlockBallLanguage {
   /** &9[Team Blue] **/
   var hubGameJoinBlue : String
 
-  /** Updates the location of a part of the arena. **/
-  var commandLocationToolTip : String
-
   /** &9Team Blue **/
   var winBlueTitle : String
+
+  /** Toggles highlighting the important areas of your arena. **/
+  var commandHighlightToolTip : String
+
+  /** Sets a selected location for your arena. **/
+  var commandSelectToolTip : String
+
+  /** &0&l[&f&lBlockBall&0&l]&7 Selection %1$1s was set. **/
+  var selectionSetMessage : String
 
   /** 60 **/
   var winDrawStay : String
@@ -172,11 +184,14 @@ interface BlockBallLanguage {
   /** &4Disabled **/
   var gameStatusDisabled : String
 
+  /** &0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with left click. **/
+  var noLeftClickSelectionMessage : String
+
   /** &0&l[&f&lBlockBall&0&l]&7 Updated inventory of game. **/
   var updatedInventoryMessage : String
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Location %1$1s was set on %2$1s. **/
-  var spawnPointSetMessage : String
+  /** &0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with right click. **/
+  var noRightClickSelectionMessage : String
 
   /** 20 **/
   var scoreBlueFadeIn : String

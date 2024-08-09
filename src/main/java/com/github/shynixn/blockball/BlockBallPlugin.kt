@@ -13,6 +13,7 @@ import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.reloadTranslation
 import com.github.shynixn.mcutils.common.repository.Repository
+import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.guice.DependencyInjectionModule
@@ -24,11 +25,9 @@ import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
-import java.io.File
 import java.nio.file.Files
-import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
-import java.util.UUID
+import java.util.*
 import java.util.logging.Level
 
 /**
@@ -105,7 +104,6 @@ class BlockBallPlugin : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(module.getService<HubgameListener>(), this)
         Bukkit.getPluginManager().registerEvents(module.getService<MinigameListener>(), this)
         Bukkit.getPluginManager().registerEvents(module.getService<BallListener>(), this)
-        Bukkit.getPluginManager().registerEvents(module.getService<BlockSelectionListener>(), this)
 
         // Register CommandExecutor
         module.getService<BlockBallCommandExecutor>()
@@ -229,6 +227,7 @@ class BlockBallPlugin : JavaPlugin() {
         }
 
         module.getService<PacketService>().close()
+        module.getService<AreaSelectionService>().close()
 
         val playerDataRepository = module.getService<CachePlayerRepository<PlayerInformation>>()
         runBlocking {

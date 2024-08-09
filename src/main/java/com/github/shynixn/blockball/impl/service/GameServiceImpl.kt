@@ -1,27 +1,28 @@
 package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.*
-import com.github.shynixn.blockball.entity.*
+import com.github.shynixn.blockball.entity.PlayerInformation
+import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.impl.SoccerHubGameImpl
 import com.github.shynixn.blockball.impl.SoccerMiniGameImpl
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.mcutils.common.ConfigurationService
+import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundService
-import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.sign.SignService
 import com.google.inject.Inject
 import kotlinx.coroutines.runBlocking
-import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import java.util.*
 import java.util.logging.Level
+import kotlin.math.max
+import kotlin.math.min
 
 class GameServiceImpl @Inject constructor(
     private val arenaRepository: Repository<SoccerArena>,
@@ -209,7 +210,53 @@ class GameServiceImpl @Inject constructor(
     private fun validateGame(arena: SoccerArena) {
         if (arena.meta.ballMeta.spawnpoint == null) {
             arena.enabled = false
-            throw SoccerGameException(arena, "Set the leave spawnpoint values in arena ${arena.name}!")
+            throw SoccerGameException(arena, "Set the ball spawnpoint for arena ${arena.name}!")
         }
+        if (arena.lowerCorner == null || arena.upperCorner == null) {
+            arena.enabled = false
+            throw SoccerGameException(arena, "Set the playing field for arena ${arena.name}!")
+        }
+        if (arena.meta.redTeamMeta.goal.lowerCorner == null || arena.meta.redTeamMeta.goal.upperCorner == null) {
+            arena.enabled = false
+            throw SoccerGameException(arena, "Set the red goal for arena ${arena.name}!")
+        }
+        if (arena.meta.blueTeamMeta.goal.lowerCorner == null || arena.meta.blueTeamMeta.goal.upperCorner == null) {
+            arena.enabled = false
+            throw SoccerGameException(arena, "Set the blue goal for arena ${arena.name}!")
+        }
+
+        if (arena.gameType == GameType.MINIGAME) {
+            if (arena.meta.lobbyMeta.leaveSpawnpoint == null) {
+                arena.enabled = false
+                throw SoccerGameException(arena, "Set the leave spawnpoint for arena ${arena.name}!")
+            }
+            if (arena.meta.redTeamMeta.lobbySpawnpoint == null) {
+                arena.enabled = false
+                throw SoccerGameException(arena, "Set the red lobby spawnpoint for arena ${arena.name}!")
+            }
+            if (arena.meta.blueTeamMeta.lobbySpawnpoint == null) {
+                arena.enabled = false
+                throw SoccerGameException(arena, "Set the blue lobby spawnpoint for arena ${arena.name}!")
+            }
+        }
+
+        fixCorners(arena.lowerCorner!!, arena.upperCorner!!)
+        fixCorners(arena.meta.redTeamMeta.goal.lowerCorner!!, arena.meta.redTeamMeta.goal.upperCorner!!)
+        fixCorners(arena.meta.blueTeamMeta.goal.lowerCorner!!, arena.meta.blueTeamMeta.goal.upperCorner!!)
+    }
+
+    /**
+     * Corrects the corner values.
+     */
+    private fun fixCorners(corner1: Vector3d, corner2: Vector3d) {
+        val copyCorner1 = corner1.copy()
+        val copyCorner2 = corner2.copy()
+
+        corner1.x = min(copyCorner1.x, copyCorner2.x)
+        corner1.y = min(copyCorner1.y, copyCorner2.y)
+        corner1.z = min(copyCorner1.z, copyCorner2.z)
+        corner2.x = max(copyCorner1.x, copyCorner2.x)
+        corner2.y = max(copyCorner1.y, copyCorner2.y)
+        corner2.z = max(copyCorner1.z, copyCorner2.z)
     }
 }

@@ -15,14 +15,18 @@ import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandType
 import com.github.shynixn.mcutils.common.command.Validator
 import com.github.shynixn.mcutils.common.repository.CacheRepository
+import com.github.shynixn.mcutils.common.selection.AreaHighlight
+import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.mcutils.sign.SignService
 import com.google.inject.Inject
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.awt.Color
 import java.util.*
 import java.util.logging.Level
+import kotlin.collections.ArrayList
 
 class BlockBallCommandExecutor @Inject constructor(
     private val arenaRepository: CacheRepository<SoccerArena>,
@@ -31,6 +35,7 @@ class BlockBallCommandExecutor @Inject constructor(
     private val configurationService: ConfigurationService,
     private val language: BlockBallLanguage,
     private val signService: SignService,
+    private val selectionService: AreaSelectionService,
     chatMessageService: ChatMessageService
 ) {
     private val arenaTabs: suspend (s: CommandSender) -> List<String> = {
@@ -129,15 +134,15 @@ class BlockBallCommandExecutor @Inject constructor(
         }
     }
 
-    private val locationTypeValidator = object : Validator<LocationType> {
+    private val selectionTypeValidator = object : Validator<SelectionType> {
         override suspend fun transform(
             sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
-        ): LocationType? {
-            return LocationType.values().firstOrNull { e -> e.id.equals(openArgs[0], true) }
+        ): SelectionType? {
+            return SelectionType.values().firstOrNull { e -> e.name.equals(openArgs[0], true) }
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.locationTypeDoesNotExistMessage
+            return language.selectionTypeDoesNotExistMessage
         }
     }
     private val signTypeValidator = object : Validator<SignType> {
@@ -203,13 +208,34 @@ class BlockBallCommandExecutor @Inject constructor(
                 builder().executePlayer({ language.commandSenderHasToBePlayer }) { sender -> leaveGame(sender) }
             }
             helpCommand()
-            subCommand("location") {
+            subCommand("axe") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandLocationToolTip }
+                toolTip { language.commandAxeToolTip }
+                builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                    selectionService.addSelectionItemToInventory(player)
+                }
+            }
+            subCommand("select") {
+                permission(Permission.EDIT_GAME)
+                toolTip { language.commandSelectToolTip }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
-                    .argument("type").validator(locationTypeValidator).tabs { LocationType.values().map { e -> e.id } }
+                    .argument("type").validator(selectionTypeValidator).tabs {
+                        SelectionType.values().map { e ->
+                            e.name.lowercase(
+                                Locale.ENGLISH
+                            )
+                        }
+                    }
                     .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, locationType ->
-                        setLocation(player, arena, locationType)
+                        setSelection(player, arena, locationType)
+                    }
+            }
+            subCommand("highlight") {
+                permission(Permission.EDIT_GAME)
+                toolTip { language.commandHighlightToolTip }
+                builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
+                    .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena ->
+
                     }
             }
             subCommand("inventory") {
@@ -423,13 +449,45 @@ class BlockBallCommandExecutor @Inject constructor(
         }
     }
 
-    private suspend fun setLocation(player: Player, arena: SoccerArena, locationType: LocationType) {
-        if (locationType == LocationType.LOBBY_RED) {
-            arena.meta.redTeamMeta.lobbySpawnpoint = player.location.toVector3d()
+    private suspend fun setSelection(player: Player, arena: SoccerArena, selectionType: SelectionType) {
+        val selectionLeft = selectionService.getLeftClickLocation(player)
+        val selectionRight = selectionService.getRightClickLocation(player)
+
+        if (selectionType == SelectionType.FIELD || selectionType == SelectionType.RED_GOAL || selectionType == SelectionType.BLUE_GOAL) {
+            if (selectionLeft == null) {
+                player.sendMessage(language.noLeftClickSelectionMessage)
+                return
+            }
+            if (selectionRight == null) {
+                player.sendMessage(language.noRightClickSelectionMessage)
+                return
+            }
+
+            if (selectionType == SelectionType.FIELD) {
+                arena.lowerCorner = selectionLeft.toVector3d()
+                arena.upperCorner = selectionRight.toVector3d()
+            } else if (selectionType == SelectionType.RED_GOAL) {
+                arena.meta.redTeamMeta.goal.lowerCorner = selectionLeft.toVector3d()
+                arena.meta.redTeamMeta.goal.upperCorner = selectionRight.toVector3d()
+            } else if (selectionType == SelectionType.BLUE_GOAL) {
+                arena.meta.blueTeamMeta.goal.lowerCorner = selectionLeft.toVector3d()
+                arena.meta.blueTeamMeta.goal.upperCorner = selectionRight.toVector3d()
+            }
+        } else {
+            if (selectionLeft == null) {
+                player.sendMessage(language.noLeftClickSelectionMessage)
+                return
+            }
+
+            if (selectionType == SelectionType.BALL) {
+                arena.meta.ballMeta.spawnpoint = selectionLeft.toVector3d()
+            }
         }
+
         arenaRepository.save(arena)
-        player.sendMessage(language.spawnPointSetMessage.format(locationType.name.uppercase(), player.location))
+        player.sendMessage(language.selectionSetMessage.format(selectionType.name.uppercase()))
     }
+
 
     private suspend fun setSign(sender: Player, arena: SoccerArena, signType: SignType) {
         if (signType == SignType.JOIN) {
@@ -526,5 +584,58 @@ class BlockBallCommandExecutor @Inject constructor(
         }
         sender.sendMessage(language.reloadedGameMessage.format(arena.name))
         return
+    }
+
+    private fun setHighlights(player: Player, arena: SoccerArena) {
+        if (selectionService.isHighlighting(player)) {
+            selectionService.removePlayer(player)
+        } else {
+            selectionService.setPlayer(player) {
+                val highLights = ArrayList<AreaHighlight>()
+                if (arena.lowerCorner != null && arena.upperCorner != null) {
+                    highLights.add(
+                        AreaHighlight(
+                            arena.lowerCorner!!,
+                            arena.upperCorner!!,
+                            Color.BLACK.rgb,
+                            "Field",
+                            true
+                        )
+                    )
+                }
+                if (arena.meta.redTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.upperCorner != null) {
+                    highLights.add(
+                        AreaHighlight(
+                            arena.meta.redTeamMeta.goal.lowerCorner!!,
+                            arena.meta.redTeamMeta.goal.upperCorner!!,
+                            Color.RED.rgb,
+                            "Red"
+                        )
+                    )
+                }
+                if (arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.blueTeamMeta.goal.upperCorner != null) {
+                    highLights.add(
+                        AreaHighlight(
+                            arena.meta.blueTeamMeta.goal.lowerCorner!!,
+                            arena.meta.blueTeamMeta.goal.upperCorner!!,
+                            Color.BLUE.rgb,
+                            "Blue"
+                        )
+                    )
+                }
+                if (arena.meta.ballMeta.spawnpoint != null) {
+                    highLights.add(
+                        AreaHighlight(
+                            arena.meta.ballMeta.spawnpoint!!,
+                            null,
+                            Color.pink.rgb,
+                            "Ball"
+                        )
+                    )
+                }
+
+                highLights
+            }
+        }
     }
 }
