@@ -30,7 +30,7 @@ You can see that the arena is still disabled and cannot be joined yet.
 
 ### Get the selection axe
 
-Get the blockball selection axe for selecting the spawnspoints and other areas.
+Get the blockball selection axe for selecting playing areas and goals.
 
 ```
 /blockball axe
@@ -127,6 +127,13 @@ to be launched out of the forcefield. To avoid this, you should set a leaveSpawn
 ### Setting the team-spawnpoints
 
 Currently, players spawn at the location of the ball. You should also set individual team spawnpoints.
+
+Disable the arena to be able to move into it.
+
+```
+/blockball toggle game1
+```
+
 Move to the first location and execute:
 
 ```
