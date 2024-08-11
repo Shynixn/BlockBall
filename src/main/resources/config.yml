@@ -1,0 +1,73 @@
+#######################################################################
+#                          BlockBall                                  #
+# 		            	   by Shynixn							      #
+#######################################################################
+
+############################
+# Language settings
+############################
+language: "en_us"
+
+############################
+# Command settings
+############################
+commands:
+  blockball:
+    aliases:
+      - "soccer"
+      - "football"
+
+############################
+# Debug settings
+# This setting should only be turned on if you want to get additional debugging information.
+############################
+debug: false
+
+############################
+# Data-collecting settings
+# This setting sends anonymous stats to https://bstats.org/plugin/bukkit/BlockBall.
+############################
+metrics: true
+
+############################
+# Database
+############################
+database:
+  # The data of a player is automatically saved when the player quits. You can additionally configure a saving interval for all cached data.
+  autoSaveIntervalMinutes: 5
+  # An artificial delay for read requests to the database in milliseconds. This can be used in server networks where multiple servers share the same database.
+  # If the data is not in sync when switching between servers, try increasing this delay in steps e.g. 50, 100, 250, 500, 1000.
+  readDelayMs: 0
+  # The type of database to use. Possible values: sqlite, mysql
+  type: "sqlite"
+  # The JDBC properties are only used for type 'mysql'
+  jdbc:
+    # Replace localhost with your server name, 3306 with your port, BlockBall with your database name.
+    url: "jdbc:mysql://localhost:3306/BlockBall"
+    # Username of your database.
+    username: ""
+    # Password of your database.
+    password: ""
+    # Additional database properties. BlockBall uses HikariCP (https://github.com/brettwooldridge/HikariCP) to cache SQL connections.
+    # You may want to customize these depending on the size of your player base and your database performance.
+    properties:
+      - "useSSL=true"
+      - "maximumPoolSize=5"
+      - "cachePrepStmts=true"
+      - "prepStmtCacheSize=250"
+      - "prepStmtCacheSqlLimit=2048"
+
+############################
+# Security settings
+# Settings to adjust the position of players.
+# fallback-spawnpoint: Spawnpoint for players who try to spawn in a blockball field.
+############################
+security:
+  fallback-spawnpoint:
+    enabled: false
+    world: 'world'
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    yaw: 0.0
+    pitch: 0.0

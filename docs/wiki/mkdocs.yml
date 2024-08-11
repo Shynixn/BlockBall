@@ -1,0 +1,35 @@
+site_name: BlockBall
+repo_url: https://github.com/Shynixn/BlockBall
+site_author: Shynixn
+nav:
+  - 'BlockBall Wiki':
+      - Introduction: README.md
+      - Permission: permission.md
+      - Creating the game: game.md
+      - Interactions: interaction.md
+      - Signs: sign.md
+      - Commands: commands.md
+      - PlaceHolders: placeholders.md
+      - Developer Api: api.md
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - content.tabs.link
+    - content.code.copy
+    - navigation.footer
+extra:
+  generator: false
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.tabbed:
+      alternate_style: true

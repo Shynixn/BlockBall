@@ -1,0 +1,643 @@
+# Unique identifier of a game.
+name: "1"
+# Arbitrary name which supports color codes and can be used as placeholder
+displayName: "SoccerArena 3"
+# Is the game enabled or not.
+enabled: true
+# Type of game. Accepts HUBGAME, MINIGAME and BUNGEE
+gameType: "HUBGAME"
+# The first corner of the playing field.
+corner1:
+  x: 1641.0
+  y: 15.0
+  z: -1615.0
+  yaw: 0.0
+  pitch: 0.0
+  world: "world"
+# The second corner of the playing field.
+corner2:
+  x: 1608.0
+  y: 3.0
+  z: -1649.0
+  yaw: 0.0
+  pitch: 0.0
+  world: "world"
+meta:
+  # All spectator configurations.
+  spectatorMeta:
+    # Should nearby players in the notificationRadius receive the BlockBall bossBar and scoreboard?
+    notifyNearbyPlayers: false
+    # Notification radius.
+    notificationRadius: 50
+    # Is the /bbspectate command available to spectate this game.
+    spectatorModeEnabled: true
+    spectateStartMessage:
+      - "%blockball_lang_spectateJoinHeader%"
+      - "%blockball_lang_spectateJoinClick%"
+    # The spawnpoint for spectators when they perform the /bbspectate command.
+    spectateSpawnpoint:
+      x: 1608.0
+      y: 3.0
+      z: -1649.0
+      yaw: 0.0
+      pitch: 0.0
+      world: "world"
+  # Additional configuration properties, which do not fit into a particular category.
+  customizingMeta:
+    # Can players damage each other on the playing field.
+    damageEnabled: false
+    # Should players be teleported back to their spawnpoint when someone scores a goal?
+    backTeleport: false
+    # Delay in seconds between scoring a goal and teleporting the players back to the spawnpoint.
+    backTeleportDelay: 2
+    # Should the ball stay inside the field at all times? If set to false, the ball can be shot outside of the playing area.
+    ballForceField: true
+    # Should the players keep their current inventory when they join a game?
+    keepInventoryEnabled: false
+    # Should players keep their health when they join the game?
+    keepHealthEnabled: false
+  # Settings for all types of games.
+  lobbyMeta:
+    # Max score a team can score before the game resets.
+    maxScore: 10
+    # Forces players to join the other team, when their team is full.
+    onlyAllowEventTeams: false
+    # Messages, which will be put on a created join Sign.
+    joinSignLines:
+      - "%blockball_lang_joinSignLine1%"
+      - "%blockball_lang_joinSignLine2%"
+      - "%blockball_lang_joinSignLine3%"
+      - "%blockball_lang_joinSignLine4%"
+    # Messages, which will be put on a created leave Sign.
+    leaveSignLines:
+      - "%blockball_lang_leaveSignLine1%"
+      - "%blockball_lang_leaveSignLine2%"
+      - "%blockball_lang_leaveSignLine3%"
+      - "%blockball_lang_leaveSignLine4%"
+    # Spawnpoint of players who leave the game.
+    leaveSpawnpoint:
+      x: 1608.0
+      y: 3.0
+      z: -1649.0
+      yaw: 0.0
+      pitch: 0.0
+      world: "world"
+    # Minecraft Game mode when players join the game.
+    gamemode: "ADVENTURE"
+    # Location of all leave signs.
+    leaveSigns:
+      - x: 1623.0
+        y: 6.0
+        z: -1592.0
+        yaw: 0.0
+        pitch: 0.0
+        world: "world"
+    # Location of all join signs.
+    joinSigns:
+      - x: 1623.0
+        y: 6.0
+        z: -1592.0
+        yaw: 0.0
+        pitch: 0.0
+        world: "world"
+  # Settings for the hubGame.
+  hubLobbyMeta:
+    # The message to send to the player, when he interacts with the forcefield. Has to be exactly 3 lines, otherwise an error appears.
+    joinMessage:
+      - "%blockball_lang_hubGameJoinHeader%"
+      - "%blockball_lang_hubGameJoinRed%"
+      - "%blockball_lang_hubGameJoinBlue%"
+    # Should players automatically join the game when they interact with the forcefield?
+    instantForcefieldJoin: false
+    # Should the game reset to zero when nobody is playing?
+    resetArenaOnEmpty: false
+    # Should the players be teleported to the team spawnpoint when they join? Should only be set to false if you set instanceForcefieldJoin to true.
+    teleportOnJoin: true
+  # Settings for the minigame.
+  minigameMeta:
+    # Time in seconds until the lobby Timer completes.
+    lobbyDuration: 20
+    # Spawnpoint when players join the lobby.
+    lobbySpawnpoint:
+      x: 1608.0
+      y: 3.0
+      z: -1649.0
+      yaw: 0.0
+      pitch: 0.0
+      world: "world"
+    # Message sent to players, with how many players are required to start.
+    playersRequiredToStartMessage: "%blockball_lang_miniGameRemainingPlayers%"
+    # Also called periods, are the sections (half times) you want to split your game in. You can remove/add as many stages as you want.
+    matchTimes:
+      # Duration in seconds until this stage completes.
+      - duration: 150
+        # TIME_OVER, this stage only completes, when the duration has passed. NEXT_GOAL, this stage completes when someone scores a goal OR if the duration has passed.
+        closeType: "TIME_OVER"
+        # Is the ball spawned and playable during this stage?
+        playAbleBall: true
+        # Should the players be teleported to their spawnpoint when this stage starts?
+        respawnEnabled: true
+        # An optional title message sent to all players when this stage starts.
+        startMessageTitle: ""
+        startMessageSubTitle: ""
+        startMessageFadeIn: 20
+        startMessageStay: 60
+        startMessageFadeOut: 20
+        # Should the goals of the teams switch when this stage starts?
+        switchGoalsEnabled: false
+      - duration: 15
+        closeType: "NEXT_GOAL"
+        playAbleBall: true
+        respawnEnabled: false
+        startMessageTitle: "ยง6Overtime"
+        startMessageSubTitle: "Only a few seconds left"
+        startMessageFadeIn: 20
+        startMessageStay: 60
+        startMessageFadeOut: 20
+        switchGoalsEnabled: false
+      - duration: 10
+        closeType: "TIME_OVER"
+        playAbleBall: false
+        respawnEnabled: false
+        startMessageTitle: "ยง6Break"
+        startMessageSubTitle: "Take a short break"
+        startMessageFadeIn: 20
+        startMessageStay: 60
+        startMessageFadeOut: 20
+        switchGoalsEnabled: false
+      - duration: 150
+        closeType: "TIME_OVER"
+        playAbleBall: true
+        respawnEnabled: true
+        startMessageTitle: ""
+        startMessageSubTitle: ""
+        startMessageFadeIn: 20
+        startMessageStay: 60
+        startMessageFadeOut: 20
+        switchGoalsEnabled: true
+      - duration: 15
+        closeType: "NEXT_GOAL"
+        playAbleBall: true
+        respawnEnabled: false
+        startMessageTitle: "ยง6Overtime"
+        startMessageSubTitle: "Only a few seconds left"
+        startMessageFadeIn: 20
+        startMessageStay: 60
+        startMessageFadeOut: 20
+        switchGoalsEnabled: false
+      - duration: 10
+        closeType: "TIME_OVER"
+        playAbleBall: false
+        respawnEnabled: false
+        startMessageTitle: ""
+        startMessageSubTitle: ""
+        startMessageFadeIn: 20
+        startMessageStay: 60
+        startMessageFadeOut: 20
+        switchGoalsEnabled: false
+  # The bungeecord settings.
+  bungeeCordMeta:
+    # An optional name of a server in the bungeeCord network to fallback when a game on this server ends.
+    fallbackServer: ""
+  # Double jump settings.
+  doubleJumpMeta:
+    # Is double jump enabled.
+    enabled: true
+    # Cooldown between each double jump.
+    cooldown: 2
+    # Vertical speed modifier.
+    verticalStrength: 1.0
+    # Horizontal speed modifier.
+    horizontalStrength: 2.0
+    # Particle effect to play when it is activated.
+    particleEffect:
+      typeName: "EXPLOSION_NORMAL"
+      id: 0
+      amount: 4
+      speed: 2.0E-4
+      offset:
+        x: 2.0
+        y: 2.0
+        z: 2.0
+      materialName: null
+      data: 0
+      colorBlue: 2
+      colorRed: 2
+      colorGreen: 2
+    # Sound effect to play when it is activated.
+    soundEffect:
+      name: "ENTITY_GHAST_SHOOT,GHAST_FIREBALL"
+      pitch: 1.0
+      volume: 10.0
+      effectingType: "RELATED_PLAYER"
+  # BossBar settings. For more settings, use a dedicated bossbar plugin and placeholders.
+  bossBarMeta:
+    color: "WHITE"
+    enabled: true
+    message: "%blockball_lang_bossBarMessage%"
+    percentage: 100.0
+    style: "SOLID"
+    flags:
+      - "NONE"
+  # Scoreboard settings. For more settings, use a dedicated scoreboard plugin and placeholders.
+  scoreboardMeta:
+    title: "&aBlockBall"
+    enabled: true
+    lines:
+      - ""
+      - "&6Time: "
+      - "%blockball_game_time%"
+      - ""
+      - "&m           &r"
+      - "&cTeam Red:"
+      - "%blockball_game_redScore%&l"
+      - ""
+      - "&9Team Blue:"
+      - "%blockball_game_blueScore%&l"
+      - "&m           &r"
+  # Additional forcefield settings.
+  protectionMeta:
+    # Entities trying to enter the playing area are launched out of the forcefield with these vector settings.
+    entityProtection:
+      x: 5.0
+      y: 2.0
+      z: 5.0
+      yaw: 0.0
+      pitch: 0.0
+      world: null
+    entityProtectionEnabled: true
+    # Players trying to rejoin the playing are launched out of the forcefield with these vector settings.
+    rejoinProtection:
+      x: 0.0
+      y: 2.0
+      z: 0.0
+      yaw: 0.0
+      pitch: 0.0
+      world: null
+    rejoinProtectionEnabled: true
+  # All ball configuration options.
+  ballMeta:
+    item:
+      # TypeName the ball is represented. For version compatibility, multiple identifiers can be added by separating with a comma.
+      typeName: "minecraft:player_head,397"
+      # Optional durability tag.
+      durability: 3
+      # Optional NBT Tags in standard Minecraft NBT format. This works in versions below Minecraft 1.20.5.
+      nbt: '{SkullOwner:{Id:[I;-679733089,1513112343,-1218902292,1830955974],Name:"BlockBall",Properties:{textures:[{Value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ=="}]}}}'
+      # Optional Data Components in Minecraft Data Component JSON format. This has replaced NBT since Minecraft 1.20.5. See https://minecraft.wiki/w/Data_component_format.
+      component: '{"minecraft:profile":{"properties":[{"name":"textures","value":"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ=="}]}}'
+      # Optional SkinBase64 tag. This overwrites any skin specified in nbt or component.
+      skinBase64: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ=='
+    # Size of the ball NORMAL, SMALL. Check the hitBoxRelocation value when you set this to SMALL.
+    size: "NORMAL"
+    # The ball uses a virtual hitbox for tracking movement interactions. You can increase this hitbox to make it easier to run into the ball.
+    interactionHitBoxSize: 2.0
+    # The ball uses an invisible slime as a hitbox. You can increase this hitbox to make it easier to hit the ball.
+    kickPassHitBoxSize: 5.0
+    # Delay in ticks between each punch of the ball.
+    kickPassDelay: 5
+    # Delay in ticks between running into the ball.
+    interactionCoolDown: 20
+    # Should the ball play a rotation animation.
+    rotating: true
+    # Should left clicks be enabled?
+    enabledKick: true
+    # Should right clicks be enabled?
+    enabledPass: true
+    # Should running into the ball be enabled.
+    enabledInteract: true
+    # Should the hitbox of the ball be moved up or down? Use it with small values like 0.5 or -0.5 when the ball is stuck in the ground or too far up in the air.
+    hitBoxRelocation: 0.0
+    # Should the ball bounce from corners and the ground?
+    alwaysBounce: true
+    # Physic modifiers.
+    movementModifier:
+      gravityModifier: 0.07
+      airResistance: 0.001
+      rollingResistance: 0.1
+      horizontalTouchModifier: 1.0
+      verticalTouchModifier: 1.0
+      shotVelocity: 1.5
+      passVelocity: 1.2
+      maximumSpinVelocity: 0.08
+      maximumPitch: 60
+      minimumPitch: 0
+      defaultPitch: 20
+    # Particles to play on certain events.
+    particleEffects:
+      ONPASS:
+        typeName: "EXPLOSION_NORMAL"
+        id: 0
+        amount: 5
+        speed: 0.1
+        offset:
+          x: 0.1
+          y: 0.1
+          z: 0.1
+        materialName: null
+        data: 0
+        colorBlue: 0
+        colorRed: 0
+        colorGreen: 0
+      ONGOAL:
+        typeName: "NONE"
+        id: 0
+        amount: 1
+        speed: 1.0
+        offset:
+          x: 1.0
+          y: 1.0
+          z: 1.0
+        materialName: null
+        data: 0
+        colorBlue: 1
+        colorRed: 1
+        colorGreen: 1
+      ONKICK:
+        typeName: "EXPLOSION_LARGE"
+        id: 0
+        amount: 5
+        speed: 0.1
+        offset:
+          x: 0.2
+          y: 0.2
+          z: 0.2
+        materialName: null
+        data: 0
+        colorBlue: 0
+        colorRed: 0
+        colorGreen: 0
+      ONSPAWN:
+        typeName: "EXPLOSION_NORMAL"
+        id: 0
+        amount: 10
+        speed: 0.1
+        offset:
+          x: 2.0
+          y: 2.0
+          z: 2.0
+        materialName: null
+        data: 0
+        colorBlue: 2
+        colorRed: 2
+        colorGreen: 2
+      ONINTERACTION:
+        typeName: "CRIT"
+        id: 0
+        amount: 5
+        speed: 0.1
+        offset:
+          x: 2.0
+          y: 2.0
+          z: 2.0
+        materialName: null
+        data: 0
+        colorBlue: 2
+        colorRed: 2
+        colorGreen: 2
+    # Sounds to play on certain events.
+    soundEffects:
+      ONPASS:
+        name: "none"
+        pitch: 1.0
+        volume: 1.0
+        effectingType: "RELATED_PLAYER"
+      ONGOAL:
+        name: "none"
+        pitch: 1.0
+        volume: 1.0
+        effectingType: "RELATED_PLAYER"
+      ONKICK:
+        name: "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR,ENTITY_ZOMBIE_ATTACK_DOOR_WOOD,ZOMBIE_WOOD"
+        pitch: 1.5
+        volume: 10.0
+        effectingType: "RELATED_PLAYER"
+    # Spawn delay of the ball in ticks.
+    delayInTicks: 0
+    # SoccerBall spawnpoint.
+    spawnpoint:
+      x: 1625.4287132686636
+      y: 4.0
+      z: -1631.5723458253754
+      yaw: 2.48388671875
+      pitch: 25.50033950805664
+      world: "world"
+    # For bedrock you want to set this to true. It is helpful to see the click hitBox.
+    slimeVisible: false
+  blueTeamMeta:
+    # Arbitrary displayName of the team.
+    displayName: "%blockball_lang_teamBlueDisplayName%"
+    # Additional color code of the team.
+    prefix: "%blockball_lang_teamBlueColor%"
+    # Messages.
+    scoreMessageTitle: "%blockball_lang_teamBlueScoreTitle%"
+    scoreMessageSubTitle: "%blockball_lang_teamBlueScoreSubTitle%"
+    winMessageTitle: "%blockball_lang_teamBlueWinTitle%"
+    winMessageSubTitle: "%blockball_lang_teamBlueWinSubTitle%"
+    drawMessageTitle: "%blockball_lang_teamBlueDrawTitle%"
+    drawMessageSubTitle: "%blockball_lang_teamBlueDrawSubTitle%"
+    # The amount of goals a team scores when the ball is launched into the goal of the opposite team.
+    pointsPerGoal: 1
+    # Amount of goals a team scores when a player of the enemy team dies.
+    pointsPerEnemyDeath: 0
+    # Minimum amount of players to start a game.
+    minAmount: 0
+    # Maximum amount of players which can join a team.
+    maxAmount: 10
+    # Minimum amount of players to keep playing a game.
+    minPlayingPlayers: 0
+    # Commands which are executed when a player joins this team.
+    # Types are:
+    #  SERVER_PER_PLAYER (executes a command with server level permission)
+    #  PER_PLAYER (executes a command with player level permission)
+    joinCommands:
+      - type: 'SERVER_PER_PLAYER'
+        command: '/say Hello %blockball_player_name%'
+    # Commands which are executed when a player leaves this team.
+    leaveCommands:
+      - type: 'SERVER_PER_PLAYER'
+        command: '/say Bye %blockball_player_name%'
+    winCommands: []
+    looseCommands: []
+    drawCommands: []
+    goalCommands: []
+    # Goal locations.
+    goal:
+      corner1:
+        x: 1641.0
+        y: 9.0
+        z: -1616.0
+        yaw: 0.0
+        pitch: 0.0
+        world: "world"
+      corner2:
+        x: 1608.0
+        y: 3.0
+        z: -1619.0
+        yaw: 0.0
+        pitch: 0.0
+        world: "world"
+    # Player wlaking speed.
+    walkingSpeed: 0.2
+    joinMessage: "%blockball_lang_joinSuccessMessage%"
+    leaveMessage: "%blockball_lang_leaveMessage%"
+    signLines:
+      - "%blockball_lang_teamSignLine1%"
+      - "%blockball_lang_teamSignLine2%"
+      - "%blockball_lang_teamSignLine3%"
+      - "%blockball_lang_teamSignLine4%"
+    # The armor a player receives when joining a game. Should only be set inGame.
+    armor:
+      - null
+      - null
+      - null
+      - null
+    # The inventory a player receives when joining a game. Should only be set inGame.
+    inventory:
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+    scoreMessageFadeIn: 20
+    scoreMessageStay: 60
+    scoreMessageFadeOut: 20
+    winMessageFadeIn: 20
+    winMessageStay: 60
+    winMessageFadeOut: 20
+    drawMessageFadeIn: 20
+    drawMessageStay: 60
+    drawMessageFadeOut: 20
+    spawnpoint: null
+    lobbySpawnpoint: null
+    # Location of team signs.
+    signs:
+      - x: 1623.0
+        y: 6.0
+        z: -1592.0
+        yaw: 0.0
+        pitch: 0.0
+        world: "world"
+  redTeamMeta:
+    displayName: "%blockball_lang_teamRedDisplayName%"
+    prefix: "%blockball_lang_teamRedColor%"
+    scoreMessageTitle: "%blockball_lang_teamRedScoreTitle%"
+    scoreMessageSubTitle: "%blockball_lang_teamRedScoreSubTitle%"
+    winMessageTitle: "%blockball_lang_teamRedWinTitle%"
+    winMessageSubTitle: "%blockball_lang_teamRedWinSubTitle%"
+    drawMessageTitle: "%blockball_lang_teamRedDrawTitle%"
+    drawMessageSubTitle: "%blockball_lang_teamRedDrawSubTitle%"
+    pointsPerGoal: 1
+    pointsPerEnemyDeath: 0
+    minAmount: 0
+    maxAmount: 10
+    minPlayingPlayers: 0
+    goal:
+      corner1:
+        x: 1641.0
+        y: 9.0
+        z: -1616.0
+        yaw: 0.0
+        pitch: 0.0
+        world: "world"
+      corner2:
+        x: 1608.0
+        y: 3.0
+        z: -1619.0
+        yaw: 0.0
+        pitch: 0.0
+        world: "world"
+    walkingSpeed: 0.2
+    joinMessage: "%blockball_lang_joinSuccessMessage%"
+    leaveMessage: "%blockball_lang_leaveMessage%"
+    signLines:
+      - "%blockball_lang_teamSignLine1%"
+      - "%blockball_lang_teamSignLine2%"
+      - "%blockball_lang_teamSignLine3%"
+      - "%blockball_lang_teamSignLine4%"
+    armor:
+      - null
+      - null
+      - null
+      - null
+    inventory:
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+    scoreMessageFadeIn: 20
+    scoreMessageStay: 60
+    scoreMessageFadeOut: 20
+    winMessageFadeIn: 20
+    winMessageStay: 60
+    winMessageFadeOut: 20
+    drawMessageFadeIn: 20
+    drawMessageStay: 60
+    drawMessageFadeOut: 20
+    spawnpoint: null
+    lobbySpawnpoint: null
+    signs: [ ]
+  hologramMetas: [ ]

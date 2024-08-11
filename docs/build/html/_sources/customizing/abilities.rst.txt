@@ -1,5 +1,0 @@
-Abilities
-=========
-
-.. toctree::
-   doublejump
