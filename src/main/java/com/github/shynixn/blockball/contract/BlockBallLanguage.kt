@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.contract
 
 interface BlockBallLanguage {
-  /** &7%1$1s scored for &cTeam Red. **/
+  /** %1$1s scored for &cTeam Red. **/
   var scoreRedSubTitle : String
 
   /** &9%blockball_game_blueScore% : &c%blockball_game_redScore% **/
@@ -40,6 +40,12 @@ interface BlockBallLanguage {
   /** 20 **/
   var scoreRedFadeIn : String
 
+  /** &0&l[&f&lBlockBall&0&l]&7 **/
+  var joinSignLine1 : String
+
+  /** %blockball_game_stateDisplayName% **/
+  var joinSignLine2 : String
+
   /** &1Running **/
   var gameStatusRunning : String
 
@@ -57,6 +63,12 @@ interface BlockBallLanguage {
 
   /** &0&l[&f&lBlockBall&0&l]&7 Use /blockball help to see more info about the plugin. **/
   var commandUsage : String
+
+  /** %blockball_game_players%/%blockball_game_maxPlayers% **/
+  var joinSignLine3 : String
+
+  /**  **/
+  var joinSignLine4 : String
 
   /** &0&l[&f&lBlockBall&0&l]&7 RightClick on a sign to convert it into a game sign. **/
   var rightClickOnSignMessage : String
@@ -88,14 +100,26 @@ interface BlockBallLanguage {
   /** 20 **/
   var winDrawFadeOut : String
 
+  /** &0&l[&f&lBlockBall&0&l]&7 **/
+  var leaveSignLine1 : String
+
   /** 20 **/
   var scoreBlueFadeOut : String
 
   /** 20 **/
   var scoreRedFadeOut : String
 
+  /** &f&lLeave **/
+  var leaveSignLine2 : String
+
+  /** %blockball_game_players%/%blockball_game_maxPlayers% **/
+  var leaveSignLine3 : String
+
   /** Lets the player executing the command leave the game. **/
   var commandLeaveToolTip : String
+
+  /**  **/
+  var leaveSignLine4 : String
 
   /** 20 **/
   var winBlueFadeIn : String
@@ -145,7 +169,7 @@ interface BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&c This sign type is not known. **/
   var signTypeDoesNotExistMessage : String
 
-  /** &7%1$1s scored for &9Team Blue. **/
+  /** %1$1s scored for &9Team Blue. **/
   var scoreBlueSubTitle : String
 
   /** &0&l[&f&lBlockBall&0&l]&7 Successfully joined team red. **/

@@ -79,10 +79,22 @@ Adds the BlockBall axe for selection to your inventory.
 /blockball select <name>
 ```
 
-Sets a selected location for your arena.
+Sets a area for your arena.
 
 * Name: Identifier of a game
-* Type: Type of selection to set: ball, field, blue_goal, red_goal, red_spawn, blue_spawn, leave_spawn, red_lobby, blue_lobby
+* Type: Type of selection to set: e.g. field, blue_goal, red_goal. See tab completion for all values.
+
+### /blockball location
+
+```
+/blockball location <name>
+```
+
+Sets a location for your arena.
+
+* Name: Identifier of a game
+* Type: Type of location to set: ball, red_spawnpoint, blue_spawnpoint, leave_spawnpoint
+
 
 ### /blockball highlight
 

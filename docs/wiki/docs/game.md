@@ -2,6 +2,8 @@
 
 This page explains step by step to setup a new game.
 
+## Minimum required setup
+
 ### Create a new game
 
 Execute the following command to create a new arena file.
@@ -26,7 +28,7 @@ game1 [My first game] [disabled]
 
 You can see that the arena is still disabled and cannot be joined yet.
 
-^^### Get the selection axe
+### Get the selection axe
 
 Get the blockball selection axe for selecting the spawnspoints and other areas.
 
@@ -80,11 +82,11 @@ Then execute the command below.
 
 ### Setting the ball spawnpoint
 
-Left-click the location where you want the ball to spawn. 
-Then execute the command below.
+Move to the location where you want the ball to spawn. The current location of your player is used as a value when you execute the ``/blockball location``
+sub command. Execute the command below.
 
 ```
-/blockball select game1 ball
+/blockball location game1 ball
 ```
 
 ### Enable the game
@@ -105,6 +107,34 @@ Output:
 
 ```
 game1 [My first game] [enabled]
+```
+
+## Optional steps
+
+The following steps are not necessary but allow you to further customize the experience.
+
+### Setting the leave-spawnpoint
+
+Players can leave your game by running out of the field. However, you can also leave by typing ``/blockball leave``, which causes the player
+to be launched out of the forcefield. To avoid this, you should set a leaveSpawnpoint.
+
+```
+/blockball location game1 leave_spawnpoint 
+```
+
+### Setting the team-spawnpoints
+
+Currently, players spawn at the location of the ball. You should also set individual team spawnpoints.
+Move to the first location and execute:
+
+```
+/blockball location game1 red_spawnpoint
+```
+
+Move to the second location and execute:
+
+```
+/blockball location game1 blue_spawnpoint
 ```
 
 ### Changing more options

@@ -3,7 +3,9 @@ package com.github.shynixn.blockball.impl.service
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
+import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.GameType
+import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.impl.SoccerHubGameImpl
 import com.github.shynixn.blockball.impl.SoccerMiniGameImpl
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
@@ -21,6 +23,7 @@ import kotlinx.coroutines.runBlocking
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -203,7 +206,6 @@ class GameServiceImpl @Inject constructor(
         games.clear()
     }
 
-
     private fun validateGame(arena: SoccerArena) {
         if (arena.meta.ballMeta.spawnpoint == null) {
             arena.enabled = false
@@ -240,6 +242,30 @@ class GameServiceImpl @Inject constructor(
         fixCorners(arena.lowerCorner!!, arena.upperCorner!!)
         fixCorners(arena.meta.redTeamMeta.goal.lowerCorner!!, arena.meta.redTeamMeta.goal.upperCorner!!)
         fixCorners(arena.meta.blueTeamMeta.goal.lowerCorner!!, arena.meta.blueTeamMeta.goal.upperCorner!!)
+
+        validateGoalSize(arena, Team.BLUE, arena.meta.blueTeamMeta)
+        validateGoalSize(arena, Team.RED, arena.meta.redTeamMeta)
+    }
+
+    private fun validateGoalSize(arena: SoccerArena, team: Team, teamMeta: TeamMeta) {
+        if (abs(teamMeta.goal.upperCorner!!.x - teamMeta.goal.lowerCorner!!.x) < 2) {
+            throw SoccerGameException(
+                arena,
+                "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
+            )
+        }
+        if (abs(teamMeta.goal.upperCorner!!.y - teamMeta.goal.lowerCorner!!.y) < 2) {
+            throw SoccerGameException(
+                arena,
+                "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
+            )
+        }
+        if (abs(teamMeta.goal.upperCorner!!.z - teamMeta.goal.lowerCorner!!.z) < 2) {
+            throw SoccerGameException(
+                arena,
+                "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
+            )
+        }
     }
 
     /**

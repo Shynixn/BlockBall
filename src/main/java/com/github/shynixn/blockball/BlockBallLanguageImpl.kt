@@ -3,8 +3,8 @@ package com.github.shynixn.blockball
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 
 object BlockBallLanguageImpl : BlockBallLanguage {
-  /** &7%1$1s scored for &cTeam Red. **/
-  override var scoreRedSubTitle : String = "&7%1$1s scored for &cTeam Red."
+  /** %1$1s scored for &cTeam Red. **/
+  override var scoreRedSubTitle : String = "%1$1s scored for &cTeam Red."
 
   /** &9%blockball_game_blueScore% : &c%blockball_game_redScore% **/
   override var scoreBlueTitle : String = "&9%blockball_game_blueScore% : &c%blockball_game_redScore%"
@@ -42,6 +42,12 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** 20 **/
   override var scoreRedFadeIn : String = "20"
 
+  /** &0&l[&f&lBlockBall&0&l]&7 **/
+  override var joinSignLine1 : String = "&0&l[&f&lBlockBall&0&l]&7"
+
+  /** %blockball_game_stateDisplayName% **/
+  override var joinSignLine2 : String = "%blockball_game_stateDisplayName%"
+
   /** &1Running **/
   override var gameStatusRunning : String = "&1Running"
 
@@ -59,6 +65,12 @@ object BlockBallLanguageImpl : BlockBallLanguage {
 
   /** &0&l[&f&lBlockBall&0&l]&7 Use /blockball help to see more info about the plugin. **/
   override var commandUsage : String = "&0&l[&f&lBlockBall&0&l]&7 Use /blockball help to see more info about the plugin."
+
+  /** %blockball_game_players%/%blockball_game_maxPlayers% **/
+  override var joinSignLine3 : String = "%blockball_game_players%/%blockball_game_maxPlayers%"
+
+  /**  **/
+  override var joinSignLine4 : String = ""
 
   /** &0&l[&f&lBlockBall&0&l]&7 RightClick on a sign to convert it into a game sign. **/
   override var rightClickOnSignMessage : String = "&0&l[&f&lBlockBall&0&l]&7 RightClick on a sign to convert it into a game sign."
@@ -90,14 +102,26 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** 20 **/
   override var winDrawFadeOut : String = "20"
 
+  /** &0&l[&f&lBlockBall&0&l]&7 **/
+  override var leaveSignLine1 : String = "&0&l[&f&lBlockBall&0&l]&7"
+
   /** 20 **/
   override var scoreBlueFadeOut : String = "20"
 
   /** 20 **/
   override var scoreRedFadeOut : String = "20"
 
+  /** &f&lLeave **/
+  override var leaveSignLine2 : String = "&f&lLeave"
+
+  /** %blockball_game_players%/%blockball_game_maxPlayers% **/
+  override var leaveSignLine3 : String = "%blockball_game_players%/%blockball_game_maxPlayers%"
+
   /** Lets the player executing the command leave the game. **/
   override var commandLeaveToolTip : String = "Lets the player executing the command leave the game."
+
+  /**  **/
+  override var leaveSignLine4 : String = ""
 
   /** 20 **/
   override var winBlueFadeIn : String = "20"
@@ -147,8 +171,8 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&c This sign type is not known. **/
   override var signTypeDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c This sign type is not known."
 
-  /** &7%1$1s scored for &9Team Blue. **/
-  override var scoreBlueSubTitle : String = "&7%1$1s scored for &9Team Blue."
+  /** %1$1s scored for &9Team Blue. **/
+  override var scoreBlueSubTitle : String = "%1$1s scored for &9Team Blue."
 
   /** &0&l[&f&lBlockBall&0&l]&7 Successfully joined team red. **/
   override var joinTeamRedMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Successfully joined team red."
