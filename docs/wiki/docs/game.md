@@ -109,6 +109,8 @@ Output:
 game1 [My first game] [enabled]
 ```
 
+You can join the game by running into the arena or executing the ``/blockball join game1`` command.
+
 ## Optional steps
 
 The following steps are not necessary but allow you to further customize the experience.
@@ -137,7 +139,48 @@ Move to the second location and execute:
 /blockball location game1 blue_spawnpoint
 ```
 
-### Changing more options
+## Creating a Minigame
+
+### Converting the HUBGAME to a MINIGAME
+
+* Currently, players can join and leave a game at any time. The timespan of a game is also infinity. In order to convert it to a standard Minecraft minigame, with a lobby 
+and a max time, you should execute the following command.
+* If your arena has been enabled before, you may encounter and error message. You can ignore that because we will fix it in the next steps.
+
+```
+/blockball gamerule gameType game1 minigame
+```
+
+### Setting the team-lobby-spawnpoints
+
+Move to the lobby spawnpoints of your teams and execute the corresponding commands.
+
+```
+/blockball location game1 red_lobby
+```
+
+```
+/blockball location game1 blue_lobby
+```
+
+### Enabling the game
+
+If your game is disabled in the game list, you should now be able to enable it with the toggle command.
+
+```
+/blockball list
+```
+
+
+```
+/blockball toggle game1
+```
+
+## Half-time, over-time 
+
+You can configure periods like half-times, breaks and overtimes in your ``game1.yml`` file. See the further customization section below.
+
+## Further Customizations
 
 Further customization options can be found in the ``plugins/BlockBall/arena/<name>.yml`` file.
 

@@ -111,8 +111,8 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** 20 **/
   override var scoreRedFadeOut : String = "20"
 
-  /** &f&lLeave **/
-  override var leaveSignLine2 : String = "&f&lLeave"
+  /** &fLeave **/
+  override var leaveSignLine2 : String = "&fLeave"
 
   /** %blockball_game_players%/%blockball_game_maxPlayers% **/
   override var leaveSignLine3 : String = "%blockball_game_players%/%blockball_game_maxPlayers%"
@@ -129,6 +129,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** 60 **/
   override var winRedStay : String = "60"
 
+  /** &0&l[&f&lBlockBall&0&l]&7 Updated a gamerule. **/
+  override var gameRuleChangedMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Updated a gamerule."
+
   /** Enables the player to add a specific sign by right-clicking any sign. You can remove signs by simply breaking the block. **/
   override var commandSignToolTip : String = "Enables the player to add a specific sign by right-clicking any sign. You can remove signs by simply breaking the block."
 
@@ -137,6 +140,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
 
   /** Copies the inventory of the player executing the command. This copy will be applied to players when they join a game. **/
   override var commandInventoryToolTip : String = "Copies the inventory of the player executing the command. This copy will be applied to players when they join a game."
+
+  /** &0&l[&f&lBlockBall&0&l]&c GameType %1$1s does not exist. **/
+  override var gameTypeNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c GameType %1$1s does not exist."
 
   /** Enables or disables your game. If a game is disabled, nobody can join. **/
   override var commandToggleToolTip : String = "Enables or disables your game. If a game is disabled, nobody can join."
@@ -215,6 +221,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
 
   /** Allows to reload all games or a specific single one. **/
   override var commandReloadToolTip : String = "Allows to reload all games or a specific single one."
+
+  /** Sets a gamerule in BlockBall. **/
+  override var commandGameRuleToolTip : String = "Sets a gamerule in BlockBall."
 
   /** &4Disabled **/
   override var gameStatusDisabled : String = "&4Disabled"

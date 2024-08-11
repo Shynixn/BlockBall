@@ -109,7 +109,7 @@ interface BlockBallLanguage {
   /** 20 **/
   var scoreRedFadeOut : String
 
-  /** &f&lLeave **/
+  /** &fLeave **/
   var leaveSignLine2 : String
 
   /** %blockball_game_players%/%blockball_game_maxPlayers% **/
@@ -127,6 +127,9 @@ interface BlockBallLanguage {
   /** 60 **/
   var winRedStay : String
 
+  /** &0&l[&f&lBlockBall&0&l]&7 Updated a gamerule. **/
+  var gameRuleChangedMessage : String
+
   /** Enables the player to add a specific sign by right-clicking any sign. You can remove signs by simply breaking the block. **/
   var commandSignToolTip : String
 
@@ -135,6 +138,9 @@ interface BlockBallLanguage {
 
   /** Copies the inventory of the player executing the command. This copy will be applied to players when they join a game. **/
   var commandInventoryToolTip : String
+
+  /** &0&l[&f&lBlockBall&0&l]&c GameType %1$1s does not exist. **/
+  var gameTypeNotExistMessage : String
 
   /** Enables or disables your game. If a game is disabled, nobody can join. **/
   var commandToggleToolTip : String
@@ -213,6 +219,9 @@ interface BlockBallLanguage {
 
   /** Allows to reload all games or a specific single one. **/
   var commandReloadToolTip : String
+
+  /** Sets a gamerule in BlockBall. **/
+  var commandGameRuleToolTip : String
 
   /** &4Disabled **/
   var gameStatusDisabled : String

@@ -147,6 +147,18 @@ class BlockBallCommandExecutor @Inject constructor(
         }
     }
 
+    private val gameTypeValidator = object : Validator<GameType> {
+        override suspend fun transform(
+            sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
+        ): GameType? {
+            return GameType.values().firstOrNull { e -> e.name.equals(openArgs[0], true) }
+        }
+
+        override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
+            return language.gameTypeNotExistMessage
+        }
+    }
+
     private val locationTypeValidator = object : Validator<LocationType> {
         override suspend fun transform(
             sender: CommandSender,
@@ -262,6 +274,28 @@ class BlockBallCommandExecutor @Inject constructor(
                         setLocation(player, arena, locationType)
                     }
             }
+            subCommand("gamerule") {
+                permission(Permission.EDIT_GAME)
+                toolTip { language.commandGameRuleToolTip }
+                subCommand("gameType") {
+                    toolTip { language.commandGameRuleToolTip }
+                    permission(Permission.EDIT_GAME)
+                    builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("value")
+                        .validator(gameTypeValidator)
+                        .tabs {
+                            GameType.values().map { e ->
+                                e.name.lowercase(
+                                    Locale.ENGLISH
+                                )
+                            }
+                        }.execute { sender, arena, gameType ->
+                            arena.gameType = gameType
+                            arenaRepository.save(arena)
+                            sender.sendMessage(language.gameRuleChangedMessage)
+                            reloadArena(sender, arena)
+                        }
+                }
+            }
             subCommand("highlight") {
                 permission(Permission.EDIT_GAME)
                 toolTip { language.commandHighlightToolTip }
@@ -314,6 +348,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
         mcCart.build()
     }
+
 
     private suspend fun createArena(sender: CommandSender, name: String, displayName: String) {
         val arena = SoccerArena()
@@ -491,6 +526,10 @@ class BlockBallCommandExecutor @Inject constructor(
             arena.meta.blueTeamMeta.spawnpoint = player.location.toVector3d()
         } else if (locationType == LocationType.RED_SPAWNPOINT) {
             arena.meta.redTeamMeta.spawnpoint = player.location.toVector3d()
+        } else if (locationType == LocationType.RED_LOBBY) {
+            arena.meta.redTeamMeta.lobbySpawnpoint = player.location.toVector3d()
+        } else if (locationType == LocationType.BLUE_LOBBY) {
+            arena.meta.blueTeamMeta.lobbySpawnpoint = player.location.toVector3d()
         }
 
         player.sendMessage(language.selectionSetMessage.format(locationType.name.lowercase()))
@@ -709,6 +748,28 @@ class BlockBallCommandExecutor @Inject constructor(
                             null,
                             Color.BLUE.rgb,
                             "Blue Spawn"
+                        )
+                    )
+                }
+
+                if (arena.meta.redTeamMeta.lobbySpawnpoint != null) {
+                    highLights.add(
+                        AreaHighlight(
+                            arena.meta.redTeamMeta.lobbySpawnpoint!!,
+                            null,
+                            Color.RED.rgb,
+                            "Red Lobby"
+                        )
+                    )
+                }
+
+                if (arena.meta.blueTeamMeta.lobbySpawnpoint != null) {
+                    highLights.add(
+                        AreaHighlight(
+                            arena.meta.blueTeamMeta.lobbySpawnpoint!!,
+                            null,
+                            Color.BLUE.rgb,
+                            "Blue Lobby"
                         )
                     )
                 }

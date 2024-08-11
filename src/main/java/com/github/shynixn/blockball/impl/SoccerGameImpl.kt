@@ -898,6 +898,7 @@ abstract class SoccerGameImpl(
         player.isFlying = false
         player.walkSpeed = stats.walkingSpeed.toFloat()
         player.level = stats.level
+        player.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
         player.exp = stats.exp.toFloat()
         player.foodLevel = stats.hunger
 

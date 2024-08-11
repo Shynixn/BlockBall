@@ -128,6 +128,18 @@ Copies the armor inventory of the player executing the command. This copy will b
 * Name: Identifier of a game
 * Team: Name of the team. Is always red or blue.
 
+### /blockball gamerule
+
+```
+/blockball gamerule <key> <name> <value>
+```
+
+Sets a gamerule of BlockBall.
+
+* Key: The name of the gamerule.
+* Name: Identifier of a game
+* Value: Value of a gamerule. See tab completions for all values.
+
 ### /blockball sign
 
 ```
