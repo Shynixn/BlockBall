@@ -222,6 +222,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** 60 **/
   override var winDrawStay : String = "60"
 
+  /** Team Red **/
+  override var teamRedDisplayName : String = "Team Red"
+
   /** Allows to reload all games or a specific single one. **/
   override var commandReloadToolTip : String = "Allows to reload all games or a specific single one."
 
@@ -266,4 +269,7 @@ object BlockBallLanguageImpl : BlockBallLanguage {
 
   /** 60 **/
   override var scoreBlueStay : String = "60"
+
+  /** Team Blue **/
+  override var teamBlueDisplayName : String = "Team Blue"
 }

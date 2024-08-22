@@ -220,6 +220,9 @@ interface BlockBallLanguage {
   /** 60 **/
   var winDrawStay : String
 
+  /** Team Red **/
+  var teamRedDisplayName : String
+
   /** Allows to reload all games or a specific single one. **/
   var commandReloadToolTip : String
 
@@ -264,4 +267,7 @@ interface BlockBallLanguage {
 
   /** 60 **/
   var scoreBlueStay : String
+
+  /** Team Blue **/
+  var teamBlueDisplayName : String
 }

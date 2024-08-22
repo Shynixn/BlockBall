@@ -47,12 +47,12 @@ interface SoccerGame {
     /**
      * All players which are already fix in team red.
      */
-    val redTeam: List<Player>
+    val redTeam: Set<Player>
 
     /**
      * All players which are already fix in team blue.
      */
-    val blueTeam: List<Player>
+    val blueTeam: Set<Player>
 
     /**
      * Status.
