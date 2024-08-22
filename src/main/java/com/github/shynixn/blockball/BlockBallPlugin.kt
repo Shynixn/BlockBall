@@ -133,7 +133,7 @@ class BlockBallPlugin : JavaPlugin() {
             // Load Language
             val language = configurationService.findValue<String>("language")
             try {
-                plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us")
+                plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us", "es_es")
                 logger.log(Level.INFO, "Loaded language file $language.properties.")
             } catch (e: Exception) {
                 // Compatibility to < 6.46.3
@@ -143,7 +143,7 @@ class BlockBallPlugin : JavaPlugin() {
                         .resolve("old_" + UUID.randomUUID().toString() + ".properties"),
                     StandardCopyOption.REPLACE_EXISTING
                 )
-                plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us")
+                plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us", "es_es")
                 logger.log(
                     Level.WARNING,
                     "Your language file is not compatible. Your existing file has been renamed and the original file has been reset."

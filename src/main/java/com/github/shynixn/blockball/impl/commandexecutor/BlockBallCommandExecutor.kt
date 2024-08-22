@@ -634,7 +634,7 @@ class BlockBallCommandExecutor @Inject constructor(
         if (arena == null) {
             plugin.reloadConfig()
             val languageDef = configurationService.findValue<String>("language")
-            plugin.reloadTranslation(languageDef, BlockBallLanguageImpl::class.java, "en_us")
+            plugin.reloadTranslation(languageDef, BlockBallLanguageImpl::class.java, "en_us", "es_es")
             plugin.logger.log(Level.INFO, "Loaded language file $languageDef.properties.")
 
             try {
