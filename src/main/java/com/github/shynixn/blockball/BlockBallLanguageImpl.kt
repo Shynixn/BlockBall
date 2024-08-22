@@ -123,6 +123,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /**  **/
   override var leaveSignLine4 : String = ""
 
+  /** &0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s **/
+  override var failedToReloadMessage : String = "&0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s"
+
   /** 20 **/
   override var winBlueFadeIn : String = "20"
 

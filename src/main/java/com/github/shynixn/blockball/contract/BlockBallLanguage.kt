@@ -121,6 +121,9 @@ interface BlockBallLanguage {
   /**  **/
   var leaveSignLine4 : String
 
+  /** &0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s **/
+  var failedToReloadMessage : String
+
   /** 20 **/
   var winBlueFadeIn : String
 
