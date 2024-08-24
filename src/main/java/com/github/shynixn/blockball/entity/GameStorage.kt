@@ -49,6 +49,16 @@ class GameStorage {
     var walkingSpeed: Double = 1.0
 
     /**
+     * Counter of enemy goals.
+     */
+    var scoredGoals : Int = 0
+
+    /**
+     * Counter of scored own goals.
+     */
+    var scoredOwnGoals : Int = 0
+
+    /**
      * Inventory cache.
      */
     var inventoryContents: Array<ItemStack?> = arrayOfNulls(0)

@@ -2,9 +2,29 @@ package com.github.shynixn.blockball.entity
 
 class StatsMeta {
     /**
-     * Scored amount of goals.
+     * Version of the tracking.
+     */
+    var version: Int = 1
+
+    /**
+     * Scored goals in enemy goal.
      */
     var scoredGoals: Int = 0
+
+    /**
+     * Scored goals in enemy goal over all win games.
+     */
+    var scoredGoalsFull: Int = 0
+
+    /**
+     * Scored goals in own goal.
+     */
+    var scoredOwnGoals: Int = 0
+
+    /**
+     * Scored goals in own goal over all win games.
+     */
+    var scoredOwnGoalsFull: Int = 0
 
     /**
      * Amount of completed played games.

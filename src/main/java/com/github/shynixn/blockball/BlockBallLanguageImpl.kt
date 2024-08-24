@@ -123,6 +123,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /**  **/
   override var leaveSignLine4 : String = ""
 
+  /** &0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s **/
+  override var failedToReloadMessage : String = "&0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s"
+
   /** 20 **/
   override var winBlueFadeIn : String = "20"
 
@@ -219,6 +222,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** 60 **/
   override var winDrawStay : String = "60"
 
+  /** Team Red **/
+  override var teamRedDisplayName : String = "Team Red"
+
   /** Allows to reload all games or a specific single one. **/
   override var commandReloadToolTip : String = "Allows to reload all games or a specific single one."
 
@@ -263,4 +269,7 @@ object BlockBallLanguageImpl : BlockBallLanguage {
 
   /** 60 **/
   override var scoreBlueStay : String = "60"
+
+  /** Team Blue **/
+  override var teamBlueDisplayName : String = "Team Blue"
 }

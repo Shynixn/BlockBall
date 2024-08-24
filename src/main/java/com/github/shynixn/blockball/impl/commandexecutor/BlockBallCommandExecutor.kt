@@ -372,8 +372,7 @@ class BlockBallCommandExecutor @Inject constructor(
             sender.sendMessage(language.enabledArenaMessage.format(arena.enabled.toString()))
         } catch (e: SoccerGameException) {
             arena.enabled = false
-            sender.sendMessage(ChatColor.RED.toString() + "Failed to reload soccerArena ${e.arena.name}.")
-            sender.sendMessage(e.message)
+            sender.sendMessage(language.failedToReloadMessage.format(e.arena.name, e.message))
             return
         }
         arenaRepository.save(arena)
@@ -627,23 +626,23 @@ class BlockBallCommandExecutor @Inject constructor(
         try {
             arenaRepository.clearCache()
         } catch (e: SoccerGameException) {
-            sender.sendMessage(ChatColor.RED.toString() + "Failed to reload arenas.")
-            sender.sendMessage(e.message)
+            e.arena.enabled = false
+            sender.sendMessage(language.failedToReloadMessage.format(e.arena.name, e.message))
             return
         }
 
         if (arena == null) {
             plugin.reloadConfig()
             val languageDef = configurationService.findValue<String>("language")
-            plugin.reloadTranslation(languageDef, BlockBallLanguageImpl::class.java, "en_us")
+            plugin.reloadTranslation(languageDef, BlockBallLanguageImpl::class.java, "en_us", "es_es")
             plugin.logger.log(Level.INFO, "Loaded language file $languageDef.properties.")
 
             try {
                 arenaRepository.clearCache()
                 gameService.reloadAll()
             } catch (e: SoccerGameException) {
-                sender.sendMessage(ChatColor.RED.toString() + "Failed to reload soccerArena ${e.arena.name}.")
-                sender.sendMessage(e.message)
+                e.arena.enabled = false
+                sender.sendMessage(language.failedToReloadMessage.format(e.arena.name, e.message))
                 return
             }
 
@@ -655,8 +654,7 @@ class BlockBallCommandExecutor @Inject constructor(
             arenaRepository.clearCache()
             gameService.reload(arena)
         } catch (e: SoccerGameException) {
-            sender.sendMessage(ChatColor.RED.toString() + "Failed to reload soccerArena ${e.arena.name}.")
-            sender.sendMessage(e.message)
+            sender.sendMessage(language.failedToReloadMessage.format(e.arena.name, e.message))
             return
         }
         sender.sendMessage(language.reloadedGameMessage.format(arena.name))

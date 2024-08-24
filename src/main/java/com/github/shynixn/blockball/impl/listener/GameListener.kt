@@ -101,7 +101,15 @@ class GameListener @Inject constructor(
                 val playerData = PlayerInformation()
                 playerData.playerUUID = player.uniqueId.toString()
                 playerData.playerName = player.name
+                playerData.statsMeta.version = 2
                 playerDataRepository.save(playerData)
+            } else {
+                // Migration of stats meta from 7.x to 7.2.0
+                if (existingPlayerData.statsMeta.version == 1) {
+                    existingPlayerData.statsMeta.version = 2
+                    existingPlayerData.statsMeta.scoredGoalsFull = existingPlayerData.statsMeta.scoredGoals
+                    playerDataRepository.save(existingPlayerData)
+                }
             }
         }
     }

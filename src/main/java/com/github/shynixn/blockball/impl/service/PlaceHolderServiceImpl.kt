@@ -58,6 +58,21 @@ class PlaceHolderServiceImpl @Inject constructor(
                 ""
             }
         }
+        gamePlayerHolderFunctions[PlaceHolder.GAME_LASTHITPLAYER_TEAM_NAME] = { game ->
+            val player = game.lastInteractedEntity
+            if (player != null && player is Player) {
+                if (game.redTeam.contains(player)) {
+                    BlockBallLanguageImpl.teamRedDisplayName
+                } else if (game.blueTeam.contains(player)) {
+                    BlockBallLanguageImpl.teamBlueDisplayName
+                } else {
+                    ""
+                }
+            } else {
+                ""
+            }
+        }
+
         gamePlayerHolderFunctions[PlaceHolder.GAME_STATE] = { game -> game.status.name }
         gamePlayerHolderFunctions[PlaceHolder.GAME_STATE_DISPLAYNAME] = { game ->
             if (game.status == GameState.JOINABLE) {
@@ -69,21 +84,19 @@ class PlaceHolderServiceImpl @Inject constructor(
             }
         }
         gamePlayerHolderFunctions[PlaceHolder.GAME_REMAININGPLAYERS_TO_START] = { game ->
-            (game.arena.meta.redTeamMeta.minAmount + game.arena.meta.blueTeamMeta.minAmount - game.ingamePlayersStorage.size).toString()
+            val r =
+                (game.arena.meta.redTeamMeta.minAmount + game.arena.meta.blueTeamMeta.minAmount - game.ingamePlayersStorage.size)
+            if (r < 0) {
+                "0"
+            } else {
+                r.toString()
+            }
         }
         gamePlayerHolderFunctions[PlaceHolder.GAME_IS_ENABLED] = { game ->
             game.arena.enabled.toString()
         }
         gamePlayerHolderFunctions[PlaceHolder.GAME_IS_JOINABLE] = { game ->
             (game.arena.enabled && game.status == GameState.JOINABLE).toString()
-        }
-
-        // Team PlaceHolders
-        teamPlaceHolderFunctions[PlaceHolder.TEAM_MAX_PLAYERS] = { _, team, _ ->
-            team.maxAmount.toString()
-        }
-        teamPlaceHolderFunctions[PlaceHolder.TEAM_PLAYERS] = { _, _, teamSize ->
-            teamSize.toString()
         }
 
         // Player PlaceHolders
@@ -102,7 +115,9 @@ class PlaceHolderServiceImpl @Inject constructor(
             val game = gameService.getByPlayer(player)
             game?.redTeam?.contains(player).toString()
         }
-        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_SCOREDGOALS] = { player ->
+
+        // Stats PlaceHolders
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_GOALS] = { player ->
             if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
@@ -110,7 +125,57 @@ class PlaceHolderServiceImpl @Inject constructor(
                 playerData?.statsMeta?.scoredGoals?.toString() ?: ""
             }
         }
-        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_STARTEDGAMES] = { player ->
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_GOALSFULL] = { player ->
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                playerData?.statsMeta?.scoredGoalsFull?.toString() ?: ""
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_OWNGOALS] = { player ->
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                playerData?.statsMeta?.scoredOwnGoals?.toString() ?: ""
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_OWNGOALSFULL] = { player ->
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                playerData?.statsMeta?.scoredOwnGoalsFull?.toString() ?: ""
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_TOTALGOALS] = { player ->
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+
+                if (playerData != null) {
+                    (playerData.statsMeta.scoredGoals + playerData.statsMeta.scoredOwnGoals).toString()
+                } else {
+                    ""
+                }
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_TOTALGOALSFULL] = { player ->
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+
+                if (playerData != null) {
+                    (playerData.statsMeta.scoredGoalsFull + playerData.statsMeta.scoredOwnGoalsFull).toString()
+                } else {
+                    ""
+                }
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_GAMES] = { player ->
             if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
@@ -118,7 +183,7 @@ class PlaceHolderServiceImpl @Inject constructor(
                 playerData?.statsMeta?.joinedGames?.toString() ?: ""
             }
         }
-        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_COMPLETEDGAMES] = { player ->
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_GAMESFULL] = { player ->
             if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
@@ -126,6 +191,7 @@ class PlaceHolderServiceImpl @Inject constructor(
                 playerData?.statsMeta?.playedGames?.toString() ?: ""
             }
         }
+
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_WINS] = { player ->
             if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
@@ -146,7 +212,7 @@ class PlaceHolderServiceImpl @Inject constructor(
                 }
             }
         }
-        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_STARTEDWINRATE] = { player ->
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_WINRATE] = { player ->
             if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
@@ -164,7 +230,7 @@ class PlaceHolderServiceImpl @Inject constructor(
                 }
             }
         }
-        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_COMPLETEDWINRATE] = { player ->
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_WINRATEFULL] = { player ->
             if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
@@ -182,7 +248,7 @@ class PlaceHolderServiceImpl @Inject constructor(
                 }
             }
         }
-        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_STARTEDGOALSPER] = { player ->
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_GOALSPERGAME] = { player ->
             if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
@@ -200,7 +266,7 @@ class PlaceHolderServiceImpl @Inject constructor(
                 }
             }
         }
-        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_COMPLETEDGOALSPER] = { player ->
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_GOALSPERGAMEFULL] = { player ->
             if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
@@ -211,6 +277,78 @@ class PlaceHolderServiceImpl @Inject constructor(
                     } else {
                         val result =
                             playerData.statsMeta.scoredGoals.toDouble() / playerData.statsMeta.playedGames.toDouble()
+                        String.format("%.2f", result)
+                    }
+                } else {
+                    ""
+                }
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_OWNGOALSPERGAME] = { player ->
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                if (playerData != null) {
+                    if (playerData.statsMeta.joinedGames == 0) {
+                        "0.00"
+                    } else {
+                        val result =
+                            playerData.statsMeta.scoredOwnGoals.toDouble() / playerData.statsMeta.joinedGames.toDouble()
+                        String.format("%.2f", result)
+                    }
+                } else {
+                    ""
+                }
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_OWNGOALSPERGAMEFULL] = { player ->
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                if (playerData != null) {
+                    if (playerData.statsMeta.playedGames == 0) {
+                        "0.00"
+                    } else {
+                        val result =
+                            playerData.statsMeta.scoredOwnGoalsFull.toDouble() / playerData.statsMeta.playedGames.toDouble()
+                        String.format("%.2f", result)
+                    }
+                } else {
+                    ""
+                }
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_TOTALGOALSPERGAME] = { player ->
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                if (playerData != null) {
+                    if (playerData.statsMeta.joinedGames == 0) {
+                        "0.00"
+                    } else {
+                        val result =
+                            (playerData.statsMeta.scoredOwnGoals + playerData.statsMeta.scoredGoals).toDouble() / playerData.statsMeta.joinedGames.toDouble()
+                        String.format("%.2f", result)
+                    }
+                } else {
+                    ""
+                }
+            }
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_TOTALGOALSPERGAMEFULL] = { player ->
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                if (playerData != null) {
+                    if (playerData.statsMeta.playedGames == 0) {
+                        "0.00"
+                    } else {
+                        val result =
+                            (playerData.statsMeta.scoredOwnGoalsFull + playerData.statsMeta.scoredGoalsFull).toDouble() / playerData.statsMeta.playedGames.toDouble()
                         String.format("%.2f", result)
                     }
                 } else {

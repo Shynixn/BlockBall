@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
+import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ChatColor
@@ -132,16 +133,17 @@ class BlockBallPlugin : JavaPlugin() {
             // Load Language
             val language = configurationService.findValue<String>("language")
             try {
-                plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us")
+                plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us", "es_es")
                 logger.log(Level.INFO, "Loaded language file $language.properties.")
             } catch (e: Exception) {
                 // Compatibility to < 6.46.3
                 Files.move(
                     plugin.dataFolder.toPath().resolve("lang").resolve("en_us.properties"),
-                    plugin.dataFolder.toPath().resolve("lang").resolve("old_" + UUID.randomUUID().toString() + ".properties"),
+                    plugin.dataFolder.toPath().resolve("lang")
+                        .resolve("old_" + UUID.randomUUID().toString() + ".properties"),
                     StandardCopyOption.REPLACE_EXISTING
                 )
-                plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us")
+                plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us", "es_es")
                 logger.log(
                     Level.WARNING,
                     "Your language file is not compatible. Your existing file has been renamed and the original file has been reset."
@@ -151,7 +153,11 @@ class BlockBallPlugin : JavaPlugin() {
 
             // Load Games
             val gameService = module.getService<GameService>()
-            gameService.reloadAll()
+            try {
+                gameService.reloadAll()
+            } catch (e: SoccerGameException) {
+                plugin.logger.log(Level.WARNING, "Cannot start game of soccerArena ${e.arena.name}.", e)
+            }
 
             // Connect to PlayerData Repository.
             try {

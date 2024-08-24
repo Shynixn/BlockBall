@@ -132,17 +132,17 @@ abstract class SoccerGameImpl(
     /**
      * All players which are already fix in team red.
      */
-    override val redTeam: List<Player>
+    override val redTeam: Set<Player>
         get() {
-            return this.ingamePlayersStorage.filter { p -> p.value.team != null && p.value.team!! == Team.RED }.keys.toList()
+            return this.ingamePlayersStorage.filter { p -> p.value.team != null && p.value.team!! == Team.RED }.keys.toHashSet()
         }
 
     /**
      * All players which are already fix in team blue.
      */
-    override val blueTeam: List<Player>
+    override val blueTeam: Set<Player>
         get() {
-            return this.ingamePlayersStorage.filter { p -> p.value.team != null && p.value.team!! == Team.BLUE }.keys.toList()
+            return this.ingamePlayersStorage.filter { p -> p.value.team != null && p.value.team!! == Team.BLUE }.keys.toHashSet()
         }
 
     /**
@@ -189,12 +189,12 @@ abstract class SoccerGameImpl(
         val result = if (joiningTeam == Team.RED && redTeam.size < arena.meta.redTeamMeta.maxAmount) {
             storeTemporaryPlayerData(player, joiningTeam)
             setPlayerToArena(player, joiningTeam)
-            executeCommandsWithPlaceHolder(listOf(player), arena.meta.redTeamMeta.joinCommands)
+            executeCommandsWithPlaceHolder(setOf(player), arena.meta.redTeamMeta.joinCommands)
             JoinResult.SUCCESS_RED
         } else if (joiningTeam == Team.BLUE && blueTeam.size < arena.meta.blueTeamMeta.maxAmount) {
             storeTemporaryPlayerData(player, joiningTeam)
             setPlayerToArena(player, joiningTeam)
-            executeCommandsWithPlaceHolder(listOf(player), arena.meta.blueTeamMeta.joinCommands)
+            executeCommandsWithPlaceHolder(setOf(player), arena.meta.blueTeamMeta.joinCommands)
             JoinResult.SUCCESS_BLUE
         } else {
             JoinResult.TEAM_FULL
@@ -233,9 +233,9 @@ abstract class SoccerGameImpl(
         restoreFromTemporaryPlayerData(player)
 
         if (playerData.team == Team.RED) {
-            executeCommandsWithPlaceHolder(listOf(player), arena.meta.redTeamMeta.leaveCommands)
+            executeCommandsWithPlaceHolder(setOf(player), arena.meta.redTeamMeta.leaveCommands)
         } else if (playerData.team == Team.BLUE) {
-            executeCommandsWithPlaceHolder(listOf(player), arena.meta.blueTeamMeta.leaveCommands)
+            executeCommandsWithPlaceHolder(setOf(player), arena.meta.blueTeamMeta.leaveCommands)
         }
 
         ingamePlayersStorage.remove(player)
@@ -289,14 +289,18 @@ abstract class SoccerGameImpl(
         }
 
         // Store playing stats.
-        val participatingPlayers = inTeamPlayers.toTypedArray()
+        val participatingPlayers = ingamePlayersStorage.map { e -> Pair(e.key, e.value) }
 
         plugin.launch {
-            for (player in participatingPlayers) {
+            for (playerPair in participatingPlayers) {
+                val player = playerPair.first
+                val data = playerPair.second
                 val playerData = playerDataRepository.getByPlayer(player)
 
                 if (playerData != null) {
                     playerData.statsMeta.playedGames++
+                    playerData.statsMeta.scoredGoalsFull += data.scoredGoals
+                    playerData.statsMeta.scoredOwnGoalsFull += data.scoredOwnGoals
                     playerData.playerName = player.name
 
                     if (winningPlayers.contains(player)) {
@@ -739,7 +743,12 @@ abstract class SoccerGameImpl(
                 chatMessageService.sendTitleMessage(
                     player,
                     placeHolderService.replacePlaceHolders(language.scoreRedTitle, player, this, scoreTeamMeta),
-                    placeHolderService.replacePlaceHolders(language.scoreRedSubTitle.format(player.name), player, this, scoreTeamMeta),
+                    placeHolderService.replacePlaceHolders(
+                        language.scoreRedSubTitle.format(player.name),
+                        player,
+                        this,
+                        scoreTeamMeta
+                    ),
                     language.scoreRedFadeIn.toIntOrNull() ?: 20,
                     language.scoreRedStay.toIntOrNull() ?: 60,
                     language.scoreRedFadeOut.toIntOrNull() ?: 20
@@ -750,7 +759,12 @@ abstract class SoccerGameImpl(
                 chatMessageService.sendTitleMessage(
                     player,
                     placeHolderService.replacePlaceHolders(language.scoreBlueTitle, player, this, scoreTeamMeta),
-                    placeHolderService.replacePlaceHolders(language.scoreBlueSubTitle.format(player.name), player, this, scoreTeamMeta),
+                    placeHolderService.replacePlaceHolders(
+                        language.scoreBlueSubTitle.format(player.name),
+                        player,
+                        this,
+                        scoreTeamMeta
+                    ),
                     language.scoreBlueFadeIn.toIntOrNull() ?: 20,
                     language.scoreBlueStay.toIntOrNull() ?: 60,
                     language.scoreBlueFadeOut.toIntOrNull() ?: 20
@@ -758,26 +772,46 @@ abstract class SoccerGameImpl(
             }
         }
 
+        val isOwnGoal =
+            !((blueTeam.contains(interactionEntity) && team == Team.BLUE) || (redTeam.contains(interactionEntity) && team == Team.RED))
+        val scorerStorage = if (ingamePlayersStorage.containsKey(interactionEntity)) {
+            ingamePlayersStorage[interactionEntity]!!
+        } else {
+            null
+        }
+
         plugin.launch {
             val playerData = playerDataRepository.getByPlayer(interactionEntity)
 
             if (playerData != null) {
-                playerData.statsMeta.scoredGoals++
+                if (isOwnGoal) {
+                    playerData.statsMeta.scoredOwnGoals++
+                } else {
+                    playerData.statsMeta.scoredGoals++
+                }
+
+                if (scorerStorage != null) {
+                    if (isOwnGoal) {
+                        scorerStorage.scoredOwnGoals++
+                    } else {
+                        scorerStorage.scoredGoals++
+                    }
+                }
             }
         }
     }
 
-    private fun onScoreReward(team: Team, players: List<Player>) {
+    private fun onScoreReward(team: Team, players: Set<Player>) {
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
             if (players.contains(lastInteractedEntity!!)) {
                 val teamMeta = getTeamMetaFromTeam(team)
-                executeCommandsWithPlaceHolder(listOf(lastInteractedEntity!! as Player), teamMeta.goalCommands)
+                executeCommandsWithPlaceHolder(setOf(lastInteractedEntity!! as Player), teamMeta.goalCommands)
             }
         }
     }
 
-    fun executeCommandsWithPlaceHolder(players: List<Player>, commands: List<CommandMeta>) {
-        commandService.executeCommands(players, commands) { c, p ->
+    fun executeCommandsWithPlaceHolder(players: Set<Player>, commands: List<CommandMeta>) {
+        commandService.executeCommands(players.toList(), commands) { c, p ->
             placeHolderService.replacePlaceHolders(
                 c, p, this
             )
