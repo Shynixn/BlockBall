@@ -1,6 +1,10 @@
                 Shynixn Plugin Distribution LICENCE
 
-You are not allowed to redistribute the BlockBall binary files.
+All terms and conditions of the GNU GENERAL PUBLIC LICENSE Version 3.0 below apply. The Shynixn Plugin Distribution LICENCE
+further restricts what you are allowed to do. Even if certain points are allowed under the GNU GENERAL PUBLIC LICENSE Version 3.0,
+the Shynixn Plugin Distribution LICENCE overrules them.
+
+You are not allowed to redistribute the BlockBall binary files under any circumstances.
 The plugin binary files are BlockBall.jar, BlockBall-Legacy.jar and BlockBall-Premium.jar.
 
 Commercial usage of this plugin is only allowed by obtaining a licence of a particular version of the BlockBall-Legacy.jar or BlockBall-Premium.jar plugin.
