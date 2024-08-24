@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.33">
     
     
       
@@ -507,24 +507,27 @@
 <p>The following placeholders are available in BlockBall and can also be used via PlaceHolderApi.</p>
 <div class="admonition note">
 <p class="admonition-title">PlaceHolder Api</p>
-<p>As BlockBall supports multiple games per server, you need to specify the name of the game in external plugins. You can do this by appending the name of the game <code>_game1</code> <code>_mygame</code>.
-This results into placeholders such as e.g. <code>%blockball_game_displayName_game1%</code> or <code>%blockball_game_blueScore_mygame%</code>. This is only relevant in external plugins. For placeholders in BlockBall, you can directly use the placeholders below.</p>
 </div>
+<p>As BlockBall supports multiple games per server, you need to specify the name of the game in external plugins. You can
+do this by appending the name of the game <code>_game1</code> <code>_mygame</code>.
+This results into placeholders such as e.g. <code>%blockball_game_displayName_game1%</code>
+or <code>%blockball_game_blueScore_mygame%</code>. This is only relevant in external plugins. For placeholders in BlockBall, you
+can directly use the placeholders below.</p>
 <table>
 <thead>
 <tr>
-<th>Placeholders</th>
+<th>Game Context Placeholders</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>%blockball_game_displayName%</td>
-<td>DisplayName of the game</td>
-</tr>
-<tr>
 <td>%blockball_game_name%</td>
 <td>Id of the game</td>
+</tr>
+<tr>
+<td>%blockball_game_displayName%</td>
+<td>DisplayName of the game</td>
 </tr>
 <tr>
 <td>%blockball_game_maxPlayers%</td>
@@ -551,6 +554,10 @@ This results into placeholders such as e.g. <code>%blockball_game_displayName_ga
 <td>Name of the player who was the last one to hit the ball, returns an empty text if no one has hit the ball yet</td>
 </tr>
 <tr>
+<td>%blockball_game_lastHitPlayerTeam%</td>
+<td>DisplayName of the team of the player who was the last one to hit the ball.</td>
+</tr>
+<tr>
 <td>%blockball_game_state%</td>
 <td>Returns JOINABLE,RUNNING,DISABLED</td>
 </tr>
@@ -570,18 +577,16 @@ This results into placeholders such as e.g. <code>%blockball_game_displayName_ga
 <td>%blockball_game_remainingPlayers%</td>
 <td>Remaining amount of players required to start a match in minigame mode</td>
 </tr>
+</tbody>
+</table>
+<table>
+<thead>
 <tr>
-<td>%blockball_team_name%</td>
-<td>DisplayName of the team.</td>
+<th>Player Context Placeholders</th>
+<th>Description</th>
 </tr>
-<tr>
-<td>%blockball_team_maxPlayers%</td>
-<td>Max amount of player who can join this team</td>
-</tr>
-<tr>
-<td>%blockball_team_players%</td>
-<td>Current amount of players in the team</td>
-</tr>
+</thead>
+<tbody>
 <tr>
 <td>%blockball_player_name%</td>
 <td>Name of the player during a BlockBall event e.g. scoring goal</td>
@@ -598,9 +603,39 @@ This results into placeholders such as e.g. <code>%blockball_game_displayName_ga
 <td>%blockball_player_isInTeamBlue%</td>
 <td>true if the player is in a game and in team blue, false if not</td>
 </tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Stats Placeholders (Patreon Only)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>%blockball_player_goals%</td>
 <td>Amount of goals a player has scored</td>
+</tr>
+<tr>
+<td>%blockball_player_goalsFull%</td>
+<td>Amount of goals a player has scored by playing full games.</td>
+</tr>
+<tr>
+<td>%blockball_player_ownGoals%</td>
+<td>Amount of own goals a player has scored</td>
+</tr>
+<tr>
+<td>%blockball_player_ownGoalsFull%</td>
+<td>Amount of own goals a player has scored by playing full games.</td>
+</tr>
+<tr>
+<td>%blockball_player_totalGoals%</td>
+<td>Amount of goals and own goals a player has scored</td>
+</tr>
+<tr>
+<td>%blockball_player_totalGoalsFull%</td>
+<td>Amount of goals and own goals a player has scored by playing full games.</td>
 </tr>
 <tr>
 <td>%blockball_player_games%</td>
@@ -633,6 +668,22 @@ This results into placeholders such as e.g. <code>%blockball_game_displayName_ga
 <tr>
 <td>%blockball_player_goalsPerGameFull%</td>
 <td>Ratio between amount of games a player has fully played and scored goals</td>
+</tr>
+<tr>
+<td>%blockball_player_ownGoalsPerGame%</td>
+<td>Ratio between amount of games a player has started playing and scored own goals</td>
+</tr>
+<tr>
+<td>%blockball_player_ownGoalsPerGameFull%</td>
+<td>Ratio between amount of games a player has fully played and scored own goals</td>
+</tr>
+<tr>
+<td>%blockball_player_totalGoalsPerGame%</td>
+<td>Ratio between amount of games a player has started playing and scored total goals</td>
+</tr>
+<tr>
+<td>%blockball_player_totalGoalsPerGameFull%</td>
+<td>Ratio between amount of games a player has fully played and scored total goals</td>
 </tr>
 </tbody>
 </table>
@@ -722,7 +773,7 @@ This results into placeholders such as e.g. <code>%blockball_game_displayName_ga
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tabs", "content.tabs.link", "content.code.copy", "navigation.footer"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      <script src="../assets/javascripts/bundle.af256bd8.min.js"></script>
       
     
   </body>
