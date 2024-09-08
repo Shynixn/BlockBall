@@ -268,6 +268,7 @@ abstract class SoccerGameImpl(
 
     fun onMatchEnd(team: Team? = null) {
         val winningPlayers = HashSet<Player>()
+        var drawCounter = 0
 
         when (team) {
             Team.BLUE -> {
@@ -285,6 +286,7 @@ abstract class SoccerGameImpl(
             else -> {
                 executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.drawCommands)
                 executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.drawCommands)
+                drawCounter++
             }
         }
 
@@ -302,6 +304,7 @@ abstract class SoccerGameImpl(
                     playerData.statsMeta.scoredGoalsFull += data.scoredGoals
                     playerData.statsMeta.scoredOwnGoalsFull += data.scoredOwnGoals
                     playerData.playerName = player.name
+                    playerData.statsMeta.drawsAmount += drawCounter
 
                     if (winningPlayers.contains(player)) {
                         playerData.statsMeta.winsAmount++

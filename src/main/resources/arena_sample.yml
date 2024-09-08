@@ -37,8 +37,6 @@ meta:
     backTeleport: false
     # Delay in seconds between scoring a goal and teleporting the players back to the spawnpoint.
     backTeleportDelay: 2
-    # Should the ball stay inside the field at all times? If set to false, the ball can be shot outside of the playing area.
-    ballForceField: true
     # Should the players keep their current inventory when they join a game?
     keepInventoryEnabled: false
     # Should players keep their health when they join the game?
