@@ -18,6 +18,6 @@ class SoccerArena : Selection(), Element{
     /** [gameType] of the soccerArena */
     var gameType: GameType = GameType.HUBGAME
 
-    /** Collection of the soccerArena meta data. */
+    /** Collection of the soccerArena metadata. */
     val meta: ArenaMeta = ArenaMeta()
 }

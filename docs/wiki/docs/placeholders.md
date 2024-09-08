@@ -3,11 +3,11 @@
 The following placeholders are available in BlockBall and can also be used via PlaceHolderApi.
 
 !!! note "PlaceHolder Api"
-As BlockBall supports multiple games per server, you need to specify the name of the game in external plugins. You can
-do this by appending the name of the game ``_game1`` ``_mygame``.
-This results into placeholders such as e.g. ``%blockball_game_displayName_game1%``
-or ``%blockball_game_blueScore_mygame%``. This is only relevant in external plugins. For placeholders in BlockBall, you
-can directly use the placeholders below.
+    As BlockBall supports multiple games per server, you need to specify the name of the game in external plugins. You can
+    do this by appending the name of the game ``_game1`` ``_mygame``.
+    This results into placeholders such as e.g. ``%blockball_game_displayName_game1%``
+    or ``%blockball_game_blueScore_mygame%``. This is only relevant in external plugins. For placeholders in BlockBall, you
+    can directly use the placeholders below.
 
 | Game Context Placeholders          | Description                                                                                                   |
 |------------------------------------|---------------------------------------------------------------------------------------------------------------|
@@ -45,6 +45,7 @@ can directly use the placeholders below.
 | %blockball_player_gamesFull%             | Amount of games a player has fully played                                         |
 | %blockball_player_wins%                  | Amount of wins a player has got by playing                                        |
 | %blockball_player_losses%                | Amount of losses a player has got by playing                                      |
+| %blockball_player_draws%                 | Amount of draws a player has got by playing                                       |
 | %blockball_player_winrate%               | Ratio between amount of games a player has started playing and wins               |
 | %blockball_player_winrateFull%           | Ratio between amount of games a player has fully played and wins                  |
 | %blockball_player_goalsPerGame%          | Ratio between amount of games a player has started playing and scored goals       |

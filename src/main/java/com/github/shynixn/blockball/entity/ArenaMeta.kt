@@ -8,7 +8,7 @@ class ArenaMeta {
     /** Meta data for spectating setting. */
     val spectatorMeta: SpectatorMeta = SpectatorMeta()
 
-    /** Meta data of the customizing Properties. */
+    /** Metadata of the customizing Properties. */
     val customizingMeta: CustomizationMeta = CustomizationMeta()
 
     /** Meta data of all holograms. */
@@ -18,7 +18,7 @@ class ArenaMeta {
     /** Meta data of a generic lobby. */
     val lobbyMeta: LobbyMeta = LobbyMeta()
 
-    /** Meta data of the hub lobby. */
+    /** Metadata of the hub lobby. */
     var hubLobbyMeta: HubLobbyMeta = HubLobbyMeta()
 
     /** Meta data of the minigame lobby. */
@@ -30,16 +30,16 @@ class ArenaMeta {
     /** Meta data of the bossbar. */
     val bossBarMeta: BossBarMeta = BossBarMeta()
 
-    /** Meta data of the scoreboard. */
+    /** Metadata of the scoreboard. */
     val scoreboardMeta: ScoreboardMeta = ScoreboardMeta()
 
     /** Meta data of proection. */
     val protectionMeta: ArenaProtectionMeta = ArenaProtectionMeta()
 
-    /** Meta data of the ball. */
+    /** Metadata of the ball. */
     val ballMeta: SoccerBallSettings = SoccerBallSettings()
 
-    /** Meta data of the blueTeam. */
+    /** Metadata of the blueTeam. */
     val blueTeamMeta: TeamMeta = TeamMeta()
 
     /** Meta data of the redTeam. */
@@ -67,5 +67,4 @@ class ArenaMeta {
         signs.addAll(blueTeamMeta.teamSigns)
         return signs
     }
-
 }

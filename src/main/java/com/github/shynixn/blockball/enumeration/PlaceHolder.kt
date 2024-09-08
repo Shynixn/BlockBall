@@ -69,6 +69,8 @@ enum class PlaceHolder(
 
     PLAYER_STATS_LOSSES("%blockball_player_losses%"),
 
+    PLAYER_STATS_DRAWS("%blockball_player_draws%"),
+
     PLAYER_STATS_WINRATE("%blockball_player_winrate%"),
 
     PLAYER_STATS_WINRATEFULL("%blockball_player_winrateFull%"),

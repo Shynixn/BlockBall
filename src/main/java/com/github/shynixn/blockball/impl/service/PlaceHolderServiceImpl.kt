@@ -191,7 +191,6 @@ class PlaceHolderServiceImpl @Inject constructor(
                 playerData?.statsMeta?.playedGames?.toString() ?: ""
             }
         }
-
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_WINS] = { player ->
             if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
@@ -200,13 +199,21 @@ class PlaceHolderServiceImpl @Inject constructor(
                 playerData?.statsMeta?.winsAmount?.toString() ?: ""
             }
         }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_DRAWS] = { player ->
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                "PatreonOnly"
+            } else {
+                val playerData = playerDataRepository.getCachedByPlayer(player)
+                playerData?.statsMeta?.drawsAmount?.toString() ?: ""
+            }
+        }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_STATS_LOSSES] = { player ->
             if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
                 "PatreonOnly"
             } else {
                 val playerData = playerDataRepository.getCachedByPlayer(player)
                 if (playerData != null) {
-                    (playerData.statsMeta.playedGames - playerData.statsMeta.winsAmount).toString()
+                    (playerData.statsMeta.playedGames - playerData.statsMeta.winsAmount - playerData.statsMeta.drawsAmount).toString()
                 } else {
                     ""
                 }

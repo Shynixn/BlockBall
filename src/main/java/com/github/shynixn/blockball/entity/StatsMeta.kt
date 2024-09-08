@@ -40,4 +40,9 @@ class StatsMeta {
      * Amount of wins.
      */
     var winsAmount: Int = 0
+
+    /**
+     * Amount of draws.
+     */
+    var drawsAmount: Int = 0
 }

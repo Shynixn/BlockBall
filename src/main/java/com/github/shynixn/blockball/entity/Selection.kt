@@ -45,13 +45,6 @@ open class Selection {
             return this.upperCorner!!.blockZ - this.lowerCorner!!.blockZ
         }
 
-
-    /** Sets the corners between [corner1] and [corner2]. Automatically sets lowerCorner and upperCorner. */
-    fun setCorners(corner1: Vector3d, corner2: Vector3d) {
-        this.calculateDownLocation(corner1, corner2)
-        this.calculateUpLocation(corner1, corner2)
-    }
-
     /**
      * Is location inside of this selection.
      */
@@ -105,43 +98,5 @@ open class Selection {
         }
 
         return BlockDirection.DOWN
-    }
-
-    private fun calculateUpLocation(corner1: Vector3d, corner2: Vector3d) {
-        val x: Int = if (corner1.blockX > corner2.blockX) {
-            corner1.blockX
-        } else {
-            corner2.blockX
-        }
-        val y: Int = if (corner1.blockY > corner2.blockY) {
-            corner1.blockY
-        } else {
-            corner2.blockY
-        }
-        val z: Int = if (corner1.blockZ > corner2.blockZ) {
-            corner1.blockZ
-        } else {
-            corner2.blockZ
-        }
-        this.upperCorner = Vector3d(corner1.world!!, x.toDouble(), y.toDouble(), z.toDouble())
-    }
-
-    private fun calculateDownLocation(corner1: Vector3d, corner2: Vector3d) {
-        val x: Int = if (corner1.blockX < corner2.blockX) {
-            corner1.blockX
-        } else {
-            corner2.blockX
-        }
-        val y: Int = if (corner1.blockY < corner2.blockY) {
-            corner1.blockY
-        } else {
-            corner2.blockY
-        }
-        val z: Int = if (corner1.blockZ < corner2.blockZ) {
-            corner1.blockZ
-        } else {
-            corner2.blockZ
-        }
-        this.lowerCorner = Vector3d(corner1.world!!, x.toDouble(), y.toDouble(), z.toDouble())
     }
 }

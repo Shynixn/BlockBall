@@ -29,7 +29,6 @@ meta:
     damageEnabled: false
     backTeleport: false
     backTeleportDelay: 2
-    ballForceField: true
     keepInventoryEnabled: false
     keepHealthEnabled: false
   rewardMeta:

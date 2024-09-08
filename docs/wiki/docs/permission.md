@@ -2,12 +2,21 @@
 
 The following permissions are available in BlockBall.
 
-#### Levels
+### Levels
 
 * User: A permission all players can have.
-* Admin: A permission only admins should have.
 * Admin/User: Depending on your server, you may give this permission to your players. If you are not sure, try to build
   your server around **not giving this permission** to your players.
+* Admin: A permission only admins should have.
+
+### Minimum Required Permissions
+
+| Permission               | Level      | Description                                                                                          |   
+|--------------------------|------------|------------------------------------------------------------------------------------------------------|
+| blockball.command        | User       | Allows to use the /blockball command.                                                                |   
+| blockball.join.*         | User       | Allows to join all games.                 |
+
+### All Permissions
 
 | Permission               | Level      | Description                                                                                          |   
 |--------------------------|------------|------------------------------------------------------------------------------------------------------|
