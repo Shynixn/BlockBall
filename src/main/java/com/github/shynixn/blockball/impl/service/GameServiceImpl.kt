@@ -250,19 +250,19 @@ class GameServiceImpl @Inject constructor(
     }
 
     private fun validateGoalSize(arena: SoccerArena, team: Team, teamMeta: TeamMeta) {
-        if (abs(teamMeta.goal.upperCorner!!.x - teamMeta.goal.lowerCorner!!.x) < 2) {
+        if (abs(teamMeta.goal.upperCorner!!.x - teamMeta.goal.lowerCorner!!.x) < 1.8) {
             throw SoccerGameException(
                 arena,
                 "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
             )
         }
-        if (abs(teamMeta.goal.upperCorner!!.y - teamMeta.goal.lowerCorner!!.y) < 2) {
+        if (abs(teamMeta.goal.upperCorner!!.y - teamMeta.goal.lowerCorner!!.y) <  1.8) {
             throw SoccerGameException(
                 arena,
                 "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
             )
         }
-        if (abs(teamMeta.goal.upperCorner!!.z - teamMeta.goal.lowerCorner!!.z) < 2) {
+        if (abs(teamMeta.goal.upperCorner!!.z - teamMeta.goal.lowerCorner!!.z) <  1.8) {
             throw SoccerGameException(
                 arena,
                 "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
