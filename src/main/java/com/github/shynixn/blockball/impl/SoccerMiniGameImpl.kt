@@ -156,6 +156,7 @@ class SoccerMiniGameImpl constructor(
                     playing = true
                     status = GameState.RUNNING
                     matchTimeIndex = -1
+                    ballEnabled = true
                     switchToNextMatchTime()
                 }
             }

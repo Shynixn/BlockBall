@@ -1,3 +1,5 @@
+@file:Suppress("UselessCallOnNotNull")
+
 package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.SoccerGame
@@ -58,8 +60,8 @@ class DependencyPlaceHolderServiceImpl @Inject constructor(
         return "blockball"
     }
 
-    override fun onPlaceholderRequest(player: Player?, params: String?): String? {
-        if (params == null) {
+    override fun onPlaceholderRequest(player: Player?, params: String): String? {
+        if (params.isNullOrBlank()) {
             return null
         }
 

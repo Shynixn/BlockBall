@@ -27,7 +27,9 @@ import org.bukkit.plugin.Plugin
 import java.awt.Color
 import java.util.*
 import java.util.logging.Level
-import kotlin.collections.ArrayList
+import kotlin.math.floor
+import kotlin.math.max
+import kotlin.math.min
 
 class BlockBallCommandExecutor @Inject constructor(
     private val arenaRepository: CacheRepository<SoccerArena>,
@@ -549,14 +551,18 @@ class BlockBallCommandExecutor @Inject constructor(
             }
 
             if (selectionType == SelectionType.FIELD) {
-                arena.lowerCorner = selectionLeft.toVector3d()
-                arena.upperCorner = selectionRight.toVector3d()
+                arena.lowerCorner = convertToOuterLowerCorner(selectionLeft.toVector3d(), selectionRight.toVector3d())
+                arena.upperCorner = convertToOuterUpperCorner(selectionLeft.toVector3d(), selectionRight.toVector3d())
             } else if (selectionType == SelectionType.RED_GOAL) {
-                arena.meta.redTeamMeta.goal.lowerCorner = selectionLeft.toVector3d()
-                arena.meta.redTeamMeta.goal.upperCorner = selectionRight.toVector3d()
+                arena.meta.redTeamMeta.goal.lowerCorner =
+                    convertToOuterLowerCorner(selectionLeft.toVector3d(), selectionRight.toVector3d())
+                arena.meta.redTeamMeta.goal.upperCorner =
+                    convertToOuterUpperCorner(selectionLeft.toVector3d(), selectionRight.toVector3d())
             } else if (selectionType == SelectionType.BLUE_GOAL) {
-                arena.meta.blueTeamMeta.goal.lowerCorner = selectionLeft.toVector3d()
-                arena.meta.blueTeamMeta.goal.upperCorner = selectionRight.toVector3d()
+                arena.meta.blueTeamMeta.goal.lowerCorner =
+                    convertToOuterLowerCorner(selectionLeft.toVector3d(), selectionRight.toVector3d())
+                arena.meta.blueTeamMeta.goal.upperCorner =
+                    convertToOuterUpperCorner(selectionLeft.toVector3d(), selectionRight.toVector3d())
             }
         }
 
@@ -564,6 +570,29 @@ class BlockBallCommandExecutor @Inject constructor(
         player.sendMessage(language.selectionSetMessage.format(selectionType.name.lowercase()))
     }
 
+    /**
+     * The block selection is not precise enough, we want to exact corner location.
+     */
+    private fun convertToOuterUpperCorner(selection1: Vector3d, selection2: Vector3d): Vector3d {
+        return Vector3d(
+            selection1.world,
+            max(selection1.x + 0.99, selection2.x + 0.99),
+            max(selection1.y + 0.99, selection2.y + 0.99),
+            max(selection1.z + 0.99, selection2.z + 0.99)
+        )
+    }
+
+    /**
+     * The block selection is not precise enough, we want to exact corner location.
+     */
+    private fun convertToOuterLowerCorner(selection1: Vector3d, selection2: Vector3d): Vector3d {
+        return Vector3d(
+            selection1.world,
+            min(selection1.x, selection2.x),
+            min(selection1.y, selection2.y),
+            min(selection1.z, selection2.z)
+        )
+    }
 
     private suspend fun setSign(sender: Player, arena: SoccerArena, signType: SignType) {
         if (signType == SignType.JOIN) {
@@ -678,8 +707,8 @@ class BlockBallCommandExecutor @Inject constructor(
                 if (arena.lowerCorner != null && arena.upperCorner != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.lowerCorner!!,
-                            arena.upperCorner!!,
+                            roundLocation(arena.lowerCorner!!),
+                            roundLocation(arena.upperCorner!!),
                             Color.BLACK.rgb,
                             "Field",
                             true
@@ -689,8 +718,8 @@ class BlockBallCommandExecutor @Inject constructor(
                 if (arena.meta.redTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.upperCorner != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.redTeamMeta.goal.lowerCorner!!,
-                            arena.meta.redTeamMeta.goal.upperCorner!!,
+                            roundLocation(arena.meta.redTeamMeta.goal.lowerCorner!!),
+                            roundLocation(arena.meta.redTeamMeta.goal.upperCorner!!),
                             Color.RED.rgb,
                             "Red"
                         )
@@ -699,8 +728,8 @@ class BlockBallCommandExecutor @Inject constructor(
                 if (arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.blueTeamMeta.goal.upperCorner != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.blueTeamMeta.goal.lowerCorner!!,
-                            arena.meta.blueTeamMeta.goal.upperCorner!!,
+                            roundLocation(arena.meta.blueTeamMeta.goal.lowerCorner!!),
+                            roundLocation(arena.meta.blueTeamMeta.goal.upperCorner!!),
                             Color.BLUE.rgb,
                             "Blue"
                         )
@@ -775,5 +804,14 @@ class BlockBallCommandExecutor @Inject constructor(
                 highLights
             }
         }
+    }
+
+    private fun roundLocation(vector3d: Vector3d): Vector3d {
+        return Vector3d(
+            vector3d.world,
+            floor(vector3d.x),
+            floor(vector3d.y),
+            floor(vector3d.z)
+        )
     }
 }
