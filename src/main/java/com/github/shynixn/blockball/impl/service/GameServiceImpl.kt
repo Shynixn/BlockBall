@@ -118,7 +118,9 @@ class GameServiceImpl @Inject constructor(
                     scoreboardService,
                     commandService,
                     soccerBallFactory
-                )
+                ).also {
+                    it.ballEnabled = false
+                }
             }
 
             games.add(game)
