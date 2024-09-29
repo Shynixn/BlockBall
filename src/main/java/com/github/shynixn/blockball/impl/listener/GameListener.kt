@@ -201,8 +201,12 @@ class GameListener @Inject constructor(
 
         val teamMeta = if (team == Team.RED) {
             game.arena.meta.redTeamMeta
-        } else {
+        } else if (team == Team.BLUE) {
             game.arena.meta.blueTeamMeta
+        } else if (team == Team.REFEREE) {
+            game.arena.meta.refereeTeamMeta
+        } else {
+            return
         }
 
         if (teamMeta.spawnpoint == null) {

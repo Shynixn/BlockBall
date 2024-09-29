@@ -20,7 +20,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class SoccerMiniGameImpl constructor(
+open class SoccerMiniGameImpl constructor(
     arena: SoccerArena,
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
     private val plugin: Plugin,
@@ -210,7 +210,7 @@ class SoccerMiniGameImpl constructor(
         }
 
         // Update signs and protections.
-        super.handle(ticks)
+        super.handleMiniGameEssentials(ticks)
     }
 
     /**

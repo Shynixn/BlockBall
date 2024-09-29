@@ -1,8 +1,10 @@
 package com.github.shynixn.blockball.impl.commandexecutor
 
+import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.BlockBallLanguageImpl
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
@@ -27,6 +29,7 @@ import org.bukkit.plugin.Plugin
 import java.awt.Color
 import java.util.*
 import java.util.logging.Level
+import kotlin.collections.ArrayList
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
@@ -44,6 +47,17 @@ class BlockBallCommandExecutor @Inject constructor(
     private val arenaTabs: suspend (s: CommandSender) -> List<String> = {
         arenaRepository.getAll().map { e -> e.name }
     }
+    private val teamTabs: suspend (s: CommandSender) -> List<String> = {
+        val tabs = ArrayList<Team>()
+        tabs.add(Team.RED)
+        tabs.add(Team.BLUE)
+
+        if (it.hasPermission(Permission.REFEREE_JOIN.permission)) {
+            tabs.add(Team.REFEREE)
+        }
+
+        tabs.map { e -> e.name.lowercase(Locale.ENGLISH) }
+    }
     private val coroutineExecutor = object : CoroutineExecutor {
         override fun execute(f: suspend () -> Unit) {
             plugin.launch {
@@ -59,10 +73,7 @@ class BlockBallCommandExecutor @Inject constructor(
     }
     private val maxLengthValidator = object : Validator<String> {
         override suspend fun validate(
-            sender: CommandSender,
-            prevArgs: List<Any>,
-            argument: String,
-            openArgs: List<String>
+            sender: CommandSender, prevArgs: List<Any>, argument: String, openArgs: List<String>
         ): Boolean {
             return argument.length < 20
         }
@@ -73,10 +84,7 @@ class BlockBallCommandExecutor @Inject constructor(
     }
     private val gameMustNotExistValidator = object : Validator<String> {
         override suspend fun validate(
-            sender: CommandSender,
-            prevArgs: List<Any>,
-            argument: String,
-            openArgs: List<String>
+            sender: CommandSender, prevArgs: List<Any>, argument: String, openArgs: List<String>
         ): Boolean {
             val existingArenas = arenaRepository.getAll()
             return existingArenas.firstOrNull { e -> e.name.equals(argument, true) } == null
@@ -163,9 +171,7 @@ class BlockBallCommandExecutor @Inject constructor(
 
     private val locationTypeValidator = object : Validator<LocationType> {
         override suspend fun transform(
-            sender: CommandSender,
-            prevArgs: List<Any>,
-            openArgs: List<String>
+            sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
         ): LocationType? {
             return LocationType.values().firstOrNull { e -> e.name.equals(openArgs[0], true) }
         }
@@ -227,7 +233,7 @@ class BlockBallCommandExecutor @Inject constructor(
                         joinGame(
                             sender, arena.name
                         )
-                    }.argument("team").validator(teamValidator).tabs { listOf("red", "blue") }
+                    }.argument("team").validator(teamValidator).tabs(teamTabs)
                     .executePlayer({ language.commandSenderHasToBePlayer }) { sender, arena, team ->
                         joinGame(sender, arena.name, team)
                     }
@@ -249,30 +255,28 @@ class BlockBallCommandExecutor @Inject constructor(
             subCommand("select") {
                 permission(Permission.EDIT_GAME)
                 toolTip { language.commandSelectToolTip }
-                builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
-                    .argument("type").validator(selectionTypeValidator).tabs {
+                builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("type")
+                    .validator(selectionTypeValidator).tabs {
                         SelectionType.values().map { e ->
                             e.name.lowercase(
                                 Locale.ENGLISH
                             )
                         }
-                    }
-                    .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, locationType ->
+                    }.executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, locationType ->
                         setSelection(player, arena, locationType)
                     }
             }
             subCommand("location") {
                 permission(Permission.EDIT_GAME)
                 toolTip { language.commandSelectToolTip }
-                builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
-                    .argument("type").validator(locationTypeValidator).tabs {
+                builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("type")
+                    .validator(locationTypeValidator).tabs {
                         LocationType.values().map { e ->
                             e.name.lowercase(
                                 Locale.ENGLISH
                             )
                         }
-                    }
-                    .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, locationType ->
+                    }.executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, locationType ->
                         setLocation(player, arena, locationType)
                     }
             }
@@ -283,14 +287,18 @@ class BlockBallCommandExecutor @Inject constructor(
                     toolTip { language.commandGameRuleToolTip }
                     permission(Permission.EDIT_GAME)
                     builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("value")
-                        .validator(gameTypeValidator)
-                        .tabs {
+                        .validator(gameTypeValidator).tabs {
                             GameType.values().map { e ->
                                 e.name.lowercase(
                                     Locale.ENGLISH
                                 )
                             }
                         }.execute { sender, arena, gameType ->
+                            if (gameType == GameType.REFEREEGAME && !BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                                sender.sendMessage(language.gameTypeRefereeOnlyForPatreons)
+                                return@execute
+                            }
+
                             arena.gameType = gameType
                             arenaRepository.save(arena)
                             sender.sendMessage(language.gameRuleChangedMessage)
@@ -310,8 +318,8 @@ class BlockBallCommandExecutor @Inject constructor(
             subCommand("inventory") {
                 permission(Permission.EDIT_GAME)
                 toolTip { language.commandInventoryToolTip }
-                builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
-                    .argument("team").validator(teamMetaValidator).tabs { listOf("red", "blue") }
+                builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("team")
+                    .validator(teamMetaValidator).tabs(teamTabs)
                     .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, meta ->
                         setInventory(player, arena, meta)
                     }
@@ -319,8 +327,8 @@ class BlockBallCommandExecutor @Inject constructor(
             subCommand("armor") {
                 permission(Permission.EDIT_GAME)
                 toolTip { language.commandArmorToolTip }
-                builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
-                    .argument("team").validator(teamMetaValidator).tabs { listOf("red", "blue") }
+                builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("team")
+                    .validator(teamMetaValidator).tabs(teamTabs)
                     .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, meta ->
                         setArmor(player, arena, meta)
                     }
@@ -328,23 +336,29 @@ class BlockBallCommandExecutor @Inject constructor(
             subCommand("sign") {
                 permission(Permission.EDIT_GAME)
                 toolTip { language.commandSignToolTip }
-                builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
-                    .argument("type").validator(signTypeValidator).tabs { listOf("join", "leave") }
+                builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("type")
+                    .validator(signTypeValidator).tabs { listOf("join", "leave") }
                     .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, signType ->
                         setSign(player, arena, signType)
                     }
             }
+            subCommand("referee") {
+                permission(Permission.REFEREE_JOIN)
+                subCommand("startgame") {
+                    permission(Permission.REFEREE_JOIN)
+                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+
+                    }
+                }
+            }
             subCommand("reload") {
                 permission(Permission.EDIT_GAME)
                 toolTip { language.commandReloadToolTip }
-                builder()
-                    .execute { sender ->
-                        reloadArena(sender, null)
-                    }
-                    .argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
-                    .execute { sender, arena ->
-                        reloadArena(sender, arena)
-                    }
+                builder().execute { sender ->
+                    reloadArena(sender, null)
+                }.argument("name").validator(gameMustExistValidator).tabs(arenaTabs).execute { sender, arena ->
+                    reloadArena(sender, arena)
+                }
             }
 
         }
@@ -427,10 +441,17 @@ class BlockBallCommandExecutor @Inject constructor(
         sender.sendMessage(headerBuilder.toString())
         for (arena in existingArenas) {
             if (arena.enabled) {
-                sender.sendMessage(ChatColor.YELLOW.toString() + arena.name + " [${arena.displayName.translateChatColors()}" + ChatColor.GRAY + "] " + ChatColor.GREEN + "[enabled]")
+                sender.sendMessage(
+                    ChatColor.YELLOW.toString() + arena.name + " [${arena.displayName.translateChatColors()}]" + ChatColor.GOLD.toString() + " [" + arena.gameType.name.lowercase(
+                        Locale.ENGLISH
+                    ) + "] " + ChatColor.GREEN + "[enabled]"
+                )
             } else {
-                sender.sendMessage(ChatColor.YELLOW.toString() + arena.name + " [${arena.displayName.translateChatColors()}" + ChatColor.GRAY + "] " + ChatColor.RED + "[disabled]")
-
+                sender.sendMessage(
+                    ChatColor.YELLOW.toString() + arena.name + " [${arena.displayName.translateChatColors()}]" + ChatColor.GOLD.toString() + " [" + arena.gameType.name.lowercase(
+                        Locale.ENGLISH
+                    ) + "] " + ChatColor.RED + "[disabled]"
+                )
             }
 
             sender.sendMessage()
@@ -472,12 +493,16 @@ class BlockBallCommandExecutor @Inject constructor(
 
         if (!player.hasPermission(
                 Permission.JOIN.permission.replace(
-                    "[name]",
-                    game.arena.name
+                    "[name]", game.arena.name
                 )
             ) && !player.hasPermission(Permission.JOIN.permission.replace("[name]", "*"))
         ) {
             player.sendMessage(language.noPermissionForGameMessage.format(game.arena.name))
+            return
+        }
+
+        if (team != null && team == Team.REFEREE && game !is SoccerRefereeGame) {
+            player.sendMessage(language.gameIsNotARefereeGame)
             return
         }
 
@@ -500,6 +525,8 @@ class BlockBallCommandExecutor @Inject constructor(
             player.sendMessage(language.joinTeamBlueMessage)
         } else if (joinResult == JoinResult.SUCCESS_RED) {
             player.sendMessage(language.joinTeamRedMessage)
+        } else if (joinResult == JoinResult.SUCCESS_REFEREE) {
+            player.sendMessage(language.joinTeamRefereeMessage)
         }
     }
 
@@ -518,7 +545,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
     }
 
-    private fun setLocation(player: Player, arena: SoccerArena, locationType: LocationType) {
+    private suspend fun setLocation(player: Player, arena: SoccerArena, locationType: LocationType) {
         if (locationType == LocationType.BALL) {
             arena.meta.ballMeta.spawnpoint = player.location.toVector3d()
         } else if (locationType == LocationType.LEAVE_SPAWNPOINT) {
@@ -527,12 +554,17 @@ class BlockBallCommandExecutor @Inject constructor(
             arena.meta.blueTeamMeta.spawnpoint = player.location.toVector3d()
         } else if (locationType == LocationType.RED_SPAWNPOINT) {
             arena.meta.redTeamMeta.spawnpoint = player.location.toVector3d()
+        } else if (locationType == LocationType.REFEREE_SPAWNPOINT) {
+            arena.meta.refereeTeamMeta.spawnpoint = player.location.toVector3d()
         } else if (locationType == LocationType.RED_LOBBY) {
             arena.meta.redTeamMeta.lobbySpawnpoint = player.location.toVector3d()
         } else if (locationType == LocationType.BLUE_LOBBY) {
             arena.meta.blueTeamMeta.lobbySpawnpoint = player.location.toVector3d()
+        } else if (locationType == LocationType.REFEREE_LOBBY) {
+            arena.meta.refereeTeamMeta.lobbySpawnpoint = player.location.toVector3d()
         }
 
+        arenaRepository.save(arena)
         player.sendMessage(language.selectionSetMessage.format(locationType.name.lowercase()))
     }
 
@@ -738,10 +770,7 @@ class BlockBallCommandExecutor @Inject constructor(
                 if (arena.meta.ballMeta.spawnpoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.ballMeta.spawnpoint!!,
-                            null,
-                            Color.pink.rgb,
-                            "Ball"
+                            arena.meta.ballMeta.spawnpoint!!, null, Color.pink.rgb, "Ball"
                         )
                     )
                 }
@@ -749,10 +778,7 @@ class BlockBallCommandExecutor @Inject constructor(
                 if (arena.meta.lobbyMeta.leaveSpawnpoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.lobbyMeta.leaveSpawnpoint!!,
-                            null,
-                            Color.ORANGE.rgb,
-                            "Leave"
+                            arena.meta.lobbyMeta.leaveSpawnpoint!!, null, Color.ORANGE.rgb, "Leave"
                         )
                     )
                 }
@@ -760,10 +786,7 @@ class BlockBallCommandExecutor @Inject constructor(
                 if (arena.meta.redTeamMeta.spawnpoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.redTeamMeta.spawnpoint!!,
-                            null,
-                            Color.RED.rgb,
-                            "Red Spawn"
+                            arena.meta.redTeamMeta.spawnpoint!!, null, Color.RED.rgb, "Red Spawn"
                         )
                     )
                 }
@@ -771,10 +794,7 @@ class BlockBallCommandExecutor @Inject constructor(
                 if (arena.meta.blueTeamMeta.spawnpoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.blueTeamMeta.spawnpoint!!,
-                            null,
-                            Color.BLUE.rgb,
-                            "Blue Spawn"
+                            arena.meta.blueTeamMeta.spawnpoint!!, null, Color.BLUE.rgb, "Blue Spawn"
                         )
                     )
                 }
@@ -782,10 +802,7 @@ class BlockBallCommandExecutor @Inject constructor(
                 if (arena.meta.redTeamMeta.lobbySpawnpoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.redTeamMeta.lobbySpawnpoint!!,
-                            null,
-                            Color.RED.rgb,
-                            "Red Lobby"
+                            arena.meta.redTeamMeta.lobbySpawnpoint!!, null, Color.RED.rgb, "Red Lobby"
                         )
                     )
                 }
@@ -793,10 +810,7 @@ class BlockBallCommandExecutor @Inject constructor(
                 if (arena.meta.blueTeamMeta.lobbySpawnpoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.blueTeamMeta.lobbySpawnpoint!!,
-                            null,
-                            Color.BLUE.rgb,
-                            "Blue Lobby"
+                            arena.meta.blueTeamMeta.lobbySpawnpoint!!, null, Color.BLUE.rgb, "Blue Lobby"
                         )
                     )
                 }
@@ -808,10 +822,7 @@ class BlockBallCommandExecutor @Inject constructor(
 
     private fun roundLocation(vector3d: Vector3d): Vector3d {
         return Vector3d(
-            vector3d.world,
-            floor(vector3d.x),
-            floor(vector3d.y),
-            floor(vector3d.z)
+            vector3d.world, floor(vector3d.x), floor(vector3d.y), floor(vector3d.z)
         )
     }
 }

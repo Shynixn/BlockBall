@@ -146,15 +146,23 @@ abstract class SoccerGameImpl(
         }
 
     /**
-     * List of players which are already in the [redTeam] or [blueTeam].
+     * All players which are referees.
+     */
+    override val refereeTeam: Set<Player>
+        get() {
+            return this.ingamePlayersStorage.filter { p -> p.value.team != null && p.value.team!! == Team.REFEREE }.keys.toHashSet()
+        }
+
+    /**
+     * List of players which are already in the teams.
      */
     private val inTeamPlayers: List<Player>
         get() {
             val players = ArrayList(redTeam)
             players.addAll(blueTeam)
+            players.addAll(refereeTeam)
             return players
         }
-
 
     /**
      * Lets the given [player] leave join. Optional can the prefered
@@ -196,11 +204,21 @@ abstract class SoccerGameImpl(
             setPlayerToArena(player, joiningTeam)
             executeCommandsWithPlaceHolder(setOf(player), arena.meta.blueTeamMeta.joinCommands)
             JoinResult.SUCCESS_BLUE
+        } else if (joiningTeam == Team.REFEREE && refereeTeam.size < arena.meta.refereeTeamMeta.maxAmount) {
+            storeTemporaryPlayerData(player, joiningTeam)
+            setPlayerToArena(player, joiningTeam)
+            executeCommandsWithPlaceHolder(setOf(player), arena.meta.refereeTeamMeta.joinCommands)
+            JoinResult.SUCCESS_REFEREE
         } else {
             JoinResult.TEAM_FULL
         }
 
         if (result == JoinResult.TEAM_FULL) {
+            return result
+        }
+
+        if (joiningTeam == Team.REFEREE) {
+            // Do not track stats as referee.
             return result
         }
 
@@ -236,6 +254,8 @@ abstract class SoccerGameImpl(
             executeCommandsWithPlaceHolder(setOf(player), arena.meta.redTeamMeta.leaveCommands)
         } else if (playerData.team == Team.BLUE) {
             executeCommandsWithPlaceHolder(setOf(player), arena.meta.blueTeamMeta.leaveCommands)
+        } else if (playerData.team == Team.REFEREE) {
+            executeCommandsWithPlaceHolder(setOf(player), arena.meta.refereeTeamMeta.leaveCommands)
         }
 
         ingamePlayersStorage.remove(player)
@@ -250,7 +270,7 @@ abstract class SoccerGameImpl(
     /**
      * Tick handle.
      */
-    override fun handle(ticks: Int) {
+    fun handleMiniGameEssentials(ticks: Int) {
         if (ticks >= 20) {
             if (closing) {
                 return
@@ -291,7 +311,8 @@ abstract class SoccerGameImpl(
         }
 
         // Store playing stats.
-        val participatingPlayers = ingamePlayersStorage.map { e -> Pair(e.key, e.value) }
+        val participatingPlayers =
+            ingamePlayersStorage.filter { e -> e.value.team != Team.REFEREE }.map { e -> Pair(e.key, e.value) }
 
         plugin.launch {
             for (playerPair in participatingPlayers) {
@@ -325,7 +346,7 @@ abstract class SoccerGameImpl(
             return
         }
 
-        val players = ArrayList(inTeamPlayers)
+        val players = HashSet(inTeamPlayers)
         val additionalPlayers = getNofifiedPlayers()
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first as Player })
 
@@ -339,7 +360,7 @@ abstract class SoccerGameImpl(
                     language.winRedStay.toIntOrNull() ?: 20,
                     language.winRedFadeOut.toIntOrNull() ?: 20,
                 )
-            } else {
+            } else if (team == Team.BLUE) {
                 chatMessageService.sendTitleMessage(
                     player,
                     placeHolderService.replacePlaceHolders(language.winBlueTitle, player, this),
@@ -366,8 +387,12 @@ abstract class SoccerGameImpl(
 
         val teamMeta = if (team == Team.RED) {
             arena.meta.redTeamMeta
-        } else {
+        } else if (team == Team.BLUE) {
             arena.meta.blueTeamMeta
+        } else if (team == Team.REFEREE) {
+            arena.meta.refereeTeamMeta
+        } else {
+            return
         }
 
         if (teamMeta.spawnpoint == null) {
@@ -385,7 +410,6 @@ abstract class SoccerGameImpl(
             ball!!.remove()
         }
     }
-
 
     protected fun handleBallSpawning() {
         if (ballSpawning && ballEnabled) {
@@ -693,7 +717,7 @@ abstract class SoccerGameImpl(
 
         if (team == Team.RED) {
             blueScore += arena.meta.blueTeamMeta.pointsPerEnemyDeath
-        } else {
+        } else if (team == Team.BLUE) {
             redScore += arena.meta.redTeamMeta.pointsPerEnemyDeath
         }
     }
@@ -734,8 +758,10 @@ abstract class SoccerGameImpl(
 
             if (scorerGameStory.team == Team.RED) {
                 arena.meta.redTeamMeta
-            } else {
+            } else if (scorerGameStory.team == Team.BLUE) {
                 arena.meta.blueTeamMeta
+            } else {
+                return
             }
         } else {
             null
@@ -747,10 +773,7 @@ abstract class SoccerGameImpl(
                     player,
                     placeHolderService.replacePlaceHolders(language.scoreRedTitle, player, this, scoreTeamMeta),
                     placeHolderService.replacePlaceHolders(
-                        language.scoreRedSubTitle.format(player.name),
-                        player,
-                        this,
-                        scoreTeamMeta
+                        language.scoreRedSubTitle.format(player.name), player, this, scoreTeamMeta
                     ),
                     language.scoreRedFadeIn.toIntOrNull() ?: 20,
                     language.scoreRedStay.toIntOrNull() ?: 60,
@@ -763,10 +786,7 @@ abstract class SoccerGameImpl(
                     player,
                     placeHolderService.replacePlaceHolders(language.scoreBlueTitle, player, this, scoreTeamMeta),
                     placeHolderService.replacePlaceHolders(
-                        language.scoreBlueSubTitle.format(player.name),
-                        player,
-                        this,
-                        scoreTeamMeta
+                        language.scoreBlueSubTitle.format(player.name), player, this, scoreTeamMeta
                     ),
                     language.scoreBlueFadeIn.toIntOrNull() ?: 20,
                     language.scoreBlueStay.toIntOrNull() ?: 60,
@@ -847,11 +867,19 @@ abstract class SoccerGameImpl(
                 blueTeamSpawnpoint = arena.meta.ballMeta.spawnpoint!!
             }
 
+            var refereeSpawnpoint = arena.meta.refereeTeamMeta.spawnpoint
+
+            if (refereeSpawnpoint == null) {
+                refereeSpawnpoint = arena.meta.ballMeta.spawnpoint!!
+            }
+
             ingamePlayersStorage.forEach { i ->
                 if (i.value.goalTeam == Team.RED) {
                     i.key.teleport(redTeamSpawnpoint.toLocation())
                 } else if (i.value.goalTeam == Team.BLUE) {
                     i.key.teleport(blueTeamSpawnpoint.toLocation())
+                } else if (i.value.team == Team.REFEREE) {
+                    i.key.teleport(refereeSpawnpoint.toLocation())
                 }
             }
         }
@@ -965,9 +993,11 @@ abstract class SoccerGameImpl(
     fun getTeamMetaFromTeam(team: Team): TeamMeta {
         if (team == Team.RED) {
             return arena.meta.redTeamMeta
+        } else if (team == Team.BLUE) {
+            return arena.meta.blueTeamMeta
         }
 
-        return arena.meta.blueTeamMeta
+        return arena.meta.refereeTeamMeta
     }
 
     /**
@@ -977,6 +1007,7 @@ abstract class SoccerGameImpl(
         val players = HashSet<Player>()
         players.addAll(redTeam)
         players.addAll(blueTeam)
+        players.addAll(refereeTeam)
         return players
     }
 }

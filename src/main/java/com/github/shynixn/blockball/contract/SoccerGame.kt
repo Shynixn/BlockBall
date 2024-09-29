@@ -55,6 +55,11 @@ interface SoccerGame {
     val blueTeam: Set<Player>
 
     /**
+     * All players which are referees.
+     */
+    val refereeTeam: Set<Player>
+
+    /**
      * Status.
      */
     var status: GameState

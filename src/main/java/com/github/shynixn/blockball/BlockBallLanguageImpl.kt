@@ -24,6 +24,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&c This selection type is not known. **/
   override var selectionTypeDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c This selection type is not known."
 
+  /** &0&l[&f&lBlockBall&0&l]&7 Successfully joined team referee. **/
+  override var joinTeamRefereeMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Successfully joined team referee."
+
   /** &0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s. **/
   override var reloadedGameMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s."
 
@@ -80,6 +83,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
 
   /** Deletes a BlockBall game. **/
   override var commandDeleteToolTip : String = "Deletes a BlockBall game."
+
+  /** Waiting for the referee to start the game... **/
+  override var waitingForRefereeToStart : String = "Waiting for the referee to start the game..."
 
   /** &0&l[&f&lBlockBall&0&l]&7 &c[Team Red] **/
   override var hubGameJoinRed : String = "&0&l[&f&lBlockBall&0&l]&7 &c[Team Red]"
@@ -155,6 +161,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
 
   /** All commands for the BlockBall plugin. **/
   override var commandDescription : String = "All commands for the BlockBall plugin."
+
+  /** &cThe game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn. **/
+  override var gameTypeRefereeOnlyForPatreons : String = "&cThe game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn."
 
   /** &0&l[&f&lBlockBall&0&l]&c You do not have permission. **/
   override var noPermissionMessage : String = "&0&l[&f&lBlockBall&0&l]&c You do not have permission."
@@ -252,6 +261,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &aThe game has ended in a draw **/
   override var winDrawSubTitle : String = "&aThe game has ended in a draw"
 
+  /** &aThis period has ended. You need to switch to the next period by using /blockball referee nextperiod. **/
+  override var refereeNextPeriodHint : String = "&aThis period has ended. You need to switch to the next period by using /blockball referee nextperiod."
+
   /** &0&l[&f&lBlockBall&0&l]&c The command sender has to be a player! **/
   override var commandSenderHasToBePlayer : String = "&0&l[&f&lBlockBall&0&l]&c The command sender has to be a player!"
 
@@ -266,6 +278,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
 
   /** &fDraw **/
   override var winDrawTitle : String = "&fDraw"
+
+  /** &cThis game is not a game where you can use a referee. Convert the game to a referee game first. **/
+  override var gameIsNotARefereeGame : String = "&cThis game is not a game where you can use a referee. Convert the game to a referee game first."
 
   /** 60 **/
   override var scoreBlueStay : String = "60"

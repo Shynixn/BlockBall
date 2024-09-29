@@ -73,7 +73,7 @@ class SoccerHubGameImpl(
         }
 
         // TODO: Minigame essentials. Update signs and protections.
-        super.handle(ticks)
+        super.handleMiniGameEssentials(ticks)
     }
 
     /**

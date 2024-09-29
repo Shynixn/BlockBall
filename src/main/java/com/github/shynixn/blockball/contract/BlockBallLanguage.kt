@@ -22,6 +22,9 @@ interface BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&c This selection type is not known. **/
   var selectionTypeDoesNotExistMessage : String
 
+  /** &0&l[&f&lBlockBall&0&l]&7 Successfully joined team referee. **/
+  var joinTeamRefereeMessage : String
+
   /** &0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s. **/
   var reloadedGameMessage : String
 
@@ -78,6 +81,9 @@ interface BlockBallLanguage {
 
   /** Deletes a BlockBall game. **/
   var commandDeleteToolTip : String
+
+  /** Waiting for the referee to start the game... **/
+  var waitingForRefereeToStart : String
 
   /** &0&l[&f&lBlockBall&0&l]&7 &c[Team Red] **/
   var hubGameJoinRed : String
@@ -153,6 +159,9 @@ interface BlockBallLanguage {
 
   /** All commands for the BlockBall plugin. **/
   var commandDescription : String
+
+  /** &cThe game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn. **/
+  var gameTypeRefereeOnlyForPatreons : String
 
   /** &0&l[&f&lBlockBall&0&l]&c You do not have permission. **/
   var noPermissionMessage : String
@@ -250,6 +259,9 @@ interface BlockBallLanguage {
   /** &aThe game has ended in a draw **/
   var winDrawSubTitle : String
 
+  /** &aThis period has ended. You need to switch to the next period by using /blockball referee nextperiod. **/
+  var refereeNextPeriodHint : String
+
   /** &0&l[&f&lBlockBall&0&l]&c The command sender has to be a player! **/
   var commandSenderHasToBePlayer : String
 
@@ -264,6 +276,9 @@ interface BlockBallLanguage {
 
   /** &fDraw **/
   var winDrawTitle : String
+
+  /** &cThis game is not a game where you can use a referee. Convert the game to a referee game first. **/
+  var gameIsNotARefereeGame : String
 
   /** 60 **/
   var scoreBlueStay : String

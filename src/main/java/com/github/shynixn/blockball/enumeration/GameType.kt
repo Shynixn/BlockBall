@@ -8,5 +8,10 @@ enum class GameType {
     /**
      * GameType Minigame.
      */
-    MINIGAME
+    MINIGAME,
+
+    /**
+     * GameType Referee.
+     */
+    REFEREEGAME,
 }

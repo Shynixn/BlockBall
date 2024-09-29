@@ -45,6 +45,9 @@ class ArenaMeta {
     /** Meta data of the redTeam. */
     val redTeamMeta: TeamMeta = TeamMeta()
 
+    /** Metadata of the refereeTeam. */
+    val refereeTeamMeta: TeamMeta = TeamMeta()
+
     private val internalHologramMetas: ArrayList<HologramMeta> = ArrayList()
 
     init {
