@@ -22,31 +22,17 @@ class MinigameLobbyMeta {
         firstPeriod.duration = 150
         firstPeriod.respawnEnabled = true
 
-        val firstPeriodOverTime = MatchTimeMeta()
-        firstPeriodOverTime.closeType = MatchTimeCloseType.NEXT_GOAL
-        firstPeriodOverTime.duration = 15
-        firstPeriodOverTime.respawnEnabled = false
-        firstPeriodOverTime.startMessageTitle = ChatColor.GOLD.toString() + "Overtime"
-        firstPeriodOverTime.startMessageSubTitle = "Only a few seconds left"
-
         val breakPeriod = MatchTimeMeta()
         breakPeriod.duration = 10
         breakPeriod.playAbleBall = false
         breakPeriod.respawnEnabled = false
-        breakPeriod.startMessageTitle = ChatColor.GOLD.toString() + "Break"
-        breakPeriod.startMessageSubTitle = "Take a short break"
+        breakPeriod.startMessageTitle = ""
+        breakPeriod.startMessageSubTitle = "&0&l[&f&lBreak&0&l]&7"
 
         val secondPeriod = MatchTimeMeta()
         secondPeriod.duration = 150
         secondPeriod.respawnEnabled = true
         secondPeriod.isSwitchGoalsEnabled = true
-
-        val secondPeriodOverTime = MatchTimeMeta()
-        secondPeriodOverTime.closeType = MatchTimeCloseType.NEXT_GOAL
-        secondPeriodOverTime.duration = 15
-        secondPeriodOverTime.respawnEnabled = false
-        secondPeriodOverTime.startMessageTitle = ChatColor.GOLD.toString() + "Overtime"
-        secondPeriodOverTime.startMessageSubTitle = "Only a few seconds left"
 
         val coolDownPeriod = MatchTimeMeta()
         coolDownPeriod.duration = 10
@@ -55,10 +41,8 @@ class MinigameLobbyMeta {
 
         matchTimes = arrayListOf(
             firstPeriod,
-            firstPeriodOverTime,
             breakPeriod,
             secondPeriod,
-            secondPeriodOverTime,
             coolDownPeriod
         )
     }

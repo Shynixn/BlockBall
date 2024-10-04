@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl.service
 
+import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
@@ -8,6 +9,7 @@ import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.impl.SoccerHubGameImpl
 import com.github.shynixn.blockball.impl.SoccerMiniGameImpl
+import com.github.shynixn.blockball.impl.SoccerRefereeGameImpl
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.Vector3d
@@ -121,6 +123,23 @@ class GameServiceImpl @Inject constructor(
                 ).also {
                     it.ballEnabled = false
                 }
+
+                GameType.REFEREEGAME -> SoccerRefereeGameImpl(
+                    arena,
+                    playerDataRepository,
+                    plugin,
+                    placeHolderService,
+                    bossBarService,
+                    chatMessageService,
+                    soundService,
+                    language,
+                    packetService,
+                    scoreboardService,
+                    commandService,
+                    soccerBallFactory
+                ).also {
+                    it.ballEnabled = false
+                }
             }
 
             games.add(game)
@@ -209,6 +228,12 @@ class GameServiceImpl @Inject constructor(
     }
 
     private fun validateGame(arena: SoccerArena) {
+        if (arena.gameType == GameType.REFEREEGAME && !BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+            throw SoccerGameException(
+                arena,
+                language.gameTypeRefereeOnlyForPatreons
+            )
+        }
         if (arena.meta.ballMeta.spawnpoint == null) {
             arena.enabled = false
             throw SoccerGameException(arena, "Set the ball spawnpoint for arena ${arena.name}!")
@@ -226,7 +251,7 @@ class GameServiceImpl @Inject constructor(
             throw SoccerGameException(arena, "Set the blue goal for arena ${arena.name}!")
         }
 
-        if (arena.gameType == GameType.MINIGAME) {
+        if (arena.gameType == GameType.MINIGAME || arena.gameType == GameType.REFEREEGAME) {
             if (arena.meta.lobbyMeta.leaveSpawnpoint == null) {
                 arena.enabled = false
                 throw SoccerGameException(arena, "Set the leave spawnpoint for arena ${arena.name}!")
@@ -238,6 +263,20 @@ class GameServiceImpl @Inject constructor(
             if (arena.meta.blueTeamMeta.lobbySpawnpoint == null) {
                 arena.enabled = false
                 throw SoccerGameException(arena, "Set the blue lobby spawnpoint for arena ${arena.name}!")
+            }
+        }
+
+        if (arena.gameType == GameType.REFEREEGAME) {
+            if (arena.meta.refereeTeamMeta.lobbySpawnpoint == null) {
+                arena.enabled = false
+                throw SoccerGameException(arena, "Set the referee lobby spawnpoint for arena ${arena.name}!")
+            }
+
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                throw SoccerGameException(
+                    arena,
+                    "The game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn."
+                )
             }
         }
 
@@ -256,13 +295,13 @@ class GameServiceImpl @Inject constructor(
                 "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
             )
         }
-        if (abs(teamMeta.goal.upperCorner!!.y - teamMeta.goal.lowerCorner!!.y) <  1.8) {
+        if (abs(teamMeta.goal.upperCorner!!.y - teamMeta.goal.lowerCorner!!.y) < 1.8) {
             throw SoccerGameException(
                 arena,
                 "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
             )
         }
-        if (abs(teamMeta.goal.upperCorner!!.z - teamMeta.goal.lowerCorner!!.z) <  1.8) {
+        if (abs(teamMeta.goal.upperCorner!!.z - teamMeta.goal.lowerCorner!!.z) < 1.8) {
             throw SoccerGameException(
                 arena,
                 "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"

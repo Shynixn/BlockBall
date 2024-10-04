@@ -6,5 +6,6 @@ enum class JoinResult {
     GAME_FULL,
     SUCCESS_RED,
     SUCCESS_BLUE,
+    SUCCESS_REFEREE,
     EVENT_CANCELLED
 }

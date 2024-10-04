@@ -35,6 +35,11 @@ interface SoccerBall {
     val isOnGround: Boolean
 
     /**
+     * Sets or gets if the ball can be interacted with.
+     */
+    var isInteractable: Boolean
+
+    /**
      * Teleports the ball to the given [location].
      */
     fun teleport(location: Location)
@@ -47,7 +52,7 @@ interface SoccerBall {
     /**
      * Gets the velocity of the ball.
      */
-    fun  getVelocity(): Vector
+    fun getVelocity(): Vector
 
     /**
      * Rotation of the visible ball in euler angles.

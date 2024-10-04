@@ -46,7 +46,8 @@ class PlaceHolderServiceImpl @Inject constructor(
         gamePlayerHolderFunctions[PlaceHolder.GAME_TIME] = { game ->
             if (game is SoccerMiniGame) {
                 game.gameCountdown.toString()
-            } else {
+            }
+            else {
                 "∞"
             }
         }

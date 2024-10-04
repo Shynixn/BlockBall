@@ -20,7 +20,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class SoccerMiniGameImpl constructor(
+open class SoccerMiniGameImpl constructor(
     arena: SoccerArena,
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
     private val plugin: Plugin,
@@ -210,7 +210,7 @@ class SoccerMiniGameImpl constructor(
         }
 
         // Update signs and protections.
-        super.handle(ticks)
+        super.handleMiniGameEssentials(ticks)
     }
 
     /**
@@ -265,8 +265,10 @@ class SoccerMiniGameImpl constructor(
                 if (e.goalTeam != null) {
                     if (e.goalTeam == Team.RED) {
                         e.goalTeam = Team.BLUE
-                    } else {
+                    } else if (e.goalTeam == Team.BLUE) {
                         e.goalTeam = Team.RED
+                    } else {
+                        e.goalTeam = Team.REFEREE
                     }
                 }
             }
@@ -286,7 +288,7 @@ class SoccerMiniGameImpl constructor(
             if (!matchTime.startMessageTitle.isBlank() || !matchTime.startMessageSubTitle.isBlank()) {
                 val game = this
                 plugin.launch {
-                    delay(60.ticks)
+                    delay(10.ticks)
                     chatMessageService.sendTitleMessage(
                         p,
                         placeHolderService.replacePlaceHolders(matchTime.startMessageTitle, null, game),

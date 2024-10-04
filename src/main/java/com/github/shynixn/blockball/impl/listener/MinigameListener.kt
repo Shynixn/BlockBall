@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.MatchTimeCloseType
 import com.github.shynixn.blockball.enumeration.Permission
@@ -36,6 +37,11 @@ class MinigameListener @Inject constructor(
     @EventHandler
     fun onPlayerGoalEvent(event: GameGoalEvent) {
         val game = event.game
+
+        if (game is SoccerRefereeGame) {
+            // Do not automatically switch in referee games.
+            return
+        }
 
         if (game !is SoccerMiniGame) {
             return

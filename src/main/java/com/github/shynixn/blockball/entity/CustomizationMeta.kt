@@ -15,5 +15,5 @@ class CustomizationMeta{
     /**
      * Should the players keep their health when they join a game?
      */
-    var keepHealthEnabled: Boolean = false
+    var keepHealthEnabled: Boolean = true
 }

@@ -20,7 +20,7 @@ class SoccerBallCrossPlatformProxy(
     override val meta: SoccerBallSettings,
     private val ballDesignEntity: BallDesignEntity,
     private val ballHitBoxEntity: BallHitboxEntity,
-    private val plugin: Plugin,
+    private val plugin: Plugin
 ) : SoccerBall {
     private var allPlayerTracker: AllPlayerTracker = AllPlayerTracker(
         {
@@ -61,6 +61,15 @@ class SoccerBallCrossPlatformProxy(
     override val isOnGround: Boolean
         get() {
             return ballHitBoxEntity.isOnGround
+        }
+
+    /**
+     * Sets or gets if the ball can be interacted with.
+     */
+    override var isInteractable: Boolean
+        get() = ballHitBoxEntity.isInteractable
+        set(value) {
+            ballHitBoxEntity.isInteractable = value
         }
 
     /**

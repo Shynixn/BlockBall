@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl
 
+import com.github.shynixn.blockball.contract.SoccerGame
 import com.github.shynixn.blockball.entity.SoccerBallSettings
 import com.github.shynixn.blockball.event.BallLeftClickEvent
 import com.github.shynixn.blockball.event.BallRayTraceEvent
@@ -31,7 +32,7 @@ import kotlin.math.sin
  * LICENCE: This code in this file licenced differently and is not allowed to
  * be used commercially.
  */
-class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d) {
+class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: SoccerGame?) {
     private var stuckCounter = 0
     private var cachedLength = 0.5
 
@@ -70,6 +71,11 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d) {
      * Gets if the ball is on ground or in air.
      */
     var isOnGround: Boolean = false
+
+    /**
+     * Sets or gets if the ball can be interacted with.
+     */
+    var isInteractable: Boolean = true
 
     /**
      * Raytracing service dependency.
@@ -135,6 +141,15 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d) {
      */
     fun kickPlayer(player: Player, baseMultiplier: Double, isPass: Boolean) {
         if (skipCounter > 0) {
+            return
+        }
+
+        if (!isInteractable) {
+            return
+        }
+
+        // Referee and game player check.
+        if (game != null && !game.redTeam.contains(player) && !game.blueTeam.contains(player)) {
             return
         }
 
@@ -272,10 +287,18 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d) {
             return
         }
 
+        if (!isInteractable) {
+            return
+        }
+
         // Reduce hitbox size in order to stay compatible to old soccerArena files.
         val hitboxSize = (meta.interactionHitBoxSize - 1)
 
         for (player in players) {
+            if (game != null && !game.redTeam.contains(player) && !game.blueTeam.contains(player)) {
+                continue
+            }
+
             val playerLocation = player.location.toVector3d()
 
             if (player.gameMode != GameMode.SPECTATOR &&
