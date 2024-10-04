@@ -151,6 +151,62 @@ Enables the player to add a specific sign by right-clicking any sign. You can re
 * Name: Identifier of a game
 * Type: Type of sign to create. Possible values: join, leave, team_red, team_blue
 
+### /blockball referee startgame
+
+```
+/blockball referee startgame
+```
+
+Starts the lobby countdown of a game.
+
+### /blockball referee stop
+
+```
+/blockball referee stop
+```
+
+Transitions the game to the final period. Executing this command again stops it.
+
+### /blockball referee setball
+
+```
+/blockball referee setball
+```
+
+Teleports the ball to the position of the referee.
+
+### /blockball referee whistleresume
+
+```
+/blockball referee whistleresume
+```
+
+Resumes the game and sets the ball interactable.
+
+### /blockball referee whistlestop
+
+```
+/blockball referee whistlestop
+```
+
+Stops the game and sets the ball inactive.
+
+### /blockball referee freezetime
+
+```
+/blockball referee freezetime
+```
+
+Freezes the countdown and sets the ball inactive.
+
+### /blockball referee nextperiod
+
+```
+/blockball referee nextperiod
+```
+
+Transitions to the next configured period.
+
 ### /blockball reload
 
 ```

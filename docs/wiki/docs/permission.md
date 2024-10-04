@@ -26,4 +26,4 @@ The following permissions are available in BlockBall.
 | blockball.command.staff  | Admin/User | Allows to execute commands while ingame. This permission will be replaced in the future.             |  
 | blockball.game.inventory | Admin/User | Allows open and click in inventories while ingame.   This permission will be replaced in the future. |
 | blockball.edit           | Admin      | Allows to create, edit and delete games.                                                             |                          
-
+| blockball.referee.join   | Admin      | Allows to manipulate games using /blockball referee commands                                         |  
