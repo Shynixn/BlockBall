@@ -134,8 +134,10 @@ class BlockBallCommandExecutor @Inject constructor(
             val arena = prevArgs[prevArgs.size - 1] as SoccerArena
             val teamMeta = if (team == Team.RED) {
                 arena.meta.redTeamMeta
-            } else {
+            } else if (team == Team.BLUE) {
                 arena.meta.blueTeamMeta
+            } else {
+                arena.meta.refereeTeamMeta
             }
             return teamMeta
         }
@@ -346,8 +348,51 @@ class BlockBallCommandExecutor @Inject constructor(
                 permission(Permission.REFEREE_JOIN)
                 subCommand("startgame") {
                     permission(Permission.REFEREE_JOIN)
+                    toolTip { language.commandRefereeStartGameToolTip }
                     builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
-
+                        startGameReferee(player)
+                    }
+                }
+                subCommand("stopgame") {
+                    permission(Permission.REFEREE_JOIN)
+                    toolTip { language.commandRefereeStopGameToolTip }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                        stopGameReferee(player)
+                    }
+                }
+                subCommand("setball") {
+                    permission(Permission.REFEREE_JOIN)
+                    toolTip { language.commandRefereeSetBallToolTip }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                        setBallToPlayerLocation(player)
+                    }
+                }
+                subCommand("whistleresume") {
+                    permission(Permission.REFEREE_JOIN)
+                    toolTip { language.commandRefereeWhistleResumeToolTip }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                        whistleRefereeResume(player)
+                    }
+                }
+                subCommand("whistlestop") {
+                    permission(Permission.REFEREE_JOIN)
+                    toolTip { language.commandRefereeWhistleStopToolTip }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                        whistleRefereeStop(player)
+                    }
+                }
+                subCommand("freezetime") {
+                    permission(Permission.REFEREE_JOIN)
+                    toolTip { language.commandRefereeFreezeTimeToolTip }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                        freezeTimeReferee(player)
+                    }
+                }
+                subCommand("nextperiod") {
+                    permission(Permission.REFEREE_JOIN)
+                    toolTip { language.commandRefereeNextPeriodToolTip }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                        nextPeriodReferee(player)
                     }
                 }
             }
@@ -365,6 +410,78 @@ class BlockBallCommandExecutor @Inject constructor(
         mcCart.build()
     }
 
+    private fun freezeTimeReferee(player: Player) {
+        val game = gameService.getByPlayer(player) ?: return
+        val ball = game.ball
+
+        if (game is SoccerRefereeGame) {
+            game.isTimerBlockerEnabled = true
+        }
+
+        if (ball != null) {
+            ball.isInteractable = false
+        }
+
+        player.sendMessage(language.refereeBallDisabled)
+    }
+
+    private fun whistleRefereeStop(player: Player) {
+        val game = gameService.getByPlayer(player) ?: return
+        val ball = game.ball
+
+        if (ball != null) {
+            ball.isInteractable = false
+        }
+
+        player.sendMessage(language.refereeBallDisabled)
+    }
+
+    private fun whistleRefereeResume(player: Player) {
+        val game = gameService.getByPlayer(player) ?: return
+        val ball = game.ball
+
+        if (game is SoccerRefereeGame) {
+            game.isTimerBlockerEnabled = false
+        }
+
+        if (ball != null) {
+            ball.isInteractable = true
+        }
+
+        player.sendMessage(language.refereeBallEnabled)
+    }
+
+    private fun nextPeriodReferee(player: Player) {
+        val game = gameService.getByPlayer(player) ?: return
+
+        if (game is SoccerRefereeGame) {
+            game.switchToNextMatchTime()
+        }
+    }
+
+    private fun setBallToPlayerLocation(player: Player) {
+        val game = gameService.getByPlayer(player) ?: return
+        game.setBallToLocation(player.location)
+    }
+
+    private fun stopGameReferee(player: Player) {
+        val game = gameService.getByPlayer(player) ?: return
+
+        if (game is SoccerRefereeGame) {
+            game.stopGame()
+            player.sendMessage(language.refereeStoppedGame)
+        }
+    }
+
+    private fun startGameReferee(player: Player) {
+        val game = gameService.getByPlayer(player) ?: return
+
+        if (game is SoccerRefereeGame) {
+            game.setLobbyCountdownActive(true)
+            game.isTimerBlockerEnabled = true
+            player.sendMessage(language.refereeStartedGame)
+        }
+    }
 
     private suspend fun createArena(sender: CommandSender, name: String, displayName: String) {
         val arena = SoccerArena()
@@ -501,9 +618,16 @@ class BlockBallCommandExecutor @Inject constructor(
             return
         }
 
-        if (team != null && team == Team.REFEREE && game !is SoccerRefereeGame) {
-            player.sendMessage(language.gameIsNotARefereeGame)
-            return
+        if (team != null && team == Team.REFEREE) {
+            if (game !is SoccerRefereeGame) {
+                player.sendMessage(language.gameIsNotARefereeGame)
+                return
+            }
+
+            if (!player.hasPermission(Permission.REFEREE_JOIN.permission)) {
+                player.sendMessage(language.noPermissionForGameMessage.format(game.arena.name))
+                return
+            }
         }
 
         val joinResult = game.join(player, team)

@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.LeaveResult
 import com.github.shynixn.blockball.enumeration.Team
+import org.bukkit.Location
 import org.bukkit.entity.Player
 
 interface SoccerGame {
@@ -72,7 +73,7 @@ interface SoccerGame {
     /**
      * The last interacted entity with the ball. Can also be a non player.
      */
-   var lastInteractedEntity: Any?
+    var lastInteractedEntity: Any?
 
     /**
      * Marks the game for being closed and will automatically
@@ -144,4 +145,9 @@ interface SoccerGame {
      * Gets all players.
      */
     fun getPlayers(): Set<Player>
+
+    /**
+     * Respawns the ball and sets it to the given location.
+     */
+    fun setBallToLocation(location: Location)
 }

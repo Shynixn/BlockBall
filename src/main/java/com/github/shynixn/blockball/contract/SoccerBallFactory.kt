@@ -10,6 +10,11 @@ interface SoccerBallFactory : AutoCloseable {
     fun createSoccerBall(location: Location, meta: SoccerBallSettings): SoccerBall
 
     /**
+     * Creates a new SoccerBall.
+     */
+    fun createSoccerBallForGame(location: Location, meta: SoccerBallSettings, game: SoccerGame?): SoccerBall
+
+    /**
      * Tries to locate the ball by the given id.
      */
     fun findBallByEntityId(id: Int): SoccerBall?

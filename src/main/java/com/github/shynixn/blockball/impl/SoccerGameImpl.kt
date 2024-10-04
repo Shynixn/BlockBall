@@ -18,6 +18,7 @@ import com.github.shynixn.mcutils.packet.api.PacketService
 import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
+import org.bukkit.Location
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -419,13 +420,18 @@ abstract class SoccerGameImpl(
                     ball!!.remove()
                 }
 
-                ball = soccerBallFactory.createSoccerBall(
-                    arena.meta.ballMeta.spawnpoint!!.toLocation(), arena.meta.ballMeta
+                ball = soccerBallFactory.createSoccerBallForGame(
+                    arena.meta.ballMeta.spawnpoint!!.toLocation(), arena.meta.ballMeta, this
                 )
                 ballSpawning = false
                 ballSpawnCounter = 0
+
+                // Dirty Hack, maybe use a different method?
+                if (this is SoccerRefereeGame) {
+                    ball?.isInteractable = false
+                }
             }
-        } else if ((ball == null || ball!!.isDead) && (redTeam.isNotEmpty() || blueTeam.isNotEmpty())) {
+        } else if ((ball == null || ball!!.isDead) && (redTeam.isNotEmpty() || blueTeam.isNotEmpty() || refereeTeam.isNotEmpty())) {
             if (arena.gameType != GameType.HUBGAME || redTeam.size >= arena.meta.redTeamMeta.minAmount && blueTeam.size >= arena.meta.blueTeamMeta.minAmount) {
                 ballSpawning = true
                 ballSpawnCounter = arena.meta.ballMeta.delayInTicks
@@ -1010,4 +1016,23 @@ abstract class SoccerGameImpl(
         players.addAll(refereeTeam)
         return players
     }
+
+    // region Referee
+    /**
+     * Respawns the ball and sets it to the given location.
+     */
+    override fun setBallToLocation(location: Location) {
+        if (ball != null && !ball!!.isDead) {
+            ball!!.remove()
+        }
+
+        ball = soccerBallFactory.createSoccerBallForGame(
+            location, arena.meta.ballMeta, this
+        )
+        ball!!.isInteractable = false // We always block interacting with the ball until the referee has started.
+        ballSpawning = false
+        ballSpawnCounter = 0
+    }
+
+    // endregion
 }

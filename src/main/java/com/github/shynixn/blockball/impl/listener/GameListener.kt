@@ -289,7 +289,7 @@ class GameListener @Inject constructor(
     @EventHandler
     fun onBallRayTraceEvent(event: BallRayTraceEvent) {
         for (game in gameService.getAll()) {
-            if (game.ball == event.ball) {
+            if (game.ball == event.ball && event.ball.isInteractable) {
                 val targetPosition = event.targetLocation.toVector3d()
                 val sourcePosition = event.ball.getLocation().toVector3d()
 

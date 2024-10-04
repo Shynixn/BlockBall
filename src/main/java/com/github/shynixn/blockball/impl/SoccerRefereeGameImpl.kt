@@ -4,12 +4,14 @@ import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
+import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
 class SoccerRefereeGameImpl constructor(
@@ -40,6 +42,11 @@ class SoccerRefereeGameImpl constructor(
     soccerBallFactory
 ), SoccerRefereeGame {
     /**
+     * Is the timer blocker enabled.
+     */
+    override var isTimerBlockerEnabled: Boolean = false
+
+    /**
      * Toggles the lobby countdown if the game is not running yet.
      */
     override fun setLobbyCountdownActive(enabled: Boolean) {
@@ -49,6 +56,27 @@ class SoccerRefereeGameImpl constructor(
 
         lobbyCountDownActive = enabled
         lobbyCountdown = arena.meta.minigameMeta.lobbyDuration
+    }
+
+    /**
+     * Stops the game and sets it to the last match time.
+     */
+    override fun stopGame() {
+        switchToNextMatchTime()
+
+        isTimerBlockerEnabled = false
+        val matchTimes = arena.meta.minigameMeta.matchTimes
+        val index = matchTimes.size - 2
+
+        if (index > 0) {
+            // Guess previous match time and switch to last match time.
+            switchToNextMatchTime()
+            return
+        }
+
+        // Cannot find matching index. Just quit the game.
+        matchTimeIndex = Int.MAX_VALUE
+        switchToNextMatchTime()
     }
 
     /**
@@ -80,13 +108,7 @@ class SoccerRefereeGameImpl constructor(
         if (ticks >= 20) {
             // Display the message.
             if (!playing && !lobbyCountDownActive) {
-                ingamePlayersStorage.keys.toTypedArray().forEach { p ->
-                    chatMessageService.sendActionBarMessage(
-                        p, placeHolderService.replacePlaceHolders(
-                            language.waitingForRefereeToStart, p, this
-                        )
-                    )
-                }
+                sendBroadcastMessage(language.waitingForRefereeToStart, language.waitingForRefereeToStartHint)
             }
 
             if (lobbyCountDownActive) {
@@ -127,35 +149,55 @@ class SoccerRefereeGameImpl constructor(
             }
 
             if (playing) {
-                gameCountdown--
+                if (matchTimeIndex != -1) {
+                    if (ball != null && !ball!!.isInteractable) {
+                        sendBroadcastMessage(language.whistleTimeOutReferee, language.whistleTimeOutRefereeHint)
+                    }
 
-                if (gameCountdown <= 0) {
-                    gameCountdown = 0
-                    for (player in refereeTeam) {
-                        chatMessageService.sendActionBarMessage(
-                            player, placeHolderService.replacePlaceHolders(
-                                language.refereeNextPeriodHint, player, this
-                            )
-                        )
+                    if (!isTimerBlockerEnabled) {
+                        gameCountdown--
+
+                        if (gameCountdown <= 0) {
+                            gameCountdown = 0
+
+                            if (ball != null) {
+                                ingamePlayersStorage.filter { e -> e.value.team != Team.REFEREE }.forEach { p ->
+                                    chatMessageService.sendActionBarMessage(
+                                        p.key, placeHolderService.replacePlaceHolders(
+                                            language.nextPeriodReferee, p.key, this
+                                        )
+                                    )
+                                }
+                            }
+
+                            refereeTeam.forEach { p ->
+                                chatMessageService.sendActionBarMessage(
+                                    p, placeHolderService.replacePlaceHolders(
+                                        language.nextPeriodRefereeHint, p, this
+                                    )
+                                )
+                            }
+                        }
+
+                        if (gameCountdown >= 0) {
+                            ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
+                                if (gameCountdown <= 10) {
+                                    p.exp = gameCountdown.toFloat() / 10.0F
+                                }
+
+                                if (gameCountdown <= 5) {
+                                    soundService.playSound(
+                                        p.location, arrayListOf(p), blingSound
+                                    )
+                                }
+
+                                p.level = gameCountdown
+                            }
+                        }
                     }
                 }
 
-                if (gameCountdown > 0) {
-                    ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
-                        if (gameCountdown <= 10) {
-                            p.exp = gameCountdown.toFloat() / 10.0F
-                        }
-
-                        if (gameCountdown <= 5) {
-                            soundService.playSound(
-                                p.location, arrayListOf(p), blingSound
-                            )
-                        }
-
-                        p.level = gameCountdown
-                    }
-                }
-
+                // The game has to be resetable automatically.
                 if (ingamePlayersStorage.isEmpty() || redTeam.size < arena.meta.redTeamMeta.minPlayingPlayers || blueTeam.size < arena.meta.blueTeamMeta.minPlayingPlayers) {
                     closing = true
                 }
@@ -172,16 +214,25 @@ class SoccerRefereeGameImpl constructor(
         super.handleMiniGameEssentials(ticks)
     }
 
-    /**
-     * Actives the next match time. Closes the match if no match time is available.
-     */
-    override fun switchToNextMatchTime() {
-        super.switchToNextMatchTime()
+    private fun sendBroadcastMessage(playerMessage: String, refereeMessage: String) {
+        refereeTeam.forEach { p ->
+            chatMessageService.sendActionBarMessage(
+                p, placeHolderService.replacePlaceHolders(
+                    refereeMessage, p, this
+                )
+            )
+        }
 
-        if (ball != null) {
-            ballEnabled = false
-            ball!!.remove()
-            ball = null
+        val otherPlayers = ArrayList<Player>()
+        otherPlayers.addAll(redTeam)
+        otherPlayers.addAll(blueTeam)
+
+        for (player in otherPlayers) {
+            chatMessageService.sendActionBarMessage(
+                player, placeHolderService.replacePlaceHolders(
+                    playerMessage, player, this
+                )
+            )
         }
     }
 }

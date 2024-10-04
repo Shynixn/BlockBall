@@ -271,6 +271,13 @@ class GameServiceImpl @Inject constructor(
                 arena.enabled = false
                 throw SoccerGameException(arena, "Set the referee lobby spawnpoint for arena ${arena.name}!")
             }
+
+            if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                throw SoccerGameException(
+                    arena,
+                    "The game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn."
+                )
+            }
         }
 
         fixCorners(arena.lowerCorner!!, arena.upperCorner!!)

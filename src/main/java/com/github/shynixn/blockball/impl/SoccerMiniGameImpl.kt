@@ -265,8 +265,10 @@ open class SoccerMiniGameImpl constructor(
                 if (e.goalTeam != null) {
                     if (e.goalTeam == Team.RED) {
                         e.goalTeam = Team.BLUE
-                    } else {
+                    } else if (e.goalTeam == Team.BLUE) {
                         e.goalTeam = Team.RED
+                    } else {
+                        e.goalTeam = Team.REFEREE
                     }
                 }
             }
@@ -286,7 +288,7 @@ open class SoccerMiniGameImpl constructor(
             if (!matchTime.startMessageTitle.isBlank() || !matchTime.startMessageSubTitle.isBlank()) {
                 val game = this
                 plugin.launch {
-                    delay(60.ticks)
+                    delay(10.ticks)
                     chatMessageService.sendTitleMessage(
                         p,
                         placeHolderService.replacePlaceHolders(matchTime.startMessageTitle, null, game),
