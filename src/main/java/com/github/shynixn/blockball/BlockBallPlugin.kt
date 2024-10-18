@@ -3,6 +3,7 @@ package com.github.shynixn.blockball
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.PlaceHolderService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
+import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
@@ -111,10 +112,7 @@ class BlockBallPlugin : JavaPlugin() {
 
         // Service dependencies
         Bukkit.getServicesManager().register(
-            SoccerBallFactory::class.java,
-            module.getService<SoccerBallFactory>(),
-            this,
-            ServicePriority.Normal
+            SoccerBallFactory::class.java, module.getService<SoccerBallFactory>(), this, ServicePriority.Normal
         )
         Bukkit.getServicesManager()
             .register(GameService::class.java, module.getService<GameService>(), this, ServicePriority.Normal)
@@ -170,6 +168,9 @@ class BlockBallPlugin : JavaPlugin() {
                 return@launch
             }
 
+            // Enable stats
+            module.getService<StatsService>().register()
+
             // Load Signs
             val placeHolderService = module.getService<PlaceHolderService>()
             val signService = module.getService<SignService>()
@@ -219,8 +220,7 @@ class BlockBallPlugin : JavaPlugin() {
                 playerDataRepository.getByPlayer(player)
             }
 
-            Bukkit.getServer()
-                .consoleSender.sendMessage(prefix + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
+            Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
         }
     }
 
@@ -234,6 +234,7 @@ class BlockBallPlugin : JavaPlugin() {
 
         module.getService<PacketService>().close()
         module.getService<AreaSelectionService>().close()
+        module.getService<StatsService>().close()
 
         val playerDataRepository = module.getService<CachePlayerRepository<PlayerInformation>>()
         runBlocking {

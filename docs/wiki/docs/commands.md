@@ -207,6 +207,17 @@ Freezes the countdown and sets the ball inactive.
 
 Transitions to the next configured period.
 
+### /blockball placeholder
+
+```
+/blockball placeholder <placeholder>
+```
+
+Tries to resolve the value of a given placeholder.
+
+* PlaceHolder: PlaceHolder
+
+
 ### /blockball reload
 
 ```

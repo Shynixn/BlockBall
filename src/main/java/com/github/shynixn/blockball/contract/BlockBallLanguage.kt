@@ -136,6 +136,9 @@ interface BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist. **/
   var gameDoesNotExistMessage : String
 
+  /** Evaluated placeholder: %1$1s **/
+  var commandPlaceHolderMessage : String
+
   /** &0&l[&f&lBlockBall&0&l]&7 &9[Team Blue] **/
   var hubGameJoinBlue : String
 
@@ -213,6 +216,9 @@ interface BlockBallLanguage {
 
   /** &0&l[&f&lBlockBall&0&l]&7 You have stopped the game and transitioned to the last configured period. **/
   var refereeStoppedGame : String
+
+  /** Resolves a given placeholder. **/
+  var commandPlaceHolderToolTip : String
 
   /** &0&l[&f&lBlockBall&0&l]&7 Updated armor of game. **/
   var updatedArmorMessage : String

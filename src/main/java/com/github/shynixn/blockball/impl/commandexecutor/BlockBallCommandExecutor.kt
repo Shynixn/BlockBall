@@ -4,6 +4,7 @@ import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.BlockBallLanguageImpl
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.PlaceHolderService
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
@@ -42,6 +43,7 @@ class BlockBallCommandExecutor @Inject constructor(
     private val language: BlockBallLanguage,
     private val signService: SignService,
     private val selectionService: AreaSelectionService,
+    private val placeHolderService: PlaceHolderService,
     chatMessageService: ChatMessageService
 ) {
     private val arenaTabs: suspend (s: CommandSender) -> List<String> = {
@@ -394,6 +396,17 @@ class BlockBallCommandExecutor @Inject constructor(
                     builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
                         nextPeriodReferee(player)
                     }
+                }
+            }
+            subCommand("placeholder") {
+                permission(Permission.EDIT_GAME)
+                toolTip { language.commandPlaceHolderToolTip }
+                builder().argument("placeholder").tabs { listOf("<>") }.execute { sender, placeHolder ->
+                    val evaluatedValue = placeHolderService.replacePlaceHolders(placeHolder)
+                    sender.sendMessage(language.commandPlaceHolderMessage.format(evaluatedValue))
+                }.executePlayer({ language.commandSenderHasToBePlayer }) { player, placeHolder ->
+                    val evaluatedValue = placeHolderService.replacePlaceHolders(placeHolder, player)
+                    player.sendMessage(language.commandPlaceHolderMessage.format(evaluatedValue))
                 }
             }
             subCommand("reload") {

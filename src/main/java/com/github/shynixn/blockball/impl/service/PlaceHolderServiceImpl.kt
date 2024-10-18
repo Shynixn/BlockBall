@@ -2,21 +2,20 @@ package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.BlockBallLanguageImpl
-import com.github.shynixn.blockball.contract.SoccerGame
-import com.github.shynixn.blockball.contract.SoccerMiniGame
-import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.PlaceHolderService
+import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.PlaceHolder
+import com.github.shynixn.blockball.enumeration.PlaceHolderLeaderBoard
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.google.inject.Inject
 import org.bukkit.entity.Player
 
 class PlaceHolderServiceImpl @Inject constructor(
-    private val gameService: GameService, private val playerDataRepository: CachePlayerRepository<PlayerInformation>
+    private val gameService: GameService, private val playerDataRepository: CachePlayerRepository<PlayerInformation>,
+    private val statsService: StatsService
 ) : PlaceHolderService {
     private val gamePlayerHolderFunctions = HashMap<PlaceHolder, ((SoccerGame) -> String)>()
     private val teamPlaceHolderFunctions = HashMap<PlaceHolder, ((SoccerGame, TeamMeta, Int) -> String)>()
@@ -46,8 +45,7 @@ class PlaceHolderServiceImpl @Inject constructor(
         gamePlayerHolderFunctions[PlaceHolder.GAME_TIME] = { game ->
             if (game is SoccerMiniGame) {
                 game.gameCountdown.toString()
-            }
-            else {
+            } else {
                 "∞"
             }
         }
@@ -406,6 +404,17 @@ class PlaceHolderServiceImpl @Inject constructor(
                     } else if (langPlaceHolderFunctions.containsKey(evaluatedPlaceHolder)) {
                         locatedPlaceHolders[evaluatedPlaceHolder] =
                             langPlaceHolderFunctions[evaluatedPlaceHolder]!!.invoke()
+                    } else if (evaluatedPlaceHolder.startsWith("%blockball_leaderboard")) {
+                        val parts = evaluatedPlaceHolder.split("_")
+                        val changedPlaceHolder = parts.dropLast(2).joinToString("_")
+                        val leaderBoardPlaceholder = PlaceHolderLeaderBoard.mapping[changedPlaceHolder]
+                        if (leaderBoardPlaceholder != null) {
+                            val leaderBoard = statsService.getLeaderBoard()
+
+                            if (leaderBoard != null) {
+                                locatedPlaceHolders[evaluatedPlaceHolder] = leaderBoardPlaceholder.f.invoke(leaderBoard, parts[parts.size - 1].substringBefore("%").toInt()-1)
+                            }
+                        }
                     }
 
                     characterCache.clear()
