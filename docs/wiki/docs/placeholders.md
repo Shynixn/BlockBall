@@ -3,11 +3,11 @@
 The following placeholders are available in BlockBall and can also be used via PlaceHolderApi.
 
 !!! note "PlaceHolder Api"
-    As BlockBall supports multiple games per server, you need to specify the name of the game in external plugins. You can
-    do this by appending the name of the game ``_game1`` ``_mygame``.
-    This results into placeholders such as e.g. ``%blockball_game_displayName_game1%``
-    or ``%blockball_game_blueScore_mygame%``. This is only relevant in external plugins. For placeholders in BlockBall, you
-    can directly use the placeholders below.
+As BlockBall supports multiple games per server, you need to specify the name of the game in external plugins. You can
+do this by appending the name of the game ``_game1`` ``_mygame``.
+This results into placeholders such as e.g. ``%blockball_game_displayName_game1%``
+or ``%blockball_game_blueScore_mygame%``. This is only relevant in external plugins. For placeholders in BlockBall, you
+can directly use the placeholders below.
 
 | Game Context Placeholders          | Description                                                                                                   |
 |------------------------------------|---------------------------------------------------------------------------------------------------------------|
@@ -26,12 +26,12 @@ The following placeholders are available in BlockBall and can also be used via P
 | %blockball_game_isJoinAble%        | true if the game is joinable, false if not                                                                    |
 | %blockball_game_remainingPlayers%  | Remaining amount of players required to start a match in minigame mode                                        |
 
-| Player Context Placeholders     | Description                                                                                                   |
-|---------------------------------|---------------------------------------------------------------------------------------------------------------|
-| %blockball_player_name%         | Name of the player during a BlockBall event e.g. scoring goal                                                 |
-| %blockball_player_isInGame%     | true if the player is in a game, false if not                                                                 |
-| %blockball_player_isInTeamRed%  | true if the player is in a game and in team red, false if not                                                 |
-| %blockball_player_isInTeamBlue% | true if the player is in a game and in team blue, false if not                                                | |
+| Player Context Placeholders     | Description                                                    |
+|---------------------------------|----------------------------------------------------------------|
+| %blockball_player_name%         | Name of the player during a BlockBall event e.g. scoring goal  |
+| %blockball_player_isInGame%     | true if the player is in a game, false if not                  |
+| %blockball_player_isInTeamRed%  | true if the player is in a game and in team red, false if not  |
+| %blockball_player_isInTeamBlue% | true if the player is in a game and in team blue, false if not | |
 
 | Stats Placeholders (Patreon Only)        | Description                                                                       |
 |------------------------------------------|-----------------------------------------------------------------------------------|
@@ -54,3 +54,41 @@ The following placeholders are available in BlockBall and can also be used via P
 | %blockball_player_ownGoalsPerGameFull%   | Ratio between amount of games a player has fully played and scored own goals      |
 | %blockball_player_totalGoalsPerGame%     | Ratio between amount of games a player has started playing and scored total goals |
 | %blockball_player_totalGoalsPerGameFull% | Ratio between amount of games a player has fully played and scored total goals    |
+
+!!! note "LeaderBoard"
+Replace **top_1** with **top_2** or **top_3** etc. to build a leaderboard.
+
+| LeaderBoard Placeholders (Patreon Only)            | Description                                                                                  |
+|----------------------------------------------------|----------------------------------------------------------------------------------------------|
+| %blockball_leaderboard_goals_name_top_1%           | The name of the player which has the most amount of scored goals                             |
+| %blockball_leaderboard_goals_value_top_1%               | The most amount of scored goals                                                              |
+| %blockball_leaderboard_goalsFull_name_top_1%            | The name of the player which has the most amount of scored goals by playing full games       |
+| %blockball_leaderboard_goalsFull_value_top_1%           | The most amount of scored goals by playing full games                                        |
+| %blockball_leaderboard_ownGoals_name_top_1%             | The name of the player which has the most amount of own goals                                |
+| %blockball_leaderboard_ownGoals_value_top_1%            | The most amount of own goals                                                                 |
+| %blockball_leaderboard_ownGoalsFull_name_top_1%         | The name of the player which has the most amount of own goals by playing full games          |
+| %blockball_leaderboard_ownGoalsFull_value_top_1%        | The most amount of own goals by playing full games                                           |
+| %blockball_leaderboard_totalGoals_name_top_1%           | The name of the player which has the most amount of total goals                              |
+| %blockball_leaderboard_totalGoals_value_top_1%          | The most amount of total goals                                                               |
+| %blockball_leaderboard_totalGoalsFull_name_top_1%       | The name of the player which has the most amount of total goals by playing full games        |
+| %blockball_leaderboard_totalGoalsFull_value_top_1%      | The most amount of total goals by playing full games                                         |
+| %blockball_leaderboard_games_name_top_1%                | The name of the player which has the most amount of joined games                             |
+| %blockball_leaderboard_games_value_top_1%               | The most amount of joined games                                                              |
+| %blockball_leaderboard_gamesFull_name_top_1%            | The name of the player which has the most amount of fully played games                       |
+| %blockball_leaderboard_gamesFull_value_top_1%           | The most amount of fully played games                                                        |
+| %blockball_leaderboard_wins_name_top_1%                 | The name of the player which has the most amount of wins                                     |
+| %blockball_leaderboard_wins_value_top_1%                | The most amount wins                                                                         |
+| %blockball_leaderboard_losses_name_top_1%               | The name of the player which has the most amount of losses                                   |
+| %blockball_leaderboard_losses_value_top_1%              | The most amount losses                                                                       |
+| %blockball_leaderboard_draws_name_top_1%                | The name of the player which has the most amount of draws                                    |
+| %blockball_leaderboard_draws_value_top_1%               | The most amount draws                                                                        |
+| %blockball_leaderboard_winrate_name_top_1%              | The name of the player which has the highest winrate                                         |
+| %blockball_leaderboard_winrate_value_top_1%             | The highest winrate                                                                          |
+| %blockball_leaderboard_goalsPerGame_name_top_1%         | The name of the player which has the most amount of goals per game                           |
+| %blockball_leaderboard_goalsPerGame_value_top_1%        | The most amount of goals per game                                                            |
+| %blockball_leaderboard_goalsPerGameFull_name_top_1%     | The name of the player which has the most amount of goals per game by playing full games     |
+| %blockball_leaderboard_goalsPerGameFull_value_top_1%    | The most amount of goals per game by playing full games                                      |
+| %blockball_leaderboard_ownGoalsPerGame_name_top_1%      | The name of the player which has the most amount of own goals per game                       |
+| %blockball_leaderboard_ownGoalsPerGame_value_top_1%     | The most amount of own goals per game                                                        |
+| %blockball_leaderboard_ownGoalsPerGameFull_name_top_1%  | The name of the player which has the most amount of own goals per game by playing full games |
+| %blockball_leaderboard_ownGoalsPerGameFull_value_top_1% | The most amount of own goals per game by playing full games                                  |

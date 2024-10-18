@@ -71,3 +71,12 @@ security:
     z: 0.0
     yaw: 0.0
     pitch: 0.0
+
+############################
+# LeaderBoard PlaceHolders (PatreonOnly)
+############################
+leaderboard:
+  # Toggles if the leader board is continuously generated. You can disable the leaderboard to save memory and computation time if you do not need.
+  enabled: true
+  # The interval how often the leader board is refreshed from the currently persisted stats.
+  intervalMinutes: 15

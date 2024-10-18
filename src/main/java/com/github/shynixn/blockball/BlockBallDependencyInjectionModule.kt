@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.impl.service.*
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
+import com.github.shynixn.mccoroutine.bukkit.scope
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.ConfigurationServiceImpl
 import com.github.shynixn.mcutils.common.CoroutineExecutor
@@ -74,12 +75,13 @@ class BlockBallDependencyInjectionModule(
             plugin,
             "BlockBall",
             plugin.dataFolder.toPath().resolve("BlockBall.sqlite"),
-            object : TypeReference<PlayerInformation>() {}
+            object : TypeReference<PlayerInformation>() {},
+            plugin.minecraftDispatcher
         )
         val playerDataRepository = AutoSavePlayerDataRepositoryImpl(
             1000 * 60L * plugin.config.getInt("database.autoSaveIntervalMinutes"),
-            CachePlayerDataRepositoryImpl(configSelectedPlayerDataRepository, plugin),
-            plugin
+            CachePlayerDataRepositoryImpl(configSelectedPlayerDataRepository, plugin.minecraftDispatcher),
+            plugin.scope, plugin.minecraftDispatcher
         )
         addService<PlayerDataRepository<PlayerInformation>>(playerDataRepository)
         addService<CachePlayerRepository<PlayerInformation>>(playerDataRepository)
@@ -97,6 +99,7 @@ class BlockBallDependencyInjectionModule(
                     }
                 })
         )
+        addService<StatsService, StatsServiceImpl>()
         addService<PacketService>(PacketServiceImpl(plugin))
         addService<ScoreboardService, ScoreboardServiceImpl>()
         addService<ConfigurationService>(ConfigurationServiceImpl(plugin))

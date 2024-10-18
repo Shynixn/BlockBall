@@ -138,6 +138,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
   /** &0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist. **/
   override var gameDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist."
 
+  /** Evaluated placeholder: %1$1s **/
+  override var commandPlaceHolderMessage : String = "Evaluated placeholder: %1$1s"
+
   /** &0&l[&f&lBlockBall&0&l]&7 &9[Team Blue] **/
   override var hubGameJoinBlue : String = "&0&l[&f&lBlockBall&0&l]&7 &9[Team Blue]"
 
@@ -215,6 +218,9 @@ object BlockBallLanguageImpl : BlockBallLanguage {
 
   /** &0&l[&f&lBlockBall&0&l]&7 You have stopped the game and transitioned to the last configured period. **/
   override var refereeStoppedGame : String = "&0&l[&f&lBlockBall&0&l]&7 You have stopped the game and transitioned to the last configured period."
+
+  /** Resolves a given placeholder. **/
+  override var commandPlaceHolderToolTip : String = "Resolves a given placeholder."
 
   /** &0&l[&f&lBlockBall&0&l]&7 Updated armor of game. **/
   override var updatedArmorMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Updated armor of game."
