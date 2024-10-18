@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.41">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
       
       
 
@@ -528,12 +528,12 @@
 <p>The following placeholders are available in BlockBall and can also be used via PlaceHolderApi.</p>
 <div class="admonition note">
 <p class="admonition-title">PlaceHolder Api</p>
+</div>
 <p>As BlockBall supports multiple games per server, you need to specify the name of the game in external plugins. You can
 do this by appending the name of the game <code>_game1</code> <code>_mygame</code>.
 This results into placeholders such as e.g. <code>%blockball_game_displayName_game1%</code>
 or <code>%blockball_game_blueScore_mygame%</code>. This is only relevant in external plugins. For placeholders in BlockBall, you
 can directly use the placeholders below.</p>
-</div>
 <table>
 <thead>
 <tr>
@@ -712,6 +712,148 @@ can directly use the placeholders below.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">LeaderBoard</p>
+</div>
+<p>Replace <strong>top_1</strong> with <strong>top_2</strong> or <strong>top_3</strong> etc. to build a leaderboard.</p>
+<table>
+<thead>
+<tr>
+<th>LeaderBoard Placeholders (Patreon Only)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>%blockball_leaderboard_goals_name_top_1%</td>
+<td>The name of the player which has the most amount of scored goals</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_goals_value_top_1%</td>
+<td>The most amount of scored goals</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_goalsFull_name_top_1%</td>
+<td>The name of the player which has the most amount of scored goals by playing full games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_goalsFull_value_top_1%</td>
+<td>The most amount of scored goals by playing full games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_ownGoals_name_top_1%</td>
+<td>The name of the player which has the most amount of own goals</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_ownGoals_value_top_1%</td>
+<td>The most amount of own goals</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_ownGoalsFull_name_top_1%</td>
+<td>The name of the player which has the most amount of own goals by playing full games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_ownGoalsFull_value_top_1%</td>
+<td>The most amount of own goals by playing full games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_totalGoals_name_top_1%</td>
+<td>The name of the player which has the most amount of total goals</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_totalGoals_value_top_1%</td>
+<td>The most amount of total goals</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_totalGoalsFull_name_top_1%</td>
+<td>The name of the player which has the most amount of total goals by playing full games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_totalGoalsFull_value_top_1%</td>
+<td>The most amount of total goals by playing full games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_games_name_top_1%</td>
+<td>The name of the player which has the most amount of joined games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_games_value_top_1%</td>
+<td>The most amount of joined games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_gamesFull_name_top_1%</td>
+<td>The name of the player which has the most amount of fully played games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_gamesFull_value_top_1%</td>
+<td>The most amount of fully played games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_wins_name_top_1%</td>
+<td>The name of the player which has the most amount of wins</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_wins_value_top_1%</td>
+<td>The most amount wins</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_losses_name_top_1%</td>
+<td>The name of the player which has the most amount of losses</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_losses_value_top_1%</td>
+<td>The most amount losses</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_draws_name_top_1%</td>
+<td>The name of the player which has the most amount of draws</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_draws_value_top_1%</td>
+<td>The most amount draws</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_winrate_name_top_1%</td>
+<td>The name of the player which has the highest winrate</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_winrate_value_top_1%</td>
+<td>The highest winrate</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_goalsPerGame_name_top_1%</td>
+<td>The name of the player which has the most amount of goals per game</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_goalsPerGame_value_top_1%</td>
+<td>The most amount of goals per game</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_goalsPerGameFull_name_top_1%</td>
+<td>The name of the player which has the most amount of goals per game by playing full games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_goalsPerGameFull_value_top_1%</td>
+<td>The most amount of goals per game by playing full games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_ownGoalsPerGame_name_top_1%</td>
+<td>The name of the player which has the most amount of own goals per game</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_ownGoalsPerGame_value_top_1%</td>
+<td>The most amount of own goals per game</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_ownGoalsPerGameFull_name_top_1%</td>
+<td>The name of the player which has the most amount of own goals per game by playing full games</td>
+</tr>
+<tr>
+<td>%blockball_leaderboard_ownGoalsPerGameFull_value_top_1%</td>
+<td>The most amount of own goals per game by playing full games</td>
+</tr>
+</tbody>
+</table>
 
 
 
@@ -798,7 +940,7 @@ can directly use the placeholders below.</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tabs", "content.tabs.link", "content.code.copy", "navigation.footer"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>
