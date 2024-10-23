@@ -27,9 +27,6 @@ import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
-import java.util.*
 import java.util.logging.Level
 
 /**
@@ -72,10 +69,11 @@ class BlockBallPlugin : JavaPlugin() {
                 Version.VERSION_1_20_R3,
                 Version.VERSION_1_20_R4,
                 Version.VERSION_1_21_R1,
+                Version.VERSION_1_21_R2,
             )
         } else {
             arrayOf(
-                Version.VERSION_1_21_R1,
+                Version.VERSION_1_21_R2,
             )
         }
 
@@ -130,24 +128,8 @@ class BlockBallPlugin : JavaPlugin() {
 
             // Load Language
             val language = configurationService.findValue<String>("language")
-            try {
-                plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us", "es_es")
-                logger.log(Level.INFO, "Loaded language file $language.properties.")
-            } catch (e: Exception) {
-                // Compatibility to < 6.46.3
-                Files.move(
-                    plugin.dataFolder.toPath().resolve("lang").resolve("en_us.properties"),
-                    plugin.dataFolder.toPath().resolve("lang")
-                        .resolve("old_" + UUID.randomUUID().toString() + ".properties"),
-                    StandardCopyOption.REPLACE_EXISTING
-                )
-                plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us", "es_es")
-                logger.log(
-                    Level.WARNING,
-                    "Your language file is not compatible. Your existing file has been renamed and the original file has been reset."
-                )
-            }
-
+            plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us", "es_es")
+            logger.log(Level.INFO, "Loaded language file $language.properties.")
 
             // Load Games
             val gameService = module.getService<GameService>()
