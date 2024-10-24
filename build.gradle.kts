@@ -4,12 +4,12 @@ import java.util.*
 import java.io.*
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version ("1.6.10")
+    id("org.jetbrains.kotlin.jvm") version ("1.9.25")
     id("com.github.johnrengelman.shadow") version ("7.0.0")
 }
 
 group = "com.github.shynixn"
-version = "7.5.0"
+version = "7.6.0"
 
 repositories {
     mavenLocal()
@@ -31,8 +31,8 @@ dependencies {
 
     // Library dependencies with legacy compatibility, we can use more up-to-date version in the plugin.yml
     implementation("com.github.shynixn.org.bstats:bstats-bukkit:1.7")
-    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.16.0")
-    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.16.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.20.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.20.0")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.3.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.2.3")
     implementation("com.google.inject:guice:5.0.1")
@@ -41,8 +41,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcutils:common:2024.23")
-    implementation("com.github.shynixn.mcutils:packet:2024.38")
+    implementation("com.github.shynixn.mcutils:common:2024.25")
+    implementation("com.github.shynixn.mcutils:packet:2024.41")
     implementation("com.github.shynixn.mcutils:database:2024.8")
     implementation("com.github.shynixn.mcutils:sign:2024.3")
     implementation("com.github.shynixn.mcutils:guice:2024.2")
@@ -99,6 +99,7 @@ tasks.register("relocatePluginJar", ShadowJar::class.java) {
     from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-relocate.${extension}"
     relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
+    relocate("com.fasterxml", "com.github.shynixn.blockball.lib.com.fasterxml")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
 }
 

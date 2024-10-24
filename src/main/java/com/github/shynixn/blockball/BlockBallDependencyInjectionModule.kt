@@ -27,14 +27,13 @@ import com.github.shynixn.mcutils.database.impl.AutoSavePlayerDataRepositoryImpl
 import com.github.shynixn.mcutils.database.impl.CachePlayerDataRepositoryImpl
 import com.github.shynixn.mcutils.database.impl.ConfigSelectedRepositoryImpl
 import com.github.shynixn.mcutils.guice.DependencyInjectionModule
-import com.github.shynixn.mcutils.packet.api.Packet
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.mcutils.packet.impl.service.ChatMessageServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.ItemServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.RayTracingServiceImpl
-import com.github.shynixn.mcutils.packet.nms.v1_21_R1.AreaSelectionServiceImpl
+import com.github.shynixn.mcutils.packet.nms.v1_21_R2.AreaSelectionServiceImpl
 import com.github.shynixn.mcutils.sign.SignService
 import com.github.shynixn.mcutils.sign.SignServiceImpl
 import kotlinx.coroutines.CoroutineDispatcher
