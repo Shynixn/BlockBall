@@ -198,7 +198,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
         }
 
         val rayTraceResult =
-            rayTracingService.rayTraceMotion(position.toLocation().toVector3d(), motion.toVector().toVector3d())
+            rayTracingService.rayTraceMotion(position.toLocation().toVector3d(), motion.toVector().toVector3d(), false, true)
 
         val rayTraceEvent = BallRayTraceEvent(
             ball, rayTraceResult.hitBlock,
