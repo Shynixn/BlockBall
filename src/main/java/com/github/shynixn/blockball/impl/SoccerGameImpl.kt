@@ -126,7 +126,7 @@ abstract class SoccerGameImpl(
     /**
      * The last interacted entity with the ball. Can also be a non player.
      */
-    override var lastInteractedEntity: Any? = null
+    override var lastInteractedEntity: Player? = null
 
     var mirroredGoals: Boolean = false
 
@@ -779,7 +779,7 @@ abstract class SoccerGameImpl(
                     player,
                     placeHolderService.replacePlaceHolders(language.scoreRedTitle, player, this, scoreTeamMeta),
                     placeHolderService.replacePlaceHolders(
-                        language.scoreRedSubTitle.format(player.name), player, this, scoreTeamMeta
+                        language.scoreRedSubTitle.format(interactionEntity.name), player, this, scoreTeamMeta
                     ),
                     language.scoreRedFadeIn.toIntOrNull() ?: 20,
                     language.scoreRedStay.toIntOrNull() ?: 60,
@@ -792,7 +792,7 @@ abstract class SoccerGameImpl(
                     player,
                     placeHolderService.replacePlaceHolders(language.scoreBlueTitle, player, this, scoreTeamMeta),
                     placeHolderService.replacePlaceHolders(
-                        language.scoreBlueSubTitle.format(player.name), player, this, scoreTeamMeta
+                        language.scoreBlueSubTitle.format(interactionEntity.name), player, this, scoreTeamMeta
                     ),
                     language.scoreBlueFadeIn.toIntOrNull() ?: 20,
                     language.scoreBlueStay.toIntOrNull() ?: 60,

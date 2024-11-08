@@ -41,7 +41,11 @@ class PlaceHolderServiceImpl @Inject constructor(
         gamePlayerHolderFunctions[PlaceHolder.GAME_SUM_CURRENTPLAYERS] =
             { game -> (game.ingamePlayersStorage.size).toString() }
         gamePlayerHolderFunctions[PlaceHolder.GAME_RED_SCORE] = { game -> game.redScore.toString() }
+        gamePlayerHolderFunctions[PlaceHolder.GAME_RED_PLAYER_AMOUNT] = { game -> game.redTeam.size.toString() }
+        gamePlayerHolderFunctions[PlaceHolder.GAME_RED_PLAYER_MAXAMOUNT] = { game -> game.arena.meta.redTeamMeta.maxAmount.toString() }
         gamePlayerHolderFunctions[PlaceHolder.GAME_BLUE_SCORE] = { game -> game.blueScore.toString() }
+        gamePlayerHolderFunctions[PlaceHolder.GAME_BLUE_PLAYER_AMOUNT] = { game -> game.blueTeam.size.toString() }
+        gamePlayerHolderFunctions[PlaceHolder.GAME_BLUE_PLAYER_MAXAMOUNT] = { game -> game.arena.meta.blueTeamMeta.maxAmount.toString()}
         gamePlayerHolderFunctions[PlaceHolder.GAME_TIME] = { game ->
             if (game is SoccerMiniGame) {
                 game.gameCountdown.toString()
@@ -101,6 +105,16 @@ class PlaceHolderServiceImpl @Inject constructor(
         // Player PlaceHolders
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_NAME] = { player ->
             player.name
+        }
+        playerPlaceHolderFunctions[PlaceHolder.PLAYER_TEAM] = { player ->
+            val game = gameService.getByPlayer(player)
+            if (game?.blueTeam != null && game.blueTeam.contains(player)) {
+                "blue"
+            } else if (game?.redTeam != null && game.redTeam.contains(player)) {
+                "red"
+            } else {
+                ""
+            }
         }
         playerPlaceHolderFunctions[PlaceHolder.PLAYER_IS_INGAME] = { player ->
             val game = gameService.getByPlayer(player)
@@ -412,7 +426,10 @@ class PlaceHolderServiceImpl @Inject constructor(
                             val leaderBoard = statsService.getLeaderBoard()
 
                             if (leaderBoard != null) {
-                                locatedPlaceHolders[evaluatedPlaceHolder] = leaderBoardPlaceholder.f.invoke(leaderBoard, parts[parts.size - 1].substringBefore("%").toInt()-1)
+                                locatedPlaceHolders[evaluatedPlaceHolder] = leaderBoardPlaceholder.f.invoke(
+                                    leaderBoard,
+                                    parts[parts.size - 1].substringBefore("%").toInt() - 1
+                                )
                             }
                         }
                     }

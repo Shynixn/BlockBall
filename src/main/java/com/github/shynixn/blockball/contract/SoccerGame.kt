@@ -73,7 +73,7 @@ interface SoccerGame {
     /**
      * The last interacted entity with the ball. Can also be a non player.
      */
-    var lastInteractedEntity: Any?
+    var lastInteractedEntity: Player?
 
     /**
      * Marks the game for being closed and will automatically

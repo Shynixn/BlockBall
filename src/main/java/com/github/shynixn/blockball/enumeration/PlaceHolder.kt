@@ -19,7 +19,15 @@ enum class PlaceHolder(
 
     GAME_RED_SCORE("%blockball_game_redScore%"),
 
+    GAME_RED_PLAYER_AMOUNT("%blockball_game_redPlayers%"),
+
+    GAME_RED_PLAYER_MAXAMOUNT("%blockball_game_redMaxPlayers%"),
+
     GAME_BLUE_SCORE("%blockball_game_blueScore%"),
+
+    GAME_BLUE_PLAYER_AMOUNT("%blockball_game_bluePlayers%"),
+
+    GAME_BLUE_PLAYER_MAXAMOUNT("%blockball_game_blueMaxPlayers%"),
 
     GAME_TIME("%blockball_game_time%"),
 
@@ -40,6 +48,8 @@ enum class PlaceHolder(
     // Player PlaceHolders
 
     PLAYER_NAME("%blockball_player_name%"),
+
+    PLAYER_TEAM("%blockball_player_team%"),
 
     PLAYER_IS_INGAME("%blockball_player_isInGame%"),
 
