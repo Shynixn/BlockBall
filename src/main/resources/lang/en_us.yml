@@ -104,10 +104,10 @@ axeReceivedMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 The BlockBall axe has been added to your inventory."
 bossBarMessage:
-  type: "BOSSBAR"
+  type: "CHAT"
   text: "&cTeam Red %blockball_game_redScore% : &9%blockball_game_blueScore% Team Blue"
 hologramMessage:
-  type: "HOLOGRAM"
+  type: "CHAT"
   text: "&cTeam Red %blockball_game_redScore% : &9Team Blue %blockball_game_blueScore%"
 scoreRed:
   type: "TITLE"

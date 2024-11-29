@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.enumeration.PlaceHolderLeaderBoard
+import com.github.shynixn.mcutils.common.language.LanguageItem
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.google.inject.Inject
@@ -31,7 +32,7 @@ class PlaceHolderServiceImpl @Inject constructor(
 
         for (field in BlockBallLanguageImpl::class.java.declaredFields) {
             field.isAccessible = true
-            langPlaceHolderFunctions["%blockball_lang_${field.name}%"] = { field.get(null) as String }
+            langPlaceHolderFunctions["%blockball_lang_${field.name}%"] = { (field.get(language) as LanguageItem).text }
         }
 
         // Game PlaceHolders

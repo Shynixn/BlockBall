@@ -50,7 +50,7 @@ class SoccerBallSettings {
     /**
      * Amount of cooldown per player.
      */
-    var interactionCoolDownPerPlayerMs: Int = 20
+    var interactionCoolDownPerPlayerMs: Int = 400
 
     /** Should the ball rotate? */
     var rotating: Boolean = true

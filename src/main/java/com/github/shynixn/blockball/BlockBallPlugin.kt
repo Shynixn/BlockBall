@@ -97,9 +97,9 @@ class BlockBallPlugin : JavaPlugin() {
         language.chatMessageService = ChatMessageServiceImpl(this)
         language.placeHolderFun =
             { text, player ->
-                val placeHolderService = module.getService<com.github.shynixn.mcutils.common.placeholder.PlaceHolderService>()
+                val placeHolderService = module.getService<PlaceHolderService>()
                 if (player != null) {
-                    placeHolderService.resolvePlaceHolder(player, text, hashMapOf())
+                    placeHolderService.replacePlaceHolders(text, player)
                 } else {
                     text
                 }

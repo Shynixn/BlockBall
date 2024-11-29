@@ -736,27 +736,13 @@ abstract class SoccerGameImpl(
         val additionalPlayers = getNofifiedPlayers()
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first as Player })
 
-        val scoreTeamMeta = if (ingamePlayersStorage.containsKey(interactionEntity)) {
-            val scorerGameStory = ingamePlayersStorage[interactionEntity]!!
-
-            if (scorerGameStory.team == Team.RED) {
-                arena.meta.redTeamMeta
-            } else if (scorerGameStory.team == Team.BLUE) {
-                arena.meta.blueTeamMeta
-            } else {
-                return
-            }
-        } else {
-            null
-        }
-
         if (team == Team.RED) {
             for (player in players) {
-                language.sendMessage(language.scoreRed, player)
+                language.sendMessage(language.scoreRed, player, interactionEntity.name)
             }
         } else {
             for (player in players) {
-                language.sendMessage(language.scoreBlue, player)
+                language.sendMessage(language.scoreBlue, player, interactionEntity.name)
             }
         }
 
