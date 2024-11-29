@@ -16,8 +16,10 @@ class SoccerBallSettings {
     var item: Item = Item().also {
         it.typeName = "PLAYER_HEAD,397"
         it.durability = "3"
-        it.skinBase64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ=="
+        it.skinBase64 =
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ=="
     }
+
     /**
      * If set to true, the slime is visible instead of the ball.
      */
@@ -45,6 +47,10 @@ class SoccerBallSettings {
      */
     var interactionCoolDown: Int = 20
 
+    /**
+     * Amount of cooldown per player.
+     */
+    var interactionCoolDownPerPlayerMs: Int = 20
 
     /** Should the ball rotate? */
     var rotating: Boolean = true

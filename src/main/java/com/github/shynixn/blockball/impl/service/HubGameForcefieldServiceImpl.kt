@@ -1,9 +1,6 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.contract.BlockBallLanguage
-import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.HubGameForcefieldService
-import com.github.shynixn.blockball.contract.PlaceHolderService
+import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.InteractionCache
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -21,7 +18,7 @@ import org.bukkit.entity.Player
 class HubGameForcefieldServiceImpl @Inject constructor(
     private val gameService: GameService,
     private val placeholderService: PlaceHolderService,
-    private val language: BlockBallLanguage,
+    private val language: Language,
     private val chatMessageService: ChatMessageService
 ) : HubGameForcefieldService {
     private val cache = HashMap<Player, InteractionCache>()
@@ -40,7 +37,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                 )
             ) {
                 gameInternal.leave(player)
-                player.sendMessage(language.leftGameMessage)
+                language.sendMessage(language.leftGameMessage, player)
             }
             return
         }
@@ -81,7 +78,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                                 it.components = mutableListOf(
                                     TextComponent().also {
                                         it.text = placeholderService.replacePlaceHolders(
-                                            language.hubGameJoinHeader,
+                                            language.hubGameJoinHeader.text,
                                             player,
                                             game,
                                             null,
@@ -90,7 +87,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                                     },
                                     TextComponent().also {
                                         it.text = placeholderService.replacePlaceHolders(
-                                            language.hubGameJoinRed,
+                                            language.hubGameJoinRed.text,
                                             player,
                                             game,
                                             null,
@@ -103,7 +100,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                                     },
                                     TextComponent().also {
                                         it.text = placeholderService.replacePlaceHolders(
-                                            language.hubGameJoinBlue,
+                                            language.hubGameJoinBlue.text,
                                             player,
                                             game,
                                             null,

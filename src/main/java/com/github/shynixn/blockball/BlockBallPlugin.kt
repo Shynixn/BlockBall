@@ -13,7 +13,7 @@ import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.Version
-import com.github.shynixn.mcutils.common.reloadTranslation
+import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
@@ -21,6 +21,7 @@ import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.guice.DependencyInjectionModule
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.impl.service.ChatMessageServiceImpl
 import com.github.shynixn.mcutils.sign.SignService
 import kotlinx.coroutines.runBlocking
 import org.bstats.bukkit.Metrics
@@ -91,8 +92,23 @@ class BlockBallPlugin : JavaPlugin() {
 
         logger.log(Level.INFO, "Loaded NMS version ${Version.serverVersion}.")
 
+        // Load Language
+        val language = BlockBallLanguageImpl()
+        language.chatMessageService = ChatMessageServiceImpl(this)
+        language.placeHolderFun =
+            { text, player ->
+                val placeHolderService = module.getService<com.github.shynixn.mcutils.common.placeholder.PlaceHolderService>()
+                if (player != null) {
+                    placeHolderService.resolvePlaceHolder(player, text, hashMapOf())
+                } else {
+                    text
+                }
+            }
+        reloadTranslation(language,BlockBallLanguageImpl::class.java)
+        logger.log(Level.INFO, "Loaded language file.")
+
         // Guice
-        this.module = BlockBallDependencyInjectionModule(this).build()
+        this.module = BlockBallDependencyInjectionModule(this, language).build()
         this.reloadConfig()
 
         // Register Packet
@@ -125,11 +141,6 @@ class BlockBallPlugin : JavaPlugin() {
             if (enableMetrics) {
                 Metrics(plugin, bstatsPluginId)
             }
-
-            // Load Language
-            val language = configurationService.findValue<String>("language")
-            plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java, "en_us", "es_es")
-            logger.log(Level.INFO, "Loaded language file $language.properties.")
 
             // Load Games
             val gameService = module.getService<GameService>()

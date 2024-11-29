@@ -218,10 +218,12 @@ meta:
     interactionHitBoxSize: 2.0
     # The ball uses an invisible slime as a hitbox. You can increase this hitbox to make it easier to hit the ball.
     kickPassHitBoxSize: 5.0
-    # Delay in ticks between each punch of the ball.
+    # The delay between interacting with the ball and the actual execution of the ball movement in ticks.
     kickPassDelay: 5
-    # Delay in ticks between running into the ball.
+    # Cooldown in ticks how often the ball accepts new movement inputs e.g. clicks, running into.
     interactionCoolDown: 20
+    # Cooldown in milliseconds how often a player can send movement inputs to the ball e.g. clicks, running into.
+    interactionCoolDownPerPlayerMs: 80
     # Should the ball play a rotation animation.
     rotating: true
     # Should left clicks be enabled?

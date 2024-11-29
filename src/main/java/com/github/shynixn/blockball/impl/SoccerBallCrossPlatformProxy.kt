@@ -22,6 +22,8 @@ class SoccerBallCrossPlatformProxy(
     private val ballHitBoxEntity: BallHitboxEntity,
     private val plugin: Plugin
 ) : SoccerBall {
+    private val playerInteractionCoolDown = HashMap<Player, Long>()
+
     private var allPlayerTracker: AllPlayerTracker = AllPlayerTracker(
         {
             ballHitBoxEntity.position
@@ -119,6 +121,10 @@ class SoccerBallCrossPlatformProxy(
             return
         }
 
+        if (isInCoolDown(player)) {
+            return
+        }
+
         ballHitBoxEntity.kickPlayer(player, meta.movementModifier.shotVelocity, false)
     }
 
@@ -130,6 +136,10 @@ class SoccerBallCrossPlatformProxy(
      */
     override fun passByPlayer(player: Player) {
         if (!meta.enabledPass) {
+            return
+        }
+
+        if (isInCoolDown(player)) {
             return
         }
 
@@ -153,6 +163,7 @@ class SoccerBallCrossPlatformProxy(
 
         isDead = true
         allPlayerTracker.dispose()
+        playerInteractionCoolDown.clear()
     }
 
     /**
@@ -170,5 +181,19 @@ class SoccerBallCrossPlatformProxy(
         } catch (e: Exception) {
             plugin.logger.log(Level.SEVERE, "Entity ticking exception", e)
         }
+    }
+
+    private fun isInCoolDown(player: Player): Boolean {
+        val currentMilliSeconds = System.currentTimeMillis()
+        val timeStampOfLastHit = playerInteractionCoolDown[player]
+
+        if (timeStampOfLastHit != null) {
+            if (currentMilliSeconds - timeStampOfLastHit < meta.interactionCoolDownPerPlayerMs) {
+                return true
+            }
+        }
+
+        playerInteractionCoolDown[player] = currentMilliSeconds
+        return false
     }
 }

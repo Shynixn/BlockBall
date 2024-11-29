@@ -42,7 +42,8 @@ import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 
 class BlockBallDependencyInjectionModule(
-    private val plugin: BlockBallPlugin
+    private val plugin: BlockBallPlugin,
+    private val language: Language
 ) : DependencyInjectionModule() {
     companion object {
         val areLegacyVersionsIncluded: Boolean by lazy {
@@ -60,6 +61,7 @@ class BlockBallDependencyInjectionModule(
      */
     override fun configure() {
         addService<Plugin>(plugin)
+        addService<Language>(language)
 
         // Repositories
         val arenaRepository = YamlFileRepositoryImpl<SoccerArena>(plugin, "arena",
@@ -84,9 +86,8 @@ class BlockBallDependencyInjectionModule(
         )
         addService<PlayerDataRepository<PlayerInformation>>(playerDataRepository)
         addService<CachePlayerRepository<PlayerInformation>>(playerDataRepository)
-        addService<BlockBallLanguage>(BlockBallLanguageImpl)
         addService<SignService> {
-            SignServiceImpl(plugin, getService(), BlockBallLanguageImpl.noPermissionMessage)
+            SignServiceImpl(plugin, getService(),language.noPermissionMessage.text)
         }
 
         // Services

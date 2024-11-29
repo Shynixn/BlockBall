@@ -5,7 +5,6 @@ import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
-import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
@@ -19,11 +18,10 @@ class SoccerHubGameImpl(
     plugin: Plugin,
     placeHolderService: PlaceHolderService,
     private val bossBarService: BossBarService,
-    language: BlockBallLanguage,
+    language: Language,
     packetService: PacketService,
     scoreboardService: ScoreboardService,
     soccerBallFactory: SoccerBallFactory,
-    chatMessageService: ChatMessageService,
     commandService: CommandService
 ) : SoccerGameImpl(
     arena,
@@ -33,7 +31,6 @@ class SoccerHubGameImpl(
     bossBarService,
     scoreboardService,
     soccerBallFactory,
-    chatMessageService,
     commandService,
     language,
     playerDataRepository
