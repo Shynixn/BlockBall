@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.enumeration.PlaceHolderLeaderBoard
+import com.github.shynixn.mcutils.common.language.LanguageItem
 import com.github.shynixn.mcutils.common.translateChatColors
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.google.inject.Inject
@@ -15,7 +16,8 @@ import org.bukkit.entity.Player
 
 class PlaceHolderServiceImpl @Inject constructor(
     private val gameService: GameService, private val playerDataRepository: CachePlayerRepository<PlayerInformation>,
-    private val statsService: StatsService
+    private val statsService: StatsService,
+    private val language: Language
 ) : PlaceHolderService {
     private val gamePlayerHolderFunctions = HashMap<PlaceHolder, ((SoccerGame) -> String)>()
     private val teamPlaceHolderFunctions = HashMap<PlaceHolder, ((SoccerGame, TeamMeta, Int) -> String)>()
@@ -30,7 +32,7 @@ class PlaceHolderServiceImpl @Inject constructor(
 
         for (field in BlockBallLanguageImpl::class.java.declaredFields) {
             field.isAccessible = true
-            langPlaceHolderFunctions["%blockball_lang_${field.name}%"] = { field.get(null) as String }
+            langPlaceHolderFunctions["%blockball_lang_${field.name}%"] = { (field.get(language) as LanguageItem).text }
         }
 
         // Game PlaceHolders
@@ -65,9 +67,9 @@ class PlaceHolderServiceImpl @Inject constructor(
             val player = game.lastInteractedEntity
             if (player != null && player is Player) {
                 if (game.redTeam.contains(player)) {
-                    BlockBallLanguageImpl.teamRedDisplayName
+                    language.teamRedDisplayName.text
                 } else if (game.blueTeam.contains(player)) {
-                    BlockBallLanguageImpl.teamBlueDisplayName
+                   language.teamBlueDisplayName.text
                 } else {
                     ""
                 }
@@ -79,11 +81,11 @@ class PlaceHolderServiceImpl @Inject constructor(
         gamePlayerHolderFunctions[PlaceHolder.GAME_STATE] = { game -> game.status.name }
         gamePlayerHolderFunctions[PlaceHolder.GAME_STATE_DISPLAYNAME] = { game ->
             if (game.status == GameState.JOINABLE) {
-                BlockBallLanguageImpl.gameStatusJoinAble
+                language.gameStatusJoinAble.text
             } else if (game.status == GameState.DISABLED) {
-                BlockBallLanguageImpl.gameStatusDisabled
+                language.gameStatusDisabled.text
             } else {
-                BlockBallLanguageImpl.gameStatusRunning
+                language.gameStatusRunning.text
             }
         }
         gamePlayerHolderFunctions[PlaceHolder.GAME_REMAININGPLAYERS_TO_START] = { game ->

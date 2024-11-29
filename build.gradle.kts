@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.6.1"
+version = "7.7.0"
 
 repositories {
     mavenLocal()
@@ -41,8 +41,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcutils:common:2024.25")
-    implementation("com.github.shynixn.mcutils:packet:2024.47")
+    implementation("com.github.shynixn.mcutils:common:2024.38")
+    implementation("com.github.shynixn.mcutils:packet:2024.49")
     implementation("com.github.shynixn.mcutils:database:2024.8")
     implementation("com.github.shynixn.mcutils:sign:2024.3")
     implementation("com.github.shynixn.mcutils:guice:2024.2")
@@ -208,57 +208,70 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
 
 tasks.register("languageFile") {
     val kotlinSrcFolder = project.sourceSets.toList()[0].allJava.srcDirs.first { e -> e.endsWith("java") }
+    val contractFile = kotlinSrcFolder.resolve("com/github/shynixn/blockball/contract/Language.kt")
+    val resourceFile = kotlinSrcFolder.parentFile.resolve("resources").resolve("lang").resolve("en_us.yml")
+    val lines = resourceFile.readLines()
 
-    // Contract file
-    var languageKotlinFile = kotlinSrcFolder.resolve("com/github/shynixn/blockball/contract/BlockBallLanguage.kt")
-    var resourceFile = kotlinSrcFolder.parentFile.resolve("resources").resolve("lang").resolve("en_us.properties")
-    var bundle = FileInputStream(resourceFile).use { stream ->
-        PropertyResourceBundle(stream)
+    val contractContents = ArrayList<String>()
+    contractContents.add("package com.github.shynixn.blockball.contract")
+    contractContents.add("")
+    contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageItem")
+    contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageProvider")
+    contractContents.add("")
+    contractContents.add("interface Language : LanguageProvider {")
+    for (key in lines) {
+        if (key.toCharArray()[0].isLetter()) {
+            contractContents.add("  var ${key} LanguageItem")
+            contractContents.add("")
+        }
     }
+    contractContents.removeLast()
+    contractContents.add("}")
 
-    var contents = ArrayList<String>()
-    contents.add("package com.github.shynixn.blockball.contract")
-    contents.add("")
-    contents.add("interface BlockBallLanguage {")
-    for (key in bundle.keys) {
-        val value = bundle.getString(key)
-        contents.add("  /** $value **/")
-        contents.add("  var ${key} : String")
-        contents.add("")
-    }
-    contents.removeLast()
-    contents.add("}")
-
-    languageKotlinFile.printWriter().use { out ->
-        for (line in contents) {
+    contractFile.printWriter().use { out ->
+        for (line in contractContents) {
             out.println(line)
         }
     }
 
-    // Impl File
-    languageKotlinFile = kotlinSrcFolder.resolve("com/github/shynixn/blockball/BlockBallLanguageImpl.kt")
-    resourceFile = kotlinSrcFolder.parentFile.resolve("resources").resolve("lang").resolve("en_us.properties")
-    bundle = FileInputStream(resourceFile).use { stream ->
-        PropertyResourceBundle(stream)
-    }
+    val implFile = kotlinSrcFolder.resolve("com/github/shynixn/blockball/BlockBallLanguageImpl.kt")
+    val implContents = ArrayList<String>()
+    implContents.add("package com.github.shynixn.blockball")
+    implContents.add("")
+    implContents.add("import com.github.shynixn.mcutils.common.language.LanguageItem")
+    implContents.add("import com.github.shynixn.mcutils.common.language.LanguageProviderImpl")
+    implContents.add("import com.github.shynixn.blockball.contract.Language")
+    implContents.add("")
+    implContents.add("class BlockBallLanguageImpl : Language, LanguageProviderImpl() {")
+    implContents.add(" override val names: List<String>\n" +
+            "  get() = listOf(\"en_us\", \"es_es\")")
 
-    contents = ArrayList<String>()
-    contents.add("package com.github.shynixn.blockball")
-    contents.add("")
-    contents.add("import com.github.shynixn.blockball.contract.BlockBallLanguage")
-    contents.add("")
-    contents.add("object BlockBallLanguageImpl : BlockBallLanguage {")
-    for (key in bundle.keys) {
-        val value = bundle.getString(key)
-        contents.add("  /** $value **/")
-        contents.add("  override var ${key} : String = \"$value\"")
-        contents.add("")
-    }
-    contents.removeLast()
-    contents.add("}")
+    for (i in 0 until lines.size) {
+        val key = lines[i]
 
-    languageKotlinFile.printWriter().use { out ->
-        for (line in contents) {
+        if (key.toCharArray()[0].isLetter()) {
+            var text = ""
+            println(">" + lines[i])
+
+            println("_")
+            var j = i
+            while (true){
+                if(lines[j].contains("text:")){
+                    text = lines[j]
+                    break
+                }
+                j++
+            }
+
+            implContents.add(" override var ${key.replace(":","")} = LanguageItem(${text.replace("  text: ","")})")
+            implContents.add("")
+        }
+    }
+    implContents.removeLast()
+    implContents.add("}")
+
+    implFile.printWriter().use { out ->
+        for (line in implContents) {
             out.println(line)
         }
     }

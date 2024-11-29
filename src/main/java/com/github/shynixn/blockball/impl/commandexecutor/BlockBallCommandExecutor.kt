@@ -2,10 +2,7 @@ package com.github.shynixn.blockball.impl.commandexecutor
 
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.BlockBallLanguageImpl
-import com.github.shynixn.blockball.contract.BlockBallLanguage
-import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.PlaceHolderService
-import com.github.shynixn.blockball.contract.SoccerRefereeGame
+import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
@@ -17,6 +14,7 @@ import com.github.shynixn.mcutils.common.command.CommandBuilder
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandType
 import com.github.shynixn.mcutils.common.command.Validator
+import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.selection.AreaHighlight
 import com.github.shynixn.mcutils.common.selection.AreaSelectionService
@@ -39,8 +37,7 @@ class BlockBallCommandExecutor @Inject constructor(
     private val arenaRepository: CacheRepository<SoccerArena>,
     private val gameService: GameService,
     private val plugin: Plugin,
-    private val configurationService: ConfigurationService,
-    private val language: BlockBallLanguage,
+    private val language: Language,
     private val signService: SignService,
     private val selectionService: AreaSelectionService,
     private val placeHolderService: PlaceHolderService,
@@ -81,7 +78,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.maxLength20Characters
+            return language.maxLength20Characters.text
         }
     }
     private val gameMustNotExistValidator = object : Validator<String> {
@@ -93,7 +90,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.gameAlreadyExistsMessage.format(openArgs[0])
+            return language.gameAlreadyExistsMessage.text.format(openArgs[0])
         }
     }
     private val gameMustExistValidator = object : Validator<SoccerArena> {
@@ -105,7 +102,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.gameDoesNotExistMessage.format(openArgs[0])
+            return language.gameDoesNotExistMessage.text.format(openArgs[0])
         }
     }
     private val teamValidator = object : Validator<Team> {
@@ -120,7 +117,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.teamDoesNotExistMessage.format(openArgs[0])
+            return language.teamDoesNotExistMessage.text.format(openArgs[0])
         }
     }
 
@@ -145,7 +142,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.teamDoesNotExistMessage.format(openArgs[0])
+            return language.teamDoesNotExistMessage.text.format(openArgs[0])
         }
     }
 
@@ -157,7 +154,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.selectionTypeDoesNotExistMessage
+            return language.selectionTypeDoesNotExistMessage.text
         }
     }
 
@@ -169,7 +166,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.gameTypeNotExistMessage
+            return language.gameTypeNotExistMessage.text
         }
     }
 
@@ -181,7 +178,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.selectionTypeDoesNotExistMessage
+            return language.selectionTypeDoesNotExistMessage.text
         }
     }
 
@@ -193,20 +190,20 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.signTypeDoesNotExistMessage
+            return language.signTypeDoesNotExistMessage.text
         }
     }
 
     init {
         val mcCart = CommandBuilder(plugin, coroutineExecutor, "blockball", chatMessageService) {
-            usage(language.commandUsage.translateChatColors())
-            description(language.commandDescription)
+            usage(language.commandUsage.text.translateChatColors())
+            description(language.commandDescription.text)
             aliases(plugin.config.getStringList("commands.blockball.aliases"))
             permission(Permission.COMMAND)
-            permissionMessage(language.noPermissionMessage.translateChatColors())
+            permissionMessage(language.noPermissionMessage.text.translateChatColors())
             subCommand("create") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandCreateToolTip }
+                toolTip { language.commandCreateToolTip.text }
                 builder().argument("name").validator(maxLengthValidator).validator(maxLengthValidator)
                     .validator(gameMustNotExistValidator).tabs { listOf("<name>") }.argument("displayName")
                     .validator(remainingStringValidator).tabs { listOf("<displayName>") }
@@ -214,51 +211,51 @@ class BlockBallCommandExecutor @Inject constructor(
             }
             subCommand("delete") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandDeleteToolTip }
+                toolTip { language.commandDeleteToolTip.text }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .execute { sender, arena -> deleteArena(sender, arena) }
             }
             subCommand("list") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandListToolTip }
+                toolTip { language.commandListToolTip.text }
                 builder().execute { sender -> listArena(sender) }
             }
             subCommand("toggle") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandToggleToolTip }
+                toolTip { language.commandToggleToolTip.text }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .execute { sender, arena -> toggleGame(sender, arena) }
             }
             subCommand("join") {
                 noPermission()
-                toolTip { language.commandJoinToolTip }
+                toolTip { language.commandJoinToolTip.text }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
-                    .executePlayer({ language.commandSenderHasToBePlayer }) { sender, arena ->
+                    .executePlayer({ language.commandSenderHasToBePlayer.text }) { sender, arena ->
                         joinGame(
                             sender, arena.name
                         )
                     }.argument("team").validator(teamValidator).tabs(teamTabs)
-                    .executePlayer({ language.commandSenderHasToBePlayer }) { sender, arena, team ->
+                    .executePlayer({ language.commandSenderHasToBePlayer.text }) { sender, arena, team ->
                         joinGame(sender, arena.name, team)
                     }
             }
             subCommand("leave") {
                 noPermission()
-                toolTip { language.commandLeaveToolTip }
-                builder().executePlayer({ language.commandSenderHasToBePlayer }) { sender -> leaveGame(sender) }
+                toolTip { language.commandLeaveToolTip.text }
+                builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { sender -> leaveGame(sender) }
             }
             helpCommand()
             subCommand("axe") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandAxeToolTip }
-                builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                toolTip { language.commandAxeToolTip.text }
+                builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { player ->
                     selectionService.addSelectionItemToInventory(player)
-                    player.sendMessage(language.axeReceivedMessage)
+                    language.sendMessage(language.axeReceivedMessage, player)
                 }
             }
             subCommand("select") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandSelectToolTip }
+                toolTip { language.commandSelectToolTip.text }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("type")
                     .validator(selectionTypeValidator).tabs {
                         SelectionType.values().map { e ->
@@ -266,13 +263,13 @@ class BlockBallCommandExecutor @Inject constructor(
                                 Locale.ENGLISH
                             )
                         }
-                    }.executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, locationType ->
+                    }.executePlayer({ language.commandSenderHasToBePlayer.text }) { player, arena, locationType ->
                         setSelection(player, arena, locationType)
                     }
             }
             subCommand("location") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandSelectToolTip }
+                toolTip { language.commandSelectToolTip.text }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("type")
                     .validator(locationTypeValidator).tabs {
                         LocationType.values().map { e ->
@@ -280,15 +277,15 @@ class BlockBallCommandExecutor @Inject constructor(
                                 Locale.ENGLISH
                             )
                         }
-                    }.executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, locationType ->
+                    }.executePlayer({ language.commandSenderHasToBePlayer.text }) { player, arena, locationType ->
                         setLocation(player, arena, locationType)
                     }
             }
             subCommand("gamerule") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandGameRuleToolTip }
+                toolTip { language.commandGameRuleToolTip.text }
                 subCommand("gameType") {
-                    toolTip { language.commandGameRuleToolTip }
+                    toolTip { language.commandGameRuleToolTip.text }
                     permission(Permission.EDIT_GAME)
                     builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("value")
                         .validator(gameTypeValidator).tabs {
@@ -299,50 +296,50 @@ class BlockBallCommandExecutor @Inject constructor(
                             }
                         }.execute { sender, arena, gameType ->
                             if (gameType == GameType.REFEREEGAME && !BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-                                sender.sendMessage(language.gameTypeRefereeOnlyForPatreons)
+                                language.sendMessage(language.gameTypeRefereeOnlyForPatreons, sender)
                                 return@execute
                             }
 
                             arena.gameType = gameType
                             arenaRepository.save(arena)
-                            sender.sendMessage(language.gameRuleChangedMessage)
+                            language.sendMessage(language.gameRuleChangedMessage, sender)
                             reloadArena(sender, arena)
                         }
                 }
             }
             subCommand("highlight") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandHighlightToolTip }
+                toolTip { language.commandHighlightToolTip.text }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
-                    .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena ->
+                    .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, arena ->
                         setHighlights(player, arena)
-                        player.sendMessage(language.toggleHighlightMessage)
+                        language.sendMessage(language.toggleHighlightMessage, player)
                     }
             }
             subCommand("inventory") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandInventoryToolTip }
+                toolTip { language.commandInventoryToolTip.text }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("team")
                     .validator(teamMetaValidator).tabs(teamTabs)
-                    .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, meta ->
+                    .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, arena, meta ->
                         setInventory(player, arena, meta)
                     }
             }
             subCommand("armor") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandArmorToolTip }
+                toolTip { language.commandArmorToolTip.text }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("team")
                     .validator(teamMetaValidator).tabs(teamTabs)
-                    .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, meta ->
+                    .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, arena, meta ->
                         setArmor(player, arena, meta)
                     }
             }
             subCommand("sign") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandSignToolTip }
+                toolTip { language.commandSignToolTip.text }
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("type")
                     .validator(signTypeValidator).tabs { listOf("join", "leave") }
-                    .executePlayer({ language.commandSenderHasToBePlayer }) { player, arena, signType ->
+                    .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, arena, signType ->
                         setSign(player, arena, signType)
                     }
             }
@@ -350,68 +347,68 @@ class BlockBallCommandExecutor @Inject constructor(
                 permission(Permission.REFEREE_JOIN)
                 subCommand("startgame") {
                     permission(Permission.REFEREE_JOIN)
-                    toolTip { language.commandRefereeStartGameToolTip }
-                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                    toolTip { language.commandRefereeStartGameToolTip.text }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { player ->
                         startGameReferee(player)
                     }
                 }
                 subCommand("stopgame") {
                     permission(Permission.REFEREE_JOIN)
-                    toolTip { language.commandRefereeStopGameToolTip }
-                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                    toolTip { language.commandRefereeStopGameToolTip.text }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { player ->
                         stopGameReferee(player)
                     }
                 }
                 subCommand("setball") {
                     permission(Permission.REFEREE_JOIN)
-                    toolTip { language.commandRefereeSetBallToolTip }
-                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                    toolTip { language.commandRefereeSetBallToolTip.text }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { player ->
                         setBallToPlayerLocation(player)
                     }
                 }
                 subCommand("whistleresume") {
                     permission(Permission.REFEREE_JOIN)
-                    toolTip { language.commandRefereeWhistleResumeToolTip }
-                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                    toolTip { language.commandRefereeWhistleResumeToolTip.text }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { player ->
                         whistleRefereeResume(player)
                     }
                 }
                 subCommand("whistlestop") {
                     permission(Permission.REFEREE_JOIN)
-                    toolTip { language.commandRefereeWhistleStopToolTip }
-                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                    toolTip { language.commandRefereeWhistleStopToolTip.text }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { player ->
                         whistleRefereeStop(player)
                     }
                 }
                 subCommand("freezetime") {
                     permission(Permission.REFEREE_JOIN)
-                    toolTip { language.commandRefereeFreezeTimeToolTip }
-                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                    toolTip { language.commandRefereeFreezeTimeToolTip.text }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { player ->
                         freezeTimeReferee(player)
                     }
                 }
                 subCommand("nextperiod") {
                     permission(Permission.REFEREE_JOIN)
-                    toolTip { language.commandRefereeNextPeriodToolTip }
-                    builder().executePlayer({ language.commandSenderHasToBePlayer }) { player ->
+                    toolTip { language.commandRefereeNextPeriodToolTip.text }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { player ->
                         nextPeriodReferee(player)
                     }
                 }
             }
             subCommand("placeholder") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandPlaceHolderToolTip }
+                toolTip { language.commandPlaceHolderToolTip.text }
                 builder().argument("placeholder").tabs { listOf("<>") }.execute { sender, placeHolder ->
                     val evaluatedValue = placeHolderService.replacePlaceHolders(placeHolder)
-                    sender.sendMessage(language.commandPlaceHolderMessage.format(evaluatedValue))
-                }.executePlayer({ language.commandSenderHasToBePlayer }) { player, placeHolder ->
+                    language.sendMessage(language.commandPlaceHolderMessage, sender, evaluatedValue)
+                }.executePlayer({ language.commandSenderHasToBePlayer.text }) { player, placeHolder ->
                     val evaluatedValue = placeHolderService.replacePlaceHolders(placeHolder, player)
-                    player.sendMessage(language.commandPlaceHolderMessage.format(evaluatedValue))
+                    language.sendMessage(language.commandPlaceHolderMessage, player, evaluatedValue)
                 }
             }
             subCommand("reload") {
                 permission(Permission.EDIT_GAME)
-                toolTip { language.commandReloadToolTip }
+                toolTip { language.commandReloadToolTip.text }
                 builder().execute { sender ->
                     reloadArena(sender, null)
                 }.argument("name").validator(gameMustExistValidator).tabs(arenaTabs).execute { sender, arena ->
@@ -435,7 +432,7 @@ class BlockBallCommandExecutor @Inject constructor(
             ball.isInteractable = false
         }
 
-        player.sendMessage(language.refereeBallDisabled)
+        language.sendMessage(language.refereeBallDisabled, player)
     }
 
     private fun whistleRefereeStop(player: Player) {
@@ -446,7 +443,7 @@ class BlockBallCommandExecutor @Inject constructor(
             ball.isInteractable = false
         }
 
-        player.sendMessage(language.refereeBallDisabled)
+        language.sendMessage(language.refereeBallDisabled, player)
     }
 
     private fun whistleRefereeResume(player: Player) {
@@ -461,7 +458,7 @@ class BlockBallCommandExecutor @Inject constructor(
             ball.isInteractable = true
         }
 
-        player.sendMessage(language.refereeBallEnabled)
+        language.sendMessage(language.refereeBallEnabled, player)
     }
 
     private fun nextPeriodReferee(player: Player) {
@@ -482,7 +479,7 @@ class BlockBallCommandExecutor @Inject constructor(
 
         if (game is SoccerRefereeGame) {
             game.stopGame()
-            player.sendMessage(language.refereeStoppedGame)
+            language.sendMessage(language.refereeStoppedGame, player)
         }
     }
 
@@ -492,7 +489,7 @@ class BlockBallCommandExecutor @Inject constructor(
         if (game is SoccerRefereeGame) {
             game.setLobbyCountdownActive(true)
             game.isTimerBlockerEnabled = true
-            player.sendMessage(language.refereeStartedGame)
+            language.sendMessage(language.refereeStartedGame, player)
         }
     }
 
@@ -501,28 +498,28 @@ class BlockBallCommandExecutor @Inject constructor(
         arena.name = name
         arena.displayName = displayName
         arenaRepository.save(arena)
-        sender.sendMessage(language.gameCreatedMessage.format(name))
+        language.sendMessage(language.gameCreatedMessage, sender, name)
     }
 
     private suspend fun deleteArena(sender: CommandSender, arena: SoccerArena) {
         arenaRepository.delete(arena)
         val runningGame = gameService.getAll().firstOrNull { e -> e.arena.name.equals(arena.name, true) }
         runningGame?.close()
-        sender.sendMessage(language.deletedGameMessage.format(arena.name))
+        language.sendMessage(language.deletedGameMessage, sender, arena.name)
     }
 
     private suspend fun toggleGame(sender: CommandSender, arena: SoccerArena) {
         try {
             arena.enabled = !arena.enabled
             gameService.reload(arena)
-            sender.sendMessage(language.enabledArenaMessage.format(arena.enabled.toString()))
+            language.sendMessage(language.enabledArenaMessage, sender, arena.enabled.toString())
         } catch (e: SoccerGameException) {
             arena.enabled = false
-            sender.sendMessage(language.failedToReloadMessage.format(e.arena.name, e.message))
+            language.sendMessage(language.failedToReloadMessage, sender, e.arena.name, e.message!!)
             return
         }
         arenaRepository.save(arena)
-        sender.sendMessage(language.reloadedGameMessage.format(arena.name))
+        language.sendMessage(language.reloadedGameMessage, sender, arena.name)
     }
 
     private suspend fun setInventory(player: Player, arena: SoccerArena, teamMetadata: TeamMeta) {
@@ -532,7 +529,7 @@ class BlockBallCommandExecutor @Inject constructor(
             yamlConfiguration.saveToString()
         }.toTypedArray()
         arenaRepository.save(arena)
-        player.sendMessage(language.updatedInventoryMessage)
+        language.sendMessage(language.updatedInventoryMessage, player)
     }
 
     private suspend fun setArmor(player: Player, arena: SoccerArena, teamMeta: TeamMeta) {
@@ -542,7 +539,7 @@ class BlockBallCommandExecutor @Inject constructor(
             yamlConfiguration.saveToString()
         }.toTypedArray()
         arenaRepository.save(arena)
-        player.sendMessage(language.updatedArmorMessage)
+        language.sendMessage(language.updatedArmorMessage, player)
     }
 
     private fun CommandBuilder.permission(permission: Permission) {
@@ -617,7 +614,7 @@ class BlockBallCommandExecutor @Inject constructor(
         val game = gameService.getByName(name)
 
         if (game == null) {
-            player.sendMessage(language.gameDoesNotExistMessage.format(name))
+            language.sendMessage(language.gameDoesNotExistMessage, player, name)
             return
         }
 
@@ -627,18 +624,18 @@ class BlockBallCommandExecutor @Inject constructor(
                 )
             ) && !player.hasPermission(Permission.JOIN.permission.replace("[name]", "*"))
         ) {
-            player.sendMessage(language.noPermissionForGameMessage.format(game.arena.name))
+            language.sendMessage(language.noPermissionForGameMessage, player, game.arena.name)
             return
         }
 
         if (team != null && team == Team.REFEREE) {
             if (game !is SoccerRefereeGame) {
-                player.sendMessage(language.gameIsNotARefereeGame)
+                language.sendMessage(language.gameIsNotARefereeGame, player)
                 return
             }
 
             if (!player.hasPermission(Permission.REFEREE_JOIN.permission)) {
-                player.sendMessage(language.noPermissionForGameMessage.format(game.arena.name))
+                language.sendMessage(language.noPermissionForGameMessage, player, game.arena.name)
                 return
             }
         }
@@ -654,16 +651,16 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         if (joinResult == JoinResult.GAME_FULL || joinResult == JoinResult.GAME_ALREADY_RUNNING) {
-            player.sendMessage(language.gameIsFullMessage)
+            language.sendMessage(language.gameIsFullMessage, player)
             return
         }
 
         if (joinResult == JoinResult.SUCCESS_BLUE) {
-            player.sendMessage(language.joinTeamBlueMessage)
+            language.sendMessage(language.joinTeamBlueMessage, player)
         } else if (joinResult == JoinResult.SUCCESS_RED) {
-            player.sendMessage(language.joinTeamRedMessage)
+            language.sendMessage(language.joinTeamRedMessage, player)
         } else if (joinResult == JoinResult.SUCCESS_REFEREE) {
-            player.sendMessage(language.joinTeamRefereeMessage)
+            language.sendMessage(language.joinTeamRefereeMessage, player)
         }
     }
 
@@ -678,7 +675,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         if (leftGame) {
-            player.sendMessage(language.leftGameMessage)
+            language.sendMessage(language.leftGameMessage, player)
         }
     }
 
@@ -702,7 +699,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         arenaRepository.save(arena)
-        player.sendMessage(language.selectionSetMessage.format(locationType.name.lowercase()))
+        language.sendMessage(language.selectionSetMessage, player, locationType.name.lowercase())
     }
 
     private suspend fun setSelection(player: Player, arena: SoccerArena, selectionType: SelectionType) {
@@ -711,11 +708,11 @@ class BlockBallCommandExecutor @Inject constructor(
 
         if (selectionType == SelectionType.FIELD || selectionType == SelectionType.RED_GOAL || selectionType == SelectionType.BLUE_GOAL) {
             if (selectionLeft == null) {
-                player.sendMessage(language.noLeftClickSelectionMessage)
+                language.sendMessage(language.noLeftClickSelectionMessage, player)
                 return
             }
             if (selectionRight == null) {
-                player.sendMessage(language.noRightClickSelectionMessage)
+                language.sendMessage(language.noRightClickSelectionMessage, player)
                 return
             }
 
@@ -736,7 +733,7 @@ class BlockBallCommandExecutor @Inject constructor(
         }
 
         arenaRepository.save(arena)
-        player.sendMessage(language.selectionSetMessage.format(selectionType.name.lowercase()))
+        language.sendMessage(language.selectionSetMessage, player, selectionType.name.lowercase())
     }
 
     /**
@@ -765,7 +762,7 @@ class BlockBallCommandExecutor @Inject constructor(
 
     private suspend fun setSign(sender: Player, arena: SoccerArena, signType: SignType) {
         if (signType == SignType.JOIN) {
-            sender.sendMessage(language.rightClickOnSignMessage)
+            language.sendMessage(language.rightClickOnSignMessage, sender)
             signService.addSignByRightClick(sender) { sign ->
                 sign.let {
                     it.line1 = "%blockball_lang_joinSignLine1%"
@@ -787,11 +784,11 @@ class BlockBallCommandExecutor @Inject constructor(
                 plugin.launch {
                     arenaRepository.save(arena)
                     gameService.reload(arena)
-                    sender.sendMessage(language.addedSignMessage)
+                    language.sendMessage(language.addedSignMessage, sender)
                 }
             }
         } else if (signType == SignType.LEAVE) {
-            sender.sendMessage(language.rightClickOnSignMessage)
+            language.sendMessage(language.rightClickOnSignMessage, sender)
             signService.addSignByRightClick(sender) { sign ->
                 sign.let {
                     it.line1 = "%blockball_lang_leaveSignLine1%"
@@ -813,7 +810,7 @@ class BlockBallCommandExecutor @Inject constructor(
                 plugin.launch {
                     arenaRepository.save(arena)
                     gameService.reload(arena)
-                    sender.sendMessage(language.addedSignMessage)
+                    language.sendMessage(language.addedSignMessage, sender)
                 }
             }
         }
@@ -825,26 +822,25 @@ class BlockBallCommandExecutor @Inject constructor(
             arenaRepository.clearCache()
         } catch (e: SoccerGameException) {
             e.arena.enabled = false
-            sender.sendMessage(language.failedToReloadMessage.format(e.arena.name, e.message))
+            language.sendMessage(language.failedToReloadMessage, sender, e.arena.name, e.message!!)
             return
         }
 
         if (arena == null) {
             plugin.reloadConfig()
-            val languageDef = configurationService.findValue<String>("language")
-            plugin.reloadTranslation(languageDef, BlockBallLanguageImpl::class.java, "en_us", "es_es")
-            plugin.logger.log(Level.INFO, "Loaded language file $languageDef.properties.")
+            plugin.reloadTranslation(language, BlockBallLanguageImpl::class.java)
+            plugin.logger.log(Level.INFO, "Loaded language file.")
 
             try {
                 arenaRepository.clearCache()
                 gameService.reloadAll()
             } catch (e: SoccerGameException) {
                 e.arena.enabled = false
-                sender.sendMessage(language.failedToReloadMessage.format(e.arena.name, e.message))
+                language.sendMessage(language.failedToReloadMessage, sender, e.arena.name, e.message!!)
                 return
             }
 
-            sender.sendMessage(language.reloadedAllGamesMessage)
+            language.sendMessage(language.reloadedAllGamesMessage, sender)
             return
         }
 
@@ -852,10 +848,10 @@ class BlockBallCommandExecutor @Inject constructor(
             arenaRepository.clearCache()
             gameService.reload(arena)
         } catch (e: SoccerGameException) {
-            sender.sendMessage(language.failedToReloadMessage.format(e.arena.name, e.message))
+            language.sendMessage(language.failedToReloadMessage, sender, e.arena.name, e.message!!)
             return
         }
-        sender.sendMessage(language.reloadedGameMessage.format(arena.name))
+        language.sendMessage(language.reloadedGameMessage, sender, arena.name)
         return
     }
 

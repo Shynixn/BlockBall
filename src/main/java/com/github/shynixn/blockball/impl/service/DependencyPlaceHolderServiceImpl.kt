@@ -2,10 +2,7 @@
 
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.contract.SoccerGame
-import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.PlaceHolderService
-import com.github.shynixn.blockball.contract.StatsService
+import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
@@ -22,9 +19,10 @@ class DependencyPlaceHolderServiceImpl @Inject constructor(
     private val plugin: Plugin,
     private val gameService: GameService,
     private val statsService: StatsService,
+    private val language: Language,
     cachePlayerRepository: CachePlayerRepository<PlayerInformation>,
 ) : PlaceholderExpansion(), PlaceHolderService {
-    private val placeHolderService = PlaceHolderServiceImpl(gameService, cachePlayerRepository, statsService)
+    private val placeHolderService = PlaceHolderServiceImpl(gameService, cachePlayerRepository, statsService, language)
     private var registered: Boolean = false
 
     init {

@@ -28,7 +28,7 @@ open class SoccerMiniGameImpl constructor(
     private val bossBarService: BossBarService,
     private val chatMessageService: ChatMessageService,
     private val soundService: SoundService,
-    language: BlockBallLanguage,
+    language: Language,
     packetService: PacketService,
     scoreboardService: ScoreboardService,
     commandService: CommandService,
@@ -41,7 +41,6 @@ open class SoccerMiniGameImpl constructor(
     bossBarService,
     scoreboardService,
     soccerBallFactory,
-    chatMessageService,
     commandService,
     language,
     playerDataRepository

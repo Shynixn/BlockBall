@@ -46,14 +46,14 @@ class GameListener @Inject constructor(
      */
     @EventHandler
     fun onPacketEvent(event: PacketAsyncEvent) {
-        if (event.packetType != PacketInType.USEENTITY) {
+        val packet = event.packet
+
+        if (packet !is PacketInInteractEntity) {
             return
         }
 
         plugin.launch {
             val game = gameService.getByPlayer(event.player) ?: return@launch
-
-            val packet = event.packet as PacketInInteractEntity
             val ball = soccerBallFactory.findBallByEntityId(packet.entityId) ?: return@launch
 
             if (game.ball != ball) {

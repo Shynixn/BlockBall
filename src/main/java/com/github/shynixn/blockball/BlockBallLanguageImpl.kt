@@ -1,341 +1,217 @@
 package com.github.shynixn.blockball
 
-import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.mcutils.common.language.LanguageItem
+import com.github.shynixn.mcutils.common.language.LanguageProviderImpl
+import com.github.shynixn.blockball.contract.Language
 
-object BlockBallLanguageImpl : BlockBallLanguage {
-  /** &cTeam Red **/
-  override var winRedTitle : String = "&cTeam Red"
+class BlockBallLanguageImpl : Language, LanguageProviderImpl() {
+    override val names: List<String>
+        get() = listOf("en_us", "es_es")
+    override var gameAlreadyExistsMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Game %1$1s already exists.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Successfully joined team blue. **/
-  override var joinTeamBlueMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Successfully joined team blue."
+    override var commandUsage =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /blockball help to see more info about the plugin.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Players can no longer kick the ball. **/
-  override var refereeBallDisabled : String = "&0&l[&f&lBlockBall&0&l]&7 Players can no longer kick the ball."
+    override var commandDescription = LanguageItem("All commands for the BlockBall plugin.")
 
-  /** Waiting for the referee to resume the game... **/
-  override var whistleTimeOutReferee : String = "Waiting for the referee to resume the game..."
+    override var maxLength20Characters =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&c The text length has to be less than 20 characters.")
 
-  /** &0&l[&f&lBlockBall&0&l]&c This selection type is not known. **/
-  override var selectionTypeDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c This selection type is not known."
+    override var gameDoesNotExistMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Successfully joined team referee. **/
-  override var joinTeamRefereeMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Successfully joined team referee."
+    override var teamDoesNotExistMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s. **/
-  override var reloadedGameMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s."
+    override var gameTypeNotExistMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c GameType %1$1s does not exist.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 A sign was added to the game. **/
-  override var addedSignMessage : String = "&0&l[&f&lBlockBall&0&l]&7 A sign was added to the game."
+    override var selectionTypeDoesNotExistMessage =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&c This selection type is not known.")
 
-  /** &9Team Blue &ahas won the match **/
-  override var winBlueSubTitle : String = "&9Team Blue &ahas won the match"
+    override var signTypeDoesNotExistMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c This sign type is not known.")
 
-  /** Execute &a/blockball referee startgame &fto start the lobby timer. **/
-  override var waitingForRefereeToStartHint : String = "Execute &a/blockball referee startgame &fto start the lobby timer."
+    override var noPermissionForGameMessage =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&c You do not have permission to join game %1$1s.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Left the game. **/
-  override var leftGameMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Left the game."
+    override var noPermissionMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c You do not have permission.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Reloaded all games. **/
-  override var reloadedAllGamesMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Reloaded all games."
+    override var commandSenderHasToBePlayer =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&c The command sender has to be a player!")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 **/
-  override var joinSignLine1 : String = "&0&l[&f&lBlockBall&0&l]&7"
+    override var gameCreatedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Created game %1$1s.")
 
-  /** %blockball_game_stateDisplayName% **/
-  override var joinSignLine2 : String = "%blockball_game_stateDisplayName%"
+    override var deletedGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Deleted game %1$1s.")
 
-  /** &1Running **/
-  override var gameStatusRunning : String = "&1Running"
+    override var gameIsFullMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Game is already full.")
 
-  /** Creates a new arena for a BlockBall game. **/
-  override var commandCreateToolTip : String = "Creates a new arena for a BlockBall game."
+    override var joinTeamRedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully joined team red.")
 
-  /** &0&l[&f&lBlockBall&0&l]&c You do not have permission to join game %1$1s. **/
-  override var noPermissionForGameMessage : String = "&0&l[&f&lBlockBall&0&l]&c You do not have permission to join game %1$1s."
+    override var joinTeamBlueMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully joined team blue.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Use /blockball help to see more info about the plugin. **/
-  override var commandUsage : String = "&0&l[&f&lBlockBall&0&l]&7 Use /blockball help to see more info about the plugin."
+    override var leftGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Left the game.")
 
-  /** Transitions the game to the final period. Executing this command again stops it. **/
-  override var commandRefereeStopGameToolTip : String = "Transitions the game to the final period. Executing this command again stops it."
+    override var selectionSetMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Selection %1$1s was set.")
 
-  /** %blockball_game_players%/%blockball_game_maxPlayers% **/
-  override var joinSignLine3 : String = "%blockball_game_players%/%blockball_game_maxPlayers%"
+    override var enabledArenaMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Game enable state was set to %1$1s.")
 
-  /**  **/
-  override var joinSignLine4 : String = ""
+    override var reloadedAllGamesMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Reloaded all games.")
 
-  /** &c%blockball_game_redScore% : &9%blockball_game_blueScore% **/
-  override var scoreRedTitle : String = "&c%blockball_game_redScore% : &9%blockball_game_blueScore%"
+    override var reloadedGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Players can kick the ball now. **/
-  override var refereeBallEnabled : String = "&0&l[&f&lBlockBall&0&l]&7 Players can kick the ball now."
+    override var updatedInventoryMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Updated inventory of game.")
 
-  /** Transitions to the next configured period. **/
-  override var commandRefereeNextPeriodToolTip : String = "Transitions to the next configured period."
+    override var updatedArmorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Updated armor of game.")
 
-  /** Updates a location selection of a part of the arena. **/
-  override var commandSelectionToolTip : String = "Updates a location selection of a part of the arena."
+    override var gameRuleChangedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Updated a gamerule.")
 
-  /** Copies the armor inventory of the player executing the command. This copy will be applied to players when they join a game. **/
-  override var commandArmorToolTip : String = "Copies the armor inventory of the player executing the command. This copy will be applied to players when they join a game."
+    override var rightClickOnSignMessage =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&7 RightClick on a sign to convert it into a game sign.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 **/
-  override var leaveSignLine1 : String = "&0&l[&f&lBlockBall&0&l]&7"
+    override var addedSignMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 A sign was added to the game.")
 
-  /** &fLeave **/
-  override var leaveSignLine2 : String = "&fLeave"
+    override var noLeftClickSelectionMessage =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with left click.")
 
-  /** %blockball_game_players%/%blockball_game_maxPlayers% **/
-  override var leaveSignLine3 : String = "%blockball_game_players%/%blockball_game_maxPlayers%"
+    override var noRightClickSelectionMessage =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with right click.")
 
-  /**  **/
-  override var leaveSignLine4 : String = ""
+    override var toggleHighlightMessage =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Toggled highlighting the important areas.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s **/
-  override var failedToReloadMessage : String = "&0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s"
+    override var axeReceivedMessage =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The BlockBall axe has been added to your inventory.")
 
-  /** 20 **/
-  override var winBlueFadeIn : String = "20"
+    override var bossBarMessage =
+        LanguageItem("&cTeam Red %blockball_game_redScore% : &9%blockball_game_blueScore% Team Blue")
 
-  /** Enables the player to add a specific sign by right-clicking any sign. You can remove signs by simply breaking the block. **/
-  override var commandSignToolTip : String = "Enables the player to add a specific sign by right-clicking any sign. You can remove signs by simply breaking the block."
+    override var hologramMessage =
+        LanguageItem("&cTeam Red %blockball_game_redScore% : &9Team Blue %blockball_game_blueScore%")
 
-  /** &0&l[&f&lBlockBall&0&l]&c GameType %1$1s does not exist. **/
-  override var gameTypeNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c GameType %1$1s does not exist."
+    override var scoreRed = LanguageItem("&c%blockball_game_redScore% : &9%blockball_game_blueScore%")
 
-  /** All commands for the BlockBall plugin. **/
-  override var commandDescription : String = "All commands for the BlockBall plugin."
+    override var scoreBlue = LanguageItem("&9%blockball_game_blueScore% : &c%blockball_game_redScore%")
 
-  /** &0&l[&f&lBlockBall&0&l]&c You do not have permission. **/
-  override var noPermissionMessage : String = "&0&l[&f&lBlockBall&0&l]&c You do not have permission."
+    override var winRed = LanguageItem("&cTeam Red")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 The BlockBall axe has been added to your inventory. **/
-  override var axeReceivedMessage : String = "&0&l[&f&lBlockBall&0&l]&7 The BlockBall axe has been added to your inventory."
+    override var winBlue = LanguageItem("&9Team Blue")
 
-  /** &cTeam Red &ahas won the match **/
-  override var winRedSubTitle : String = "&cTeam Red &ahas won the match"
+    override var winDraw = LanguageItem("&fDraw")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Click on the team to join the match. **/
-  override var hubGameJoinHeader : String = "&0&l[&f&lBlockBall&0&l]&7 Click on the team to join the match."
+    override var gameStatusJoinAble = LanguageItem("&aJoin")
 
-  /** &0&l[&f&lBlockBall&0&l]&c The text length has to be less than 20 characters. **/
-  override var maxLength20Characters : String = "&0&l[&f&lBlockBall&0&l]&c The text length has to be less than 20 characters."
+    override var gameStatusDisabled = LanguageItem("&4Disabled")
 
-  /** &cTeam Red %blockball_game_redScore% : &9%blockball_game_blueScore% Team Blue **/
-  override var bossBarMessage : String = "&cTeam Red %blockball_game_redScore% : &9%blockball_game_blueScore% Team Blue"
+    override var gameStatusRunning = LanguageItem("&1Running")
 
-  /** %1$1s scored for &9Team Blue. **/
-  override var scoreBlueSubTitle : String = "%1$1s scored for &9Team Blue."
+    override var hubGameJoinHeader = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Click on the team to join the match.")
 
-  /** Gives you the BlockBall selection axe. **/
-  override var commandAxeToolTip : String = "Gives you the BlockBall selection axe."
+    override var hubGameJoinRed = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &c[Team Red]")
 
-  /** Lets the player executing the command join the game. The optional team argument allows to directly join a specific team. If the team is full, the other team will be chosen. If no team is specified, a random team will be selected. **/
-  override var commandJoinToolTip : String = "Lets the player executing the command join the game. The optional team argument allows to directly join a specific team. If the team is full, the other team will be chosen. If no team is specified, a random team will be selected."
+    override var hubGameJoinBlue = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &9[Team Blue]")
 
-  /** &0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist. **/
-  override var gameDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist."
+    override var commandCreateToolTip = LanguageItem("Creates a new arena for a BlockBall game.")
 
-  /** Evaluated placeholder: %1$1s **/
-  override var commandPlaceHolderMessage : String = "Evaluated placeholder: %1$1s"
+    override var commandDeleteToolTip = LanguageItem("Deletes a BlockBall game.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 &9[Team Blue] **/
-  override var hubGameJoinBlue : String = "&0&l[&f&lBlockBall&0&l]&7 &9[Team Blue]"
+    override var commandListToolTip = LanguageItem("Lists all games you have created.")
 
-  /** &9Team Blue **/
-  override var winBlueTitle : String = "&9Team Blue"
+    override var commandToggleToolTip =
+        LanguageItem("Enables or disables your game. If a game is disabled, nobody can join.")
 
-  /** Toggles highlighting the important areas of your arena. **/
-  override var commandHighlightToolTip : String = "Toggles highlighting the important areas of your arena."
+    override var commandJoinToolTip =
+        LanguageItem("Lets the player executing the command join the game. The optional team argument allows to directly join a specific team. If the team is full, the other team will be chosen. If no team is specified, a random team will be selected.")
 
-  /** Sets a selected location for your arena. **/
-  override var commandSelectToolTip : String = "Sets a selected location for your arena."
+    override var commandLeaveToolTip = LanguageItem("Lets the player executing the command leave the game.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Selection %1$1s was set. **/
-  override var selectionSetMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Selection %1$1s was set."
+    override var commandSelectionToolTip = LanguageItem("Updates a location selection of a part of the arena.")
 
-  /** Team Red **/
-  override var teamRedDisplayName : String = "Team Red"
+    override var commandInventoryToolTip =
+        LanguageItem("Copies the inventory of the player executing the command. This copy will be applied to players when they join a game.")
 
-  /** Sets a gamerule in BlockBall. **/
-  override var commandGameRuleToolTip : String = "Sets a gamerule in BlockBall."
+    override var commandArmorToolTip =
+        LanguageItem("Copies the armor inventory of the player executing the command. This copy will be applied to players when they join a game.")
 
-  /** &4Disabled **/
-  override var gameStatusDisabled : String = "&4Disabled"
+    override var commandSignToolTip =
+        LanguageItem("Enables the player to add a specific sign by right-clicking any sign. You can remove signs by simply breaking the block.")
 
-  /** This period has ended. Execute &a/blockball referee nextperiod. **/
-  override var nextPeriodRefereeHint : String = "This period has ended. Execute &a/blockball referee nextperiod."
+    override var commandReloadToolTip = LanguageItem("Allows to reload all games or a specific single one.")
 
-  /** &aThe game has ended in a draw **/
-  override var winDrawSubTitle : String = "&aThe game has ended in a draw"
+    override var commandAxeToolTip = LanguageItem("Gives you the BlockBall selection axe.")
 
-  /** 20 **/
-  override var winDrawFadeIn : String = "20"
+    override var commandHighlightToolTip = LanguageItem("Toggles highlighting the important areas of your arena.")
 
-  /** Lists all games you have created. **/
-  override var commandListToolTip : String = "Lists all games you have created."
+    override var commandSelectToolTip = LanguageItem("Sets a selected location for your arena.")
 
-  /** &fDraw **/
-  override var winDrawTitle : String = "&fDraw"
+    override var commandGameRuleToolTip = LanguageItem("Sets a gamerule in BlockBall.")
 
-  /** &0&l[&f&lBlockBall&0&l]&c This game is not a game where you can use a referee. Convert the game to a referee game first. **/
-  override var gameIsNotARefereeGame : String = "&0&l[&f&lBlockBall&0&l]&c This game is not a game where you can use a referee. Convert the game to a referee game first."
+    override var joinSignLine1 = LanguageItem("&0&l[&f&lBlockBall&0&l]&7")
 
-  /** 60 **/
-  override var scoreBlueStay : String = "60"
+    override var joinSignLine2 = LanguageItem("%blockball_game_stateDisplayName%")
 
-  /** Team Blue **/
-  override var teamBlueDisplayName : String = "Team Blue"
+    override var joinSignLine3 = LanguageItem("%blockball_game_players%/%blockball_game_maxPlayers%")
 
-  /** Resumes the game and sets the ball interactable. **/
-  override var commandRefereeWhistleResumeToolTip : String = "Resumes the game and sets the ball interactable."
+    override var joinSignLine4 = LanguageItem("")
 
-  /** %1$1s scored for &cTeam Red. **/
-  override var scoreRedSubTitle : String = "%1$1s scored for &cTeam Red."
+    override var leaveSignLine1 = LanguageItem("&0&l[&f&lBlockBall&0&l]&7")
 
-  /** &9%blockball_game_blueScore% : &c%blockball_game_redScore% **/
-  override var scoreBlueTitle : String = "&9%blockball_game_blueScore% : &c%blockball_game_redScore%"
+    override var leaveSignLine2 = LanguageItem("&fLeave")
 
-  /** &0&l[&f&lBlockBall&0&l]&c Game %1$1s already exists. **/
-  override var gameAlreadyExistsMessage : String = "&0&l[&f&lBlockBall&0&l]&c Game %1$1s already exists."
+    override var leaveSignLine3 = LanguageItem("%blockball_game_players%/%blockball_game_maxPlayers%")
 
-  /** &0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist. **/
-  override var teamDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist."
+    override var leaveSignLine4 = LanguageItem("")
 
-  /** This period has ended. You are now in overtime. **/
-  override var nextPeriodReferee : String = "This period has ended. You are now in overtime."
+    override var failedToReloadMessage =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s")
 
-  /** You can resume the match by executing &a/blockball referee whistleresume. **/
-  override var whistleTimeOutRefereeHint : String = "You can resume the match by executing &a/blockball referee whistleresume."
+    override var teamRedDisplayName = LanguageItem("Team Red")
 
-  /** 20 **/
-  override var scoreRedFadeIn : String = "20"
+    override var teamBlueDisplayName = LanguageItem("Team Blue")
 
-  /** Stops the game and sets the ball inactive. **/
-  override var commandRefereeWhistleStopToolTip : String = "Stops the game and sets the ball inactive."
+    override var gameIsNotARefereeGame =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&c This game is not a game where you can use a referee. Convert the game to a referee game first.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 You have stopped the game and transitioned to the last configured period. **/
-  override var refereeStoppedGame : String = "&0&l[&f&lBlockBall&0&l]&7 You have stopped the game and transitioned to the last configured period."
+    override var gameTypeRefereeOnlyForPatreons =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&c The game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn.")
 
-  /** Resolves a given placeholder. **/
-  override var commandPlaceHolderToolTip : String = "Resolves a given placeholder."
+    override var joinTeamRefereeMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully joined team referee.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Updated armor of game. **/
-  override var updatedArmorMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Updated armor of game."
+    override var waitingForRefereeToStart = LanguageItem("Waiting for the referee to start the game...")
 
-  /** 20 **/
-  override var winBlueFadeOut : String = "20"
+    override var waitingForRefereeToStartHint =
+        LanguageItem("Execute &a/blockball referee startgame &fto start the lobby timer.")
 
-  /** Teleports the ball to the position of the referee. **/
-  override var commandRefereeSetBallToolTip : String = "Teleports the ball to the position of the referee."
+    override var nextPeriodReferee = LanguageItem("This period has ended. You are now in overtime.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 RightClick on a sign to convert it into a game sign. **/
-  override var rightClickOnSignMessage : String = "&0&l[&f&lBlockBall&0&l]&7 RightClick on a sign to convert it into a game sign."
+    override var nextPeriodRefereeHint = LanguageItem("This period has ended. Execute &a/blockball referee nextperiod.")
 
-  /** Deletes a BlockBall game. **/
-  override var commandDeleteToolTip : String = "Deletes a BlockBall game."
+    override var whistleTimeOutReferee = LanguageItem("Waiting for the referee to resume the game...")
 
-  /** Waiting for the referee to start the game... **/
-  override var waitingForRefereeToStart : String = "Waiting for the referee to start the game..."
+    override var whistleTimeOutRefereeHint =
+        LanguageItem("You can resume the match by executing &a/blockball referee whistleresume.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 &c[Team Red] **/
-  override var hubGameJoinRed : String = "&0&l[&f&lBlockBall&0&l]&7 &c[Team Red]"
+    override var refereeStartedGame = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 You have started the game.")
 
-  /** 20 **/
-  override var winRedFadeIn : String = "20"
+    override var refereeStoppedGame =
+        LanguageItem("&0&l[&f&lBlockBall&0&l]&7 You have stopped the game and transitioned to the last configured period.")
 
-  /** 60 **/
-  override var winBlueStay : String = "60"
+    override var refereeBallEnabled = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Players can kick the ball now.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Created game %1$1s. **/
-  override var gameCreatedMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Created game %1$1s."
+    override var refereeBallDisabled = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Players can no longer kick the ball.")
 
-  /** 20 **/
-  override var winDrawFadeOut : String = "20"
+    override var commandRefereeStartGameToolTip = LanguageItem("Starts the game.")
 
-  /** 20 **/
-  override var scoreRedFadeOut : String = "20"
+    override var commandRefereeStopGameToolTip =
+        LanguageItem("Transitions the game to the final period. Executing this command again stops it.")
 
-  /** 20 **/
-  override var scoreBlueFadeOut : String = "20"
+    override var commandRefereeWhistleResumeToolTip = LanguageItem("Resumes the game and sets the ball interactable.")
 
-  /** Lets the player executing the command leave the game. **/
-  override var commandLeaveToolTip : String = "Lets the player executing the command leave the game."
+    override var commandRefereeWhistleStopToolTip = LanguageItem("Stops the game and sets the ball inactive.")
 
-  /** Freezes the countdown and sets the ball inactive. **/
-  override var commandRefereeFreezeTimeToolTip : String = "Freezes the countdown and sets the ball inactive."
+    override var commandRefereeFreezeTimeToolTip = LanguageItem("Freezes the countdown and sets the ball inactive.")
 
-  /** 60 **/
-  override var winRedStay : String = "60"
+    override var commandRefereeSetBallToolTip = LanguageItem("Teleports the ball to the position of the referee.")
 
-  /** &0&l[&f&lBlockBall&0&l]&7 Updated a gamerule. **/
-  override var gameRuleChangedMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Updated a gamerule."
+    override var commandRefereeNextPeriodToolTip = LanguageItem("Transitions to the next configured period.")
 
-  /** 60 **/
-  override var scoreRedStay : String = "60"
+    override var commandPlaceHolderToolTip = LanguageItem("Resolves a given placeholder.")
 
-  /** Copies the inventory of the player executing the command. This copy will be applied to players when they join a game. **/
-  override var commandInventoryToolTip : String = "Copies the inventory of the player executing the command. This copy will be applied to players when they join a game."
-
-  /** Enables or disables your game. If a game is disabled, nobody can join. **/
-  override var commandToggleToolTip : String = "Enables or disables your game. If a game is disabled, nobody can join."
-
-  /** &0&l[&f&lBlockBall&0&l]&7 Toggled highlighting the important areas. **/
-  override var toggleHighlightMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Toggled highlighting the important areas."
-
-  /** &0&l[&f&lBlockBall&0&l]&c The game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn. **/
-  override var gameTypeRefereeOnlyForPatreons : String = "&0&l[&f&lBlockBall&0&l]&c The game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn."
-
-  /** &0&l[&f&lBlockBall&0&l]&7 Game enable state was set to %1$1s. **/
-  override var enabledArenaMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Game enable state was set to %1$1s."
-
-  /** &0&l[&f&lBlockBall&0&l]&c This sign type is not known. **/
-  override var signTypeDoesNotExistMessage : String = "&0&l[&f&lBlockBall&0&l]&c This sign type is not known."
-
-  /** &0&l[&f&lBlockBall&0&l]&7 Successfully joined team red. **/
-  override var joinTeamRedMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Successfully joined team red."
-
-  /** &aJoin **/
-  override var gameStatusJoinAble : String = "&aJoin"
-
-  /** &0&l[&f&lBlockBall&0&l]&7 Deleted game %1$1s. **/
-  override var deletedGameMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Deleted game %1$1s."
-
-  /** &0&l[&f&lBlockBall&0&l]&c Game is already full. **/
-  override var gameIsFullMessage : String = "&0&l[&f&lBlockBall&0&l]&c Game is already full."
-
-  /** Starts the game. **/
-  override var commandRefereeStartGameToolTip : String = "Starts the game."
-
-  /** 60 **/
-  override var winDrawStay : String = "60"
-
-  /** Allows to reload all games or a specific single one. **/
-  override var commandReloadToolTip : String = "Allows to reload all games or a specific single one."
-
-  /** &cTeam Red %blockball_game_redScore% : &9Team Blue %blockball_game_blueScore% **/
-  override var hologramMessage : String = "&cTeam Red %blockball_game_redScore% : &9Team Blue %blockball_game_blueScore%"
-
-  /** &0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with left click. **/
-  override var noLeftClickSelectionMessage : String = "&0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with left click."
-
-  /** &0&l[&f&lBlockBall&0&l]&7 Updated inventory of game. **/
-  override var updatedInventoryMessage : String = "&0&l[&f&lBlockBall&0&l]&7 Updated inventory of game."
-
-  /** &0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with right click. **/
-  override var noRightClickSelectionMessage : String = "&0&l[&f&lBlockBall&0&l]&c You need to select a location using the BlockBall axe with right click."
-
-  /** 20 **/
-  override var scoreBlueFadeIn : String = "20"
-
-  /** &0&l[&f&lBlockBall&0&l]&c The command sender has to be a player! **/
-  override var commandSenderHasToBePlayer : String = "&0&l[&f&lBlockBall&0&l]&c The command sender has to be a player!"
-
-  /** 20 **/
-  override var winRedFadeOut : String = "20"
-
-  /** &0&l[&f&lBlockBall&0&l]&7 You have started the game. **/
-  override var refereeStartedGame : String = "&0&l[&f&lBlockBall&0&l]&7 You have started the game."
+    override var commandPlaceHolderMessage = LanguageItem("Evaluated placeholder: %1$1s")
 }

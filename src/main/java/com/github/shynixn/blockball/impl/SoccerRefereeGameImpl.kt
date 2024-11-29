@@ -17,12 +17,12 @@ import org.bukkit.plugin.Plugin
 class SoccerRefereeGameImpl constructor(
     arena: SoccerArena,
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
-    private val plugin: Plugin,
+    plugin: Plugin,
     private val placeHolderService: PlaceHolderService,
-    private val bossBarService: BossBarService,
+    bossBarService: BossBarService,
     private val chatMessageService: ChatMessageService,
     private val soundService: SoundService,
-    private val language: BlockBallLanguage,
+    private val language: Language,
     packetService: PacketService,
     scoreboardService: ScoreboardService,
     commandService: CommandService,
@@ -108,7 +108,7 @@ class SoccerRefereeGameImpl constructor(
         if (ticks >= 20) {
             // Display the message.
             if (!playing && !lobbyCountDownActive) {
-                sendBroadcastMessage(language.waitingForRefereeToStart, language.waitingForRefereeToStartHint)
+                sendBroadcastMessage(language.waitingForRefereeToStart.text, language.waitingForRefereeToStartHint.text)
             }
 
             if (lobbyCountDownActive) {
@@ -151,7 +151,7 @@ class SoccerRefereeGameImpl constructor(
             if (playing) {
                 if (matchTimeIndex != -1) {
                     if (ball != null && !ball!!.isInteractable) {
-                        sendBroadcastMessage(language.whistleTimeOutReferee, language.whistleTimeOutRefereeHint)
+                        sendBroadcastMessage(language.whistleTimeOutReferee.text, language.whistleTimeOutRefereeHint.text)
                     }
 
                     if (!isTimerBlockerEnabled) {
@@ -164,7 +164,7 @@ class SoccerRefereeGameImpl constructor(
                                 ingamePlayersStorage.filter { e -> e.value.team != Team.REFEREE }.forEach { p ->
                                     chatMessageService.sendActionBarMessage(
                                         p.key, placeHolderService.replacePlaceHolders(
-                                            language.nextPeriodReferee, p.key, this
+                                            language.nextPeriodReferee.text, p.key, this
                                         )
                                     )
                                 }
@@ -173,7 +173,7 @@ class SoccerRefereeGameImpl constructor(
                             refereeTeam.forEach { p ->
                                 chatMessageService.sendActionBarMessage(
                                     p, placeHolderService.replacePlaceHolders(
-                                        language.nextPeriodRefereeHint, p, this
+                                        language.nextPeriodRefereeHint.text, p, this
                                     )
                                 )
                             }

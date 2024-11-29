@@ -11,7 +11,6 @@ import com.github.shynixn.blockball.impl.SoccerHubGameImpl
 import com.github.shynixn.blockball.impl.SoccerMiniGameImpl
 import com.github.shynixn.blockball.impl.SoccerRefereeGameImpl
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
-import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
@@ -31,7 +30,6 @@ import kotlin.math.min
 
 class GameServiceImpl @Inject constructor(
     private val arenaRepository: Repository<SoccerArena>,
-    private val configurationService: ConfigurationService,
     private val plugin: Plugin,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
     private val placeHolderService: PlaceHolderService,
@@ -42,7 +40,7 @@ class GameServiceImpl @Inject constructor(
     private val scoreboardService: ScoreboardService,
     private val commandService: CommandService,
     private val soccerBallFactory: SoccerBallFactory,
-    private val language: BlockBallLanguage,
+    private val language: Language,
     private val signService: SignService
 ) : GameService, Runnable {
     private val games = ArrayList<SoccerGame>()
@@ -103,7 +101,6 @@ class GameServiceImpl @Inject constructor(
                     packetService,
                     scoreboardService,
                     soccerBallFactory,
-                    chatMessageService,
                     commandService
                 )
 
@@ -231,7 +228,7 @@ class GameServiceImpl @Inject constructor(
         if (arena.gameType == GameType.REFEREEGAME && !BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
             throw SoccerGameException(
                 arena,
-                language.gameTypeRefereeOnlyForPatreons
+                language.gameTypeRefereeOnlyForPatreons.text
             )
         }
         if (arena.meta.ballMeta.spawnpoint == null) {

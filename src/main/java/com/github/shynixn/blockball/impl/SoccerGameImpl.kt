@@ -10,7 +10,6 @@ import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.*
-import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
@@ -35,9 +34,8 @@ abstract class SoccerGameImpl(
     private val bossBarService: BossBarService,
     private val scoreboardService: ScoreboardService,
     private val soccerBallFactory: SoccerBallFactory,
-    private val chatMessageService: ChatMessageService,
     private val commandService: CommandService,
-    private val language: BlockBallLanguage,
+    private val language: Language,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>
 ) : SoccerGame {
     /**
@@ -353,23 +351,9 @@ abstract class SoccerGameImpl(
 
         for (player in players) {
             if (team == Team.RED) {
-                chatMessageService.sendTitleMessage(
-                    player,
-                    placeHolderService.replacePlaceHolders(language.winRedTitle, player, this),
-                    placeHolderService.replacePlaceHolders(language.winRedSubTitle, player, this),
-                    language.winRedFadeIn.toIntOrNull() ?: 20,
-                    language.winRedStay.toIntOrNull() ?: 20,
-                    language.winRedFadeOut.toIntOrNull() ?: 20,
-                )
+                language.sendMessage(language.winRed, player)
             } else if (team == Team.BLUE) {
-                chatMessageService.sendTitleMessage(
-                    player,
-                    placeHolderService.replacePlaceHolders(language.winBlueTitle, player, this),
-                    placeHolderService.replacePlaceHolders(language.winBlueSubTitle, player, this),
-                    language.winBlueFadeIn.toIntOrNull() ?: 20,
-                    language.winBlueStay.toIntOrNull() ?: 20,
-                    language.winBlueFadeOut.toIntOrNull() ?: 20,
-                )
+                language.sendMessage(language.winBlue, player)
             }
         }
 
@@ -655,14 +639,7 @@ abstract class SoccerGameImpl(
         players.addAll(getPlayers())
 
         for (player in players) {
-            chatMessageService.sendTitleMessage(
-                player,
-                placeHolderService.replacePlaceHolders(language.winDrawTitle, player, this),
-                placeHolderService.replacePlaceHolders(language.winDrawSubTitle, player, this),
-                language.winDrawFadeIn.toIntOrNull() ?: 20,
-                language.winDrawStay.toIntOrNull() ?: 60,
-                language.winDrawFadeOut.toIntOrNull() ?: 20,
-            )
+            language.sendMessage(language.winDraw, player)
         }
     }
 
@@ -759,45 +736,13 @@ abstract class SoccerGameImpl(
         val additionalPlayers = getNofifiedPlayers()
         players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first as Player })
 
-        val scoreTeamMeta = if (ingamePlayersStorage.containsKey(interactionEntity)) {
-            val scorerGameStory = ingamePlayersStorage[interactionEntity]!!
-
-            if (scorerGameStory.team == Team.RED) {
-                arena.meta.redTeamMeta
-            } else if (scorerGameStory.team == Team.BLUE) {
-                arena.meta.blueTeamMeta
-            } else {
-                return
-            }
-        } else {
-            null
-        }
-
         if (team == Team.RED) {
             for (player in players) {
-                chatMessageService.sendTitleMessage(
-                    player,
-                    placeHolderService.replacePlaceHolders(language.scoreRedTitle, player, this, scoreTeamMeta),
-                    placeHolderService.replacePlaceHolders(
-                        language.scoreRedSubTitle.format(interactionEntity.name), player, this, scoreTeamMeta
-                    ),
-                    language.scoreRedFadeIn.toIntOrNull() ?: 20,
-                    language.scoreRedStay.toIntOrNull() ?: 60,
-                    language.scoreRedFadeOut.toIntOrNull() ?: 20
-                )
+                language.sendMessage(language.scoreRed, player, interactionEntity.name)
             }
         } else {
             for (player in players) {
-                chatMessageService.sendTitleMessage(
-                    player,
-                    placeHolderService.replacePlaceHolders(language.scoreBlueTitle, player, this, scoreTeamMeta),
-                    placeHolderService.replacePlaceHolders(
-                        language.scoreBlueSubTitle.format(interactionEntity.name), player, this, scoreTeamMeta
-                    ),
-                    language.scoreBlueFadeIn.toIntOrNull() ?: 20,
-                    language.scoreBlueStay.toIntOrNull() ?: 60,
-                    language.scoreBlueFadeOut.toIntOrNull() ?: 20
-                )
+                language.sendMessage(language.scoreBlue, player, interactionEntity.name)
             }
         }
 
