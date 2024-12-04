@@ -11,8 +11,10 @@
       
       
       
-        <link rel="prev" href="../placeholders/">
+        <link rel="prev" href="../sign/">
       
+      
+        <link rel="next" href="../commands/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -20,7 +22,7 @@
     
     
       
-        <title>Developer Api - BlockBall</title>
+        <title>Referee - BlockBall</title>
       
     
     
@@ -62,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#api" class="md-skip">
+        <a href="#referee" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Developer Api
+              Referee
             
           </span>
         </div>
@@ -389,10 +391,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../referee/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Referee
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -401,6 +423,128 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-new-game-with-gamerule-minigame-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create a new game with gamerule minigame first
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-the-referee-spawnpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting the referee spawnpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-the-referee-lobby-spawnpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting the referee lobby spawnpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#converting-the-minigame-to-a-refereegame" class="md-nav__link">
+    <span class="md-ellipsis">
+      Converting the MINIGAME to a REFEREEGAME
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enabling-the-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enabling the game
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gameplay" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gameplay
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Gameplay">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-the-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      Starting the game
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controlling-the-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      Controlling the game
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-whistle-sounds-and-clickable-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting up whistle sounds and clickable items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -452,30 +596,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Developer Api
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -484,35 +608,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -552,11 +647,104 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
+  <a href="#setup" class="md-nav__link">
     <span class="md-ellipsis">
-      Usage
+      Setup
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-new-game-with-gamerule-minigame-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create a new game with gamerule minigame first
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-the-referee-spawnpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting the referee spawnpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-the-referee-lobby-spawnpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting the referee lobby spawnpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#converting-the-minigame-to-a-refereegame" class="md-nav__link">
+    <span class="md-ellipsis">
+      Converting the MINIGAME to a REFEREEGAME
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enabling-the-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enabling the game
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gameplay" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gameplay
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Gameplay">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-the-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      Starting the game
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controlling-the-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      Controlling the game
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-whistle-sounds-and-clickable-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting up whistle sounds and clickable items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -578,33 +766,53 @@
   
 
 
-<h1 id="api">Api</h1>
-<p>BlockBall offers a Developer Api, however it is not published to Maven Central or any other distribution system yet.
-You need to directly reference the BlockBall.jar file.</p>
-<h2 id="usage">Usage</h2>
-<p>Add a dependency in your plugin.yml</p>
-<div class="highlight"><pre><span></span><code><span class="nt">softdepend</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">BlockBall</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<h1 id="referee">Referee</h1>
+<p>BlockBall offers a third game mode called <code>refereegame</code>. This game mode is exclusive for <strong>Patreon supporters</strong>. (They are responsible for funding this feature <img alt="❤" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2764.svg" title=":heart:" />).</p>
+<p>This game mode is intended for server events where you have an admin or moderator control the flow of a BlockBall match by using the <code>/blockball referee ....</code> subcommands.
+Examples:</p>
+<ul>
+<li>The referee can resume/pause matches</li>
+<li>The referee can blow the whistle to block players interacting with the ball</li>
+<li>The referee can place the ball anywhere</li>
+<li>...</li>
+</ul>
+<h2 id="setup">Setup</h2>
+<h3 id="create-a-new-game-with-gamerule-minigame-first">Create a new game with gamerule minigame first</h3>
+<p>Go to the page <a href="https://shynixn.github.io/BlockBall/wiki/site/game/">https://shynixn.github.io/BlockBall/wiki/site/game/</a> and perform all steps until you have got a game with gamerule <code>minigame.</code></p>
+<h3 id="setting-the-referee-spawnpoint">Setting the referee spawnpoint</h3>
+<p>Move to the location where you want the referee to spawn in the field.</p>
+<div class="highlight"><pre><span></span><code>/blockball location game1 referee_spawnpoint
 </code></pre></div>
-<p>Take a look at the following example:
-<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">YourPlugin</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">JavaPlugin</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onEnable</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Player</span><span class="w"> </span><span class="n">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bukkit</span><span class="p">.</span><span class="na">getPlayer</span><span class="p">(</span><span class="s">&quot;YourPlayerName&quot;</span><span class="p">);</span>
-
-<span class="w">        </span><span class="c1">// Creating a soccer ball independent of a game.</span>
-<span class="w">        </span><span class="n">SoccerBallFactory</span><span class="w"> </span><span class="n">soccerBallFactory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bukkit</span><span class="p">.</span><span class="na">getServicesManager</span><span class="p">().</span><span class="na">load</span><span class="p">(</span><span class="n">SoccerBallFactory</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
-<span class="w">        </span><span class="n">SoccerBall</span><span class="w"> </span><span class="n">soccerBall</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">soccerBallFactory</span><span class="p">.</span><span class="na">createSoccerBall</span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="na">getLocation</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SoccerBallSettings</span><span class="p">());</span>
-<span class="w">        </span><span class="c1">// The is no way to directly set the velocity, but you can kick it relative to the position the player.</span>
-<span class="w">        </span><span class="n">soccerBall</span><span class="p">.</span><span class="na">kickByPlayer</span><span class="p">(</span><span class="n">player</span><span class="p">);</span>
-
-<span class="w">        </span><span class="c1">// Letting a player join a game.</span>
-<span class="w">        </span><span class="n">GameService</span><span class="w"> </span><span class="n">gameService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bukkit</span><span class="p">.</span><span class="na">getServicesManager</span><span class="p">().</span><span class="na">load</span><span class="p">(</span><span class="n">GameService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
-<span class="w">        </span><span class="n">SoccerGame</span><span class="w"> </span><span class="n">game</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gameService</span><span class="p">.</span><span class="na">getByName</span><span class="p">(</span><span class="s">&quot;myGameName&quot;</span><span class="p">);</span>
-<span class="w">        </span><span class="n">game</span><span class="p">.</span><span class="na">join</span><span class="p">(</span><span class="n">player</span><span class="p">,</span><span class="w"> </span><span class="n">Team</span><span class="p">.</span><span class="na">BLUE</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></p>
-<p>BlockBall broadcasts the following <a href="https://github.com/Shynixn/BlockBall/tree/master/src/main/java/com/github/shynixn/blockball/event">events.</a></p>
+<h3 id="setting-the-referee-lobby-spawnpoint">Setting the referee lobby spawnpoint</h3>
+<p>Move to the location where you want the referee to spawn in the lobby.</p>
+<div class="highlight"><pre><span></span><code>/blockball location game1 referee_lobby
+</code></pre></div>
+<h3 id="converting-the-minigame-to-a-refereegame">Converting the MINIGAME to a REFEREEGAME</h3>
+<p>In order to give the referee full control over the game, you need to convert the game type.</p>
+<div class="highlight"><pre><span></span><code>/blockball gamerule gameType game1 refereegame
+</code></pre></div>
+<h3 id="enabling-the-game">Enabling the game</h3>
+<div class="highlight"><pre><span></span><code>/blockball toggle game1
+</code></pre></div>
+<h2 id="gameplay">Gameplay</h2>
+<p>Players can join the game in the same way as before. However, the lobby countdown will not start until a referee has joined the game.</p>
+<p>A referee can join the game using the following command:</p>
+<div class="highlight"><pre><span></span><code>/blockball join game1 referee
+</code></pre></div>
+<h3 id="starting-the-game">Starting the game</h3>
+<p><code>/blockball referee startgame</code></p>
+<h3 id="controlling-the-game">Controlling the game</h3>
+<p>The referee can control the game using the <code>/blockball referee...</code> subcommands. You can take a look at the commands beforehand, but they
+are also displayed hints for the referee during the game.</p>
+<h3 id="setting-up-whistle-sounds-and-clickable-items">Setting up whistle sounds and clickable items</h3>
+<p>Currently, there is no way to directly add a whistle sound or execute the referee commands via items using BlockBall.</p>
+<p>However, you can still do that by following these steps:</p>
+<ul>
+<li>Install a third party plugin to bind commands to items (they are called <code>Command Items plugins</code>, use google)</li>
+<li>Bind the referee commands <code>/blockball referee whistleresume</code> and others to items</li>
+<li>Bind the <code>/playsound</code> vanilla minecraft command to these items to play a whistle sound</li>
+<li>Put the item in your inventory and execute the <code>/blockball inventory game1 referee</code> command to put that item into the inventory, which is received by the referee on join.</li>
+</ul>
 
 
 
@@ -636,7 +844,7 @@ You need to directly reference the BlockBall.jar file.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../placeholders/" class="md-footer__link md-footer__link--prev" aria-label="Previous: PlaceHolders">
+          <a href="../sign/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Signs">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -646,11 +854,27 @@ You need to directly reference the BlockBall.jar file.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                PlaceHolders
+                Signs
               </div>
             </div>
           </a>
         
+        
+          
+          <a href="../commands/" class="md-footer__link md-footer__link--next" aria-label="Next: Commands">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Commands
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
         
       </nav>
     
