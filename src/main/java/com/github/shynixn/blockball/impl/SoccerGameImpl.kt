@@ -849,7 +849,6 @@ abstract class SoccerGameImpl(
         stats.gameMode = player.gameMode
         stats.armorContents = player.inventory.armorContents.clone()
         stats.inventoryContents = player.inventory.contents.clone()
-        stats.walkingSpeed = player.walkSpeed.toDouble()
         stats.level = player.level
         stats.exp = player.exp.toDouble()
         stats.maxHealth = player.maxHealth
@@ -861,7 +860,6 @@ abstract class SoccerGameImpl(
         player.allowFlight = false
         player.isFlying = false
         player.gameMode = arena.meta.lobbyMeta.gamemode
-        player.walkSpeed = teamMeta.walkingSpeed.toFloat()
         player.foodLevel = 20
         player.level = 0
         player.exp = 0.0F
@@ -912,7 +910,6 @@ abstract class SoccerGameImpl(
         player.gameMode = stats.gameMode
         player.allowFlight = stats.gameMode == GameMode.CREATIVE
         player.isFlying = false
-        player.walkSpeed = stats.walkingSpeed.toFloat()
         player.level = stats.level
         player.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
         player.exp = stats.exp.toFloat()

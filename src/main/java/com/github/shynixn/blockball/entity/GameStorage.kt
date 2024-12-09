@@ -44,11 +44,6 @@ class GameStorage {
     var gameMode: GameMode = GameMode.SURVIVAL
 
     /**
-     * Walking Speed of the player.
-     */
-    var walkingSpeed: Double = 1.0
-
-    /**
      * Counter of enemy goals.
      */
     var scoredGoals : Int = 0

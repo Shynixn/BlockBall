@@ -320,8 +320,6 @@ meta:
         yaw: 0.0
         pitch: 0.0
         world: "world"
-    # Player walking speed.
-    walkingSpeed: 0.2
     # The armor a player receives when joining a game. Should only be set inGame.
     armor:
       - null
@@ -389,7 +387,6 @@ meta:
         yaw: 0.0
         pitch: 0.0
         world: "world"
-    walkingSpeed: 0.2
     armor:
       - null
       - null

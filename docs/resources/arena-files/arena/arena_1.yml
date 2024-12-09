@@ -439,7 +439,6 @@ meta:
         yaw: 0.0
         pitch: 0.0
         world: "world"
-    walkingSpeed: 0.2
     joinMessage: "%blockball_lang_joinSuccessMessage%"
     leaveMessage: "%blockball_lang_leaveMessage%"
     signLines:
@@ -530,7 +529,6 @@ meta:
         yaw: 0.0
         pitch: 0.0
         world: "world"
-    walkingSpeed: 0.2
     joinMessage: "%blockball_lang_joinSuccessMessage%"
     leaveMessage: "%blockball_lang_leaveMessage%"
     signLines:

@@ -6,7 +6,7 @@ import com.github.shynixn.blockball.contract.Language
 
 class BlockBallLanguageImpl : Language, LanguageProviderImpl() {
     override val names: List<String>
-        get() = listOf("en_us", "es_es")
+        get() = listOf("en_us", "es_es", "zh_cn")
     override var gameAlreadyExistsMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Game %1$1s already exists.")
 
     override var commandUsage =
