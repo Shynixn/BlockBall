@@ -26,9 +26,6 @@ class TeamMeta {
     /** Goal properties of the team. */
     val goal: Selection = Selection()
 
-    /** WalkingSpeed of the players in this team. */
-    var walkingSpeed: Double = 0.2
-
     var armor: Array<String?> = arrayOfNulls(4)
 
     var inventory: Array<String?> = arrayOfNulls(36)

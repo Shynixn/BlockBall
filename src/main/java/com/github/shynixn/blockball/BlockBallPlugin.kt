@@ -71,10 +71,11 @@ class BlockBallPlugin : JavaPlugin() {
                 Version.VERSION_1_20_R4,
                 Version.VERSION_1_21_R1,
                 Version.VERSION_1_21_R2,
+                Version.VERSION_1_21_R3,
             )
         } else {
             arrayOf(
-                Version.VERSION_1_21_R2,
+                Version.VERSION_1_21_R3,
             )
         }
 
