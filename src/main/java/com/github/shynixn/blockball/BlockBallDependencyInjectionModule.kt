@@ -33,7 +33,7 @@ import com.github.shynixn.mcutils.packet.impl.service.ChatMessageServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.ItemServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.RayTracingServiceImpl
-import com.github.shynixn.mcutils.packet.nms.v1_21_R2.AreaSelectionServiceImpl
+import com.github.shynixn.mcutils.packet.nms.v1_21_R3.AreaSelectionServiceImpl
 import com.github.shynixn.mcutils.sign.SignService
 import com.github.shynixn.mcutils.sign.SignServiceImpl
 import kotlinx.coroutines.CoroutineDispatcher
