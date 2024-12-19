@@ -2,7 +2,10 @@ package com.github.shynixn.blockball.impl.commandexecutor
 
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.BlockBallLanguageImpl
-import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.Language
+import com.github.shynixn.blockball.contract.PlaceHolderService
+import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
@@ -14,6 +17,8 @@ import com.github.shynixn.mcutils.common.command.CommandBuilder
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandType
 import com.github.shynixn.mcutils.common.command.Validator
+import com.github.shynixn.mcutils.common.item.Item
+import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.selection.AreaHighlight
@@ -29,7 +34,6 @@ import org.bukkit.plugin.Plugin
 import java.awt.Color
 import java.util.*
 import java.util.logging.Level
-import kotlin.collections.ArrayList
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
@@ -42,6 +46,7 @@ class BlockBallCommandExecutor @Inject constructor(
     private val signService: SignService,
     private val selectionService: AreaSelectionService,
     private val placeHolderService: PlaceHolderService,
+    private val itemService: ItemService,
     chatMessageService: ChatMessageService
 ) {
     private val arenaTabs: suspend (s: CommandSender) -> List<String> = {
@@ -263,10 +268,9 @@ class BlockBallCommandExecutor @Inject constructor(
                     }.argument("team").validator(teamValidator).tabs(teamTabs)
                     .executePlayer({ language.commandSenderHasToBePlayer.text }) { sender, arena, team ->
                         joinGame(sender, sender, arena.name, team)
-                    }
-                    .argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
-                    .permission { Permission.EDIT_GAME.permission }.permissionMessage { language.noPermissionMessage.text }
-                    .execute { sender, arena, team, player ->
+                    }.argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
+                    .permission { Permission.EDIT_GAME.permission }
+                    .permissionMessage { language.noPermissionMessage.text }.execute { sender, arena, team, player ->
                         joinGame(sender, player, arena.name, team)
                     }
             }
@@ -275,8 +279,8 @@ class BlockBallCommandExecutor @Inject constructor(
                 toolTip { language.commandLeaveToolTip.text }
                 builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { sender -> leaveGame(sender) }
                     .argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
-                    .permission { Permission.EDIT_GAME.permission }.permissionMessage { language.noPermissionMessage.text }
-                    .execute { _, player ->
+                    .permission { Permission.EDIT_GAME.permission }
+                    .permissionMessage { language.noPermissionMessage.text }.execute { _, player ->
                         leaveGame(player)
                     }
             }
@@ -533,8 +537,37 @@ class BlockBallCommandExecutor @Inject constructor(
         val arena = SoccerArena()
         arena.name = name
         arena.displayName = displayName
+
+        val items = arrayOf(
+            Item("minecraft:leather_boots,301"),
+            Item("minecraft:leather_leggings,300"),
+            Item("minecraft:leather_chestplate,299"),
+            null
+        )
+        arena.meta.redTeamMeta.armor = mapItemsToColoredSerializedItems(items, "16711680")
+        arena.meta.blueTeamMeta.armor = mapItemsToColoredSerializedItems(items, "255")
+        arena.meta.refereeTeamMeta.armor = mapItemsToColoredSerializedItems(items, "16777215")
+
         arenaRepository.save(arena)
         language.sendMessage(language.gameCreatedMessage, sender, name)
+    }
+
+    private fun mapItemsToColoredSerializedItems(items: Array<Item?>, color: String): Array<String?> {
+        return items.map { e ->
+            if (e != null) {
+                itemService.toItemStack(
+                    e.copy(
+                        nbt = "{display:{color:$color}}", component = "{\"minecraft:dyed_color\":$color}"
+                    )
+                )
+            } else {
+                null
+            }
+        }.map {
+            val yamlConfiguration = YamlConfiguration()
+            yamlConfiguration.set("item", it)
+            yamlConfiguration.saveToString()
+        }.toTypedArray()
     }
 
     private suspend fun deleteArena(sender: CommandSender, arena: SoccerArena) {

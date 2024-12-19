@@ -103,7 +103,7 @@ class BlockBallLanguageImpl : Language, LanguageProviderImpl() {
 
  override var commandToggleToolTip = LanguageItem("Enables or disables your game. If a game is disabled, nobody can join.")
 
- override var commandJoinToolTip = LanguageItem("Lets the player executing the command join the game. The optional team argument allows to directly join a specific team. If the team is full, the other team will be chosen. If no team is specified, a random team will be selected.")
+ override var commandJoinToolTip = LanguageItem("Lets the player executing the command join the game. If no team is specified, a random team will be selected. If the player has already joined a game, this command can also be used to switch teams.")
 
  override var commandLeaveToolTip = LanguageItem("Lets the player executing the command leave the game.")
 
