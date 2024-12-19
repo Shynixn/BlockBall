@@ -86,7 +86,7 @@ class SoccerBallSettings {
     val soundEffects: MutableMap<BallActionType, SoundMeta> = HashMap()
 
     /** Spawning delay. */
-    var delayInTicks: Int = 0
+    var delayInTicks: Int = 60
 
     /** Spawnpoint of the ball. */
     var spawnpoint: Vector3d? = null

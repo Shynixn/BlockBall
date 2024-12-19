@@ -204,10 +204,7 @@ open class SoccerMiniGameImpl constructor(
 
         // Handle SoccerBall.
         this.fixBallPositionSpawn()
-        if (ticks >= 20) {
-            this.handleBallSpawning()
-        }
-
+        this.handleBallSpawning()
         // Update signs and protections.
         super.handleMiniGameEssentials(ticks)
     }
