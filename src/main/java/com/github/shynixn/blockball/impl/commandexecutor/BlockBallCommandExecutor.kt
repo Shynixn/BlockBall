@@ -21,6 +21,7 @@ import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.mcutils.sign.SignService
 import com.google.inject.Inject
 import kotlinx.coroutines.runBlocking
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
@@ -46,6 +47,31 @@ class BlockBallCommandExecutor @Inject constructor(
     private val arenaTabs: suspend (s: CommandSender) -> List<String> = {
         arenaRepository.getAll().map { e -> e.name }
     }
+    private val onlinePlayerTabs: (suspend (CommandSender) -> List<String>) = {
+        Bukkit.getOnlinePlayers().map { e -> e.name }
+    }
+    private val playerMustExist = object : Validator<Player> {
+        override suspend fun transform(
+            sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
+        ): Player? {
+            try {
+                val playerId = openArgs[0]
+                val player = Bukkit.getPlayer(playerId)
+
+                if (player != null) {
+                    return player
+                }
+                return Bukkit.getPlayer(UUID.fromString(playerId))
+            } catch (e: Exception) {
+                return null
+            }
+        }
+
+        override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
+            return language.playerNotFoundMessage.text.format(openArgs[0])
+        }
+    }
+
     private val teamTabs: suspend (s: CommandSender) -> List<String> = {
         val tabs = ArrayList<Team>()
         tabs.add(Team.RED)
@@ -232,17 +258,27 @@ class BlockBallCommandExecutor @Inject constructor(
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .executePlayer({ language.commandSenderHasToBePlayer.text }) { sender, arena ->
                         joinGame(
-                            sender, arena.name
+                            sender, sender, arena.name
                         )
                     }.argument("team").validator(teamValidator).tabs(teamTabs)
                     .executePlayer({ language.commandSenderHasToBePlayer.text }) { sender, arena, team ->
-                        joinGame(sender, arena.name, team)
+                        joinGame(sender, sender, arena.name, team)
+                    }
+                    .argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
+                    .permission { Permission.EDIT_GAME.permission }.permissionMessage { language.noPermissionMessage.text }
+                    .execute { sender, arena, team, player ->
+                        joinGame(sender, player, arena.name, team)
                     }
             }
             subCommand("leave") {
                 noPermission()
                 toolTip { language.commandLeaveToolTip.text }
                 builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { sender -> leaveGame(sender) }
+                    .argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
+                    .permission { Permission.EDIT_GAME.permission }.permissionMessage { language.noPermissionMessage.text }
+                    .execute { _, player ->
+                        leaveGame(player)
+                    }
             }
             helpCommand()
             subCommand("axe") {
@@ -599,12 +635,26 @@ class BlockBallCommandExecutor @Inject constructor(
         sender.sendMessage(footerBuilder.toString())
     }
 
-    private fun joinGame(player: Player, name: String, team: Team? = null) {
+    private fun joinGame(sender: CommandSender, player: Player, name: String, team: Team? = null): Boolean {
         for (game in gameService.getAll()) {
             if (game.getPlayers().contains(player)) {
                 if (game.arena.name.equals(name, true)) {
-                    // Do not leave, if it is the same game.
-                    return
+                    // It is the same game.
+                    val previousTeam = game.ingamePlayersStorage[player]!!.team
+
+                    if (game.status == GameState.JOINABLE && team != null && previousTeam != team) {
+                        // Switching teams.
+                        game.leave(player)
+                        val joinResult = joinGame(sender, player, name, team)
+
+                        if (!joinResult) {
+                            game.join(player, previousTeam)
+                            return false
+                        }
+                        return true
+                    }
+
+                    return false
                 }
 
                 game.leave(player)
@@ -614,29 +664,29 @@ class BlockBallCommandExecutor @Inject constructor(
         val game = gameService.getByName(name)
 
         if (game == null) {
-            language.sendMessage(language.gameDoesNotExistMessage, player, name)
-            return
+            language.sendMessage(language.gameDoesNotExistMessage, sender, name)
+            return false
         }
 
-        if (!player.hasPermission(
+        if (!sender.hasPermission(
                 Permission.JOIN.permission.replace(
                     "[name]", game.arena.name
                 )
-            ) && !player.hasPermission(Permission.JOIN.permission.replace("[name]", "*"))
+            ) && !sender.hasPermission(Permission.JOIN.permission.replace("[name]", "*"))
         ) {
-            language.sendMessage(language.noPermissionForGameMessage, player, game.arena.name)
-            return
+            language.sendMessage(language.noPermissionForGameMessage, sender, game.arena.name)
+            return false
         }
 
         if (team != null && team == Team.REFEREE) {
             if (game !is SoccerRefereeGame) {
-                language.sendMessage(language.gameIsNotARefereeGame, player)
-                return
+                language.sendMessage(language.gameIsNotARefereeGame, sender)
+                return false
             }
 
-            if (!player.hasPermission(Permission.REFEREE_JOIN.permission)) {
-                language.sendMessage(language.noPermissionForGameMessage, player, game.arena.name)
-                return
+            if (!sender.hasPermission(Permission.REFEREE_JOIN.permission)) {
+                language.sendMessage(language.noPermissionForGameMessage, sender, game.arena.name)
+                return false
             }
         }
 
@@ -644,15 +694,15 @@ class BlockBallCommandExecutor @Inject constructor(
 
         if (team != null && joinResult == JoinResult.TEAM_FULL) {
             if (team == Team.BLUE) {
-                return joinGame(player, name, Team.RED)
+                return joinGame(sender, player, name, Team.RED)
             } else {
-                return joinGame(player, name, Team.BLUE)
+                return joinGame(sender, player, name, Team.BLUE)
             }
         }
 
         if (joinResult == JoinResult.GAME_FULL || joinResult == JoinResult.GAME_ALREADY_RUNNING) {
-            language.sendMessage(language.gameIsFullMessage, player)
-            return
+            language.sendMessage(language.gameIsFullMessage, sender)
+            return false
         }
 
         if (joinResult == JoinResult.SUCCESS_BLUE) {
@@ -662,6 +712,7 @@ class BlockBallCommandExecutor @Inject constructor(
         } else if (joinResult == JoinResult.SUCCESS_REFEREE) {
             language.sendMessage(language.joinTeamRefereeMessage, player)
         }
+        return true
     }
 
     private fun leaveGame(player: Player) {

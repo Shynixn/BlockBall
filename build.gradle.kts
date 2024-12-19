@@ -115,7 +115,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveName)))
     archiveName = "${baseName}-${version}-latest.${extension}"
-    // destinationDir = File("C:\\temp\\plugins")
+    destinationDir = File("C:\\temp\\plugins")
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_9_R2/**")
@@ -251,7 +251,7 @@ tasks.register("languageFile") {
     implContents.add("")
     implContents.add("class BlockBallLanguageImpl : Language, LanguageProviderImpl() {")
     implContents.add(" override val names: List<String>\n" +
-            "  get() = listOf(\"en_us\", \"es_es\")")
+            "  get() = listOf(\"en_us\", \"es_es\", \"zh_cn\")")
 
     for (i in 0 until lines.size) {
         val key = lines[i]

@@ -48,22 +48,25 @@ Enables or disables your game. If a game is disabled, nobody can join.
 ### /blockball join
 
 ```
-/blockball join <name> [team]
+/blockball join <name> [team] [player]
 ```
 
-Lets the player executing the command join the game. The optional team argument allows to directly join a specific team.
-If the team is full, the other team will be chosen. If no team is specified, a random team will be selected.
+Lets the player executing the command join the game. If no team is specified, a random team will be selected.
+If the player has already joined a game, this command can also be used to switch teams. 
 
 * Name: Identifier of a game
-* Team: Name of the team. Is always red or blue.
+* Team: Optional name of the team. Is ``red``, ``blue`` or ``referee``.
+* Player: Optional name of the player to join. Requires the ``blockball.edit`` permission to use.
 
 ### /blockball leave
 
 ```
-/blockball leave
+/blockball leave [player]
 ```
 
 Lets the player executing the command leave the game.
+
+* Player: Optional name of the player to leave. Requires the ``blockball.edit`` permission to use.
 
 ### /blockball axe
 
