@@ -164,14 +164,6 @@ open class SoccerMiniGameImpl constructor(
                 if (canStartLobbyCountdown()) {
                     lobbyCountDownActive = true
                     lobbyCountdown = arena.meta.minigameMeta.lobbyDuration
-                } else if (!playing) {
-                    ingamePlayersStorage.keys.toTypedArray().forEach { p ->
-                        chatMessageService.sendActionBarMessage(
-                            p, placeHolderService.replacePlaceHolders(
-                                arena.meta.minigameMeta.playersRequiredToStartMessage, p, this
-                            )
-                        )
-                    }
                 }
             }
 
