@@ -41,6 +41,8 @@ meta:
     keepInventoryEnabled: false
     # Should players keep their health when they join the game?
     keepHealthEnabled: false
+    # If set to true, the goal size can be arbitrary.
+    ignoreGoalSize: false
   # Settings for all types of games.
   lobbyMeta:
     # Max score a team can score before the game resets.
