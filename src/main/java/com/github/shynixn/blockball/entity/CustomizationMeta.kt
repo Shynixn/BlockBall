@@ -16,4 +16,9 @@ class CustomizationMeta{
      * Should the players keep their health when they join a game?
      */
     var keepHealthEnabled: Boolean = true
+
+    /**
+     * If set to true, the goal size can be arbitrary.
+     */
+    var ignoreGoalSize: Boolean = false
 }

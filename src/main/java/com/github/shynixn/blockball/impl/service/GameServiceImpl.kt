@@ -286,6 +286,10 @@ class GameServiceImpl @Inject constructor(
     }
 
     private fun validateGoalSize(arena: SoccerArena, team: Team, teamMeta: TeamMeta) {
+        if (arena.meta.customizingMeta.ignoreGoalSize) {
+            return
+        }
+
         if (abs(teamMeta.goal.upperCorner!!.x - teamMeta.goal.lowerCorner!!.x) < 1.8) {
             throw SoccerGameException(
                 arena,

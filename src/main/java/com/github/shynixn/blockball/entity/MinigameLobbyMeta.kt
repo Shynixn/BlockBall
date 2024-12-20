@@ -13,10 +13,6 @@ class MinigameLobbyMeta {
     /** Duration the match will max last. */
     var lobbyDuration: Int = 20
 
-    /** Message being played in the action bar displaying the joined players how many players are remaining to start. */
-    var playersRequiredToStartMessage: String =
-        "%blockball_lang_miniGameRemainingPlayers%"
-
     init {
         val firstPeriod = MatchTimeMeta()
         firstPeriod.duration = 150

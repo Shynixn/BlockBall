@@ -187,4 +187,8 @@ interface Language : LanguageProvider {
   var commandPlaceHolderToolTip: LanguageItem
 
   var commandPlaceHolderMessage: LanguageItem
+
+  var playerNotFoundMessage: LanguageItem
+
+  var queueTimeOutMessage: LanguageItem
 }

@@ -6,6 +6,8 @@ displayName: "SoccerArena 3"
 enabled: true
 # Type of game. Accepts HUBGAME, MINIGAME and BUNGEE
 gameType: "HUBGAME"
+# Amount of time until the player queue timeouts.
+queueTimeOutSec: 30
 # The first corner of the playing field.
 corner1:
   x: 1641.0
@@ -41,6 +43,8 @@ meta:
     keepInventoryEnabled: false
     # Should players keep their health when they join the game?
     keepHealthEnabled: false
+    # If set to true, the goal size can be arbitrary.
+    ignoreGoalSize: false
   # Settings for all types of games.
   lobbyMeta:
     # Max score a team can score before the game resets.
@@ -69,8 +73,6 @@ meta:
   minigameMeta:
     # Time in seconds until the lobby Timer completes.
     lobbyDuration: 20
-    # Message sent to players, with how many players are required to start.
-    playersRequiredToStartMessage: "%blockball_lang_miniGameRemainingPlayers%"
     # Also called periods, are the sections (half times) you want to split your game in. You can remove/add as many stages as you want.
     matchTimes:
       # Duration in seconds until this stage completes.

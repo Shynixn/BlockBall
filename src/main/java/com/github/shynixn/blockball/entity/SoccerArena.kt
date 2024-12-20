@@ -15,6 +15,11 @@ class SoccerArena : Selection(), Element{
     /** Is the soccerArena ready to be placed. */
     var enabled: Boolean = false
 
+    /**
+     * Amount of seconds until the queue timeouts.
+     */
+    var queueTimeOutSec: Int = 30
+
     /** [gameType] of the soccerArena */
     var gameType: GameType = GameType.HUBGAME
 

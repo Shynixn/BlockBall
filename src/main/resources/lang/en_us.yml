@@ -176,7 +176,7 @@ commandToggleToolTip:
   text: "Enables or disables your game. If a game is disabled, nobody can join."
 commandJoinToolTip:
   type: "CHAT"
-  text: "Lets the player executing the command join the game. The optional team argument allows to directly join a specific team. If the team is full, the other team will be chosen. If no team is specified, a random team will be selected."
+  text: "Lets the player executing the command join the game. If no team is specified, a random team will be selected. If the player has already joined a game, this command can also be used to switch teams."
 commandLeaveToolTip:
   type: "CHAT"
   text: "Lets the player executing the command leave the game."
@@ -306,3 +306,9 @@ commandPlaceHolderToolTip:
 commandPlaceHolderMessage:
   type: "CHAT"
   text: "Evaluated placeholder: %1$1s"
+playerNotFoundMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c Player %1$1s not found."
+queueTimeOutMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c Not enough players joined in time to start the game."

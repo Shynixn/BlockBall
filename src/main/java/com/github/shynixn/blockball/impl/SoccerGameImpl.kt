@@ -796,14 +796,13 @@ abstract class SoccerGameImpl(
      * Teleports all players and ball back to their spawnpoint if [game] has got back teleport enabled.
      */
     private fun relocatePlayersAndBall() {
+        respawnBall()
+
         if (!arena.meta.customizingMeta.backTeleport) {
-            respawnBall()
             return
         }
 
         val tickDelay = 20 * arena.meta.customizingMeta.backTeleportDelay
-
-        respawnBall(tickDelay)
         plugin.launch {
             delay(tickDelay.ticks)
             var redTeamSpawnpoint = arena.meta.redTeamMeta.spawnpoint
@@ -934,8 +933,13 @@ abstract class SoccerGameImpl(
             return
         }
 
+        if (ball != null) {
+            ball!!.remove()
+            ball = null
+        }
+
         ballSpawning = true
-        ballSpawnCounter = delayInTicks / 20
+        ballSpawnCounter = delayInTicks
     }
 
     fun getTeamMetaFromTeam(team: Team): TeamMeta {

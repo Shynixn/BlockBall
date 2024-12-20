@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.8.0"
+version = "7.9.0"
 
 repositories {
     mavenLocal()
@@ -251,7 +251,7 @@ tasks.register("languageFile") {
     implContents.add("")
     implContents.add("class BlockBallLanguageImpl : Language, LanguageProviderImpl() {")
     implContents.add(" override val names: List<String>\n" +
-            "  get() = listOf(\"en_us\", \"es_es\")")
+            "  get() = listOf(\"en_us\", \"es_es\", \"zh_cn\")")
 
     for (i in 0 until lines.size) {
         val key = lines[i]
