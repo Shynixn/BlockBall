@@ -309,3 +309,6 @@ commandPlaceHolderMessage:
 playerNotFoundMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c Player %1$1s not found."
+queueTimeOutMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c Not enough players joined in time to start the game."

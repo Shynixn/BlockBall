@@ -28,7 +28,7 @@ open class SoccerMiniGameImpl constructor(
     private val bossBarService: BossBarService,
     private val chatMessageService: ChatMessageService,
     private val soundService: SoundService,
-    language: Language,
+    private val language: Language,
     packetService: PacketService,
     scoreboardService: ScoreboardService,
     commandService: CommandService,
@@ -45,6 +45,8 @@ open class SoccerMiniGameImpl constructor(
     language,
     playerDataRepository
 ), SoccerMiniGame {
+    private var currentQueueTime = arena.queueTimeOutSec
+    private var isQueueTimeRunning = false
 
     /**
      * Is the lobby countdown active.
@@ -85,6 +87,7 @@ open class SoccerMiniGameImpl constructor(
             return JoinResult.GAME_FULL
         }
 
+        queueTimeOut()
         return super.join(player, team)
     }
 
@@ -116,6 +119,8 @@ open class SoccerMiniGameImpl constructor(
 
         if (ticks >= 20) {
             if (lobbyCountDownActive) {
+                isQueueTimeRunning = false
+
                 if (lobbyCountdown > 10) {
                     val amountPlayers = arena.meta.blueTeamMeta.maxAmount + arena.meta.redTeamMeta.maxAmount
 
@@ -334,5 +339,33 @@ open class SoccerMiniGameImpl constructor(
         }
 
         return false
+    }
+
+
+    private fun queueTimeOut() {
+        currentQueueTime = arena.queueTimeOutSec // Reset queue timer each time someone joins.
+
+        if (isQueueTimeRunning) {
+            return
+        }
+
+        isQueueTimeRunning = true
+        plugin.launch {
+            while (isQueueTimeRunning && status == GameState.JOINABLE) {
+                currentQueueTime -= 1
+
+                if (currentQueueTime <= 0) {
+                    isQueueTimeRunning = false
+                    for (player in ingamePlayersStorage.keys.toTypedArray()) {
+                        language.sendMessage(language.queueTimeOutMessage, player)
+                        leave(player)
+                    }
+                    status = GameState.JOINABLE
+                    return@launch
+                }
+
+                delay(20.ticks)
+            }
+        }
     }
 }

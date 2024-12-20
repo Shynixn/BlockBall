@@ -192,4 +192,6 @@ class BlockBallLanguageImpl : Language, LanguageProviderImpl() {
  override var commandPlaceHolderMessage = LanguageItem("Evaluated placeholder: %1$1s")
 
  override var playerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Player %1$1s not found.")
+
+ override var queueTimeOutMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Not enough players joined in time to start the game.")
 }
