@@ -99,13 +99,15 @@ class BlockBallPlugin : JavaPlugin() {
         language.placeHolderFun =
             { text, player ->
                 val placeHolderService = module.getService<PlaceHolderService>()
+                val gameService = module.getService<GameService>()
                 if (player != null) {
-                    placeHolderService.replacePlaceHolders(text, player)
+                    val game = gameService.getByPlayer(player)
+                    placeHolderService.replacePlaceHolders(text, player, game)
                 } else {
                     text
                 }
             }
-        reloadTranslation(language,BlockBallLanguageImpl::class.java)
+        reloadTranslation(language, BlockBallLanguageImpl::class.java)
         logger.log(Level.INFO, "Loaded language file.")
 
         // Guice
