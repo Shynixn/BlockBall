@@ -152,7 +152,7 @@ meta:
     horizontalStrength: 2.0
     # Sound effect to play when it is activated.
     soundEffect:
-      name: "ENTITY_GHAST_SHOOT,GHAST_FIREBALL"
+      name: "ENTITY_WIND_CHARGE_WIND_BURST,ENTITY_GHAST_SHOOT,GHAST_FIREBALL"
       pitch: 1.0
       volume: 10.0
       effectingType: "RELATED_PLAYER"
