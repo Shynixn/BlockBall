@@ -32,6 +32,13 @@ jobs:
           ./gradlew build pluginJars
           echo "RELEASE_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_ENV
 
+      - name: Create Geyser Customizations
+        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
+        env:
+          GEYSER_PASSWORD: ${{ secrets.GEYSER_PASSWORD }}
+        run: |
+          7z x docs/resources/BlockBall-GeyserMC.7z -p${{ env.GEYSER_PASSWORD }} 
+
       - name: Create Github Release
         if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
         id: create_release
@@ -77,6 +84,17 @@ jobs:
           asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-root-${{ env.RELEASE_VERSION }}-legacy.jar
           asset_name: BlockBall-Legacy.jar
           asset_content_type: application/jar
+
+      - name: Geyser Customizations to Github
+        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /home/runner/work/BlockBall/BlockBall/BlockBall-GeyserMC.zip
+          asset_name: BlockBall-GeyserMC.zip
+          asset_content_type: application/zip
 
   Wiki:
     runs-on: ubuntu-latest

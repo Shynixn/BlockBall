@@ -14,7 +14,7 @@ class DoubleJumpMeta {
     /** ParticleEffect being played when activating this.*/
     /** SoundEffect being played when activating this.*/
     val soundEffect: SoundMeta = SoundMeta().also {
-        it.name = "ENTITY_GHAST_SHOOT,GHAST_FIREBALL"
+        it.name = "ENTITY_WIND_CHARGE_WIND_BURST,ENTITY_GHAST_SHOOT,GHAST_FIREBALL"
         it.pitch = 1.0
         it.volume = 10.0
     }

@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.9.0"
+version = "7.10.0"
 
 repositories {
     mavenLocal()
@@ -41,8 +41,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcutils:common:2024.39")
-    implementation("com.github.shynixn.mcutils:packet:2024.51")
+    implementation("com.github.shynixn.mcutils:common:2024.43")
+    implementation("com.github.shynixn.mcutils:packet:2024.54")
     implementation("com.github.shynixn.mcutils:database:2024.8")
     implementation("com.github.shynixn.mcutils:sign:2024.3")
     implementation("com.github.shynixn.mcutils:guice:2024.2")
