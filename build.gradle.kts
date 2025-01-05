@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.10.0"
+version = "7.10.1"
 
 repositories {
     mavenLocal()
