@@ -5,14 +5,12 @@ package com.github.shynixn.blockball.impl.service
 import com.github.shynixn.blockball.contract.BossBarService
 import com.github.shynixn.blockball.entity.BossBarMeta
 import com.github.shynixn.blockball.enumeration.BossBarFlag
-import com.google.inject.Inject
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.lang.reflect.Array
 import java.lang.reflect.Method
 
-class BossBarServiceImpl @Inject constructor() :
-    BossBarService {
+class BossBarServiceImpl : BossBarService {
     /**
      * Adds the given [player] to this bossbar.
      * Does nothing if the player is already added.
@@ -47,14 +45,12 @@ class BossBarServiceImpl @Inject constructor() :
         getBossBarMethod("setVisible", Boolean::class.java).invoke(bossBar, bossBarMeta.enabled)
         getBossBarMethod("setTitle", String::class.java).invoke(bossBar, title)
         getBossBarMethod("setProgress", Double::class.java).invoke(bossBar, bossBarMeta.percentage / 100.0)
-        getBossBarMethod("setColor", Class.forName("org.bukkit.boss.BarColor"))
-            .invoke(
+        getBossBarMethod("setColor", Class.forName("org.bukkit.boss.BarColor")).invoke(
                 bossBar,
                 Class.forName("org.bukkit.boss.BarColor").getDeclaredMethod("valueOf", String::class.java)
                     .invoke(null, bossBarMeta.color.name)
             )
-        getBossBarMethod("setStyle", Class.forName("org.bukkit.boss.BarStyle"))
-            .invoke(
+        getBossBarMethod("setStyle", Class.forName("org.bukkit.boss.BarStyle")).invoke(
                 bossBar,
                 Class.forName("org.bukkit.boss.BarStyle").getDeclaredMethod("valueOf", String::class.java)
                     .invoke(null, bossBarMeta.style.name)
@@ -86,11 +82,7 @@ class BossBarServiceImpl @Inject constructor() :
             .invoke(null, bossBarMeta.style.name)
 
         val bossBar = method.invoke(
-            null,
-            bossBarMeta.message,
-            color,
-            style,
-            Array.newInstance(Class.forName("org.bukkit.boss.BarFlag"), 0)
+            null, bossBarMeta.message, color, style, Array.newInstance(Class.forName("org.bukkit.boss.BarFlag"), 0)
         ) as B
         changeConfiguration(bossBar, bossBarMeta.message, bossBarMeta, null)
 

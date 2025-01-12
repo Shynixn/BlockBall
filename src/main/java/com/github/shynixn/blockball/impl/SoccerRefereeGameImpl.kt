@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
@@ -14,7 +15,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class SoccerRefereeGameImpl constructor(
+class SoccerRefereeGameImpl(
     arena: SoccerArena,
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
     plugin: Plugin,
@@ -22,7 +23,7 @@ class SoccerRefereeGameImpl constructor(
     bossBarService: BossBarService,
     private val chatMessageService: ChatMessageService,
     private val soundService: SoundService,
-    private val language: Language,
+    language: BlockBallLanguage,
     packetService: PacketService,
     scoreboardService: ScoreboardService,
     commandService: CommandService,
@@ -163,8 +164,8 @@ class SoccerRefereeGameImpl constructor(
                             if (ball != null) {
                                 ingamePlayersStorage.filter { e -> e.value.team != Team.REFEREE }.forEach { p ->
                                     chatMessageService.sendActionBarMessage(
-                                        p.key, placeHolderService.replacePlaceHolders(
-                                            language.nextPeriodReferee.text, p.key, this
+                                        p.key, placeHolderService.resolvePlaceHolder(
+                                            language.nextPeriodReferee.text, p.key
                                         )
                                     )
                                 }
@@ -172,8 +173,8 @@ class SoccerRefereeGameImpl constructor(
 
                             refereeTeam.forEach { p ->
                                 chatMessageService.sendActionBarMessage(
-                                    p, placeHolderService.replacePlaceHolders(
-                                        language.nextPeriodRefereeHint.text, p, this
+                                    p, placeHolderService.resolvePlaceHolder(
+                                        language.nextPeriodRefereeHint.text, p
                                     )
                                 )
                             }
@@ -214,8 +215,8 @@ class SoccerRefereeGameImpl constructor(
     private fun sendBroadcastMessage(playerMessage: String, refereeMessage: String) {
         refereeTeam.forEach { p ->
             chatMessageService.sendActionBarMessage(
-                p, placeHolderService.replacePlaceHolders(
-                    refereeMessage, p, this
+                p, placeHolderService.resolvePlaceHolder(
+                    refereeMessage, p
                 )
             )
         }
@@ -226,8 +227,8 @@ class SoccerRefereeGameImpl constructor(
 
         for (player in otherPlayers) {
             chatMessageService.sendActionBarMessage(
-                player, placeHolderService.replacePlaceHolders(
-                    playerMessage, player, this
+                player, placeHolderService.resolvePlaceHolder(
+                    playerMessage, player
                 )
             )
         }

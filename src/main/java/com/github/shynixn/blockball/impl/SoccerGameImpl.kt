@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl
 
+import com.github.shynixn.blockball.BlockBallPlugin.Companion.gameKey
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.*
@@ -12,6 +13,8 @@ import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.language.sendPluginMessage
+import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
 import kotlinx.coroutines.delay
@@ -35,7 +38,7 @@ abstract class SoccerGameImpl(
     private val scoreboardService: ScoreboardService,
     private val soccerBallFactory: SoccerBallFactory,
     private val commandService: CommandService,
-    private val language: Language,
+    override val language: BlockBallLanguage,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>
 ) : SoccerGame {
     /**
@@ -351,9 +354,9 @@ abstract class SoccerGameImpl(
 
         for (player in players) {
             if (team == Team.RED) {
-                language.sendMessage(language.winRed, player)
+                player.sendPluginMessage(language.winRed)
             } else if (team == Team.BLUE) {
-                language.sendMessage(language.winBlue, player)
+                player.sendPluginMessage(language.winBlue)
             }
         }
 
@@ -479,7 +482,7 @@ abstract class SoccerGameImpl(
             val lines = ArrayList(arena.meta.hologramMetas[i].lines)
 
             for (k in lines.indices) {
-                lines[k] = placeHolderService.replacePlaceHolders(lines[k], null, this)
+                lines[k] = placeHolderService.resolvePlaceHolder(lines[k], null,  mapOf(gameKey to arena.name))
             }
 
             holo.lines = lines
@@ -499,7 +502,7 @@ abstract class SoccerGameImpl(
 
             if (bossBar != null) {
                 bossBarService.changeConfiguration(
-                    bossBar, placeHolderService.replacePlaceHolders(meta.message, null, this), meta, null
+                    bossBar, placeHolderService.resolvePlaceHolder(meta.message, null,  mapOf(gameKey to arena.name)), meta, null
                 )
 
                 val players = ArrayList(inTeamPlayers)
@@ -575,7 +578,7 @@ abstract class SoccerGameImpl(
 
                 var j = lines.size
                 for (i in 0 until lines.size) {
-                    val line = placeHolderService.replacePlaceHolders(lines[i], p as Player, this)
+                    val line = placeHolderService.resolvePlaceHolder(lines[i], p as Player)
                     scoreboardService.setLine(scoreboard as Scoreboard, j, line)
                     j--
                 }
@@ -639,7 +642,7 @@ abstract class SoccerGameImpl(
         players.addAll(getPlayers())
 
         for (player in players) {
-            language.sendMessage(language.winDraw, player)
+            player.sendPluginMessage(language.winDraw)
         }
     }
 
@@ -678,7 +681,7 @@ abstract class SoccerGameImpl(
         if (teamOfGoal == Team.BLUE) {
             redScore += arena.meta.redTeamMeta.pointsPerGoal
             onScore(Team.RED)
-            onScoreReward(Team.BLUE, redTeam)
+            onScoreReward(Team.RED, redTeam)
             relocatePlayersAndBall()
 
             if (redScore >= arena.meta.lobbyMeta.maxScore) {
@@ -713,7 +716,7 @@ abstract class SoccerGameImpl(
         var interactionEntity: Player? = null
 
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
-            interactionEntity = lastInteractedEntity!! as Player
+            interactionEntity = lastInteractedEntity!!
         }
 
         if (interactionEntity == null) {
@@ -738,11 +741,11 @@ abstract class SoccerGameImpl(
 
         if (team == Team.RED) {
             for (player in players) {
-                language.sendMessage(language.scoreRed, player, interactionEntity.name)
+                player.sendPluginMessage(language.scoreRed, interactionEntity.name)
             }
         } else {
             for (player in players) {
-                language.sendMessage(language.scoreBlue, player, interactionEntity.name)
+                player.sendPluginMessage(language.scoreBlue, interactionEntity.name)
             }
         }
 
@@ -779,15 +782,15 @@ abstract class SoccerGameImpl(
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
             if (players.contains(lastInteractedEntity!!)) {
                 val teamMeta = getTeamMetaFromTeam(team)
-                executeCommandsWithPlaceHolder(setOf(lastInteractedEntity!! as Player), teamMeta.goalCommands)
+                executeCommandsWithPlaceHolder(setOf(lastInteractedEntity!!), teamMeta.goalCommands)
             }
         }
     }
 
     fun executeCommandsWithPlaceHolder(players: Set<Player>, commands: List<CommandMeta>) {
         commandService.executeCommands(players.toList(), commands) { c, p ->
-            placeHolderService.replacePlaceHolders(
-                c, p, this
+            placeHolderService.resolvePlaceHolder(
+                c, p
             )
         }
     }

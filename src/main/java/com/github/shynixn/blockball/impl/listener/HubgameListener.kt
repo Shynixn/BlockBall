@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.HubGameForcefieldService
-import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -10,7 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.player.PlayerToggleFlightEvent
 
-class HubgameListener @Inject constructor(private val hubGameForcefieldService: HubGameForcefieldService) : Listener {
+class HubgameListener (private val hubGameForcefieldService: HubGameForcefieldService) : Listener {
     /** Handles the forcefield of hubGames. */
     @EventHandler
     fun onPlayerMoveAgainstHubForceField(event: PlayerMoveEvent) {

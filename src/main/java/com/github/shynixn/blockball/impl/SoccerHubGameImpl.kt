@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
 import org.bukkit.Bukkit
@@ -18,7 +19,7 @@ class SoccerHubGameImpl(
     plugin: Plugin,
     placeHolderService: PlaceHolderService,
     private val bossBarService: BossBarService,
-    language: Language,
+    language: BlockBallLanguage,
     packetService: PacketService,
     scoreboardService: ScoreboardService,
     soccerBallFactory: SoccerBallFactory,

@@ -7,19 +7,20 @@ import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.chat.ClickEvent
 import com.github.shynixn.mcutils.common.chat.ClickEventType
 import com.github.shynixn.mcutils.common.chat.TextComponent
+import com.github.shynixn.mcutils.common.language.sendPluginMessage
+import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector
 import com.github.shynixn.mcutils.common.toVector3d
-import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
-class HubGameForcefieldServiceImpl @Inject constructor(
+class HubGameForcefieldServiceImpl (
     private val gameService: GameService,
-    private val placeholderService: PlaceHolderService,
-    private val language: Language,
-    private val chatMessageService: ChatMessageService
+    private val language: BlockBallLanguage,
+    private val chatMessageService: ChatMessageService,
+    private val placeholderService: PlaceHolderService
 ) : HubGameForcefieldService {
     private val cache = HashMap<Player, InteractionCache>()
 
@@ -37,7 +38,7 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                 )
             ) {
                 gameInternal.leave(player)
-                language.sendMessage(language.leftGameMessage, player)
+                player.sendPluginMessage(language.leftGameMessage)
             }
             return
         }
@@ -77,21 +78,15 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                             chatMessageService.sendChatMessage(player, TextComponent().also {
                                 it.components = mutableListOf(
                                     TextComponent().also {
-                                        it.text = placeholderService.replacePlaceHolders(
+                                        it.text = placeholderService.resolvePlaceHolder(
                                             language.hubGameJoinHeader.text,
-                                            player,
-                                            game,
-                                            null,
-                                            null
+                                            player
                                         ) + "\n"
                                     },
                                     TextComponent().also {
-                                        it.text = placeholderService.replacePlaceHolders(
+                                        it.text = placeholderService.resolvePlaceHolder(
                                             language.hubGameJoinRed.text,
-                                            player,
-                                            game,
-                                            null,
-                                            null
+                                            player
                                         ) + "\n"
                                         it.clickEvent = ClickEvent(
                                             ClickEventType.RUN_COMMAND,
@@ -99,12 +94,9 @@ class HubGameForcefieldServiceImpl @Inject constructor(
                                         )
                                     },
                                     TextComponent().also {
-                                        it.text = placeholderService.replacePlaceHolders(
+                                        it.text = placeholderService.resolvePlaceHolder(
                                             language.hubGameJoinBlue.text,
-                                            player,
-                                            game,
-                                            null,
-                                            null
+                                            player
                                         )
                                         it.clickEvent = ClickEvent(
                                             ClickEventType.RUN_COMMAND,

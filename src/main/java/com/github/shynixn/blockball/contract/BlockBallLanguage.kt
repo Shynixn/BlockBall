@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.contract
 import com.github.shynixn.mcutils.common.language.LanguageItem
 import com.github.shynixn.mcutils.common.language.LanguageProvider
 
-interface Language : LanguageProvider {
+interface BlockBallLanguage : LanguageProvider {
   var gameAlreadyExistsMessage: LanguageItem
 
   var commandUsage: LanguageItem

@@ -14,12 +14,12 @@ import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.sign.SignService
-import com.google.inject.Inject
 import kotlinx.coroutines.runBlocking
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -28,7 +28,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class GameServiceImpl @Inject constructor(
+class GameServiceImpl (
     private val arenaRepository: Repository<SoccerArena>,
     private val plugin: Plugin,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
@@ -40,7 +40,7 @@ class GameServiceImpl @Inject constructor(
     private val scoreboardService: ScoreboardService,
     private val commandService: CommandService,
     private val soccerBallFactory: SoccerBallFactory,
-    private val language: Language,
+    private val language: BlockBallLanguage,
     private val signService: SignService
 ) : GameService, Runnable {
     private val games = ArrayList<SoccerGame>()

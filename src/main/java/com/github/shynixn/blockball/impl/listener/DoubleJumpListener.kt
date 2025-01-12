@@ -4,14 +4,13 @@ package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.mcutils.common.sound.SoundService
-import com.google.inject.Inject
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerToggleFlightEvent
 
-class DoubleJumpListener @Inject constructor(
+class DoubleJumpListener (
     private val gameService: GameService,
     private val soundService: SoundService
 ) : Listener {

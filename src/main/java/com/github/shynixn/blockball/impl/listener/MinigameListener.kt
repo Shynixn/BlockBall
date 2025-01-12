@@ -1,22 +1,19 @@
 package com.github.shynixn.blockball.impl.listener
 
-import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.MatchTimeCloseType
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.event.GameGoalEvent
-import com.github.shynixn.mcutils.common.ConfigurationService
-import com.google.inject.Inject
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerInteractEvent
 
-class MinigameListener @Inject constructor(
-    private val gameService: GameService,
-    private val configurationService: ConfigurationService
+class MinigameListener (
+    private val gameService: GameService
 ) : Listener {
 
     /**
