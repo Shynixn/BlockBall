@@ -848,10 +848,10 @@ class BlockBallCommandExecutor(
             sender.sendPluginMessage(language.rightClickOnSignMessage)
             signService.addSignByRightClick(sender) { sign ->
                 sign.let {
-                    it.line1 = "%blockball_lang_joinSignLine1%"
-                    it.line2 = "%blockball_lang_joinSignLine2%"
-                    it.line3 = "%blockball_lang_joinSignLine3%"
-                    it.line4 = "%blockball_lang_joinSignLine4%"
+                    it.line1 = language.joinSignLine1.text
+                    it.line2 = language.joinSignLine2.text
+                    it.line3 = language.joinSignLine3.text
+                    it.line4 = language.joinSignLine4.text
                     it.cooldown = 20
                     it.update = 40
                     it.commands = mutableListOf(CommandMeta().also {
@@ -874,10 +874,10 @@ class BlockBallCommandExecutor(
             sender.sendPluginMessage(language.rightClickOnSignMessage)
             signService.addSignByRightClick(sender) { sign ->
                 sign.let {
-                    it.line1 = "%blockball_lang_leaveSignLine1%"
-                    it.line2 = "%blockball_lang_leaveSignLine2%"
-                    it.line3 = "%blockball_lang_leaveSignLine3%"
-                    it.line4 = "%blockball_lang_leaveSignLine4%"
+                    it.line1 = language.leaveSignLine1.text
+                    it.line2 = language.leaveSignLine2.text
+                    it.line3 = language.leaveSignLine3.text
+                    it.line4 = language.leaveSignLine4.text
                     it.cooldown = 20
                     it.update = 40
                     it.commands = mutableListOf(CommandMeta().also {

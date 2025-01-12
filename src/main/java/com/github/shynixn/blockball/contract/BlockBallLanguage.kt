@@ -66,10 +66,6 @@ interface BlockBallLanguage : LanguageProvider {
 
   var axeReceivedMessage: LanguageItem
 
-  var bossBarMessage: LanguageItem
-
-  var hologramMessage: LanguageItem
-
   var scoreRed: LanguageItem
 
   var scoreBlue: LanguageItem

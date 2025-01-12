@@ -68,10 +68,6 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var axeReceivedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The BlockBall axe has been added to your inventory.")
 
- override var bossBarMessage = LanguageItem("&cTeam Red %blockball_game_redScore% : &9%blockball_game_blueScore% Team Blue")
-
- override var hologramMessage = LanguageItem("&cTeam Red %blockball_game_redScore% : &9Team Blue %blockball_game_blueScore%")
-
  override var scoreRed = LanguageItem("&c%blockball_game_redScore% : &9%blockball_game_blueScore%")
 
  override var scoreBlue = LanguageItem("&9%blockball_game_blueScore% : &c%blockball_game_redScore%")

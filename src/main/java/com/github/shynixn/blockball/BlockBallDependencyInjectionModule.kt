@@ -5,6 +5,8 @@ import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.Permission
+import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
+import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.blockball.impl.service.*
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
@@ -15,6 +17,10 @@ import com.github.shynixn.mcutils.common.CoroutineExecutor
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
 import com.github.shynixn.mcutils.common.item.ItemService
+import com.github.shynixn.mcutils.common.language.globalChatMessageService
+import com.github.shynixn.mcutils.common.language.globalPlaceHolderService
+import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
+import com.github.shynixn.mcutils.common.placeholder.PlaceHolderServiceImpl
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.repository.CachedRepositoryImpl
 import com.github.shynixn.mcutils.common.repository.Repository
@@ -121,6 +127,7 @@ class BlockBallDependencyInjectionModule(
                 }
             )
         }
+        module.addService<PlaceHolderService> { PlaceHolderServiceImpl(plugin) }
 
         // Services
         module.addService<StatsService> {
@@ -153,10 +160,31 @@ class BlockBallDependencyInjectionModule(
                 module.getService()
             )
         }
-        module.addService<SoccerBallFactory>{
+        module.addService<SoccerBallFactory> {
             SoccerBallFactoryImpl(module.getService(), module.getService(), module.getService(), plugin)
         }
-
+        module.addService<BallListener> { BallListener(module.getService(), module.getService()) }
+        module.addService<DoubleJumpListener> { DoubleJumpListener(module.getService(), module.getService()) }
+        module.addService<GameListener> {
+            GameListener(module.getService(), module.getService(), module.getService(), module.getService())
+        }
+        module.addService<HubgameListener> { HubgameListener(module.getService()) }
+        module.addService<MinigameListener> { MinigameListener(module.getService()) }
+        module.addService<BlockBallCommandExecutor> {
+            BlockBallCommandExecutor(
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService()
+            )
+        }
+        plugin.globalChatMessageService = module.getService()
+        plugin.globalPlaceHolderService = module.getService()
         return module
     }
 }

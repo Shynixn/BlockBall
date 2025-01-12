@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
+import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
@@ -107,6 +108,11 @@ class BlockBallPlugin : JavaPlugin() {
         // Module
         this.module = BlockBallDependencyInjectionModule(this, language).build()
 
+        // Register PlaceHolder
+        PlaceHolder.registerAll(
+            module.getService(), module.getService(), module.getService(), module.getService()
+        )
+
         // Register Packet
         module.getService<PacketService>().registerPacketListening(PacketInType.USEENTITY)
 
@@ -193,7 +199,8 @@ class BlockBallPlugin : JavaPlugin() {
                 if (signMeta.tag != null) {
                     val game = gameService.getByName(signMeta.tag!!)
                     if (game != null) {
-                        resolvedText = placeHolderService.resolvePlaceHolder(text, null, mapOf(gameKey to game.arena.name))
+                        resolvedText =
+                            placeHolderService.resolvePlaceHolder(text, null, mapOf(gameKey to game.arena.name))
                     }
                 }
 

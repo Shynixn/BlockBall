@@ -844,8 +844,8 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         ) {
             for (placeHolder in PlaceHolder.values()) {
                 placeHolderService.register(placeHolder.text) { player, context ->
-                    require(context is MutableMap<String, Any>)
-                    val gameNameReference = context[BlockBallPlugin.gameKey] as String?
+                    val newContext = context.toMutableMap()
+                    val gameNameReference = newContext[BlockBallPlugin.gameKey] as String?
                     val game = if (gameNameReference != null) {
                         gameService.getByName(gameNameReference)
                     } else if (player != null) {
@@ -857,16 +857,16 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
                     if (player != null) {
                         val playerInformation = playerDataRepository.getCachedByPlayer(player)
                         if (playerInformation != null) {
-                            context[BlockBallPlugin.playerDataKey] = playerInformation
+                            newContext[BlockBallPlugin.playerDataKey] = playerInformation
                         }
                     }
 
                     val leaderBoard = statsService.getLeaderBoard()
                     if (leaderBoard != null) {
-                        context[BlockBallPlugin.leaderBoardKey] = leaderBoard
+                        newContext[BlockBallPlugin.leaderBoardKey] = leaderBoard
                     }
 
-                    placeHolder.f.invoke(player, game, context)
+                    placeHolder.f.invoke(player, game, newContext)
                 }
             }
         }
