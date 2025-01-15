@@ -1,11 +1,11 @@
 package com.github.shynixn.blockball
 
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.PlaceHolderService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
+import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
@@ -13,15 +13,15 @@ import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
 import com.github.shynixn.mcutils.common.language.reloadTranslation
+import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
-import com.github.shynixn.mcutils.guice.DependencyInjectionModule
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService
-import com.github.shynixn.mcutils.packet.impl.service.ChatMessageServiceImpl
 import com.github.shynixn.mcutils.sign.SignService
 import kotlinx.coroutines.runBlocking
 import org.bstats.bukkit.Metrics
@@ -39,6 +39,13 @@ class BlockBallPlugin : JavaPlugin() {
     private val bstatsPluginId = 1317
     private lateinit var module: DependencyInjectionModule
     private var immidiateDisable = false
+
+    companion object {
+        val playerDataKey = "playerData"
+        var leaderBoardKey = "leaderBoard"
+        var indexKey = "[index]"
+        var gameKey = "[game]"
+    }
 
     /**
      * Enables the plugin BlockBall.
@@ -93,26 +100,18 @@ class BlockBallPlugin : JavaPlugin() {
 
         logger.log(Level.INFO, "Loaded NMS version ${Version.serverVersion}.")
 
-        // Load Language
+        // Load BlockBallLanguage
         val language = BlockBallLanguageImpl()
-        language.chatMessageService = ChatMessageServiceImpl(this)
-        language.placeHolderFun =
-            { text, player ->
-                val placeHolderService = module.getService<PlaceHolderService>()
-                val gameService = module.getService<GameService>()
-                if (player != null) {
-                    val game = gameService.getByPlayer(player)
-                    placeHolderService.replacePlaceHolders(text, player, game)
-                } else {
-                    text
-                }
-            }
-        reloadTranslation(language, BlockBallLanguageImpl::class.java)
+        reloadTranslation(language)
         logger.log(Level.INFO, "Loaded language file.")
 
-        // Guice
+        // Module
         this.module = BlockBallDependencyInjectionModule(this, language).build()
-        this.reloadConfig()
+
+        // Register PlaceHolder
+        PlaceHolder.registerAll(
+            module.getService(), module.getService(), module.getService(), module.getService()
+        )
 
         // Register Packet
         module.getService<PacketService>().registerPacketListening(PacketInType.USEENTITY)
@@ -200,12 +199,13 @@ class BlockBallPlugin : JavaPlugin() {
                 if (signMeta.tag != null) {
                     val game = gameService.getByName(signMeta.tag!!)
                     if (game != null) {
-                        resolvedText = placeHolderService.replacePlaceHolders(text, null, game)
+                        resolvedText =
+                            placeHolderService.resolvePlaceHolder(text, null, mapOf(gameKey to game.arena.name))
                     }
                 }
 
                 if (resolvedText == null) {
-                    resolvedText = placeHolderService.replacePlaceHolders(text)
+                    resolvedText = placeHolderService.resolvePlaceHolder(text, null)
                 }
 
                 resolvedText

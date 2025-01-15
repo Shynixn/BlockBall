@@ -3,12 +3,11 @@ package com.github.shynixn.blockball.impl.service
 import com.github.shynixn.blockball.contract.ScoreboardService
 import com.github.shynixn.blockball.enumeration.ScoreboardDisplaySlot
 import com.github.shynixn.mcutils.common.translateChatColors
-import com.google.inject.Inject
 import org.bukkit.ChatColor
 import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.Scoreboard
 
-class ScoreboardServiceImpl @Inject constructor() : ScoreboardService {
+class ScoreboardServiceImpl: ScoreboardService {
     companion object {
         private const val defaultObjective: String = "def_obj"
     }

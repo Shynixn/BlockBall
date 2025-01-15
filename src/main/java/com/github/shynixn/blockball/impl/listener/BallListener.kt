@@ -5,14 +5,13 @@ import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.blockball.event.*
 import com.github.shynixn.mcutils.common.sound.SoundService
-import com.google.inject.Inject
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
 /**
  * Handles common ball events.
  */
-class BallListener @Inject constructor(
+class BallListener (
     private val soccerBallFactory: SoccerBallFactory,
     private val soundService: SoundService
 ) : Listener {

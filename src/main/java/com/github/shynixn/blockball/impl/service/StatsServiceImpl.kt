@@ -7,44 +7,17 @@ import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.StatsMeta
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
-import com.google.inject.Inject
 import kotlinx.coroutines.delay
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
 
-class StatsServiceImpl @Inject constructor(
+class StatsServiceImpl(
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
     private val plugin: Plugin
 ) : StatsService {
     private var aggregationLeaderBoardKey = "leaderBoardAg"
     private var leaderBoardStats: LeaderBoardStats? = null
     private var isDisposed: Boolean = false
-
-    companion object {
-        fun getNameOrEmpty(leaderBoardStats: List<Pair<String, *>>, index: Int): String {
-            if (index >= 0 && index < leaderBoardStats.size) {
-                return leaderBoardStats[index].first
-            }
-
-            return ""
-        }
-
-        fun getValueIntOrEmpty(leaderBoardStats: List<Pair<String, Int>>, index: Int): String {
-            if (index >= 0 && index < leaderBoardStats.size) {
-                return leaderBoardStats[index].second.toString()
-            }
-
-            return ""
-        }
-
-        fun getValueFloatOrEmpty(leaderBoardStats: List<Pair<String, Float>>, index: Int): String {
-            if (index >= 0 && index < leaderBoardStats.size) {
-                return String.format("%.2f", leaderBoardStats[index].second)
-            }
-
-            return ""
-        }
-    }
 
     /**
      * Registers tracking the stats.

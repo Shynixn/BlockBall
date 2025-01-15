@@ -8,12 +8,10 @@ import com.github.shynixn.blockball.event.BallRightClickEvent
 import com.github.shynixn.blockball.event.BallTouchPlayerEvent
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
-import com.github.shynixn.mcutils.common.Vector3d
-import com.github.shynixn.mcutils.common.toLocation
-import com.github.shynixn.mcutils.common.toVector
-import com.github.shynixn.mcutils.common.toVector3d
+import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
+import com.github.shynixn.mcutils.packet.api.meta.InteractionMetadata
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.*
@@ -105,25 +103,42 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
     /**
      * Spawns the ball for the given player.
      */
-    fun spawn(player: Any, position: Vector3d) {
-        require(player is Player)
-        packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
-            it.entityId = entityId
-            it.entityType = EntityType.SLIME
-            it.target = position.toLocation()
-        })
-
-        if (meta.isSlimeVisible) {
-            packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
-                it.slimeSize = meta.kickPassHitBoxSize.toInt()
+    fun spawn(player: Player, position: Vector3d) {
+        if (Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_19_R3)) {
+            // We use the Interaction Entity since 1.19.4.
+            packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
                 it.entityId = entityId
+                it.entityType = EntityType.INTERACTION
+                it.target = position.toLocation()
+            })
+
+            packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
+                it.entityId = entityId
+                it.interactionMetadata = InteractionMetadata().also {
+                    it.height = meta.kickPassHitBoxSize
+                    it.width = meta.kickPassHitBoxSize
+                }
             })
         } else {
-            packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
-                it.slimeSize = meta.kickPassHitBoxSize.toInt()
+            // Use Slime for older versions.
+            packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
                 it.entityId = entityId
-                it.isInvisible = true
+                it.entityType = EntityType.SLIME
+                it.target = position.toLocation()
             })
+
+            if (meta.isSlimeVisible) {
+                packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
+                    it.slimeSize = meta.kickPassHitBoxSize.toInt()
+                    it.entityId = entityId
+                })
+            } else {
+                packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
+                    it.slimeSize = meta.kickPassHitBoxSize.toInt()
+                    it.entityId = entityId
+                    it.isInvisible = true
+                })
+            }
         }
     }
 
@@ -198,7 +213,12 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
         }
 
         val rayTraceResult =
-            rayTracingService.rayTraceMotion(position.toLocation().toVector3d(), motion.toVector().toVector3d(), false, true)
+            rayTracingService.rayTraceMotion(
+                position.toLocation().toVector3d(),
+                motion.toVector().toVector3d(),
+                false,
+                true
+            )
 
         val rayTraceEvent = BallRayTraceEvent(
             ball, rayTraceResult.hitBlock,

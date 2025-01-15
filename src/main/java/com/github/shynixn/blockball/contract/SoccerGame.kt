@@ -103,6 +103,11 @@ interface SoccerGame {
     var ballBumperCounter: Int
 
     /**
+     * Compatibility reference.
+     */
+    val language : BlockBallLanguage
+
+    /**
      * Lets the given [player] leave join. Optional can the prefered
      * [team] be specified but the team can still change because of soccerArena settings.
      * Does nothing if the player is already in a Game.

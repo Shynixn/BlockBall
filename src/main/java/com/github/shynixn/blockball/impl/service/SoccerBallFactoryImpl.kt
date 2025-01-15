@@ -14,13 +14,12 @@ import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
-import com.google.inject.Inject
 import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.plugin.Plugin
 
-class SoccerBallFactoryImpl @Inject constructor(
+class SoccerBallFactoryImpl (
     private val packetService: PacketService,
     private val itemService: ItemService,
     private val rayTracingService: RayTracingService,

@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.contract
 import com.github.shynixn.mcutils.common.language.LanguageItem
 import com.github.shynixn.mcutils.common.language.LanguageProvider
 
-interface Language : LanguageProvider {
+interface BlockBallLanguage : LanguageProvider {
   var gameAlreadyExistsMessage: LanguageItem
 
   var commandUsage: LanguageItem
@@ -65,10 +65,6 @@ interface Language : LanguageProvider {
   var toggleHighlightMessage: LanguageItem
 
   var axeReceivedMessage: LanguageItem
-
-  var bossBarMessage: LanguageItem
-
-  var hologramMessage: LanguageItem
 
   var scoreRed: LanguageItem
 

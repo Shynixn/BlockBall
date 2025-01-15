@@ -10,6 +10,8 @@ import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.language.sendPluginMessage
+import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.sound.SoundMeta
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.toLocation
@@ -28,7 +30,7 @@ open class SoccerMiniGameImpl constructor(
     private val bossBarService: BossBarService,
     private val chatMessageService: ChatMessageService,
     private val soundService: SoundService,
-    private val language: Language,
+    language: BlockBallLanguage,
     packetService: PacketService,
     scoreboardService: ScoreboardService,
     commandService: CommandService,
@@ -279,13 +281,12 @@ open class SoccerMiniGameImpl constructor(
             }
 
             if (!matchTime.startMessageTitle.isBlank() || !matchTime.startMessageSubTitle.isBlank()) {
-                val game = this
                 plugin.launch {
                     delay(10.ticks)
                     chatMessageService.sendTitleMessage(
                         p,
-                        placeHolderService.replacePlaceHolders(matchTime.startMessageTitle, null, game),
-                        placeHolderService.replacePlaceHolders(matchTime.startMessageSubTitle, null, game),
+                        placeHolderService.resolvePlaceHolder(matchTime.startMessageTitle, p),
+                        placeHolderService.resolvePlaceHolder(matchTime.startMessageSubTitle, p),
                         matchTime.startMessageFadeIn,
                         matchTime.startMessageStay,
                         matchTime.startMessageFadeOut
@@ -357,7 +358,7 @@ open class SoccerMiniGameImpl constructor(
                 if (currentQueueTime <= 0) {
                     isQueueTimeRunning = false
                     for (player in ingamePlayersStorage.keys.toTypedArray()) {
-                        language.sendMessage(language.queueTimeOutMessage, player)
+                        player.sendPluginMessage(language.queueTimeOutMessage)
                         leave(player)
                     }
                     status = GameState.JOINABLE

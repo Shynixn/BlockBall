@@ -26,4 +26,28 @@ class LeaderBoardStats {
 
     var topTenTotalGoalsPerGame = ArrayList<Pair<String, Float>>()
     var topTenTotalGoalsPerGameFull = ArrayList<Pair<String, Float>>()
+
+    fun getNameOrEmpty(leaderBoardStats: List<Pair<String, *>>, index: Int): String {
+        if (index >= 0 && index < leaderBoardStats.size) {
+            return leaderBoardStats[index].first
+        }
+
+        return ""
+    }
+
+    fun getValueIntOrEmpty(leaderBoardStats: List<Pair<String, Int>>, index: Int): String {
+        if (index >= 0 && index < leaderBoardStats.size) {
+            return leaderBoardStats[index].second.toString()
+        }
+
+        return ""
+    }
+
+    fun getValueFloatOrEmpty(leaderBoardStats: List<Pair<String, Float>>, index: Int): String {
+        if (index >= 0 && index < leaderBoardStats.size) {
+            return String.format("%.2f", leaderBoardStats[index].second)
+        }
+
+        return ""
+    }
 }

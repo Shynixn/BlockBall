@@ -13,11 +13,9 @@ import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
-import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.event.PacketAsyncEvent
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.InteractionType
 import com.github.shynixn.mcutils.packet.api.packet.PacketInInteractEntity
-import com.google.inject.Inject
 import kotlinx.coroutines.delay
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -33,7 +31,7 @@ import org.bukkit.plugin.Plugin
 /**
  * Game Listener for the most important game events.
  */
-class GameListener @Inject constructor(
+class GameListener (
     private val gameService: GameService,
     private val soccerBallFactory: SoccerBallFactory,
     private val plugin: Plugin,

@@ -160,7 +160,7 @@ meta:
   bossBarMeta:
     color: "WHITE"
     enabled: true
-    message: "%blockball_lang_bossBarMessage%"
+    message: "&cTeam Red %blockball_game_redScore% : &9%blockball_game_blueScore% Team Blue"
     percentage: 100.0
     style: "SOLID"
     flags:
