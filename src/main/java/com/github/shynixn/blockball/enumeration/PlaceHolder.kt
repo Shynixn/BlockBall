@@ -457,7 +457,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_goals_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenGoals, index)
             } else {
                 null
@@ -466,7 +466,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
     LEADERBOARD_GOALS_VALUE("%blockball_leaderboard_goals_value_top_[index]%", { _, _, context ->
         if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
             val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-            val index = context[BlockBallPlugin.indexKey] as Int
+            val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
             leaderBoard.getValueIntOrEmpty(leaderBoard.topTenGoals, index)
         } else {
             null
@@ -477,7 +477,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_goalsFull_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenGoalsFull, index)
             } else {
                 null
@@ -489,7 +489,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_goalsFull_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueIntOrEmpty(leaderBoard.topTenGoalsFull, index)
             } else {
                 null
@@ -501,7 +501,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_ownGoals_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenOwnGoals, index)
             } else {
                 null
@@ -513,7 +513,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_ownGoals_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueIntOrEmpty(leaderBoard.topTenOwnGoals, index)
             } else {
                 null
@@ -525,7 +525,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_ownGoalsFull_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenOwnGoalsFull, index)
             } else {
                 null
@@ -537,7 +537,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_ownGoalsFull_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueIntOrEmpty(leaderBoard.topTenOwnGoalsFull, index)
             } else {
                 null
@@ -549,7 +549,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_totalGoals_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenTotalGoals, index)
             } else {
                 null
@@ -561,7 +561,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_totalGoals_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueIntOrEmpty(leaderBoard.topTenTotalGoals, index)
             } else {
                 null
@@ -573,7 +573,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_totalGoalsFull_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenTotalGoalsFull, index)
             } else {
                 null
@@ -585,7 +585,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_totalGoalsFull_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueIntOrEmpty(leaderBoard.topTenTotalGoalsFull, index)
             } else {
                 null
@@ -597,7 +597,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_games_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenGames, index)
             } else {
                 null
@@ -609,7 +609,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_games_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueIntOrEmpty(leaderBoard.topTenGames, index)
             } else {
                 null
@@ -621,7 +621,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_gamesFull_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenGamesFull, index)
             } else {
                 null
@@ -633,7 +633,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_gamesFull_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueIntOrEmpty(leaderBoard.topTenGamesFull, index)
             } else {
                 null
@@ -645,7 +645,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_wins_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenWins, index)
             } else {
                 null
@@ -657,7 +657,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_wins_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueIntOrEmpty(leaderBoard.topTenWins, index)
             } else {
                 null
@@ -669,7 +669,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_losses_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenLosses, index)
             } else {
                 null
@@ -681,7 +681,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_losses_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueIntOrEmpty(leaderBoard.topTenLosses, index)
             } else {
                 null
@@ -692,7 +692,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_draws_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenDraws, index)
             } else {
                 null
@@ -704,7 +704,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_draws_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueIntOrEmpty(leaderBoard.topTenDraws, index)
             } else {
                 null
@@ -716,7 +716,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_winrate_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenWinRate, index)
             } else {
                 null
@@ -728,7 +728,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_winrate_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueFloatOrEmpty(leaderBoard.topTenWinRate, index)
             } else {
                 null
@@ -740,7 +740,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_goalsPerGame_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenGoalsPerGame, index)
             } else {
                 null
@@ -752,7 +752,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_goalsPerGame_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueFloatOrEmpty(leaderBoard.topTenGoalsPerGame, index)
             } else {
                 null
@@ -764,7 +764,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_goalsPerGameFull_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenGoalsPerGameFull, index)
             } else {
                 null
@@ -776,7 +776,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_goalsPerGameFull_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueFloatOrEmpty(leaderBoard.topTenGoalsPerGameFull, index)
             } else {
                 null
@@ -788,7 +788,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_ownGoalsPerGame_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenOwnGoalsPerGame, index)
             } else {
                 null
@@ -800,7 +800,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_ownGoalsPerGame_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueFloatOrEmpty(leaderBoard.topTenOwnGoalsPerGame, index)
             } else {
                 null
@@ -812,7 +812,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_ownGoalsPerGameFull_name_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getNameOrEmpty(leaderBoard.topTenOwnGoalsPerGameFull, index)
             } else {
                 null
@@ -824,7 +824,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_leaderboard_ownGoalsPerGameFull_value_top_[index]%", { _, _, context ->
             if (context != null && context.containsKey(BlockBallPlugin.leaderBoardKey)) {
                 val leaderBoard = context[BlockBallPlugin.leaderBoardKey] as LeaderBoardStats
-                val index = context[BlockBallPlugin.indexKey] as Int
+                val index = (context[BlockBallPlugin.indexKey] as String).toInt() - 1
                 leaderBoard.getValueFloatOrEmpty(leaderBoard.topTenOwnGoalsPerGameFull, index)
             } else {
                 null

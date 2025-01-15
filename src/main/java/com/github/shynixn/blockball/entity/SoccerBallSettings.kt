@@ -33,7 +33,7 @@ class SoccerBallSettings {
     /**
      * Size of the hitbox used for kicking and passing detecting.
      */
-    var kickPassHitBoxSize: Double = 5.0
+    var kickPassHitBoxSize: Double = 2.0
 
     /**
      * Delay in ticks until the ball executes the kick pass request by the player.
