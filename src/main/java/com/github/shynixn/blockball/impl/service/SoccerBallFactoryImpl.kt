@@ -33,7 +33,8 @@ class SoccerBallFactoryImpl (
     init {
         plugin.launch {
             while (!isDisposed) {
-                for (ball in ballHitBoxTracked.values) {
+                val balls = ballHitBoxTracked.values.toTypedArray()
+                for (ball in balls) {
                     ball.run()
                 }
                 delay(1.ticks)
