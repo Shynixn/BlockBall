@@ -308,3 +308,9 @@ playerNotFoundMessage:
 queueTimeOutMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c Not enough players joined in time to start the game."
+cannotParseNumberMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c Cannot parse number."
+cannotParseWorldMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c Cannot find world."

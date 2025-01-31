@@ -1,8 +1,8 @@
 package com.github.shynixn.blockball.impl.commandexecutor
 
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
-import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
@@ -26,6 +26,7 @@ import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.mcutils.sign.SignService
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Bukkit
+import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
@@ -53,6 +54,9 @@ class BlockBallCommandExecutor(
     }
     private val onlinePlayerTabs: (suspend (CommandSender) -> List<String>) = {
         Bukkit.getOnlinePlayers().map { e -> e.name }
+    }
+    private val worldTabs: (suspend (CommandSender) -> List<String>) = {
+        Bukkit.getWorlds().map { e -> e.name }
     }
     private val playerMustExist = object : Validator<Player> {
         override suspend fun transform(
@@ -221,6 +225,34 @@ class BlockBallCommandExecutor(
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
             return language.signTypeDoesNotExistMessage.text
+        }
+    }
+
+    private val doubleValidator = object : Validator<Double> {
+        override suspend fun transform(
+            sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
+        ): Double? {
+            return openArgs[0].toDoubleOrNull()
+        }
+
+        override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
+            return language.cannotParseNumberMessage.text
+        }
+    }
+
+    private val worldValidator = object : Validator<World> {
+        override suspend fun transform(
+            sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
+        ): World? {
+            try {
+                return Bukkit.getWorld(openArgs[0])
+            } catch (e: Exception) {
+                return null
+            }
+        }
+
+        override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
+            return language.cannotParseWorldMessage.text
         }
     }
 
@@ -403,7 +435,44 @@ class BlockBallCommandExecutor(
                     toolTip { language.commandRefereeSetBallToolTip.text }
                     builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { player ->
                         setBallToPlayerLocation(player)
-                    }
+                    }.argument("x").validator(doubleValidator).tabs { listOf("<x>") }
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, x ->
+                            setBallToPlayerLocation(player, x)
+                        }
+                        .argument("y").validator(doubleValidator).tabs { listOf("<y>") }
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, x, y ->
+                            setBallToPlayerLocation(player, x, y)
+                        }
+                        .argument("z").validator(doubleValidator).tabs { listOf("<z>") }
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, x, y, z ->
+                            setBallToPlayerLocation(player, x, y, z)
+                        }
+                        .argument("yaw").validator(doubleValidator).tabs { listOf("<yaw>") }
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, x, y, z, yaw ->
+                            setBallToPlayerLocation(player, x, y, z, yaw)
+                        }
+                        .argument("pitch").validator(doubleValidator).tabs { listOf("<pitch>") }
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, x, y, z, yaw, pitch ->
+                            setBallToPlayerLocation(player, x, y, z, yaw, pitch)
+                        }
+                        .argument("world").validator(worldValidator).tabs(worldTabs)
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, x, y, z, yaw, pitch, wordl ->
+                            setBallToPlayerLocation(player, x, y, z, yaw, pitch, wordl)
+                        }
+                }
+                subCommand("setballrel") {
+                    permission(Permission.REFEREE_JOIN)
+                    toolTip { language.commandRefereeSetBallToolTip.text }
+                    builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { player ->
+                        setBallToPlayerLocation(player)
+                    }.argument("forward").validator(doubleValidator).tabs { listOf("<forward>") }
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, forward ->
+                            setBallRelativeToPlayerLocation(player, forward, 0.0)
+                        }
+                        .argument("sideward").validator(doubleValidator).tabs { listOf("<sideward>") }
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, forward, sideward ->
+                            setBallRelativeToPlayerLocation(player, forward, sideward)
+                        }
                 }
                 subCommand("whistleresume") {
                     permission(Permission.REFEREE_JOIN)
@@ -508,9 +577,49 @@ class BlockBallCommandExecutor(
         }
     }
 
-    private fun setBallToPlayerLocation(player: Player) {
+    private fun setBallRelativeToPlayerLocation(player: Player, forward: Double, sideWard: Double) {
         val game = gameService.getByPlayer(player) ?: return
-        game.setBallToLocation(player.location)
+        val target = player.location.toVector3d().addRelativeFront(forward).addRelativeLeft(sideWard).toLocation()
+        game.setBallToLocation(target)
+    }
+
+    private fun setBallToPlayerLocation(
+        player: Player,
+        x: Double? = null,
+        y: Double? = null,
+        z: Double? = null,
+        yaw: Double? = null,
+        pitch: Double? = null,
+        world: World? = null
+    ) {
+        val game = gameService.getByPlayer(player) ?: return
+        val location = player.location.clone()
+
+        if (x != null) {
+            location.x = x
+        }
+
+        if (y != null) {
+            location.y = y
+        }
+
+        if (z != null) {
+            location.z = z
+        }
+
+        if (yaw != null) {
+            location.yaw = yaw.toFloat()
+        }
+
+        if (pitch != null) {
+            location.pitch = pitch.toFloat()
+        }
+
+        if (world != null) {
+            location.world = world
+        }
+
+        game.setBallToLocation(location)
     }
 
     private fun stopGameReferee(player: Player) {

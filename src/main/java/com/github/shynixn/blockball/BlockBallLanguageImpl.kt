@@ -189,4 +189,8 @@ class BlockBallLanguageImpl : BlockBallLanguage {
  override var playerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Player %1$1s not found.")
 
  override var queueTimeOutMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Not enough players joined in time to start the game.")
+
+ override var cannotParseNumberMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Cannot parse number.")
+
+ override var cannotParseWorldMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Cannot find world.")
 }
