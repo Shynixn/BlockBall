@@ -5,6 +5,11 @@ import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.sign.SignMeta
 
 class TeamMeta {
+    /**
+     * Team DisplayName.
+     */
+    var displayName: String = ""
+
     /** Amount of points this team receives when a goal gets scored. */
     var pointsPerGoal: Int = 1
 

@@ -59,10 +59,10 @@ gameIsFullMessage:
   text: "&0&l[&f&lBlockBall&0&l]&c Game is already full."
 joinTeamRedMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully joined team red."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully joined %blockball_player_teamDisplayName%."
 joinTeamBlueMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully joined team blue."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully joined %blockball_player_teamDisplayName%."
 leftGameMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 Left the game."
@@ -108,28 +108,28 @@ axeReceivedMessage:
 scoreRed:
   type: "TITLE"
   text: "&c%blockball_game_redScore% : &9%blockball_game_blueScore%"
-  subTitle: "%1$1s scored for &cTeam Red."
+  subTitle: "%1$1s scored for %blockball_game_redDisplayName%."
   fadeInTicks: 20
   stayTicks: 60
   fadeOutTicks: 20
 scoreBlue:
   type: "TITLE"
   text: "&9%blockball_game_blueScore% : &c%blockball_game_redScore%"
-  subTitle: "%1$1s scored for &9Team Blue."
+  subTitle: "%1$1s scored for %blockball_game_blueDisplayName%."
   fadeInTicks: 20
   stayTicks: 60
   fadeOutTicks: 20
 winRed:
   type: "TITLE"
-  text: "&cTeam Red"
-  subTitle: "&cTeam Red &ahas won the match"
+  text: "%blockball_game_redDisplayName%"
+  subTitle: "%blockball_game_redDisplayName% &ahas won the match"
   fadeInTicks: 20
   stayTicks: 60
   fadeOutTicks: 20
 winBlue:
   type: "TITLE"
-  text: "&9Team Blue"
-  subTitle: "&9Team Blue &ahas won the match"
+  text: "%blockball_game_blueDisplayName%"
+  subTitle: "%blockball_game_blueDisplayName% &ahas won the match"
   fadeInTicks: 20
   stayTicks: 60
   fadeOutTicks: 20
@@ -154,10 +154,10 @@ hubGameJoinHeader:
   text: "&0&l[&f&lBlockBall&0&l]&7 Click on the team to join the match."
 hubGameJoinRed:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 &c[Team Red]"
+  text: "&0&l[&f&lBlockBall&0&l]&7 [%blockball_game_redDisplayName%&7]"
 hubGameJoinBlue:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 &9[Team Blue]"
+  text: "&0&l[&f&lBlockBall&0&l]&7 [%blockball_game_blueDisplayName%&7]"
 commandCreateToolTip:
   type: "CHAT"
   text: "Creates a new arena for a BlockBall game."
@@ -230,12 +230,6 @@ leaveSignLine4:
 failedToReloadMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s"
-teamRedDisplayName:
-  type: "CHAT"
-  text: "Team Red"
-teamBlueDisplayName:
-  type: "CHAT"
-  text: "Team Blue"
 gameIsNotARefereeGame:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c This game is not a game where you can use a referee. Convert the game to a referee game first."
@@ -244,7 +238,7 @@ gameTypeRefereeOnlyForPatreons:
   text: "&0&l[&f&lBlockBall&0&l]&c The game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn."
 joinTeamRefereeMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully joined team referee."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully joined %blockball_player_teamDisplayName%."
 waitingForRefereeToStart:
   type: "CHAT"
   text: "Waiting for the referee to start the game..."

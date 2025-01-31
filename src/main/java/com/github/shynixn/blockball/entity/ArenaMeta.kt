@@ -55,7 +55,9 @@ class ArenaMeta {
         soundMetaKick.name = "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR,ENTITY_ZOMBIE_ATTACK_DOOR_WOOD,ZOMBIE_WOOD"
         soundMetaKick.volume = 10.0
         soundMetaKick.pitch = 1.5
-
+        blueTeamMeta.displayName = "&9Team Blue"
+        redTeamMeta.displayName = "&cTeam Red"
+        refereeTeamMeta.displayName = "&fTeam Referee"
         ballMeta.soundEffects[BallActionType.ONKICK] = soundMetaKick
     }
 

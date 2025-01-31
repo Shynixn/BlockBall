@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl.service
 
+import com.github.shynixn.blockball.BlockBallPlugin.Companion.gameKey
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.HubGameForcefieldService
@@ -82,13 +83,15 @@ class HubGameForcefieldServiceImpl(
                                     TextComponent().also {
                                         it.text = placeholderService.resolvePlaceHolder(
                                             language.hubGameJoinHeader.text,
-                                            player
+                                            player,
+                                            mapOf(gameKey to game.arena.name)
                                         ) + "\n"
                                     },
                                     TextComponent().also {
                                         it.text = placeholderService.resolvePlaceHolder(
                                             language.hubGameJoinRed.text,
-                                            player
+                                            player,
+                                            mapOf(gameKey to game.arena.name)
                                         ) + "\n"
                                         it.clickEvent = ClickEvent(
                                             ClickEventType.RUN_COMMAND,
@@ -98,7 +101,8 @@ class HubGameForcefieldServiceImpl(
                                     TextComponent().also {
                                         it.text = placeholderService.resolvePlaceHolder(
                                             language.hubGameJoinBlue.text,
-                                            player
+                                            player,
+                                            mapOf(gameKey to game.arena.name)
                                         )
                                         it.clickEvent = ClickEvent(
                                             ClickEventType.RUN_COMMAND,
