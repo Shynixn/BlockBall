@@ -46,10 +46,13 @@ The following placeholders are available in BlockBall and can also be used via P
 |------------------------------------------|-----------------------------------------------------------------------------------|
 | %blockball_player_goals%                 | Amount of goals a player has scored                                               |
 | %blockball_player_goalsFull%             | Amount of goals a player has scored by playing full games.                        |
+| %blockball_player_goalsCurrent%          | Amount of goals a player has scored during the current game.                      |
 | %blockball_player_ownGoals%              | Amount of own goals a player has scored                                           |
 | %blockball_player_ownGoalsFull%          | Amount of own goals a player has scored by playing full games.                    |
+| %blockball_player_ownGoalsCurrent%       | Amount of own goals a player has scored during the current game.                  |
 | %blockball_player_totalGoals%            | Amount of goals and own goals a player has scored                                 |
 | %blockball_player_totalGoalsFull%        | Amount of goals and own goals a player has scored by playing full games.          |
+| %blockball_player_totalGoalsCurrent%     | Amount of goals and own goals a player has scored during the current game.        |
 | %blockball_player_games%                 | Amount of games a player has started playing                                      |
 | %blockball_player_gamesFull%             | Amount of games a player has fully played                                         |
 | %blockball_player_wins%                  | Amount of wins a player has got by playing                                        |

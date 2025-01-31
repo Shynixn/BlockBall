@@ -196,6 +196,17 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         }
     }),
 
+    PLAYER_STATS_GOALSCURRENT("%blockball_player_goalsCurrent%", { player, game, _ ->
+        if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+            "PatreonOnly"
+        } else if (game != null && player != null && game.ingamePlayersStorage.containsKey(player)) {
+            val storage = game.ingamePlayersStorage[player]!!
+            (storage.scoredGoals).toString()
+        } else {
+            "0"
+        }
+    }),
+
     PLAYER_STATS_OWNGOALS("%blockball_player_ownGoals%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
             "PatreonOnly"
@@ -215,6 +226,17 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
             playerData?.statsMeta?.scoredOwnGoalsFull?.toString() ?: ""
         } else {
             null
+        }
+    }),
+
+    PLAYER_STATS_OWNGOALSCURRENT("%blockball_player_ownGoalsCurrent%", { player, game, _ ->
+        if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+            "PatreonOnly"
+        } else if (game != null && player != null && game.ingamePlayersStorage.containsKey(player)) {
+            val storage = game.ingamePlayersStorage[player]!!
+            (storage.scoredOwnGoals).toString()
+        } else {
+            "0"
         }
     }),
 
@@ -245,6 +267,17 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
             }
         } else {
             null
+        }
+    }),
+
+    PLAYER_STATS_TOTALGOALSCURRENT("%blockball_player_totalGoalsCurrent%", { player, game, _ ->
+        if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+            "PatreonOnly"
+        } else if (game != null && player != null && game.ingamePlayersStorage.containsKey(player)) {
+            val storage = game.ingamePlayersStorage[player]!!
+            (storage.scoredGoals + storage.scoredOwnGoals).toString()
+        } else {
+            "0"
         }
     }),
 
