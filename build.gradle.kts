@@ -15,7 +15,6 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven(System.getenv("SHYNIXN_MCUTILS_REPOSITORY")) // All MCUTILS libraries are private and not OpenSource.
     maven(System.getenv("SHYNIXN_MCUTILS_REPOSITORY_2025")) // All MCUTILS libraries are private and not OpenSource.
 }
 
@@ -33,10 +32,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcutils:common:2025.1")
-    implementation("com.github.shynixn.mcutils:packet:2025.1")
-    implementation("com.github.shynixn.mcutils:database:2024.8")
-    implementation("com.github.shynixn.mcutils:sign:2024.3")
+    implementation("com.github.shynixn.mcutils:common:2025.4")
+    implementation("com.github.shynixn.mcutils:packet:2025.3")
+    implementation("com.github.shynixn.mcutils:database:2025.2")
+    implementation("com.github.shynixn.mcutils:sign:2025.1")
 }
 
 tasks.withType<KotlinCompile> {
