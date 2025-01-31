@@ -28,7 +28,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class GameServiceImpl (
+class GameServiceImpl(
     private val arenaRepository: Repository<SoccerArena>,
     private val plugin: Plugin,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
@@ -278,6 +278,12 @@ class GameServiceImpl (
         }
 
         fixCorners(arena.lowerCorner!!, arena.upperCorner!!)
+
+        // If players set a too small arena height for hub game detection, automatically fix it.
+        if (abs(arena.upperCorner!!.y - arena.lowerCorner!!.y) < 3) {
+            arena.upperCorner!!.y = 10.0
+        }
+
         fixCorners(arena.meta.redTeamMeta.goal.lowerCorner!!, arena.meta.redTeamMeta.goal.upperCorner!!)
         fixCorners(arena.meta.blueTeamMeta.goal.lowerCorner!!, arena.meta.blueTeamMeta.goal.upperCorner!!)
 

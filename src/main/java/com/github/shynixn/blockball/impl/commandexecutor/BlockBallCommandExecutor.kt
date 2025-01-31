@@ -680,6 +680,7 @@ class BlockBallCommandExecutor(
 
     private suspend fun deleteArena(sender: CommandSender, arena: SoccerArena) {
         arenaRepository.delete(arena)
+        arenaRepository.clearCache()
         val runningGame = gameService.getAll().firstOrNull { e -> e.arena.name.equals(arena.name, true) }
         runningGame?.close()
         sender.sendPluginMessage(language.deletedGameMessage, arena.name)
