@@ -5,6 +5,8 @@ gameAlreadyExistsMessage:
   type: "CHAT"
   # The primary text to be sent.
   text: "&0&l[&f&lBlockBall&0&l]&c El juego %1$1s ya existe."
+  # Only available for type "ACTIONBAR". The time until the action bar message disappears.
+  durationInTicks: 60
   # Only available for type "TITLE". Adds a subTitle.
   subTitle: ""
   # Only available for type: "TITLE". Adds a fade in effect.

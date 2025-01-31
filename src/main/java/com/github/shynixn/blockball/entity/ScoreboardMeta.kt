@@ -14,10 +14,10 @@ class ScoreboardMeta {
         "%blockball_game_time%",
         "",
         "&m           &r",
-        "&cTeam Red:",
+        "%blockball_game_redDisplayName%:",
         "%blockball_game_redScore%&l",
         "",
-        "&9Team Blue:",
+        "%blockball_game_blueDisplayName%:",
         "%blockball_game_blueScore%&l",
         "&m           &r"
     )

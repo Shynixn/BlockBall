@@ -31,7 +31,7 @@ import com.github.shynixn.mcutils.common.sound.SoundServiceImpl
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.database.impl.AutoSavePlayerDataRepositoryImpl
-import com.github.shynixn.mcutils.database.impl.CachePlayerDataRepositoryImpl
+import com.github.shynixn.mcutils.database.impl.CachedPlayerDataRepositoryImpl
 import com.github.shynixn.mcutils.database.impl.ConfigSelectedRepositoryImpl
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
@@ -84,7 +84,7 @@ class BlockBallDependencyInjectionModule(
         )
         val playerDataRepository = AutoSavePlayerDataRepositoryImpl(
             1000 * 60L * plugin.config.getInt("database.autoSaveIntervalMinutes"),
-            CachePlayerDataRepositoryImpl(configSelectedPlayerDataRepository, plugin.minecraftDispatcher),
+            CachedPlayerDataRepositoryImpl(configSelectedPlayerDataRepository, plugin.minecraftDispatcher),
             plugin.scope, plugin.minecraftDispatcher
         )
         module.addService<PlayerDataRepository<PlayerInformation>>(playerDataRepository)

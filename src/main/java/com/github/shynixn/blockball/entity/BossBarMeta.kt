@@ -10,7 +10,7 @@ class BossBarMeta {
     /** Is bossbar visible. */
     var enabled: Boolean = true
     /** Displaying message. */
-    var message: String = "&cTeam Red %blockball_game_redScore% : &9%blockball_game_blueScore% Team Blue"
+    var message: String = "%blockball_game_redDisplayName% %blockball_game_redScore% : &9%blockball_game_blueScore% %blockball_game_blueDisplayName%"
     /** Percentage filled in the bossbar. */
     var percentage: Double = 100.0
     /** Style of the bossbar. */

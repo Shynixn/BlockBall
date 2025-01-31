@@ -9,13 +9,12 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.11.1"
+version = "7.12.0"
 
 repositories {
     mavenLocal()
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven(System.getenv("SHYNIXN_MCUTILS_REPOSITORY")) // All MCUTILS libraries are private and not OpenSource.
     maven(System.getenv("SHYNIXN_MCUTILS_REPOSITORY_2025")) // All MCUTILS libraries are private and not OpenSource.
 }
 
@@ -33,10 +32,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcutils:common:2025.1")
-    implementation("com.github.shynixn.mcutils:packet:2025.1")
-    implementation("com.github.shynixn.mcutils:database:2024.8")
-    implementation("com.github.shynixn.mcutils:sign:2024.3")
+    implementation("com.github.shynixn.mcutils:common:2025.4")
+    implementation("com.github.shynixn.mcutils:packet:2025.3")
+    implementation("com.github.shynixn.mcutils:database:2025.2")
+    implementation("com.github.shynixn.mcutils:sign:2025.1")
 }
 
 tasks.withType<KotlinCompile> {
@@ -53,7 +52,7 @@ java {
  */
 tasks.withType<ShadowJar> {
     dependsOn("jar")
-    archiveName = "${baseName}-${version}-shadowjar.${extension}"
+    archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-shadowjar.${archiveExtension.get()}")
     exclude("DebugProbesKt.bin")
     exclude("module-info.class")
 }
@@ -72,8 +71,8 @@ tasks.register("pluginJars") {
  */
 tasks.register("relocatePluginJar", ShadowJar::class.java) {
     dependsOn("shadowJar")
-    from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
-    archiveName = "${baseName}-${version}-relocate.${extension}"
+    from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveFileName.get())))
+    archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-relocate.${archiveExtension.get()}")
     relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
     relocate("com.fasterxml", "com.github.shynixn.blockball.lib.com.fasterxml")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
@@ -84,8 +83,8 @@ tasks.register("relocatePluginJar", ShadowJar::class.java) {
  */
 tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
-    from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveName)))
-    archiveName = "${baseName}-${version}-latest.${extension}"
+    from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
+    archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-latest.${archiveExtension.get()}")
     // destinationDir = File("C:\\temp\\plugins")
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
@@ -140,8 +139,8 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
  */
 tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     dependsOn("shadowJar")
-    from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveName)))
-    archiveName = "${baseName}-${version}-legacy-relocate.${extension}"
+    from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveFileName.get())))
+    archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-legacy-relocate.${archiveExtension.get()}")
     relocate("kotlin", "com.github.shynixn.blockball.lib.kotlin")
     relocate("kotlinx", "com.github.shynixn.blockball.lib.kotlinx")
     relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intelli")
@@ -169,8 +168,8 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
  */
 tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     dependsOn("relocateLegacyPluginJar")
-    from(zipTree(File("./build/libs/" + (tasks.getByName("relocateLegacyPluginJar") as Jar).archiveName)))
-    archiveName = "${baseName}-${version}-legacy.${extension}"
+    from(zipTree(File("./build/libs/" + (tasks.getByName("relocateLegacyPluginJar") as Jar).archiveFileName.get())))
+    archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-legacy.${archiveExtension.get()}")
     // destinationDir = File("C:\\temp\\plugins")
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
@@ -223,11 +222,11 @@ tasks.register("languageFile") {
     implContents.add(" override val names: List<String>\n" +
             "  get() = listOf(\"en_us\", \"es_es\", \"zh_cn\")")
 
-    for (i in 0 until lines.size) {
+    for (i in lines.indices) {
         val key = lines[i]
 
         if (key.toCharArray()[0].isLetter()) {
-            var text = ""
+            var text: String
 
             var j = i
             while (true){

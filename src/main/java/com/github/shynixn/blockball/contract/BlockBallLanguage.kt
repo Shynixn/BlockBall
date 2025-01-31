@@ -187,4 +187,8 @@ interface BlockBallLanguage : LanguageProvider {
   var playerNotFoundMessage: LanguageItem
 
   var queueTimeOutMessage: LanguageItem
+
+  var cannotParseNumberMessage: LanguageItem
+
+  var cannotParseWorldMessage: LanguageItem
 }

@@ -1,6 +1,9 @@
 package com.github.shynixn.blockball.impl.service
 
-import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.BlockBallPlugin.Companion.gameKey
+import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.HubGameForcefieldService
 import com.github.shynixn.blockball.entity.InteractionCache
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -16,7 +19,7 @@ import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
-class HubGameForcefieldServiceImpl (
+class HubGameForcefieldServiceImpl(
     private val gameService: GameService,
     private val language: BlockBallLanguage,
     private val chatMessageService: ChatMessageService,
@@ -45,8 +48,8 @@ class HubGameForcefieldServiceImpl (
 
         var inArea = false
 
-        gameService.getAll().forEach { game ->
-            if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationIn2dSelection(
+        for (game in gameService.getAll()) {
+            if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(
                     location.toVector3d()
                 )
             ) {
@@ -80,13 +83,15 @@ class HubGameForcefieldServiceImpl (
                                     TextComponent().also {
                                         it.text = placeholderService.resolvePlaceHolder(
                                             language.hubGameJoinHeader.text,
-                                            player
+                                            player,
+                                            mapOf(gameKey to game.arena.name)
                                         ) + "\n"
                                     },
                                     TextComponent().also {
                                         it.text = placeholderService.resolvePlaceHolder(
                                             language.hubGameJoinRed.text,
-                                            player
+                                            player,
+                                            mapOf(gameKey to game.arena.name)
                                         ) + "\n"
                                         it.clickEvent = ClickEvent(
                                             ClickEventType.RUN_COMMAND,
@@ -96,7 +101,8 @@ class HubGameForcefieldServiceImpl (
                                     TextComponent().also {
                                         it.text = placeholderService.resolvePlaceHolder(
                                             language.hubGameJoinBlue.text,
-                                            player
+                                            player,
+                                            mapOf(gameKey to game.arena.name)
                                         )
                                         it.clickEvent = ClickEvent(
                                             ClickEventType.RUN_COMMAND,

@@ -5,6 +5,8 @@ gameAlreadyExistsMessage:
   type: "CHAT"
   # 所发送的信息。
   text: "&0&l[&f&lBlockBall&0&l]&c 游戏 %1$1s 已存在。"
+  # Only available for type "ACTIONBAR". The time until the action bar message disappears.
+  durationInTicks: 60
   # 仅用于 "TITLE" 类型，设置副标题。
   subTitle: ""
   # 仅用于 "TITLE" 类型，设置淡入时间。

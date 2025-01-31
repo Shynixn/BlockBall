@@ -37,6 +37,10 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         "%blockball_game_redMaxPlayers_[game]%",
         { _, game, _ -> game?.arena?.meta?.redTeamMeta?.maxAmount?.toString() }),
 
+    GAME_RED_DISPLAYNAME(
+        "%blockball_game_redDisplayName_[game]%",
+        { _, game, _ -> game?.arena?.meta?.redTeamMeta?.displayName }),
+
     GAME_BLUE_SCORE("%blockball_game_blueScore_[game]%", { _, game, _ -> game?.blueScore?.toString() }),
 
     GAME_BLUE_PLAYER_AMOUNT("%blockball_game_bluePlayers_[game]%", { _, game, _ -> game?.blueTeam?.size?.toString() }),
@@ -44,6 +48,14 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
     GAME_BLUE_PLAYER_MAXAMOUNT(
         "%blockball_game_blueMaxPlayers_[game]%",
         { _, game, _ -> game?.arena?.meta?.blueTeamMeta?.maxAmount?.toString() }),
+
+    GAME_BLUE_DISPLAYNAME(
+        "%blockball_game_blueDisplayName_[game]%",
+        { _, game, _ -> game?.arena?.meta?.blueTeamMeta?.displayName }),
+
+    GAME_REFEREE_DISPLAYNAME(
+        "%blockball_game_refereeDisplayName_[game]%",
+        { _, game, _ -> game?.arena?.meta?.refereeTeamMeta?.displayName }),
 
     GAME_TIME("%blockball_game_time_[game]%", { _, game, _ ->
         if (game is SoccerMiniGame) {
@@ -136,6 +148,18 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         }
     }),
 
+    PLAYER_TEAM_DISPLAY("%blockball_player_teamDisplayName%", { player, game, _ ->
+        if (game?.blueTeam != null && game.blueTeam.contains(player)) {
+            game.arena.meta.blueTeamMeta.displayName
+        } else if (game?.redTeam != null && game.redTeam.contains(player)) {
+            game.arena.meta.redTeamMeta.displayName
+        } else if (game?.refereeTeam != null && game.refereeTeam.contains(player)) {
+            game.arena.meta.refereeTeamMeta.displayName
+        } else {
+            null
+        }
+    }),
+
     PLAYER_IS_INGAME("%blockball_player_isInGame%", { player, game, _ ->
         game?.ingamePlayersStorage?.containsKey(player)?.toString()
     }),
@@ -172,6 +196,17 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         }
     }),
 
+    PLAYER_STATS_GOALSCURRENT("%blockball_player_goalsCurrent%", { player, game, _ ->
+        if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+            "PatreonOnly"
+        } else if (game != null && player != null && game.ingamePlayersStorage.containsKey(player)) {
+            val storage = game.ingamePlayersStorage[player]!!
+            (storage.scoredGoals).toString()
+        } else {
+            "0"
+        }
+    }),
+
     PLAYER_STATS_OWNGOALS("%blockball_player_ownGoals%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
             "PatreonOnly"
@@ -191,6 +226,17 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
             playerData?.statsMeta?.scoredOwnGoalsFull?.toString() ?: ""
         } else {
             null
+        }
+    }),
+
+    PLAYER_STATS_OWNGOALSCURRENT("%blockball_player_ownGoalsCurrent%", { player, game, _ ->
+        if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+            "PatreonOnly"
+        } else if (game != null && player != null && game.ingamePlayersStorage.containsKey(player)) {
+            val storage = game.ingamePlayersStorage[player]!!
+            (storage.scoredOwnGoals).toString()
+        } else {
+            "0"
         }
     }),
 
@@ -221,6 +267,17 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
             }
         } else {
             null
+        }
+    }),
+
+    PLAYER_STATS_TOTALGOALSCURRENT("%blockball_player_totalGoalsCurrent%", { player, game, _ ->
+        if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+            "PatreonOnly"
+        } else if (game != null && player != null && game.ingamePlayersStorage.containsKey(player)) {
+            val storage = game.ingamePlayersStorage[player]!!
+            (storage.scoredGoals + storage.scoredOwnGoals).toString()
+        } else {
+            "0"
         }
     }),
 

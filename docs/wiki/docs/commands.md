@@ -173,10 +173,18 @@ Transitions the game to the final period. Executing this command again stops it.
 ### /blockball referee setball
 
 ```
-/blockball referee setball
+/blockball referee setball [x] [y] [z] [yaw] [pitch] [world]
 ```
 
 Teleports the ball to the position of the referee.
+
+### /blockball referee setballrel
+
+```
+/blockball referee setballrel [forward] [sideward]
+```
+
+Teleports the ball to the relative position of the referee.
 
 ### /blockball referee whistleresume
 
