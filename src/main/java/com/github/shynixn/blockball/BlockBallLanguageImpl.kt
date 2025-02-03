@@ -36,9 +36,9 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var gameIsFullMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Game is already full.")
 
- override var joinTeamRedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully joined team red.")
+ override var joinTeamRedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully joined %blockball_player_teamDisplayName%.")
 
- override var joinTeamBlueMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully joined team blue.")
+ override var joinTeamBlueMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully joined %blockball_player_teamDisplayName%.")
 
  override var leftGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Left the game.")
 
@@ -72,9 +72,9 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var scoreBlue = LanguageItem("&9%blockball_game_blueScore% : &c%blockball_game_redScore%")
 
- override var winRed = LanguageItem("&cTeam Red")
+ override var winRed = LanguageItem("%blockball_game_redDisplayName%")
 
- override var winBlue = LanguageItem("&9Team Blue")
+ override var winBlue = LanguageItem("%blockball_game_blueDisplayName%")
 
  override var winDraw = LanguageItem("&fDraw")
 
@@ -86,9 +86,9 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var hubGameJoinHeader = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Click on the team to join the match.")
 
- override var hubGameJoinRed = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &c[Team Red]")
+ override var hubGameJoinRed = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 [%blockball_game_redDisplayName%&7]")
 
- override var hubGameJoinBlue = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &9[Team Blue]")
+ override var hubGameJoinBlue = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 [%blockball_game_blueDisplayName%&7]")
 
  override var commandCreateToolTip = LanguageItem("Creates a new arena for a BlockBall game.")
 
@@ -138,15 +138,11 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var failedToReloadMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s")
 
- override var teamRedDisplayName = LanguageItem("Team Red")
-
- override var teamBlueDisplayName = LanguageItem("Team Blue")
-
  override var gameIsNotARefereeGame = LanguageItem("&0&l[&f&lBlockBall&0&l]&c This game is not a game where you can use a referee. Convert the game to a referee game first.")
 
  override var gameTypeRefereeOnlyForPatreons = LanguageItem("&0&l[&f&lBlockBall&0&l]&c The game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn.")
 
- override var joinTeamRefereeMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully joined team referee.")
+ override var joinTeamRefereeMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully joined %blockball_player_teamDisplayName%.")
 
  override var waitingForRefereeToStart = LanguageItem("Waiting for the referee to start the game...")
 

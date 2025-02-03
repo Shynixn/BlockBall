@@ -136,10 +136,6 @@ interface BlockBallLanguage : LanguageProvider {
 
   var failedToReloadMessage: LanguageItem
 
-  var teamRedDisplayName: LanguageItem
-
-  var teamBlueDisplayName: LanguageItem
-
   var gameIsNotARefereeGame: LanguageItem
 
   var gameTypeRefereeOnlyForPatreons: LanguageItem
