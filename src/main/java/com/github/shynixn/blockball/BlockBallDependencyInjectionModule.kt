@@ -133,7 +133,6 @@ class BlockBallDependencyInjectionModule(
         module.addService<StatsService> {
             StatsServiceImpl(module.getService(), module.getService())
         }
-        module.addService<ScoreboardService>(ScoreboardServiceImpl())
         module.addService<BossBarService>(BossBarServiceImpl())
         module.addService<GameService> {
             GameServiceImpl(
@@ -149,7 +148,6 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
-                module.getService()
             )
         }
         module.addService<HubGameForcefieldService> {

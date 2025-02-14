@@ -78,9 +78,9 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         if (player != null && true) {
             val language = game.language
             if (game.redTeam.contains(player)) {
-                language.teamRedDisplayName.text
+                game.arena.meta.redTeamMeta.displayName
             } else if (game.blueTeam.contains(player)) {
-                language.teamBlueDisplayName.text
+                game.arena.meta.blueTeamMeta.displayName
             } else {
                 ""
             }

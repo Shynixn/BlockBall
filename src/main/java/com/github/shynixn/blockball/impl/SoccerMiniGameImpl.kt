@@ -32,7 +32,6 @@ open class SoccerMiniGameImpl constructor(
     private val soundService: SoundService,
     language: BlockBallLanguage,
     packetService: PacketService,
-    scoreboardService: ScoreboardService,
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory
 ) : SoccerGameImpl(
@@ -41,7 +40,6 @@ open class SoccerMiniGameImpl constructor(
     packetService,
     plugin,
     bossBarService,
-    scoreboardService,
     soccerBallFactory,
     commandService,
     language,
@@ -223,8 +221,6 @@ open class SoccerMiniGameImpl constructor(
         ingamePlayersStorage.clear()
         ball?.remove()
         doubleJumpCoolDownPlayers.clear()
-        holograms.forEach { h -> h.remove() }
-        holograms.clear()
 
         if (bossBar != null) {
             bossBarService.cleanResources(bossBar)

@@ -4,7 +4,7 @@ name: "1"
 displayName: "SoccerArena 3"
 # Is the game enabled or not.
 enabled: true
-# Type of game. Accepts HUBGAME, MINIGAME and BUNGEE
+# Type of game. Accepts HUBGAME, MINIGAME and REFEREE
 gameType: "HUBGAME"
 # Amount of time until the player queue timeouts.
 queueTimeOutSec: 30
@@ -165,22 +165,6 @@ meta:
     style: "SOLID"
     flags:
       - "NONE"
-  # Scoreboard settings. For more settings, use a dedicated scoreboard plugin and placeholders.
-  scoreboardMeta:
-    title: "&aBlockBall"
-    enabled: true
-    lines:
-      - ""
-      - "&6Time: "
-      - "%blockball_game_time%"
-      - ""
-      - "&m           &r"
-      - "&cTeam Red:"
-      - "%blockball_game_redScore%&l"
-      - ""
-      - "&9Team Blue:"
-      - "%blockball_game_blueScore%&l"
-      - "&m           &r"
   # Additional forcefield settings.
   protectionMeta:
     # Entities trying to enter the playing area are launched out of the forcefield with these vector settings.
@@ -434,4 +418,3 @@ meta:
     spawnpoint: null
     lobbySpawnpoint: null
     signs: [ ]
-  hologramMetas: [ ]

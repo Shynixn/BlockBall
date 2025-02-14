@@ -21,7 +21,6 @@ class SoccerHubGameImpl(
     private val bossBarService: BossBarService,
     language: BlockBallLanguage,
     packetService: PacketService,
-    scoreboardService: ScoreboardService,
     soccerBallFactory: SoccerBallFactory,
     commandService: CommandService
 ) : SoccerGameImpl(
@@ -30,7 +29,6 @@ class SoccerHubGameImpl(
     packetService,
     plugin,
     bossBarService,
-    scoreboardService,
     soccerBallFactory,
     commandService,
     language,
@@ -87,8 +85,6 @@ class SoccerHubGameImpl(
         ingamePlayersStorage.clear()
         ball?.remove()
         doubleJumpCoolDownPlayers.clear()
-        holograms.forEach { h -> h.remove() }
-        holograms.clear()
 
         if (bossBar != null) {
             bossBarService.cleanResources(bossBar)

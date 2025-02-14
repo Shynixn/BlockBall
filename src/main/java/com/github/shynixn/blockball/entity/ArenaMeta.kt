@@ -11,10 +11,6 @@ class ArenaMeta {
     /** Metadata of the customizing Properties. */
     val customizingMeta: CustomizationMeta = CustomizationMeta()
 
-    /** Meta data of all holograms. */
-    val hologramMetas: ArrayList<HologramMeta>
-        get() = this.internalHologramMetas
-
     /** Meta data of a generic lobby. */
     val lobbyMeta: LobbyMeta = LobbyMeta()
 
@@ -30,9 +26,6 @@ class ArenaMeta {
     /** Meta data of the bossbar. */
     val bossBarMeta: BossBarMeta = BossBarMeta()
 
-    /** Metadata of the scoreboard. */
-    val scoreboardMeta: ScoreboardMeta = ScoreboardMeta()
-
     /** Meta data of proection. */
     val protectionMeta: ArenaProtectionMeta = ArenaProtectionMeta()
 
@@ -47,8 +40,6 @@ class ArenaMeta {
 
     /** Metadata of the refereeTeam. */
     val refereeTeamMeta: TeamMeta = TeamMeta()
-
-    private val internalHologramMetas: ArrayList<HologramMeta> = ArrayList()
 
     init {
         val soundMetaKick = SoundMeta()
