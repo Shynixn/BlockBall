@@ -242,6 +242,7 @@ class BlockBallPlugin : JavaPlugin() {
         }
 
         module.close()
+        scoreboardModule.close()
     }
 
     private fun loadShyScoreboardModule(language: ShyScoreboardLanguage): DependencyInjectionModule {
