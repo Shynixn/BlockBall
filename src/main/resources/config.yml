@@ -16,18 +16,16 @@ commands:
     aliases:
       - "soccer"
       - "football"
+  blockballscoreboard:
+    aliases:
+      - "soccerscoreboard"
+      - "footballscoreboard"
 
 ############################
 # Debug settings
 # This setting should only be turned on if you want to get additional debugging information.
 ############################
 debug: false
-
-############################
-# Data-collecting settings
-# This setting sends anonymous stats to https://bstats.org/plugin/bukkit/BlockBall.
-############################
-metrics: true
 
 ############################
 # Database
@@ -73,6 +71,16 @@ security:
     pitch: 0.0
 
 ############################
+# Scoreboard
+# All global scoreboard settings.
+############################
+scoreboard:
+  # How often are the permissions of a player checked to determine if he has got access to any scoreboard.
+  checkForPermissionChangeSeconds: 3
+  # When a new player joins the server, after how many seconds are the scoreboards created.
+  joinDelaySeconds: 3
+
+############################
 # LeaderBoard PlaceHolders (PatreonOnly)
 ############################
 leaderboard:
@@ -80,3 +88,5 @@ leaderboard:
   enabled: true
   # The interval how often the leader board is refreshed from the currently persisted stats.
   intervalMinutes: 15
+
+

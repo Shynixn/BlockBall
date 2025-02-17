@@ -308,3 +308,45 @@ cannotParseNumberMessage:
 cannotParseWorldMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c Cannot find world."
+noPermissionCommand:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l] &cYou do not have permission to execute this command."
+reloadCommandHint:
+  type: "CHAT"
+  text: "Reloads all configuration."
+reloadMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Reloaded all configuration."
+commonErrorMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details."
+scoreboardCommandUsage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Use /blockballscoreboard help to see more info about the plugin."
+scoreboardCommandDescription:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 All commands for scoreboards in BlockBall."
+scoreboardAddCommandHint:
+  type: "CHAT"
+  text: "Adds a scoreboard to a player."
+scoreboardRemoveCommandHint:
+  type: "CHAT"
+  text: "Removes a scoreboard from a player."
+scoreboardNotFoundMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cScoreboard %1$1s not found."
+scoreboardNoPermissionToScoreboardCommand:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to this scoreboard."
+scoreboardAddedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Added the scoreboard %1$1s to the player %2$1s."
+scoreboardRemovedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Removed the scoreboard %1$1s from the player %2$1s."
+scoreboardUpdateCommandHint:
+  type: "CHAT"
+  text: "Updates the placeholder of the scoreboard."
+scoreboardUpdatedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Updated the scoreboard."

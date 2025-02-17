@@ -189,4 +189,32 @@ class BlockBallLanguageImpl : BlockBallLanguage {
  override var cannotParseNumberMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Cannot parse number.")
 
  override var cannotParseWorldMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Cannot find world.")
+
+ override var noPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l] &cYou do not have permission to execute this command.")
+
+ override var reloadCommandHint = LanguageItem("Reloads all configuration.")
+
+ override var reloadMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Reloaded all configuration.")
+
+ override var commonErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details.")
+
+ override var scoreboardCommandUsage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /blockballscoreboard help to see more info about the plugin.")
+
+ override var scoreboardCommandDescription = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 All commands for scoreboards in BlockBall.")
+
+ override var scoreboardAddCommandHint = LanguageItem("Adds a scoreboard to a player.")
+
+ override var scoreboardRemoveCommandHint = LanguageItem("Removes a scoreboard from a player.")
+
+ override var scoreboardNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cScoreboard %1$1s not found.")
+
+ override var scoreboardNoPermissionToScoreboardCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to this scoreboard.")
+
+ override var scoreboardAddedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Added the scoreboard %1$1s to the player %2$1s.")
+
+ override var scoreboardRemovedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Removed the scoreboard %1$1s from the player %2$1s.")
+
+ override var scoreboardUpdateCommandHint = LanguageItem("Updates the placeholder of the scoreboard.")
+
+ override var scoreboardUpdatedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Updated the scoreboard.")
 }
