@@ -27,9 +27,9 @@ corner2:
 meta:
   # All spectator configurations.
   spectatorMeta:
-    # Should nearby players in the notificationRadius receive the BlockBall bossBar and scoreboard?
+    # Obsolete setting.
     notifyNearbyPlayers: false
-    # Notification radius.
+    # Obsolete setting.
     notificationRadius: 50
   # Additional configuration properties, which do not fit into a particular category.
   customizingMeta:
