@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.command.CommandMeta
+import com.github.shynixn.mcutils.common.command.CommandType
 import com.github.shynixn.mcutils.sign.SignMeta
 
 class TeamMeta {
@@ -64,10 +65,20 @@ class TeamMeta {
     /**
      * Commands executed on player join.
      */
-    var joinCommands: List<CommandMeta> = ArrayList()
+    var joinCommands: List<CommandMeta> = listOf(
+        CommandMeta(
+            CommandType.SERVER_PER_PLAYER,
+            "/blockballscoreboard add blockball_scoreboard %blockball_player_name%"
+        )
+    )
 
     /**
      * Commands executed on player leave.
      */
-    var leaveCommands: List<CommandMeta> = ArrayList()
+    var leaveCommands: List<CommandMeta> = listOf(
+        CommandMeta(
+            CommandType.SERVER_PER_PLAYER,
+            "/blockballscoreboard remove blockball_scoreboard %blockball_player_name%"
+        )
+    )
 }

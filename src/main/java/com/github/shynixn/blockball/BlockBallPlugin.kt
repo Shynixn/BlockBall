@@ -11,7 +11,6 @@ import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.ChatColor
-import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
 import com.github.shynixn.mcutils.common.language.reloadTranslation
@@ -23,8 +22,13 @@ import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.sign.SignService
+import com.github.shynixn.shyscoreboard.ShyScoreboardDependencyInjectionModule
+import com.github.shynixn.shyscoreboard.contract.ScoreboardService
+import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage
+import com.github.shynixn.shyscoreboard.entity.ShyScoreboardSettings
+import com.github.shynixn.shyscoreboard.impl.commandexecutor.ShyScoreboardCommandExecutor
+import com.github.shynixn.shyscoreboard.impl.listener.ShyScoreboardListener
 import kotlinx.coroutines.runBlocking
-import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
@@ -36,8 +40,8 @@ import java.util.logging.Level
  */
 class BlockBallPlugin : JavaPlugin() {
     private val prefix: String = ChatColor.BLUE.toString() + "[BlockBall] "
-    private val bstatsPluginId = 1317
     private lateinit var module: DependencyInjectionModule
+    private lateinit var scoreboardModule : DependencyInjectionModule
     private var immidiateDisable = false
 
     companion object {
@@ -106,7 +110,8 @@ class BlockBallPlugin : JavaPlugin() {
         logger.log(Level.INFO, "Loaded language file.")
 
         // Module
-        this.module = BlockBallDependencyInjectionModule(this, language).build()
+        this.scoreboardModule = loadShyScoreboardModule(language)
+        this.module = BlockBallDependencyInjectionModule(this, language, this.scoreboardModule.getService()).build()
 
         // Register PlaceHolder
         PlaceHolder.registerAll(
@@ -135,15 +140,6 @@ class BlockBallPlugin : JavaPlugin() {
 
         val plugin = this
         plugin.launch {
-            val configurationService = module.getService<ConfigurationService>()
-
-            // Enable Metrics
-            val enableMetrics = configurationService.findValue<Boolean>("metrics")
-
-            if (enableMetrics) {
-                Metrics(plugin, bstatsPluginId)
-            }
-
             // Load Games
             val gameService = module.getService<GameService>()
             try {
@@ -244,5 +240,46 @@ class BlockBallPlugin : JavaPlugin() {
         } catch (e: Exception) {
             // Ignored.
         }
+
+        module.close()
+        scoreboardModule.close()
+    }
+
+    private fun loadShyScoreboardModule(language: ShyScoreboardLanguage): DependencyInjectionModule {
+        val settings = ShyScoreboardSettings({ s ->
+            s.joinDelaySeconds = config.getInt("scoreboard.joinDelaySeconds")
+            s.checkForPermissionChangeSeconds = config.getInt("scoreboard.checkForPermissionChangeSeconds")
+            s.baseCommand = "blockballscoreboard"
+            s.commandAliases = config.getStringList("commands.blockballscoreboard.aliases")
+            s.commandPermission = "blockball.shyscoreboard.command"
+            s.reloadPermission = "blockball.shyscoreboard.reload"
+            s.dynScoreboardPermission = "blockball.shyscoreboard.scoreboard."
+            s.addPermission = "blockball.shyscoreboard.add"
+            s.removePermission = "blockball.shyscoreboard.remove"
+            s.updatePermission = "blockball.shyscoreboard.remove"
+            s.defaultScoreboards = listOf(
+                "scoreboard/blockball_scoreboard.yml" to "blockball_scoreboard.yml"
+            )
+        })
+        settings.reload()
+        val module = ShyScoreboardDependencyInjectionModule(this, settings, language).build()
+
+        // Register PlaceHolders
+        com.github.shynixn.shyscoreboard.enumeration.PlaceHolder.registerAll(
+            this,
+            module.getService<PlaceHolderService>(),
+        )
+
+        // Register Listeners
+        Bukkit.getPluginManager().registerEvents(module.getService<ShyScoreboardListener>(), this)
+
+        // Register CommandExecutor
+        module.getService<ShyScoreboardCommandExecutor>()
+        val scoreboardService = module.getService<ScoreboardService>()
+        launch {
+            scoreboardService.reload()
+        }
+
+        return module
     }
 }

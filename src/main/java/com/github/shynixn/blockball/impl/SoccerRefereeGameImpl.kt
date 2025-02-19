@@ -25,7 +25,6 @@ class SoccerRefereeGameImpl(
     private val soundService: SoundService,
     language: BlockBallLanguage,
     packetService: PacketService,
-    scoreboardService: ScoreboardService,
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory
 ) : SoccerMiniGameImpl(
@@ -38,7 +37,6 @@ class SoccerRefereeGameImpl(
     soundService,
     language,
     packetService,
-    scoreboardService,
     commandService,
     soccerBallFactory
 ), SoccerRefereeGame {

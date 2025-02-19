@@ -35,7 +35,6 @@ abstract class SoccerGameImpl(
     private val packetService: PacketService,
     private val plugin: Plugin,
     private val bossBarService: BossBarService,
-    private val scoreboardService: ScoreboardService,
     private val soccerBallFactory: SoccerBallFactory,
     private val commandService: CommandService,
     override val language: BlockBallLanguage,
@@ -83,11 +82,6 @@ abstract class SoccerGameImpl(
      * Ingame bossbar.
      */
     override var bossBar: Any? = null
-
-    /**
-     * Ingame holograms.
-     */
-    override val holograms: MutableList<HologramProxy> = ArrayList()
 
     /**
      * RedScore.
@@ -278,11 +272,7 @@ abstract class SoccerGameImpl(
                 return
             }
 
-            this.kickUnwantedEntitiesOutOfForcefield()
-            this.updateScoreboard()
             this.updateBossBar()
-            this.updateDoubleJumpCooldown()
-            this.updateHolograms()
             this.updateDoubleJumpCooldown()
         }
     }
@@ -427,70 +417,6 @@ abstract class SoccerGameImpl(
     }
 
     /**
-     * Kicks entities out of the soccerArena.
-     */
-    private fun kickUnwantedEntitiesOutOfForcefield() {
-        if (!arena.meta.protectionMeta.entityProtectionEnabled) {
-            return
-        }
-
-        val ballSpawnpointLocation = arena.meta.ballMeta.spawnpoint!!.toLocation()
-
-        for (entity in ballSpawnpointLocation.world!!.entities) {
-            if (entity is Player || entity is ItemFrame) {
-                continue
-            }
-
-            if (arena.isLocationIn2dSelection(entity.location.toVector3d())) {
-                val vector = arena.meta.protectionMeta.entityProtection
-                entity.location.setDirection(vector.toVector())
-                entity.velocity = vector.toVector()
-            }
-        }
-    }
-
-    /**
-     * Updates the hologram for the current game.
-     */
-    private fun updateHolograms() {
-        if (holograms.size != arena.meta.hologramMetas.size) {
-            holograms.forEach { h -> h.remove() }
-            holograms.clear()
-
-            arena.meta.hologramMetas.forEach { meta ->
-                val hologram = PacketHologram()
-                hologram.packetService = packetService
-
-                hologram.lines = meta.lines
-                hologram.location = meta.position!!.toLocation()
-                holograms.add(hologram)
-            }
-        }
-
-        holograms.forEachIndexed { i, holo ->
-            val players = ArrayList(inTeamPlayers)
-            val additionalPlayers = getAdditionalNotificationPlayers()
-            players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first as Player }
-                .toList())
-
-            holo.players.addAll(players as Collection<Player>)
-
-            additionalPlayers.filter { p -> !p.second && holo.players.contains(p.first) }.forEach { p ->
-                holo.players.remove(p.first)
-            }
-
-            val lines = ArrayList(arena.meta.hologramMetas[i].lines)
-
-            for (k in lines.indices) {
-                lines[k] = placeHolderService.resolvePlaceHolder(lines[k], null,  mapOf(gameKey to arena.name))
-            }
-
-            holo.lines = lines
-            holo.update()
-        }
-    }
-
-    /**
      * Updates the bossbar for the current game.
      */
     private fun updateBossBar() {
@@ -537,51 +463,6 @@ abstract class SoccerGameImpl(
                 doubleJumpCoolDownPlayers.remove(p)
             } else {
                 doubleJumpCoolDownPlayers[p] = time
-            }
-        }
-    }
-
-    /**
-     * Updates the scoreboard for all players when enabled.
-     */
-    private fun updateScoreboard() {
-        if (!arena.meta.scoreboardMeta.enabled) {
-            return
-        }
-
-        if (scoreboard == null) {
-            scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
-
-            scoreboardService.setConfiguration(
-                scoreboard as Scoreboard, ScoreboardDisplaySlot.SIDEBAR, arena.meta.scoreboardMeta.title
-            )
-        }
-
-        val players = ArrayList(inTeamPlayers)
-        val additionalPlayers = getAdditionalNotificationPlayers()
-        players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }.map { p -> p.first as Player }
-            .toList())
-
-        additionalPlayers.filter { p -> !p.second }.forEach { p ->
-            if ((p.first as Player).scoreboard == scoreboard) {
-                (p.first as Player).scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
-            }
-        }
-
-        players.forEach { p ->
-            if (scoreboard != null) {
-                if (p.scoreboard != scoreboard) {
-                    p.scoreboard = scoreboard as Scoreboard
-                }
-
-                val lines = arena.meta.scoreboardMeta.lines
-
-                var j = lines.size
-                for (i in 0 until lines.size) {
-                    val line = placeHolderService.resolvePlaceHolder(lines[i], p as Player)
-                    scoreboardService.setLine(scoreboard as Scoreboard, j, line)
-                    j--
-                }
             }
         }
     }
@@ -900,12 +781,6 @@ abstract class SoccerGameImpl(
         // TODO: Own plugins
         if (bossBar != null) {
             bossBarService.removePlayer(bossBar, player)
-        }
-
-        for (hologram in holograms) {
-            if (hologram.players.contains(player)) {
-                hologram.players.remove(player)
-            }
         }
 
         val stats = ingamePlayersStorage[player]!!

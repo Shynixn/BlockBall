@@ -33,11 +33,5 @@ enum class BallActionType {
     /**
      * SoccerBall Move.
      */
-    ONMOVE,
-
-    @Deprecated("No longer being used. Stays for compatibility reason since v6.22.1")
-    ONTHROW,
-
-    @Deprecated("No longer being used. Stays for compatibility reason since v6.22.1")
-    ONGRAB,
+    ONMOVE
 }

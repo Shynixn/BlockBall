@@ -20,7 +20,6 @@ import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.language.globalChatMessageService
 import com.github.shynixn.mcutils.common.language.globalPlaceHolderService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
-import com.github.shynixn.mcutils.common.placeholder.PlaceHolderServiceImpl
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.repository.CachedRepositoryImpl
 import com.github.shynixn.mcutils.common.repository.Repository
@@ -47,7 +46,8 @@ import org.bukkit.plugin.Plugin
 
 class BlockBallDependencyInjectionModule(
     private val plugin: BlockBallPlugin,
-    private val language: BlockBallLanguage
+    private val language: BlockBallLanguage,
+    private val placeHolderService: PlaceHolderService
 ) {
     companion object {
         val areLegacyVersionsIncluded: Boolean by lazy {
@@ -68,7 +68,9 @@ class BlockBallDependencyInjectionModule(
         module.addService<BlockBallLanguage>(language)
 
         // Repositories
-        val arenaRepository = CachedRepositoryImpl(YamlFileRepositoryImpl<SoccerArena>(plugin, "arena",
+        val arenaRepository = CachedRepositoryImpl(
+            YamlFileRepositoryImpl<SoccerArena>(
+            plugin, "arena",
             listOf(Pair("arena_sample.yml", "arena_sample.yml")),
             listOf("arena_sample.yml"),
             object : TypeReference<SoccerArena>() {}
@@ -127,13 +129,12 @@ class BlockBallDependencyInjectionModule(
                 }
             )
         }
-        module.addService<PlaceHolderService> { PlaceHolderServiceImpl(plugin) }
+        module.addService<PlaceHolderService> { placeHolderService }
 
         // Services
         module.addService<StatsService> {
             StatsServiceImpl(module.getService(), module.getService())
         }
-        module.addService<ScoreboardService>(ScoreboardServiceImpl())
         module.addService<BossBarService>(BossBarServiceImpl())
         module.addService<GameService> {
             GameServiceImpl(
@@ -149,7 +150,6 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
-                module.getService()
             )
         }
         module.addService<HubGameForcefieldService> {

@@ -37,7 +37,6 @@ class GameServiceImpl(
     private val chatMessageService: ChatMessageService,
     private val soundService: SoundService,
     private val packetService: PacketService,
-    private val scoreboardService: ScoreboardService,
     private val commandService: CommandService,
     private val soccerBallFactory: SoccerBallFactory,
     private val language: BlockBallLanguage,
@@ -99,7 +98,6 @@ class GameServiceImpl(
                     bossBarService,
                     language,
                     packetService,
-                    scoreboardService,
                     soccerBallFactory,
                     commandService
                 )
@@ -114,7 +112,6 @@ class GameServiceImpl(
                     soundService,
                     language,
                     packetService,
-                    scoreboardService,
                     commandService,
                     soccerBallFactory
                 ).also {
@@ -131,7 +128,6 @@ class GameServiceImpl(
                     soundService,
                     language,
                     packetService,
-                    scoreboardService,
                     commandService,
                     soccerBallFactory
                 ).also {

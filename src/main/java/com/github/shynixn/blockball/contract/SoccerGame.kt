@@ -41,11 +41,6 @@ interface SoccerGame {
     var bossBar: Any?
 
     /**
-     * Ingame holograms.
-     */
-    val holograms: MutableList<HologramProxy>
-
-    /**
      * All players which are already fix in team red.
      */
     val redTeam: Set<Player>
