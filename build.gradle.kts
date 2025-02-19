@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.12.0"
+version = "7.13.0"
 
 repositories {
     mavenLocal()
@@ -34,9 +34,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.0.1")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.0.2")
     implementation("com.github.shynixn.mcutils:common:2025.5")
-    implementation("com.github.shynixn.mcutils:packet:2025.8")
+    implementation("com.github.shynixn.mcutils:packet:2025.9")
     implementation("com.github.shynixn.mcutils:database:2025.2")
     implementation("com.github.shynixn.mcutils:sign:2025.1")
 }
@@ -79,6 +79,7 @@ tasks.register("relocatePluginJar", ShadowJar::class.java) {
     relocate("org.bstats", "com.github.shynixn.blockball.lib.org.bstats")
     relocate("com.fasterxml", "com.github.shynixn.blockball.lib.com.fasterxml")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
+    relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
 }
 
 /**
@@ -106,6 +107,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R2/**")
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
+    exclude("com/github/shynixn/shyscoreboard/**")
     exclude("org/**")
     exclude("kotlin/**")
     exclude("kotlinx/**")
@@ -134,6 +136,7 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     exclude("com/google/**")
     exclude("com/fasterxml/**")
     exclude("com/zaxxer/**")
+    exclude("com/github/shynixn/shyscoreboard/**")
     exclude("plugin-legacy.yml")
 }
 
@@ -161,6 +164,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.fasterxml", "com.github.shynixn.blockball.lib.com.fasterxml")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
     relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
+    relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
 
     exclude("plugin.yml")
     rename("plugin-legacy.yml", "plugin.yml")
@@ -183,6 +187,7 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     exclude("com/google/**")
     exclude("com/fasterxml/**")
     exclude("com/zaxxer/**")
+    exclude("com/github/shynixn/shyscoreboard/**")
     exclude("plugin-legacy.yml")
 }
 

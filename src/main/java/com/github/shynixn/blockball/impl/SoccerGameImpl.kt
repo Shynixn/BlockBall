@@ -272,9 +272,7 @@ abstract class SoccerGameImpl(
                 return
             }
 
-            this.kickUnwantedEntitiesOutOfForcefield()
             this.updateBossBar()
-            this.updateDoubleJumpCooldown()
             this.updateDoubleJumpCooldown()
         }
     }
@@ -414,29 +412,6 @@ abstract class SoccerGameImpl(
             if (arena.gameType != GameType.HUBGAME || redTeam.size >= arena.meta.redTeamMeta.minAmount && blueTeam.size >= arena.meta.blueTeamMeta.minAmount) {
                 ballSpawning = true
                 ballSpawnCounter = arena.meta.ballMeta.delayInTicks
-            }
-        }
-    }
-
-    /**
-     * Kicks entities out of the soccerArena.
-     */
-    private fun kickUnwantedEntitiesOutOfForcefield() {
-        if (!arena.meta.protectionMeta.entityProtectionEnabled) {
-            return
-        }
-
-        val ballSpawnpointLocation = arena.meta.ballMeta.spawnpoint!!.toLocation()
-
-        for (entity in ballSpawnpointLocation.world!!.entities) {
-            if (entity is Player || entity is ItemFrame) {
-                continue
-            }
-
-            if (arena.isLocationIn2dSelection(entity.location.toVector3d())) {
-                val vector = arena.meta.protectionMeta.entityProtection
-                entity.location.setDirection(vector.toVector())
-                entity.velocity = vector.toVector()
             }
         }
     }
