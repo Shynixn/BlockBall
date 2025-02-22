@@ -113,6 +113,16 @@ class BlockBallPlugin : JavaPlugin() {
         this.scoreboardModule = loadShyScoreboardModule(language)
         this.module = BlockBallDependencyInjectionModule(this, language, this.scoreboardModule.getService()).build()
 
+        // Connect to database
+        try {
+            val playerDataRepository = module.getService<PlayerDataRepository<PlayerInformation>>()
+            playerDataRepository.createIfNotExist()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Bukkit.getPluginManager().disablePlugin(this)
+            return
+        }
+
         // Register PlaceHolder
         PlaceHolder.registerAll(
             module.getService(), module.getService(), module.getService(), module.getService()
@@ -137,7 +147,6 @@ class BlockBallPlugin : JavaPlugin() {
         )
         Bukkit.getServicesManager()
             .register(GameService::class.java, module.getService<GameService>(), this, ServicePriority.Normal)
-
         val plugin = this
         plugin.launch {
             // Load Games
@@ -146,17 +155,6 @@ class BlockBallPlugin : JavaPlugin() {
                 gameService.reloadAll()
             } catch (e: SoccerGameException) {
                 plugin.logger.log(Level.WARNING, "Cannot start game of soccerArena ${e.arena.name}.", e)
-            }
-
-            // Connect to PlayerData Repository.
-            try {
-                val playerDataRepository = module.getService<PlayerDataRepository<PlayerInformation>>()
-                playerDataRepository.createIfNotExist()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                immidiateDisable = true
-                Bukkit.getPluginManager().disablePlugin(plugin)
-                return@launch
             }
 
             // Enable stats

@@ -68,29 +68,35 @@ class BlockBallDependencyInjectionModule(
         module.addService<BlockBallLanguage>(language)
 
         // Repositories
-        val arenaRepository = CachedRepositoryImpl(
-            YamlFileRepositoryImpl<SoccerArena>(
-            plugin, "arena",
-            listOf(Pair("arena_sample.yml", "arena_sample.yml")),
-            listOf("arena_sample.yml"),
-            object : TypeReference<SoccerArena>() {}
-        ))
-        module.addService<Repository<SoccerArena>>(arenaRepository)
-        module.addService<CacheRepository<SoccerArena>>(arenaRepository)
-        val configSelectedPlayerDataRepository = ConfigSelectedRepositoryImpl<PlayerInformation>(
-            plugin,
-            "BlockBall",
-            plugin.dataFolder.toPath().resolve("BlockBall.sqlite"),
-            object : TypeReference<PlayerInformation>() {},
-            plugin.minecraftDispatcher
-        )
-        val playerDataRepository = AutoSavePlayerDataRepositoryImpl(
-            1000 * 60L * plugin.config.getInt("database.autoSaveIntervalMinutes"),
-            CachedPlayerDataRepositoryImpl(configSelectedPlayerDataRepository, plugin.minecraftDispatcher),
-            plugin.scope, plugin.minecraftDispatcher
-        )
-        module.addService<PlayerDataRepository<PlayerInformation>>(playerDataRepository)
-        module.addService<CachePlayerRepository<PlayerInformation>>(playerDataRepository)
+        module.addService<Repository<SoccerArena>> {
+            module.getService<CacheRepository<SoccerArena>>()
+        }
+        module.addService<CacheRepository<SoccerArena>> {
+            CachedRepositoryImpl(
+                YamlFileRepositoryImpl<SoccerArena>(
+                    plugin, "arena",
+                    listOf(Pair("arena_sample.yml", "arena_sample.yml")),
+                    listOf("arena_sample.yml"),
+                    object : TypeReference<SoccerArena>() {}
+                ))
+        }
+        module.addService<PlayerDataRepository<PlayerInformation>> {
+            module.getService<CachePlayerRepository<PlayerInformation>>()
+        }
+        module.addService<CachePlayerRepository<PlayerInformation>> {
+            val configSelectedPlayerDataRepository = ConfigSelectedRepositoryImpl<PlayerInformation>(
+                plugin,
+                "BlockBall",
+                plugin.dataFolder.toPath().resolve("BlockBall.sqlite"),
+                object : TypeReference<PlayerInformation>() {},
+                plugin.minecraftDispatcher
+            )
+            AutoSavePlayerDataRepositoryImpl(
+                1000 * 60L * plugin.config.getInt("database.autoSaveIntervalMinutes"),
+                CachedPlayerDataRepositoryImpl(configSelectedPlayerDataRepository, plugin.minecraftDispatcher),
+                plugin.scope, plugin.minecraftDispatcher
+            )
+        }
         module.addService<SignService> {
             SignServiceImpl(plugin, module.getService(), language.noPermissionMessage.text)
         }
