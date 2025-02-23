@@ -254,7 +254,7 @@ class BlockBallPlugin : JavaPlugin() {
             s.dynScoreboardPermission = "blockball.shyscoreboard.scoreboard."
             s.addPermission = "blockball.shyscoreboard.add"
             s.removePermission = "blockball.shyscoreboard.remove"
-            s.updatePermission = "blockball.shyscoreboard.remove"
+            s.updatePermission = "blockball.shyscoreboard.update"
             s.defaultScoreboards = listOf(
                 "scoreboard/blockball_scoreboard.yml" to "blockball_scoreboard.yml"
             )
