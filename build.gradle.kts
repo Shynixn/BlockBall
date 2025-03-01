@@ -5,11 +5,11 @@ import java.io.*
 
 plugins {
     id("org.jetbrains.kotlin.jvm") version ("1.9.25")
-    id("com.github.johnrengelman.shadow") version ("7.0.0")
+    id("com.gradleup.shadow") version ("8.3.6")
 }
 
 group = "com.github.shynixn"
-version = "7.13.1"
+version = "7.14.0"
 
 repositories {
     mavenLocal()
@@ -28,17 +28,18 @@ dependencies {
     implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.21.0")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-folia-api:2.21.0")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-folia-core:2.21.0")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.3.0")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.2.3")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    implementation("org.yaml:snakeyaml:1.33")
     implementation("com.zaxxer:HikariCP:4.0.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.0.2")
-    implementation("com.github.shynixn.mcutils:common:2025.5")
-    implementation("com.github.shynixn.mcutils:packet:2025.9")
-    implementation("com.github.shynixn.mcutils:database:2025.4")
-    implementation("com.github.shynixn.mcutils:sign:2025.1")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.1.0")
+    implementation("com.github.shynixn.mcutils:common:2025.7")
+    implementation("com.github.shynixn.mcutils:packet:2025.10")
+    implementation("com.github.shynixn.mcutils:database:2025.5")
+    implementation("com.github.shynixn.mcutils:sign:2025.3")
 }
 
 tasks.withType<KotlinCompile> {
@@ -89,7 +90,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-latest.${archiveExtension.get()}")
-    // destinationDir = File("C:\\temp\\plugins")
+    // destinationDirectory.set(File("C:\\temp\\plugins"))
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_9_R2/**")
@@ -115,6 +116,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/google/**")
     exclude("com/fasterxml/**")
     exclude("com/zaxxer/**")
+    exclude("org/yaml")
     exclude("plugin-legacy.yml")
 }
 
@@ -125,10 +127,11 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-premium.${archiveExtension.get()}")
-    // destinationDir = File("C:\\temp\\plugins")
+    // destinationDirectory.set(File("C:\\temp\\plugins"))
 
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
+    exclude("com/github/shynixn/shyscoreboard/**")
     exclude("org/**")
     exclude("kotlin/**")
     exclude("kotlinx/**")
@@ -136,7 +139,7 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     exclude("com/google/**")
     exclude("com/fasterxml/**")
     exclude("com/zaxxer/**")
-    exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("org/yaml")
     exclude("plugin-legacy.yml")
 }
 
@@ -162,6 +165,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
     relocate("org.apache", "com.github.shynixn.blockball.lib.org.apache")
     relocate("com.fasterxml", "com.github.shynixn.blockball.lib.com.fasterxml")
+    relocate("org.yaml", "com.github.shynixn.blockball.lib.org.yaml")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
     relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
     relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
@@ -177,7 +181,8 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     dependsOn("relocateLegacyPluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocateLegacyPluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-legacy.${archiveExtension.get()}")
-    // destinationDir = File("C:\\temp\\plugins")
+    // destinationDirectory.set(File("C:\\temp\\plugins"))
+
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("org/**")
