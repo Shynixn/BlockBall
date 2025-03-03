@@ -11,8 +11,10 @@ placeHolders:
   - "###displayName###"
   - "###teamRed###"
   - "###teamRedScore###"
+  - "###teamRedPlayerNames###"
   - "###teamBlue###"
   - "###teamBlueScore###"
+  - "###teamBluePlayerNames###"
 
 # MCPlayerStats continuously collects the defined placeHolders above for all the online players. You can define when this happens and how often.
 collect:

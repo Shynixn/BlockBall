@@ -33,6 +33,8 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     GAME_RED_PLAYER_AMOUNT("%blockball_game_redPlayers_[game]%", { _, game, _ -> game?.redTeam?.size?.toString() }),
 
+    GAME_RED_PLAYER_NAMES("%blockball_game_redPlayerNames_[game]%", {_, game, _ -> game?.redTeam?.joinToString(", ") { e -> e.name } }),
+
     GAME_RED_PLAYER_MAXAMOUNT(
         "%blockball_game_redMaxPlayers_[game]%",
         { _, game, _ -> game?.arena?.meta?.redTeamMeta?.maxAmount?.toString() }),
@@ -44,6 +46,8 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
     GAME_BLUE_SCORE("%blockball_game_blueScore_[game]%", { _, game, _ -> game?.blueScore?.toString() }),
 
     GAME_BLUE_PLAYER_AMOUNT("%blockball_game_bluePlayers_[game]%", { _, game, _ -> game?.blueTeam?.size?.toString() }),
+
+    GAME_BLUE_PLAYER_NAMES("%blockball_game_bluePlayerNames_[game]%", {_, game, _ -> game?.blueTeam?.joinToString(", ") { e -> e.name } }),
 
     GAME_BLUE_PLAYER_MAXAMOUNT(
         "%blockball_game_blueMaxPlayers_[game]%",

@@ -33,7 +33,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcplayerstats:mcplayerstats:1.1.2")
+    implementation("com.github.shynixn.mcplayerstats:mcplayerstats:1.1.3")
     implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.1.1")
     implementation("com.github.shynixn.mcutils:common:2025.9")
     implementation("com.github.shynixn.mcutils:packet:2025.10")

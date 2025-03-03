@@ -8,51 +8,27 @@
 </head>
 <body class="bg-gray-100 p-6">
 <div class="max-w-4xl mx-auto space-y-6">
-    <!-- Final Score Card -->
     <div class="bg-white p-6 rounded-2xl shadow-lg text-center">
         <h2 class="text-xl font-bold">Final Score</h2>
-        <p class="text-4xl font-extrabold mt-2">###teamRed### ###teamRedScore### - ###teamBlueScore### ###teamBlue###</p>
+        <p class="text-4xl font-extrabold mt-2">###teamRed### ###teamRedScore### - ###teamBlueScore###
+            ###teamBlue###</p>
     </div>
 
     <!-- Players List Card -->
     <div class="bg-white p-6 rounded-2xl shadow-lg">
         <h2 class="text-xl font-bold mb-4">Players</h2>
         <div class="grid grid-cols-2 gap-6">
-            <!-- Team A -->
+            <!-- Team Red -->
             <div>
                 <h3 class="text-lg font-semibold text-center mb-2">Team A</h3>
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="text-center">
-                        <img src="placeholder.jpg" alt="Player A1" class="w-16 h-16 mx-auto">
-                        <p class="mt-2 font-semibold">Player A1</p>
-                    </div>
-                    <div class="text-center">
-                        <img src="placeholder.jpg" alt="Player A2" class="w-16 h-16 mx-auto">
-                        <p class="mt-2 font-semibold">Player A2</p>
-                    </div>
-                    <div class="text-center">
-                        <img src="placeholder.jpg" alt="Player A3" class="w-16 h-16 mx-auto">
-                        <p class="mt-2 font-semibold">Player A3</p>
-                    </div>
+                <div id="red-team-container" class="grid grid-cols-3 gap-4">
                 </div>
             </div>
 
-            <!-- Team B -->
+            <!-- Team Blue -->
             <div>
                 <h3 class="text-lg font-semibold text-center mb-2">Team B</h3>
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="text-center">
-                        <img src="placeholder.jpg" alt="Player B1" class="w-16 h-16 mx-auto">
-                        <p class="mt-2 font-semibold">Player B1</p>
-                    </div>
-                    <div class="text-center">
-                        <img src="placeholder.jpg" alt="Player B2" class="w-16 h-16 mx-auto">
-                        <p class="mt-2 font-semibold">Player B2</p>
-                    </div>
-                    <div class="text-center">
-                        <img src="placeholder.jpg" alt="Player B3" class="w-16 h-16 mx-auto">
-                        <p class="mt-2 font-semibold">Player B3</p>
-                    </div>
+                <div id="blue-team-container" class="grid grid-cols-3 gap-4">
                 </div>
             </div>
         </div>
@@ -66,5 +42,43 @@
         <p class="text-gray-600">Top Scorer</p>
     </div>
 </div>
+<script type="text/javascript">
+    class PlayerContainer extends HTMLElement {
+        constructor() {
+            super();
+            this.attachShadow({mode: 'open'});
+        }
+
+        setPlayerName(name) {
+            const wrapper = document.createElement('div');
+            console.log("NAME: " + name)
+            wrapper.innerHTML = `
+                  <div class="text-center">
+                        <img src="placeholder.jpg" alt="Player A1" class="w-16 h-16 mx-auto">
+                        <p class="mt-2 font-semibold">###NAME###</p>
+                    </div>
+                `.replace("###NAME###", name);
+            this.shadowRoot.appendChild(wrapper);
+        }
+    }
+
+    customElements.define('player-container', PlayerContainer);
+    // Red
+    let redPlayerNames = "Shynixn".split(",")
+    let redContainer = document.getElementById("red-team-container")
+    redPlayerNames.filter(e => e !== "").forEach(player => {
+        const playerContainer = document.createElement("player-container")
+        playerContainer.setPlayerName(player);
+        redContainer.appendChild(playerContainer)
+    })
+    // Blue
+    let bluePlayerNames = "".split(",")
+    let blueContainer = document.getElementById("blue-team-container")
+    bluePlayerNames.filter(e => e !== "").forEach(player => {
+        const playerContainer = document.createElement("player-container")
+        playerContainer.setPlayerName(player);
+        blueContainer.appendChild(playerContainer)
+    })
+</script>
 </body>
 </html>
