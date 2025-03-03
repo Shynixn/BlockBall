@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
+import com.github.shynixn.mccoroutine.bukkit.CoroutineTimings
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -24,7 +25,9 @@ import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.selection.AreaHighlight
 import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.mcutils.sign.SignService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.command.CommandSender
@@ -655,9 +658,29 @@ class BlockBallCommandExecutor(
         arena.meta.redTeamMeta.armor = mapItemsToColoredSerializedItems(items, "16711680")
         arena.meta.blueTeamMeta.armor = mapItemsToColoredSerializedItems(items, "255")
         arena.meta.refereeTeamMeta.armor = mapItemsToColoredSerializedItems(items, "16777215")
-
         arenaRepository.save(arena)
+
+        // Create stats
+        withContext(Dispatchers.IO) {
+            val yamlContent = plugin.getResource("stats/game_summary.yml")!!.readBytes().toString(Charsets.UTF_8)
+            plugin.dataFolder.resolve("stats/templates/${name}_summary.yml")
+                .writeText(replaceStatsPlaceHolders(yamlContent, name))
+            val htmlContent = plugin.getResource("stats/game_summary.html")!!.readBytes().toString(Charsets.UTF_8)
+            plugin.dataFolder.resolve("stats/templates/${name}_summary.html")
+                .writeText(replaceStatsPlaceHolders(htmlContent, name))
+        }
+
         sender.sendPluginMessage(language.gameCreatedMessage, name)
+    }
+
+    private fun replaceStatsPlaceHolders(content: String, name: String): String {
+        return content.replace("###name###", "${name}_summary")
+            .replace("###displayName###", "%blockball_game_displayName_$name%")
+            .replace("###teamRed###", "%blockball_game_redDisplayName_$name%")
+            .replace("###teamRedScore###", "%blockball_game_redScore_$name%")
+            .replace("###teamBlue###", "%blockball_game_blueDisplayName_$name%")
+            .replace("###teamBlueScore###", "%blockball_game_blueScore_$name%")
+            .replace("###publishName###", "${name}_summary")
     }
 
     private fun mapItemsToColoredSerializedItems(items: Array<Item?>, color: String): Array<String?> {
@@ -683,6 +706,18 @@ class BlockBallCommandExecutor(
         arenaRepository.clearCache()
         val runningGame = gameService.getAll().firstOrNull { e -> e.arena.name.equals(arena.name, true) }
         runningGame?.close()
+
+        withContext(Dispatchers.IO) {
+            val htmlFile = plugin.dataFolder.resolve("stats/templates/${arena.name}_summary.html")
+            if (htmlFile.exists()) {
+                htmlFile.delete()
+            }
+            val yamlFile = plugin.dataFolder.resolve("stats/templates/${arena.name}_summary.yml")
+            if (yamlFile.exists()) {
+                yamlFile.delete()
+            }
+        }
+
         sender.sendPluginMessage(language.deletedGameMessage, arena.name)
     }
 

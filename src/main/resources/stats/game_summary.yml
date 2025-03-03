@@ -1,0 +1,58 @@
+# The unique template identifier. Should be the same as the final name without the extension.
+name: "###name###"
+# Possibles types "PLAYER", "GLOBAL".
+type: "GLOBAL"
+# The displayName when uploaded to https://mcplayerstats.com
+# e.g. https://upload.mcplayerstats.com/12345789/Steve/yourPublishName.html
+publishName: "###publishName###"
+# A list of placeHolder this template collects. Can be any PlaceHolderAPI compatible placeholder.
+# The latest value of this placeHolder are then available in the .html file per player.
+placeHolders:
+  - "###displayName###"
+  - "###teamRed###"
+  - "###teamRedScore###"
+  - "###teamBlue###"
+  - "###teamBlueScore###"
+
+# MCPlayerStats continuously collects the defined placeHolders above for all the online players. You can define when this happens and how often.
+collect:
+  # Should the stats be collected some seconds after the player joins?
+  onPlayerJoin: false
+  # Should the stats be collected some seconds after the player leaves?
+  onPlayerLeave: false
+  # Defines the schedule how often the collect is performed automatically.
+  schedule:
+    type: "never"
+
+# MCPlayerStats continuously uploads your HTML files to https://mcplayerstats.com. This consumes quota for each request, see wiki for details.
+# Only changed HTML files are uploaded. If the file for a single player has not changed since the last upload, it will not be uploaded and no quota is consumed.
+# Uploaded HTML files are available as webpages for 30 days, then they are permanently deleted. If a changed HTML file is uploaded, this timer is reset, and you have 30 days again.
+upload:
+  # If an HTML file of a player has not changed, it is deleted from https://mcplayerstats.com after 30 days. If you do not want that, you can automatically renew the file for that player after some days.
+  # Define the amount of days you want to avoid uploading unchanged data. Settings -1 disables automatic reUpload. A reUpload consumes additional quota.
+  reUploadAfterDays: -1
+  schedule:
+    type: "never"
+
+# MCPlayerStats continuously pushes data into your configured database. This data needs to be deleted regularly otherwise your database continuously grows.
+# Depending on the size of your player base you need to clean up more often or less often.
+cleanup:
+  # How long values are kept at minimum.
+  olderThan:
+    # Possible values: hours, minutes, seconds
+    unit: "minutes"
+    value: 30
+  # Defines the schedule how often the cleanup is performed automatically.
+  schedule:
+    # Required property. Possible values: daily, weekly, interval
+    type: "interval"
+    # Required for type interval.
+    every: # Allows to repeat it every couple of seconds, minutes or hours. Is required for interval.
+      unit: "minutes"
+      value: 60
+      # Required for type daily and weekly. In 24-hour format in the timezone of the local system.
+    # time: "04:00"
+  # Required for type weekly. Allows limit it for certain days.
+  # days:
+  #  - "Wednesday"
+  #  - "Saturday"

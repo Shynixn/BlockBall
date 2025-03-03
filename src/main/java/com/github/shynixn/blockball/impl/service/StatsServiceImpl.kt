@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.LeaderBoardStats
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.StatsMeta
+import com.github.shynixn.mccoroutine.bukkit.CoroutineTimings
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import kotlinx.coroutines.delay
@@ -35,7 +36,7 @@ class StatsServiceImpl(
                 computeLeaderBoard(playerInfo, leaderBoard)
             }
 
-            plugin.launch {
+            plugin.launch(object : CoroutineTimings() {}) {
                 while (!isDisposed) {
                     leaderBoardStats =
                         playerDataRepository.getAggregationResult<LeaderBoardStats>(aggregationLeaderBoardKey)
