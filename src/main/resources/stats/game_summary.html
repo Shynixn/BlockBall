@@ -51,7 +51,6 @@
 
         setPlayerName(name) {
             const wrapper = document.createElement('div');
-            console.log("NAME: " + name)
             wrapper.innerHTML = `
                   <div class="text-center">
                         <img src="placeholder.jpg" alt="Player A1" class="w-16 h-16 mx-auto">
@@ -64,7 +63,7 @@
 
     customElements.define('player-container', PlayerContainer);
     // Red
-    let redPlayerNames = "Shynixn".split(",")
+    let redPlayerNames = "###teamRedPlayerNames###".split(",")
     let redContainer = document.getElementById("red-team-container")
     redPlayerNames.filter(e => e !== "").forEach(player => {
         const playerContainer = document.createElement("player-container")
@@ -72,7 +71,7 @@
         redContainer.appendChild(playerContainer)
     })
     // Blue
-    let bluePlayerNames = "".split(",")
+    let bluePlayerNames = "###teamBluePlayerNames###".split(",")
     let blueContainer = document.getElementById("blue-team-container")
     bluePlayerNames.filter(e => e !== "").forEach(player => {
         const playerContainer = document.createElement("player-container")
