@@ -8,10 +8,13 @@ import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
+import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
+import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundMeta
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.toLocation
@@ -33,7 +36,9 @@ open class SoccerMiniGameImpl constructor(
     language: BlockBallLanguage,
     packetService: PacketService,
     commandService: CommandService,
-    soccerBallFactory: SoccerBallFactory
+    soccerBallFactory: SoccerBallFactory,
+    templateProcessService: TemplateProcessService,
+    templateRepository: Repository<Template>
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -43,7 +48,9 @@ open class SoccerMiniGameImpl constructor(
     soccerBallFactory,
     commandService,
     language,
-    playerDataRepository
+    playerDataRepository,
+    templateProcessService,
+    templateRepository
 ), SoccerMiniGame {
     private var currentQueueTime = arena.queueTimeOutSec
     private var isQueueTimeRunning = false
@@ -98,10 +105,10 @@ open class SoccerMiniGameImpl constructor(
         // Handle HubGame ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
+
+
+
             close()
-            if (ingamePlayersStorage.isNotEmpty()) {
-                closing = true
-            }
             return
         }
 
@@ -114,7 +121,7 @@ open class SoccerMiniGameImpl constructor(
         }
 
         if (arena.meta.hubLobbyMeta.resetArenaOnEmpty && ingamePlayersStorage.isEmpty() && (redScore > 0 || blueScore > 0)) {
-            closing = true
+            setGameClosing()
         }
 
         if (ticks >= 20) {
@@ -194,7 +201,7 @@ open class SoccerMiniGameImpl constructor(
                 }
 
                 if (ingamePlayersStorage.isEmpty() || redTeam.size < arena.meta.redTeamMeta.minPlayingPlayers || blueTeam.size < arena.meta.blueTeamMeta.minPlayingPlayers) {
-                    closing = true
+                    setGameClosing()
                 }
             }
         }
@@ -215,6 +222,7 @@ open class SoccerMiniGameImpl constructor(
         }
         status = GameState.DISABLED
         closed = true
+        closing = true
         ingamePlayersStorage.keys.toTypedArray().forEach { p ->
             leave(p)
         }
@@ -236,7 +244,7 @@ open class SoccerMiniGameImpl constructor(
         val matchTimes = arena.meta.minigameMeta.matchTimes
 
         if (matchTimeIndex >= matchTimes.size) {
-            closing = true
+            setGameClosing()
             return
         }
 

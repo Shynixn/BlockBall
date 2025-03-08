@@ -302,6 +302,12 @@ playerNotFoundMessage:
 queueTimeOutMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c Not enough players joined in time to start the game."
+gameWebsiteMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 The game was published on:"
+gameWebsiteErrorMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c Execute &f/blockballstats login &r&cto link your server to mcplayerstats.com to share your games as website. If you do not want that, set mcPlayerStatsEnabled=false."
 cannotParseNumberMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c Cannot parse number."
@@ -441,5 +447,5 @@ mcPlayerStatsPreviewCommandHint:
   type: "CHAT"
   text: "Generates the HTML page for a player and stores it into the preview directory."
 mcPlayerStatsCommonErrorMessage:
-  type: "CHAT"
+  type: "HIDDEN"
   text: "&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details."

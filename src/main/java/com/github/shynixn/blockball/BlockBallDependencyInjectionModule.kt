@@ -48,7 +48,8 @@ import org.bukkit.plugin.Plugin
 class BlockBallDependencyInjectionModule(
     private val plugin: BlockBallPlugin,
     private val language: BlockBallLanguage,
-    private val placeHolderService: PlaceHolderService
+    private val placeHolderService: PlaceHolderService,
+    private val mcplayerStatsModule: DependencyInjectionModule
 ) {
     companion object {
         val areLegacyVersionsIncluded: Boolean by lazy {
@@ -163,6 +164,8 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                mcplayerStatsModule.getService(),
+                mcplayerStatsModule.getService()
             )
         }
         module.addService<HubGameForcefieldService> {

@@ -59,6 +59,7 @@ class BlockBallPlugin : JavaPlugin() {
         var leaderBoardKey = "leaderBoard"
         var indexKey = "[index]"
         var gameKey = "[game]"
+        val patreonOnly = "PatreonOnly"
     }
 
     /**
@@ -122,7 +123,7 @@ class BlockBallPlugin : JavaPlugin() {
         // Module
         this.scoreboardModule = loadShyScoreboardModule(language)
         this.mcPlayerStatsModule = loadMCPlayerStatsModule(language, this.scoreboardModule.getService())
-        this.module = BlockBallDependencyInjectionModule(this, language, this.scoreboardModule.getService()).build()
+        this.module = BlockBallDependencyInjectionModule(this, language, this.scoreboardModule.getService(), mcPlayerStatsModule!!).build()
 
         // Connect to database
         try {
@@ -318,7 +319,10 @@ class BlockBallPlugin : JavaPlugin() {
             s.previewFolder = statsFolder.resolve("preview")
             s.sessionFile = statsFolder.resolve("session.data")
             s.templatesFolder = statsFolder.resolve("templates")
-            s.defaultStats = listOf()
+            s.defaultStats = listOf(
+                Pair("stats/player_page.html", "player_page.html"),
+                Pair("stats/player_page.yml", "player_page.yml")
+            )
         })
         settings.reload()
         val module = MCPlayerStatsDependencyInjectionModule(this, settings, language, placeHolderService).build()
@@ -328,19 +332,11 @@ class BlockBallPlugin : JavaPlugin() {
 
         // Register CommandExecutor
         module.getService<MCPlayerStatsCommandExecutor>()
-        val plugin = this
-        launch {
-            try {
-                // TODO: Blocking
-                module.getService<PlaceHolderRepository>().createIfNotExists()
-                module.getService<UploadedStatsRepository>().createIfNotExists()
-            } catch (e: Exception) {
-                logger.log(Level.SEVERE, "Failed to create database tables. Disabling the plugin now.", e)
-                Bukkit.getPluginManager().disablePlugin(plugin)
-                return@launch
-            }
+        module.getService<PlaceHolderRepository>().createIfNotExists()
+        module.getService<UploadedStatsRepository>().createIfNotExists()
 
-            val templateProcessService = module!!.getService<TemplateProcessService>()
+        launch {
+            val templateProcessService = module.getService<TemplateProcessService>()
             templateProcessService.reload()
         }
 

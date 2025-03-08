@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl
 
+import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.BlockBallPlugin.Companion.gameKey
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.*
@@ -10,21 +11,26 @@ import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
+import com.github.shynixn.mcplayerstats.entity.Template
+import com.github.shynixn.mcplayerstats.enumeration.UploadDataType
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
+import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
-import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import org.bukkit.scoreboard.Scoreboard
+import java.util.*
 
 abstract class SoccerGameImpl(
     /**
@@ -38,8 +44,16 @@ abstract class SoccerGameImpl(
     private val soccerBallFactory: SoccerBallFactory,
     private val commandService: CommandService,
     override val language: BlockBallLanguage,
-    private val playerDataRepository: PlayerDataRepository<PlayerInformation>
+    private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
+    private val templateProcessService: TemplateProcessService,
+    private val templateRepository: Repository<Template>
 ) : SoccerGame {
+
+    /**
+     * Generated game id.
+     */
+    override val id: String = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
+
     /**
      * Is the ball spawning?
      */
@@ -318,7 +332,13 @@ abstract class SoccerGameImpl(
                     playerData.statsMeta.scoredOwnGoalsFull += data.scoredOwnGoals
                     playerData.playerName = player.name
                     playerData.statsMeta.drawsAmount += drawCounter
-
+                    val lastGameIds = ArrayList(playerData.statsMeta.lastGames)
+                    lastGameIds.add(0, StatsGame().also {
+                        it.id = id
+                        it.name = arena.name
+                        it.displayName = ChatColor.stripChatColors(arena.displayName)
+                    })
+                    playerData.statsMeta.lastGames = lastGameIds.take(6).toList()
                     if (winningPlayers.contains(player)) {
                         playerData.statsMeta.winsAmount++
                     }
@@ -350,7 +370,7 @@ abstract class SoccerGameImpl(
             }
         }
 
-        closing = true
+        setGameClosing()
     }
 
     /**
@@ -428,7 +448,10 @@ abstract class SoccerGameImpl(
 
             if (bossBar != null) {
                 bossBarService.changeConfiguration(
-                    bossBar, placeHolderService.resolvePlaceHolder(meta.message, null,  mapOf(gameKey to arena.name)), meta, null
+                    bossBar,
+                    placeHolderService.resolvePlaceHolder(meta.message, null, mapOf(gameKey to arena.name)),
+                    meta,
+                    null
                 )
 
                 val players = ArrayList(inTeamPlayers)
@@ -778,7 +801,6 @@ abstract class SoccerGameImpl(
     }
 
     protected fun restoreFromTemporaryPlayerData(player: Player) {
-        // TODO: Own plugins
         if (bossBar != null) {
             bossBarService.removePlayer(bossBar, player)
         }
@@ -856,6 +878,47 @@ abstract class SoccerGameImpl(
         ball!!.isInteractable = false // We always block interacting with the ball until the referee has started.
         ballSpawning = false
         ballSpawnCounter = 0
+    }
+
+    protected var executingEndCommands = false
+
+    protected fun setGameClosing() {
+        if (executingEndCommands) {
+            return
+        }
+
+        executingEndCommands = true
+        val players = HashSet(ingamePlayersStorage.keys)
+
+        plugin.launch {
+            if (arena.meta.mcPlayerStatsEnabled && BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+                val fileExists = withContext(Dispatchers.IO) {
+                    plugin.dataFolder.resolve("stats").resolve("session.data").exists()
+                }
+
+                if (!fileExists) {
+                    for (player in players) {
+                        player.sendPluginMessage(language.gameWebsiteErrorMessage)
+                    }
+                    closing = true
+                } else {
+                    val template = templateRepository.getAll().firstOrNull { e -> e.name == "${arena.name}_page" }
+
+                    if (template != null) {
+                        templateProcessService.collectStats(template, null)
+                        closing = true
+                        val response =
+                            templateProcessService.uploadStats(template, UploadDataType.DEFAULT, "_${id}", "g")
+                        for (player in players) {
+                            player.sendPluginMessage(language.gameWebsiteMessage)
+                            player.sendMessage(response.first[0])
+                        }
+                    }
+                }
+            } else {
+                closing = true
+            }
+        }
     }
 
     // endregion

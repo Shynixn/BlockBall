@@ -182,6 +182,10 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, MCPlayerS
 
   var queueTimeOutMessage: LanguageItem
 
+  var gameWebsiteMessage: LanguageItem
+
+  var gameWebsiteErrorMessage: LanguageItem
+
   var cannotParseNumberMessage: LanguageItem
 
   var cannotParseWorldMessage: LanguageItem

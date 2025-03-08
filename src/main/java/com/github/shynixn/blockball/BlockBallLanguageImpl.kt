@@ -5,7 +5,7 @@ import com.github.shynixn.blockball.contract.BlockBallLanguage
 
 class BlockBallLanguageImpl : BlockBallLanguage {
  override val names: List<String>
-  get() = listOf("en_us", "es_es", "zh_cn")
+  get() = listOf("en_us")
  override var gameAlreadyExistsMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Game %1$1s already exists.")
 
  override var commandUsage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /blockball help to see more info about the plugin.")
@@ -185,6 +185,10 @@ class BlockBallLanguageImpl : BlockBallLanguage {
  override var playerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Player %1$1s not found.")
 
  override var queueTimeOutMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Not enough players joined in time to start the game.")
+
+ override var gameWebsiteMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The game was published on:")
+
+ override var gameWebsiteErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Execute &f&l/blockballstats login &r&7to link your server to mcplayerstats.com to share your games as website. If you do not want that, hide this message in the language file.")
 
  override var cannotParseNumberMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Cannot parse number.")
 

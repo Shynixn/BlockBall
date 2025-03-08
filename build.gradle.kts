@@ -33,7 +33,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcplayerstats:mcplayerstats:1.1.3")
+    implementation("com.github.shynixn.mcplayerstats:mcplayerstats:1.1.7")
     implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.1.1")
     implementation("com.github.shynixn.mcutils:common:2025.9")
     implementation("com.github.shynixn.mcutils:packet:2025.10")
@@ -127,7 +127,7 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-premium.${archiveExtension.get()}")
-    // destinationDirectory.set(File("C:\\temp\\plugins"))
+    destinationDirectory.set(File("C:\\temp\\plugins"))
 
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
@@ -259,7 +259,7 @@ tasks.register("languageFile") {
     implContents.add("class BlockBallLanguageImpl : BlockBallLanguage {")
     implContents.add(
         " override val names: List<String>\n" +
-                "  get() = listOf(\"en_us\", \"es_es\", \"zh_cn\")"
+                "  get() = listOf(\"en_us\")"
     )
 
     for (i in lines.indices) {
