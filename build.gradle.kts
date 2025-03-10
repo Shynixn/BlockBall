@@ -1,5 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.*
+import java.io.*
 
 plugins {
     id("org.jetbrains.kotlin.jvm") version ("1.9.25")
@@ -7,7 +9,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.14.0"
+version = "7.14.1"
 
 repositories {
     mavenLocal()
@@ -33,12 +35,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcplayerstats:mcplayerstats:1.1.7")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.1.1")
-    implementation("com.github.shynixn.mcutils:common:2025.9")
-    implementation("com.github.shynixn.mcutils:packet:2025.10")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.1.0")
+    implementation("com.github.shynixn.mcutils:common:2025.7")
+    implementation("com.github.shynixn.mcutils:packet:2025.11")
     implementation("com.github.shynixn.mcutils:database:2025.5")
-    implementation("com.github.shynixn.mcutils:http:2025.5")
     implementation("com.github.shynixn.mcutils:sign:2025.3")
 }
 
@@ -90,7 +90,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-latest.${archiveExtension.get()}")
-    destinationDirectory.set(File("C:\\temp\\plugins"))
+    // destinationDirectory.set(File("C:\\temp\\plugins"))
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_9_R2/**")
@@ -127,7 +127,7 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-premium.${archiveExtension.get()}")
-    destinationDirectory.set(File("C:\\temp\\plugins"))
+    // destinationDirectory.set(File("C:\\temp\\plugins"))
 
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
@@ -223,21 +223,19 @@ tasks.register("languageFile") {
     )
     contractContents.add("package com.github.shynixn.blockball.contract")
     contractContents.add("")
-    contractContents.add("import com.github.shynixn.mcplayerstats.contract.MCPlayerStatsLanguage")
     contractContents.add("import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageItem")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageProvider")
     contractContents.add("")
-    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, MCPlayerStatsLanguage {")
+    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage {")
     for (key in lines) {
         if (key.toCharArray()[0].isLetter()) {
-            if (ignoredKeys.contains(key.substring(0, key.length - 1))) {
+            if (ignoredKeys.contains(key.substring(0, key.length-1))) {
                 continue
             }
-            if (!key.startsWith("mcPlayerStats")) {
-                contractContents.add("  var ${key} LanguageItem")
-                contractContents.add("")
-            }
+
+            contractContents.add("  var ${key} LanguageItem")
+            contractContents.add("")
         }
     }
     contractContents.removeLast()
@@ -257,10 +255,8 @@ tasks.register("languageFile") {
     implContents.add("import com.github.shynixn.blockball.contract.BlockBallLanguage")
     implContents.add("")
     implContents.add("class BlockBallLanguageImpl : BlockBallLanguage {")
-    implContents.add(
-        " override val names: List<String>\n" +
-                "  get() = listOf(\"en_us\")"
-    )
+    implContents.add(" override val names: List<String>\n" +
+            "  get() = listOf(\"en_us\", \"es_es\", \"zh_cn\")")
 
     for (i in lines.indices) {
         val key = lines[i]
@@ -269,15 +265,15 @@ tasks.register("languageFile") {
             var text: String
 
             var j = i
-            while (true) {
-                if (lines[j].contains("text:")) {
+            while (true){
+                if(lines[j].contains("text:")){
                     text = lines[j]
                     break
                 }
                 j++
             }
 
-            implContents.add(" override var ${key.replace(":", "")} = LanguageItem(${text.replace("  text: ", "")})")
+            implContents.add(" override var ${key.replace(":","")} = LanguageItem(${text.replace("  text: ","")})")
             implContents.add("")
         }
     }
