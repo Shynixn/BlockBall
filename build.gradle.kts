@@ -35,8 +35,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.1.0")
-    implementation("com.github.shynixn.mcutils:common:2025.7")
+    implementation("com.github.shynixn.mcplayerstats:mcplayerstats:1.1.7")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.1.1")
+    implementation("com.github.shynixn.mcutils:common:2025.9")
     implementation("com.github.shynixn.mcutils:packet:2025.11")
     implementation("com.github.shynixn.mcutils:database:2025.5")
     implementation("com.github.shynixn.mcutils:sign:2025.3")
@@ -223,19 +224,22 @@ tasks.register("languageFile") {
     )
     contractContents.add("package com.github.shynixn.blockball.contract")
     contractContents.add("")
+    contractContents.add("import com.github.shynixn.mcplayerstats.contract.MCPlayerStatsLanguage")
     contractContents.add("import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageItem")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageProvider")
     contractContents.add("")
-    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage {")
+    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, MCPlayerStatsLanguage {")
     for (key in lines) {
         if (key.toCharArray()[0].isLetter()) {
             if (ignoredKeys.contains(key.substring(0, key.length-1))) {
                 continue
             }
 
-            contractContents.add("  var ${key} LanguageItem")
-            contractContents.add("")
+            if (!key.startsWith("mcPlayerStats")) {
+                contractContents.add("  var ${key} LanguageItem")
+                contractContents.add("")
+            }
         }
     }
     contractContents.removeLast()
@@ -256,7 +260,7 @@ tasks.register("languageFile") {
     implContents.add("")
     implContents.add("class BlockBallLanguageImpl : BlockBallLanguage {")
     implContents.add(" override val names: List<String>\n" +
-            "  get() = listOf(\"en_us\", \"es_es\", \"zh_cn\")")
+            "  get() = listOf(\"en_us\")")
 
     for (i in lines.indices) {
         val key = lines[i]
