@@ -43,13 +43,24 @@ Instead of sending the link to a webpage at the end of a game, you can publish t
 
 3. Create a [Discord WebHook](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) on your server for a certain channel. You can download the following icon to use it as avatar url.
 
-![image info](./assets/icon.png)
+    ![image info](./assets/icon.png)
+    
+    Copy and paste the WebHook-URL into the field in your stats definition.
+    
+    ```
+    webHook:
+     url: "<WebHook-URL>"
+    ```
 
-Copy and paste the WebHook-URL into the field in your stats definition.
+4. Reload the configuration
 
-```
-webHook:
- url: "<WebHook-URL>"
-```
+     ```
+    /blockballstats reload
+    ```
 
 Play a game and observe that the game is sent ~1 minute later to your Discord Server.
+
+![image info](./assets/discordwebhook.png)
+
+
+
