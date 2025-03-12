@@ -17,6 +17,15 @@ placeHolders:
   - "###teamBluePlayerNames###"
   - "###topGoalsCurrentPlayerName###"
 
+# Allows to define a discord webhook.
+webHook:
+  # Create a discord web hook and copy the WebHook-URL into this field.
+  url: ""
+  # Meta values.
+  author: "MCPlayerStats"
+  title: "View BlockBall game stats"
+  description: "A game has ended"
+
 # MCPlayerStats continuously collects the defined placeHolders above for all the online players. You can define when this happens and how often.
 collect:
   # Should the stats be collected some seconds after the player joins?

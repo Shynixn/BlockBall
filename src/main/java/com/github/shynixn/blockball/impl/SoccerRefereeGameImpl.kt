@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
+import com.github.shynixn.mcplayerstats.contract.DiscordService
 import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
 import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -34,7 +35,8 @@ class SoccerRefereeGameImpl(
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
     templateProcessService: TemplateProcessService,
-    templateRepository: Repository<Template>
+    templateRepository: Repository<Template>,
+    discordService: DiscordService
 ) : SoccerMiniGameImpl(
     arena,
     playerDataRepository,
@@ -48,7 +50,8 @@ class SoccerRefereeGameImpl(
     commandService,
     soccerBallFactory,
     templateProcessService,
-    templateRepository
+    templateRepository,
+    discordService
 ), SoccerRefereeGame {
     /**
      * Is the timer blocker enabled.

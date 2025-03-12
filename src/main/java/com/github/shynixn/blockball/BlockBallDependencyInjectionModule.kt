@@ -165,6 +165,7 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 mcplayerStatsModule.getService(),
+                mcplayerStatsModule.getService(),
                 mcplayerStatsModule.getService()
             )
         }

@@ -35,12 +35,13 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcplayerstats:mcplayerstats:1.1.7")
+    implementation("com.github.shynixn.mcplayerstats:mcplayerstats:1.1.9")
     implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.1.1")
     implementation("com.github.shynixn.mcutils:common:2025.9")
     implementation("com.github.shynixn.mcutils:packet:2025.11")
     implementation("com.github.shynixn.mcutils:database:2025.5")
     implementation("com.github.shynixn.mcutils:sign:2025.3")
+    implementation("com.github.shynixn.mcutils:http:2025.5")
 }
 
 tasks.withType<KotlinCompile> {
@@ -82,6 +83,7 @@ tasks.register("relocatePluginJar", ShadowJar::class.java) {
     relocate("com.fasterxml", "com.github.shynixn.blockball.lib.com.fasterxml")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
     relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
+    relocate("com.github.shynixn.mcplayerstats", "com.github.shynixn.blockball.lib.com.github.shynixn.mcplayerstats")
 }
 
 /**
@@ -128,7 +130,7 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-premium.${archiveExtension.get()}")
-    // destinationDirectory.set(File("C:\\temp\\plugins"))
+    //  destinationDirectory.set(File("C:\\temp\\plugins"))
 
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
@@ -170,6 +172,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
     relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
     relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
+    relocate("com.github.shynixn.mcplayerstats", "com.github.shynixn.blockball.lib.com.github.shynixn.mcplayerstats")
 
     exclude("plugin.yml")
     rename("plugin-legacy.yml", "plugin.yml")

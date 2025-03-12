@@ -11,6 +11,7 @@ import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mcplayerstats.contract.DiscordService
 import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
 import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcplayerstats.enumeration.UploadDataType
@@ -31,6 +32,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.*
+import java.util.logging.Level
 
 abstract class SoccerGameImpl(
     /**
@@ -46,7 +48,8 @@ abstract class SoccerGameImpl(
     override val language: BlockBallLanguage,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
     private val templateProcessService: TemplateProcessService,
-    private val templateRepository: Repository<Template>
+    private val templateRepository: Repository<Template>,
+    private val discordService: DiscordService
 ) : SoccerGame {
 
     /**
@@ -909,9 +912,24 @@ abstract class SoccerGameImpl(
                         closing = true
                         val response =
                             templateProcessService.uploadStats(template, UploadDataType.DEFAULT, "_${id}", "g")
-                        for (player in players) {
-                            player.sendPluginMessage(language.gameWebsiteMessage)
-                            player.sendMessage(response.first[0])
+
+                        if (response.first.size == 0) {
+                            plugin.logger.log(
+                                Level.WARNING,
+                                "You have exceeded the daily MCPlayerStats Quota. Increase your quota on patreon or publish it on the next day."
+                            )
+                        } else {
+                            for (player in players) {
+                                player.sendPluginMessage(language.gameWebsiteMessage)
+                                player.sendMessage(response.first[0])
+                            }
+                            plugin.launch {
+                                delay(1000 * 50)
+                                discordService.sendDiscordWebhook(
+                                    template.webHook,
+                                    response.first[0]
+                                )
+                            }
                         }
                     }
                 }

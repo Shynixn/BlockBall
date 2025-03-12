@@ -188,7 +188,7 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var gameWebsiteMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The game was published on:")
 
- override var gameWebsiteErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Execute &f/blockballstats login &r&cto link your server to mcplayerstats.com to share your games as website. If you do not want that, set mcPlayerStatsEnabled=false.")
+ override var gameWebsiteErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Execute &f/blockballstats login &r&cto link your server to mcplayerstats.com to share your games as website and on your Discord server. If you do not want that, set mcPlayerStatsEnabled=false.")
 
  override var cannotParseNumberMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Cannot parse number.")
 

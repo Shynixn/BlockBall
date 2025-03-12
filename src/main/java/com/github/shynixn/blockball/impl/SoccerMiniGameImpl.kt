@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mcplayerstats.contract.DiscordService
 import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
 import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -38,7 +39,8 @@ open class SoccerMiniGameImpl constructor(
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
     templateProcessService: TemplateProcessService,
-    templateRepository: Repository<Template>
+    templateRepository: Repository<Template>,
+    discordService: DiscordService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -50,7 +52,8 @@ open class SoccerMiniGameImpl constructor(
     language,
     playerDataRepository,
     templateProcessService,
-    templateRepository
+    templateRepository,
+    discordService
 ), SoccerMiniGame {
     private var currentQueueTime = arena.queueTimeOutSec
     private var isQueueTimeRunning = false

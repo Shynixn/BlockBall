@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
+import com.github.shynixn.mcplayerstats.contract.DiscordService
 import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
 import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.command.CommandService
@@ -30,7 +31,8 @@ class SoccerHubGameImpl(
     soccerBallFactory: SoccerBallFactory,
     commandService: CommandService,
     templateProcessService: TemplateProcessService,
-    templateRepository: Repository<Template>
+    templateRepository: Repository<Template>,
+    discordService: DiscordService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -42,7 +44,8 @@ class SoccerHubGameImpl(
     language,
     playerDataRepository,
     templateProcessService,
-    templateRepository
+    templateRepository,
+    discordService
 ),
     SoccerHubGame {
     /**
