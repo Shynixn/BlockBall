@@ -41,6 +41,9 @@ class ArenaMeta {
     /** Metadata of the refereeTeam. */
     val refereeTeamMeta: TeamMeta = TeamMeta()
 
+    /** Integration into MCPlayerStats */
+    val mcPlayerStatsEnabled : Boolean = true
+
     init {
         val soundMetaKick = SoundMeta()
         soundMetaKick.name = "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR,ENTITY_ZOMBIE_ATTACK_DOOR_WOOD,ZOMBIE_WOOD"

@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.14.1"
+version = "7.15.0"
 
 repositories {
     mavenLocal()
@@ -35,11 +35,13 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.1.0")
-    implementation("com.github.shynixn.mcutils:common:2025.7")
+    implementation("com.github.shynixn.mcplayerstats:mcplayerstats:1.1.9")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.1.1")
+    implementation("com.github.shynixn.mcutils:common:2025.9")
     implementation("com.github.shynixn.mcutils:packet:2025.11")
     implementation("com.github.shynixn.mcutils:database:2025.5")
     implementation("com.github.shynixn.mcutils:sign:2025.3")
+    implementation("com.github.shynixn.mcutils:http:2025.5")
 }
 
 tasks.withType<KotlinCompile> {
@@ -81,6 +83,7 @@ tasks.register("relocatePluginJar", ShadowJar::class.java) {
     relocate("com.fasterxml", "com.github.shynixn.blockball.lib.com.fasterxml")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
     relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
+    relocate("com.github.shynixn.mcplayerstats", "com.github.shynixn.blockball.lib.com.github.shynixn.mcplayerstats")
 }
 
 /**
@@ -109,6 +112,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("com/github/shynixn/mcplayerstats/**")
     exclude("org/**")
     exclude("kotlin/**")
     exclude("kotlinx/**")
@@ -116,6 +120,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/google/**")
     exclude("com/fasterxml/**")
     exclude("com/zaxxer/**")
+    exclude("templates/**")
     exclude("org/yaml")
     exclude("plugin-legacy.yml")
 }
@@ -132,8 +137,10 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("com/github/shynixn/mcplayerstats/**")
     exclude("org/**")
     exclude("kotlin/**")
+    exclude("templates/**")
     exclude("kotlinx/**")
     exclude("javax/**")
     exclude("com/google/**")
@@ -169,6 +176,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
     relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
     relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
+    relocate("com.github.shynixn.mcplayerstats", "com.github.shynixn.blockball.lib.com.github.shynixn.mcplayerstats")
 
     exclude("plugin.yml")
     rename("plugin-legacy.yml", "plugin.yml")
@@ -185,6 +193,8 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
 
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
+    exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("com/github/shynixn/mcplayerstats/**")
     exclude("org/**")
     exclude("kotlin/**")
     exclude("kotlinx/**")
@@ -192,7 +202,7 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     exclude("com/google/**")
     exclude("com/fasterxml/**")
     exclude("com/zaxxer/**")
-    exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("templates/**")
     exclude("plugin-legacy.yml")
 }
 
@@ -223,19 +233,22 @@ tasks.register("languageFile") {
     )
     contractContents.add("package com.github.shynixn.blockball.contract")
     contractContents.add("")
+    contractContents.add("import com.github.shynixn.mcplayerstats.contract.MCPlayerStatsLanguage")
     contractContents.add("import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageItem")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageProvider")
     contractContents.add("")
-    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage {")
+    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, MCPlayerStatsLanguage {")
     for (key in lines) {
         if (key.toCharArray()[0].isLetter()) {
             if (ignoredKeys.contains(key.substring(0, key.length-1))) {
                 continue
             }
 
-            contractContents.add("  var ${key} LanguageItem")
-            contractContents.add("")
+            if (!key.startsWith("mcPlayerStats")) {
+                contractContents.add("  var ${key} LanguageItem")
+                contractContents.add("")
+            }
         }
     }
     contractContents.removeLast()
@@ -256,7 +269,7 @@ tasks.register("languageFile") {
     implContents.add("")
     implContents.add("class BlockBallLanguageImpl : BlockBallLanguage {")
     implContents.add(" override val names: List<String>\n" +
-            "  get() = listOf(\"en_us\", \"es_es\", \"zh_cn\")")
+            "  get() = listOf(\"en_us\")")
 
     for (i in lines.indices) {
         val key = lines[i]

@@ -11,6 +11,9 @@ import com.github.shynixn.blockball.impl.SoccerHubGameImpl
 import com.github.shynixn.blockball.impl.SoccerMiniGameImpl
 import com.github.shynixn.blockball.impl.SoccerRefereeGameImpl
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
+import com.github.shynixn.mcplayerstats.contract.DiscordService
+import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
+import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
@@ -40,7 +43,10 @@ class GameServiceImpl(
     private val commandService: CommandService,
     private val soccerBallFactory: SoccerBallFactory,
     private val language: BlockBallLanguage,
-    private val signService: SignService
+    private val signService: SignService,
+    private val templateProcessService: TemplateProcessService,
+    private val templateRepository: Repository<Template>,
+    private val discordService: DiscordService
 ) : GameService, Runnable {
     private val games = ArrayList<SoccerGame>()
     private var ticks: Int = 0
@@ -99,7 +105,10 @@ class GameServiceImpl(
                     language,
                     packetService,
                     soccerBallFactory,
-                    commandService
+                    commandService,
+                    templateProcessService,
+                    templateRepository,
+                    discordService
                 )
 
                 GameType.MINIGAME -> SoccerMiniGameImpl(
@@ -113,7 +122,10 @@ class GameServiceImpl(
                     language,
                     packetService,
                     commandService,
-                    soccerBallFactory
+                    soccerBallFactory,
+                    templateProcessService,
+                    templateRepository,
+                    discordService
                 ).also {
                     it.ballEnabled = false
                 }
@@ -129,7 +141,10 @@ class GameServiceImpl(
                     language,
                     packetService,
                     commandService,
-                    soccerBallFactory
+                    soccerBallFactory,
+                    templateProcessService,
+                    templateRepository,
+                    discordService
                 ).also {
                     it.ballEnabled = false
                 }
