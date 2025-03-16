@@ -1,12 +1,19 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.BossBarService
+import com.github.shynixn.blockball.contract.SoccerBallFactory
+import com.github.shynixn.blockball.contract.SoccerHubGame
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
+import com.github.shynixn.mcplayerstats.contract.DiscordService
+import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
+import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
+import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
 import org.bukkit.Bukkit
@@ -22,7 +29,10 @@ class SoccerHubGameImpl(
     language: BlockBallLanguage,
     packetService: PacketService,
     soccerBallFactory: SoccerBallFactory,
-    commandService: CommandService
+    commandService: CommandService,
+    templateProcessService: TemplateProcessService,
+    templateRepository: Repository<Template>,
+    discordService: DiscordService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -32,7 +42,10 @@ class SoccerHubGameImpl(
     soccerBallFactory,
     commandService,
     language,
-    playerDataRepository
+    playerDataRepository,
+    templateProcessService,
+    templateRepository,
+    discordService
 ),
     SoccerHubGame {
     /**
@@ -44,9 +57,6 @@ class SoccerHubGameImpl(
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
             close()
-            if (ingamePlayersStorage.isNotEmpty()) {
-                closing = true
-            }
             return
         }
 
@@ -59,7 +69,7 @@ class SoccerHubGameImpl(
         }
 
         if (arena.meta.hubLobbyMeta.resetArenaOnEmpty && ingamePlayersStorage.isEmpty() && (redScore > 0 || blueScore > 0)) {
-            closing = true
+            setGameClosing()
         }
 
         // Handle SoccerBall.
@@ -78,6 +88,7 @@ class SoccerHubGameImpl(
         }
 
         status = GameState.DISABLED
+        closing = true
         closed = true
         ingamePlayersStorage.keys.toTypedArray().forEach { p ->
             leave(p)

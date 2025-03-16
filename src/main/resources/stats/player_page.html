@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Player 3D Model and Stats Container -->
+    <div id="render-image" class="bg-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row items-center">
+        <div class="w-full md:w-1/2 text-center">
+            <h2 class="text-xl font-bold">Player Overview</h2>
+            <img src="%mcplayerstats_upload_web%/player/%mcplayerstats_player_name%/skin3d.png" alt="Profile"
+                 class="w-64 h-64 mx-auto mt-4">
+            <p class="text-lg font-semibold">%mcplayerstats_player_name%</p>
+        </div>
+
+        <!-- Player Stats -->
+        <div class="w-full md:w-1/2 p-4 mt-4 md:mt-0">
+            <h2 class="text-xl font-bold mb-4">Stats</h2>
+            <div class="mt-4 space-y-3">
+                <div class="flex justify-between text-gray-700 bg-gray-200 p-2 rounded-lg shadow-sm">
+                    <span>Played Games</span>
+                    <span class="font-bold">%blockball_player_gamesFull%</span>
+                </div>
+                <div class="flex justify-between text-gray-700 bg-gray-200 p-2 rounded-lg shadow-sm">
+                    <span>Wins</span>
+                    <span class="font-bold">%blockball_player_wins%</span>
+                </div>
+                <div class="flex justify-between text-gray-700 bg-gray-200 p-2 rounded-lg shadow-sm">
+                    <span>Scored Goals</span>
+                    <span class="font-bold">%blockball_player_goalsFull%</span>
+                </div>
+                <div class="flex justify-between text-gray-700 bg-gray-200 p-2 rounded-lg shadow-sm">
+                    <span>Goals Per Game</span>
+                    <span class="font-bold">%blockball_player_goalsPerGameFull%</span>
+                </div>
+                <div class="flex justify-between text-gray-700 bg-gray-200 p-2 rounded-lg shadow-sm">
+                    <span>Win Rate</span>
+                    <span class="font-bold">%blockball_player_winrateFull%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reference Link -->
+    <div class="text-center text-gray-500 text-sm mt-6">
+        <p>Data is updated daily by the <a href="https://www.spigotmc.org/resources/blockball-minigame-soccer-football-geysermc-1-21-4.15320/" class="text-blue-600 hover:underline">BlockBall Plugin</a></p>
+    </div>
+</div>
+</body>
+</html>

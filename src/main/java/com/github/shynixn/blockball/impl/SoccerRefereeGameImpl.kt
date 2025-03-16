@@ -1,13 +1,20 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.BossBarService
+import com.github.shynixn.blockball.contract.SoccerBallFactory
+import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
+import com.github.shynixn.mcplayerstats.contract.DiscordService
+import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
+import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
+import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
@@ -26,7 +33,10 @@ class SoccerRefereeGameImpl(
     language: BlockBallLanguage,
     packetService: PacketService,
     commandService: CommandService,
-    soccerBallFactory: SoccerBallFactory
+    soccerBallFactory: SoccerBallFactory,
+    templateProcessService: TemplateProcessService,
+    templateRepository: Repository<Template>,
+    discordService: DiscordService
 ) : SoccerMiniGameImpl(
     arena,
     playerDataRepository,
@@ -38,7 +48,10 @@ class SoccerRefereeGameImpl(
     language,
     packetService,
     commandService,
-    soccerBallFactory
+    soccerBallFactory,
+    templateProcessService,
+    templateRepository,
+    discordService
 ), SoccerRefereeGame {
     /**
      * Is the timer blocker enabled.
@@ -86,9 +99,6 @@ class SoccerRefereeGameImpl(
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
             close()
-            if (ingamePlayersStorage.isNotEmpty()) {
-                closing = true
-            }
             return
         }
 
@@ -101,7 +111,7 @@ class SoccerRefereeGameImpl(
         }
 
         if (arena.meta.hubLobbyMeta.resetArenaOnEmpty && ingamePlayersStorage.isEmpty() && (redScore > 0 || blueScore > 0)) {
-            closing = true
+            setGameClosing()
         }
 
         if (ticks >= 20) {
@@ -150,7 +160,10 @@ class SoccerRefereeGameImpl(
             if (playing) {
                 if (matchTimeIndex != -1) {
                     if (ball != null && !ball!!.isInteractable) {
-                        sendBroadcastMessage(language.whistleTimeOutReferee.text, language.whistleTimeOutRefereeHint.text)
+                        sendBroadcastMessage(
+                            language.whistleTimeOutReferee.text,
+                            language.whistleTimeOutRefereeHint.text
+                        )
                     }
 
                     if (!isTimerBlockerEnabled) {
@@ -198,7 +211,7 @@ class SoccerRefereeGameImpl(
 
                 // The game has to be resetable automatically.
                 if (ingamePlayersStorage.isEmpty() || redTeam.size < arena.meta.redTeamMeta.minPlayingPlayers || blueTeam.size < arena.meta.blueTeamMeta.minPlayingPlayers) {
-                    closing = true
+                    setGameClosing()
                 }
             }
         }

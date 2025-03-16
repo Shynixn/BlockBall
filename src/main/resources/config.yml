@@ -89,4 +89,20 @@ leaderboard:
   # The interval how often the leader board is refreshed from the currently persisted stats.
   intervalMinutes: 15
 
-
+############################
+# Cloud (PatreonOnly)
+############################
+# You do not need to change anything here.
+cloud:
+  web:
+    login:
+      baseUrl: "https://login.mcplayerstats.com"
+    upload:
+      baseUrl: "https://upload.mcplayerstats.com"
+  api:
+    login:
+      baseUrl: "https://api.login.mcplayerstats.com"
+      timeOutSeconds: 8
+    upload:
+      baseUrl: "https://api.upload.mcplayerstats.com"
+      timeOutSeconds: 20

@@ -302,6 +302,12 @@ playerNotFoundMessage:
 queueTimeOutMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c Not enough players joined in time to start the game."
+gameWebsiteMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 The game was published on:"
+gameWebsiteErrorMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c Execute &f/blockballstats login &r&cto link your server to mcplayerstats.com to share your games as website and on your Discord server. If you do not want that, set mcPlayerStatsEnabled=false."
 cannotParseNumberMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c Cannot parse number."
@@ -350,3 +356,96 @@ scoreboardUpdateCommandHint:
 scoreboardUpdatedMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 Updated the scoreboard."
+mcPlayerStatsCommandUsage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Use /blockballstats help to see more info about the plugin."
+mcPlayerStatsCommandDescription:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 All commands for the command /blockballstats."
+mcPlayerStatsPlayerNotFoundMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cPlayer %1$1s not found."
+mcPlayerStatsNoPermissionMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command."
+mcPlayerStatsReloadCommandHint:
+  type: "CHAT"
+  text: "Reloads the configuration of the plugin."
+mcPlayerStatsReloadCommandSuccess:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully reloaded the plugin."
+mcPlayerStatsCommandSenderHasToBePlayer:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c The command sender has to be a player!"
+mcPlayerStatsTemplateNotFoundMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cTemplate %1$1s not found."
+mcPlayerStatsLoginCommandHint:
+  type: "CHAT"
+  text: "Logins to https://mcplayerstats.com."
+mcPlayerStatsReLoginCommandHint:
+  type: "CHAT"
+  text: "Logins to https://mcplayerstats.com and resets API keys."
+mcPlayerStatsLoginSessionStartMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Starting new login session..."
+mcPlayerStatsLoginSessionUrlMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Open the url in your web browser:"
+mcPlayerStatsLoginSessionSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully logged into https://mcplayerstats.com."
+mcPlayerStatsCollectCommandHint:
+  type: "CHAT"
+  text: "Collects the stats for the given template and player."
+mcPlayerStatsCollectCompletedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Finished collecting the placeholders for template %1$1s."
+mcPlayerStatsUploadDataCommandHint:
+  type: "CHAT"
+  text: "Uploads all changed HTML files for a given template and player. This command consumes quota."
+mcPlayerStatsUploadDataStartMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Starting to upload the changed HTML files for template %1$1s..."
+mcPlayerStatsUploadDataCompletedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Completed data upload. Uploaded files: %1$1s"
+mcPlayerStatsUploadSettingsCommandHint:
+  type: "CHAT"
+  text: "Uploads the settings from the config.yml to the server. This command consumes quota."
+mcPlayerStatsUploadSettingsStartMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Starting to upload the settings..."
+mcPlayerStatsUploadSettingsCompletedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Completed settings upload."
+mcPlayerStatsCleanUpCommandHint:
+  type: "CHAT"
+  text: "Cleans all obsolete data for a given template and player."
+mcPlayerStatsCleanUpStartMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Starting to cleanup the database for template %1$1s..."
+mcPlayerStatsCleanUpCompletedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Finished cleanup the database for template %1$1s."
+mcPlayerStatsSchedulesCommandHint:
+  type: "CHAT"
+  text: "Lists the next scheduled tasks"
+mcPlayerStatsSchedulesMessageHeader:
+  type: "CHAT"
+  text: "The next scheduled tasks:"
+mcPlayerStatsScheduledTaskMessage:
+  type: "CHAT"
+  text: "%1$1s %2$1s for %3$1s"
+mcPlayerStatsBooleanNotParseableMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cValue has to be true or false."
+mcPlayerStatsPreviewCompletedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Finished generating preview for template %1$1s."
+mcPlayerStatsPreviewCommandHint:
+  type: "CHAT"
+  text: "Generates the HTML page for a player and stores it into the preview directory."
+mcPlayerStatsCommonErrorMessage:
+  type: "HIDDEN"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details."

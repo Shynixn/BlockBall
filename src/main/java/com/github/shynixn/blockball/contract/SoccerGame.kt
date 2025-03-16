@@ -11,6 +11,11 @@ import org.bukkit.entity.Player
 
 interface SoccerGame {
     /**
+     * Generated game id.
+     */
+    val id : String
+
+    /**
      * Player who was the last one to hit the ball.
      */
     var lastHitPlayer: Player?

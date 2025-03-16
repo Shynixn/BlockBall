@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.blockball.impl.service.*
+import com.github.shynixn.mccoroutine.bukkit.CoroutineTimings
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
 import com.github.shynixn.mccoroutine.bukkit.scope
@@ -47,7 +48,8 @@ import org.bukkit.plugin.Plugin
 class BlockBallDependencyInjectionModule(
     private val plugin: BlockBallPlugin,
     private val language: BlockBallLanguage,
-    private val placeHolderService: PlaceHolderService
+    private val placeHolderService: PlaceHolderService,
+    private val mcplayerStatsModule: DependencyInjectionModule
 ) {
     companion object {
         val areLegacyVersionsIncluded: Boolean by lazy {
@@ -74,7 +76,7 @@ class BlockBallDependencyInjectionModule(
         module.addService<CacheRepository<SoccerArena>> {
             CachedRepositoryImpl(
                 YamlFileRepositoryImpl<SoccerArena>(
-                    plugin, "arena",
+                    plugin, plugin.dataFolder.toPath().resolve("arena"),
                     listOf(Pair("arena_sample.yml", "arena_sample.yml")),
                     listOf("arena_sample.yml"),
                     object : TypeReference<SoccerArena>() {}
@@ -106,7 +108,9 @@ class BlockBallDependencyInjectionModule(
             com.github.shynixn.mcutils.common.command.CommandServiceImpl(
                 object : CoroutineExecutor {
                     override fun execute(f: suspend () -> Unit) {
-                        plugin.launch { f.invoke() }
+                        plugin.launch(object : CoroutineTimings() {}) {
+                            f.invoke()
+                        }
                     }
                 })
         )
@@ -124,13 +128,17 @@ class BlockBallDependencyInjectionModule(
                 module.getService<PacketService>(),
                 object : CoroutineExecutor {
                     override fun execute(f: suspend () -> Unit) {
-                        plugin.launch { f.invoke() }
+                        plugin.launch(object : CoroutineTimings() {}) {
+                            f.invoke()
+                        }
                     }
                 },
                 plugin.minecraftDispatcher as CoroutineDispatcher,
                 object : CoroutineExecutor {
                     override fun execute(f: suspend () -> Unit) {
-                        plugin.launch { f.invoke() }
+                        plugin.launch(object : CoroutineTimings() {}) {
+                            f.invoke()
+                        }
                     }
                 }
             )
@@ -156,6 +164,9 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                mcplayerStatsModule.getService(),
+                mcplayerStatsModule.getService(),
+                mcplayerStatsModule.getService()
             )
         }
         module.addService<HubGameForcefieldService> {

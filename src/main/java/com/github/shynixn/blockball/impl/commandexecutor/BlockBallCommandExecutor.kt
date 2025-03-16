@@ -24,7 +24,9 @@ import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.selection.AreaHighlight
 import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.mcutils.sign.SignService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.command.CommandSender
@@ -652,12 +654,51 @@ class BlockBallCommandExecutor(
             Item("minecraft:leather_chestplate,299"),
             null
         )
+
         arena.meta.redTeamMeta.armor = mapItemsToColoredSerializedItems(items, "16711680")
         arena.meta.blueTeamMeta.armor = mapItemsToColoredSerializedItems(items, "255")
         arena.meta.refereeTeamMeta.armor = mapItemsToColoredSerializedItems(items, "16777215")
 
         arenaRepository.save(arena)
+        createStatsFile(name)
         sender.sendPluginMessage(language.gameCreatedMessage, name)
+    }
+
+    private suspend fun createStatsFile(name: String) {
+        var hasCreatedFile = false
+        withContext(Dispatchers.IO) {
+            val yamlContent = plugin.getResource("stats/game_page.yml")!!.readBytes().toString(Charsets.UTF_8)
+            val yamlFile = plugin.dataFolder.resolve("stats/templates/${name}_page.yml")
+
+            if (!yamlFile.exists()) {
+                yamlFile.writeText(replaceStatsPlaceHolders(yamlContent, name))
+                hasCreatedFile = true
+            }
+
+            val htmlContent = plugin.getResource("stats/game_page.html")!!.readBytes().toString(Charsets.UTF_8)
+            val htmlFile = plugin.dataFolder.resolve("stats/templates/${name}_page.html")
+            if (!htmlFile.exists()) {
+                htmlFile.writeText(replaceStatsPlaceHolders(htmlContent, name))
+                hasCreatedFile = true
+            }
+        }
+
+        if (hasCreatedFile) {
+            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "blockballstats reload")
+        }
+    }
+
+    private fun replaceStatsPlaceHolders(content: String, name: String): String {
+        return content.replace("###name###", "${name}_page")
+            .replace("###displayName###", "%blockball_game_displayName_$name%")
+            .replace("###teamRed###", "%blockball_game_redDisplayName_$name%")
+            .replace("###teamRedScore###", "%blockball_game_redScore_$name%")
+            .replace("###teamBlue###", "%blockball_game_blueDisplayName_$name%")
+            .replace("###teamBlueScore###", "%blockball_game_blueScore_$name%")
+            .replace("###publishName###", "blockball_${name}")
+            .replace("###teamRedPlayerNames###", "%blockball_game_redPlayerNames_$name%")
+            .replace("###teamBluePlayerNames###", "%blockball_game_bluePlayerNames_$name%")
+            .replace("###topGoalsCurrentPlayerName###", "%blockball_game_topGoalsCurrentPlayerName_$name%")
     }
 
     private fun mapItemsToColoredSerializedItems(items: Array<Item?>, color: String): Array<String?> {
@@ -683,6 +724,18 @@ class BlockBallCommandExecutor(
         arenaRepository.clearCache()
         val runningGame = gameService.getAll().firstOrNull { e -> e.arena.name.equals(arena.name, true) }
         runningGame?.close()
+
+        withContext(Dispatchers.IO) {
+            val htmlFile = plugin.dataFolder.resolve("stats/templates/${arena.name}_summary.html")
+            if (htmlFile.exists()) {
+                htmlFile.delete()
+            }
+            val yamlFile = plugin.dataFolder.resolve("stats/templates/${arena.name}_summary.yml")
+            if (yamlFile.exists()) {
+                yamlFile.delete()
+            }
+        }
+
         sender.sendPluginMessage(language.deletedGameMessage, arena.name)
     }
 
@@ -690,6 +743,11 @@ class BlockBallCommandExecutor(
         try {
             arena.enabled = !arena.enabled
             gameService.reload(arena)
+
+            if (arena.enabled) {
+                createStatsFile(arena.name)
+            }
+
             sender.sendPluginMessage(language.enabledArenaMessage, arena.enabled.toString())
         } catch (e: SoccerGameException) {
             arena.enabled = false

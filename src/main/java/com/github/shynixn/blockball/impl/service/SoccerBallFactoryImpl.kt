@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.event.BallSpawnEvent
 import com.github.shynixn.blockball.impl.SoccerBallCrossPlatformProxy
 import com.github.shynixn.blockball.impl.BallDesignEntity
 import com.github.shynixn.blockball.impl.BallHitboxEntity
+import com.github.shynixn.mccoroutine.bukkit.CoroutineTimings
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -31,7 +32,7 @@ class SoccerBallFactoryImpl (
     private var isDisposed = false
 
     init {
-        plugin.launch {
+        plugin.launch(object : CoroutineTimings() {}) {
             while (!isDisposed) {
                 val balls = ballHitBoxTracked.values.toTypedArray()
                 for (ball in balls) {

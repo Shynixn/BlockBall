@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.LeaderBoardStats
 import com.github.shynixn.blockball.entity.PlayerInformation
+import com.github.shynixn.blockball.entity.StatsGame
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import org.bukkit.entity.Player
@@ -33,6 +34,8 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     GAME_RED_PLAYER_AMOUNT("%blockball_game_redPlayers_[game]%", { _, game, _ -> game?.redTeam?.size?.toString() }),
 
+    GAME_RED_PLAYER_NAMES("%blockball_game_redPlayerNames_[game]%", {_, game, _ -> game?.redTeam?.joinToString(", ") { e -> e.name } }),
+
     GAME_RED_PLAYER_MAXAMOUNT(
         "%blockball_game_redMaxPlayers_[game]%",
         { _, game, _ -> game?.arena?.meta?.redTeamMeta?.maxAmount?.toString() }),
@@ -44,6 +47,8 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
     GAME_BLUE_SCORE("%blockball_game_blueScore_[game]%", { _, game, _ -> game?.blueScore?.toString() }),
 
     GAME_BLUE_PLAYER_AMOUNT("%blockball_game_bluePlayers_[game]%", { _, game, _ -> game?.blueTeam?.size?.toString() }),
+
+    GAME_BLUE_PLAYER_NAMES("%blockball_game_bluePlayerNames_[game]%", {_, game, _ -> game?.blueTeam?.joinToString(", ") { e -> e.name } }),
 
     GAME_BLUE_PLAYER_MAXAMOUNT(
         "%blockball_game_blueMaxPlayers_[game]%",
@@ -176,7 +181,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_GOALS("%blockball_player_goals%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             playerData?.statsMeta?.scoredGoals?.toString() ?: ""
@@ -187,7 +192,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_GOALSFULL("%blockball_player_goalsFull%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             playerData?.statsMeta?.scoredGoalsFull?.toString() ?: ""
@@ -198,7 +203,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_GOALSCURRENT("%blockball_player_goalsCurrent%", { player, game, _ ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (game != null && player != null && game.ingamePlayersStorage.containsKey(player)) {
             val storage = game.ingamePlayersStorage[player]!!
             (storage.scoredGoals).toString()
@@ -207,9 +212,20 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
         }
     }),
 
+    PLAYER_STATS_TOPGOALSCURRENT("%blockball_game_topGoalsCurrentPlayerName_[game]%", { _, game, _ ->
+        if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+            BlockBallPlugin.patreonOnly
+        } else if(game != null) {
+            val storage = game.ingamePlayersStorage.maxBy { e -> e.value.scoredGoals }
+            storage.key.name
+        }else{
+            ""
+        }
+    }),
+
     PLAYER_STATS_OWNGOALS("%blockball_player_ownGoals%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             playerData?.statsMeta?.scoredOwnGoals?.toString() ?: ""
@@ -220,7 +236,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_OWNGOALSFULL("%blockball_player_ownGoalsFull%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             playerData?.statsMeta?.scoredOwnGoalsFull?.toString() ?: ""
@@ -231,7 +247,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_OWNGOALSCURRENT("%blockball_player_ownGoalsCurrent%", { player, game, _ ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (game != null && player != null && game.ingamePlayersStorage.containsKey(player)) {
             val storage = game.ingamePlayersStorage[player]!!
             (storage.scoredOwnGoals).toString()
@@ -242,7 +258,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_TOTALGOALS("%blockball_player_totalGoals%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             if (playerData != null) {
@@ -257,7 +273,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_TOTALGOALSFULL("%blockball_player_totalGoalsFull%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             if (playerData != null) {
@@ -272,7 +288,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_TOTALGOALSCURRENT("%blockball_player_totalGoalsCurrent%", { player, game, _ ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (game != null && player != null && game.ingamePlayersStorage.containsKey(player)) {
             val storage = game.ingamePlayersStorage[player]!!
             (storage.scoredGoals + storage.scoredOwnGoals).toString()
@@ -283,7 +299,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_GAMES("%blockball_player_games%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             playerData?.statsMeta?.joinedGames?.toString() ?: ""
@@ -294,7 +310,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_GAMESFULL("%blockball_player_gamesFull%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             playerData?.statsMeta?.playedGames?.toString() ?: ""
@@ -305,7 +321,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_WINS("%blockball_player_wins%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             playerData?.statsMeta?.winsAmount?.toString() ?: ""
@@ -316,7 +332,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_LOSSES("%blockball_player_losses%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             if (playerData != null) {
@@ -331,7 +347,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_DRAWS("%blockball_player_draws%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             playerData?.statsMeta?.drawsAmount?.toString() ?: ""
@@ -342,7 +358,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_WINRATE("%blockball_player_winrate%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             if (playerData != null) {
@@ -363,7 +379,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_WINRATEFULL("%blockball_player_winrateFull%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             if (playerData != null) {
@@ -384,7 +400,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_GOALSPERGAME("%blockball_player_goalsPerGame%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             if (playerData != null) {
@@ -405,7 +421,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_GOALSPERGAMEFULL("%blockball_player_goalsPerGameFull%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             if (playerData != null) {
@@ -426,7 +442,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_OWNGOALSPERGAME("%blockball_player_ownGoalsPerGame%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             if (playerData != null) {
@@ -447,7 +463,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_OWNGOALSPERGAMEFULL("%blockball_player_ownGoalsPerGameFull%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             if (playerData != null) {
@@ -468,7 +484,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_TOTALGOALSPERGAME("%blockball_player_totalGoalsPerGame%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             if (playerData != null) {
@@ -489,7 +505,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_STATS_TOTALGOALSPERGAMEFULL("%blockball_player_totalGoalsPerGameFull%", { _, _, context ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-            "PatreonOnly"
+            BlockBallPlugin.patreonOnly
         } else if (context != null) {
             val playerData = context[BlockBallPlugin.playerDataKey] as PlayerInformation?
             if (playerData != null) {
