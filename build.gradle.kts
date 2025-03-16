@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.14.1"
+version = "7.15.0"
 
 repositories {
     mavenLocal()
@@ -112,6 +112,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("com/github/shynixn/mcplayerstats/**")
     exclude("org/**")
     exclude("kotlin/**")
     exclude("kotlinx/**")
@@ -119,6 +120,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/google/**")
     exclude("com/fasterxml/**")
     exclude("com/zaxxer/**")
+    exclude("templates/**")
     exclude("org/yaml")
     exclude("plugin-legacy.yml")
 }
@@ -130,13 +132,15 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-premium.${archiveExtension.get()}")
-    //  destinationDirectory.set(File("C:\\temp\\plugins"))
+    // destinationDirectory.set(File("C:\\temp\\plugins"))
 
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("com/github/shynixn/mcplayerstats/**")
     exclude("org/**")
     exclude("kotlin/**")
+    exclude("templates/**")
     exclude("kotlinx/**")
     exclude("javax/**")
     exclude("com/google/**")
@@ -189,6 +193,8 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
 
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
+    exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("com/github/shynixn/mcplayerstats/**")
     exclude("org/**")
     exclude("kotlin/**")
     exclude("kotlinx/**")
@@ -196,7 +202,7 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     exclude("com/google/**")
     exclude("com/fasterxml/**")
     exclude("com/zaxxer/**")
-    exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("templates/**")
     exclude("plugin-legacy.yml")
 }
 

@@ -18,6 +18,7 @@ import com.github.shynixn.mcplayerstats.enumeration.UploadDataType
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.language.LanguageType
 import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.Repository
@@ -902,6 +903,7 @@ abstract class SoccerGameImpl(
                 if (!fileExists) {
                     for (player in players) {
                         player.sendPluginMessage(language.gameWebsiteErrorMessage)
+                        player.sendMessage("https://shynixn.github.io/BlockBall/wiki/site/stats/")
                     }
                     closing = true
                 } else {
@@ -919,9 +921,11 @@ abstract class SoccerGameImpl(
                                 "You have exceeded the daily MCPlayerStats Quota. Increase your quota on patreon or publish it on the next day."
                             )
                         } else {
-                            for (player in players) {
-                                player.sendPluginMessage(language.gameWebsiteMessage)
-                                player.sendMessage(response.first[0])
+                            if (language.gameWebsiteMessage.type != LanguageType.HIDDEN) {
+                                for (player in players) {
+                                    player.sendPluginMessage(language.gameWebsiteMessage)
+                                    player.sendMessage(response.first[0])
+                                }
                             }
                             plugin.launch {
                                 delay(1000 * 50)
@@ -931,6 +935,8 @@ abstract class SoccerGameImpl(
                                 )
                             }
                         }
+                    } else {
+                        closing = true
                     }
                 }
             } else {

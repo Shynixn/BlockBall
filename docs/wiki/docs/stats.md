@@ -8,7 +8,7 @@ This page deals with sharing stats and game results as a website and on Discord.
 
 BlockBall ships an integration of [https://mcplayerstats.com/](https://mcplayerstats.com/) which is a service to host websites. The service is included
 as long as you are an active patreon member of [https://www.patreon.com/Shynixn](https://www.patreon.com/Shynixn). 
-The amount of stats you can share per day is limited and is called Quota.
+The amount of stats you can share per day is limited and is called Quota. If you want to learn more about mcplayerstats.com, see [https://shynixn.github.io/MCPlayerStatsPlugin](https://shynixn.github.io/MCPlayerStatsPlugin).
 
 1. Login into mcplayerstats.com
 
@@ -37,7 +37,7 @@ Generating webpages for all of your games might not be desired. Set ``mcPlayerSt
 
 Instead of sending the link to a webpage at the end of a game, you can publish the game on Discord instead.
 
-1. Set the type of the language message ``mcPlayerStatsLoginSessionUrlMessage`` to ``HIDDEN``.
+1. Set the type of the language message ``gameWebsiteMessage`` to ``HIDDEN``.
 
 2. Open the stats definition of your game under ``plugins\BlockBall\stats\templates\``. It will be named ``game1_page.yml`` or similar.
 
