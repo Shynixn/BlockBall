@@ -273,7 +273,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
         val angle =
             calculatePitchToLaunch(prevEyeLoc.toVector3d(), eyeLocation.toVector3d())
 
-        val verticalMod = baseMultiplier * spinDrag * sin(angle)
+        val verticalMod = baseMultiplier * spinDrag * sin(angle) * meta.movementModifier.shotPassYVelocityOverwrite
         val horizontalMod = baseMultiplier * spinDrag * cos(angle)
         kickVector = kickVector.normalize().multiply(horizontalMod)
         kickVector.y = verticalMod

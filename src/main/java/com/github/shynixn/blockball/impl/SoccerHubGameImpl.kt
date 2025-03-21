@@ -12,6 +12,7 @@ import com.github.shynixn.mcplayerstats.contract.DiscordService
 import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
 import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
@@ -32,7 +33,8 @@ class SoccerHubGameImpl(
     commandService: CommandService,
     templateProcessService: TemplateProcessService,
     templateRepository: Repository<Template>,
-    discordService: DiscordService
+    discordService: DiscordService,
+    itemService: ItemService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -45,7 +47,8 @@ class SoccerHubGameImpl(
     playerDataRepository,
     templateProcessService,
     templateRepository,
-    discordService
+    discordService,
+    itemService
 ),
     SoccerHubGame {
     /**
