@@ -345,10 +345,10 @@ scoreboardNoPermissionToScoreboardCommand:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to this scoreboard."
 scoreboardAddedMessage:
-  type: "CHAT"
+  type: "HIDDEN"
   text: "&0&l[&f&lBlockBall&0&l]&7 Added the scoreboard %1$1s to the player %2$1s."
 scoreboardRemovedMessage:
-  type: "CHAT"
+  type: "HIDDEN"
   text: "&0&l[&f&lBlockBall&0&l]&7 Removed the scoreboard %1$1s from the player %2$1s."
 scoreboardUpdateCommandHint:
   type: "CHAT"

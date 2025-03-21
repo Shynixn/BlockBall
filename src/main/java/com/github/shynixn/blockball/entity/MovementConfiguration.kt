@@ -38,6 +38,11 @@ class MovementConfiguration {
     var shotVelocity: Double = 1.5
 
     /**
+     * Overwrite for y velocity.
+     */
+    var shotPassYVelocityOverwrite: Double = 1.0
+
+    /**
      * The overall pass velocity.
      */
     var passVelocity: Double = 1.2

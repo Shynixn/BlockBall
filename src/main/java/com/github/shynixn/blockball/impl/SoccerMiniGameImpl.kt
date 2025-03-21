@@ -13,6 +13,7 @@ import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
 import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.Repository
@@ -40,7 +41,8 @@ open class SoccerMiniGameImpl constructor(
     soccerBallFactory: SoccerBallFactory,
     templateProcessService: TemplateProcessService,
     templateRepository: Repository<Template>,
-    discordService: DiscordService
+    discordService: DiscordService,
+    itemService: ItemService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -53,7 +55,8 @@ open class SoccerMiniGameImpl constructor(
     playerDataRepository,
     templateProcessService,
     templateRepository,
-    discordService
+    discordService,
+    itemService
 ), SoccerMiniGame {
     private var currentQueueTime = arena.queueTimeOutSec
     private var isQueueTimeRunning = false
@@ -108,10 +111,9 @@ open class SoccerMiniGameImpl constructor(
         // Handle HubGame ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
-
-
-
-            close()
+            if(completedPublish){
+                close()
+            }
             return
         }
 
@@ -225,7 +227,6 @@ open class SoccerMiniGameImpl constructor(
         }
         status = GameState.DISABLED
         closed = true
-        closing = true
         ingamePlayersStorage.keys.toTypedArray().forEach { p ->
             leave(p)
         }
@@ -330,9 +331,6 @@ open class SoccerMiniGameImpl constructor(
                 onWin(Team.BLUE)
             }
         }
-
-        // OnWin sets game.closing to true.
-        closing = false
     }
 
     /**

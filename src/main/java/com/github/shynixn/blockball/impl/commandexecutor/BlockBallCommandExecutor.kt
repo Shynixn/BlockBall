@@ -30,7 +30,6 @@ import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.command.CommandSender
-import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.awt.Color
@@ -712,11 +711,7 @@ class BlockBallCommandExecutor(
             } else {
                 null
             }
-        }.map {
-            val yamlConfiguration = YamlConfiguration()
-            yamlConfiguration.set("item", it)
-            yamlConfiguration.saveToString()
-        }.toTypedArray()
+        }.map { itemService.serializeItemStack(it) }.toTypedArray()
     }
 
     private suspend fun deleteArena(sender: CommandSender, arena: SoccerArena) {
@@ -759,21 +754,15 @@ class BlockBallCommandExecutor(
     }
 
     private suspend fun setInventory(player: Player, arena: SoccerArena, teamMetadata: TeamMeta) {
-        teamMetadata.inventory = player.inventory.contents.clone().map { e ->
-            val yamlConfiguration = YamlConfiguration()
-            yamlConfiguration.set("item", e)
-            yamlConfiguration.saveToString()
-        }.toTypedArray()
+        teamMetadata.inventory =
+            player.inventory.contents.clone().map { e -> itemService.serializeItemStack(e) }.toTypedArray()
         arenaRepository.save(arena)
         player.sendPluginMessage(language.updatedInventoryMessage)
     }
 
     private suspend fun setArmor(player: Player, arena: SoccerArena, teamMeta: TeamMeta) {
-        teamMeta.armor = player.inventory.armorContents.clone().map { e ->
-            val yamlConfiguration = YamlConfiguration()
-            yamlConfiguration.set("item", e)
-            yamlConfiguration.saveToString()
-        }.toTypedArray()
+        teamMeta.armor =
+            player.inventory.armorContents.clone().map { e -> itemService.serializeItemStack(e) }.toTypedArray()
         arenaRepository.save(arena)
         player.sendPluginMessage(language.updatedArmorMessage)
     }
@@ -1011,7 +1000,7 @@ class BlockBallCommandExecutor(
         )
     }
 
-    private suspend fun setSign(sender: Player, arena: SoccerArena, signType: SignType) {
+    private fun setSign(sender: Player, arena: SoccerArena, signType: SignType) {
         if (signType == SignType.JOIN) {
             sender.sendPluginMessage(language.rightClickOnSignMessage)
             signService.addSignByRightClick(sender) { sign ->

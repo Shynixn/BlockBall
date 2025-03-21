@@ -31,6 +31,7 @@ import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.sign.SignService
+import com.github.shynixn.mcutils.worldguard.WorldGuardServiceImpl
 import com.github.shynixn.shyscoreboard.ShyScoreboardDependencyInjectionModule
 import com.github.shynixn.shyscoreboard.contract.ScoreboardService
 import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage
@@ -259,7 +260,7 @@ class BlockBallPlugin : JavaPlugin() {
     private fun loadShyScoreboardModule(language: ShyScoreboardLanguage): DependencyInjectionModule {
         val settings = ShyScoreboardSettings({ s ->
             s.joinDelaySeconds = config.getInt("scoreboard.joinDelaySeconds")
-            s.checkForPermissionChangeSeconds = config.getInt("scoreboard.checkForPermissionChangeSeconds")
+            s.checkForChangeChangeSeconds = config.getInt("scoreboard.checkForChangeChangeSeconds")
             s.baseCommand = "blockballscoreboard"
             s.commandAliases = config.getStringList("commands.blockballscoreboard.aliases")
             s.commandPermission = "blockball.shyscoreboard.command"
@@ -273,7 +274,7 @@ class BlockBallPlugin : JavaPlugin() {
             )
         })
         settings.reload()
-        val module = ShyScoreboardDependencyInjectionModule(this, settings, language).build()
+        val module = ShyScoreboardDependencyInjectionModule(this, settings, language, WorldGuardServiceImpl(this)).build()
 
         // Register PlaceHolders
         com.github.shynixn.shyscoreboard.enumeration.PlaceHolder.registerAll(

@@ -13,6 +13,7 @@ import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
 import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundService
@@ -36,7 +37,8 @@ class SoccerRefereeGameImpl(
     soccerBallFactory: SoccerBallFactory,
     templateProcessService: TemplateProcessService,
     templateRepository: Repository<Template>,
-    discordService: DiscordService
+    discordService: DiscordService,
+    itemService: ItemService
 ) : SoccerMiniGameImpl(
     arena,
     playerDataRepository,
@@ -51,7 +53,8 @@ class SoccerRefereeGameImpl(
     soccerBallFactory,
     templateProcessService,
     templateRepository,
-    discordService
+    discordService,
+    itemService
 ), SoccerRefereeGame {
     /**
      * Is the timer blocker enabled.
@@ -98,7 +101,9 @@ class SoccerRefereeGameImpl(
         // Handle ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
-            close()
+            if (completedPublish) {
+                close()
+            }
             return
         }
 

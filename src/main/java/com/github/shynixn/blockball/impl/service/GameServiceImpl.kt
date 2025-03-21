@@ -17,6 +17,7 @@ import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundService
@@ -46,7 +47,8 @@ class GameServiceImpl(
     private val signService: SignService,
     private val templateProcessService: TemplateProcessService,
     private val templateRepository: Repository<Template>,
-    private val discordService: DiscordService
+    private val discordService: DiscordService,
+    private val itemService: ItemService
 ) : GameService, Runnable {
     private val games = ArrayList<SoccerGame>()
     private var ticks: Int = 0
@@ -108,7 +110,8 @@ class GameServiceImpl(
                     commandService,
                     templateProcessService,
                     templateRepository,
-                    discordService
+                    discordService,
+                    itemService
                 )
 
                 GameType.MINIGAME -> SoccerMiniGameImpl(
@@ -125,7 +128,8 @@ class GameServiceImpl(
                     soccerBallFactory,
                     templateProcessService,
                     templateRepository,
-                    discordService
+                    discordService,
+                    itemService
                 ).also {
                     it.ballEnabled = false
                 }
@@ -144,7 +148,8 @@ class GameServiceImpl(
                     soccerBallFactory,
                     templateProcessService,
                     templateRepository,
-                    discordService
+                    discordService,
+                    itemService
                 ).also {
                     it.ballEnabled = false
                 }

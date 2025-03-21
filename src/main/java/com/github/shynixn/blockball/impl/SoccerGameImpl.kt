@@ -18,6 +18,7 @@ import com.github.shynixn.mcplayerstats.enumeration.UploadDataType
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.language.LanguageType
 import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
@@ -50,7 +51,8 @@ abstract class SoccerGameImpl(
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
     private val templateProcessService: TemplateProcessService,
     private val templateRepository: Repository<Template>,
-    private val discordService: DiscordService
+    private val discordService: DiscordService,
+    private val itemService: ItemService
 ) : SoccerGame {
 
     /**
@@ -780,26 +782,10 @@ abstract class SoccerGameImpl(
         }
 
         if (!arena.meta.customizingMeta.keepInventoryEnabled) {
-            player.inventory.contents = teamMeta.inventory.map {
-                if (it != null) {
-                    val configuration = org.bukkit.configuration.file.YamlConfiguration()
-                    configuration.loadFromString(it)
-                    configuration.getItemStack("item")
-                } else {
-                    null
-                }
-            }.toTypedArray()
-            player.inventory.setArmorContents(
-                teamMeta.armor.map {
-                    if (it != null) {
-                        val configuration = org.bukkit.configuration.file.YamlConfiguration()
-                        configuration.loadFromString(it)
-                        configuration.getItemStack("item")
-                    } else {
-                        null
-                    }
-                }.toTypedArray()
-            )
+            player.inventory.contents =
+                teamMeta.inventory.map { e -> itemService.deserializeItemStack(e) }.toTypedArray()
+            player.inventory.setArmorContents(teamMeta.armor.map { e -> itemService.deserializeItemStack(e) }
+                .toTypedArray())
             player.updateInventory()
         }
     }
@@ -884,15 +870,15 @@ abstract class SoccerGameImpl(
         ballSpawnCounter = 0
     }
 
-    protected var executingEndCommands = false
+    var completedPublish = false
 
     protected fun setGameClosing() {
-        if (executingEndCommands) {
+        if (closing) {
             return
         }
 
-        executingEndCommands = true
         val players = HashSet(ingamePlayersStorage.keys)
+        closing = true
 
         plugin.launch {
             if (arena.meta.mcPlayerStatsEnabled && BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
@@ -905,13 +891,11 @@ abstract class SoccerGameImpl(
                         player.sendPluginMessage(language.gameWebsiteErrorMessage)
                         player.sendMessage("https://shynixn.github.io/BlockBall/wiki/site/stats/")
                     }
-                    closing = true
                 } else {
                     val template = templateRepository.getAll().firstOrNull { e -> e.name == "${arena.name}_page" }
 
                     if (template != null) {
                         templateProcessService.collectStats(template, null)
-                        closing = true
                         val response =
                             templateProcessService.uploadStats(template, UploadDataType.DEFAULT, "_${id}", "g")
 
@@ -935,13 +919,10 @@ abstract class SoccerGameImpl(
                                 )
                             }
                         }
-                    } else {
-                        closing = true
                     }
                 }
-            } else {
-                closing = true
             }
+            completedPublish = true
         }
     }
 

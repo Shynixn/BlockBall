@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.15.0"
+version = "7.16.0"
 
 repositories {
     mavenLocal()
@@ -36,12 +36,13 @@ dependencies {
 
     // Custom dependencies
     implementation("com.github.shynixn.mcplayerstats:mcplayerstats:1.1.9")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.1.1")
-    implementation("com.github.shynixn.mcutils:common:2025.9")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.2.0")
+    implementation("com.github.shynixn.mcutils:common:2025.12")
     implementation("com.github.shynixn.mcutils:packet:2025.11")
     implementation("com.github.shynixn.mcutils:database:2025.5")
     implementation("com.github.shynixn.mcutils:sign:2025.3")
     implementation("com.github.shynixn.mcutils:http:2025.5")
+    implementation("com.github.shynixn.mcutils:worldguard:2025.3")
 }
 
 tasks.withType<KotlinCompile> {

@@ -166,7 +166,8 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 mcplayerStatsModule.getService(),
                 mcplayerStatsModule.getService(),
-                mcplayerStatsModule.getService()
+                mcplayerStatsModule.getService(),
+                module.getService()
             )
         }
         module.addService<HubGameForcefieldService> {
