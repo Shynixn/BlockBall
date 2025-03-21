@@ -870,15 +870,15 @@ abstract class SoccerGameImpl(
         ballSpawnCounter = 0
     }
 
-    protected var executingEndCommands = false
+    var completedPublish = false
 
     protected fun setGameClosing() {
-        if (executingEndCommands) {
+        if (closing) {
             return
         }
 
-        executingEndCommands = true
         val players = HashSet(ingamePlayersStorage.keys)
+        closing = true
 
         plugin.launch {
             if (arena.meta.mcPlayerStatsEnabled && BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
@@ -891,13 +891,11 @@ abstract class SoccerGameImpl(
                         player.sendPluginMessage(language.gameWebsiteErrorMessage)
                         player.sendMessage("https://shynixn.github.io/BlockBall/wiki/site/stats/")
                     }
-                    closing = true
                 } else {
                     val template = templateRepository.getAll().firstOrNull { e -> e.name == "${arena.name}_page" }
 
                     if (template != null) {
                         templateProcessService.collectStats(template, null)
-                        closing = true
                         val response =
                             templateProcessService.uploadStats(template, UploadDataType.DEFAULT, "_${id}", "g")
 
@@ -921,13 +919,10 @@ abstract class SoccerGameImpl(
                                 )
                             }
                         }
-                    } else {
-                        closing = true
                     }
                 }
-            } else {
-                closing = true
             }
+            completedPublish = true
         }
     }
 

@@ -101,7 +101,9 @@ class SoccerRefereeGameImpl(
         // Handle ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
-            close()
+            if (completedPublish) {
+                close()
+            }
             return
         }
 

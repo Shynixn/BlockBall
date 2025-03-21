@@ -59,7 +59,9 @@ class SoccerHubGameImpl(
         // Handle HubGame ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
-            close()
+            if(completedPublish){
+                close()
+            }
             return
         }
 
@@ -91,7 +93,6 @@ class SoccerHubGameImpl(
         }
 
         status = GameState.DISABLED
-        closing = true
         closed = true
         ingamePlayersStorage.keys.toTypedArray().forEach { p ->
             leave(p)

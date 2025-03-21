@@ -76,7 +76,7 @@ security:
 ############################
 scoreboard:
   # How often are the permissions of a player checked to determine if he has got access to any scoreboard.
-  checkForPermissionChangeSeconds: 3
+  checkForChangeChangeSeconds: 3
   # When a new player joins the server, after how many seconds are the scoreboards created.
   joinDelaySeconds: 3
 

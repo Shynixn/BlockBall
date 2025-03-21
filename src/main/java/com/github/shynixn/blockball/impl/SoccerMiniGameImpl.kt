@@ -111,10 +111,9 @@ open class SoccerMiniGameImpl constructor(
         // Handle HubGame ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
-
-
-
-            close()
+            if(completedPublish){
+                close()
+            }
             return
         }
 
@@ -228,7 +227,6 @@ open class SoccerMiniGameImpl constructor(
         }
         status = GameState.DISABLED
         closed = true
-        closing = true
         ingamePlayersStorage.keys.toTypedArray().forEach { p ->
             leave(p)
         }
@@ -333,9 +331,6 @@ open class SoccerMiniGameImpl constructor(
                 onWin(Team.BLUE)
             }
         }
-
-        // OnWin sets game.closing to true.
-        closing = false
     }
 
     /**
