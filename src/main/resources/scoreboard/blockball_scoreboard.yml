@@ -1,0 +1,27 @@
+# Unique identifier of a scoreboard.
+name: "blockball_scoreboard"
+# Possible types: GLOBAL, COMMAND, WORLDGUARD
+# If GLOBAl, the scoreboard is always visible as long as the player has got the permission shyscoreboard.scoreboard.blockball_scoreboard.
+# If COMMAND, the scoreboard is only visible after executing the command /shyscoreboard add blockball_scoreboard AND having the permission shyscoreboard.scoreboard.blockball_scoreboard.
+# If WORLDGUARD, the scoreboard is only visible after entering a WorldGuard region where the flag shyscoreboard has been set to this scoreboard name.
+type: "COMMAND"
+# If multiple scoreboards would be available, the one with the highest priority (lowest number), is selected.
+priority: 1
+# The Minecraft ticks how often this scoreboard is updated to the player. (1 tick = 50ms)
+refreshTicks: 5
+# Displayed title of the scoreboard. Supports placeholders. Max length of the title is 16 characters.
+title: "&aBlockBall"
+# Displayed lines of the scoreboard. Supports placeholders. Max length of a line is 32 characters.
+lines:
+  - "&6Time:"
+  - "%blockball_game_time%"
+  - "&m           &r"
+  - "&6Team:"
+  - "%blockball_player_teamDisplayName%"
+  - "&m           &r"
+  - "%blockball_game_redDisplayName%:"
+  - "%blockball_game_redScore%"
+  - ""
+  - "%blockball_game_blueDisplayName%:"
+  - "%blockball_game_blueScore%"
+  - "&m           &r"
