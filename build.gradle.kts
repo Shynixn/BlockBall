@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.16.0"
+version = "7.16.1"
 
 repositories {
     mavenLocal()
@@ -42,7 +42,7 @@ dependencies {
     implementation("com.github.shynixn.mcutils:database:2025.5")
     implementation("com.github.shynixn.mcutils:sign:2025.3")
     implementation("com.github.shynixn.mcutils:http:2025.5")
-    implementation("com.github.shynixn.mcutils:worldguard:2025.3")
+    implementation("com.github.shynixn.mcutils:worldguard:2025.4")
 }
 
 tasks.withType<KotlinCompile> {
