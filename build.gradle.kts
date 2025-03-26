@@ -36,9 +36,9 @@ dependencies {
 
     // Custom dependencies
     implementation("com.github.shynixn.mcplayerstats:mcplayerstats:1.1.9")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.2.0")
-    implementation("com.github.shynixn.mcutils:common:2025.12")
-    implementation("com.github.shynixn.mcutils:packet:2025.11")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.3.0")
+    implementation("com.github.shynixn.mcutils:common:2025.13")
+    implementation("com.github.shynixn.mcutils:packet:2025.14")
     implementation("com.github.shynixn.mcutils:database:2025.5")
     implementation("com.github.shynixn.mcutils:sign:2025.3")
     implementation("com.github.shynixn.mcutils:http:2025.5")
@@ -110,6 +110,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R4/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R1/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R3/**")
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
