@@ -717,8 +717,7 @@ class BlockBallCommandExecutor(
     private suspend fun deleteArena(sender: CommandSender, arena: SoccerArena) {
         arenaRepository.delete(arena)
         arenaRepository.clearCache()
-        val runningGame = gameService.getAll().firstOrNull { e -> e.arena.name.equals(arena.name, true) }
-        runningGame?.close()
+        gameService.reloadAll()
 
         withContext(Dispatchers.IO) {
             val htmlFile = plugin.dataFolder.resolve("stats/templates/${arena.name}_summary.html")

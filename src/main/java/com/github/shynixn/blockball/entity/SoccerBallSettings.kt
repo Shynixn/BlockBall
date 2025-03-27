@@ -39,7 +39,7 @@ class SoccerBallSettings {
      * Delay in ticks until the ball executes the kick pass request by the player.
      * Is useful for magnus force calculation.
      */
-    var kickPassDelay: Int = 5
+    var kickPassDelay: Int = 2
 
     /**
      * Amount of ticks until the ball can intercept interaction again after

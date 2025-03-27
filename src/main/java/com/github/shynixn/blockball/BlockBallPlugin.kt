@@ -95,10 +95,11 @@ class BlockBallPlugin : JavaPlugin() {
                 Version.VERSION_1_21_R1,
                 Version.VERSION_1_21_R2,
                 Version.VERSION_1_21_R3,
+                Version.VERSION_1_21_R4,
             )
         } else {
             arrayOf(
-                Version.VERSION_1_21_R3,
+                Version.VERSION_1_21_R4,
             )
         }
 
@@ -167,7 +168,7 @@ class BlockBallPlugin : JavaPlugin() {
             try {
                 gameService.reloadAll()
             } catch (e: SoccerGameException) {
-                plugin.logger.log(Level.WARNING, "Cannot start game of soccerArena ${e.arena.name}.", e)
+                plugin.logger.log(Level.WARNING, " Cannot start game of soccerArena ${e.arena.name}.", e)
             }
 
             // Enable stats
