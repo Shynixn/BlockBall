@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.entity
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.github.shynixn.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.github.shynixn.fasterxml.jackson.annotation.JsonProperty
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 

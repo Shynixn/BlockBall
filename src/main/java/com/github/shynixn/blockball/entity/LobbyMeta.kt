@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.entity
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.github.shynixn.fasterxml.jackson.annotation.JsonProperty
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.sign.SignMeta
 import org.bukkit.GameMode

@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.entity
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import com.github.shynixn.blockball.enumeration.GameType
+import com.github.shynixn.fasterxml.jackson.annotation.JsonPropertyOrder
 import com.github.shynixn.mcutils.common.repository.Element
 
 @JsonPropertyOrder("name", "displayName", "enabled", "gameType", "corner1", "corner2", "meta")
