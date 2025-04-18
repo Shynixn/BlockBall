@@ -10,7 +10,6 @@ nav:
       - Signs: sign.md
       - Bedrock: bedrock.md
       - Referee: referee.md
-      - Stats: stats.md
       - Commands: commands.md
       - PlaceHolders: placeholders.md
       - Developer Api: api.md

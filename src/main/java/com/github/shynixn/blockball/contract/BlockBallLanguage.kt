@@ -1,11 +1,10 @@
 package com.github.shynixn.blockball.contract
 
-import com.github.shynixn.mcplayerstats.contract.MCPlayerStatsLanguage
 import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage
 import com.github.shynixn.mcutils.common.language.LanguageItem
 import com.github.shynixn.mcutils.common.language.LanguageProvider
 
-interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, MCPlayerStatsLanguage {
+interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage {
   var gameAlreadyExistsMessage: LanguageItem
 
   var commandUsage: LanguageItem
@@ -27,6 +26,8 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, MCPlayerS
   var noPermissionForGameMessage: LanguageItem
 
   var noPermissionMessage: LanguageItem
+
+  var commandSenderHasToBePlayer: LanguageItem
 
   var gameCreatedMessage: LanguageItem
 
@@ -180,13 +181,19 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, MCPlayerS
 
   var commandPlaceHolderMessage: LanguageItem
 
+  var playerNotFoundMessage: LanguageItem
+
   var queueTimeOutMessage: LanguageItem
-
-  var gameWebsiteMessage: LanguageItem
-
-  var gameWebsiteErrorMessage: LanguageItem
 
   var cannotParseNumberMessage: LanguageItem
 
   var cannotParseWorldMessage: LanguageItem
+
+  var noPermissionCommand: LanguageItem
+
+  var reloadCommandHint: LanguageItem
+
+  var reloadMessage: LanguageItem
+
+  var commonErrorMessage: LanguageItem
 }

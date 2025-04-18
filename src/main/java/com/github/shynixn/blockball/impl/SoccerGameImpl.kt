@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.BlockBallPlugin.Companion.gameKey
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.*
@@ -11,30 +10,22 @@ import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
-import com.github.shynixn.mcplayerstats.contract.DiscordService
-import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
-import com.github.shynixn.mcplayerstats.entity.Template
-import com.github.shynixn.mcplayerstats.enumeration.UploadDataType
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
-import com.github.shynixn.mcutils.common.language.LanguageType
 import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.*
-import java.util.logging.Level
 
 abstract class SoccerGameImpl(
     /**
@@ -49,9 +40,6 @@ abstract class SoccerGameImpl(
     private val commandService: CommandService,
     override val language: BlockBallLanguage,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
-    private val templateProcessService: TemplateProcessService,
-    private val templateRepository: Repository<Template>,
-    private val discordService: DiscordService,
     private val itemService: ItemService
 ) : SoccerGame {
 
@@ -877,53 +865,8 @@ abstract class SoccerGameImpl(
             return
         }
 
-        val players = HashSet(ingamePlayersStorage.keys)
         closing = true
-
-        plugin.launch {
-            if (arena.meta.mcPlayerStatsEnabled && BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-                val fileExists = withContext(Dispatchers.IO) {
-                    plugin.dataFolder.resolve("stats").resolve("session.data").exists()
-                }
-
-                if (!fileExists) {
-                    for (player in players) {
-                        player.sendPluginMessage(language.gameWebsiteErrorMessage)
-                        player.sendMessage("https://shynixn.github.io/BlockBall/wiki/site/stats/")
-                    }
-                } else {
-                    val template = templateRepository.getAll().firstOrNull { e -> e.name == "${arena.name}_page" }
-
-                    if (template != null) {
-                        templateProcessService.collectStats(template, null)
-                        val response =
-                            templateProcessService.uploadStats(template, UploadDataType.DEFAULT, "_${id}", "g")
-
-                        if (response.first.size == 0) {
-                            plugin.logger.log(
-                                Level.WARNING,
-                                "You have exceeded the daily MCPlayerStats Quota. Increase your quota on patreon or publish it on the next day."
-                            )
-                        } else {
-                            if (language.gameWebsiteMessage.type != LanguageType.HIDDEN) {
-                                for (player in players) {
-                                    player.sendPluginMessage(language.gameWebsiteMessage)
-                                    player.sendMessage(response.first[0])
-                                }
-                            }
-                            plugin.launch {
-                                delay(1000 * 50)
-                                discordService.sendDiscordWebhook(
-                                    template.webHook,
-                                    response.first[0]
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-            completedPublish = true
-        }
+        completedPublish = true
     }
 
     // endregion

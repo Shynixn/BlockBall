@@ -186,10 +186,6 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var queueTimeOutMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Not enough players joined in time to start the game.")
 
- override var gameWebsiteMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The game was published on:")
-
- override var gameWebsiteErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Execute &f/blockballstats login &r&cto link your server to mcplayerstats.com to share your games as website and on your Discord server. If you do not want that, set mcPlayerStatsEnabled=false.")
-
  override var cannotParseNumberMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Cannot parse number.")
 
  override var cannotParseWorldMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Cannot find world.")
@@ -202,85 +198,39 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var commonErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details.")
 
- override var scoreboardCommandUsage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /blockballscoreboard help to see more info about the plugin.")
+ override var shyScoreboardPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %1$1s not found.")
 
- override var scoreboardCommandDescription = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 All commands for scoreboards in BlockBall.")
+ override var shyScoreboardNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")
 
- override var scoreboardAddCommandHint = LanguageItem("Adds a scoreboard to a player.")
+ override var shyScoreboardReloadCommandHint = LanguageItem("Reloads all scoreboards and configuration.")
 
- override var scoreboardRemoveCommandHint = LanguageItem("Removes a scoreboard from a player.")
+ override var shyScoreboardReloadMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Reloaded all scoreboards and configuration.")
 
- override var scoreboardNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cScoreboard %1$1s not found.")
+ override var shyScoreboardCommonErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details.")
 
- override var scoreboardNoPermissionToScoreboardCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to this scoreboard.")
+ override var shyScoreboardCommandSenderHasToBePlayer = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player if you do not specify the optional player argument.")
 
- override var scoreboardAddedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Added the scoreboard %1$1s to the player %2$1s.")
+ override var shyScoreboardCommandUsage = LanguageItem("[&9ShyScoreboard&f] Use /shyscoreboard help to see more info about the plugin.")
 
- override var scoreboardRemovedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Removed the scoreboard %1$1s from the player %2$1s.")
+ override var shyScoreboardCommandDescription = LanguageItem("[&9ShyScoreboard&f] All commands for the ShyScoreboard plugin.")
 
- override var scoreboardUpdateCommandHint = LanguageItem("Updates the placeholder of the scoreboard.")
+ override var shyScoreboardAddCommandHint = LanguageItem("Adds a scoreboard to a player.")
 
- override var scoreboardUpdatedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Updated the scoreboard.")
+ override var shyScoreboardSetCommandHint = LanguageItem("Sets a scoreboard to a player.")
 
- override var mcPlayerStatsCommandUsage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /blockballstats help to see more info about the plugin.")
+ override var shyScoreboardRemoveCommandHint = LanguageItem("Removes a scoreboard from a player.")
 
- override var mcPlayerStatsCommandDescription = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 All commands for the command /blockballstats.")
+ override var shyScoreboardNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cScoreboard %1$1s not found.")
 
- override var mcPlayerStatsPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %1$1s not found.")
+ override var shyScoreboardNoPermissionToScoreboardCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to this scoreboard.")
 
- override var mcPlayerStatsNoPermissionMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")
+ override var shyScoreboardAddedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Added the scoreboard %1$1s to the player %2$1s.")
 
- override var mcPlayerStatsReloadCommandHint = LanguageItem("Reloads the configuration of the plugin.")
+ override var shyScoreboardRemovedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Removed the scoreboard %1$1s from the player %2$1s.")
 
- override var mcPlayerStatsReloadCommandSuccess = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully reloaded the plugin.")
+ override var shyScoreboardUpdateCommandHint = LanguageItem("Updates the placeholder of the scoreboard.")
 
- override var mcPlayerStatsCommandSenderHasToBePlayer = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c The command sender has to be a player!")
+ override var shyScoreboardUpdatedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Updated the scoreboard.")
 
- override var mcPlayerStatsTemplateNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cTemplate %1$1s not found.")
-
- override var mcPlayerStatsLoginCommandHint = LanguageItem("Logins to https://mcplayerstats.com.")
-
- override var mcPlayerStatsReLoginCommandHint = LanguageItem("Logins to https://mcplayerstats.com and resets API keys.")
-
- override var mcPlayerStatsLoginSessionStartMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Starting new login session...")
-
- override var mcPlayerStatsLoginSessionUrlMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Open the url in your web browser:")
-
- override var mcPlayerStatsLoginSessionSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully logged into https://mcplayerstats.com.")
-
- override var mcPlayerStatsCollectCommandHint = LanguageItem("Collects the stats for the given template and player.")
-
- override var mcPlayerStatsCollectCompletedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Finished collecting the placeholders for template %1$1s.")
-
- override var mcPlayerStatsUploadDataCommandHint = LanguageItem("Uploads all changed HTML files for a given template and player. This command consumes quota.")
-
- override var mcPlayerStatsUploadDataStartMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Starting to upload the changed HTML files for template %1$1s...")
-
- override var mcPlayerStatsUploadDataCompletedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Completed data upload. Uploaded files: %1$1s")
-
- override var mcPlayerStatsUploadSettingsCommandHint = LanguageItem("Uploads the settings from the config.yml to the server. This command consumes quota.")
-
- override var mcPlayerStatsUploadSettingsStartMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Starting to upload the settings...")
-
- override var mcPlayerStatsUploadSettingsCompletedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Completed settings upload.")
-
- override var mcPlayerStatsCleanUpCommandHint = LanguageItem("Cleans all obsolete data for a given template and player.")
-
- override var mcPlayerStatsCleanUpStartMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Starting to cleanup the database for template %1$1s...")
-
- override var mcPlayerStatsCleanUpCompletedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Finished cleanup the database for template %1$1s.")
-
- override var mcPlayerStatsSchedulesCommandHint = LanguageItem("Lists the next scheduled tasks")
-
- override var mcPlayerStatsSchedulesMessageHeader = LanguageItem("The next scheduled tasks:")
-
- override var mcPlayerStatsScheduledTaskMessage = LanguageItem("%1$1s %2$1s for %3$1s")
-
- override var mcPlayerStatsBooleanNotParseableMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cValue has to be true or false.")
-
- override var mcPlayerStatsPreviewCompletedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Finished generating preview for template %1$1s.")
-
- override var mcPlayerStatsPreviewCommandHint = LanguageItem("Generates the HTML page for a player and stores it into the preview directory.")
-
- override var mcPlayerStatsCommonErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details.")
+ override var shyScoreboardBooleanNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Only true and false are allowed as values.")
 }

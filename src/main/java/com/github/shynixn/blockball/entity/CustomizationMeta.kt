@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.entity
 
+import com.github.shynixn.mcutils.common.repository.Comment
+
 
 class CustomizationMeta{
     /** Can players damage other players during a game?*/
@@ -21,4 +23,7 @@ class CustomizationMeta{
      * If set to true, the goal size can be arbitrary.
      */
     var ignoreGoalSize: Boolean = false
+
+    @Comment("When players queue for a game in gameType=MINIGAME, this is the timeout in seconds how long they can wait.")
+    var queueTimeOutSec: Int = 30
 }

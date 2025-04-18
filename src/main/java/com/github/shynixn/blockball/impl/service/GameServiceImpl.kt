@@ -11,9 +11,6 @@ import com.github.shynixn.blockball.impl.SoccerHubGameImpl
 import com.github.shynixn.blockball.impl.SoccerMiniGameImpl
 import com.github.shynixn.blockball.impl.SoccerRefereeGameImpl
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
-import com.github.shynixn.mcplayerstats.contract.DiscordService
-import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
-import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
@@ -45,9 +42,6 @@ class GameServiceImpl(
     private val soccerBallFactory: SoccerBallFactory,
     private val language: BlockBallLanguage,
     private val signService: SignService,
-    private val templateProcessService: TemplateProcessService,
-    private val templateRepository: Repository<Template>,
-    private val discordService: DiscordService,
     private val itemService: ItemService
 ) : GameService, Runnable {
     private val games = ArrayList<SoccerGame>()
@@ -108,9 +102,6 @@ class GameServiceImpl(
                     packetService,
                     soccerBallFactory,
                     commandService,
-                    templateProcessService,
-                    templateRepository,
-                    discordService,
                     itemService
                 )
 
@@ -126,9 +117,6 @@ class GameServiceImpl(
                     packetService,
                     commandService,
                     soccerBallFactory,
-                    templateProcessService,
-                    templateRepository,
-                    discordService,
                     itemService
                 ).also {
                     it.ballEnabled = false
@@ -146,9 +134,6 @@ class GameServiceImpl(
                     packetService,
                     commandService,
                     soccerBallFactory,
-                    templateProcessService,
-                    templateRepository,
-                    discordService,
                     itemService
                 ).also {
                     it.ballEnabled = false
@@ -251,15 +236,15 @@ class GameServiceImpl(
             arena.enabled = false
             throw SoccerGameException(arena, "Set the ball spawnpoint for arena ${arena.name}!")
         }
-        if (arena.lowerCorner == null || arena.upperCorner == null) {
+        if (arena.corner2 == null || arena.corner1 == null) {
             arena.enabled = false
             throw SoccerGameException(arena, "Set the playing field for arena ${arena.name}!")
         }
-        if (arena.meta.redTeamMeta.goal.lowerCorner == null || arena.meta.redTeamMeta.goal.upperCorner == null) {
+        if (arena.meta.redTeamMeta.goal.corner2 == null || arena.meta.redTeamMeta.goal.corner1 == null) {
             arena.enabled = false
             throw SoccerGameException(arena, "Set the red goal for arena ${arena.name}!")
         }
-        if (arena.meta.blueTeamMeta.goal.lowerCorner == null || arena.meta.blueTeamMeta.goal.upperCorner == null) {
+        if (arena.meta.blueTeamMeta.goal.corner2 == null || arena.meta.blueTeamMeta.goal.corner1 == null) {
             arena.enabled = false
             throw SoccerGameException(arena, "Set the blue goal for arena ${arena.name}!")
         }
@@ -293,15 +278,15 @@ class GameServiceImpl(
             }
         }
 
-        fixCorners(arena.lowerCorner!!, arena.upperCorner!!)
+        fixCorners(arena.corner2!!, arena.corner1!!)
 
         // If players set a too small arena height for hub game detection, automatically fix it.
-        if (abs(arena.upperCorner!!.y - arena.lowerCorner!!.y) < 3) {
-            arena.upperCorner!!.y = 10.0
+        if (abs(arena.corner1!!.y - arena.corner2!!.y) < 3) {
+            arena.corner1!!.y = 10.0
         }
 
-        fixCorners(arena.meta.redTeamMeta.goal.lowerCorner!!, arena.meta.redTeamMeta.goal.upperCorner!!)
-        fixCorners(arena.meta.blueTeamMeta.goal.lowerCorner!!, arena.meta.blueTeamMeta.goal.upperCorner!!)
+        fixCorners(arena.meta.redTeamMeta.goal.corner2!!, arena.meta.redTeamMeta.goal.corner1!!)
+        fixCorners(arena.meta.blueTeamMeta.goal.corner2!!, arena.meta.blueTeamMeta.goal.corner1!!)
 
         validateGoalSize(arena, Team.BLUE, arena.meta.blueTeamMeta)
         validateGoalSize(arena, Team.RED, arena.meta.redTeamMeta)
@@ -312,19 +297,19 @@ class GameServiceImpl(
             return
         }
 
-        if (abs(teamMeta.goal.upperCorner!!.x - teamMeta.goal.lowerCorner!!.x) < 1.8) {
+        if (abs(teamMeta.goal.corner1!!.x - teamMeta.goal.corner2!!.x) < 1.8) {
             throw SoccerGameException(
                 arena,
                 "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
             )
         }
-        if (abs(teamMeta.goal.upperCorner!!.y - teamMeta.goal.lowerCorner!!.y) < 1.8) {
+        if (abs(teamMeta.goal.corner1!!.y - teamMeta.goal.corner2!!.y) < 1.8) {
             throw SoccerGameException(
                 arena,
                 "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
             )
         }
-        if (abs(teamMeta.goal.upperCorner!!.z - teamMeta.goal.lowerCorner!!.z) < 1.8) {
+        if (abs(teamMeta.goal.corner1!!.z - teamMeta.goal.corner2!!.z) < 1.8) {
             throw SoccerGameException(
                 arena,
                 "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
