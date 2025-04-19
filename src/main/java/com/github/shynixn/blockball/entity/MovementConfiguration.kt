@@ -1,69 +1,42 @@
 package com.github.shynixn.blockball.entity
 
+import com.github.shynixn.mcutils.common.repository.Comment
+
 
 class MovementConfiguration {
-    /**
-     * The gravity modifier how fast a ball falls to the ground after being kicked or
-     * thrown in to the sky.
-     */
+    @Comment("The gravity modifier how fast a ball falls to the ground after being kicked.")
     var gravityModifier: Double = 0.07
 
-    /**
-     * The speed reducement of the ball in the air is calculated by
-     *
-     * NewVelocity = Current Velocity * (1.0-airDrag)
-     */
+    @Comment("The speed reducement of the ball in the air.")
     var airResistance: Double = 0.001
 
-    /**
-     * The speed reducement of the ball on the ground is calculated by
-     *
-     * NewVelocity = Current Velocity * (1.0-groundDrag)
-     */
+    @Comment("The speed reducement of the ball on the ground.")
     var rollingResistance: Double = 0.1
 
-    /**
-     * Horizontal touch modifier.
-     */
+    @Comment("The horizontal speed gain after touching the ball.")
     var horizontalTouchModifier: Double = 1.0
 
-    /**
-     * Vertical touch modifier.
-     */
+    @Comment("The vertical speed gain after touching the ball.")
     var verticalTouchModifier: Double = 1.0
 
-    /**
-     * The overall shot velocity.
-     */
+    @Comment("The horizontal and vertical speed gain after left clicking the ball.")
     var shotVelocity: Double = 1.5
 
-    /**
-     * Overwrite for y velocity.
-     */
+    @Comment("Allows to override the shotVelocity with a vertical modifier if it is any other value than 1.0.")
     var shotPassYVelocityOverwrite: Double = 1.0
 
-    /**
-     * The overall pass velocity.
-     */
+    @Comment("The horizontal and vertical speed gain after right clicking the ball.")
     var passVelocity: Double = 1.2
 
-    /**
-     * The maximum strength of spin.
-     */
+    @Comment("Maximum spin velocity.")
     var maximumSpinVelocity: Double = 0.08
 
-    /**
-     * Maximum vertical angle (in degrees) when launching a ball
-     */
+    @Comment("Maximum pitch velocity.")
     var maximumPitch: Int = 60
 
-    /**
-     * Minimum vertical angle (in degrees) when launching a ball
-     */
+    @Comment("Maximum pitch velocity.")
     var minimumPitch: Int = 0
 
-    /**
-     * Initial value of vertical angle (in degrees) when launching a ball
-     */
+    @Comment("Default pitch velocity.")
     var defaultPitch: Int = 20
 }

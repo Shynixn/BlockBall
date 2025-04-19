@@ -183,18 +183,7 @@ If your game is disabled in the game list, you should now be able to enable it w
 /blockball toggle game1
 ```
 
-## Half-time, over-time 
+## Half-time, over-time, further customizations
 
-You can configure periods like half-times, breaks and overtimes in your ``game1.yml`` file. See the further customization section below.
+You can configure periods like half-times, breaks and overtimes in your ``game1.yml`` file. See the further customization section on the next page.
 
-## Further Customizations
-
-Further customization options can be found in the ``plugins/BlockBall/arena/<name>.yml`` file.
-
-The ``arena_sample.yml`` file contains explanations for each property.
-
-Execute the reload command to load your file changes.
-
-```
-/blockball reload game1
-```

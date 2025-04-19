@@ -3,25 +3,23 @@ package com.github.shynixn.blockball.entity
 import com.github.shynixn.mcutils.common.repository.Comment
 
 
-class CustomizationMeta{
-    /** Can players damage other players during a game?*/
+class CustomizationMeta {
+    @Comment("Should player take damage during a game?")
     var damageEnabled: Boolean = false
-    /** Should players be teleported back to their spawnpoint if someone scores?*/
+
+    @Comment("Should players be teleported back to their spawnpoint in the game when someone scores a goal?")
     var backTeleport: Boolean = false
-    /** After how many seconds should players be teleported back to their spawnpoint if [backTeleport] is enabled?*/
+
+    @Comment("The amount of seconds until the players are teleported back to their spawnpoint when someone scores a goal.")
     var backTeleportDelay: Int = 2
-    /**
-     * Should the players keep their inventory when they join a game?
-     */
+
+    @Comment("Should players keep their inventory when they join a game?")
     var keepInventoryEnabled: Boolean = false
-    /**
-     * Should the players keep their health when they join a game?
-     */
+
+    @Comment("Should players keep their current health when they join a game?")
     var keepHealthEnabled: Boolean = true
 
-    /**
-     * If set to true, the goal size can be arbitrary.
-     */
+    @Comment("If set to true, the goal size is allowed to by very tiny. If set to false, the goal size has to be a minimum size.")
     var ignoreGoalSize: Boolean = false
 
     @Comment("When players queue for a game in gameType=MINIGAME, this is the timeout in seconds how long they can wait.")

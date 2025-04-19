@@ -3,68 +3,61 @@ package com.github.shynixn.blockball.entity
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandType
+import com.github.shynixn.mcutils.common.repository.Comment
 import com.github.shynixn.mcutils.sign.SignMeta
 
 class TeamMeta {
-    /**
-     * Team DisplayName.
-     */
+    @Comment("The display name of the team. Supports Minecraft chat colors.")
     var displayName: String = ""
 
-    /** Amount of points this team receives when a goal gets scored. */
+    @Comment("The amount of points a team gets when a player scores a goal.")
     var pointsPerGoal: Int = 1
 
-    /** Amount of points this team receives when a player of the opposite team dies. */
+    @Comment("The amount of points a team gets when a player of the opposite team dies.")
     var pointsPerEnemyDeath: Int = 0
 
-    /** List of signs which can be clicked to join the team.*/
+    @Comment("All signs to join this team. Use the /blockball sign command ingame to configure this field.")
     val teamSigns = ArrayList<SignMeta>()
 
-    /** Min amount of players in this team to start the match for this team. */
+    @Comment("Min amount of players in this team to start the match for this team.")
     var minAmount: Int = 0
 
-    /** Max amount of players in this team to start the match for this team. */
+    @Comment("Max amount of players in this team to start the match for this team.")
     var maxAmount: Int = 10
 
-    /** Minimum amount of players in this team to keep the game running. **/
+    @Comment("Minimum amount of players in this team to keep the game running.")
     var minPlayingPlayers: Int = 0
 
     /** Goal properties of the team. */
+    @Comment("Goal location properties.")
     val goal: Selection = Selection()
 
+    @Comment("The armor a player receives when joining this team. Use the /blockball armor command ingame to configure this.")
     var armor: Array<String?> = arrayOfNulls(4)
 
+    @Comment("The inventory a player receives when joining this team. Use the /blockball inventory command ingame to configure this.")
     var inventory: Array<String?> = arrayOfNulls(36)
 
     /** Spawnpoint of the team inside the soccerArena. */
+    @Comment("The spawnpoint of this team inside of the game.")
     var spawnpoint: Vector3d? = null
 
-    /** Optional lobby spawnpoint */
+    @Comment("The lobby spawnpoint of this team inside of the game.")
     var lobbySpawnpoint: Vector3d? = null
 
-    /**
-     * Commands executed on player win.
-     */
+    @Comment("The commands being executed when a team wins. A command always starts with an slash.")
     var winCommands: List<CommandMeta> = ArrayList()
 
-    /**
-     * Commands executed on player loose.
-     */
+    @Comment("The commands being executed when a team looses. A command always starts with an slash.")
     var looseCommands: List<CommandMeta> = ArrayList()
 
-    /**
-     * Commands executed on player draw.
-     */
+    @Comment("The commands being executed when a game ends in a draw. A command always starts with an slash.")
     var drawCommands: List<CommandMeta> = ArrayList()
 
-    /**
-     * Commands executed on player goal.
-     */
+    @Comment("The commands being executed when a goal is scored. A command always starts with an slash.")
     var goalCommands: List<CommandMeta> = ArrayList()
 
-    /**
-     * Commands executed on player join.
-     */
+    @Comment("The commands being executed when a player joins this team. A command always starts with an slash.")
     var joinCommands: List<CommandMeta> = listOf(
         CommandMeta(
             CommandType.SERVER_PER_PLAYER,
@@ -72,9 +65,7 @@ class TeamMeta {
         )
     )
 
-    /**
-     * Commands executed on player leave.
-     */
+    @Comment("The commands being executed when a player leaves this team. A command always starts with an slash.")
     var leaveCommands: List<CommandMeta> = listOf(
         CommandMeta(
             CommandType.SERVER_PER_PLAYER,
