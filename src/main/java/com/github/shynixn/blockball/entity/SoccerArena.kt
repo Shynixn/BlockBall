@@ -1,28 +1,29 @@
 package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.enumeration.GameType
-import com.github.shynixn.fasterxml.jackson.annotation.JsonPropertyOrder
+import com.github.shynixn.mcutils.common.repository.Comment
 import com.github.shynixn.mcutils.common.repository.Element
 
-@JsonPropertyOrder("name", "displayName", "enabled", "gameType", "corner1", "corner2", "meta")
-class SoccerArena : Selection(), Element{
-    /** Unique [name] of the soccerArena. */
+@Comment(
+    "###############",
+    "",
+    "This is the configuration for one arena in the Minecraft plugin BlockBall.",
+    "",
+    "###############"
+)
+class SoccerArena : Selection(), Element {
+    @Comment("The unique identifier of a soccer arena. Should be identical to the name of this file.")
     override var name: String = ""
 
-    /** [displayName] of the soccerArena on signs or messages. */
+    @Comment("A display name for this arena, which can contain chat colors and more. This name can be used in messages using the placeholder %blockball_game_displayName%.")
     var displayName: String = ""
 
-    /** Is the soccerArena ready to be placed. */
+    @Comment("Allows to enable to disable the arena.")
     var enabled: Boolean = false
 
-    /**
-     * Amount of seconds until the queue timeouts.
-     */
-    var queueTimeOutSec: Int = 30
-
-    /** [gameType] of the soccerArena */
+    @Comment("The type of BlockBall game. The supported types are HUBGAME, MINIGAME and REFEREEGAME. REFEREEGAME is PatreonOnly.")
     var gameType: GameType = GameType.HUBGAME
 
-    /** Collection of the soccerArena metadata. */
-    val meta: ArenaMeta = ArenaMeta()
+    @Comment("All configurable meta data of this arena.")
+    var meta: ArenaMeta = ArenaMeta()
 }

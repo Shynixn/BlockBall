@@ -6,11 +6,11 @@ nav:
       - Introduction: README.md
       - Permission: permission.md
       - Creating the game: game.md
+      - Customizing the game: customization.md
       - Interactions: interaction.md
       - Signs: sign.md
       - Bedrock: bedrock.md
       - Referee: referee.md
-      - Stats: stats.md
       - Commands: commands.md
       - PlaceHolders: placeholders.md
       - Developer Api: api.md

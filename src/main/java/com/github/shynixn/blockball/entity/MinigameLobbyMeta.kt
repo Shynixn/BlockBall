@@ -1,16 +1,13 @@
 package com.github.shynixn.blockball.entity
 
-import com.github.shynixn.blockball.enumeration.MatchTimeCloseType
-import com.github.shynixn.mcutils.common.ChatColor
-import com.github.shynixn.mcutils.common.Vector3d
+import com.github.shynixn.mcutils.common.repository.Comment
 
 class MinigameLobbyMeta {
-    /**
-     * Match Times.
-     */
+
+    @Comment("A list of periods in this soccer game. You can freely add and remove periods here.")
     var matchTimes: MutableList<MatchTimeMeta> = ArrayList()
 
-    /** Duration the match will max last. */
+    @Comment("The lobby timer in seconds until the match starts.")
     var lobbyDuration: Int = 20
 
     init {

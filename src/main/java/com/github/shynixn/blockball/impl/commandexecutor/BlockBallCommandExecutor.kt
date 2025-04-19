@@ -50,13 +50,18 @@ class BlockBallCommandExecutor(
     private val itemService: ItemService,
     chatMessageService: ChatMessageService
 ) {
-    private val arenaTabs: suspend (s: CommandSender) -> List<String> = {
-        arenaRepository.getAll().map { e -> e.name }
+    private val arenaTabs: (s: CommandSender) -> List<String> = {
+        val cache = arenaRepository.getCache()
+        if (cache != null) {
+            cache.map { e -> e.name }
+        } else {
+            gameService.getAll().map { e -> e.arena.name }
+        }
     }
-    private val onlinePlayerTabs: (suspend (CommandSender) -> List<String>) = {
+    private val onlinePlayerTabs: ((CommandSender) -> List<String>) = {
         Bukkit.getOnlinePlayers().map { e -> e.name }
     }
-    private val worldTabs: (suspend (CommandSender) -> List<String>) = {
+    private val worldTabs: ((CommandSender) -> List<String>) = {
         Bukkit.getWorlds().map { e -> e.name }
     }
     private val playerMustExist = object : Validator<Player> {
@@ -81,7 +86,7 @@ class BlockBallCommandExecutor(
         }
     }
 
-    private val teamTabs: suspend (s: CommandSender) -> List<String> = {
+    private val teamTabs: (s: CommandSender) -> List<String> = {
         val tabs = ArrayList<Team>()
         tabs.add(Team.RED)
         tabs.add(Team.BLUE)
@@ -659,32 +664,7 @@ class BlockBallCommandExecutor(
         arena.meta.refereeTeamMeta.armor = mapItemsToColoredSerializedItems(items, "16777215")
 
         arenaRepository.save(arena)
-        createStatsFile(name)
         sender.sendPluginMessage(language.gameCreatedMessage, name)
-    }
-
-    private suspend fun createStatsFile(name: String) {
-        var hasCreatedFile = false
-        withContext(Dispatchers.IO) {
-            val yamlContent = plugin.getResource("stats/game_page.yml")!!.readBytes().toString(Charsets.UTF_8)
-            val yamlFile = plugin.dataFolder.resolve("stats/templates/${name}_page.yml")
-
-            if (!yamlFile.exists()) {
-                yamlFile.writeText(replaceStatsPlaceHolders(yamlContent, name))
-                hasCreatedFile = true
-            }
-
-            val htmlContent = plugin.getResource("stats/game_page.html")!!.readBytes().toString(Charsets.UTF_8)
-            val htmlFile = plugin.dataFolder.resolve("stats/templates/${name}_page.html")
-            if (!htmlFile.exists()) {
-                htmlFile.writeText(replaceStatsPlaceHolders(htmlContent, name))
-                hasCreatedFile = true
-            }
-        }
-
-        if (hasCreatedFile) {
-            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "blockballstats reload")
-        }
     }
 
     private fun replaceStatsPlaceHolders(content: String, name: String): String {
@@ -737,11 +717,6 @@ class BlockBallCommandExecutor(
         try {
             arena.enabled = !arena.enabled
             gameService.reload(arena)
-
-            if (arena.enabled) {
-                createStatsFile(arena.name)
-            }
-
             sender.sendPluginMessage(language.enabledArenaMessage, arena.enabled.toString())
         } catch (e: SoccerGameException) {
             arena.enabled = false
@@ -956,18 +931,18 @@ class BlockBallCommandExecutor(
             }
 
             if (selectionType == SelectionType.FIELD) {
-                arena.lowerCorner = convertToOuterLowerCorner(selectionLeft.toVector3d(), selectionRight.toVector3d())
-                arena.upperCorner = convertToOuterUpperCorner(selectionLeft.toVector3d(), selectionRight.toVector3d())
+                arena.corner2 = convertToOutercorner2(selectionLeft.toVector3d(), selectionRight.toVector3d())
+                arena.corner1 = convertToOutercorner1(selectionLeft.toVector3d(), selectionRight.toVector3d())
             } else if (selectionType == SelectionType.RED_GOAL) {
-                arena.meta.redTeamMeta.goal.lowerCorner =
-                    convertToOuterLowerCorner(selectionLeft.toVector3d(), selectionRight.toVector3d())
-                arena.meta.redTeamMeta.goal.upperCorner =
-                    convertToOuterUpperCorner(selectionLeft.toVector3d(), selectionRight.toVector3d())
+                arena.meta.redTeamMeta.goal.corner2 =
+                    convertToOutercorner2(selectionLeft.toVector3d(), selectionRight.toVector3d())
+                arena.meta.redTeamMeta.goal.corner1 =
+                    convertToOutercorner1(selectionLeft.toVector3d(), selectionRight.toVector3d())
             } else if (selectionType == SelectionType.BLUE_GOAL) {
-                arena.meta.blueTeamMeta.goal.lowerCorner =
-                    convertToOuterLowerCorner(selectionLeft.toVector3d(), selectionRight.toVector3d())
-                arena.meta.blueTeamMeta.goal.upperCorner =
-                    convertToOuterUpperCorner(selectionLeft.toVector3d(), selectionRight.toVector3d())
+                arena.meta.blueTeamMeta.goal.corner2 =
+                    convertToOutercorner2(selectionLeft.toVector3d(), selectionRight.toVector3d())
+                arena.meta.blueTeamMeta.goal.corner1 =
+                    convertToOutercorner1(selectionLeft.toVector3d(), selectionRight.toVector3d())
             }
         }
 
@@ -978,7 +953,7 @@ class BlockBallCommandExecutor(
     /**
      * The block selection is not precise enough, we want to exact corner location.
      */
-    private fun convertToOuterUpperCorner(selection1: Vector3d, selection2: Vector3d): Vector3d {
+    private fun convertToOutercorner1(selection1: Vector3d, selection2: Vector3d): Vector3d {
         return Vector3d(
             selection1.world,
             max(selection1.x + 0.99, selection2.x + 0.99),
@@ -990,7 +965,7 @@ class BlockBallCommandExecutor(
     /**
      * The block selection is not precise enough, we want to exact corner location.
      */
-    private fun convertToOuterLowerCorner(selection1: Vector3d, selection2: Vector3d): Vector3d {
+    private fun convertToOutercorner2(selection1: Vector3d, selection2: Vector3d): Vector3d {
         return Vector3d(
             selection1.world,
             min(selection1.x, selection2.x),
@@ -1108,32 +1083,32 @@ class BlockBallCommandExecutor(
                 }
 
                 val highLights = ArrayList<AreaHighlight>()
-                if (arena.lowerCorner != null && arena.upperCorner != null) {
+                if (arena.corner2 != null && arena.corner1 != null) {
                     highLights.add(
                         AreaHighlight(
-                            roundLocation(arena.lowerCorner!!),
-                            roundLocation(arena.upperCorner!!),
+                            roundLocation(arena.corner2!!),
+                            roundLocation(arena.corner1!!),
                             Color.BLACK.rgb,
                             "Field",
                             true
                         )
                     )
                 }
-                if (arena.meta.redTeamMeta.goal.lowerCorner != null && arena.meta.redTeamMeta.goal.upperCorner != null) {
+                if (arena.meta.redTeamMeta.goal.corner2 != null && arena.meta.redTeamMeta.goal.corner1 != null) {
                     highLights.add(
                         AreaHighlight(
-                            roundLocation(arena.meta.redTeamMeta.goal.lowerCorner!!),
-                            roundLocation(arena.meta.redTeamMeta.goal.upperCorner!!),
+                            roundLocation(arena.meta.redTeamMeta.goal.corner2!!),
+                            roundLocation(arena.meta.redTeamMeta.goal.corner1!!),
                             Color.RED.rgb,
                             "Red"
                         )
                     )
                 }
-                if (arena.meta.blueTeamMeta.goal.lowerCorner != null && arena.meta.blueTeamMeta.goal.upperCorner != null) {
+                if (arena.meta.blueTeamMeta.goal.corner2 != null && arena.meta.blueTeamMeta.goal.corner1 != null) {
                     highLights.add(
                         AreaHighlight(
-                            roundLocation(arena.meta.blueTeamMeta.goal.lowerCorner!!),
-                            roundLocation(arena.meta.blueTeamMeta.goal.upperCorner!!),
+                            roundLocation(arena.meta.blueTeamMeta.goal.corner2!!),
+                            roundLocation(arena.meta.blueTeamMeta.goal.corner1!!),
                             Color.BLUE.rgb,
                             "Blue"
                         )

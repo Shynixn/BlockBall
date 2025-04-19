@@ -8,9 +8,6 @@ import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
-import com.github.shynixn.mcplayerstats.contract.DiscordService
-import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
-import com.github.shynixn.mcplayerstats.entity.Template
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -39,9 +36,6 @@ open class SoccerMiniGameImpl constructor(
     packetService: PacketService,
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
-    templateProcessService: TemplateProcessService,
-    templateRepository: Repository<Template>,
-    discordService: DiscordService,
     itemService: ItemService
 ) : SoccerGameImpl(
     arena,
@@ -53,12 +47,9 @@ open class SoccerMiniGameImpl constructor(
     commandService,
     language,
     playerDataRepository,
-    templateProcessService,
-    templateRepository,
-    discordService,
     itemService
 ), SoccerMiniGame {
-    private var currentQueueTime = arena.queueTimeOutSec
+    private var currentQueueTime = arena.meta.customizingMeta.queueTimeOutSec
     private var isQueueTimeRunning = false
 
     /**
@@ -349,7 +340,7 @@ open class SoccerMiniGameImpl constructor(
 
 
     private fun queueTimeOut() {
-        currentQueueTime = arena.queueTimeOutSec // Reset queue timer each time someone joins.
+        currentQueueTime = arena.meta.customizingMeta.queueTimeOutSec // Reset queue timer each time someone joins.
 
         if (isQueueTimeRunning) {
             return

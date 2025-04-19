@@ -49,7 +49,6 @@ class BlockBallDependencyInjectionModule(
     private val plugin: BlockBallPlugin,
     private val language: BlockBallLanguage,
     private val placeHolderService: PlaceHolderService,
-    private val mcplayerStatsModule: DependencyInjectionModule
 ) {
     companion object {
         val areLegacyVersionsIncluded: Boolean by lazy {
@@ -77,7 +76,7 @@ class BlockBallDependencyInjectionModule(
             CachedRepositoryImpl(
                 YamlFileRepositoryImpl<SoccerArena>(
                     plugin, plugin.dataFolder.toPath().resolve("arena"),
-                    listOf(Pair("arena_sample.yml", "arena_sample.yml")),
+                    listOf(),
                     listOf("arena_sample.yml"),
                     object : TypeReference<SoccerArena>() {}
                 ))
@@ -164,9 +163,6 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
-                mcplayerStatsModule.getService(),
-                mcplayerStatsModule.getService(),
-                mcplayerStatsModule.getService(),
                 module.getService()
             )
         }

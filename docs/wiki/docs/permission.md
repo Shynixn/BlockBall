@@ -33,14 +33,6 @@ The following permissions are available in BlockBall.
 | blockball.shyscoreboard.command                        | Admin      | Allows to use the /blockballscoreboard command.                                                      |
 | blockball.shyscoreboard.reload                         | Admin      | Allows to reload configurations.                                                                     |
 | blockball.shyscoreboard.add                            | Admin      | Allows to add a scoreboard to a player                                                               |
+| blockball.shyscoreboard.set                            | Admin      | Allows to set a scoreboard to a player                                                               |
 | blockball.shyscoreboard.remove                         | Admin      | Allows to remove a scoreboard from a player                                                          |
 | blockball.shyscoreboard.update                         | Admin      | Allows to refresh a scoreboard                                                                       |
-| blockball.mcplayerstats.command                        | Admin      | Allows to use the /blockballstats command.                                                           |
-| blockball.mcplayerstats.reload                         | Admin      | Allows to reload configurations.                                                                     |
-| blockball.mcplayerstats.login                          | Admin      | Allows to start a login session                                                                      |
-| blockball.mcplayerstats.collect                        | Admin      | Allows to collect stats manually                                                                     |
-| blockball.mcplayerstats.upload                         | Admin      | Allows to upload data manually                                                                       |
-| blockball.mcplayerstats.cleanup                        | Admin      | Allows to cleanup data manually                                                                      |
-| blockball.mcplayerstats.schedules                      | Admin      | Allows to display schedules                                                                          |
-| blockball.mcplayerstats.preview                        | Admin      | Allows to preview pages                                                                              |
-

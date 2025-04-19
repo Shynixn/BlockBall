@@ -11,14 +11,6 @@ import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.mccoroutine.bukkit.CoroutineTimings
 import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mcplayerstats.MCPlayerStatsDependencyInjectionModule
-import com.github.shynixn.mcplayerstats.contract.MCPlayerStatsLanguage
-import com.github.shynixn.mcplayerstats.contract.PlaceHolderRepository
-import com.github.shynixn.mcplayerstats.contract.TemplateProcessService
-import com.github.shynixn.mcplayerstats.contract.UploadedStatsRepository
-import com.github.shynixn.mcplayerstats.entity.MCPlayerStatsSettings
-import com.github.shynixn.mcplayerstats.impl.commandexecutor.MCPlayerStatsCommandExecutor
-import com.github.shynixn.mcplayerstats.impl.listener.MCPlayerStatsListener
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
@@ -52,7 +44,6 @@ class BlockBallPlugin : JavaPlugin() {
     private val prefix: String = ChatColor.BLUE.toString() + "[BlockBall] "
     private lateinit var module: DependencyInjectionModule
     private lateinit var scoreboardModule: DependencyInjectionModule
-    private var mcPlayerStatsModule: DependencyInjectionModule? = null
     private var immidiateDisable = false
 
     companion object {
@@ -124,8 +115,7 @@ class BlockBallPlugin : JavaPlugin() {
 
         // Module
         this.scoreboardModule = loadShyScoreboardModule(language)
-        this.mcPlayerStatsModule = loadMCPlayerStatsModule(language, this.scoreboardModule.getService())
-        this.module = BlockBallDependencyInjectionModule(this, language, this.scoreboardModule.getService(), mcPlayerStatsModule!!).build()
+        this.module = BlockBallDependencyInjectionModule(this, language, this.scoreboardModule.getService()).build()
 
         // Connect to database
         try {
@@ -255,24 +245,25 @@ class BlockBallPlugin : JavaPlugin() {
 
         module.close()
         scoreboardModule.close()
-        mcPlayerStatsModule?.close()
     }
 
     private fun loadShyScoreboardModule(language: ShyScoreboardLanguage): DependencyInjectionModule {
         val settings = ShyScoreboardSettings({ s ->
-            s.joinDelaySeconds = config.getInt("scoreboard.joinDelaySeconds")
-            s.checkForChangeChangeSeconds = config.getInt("scoreboard.checkForChangeChangeSeconds")
+            s.addPermission = "blockball.shyscoreboard.add"
             s.baseCommand = "blockballscoreboard"
+            s.checkForChangeChangeSeconds = config.getInt("scoreboard.checkForChangeChangeSeconds")
             s.commandAliases = config.getStringList("commands.blockballscoreboard.aliases")
             s.commandPermission = "blockball.shyscoreboard.command"
-            s.reloadPermission = "blockball.shyscoreboard.reload"
-            s.dynScoreboardPermission = "blockball.shyscoreboard.scoreboard."
-            s.addPermission = "blockball.shyscoreboard.add"
-            s.removePermission = "blockball.shyscoreboard.remove"
-            s.updatePermission = "blockball.shyscoreboard.update"
             s.defaultScoreboards = listOf(
                 "scoreboard/blockball_scoreboard.yml" to "blockball_scoreboard.yml"
             )
+            s.dynScoreboardPermission = "blockball.shyscoreboard.scoreboard."
+            s.joinDelaySeconds = config.getInt("scoreboard.joinDelaySeconds")
+            s.reloadPermission = "blockball.shyscoreboard.reload"
+            s.removePermission = "blockball.shyscoreboard.remove"
+            s.setPermission = "blockball.shyscoreboard.set"
+            s.updatePermission = "blockball.shyscoreboard.update"
+            s.worldGuardFlag = "blockballscoreboard"
         })
         settings.reload()
         val module = ShyScoreboardDependencyInjectionModule(this, settings, language, WorldGuardServiceImpl(this)).build()
@@ -291,55 +282,6 @@ class BlockBallPlugin : JavaPlugin() {
         val scoreboardService = module.getService<ScoreboardService>()
         launch {
             scoreboardService.reload()
-        }
-
-        return module
-    }
-
-    private fun loadMCPlayerStatsModule(
-        language: MCPlayerStatsLanguage,
-        placeHolderService: PlaceHolderService
-    ): DependencyInjectionModule {
-        val statsFolder = dataFolder.resolve("stats").toPath()
-
-        if (!statsFolder.toFile().exists()) {
-            statsFolder.toFile().mkdir()
-        }
-
-        val settings = MCPlayerStatsSettings({ s ->
-            s.baseCommand = "blockballstats"
-            s.commandAliases = config.getStringList("commands.blockballstats.aliases")
-            s.commandPermission = "blockball.mcplayerstats.command"
-            s.reloadPermission = "blockball.mcplayerstats.reload"
-            s.loginPermission = "blockball.mcplayerstats.login"
-            s.cleanupPermission = "blockball.mcplayerstats.cleanup"
-            s.uploadPermission = "blockball.mcplayerstats.upload"
-            s.previewPermission = "blockball.mcplayerstats.preview"
-            s.schedulesPermission = "blockball.mcplayerstats.schedules"
-            s.collectPermission = "blockball.mcplayerstats.collect"
-            s.sqliteFile = statsFolder.resolve("MCPlayerStats.sqlite")
-            s.previewFolder = statsFolder.resolve("preview")
-            s.sessionFile = statsFolder.resolve("session.data")
-            s.templatesFolder = statsFolder.resolve("templates")
-            s.defaultStats = listOf(
-                Pair("stats/player_page.html", "player_page.html"),
-                Pair("stats/player_page.yml", "player_page.yml")
-            )
-        })
-        settings.reload()
-        val module = MCPlayerStatsDependencyInjectionModule(this, settings, language, placeHolderService).build()
-
-        // Register Listeners
-        Bukkit.getPluginManager().registerEvents(module.getService<MCPlayerStatsListener>(), this)
-
-        // Register CommandExecutor
-        module.getService<MCPlayerStatsCommandExecutor>()
-        module.getService<PlaceHolderRepository>().createIfNotExists()
-        module.getService<UploadedStatsRepository>().createIfNotExists()
-
-        launch {
-            val templateProcessService = module.getService<TemplateProcessService>()
-            templateProcessService.reload()
         }
 
         return module

@@ -1,46 +1,36 @@
 package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.enumeration.MatchTimeCloseType
+import com.github.shynixn.mcutils.common.repository.Comment
 
 class MatchTimeMeta {
-    /**
-     * TimeSpan of the match in seconds.
-     */
+    @Comment("Timespan of this period in a game in seconds.")
     var duration: Int = 300
 
-    /**
-     * Close time when the match is over.
-     */
+    @Comment("Defines when this period is over. If set to TIME_OVER, the match ends when the duration has passed. If set to NEXT_GOAL, the match ends when the duration has passed or if a goal gets scored.")
     var closeType: MatchTimeCloseType = MatchTimeCloseType.TIME_OVER
 
-    /**
-     * Should the goals of the teams be switched when this match time gets enabled?
-     */
+    @Comment("Should teams switch sides when this period starts?")
     var isSwitchGoalsEnabled: Boolean = false
 
-    /**
-     * Is the ball playable?
-     */
+    @Comment("Is the ball spawned during this period?")
     var playAbleBall: Boolean = true
 
-    /**
-     * Should the players respawn when this match time starts.
-     */
+    @Comment("Should players respawn at their spawnpoint when this period starts?")
     var respawnEnabled: Boolean = true
 
-    /**
-     * Title of the message getting played when this match time starts.
-     */
+    @Comment("A title message being displayed.")
     var startMessageTitle: String = ""
 
-    /**
-     * SubTitle of the message getting played when this match time starts.
-     */
+    @Comment("A subtitle message being displayed.")
     var startMessageSubTitle: String = ""
 
+    @Comment("Title message property.")
     var startMessageFadeIn: Int = 20
 
+    @Comment("Title message property.")
     var startMessageStay: Int = 60
 
+    @Comment("Title message property.")
     var startMessageFadeOut: Int = 20
 }

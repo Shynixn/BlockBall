@@ -1,7 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.util.*
-import java.io.*
 
 plugins {
     id("org.jetbrains.kotlin.jvm") version ("1.9.25")
@@ -9,7 +7,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.17.1"
+version = "7.18.0"
 
 repositories {
     mavenLocal()
@@ -24,22 +22,20 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT")
 
     // Library dependencies with legacy compatibility, we can use more up-to-date version in the plugin.yml
-    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.21.0")
-    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.21.0")
-    implementation("com.github.shynixn.mccoroutine:mccoroutine-folia-api:2.21.0")
-    implementation("com.github.shynixn.mccoroutine:mccoroutine-folia-core:2.21.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.22.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.22.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-folia-api:2.22.0")
+    implementation("com.github.shynixn.mccoroutine:mccoroutine-folia-core:2.22.0")
     implementation("com.github.shynixn:fasterxml:1.2.0")
     implementation("com.zaxxer:HikariCP:4.0.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.mcplayerstats:mcplayerstats:1.1.10")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.4.0")
-    implementation("com.github.shynixn.mcutils:common:2025.17")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.5.0")
+    implementation("com.github.shynixn.mcutils:common:2025.22")
     implementation("com.github.shynixn.mcutils:packet:2025.17")
     implementation("com.github.shynixn.mcutils:database:2025.7")
     implementation("com.github.shynixn.mcutils:sign:2025.4")
-    implementation("com.github.shynixn.mcutils:http:2025.9")
     implementation("com.github.shynixn.mcutils:worldguard:2025.4")
 }
 
@@ -80,7 +76,6 @@ tasks.register("relocatePluginJar", ShadowJar::class.java) {
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-relocate.${archiveExtension.get()}")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
     relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
-    relocate("com.github.shynixn.mcplayerstats", "com.github.shynixn.blockball.lib.com.github.shynixn.mcplayerstats")
 }
 
 /**
@@ -110,7 +105,6 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
-    exclude("com/github/shynixn/mcplayerstats/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("org/**")
     exclude("kotlin/**")
@@ -133,7 +127,6 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
-    exclude("com/github/shynixn/mcplayerstats/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("org/**")
     exclude("kotlin/**")
@@ -165,7 +158,6 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
     relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
     relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
-    relocate("com.github.shynixn.mcplayerstats", "com.github.shynixn.blockball.lib.com.github.shynixn.mcplayerstats")
     relocate("com.github.shynixn.fasterxml", "com.github.shynixn.blockball.lib.com.github.shynixn.fasterxml")
 
     exclude("plugin.yml")
@@ -184,7 +176,6 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
-    exclude("com/github/shynixn/mcplayerstats/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("org/**")
     exclude("kotlin/**")
@@ -203,40 +194,36 @@ tasks.register("languageFile") {
 
     val contractContents = ArrayList<String>()
     val ignoredKeys = listOf(
-        "playerNotFoundMessage",
-        "reloadMessage",
-        "noPermissionCommand",
-        "commandSenderHasToBePlayer",
-        "reloadCommandHint",
-        "commonErrorMessage",
-        "scoreboardCommandUsage",
-        "scoreboardCommandDescription",
-        "scoreboardAddCommandHint",
-        "scoreboardRemoveCommandHint",
-        "scoreboardNotFoundMessage",
-        "scoreboardNoPermissionToScoreboardCommand",
-        "scoreboardAddedMessage",
-        "scoreboardRemovedMessage",
-        "scoreboardUpdateCommandHint",
-        "scoreboardUpdatedMessage"
+        "shyScoreboardPlayerNotFoundMessage",
+        "shyScoreboardNoPermissionCommand",
+        "shyScoreboardReloadCommandHint",
+        "shyScoreboardReloadMessage",
+        "shyScoreboardCommonErrorMessage",
+        "shyScoreboardCommandSenderHasToBePlayer",
+        "shyScoreboardCommandUsage",
+        "shyScoreboardCommandDescription",
+        "shyScoreboardAddCommandHint",
+        "shyScoreboardSetCommandHint",
+        "shyScoreboardRemoveCommandHint",
+        "shyScoreboardNotFoundMessage",
+        "shyScoreboardNoPermissionToScoreboardCommand",
+        "shyScoreboardAddedMessage",
+        "shyScoreboardRemovedMessage",
+        "shyScoreboardUpdateCommandHint",
+        "shyScoreboardUpdatedMessage",
+        "shyScoreboardBooleanNotFoundMessage"
     )
     contractContents.add("package com.github.shynixn.blockball.contract")
     contractContents.add("")
-    contractContents.add("import com.github.shynixn.mcplayerstats.contract.MCPlayerStatsLanguage")
     contractContents.add("import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageItem")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageProvider")
     contractContents.add("")
-    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, MCPlayerStatsLanguage {")
+    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage {")
     for (key in lines) {
         if (key.toCharArray()[0].isLetter()) {
-            if (ignoredKeys.contains(key.substring(0, key.length-1))) {
+            if (ignoredKeys.contains(key.substring(0, key.length - 1))) {
                 continue
-            }
-
-            if (!key.startsWith("mcPlayerStats")) {
-                contractContents.add("  var ${key} LanguageItem")
-                contractContents.add("")
             }
         }
     }
@@ -257,8 +244,10 @@ tasks.register("languageFile") {
     implContents.add("import com.github.shynixn.blockball.contract.BlockBallLanguage")
     implContents.add("")
     implContents.add("class BlockBallLanguageImpl : BlockBallLanguage {")
-    implContents.add(" override val names: List<String>\n" +
-            "  get() = listOf(\"en_us\")")
+    implContents.add(
+        " override val names: List<String>\n" +
+                "  get() = listOf(\"en_us\")"
+    )
 
     for (i in lines.indices) {
         val key = lines[i]
@@ -267,15 +256,15 @@ tasks.register("languageFile") {
             var text: String
 
             var j = i
-            while (true){
-                if(lines[j].contains("text:")){
+            while (true) {
+                if (lines[j].contains("text:")) {
                     text = lines[j]
                     break
                 }
                 j++
             }
 
-            implContents.add(" override var ${key.replace(":","")} = LanguageItem(${text.replace("  text: ","")})")
+            implContents.add(" override var ${key.replace(":", "")} = LanguageItem(${text.replace("  text: ", "")})")
             implContents.add("")
         }
     }
