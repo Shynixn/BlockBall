@@ -127,7 +127,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
                 it.target = position.toLocation()
             })
 
-            if (meta.isSlimeVisible) {
+            if (meta.slimeVisible) {
                 packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
                     it.slimeSize = meta.kickPassHitBoxSize.toInt()
                     it.entityId = entityId

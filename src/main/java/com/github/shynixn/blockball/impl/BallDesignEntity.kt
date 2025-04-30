@@ -47,7 +47,7 @@ class BallDesignEntity(val entityId: Int) {
             it.entityType = EntityType.ARMOR_STAND
         })
 
-        if (!ball.meta.isSlimeVisible) {
+        if (!ball.meta.slimeVisible) {
             val stack = itemService.toItemStack(ball.meta.item)
             packetService.sendPacketOutEntityEquipment(player, PacketOutEntityEquipment().also {
                 it.entityId = entityId
@@ -121,7 +121,7 @@ class BallDesignEntity(val entityId: Int) {
         if (angle != null) {
             rotation = Vector3d(angle.x, angle.y, angle.z)
 
-            if (ball.meta.isSlimeVisible) {
+            if (ball.meta.slimeVisible) {
                 return
             }
 

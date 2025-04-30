@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.BlockBallLanguage
-import com.github.shynixn.blockball.contract.BossBarService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.PlayerInformation
@@ -24,7 +23,6 @@ class SoccerRefereeGameImpl(
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
     plugin: Plugin,
     private val placeHolderService: PlaceHolderService,
-    bossBarService: BossBarService,
     private val chatMessageService: ChatMessageService,
     private val soundService: SoundService,
     language: BlockBallLanguage,
@@ -37,7 +35,6 @@ class SoccerRefereeGameImpl(
     playerDataRepository,
     plugin,
     placeHolderService,
-    bossBarService,
     chatMessageService,
     soundService,
     language,

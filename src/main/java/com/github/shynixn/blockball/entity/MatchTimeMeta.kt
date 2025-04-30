@@ -11,7 +11,7 @@ class MatchTimeMeta {
     var closeType: MatchTimeCloseType = MatchTimeCloseType.TIME_OVER
 
     @Comment("Should teams switch sides when this period starts?")
-    var isSwitchGoalsEnabled: Boolean = false
+    var switchGoals: Boolean = false
 
     @Comment("Is the ball spawned during this period?")
     var playAbleBall: Boolean = true

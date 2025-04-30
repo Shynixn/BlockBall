@@ -35,7 +35,6 @@ abstract class SoccerGameImpl(
     private val placeHolderService: PlaceHolderService,
     private val packetService: PacketService,
     private val plugin: Plugin,
-    private val bossBarService: BossBarService,
     private val soccerBallFactory: SoccerBallFactory,
     private val commandService: CommandService,
     override val language: BlockBallLanguage,
@@ -74,22 +73,12 @@ abstract class SoccerGameImpl(
     override var lastHitPlayer: Player? = null
 
     /**
-     * Ingame scoreboard.
-     */
-    override var scoreboard: Any? = null
-
-    /**
      * Marks the game for being closed and will automatically
      * switch to close state once the resources are cleard.
      */
     override var closing: Boolean = false
 
     override var closed: Boolean = false
-
-    /**
-     * Ingame bossbar.
-     */
-    override var bossBar: Any? = null
 
     /**
      * RedScore.
@@ -280,7 +269,6 @@ abstract class SoccerGameImpl(
                 return
             }
 
-            this.updateBossBar()
             this.updateDoubleJumpCooldown()
         }
     }
@@ -353,8 +341,6 @@ abstract class SoccerGameImpl(
         }
 
         val players = HashSet(inTeamPlayers)
-        val additionalPlayers = getNofifiedPlayers()
-        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first as Player })
 
         for (player in players) {
             if (team == Team.RED) {
@@ -431,44 +417,6 @@ abstract class SoccerGameImpl(
     }
 
     /**
-     * Updates the bossbar for the current game.
-     */
-    private fun updateBossBar() {
-        val meta = arena.meta.bossBarMeta
-        if (Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
-            if (bossBar == null && arena.meta.bossBarMeta.enabled) {
-                bossBar = bossBarService.createNewBossBar<Any>(arena.meta.bossBarMeta)
-            }
-
-            if (bossBar != null) {
-                bossBarService.changeConfiguration(
-                    bossBar,
-                    placeHolderService.resolvePlaceHolder(meta.message, null, mapOf(gameKey to arena.name)),
-                    meta,
-                    null
-                )
-
-                val players = ArrayList(inTeamPlayers)
-                val additionalPlayers = getAdditionalNotificationPlayers()
-                players.addAll(additionalPlayers.asSequence().filter { pair -> pair.second }
-                    .map { p -> p.first as Player }.toList())
-
-                val bossbarPlayers = bossBarService.getPlayers<Any, Any>(bossBar!!)
-
-                additionalPlayers.filter { p -> !p.second }.forEach { p ->
-                    if (bossbarPlayers.contains(p.first)) {
-                        bossBarService.removePlayer(bossBar!!, p.first)
-                    }
-                }
-
-                players.forEach { p ->
-                    bossBarService.addPlayer(bossBar, p)
-                }
-            }
-        }
-    }
-
-    /**
      * Updates the cooldown of the double jump for the given game.
      */
     private fun updateDoubleJumpCooldown() {
@@ -485,61 +433,10 @@ abstract class SoccerGameImpl(
     }
 
     /**
-     * Returns a list of players which can be also notified
-     */
-    private fun getAdditionalNotificationPlayers(): MutableList<Pair<Any, Boolean>> {
-        if (!arena.meta.spectatorMeta.notifyNearbyPlayers) {
-            return ArrayList()
-        }
-
-        val players = ArrayList<Pair<Any, Boolean>>()
-        val center = arena.center
-
-
-        center.toLocation().world!!.players.filter { p -> !ingamePlayersStorage.containsKey(p) }.forEach { p ->
-            val playerPosition = p.location.toVector3d()
-            val distanceToCenter = playerPosition.distance(center)
-
-            if (distanceToCenter <= arena.meta.spectatorMeta.notificationRadius) {
-                players.add(Pair(p, true))
-            } else {
-                players.add(Pair(p, false))
-            }
-        }
-
-        return players
-    }
-
-    /**
-     * Get nofified players.
-     */
-    private fun getNofifiedPlayers(): List<Pair<Any, Boolean>> {
-        val players = ArrayList<Pair<Any, Boolean>>()
-
-        if (arena.meta.spectatorMeta.notifyNearbyPlayers) {
-            for (player in arena.center.toLocation().world!!.players) {
-                val playerPosition = player.location.toVector3d()
-
-                if (playerPosition.distance(arena.center) <= arena.meta.spectatorMeta.notificationRadius) {
-                    players.add(Pair(player, true))
-                } else {
-                    players.add(Pair(player, false))
-                }
-            }
-        }
-
-        return players
-    }
-
-    /**
      * Gets called when the given [game] ends with a draw.
      */
     fun onDraw() {
-        val players = HashSet<Player>()
-        players.addAll(getNofifiedPlayers().filter { pair -> pair.second }.map { p -> p.first as Player })
-        players.addAll(getPlayers())
-
-        for (player in players) {
+        for (player in getPlayers()) {
             player.sendPluginMessage(language.winDraw)
         }
     }
@@ -634,8 +531,6 @@ abstract class SoccerGameImpl(
         }
 
         val players = ArrayList(inTeamPlayers)
-        val additionalPlayers = getNofifiedPlayers()
-        players.addAll(additionalPlayers.filter { pair -> pair.second }.map { p -> p.first as Player })
 
         if (team == Team.RED) {
             for (player in players) {
@@ -778,11 +673,7 @@ abstract class SoccerGameImpl(
         }
     }
 
-    protected fun restoreFromTemporaryPlayerData(player: Player) {
-        if (bossBar != null) {
-            bossBarService.removePlayer(bossBar, player)
-        }
-
+    private fun restoreFromTemporaryPlayerData(player: Player) {
         val stats = ingamePlayersStorage[player]!!
         player.gameMode = stats.gameMode
         player.allowFlight = stats.gameMode == GameMode.CREATIVE

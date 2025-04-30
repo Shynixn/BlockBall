@@ -25,7 +25,7 @@ class MinigameLobbyMeta {
         val secondPeriod = MatchTimeMeta()
         secondPeriod.duration = 150
         secondPeriod.respawnEnabled = true
-        secondPeriod.isSwitchGoalsEnabled = true
+        secondPeriod.switchGoals = true
 
         val coolDownPeriod = MatchTimeMeta()
         coolDownPeriod.duration = 10

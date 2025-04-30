@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.BlockBallLanguage
-import com.github.shynixn.blockball.contract.BossBarService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerHubGame
 import com.github.shynixn.blockball.entity.PlayerInformation
@@ -22,7 +21,6 @@ class SoccerHubGameImpl(
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
     plugin: Plugin,
     placeHolderService: PlaceHolderService,
-    private val bossBarService: BossBarService,
     language: BlockBallLanguage,
     packetService: PacketService,
     soccerBallFactory: SoccerBallFactory,
@@ -33,7 +31,6 @@ class SoccerHubGameImpl(
     placeHolderService,
     packetService,
     plugin,
-    bossBarService,
     soccerBallFactory,
     commandService,
     language,
@@ -90,10 +87,6 @@ class SoccerHubGameImpl(
         ingamePlayersStorage.clear()
         ball?.remove()
         doubleJumpCoolDownPlayers.clear()
-
-        if (bossBar != null) {
-            bossBarService.cleanResources(bossBar)
-        }
     }
 
     override fun setPlayerToArena(player: Player, team: Team) {
