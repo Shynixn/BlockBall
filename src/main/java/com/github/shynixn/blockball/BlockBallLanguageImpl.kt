@@ -233,4 +233,40 @@ class BlockBallLanguageImpl : BlockBallLanguage {
  override var shyScoreboardUpdatedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Updated the scoreboard.")
 
  override var shyScoreboardBooleanNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Only true and false are allowed as values.")
+
+ override var shyBossBarPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %1$1s not found.")
+
+ override var shyBossBarNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")
+
+ override var shyBossBarReloadCommandHint = LanguageItem("Reloads all bossbars and configuration.")
+
+ override var shyBossBarReloadMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Reloaded all bossbars and configuration.")
+
+ override var shyBossBarCommonErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details.")
+
+ override var shyBossBarCommandSenderHasToBePlayer = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player if you do not specify the optional player argument.")
+
+ override var shyBossBarCommandUsage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /blockballbossbar help to see more info about the plugin.")
+
+ override var shyBossBarCommandDescription = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 All commands for the ShyBossBar module of BlockBall.")
+
+ override var shyBossBarAddCommandHint = LanguageItem("Adds a bossbar to a player.")
+
+ override var shyBossBarSetCommandHint = LanguageItem("Sets a bossbar to a player.")
+
+ override var shyBossBarRemoveCommandHint = LanguageItem("Removes a bossbar from a player.")
+
+ override var shyBossBarNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cBossBar %1$1s not found.")
+
+ override var shyBossBarNoPermissionToBossBarCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to this bossbar.")
+
+ override var shyBossBarAddedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Added the bossbar %1$1s to the player %2$1s.")
+
+ override var shyBossBarRemovedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Removed the bossbar %1$1s from the player %2$1s.")
+
+ override var shyBossBarUpdateCommandHint = LanguageItem("Updates the placeholder of the bossbar.")
+
+ override var shyBossBarUpdatedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Updated the bossbar.")
+
+ override var shyBossBarBooleanNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Only true and false are allowed as values.")
 }

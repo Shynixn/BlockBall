@@ -24,6 +24,12 @@ import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.sign.SignService
 import com.github.shynixn.mcutils.worldguard.WorldGuardServiceImpl
+import com.github.shynixn.shybossbar.ShyBossBarDependencyInjectionModule
+import com.github.shynixn.shybossbar.contract.BossBarService
+import com.github.shynixn.shybossbar.contract.ShyBossBarLanguage
+import com.github.shynixn.shybossbar.entity.ShyBossBarSettings
+import com.github.shynixn.shybossbar.impl.commandexecutor.ShyBossBarCommandExecutor
+import com.github.shynixn.shybossbar.impl.listener.ShyBossBarListener
 import com.github.shynixn.shyscoreboard.ShyScoreboardDependencyInjectionModule
 import com.github.shynixn.shyscoreboard.contract.ScoreboardService
 import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage
@@ -44,6 +50,7 @@ class BlockBallPlugin : JavaPlugin() {
     private val prefix: String = ChatColor.BLUE.toString() + "[BlockBall] "
     private lateinit var module: DependencyInjectionModule
     private lateinit var scoreboardModule: DependencyInjectionModule
+    private lateinit var bossBarModule: DependencyInjectionModule
     private var immidiateDisable = false
 
     companion object {
@@ -115,7 +122,9 @@ class BlockBallPlugin : JavaPlugin() {
 
         // Module
         this.scoreboardModule = loadShyScoreboardModule(language)
-        this.module = BlockBallDependencyInjectionModule(this, language, this.scoreboardModule.getService()).build()
+        val placeHolderService = this.scoreboardModule.getService<PlaceHolderService>()
+        this.bossBarModule = loadShyBossBarModule(language, placeHolderService)
+        this.module = BlockBallDependencyInjectionModule(this, language, placeHolderService).build()
 
         // Connect to database
         try {
@@ -245,6 +254,56 @@ class BlockBallPlugin : JavaPlugin() {
 
         module.close()
         scoreboardModule.close()
+        bossBarModule.close()
+    }
+
+    private fun loadShyBossBarModule(
+        language: ShyBossBarLanguage,
+        placeHolderService: PlaceHolderService
+    ): DependencyInjectionModule {
+        val settings = ShyBossBarSettings({ s ->
+            s.addPermission = "blockball.shybossbar.add"
+            s.baseCommand = "blockballbossbar"
+            s.checkForChangeChangeSeconds = config.getInt("bossbar.checkForChangeChangeSeconds")
+            s.commandAliases = config.getStringList("commands.blockballbossbar.aliases")
+            s.commandPermission = "blockball.shybossbar.command"
+            s.defaultBossBars = listOf(
+                "bossbar/blockball_bossbar.yml" to "blockball_bossbar.yml"
+            )
+            s.dynBossBarPermission = "blockball.shybossbar.bossbar."
+            s.joinDelaySeconds = config.getInt("bossbar.joinDelaySeconds")
+            s.reloadPermission = "blockball.shybossbar.reload"
+            s.removePermission = "blockball.shybossbar.remove"
+            s.setPermission = "blockball.shybossbar.set"
+            s.updatePermission = "blockball.shybossbar.update"
+            s.worldGuardFlag = "blockballshybossbar"
+        })
+        settings.reload()
+        val module = ShyBossBarDependencyInjectionModule(
+            this,
+            settings,
+            language,
+            WorldGuardServiceImpl(this),
+            placeHolderService
+        ).build()
+
+        // Register PlaceHolders
+        com.github.shynixn.shybossbar.enumeration.PlaceHolder.registerAll(
+            this,
+            placeHolderService,
+        )
+
+        // Register Listeners
+        Bukkit.getPluginManager().registerEvents(module.getService<ShyBossBarListener>(), this)
+
+        // Register CommandExecutor
+        module.getService<ShyBossBarCommandExecutor>()
+        val bossBarService = module.getService<BossBarService>()
+        launch {
+            bossBarService.reload()
+        }
+
+        return module
     }
 
     private fun loadShyScoreboardModule(language: ShyScoreboardLanguage): DependencyInjectionModule {
@@ -266,7 +325,8 @@ class BlockBallPlugin : JavaPlugin() {
             s.worldGuardFlag = "blockballscoreboard"
         })
         settings.reload()
-        val module = ShyScoreboardDependencyInjectionModule(this, settings, language, WorldGuardServiceImpl(this)).build()
+        val module =
+            ShyScoreboardDependencyInjectionModule(this, settings, language, WorldGuardServiceImpl(this)).build()
 
         // Register PlaceHolders
         com.github.shynixn.shyscoreboard.enumeration.PlaceHolder.registerAll(

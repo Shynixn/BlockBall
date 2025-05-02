@@ -20,6 +20,10 @@ commands:
     aliases:
       - "soccerscoreboard"
       - "footballscoreboard"
+  blockballbossbar:
+    aliases:
+      - "soccerbossbar"
+      - "footballbossbar"
 
 ############################
 # Debug settings
@@ -78,6 +82,16 @@ scoreboard:
   # How often are the permissions of a player checked to determine if he has got access to any scoreboard.
   checkForChangeChangeSeconds: 3
   # When a new player joins the server, after how many seconds are the scoreboards created.
+  joinDelaySeconds: 3
+
+############################
+# BossBar
+# All global bossbar settings.
+############################
+bossbar:
+  # How often are the permissions of a player checked to determine if he has got access to any bossbar.
+  checkForChangeChangeSeconds: 3
+  # When a new player joins the server, after how many seconds are the bossbars created.
   joinDelaySeconds: 3
 
 ############################

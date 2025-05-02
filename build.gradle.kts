@@ -195,37 +195,25 @@ tasks.register("languageFile") {
 
     val contractContents = ArrayList<String>()
     val ignoredKeys = listOf(
-        "shyScoreboardPlayerNotFoundMessage",
-        "shyScoreboardNoPermissionCommand",
-        "shyScoreboardReloadCommandHint",
-        "shyScoreboardReloadMessage",
-        "shyScoreboardCommonErrorMessage",
-        "shyScoreboardCommandSenderHasToBePlayer",
-        "shyScoreboardCommandUsage",
-        "shyScoreboardCommandDescription",
-        "shyScoreboardAddCommandHint",
-        "shyScoreboardSetCommandHint",
-        "shyScoreboardRemoveCommandHint",
-        "shyScoreboardNotFoundMessage",
-        "shyScoreboardNoPermissionToScoreboardCommand",
-        "shyScoreboardAddedMessage",
-        "shyScoreboardRemovedMessage",
-        "shyScoreboardUpdateCommandHint",
-        "shyScoreboardUpdatedMessage",
-        "shyScoreboardBooleanNotFoundMessage"
+       "shyBossBar",
+        "shyScoreboard"
     )
     contractContents.add("package com.github.shynixn.blockball.contract")
     contractContents.add("")
     contractContents.add("import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageItem")
+    contractContents.add("import com.github.shynixn.shybossbar.contract.ShyBossBarLanguage")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageProvider")
     contractContents.add("")
-    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage {")
+    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBarLanguage {")
     for (key in lines) {
         if (key.toCharArray()[0].isLetter()) {
-            if (ignoredKeys.contains(key.substring(0, key.length - 1))) {
+            if (ignoredKeys.firstOrNull { e -> key.startsWith(e) } != null) {
                 continue
             }
+
+            contractContents.add("  var ${key} LanguageItem")
+            contractContents.add("")
         }
     }
     contractContents.removeLast()

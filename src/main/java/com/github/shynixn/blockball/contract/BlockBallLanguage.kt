@@ -2,9 +2,10 @@ package com.github.shynixn.blockball.contract
 
 import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage
 import com.github.shynixn.mcutils.common.language.LanguageItem
+import com.github.shynixn.shybossbar.contract.ShyBossBarLanguage
 import com.github.shynixn.mcutils.common.language.LanguageProvider
 
-interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage {
+interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBarLanguage {
   var gameAlreadyExistsMessage: LanguageItem
 
   var commandUsage: LanguageItem

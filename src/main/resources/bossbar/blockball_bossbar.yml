@@ -1,0 +1,21 @@
+# Unique identifier of a bossbar.
+name: "blockball_bossbar"
+# Possible types: GLOBAL, COMMAND, WORLDGUARD
+# If GLOBAl, the bossbar is always visible as long as the player has got the permission shybossbar.bossbar.sample_bossbar.
+# If COMMAND, the bossbar is only visible after executing the command /shybossbar add sample_bossbar AND having the permission shybossbar.bossbar.sample_bossbar.
+# If WORLDGUARD, the bossbar is only visible after entering a WorldGuard region where the flag shybossbar has been set to this bossbar name.
+type: "COMMAND"
+# If multiple bossbars would be available, the one with the highest priority (lowest number), is selected.
+priority: 5
+# The Minecraft ticks how often this bossbar is updated to the player. (1 tick = 50ms)
+refreshTicks: 60
+# Displayed Message. Supports placeholders.
+message: "%blockball_game_redDisplayName% %blockball_game_redScore% : &9%blockball_game_blueScore% %blockball_game_blueDisplayName%"
+# Color of the bossBar. Supports placeholders. Possibles values: PINK,BLUE,RED,GREEN,YELLOW,PURPLE,WHITE.
+color: "WHITE"
+# Progress of the BossBar in the range 0.0 to 1.0. Supports placeholders and should be a text value.
+progress: "1.0"
+# Style of the BossBar. Supports placeholders. Possibles values: PROGRESS, NOTCHED_6, NOTCHED_10, NOTCHED_12, NOTCHED_20
+style: "NOTCHED_10"
+# List of flags of a BossBar. Possibles values: DARKEN_SKY, PLAY_BOSS_MUSIC, CREATE_FOG
+flags: []
