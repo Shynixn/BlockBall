@@ -5,9 +5,6 @@ import com.github.shynixn.mcutils.common.sound.SoundMeta
 import com.github.shynixn.mcutils.sign.SignMeta
 
 class ArenaMeta {
-    /** Meta data for spectating setting. */
-    val spectatorMeta: SpectatorMeta = SpectatorMeta()
-
     /** Metadata of the customizing Properties. */
     val customizingMeta: CustomizationMeta = CustomizationMeta()
 
@@ -22,9 +19,6 @@ class ArenaMeta {
 
     /** Meta data of the doubleJump. */
     val doubleJumpMeta: DoubleJumpMeta = DoubleJumpMeta()
-
-    /** Meta data of the bossbar. */
-    val bossBarMeta: BossBarMeta = BossBarMeta()
 
     /** Meta data of proection. */
     val protectionMeta: ArenaProtectionMeta = ArenaProtectionMeta()

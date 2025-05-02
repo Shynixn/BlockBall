@@ -16,6 +16,7 @@ The following permissions are available in BlockBall.
 | blockball.command                    | User  | Allows to use the /blockball command.                 |   
 | blockball.join.*                     | User  | Allows to join all games.                             |
 | blockball.shyscoreboard.scoreboard.* | User  | Allows to see all blockball scoreboards during games. |
+| blockball.shybossbar.bossbar.*       | User  | Allows to see all blockball bossbars during games.    |
 
 ### All Permissions
 
@@ -36,3 +37,11 @@ The following permissions are available in BlockBall.
 | blockball.shyscoreboard.set                            | Admin      | Allows to set a scoreboard to a player                                                               |
 | blockball.shyscoreboard.remove                         | Admin      | Allows to remove a scoreboard from a player                                                          |
 | blockball.shyscoreboard.update                         | Admin      | Allows to refresh a scoreboard                                                                       |
+| blockball.shybossbar.bossbar.*                         | User       | Allows to see all bossbars                                                                           |
+| blockball.shybossbar.bossbar.\[bossbar-name\]          | User       | Allows to see a specific bossbar                                                                     |
+| blockball.shybossbar.command                           | Admin      | Allows to use the /blockballbossbar command.                                                         |
+| blockball.shybossbar.reload                            | Admin      | Allows to reload configurations.                                                                     |
+| blockball.shybossbar.add                               | Admin      | Allows to add a bossbar to a player                                                                  |
+| blockball.shybossbar.set                               | Admin      | Allows to set a bossbar to a player                                                                  |
+| blockball.shybossbar.remove                            | Admin      | Allows to remove a bossbar from a player                                                             |
+| blockball.shybossbar.update                            | Admin      | Allows to refresh a bossbar                                                                          |

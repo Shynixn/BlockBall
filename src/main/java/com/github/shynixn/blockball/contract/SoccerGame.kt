@@ -36,16 +36,6 @@ interface SoccerGame {
     var blueScore: Int
 
     /**
-     * Ingame scoreboard.
-     */
-    var scoreboard: Any?
-
-    /**
-     * Ingame bossbar.
-     */
-    var bossBar: Any?
-
-    /**
      * All players which are already fix in team red.
      */
     val redTeam: Set<Player>

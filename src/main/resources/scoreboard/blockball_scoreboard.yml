@@ -16,7 +16,7 @@ lines:
   - "&6Time:"
   - "%blockball_game_time%"
   - "&m           &r"
-  - "&6Team:"
+  - "&6You:"
   - "%blockball_player_teamDisplayName%"
   - "&m           &r"
   - "%blockball_game_redDisplayName%:"

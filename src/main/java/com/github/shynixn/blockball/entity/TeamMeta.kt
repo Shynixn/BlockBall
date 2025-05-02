@@ -62,6 +62,10 @@ class TeamMeta {
         CommandMeta(
             CommandType.SERVER_PER_PLAYER,
             "/blockballscoreboard add blockball_scoreboard %blockball_player_name%"
+        ),
+        CommandMeta(
+            CommandType.SERVER_PER_PLAYER,
+            "/blockballbossbar add blockball_bossbar %blockball_player_name%"
         )
     )
 
@@ -70,6 +74,10 @@ class TeamMeta {
         CommandMeta(
             CommandType.SERVER_PER_PLAYER,
             "/blockballscoreboard remove blockball_scoreboard %blockball_player_name%"
+        ),
+        CommandMeta(
+            CommandType.SERVER_PER_PLAYER,
+            "/blockballbossbar remove blockball_bossbar %blockball_player_name%"
         )
     )
 }

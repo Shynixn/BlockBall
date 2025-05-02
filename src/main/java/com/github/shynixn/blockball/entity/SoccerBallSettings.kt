@@ -20,7 +20,7 @@ class SoccerBallSettings {
     }
 
     @Comment("If true, the slime is visible. This only works in older Minecraft versions where a slime is used instead of the interaction entity.")
-    var isSlimeVisible: Boolean = false
+    var slimeVisible: Boolean = false
 
     @Comment("Hitbox size for touching the ball.")
     var interactionHitBoxSize: Double = 2.0
@@ -30,7 +30,6 @@ class SoccerBallSettings {
 
     @Comment("Delay in ticks until the ball executes the kick pass requested by the player. If you set this to 0, the ball will be more smooth but direction manipulations may not be as accurate anymore.")
     var kickPassDelay: Int = 2
-
 
     @Comment("Amount of ticks until the ball can intercept interaction again.")
     var interactionCoolDown: Int = 20

@@ -1,6 +1,8 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.SoccerBallFactory
+import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
@@ -13,7 +15,6 @@ import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
-import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundMeta
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.toLocation
@@ -29,7 +30,6 @@ open class SoccerMiniGameImpl constructor(
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
     private val plugin: Plugin,
     private val placeHolderService: PlaceHolderService,
-    private val bossBarService: BossBarService,
     private val chatMessageService: ChatMessageService,
     private val soundService: SoundService,
     language: BlockBallLanguage,
@@ -42,7 +42,6 @@ open class SoccerMiniGameImpl constructor(
     placeHolderService,
     packetService,
     plugin,
-    bossBarService,
     soccerBallFactory,
     commandService,
     language,
@@ -224,10 +223,6 @@ open class SoccerMiniGameImpl constructor(
         ingamePlayersStorage.clear()
         ball?.remove()
         doubleJumpCoolDownPlayers.clear()
-
-        if (bossBar != null) {
-            bossBarService.cleanResources(bossBar)
-        }
     }
 
     /**
@@ -252,7 +247,7 @@ open class SoccerMiniGameImpl constructor(
 
         gameCountdown = matchTime.duration
 
-        if (matchTime.isSwitchGoalsEnabled) {
+        if (matchTime.switchGoals) {
             mirroredGoals = !mirroredGoals
 
             ingamePlayersStorage.values.forEach { e ->

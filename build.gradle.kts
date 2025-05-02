@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.18.0"
+version = "7.19.0"
 
 repositories {
     mavenLocal()
@@ -31,9 +31,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
+    implementation("com.github.shynixn.shybossbar:shybossbar:1.0.0")
     implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.5.0")
-    implementation("com.github.shynixn.mcutils:common:2025.22")
-    implementation("com.github.shynixn.mcutils:packet:2025.17")
+    implementation("com.github.shynixn.mcutils:common:2025.25")
+    implementation("com.github.shynixn.mcutils:packet:2025.18")
     implementation("com.github.shynixn.mcutils:database:2025.7")
     implementation("com.github.shynixn.mcutils:sign:2025.4")
     implementation("com.github.shynixn.mcutils:worldguard:2025.4")
@@ -76,6 +77,7 @@ tasks.register("relocatePluginJar", ShadowJar::class.java) {
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-relocate.${archiveExtension.get()}")
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
     relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
+    relocate("com.github.shynixn.shybossbar", "com.github.shynixn.blockball.lib.com.github.shynixn.shybossbar")
 }
 
 /**
@@ -105,6 +107,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("com/github/shynixn/shybossbar/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("org/**")
     exclude("kotlin/**")
@@ -127,6 +130,7 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("com/github/shynixn/shybossbar/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("org/**")
     exclude("kotlin/**")
@@ -158,6 +162,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
     relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
     relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
+    relocate("com.github.shynixn.shybossbar", "com.github.shynixn.blockball.lib.com.github.shynixn.shybossbar")
     relocate("com.github.shynixn.fasterxml", "com.github.shynixn.blockball.lib.com.github.shynixn.fasterxml")
 
     exclude("plugin.yml")
@@ -176,6 +181,7 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("com/github/shynixn/shybossbar/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("org/**")
     exclude("kotlin/**")
@@ -194,37 +200,25 @@ tasks.register("languageFile") {
 
     val contractContents = ArrayList<String>()
     val ignoredKeys = listOf(
-        "shyScoreboardPlayerNotFoundMessage",
-        "shyScoreboardNoPermissionCommand",
-        "shyScoreboardReloadCommandHint",
-        "shyScoreboardReloadMessage",
-        "shyScoreboardCommonErrorMessage",
-        "shyScoreboardCommandSenderHasToBePlayer",
-        "shyScoreboardCommandUsage",
-        "shyScoreboardCommandDescription",
-        "shyScoreboardAddCommandHint",
-        "shyScoreboardSetCommandHint",
-        "shyScoreboardRemoveCommandHint",
-        "shyScoreboardNotFoundMessage",
-        "shyScoreboardNoPermissionToScoreboardCommand",
-        "shyScoreboardAddedMessage",
-        "shyScoreboardRemovedMessage",
-        "shyScoreboardUpdateCommandHint",
-        "shyScoreboardUpdatedMessage",
-        "shyScoreboardBooleanNotFoundMessage"
+       "shyBossBar",
+        "shyScoreboard"
     )
     contractContents.add("package com.github.shynixn.blockball.contract")
     contractContents.add("")
     contractContents.add("import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageItem")
+    contractContents.add("import com.github.shynixn.shybossbar.contract.ShyBossBarLanguage")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageProvider")
     contractContents.add("")
-    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage {")
+    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBarLanguage {")
     for (key in lines) {
         if (key.toCharArray()[0].isLetter()) {
-            if (ignoredKeys.contains(key.substring(0, key.length - 1))) {
+            if (ignoredKeys.firstOrNull { e -> key.startsWith(e) } != null) {
                 continue
             }
+
+            contractContents.add("  var ${key} LanguageItem")
+            contractContents.add("")
         }
     }
     contractContents.removeLast()
