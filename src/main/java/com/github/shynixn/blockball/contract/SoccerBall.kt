@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.contract
 
-import com.github.shynixn.blockball.entity.SoccerBallSettings
+import com.github.shynixn.blockball.entity.SoccerBallMeta
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
@@ -12,7 +12,7 @@ interface SoccerBall {
     /**
      * Gets the meta data.
      */
-    val meta: SoccerBallSettings
+    val meta: SoccerBallMeta
 
     /**
      * Is the entity dead?

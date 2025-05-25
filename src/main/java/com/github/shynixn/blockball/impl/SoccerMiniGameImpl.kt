@@ -101,9 +101,7 @@ open class SoccerMiniGameImpl constructor(
         // Handle HubGame ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
-            if(completedPublish){
-                close()
-            }
+            close()
             return
         }
 
@@ -111,7 +109,7 @@ open class SoccerMiniGameImpl constructor(
             status = GameState.JOINABLE
         }
 
-        if (Bukkit.getWorld(arena.meta.ballMeta.spawnpoint!!.world!!) == null) {
+        if (Bukkit.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
             return
         }
 
@@ -201,8 +199,13 @@ open class SoccerMiniGameImpl constructor(
             }
         }
 
-        // Handle SoccerBall.
-        this.fixBallPositionSpawn()
+        if (ballEnabled) {
+            respawnBall(arena.meta.customizingMeta.initialBallSpawnDelayTicks)
+        } else {
+            ball?.remove()
+            ball = null
+        }
+
         this.handleBallSpawning()
         // Update signs and protections.
         super.handleMiniGameEssentials(ticks)

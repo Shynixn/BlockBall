@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.entity
 
-import com.github.shynixn.blockball.enumeration.BallActionType
-import com.github.shynixn.mcutils.common.sound.SoundMeta
 import com.github.shynixn.mcutils.sign.SignMeta
 
 class ArenaMeta {
@@ -23,9 +21,6 @@ class ArenaMeta {
     /** Meta data of proection. */
     val protectionMeta: ArenaProtectionMeta = ArenaProtectionMeta()
 
-    /** Metadata of the ball. */
-    val ballMeta: SoccerBallSettings = SoccerBallSettings()
-
     /** Metadata of the blueTeam. */
     val blueTeamMeta: TeamMeta = TeamMeta()
 
@@ -36,14 +31,9 @@ class ArenaMeta {
     val refereeTeamMeta: TeamMeta = TeamMeta()
 
     init {
-        val soundMetaKick = SoundMeta()
-        soundMetaKick.name = "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR,ENTITY_ZOMBIE_ATTACK_DOOR_WOOD,ZOMBIE_WOOD"
-        soundMetaKick.volume = 10.0
-        soundMetaKick.pitch = 1.5
         blueTeamMeta.displayName = "&9Team Blue"
         redTeamMeta.displayName = "&cTeam Red"
         refereeTeamMeta.displayName = "&fTeam Referee"
-        ballMeta.soundEffects[BallActionType.ONKICK] = soundMetaKick
     }
 
     /**

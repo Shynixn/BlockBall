@@ -208,7 +208,7 @@ class GameListener (
         }
 
         if (teamMeta.spawnpoint == null) {
-            event.respawnLocation = game.arena.meta.ballMeta.spawnpoint!!.toLocation()
+            event.respawnLocation = game.arena.ballSpawnPoint!!.toLocation()
         } else {
             event.respawnLocation = teamMeta.spawnpoint!!.toLocation()
         }
@@ -316,7 +316,7 @@ class GameListener (
 
                     if (game.ballBumperCounter > 60) {
                         // Rescue system, if the ball gets stuck in the walls.
-                        event.ball.teleport(game.arena.meta.ballMeta.spawnpoint!!.toLocation())
+                        event.ball.teleport(game.arena.ballSpawnPoint!!.toLocation())
                         game.ballBumperCounter = 0
                     }
 

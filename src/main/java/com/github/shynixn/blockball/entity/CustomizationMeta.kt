@@ -24,4 +24,10 @@ class CustomizationMeta {
 
     @Comment("When players queue for a game in gameType=MINIGAME, this is the timeout in seconds how long they can wait.")
     var queueTimeOutSec: Int = 30
+
+    @Comment("The ball spawn delay in ticks when spawning for the first time during a game.")
+    var initialBallSpawnDelayTicks: Int = 2
+
+    @Comment("The ball spawn delay in ticks when spawning after at least 1 goal has been scored.")
+    var subsequentBallSpawnDelayTicks: Int = 1
 }

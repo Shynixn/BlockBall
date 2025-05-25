@@ -228,7 +228,7 @@ class GameServiceImpl(
                 language.gameTypeRefereeOnlyForPatreons.text
             )
         }
-        if (arena.meta.ballMeta.spawnpoint == null) {
+        if (arena.ballSpawnPoint == null) {
             arena.enabled = false
             throw SoccerGameException(arena, "Set the ball spawnpoint for arena ${arena.name}!")
         }

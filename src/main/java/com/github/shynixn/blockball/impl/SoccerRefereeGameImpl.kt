@@ -88,9 +88,7 @@ class SoccerRefereeGameImpl(
         // Handle ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
-            if (completedPublish) {
-                close()
-            }
+            close()
             return
         }
 
@@ -98,7 +96,7 @@ class SoccerRefereeGameImpl(
             status = GameState.JOINABLE
         }
 
-        if (Bukkit.getWorld(arena.meta.ballMeta.spawnpoint!!.world!!) == null) {
+        if (Bukkit.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
             return
         }
 
@@ -209,7 +207,6 @@ class SoccerRefereeGameImpl(
         }
 
         // Handle SoccerBall.
-        this.fixBallPositionSpawn()
         this.handleBallSpawning()
         // Update signs and protections.
         super.handleMiniGameEssentials(ticks)

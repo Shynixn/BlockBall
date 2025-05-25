@@ -3,13 +3,10 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.SoccerBall
-import com.github.shynixn.blockball.enumeration.BallSize
-import com.github.shynixn.mcutils.common.Vector3d
+import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.item.ItemService
-import com.github.shynixn.mcutils.common.toEulerAngle
-import com.github.shynixn.mcutils.common.toLocation
-import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.api.meta.EntityAttribute
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.ArmorSlotType
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.*
@@ -39,27 +36,43 @@ class BallDesignEntity(val entityId: Int) {
     /**
      * Spawns the ball for the given player.
      */
-    fun spawn(player: Any, position: Vector3d) {
+    fun spawn(player: Any) {
         require(player is Player)
+        var position = ball.getLocation().toVector3d()
+        position.y += ball.meta.render.offSetY
         packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
             it.target = position.toLocation()
             it.entityId = entityId
             it.entityType = EntityType.ARMOR_STAND
         })
 
-        if (!ball.meta.slimeVisible) {
-            val stack = itemService.toItemStack(ball.meta.item)
+        if (!ball.meta.hitbox.slimeVisible) {
+            val stack = itemService.toItemStack(ball.meta.render.item)
             packetService.sendPacketOutEntityEquipment(player, PacketOutEntityEquipment().also {
                 it.entityId = entityId
                 it.items = listOf(Pair(ArmorSlotType.HELMET, stack))
             })
         }
 
-        packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
-            it.entityId = entityId
-            it.isInvisible = true
-            it.isArmorstandSmall = ball.meta.size == BallSize.SMALL
-        })
+        if (Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_20_R4)) {
+            packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
+                it.entityId = entityId
+                it.isInvisible = true
+            })
+            packetService.sendPacketOutEntityAttributes(player, PacketOutEntityAttributes().also {
+                it.entityId = entityId
+                it.attributes = listOf(EntityAttribute().also {
+                    it.id = "scale"
+                    it.base = ball.meta.render.scale
+                })
+            })
+        } else {
+            packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
+                it.entityId = entityId
+                it.isInvisible = true
+                it.isArmorstandSmall = ball.meta.render.scale == 0.5
+            })
+        }
     }
 
     /**
@@ -78,12 +91,7 @@ class BallDesignEntity(val entityId: Int) {
      */
     fun tick(players: List<Player>) {
         val position = ball.getLocation().toVector3d()
-
-        position.y = if (ball.meta.size == BallSize.NORMAL) {
-            position.y + ball.meta.hitBoxRelocation - 1.2
-        } else {
-            position.y + ball.meta.hitBoxRelocation - 0.4
-        }
+        position.y += ball.meta.render.offSetY
 
         for (player in players) {
             packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
@@ -92,7 +100,7 @@ class BallDesignEntity(val entityId: Int) {
             })
         }
 
-        if (ball.meta.rotating) {
+        if (ball.meta.render.rotating) {
             playRotationAnimation(players as List<Any>)
         }
     }
@@ -121,7 +129,7 @@ class BallDesignEntity(val entityId: Int) {
         if (angle != null) {
             rotation = Vector3d(angle.x, angle.y, angle.z)
 
-            if (ball.meta.slimeVisible) {
+            if (ball.meta.hitbox.slimeVisible) {
                 return
             }
 

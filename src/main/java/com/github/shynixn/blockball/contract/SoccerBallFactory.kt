@@ -1,18 +1,18 @@
 package com.github.shynixn.blockball.contract
 
-import com.github.shynixn.blockball.entity.SoccerBallSettings
+import com.github.shynixn.blockball.entity.SoccerBallMeta
 import org.bukkit.Location
 
 interface SoccerBallFactory : AutoCloseable {
     /**
      * Creates a new SoccerBall.
      */
-    fun createSoccerBall(location: Location, meta: SoccerBallSettings): SoccerBall
+    fun createSoccerBall(location: Location, meta: SoccerBallMeta): SoccerBall
 
     /**
      * Creates a new SoccerBall.
      */
-    fun createSoccerBallForGame(location: Location, meta: SoccerBallSettings, game: SoccerGame?): SoccerBall
+    fun createSoccerBallForGame(location: Location, meta: SoccerBallMeta, game: SoccerGame?): SoccerBall
 
     /**
      * Tries to locate the ball by the given id.
