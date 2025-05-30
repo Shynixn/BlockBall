@@ -1,9 +1,7 @@
-@file:Suppress("UNCHECKED_CAST")
-
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.SoccerBall
-import com.github.shynixn.blockball.entity.SoccerBallSettings
+import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.event.BallRemoveEvent
 import com.github.shynixn.blockball.event.BallTeleportEvent
 import com.github.shynixn.mcutils.common.toLocation
@@ -17,7 +15,7 @@ import org.bukkit.util.Vector
 import java.util.logging.Level
 
 class SoccerBallCrossPlatformProxy(
-    override val meta: SoccerBallSettings,
+    override val meta: SoccerBallMeta,
     private val ballDesignEntity: BallDesignEntity,
     private val ballHitBoxEntity: BallHitboxEntity,
     private val plugin: Plugin
@@ -29,7 +27,7 @@ class SoccerBallCrossPlatformProxy(
             ballHitBoxEntity.position
         },
         { player ->
-            ballDesignEntity.spawn(player, ballHitBoxEntity.position)
+            ballDesignEntity.spawn(player)
             ballHitBoxEntity.spawn(player, ballHitBoxEntity.position)
         }, { player ->
             ballDesignEntity.destroy(player)
@@ -102,14 +100,6 @@ class SoccerBallCrossPlatformProxy(
     override fun getVelocity(): Vector {
         return ballHitBoxEntity.motion.toVector()
     }
-
-    /**
-     * Rotation of the visible ball in euler angles.
-     */
-    override fun getRotation(): Vector {
-        return ballDesignEntity.rotation.toVector()
-    }
-
     /**
      * Shoot the ball by the given player.
      * The calculated velocity can be manipulated by the BallLeftClickEvent.
@@ -117,7 +107,7 @@ class SoccerBallCrossPlatformProxy(
      * @param player
      */
     override fun kickByPlayer(player: Player) {
-        if (!meta.enabledKick) {
+        if (!meta.hitbox.leftClickEnabled) {
             return
         }
 
@@ -125,7 +115,7 @@ class SoccerBallCrossPlatformProxy(
             return
         }
 
-        ballHitBoxEntity.kickPlayer(player, meta.movementModifier.shotVelocity, false)
+        ballHitBoxEntity.kickPlayer(player, meta.shotVelocity, false)
     }
 
     /**
@@ -135,7 +125,7 @@ class SoccerBallCrossPlatformProxy(
      * @param player
      */
     override fun passByPlayer(player: Player) {
-        if (!meta.enabledPass) {
+        if (!meta.hitbox.rightClickEnabled) {
             return
         }
 
@@ -143,7 +133,7 @@ class SoccerBallCrossPlatformProxy(
             return
         }
 
-        ballHitBoxEntity.kickPlayer(player, meta.movementModifier.passVelocity, true)
+        ballHitBoxEntity.kickPlayer(player, meta.passVelocity, true)
     }
 
     /**
@@ -186,9 +176,10 @@ class SoccerBallCrossPlatformProxy(
     private fun isInCoolDown(player: Player): Boolean {
         val currentMilliSeconds = System.currentTimeMillis()
         val timeStampOfLastHit = playerInteractionCoolDown[player]
+        val milliSeconds = (meta.hitbox.interactionCoolDownPerPlayerTicks.toDouble() / 20.0 * 1000.0)
 
         if (timeStampOfLastHit != null) {
-            if (currentMilliSeconds - timeStampOfLastHit < meta.interactionCoolDownPerPlayerMs) {
+            if (currentMilliSeconds - timeStampOfLastHit < milliSeconds) {
                 return true
             }
         }

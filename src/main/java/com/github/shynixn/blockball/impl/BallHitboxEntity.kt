@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.SoccerGame
-import com.github.shynixn.blockball.entity.SoccerBallSettings
+import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.event.BallLeftClickEvent
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallRightClickEvent
@@ -95,7 +95,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
     /**
      * SoccerBall Meta.
      */
-    val meta: SoccerBallSettings
+    val meta: SoccerBallMeta
         get() {
             return ball.meta
         }
@@ -115,8 +115,8 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
             packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
                 it.entityId = entityId
                 it.interactionMetadata = InteractionMetadata().also {
-                    it.height = meta.kickPassHitBoxSize
-                    it.width = meta.kickPassHitBoxSize
+                    it.height = meta.hitbox.clickHitBoxSize
+                    it.width = meta.hitbox.clickHitBoxSize
                 }
             })
         } else {
@@ -127,14 +127,14 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
                 it.target = position.toLocation()
             })
 
-            if (meta.slimeVisible) {
+            if (meta.hitbox.slimeVisible) {
                 packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
-                    it.slimeSize = meta.kickPassHitBoxSize.toInt()
+                    it.slimeSize = meta.hitbox.clickHitBoxSize.toInt()
                     it.entityId = entityId
                 })
             } else {
                 packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
-                    it.slimeSize = meta.kickPassHitBoxSize.toInt()
+                    it.slimeSize = meta.hitbox.clickHitBoxSize.toInt()
                     it.entityId = entityId
                     it.isInvisible = true
                 })
@@ -169,13 +169,13 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
         }
 
         val prevEyeLoc = player.eyeLocation.clone()
-        this.skipCounter = meta.interactionCoolDown
+        this.skipCounter = meta.hitbox.interactionCoolDownTicks
 
-        if (meta.kickPassDelay == 0) {
+        if (meta.hitbox.leftClickRightClickDelayTicks == 0) {
             executeKickPass(player, prevEyeLoc, baseMultiplier, isPass)
         } else {
             plugin.launch {
-                delay(meta.kickPassDelay.ticks)
+                delay(meta.hitbox.leftClickRightClickDelayTicks.ticks)
                 executeKickPass(player, prevEyeLoc, baseMultiplier, isPass)
             }
         }
@@ -194,11 +194,10 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
             requestTeleport = false
 
             // Visible position makes the slime hitbox better align with the ball.
-            val visiblePosition = position.copy().add(0.0, -0.5, 0.0).add(0.0, meta.hitBoxRelocation, 0.0)
             for (player in players) {
                 packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
                     it.entityId = entityId
-                    it.target = visiblePosition.toLocation()
+                    it.target = position.toLocation().add(0.0, meta.hitbox.offSetY, 0.0)
                 })
             }
 
@@ -269,11 +268,11 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
         val eyeLocation = player.eyeLocation.clone()
         val spinV = calculateSpinVelocity(eyeLocation.direction.toVector3d(), kickVector)
 
-        val spinDrag = 1.0 - abs(spinV) / (3.0 * meta.movementModifier.maximumSpinVelocity)
+        val spinDrag = 1.0 - abs(spinV) / (3.0 * meta.maximumSpinVelocity)
         val angle =
             calculatePitchToLaunch(prevEyeLoc.toVector3d(), eyeLocation.toVector3d())
 
-        val verticalMod = baseMultiplier * spinDrag * sin(angle) * meta.movementModifier.shotPassYVelocityOverwrite
+        val verticalMod = baseMultiplier * spinDrag * sin(angle) * meta.shotPassYVelocityOverwrite
         val horizontalMod = baseMultiplier * spinDrag * cos(angle)
         kickVector = kickVector.normalize().multiply(horizontalMod)
         kickVector.y = verticalMod
@@ -303,7 +302,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
      * Checks movement interactions with the ball.
      */
     private fun checkMovementInteractions(players: List<Player>) {
-        if (!meta.enabledInteract || skipCounter > 0) {
+        if (!meta.hitbox.touchEnabled || skipCounter > 0) {
             return
         }
 
@@ -311,8 +310,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
             return
         }
 
-        // Reduce hitbox size in order to stay compatible to old soccerArena files.
-        val hitboxSize = (meta.interactionHitBoxSize - 1)
+        val hitboxSize = meta.hitbox.touchHitBoxSize
 
         for (player in players) {
             if (game != null && !game.redTeam.contains(player) && !game.blueTeam.contains(player)) {
@@ -327,8 +325,8 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
                 val vector = position
                     .copy()
                     .subtract(playerLocation)
-                    .normalize().multiply(meta.movementModifier.horizontalTouchModifier)
-                vector.y = 0.1 * meta.movementModifier.verticalTouchModifier
+                    .normalize().multiply(meta.horizontalTouchModifier)
+                vector.y = 0.1 * meta.verticalTouchModifier
 
                 val ballTouchPlayerEvent = BallTouchPlayerEvent(ball, player, vector.toVector())
                 Bukkit.getPluginManager().callEvent(ballTouchPlayerEvent)
@@ -344,7 +342,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
                 // Move the ball a little bit up otherwise wallcollision of ground immidately cancel movement.
                 this.position.y += 0.25
                 this.motion = ballTouchPlayerEvent.velocity.toVector3d()
-                this.skipCounter = meta.interactionCoolDown
+                this.skipCounter = meta.hitbox.interactionCoolDownTicks
             }
         }
     }
@@ -367,16 +365,16 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
         this.position = targetPosition
 
         // Visible position makes the slime hitbox better align with the ball.
-        val visiblePosition = position.copy().add(0.0, -0.5, 0.0).add(0.0, meta.hitBoxRelocation, 0.0)
+        val visiblePosition = position.toLocation().add(0.0, meta.hitbox.offSetY, 0.0)
         for (player in players) {
             require(player is Player)
             packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
                 it.entityId = entityId
-                it.target = visiblePosition.toLocation()
+                it.target = visiblePosition
             })
         }
 
-        val rollingResistance = 1.0 - this.meta.movementModifier.rollingResistance
+        val rollingResistance = 1.0 - this.meta.rollingResistance
         this.motion = this.motion.multiply(rollingResistance)
         this.isOnGround = true
     }
@@ -385,19 +383,18 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
      * Handles movement of the ball in air.
      */
     private fun calculateBallOnAir(players: List<Any>, targetPosition: Vector3d) {
-        val airResistance = 1.0 - this.meta.movementModifier.airResistance
+        val airResistance = 1.0 - this.meta.airResistance
         this.motion = this.motion.multiply(airResistance)
-        this.motion.y -= this.meta.movementModifier.gravityModifier
+        this.motion.y -= this.meta.gravityModifier
         this.position = targetPosition
         this.isOnGround = false
 
         // Visible position makes the slime hitbox better align with the ball.
-        val visiblePosition = position.copy().add(0.0, -0.5, 0.0).add(0.0, meta.hitBoxRelocation, 0.0)
         for (player in players) {
             require(player is Player)
             packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
                 it.entityId = entityId
-                it.target = visiblePosition.toLocation()
+                it.target = position.toLocation().add(0.0, meta.hitbox.offSetY, 0.0)
             })
         }
 
@@ -419,7 +416,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
     private fun calculateSpinVelocity(postVector: Vector3d, initVector: Vector3d): Double {
         val angle = Math.toDegrees(getHorizontalDeviation(initVector, postVector))
         val absAngle = abs(angle).toFloat()
-        val maxV = meta.movementModifier.maximumSpinVelocity
+        val maxV = meta.maximumSpinVelocity
         var velocity: Double
 
         velocity = when (absAngle < 90) {
@@ -444,9 +441,9 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
      * @return Angle measured in Radian
      */
     private fun calculatePitchToLaunch(preLoc: Vector3d, postLoc: Vector3d): Double {
-        val maximum = meta.movementModifier.maximumPitch
-        val minimum = meta.movementModifier.minimumPitch
-        val default = meta.movementModifier.defaultPitch
+        val maximum = meta.maximumPitch
+        val minimum = meta.minimumPitch
+        val default = meta.defaultPitch
 
         if (default > maximum || default < minimum) {
             throw IllegalArgumentException("Default value must be in range of minimum and maximum!")

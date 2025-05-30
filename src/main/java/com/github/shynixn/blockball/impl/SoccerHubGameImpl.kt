@@ -46,9 +46,7 @@ class SoccerHubGameImpl(
         // Handle HubGame ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
-            if(completedPublish){
-                close()
-            }
+            close()
             return
         }
 
@@ -56,7 +54,7 @@ class SoccerHubGameImpl(
             status = GameState.JOINABLE
         }
 
-        if (Bukkit.getWorld(arena.meta.ballMeta.spawnpoint!!.world!!) == null) {
+        if (Bukkit.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
             return
         }
 
@@ -64,8 +62,17 @@ class SoccerHubGameImpl(
             setGameClosing()
         }
 
+        if (ball == null) {
+            if (redTeam.size >= arena.meta.redTeamMeta.minAmount && blueTeam.size >= arena.meta.blueTeamMeta.minAmount && ingamePlayersStorage.isNotEmpty()) {
+                respawnBall(arena.meta.customizingMeta.gameStartBallSpawnDelayTicks)
+            }
+        }
+
+        if (ball != null && ingamePlayersStorage.isEmpty()) {
+            destroyBall()
+        }
+
         // Handle SoccerBall.
-        this.fixBallPositionSpawn()
         this.handleBallSpawning()
         // TODO: Minigame essentials. Update signs and protections.
         super.handleMiniGameEssentials(ticks)

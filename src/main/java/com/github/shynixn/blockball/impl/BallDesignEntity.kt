@@ -1,25 +1,27 @@
-@file:Suppress("UNCHECKED_CAST")
-
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.SoccerBall
-import com.github.shynixn.blockball.enumeration.BallSize
 import com.github.shynixn.mcutils.common.Vector3d
+import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.item.ItemService
-import com.github.shynixn.mcutils.common.toEulerAngle
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.api.meta.EntityAttribute
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.ArmorSlotType
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.*
 import org.bukkit.entity.Player
+import org.bukkit.util.EulerAngle
+import org.bukkit.util.Vector
+import kotlin.math.atan2
 
 class BallDesignEntity(val entityId: Int) {
-    /**
-     * Rotation of the design in euler angles.
-     */
-    var rotation: Vector3d = Vector3d(0.0, 0.0, 0.0)
+    companion object {
+        const val SCALE: String = "scale"
+    }
+
+    private var rotationDegrees: Int = 0
 
     /**
      * Packet service dependency.
@@ -39,34 +41,48 @@ class BallDesignEntity(val entityId: Int) {
     /**
      * Spawns the ball for the given player.
      */
-    fun spawn(player: Any, position: Vector3d) {
-        require(player is Player)
+    fun spawn(player: Player) {
+        val position = ball.getLocation().toVector3d()
+        position.y += ball.meta.render.offSetY
         packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
             it.target = position.toLocation()
             it.entityId = entityId
             it.entityType = EntityType.ARMOR_STAND
         })
 
-        if (!ball.meta.slimeVisible) {
-            val stack = itemService.toItemStack(ball.meta.item)
+        if (!ball.meta.hitbox.slimeVisible) {
+            val stack = itemService.toItemStack(ball.meta.render.item)
             packetService.sendPacketOutEntityEquipment(player, PacketOutEntityEquipment().also {
                 it.entityId = entityId
                 it.items = listOf(Pair(ArmorSlotType.HELMET, stack))
             })
         }
 
-        packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
-            it.entityId = entityId
-            it.isInvisible = true
-            it.isArmorstandSmall = ball.meta.size == BallSize.SMALL
-        })
+        if (Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_20_R4)) {
+            packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
+                it.entityId = entityId
+                it.isInvisible = true
+            })
+            packetService.sendPacketOutEntityAttributes(player, PacketOutEntityAttributes().also {
+                it.entityId = entityId
+                it.attributes = listOf(EntityAttribute().also { at ->
+                    at.id = SCALE
+                    at.base = ball.meta.render.scale
+                })
+            })
+        } else {
+            packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
+                it.entityId = entityId
+                it.isInvisible = true
+                it.isArmorstandSmall = ball.meta.render.scale == 0.5
+            })
+        }
     }
 
     /**
      * Destroys the ball for the given player.
      */
-    fun destroy(player: Any) {
-        require(player is Player)
+    fun destroy(player: Player) {
         packetService.sendPacketOutEntityDestroy(player, PacketOutEntityDestroy().also {
             it.entityIds = listOf(entityId)
         })
@@ -78,12 +94,8 @@ class BallDesignEntity(val entityId: Int) {
      */
     fun tick(players: List<Player>) {
         val position = ball.getLocation().toVector3d()
-
-        position.y = if (ball.meta.size == BallSize.NORMAL) {
-            position.y + ball.meta.hitBoxRelocation - 1.2
-        } else {
-            position.y + ball.meta.hitBoxRelocation - 0.4
-        }
+        position.y += ball.meta.render.offSetY
+        position.yaw = vectorToYaw(ball.getVelocity())
 
         for (player in players) {
             packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
@@ -92,19 +104,18 @@ class BallDesignEntity(val entityId: Int) {
             })
         }
 
-        if (ball.meta.rotating) {
-            playRotationAnimation(players as List<Any>)
+        if (ball.meta.render.rotating) {
+            playRotationAnimation(players)
         }
     }
 
     /**
      * Plays the rotation animation.
      */
-    private fun playRotationAnimation(players: List<Any>) {
+    private fun playRotationAnimation(players: List<Player>) {
         // 360 0 0 is a full forward rotation.
         // Length of the velocity is the speed of the ball.
         val velocity = ball.getVelocity().toVector3d()
-
         val length = if (ball.isOnGround) {
             Vector3d(velocity.x, 0.0, velocity.z).length()
         } else {
@@ -112,26 +123,35 @@ class BallDesignEntity(val entityId: Int) {
         }
 
         val angle = when {
-            length > 1.0 -> Vector3d(rotation.x - 30, 0.0, 0.0)
-            length > 0.1 -> Vector3d(rotation.x - 10, 0.0, 0.0)
-            length > 0.08 -> Vector3d(rotation.x - 5, 0.0, 0.0)
+            length > 1.0 -> rotationDegrees - 20
+            length > 0.1 -> rotationDegrees - 10
+            length > 0.08 -> rotationDegrees - 5
             else -> null
         }
 
         if (angle != null) {
-            rotation = Vector3d(angle.x, angle.y, angle.z)
-
-            if (ball.meta.slimeVisible) {
+            rotationDegrees = angle % 360
+            if (ball.meta.hitbox.slimeVisible) {
                 return
             }
 
             for (player in players) {
-                require(player is Player)
                 packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
-                    it.armorStandHeadRotation = angle.toEulerAngle()
+                    it.armorStandHeadRotation = EulerAngle(-1 * rotationDegrees.toDouble(), 0.0, 0.0)
                     it.entityId = entityId
                 })
             }
         }
+    }
+
+    private fun vectorToYaw(vector: Vector): Double {
+        // Invert X because Minecraft yaw is reversed around the Y-axis
+        var yaw = Math.toDegrees(atan2(-vector.x, vector.z))
+
+        // Normalize to the range (-180, 180]
+        if (yaw < -180) yaw += 360.0
+        if (yaw > 180) yaw -= 360.0
+
+        return yaw
     }
 }

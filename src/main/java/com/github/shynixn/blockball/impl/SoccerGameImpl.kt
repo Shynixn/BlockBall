@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.BlockBallPlugin.Companion.gameKey
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.*
@@ -16,7 +15,6 @@ import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
-import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
 import kotlinx.coroutines.delay
@@ -50,7 +48,7 @@ abstract class SoccerGameImpl(
     /**
      * Is the ball spawning?
      */
-    private var ballSpawning: Boolean = false
+    protected var ballSpawning: Boolean = false
 
     /**
      * SoccerBall spawn counter.
@@ -374,46 +372,30 @@ abstract class SoccerGameImpl(
         }
 
         if (teamMeta.spawnpoint == null) {
-            player.teleport(arena.meta.ballMeta.spawnpoint!!.toLocation())
+            player.teleport(arena.ballSpawnPoint!!.toLocation())
         } else {
             player.teleport(teamMeta.spawnpoint!!.toLocation())
         }
     }
 
-    protected fun fixBallPositionSpawn() {
-        if (ball == null || ball!!.isDead) {
-            return
-        }
-        if (ingamePlayersStorage.isEmpty()) {
-            ball!!.remove()
-        }
-    }
-
-    protected fun handleBallSpawning() {
+    /**
+     * Returns if the ball was spawned when calling this method.
+     */
+    protected fun handleBallSpawning() : Boolean{
         if (ballSpawning && ballEnabled) {
             ballSpawnCounter--
             if (ballSpawnCounter <= 0) {
-                if (ball != null && !ball!!.isDead) {
-                    ball!!.remove()
-                }
-
+                destroyBall()
                 ball = soccerBallFactory.createSoccerBallForGame(
-                    arena.meta.ballMeta.spawnpoint!!.toLocation(), arena.meta.ballMeta, this
+                    arena.ballSpawnPoint!!.toLocation(), arena.ball, this
                 )
                 ballSpawning = false
                 ballSpawnCounter = 0
-
-                // Dirty Hack, maybe use a different method?
-                if (this is SoccerRefereeGame) {
-                    ball?.isInteractable = false
-                }
-            }
-        } else if ((ball == null || ball!!.isDead) && (redTeam.isNotEmpty() || blueTeam.isNotEmpty() || refereeTeam.isNotEmpty())) {
-            if (arena.gameType != GameType.HUBGAME || redTeam.size >= arena.meta.redTeamMeta.minAmount && blueTeam.size >= arena.meta.blueTeamMeta.minAmount) {
-                ballSpawning = true
-                ballSpawnCounter = arena.meta.ballMeta.delayInTicks
+                return true
             }
         }
+
+        return false
     }
 
     /**
@@ -592,7 +574,7 @@ abstract class SoccerGameImpl(
      * Teleports all players and ball back to their spawnpoint if [game] has got back teleport enabled.
      */
     private fun relocatePlayersAndBall() {
-        respawnBall()
+        respawnBall(arena.meta.customizingMeta.goalScoredBallSpawnDelayTicks)
 
         if (!arena.meta.customizingMeta.backTeleport) {
             return
@@ -604,19 +586,19 @@ abstract class SoccerGameImpl(
             var redTeamSpawnpoint = arena.meta.redTeamMeta.spawnpoint
 
             if (redTeamSpawnpoint == null) {
-                redTeamSpawnpoint = arena.meta.ballMeta.spawnpoint!!
+                redTeamSpawnpoint = arena.ballSpawnPoint!!
             }
 
             var blueTeamSpawnpoint = arena.meta.blueTeamMeta.spawnpoint
 
             if (blueTeamSpawnpoint == null) {
-                blueTeamSpawnpoint = arena.meta.ballMeta.spawnpoint!!
+                blueTeamSpawnpoint = arena.ballSpawnPoint!!
             }
 
             var refereeSpawnpoint = arena.meta.refereeTeamMeta.spawnpoint
 
             if (refereeSpawnpoint == null) {
-                refereeSpawnpoint = arena.meta.ballMeta.spawnpoint!!
+                refereeSpawnpoint = arena.ballSpawnPoint!!
             }
 
             ingamePlayersStorage.forEach { i ->
@@ -697,16 +679,12 @@ abstract class SoccerGameImpl(
 
     abstract fun setPlayerToArena(player: Player, team: Team)
 
-    private fun respawnBall(delayInTicks: Int = arena.meta.ballMeta.delayInTicks) {
+    protected fun respawnBall(delayInTicks: Int) {
         if (ballSpawning) {
             return
         }
 
-        if (ball != null) {
-            ball!!.remove()
-            ball = null
-        }
-
+        destroyBall()
         ballSpawning = true
         ballSpawnCounter = delayInTicks
     }
@@ -735,21 +713,23 @@ abstract class SoccerGameImpl(
     // region Referee
     /**
      * Respawns the ball and sets it to the given location.
+     * This is only relevant for the referee.
      */
     override fun setBallToLocation(location: Location) {
-        if (ball != null && !ball!!.isDead) {
-            ball!!.remove()
-        }
-
+        destroyBall()
         ball = soccerBallFactory.createSoccerBallForGame(
-            location, arena.meta.ballMeta, this
+            location, arena.ball, this
         )
         ball!!.isInteractable = false // We always block interacting with the ball until the referee has started.
         ballSpawning = false
         ballSpawnCounter = 0
     }
 
-    var completedPublish = false
+
+    protected fun destroyBall() {
+        ball?.remove()
+        ball = null
+    }
 
     protected fun setGameClosing() {
         if (closing) {
@@ -757,7 +737,6 @@ abstract class SoccerGameImpl(
         }
 
         closing = true
-        completedPublish = true
     }
 
     // endregion

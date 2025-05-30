@@ -895,7 +895,7 @@ class BlockBallCommandExecutor(
 
     private suspend fun setLocation(player: Player, arena: SoccerArena, locationType: LocationType) {
         if (locationType == LocationType.BALL) {
-            arena.meta.ballMeta.spawnpoint = player.location.toVector3d()
+            arena.ballSpawnPoint = player.location.toVector3d()
         } else if (locationType == LocationType.LEAVE_SPAWNPOINT) {
             arena.meta.lobbyMeta.leaveSpawnpoint = player.location.toVector3d()
         } else if (locationType == LocationType.BLUE_SPAWNPOINT) {
@@ -1114,10 +1114,10 @@ class BlockBallCommandExecutor(
                         )
                     )
                 }
-                if (arena.meta.ballMeta.spawnpoint != null) {
+                if (arena.ballSpawnPoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.ballMeta.spawnpoint!!, null, Color.pink.rgb, "Ball"
+                            arena.ballSpawnPoint!!, null, Color.pink.rgb, "Ball"
                         )
                     )
                 }
