@@ -25,11 +25,17 @@ class SoccerArena : Selection(), Element {
     @Comment("The type of BlockBall game. The supported types are HUBGAME, MINIGAME and REFEREEGAME. REFEREEGAME is PatreonOnly.")
     var gameType: GameType = GameType.HUBGAME
 
-    @Comment("All settings related to the ball.")
-    var ball : SoccerBallMeta = SoccerBallMeta()
+    @Comment("Corner 1 of the playable field.")
+    override var corner1: Vector3d? = null
+
+    @Comment("Corner 2 of the playable field.")
+    override var corner2: Vector3d? = null
 
     @Comment("Spawn location of the ball.")
     var ballSpawnPoint : Vector3d? = null
+
+    @Comment("All settings related to the ball.")
+    var ball : SoccerBallMeta = SoccerBallMeta()
 
     @Comment("All configurable meta data of this arena.")
     var meta: ArenaMeta = ArenaMeta()

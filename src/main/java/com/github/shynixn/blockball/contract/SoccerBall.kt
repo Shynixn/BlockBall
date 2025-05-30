@@ -55,11 +55,6 @@ interface SoccerBall {
     fun getVelocity(): Vector
 
     /**
-     * Rotation of the visible ball in euler angles.
-     */
-    fun getRotation(): Vector
-
-    /**
      * Shoot the ball by the given player.
      * The calculated velocity can be manipulated by the BallKickEvent.
      *

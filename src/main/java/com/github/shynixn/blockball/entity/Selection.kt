@@ -5,9 +5,9 @@ import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 
 open class Selection {
 
-    var corner1: Vector3d? = null
+    open var corner1: Vector3d? = null
 
-    var corner2: Vector3d? = null
+    open var corner2: Vector3d? = null
 
     /** [center] of the soccerArena */
     val center: Vector3d

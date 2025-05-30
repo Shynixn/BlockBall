@@ -100,14 +100,6 @@ class SoccerBallCrossPlatformProxy(
     override fun getVelocity(): Vector {
         return ballHitBoxEntity.motion.toVector()
     }
-
-    /**
-     * Rotation of the visible ball in euler angles.
-     */
-    override fun getRotation(): Vector {
-        return ballDesignEntity.rotation.toVector()
-    }
-
     /**
      * Shoot the ball by the given player.
      * The calculated velocity can be manipulated by the BallLeftClickEvent.
