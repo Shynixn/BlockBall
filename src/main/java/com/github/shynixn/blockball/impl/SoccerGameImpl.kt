@@ -48,7 +48,7 @@ abstract class SoccerGameImpl(
     /**
      * Is the ball spawning?
      */
-    private var ballSpawning: Boolean = false
+    protected var ballSpawning: Boolean = false
 
     /**
      * SoccerBall spawn counter.
@@ -378,7 +378,10 @@ abstract class SoccerGameImpl(
         }
     }
 
-    protected fun handleBallSpawning() {
+    /**
+     * Returns if the ball was spawned when calling this method.
+     */
+    protected fun handleBallSpawning() : Boolean{
         if (ballSpawning && ballEnabled) {
             ballSpawnCounter--
             if (ballSpawnCounter <= 0) {
@@ -388,15 +391,11 @@ abstract class SoccerGameImpl(
                 )
                 ballSpawning = false
                 ballSpawnCounter = 0
-
-                // Dirty Hack, maybe use a different method?
-                if (this is SoccerRefereeGame) {
-                    ball?.isInteractable = false
-                }
+                return true
             }
-
-            return
         }
+
+        return false
     }
 
     /**
@@ -575,7 +574,7 @@ abstract class SoccerGameImpl(
      * Teleports all players and ball back to their spawnpoint if [game] has got back teleport enabled.
      */
     private fun relocatePlayersAndBall() {
-        respawnBall(arena.meta.customizingMeta.subsequentBallSpawnDelayTicks)
+        respawnBall(arena.meta.customizingMeta.goalScoredBallSpawnDelayTicks)
 
         if (!arena.meta.customizingMeta.backTeleport) {
             return

@@ -64,7 +64,7 @@ class SoccerHubGameImpl(
 
         if (ball == null) {
             if (redTeam.size >= arena.meta.redTeamMeta.minAmount && blueTeam.size >= arena.meta.blueTeamMeta.minAmount && ingamePlayersStorage.isNotEmpty()) {
-                respawnBall(arena.meta.customizingMeta.initialBallSpawnDelayTicks)
+                respawnBall(arena.meta.customizingMeta.gameStartBallSpawnDelayTicks)
             }
         }
 

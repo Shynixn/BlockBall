@@ -199,14 +199,19 @@ open class SoccerMiniGameImpl constructor(
             }
         }
 
-        if (ballEnabled) {
-            respawnBall(arena.meta.customizingMeta.initialBallSpawnDelayTicks)
-        } else {
-            ball?.remove()
-            ball = null
+        // Handle SoccerBall.
+        if (ball == null) {
+            if (ballEnabled && ingamePlayersStorage.isNotEmpty() && ballSpawning == false) {
+                respawnBall(arena.meta.customizingMeta.gameStartBallSpawnDelayTicks)
+            }
+        }
+
+        if (!ballEnabled && ball != null) {
+            destroyBall()
         }
 
         this.handleBallSpawning()
+
         // Update signs and protections.
         super.handleMiniGameEssentials(ticks)
     }

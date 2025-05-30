@@ -207,7 +207,22 @@ class SoccerRefereeGameImpl(
         }
 
         // Handle SoccerBall.
-        this.handleBallSpawning()
+        if (ball == null) {
+            if (ballEnabled && ingamePlayersStorage.isNotEmpty() && ballSpawning == false) {
+                respawnBall(arena.meta.customizingMeta.gameStartBallSpawnDelayTicks)
+            }
+        }
+
+        if (!ballEnabled && ball != null) {
+            destroyBall()
+        }
+
+
+        val wasSpawned = this.handleBallSpawning()
+        if (wasSpawned) {
+            ball?.isInteractable = false
+        }
+
         // Update signs and protections.
         super.handleMiniGameEssentials(ticks)
     }
