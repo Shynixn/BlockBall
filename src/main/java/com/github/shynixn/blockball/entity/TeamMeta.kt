@@ -45,19 +45,19 @@ class TeamMeta {
     @Comment("The lobby spawnpoint of this team inside of the game.")
     var lobbySpawnpoint: Vector3d? = null
 
-    @Comment("The commands being executed when a team wins. A command always starts with an slash.")
+    @Comment("The commands being executed when a team wins. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.")
     var winCommands: List<CommandMeta> = ArrayList()
 
-    @Comment("The commands being executed when a team looses. A command always starts with an slash.")
+    @Comment("The commands being executed when a team looses. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.")
     var looseCommands: List<CommandMeta> = ArrayList()
 
-    @Comment("The commands being executed when a game ends in a draw. A command always starts with an slash.")
+    @Comment("The commands being executed when a game ends in a draw. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.")
     var drawCommands: List<CommandMeta> = ArrayList()
 
-    @Comment("The commands being executed when a goal is scored. A command always starts with an slash.")
+    @Comment("The commands being executed when a goal is scored. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER. Is not triggered on own goals.")
     var goalCommands: List<CommandMeta> = ArrayList()
 
-    @Comment("The commands being executed when a player joins this team. A command always starts with an slash.")
+    @Comment("The commands being executed when a player joins this team. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.")
     var joinCommands: List<CommandMeta> = listOf(
         CommandMeta(
             CommandType.SERVER_PER_PLAYER,
@@ -69,7 +69,7 @@ class TeamMeta {
         )
     )
 
-    @Comment("The commands being executed when a player leaves this team. A command always starts with an slash.")
+    @Comment("The commands being executed when a player leaves this team. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.")
     var leaveCommands: List<CommandMeta> = listOf(
         CommandMeta(
             CommandType.SERVER_PER_PLAYER,
