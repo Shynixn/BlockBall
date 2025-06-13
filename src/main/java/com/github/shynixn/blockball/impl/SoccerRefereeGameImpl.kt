@@ -124,7 +124,7 @@ class SoccerRefereeGameImpl(
                 if (lobbyCountdown < 5) {
                     ingamePlayersStorage.keys.forEach { p ->
                         soundService.playSound(
-                            p.location, arrayListOf(p), blingSound
+                            p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
                         )
                     }
                 }
@@ -144,6 +144,9 @@ class SoccerRefereeGameImpl(
                     matchTimeIndex = -1
                     ballEnabled = true
                     switchToNextMatchTime()
+                    executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.gameStartCommands)
+                    executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.gameStartCommands)
+                    executeCommandsWithPlaceHolder(refereeTeam, arena.meta.refereeTeamMeta.gameStartCommands)
                 }
             }
 
@@ -189,7 +192,7 @@ class SoccerRefereeGameImpl(
 
                                 if (gameCountdown <= 5) {
                                     soundService.playSound(
-                                        p.location, arrayListOf(p), blingSound
+                                        p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
                                     )
                                 }
 

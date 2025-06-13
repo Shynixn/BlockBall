@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.HubGameForcefieldService
 import com.github.shynixn.blockball.entity.InteractionCache
+import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.chat.ClickEvent
@@ -18,6 +19,7 @@ import com.github.shynixn.mcutils.common.toVector3d
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import java.util.*
 
 class HubGameForcefieldServiceImpl(
     private val gameService: GameService,
@@ -36,13 +38,22 @@ class HubGameForcefieldServiceImpl(
         val gameInternal = gameService.getByPlayer(player)
 
         if (gameInternal != null) {
-            if (gameInternal.arena.gameType == GameType.HUBGAME && !gameInternal.arena.isLocationIn2dSelection(
-                    location.toVector3d()
-                )
-            ) {
-                gameInternal.leave(player)
-                player.sendPluginMessage(language.leftGameMessage)
+            if (gameInternal.arena.gameType == GameType.HUBGAME) {
+                if (!gameInternal.arena.isLocationIn2dSelection(location.toVector3d())) {
+                    gameInternal.leave(player)
+                    player.sendPluginMessage(language.leftGameMessage)
+                }
+            } else if ((gameInternal.arena.gameType == GameType.MINIGAME || gameInternal.arena.gameType == GameType.REFEREEGAME) && gameInternal.arena.meta.minigameMeta.forceFieldEnabled) {
+                if (gameInternal.status == GameState.RUNNING && !gameInternal.arena.isLocationIn2dSelection(location.toVector3d())) {
+                    val knockBack =
+                        gameInternal.arena.ballSpawnPoint!!.toLocation().toVector().subtract(player.location.toVector())
+                            .normalize().multiply(2.0)
+                    player.location.direction = knockBack
+                    player.velocity = knockBack
+                    player.allowFlight = true
+                }
             }
+
             return
         }
 
@@ -126,6 +137,7 @@ class HubGameForcefieldServiceImpl(
             if (interactionCache.toggled) {
                 if (player.gameMode != GameMode.CREATIVE) {
                     player.allowFlight = false
+                    player.isFlying = false
                 }
 
                 interactionCache.toggled = false

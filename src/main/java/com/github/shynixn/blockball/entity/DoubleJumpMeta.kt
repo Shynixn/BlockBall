@@ -12,7 +12,7 @@ class DoubleJumpMeta {
     var verticalStrength: Double = 1.0
     @Comment("The horizontal velocity modifier.")
     var horizontalStrength: Double = 2.0
-   @Comment("The sound effect being played. The names are separated by comma to support different Minecraft versions.")
+   @Comment("The sound effect being played. The names are separated by comma to support different Minecraft versions. An empty name disables the sound.")
     val soundEffect: SoundMeta = SoundMeta().also {
         it.name = "ENTITY_WIND_CHARGE_WIND_BURST,ENTITY_GHAST_SHOOT,GHAST_FIREBALL"
         it.pitch = 1.0
