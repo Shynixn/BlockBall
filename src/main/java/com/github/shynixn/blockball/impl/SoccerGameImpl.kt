@@ -381,7 +381,7 @@ abstract class SoccerGameImpl(
     /**
      * Returns if the ball was spawned when calling this method.
      */
-    protected fun handleBallSpawning() : Boolean{
+    protected fun handleBallSpawning(): Boolean {
         if (ballSpawning && ballEnabled) {
             ballSpawnCounter--
             if (ballSpawnCounter <= 0) {
@@ -444,7 +444,7 @@ abstract class SoccerGameImpl(
         if (teamOfGoal == Team.RED) {
             blueScore += arena.meta.blueTeamMeta.pointsPerGoal
             onScore(Team.BLUE)
-            onScoreReward(Team.BLUE, blueTeam)
+            executeGoalCommands(teamOfGoal)
             relocatePlayersAndBall()
 
             if (blueScore >= arena.meta.lobbyMeta.maxScore) {
@@ -458,7 +458,7 @@ abstract class SoccerGameImpl(
         if (teamOfGoal == Team.BLUE) {
             redScore += arena.meta.redTeamMeta.pointsPerGoal
             onScore(Team.RED)
-            onScoreReward(Team.RED, redTeam)
+            executeGoalCommands(teamOfGoal)
             relocatePlayersAndBall()
 
             if (redScore >= arena.meta.lobbyMeta.maxScore) {
@@ -553,11 +553,31 @@ abstract class SoccerGameImpl(
         }
     }
 
-    private fun onScoreReward(team: Team, players: Set<Player>) {
-        if (lastInteractedEntity != null && lastInteractedEntity is Player) {
-            if (players.contains(lastInteractedEntity!!)) {
-                val teamMeta = getTeamMetaFromTeam(team)
-                executeCommandsWithPlaceHolder(setOf(lastInteractedEntity!!), teamMeta.goalCommands)
+    /**
+     * The goal where the ball has been shot in.
+     */
+    private fun executeGoalCommands(goalTeam: Team) {
+        if (lastInteractedEntity == null) {
+            return
+        }
+
+        val goalShooter = lastInteractedEntity!!
+
+        if (redTeam.contains(goalShooter)) {
+            if (goalTeam == Team.BLUE) {
+                executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.goalCommands)
+                executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.enemyGoalCommands)
+            } else {
+                executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.ownGoalCommands)
+                executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.enemyOwnGoalCommands)
+            }
+        } else if (blueTeam.contains(goalShooter)) {
+            if (goalTeam == Team.RED) {
+                executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.goalCommands)
+                executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.enemyGoalCommands)
+            } else {
+                executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.ownGoalCommands)
+                executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.enemyOwnGoalCommands)
             }
         }
     }
@@ -601,7 +621,7 @@ abstract class SoccerGameImpl(
                 refereeSpawnpoint = arena.ballSpawnPoint!!
             }
 
-            ingamePlayersStorage.forEach { i ->
+            for (i in ingamePlayersStorage) {
                 if (i.value.goalTeam == Team.RED) {
                     i.key.teleport(redTeamSpawnpoint.toLocation())
                 } else if (i.value.goalTeam == Team.BLUE) {
@@ -610,6 +630,10 @@ abstract class SoccerGameImpl(
                     i.key.teleport(refereeSpawnpoint.toLocation())
                 }
             }
+
+            executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.backTeleportCommands)
+            executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.backTeleportCommands)
+            executeCommandsWithPlaceHolder(refereeTeam, arena.meta.refereeTeamMeta.backTeleportCommands)
         }
     }
 

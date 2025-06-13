@@ -15,7 +15,6 @@ import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
-import com.github.shynixn.mcutils.common.sound.SoundMeta
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
@@ -25,7 +24,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-open class SoccerMiniGameImpl constructor(
+open class SoccerMiniGameImpl(
     arena: SoccerArena,
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
     private val plugin: Plugin,
@@ -70,15 +69,6 @@ open class SoccerMiniGameImpl constructor(
      * Index of the current match time.
      */
     override var matchTimeIndex: Int = 0
-
-    /**
-     * Returns the bling sound.
-     */
-    val blingSound: SoundMeta = SoundMeta().also {
-        it.name = "BLOCK_NOTE_BLOCK_PLING,BLOCK_NOTE_PLING,NOTE_PLING"
-        it.volume = 10.0
-        it.pitch = 2.0
-    }
 
     /**
      * Lets the given [player] leave join. Optional can the prefered
@@ -142,7 +132,7 @@ open class SoccerMiniGameImpl constructor(
                 if (lobbyCountdown < 5) {
                     ingamePlayersStorage.keys.forEach { p ->
                         soundService.playSound(
-                            p.location, arrayListOf(p), blingSound
+                            p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
                         )
                     }
                 }
@@ -162,6 +152,9 @@ open class SoccerMiniGameImpl constructor(
                     matchTimeIndex = -1
                     ballEnabled = true
                     switchToNextMatchTime()
+                    executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.gameStartCommands)
+                    executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.gameStartCommands)
+                    executeCommandsWithPlaceHolder(refereeTeam, arena.meta.refereeTeamMeta.gameStartCommands)
                 }
             }
 
@@ -182,7 +175,7 @@ open class SoccerMiniGameImpl constructor(
 
                     if (gameCountdown <= 5) {
                         soundService.playSound(
-                            p.location, arrayListOf(p), blingSound
+                            p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
                         )
                     }
 

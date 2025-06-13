@@ -54,8 +54,17 @@ class TeamMeta {
     @Comment("The commands being executed when a game ends in a draw. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.")
     var drawCommands: List<CommandMeta> = ArrayList()
 
-    @Comment("The commands being executed when a goal is scored. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER. Is not triggered on own goals.")
+    @Comment("The commands being executed when this team scores a goal. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.")
     var goalCommands: List<CommandMeta> = ArrayList()
+
+    @Comment("The commands being executed when this team scores an own goal. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.")
+    var ownGoalCommands: List<CommandMeta> = ArrayList()
+
+    @Comment("The commands being executed when the enemy scores a goal. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.")
+    var enemyGoalCommands: List<CommandMeta> = ArrayList()
+
+    @Comment("The commands being executed when the enemy scores an own goal. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.")
+    var enemyOwnGoalCommands: List<CommandMeta> = ArrayList()
 
     @Comment("The commands being executed when a player joins this team. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.")
     var joinCommands: List<CommandMeta> = listOf(
@@ -80,4 +89,10 @@ class TeamMeta {
             "/blockballbossbar remove blockball_bossbar %blockball_player_name%"
         )
     )
+
+    @Comment("The commands being when players are teleported back to the spawnpoint. BackTeleport needs to be set to enabled for this to work. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER. ")
+    var backTeleportCommands: List<CommandMeta> = ArrayList()
+
+    @Comment("The commands being when a game start in MiniGame mode or Referee game mode.  A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER. ")
+    var gameStartCommands: List<CommandMeta> = ArrayList()
 }
