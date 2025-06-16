@@ -77,7 +77,7 @@ open class SoccerMiniGameImpl(
      */
     override fun join(player: Player, team: Team?): JoinResult {
         if (playing) {
-            return JoinResult.GAME_FULL
+            return JoinResult.GAME_ALREADY_RUNNING
         }
 
         queueTimeOut()

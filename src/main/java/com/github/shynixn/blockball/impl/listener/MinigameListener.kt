@@ -11,10 +11,18 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.plugin.Plugin
 
-class MinigameListener (
-    private val gameService: GameService
+class MinigameListener(
+    private val gameService: GameService,
+    private val plugin: Plugin
 ) : Listener {
+    private val commandMessages by lazy {
+        val list = ArrayList<String>()
+        list.add("/blockball")
+        list.addAll(plugin.config.getStringList("commands.blockball.aliases").map { e -> "/${e}" })
+        list
+    }
 
     /**
      * Cancels actions in minigame and bungeecord games to restrict destroying the soccerArena.
@@ -62,11 +70,11 @@ class MinigameListener (
      */
     @EventHandler
     fun onPlayerExecuteCommand(event: PlayerCommandPreprocessEvent) {
-        if (event.message.startsWith("/blockball")
-            || event.player.hasPermission(Permission.OBSOLETE_STAFF.permission) || event.player.hasPermission(Permission.EDIT_GAME.permission)
-            || event.player.isOp
-        ) {
+        if (commandMessages.firstOrNull { e -> event.message.startsWith(e) } != null) {
+            return
+        }
 
+        if (event.player.hasPermission(Permission.OBSOLETE_STAFF.permission) || event.player.hasPermission(Permission.EDIT_GAME.permission) || event.player.isOp) {
             return
         }
 
