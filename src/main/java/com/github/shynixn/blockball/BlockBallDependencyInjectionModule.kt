@@ -181,7 +181,7 @@ class BlockBallDependencyInjectionModule(
             GameListener(module.getService(), module.getService(), module.getService(), module.getService())
         }
         module.addService<HubgameListener> { HubgameListener(module.getService()) }
-        module.addService<MinigameListener> { MinigameListener(module.getService()) }
+        module.addService<MinigameListener> { MinigameListener(module.getService(), module.getService()) }
         module.addService<BlockBallCommandExecutor> {
             BlockBallCommandExecutor(
                 module.getService(),

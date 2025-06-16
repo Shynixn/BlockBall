@@ -798,7 +798,13 @@ class BlockBallCommandExecutor(
         sender.sendMessage(footerBuilder.toString())
     }
 
-    private fun joinGame(sender: CommandSender, player: Player, name: String, team: Team? = null): Boolean {
+    private fun joinGame(
+        sender: CommandSender,
+        player: Player,
+        name: String,
+        team: Team? = null,
+        retry: Boolean = true
+    ): Boolean {
         for (game in gameService.getAll()) {
             if (game.getPlayers().contains(player)) {
                 if (game.arena.name.equals(name, true)) {
@@ -808,8 +814,12 @@ class BlockBallCommandExecutor(
                     if (game.status == GameState.JOINABLE && team != null && previousTeam != team) {
                         // Switching teams.
                         game.leave(player)
-                        val joinResult = joinGame(sender, player, name, team)
 
+                        val joinResult = if (retry) {
+                            joinGame(sender, player, name, team, false)
+                        } else {
+                            false
+                        }
                         if (!joinResult) {
                             game.join(player, previousTeam)
                             return false
@@ -855,15 +865,15 @@ class BlockBallCommandExecutor(
 
         val joinResult = game.join(player, team)
 
-        if (team != null && joinResult == JoinResult.TEAM_FULL) {
+        if (team != null && joinResult == JoinResult.TEAM_FULL && retry) {
             if (team == Team.BLUE) {
-                return joinGame(sender, player, name, Team.RED)
+                return joinGame(sender, player, name, Team.RED, false)
             } else {
-                return joinGame(sender, player, name, Team.BLUE)
+                return joinGame(sender, player, name, Team.BLUE, false)
             }
         }
 
-        if (joinResult == JoinResult.GAME_FULL || joinResult == JoinResult.GAME_ALREADY_RUNNING) {
+        if (joinResult == JoinResult.TEAM_FULL || joinResult == JoinResult.GAME_ALREADY_RUNNING) {
             sender.sendPluginMessage(language.gameIsFullMessage)
             return false
         }
