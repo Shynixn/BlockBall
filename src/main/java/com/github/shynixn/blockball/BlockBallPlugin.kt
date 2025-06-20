@@ -16,6 +16,7 @@ import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
 import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
+import com.github.shynixn.mcutils.common.placeholder.PlaceHolderServiceImpl
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
@@ -94,10 +95,11 @@ class BlockBallPlugin : JavaPlugin() {
                 Version.VERSION_1_21_R2,
                 Version.VERSION_1_21_R3,
                 Version.VERSION_1_21_R4,
+                Version.VERSION_1_21_R5,
             )
         } else {
             arrayOf(
-                Version.VERSION_1_21_R4,
+                Version.VERSION_1_21_R5,
             )
         }
 
@@ -121,8 +123,8 @@ class BlockBallPlugin : JavaPlugin() {
         logger.log(Level.INFO, "Loaded language file.")
 
         // Module
-        this.scoreboardModule = loadShyScoreboardModule(language)
-        val placeHolderService = this.scoreboardModule.getService<PlaceHolderService>()
+        val placeHolderService = PlaceHolderServiceImpl(this)
+        this.scoreboardModule = loadShyScoreboardModule(language, placeHolderService)
         this.bossBarModule = loadShyBossBarModule(language, placeHolderService)
         this.module = BlockBallDependencyInjectionModule(this, language, placeHolderService).build()
 
@@ -174,7 +176,6 @@ class BlockBallPlugin : JavaPlugin() {
             module.getService<StatsService>().register()
 
             // Load Signs
-            val placeHolderService = module.getService<PlaceHolderService>()
             val signService = module.getService<SignService>()
             val arenaService = module.getService<Repository<SoccerArena>>()
             signService.onSignDestroy = { signMeta ->
@@ -306,7 +307,10 @@ class BlockBallPlugin : JavaPlugin() {
         return module
     }
 
-    private fun loadShyScoreboardModule(language: ShyScoreboardLanguage): DependencyInjectionModule {
+    private fun loadShyScoreboardModule(
+        language: ShyScoreboardLanguage,
+        placeHolderService: PlaceHolderService
+    ): DependencyInjectionModule {
         val settings = ShyScoreboardSettings({ s ->
             s.addPermission = "blockball.shyscoreboard.add"
             s.baseCommand = "blockballscoreboard"
@@ -326,12 +330,18 @@ class BlockBallPlugin : JavaPlugin() {
         })
         settings.reload()
         val module =
-            ShyScoreboardDependencyInjectionModule(this, settings, language, WorldGuardServiceImpl(this)).build()
+            ShyScoreboardDependencyInjectionModule(
+                this,
+                settings,
+                language,
+                WorldGuardServiceImpl(this),
+                placeHolderService
+            ).build()
 
         // Register PlaceHolders
         com.github.shynixn.shyscoreboard.enumeration.PlaceHolder.registerAll(
             this,
-            module.getService<PlaceHolderService>(),
+            placeHolderService
         )
 
         // Register Listeners

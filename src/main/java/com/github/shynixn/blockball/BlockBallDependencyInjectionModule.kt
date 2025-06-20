@@ -39,7 +39,7 @@ import com.github.shynixn.mcutils.packet.impl.service.ChatMessageServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.ItemServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.RayTracingServiceImpl
-import com.github.shynixn.mcutils.packet.nms.v1_21_R4.AreaSelectionServiceImpl
+import com.github.shynixn.mcutils.packet.nms.v1_21_R5.AreaSelectionServiceImpl
 import com.github.shynixn.mcutils.sign.SignService
 import com.github.shynixn.mcutils.sign.SignServiceImpl
 import kotlinx.coroutines.CoroutineDispatcher
@@ -75,7 +75,9 @@ class BlockBallDependencyInjectionModule(
         module.addService<CacheRepository<SoccerArena>> {
             CachedRepositoryImpl(
                 YamlFileRepositoryImpl<SoccerArena>(
-                    plugin, plugin.dataFolder.toPath().resolve("arena"),
+                    plugin,
+                    "arena",
+                    plugin.dataFolder.toPath().resolve("arena"),
                     listOf(),
                     listOf("arena_sample.yml"),
                     object : TypeReference<SoccerArena>() {}

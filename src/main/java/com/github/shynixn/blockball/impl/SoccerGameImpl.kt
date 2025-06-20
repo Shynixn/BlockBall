@@ -22,6 +22,7 @@ import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import java.util.*
 
@@ -671,8 +672,7 @@ abstract class SoccerGameImpl(
         }
 
         if (!arena.meta.customizingMeta.keepInventoryEnabled) {
-            player.inventory.contents =
-                teamMeta.inventory.map { e -> itemService.deserializeItemStack(e) }.toTypedArray()
+            setInventoryContentsSecure(player, teamMeta.inventory.map { e -> itemService.deserializeItemStack(e) })
             player.inventory.setArmorContents(teamMeta.armor.map { e -> itemService.deserializeItemStack(e) }
                 .toTypedArray())
             player.updateInventory()
@@ -695,7 +695,7 @@ abstract class SoccerGameImpl(
         }
 
         if (!arena.meta.customizingMeta.keepInventoryEnabled) {
-            player.inventory.contents = stats.inventoryContents.clone()
+            setInventoryContentsSecure(player, stats.inventoryContents.clone().toList())
             player.inventory.setArmorContents(stats.armorContents.clone())
             player.updateInventory()
         }
@@ -749,7 +749,6 @@ abstract class SoccerGameImpl(
         ballSpawnCounter = 0
     }
 
-
     protected fun destroyBall() {
         ball?.remove()
         ball = null
@@ -764,4 +763,13 @@ abstract class SoccerGameImpl(
     }
 
     // endregion
+
+    private fun setInventoryContentsSecure(player: Player, items: List<ItemStack?>) {
+        // There is a bug in 1.21.6. which returns a too many item array in getContents which causes bugs in setContents.
+        var i = 0
+        while (i < items.size && i < 36) {
+            player.inventory.setItem(i, items[i])
+            i++
+        }
+    }
 }
