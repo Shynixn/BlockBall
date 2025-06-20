@@ -31,10 +31,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shybossbar:shybossbar:1.0.0")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.5.0")
-    implementation("com.github.shynixn.mcutils:common:2025.25")
-    implementation("com.github.shynixn.mcutils:packet:2025.22")
+    implementation("com.github.shynixn.shybossbar:shybossbar:1.1.0")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.6.0")
+    implementation("com.github.shynixn.mcutils:common:2025.28")
+    implementation("com.github.shynixn.mcutils:packet:2025.25")
     implementation("com.github.shynixn.mcutils:database:2025.7")
     implementation("com.github.shynixn.mcutils:sign:2025.4")
     implementation("com.github.shynixn.mcutils:worldguard:2025.4")
