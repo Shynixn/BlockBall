@@ -123,5 +123,5 @@ jobs:
           cd ..
           cd ..
           git add docs
-          git commit --message "Automatic CI Documentation."
-          git push --quiet https://Shynixn:${{ secrets.GITHUB_TOKEN }}@github.com/Shynixn/BlockBall.git HEAD:master
+          git commit --message "Automatic CI Documentation." || true
+          git push --quiet https://Shynixn:${{ secrets.GITHUB_TOKEN }}@github.com/Shynixn/BlockBall.git HEAD:master || true
