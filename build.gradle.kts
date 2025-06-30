@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.22.0"
+version = "7.22.1"
 
 repositories {
     mavenLocal()
@@ -33,8 +33,8 @@ dependencies {
     // Custom dependencies
     implementation("com.github.shynixn.shybossbar:shybossbar:1.1.0")
     implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.6.0")
-    implementation("com.github.shynixn.mcutils:common:2025.28")
-    implementation("com.github.shynixn.mcutils:packet:2025.25")
+    implementation("com.github.shynixn.mcutils:common:2025.29")
+    implementation("com.github.shynixn.mcutils:packet:2025.26")
     implementation("com.github.shynixn.mcutils:database:2025.7")
     implementation("com.github.shynixn.mcutils:sign:2025.4")
     implementation("com.github.shynixn.mcutils:worldguard:2025.4")
