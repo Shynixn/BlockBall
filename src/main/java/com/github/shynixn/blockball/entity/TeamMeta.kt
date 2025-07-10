@@ -4,7 +4,6 @@ import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandType
 import com.github.shynixn.mcutils.common.repository.Comment
-import com.github.shynixn.mcutils.sign.SignMeta
 
 class TeamMeta {
     @Comment("The display name of the team. Supports Minecraft chat colors.")
@@ -15,9 +14,6 @@ class TeamMeta {
 
     @Comment("The amount of points a team gets when a player of the opposite team dies.")
     var pointsPerEnemyDeath: Int = 0
-
-    @Comment("All signs to join this team. Use the /blockball sign command ingame to configure this field.")
-    val teamSigns = ArrayList<SignMeta>()
 
     @Comment("Min amount of players in this team to start the match for this team.")
     var minAmount: Int = 0

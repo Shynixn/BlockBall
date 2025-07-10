@@ -12,8 +12,6 @@ import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandBuilder
-import com.github.shynixn.mcutils.common.command.CommandMeta
-import com.github.shynixn.mcutils.common.command.CommandType
 import com.github.shynixn.mcutils.common.command.Validator
 import com.github.shynixn.mcutils.common.item.Item
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -23,7 +21,6 @@ import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.selection.AreaHighlight
 import com.github.shynixn.mcutils.common.selection.AreaSelectionService
-import com.github.shynixn.mcutils.sign.SignService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -44,7 +41,6 @@ class BlockBallCommandExecutor(
     private val gameService: GameService,
     private val plugin: Plugin,
     private val language: BlockBallLanguage,
-    private val signService: SignService,
     private val selectionService: AreaSelectionService,
     private val placeHolderService: PlaceHolderService,
     private val itemService: ItemService,
@@ -411,15 +407,6 @@ class BlockBallCommandExecutor(
                         setArmor(player, arena, meta)
                     }
             }
-            subCommand("sign") {
-                permission(Permission.EDIT_GAME)
-                toolTip { language.commandSignToolTip.text }
-                builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("type")
-                    .validator(signTypeValidator).tabs { listOf("join", "leave") }
-                    .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, arena, signType ->
-                        setSign(player, arena, signType)
-                    }
-            }
             subCommand("referee") {
                 permission(Permission.REFEREE_JOIN)
                 subCommand("startgame") {
@@ -665,19 +652,6 @@ class BlockBallCommandExecutor(
 
         arenaRepository.save(arena)
         sender.sendPluginMessage(language.gameCreatedMessage, name)
-    }
-
-    private fun replaceStatsPlaceHolders(content: String, name: String): String {
-        return content.replace("###name###", "${name}_page")
-            .replace("###displayName###", "%blockball_game_displayName_$name%")
-            .replace("###teamRed###", "%blockball_game_redDisplayName_$name%")
-            .replace("###teamRedScore###", "%blockball_game_redScore_$name%")
-            .replace("###teamBlue###", "%blockball_game_blueDisplayName_$name%")
-            .replace("###teamBlueScore###", "%blockball_game_blueScore_$name%")
-            .replace("###publishName###", "blockball_${name}")
-            .replace("###teamRedPlayerNames###", "%blockball_game_redPlayerNames_$name%")
-            .replace("###teamBluePlayerNames###", "%blockball_game_bluePlayerNames_$name%")
-            .replace("###topGoalsCurrentPlayerName###", "%blockball_game_topGoalsCurrentPlayerName_$name%")
     }
 
     private fun mapItemsToColoredSerializedItems(items: Array<Item?>, color: String): Array<String?> {
@@ -984,63 +958,6 @@ class BlockBallCommandExecutor(
         )
     }
 
-    private fun setSign(sender: Player, arena: SoccerArena, signType: SignType) {
-        if (signType == SignType.JOIN) {
-            sender.sendPluginMessage(language.rightClickOnSignMessage)
-            signService.addSignByRightClick(sender) { sign ->
-                sign.let {
-                    it.line1 = language.joinSignLine1.text
-                    it.line2 = language.joinSignLine2.text
-                    it.line3 = language.joinSignLine3.text
-                    it.line4 = language.joinSignLine4.text
-                    it.cooldown = 20
-                    it.update = 40
-                    it.commands = mutableListOf(CommandMeta().also {
-                        it.command = "/blockball join ${arena.name}"
-                        it.type = CommandType.PER_PLAYER
-                    })
-                }
-
-                if (arena.meta.lobbyMeta.joinSigns.firstOrNull { e -> e.isSameSign(sign) } == null) {
-                    arena.meta.lobbyMeta.joinSigns.add(sign)
-                }
-
-                plugin.launch {
-                    arenaRepository.save(arena)
-                    gameService.reload(arena)
-                    sender.sendPluginMessage(language.addedSignMessage)
-                }
-            }
-        } else if (signType == SignType.LEAVE) {
-            sender.sendPluginMessage(language.rightClickOnSignMessage)
-            signService.addSignByRightClick(sender) { sign ->
-                sign.let {
-                    it.line1 = language.leaveSignLine1.text
-                    it.line2 = language.leaveSignLine2.text
-                    it.line3 = language.leaveSignLine3.text
-                    it.line4 = language.leaveSignLine4.text
-                    it.cooldown = 20
-                    it.update = 40
-                    it.commands = mutableListOf(CommandMeta().also {
-                        it.command = "/blockball leave"
-                        it.type = CommandType.PER_PLAYER
-                    })
-                }
-
-                if (arena.meta.lobbyMeta.joinSigns.firstOrNull { e -> e.isSameSign(sign) } == null) {
-                    arena.meta.lobbyMeta.joinSigns.add(sign)
-                }
-
-                plugin.launch {
-                    arenaRepository.save(arena)
-                    gameService.reload(arena)
-                    sender.sendPluginMessage(language.addedSignMessage)
-                }
-            }
-        }
-    }
-
-
     private suspend fun reloadArena(sender: CommandSender, arena: SoccerArena?) {
         try {
             arenaRepository.clearCache()
@@ -1084,90 +1001,90 @@ class BlockBallCommandExecutor(
             selectionService.removePlayer(player)
         } else {
             selectionService.setPlayer(player) {
-                val arena = runBlocking {
+                val arenaHighlighted = runBlocking {
                     arenaRepository.getAll().firstOrNull { e -> e.name == arena.name }
                 }
 
-                if (arena == null) {
+                if (arenaHighlighted == null) {
                     return@setPlayer emptyList()
                 }
 
                 val highLights = ArrayList<AreaHighlight>()
-                if (arena.corner2 != null && arena.corner1 != null) {
+                if (arenaHighlighted.corner2 != null && arenaHighlighted.corner1 != null) {
                     highLights.add(
                         AreaHighlight(
-                            roundLocation(arena.corner2!!),
-                            roundLocation(arena.corner1!!),
+                            roundLocation(arenaHighlighted.corner2!!),
+                            roundLocation(arenaHighlighted.corner1!!),
                             Color.BLACK.rgb,
                             "Field",
                             true
                         )
                     )
                 }
-                if (arena.meta.redTeamMeta.goal.corner2 != null && arena.meta.redTeamMeta.goal.corner1 != null) {
+                if (arenaHighlighted.meta.redTeamMeta.goal.corner2 != null && arenaHighlighted.meta.redTeamMeta.goal.corner1 != null) {
                     highLights.add(
                         AreaHighlight(
-                            roundLocation(arena.meta.redTeamMeta.goal.corner2!!),
-                            roundLocation(arena.meta.redTeamMeta.goal.corner1!!),
+                            roundLocation(arenaHighlighted.meta.redTeamMeta.goal.corner2!!),
+                            roundLocation(arenaHighlighted.meta.redTeamMeta.goal.corner1!!),
                             Color.RED.rgb,
                             "Red"
                         )
                     )
                 }
-                if (arena.meta.blueTeamMeta.goal.corner2 != null && arena.meta.blueTeamMeta.goal.corner1 != null) {
+                if (arenaHighlighted.meta.blueTeamMeta.goal.corner2 != null && arenaHighlighted.meta.blueTeamMeta.goal.corner1 != null) {
                     highLights.add(
                         AreaHighlight(
-                            roundLocation(arena.meta.blueTeamMeta.goal.corner2!!),
-                            roundLocation(arena.meta.blueTeamMeta.goal.corner1!!),
+                            roundLocation(arenaHighlighted.meta.blueTeamMeta.goal.corner2!!),
+                            roundLocation(arenaHighlighted.meta.blueTeamMeta.goal.corner1!!),
                             Color.BLUE.rgb,
                             "Blue"
                         )
                     )
                 }
-                if (arena.ballSpawnPoint != null) {
+                if (arenaHighlighted.ballSpawnPoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.ballSpawnPoint!!, null, Color.pink.rgb, "Ball"
+                            arenaHighlighted.ballSpawnPoint!!, null, Color.pink.rgb, "Ball"
                         )
                     )
                 }
 
-                if (arena.meta.lobbyMeta.leaveSpawnpoint != null) {
+                if (arenaHighlighted.meta.lobbyMeta.leaveSpawnpoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.lobbyMeta.leaveSpawnpoint!!, null, Color.ORANGE.rgb, "Leave"
+                            arenaHighlighted.meta.lobbyMeta.leaveSpawnpoint!!, null, Color.ORANGE.rgb, "Leave"
                         )
                     )
                 }
 
-                if (arena.meta.redTeamMeta.spawnpoint != null) {
+                if (arenaHighlighted.meta.redTeamMeta.spawnpoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.redTeamMeta.spawnpoint!!, null, Color.RED.rgb, "Red Spawn"
+                            arenaHighlighted.meta.redTeamMeta.spawnpoint!!, null, Color.RED.rgb, "Red Spawn"
                         )
                     )
                 }
 
-                if (arena.meta.blueTeamMeta.spawnpoint != null) {
+                if (arenaHighlighted.meta.blueTeamMeta.spawnpoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.blueTeamMeta.spawnpoint!!, null, Color.BLUE.rgb, "Blue Spawn"
+                            arenaHighlighted.meta.blueTeamMeta.spawnpoint!!, null, Color.BLUE.rgb, "Blue Spawn"
                         )
                     )
                 }
 
-                if (arena.meta.redTeamMeta.lobbySpawnpoint != null) {
+                if (arenaHighlighted.meta.redTeamMeta.lobbySpawnpoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.redTeamMeta.lobbySpawnpoint!!, null, Color.RED.rgb, "Red Lobby"
+                            arenaHighlighted.meta.redTeamMeta.lobbySpawnpoint!!, null, Color.RED.rgb, "Red Lobby"
                         )
                     )
                 }
 
-                if (arena.meta.blueTeamMeta.lobbySpawnpoint != null) {
+                if (arenaHighlighted.meta.blueTeamMeta.lobbySpawnpoint != null) {
                     highLights.add(
                         AreaHighlight(
-                            arena.meta.blueTeamMeta.lobbySpawnpoint!!, null, Color.BLUE.rgb, "Blue Lobby"
+                            arenaHighlighted.meta.blueTeamMeta.lobbySpawnpoint!!, null, Color.BLUE.rgb, "Blue Lobby"
                         )
                     )
                 }

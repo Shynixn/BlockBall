@@ -269,4 +269,30 @@ class BlockBallLanguageImpl : BlockBallLanguage {
  override var shyBossBarUpdatedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Updated the bossbar.")
 
  override var shyBossBarBooleanNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Only true and false are allowed as values.")
+
+ override var shyCommandSignsPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %1$1s not found.")
+
+ override var shyCommandSignsNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")
+
+ override var shyCommandSignsReloadCommandHint = LanguageItem("Reloads all signs and configuration.")
+
+ override var shyCommandSignsReloadMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Reloaded all signs and configuration.")
+
+ override var shyCommandSignsCommonErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details.")
+
+ override var shyCommandSignsCommandSenderHasToBePlayer = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player if you do not specify the optional player argument.")
+
+ override var shyCommandSignsCommandUsage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /shycommandsigns help to see more info about the plugin.")
+
+ override var shyCommandSignsCommandDescription = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 All commands for the ShyCommandSign plugin.")
+
+ override var shyCommandSignsAddCommandHint = LanguageItem("Adds a sign of the given sign type.")
+
+ override var shyCommandSignsNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cSign %1$1s not found.")
+
+ override var shyCommandSignsBooleanNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Only true and false are allowed as values.")
+
+ override var shyCommandSignsRightClickOnSign = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Click on a sign to convert it into a %1$1s sign.")
+
+ override var shyCommandSignsRightClickOnSignSuccess = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Added a sign of type %1$1s sign.")
 }

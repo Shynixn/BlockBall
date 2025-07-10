@@ -24,6 +24,9 @@ commands:
     aliases:
       - "soccerbossbar"
       - "footballbossbar"
+  blockballsign:
+    aliases:
+      - "soccersign"
 
 ############################
 # Debug settings
