@@ -15,7 +15,7 @@ leftClickCommands: []
 # A list of commands, which get executed on right click. A command always starts with a slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.
 rightClickCommands:
   - type: PER_PLAYER
-    command: "/blockball leave
+    command: "/blockball leave"
     cooldown: 0
     delay: 0
 # Do not modify this location list. Use the command '/shycommandsigns add sample_sign' ingame instead. This list stores all sign locations.

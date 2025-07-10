@@ -328,7 +328,10 @@ class BlockBallPlugin : JavaPlugin() {
             s.commandPermission = "blockball.shycommandsigns.command"
             s.coolDownTicks = 30
             s.defaultSigns = listOf(
-                "sign/blockball_join_sign.yml" to "blockball_join_sign.yml"
+                "sign/blockball_join_sign.yml" to "blockball_join_sign.yml",
+                "sign/blockball_join_red_sign.yml" to "blockball_join_red_sign.yml",
+                "sign/blockball_join_blue_sign.yml" to "blockball_join_blue_sign.yml",
+                "sign/blockball_leave_sign.yml" to "blockball_leave_sign.yml"
             )
             s.reloadPermission = "blockball.shycommandsigns.reload"
         })
