@@ -23,7 +23,7 @@ e.g.
 
 **Leave**
 ```
-/blockballsign add blockball_leave_sign
+/blockballsign add blockball_leave_sign arena <game>
 ```
 
 **Join Team Red**
@@ -33,7 +33,7 @@ e.g.
 
 **Join Team Blue**
 ```
-/blockballsign add blockball_join_red_sign arena <game>
+/blockballsign add blockball_join_blue_sign arena <game>
 ```
 
 ### Removing a sign

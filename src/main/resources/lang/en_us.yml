@@ -203,30 +203,6 @@ commandSelectToolTip:
 commandGameRuleToolTip:
   type: "CHAT"
   text: "Sets a gamerule in BlockBall."
-joinSignLine1:
-  type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7"
-joinSignLine2:
-  type: "CHAT"
-  text: "%blockball_game_stateDisplayName%"
-joinSignLine3:
-  type: "CHAT"
-  text: "%blockball_game_players%/%blockball_game_maxPlayers%"
-joinSignLine4:
-  type: "CHAT"
-  text: ""
-leaveSignLine1:
-  type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7"
-leaveSignLine2:
-  type: "CHAT"
-  text: "&fLeave"
-leaveSignLine3:
-  type: "CHAT"
-  text: "%blockball_game_players%/%blockball_game_maxPlayers%"
-leaveSignLine4:
-  type: "CHAT"
-  text: ""
 failedToReloadMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s"
