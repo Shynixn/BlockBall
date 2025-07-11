@@ -326,7 +326,7 @@ class BlockBallPlugin : JavaPlugin() {
             s.baseCommand = "blockballsign"
             s.commandAliases = config.getStringList("commands.blockballsign.aliases")
             s.commandPermission = "blockball.shycommandsigns.command"
-            s.coolDownTicks = 30
+            s.coolDownTicks = config.getInt("sign.clickCooldownTicks")
             s.defaultSigns = listOf(
                 "sign/blockball_join_sign.yml" to "blockball_join_sign.yml",
                 "sign/blockball_join_red_sign.yml" to "blockball_join_red_sign.yml",

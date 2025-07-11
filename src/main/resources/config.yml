@@ -98,6 +98,14 @@ bossbar:
   joinDelaySeconds: 3
 
 ############################
+# Sign
+# All global sign settings.
+############################
+sign:
+  # How often clicks on signs are detected.
+  clickCooldownTicks: 30
+
+############################
 # LeaderBoard PlaceHolders (PatreonOnly)
 ############################
 leaderboard:
