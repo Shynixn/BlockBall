@@ -45,3 +45,6 @@ The following permissions are available in BlockBall.
 | blockball.shybossbar.set                               | Admin      | Allows to set a bossbar to a player                                                                  |
 | blockball.shybossbar.remove                            | Admin      | Allows to remove a bossbar from a player                                                             |
 | blockball.shybossbar.update                            | Admin      | Allows to refresh a bossbar                                                                          |
+| blockball.shycommandsigns.command                      | Admin      | Allows to use the /blockballsign command.                                                            
+| blockball.shycommandsigns.add                          | Admin      | Allows to add a join and leave sign                                                                  
+| blockball.shycommandsigns.reload                       | Admin      | Allows to reload configurations.                                                                     
