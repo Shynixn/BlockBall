@@ -462,18 +462,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-a-join-sign" class="md-nav__link">
+  <a href="#creating-a-join-sign" class="md-nav__link">
     <span class="md-ellipsis">
-      Create a join sign
+      Creating a join sign
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#create-a-leave-sign" class="md-nav__link">
+  <a href="#other-sign-types" class="md-nav__link">
     <span class="md-ellipsis">
-      Create a leave sign
+      Other sign types
     </span>
   </a>
   
@@ -483,6 +483,15 @@
   <a href="#removing-a-sign" class="md-nav__link">
     <span class="md-ellipsis">
       Removing a sign
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customizing-signs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customizing signs
     </span>
   </a>
   
@@ -646,18 +655,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-a-join-sign" class="md-nav__link">
+  <a href="#creating-a-join-sign" class="md-nav__link">
     <span class="md-ellipsis">
-      Create a join sign
+      Creating a join sign
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#create-a-leave-sign" class="md-nav__link">
+  <a href="#other-sign-types" class="md-nav__link">
     <span class="md-ellipsis">
-      Create a leave sign
+      Other sign types
     </span>
   </a>
   
@@ -667,6 +676,15 @@
   <a href="#removing-a-sign" class="md-nav__link">
     <span class="md-ellipsis">
       Removing a sign
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customizing-signs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customizing signs
     </span>
   </a>
   
@@ -692,33 +710,40 @@
 
 
 <h1 id="signs">Signs</h1>
-<p>This page explains how to create signs for joining and leave.</p>
-<h3 id="create-a-join-sign">Create a join sign</h3>
+<p>This page explains how you can create join and leave signs in BlockBall.</p>
+<h3 id="creating-a-join-sign">Creating a join sign</h3>
 <ul>
 <li>Place a new sign in your world</li>
-<li>Execute the following command:</li>
+<li>Execute the following command: </li>
 </ul>
-<div class="highlight"><pre><span></span><code>/blockball sign game1 join
+<div class="highlight"><pre><span></span><code>/blockballsign add blockball_join_sign arena &lt;game&gt;
+</code></pre></div>
+<p>e.g.</p>
+<div class="highlight"><pre><span></span><code>/blockballsign add blockball_join_sign arena game1
 </code></pre></div>
 <ul>
-<li>Rightclick on a sign</li>
-<li>This sign simply executes the <code>/blockball join</code> command on behalf of the player. You can create team join signs by searching for the created sign in your <code>game1.yml</code> and editing the command to e.g. <code>/blockball join red</code></li>
+<li>Right-click on your placed sign. The sign will be converted to a join sign.</li>
 </ul>
-<h3 id="create-a-leave-sign">Create a leave sign</h3>
-<ul>
-<li>Place a new sign in your world</li>
-<li>Execute the following command:</li>
-</ul>
-<div class="highlight"><pre><span></span><code>/blockball sign game1 leave
-</code></pre></div>
-<ul>
-<li>Rightclick on a sign</li>
-<li>This sign simply executes the <code>/blockball leave</code> command on behalf of the player. </li>
-</ul>
+<h3 id="other-sign-types">Other sign types</h3>
+<p><strong>Leave</strong>
+<div class="highlight"><pre><span></span><code>/blockballsign add blockball_leave_sign arena &lt;game&gt;
+</code></pre></div></p>
+<p><strong>Join Team Red</strong>
+<div class="highlight"><pre><span></span><code>/blockballsign add blockball_join_red_sign arena &lt;game&gt;
+</code></pre></div></p>
+<p><strong>Join Team Blue</strong>
+<div class="highlight"><pre><span></span><code>/blockballsign add blockball_join_blue_sign arena &lt;game&gt;
+</code></pre></div></p>
 <h3 id="removing-a-sign">Removing a sign</h3>
 <ul>
 <li>Simply destroy the sign with your hand</li>
 </ul>
+<h3 id="customizing-signs">Customizing signs</h3>
+<ul>
+<li>Open the <code>plugins/BlockBall/sign</code> folder and edit the files. </li>
+<li>Execute <code>/blockballsign reload</code> or <code>/blockball reload</code> to load the changes.</li>
+</ul>
+<p>BlockBall uses a version of <a href="https://shynixn.github.io/ShyCommandSigns/wiki/site/installation/">ShyCommandSigns</a> internally, if you want to learn more about all available options.</p>
 
 
 
