@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.entity
 
-import com.github.shynixn.mcutils.sign.SignMeta
-
 class ArenaMeta {
     /** Metadata of the customizing Properties. */
     val customizingMeta: CustomizationMeta = CustomizationMeta()
@@ -34,17 +32,5 @@ class ArenaMeta {
         blueTeamMeta.displayName = "&9Team Blue"
         redTeamMeta.displayName = "&cTeam Red"
         refereeTeamMeta.displayName = "&fTeam Referee"
-    }
-
-    /**
-     * Compatibility until signs are refactored to external addon.
-     */
-    fun getAllSigns(): List<SignMeta> {
-        val signs = ArrayList<SignMeta>()
-        signs.addAll(lobbyMeta.joinSigns)
-        signs.addAll(lobbyMeta.leaveSigns)
-        signs.addAll(redTeamMeta.teamSigns)
-        signs.addAll(blueTeamMeta.teamSigns)
-        return signs
     }
 }

@@ -40,8 +40,6 @@ import com.github.shynixn.mcutils.packet.impl.service.ItemServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
 import com.github.shynixn.mcutils.packet.impl.service.RayTracingServiceImpl
 import com.github.shynixn.mcutils.packet.nms.v1_21_R5.AreaSelectionServiceImpl
-import com.github.shynixn.mcutils.sign.SignService
-import com.github.shynixn.mcutils.sign.SignServiceImpl
 import kotlinx.coroutines.CoroutineDispatcher
 import org.bukkit.plugin.Plugin
 
@@ -100,10 +98,6 @@ class BlockBallDependencyInjectionModule(
                 plugin.scope, plugin.minecraftDispatcher
             )
         }
-        module.addService<SignService> {
-            SignServiceImpl(plugin, module.getService(), language.noPermissionMessage.text)
-        }
-
         // Library Services
         module.addService<com.github.shynixn.mcutils.common.command.CommandService>(
             com.github.shynixn.mcutils.common.command.CommandServiceImpl(
@@ -163,7 +157,6 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
-                module.getService(),
             )
         }
         module.addService<HubGameForcefieldService> {
@@ -194,7 +187,6 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
-                module.getService()
             )
         }
         plugin.globalChatMessageService = module.getService()

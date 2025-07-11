@@ -203,30 +203,6 @@ commandSelectToolTip:
 commandGameRuleToolTip:
   type: "CHAT"
   text: "Sets a gamerule in BlockBall."
-joinSignLine1:
-  type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7"
-joinSignLine2:
-  type: "CHAT"
-  text: "%blockball_game_stateDisplayName%"
-joinSignLine3:
-  type: "CHAT"
-  text: "%blockball_game_players%/%blockball_game_maxPlayers%"
-joinSignLine4:
-  type: "CHAT"
-  text: ""
-leaveSignLine1:
-  type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7"
-leaveSignLine2:
-  type: "CHAT"
-  text: "&fLeave"
-leaveSignLine3:
-  type: "CHAT"
-  text: "%blockball_game_players%/%blockball_game_maxPlayers%"
-leaveSignLine4:
-  type: "CHAT"
-  text: ""
 failedToReloadMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s"
@@ -451,3 +427,54 @@ shyBossBarUpdatedMessage:
 shyBossBarBooleanNotFoundMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7&c Only true and false are allowed as values."
+# All language key identifiers.
+shyCommandSignsPlayerNotFoundMessage:
+  # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
+  # Please notice that some messages do only support chat.
+  type: "CHAT"
+  # The primary text to be sent.
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cPlayer %1$1s not found."
+  # Only available for type "TITLE". Adds a subTitle.
+  subTitle: ""
+  # Only available for type: "TITLE". Adds a fade in effect.
+  fadeInTicks: 20
+  # Only available for type: "TITLE". Adds a stay effect.
+  stayTicks: 60
+  # Only available for type: "TITLE". Adds a fade out effect.
+  fadeOutTicks: 20
+shyCommandSignsNoPermissionCommand:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command."
+shyCommandSignsReloadCommandHint:
+  type: "CHAT"
+  text: "Reloads all signs and configuration."
+shyCommandSignsReloadMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Reloaded all signs and configuration."
+shyCommandSignsCommonErrorMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details."
+shyCommandSignsCommandSenderHasToBePlayer:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player if you do not specify the optional player argument."
+shyCommandSignsCommandUsage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Use /shycommandsigns help to see more info about the plugin."
+shyCommandSignsCommandDescription:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 All commands for the ShyCommandSign plugin."
+shyCommandSignsAddCommandHint:
+  type: "CHAT"
+  text: "Adds a sign of the given sign type."
+shyCommandSignsNotFoundMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cSign %1$1s not found."
+shyCommandSignsBooleanNotFoundMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Only true and false are allowed as values."
+shyCommandSignsRightClickOnSign:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Click on a sign to convert it into a %1$1s sign."
+shyCommandSignsRightClickOnSignSuccess:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Added a sign of type %1$1s sign."

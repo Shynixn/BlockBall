@@ -24,6 +24,9 @@ commands:
     aliases:
       - "soccerbossbar"
       - "footballbossbar"
+  blockballsign:
+    aliases:
+      - "soccersign"
 
 ############################
 # Debug settings
@@ -93,6 +96,14 @@ bossbar:
   checkForChangeChangeSeconds: 3
   # When a new player joins the server, after how many seconds are the bossbars created.
   joinDelaySeconds: 3
+
+############################
+# Sign
+# All global sign settings.
+############################
+sign:
+  # How often clicks on signs are detected.
+  clickCooldownTicks: 30
 
 ############################
 # LeaderBoard PlaceHolders (PatreonOnly)

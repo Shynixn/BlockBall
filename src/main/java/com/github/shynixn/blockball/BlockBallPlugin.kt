@@ -4,7 +4,6 @@ import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.PlayerInformation
-import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
@@ -17,13 +16,11 @@ import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
 import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderServiceImpl
-import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService
-import com.github.shynixn.mcutils.sign.SignService
 import com.github.shynixn.mcutils.worldguard.WorldGuardServiceImpl
 import com.github.shynixn.shybossbar.ShyBossBarDependencyInjectionModule
 import com.github.shynixn.shybossbar.contract.BossBarService
@@ -31,6 +28,12 @@ import com.github.shynixn.shybossbar.contract.ShyBossBarLanguage
 import com.github.shynixn.shybossbar.entity.ShyBossBarSettings
 import com.github.shynixn.shybossbar.impl.commandexecutor.ShyBossBarCommandExecutor
 import com.github.shynixn.shybossbar.impl.listener.ShyBossBarListener
+import com.github.shynixn.shycommandsigns.ShyCommandSignsDependencyInjectionModule
+import com.github.shynixn.shycommandsigns.contract.ShyCommandSignService
+import com.github.shynixn.shycommandsigns.contract.ShyCommandSignsLanguage
+import com.github.shynixn.shycommandsigns.entity.ShyCommandSignSettings
+import com.github.shynixn.shycommandsigns.impl.commandexecutor.ShyCommandSignCommandExecutor
+import com.github.shynixn.shycommandsigns.impl.listener.ShyCommandSignListener
 import com.github.shynixn.shyscoreboard.ShyScoreboardDependencyInjectionModule
 import com.github.shynixn.shyscoreboard.contract.ScoreboardService
 import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage
@@ -52,7 +55,8 @@ class BlockBallPlugin : JavaPlugin() {
     private lateinit var module: DependencyInjectionModule
     private lateinit var scoreboardModule: DependencyInjectionModule
     private lateinit var bossBarModule: DependencyInjectionModule
-    private var immidiateDisable = false
+    private lateinit var signModule : DependencyInjectionModule
+    private var immediateDisable = false
 
     companion object {
         val playerDataKey = "playerData"
@@ -104,7 +108,7 @@ class BlockBallPlugin : JavaPlugin() {
         }
 
         if (!Version.serverVersion.isCompatible(*versions)) {
-            immidiateDisable = true
+            immediateDisable = true
             logger.log(Level.SEVERE, "================================================")
             logger.log(Level.SEVERE, "BlockBall does not support your server version")
             logger.log(Level.SEVERE, "Install v" + versions[0].from + " - v" + versions[versions.size - 1].to)
@@ -126,6 +130,7 @@ class BlockBallPlugin : JavaPlugin() {
         val placeHolderService = PlaceHolderServiceImpl(this)
         this.scoreboardModule = loadShyScoreboardModule(language, placeHolderService)
         this.bossBarModule = loadShyBossBarModule(language, placeHolderService)
+        this.signModule = loadShyCommandSignsModule(language, placeHolderService)
         this.module = BlockBallDependencyInjectionModule(this, language, placeHolderService).build()
 
         // Connect to database
@@ -174,51 +179,6 @@ class BlockBallPlugin : JavaPlugin() {
 
             // Enable stats
             module.getService<StatsService>().register()
-
-            // Load Signs
-            val signService = module.getService<SignService>()
-            val arenaService = module.getService<Repository<SoccerArena>>()
-            signService.onSignDestroy = { signMeta ->
-                plugin.launch(object : CoroutineTimings() {}) {
-                    val arenas = arenaService.getAll()
-                    for (arena in arenas) {
-                        for (signToRemove in arena.meta.lobbyMeta.joinSigns.filter { e -> e.isSameSign(signMeta) }) {
-                            arena.meta.lobbyMeta.joinSigns.remove(signToRemove)
-                            arenaService.save(arena)
-                        }
-                        for (signToRemove in arena.meta.lobbyMeta.leaveSigns.filter { e -> e.isSameSign(signMeta) }) {
-                            arena.meta.lobbyMeta.leaveSigns.remove(signToRemove)
-                            arenaService.save(arena)
-                        }
-                        for (signToRemove in arena.meta.redTeamMeta.teamSigns.filter { e -> e.isSameSign(signMeta) }) {
-                            arena.meta.lobbyMeta.joinSigns.remove(signToRemove)
-                            arenaService.save(arena)
-                        }
-                        for (signToRemove in arena.meta.blueTeamMeta.teamSigns.filter { e -> e.isSameSign(signMeta) }) {
-                            arena.meta.lobbyMeta.leaveSigns.remove(signToRemove)
-                            arenaService.save(arena)
-                        }
-                    }
-                }
-            }
-            signService.onPlaceHolderResolve = { signMeta, text ->
-                var resolvedText: String? = null
-
-                if (signMeta.tag != null) {
-                    val game = gameService.getByName(signMeta.tag!!)
-                    if (game != null) {
-                        resolvedText =
-                            placeHolderService.resolvePlaceHolder(text, null, mapOf(gameKey to game.arena.name))
-                    }
-                }
-
-                if (resolvedText == null) {
-                    resolvedText = placeHolderService.resolvePlaceHolder(text, null)
-                }
-
-                resolvedText
-            }
-
             val playerDataRepository = module.getService<PlayerDataRepository<PlayerInformation>>()
             for (player in Bukkit.getOnlinePlayers()) {
                 playerDataRepository.getByPlayer(player)
@@ -232,7 +192,7 @@ class BlockBallPlugin : JavaPlugin() {
      * Override on disable.
      */
     override fun onDisable() {
-        if (immidiateDisable) {
+        if (immediateDisable) {
             return
         }
 
@@ -354,6 +314,51 @@ class BlockBallPlugin : JavaPlugin() {
             scoreboardService.reload()
         }
 
+        return module
+    }
+
+    private fun loadShyCommandSignsModule(
+        language: ShyCommandSignsLanguage,
+        placeHolderService: PlaceHolderService
+    ): DependencyInjectionModule {
+        val settings = ShyCommandSignSettings({ s ->
+            s.addPermission = "blockball.shycommandsigns.add"
+            s.baseCommand = "blockballsign"
+            s.commandAliases = config.getStringList("commands.blockballsign.aliases")
+            s.commandPermission = "blockball.shycommandsigns.command"
+            s.coolDownTicks = config.getInt("sign.clickCooldownTicks")
+            s.defaultSigns = listOf(
+                "sign/blockball_join_sign.yml" to "blockball_join_sign.yml",
+                "sign/blockball_join_red_sign.yml" to "blockball_join_red_sign.yml",
+                "sign/blockball_join_blue_sign.yml" to "blockball_join_blue_sign.yml",
+                "sign/blockball_leave_sign.yml" to "blockball_leave_sign.yml"
+            )
+            s.reloadPermission = "blockball.shycommandsigns.reload"
+        })
+        settings.reload()
+        val module =
+            ShyCommandSignsDependencyInjectionModule(
+                this,
+                settings,
+                language,
+                placeHolderService
+            ).build()
+
+        // Register PlaceHolders
+        com.github.shynixn.shycommandsigns.enumeration.PlaceHolder.registerAll(
+            this,
+            placeHolderService
+        )
+
+        // Register Listeners
+        Bukkit.getPluginManager().registerEvents(module.getService<ShyCommandSignListener>(), this)
+
+        // Register CommandExecutor
+        module.getService<ShyCommandSignCommandExecutor>()
+        val signService = module.getService<ShyCommandSignService>()
+        launch {
+            signService.reload()
+        }
         return module
     }
 }

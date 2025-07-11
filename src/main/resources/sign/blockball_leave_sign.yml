@@ -1,0 +1,22 @@
+# Unique identifier of a sign
+name: "blockball_leave_sign"
+# The 4 lines, which are displayed on the sign. They support color codes, HTML color codes and PlaceHolderApi placeholders.
+lines:
+  - "&0&l[&f&lBlockBall&0&l]&7"
+  - "&fLeave"
+  - "%blockball_game_players_$arena$%/%blockball_game_maxPlayers_$arena$%"
+  - "&oClick me"
+# How often this sign is updated in ticks. e.g. resolving placeholder values.
+refreshTicks: 60
+# A list of commands, which get executed on right or left click. A command always starts with a slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.
+clickCommands: []
+# A list of commands, which get executed on left click. A command always starts with a slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.
+leftClickCommands: []
+# A list of commands, which get executed on right click. A command always starts with a slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.
+rightClickCommands:
+  - type: PER_PLAYER
+    command: "/blockball leave"
+    cooldown: 0
+    delay: 0
+# Do not modify this location list. Use the command '/shycommandsigns add sample_sign' ingame instead. This list stores all sign locations.
+locations: []

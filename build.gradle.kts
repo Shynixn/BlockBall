@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.23.0"
+version = "7.24.0"
 
 repositories {
     mavenLocal()
@@ -31,12 +31,12 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
+    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.0.0")
     implementation("com.github.shynixn.shybossbar:shybossbar:1.2.0")
     implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.7.0")
     implementation("com.github.shynixn.mcutils:common:2025.30")
     implementation("com.github.shynixn.mcutils:packet:2025.29")
     implementation("com.github.shynixn.mcutils:database:2025.7")
-    implementation("com.github.shynixn.mcutils:sign:2025.4")
     implementation("com.github.shynixn.mcutils:worldguard:2025.4")
 }
 
@@ -78,6 +78,7 @@ tasks.register("relocatePluginJar", ShadowJar::class.java) {
     relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
     relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
     relocate("com.github.shynixn.shybossbar", "com.github.shynixn.blockball.lib.com.github.shynixn.shybossbar")
+    relocate("com.github.shynixn.shycommandsigns", "com.github.shynixn.blockball.lib.com.github.shynixn.shycommandsigns")
 }
 
 /**
@@ -108,6 +109,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
     exclude("com/github/shynixn/shybossbar/**")
+    exclude("com/github/shynixn/shycommandsigns/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("org/**")
     exclude("kotlin/**")
@@ -131,6 +133,7 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
     exclude("com/github/shynixn/shybossbar/**")
+    exclude("com/github/shynixn/shycommandsigns/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("org/**")
     exclude("kotlin/**")
@@ -163,6 +166,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
     relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
     relocate("com.github.shynixn.shybossbar", "com.github.shynixn.blockball.lib.com.github.shynixn.shybossbar")
+    relocate("com.github.shynixn.shycommandsigns", "com.github.shynixn.blockball.lib.com.github.shynixn.shycommandsigns")
     relocate("com.github.shynixn.fasterxml", "com.github.shynixn.blockball.lib.com.github.shynixn.fasterxml")
 
     exclude("plugin.yml")
@@ -182,6 +186,7 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
     exclude("com/github/shynixn/shybossbar/**")
+    exclude("com/github/shynixn/shycommandsigns/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("org/**")
     exclude("kotlin/**")
@@ -201,7 +206,8 @@ tasks.register("languageFile") {
     val contractContents = ArrayList<String>()
     val ignoredKeys = listOf(
        "shyBossBar",
-        "shyScoreboard"
+        "shyScoreboard",
+        "shyCommandSigns"
     )
     contractContents.add("package com.github.shynixn.blockball.contract")
     contractContents.add("")
@@ -209,8 +215,9 @@ tasks.register("languageFile") {
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageItem")
     contractContents.add("import com.github.shynixn.shybossbar.contract.ShyBossBarLanguage")
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageProvider")
+    contractContents.add("import com.github.shynixn.shycommandsigns.contract.ShyCommandSignsLanguage")
     contractContents.add("")
-    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBarLanguage {")
+    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBarLanguage, ShyCommandSignsLanguage {")
     for (key in lines) {
         if (key.toCharArray()[0].isLetter()) {
             if (ignoredKeys.firstOrNull { e -> key.startsWith(e) } != null) {

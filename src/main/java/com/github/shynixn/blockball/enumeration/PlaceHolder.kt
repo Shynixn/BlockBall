@@ -81,7 +81,6 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
     GAME_LASTHITPLAYER_TEAM_NAME("%blockball_game_lastHitPlayerTeam_[game]%", { _, game, _ ->
         val player = game?.lastInteractedEntity
         if (player != null && true) {
-            val language = game.language
             if (game.redTeam.contains(player)) {
                 game.arena.meta.redTeamMeta.displayName
             } else if (game.blueTeam.contains(player)) {
@@ -367,7 +366,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
                 } else {
                     val result =
                         playerData.statsMeta.winsAmount.toDouble() / playerData.statsMeta.joinedGames.toDouble()
-                    kotlin.String.format("%.2f", result)
+                    String.format("%.2f", result)
                 }
             } else {
                 ""
@@ -388,7 +387,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
                 } else {
                     val result =
                         playerData.statsMeta.winsAmount.toDouble() / playerData.statsMeta.playedGames.toDouble()
-                    kotlin.String.format("%.2f", result)
+                    String.format("%.2f", result)
                 }
             } else {
                 ""
@@ -409,7 +408,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
                 } else {
                     val result =
                         playerData.statsMeta.scoredGoals.toDouble() / playerData.statsMeta.joinedGames.toDouble()
-                    kotlin.String.format("%.2f", result)
+                    String.format("%.2f", result)
                 }
             } else {
                 ""
@@ -430,7 +429,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
                 } else {
                     val result =
                         playerData.statsMeta.scoredGoals.toDouble() / playerData.statsMeta.playedGames.toDouble()
-                    kotlin.String.format("%.2f", result)
+                    String.format("%.2f", result)
                 }
             } else {
                 ""
@@ -472,7 +471,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
                 } else {
                     val result =
                         playerData.statsMeta.scoredOwnGoalsFull.toDouble() / playerData.statsMeta.playedGames.toDouble()
-                    kotlin.String.format("%.2f", result)
+                    String.format("%.2f", result)
                 }
             } else {
                 ""
@@ -493,7 +492,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
                 } else {
                     val result =
                         (playerData.statsMeta.scoredOwnGoals + playerData.statsMeta.scoredGoals).toDouble() / playerData.statsMeta.joinedGames.toDouble()
-                    kotlin.String.format("%.2f", result)
+                    String.format("%.2f", result)
                 }
             } else {
                 ""
@@ -514,7 +513,7 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
                 } else {
                     val result =
                         (playerData.statsMeta.scoredOwnGoalsFull + playerData.statsMeta.scoredGoalsFull).toDouble() / playerData.statsMeta.playedGames.toDouble()
-                    kotlin.String.format("%.2f", result)
+                    String.format("%.2f", result)
                 }
             } else {
                 ""

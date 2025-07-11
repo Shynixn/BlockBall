@@ -20,7 +20,6 @@ import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
-import com.github.shynixn.mcutils.sign.SignService
 import kotlinx.coroutines.runBlocking
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -40,7 +39,6 @@ class GameServiceImpl(
     private val commandService: CommandService,
     private val soccerBallFactory: SoccerBallFactory,
     private val language: BlockBallLanguage,
-    private val signService: SignService,
     private val itemService: ItemService
 ) : GameService, Runnable {
     private val games = ArrayList<SoccerGame>()
@@ -79,12 +77,6 @@ class GameServiceImpl(
             existingGame.close()
             games.remove(existingGame)
             plugin.logger.log(Level.INFO, "Stopped game '" + arena.name + "'.")
-        }
-
-        // Enable signs, if they are already added, the call does nothing.
-        for (sign in arena.meta.getAllSigns()) {
-            sign.tag = arena.name
-            signService.addSign(sign)
         }
 
         if (arena.enabled) {
