@@ -10,10 +10,10 @@ import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.*
+import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
-import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
@@ -38,7 +38,8 @@ abstract class SoccerGameImpl(
     private val commandService: CommandService,
     override val language: BlockBallLanguage,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
-    private val itemService: ItemService
+    private val itemService: ItemService,
+    private val chatMessageService: ChatMessageService
 ) : SoccerGame {
 
     /**
@@ -343,9 +344,9 @@ abstract class SoccerGameImpl(
 
         for (player in players) {
             if (team == Team.RED) {
-                player.sendPluginMessage(language.winRed)
+                chatMessageService.sendLanguageMessage(player, language.winRed)
             } else if (team == Team.BLUE) {
-                player.sendPluginMessage(language.winBlue)
+                chatMessageService.sendLanguageMessage(player, language.winBlue)
             }
         }
 
@@ -420,7 +421,7 @@ abstract class SoccerGameImpl(
      */
     fun onDraw() {
         for (player in getPlayers()) {
-            player.sendPluginMessage(language.winDraw)
+            chatMessageService.sendLanguageMessage(player, language.winDraw)
         }
     }
 
@@ -517,11 +518,11 @@ abstract class SoccerGameImpl(
 
         if (team == Team.RED) {
             for (player in players) {
-                player.sendPluginMessage(language.scoreRed, interactionEntity.name)
+                chatMessageService.sendLanguageMessage(player, language.scoreRed, interactionEntity.name)
             }
         } else {
             for (player in players) {
-                player.sendPluginMessage(language.scoreBlue, interactionEntity.name)
+                chatMessageService.sendLanguageMessage(player, language.scoreBlue, interactionEntity.name)
             }
         }
 
@@ -642,7 +643,7 @@ abstract class SoccerGameImpl(
      * Stores health, food, etc.
      * TODO: Migrate to minigame essentials.
      */
-    protected fun storeTemporaryPlayerData(player: Player, team: Team) {
+    private fun storeTemporaryPlayerData(player: Player, team: Team) {
         // Store
         val stats = GameStorage()
         ingamePlayersStorage[player] = stats
@@ -685,7 +686,6 @@ abstract class SoccerGameImpl(
         player.allowFlight = stats.gameMode == GameMode.CREATIVE
         player.isFlying = false
         player.level = stats.level
-        player.scoreboard = Bukkit.getScoreboardManager()!!.newScoreboard
         player.exp = stats.exp.toFloat()
         player.foodLevel = stats.hunger
 

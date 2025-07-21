@@ -10,7 +10,9 @@ import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.mccoroutine.bukkit.CoroutineTimings
 import com.github.shynixn.mccoroutine.bukkit.launch
+import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
 import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.CoroutinePlugin
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
 import com.github.shynixn.mcutils.common.language.reloadTranslation
@@ -40,17 +42,21 @@ import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage
 import com.github.shynixn.shyscoreboard.entity.ShyScoreboardSettings
 import com.github.shynixn.shyscoreboard.impl.commandexecutor.ShyScoreboardCommandExecutor
 import com.github.shynixn.shyscoreboard.impl.listener.ShyScoreboardListener
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.entity.Entity
 import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Plugin Main.
  * @author Shynixn
  */
-class BlockBallPlugin : JavaPlugin() {
+class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
     private val prefix: String = ChatColor.BLUE.toString() + "[BlockBall] "
     private lateinit var module: DependencyInjectionModule
     private lateinit var scoreboardModule: DependencyInjectionModule
@@ -186,6 +192,24 @@ class BlockBallPlugin : JavaPlugin() {
 
             Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
         }
+    }
+
+    override fun execute(f: suspend () -> Unit): Job {
+        return launch {
+            f.invoke()
+        }
+    }
+
+    override fun fetchEntityDispatcher(entity: Entity): CoroutineContext {
+        return minecraftDispatcher
+    }
+
+    override fun fetchGlobalRegionDispatcher(): CoroutineContext {
+        return minecraftDispatcher
+    }
+
+    override fun fetchLocationDispatcher(location: Location): CoroutineContext {
+        return minecraftDispatcher
     }
 
     /**

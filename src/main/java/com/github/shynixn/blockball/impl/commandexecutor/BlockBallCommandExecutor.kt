@@ -8,15 +8,14 @@ import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
-import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandBuilder
 import com.github.shynixn.mcutils.common.command.Validator
 import com.github.shynixn.mcutils.common.item.Item
 import com.github.shynixn.mcutils.common.item.ItemService
+import com.github.shynixn.mcutils.common.language.LanguageItem
 import com.github.shynixn.mcutils.common.language.reloadTranslation
-import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.selection.AreaHighlight
@@ -28,7 +27,6 @@ import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
 import java.awt.Color
 import java.util.*
 import java.util.logging.Level
@@ -39,12 +37,12 @@ import kotlin.math.min
 class BlockBallCommandExecutor(
     private val arenaRepository: CacheRepository<SoccerArena>,
     private val gameService: GameService,
-    private val plugin: Plugin,
+    private val plugin: CoroutinePlugin,
     private val language: BlockBallLanguage,
     private val selectionService: AreaSelectionService,
     private val placeHolderService: PlaceHolderService,
     private val itemService: ItemService,
-    chatMessageService: ChatMessageService
+    private val chatMessageService: ChatMessageService
 ) {
     private val arenaTabs: (s: CommandSender) -> List<String> = {
         val cache = arenaRepository.getCache()
@@ -78,7 +76,9 @@ class BlockBallCommandExecutor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.playerNotFoundMessage.text.format(openArgs[0])
+            return placeHolderService.resolvePlaceHolder(
+                language.playerNotFoundMessage.text, null, mapOf("0" to openArgs[0])
+            )
         }
     }
 
@@ -92,13 +92,6 @@ class BlockBallCommandExecutor(
         }
 
         tabs.map { e -> e.name.lowercase(Locale.ENGLISH) }
-    }
-    private val coroutineExecutor = object : CoroutineExecutor {
-        override fun execute(f: suspend () -> Unit) {
-            plugin.launch {
-                f.invoke()
-            }
-        }
     }
 
     private val remainingStringValidator = object : Validator<String> {
@@ -126,7 +119,9 @@ class BlockBallCommandExecutor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.gameAlreadyExistsMessage.text.format(openArgs[0])
+            return placeHolderService.resolvePlaceHolder(
+                language.gameAlreadyExistsMessage.text, null, mapOf("0" to openArgs[0])
+            )
         }
     }
     private val gameMustExistValidator = object : Validator<SoccerArena> {
@@ -138,7 +133,9 @@ class BlockBallCommandExecutor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.gameDoesNotExistMessage.text.format(openArgs[0])
+            return placeHolderService.resolvePlaceHolder(
+                language.gameDoesNotExistMessage.text, null, mapOf("0" to openArgs[0])
+            )
         }
     }
     private val teamValidator = object : Validator<Team> {
@@ -153,7 +150,9 @@ class BlockBallCommandExecutor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.teamDoesNotExistMessage.text.format(openArgs[0])
+            return placeHolderService.resolvePlaceHolder(
+                language.teamDoesNotExistMessage.text, null, mapOf("0" to openArgs[0])
+            )
         }
     }
 
@@ -178,7 +177,9 @@ class BlockBallCommandExecutor(
         }
 
         override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.teamDoesNotExistMessage.text.format(openArgs[0])
+            return placeHolderService.resolvePlaceHolder(
+                language.teamDoesNotExistMessage.text, null, mapOf("0" to openArgs[0])
+            )
         }
     }
 
@@ -259,7 +260,7 @@ class BlockBallCommandExecutor(
     }
 
     init {
-        val mcCart = CommandBuilder(plugin, coroutineExecutor, "blockball", chatMessageService) {
+        val mcCart = CommandBuilder(plugin, "blockball", chatMessageService) {
             usage(language.commandUsage.text.translateChatColors())
             description(language.commandDescription.text)
             aliases(plugin.config.getStringList("commands.blockball.aliases"))
@@ -323,7 +324,7 @@ class BlockBallCommandExecutor(
                 toolTip { language.commandAxeToolTip.text }
                 builder().executePlayer({ language.commandSenderHasToBePlayer.text }) { player ->
                     selectionService.addSelectionItemToInventory(player)
-                    player.sendPluginMessage(language.axeReceivedMessage)
+                    player.sendLanguageMessage(language.axeReceivedMessage)
                 }
             }
             subCommand("select") {
@@ -369,13 +370,13 @@ class BlockBallCommandExecutor(
                             }
                         }.execute { sender, arena, gameType ->
                             if (gameType == GameType.REFEREEGAME && !BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-                                sender.sendPluginMessage(language.gameTypeRefereeOnlyForPatreons)
+                                sender.sendLanguageMessage(language.gameTypeRefereeOnlyForPatreons)
                                 return@execute
                             }
 
                             arena.gameType = gameType
                             arenaRepository.save(arena)
-                            sender.sendPluginMessage(language.gameRuleChangedMessage)
+                            sender.sendLanguageMessage(language.gameRuleChangedMessage)
                             reloadArena(sender, arena)
                         }
                 }
@@ -386,7 +387,7 @@ class BlockBallCommandExecutor(
                 builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs)
                     .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, arena ->
                         setHighlights(player, arena)
-                        player.sendPluginMessage(language.toggleHighlightMessage)
+                        player.sendLanguageMessage(language.toggleHighlightMessage)
                     }
             }
             subCommand("inventory") {
@@ -501,10 +502,10 @@ class BlockBallCommandExecutor(
                 toolTip { language.commandPlaceHolderToolTip.text }
                 builder().argument("placeholder").tabs { listOf("<>") }.execute { sender, placeHolder ->
                     val evaluatedValue = placeHolderService.resolvePlaceHolder(placeHolder, null)
-                    sender.sendPluginMessage(language.commandPlaceHolderMessage, evaluatedValue)
+                    sender.sendLanguageMessage(language.commandPlaceHolderMessage, evaluatedValue)
                 }.executePlayer({ language.commandSenderHasToBePlayer.text }) { player, placeHolder ->
                     val evaluatedValue = placeHolderService.resolvePlaceHolder(placeHolder, player)
-                    player.sendPluginMessage(language.commandPlaceHolderMessage, evaluatedValue)
+                    player.sendLanguageMessage(language.commandPlaceHolderMessage, evaluatedValue)
                 }
             }
             subCommand("reload") {
@@ -533,7 +534,7 @@ class BlockBallCommandExecutor(
             ball.isInteractable = false
         }
 
-        player.sendPluginMessage(language.refereeBallDisabled)
+        player.sendLanguageMessage(language.refereeBallDisabled)
     }
 
     private fun whistleRefereeStop(player: Player) {
@@ -544,7 +545,7 @@ class BlockBallCommandExecutor(
             ball.isInteractable = false
         }
 
-        player.sendPluginMessage(language.refereeBallDisabled)
+        player.sendLanguageMessage(language.refereeBallDisabled)
     }
 
     private fun whistleRefereeResume(player: Player) {
@@ -559,7 +560,7 @@ class BlockBallCommandExecutor(
             ball.isInteractable = true
         }
 
-        player.sendPluginMessage(language.refereeBallEnabled)
+        player.sendLanguageMessage(language.refereeBallEnabled)
     }
 
     private fun nextPeriodReferee(player: Player) {
@@ -620,7 +621,7 @@ class BlockBallCommandExecutor(
 
         if (game is SoccerRefereeGame) {
             game.stopGame()
-            player.sendPluginMessage(language.refereeStoppedGame)
+            player.sendLanguageMessage(language.refereeStoppedGame)
         }
     }
 
@@ -630,7 +631,7 @@ class BlockBallCommandExecutor(
         if (game is SoccerRefereeGame) {
             game.setLobbyCountdownActive(true)
             game.isTimerBlockerEnabled = true
-            player.sendPluginMessage(language.refereeStartedGame)
+            player.sendLanguageMessage(language.refereeStartedGame)
         }
     }
 
@@ -651,7 +652,7 @@ class BlockBallCommandExecutor(
         arena.meta.refereeTeamMeta.armor = mapItemsToColoredSerializedItems(items, "16777215")
 
         arenaRepository.save(arena)
-        sender.sendPluginMessage(language.gameCreatedMessage, name)
+        sender.sendLanguageMessage(language.gameCreatedMessage, name)
     }
 
     private fun mapItemsToColoredSerializedItems(items: Array<Item?>, color: String): Array<String?> {
@@ -684,35 +685,35 @@ class BlockBallCommandExecutor(
             }
         }
 
-        sender.sendPluginMessage(language.deletedGameMessage, arena.name)
+        sender.sendLanguageMessage(language.deletedGameMessage, arena.name)
     }
 
     private suspend fun toggleGame(sender: CommandSender, arena: SoccerArena) {
         try {
             arena.enabled = !arena.enabled
             gameService.reload(arena)
-            sender.sendPluginMessage(language.enabledArenaMessage, arena.enabled.toString())
+            sender.sendLanguageMessage(language.enabledArenaMessage, arena.enabled.toString())
         } catch (e: SoccerGameException) {
             arena.enabled = false
-            sender.sendPluginMessage(language.failedToReloadMessage, e.arena.name, e.message!!)
+            sender.sendLanguageMessage(language.failedToReloadMessage, e.arena.name, e.message!!)
             return
         }
         arenaRepository.save(arena)
-        sender.sendPluginMessage(language.reloadedGameMessage, arena.name)
+        sender.sendLanguageMessage(language.reloadedGameMessage, arena.name)
     }
 
     private suspend fun setInventory(player: Player, arena: SoccerArena, teamMetadata: TeamMeta) {
         teamMetadata.inventory =
             player.inventory.contents.clone().map { e -> itemService.serializeItemStack(e) }.toTypedArray()
         arenaRepository.save(arena)
-        player.sendPluginMessage(language.updatedInventoryMessage)
+        player.sendLanguageMessage(language.updatedInventoryMessage)
     }
 
     private suspend fun setArmor(player: Player, arena: SoccerArena, teamMeta: TeamMeta) {
         teamMeta.armor =
             player.inventory.armorContents.clone().map { e -> itemService.serializeItemStack(e) }.toTypedArray()
         arenaRepository.save(arena)
-        player.sendPluginMessage(language.updatedArmorMessage)
+        player.sendLanguageMessage(language.updatedArmorMessage)
     }
 
     private fun CommandBuilder.permission(permission: Permission) {
@@ -811,7 +812,7 @@ class BlockBallCommandExecutor(
         val game = gameService.getByName(name)
 
         if (game == null) {
-            sender.sendPluginMessage(language.gameDoesNotExistMessage, name)
+            sender.sendLanguageMessage(language.gameDoesNotExistMessage, name)
             return false
         }
 
@@ -821,18 +822,18 @@ class BlockBallCommandExecutor(
                 )
             ) && !sender.hasPermission(Permission.JOIN.permission.replace("[name]", "*"))
         ) {
-            sender.sendPluginMessage(language.noPermissionForGameMessage, game.arena.name)
+            sender.sendLanguageMessage(language.noPermissionForGameMessage, game.arena.name)
             return false
         }
 
         if (team != null && team == Team.REFEREE) {
             if (game !is SoccerRefereeGame) {
-                sender.sendPluginMessage(language.gameIsNotARefereeGame)
+                sender.sendLanguageMessage(language.gameIsNotARefereeGame)
                 return false
             }
 
             if (!sender.hasPermission(Permission.REFEREE_JOIN.permission)) {
-                sender.sendPluginMessage(language.noPermissionForGameMessage, game.arena.name)
+                sender.sendLanguageMessage(language.noPermissionForGameMessage, game.arena.name)
                 return false
             }
         }
@@ -848,16 +849,16 @@ class BlockBallCommandExecutor(
         }
 
         if (joinResult == JoinResult.TEAM_FULL || joinResult == JoinResult.GAME_ALREADY_RUNNING) {
-            sender.sendPluginMessage(language.gameIsFullMessage)
+            sender.sendLanguageMessage(language.gameIsFullMessage)
             return false
         }
 
         if (joinResult == JoinResult.SUCCESS_BLUE) {
-            player.sendPluginMessage(language.joinTeamBlueMessage)
+            player.sendLanguageMessage(language.joinTeamBlueMessage)
         } else if (joinResult == JoinResult.SUCCESS_RED) {
-            player.sendPluginMessage(language.joinTeamRedMessage)
+            player.sendLanguageMessage(language.joinTeamRedMessage)
         } else if (joinResult == JoinResult.SUCCESS_REFEREE) {
-            player.sendPluginMessage(language.joinTeamRefereeMessage)
+            player.sendLanguageMessage(language.joinTeamRefereeMessage)
         }
         return true
     }
@@ -873,7 +874,7 @@ class BlockBallCommandExecutor(
         }
 
         if (leftGame) {
-            player.sendPluginMessage(language.leftGameMessage)
+            player.sendLanguageMessage(language.leftGameMessage)
         }
     }
 
@@ -897,7 +898,7 @@ class BlockBallCommandExecutor(
         }
 
         arenaRepository.save(arena)
-        player.sendPluginMessage(language.selectionSetMessage, locationType.name.lowercase())
+        player.sendLanguageMessage(language.selectionSetMessage, locationType.name.lowercase())
     }
 
     private suspend fun setSelection(player: Player, arena: SoccerArena, selectionType: SelectionType) {
@@ -906,11 +907,11 @@ class BlockBallCommandExecutor(
 
         if (selectionType == SelectionType.FIELD || selectionType == SelectionType.RED_GOAL || selectionType == SelectionType.BLUE_GOAL) {
             if (selectionLeft == null) {
-                player.sendPluginMessage(language.noLeftClickSelectionMessage)
+                player.sendLanguageMessage(language.noLeftClickSelectionMessage)
                 return
             }
             if (selectionRight == null) {
-                player.sendPluginMessage(language.noRightClickSelectionMessage)
+                player.sendLanguageMessage(language.noRightClickSelectionMessage)
                 return
             }
 
@@ -931,7 +932,7 @@ class BlockBallCommandExecutor(
         }
 
         arenaRepository.save(arena)
-        player.sendPluginMessage(language.selectionSetMessage, selectionType.name.lowercase())
+        player.sendLanguageMessage(language.selectionSetMessage, selectionType.name.lowercase())
     }
 
     /**
@@ -963,7 +964,7 @@ class BlockBallCommandExecutor(
             arenaRepository.clearCache()
         } catch (e: SoccerGameException) {
             e.arena.enabled = false
-            sender.sendPluginMessage(language.failedToReloadMessage, e.arena.name, e.message!!)
+            sender.sendLanguageMessage(language.failedToReloadMessage, e.arena.name, e.message!!)
             return
         }
 
@@ -977,11 +978,11 @@ class BlockBallCommandExecutor(
                 gameService.reloadAll()
             } catch (e: SoccerGameException) {
                 e.arena.enabled = false
-                sender.sendPluginMessage(language.failedToReloadMessage, e.arena.name, e.message!!)
+                sender.sendLanguageMessage(language.failedToReloadMessage, e.arena.name, e.message!!)
                 return
             }
 
-            sender.sendPluginMessage(language.reloadedAllGamesMessage)
+            sender.sendLanguageMessage(language.reloadedAllGamesMessage)
             return
         }
 
@@ -989,10 +990,10 @@ class BlockBallCommandExecutor(
             arenaRepository.clearCache()
             gameService.reload(arena)
         } catch (e: SoccerGameException) {
-            sender.sendPluginMessage(language.failedToReloadMessage, e.arena.name, e.message!!)
+            sender.sendLanguageMessage(language.failedToReloadMessage, e.arena.name, e.message!!)
             return
         }
-        sender.sendPluginMessage(language.reloadedGameMessage, arena.name)
+        sender.sendLanguageMessage(language.reloadedGameMessage, arena.name)
         return
     }
 
@@ -1098,5 +1099,10 @@ class BlockBallCommandExecutor(
         return Vector3d(
             vector3d.world, floor(vector3d.x), floor(vector3d.y), floor(vector3d.z)
         )
+    }
+
+    private fun CommandSender.sendLanguageMessage(languageItem: LanguageItem, vararg args: String) {
+        val sender = this
+        chatMessageService.sendLanguageMessage(sender, languageItem, *args)
     }
 }

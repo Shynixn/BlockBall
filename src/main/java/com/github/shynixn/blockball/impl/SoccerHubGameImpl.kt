@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
+import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
@@ -25,7 +26,8 @@ class SoccerHubGameImpl(
     packetService: PacketService,
     soccerBallFactory: SoccerBallFactory,
     commandService: CommandService,
-    itemService: ItemService
+    itemService: ItemService,
+    chatMessageService: ChatMessageService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -35,7 +37,8 @@ class SoccerHubGameImpl(
     commandService,
     language,
     playerDataRepository,
-    itemService
+    itemService,
+    chatMessageService
 ),
     SoccerHubGame {
     /**

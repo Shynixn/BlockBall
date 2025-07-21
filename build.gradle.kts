@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.24.0"
+version = "7.25.0"
 
 repositories {
     mavenLocal()
@@ -31,12 +31,12 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.0.0")
-    implementation("com.github.shynixn.shybossbar:shybossbar:1.2.0")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.7.0")
-    implementation("com.github.shynixn.mcutils:common:2025.30")
-    implementation("com.github.shynixn.mcutils:packet:2025.29")
-    implementation("com.github.shynixn.mcutils:database:2025.7")
+    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.1.0")
+    implementation("com.github.shynixn.shybossbar:shybossbar:1.3.0")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.8.0")
+    implementation("com.github.shynixn.mcutils:common:2025.34")
+    implementation("com.github.shynixn.mcutils:packet:2025.31")
+    implementation("com.github.shynixn.mcutils:database:2025.10")
     implementation("com.github.shynixn.mcutils:worldguard:2025.4")
 }
 
@@ -105,6 +105,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R1/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R2/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R3/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R4/**")
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")

@@ -121,22 +121,6 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
 
   var commandGameRuleToolTip: LanguageItem
 
-  var joinSignLine1: LanguageItem
-
-  var joinSignLine2: LanguageItem
-
-  var joinSignLine3: LanguageItem
-
-  var joinSignLine4: LanguageItem
-
-  var leaveSignLine1: LanguageItem
-
-  var leaveSignLine2: LanguageItem
-
-  var leaveSignLine3: LanguageItem
-
-  var leaveSignLine4: LanguageItem
-
   var failedToReloadMessage: LanguageItem
 
   var gameIsNotARefereeGame: LanguageItem

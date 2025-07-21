@@ -13,7 +13,6 @@ import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
-import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.toLocation
@@ -45,7 +44,8 @@ open class SoccerMiniGameImpl(
     commandService,
     language,
     playerDataRepository,
-    itemService
+    itemService,
+    chatMessageService
 ), SoccerMiniGame {
     private var currentQueueTime = arena.meta.customizingMeta.queueTimeOutSec
     private var isQueueTimeRunning = false
@@ -350,7 +350,7 @@ open class SoccerMiniGameImpl(
                 if (currentQueueTime <= 0) {
                     isQueueTimeRunning = false
                     for (player in ingamePlayersStorage.keys.toTypedArray()) {
-                        player.sendPluginMessage(language.queueTimeOutMessage)
+                        chatMessageService.sendLanguageMessage(player, language.queueTimeOutMessage)
                         leave(player)
                     }
                     status = GameState.JOINABLE
