@@ -11,7 +11,6 @@ import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.chat.ClickEvent
 import com.github.shynixn.mcutils.common.chat.ClickEventType
 import com.github.shynixn.mcutils.common.chat.TextComponent
-import com.github.shynixn.mcutils.common.language.sendPluginMessage
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector
@@ -19,7 +18,6 @@ import com.github.shynixn.mcutils.common.toVector3d
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
-import java.util.*
 
 class HubGameForcefieldServiceImpl(
     private val gameService: GameService,
@@ -41,7 +39,7 @@ class HubGameForcefieldServiceImpl(
             if (gameInternal.arena.gameType == GameType.HUBGAME) {
                 if (!gameInternal.arena.isLocationIn2dSelection(location.toVector3d())) {
                     gameInternal.leave(player)
-                    player.sendPluginMessage(language.leftGameMessage)
+                    chatMessageService.sendLanguageMessage(player, language.leftGameMessage)
                 }
             } else if ((gameInternal.arena.gameType == GameType.MINIGAME || gameInternal.arena.gameType == GameType.REFEREEGAME) && gameInternal.arena.meta.minigameMeta.forceFieldEnabled) {
                 if (gameInternal.status == GameState.RUNNING && !gameInternal.arena.isLocationIn2dSelection(location.toVector3d())) {

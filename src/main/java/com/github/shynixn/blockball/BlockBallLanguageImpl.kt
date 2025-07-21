@@ -6,7 +6,7 @@ import com.github.shynixn.blockball.contract.BlockBallLanguage
 class BlockBallLanguageImpl : BlockBallLanguage {
  override val names: List<String>
   get() = listOf("en_us")
- override var gameAlreadyExistsMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Game %1$1s already exists.")
+ override var gameAlreadyExistsMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Game %blockball_param_1% already exists.")
 
  override var commandUsage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /blockball help to see more info about the plugin.")
 
@@ -14,25 +14,25 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var maxLength20Characters = LanguageItem("&0&l[&f&lBlockBall&0&l]&c The text length has to be less than 20 characters.")
 
- override var gameDoesNotExistMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist.")
+ override var gameDoesNotExistMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Game %blockball_param_1% does not exist.")
 
- override var teamDoesNotExistMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist.")
+ override var teamDoesNotExistMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Team %blockball_param_1% does not exist.")
 
- override var gameTypeNotExistMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c GameType %1$1s does not exist.")
+ override var gameTypeNotExistMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c GameType %blockball_param_1% does not exist.")
 
  override var selectionTypeDoesNotExistMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c This selection type is not known.")
 
  override var signTypeDoesNotExistMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c This sign type is not known.")
 
- override var noPermissionForGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c You do not have permission to join game %1$1s.")
+ override var noPermissionForGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c You do not have permission to join game %blockball_param_1%.")
 
  override var noPermissionMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c You do not have permission.")
 
  override var commandSenderHasToBePlayer = LanguageItem("&0&l[&f&lBlockBall&0&l]&c The command sender has to be a player!")
 
- override var gameCreatedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Created game %1$1s.")
+ override var gameCreatedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Created game %blockball_param_1%.")
 
- override var deletedGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Deleted game %1$1s.")
+ override var deletedGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Deleted game %blockball_param_1%.")
 
  override var gameIsFullMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Game is already full.")
 
@@ -42,13 +42,13 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var leftGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Left the game.")
 
- override var selectionSetMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Selection %1$1s was set.")
+ override var selectionSetMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Selection %blockball_param_1% was set.")
 
- override var enabledArenaMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Game enable state was set to %1$1s.")
+ override var enabledArenaMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Game enable state was set to %blockball_param_1%.")
 
  override var reloadedAllGamesMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Reloaded all games.")
 
- override var reloadedGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s.")
+ override var reloadedGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Reloaded game %blockball_param_1%.")
 
  override var updatedInventoryMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Updated inventory of game.")
 
@@ -120,23 +120,7 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var commandGameRuleToolTip = LanguageItem("Sets a gamerule in BlockBall.")
 
- override var joinSignLine1 = LanguageItem("&0&l[&f&lBlockBall&0&l]&7")
-
- override var joinSignLine2 = LanguageItem("%blockball_game_stateDisplayName%")
-
- override var joinSignLine3 = LanguageItem("%blockball_game_players%/%blockball_game_maxPlayers%")
-
- override var joinSignLine4 = LanguageItem("")
-
- override var leaveSignLine1 = LanguageItem("&0&l[&f&lBlockBall&0&l]&7")
-
- override var leaveSignLine2 = LanguageItem("&fLeave")
-
- override var leaveSignLine3 = LanguageItem("%blockball_game_players%/%blockball_game_maxPlayers%")
-
- override var leaveSignLine4 = LanguageItem("")
-
- override var failedToReloadMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s")
+ override var failedToReloadMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %blockball_param_1%. Recommended action: &e%blockball_param_2%")
 
  override var gameIsNotARefereeGame = LanguageItem("&0&l[&f&lBlockBall&0&l]&c This game is not a game where you can use a referee. Convert the game to a referee game first.")
 
@@ -180,9 +164,9 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var commandPlaceHolderToolTip = LanguageItem("Resolves a given placeholder.")
 
- override var commandPlaceHolderMessage = LanguageItem("Evaluated placeholder: %1$1s")
+ override var commandPlaceHolderMessage = LanguageItem("Evaluated placeholder: %blockball_param_1%")
 
- override var playerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Player %1$1s not found.")
+ override var playerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Player %blockball_param_1% not found.")
 
  override var queueTimeOutMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c Not enough players joined in time to start the game.")
 
@@ -198,7 +182,7 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var commonErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details.")
 
- override var shyScoreboardPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %1$1s not found.")
+ override var shyScoreboardPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found.")
 
  override var shyScoreboardNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")
 
@@ -220,13 +204,13 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var shyScoreboardRemoveCommandHint = LanguageItem("Removes a scoreboard from a player.")
 
- override var shyScoreboardNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cScoreboard %1$1s not found.")
+ override var shyScoreboardNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cScoreboard %blockball_param_1% not found.")
 
  override var shyScoreboardNoPermissionToScoreboardCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to this scoreboard.")
 
- override var shyScoreboardAddedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Added the scoreboard %1$1s to the player %2$1s.")
+ override var shyScoreboardAddedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Added the scoreboard %blockball_param_1% to the player %blockball_param_2%.")
 
- override var shyScoreboardRemovedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Removed the scoreboard %1$1s from the player %2$1s.")
+ override var shyScoreboardRemovedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Removed the scoreboard %blockball_param_1% from the player %blockball_param_2%.")
 
  override var shyScoreboardUpdateCommandHint = LanguageItem("Updates the placeholder of the scoreboard.")
 
@@ -234,7 +218,7 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var shyScoreboardBooleanNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Only true and false are allowed as values.")
 
- override var shyBossBarPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %1$1s not found.")
+ override var shyBossBarPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found.")
 
  override var shyBossBarNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")
 
@@ -256,13 +240,13 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var shyBossBarRemoveCommandHint = LanguageItem("Removes a bossbar from a player.")
 
- override var shyBossBarNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cBossBar %1$1s not found.")
+ override var shyBossBarNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cBossBar %blockball_param_1% not found.")
 
  override var shyBossBarNoPermissionToBossBarCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to this bossbar.")
 
- override var shyBossBarAddedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Added the bossbar %1$1s to the player %2$1s.")
+ override var shyBossBarAddedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Added the bossbar %blockball_param_1% to the player %blockball_param_2%.")
 
- override var shyBossBarRemovedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Removed the bossbar %1$1s from the player %2$1s.")
+ override var shyBossBarRemovedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Removed the bossbar %blockball_param_1% from the player %blockball_param_2%.")
 
  override var shyBossBarUpdateCommandHint = LanguageItem("Updates the placeholder of the bossbar.")
 
@@ -270,7 +254,7 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var shyBossBarBooleanNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Only true and false are allowed as values.")
 
- override var shyCommandSignsPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %1$1s not found.")
+ override var shyCommandSignsPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found.")
 
  override var shyCommandSignsNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")
 
@@ -288,11 +272,11 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var shyCommandSignsAddCommandHint = LanguageItem("Adds a sign of the given sign type.")
 
- override var shyCommandSignsNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cSign %1$1s not found.")
+ override var shyCommandSignsNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cSign %blockball_param_1% not found.")
 
  override var shyCommandSignsBooleanNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Only true and false are allowed as values.")
 
- override var shyCommandSignsRightClickOnSign = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Click on a sign to convert it into a %1$1s sign.")
+ override var shyCommandSignsRightClickOnSign = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Click on a sign to convert it into a %blockball_param_1% sign.")
 
- override var shyCommandSignsRightClickOnSignSuccess = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Added a sign of type %1$1s sign.")
+ override var shyCommandSignsRightClickOnSignSuccess = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Added a sign of type %blockball_param_1% sign.")
 }

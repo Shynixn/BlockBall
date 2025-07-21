@@ -4,7 +4,7 @@ gameAlreadyExistsMessage:
   # Please notice that some messages do only support chat.
   type: "CHAT"
   # The primary text to be sent.
-  text: "&0&l[&f&lBlockBall&0&l]&c Game %1$1s already exists."
+  text: "&0&l[&f&lBlockBall&0&l]&c Game %blockball_param_1% already exists."
   # Only available for type "ACTIONBAR". The time until the action bar message disappears.
   durationInTicks: 60
   # Only available for type "TITLE". Adds a subTitle.
@@ -26,13 +26,13 @@ maxLength20Characters:
   text: "&0&l[&f&lBlockBall&0&l]&c The text length has to be less than 20 characters."
 gameDoesNotExistMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&c Game %1$1s does not exist."
+  text: "&0&l[&f&lBlockBall&0&l]&c Game %blockball_param_1% does not exist."
 teamDoesNotExistMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&c Team %1$1s does not exist."
+  text: "&0&l[&f&lBlockBall&0&l]&c Team %blockball_param_1% does not exist."
 gameTypeNotExistMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&c GameType %1$1s does not exist."
+  text: "&0&l[&f&lBlockBall&0&l]&c GameType %blockball_param_1% does not exist."
 selectionTypeDoesNotExistMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c This selection type is not known."
@@ -41,7 +41,7 @@ signTypeDoesNotExistMessage:
   text: "&0&l[&f&lBlockBall&0&l]&c This sign type is not known."
 noPermissionForGameMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&c You do not have permission to join game %1$1s."
+  text: "&0&l[&f&lBlockBall&0&l]&c You do not have permission to join game %blockball_param_1%."
 noPermissionMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c You do not have permission."
@@ -50,10 +50,10 @@ commandSenderHasToBePlayer:
   text: "&0&l[&f&lBlockBall&0&l]&c The command sender has to be a player!"
 gameCreatedMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Created game %1$1s."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Created game %blockball_param_1%."
 deletedGameMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Deleted game %1$1s."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Deleted game %blockball_param_1%."
 gameIsFullMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c Game is already full."
@@ -68,16 +68,16 @@ leftGameMessage:
   text: "&0&l[&f&lBlockBall&0&l]&7 Left the game."
 selectionSetMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Selection %1$1s was set."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Selection %blockball_param_1% was set."
 enabledArenaMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Game enable state was set to %1$1s."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Game enable state was set to %blockball_param_1%."
 reloadedAllGamesMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 Reloaded all games."
 reloadedGameMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Reloaded game %1$1s."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Reloaded game %blockball_param_1%."
 updatedInventoryMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 Updated inventory of game."
@@ -108,14 +108,14 @@ axeReceivedMessage:
 scoreRed:
   type: "TITLE"
   text: "&c%blockball_game_redScore% : &9%blockball_game_blueScore%"
-  subTitle: "%1$1s scored for %blockball_game_redDisplayName%."
+  subTitle: "%blockball_param_1% scored for %blockball_game_redDisplayName%."
   fadeInTicks: 20
   stayTicks: 60
   fadeOutTicks: 20
 scoreBlue:
   type: "TITLE"
   text: "&9%blockball_game_blueScore% : &c%blockball_game_redScore%"
-  subTitle: "%1$1s scored for %blockball_game_blueDisplayName%."
+  subTitle: "%blockball_param_1% scored for %blockball_game_blueDisplayName%."
   fadeInTicks: 20
   stayTicks: 60
   fadeOutTicks: 20
@@ -205,7 +205,7 @@ commandGameRuleToolTip:
   text: "Sets a gamerule in BlockBall."
 failedToReloadMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %1$1s. Recommended action: &e%2$1s"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cFailed to reload arena %blockball_param_1%. Recommended action: &e%blockball_param_2%"
 gameIsNotARefereeGame:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c This game is not a game where you can use a referee. Convert the game to a referee game first."
@@ -271,10 +271,10 @@ commandPlaceHolderToolTip:
   text: "Resolves a given placeholder."
 commandPlaceHolderMessage:
   type: "CHAT"
-  text: "Evaluated placeholder: %1$1s"
+  text: "Evaluated placeholder: %blockball_param_1%"
 playerNotFoundMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&c Player %1$1s not found."
+  text: "&0&l[&f&lBlockBall&0&l]&c Player %blockball_param_1% not found."
 queueTimeOutMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c Not enough players joined in time to start the game."
@@ -301,7 +301,7 @@ shyScoreboardPlayerNotFoundMessage:
   # Please notice that some messages do only support chat.
   type: "CHAT"
   # The primary text to be sent.
-  text: "&0&l[&f&lBlockBall&0&l]&7 &cPlayer %1$1s not found."
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found."
   # Only available for type "TITLE". Adds a subTitle.
   subTitle: ""
   # Only available for type: "TITLE". Adds a fade in effect.
@@ -342,16 +342,16 @@ shyScoreboardRemoveCommandHint:
   text: "Removes a scoreboard from a player."
 shyScoreboardNotFoundMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 &cScoreboard %1$1s not found."
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cScoreboard %blockball_param_1% not found."
 shyScoreboardNoPermissionToScoreboardCommand:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to this scoreboard."
 shyScoreboardAddedMessage:
   type: "HIDDEN"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Added the scoreboard %1$1s to the player %2$1s."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Added the scoreboard %blockball_param_1% to the player %blockball_param_2%."
 shyScoreboardRemovedMessage:
   type: "HIDDEN"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Removed the scoreboard %1$1s from the player %2$1s."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Removed the scoreboard %blockball_param_1% from the player %blockball_param_2%."
 shyScoreboardUpdateCommandHint:
   type: "CHAT"
   text: "Updates the placeholder of the scoreboard."
@@ -367,7 +367,7 @@ shyBossBarPlayerNotFoundMessage:
   # Please notice that some messages do only support chat.
   type: "CHAT"
   # The primary text to be sent.
-  text: "&0&l[&f&lBlockBall&0&l]&7 &cPlayer %1$1s not found."
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found."
   # Only available for type "TITLE". Adds a subTitle.
   subTitle: ""
   # Only available for type: "TITLE". Adds a fade in effect.
@@ -408,16 +408,16 @@ shyBossBarRemoveCommandHint:
   text: "Removes a bossbar from a player."
 shyBossBarNotFoundMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 &cBossBar %1$1s not found."
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cBossBar %blockball_param_1% not found."
 shyBossBarNoPermissionToBossBarCommand:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to this bossbar."
 shyBossBarAddedMessage:
   type: "HIDDEN"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Added the bossbar %1$1s to the player %2$1s."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Added the bossbar %blockball_param_1% to the player %blockball_param_2%."
 shyBossBarRemovedMessage:
   type: "HIDDEN"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Removed the bossbar %1$1s from the player %2$1s."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Removed the bossbar %blockball_param_1% from the player %blockball_param_2%."
 shyBossBarUpdateCommandHint:
   type: "CHAT"
   text: "Updates the placeholder of the bossbar."
@@ -433,7 +433,7 @@ shyCommandSignsPlayerNotFoundMessage:
   # Please notice that some messages do only support chat.
   type: "CHAT"
   # The primary text to be sent.
-  text: "&0&l[&f&lBlockBall&0&l]&7 &cPlayer %1$1s not found."
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found."
   # Only available for type "TITLE". Adds a subTitle.
   subTitle: ""
   # Only available for type: "TITLE". Adds a fade in effect.
@@ -468,13 +468,13 @@ shyCommandSignsAddCommandHint:
   text: "Adds a sign of the given sign type."
 shyCommandSignsNotFoundMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 &cSign %1$1s not found."
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cSign %blockball_param_1% not found."
 shyCommandSignsBooleanNotFoundMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7&c Only true and false are allowed as values."
 shyCommandSignsRightClickOnSign:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Click on a sign to convert it into a %1$1s sign."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Click on a sign to convert it into a %blockball_param_1% sign."
 shyCommandSignsRightClickOnSignSuccess:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Added a sign of type %1$1s sign."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Added a sign of type %blockball_param_1% sign."

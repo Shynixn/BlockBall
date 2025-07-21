@@ -6,20 +6,19 @@ import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.listener.*
-import com.github.shynixn.blockball.impl.service.*
+import com.github.shynixn.blockball.impl.service.GameServiceImpl
+import com.github.shynixn.blockball.impl.service.HubGameForcefieldServiceImpl
+import com.github.shynixn.blockball.impl.service.SoccerBallFactoryImpl
+import com.github.shynixn.blockball.impl.service.StatsServiceImpl
 import com.github.shynixn.fasterxml.jackson.core.type.TypeReference
-import com.github.shynixn.mccoroutine.bukkit.CoroutineTimings
-import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
-import com.github.shynixn.mccoroutine.bukkit.scope
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.ConfigurationServiceImpl
-import com.github.shynixn.mcutils.common.CoroutineExecutor
+import com.github.shynixn.mcutils.common.CoroutinePlugin
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
+import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.command.CommandServiceImpl
 import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
 import com.github.shynixn.mcutils.common.item.ItemService
-import com.github.shynixn.mcutils.common.language.globalChatMessageService
-import com.github.shynixn.mcutils.common.language.globalPlaceHolderService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.repository.CachedRepositoryImpl
@@ -35,12 +34,7 @@ import com.github.shynixn.mcutils.database.impl.CachedPlayerDataRepositoryImpl
 import com.github.shynixn.mcutils.database.impl.ConfigSelectedRepositoryImpl
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
-import com.github.shynixn.mcutils.packet.impl.service.ChatMessageServiceImpl
-import com.github.shynixn.mcutils.packet.impl.service.ItemServiceImpl
-import com.github.shynixn.mcutils.packet.impl.service.PacketServiceImpl
-import com.github.shynixn.mcutils.packet.impl.service.RayTracingServiceImpl
-import com.github.shynixn.mcutils.packet.nms.v1_21_R5.AreaSelectionServiceImpl
-import kotlinx.coroutines.CoroutineDispatcher
+import com.github.shynixn.mcutils.packet.impl.service.*
 import org.bukkit.plugin.Plugin
 
 class BlockBallDependencyInjectionModule(
@@ -64,7 +58,9 @@ class BlockBallDependencyInjectionModule(
 
         // Params
         module.addService<Plugin>(plugin)
+        module.addService<CoroutinePlugin>(plugin)
         module.addService<BlockBallLanguage>(language)
+        module.addService<PlaceHolderService>(placeHolderService)
 
         // Repositories
         module.addService<Repository<SoccerArena>> {
@@ -89,58 +85,45 @@ class BlockBallDependencyInjectionModule(
                 plugin,
                 "BlockBall",
                 plugin.dataFolder.toPath().resolve("BlockBall.sqlite"),
-                object : TypeReference<PlayerInformation>() {},
-                plugin.minecraftDispatcher
+                object : TypeReference<PlayerInformation>() {}
             )
             AutoSavePlayerDataRepositoryImpl(
                 1000 * 60L * plugin.config.getInt("database.autoSaveIntervalMinutes"),
-                CachedPlayerDataRepositoryImpl(configSelectedPlayerDataRepository, plugin.minecraftDispatcher),
-                plugin.scope, plugin.minecraftDispatcher
+                CachedPlayerDataRepositoryImpl(configSelectedPlayerDataRepository),
+                plugin
             )
         }
-        // Library Services
-        module.addService<com.github.shynixn.mcutils.common.command.CommandService>(
-            com.github.shynixn.mcutils.common.command.CommandServiceImpl(
-                object : CoroutineExecutor {
-                    override fun execute(f: suspend () -> Unit) {
-                        plugin.launch(object : CoroutineTimings() {}) {
-                            f.invoke()
-                        }
-                    }
-                })
-        )
-        module.addService<PacketService>(PacketServiceImpl(plugin))
-        module.addService<ConfigurationService>(ConfigurationServiceImpl(plugin))
-        module.addService<SoundService>(SoundServiceImpl(plugin))
-        module.addService<ItemService>(ItemServiceImpl())
-        module.addService<ChatMessageService>(ChatMessageServiceImpl(plugin))
-        module.addService<RayTracingService>(RayTracingServiceImpl())
+
+        // Services
+        module.addService<CommandService> {
+            CommandServiceImpl(module.getService())
+        }
+        module.addService<PacketService> {
+            PacketServiceImpl(module.getService())
+        }
+        module.addService<ConfigurationService> {
+            ConfigurationServiceImpl(module.getService())
+        }
+        module.addService<SoundService> {
+            SoundServiceImpl(module.getService())
+        }
+        module.addService<ItemService> {
+            ItemServiceImpl()
+        }
+        module.addService<ChatMessageService> {
+            ChatMessageServiceImpl(module.getService(), module.getService())
+        }
+        module.addService<RayTracingService> {
+            RayTracingServiceImpl()
+        }
         module.addService<AreaSelectionService> {
             AreaSelectionServiceImpl(
                 Permission.EDIT_GAME.permission,
-                plugin,
-                module.getService<ItemService>(),
-                module.getService<PacketService>(),
-                object : CoroutineExecutor {
-                    override fun execute(f: suspend () -> Unit) {
-                        plugin.launch(object : CoroutineTimings() {}) {
-                            f.invoke()
-                        }
-                    }
-                },
-                plugin.minecraftDispatcher as CoroutineDispatcher,
-                object : CoroutineExecutor {
-                    override fun execute(f: suspend () -> Unit) {
-                        plugin.launch(object : CoroutineTimings() {}) {
-                            f.invoke()
-                        }
-                    }
-                }
+                module.getService(),
+                module.getService(),
+                module.getService(),
             )
         }
-        module.addService<PlaceHolderService> { placeHolderService }
-
-        // Services
         module.addService<StatsService> {
             StatsServiceImpl(module.getService(), module.getService())
         }
@@ -168,7 +151,7 @@ class BlockBallDependencyInjectionModule(
             )
         }
         module.addService<SoccerBallFactory> {
-            SoccerBallFactoryImpl(module.getService(), module.getService(), module.getService(), plugin)
+            SoccerBallFactoryImpl(module.getService(), module.getService(), module.getService(), module.getService())
         }
         module.addService<BallListener> { BallListener(module.getService(), module.getService()) }
         module.addService<DoubleJumpListener> { DoubleJumpListener(module.getService(), module.getService()) }
@@ -189,8 +172,6 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
             )
         }
-        plugin.globalChatMessageService = module.getService()
-        plugin.globalPlaceHolderService = module.getService()
         return module
     }
 }

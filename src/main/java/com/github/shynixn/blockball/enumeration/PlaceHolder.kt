@@ -7,12 +7,26 @@ import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.LeaderBoardStats
 import com.github.shynixn.blockball.entity.PlayerInformation
-import com.github.shynixn.blockball.entity.StatsGame
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import org.bukkit.entity.Player
 
 enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<String, Any>?) -> String?) {
+    PARAM_1("param_1", { _, _, context ->
+        if (context != null) {
+            context["0"] as String?
+        } else {
+            null
+        }
+    }),
+    PARAM_2("param_2", { _, _, context ->
+        if (context != null) {
+            context["1"] as kotlin.String?
+        } else {
+            null
+        }
+    }),
+
     // Game PlaceHolders
     GAME_NAME("%blockball_game_name_[game]%", { _, game, _ -> game?.arena?.name }),
 
@@ -34,7 +48,9 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     GAME_RED_PLAYER_AMOUNT("%blockball_game_redPlayers_[game]%", { _, game, _ -> game?.redTeam?.size?.toString() }),
 
-    GAME_RED_PLAYER_NAMES("%blockball_game_redPlayerNames_[game]%", {_, game, _ -> game?.redTeam?.joinToString(", ") { e -> e.name } }),
+    GAME_RED_PLAYER_NAMES(
+        "%blockball_game_redPlayerNames_[game]%",
+        { _, game, _ -> game?.redTeam?.joinToString(", ") { e -> e.name } }),
 
     GAME_RED_PLAYER_MAXAMOUNT(
         "%blockball_game_redMaxPlayers_[game]%",
@@ -48,7 +64,9 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     GAME_BLUE_PLAYER_AMOUNT("%blockball_game_bluePlayers_[game]%", { _, game, _ -> game?.blueTeam?.size?.toString() }),
 
-    GAME_BLUE_PLAYER_NAMES("%blockball_game_bluePlayerNames_[game]%", {_, game, _ -> game?.blueTeam?.joinToString(", ") { e -> e.name } }),
+    GAME_BLUE_PLAYER_NAMES(
+        "%blockball_game_bluePlayerNames_[game]%",
+        { _, game, _ -> game?.blueTeam?.joinToString(", ") { e -> e.name } }),
 
     GAME_BLUE_PLAYER_MAXAMOUNT(
         "%blockball_game_blueMaxPlayers_[game]%",
@@ -214,10 +232,10 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
     PLAYER_STATS_TOPGOALSCURRENT("%blockball_game_topGoalsCurrentPlayerName_[game]%", { _, game, _ ->
         if (!com.github.shynixn.blockball.BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
             BlockBallPlugin.patreonOnly
-        } else if(game != null) {
+        } else if (game != null) {
             val storage = game.ingamePlayersStorage.maxBy { e -> e.value.scoredGoals }
             storage.key.name
-        }else{
+        } else {
             ""
         }
     }),

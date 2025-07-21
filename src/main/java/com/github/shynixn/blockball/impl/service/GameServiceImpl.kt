@@ -92,7 +92,8 @@ class GameServiceImpl(
                     packetService,
                     soccerBallFactory,
                     commandService,
-                    itemService
+                    itemService,
+                    chatMessageService
                 )
 
                 GameType.MINIGAME -> SoccerMiniGameImpl(
