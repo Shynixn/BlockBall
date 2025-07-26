@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
+import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.regionDispatcher
@@ -206,7 +207,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
     }
 
     override fun fetchEntityDispatcher(entity: Entity): CoroutineContext {
-        return fetchEntityDispatcher(entity)
+        return entityDispatcher(entity)
     }
 
     override fun fetchGlobalRegionDispatcher(): CoroutineContext {

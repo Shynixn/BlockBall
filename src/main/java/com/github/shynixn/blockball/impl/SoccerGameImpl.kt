@@ -9,6 +9,7 @@ import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.mccoroutine.folia.entityDispatcher
+import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.*
@@ -26,6 +27,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
+import teleportCompat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -260,7 +262,11 @@ abstract class SoccerGameImpl(
         ingamePlayersStorage.remove(player)
 
         if (arena.meta.lobbyMeta.leaveSpawnpoint != null) {
-            player.teleport(arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation())
+            val teleportTarget = arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation()
+
+            plugin.launch(plugin.entityDispatcher(player)) {
+                player.teleportCompat(plugin,teleportTarget)
+            }
         }
 
         return LeaveResult.SUCCESS
@@ -384,10 +390,14 @@ abstract class SoccerGameImpl(
             return
         }
 
-        if (teamMeta.spawnpoint == null) {
-            player.teleport(arena.ballSpawnPoint!!.toLocation())
+        val spawnPoint = if (teamMeta.spawnpoint == null) {
+            arena.ballSpawnPoint!!.toLocation()
         } else {
-            player.teleport(teamMeta.spawnpoint!!.toLocation())
+            teamMeta.spawnpoint!!.toLocation()
+        }
+
+        plugin.launch(plugin.entityDispatcher(player)) {
+            player.teleportCompat(plugin, spawnPoint)
         }
     }
 
@@ -417,15 +427,17 @@ abstract class SoccerGameImpl(
      */
     private fun updateDoubleJumpCooldown() {
         checkForPluginMainThread()
-
+        println("TICK")
         doubleJumpCoolDownPlayers.keys.toTypedArray().forEach { p ->
             var time = doubleJumpCoolDownPlayers[p]!!
             time -= 1
 
             if (time <= 0) {
                 doubleJumpCoolDownPlayers.remove(p)
+                println("REMOVED")
             } else {
                 doubleJumpCoolDownPlayers[p] = time
+                println("SET TIME")
             }
         }
     }
@@ -607,10 +619,12 @@ abstract class SoccerGameImpl(
 
     fun executeCommandsWithPlaceHolder(players: Set<Player>, commands: List<CommandMeta>) {
         checkForPluginMainThread()
-        commandService.executeCommands(players.toList(), commands) { c, p ->
-            placeHolderService.resolvePlaceHolder(
-                c, p
-            )
+        plugin.launch(plugin.globalRegionDispatcher) {
+            commandService.executeCommands(players.toList(), commands) { c, p ->
+                placeHolderService.resolvePlaceHolder(
+                    c, p
+                )
+            }
         }
     }
 
@@ -646,12 +660,21 @@ abstract class SoccerGameImpl(
             }
 
             for (i in ingamePlayersStorage) {
-                if (i.value.goalTeam == Team.RED) {
-                    i.key.teleport(redTeamSpawnpoint.toLocation())
+                val player = i.key
+                val location = if (i.value.goalTeam == Team.RED) {
+                    redTeamSpawnpoint.toLocation()
                 } else if (i.value.goalTeam == Team.BLUE) {
-                    i.key.teleport(blueTeamSpawnpoint.toLocation())
+                    blueTeamSpawnpoint.toLocation()
                 } else if (i.value.team == Team.REFEREE) {
-                    i.key.teleport(refereeSpawnpoint.toLocation())
+                    refereeSpawnpoint.toLocation()
+                } else {
+                    null
+                }
+
+                if (location != null) {
+                    plugin.launch(plugin.entityDispatcher(player)) {
+                        player.teleportCompat(plugin,location)
+                    }
                 }
             }
 
@@ -708,7 +731,7 @@ abstract class SoccerGameImpl(
     private fun restoreFromTemporaryPlayerData(player: Player) {
         val stats = ingamePlayersStorage[player]!!
 
-        plugin.launch(plugin.entityDispatcher(player)){
+        plugin.launch(plugin.entityDispatcher(player)) {
             player.gameMode = stats.gameMode
             player.allowFlight = stats.gameMode == GameMode.CREATIVE
             player.isFlying = false

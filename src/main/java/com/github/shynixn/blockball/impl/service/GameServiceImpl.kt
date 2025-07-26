@@ -25,7 +25,6 @@ import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
@@ -68,7 +67,7 @@ class GameServiceImpl(
      */
     override suspend fun reloadAll() {
         checkForPluginMainThread()
-        close()
+        closeGames()
 
         val arenas = arenaRepository.getAll()
 
@@ -153,14 +152,12 @@ class GameServiceImpl(
         }
     }
 
-    private fun runGames() {
+    private suspend fun runGames() {
         checkForPluginMainThread()
 
         games.toTypedArray().forEach { game ->
             if (game.closed) {
-                runBlocking {
-                    reload(game.arena)
-                }
+                reload(game.arena)
             } else {
                 game.handle(ticks)
             }
@@ -211,9 +208,12 @@ class GameServiceImpl(
      */
     override fun close() {
         checkForPluginMainThread()
+        closeGames()
         isDisposed = true
+    }
 
-        for (game in this.games) {
+    private fun closeGames() {
+        for (game in this.games.toTypedArray()) {
             try {
                 game.close()
             } catch (e: Exception) {
