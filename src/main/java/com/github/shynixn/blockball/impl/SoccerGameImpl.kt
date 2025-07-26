@@ -427,17 +427,14 @@ abstract class SoccerGameImpl(
      */
     private fun updateDoubleJumpCooldown() {
         checkForPluginMainThread()
-        println("TICK")
         doubleJumpCoolDownPlayers.keys.toTypedArray().forEach { p ->
             var time = doubleJumpCoolDownPlayers[p]!!
             time -= 1
 
             if (time <= 0) {
                 doubleJumpCoolDownPlayers.remove(p)
-                println("REMOVED")
             } else {
                 doubleJumpCoolDownPlayers[p] = time
-                println("SET TIME")
             }
         }
     }

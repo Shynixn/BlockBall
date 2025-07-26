@@ -74,9 +74,4 @@ interface SoccerBall {
      * Removes the ball.
      */
     fun remove()
-
-    /**
-     * Runnable. Should not be called directly.
-     */
-    fun run()
 }

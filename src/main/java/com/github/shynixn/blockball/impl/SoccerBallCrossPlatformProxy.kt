@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.event.BallRemoveEvent
 import com.github.shynixn.blockball.event.BallTeleportEvent
+import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector
 import com.github.shynixn.mcutils.common.toVector3d
@@ -34,6 +35,14 @@ class SoccerBallCrossPlatformProxy(
             ballDesignEntity.destroy(player)
             ballHitBoxEntity.destroy(player)
         })
+
+    fun startTicking() {
+        plugin.launch {
+            while (!isDead) {
+                run()
+            }
+        }
+    }
 
     /**
      * Is the entity dead?
@@ -103,6 +112,7 @@ class SoccerBallCrossPlatformProxy(
     override fun getVelocity(): Vector {
         return ballHitBoxEntity.motion.toVector()
     }
+
     /**
      * Shoot the ball by the given player.
      * The calculated velocity can be manipulated by the BallLeftClickEvent.
@@ -168,7 +178,7 @@ class SoccerBallCrossPlatformProxy(
     /**
      * Runnable. Should not be called directly.
      */
-    override fun run() {
+    private suspend fun run() {
         checkForPluginMainThread()
 
         if (isDead) {

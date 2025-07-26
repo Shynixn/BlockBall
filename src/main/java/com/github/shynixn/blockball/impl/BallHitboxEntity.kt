@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallRightClickEvent
 import com.github.shynixn.blockball.event.BallTouchPlayerEvent
 import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.regionDispatcher
 import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.packet.api.PacketService
@@ -17,8 +18,8 @@ import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
-import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -192,7 +193,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
      * Ticks the hitbox.
      * @param players watching this hitbox.
      */
-    fun tick(players: List<Player>) {
+    suspend fun tick(players: List<Pair<Player, Location>>) {
         checkForPluginMainThread()
 
         if (skipCounter > 0) {
@@ -204,7 +205,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
 
             // Visible position makes the slime hitbox better align with the ball.
             for (player in players) {
-                packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
+                packetService.sendPacketOutEntityTeleport(player.first, PacketOutEntityTeleport().also {
                     it.entityId = entityId
                     it.target = position.toLocation().add(0.0, meta.hitbox.offSetY, 0.0)
                 })
@@ -215,18 +216,18 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
         }
 
         checkMovementInteractions(players)
-
-        if (motion.x == 0.0 && motion.y == 0.0 && motion.z == 0.0) {
-            return
-        }
-
-        val rayTraceResult =
+        val rayTraceResult = withContext(plugin.regionDispatcher(position.toLocation())) {
             rayTracingService.rayTraceMotion(
                 position.toLocation().toVector3d(),
                 motion.toVector().toVector3d(),
                 false,
                 true
             )
+        }
+
+        if (motion.x == 0.0 && motion.y == 0.0 && motion.z == 0.0) {
+            return
+        }
 
         val rayTraceEvent = BallRayTraceEvent(
             ball, rayTraceResult.hitBlock,
@@ -310,7 +311,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
     /**
      * Checks movement interactions with the ball.
      */
-    private fun checkMovementInteractions(players: List<Player>) {
+    private fun checkMovementInteractions(players: List<Pair<Player, Location>>) {
         if (!meta.hitbox.touchEnabled || skipCounter > 0) {
             return
         }
@@ -322,14 +323,13 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
         val hitboxSize = meta.hitbox.touchHitBoxSize
 
         for (player in players) {
-            if (game != null && !game.redTeam.contains(player) && !game.blueTeam.contains(player)) {
+            if (game != null && !game.redTeam.contains(player.first) && !game.blueTeam.contains(player.first)) {
                 continue
             }
 
-            val playerLocation = player.location.toVector3d()
+            val playerLocation = player.second.toVector3d()
 
-            if (player.gameMode != GameMode.SPECTATOR &&
-                playerLocation.distance(position) < hitboxSize
+            if (playerLocation.distance(position) < hitboxSize
             ) {
                 val vector = position
                     .copy()
@@ -337,7 +337,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
                     .normalize().multiply(meta.horizontalTouchModifier)
                 vector.y = 0.1 * meta.verticalTouchModifier
 
-                val ballTouchPlayerEvent = BallTouchPlayerEvent(ball, player, vector.toVector())
+                val ballTouchPlayerEvent = BallTouchPlayerEvent(ball, player.first, vector.toVector())
                 Bukkit.getPluginManager().callEvent(ballTouchPlayerEvent)
 
                 if (ballTouchPlayerEvent.isCancelled) {
@@ -359,13 +359,12 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
     /**
      * Handles movement of the ball on ground.
      */
-    private fun calculateBallOnGround(players: List<Any>, targetPosition: Vector3d) {
+    private fun calculateBallOnGround(players: List<Pair<Player, Location>>, targetPosition: Vector3d) {
         targetPosition.y = this.position.y
         motion.y = 0.0
 
         for (player in players) {
-            require(player is Player)
-            packetService.sendPacketOutEntityVelocity(player, PacketOutEntityVelocity().also {
+            packetService.sendPacketOutEntityVelocity(player.first, PacketOutEntityVelocity().also {
                 it.entityId = entityId
                 it.target = motion.toVector()
             })
@@ -376,8 +375,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
         // Visible position makes the slime hitbox better align with the ball.
         val visiblePosition = position.toLocation().add(0.0, meta.hitbox.offSetY, 0.0)
         for (player in players) {
-            require(player is Player)
-            packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
+            packetService.sendPacketOutEntityTeleport(player.first, PacketOutEntityTeleport().also {
                 it.entityId = entityId
                 it.target = visiblePosition
             })
@@ -391,7 +389,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
     /**
      * Handles movement of the ball in air.
      */
-    private fun calculateBallOnAir(players: List<Any>, targetPosition: Vector3d) {
+    private fun calculateBallOnAir(players: List<Pair<Player, Location>>, targetPosition: Vector3d) {
         val airResistance = 1.0 - this.meta.airResistance
         this.motion = this.motion.multiply(airResistance)
         this.motion.y -= this.meta.gravityModifier
@@ -400,8 +398,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
 
         // Visible position makes the slime hitbox better align with the ball.
         for (player in players) {
-            require(player is Player)
-            packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
+            packetService.sendPacketOutEntityTeleport(player.first, PacketOutEntityTeleport().also {
                 it.entityId = entityId
                 it.target = position.toLocation().add(0.0, meta.hitbox.offSetY, 0.0)
             })
