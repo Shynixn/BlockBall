@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl.service
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerGame
@@ -8,9 +9,8 @@ import com.github.shynixn.blockball.event.BallSpawnEvent
 import com.github.shynixn.blockball.impl.SoccerBallCrossPlatformProxy
 import com.github.shynixn.blockball.impl.BallDesignEntity
 import com.github.shynixn.blockball.impl.BallHitboxEntity
-import com.github.shynixn.mccoroutine.bukkit.CoroutineTimings
-import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.PacketService
@@ -32,7 +32,7 @@ class SoccerBallFactoryImpl (
     private var isDisposed = false
 
     init {
-        plugin.launch(object : CoroutineTimings() {}) {
+        plugin.launch {
             while (!isDisposed) {
                 val balls = ballHitBoxTracked.values.toTypedArray()
                 for (ball in balls) {
@@ -47,6 +47,7 @@ class SoccerBallFactoryImpl (
      * Creates a new SoccerBall.
      */
     override fun createSoccerBall(location: Location, meta: SoccerBallMeta): SoccerBall {
+        checkForPluginMainThread()
         return createSoccerBallForGame(location, meta, null)
     }
 
@@ -54,6 +55,8 @@ class SoccerBallFactoryImpl (
      * Creates a new SoccerBall.
      */
     override fun createSoccerBallForGame(location: Location, meta: SoccerBallMeta, game: SoccerGame?): SoccerBall {
+        checkForPluginMainThread()
+
         val position = location.toVector3d()
         position.yaw = 0.0
         position.pitch = 0.0
@@ -85,6 +88,8 @@ class SoccerBallFactoryImpl (
      * Tries to locate the ball by the given id.
      */
     override fun findBallByEntityId(id: Int): SoccerBall? {
+        checkForPluginMainThread()
+
         if (ballDesignTracked.containsKey(id)) {
             return ballDesignTracked[id]
         }
@@ -100,6 +105,8 @@ class SoccerBallFactoryImpl (
      * Disables a ball from tracking.
      */
     override fun removeTrackedBall(ball: SoccerBall) {
+        checkForPluginMainThread()
+
         if (ballDesignTracked.containsKey(ball.designEntityId)) {
             ballDesignTracked.remove(ball.designEntityId)
         }

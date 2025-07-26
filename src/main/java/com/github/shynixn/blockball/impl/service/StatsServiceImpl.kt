@@ -1,12 +1,12 @@
 package com.github.shynixn.blockball.impl.service
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.LeaderBoardStats
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.StatsMeta
-import com.github.shynixn.mccoroutine.bukkit.CoroutineTimings
-import com.github.shynixn.mccoroutine.bukkit.launch
+import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import kotlinx.coroutines.delay
 import org.bukkit.plugin.Plugin
@@ -24,6 +24,8 @@ class StatsServiceImpl(
      * Registers tracking the stats.
      */
     override fun register() {
+        checkForPluginMainThread()
+
         val refreshTime = plugin.config.getInt("leaderboard.intervalMinutes")
         val isEnabled = plugin.config.getBoolean("leaderboard.enabled")
 
@@ -36,7 +38,7 @@ class StatsServiceImpl(
                 computeLeaderBoard(playerInfo, leaderBoard)
             }
 
-            plugin.launch(object : CoroutineTimings() {}) {
+            plugin.launch {
                 while (!isDisposed) {
                     leaderBoardStats =
                         playerDataRepository.getAggregationResult<LeaderBoardStats>(aggregationLeaderBoardKey)

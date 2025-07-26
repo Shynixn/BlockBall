@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl.listener
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerHubGame
@@ -8,8 +9,9 @@ import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallTouchPlayerEvent
-import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mccoroutine.folia.entityDispatcher
+import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
@@ -27,17 +29,18 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
 import org.bukkit.plugin.Plugin
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Game Listener for the most important game events.
  */
-class GameListener (
+class GameListener(
     private val gameService: GameService,
     private val soccerBallFactory: SoccerBallFactory,
     private val plugin: Plugin,
     private val playerDataRepository: CachePlayerRepository<PlayerInformation>
 ) : Listener {
-    private val playerCache = HashSet<Player>()
+    private val playerCache: MutableSet<Player> = ConcurrentHashMap.newKeySet();
 
     /**
      * Gets called when a packet arrives.
@@ -72,14 +75,13 @@ class GameListener (
     @EventHandler
     fun onPlayerQuitEvent(event: PlayerQuitEvent) {
         val player = event.player
-
-        val playerGame = gameService.getByPlayer(player)
-        playerGame?.leave(player)
-
-        val spectateGame = gameService.getByPlayer(player)
-        spectateGame?.leave(player)
-
         plugin.launch {
+            val playerGame = gameService.getByPlayer(player)
+            playerGame?.leave(player)
+
+            val spectateGame = gameService.getByPlayer(player)
+            spectateGame?.leave(player)
+
             val existingPlayerData = playerDataRepository.getByPlayer(player)
 
             if (existingPlayerData != null) {
@@ -127,11 +129,13 @@ class GameListener (
             return
         }
 
-        if (game.arena.isLocationIn2dSelection(event.to!!.toVector3d())) {
-            return
-        }
+        plugin.launch {
+            if (game.arena.isLocationIn2dSelection(event.to!!.toVector3d())) {
+                return@launch
+            }
 
-        game.leave(event.player)
+            game.leave(event.player)
+        }
     }
 
     /**
@@ -181,7 +185,7 @@ class GameListener (
         if (game != null && !(event.player).hasPermission(Permission.OBSOLETE_INVENTORY.permission)) {
             event.isCancelled = true
 
-            plugin.launch {
+            plugin.launch(plugin.entityDispatcher(event.player)) {
                 delay(10.ticks)
                 event.player.updateInventory()
             }
@@ -195,7 +199,7 @@ class GameListener (
     fun onPlayerRespawnEvent(event: PlayerRespawnEvent) {
         val game = gameService.getByPlayer(event.player) ?: return
 
-        val team = game.ingamePlayersStorage[event.player]!!.goalTeam
+        val team = game.ingamePlayersStorage[event.player]?.goalTeam
 
         val teamMeta = if (team == Team.RED) {
             game.arena.meta.redTeamMeta
@@ -225,7 +229,9 @@ class GameListener (
             return
         }
 
-        game.applyDeathPoints(event.entity)
+        plugin.launch {
+            game.applyDeathPoints(event.entity)
+        }
     }
 
     /**
@@ -256,13 +262,12 @@ class GameListener (
 
         @Suppress("DEPRECATION")
         player.health = player.maxHealth
-
         playerCache.add(player)
 
-        game.applyDeathPoints(player)
-        game.respawn(player)
-
         plugin.launch {
+            game.applyDeathPoints(player)
+            game.respawn(player)
+
             delay(40.ticks)
             playerCache.remove(player)
         }
@@ -273,6 +278,7 @@ class GameListener (
      */
     @EventHandler
     fun onBallInteractEvent(event: BallTouchPlayerEvent) {
+        checkForPluginMainThread()
         val game = gameService.getAll().find { p -> p.ball != null && p.ball!! == event.ball }
 
         if (game != null) {
@@ -286,6 +292,8 @@ class GameListener (
      */
     @EventHandler
     fun onBallRayTraceEvent(event: BallRayTraceEvent) {
+        checkForPluginMainThread()
+
         for (game in gameService.getAll()) {
             if (game.ball == event.ball && event.ball.isInteractable) {
                 val targetPosition = event.targetLocation.toVector3d()

@@ -1,13 +1,14 @@
 package com.github.shynixn.blockball.impl
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.SoccerGame
 import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.event.BallLeftClickEvent
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallRightClickEvent
 import com.github.shynixn.blockball.event.BallTouchPlayerEvent
-import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
@@ -104,6 +105,8 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
      * Spawns the ball for the given player.
      */
     fun spawn(player: Player, position: Vector3d) {
+        checkForPluginMainThread()
+
         if (Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_19_R3)) {
             // We use the Interaction Entity since 1.19.4.
             packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
@@ -146,6 +149,8 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
      * Destroys the ball for the given player.
      */
     fun destroy(player: Player) {
+        checkForPluginMainThread()
+
         packetService.sendPacketOutEntityDestroy(player, PacketOutEntityDestroy().also {
             it.entityIds = listOf(entityId)
         })
@@ -155,6 +160,8 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
      * Kicks the hitbox for the given player interaction.
      */
     fun kickPlayer(player: Player, baseMultiplier: Double, isPass: Boolean) {
+        checkForPluginMainThread()
+
         if (skipCounter > 0) {
             return
         }
@@ -186,6 +193,8 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
      * @param players watching this hitbox.
      */
     fun tick(players: List<Player>) {
+        checkForPluginMainThread()
+
         if (skipCounter > 0) {
             skipCounter--
         }

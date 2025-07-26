@@ -8,9 +8,9 @@ import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
-import com.github.shynixn.mccoroutine.bukkit.CoroutineTimings
-import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
+import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
+import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.regionDispatcher
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.CoroutinePlugin
 import com.github.shynixn.mcutils.common.Version
@@ -49,6 +49,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
+import pluginMainThreadId
 import java.util.logging.Level
 import kotlin.coroutines.CoroutineContext
 
@@ -61,7 +62,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
     private lateinit var module: DependencyInjectionModule
     private lateinit var scoreboardModule: DependencyInjectionModule
     private lateinit var bossBarModule: DependencyInjectionModule
-    private lateinit var signModule : DependencyInjectionModule
+    private lateinit var signModule: DependencyInjectionModule
     private var immediateDisable = false
 
     companion object {
@@ -127,6 +128,10 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
 
         logger.log(Level.INFO, "Loaded NMS version ${Version.serverVersion}.")
 
+        launch {
+            pluginMainThreadId = Thread.currentThread().id
+        }
+
         // Load BlockBallLanguage
         val language = BlockBallLanguageImpl()
         reloadTranslation(language)
@@ -174,7 +179,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
         Bukkit.getServicesManager()
             .register(GameService::class.java, module.getService<GameService>(), this, ServicePriority.Normal)
         val plugin = this
-        plugin.launch(object : CoroutineTimings() {}) {
+        plugin.launch {
             // Load Games
             val gameService = module.getService<GameService>()
             try {
@@ -201,15 +206,15 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
     }
 
     override fun fetchEntityDispatcher(entity: Entity): CoroutineContext {
-        return minecraftDispatcher
+        return fetchEntityDispatcher(entity)
     }
 
     override fun fetchGlobalRegionDispatcher(): CoroutineContext {
-        return minecraftDispatcher
+        return globalRegionDispatcher
     }
 
     override fun fetchLocationDispatcher(location: Location): CoroutineContext {
-        return minecraftDispatcher
+        return regionDispatcher(location)
     }
 
     /**

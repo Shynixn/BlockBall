@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.Version
@@ -42,6 +43,8 @@ class BallDesignEntity(val entityId: Int) {
      * Spawns the ball for the given player.
      */
     fun spawn(player: Player) {
+        checkForPluginMainThread()
+
         val position = ball.getLocation().toVector3d()
         position.y += ball.meta.render.offSetY
         packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
@@ -83,6 +86,8 @@ class BallDesignEntity(val entityId: Int) {
      * Destroys the ball for the given player.
      */
     fun destroy(player: Player) {
+        checkForPluginMainThread()
+
         packetService.sendPacketOutEntityDestroy(player, PacketOutEntityDestroy().also {
             it.entityIds = listOf(entityId)
         })
@@ -93,6 +98,8 @@ class BallDesignEntity(val entityId: Int) {
      * @param players watching this hitbox.
      */
     fun tick(players: List<Player>) {
+        checkForPluginMainThread()
+
         val position = ball.getLocation().toVector3d()
         position.y += ball.meta.render.offSetY
         position.yaw = vectorToYaw(ball.getVelocity())

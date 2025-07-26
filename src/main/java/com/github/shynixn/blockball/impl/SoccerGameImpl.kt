@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.*
@@ -7,8 +8,9 @@ import com.github.shynixn.blockball.event.GameEndEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
-import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mccoroutine.folia.entityDispatcher
+import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandMeta
@@ -25,6 +27,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 abstract class SoccerGameImpl(
     /**
@@ -32,7 +35,6 @@ abstract class SoccerGameImpl(
      */
     override val arena: SoccerArena,
     private val placeHolderService: PlaceHolderService,
-    private val packetService: PacketService,
     private val plugin: Plugin,
     private val soccerBallFactory: SoccerBallFactory,
     private val commandService: CommandService,
@@ -65,7 +67,7 @@ abstract class SoccerGameImpl(
     /**
      * Storage.
      */
-    override val ingamePlayersStorage: MutableMap<Player, GameStorage> = HashMap()
+    override val ingamePlayersStorage: MutableMap<Player, GameStorage> = ConcurrentHashMap()
 
     /**
      * Player who was the last one to hit the ball.
@@ -103,7 +105,7 @@ abstract class SoccerGameImpl(
     /**
      * Contains players which are in cooldown by doublejump.
      */
-    override val doubleJumpCoolDownPlayers: MutableMap<Player, Int> = HashMap()
+    override val doubleJumpCoolDownPlayers: MutableMap<Player, Int> = ConcurrentHashMap()
 
     /**
      * Are currently players actively playing in this game?
@@ -163,6 +165,8 @@ abstract class SoccerGameImpl(
      * Does nothing if the player is already in a Game.
      */
     override fun join(player: Player, team: Team?): JoinResult {
+        checkForPluginMainThread()
+
         val event = GameJoinEvent(player, this)
         Bukkit.getPluginManager().callEvent(event)
 
@@ -229,6 +233,8 @@ abstract class SoccerGameImpl(
      * Leaves the given player.
      */
     override fun leave(player: Player): LeaveResult {
+        checkForPluginMainThread()
+
         if (!ingamePlayersStorage.containsKey(player)) {
             return LeaveResult.NOT_IN_MATCH
         }
@@ -264,6 +270,8 @@ abstract class SoccerGameImpl(
      * Tick handle.
      */
     fun handleMiniGameEssentials(ticks: Int) {
+        checkForPluginMainThread()
+
         if (ticks >= 20) {
             if (closing) {
                 return
@@ -275,6 +283,7 @@ abstract class SoccerGameImpl(
 
 
     fun onMatchEnd(team: Team? = null) {
+        checkForPluginMainThread()
         val winningPlayers = HashSet<Player>()
         var drawCounter = 0
 
@@ -333,6 +342,7 @@ abstract class SoccerGameImpl(
      * Gets called when the given [game] gets win by the given [team].
      */
     fun onWin(team: Team) {
+        checkForPluginMainThread()
         val event = GameEndEvent(team, this)
         Bukkit.getPluginManager().callEvent(event)
 
@@ -357,6 +367,7 @@ abstract class SoccerGameImpl(
      * Lets the given [player] in the given [game] respawn at the specified spawnpoint.
      */
     override fun respawn(player: Player) {
+        checkForPluginMainThread()
         if (!ingamePlayersStorage.containsKey(player)) {
             return
         }
@@ -384,6 +395,7 @@ abstract class SoccerGameImpl(
      * Returns if the ball was spawned when calling this method.
      */
     protected fun handleBallSpawning(): Boolean {
+        checkForPluginMainThread()
         if (ballSpawning && ballEnabled) {
             ballSpawnCounter--
             if (ballSpawnCounter <= 0) {
@@ -404,6 +416,8 @@ abstract class SoccerGameImpl(
      * Updates the cooldown of the double jump for the given game.
      */
     private fun updateDoubleJumpCooldown() {
+        checkForPluginMainThread()
+
         doubleJumpCoolDownPlayers.keys.toTypedArray().forEach { p ->
             var time = doubleJumpCoolDownPlayers[p]!!
             time -= 1
@@ -420,6 +434,7 @@ abstract class SoccerGameImpl(
      * Gets called when the given [game] ends with a draw.
      */
     fun onDraw() {
+        checkForPluginMainThread()
         for (player in getPlayers()) {
             chatMessageService.sendLanguageMessage(player, language.winDraw)
         }
@@ -431,6 +446,8 @@ abstract class SoccerGameImpl(
      * is handled inside of the method.
      */
     override fun notifyBallInGoal(team: Team) {
+        checkForPluginMainThread()
+
         if (ballSpawning) {
             return
         }
@@ -474,6 +491,8 @@ abstract class SoccerGameImpl(
      * Applies points to the belonging teams when the given [player] dies in the given [game].
      */
     override fun applyDeathPoints(player: Player) {
+        checkForPluginMainThread()
+
         if (!ingamePlayersStorage.containsKey(player)) {
             return
         }
@@ -492,6 +511,8 @@ abstract class SoccerGameImpl(
      * Gets called when a goal gets scored on the given [game] by the given [team].
      */
     private fun onScore(team: Team) {
+        checkForPluginMainThread()
+
         var interactionEntity: Player? = null
 
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
@@ -585,6 +606,7 @@ abstract class SoccerGameImpl(
     }
 
     fun executeCommandsWithPlaceHolder(players: Set<Player>, commands: List<CommandMeta>) {
+        checkForPluginMainThread()
         commandService.executeCommands(players.toList(), commands) { c, p ->
             placeHolderService.resolvePlaceHolder(
                 c, p
@@ -649,61 +671,69 @@ abstract class SoccerGameImpl(
         ingamePlayersStorage[player] = stats
         stats.team = team
         stats.goalTeam = team
-        stats.gameMode = player.gameMode
-        stats.armorContents = player.inventory.armorContents.clone()
-        stats.inventoryContents = player.inventory.contents.clone()
-        stats.level = player.level
-        stats.exp = player.exp.toDouble()
-        stats.maxHealth = player.maxHealth
-        stats.health = player.health
-        stats.hunger = player.foodLevel
 
-        // Apply
-        val teamMeta = getTeamMetaFromTeam(team)
-        player.allowFlight = false
-        player.isFlying = false
-        player.gameMode = arena.meta.lobbyMeta.gamemode
-        player.foodLevel = 20
-        player.level = 0
-        player.exp = 0.0F
+        plugin.launch(plugin.entityDispatcher(player)) {
+            stats.gameMode = player.gameMode
+            stats.armorContents = player.inventory.armorContents.clone()
+            stats.inventoryContents = player.inventory.contents.clone()
+            stats.level = player.level
+            stats.exp = player.exp.toDouble()
+            stats.maxHealth = player.maxHealth
+            stats.health = player.health
+            stats.hunger = player.foodLevel
 
-        if (!arena.meta.customizingMeta.keepHealthEnabled) {
-            player.maxHealth = 20.0
-            player.health = 20.0
-        }
+            // Apply
+            val teamMeta = getTeamMetaFromTeam(team)
+            player.allowFlight = false
+            player.isFlying = false
+            player.gameMode = arena.meta.lobbyMeta.gamemode
+            player.foodLevel = 20
+            player.level = 0
+            player.exp = 0.0F
 
-        if (!arena.meta.customizingMeta.keepInventoryEnabled) {
-            setInventoryContentsSecure(player, teamMeta.inventory.map { e -> itemService.deserializeItemStack(e) })
-            player.inventory.setArmorContents(teamMeta.armor.map { e -> itemService.deserializeItemStack(e) }
-                .toTypedArray())
-            player.updateInventory()
+            if (!arena.meta.customizingMeta.keepHealthEnabled) {
+                player.maxHealth = 20.0
+                player.health = 20.0
+            }
+
+            if (!arena.meta.customizingMeta.keepInventoryEnabled) {
+                setInventoryContentsSecure(player, teamMeta.inventory.map { e -> itemService.deserializeItemStack(e) })
+                player.inventory.setArmorContents(teamMeta.armor.map { e -> itemService.deserializeItemStack(e) }
+                    .toTypedArray())
+                player.updateInventory()
+            }
         }
     }
 
     private fun restoreFromTemporaryPlayerData(player: Player) {
         val stats = ingamePlayersStorage[player]!!
-        player.gameMode = stats.gameMode
-        player.allowFlight = stats.gameMode == GameMode.CREATIVE
-        player.isFlying = false
-        player.level = stats.level
-        player.exp = stats.exp.toFloat()
-        player.foodLevel = stats.hunger
 
-        if (!arena.meta.customizingMeta.keepHealthEnabled) {
-            player.maxHealth = stats.maxHealth
-            player.health = stats.health
-        }
+        plugin.launch(plugin.entityDispatcher(player)){
+            player.gameMode = stats.gameMode
+            player.allowFlight = stats.gameMode == GameMode.CREATIVE
+            player.isFlying = false
+            player.level = stats.level
+            player.exp = stats.exp.toFloat()
+            player.foodLevel = stats.hunger
 
-        if (!arena.meta.customizingMeta.keepInventoryEnabled) {
-            setInventoryContentsSecure(player, stats.inventoryContents.clone().toList())
-            player.inventory.setArmorContents(stats.armorContents.clone())
-            player.updateInventory()
+            if (!arena.meta.customizingMeta.keepHealthEnabled) {
+                player.maxHealth = stats.maxHealth
+                player.health = stats.health
+            }
+
+            if (!arena.meta.customizingMeta.keepInventoryEnabled) {
+                setInventoryContentsSecure(player, stats.inventoryContents.clone().toList())
+                player.inventory.setArmorContents(stats.armorContents.clone())
+                player.updateInventory()
+            }
         }
     }
 
     abstract fun setPlayerToArena(player: Player, team: Team)
 
     protected fun respawnBall(delayInTicks: Int) {
+        checkForPluginMainThread()
+
         if (ballSpawning) {
             return
         }
@@ -740,6 +770,8 @@ abstract class SoccerGameImpl(
      * This is only relevant for the referee.
      */
     override fun setBallToLocation(location: Location) {
+        checkForPluginMainThread()
+
         destroyBall()
         ball = soccerBallFactory.createSoccerBallForGame(
             location, arena.ball, this
@@ -750,11 +782,14 @@ abstract class SoccerGameImpl(
     }
 
     protected fun destroyBall() {
+        checkForPluginMainThread()
         ball?.remove()
         ball = null
     }
 
     protected fun setGameClosing() {
+        checkForPluginMainThread()
+
         if (closing) {
             return
         }

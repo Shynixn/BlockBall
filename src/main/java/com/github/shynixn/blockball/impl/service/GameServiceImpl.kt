@@ -1,6 +1,8 @@
 package com.github.shynixn.blockball.impl.service
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
+import com.github.shynixn.blockball.BlockBallPlugin
 import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
@@ -11,6 +13,8 @@ import com.github.shynixn.blockball.impl.SoccerHubGameImpl
 import com.github.shynixn.blockball.impl.SoccerMiniGameImpl
 import com.github.shynixn.blockball.impl.SoccerRefereeGameImpl
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
+import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
@@ -20,6 +24,7 @@ import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -40,23 +45,29 @@ class GameServiceImpl(
     private val soccerBallFactory: SoccerBallFactory,
     private val language: BlockBallLanguage,
     private val itemService: ItemService
-) : GameService, Runnable {
-    private val games = ArrayList<SoccerGame>()
+) : GameService {
+    @Volatile
+    private var games: List<SoccerGame> = ArrayList()
     private var ticks: Int = 0
+    private var isDisposed = false
 
     /**
      * Init.
      */
     init {
-        plugin.server.scheduler.runTaskTimer(
-            plugin, Runnable { this.run() }, 0L, 1L
-        )
+        plugin.launch {
+            while (!isDisposed) {
+                runGames()
+                delay(1.ticks)
+            }
+        }
     }
 
     /**
      * Reloads all games.
      */
     override suspend fun reloadAll() {
+        checkForPluginMainThread()
         close()
 
         val arenas = arenaRepository.getAll()
@@ -70,12 +81,16 @@ class GameServiceImpl(
      * Reloads the specific game.
      */
     override suspend fun reload(arena: SoccerArena) {
+        checkForPluginMainThread()
+
         // A game with the same arena name is currently running. Stop it and reboot it.
         val existingGame = getByName(arena.name)
 
         if (existingGame != null) {
             existingGame.close()
-            games.remove(existingGame)
+            val copy = games.toMutableList()
+            copy.remove(existingGame)
+            games = copy
             plugin.logger.log(Level.INFO, "Stopped game '" + arena.name + "'.")
         }
 
@@ -129,26 +144,18 @@ class GameServiceImpl(
                 }
             }
 
-            games.add(game)
+            val copy = games.toMutableList()
+            copy.add(game)
+            games = copy
             plugin.logger.log(Level.INFO, "Game '" + arena.name + "' is ready.")
         } else {
             plugin.logger.log(Level.INFO, "Cannot boot game '" + arena.name + "' because it is not enabled.")
         }
     }
 
-    /**
-     * When an object implementing interface `Runnable` is used
-     * to create a thread, starting the thread causes the object's
-     * `run` method to be called in that separately executing
-     * thread.
-     *
-     *
-     * The general contract of the method `run` is that it may
-     * take any action whatsoever.
-     *
-     * @see java.lang.Thread.run
-     */
-    override fun run() {
+    private fun runGames() {
+        checkForPluginMainThread()
+
         games.toTypedArray().forEach { game ->
             if (game.closed) {
                 runBlocking {
@@ -203,6 +210,9 @@ class GameServiceImpl(
      * Closes all games permanently and should be executed on server shutdown.
      */
     override fun close() {
+        checkForPluginMainThread()
+        isDisposed = true
+
         for (game in this.games) {
             try {
                 game.close()
@@ -211,7 +221,7 @@ class GameServiceImpl(
             }
         }
 
-        games.clear()
+        games = ArrayList()
     }
 
     private fun validateGame(arena: SoccerArena) {

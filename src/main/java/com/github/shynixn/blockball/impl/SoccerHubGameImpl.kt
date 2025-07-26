@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerHubGame
@@ -31,7 +32,6 @@ class SoccerHubGameImpl(
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
-    packetService,
     plugin,
     soccerBallFactory,
     commandService,
@@ -46,6 +46,8 @@ class SoccerHubGameImpl(
      * 0 - 20 for each second.
      */
     override fun handle(ticks: Int) {
+        checkForPluginMainThread()
+
         // Handle HubGame ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
@@ -85,6 +87,8 @@ class SoccerHubGameImpl(
      * Closes the given game and all underlying resources.
      */
     override fun close() {
+        checkForPluginMainThread()
+
         if (closed) {
             return
         }
@@ -100,6 +104,8 @@ class SoccerHubGameImpl(
     }
 
     override fun setPlayerToArena(player: Player, team: Team) {
+        checkForPluginMainThread()
+
         if (arena.meta.hubLobbyMeta.teleportOnJoin) {
             this.respawn(player)
         } else {
