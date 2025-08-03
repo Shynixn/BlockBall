@@ -89,7 +89,7 @@ class SoccerRefereeGameImpl(
     /**
      * Tick handle.
      */
-    override fun handle(ticks: Int) {
+    override fun handle(hasSecondPassed: Boolean) {
         checkForPluginMainThread()
 
         // Handle ticking.
@@ -111,7 +111,7 @@ class SoccerRefereeGameImpl(
             setGameClosing()
         }
 
-        if (ticks >= 20) {
+        if (hasSecondPassed) {
             // Display the message.
             if (!playing && !lobbyCountDownActive) {
                 sendBroadcastMessage(language.waitingForRefereeToStart.text, language.waitingForRefereeToStartHint.text)
@@ -234,7 +234,7 @@ class SoccerRefereeGameImpl(
         }
 
         // Update signs and protections.
-        super.handleMiniGameEssentials(ticks)
+        super.handleMiniGameEssentials(hasSecondPassed)
     }
 
     private fun sendBroadcastMessage(playerMessage: String, refereeMessage: String) {

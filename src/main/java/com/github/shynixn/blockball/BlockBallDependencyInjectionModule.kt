@@ -147,7 +147,7 @@ class BlockBallDependencyInjectionModule(
         module.addService<BallListener> { BallListener(module.getService(), module.getService()) }
         module.addService<DoubleJumpListener> { DoubleJumpListener(module.getService(), module.getService()) }
         module.addService<GameListener> {
-            GameListener(module.getService(), module.getService(), module.getService(), module.getService())
+            GameListener(module.getService(), module.getService(), module.getService(), module.getService(), module.getService())
         }
         module.addService<HubgameListener> { HubgameListener(module.getService(), module.getService(), module.getService(), module.getService(), module.getService()) }
         module.addService<MinigameListener> { MinigameListener(module.getService(), module.getService()) }

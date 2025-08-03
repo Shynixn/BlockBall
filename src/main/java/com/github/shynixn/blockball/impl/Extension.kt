@@ -2,6 +2,7 @@ import com.github.shynixn.mccoroutine.folia.isFoliaLoaded
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import java.lang.reflect.Method
 
@@ -26,5 +27,15 @@ fun Player.teleportCompat(plugin: Plugin, location: Location) {
         teleportMethodRef!!.invoke(player, location)
     } else {
         teleport(location)
+    }
+}
+
+fun Player.setInventoryContentsSecure(items: List<ItemStack?>) {
+    val player = this
+    // There is a bug in 1.21.6. which returns a too many item array in getContents which causes bugs in setContents.
+    var i = 0
+    while (i < items.size && i < 36) {
+        player.inventory.setItem(i, items[i])
+        i++
     }
 }

@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
+import com.github.shynixn.mccoroutine.folia.isFoliaLoaded
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.regionDispatcher
 import com.github.shynixn.mcutils.common.ChatColor
@@ -129,6 +130,10 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
 
         logger.log(Level.INFO, "Loaded NMS version ${Version.serverVersion}.")
 
+        if (isFoliaLoaded()) {
+            logger.log(Level.INFO, "Loading Folia components.")
+        }
+
         launch {
             pluginMainThreadId = Thread.currentThread().id
         }
@@ -225,11 +230,6 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
         if (immediateDisable) {
             return
         }
-
-        module.getService<PacketService>().close()
-        module.getService<AreaSelectionService>().close()
-        module.getService<StatsService>().close()
-
         val playerDataRepository = module.getService<CachePlayerRepository<PlayerInformation>>()
         runBlocking {
             playerDataRepository.saveAll()
@@ -237,15 +237,10 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
             playerDataRepository.close()
         }
 
-        try {
-            module.getService<GameService>().close()
-        } catch (e: Exception) {
-            // Ignored.
-        }
-
         module.close()
         scoreboardModule.close()
         bossBarModule.close()
+        signModule.close()
     }
 
     private fun loadShyBossBarModule(

@@ -2,8 +2,10 @@ package com.github.shynixn.blockball.impl.service
 
 import checkForPluginMainThread
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
-import com.github.shynixn.blockball.BlockBallPlugin
-import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.SoccerBallFactory
+import com.github.shynixn.blockball.contract.SoccerGame
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
@@ -13,7 +15,9 @@ import com.github.shynixn.blockball.impl.SoccerHubGameImpl
 import com.github.shynixn.blockball.impl.SoccerMiniGameImpl
 import com.github.shynixn.blockball.impl.SoccerRefereeGameImpl
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
+import com.github.shynixn.mccoroutine.folia.isFoliaLoaded
 import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.mcCoroutineConfiguration
 import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -45,9 +49,11 @@ class GameServiceImpl(
     private val language: BlockBallLanguage,
     private val itemService: ItemService
 ) : GameService {
+    private val isFoliaLoaded = plugin.mcCoroutineConfiguration.isFoliaLoaded
+
     @Volatile
     private var games: List<SoccerGame> = ArrayList()
-    private var ticks: Int = 0
+    private var timeStampLastSecond = 0L
     private var isDisposed = false
 
     /**
@@ -155,19 +161,21 @@ class GameServiceImpl(
     private suspend fun runGames() {
         checkForPluginMainThread()
 
+        val currentMilliSeconds = System.currentTimeMillis()
+        val hasSecondPassed = if (currentMilliSeconds - timeStampLastSecond >= 1000) {
+            timeStampLastSecond = currentMilliSeconds
+            true
+        } else {
+            false
+        }
+
         games.toTypedArray().forEach { game ->
             if (game.closed) {
                 reload(game.arena)
             } else {
-                game.handle(ticks)
+                game.handle(hasSecondPassed)
             }
         }
-
-        if (ticks >= 20) {
-            ticks = 0
-        }
-
-        ticks++
     }
 
     /**
@@ -207,8 +215,10 @@ class GameServiceImpl(
      * Closes all games permanently and should be executed on server shutdown.
      */
     override fun close() {
-        checkForPluginMainThread()
-        closeGames()
+        if (!isFoliaLoaded) {
+            closeGames()
+        }
+
         isDisposed = true
     }
 
@@ -227,8 +237,7 @@ class GameServiceImpl(
     private fun validateGame(arena: SoccerArena) {
         if (arena.gameType == GameType.REFEREEGAME && !BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
             throw SoccerGameException(
-                arena,
-                language.gameTypeRefereeOnlyForPatreons.text
+                arena, language.gameTypeRefereeOnlyForPatreons.text
             )
         }
         if (arena.ballSpawnPoint == null) {
@@ -298,20 +307,17 @@ class GameServiceImpl(
 
         if (abs(teamMeta.goal.corner1!!.x - teamMeta.goal.corner2!!.x) < 1.8) {
             throw SoccerGameException(
-                arena,
-                "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
+                arena, "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
             )
         }
         if (abs(teamMeta.goal.corner1!!.y - teamMeta.goal.corner2!!.y) < 1.8) {
             throw SoccerGameException(
-                arena,
-                "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
+                arena, "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
             )
         }
         if (abs(teamMeta.goal.corner1!!.z - teamMeta.goal.corner2!!.z) < 1.8) {
             throw SoccerGameException(
-                arena,
-                "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
+                arena, "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
             )
         }
     }

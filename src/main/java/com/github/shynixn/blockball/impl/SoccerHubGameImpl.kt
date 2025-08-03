@@ -42,10 +42,9 @@ class SoccerHubGameImpl(
 ),
     SoccerHubGame {
     /**
-     * Handles the game actions per tick. [ticks] parameter shows the amount of ticks
-     * 0 - 20 for each second.
+     * Handles the game actions per tick.
      */
-    override fun handle(ticks: Int) {
+    override fun handle(hasSecondPassed: Boolean) {
         checkForPluginMainThread()
 
         // Handle HubGame ticking.
@@ -80,7 +79,7 @@ class SoccerHubGameImpl(
         // Handle SoccerBall.
         this.handleBallSpawning()
         // TODO: Minigame essentials. Update signs and protections.
-        super.handleMiniGameEssentials(ticks)
+        super.handleMiniGameEssentials(hasSecondPassed)
     }
 
     /**

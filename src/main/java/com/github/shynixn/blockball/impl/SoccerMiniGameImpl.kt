@@ -91,7 +91,7 @@ open class SoccerMiniGameImpl(
     /**
      * Tick handle.
      */
-    override fun handle(ticks: Int) {
+    override fun handle(hasSecondPassed: Boolean) {
         checkForPluginMainThread()
 
         // Handle HubGame ticking.
@@ -113,7 +113,7 @@ open class SoccerMiniGameImpl(
             setGameClosing()
         }
 
-        if (ticks >= 20) {
+        if (hasSecondPassed) {
             if (lobbyCountDownActive) {
                 isQueueTimeRunning = false
 
@@ -212,7 +212,7 @@ open class SoccerMiniGameImpl(
         this.handleBallSpawning()
 
         // Update signs and protections.
-        super.handleMiniGameEssentials(ticks)
+        super.handleMiniGameEssentials(hasSecondPassed)
     }
 
     /**
@@ -310,7 +310,7 @@ open class SoccerMiniGameImpl(
         val location = teamMeta.lobbySpawnpoint!!.toLocation()
 
         plugin.launch(plugin.entityDispatcher(player)) {
-            player.teleportCompat(plugin,location)
+            player.teleportCompat(plugin, location)
         }
     }
 

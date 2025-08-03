@@ -1,9 +1,15 @@
 package com.github.shynixn.blockball.impl
 
 import checkForPluginMainThread
-import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.SoccerBall
+import com.github.shynixn.blockball.contract.SoccerBallFactory
+import com.github.shynixn.blockball.contract.SoccerGame
 import com.github.shynixn.blockball.entity.*
-import com.github.shynixn.blockball.enumeration.*
+import com.github.shynixn.blockball.enumeration.GameState
+import com.github.shynixn.blockball.enumeration.JoinResult
+import com.github.shynixn.blockball.enumeration.LeaveResult
+import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.GameEndEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.blockball.event.GameJoinEvent
@@ -12,21 +18,23 @@ import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
-import com.github.shynixn.mcutils.common.*
+import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.deserializeItemStack
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
+import com.github.shynixn.mcutils.common.serializeItemStack
+import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
-import com.github.shynixn.mcutils.packet.api.PacketService
 import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
+import setInventoryContentsSecure
 import teleportCompat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -224,6 +232,7 @@ abstract class SoccerGameImpl(
         plugin.launch {
             val playerData = playerDataRepository.getByPlayer(player)
             if (playerData != null) {
+                playerData.cachedStorage = ingamePlayersStorage[player]
                 playerData.statsMeta.joinedGames++
             }
         }
@@ -261,11 +270,23 @@ abstract class SoccerGameImpl(
 
         ingamePlayersStorage.remove(player)
 
+        plugin.launch {
+            val playerData = playerDataRepository.getByPlayer(player)
+
+            if (playerData != null) {
+                plugin.launch(plugin.entityDispatcher(player)) {
+                    if (player.isOnline) {
+                        playerData.cachedStorage = null
+                    }
+                }
+            }
+        }
+
         if (arena.meta.lobbyMeta.leaveSpawnpoint != null) {
             val teleportTarget = arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation()
 
             plugin.launch(plugin.entityDispatcher(player)) {
-                player.teleportCompat(plugin,teleportTarget)
+                player.teleportCompat(plugin, teleportTarget)
             }
         }
 
@@ -275,10 +296,10 @@ abstract class SoccerGameImpl(
     /**
      * Tick handle.
      */
-    fun handleMiniGameEssentials(ticks: Int) {
+    fun handleMiniGameEssentials(hasSecondPassed: Boolean) {
         checkForPluginMainThread()
 
-        if (ticks >= 20) {
+        if (hasSecondPassed) {
             if (closing) {
                 return
             }
@@ -670,7 +691,7 @@ abstract class SoccerGameImpl(
 
                 if (location != null) {
                     plugin.launch(plugin.entityDispatcher(player)) {
-                        player.teleportCompat(plugin,location)
+                        player.teleportCompat(plugin, location)
                     }
                 }
             }
@@ -694,8 +715,10 @@ abstract class SoccerGameImpl(
 
         plugin.launch(plugin.entityDispatcher(player)) {
             stats.gameMode = player.gameMode
-            stats.armorContents = player.inventory.armorContents.clone()
-            stats.inventoryContents = player.inventory.contents.clone()
+            stats.armorContents =
+                player.inventory.armorContents.map { itemService.serializeItemStack(it) }.toTypedArray()
+            stats.inventoryContents =
+                player.inventory.contents.map { itemService.serializeItemStack(it) }.toTypedArray()
             stats.level = player.level
             stats.exp = player.exp.toDouble()
             stats.maxHealth = player.maxHealth
@@ -717,7 +740,7 @@ abstract class SoccerGameImpl(
             }
 
             if (!arena.meta.customizingMeta.keepInventoryEnabled) {
-                setInventoryContentsSecure(player, teamMeta.inventory.map { e -> itemService.deserializeItemStack(e) })
+                player.setInventoryContentsSecure(teamMeta.inventory.map { e -> itemService.deserializeItemStack(e) })
                 player.inventory.setArmorContents(teamMeta.armor.map { e -> itemService.deserializeItemStack(e) }
                     .toTypedArray())
                 player.updateInventory()
@@ -742,8 +765,10 @@ abstract class SoccerGameImpl(
             }
 
             if (!arena.meta.customizingMeta.keepInventoryEnabled) {
-                setInventoryContentsSecure(player, stats.inventoryContents.clone().toList())
-                player.inventory.setArmorContents(stats.armorContents.clone())
+                player.setInventoryContentsSecure(
+                    stats.inventoryContents.map { e -> itemService.deserializeItemStack(e) })
+                player.inventory.setArmorContents(stats.armorContents.map { e -> itemService.deserializeItemStack(e) }
+                    .toTypedArray())
                 player.updateInventory()
             }
         }
@@ -784,7 +809,7 @@ abstract class SoccerGameImpl(
         return players
     }
 
-    // region Referee
+
     /**
      * Respawns the ball and sets it to the given location.
      * This is only relevant for the referee.
@@ -815,16 +840,5 @@ abstract class SoccerGameImpl(
         }
 
         closing = true
-    }
-
-    // endregion
-
-    private fun setInventoryContentsSecure(player: Player, items: List<ItemStack?>) {
-        // There is a bug in 1.21.6. which returns a too many item array in getContents which causes bugs in setContents.
-        var i = 0
-        while (i < items.size && i < 36) {
-            player.inventory.setItem(i, items[i])
-            i++
-        }
     }
 }
