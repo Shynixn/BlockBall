@@ -86,8 +86,9 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-latest.${archiveExtension.get()}")
-    // destinationDirectory.set(File("C:\\temp\\plugins"))
+    /// destinationDirectory.set(File("C:\\git\\mc\\plugins"))
 
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_9_R2/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_17_R1/**")
@@ -126,8 +127,9 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-premium.${archiveExtension.get()}")
-    // destinationDirectory.set(File("C:\\temp\\plugins"))
+    // destinationDirectory.set(File("C:\\git\\mc\\plugins"))
 
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
@@ -220,6 +222,7 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-legacy.${archiveExtension.get()}")
     // destinationDirectory.set(File("C:\\temp\\plugins"))
 
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")

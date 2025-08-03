@@ -15,7 +15,6 @@ import com.github.shynixn.blockball.impl.SoccerHubGameImpl
 import com.github.shynixn.blockball.impl.SoccerMiniGameImpl
 import com.github.shynixn.blockball.impl.SoccerRefereeGameImpl
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
-import com.github.shynixn.mccoroutine.folia.isFoliaLoaded
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.mcCoroutineConfiguration
 import com.github.shynixn.mccoroutine.folia.ticks
@@ -215,10 +214,6 @@ class GameServiceImpl(
      * Closes all games permanently and should be executed on server shutdown.
      */
     override fun close() {
-        if (!isFoliaLoaded) {
-            closeGames()
-        }
-
         isDisposed = true
     }
 
