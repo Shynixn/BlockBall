@@ -12,10 +12,12 @@ import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
 import com.github.shynixn.mccoroutine.folia.isFoliaLoaded
 import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.mcCoroutineConfiguration
 import com.github.shynixn.mccoroutine.folia.regionDispatcher
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.CoroutinePlugin
 import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.common.checkIfFoliaIsLoadable
 import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
 import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
@@ -61,10 +63,10 @@ import kotlin.coroutines.CoroutineContext
  */
 class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
     private val prefix: String = ChatColor.BLUE.toString() + "[BlockBall] "
-    private lateinit var module: DependencyInjectionModule
-    private lateinit var scoreboardModule: DependencyInjectionModule
-    private lateinit var bossBarModule: DependencyInjectionModule
-    private lateinit var signModule: DependencyInjectionModule
+    private var module: DependencyInjectionModule? = null
+    private var scoreboardModule: DependencyInjectionModule? = null
+    private var bossBarModule: DependencyInjectionModule? = null
+    private var signModule: DependencyInjectionModule? = null
     private var immediateDisable = false
 
     companion object {
@@ -130,6 +132,16 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
 
         logger.log(Level.INFO, "Loaded NMS version ${Version.serverVersion}.")
 
+        if (mcCoroutineConfiguration.isFoliaLoaded && !checkIfFoliaIsLoadable()) {
+            logger.log(Level.SEVERE, "================================================")
+            logger.log(Level.SEVERE, "BlockBall for Folia requires BlockBall-Premium-Folia.jar")
+            logger.log(Level.SEVERE, "Go to https://www.patreon.com/Shynixn to download it.")
+            logger.log(Level.SEVERE, "Plugin gets now disabled!")
+            logger.log(Level.SEVERE, "================================================")
+            Bukkit.getPluginManager().disablePlugin(this)
+            return
+        }
+
         if (isFoliaLoaded()) {
             logger.log(Level.INFO, "Loading Folia components.")
         }
@@ -152,7 +164,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
 
         // Connect to database
         try {
-            val playerDataRepository = module.getService<PlayerDataRepository<PlayerInformation>>()
+            val playerDataRepository = module!!.getService<PlayerDataRepository<PlayerInformation>>()
             playerDataRepository.createIfNotExist()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -162,32 +174,32 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
 
         // Register PlaceHolder
         PlaceHolder.registerAll(
-            module.getService(), module.getService(), module.getService(), module.getService()
+            module!!.getService(), module!!.getService(), module!!.getService(), module!!.getService()
         )
 
         // Register Packet
-        module.getService<PacketService>().registerPacketListening(PacketInType.USEENTITY)
+        module!!.getService<PacketService>().registerPacketListening(PacketInType.USEENTITY)
 
         // Register Listeners
-        Bukkit.getPluginManager().registerEvents(module.getService<GameListener>(), this)
-        Bukkit.getPluginManager().registerEvents(module.getService<DoubleJumpListener>(), this)
-        Bukkit.getPluginManager().registerEvents(module.getService<HubgameListener>(), this)
-        Bukkit.getPluginManager().registerEvents(module.getService<MinigameListener>(), this)
-        Bukkit.getPluginManager().registerEvents(module.getService<BallListener>(), this)
+        Bukkit.getPluginManager().registerEvents(module!!.getService<GameListener>(), this)
+        Bukkit.getPluginManager().registerEvents(module!!.getService<DoubleJumpListener>(), this)
+        Bukkit.getPluginManager().registerEvents(module!!.getService<HubgameListener>(), this)
+        Bukkit.getPluginManager().registerEvents(module!!.getService<MinigameListener>(), this)
+        Bukkit.getPluginManager().registerEvents(module!!.getService<BallListener>(), this)
 
         // Register CommandExecutor
-        module.getService<BlockBallCommandExecutor>()
+        module!!.getService<BlockBallCommandExecutor>()
 
         // Service dependencies
         Bukkit.getServicesManager().register(
-            SoccerBallFactory::class.java, module.getService<SoccerBallFactory>(), this, ServicePriority.Normal
+            SoccerBallFactory::class.java, module!!.getService<SoccerBallFactory>(), this, ServicePriority.Normal
         )
         Bukkit.getServicesManager()
-            .register(GameService::class.java, module.getService<GameService>(), this, ServicePriority.Normal)
+            .register(GameService::class.java, module!!.getService<GameService>(), this, ServicePriority.Normal)
         val plugin = this
         plugin.launch {
             // Load Games
-            val gameService = module.getService<GameService>()
+            val gameService = module!!.getService<GameService>()
             try {
                 gameService.reloadAll()
             } catch (e: SoccerGameException) {
@@ -195,8 +207,8 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
             }
 
             // Enable stats
-            module.getService<StatsService>().register()
-            val playerDataRepository = module.getService<PlayerDataRepository<PlayerInformation>>()
+            module!!.getService<StatsService>().register()
+            val playerDataRepository = module!!.getService<PlayerDataRepository<PlayerInformation>>()
             for (player in Bukkit.getOnlinePlayers()) {
                 playerDataRepository.getByPlayer(player)
             }
@@ -230,17 +242,17 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
         if (immediateDisable) {
             return
         }
-        val playerDataRepository = module.getService<CachePlayerRepository<PlayerInformation>>()
+        val playerDataRepository = module?.getService<CachePlayerRepository<PlayerInformation>>()
         runBlocking {
-            playerDataRepository.saveAll()
-            playerDataRepository.clearAll()
-            playerDataRepository.close()
+            playerDataRepository?.saveAll()
+            playerDataRepository?.clearAll()
+            playerDataRepository?.close()
         }
 
-        module.close()
-        scoreboardModule.close()
-        bossBarModule.close()
-        signModule.close()
+        module?.close()
+        scoreboardModule?.close()
+        bossBarModule?.close()
+        signModule?.close()
     }
 
     private fun loadShyBossBarModule(

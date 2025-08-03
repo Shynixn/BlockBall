@@ -63,6 +63,7 @@ tasks.withType<ShadowJar> {
 tasks.register("pluginJars") {
     dependsOn("pluginJarLatest")
     dependsOn("pluginJarPremium")
+    dependsOn("pluginJarPremiumFolia")
     dependsOn("pluginJarLegacy")
 }
 

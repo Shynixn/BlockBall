@@ -75,6 +75,17 @@ jobs:
           asset_name: BlockBall-Premium.jar
           asset_content_type: application/jar
 
+      - name: Upload Premium Folia Release to Github
+        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-root-${{ env.RELEASE_VERSION }}-premium-folia.jar
+          asset_name: BlockBall-Premium-Folia.jar
+          asset_content_type: application/jar
+
       - name: Upload Legacy Bukkit Release to Github
         if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
         uses: actions/upload-release-asset@v1
