@@ -43,16 +43,17 @@ class DoubleJumpListener (
 
         val game = gameService.getByPlayer(event.player) ?: return
 
-        if (!game.arena.meta.doubleJumpMeta.enabled) {
-            return
-        }
-
         val player = event.player
         val meta = game.arena.meta.doubleJumpMeta
 
         player.allowFlight = false
         player.isFlying = false
         event.isCancelled = true
+
+        // This has to be to ensure that the minigame force field does not grant the players flight.
+        if (!game.arena.meta.doubleJumpMeta.enabled) {
+            return
+        }
 
         if (game.doubleJumpCoolDownPlayers.containsKey(player)) {
             return
