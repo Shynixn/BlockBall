@@ -10,6 +10,7 @@ Are you looking for the 6.x.x wiki? You can access it via [the WayBackMachine](h
 * A moving SoccerBall without any resource pack
 * A customizable physic engine for the SoccerBall
 * PlaceHolderApi Support
+* Bukkit and Folia compatible
 * Multiple games per server
 * Player Stats collecting (Patreon Only)
 

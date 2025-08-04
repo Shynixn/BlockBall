@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList
 /**
  * Base BlockBall event where all BlockBall events inherit from.
  */
-open class BlockBallEvent : Event(), Cancellable {
+open class BlockBallEvent : Event(true), Cancellable {
     private var cancelled: Boolean = false
 
     /**

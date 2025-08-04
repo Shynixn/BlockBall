@@ -1,9 +1,11 @@
 package com.github.shynixn.blockball.impl
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.event.BallRemoveEvent
 import com.github.shynixn.blockball.event.BallTeleportEvent
+import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector
 import com.github.shynixn.mcutils.common.toVector3d
@@ -33,6 +35,14 @@ class SoccerBallCrossPlatformProxy(
             ballDesignEntity.destroy(player)
             ballHitBoxEntity.destroy(player)
         })
+
+    fun startTicking() {
+        plugin.launch {
+            while (!isDead) {
+                run()
+            }
+        }
+    }
 
     /**
      * Is the entity dead?
@@ -76,6 +86,8 @@ class SoccerBallCrossPlatformProxy(
      * Teleports the ball to the given [location].
      */
     override fun teleport(location: Location) {
+        checkForPluginMainThread()
+
         val ballTeleportEvent = BallTeleportEvent(this, location)
         Bukkit.getPluginManager().callEvent(ballTeleportEvent)
 
@@ -100,6 +112,7 @@ class SoccerBallCrossPlatformProxy(
     override fun getVelocity(): Vector {
         return ballHitBoxEntity.motion.toVector()
     }
+
     /**
      * Shoot the ball by the given player.
      * The calculated velocity can be manipulated by the BallLeftClickEvent.
@@ -107,6 +120,8 @@ class SoccerBallCrossPlatformProxy(
      * @param player
      */
     override fun kickByPlayer(player: Player) {
+        checkForPluginMainThread()
+
         if (!meta.hitbox.leftClickEnabled) {
             return
         }
@@ -125,6 +140,8 @@ class SoccerBallCrossPlatformProxy(
      * @param player
      */
     override fun passByPlayer(player: Player) {
+        checkForPluginMainThread()
+
         if (!meta.hitbox.rightClickEnabled) {
             return
         }
@@ -140,6 +157,8 @@ class SoccerBallCrossPlatformProxy(
      * Removes the ball.
      */
     override fun remove() {
+        checkForPluginMainThread()
+
         if (isDead) {
             return
         }
@@ -159,7 +178,9 @@ class SoccerBallCrossPlatformProxy(
     /**
      * Runnable. Should not be called directly.
      */
-    override fun run() {
+    private suspend fun run() {
+        checkForPluginMainThread()
+
         if (isDead) {
             return
         }

@@ -22,4 +22,9 @@ class PlayerInformation : PlayerData {
      * Collected stats meta.
      */
     var statsMeta: StatsMeta = StatsMeta()
+
+    /**
+     * Cached game storage for crashes.
+     */
+    var cachedStorage: GameStorage? = null
 }

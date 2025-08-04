@@ -3,7 +3,7 @@ package com.github.shynixn.blockball.contract
 import com.github.shynixn.blockball.entity.SoccerArena
 import org.bukkit.entity.Player
 
-interface GameService {
+interface GameService : AutoCloseable {
     /**
      * Reloads all games.
      */
@@ -28,9 +28,4 @@ interface GameService {
      * Tries to locate a game of the given name.
      */
     fun getByName(name: String): SoccerGame?
-
-    /**
-     * Disposes all running games.
-     */
-    fun close()
 }

@@ -8,12 +8,16 @@ import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
-import com.github.shynixn.mccoroutine.bukkit.CoroutineTimings
-import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
+import com.github.shynixn.mccoroutine.folia.entityDispatcher
+import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
+import com.github.shynixn.mccoroutine.folia.isFoliaLoaded
+import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.mcCoroutineConfiguration
+import com.github.shynixn.mccoroutine.folia.regionDispatcher
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.CoroutinePlugin
 import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.common.checkIfFoliaIsLoadable
 import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
 import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
@@ -49,6 +53,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
+import pluginMainThreadId
 import java.util.logging.Level
 import kotlin.coroutines.CoroutineContext
 
@@ -58,10 +63,10 @@ import kotlin.coroutines.CoroutineContext
  */
 class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
     private val prefix: String = ChatColor.BLUE.toString() + "[BlockBall] "
-    private lateinit var module: DependencyInjectionModule
-    private lateinit var scoreboardModule: DependencyInjectionModule
-    private lateinit var bossBarModule: DependencyInjectionModule
-    private lateinit var signModule : DependencyInjectionModule
+    private var module: DependencyInjectionModule? = null
+    private var scoreboardModule: DependencyInjectionModule? = null
+    private var bossBarModule: DependencyInjectionModule? = null
+    private var signModule: DependencyInjectionModule? = null
     private var immediateDisable = false
 
     companion object {
@@ -127,6 +132,24 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
 
         logger.log(Level.INFO, "Loaded NMS version ${Version.serverVersion}.")
 
+        if (mcCoroutineConfiguration.isFoliaLoaded && !checkIfFoliaIsLoadable()) {
+            logger.log(Level.SEVERE, "================================================")
+            logger.log(Level.SEVERE, "BlockBall for Folia requires BlockBall-Premium-Folia.jar")
+            logger.log(Level.SEVERE, "Go to https://www.patreon.com/Shynixn to download it.")
+            logger.log(Level.SEVERE, "Plugin gets now disabled!")
+            logger.log(Level.SEVERE, "================================================")
+            Bukkit.getPluginManager().disablePlugin(this)
+            return
+        }
+
+        if (isFoliaLoaded()) {
+            logger.log(Level.INFO, "Loading Folia components.")
+        }
+
+        launch {
+            pluginMainThreadId = Thread.currentThread().id
+        }
+
         // Load BlockBallLanguage
         val language = BlockBallLanguageImpl()
         reloadTranslation(language)
@@ -141,7 +164,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
 
         // Connect to database
         try {
-            val playerDataRepository = module.getService<PlayerDataRepository<PlayerInformation>>()
+            val playerDataRepository = module!!.getService<PlayerDataRepository<PlayerInformation>>()
             playerDataRepository.createIfNotExist()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -151,32 +174,32 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
 
         // Register PlaceHolder
         PlaceHolder.registerAll(
-            module.getService(), module.getService(), module.getService(), module.getService()
+            module!!.getService(), module!!.getService(), module!!.getService(), module!!.getService()
         )
 
         // Register Packet
-        module.getService<PacketService>().registerPacketListening(PacketInType.USEENTITY)
+        module!!.getService<PacketService>().registerPacketListening(PacketInType.USEENTITY)
 
         // Register Listeners
-        Bukkit.getPluginManager().registerEvents(module.getService<GameListener>(), this)
-        Bukkit.getPluginManager().registerEvents(module.getService<DoubleJumpListener>(), this)
-        Bukkit.getPluginManager().registerEvents(module.getService<HubgameListener>(), this)
-        Bukkit.getPluginManager().registerEvents(module.getService<MinigameListener>(), this)
-        Bukkit.getPluginManager().registerEvents(module.getService<BallListener>(), this)
+        Bukkit.getPluginManager().registerEvents(module!!.getService<GameListener>(), this)
+        Bukkit.getPluginManager().registerEvents(module!!.getService<DoubleJumpListener>(), this)
+        Bukkit.getPluginManager().registerEvents(module!!.getService<HubgameListener>(), this)
+        Bukkit.getPluginManager().registerEvents(module!!.getService<MinigameListener>(), this)
+        Bukkit.getPluginManager().registerEvents(module!!.getService<BallListener>(), this)
 
         // Register CommandExecutor
-        module.getService<BlockBallCommandExecutor>()
+        module!!.getService<BlockBallCommandExecutor>()
 
         // Service dependencies
         Bukkit.getServicesManager().register(
-            SoccerBallFactory::class.java, module.getService<SoccerBallFactory>(), this, ServicePriority.Normal
+            SoccerBallFactory::class.java, module!!.getService<SoccerBallFactory>(), this, ServicePriority.Normal
         )
         Bukkit.getServicesManager()
-            .register(GameService::class.java, module.getService<GameService>(), this, ServicePriority.Normal)
+            .register(GameService::class.java, module!!.getService<GameService>(), this, ServicePriority.Normal)
         val plugin = this
-        plugin.launch(object : CoroutineTimings() {}) {
+        plugin.launch {
             // Load Games
-            val gameService = module.getService<GameService>()
+            val gameService = module!!.getService<GameService>()
             try {
                 gameService.reloadAll()
             } catch (e: SoccerGameException) {
@@ -184,8 +207,8 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
             }
 
             // Enable stats
-            module.getService<StatsService>().register()
-            val playerDataRepository = module.getService<PlayerDataRepository<PlayerInformation>>()
+            module!!.getService<StatsService>().register()
+            val playerDataRepository = module!!.getService<PlayerDataRepository<PlayerInformation>>()
             for (player in Bukkit.getOnlinePlayers()) {
                 playerDataRepository.getByPlayer(player)
             }
@@ -201,15 +224,15 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
     }
 
     override fun fetchEntityDispatcher(entity: Entity): CoroutineContext {
-        return minecraftDispatcher
+        return entityDispatcher(entity)
     }
 
     override fun fetchGlobalRegionDispatcher(): CoroutineContext {
-        return minecraftDispatcher
+        return globalRegionDispatcher
     }
 
     override fun fetchLocationDispatcher(location: Location): CoroutineContext {
-        return minecraftDispatcher
+        return regionDispatcher(location)
     }
 
     /**
@@ -219,27 +242,17 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
         if (immediateDisable) {
             return
         }
-
-        module.getService<PacketService>().close()
-        module.getService<AreaSelectionService>().close()
-        module.getService<StatsService>().close()
-
-        val playerDataRepository = module.getService<CachePlayerRepository<PlayerInformation>>()
+        val playerDataRepository = module?.getService<CachePlayerRepository<PlayerInformation>>()
         runBlocking {
-            playerDataRepository.saveAll()
-            playerDataRepository.clearAll()
-            playerDataRepository.close()
+            playerDataRepository?.saveAll()
+            playerDataRepository?.clearAll()
+            playerDataRepository?.close()
         }
 
-        try {
-            module.getService<GameService>().close()
-        } catch (e: Exception) {
-            // Ignored.
-        }
-
-        module.close()
-        scoreboardModule.close()
-        bossBarModule.close()
+        module?.close()
+        scoreboardModule?.close()
+        bossBarModule?.close()
+        signModule?.close()
     }
 
     private fun loadShyBossBarModule(

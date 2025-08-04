@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
+import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandBuilder
@@ -571,13 +572,15 @@ class BlockBallCommandExecutor(
         }
     }
 
-    private fun setBallRelativeToPlayerLocation(player: Player, forward: Double, sideWard: Double) {
+    private suspend fun setBallRelativeToPlayerLocation(player: Player, forward: Double, sideWard: Double) {
         val game = gameService.getByPlayer(player) ?: return
-        val target = player.location.toVector3d().addRelativeFront(forward).addRelativeLeft(sideWard).toLocation()
+        val target = withContext(plugin.entityDispatcher(player)) {
+            player.location.toVector3d().addRelativeFront(forward).addRelativeLeft(sideWard).toLocation()
+        }
         game.setBallToLocation(target)
     }
 
-    private fun setBallToPlayerLocation(
+    private suspend fun setBallToPlayerLocation(
         player: Player,
         x: Double? = null,
         y: Double? = null,
@@ -587,7 +590,9 @@ class BlockBallCommandExecutor(
         world: World? = null
     ) {
         val game = gameService.getByPlayer(player) ?: return
-        val location = player.location.clone()
+        val location = withContext(plugin.entityDispatcher(player)) {
+            player.location.clone()
+        }
 
         if (x != null) {
             location.x = x
@@ -703,15 +708,17 @@ class BlockBallCommandExecutor(
     }
 
     private suspend fun setInventory(player: Player, arena: SoccerArena, teamMetadata: TeamMeta) {
-        teamMetadata.inventory =
+        teamMetadata.inventory = withContext(plugin.entityDispatcher(player)) {
             player.inventory.contents.clone().map { e -> itemService.serializeItemStack(e) }.toTypedArray()
+        }
         arenaRepository.save(arena)
         player.sendLanguageMessage(language.updatedInventoryMessage)
     }
 
     private suspend fun setArmor(player: Player, arena: SoccerArena, teamMeta: TeamMeta) {
-        teamMeta.armor =
+        teamMeta.armor = withContext(plugin.entityDispatcher(player)) {
             player.inventory.armorContents.clone().map { e -> itemService.serializeItemStack(e) }.toTypedArray()
+        }
         arenaRepository.save(arena)
         player.sendLanguageMessage(language.updatedArmorMessage)
     }
@@ -879,22 +886,26 @@ class BlockBallCommandExecutor(
     }
 
     private suspend fun setLocation(player: Player, arena: SoccerArena, locationType: LocationType) {
+        val playerLocation = withContext(plugin.entityDispatcher(player)) {
+            player.location.toVector3d()
+        }
+
         if (locationType == LocationType.BALL) {
-            arena.ballSpawnPoint = player.location.toVector3d()
+            arena.ballSpawnPoint = playerLocation
         } else if (locationType == LocationType.LEAVE_SPAWNPOINT) {
-            arena.meta.lobbyMeta.leaveSpawnpoint = player.location.toVector3d()
+            arena.meta.lobbyMeta.leaveSpawnpoint = playerLocation
         } else if (locationType == LocationType.BLUE_SPAWNPOINT) {
-            arena.meta.blueTeamMeta.spawnpoint = player.location.toVector3d()
+            arena.meta.blueTeamMeta.spawnpoint = playerLocation
         } else if (locationType == LocationType.RED_SPAWNPOINT) {
-            arena.meta.redTeamMeta.spawnpoint = player.location.toVector3d()
+            arena.meta.redTeamMeta.spawnpoint = playerLocation
         } else if (locationType == LocationType.REFEREE_SPAWNPOINT) {
-            arena.meta.refereeTeamMeta.spawnpoint = player.location.toVector3d()
+            arena.meta.refereeTeamMeta.spawnpoint = playerLocation
         } else if (locationType == LocationType.RED_LOBBY) {
-            arena.meta.redTeamMeta.lobbySpawnpoint = player.location.toVector3d()
+            arena.meta.redTeamMeta.lobbySpawnpoint = playerLocation
         } else if (locationType == LocationType.BLUE_LOBBY) {
-            arena.meta.blueTeamMeta.lobbySpawnpoint = player.location.toVector3d()
+            arena.meta.blueTeamMeta.lobbySpawnpoint = playerLocation
         } else if (locationType == LocationType.REFEREE_LOBBY) {
-            arena.meta.refereeTeamMeta.lobbySpawnpoint = player.location.toVector3d()
+            arena.meta.refereeTeamMeta.lobbySpawnpoint = playerLocation
         }
 
         arenaRepository.save(arena)

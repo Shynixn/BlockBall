@@ -1,7 +1,11 @@
 package com.github.shynixn.blockball.impl.service
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
-import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.SoccerBallFactory
+import com.github.shynixn.blockball.contract.SoccerGame
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
@@ -11,6 +15,9 @@ import com.github.shynixn.blockball.impl.SoccerHubGameImpl
 import com.github.shynixn.blockball.impl.SoccerMiniGameImpl
 import com.github.shynixn.blockball.impl.SoccerRefereeGameImpl
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
+import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.mcCoroutineConfiguration
+import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
@@ -20,7 +27,7 @@ import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.delay
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
@@ -40,24 +47,32 @@ class GameServiceImpl(
     private val soccerBallFactory: SoccerBallFactory,
     private val language: BlockBallLanguage,
     private val itemService: ItemService
-) : GameService, Runnable {
-    private val games = ArrayList<SoccerGame>()
-    private var ticks: Int = 0
+) : GameService {
+    private val isFoliaLoaded = plugin.mcCoroutineConfiguration.isFoliaLoaded
+
+    @Volatile
+    private var games: List<SoccerGame> = ArrayList()
+    private var timeStampLastSecond = 0L
+    private var isDisposed = false
 
     /**
      * Init.
      */
     init {
-        plugin.server.scheduler.runTaskTimer(
-            plugin, Runnable { this.run() }, 0L, 1L
-        )
+        plugin.launch {
+            while (!isDisposed) {
+                runGames()
+                delay(1.ticks)
+            }
+        }
     }
 
     /**
      * Reloads all games.
      */
     override suspend fun reloadAll() {
-        close()
+        checkForPluginMainThread()
+        closeGames()
 
         val arenas = arenaRepository.getAll()
 
@@ -70,12 +85,16 @@ class GameServiceImpl(
      * Reloads the specific game.
      */
     override suspend fun reload(arena: SoccerArena) {
+        checkForPluginMainThread()
+
         // A game with the same arena name is currently running. Stop it and reboot it.
         val existingGame = getByName(arena.name)
 
         if (existingGame != null) {
             existingGame.close()
-            games.remove(existingGame)
+            val copy = games.toMutableList()
+            copy.remove(existingGame)
+            games = copy
             plugin.logger.log(Level.INFO, "Stopped game '" + arena.name + "'.")
         }
 
@@ -129,41 +148,33 @@ class GameServiceImpl(
                 }
             }
 
-            games.add(game)
+            val copy = games.toMutableList()
+            copy.add(game)
+            games = copy
             plugin.logger.log(Level.INFO, "Game '" + arena.name + "' is ready.")
         } else {
             plugin.logger.log(Level.INFO, "Cannot boot game '" + arena.name + "' because it is not enabled.")
         }
     }
 
-    /**
-     * When an object implementing interface `Runnable` is used
-     * to create a thread, starting the thread causes the object's
-     * `run` method to be called in that separately executing
-     * thread.
-     *
-     *
-     * The general contract of the method `run` is that it may
-     * take any action whatsoever.
-     *
-     * @see java.lang.Thread.run
-     */
-    override fun run() {
+    private suspend fun runGames() {
+        checkForPluginMainThread()
+
+        val currentMilliSeconds = System.currentTimeMillis()
+        val hasSecondPassed = if (currentMilliSeconds - timeStampLastSecond >= 1000) {
+            timeStampLastSecond = currentMilliSeconds
+            true
+        } else {
+            false
+        }
+
         games.toTypedArray().forEach { game ->
             if (game.closed) {
-                runBlocking {
-                    reload(game.arena)
-                }
+                reload(game.arena)
             } else {
-                game.handle(ticks)
+                game.handle(hasSecondPassed)
             }
         }
-
-        if (ticks >= 20) {
-            ticks = 0
-        }
-
-        ticks++
     }
 
     /**
@@ -203,7 +214,11 @@ class GameServiceImpl(
      * Closes all games permanently and should be executed on server shutdown.
      */
     override fun close() {
-        for (game in this.games) {
+        isDisposed = true
+    }
+
+    private fun closeGames() {
+        for (game in this.games.toTypedArray()) {
             try {
                 game.close()
             } catch (e: Exception) {
@@ -211,14 +226,13 @@ class GameServiceImpl(
             }
         }
 
-        games.clear()
+        games = ArrayList()
     }
 
     private fun validateGame(arena: SoccerArena) {
         if (arena.gameType == GameType.REFEREEGAME && !BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
             throw SoccerGameException(
-                arena,
-                language.gameTypeRefereeOnlyForPatreons.text
+                arena, language.gameTypeRefereeOnlyForPatreons.text
             )
         }
         if (arena.ballSpawnPoint == null) {
@@ -288,20 +302,17 @@ class GameServiceImpl(
 
         if (abs(teamMeta.goal.corner1!!.x - teamMeta.goal.corner2!!.x) < 1.8) {
             throw SoccerGameException(
-                arena,
-                "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
+                arena, "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
             )
         }
         if (abs(teamMeta.goal.corner1!!.y - teamMeta.goal.corner2!!.y) < 1.8) {
             throw SoccerGameException(
-                arena,
-                "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
+                arena, "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
             )
         }
         if (abs(teamMeta.goal.corner1!!.z - teamMeta.goal.corner2!!.z) < 1.8) {
             throw SoccerGameException(
-                arena,
-                "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
+                arena, "The goal for team ${team.name} should be at least 2x2x2 for ${arena.name}!"
             )
         }
     }

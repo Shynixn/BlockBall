@@ -112,7 +112,7 @@ interface SoccerGame {
     /**
      * Tick handle.
      */
-    fun handle(ticks: Int)
+    fun handle(hasSecondPassed : Boolean)
 
     /**
      * Lets the given [player] in the given [game] respawn at the specified spawnpoint.

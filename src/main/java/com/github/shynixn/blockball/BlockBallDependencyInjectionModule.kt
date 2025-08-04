@@ -7,7 +7,6 @@ import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.blockball.impl.service.GameServiceImpl
-import com.github.shynixn.blockball.impl.service.HubGameForcefieldServiceImpl
 import com.github.shynixn.blockball.impl.service.SoccerBallFactoryImpl
 import com.github.shynixn.blockball.impl.service.StatsServiceImpl
 import com.github.shynixn.fasterxml.jackson.core.type.TypeReference
@@ -142,23 +141,15 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
             )
         }
-        module.addService<HubGameForcefieldService> {
-            HubGameForcefieldServiceImpl(
-                module.getService(),
-                module.getService(),
-                module.getService(),
-                module.getService()
-            )
-        }
         module.addService<SoccerBallFactory> {
             SoccerBallFactoryImpl(module.getService(), module.getService(), module.getService(), module.getService())
         }
         module.addService<BallListener> { BallListener(module.getService(), module.getService()) }
         module.addService<DoubleJumpListener> { DoubleJumpListener(module.getService(), module.getService()) }
         module.addService<GameListener> {
-            GameListener(module.getService(), module.getService(), module.getService(), module.getService())
+            GameListener(module.getService(), module.getService(), module.getService(), module.getService(), module.getService())
         }
-        module.addService<HubgameListener> { HubgameListener(module.getService()) }
+        module.addService<HubgameListener> { HubgameListener(module.getService(), module.getService(), module.getService(), module.getService(), module.getService()) }
         module.addService<MinigameListener> { MinigameListener(module.getService(), module.getService()) }
         module.addService<BlockBallCommandExecutor> {
             BlockBallCommandExecutor(
