@@ -1,10 +1,11 @@
 name: BlockBall
-version: 7.26.0
+version: 7.25.0
 author: Shynixn
 website: https://www.spigotmc.org/members/shynixn.63455/
 main: com.github.shynixn.blockball.BlockBallPlugin
 softdepend: [ PlaceholderAPI ]
 api-version: 1.13
+folia-supported: true
 libraries:
   - com.github.shynixn.mccoroutine:mccoroutine-folia-api:2.22.0
   - com.github.shynixn.mccoroutine:mccoroutine-folia-core:2.22.0

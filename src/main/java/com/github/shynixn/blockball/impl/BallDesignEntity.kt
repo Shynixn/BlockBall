@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.Version
@@ -11,6 +12,7 @@ import com.github.shynixn.mcutils.packet.api.meta.EntityAttribute
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.ArmorSlotType
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
 import com.github.shynixn.mcutils.packet.api.packet.*
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
@@ -42,6 +44,8 @@ class BallDesignEntity(val entityId: Int) {
      * Spawns the ball for the given player.
      */
     fun spawn(player: Player) {
+        checkForPluginMainThread()
+
         val position = ball.getLocation().toVector3d()
         position.y += ball.meta.render.offSetY
         packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
@@ -83,6 +87,8 @@ class BallDesignEntity(val entityId: Int) {
      * Destroys the ball for the given player.
      */
     fun destroy(player: Player) {
+        checkForPluginMainThread()
+
         packetService.sendPacketOutEntityDestroy(player, PacketOutEntityDestroy().also {
             it.entityIds = listOf(entityId)
         })
@@ -92,13 +98,15 @@ class BallDesignEntity(val entityId: Int) {
      * Ticks the hitbox.
      * @param players watching this hitbox.
      */
-    fun tick(players: List<Player>) {
+    fun tick(players: List<Pair<Player, Location>>) {
+        checkForPluginMainThread()
+
         val position = ball.getLocation().toVector3d()
         position.y += ball.meta.render.offSetY
         position.yaw = vectorToYaw(ball.getVelocity())
 
         for (player in players) {
-            packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
+            packetService.sendPacketOutEntityTeleport(player.first, PacketOutEntityTeleport().also {
                 it.entityId = entityId
                 it.target = position.toLocation()
             })
@@ -112,7 +120,7 @@ class BallDesignEntity(val entityId: Int) {
     /**
      * Plays the rotation animation.
      */
-    private fun playRotationAnimation(players: List<Player>) {
+    private fun playRotationAnimation(players: List<Pair<Player, Location>>) {
         // 360 0 0 is a full forward rotation.
         // Length of the velocity is the speed of the ball.
         val velocity = ball.getVelocity().toVector3d()
@@ -136,7 +144,7 @@ class BallDesignEntity(val entityId: Int) {
             }
 
             for (player in players) {
-                packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
+                packetService.sendPacketOutEntityMetadata(player.first, PacketOutEntityMetadata().also {
                     it.armorStandHeadRotation = EulerAngle(-1 * rotationDegrees.toDouble(), 0.0, 0.0)
                     it.entityId = entityId
                 })

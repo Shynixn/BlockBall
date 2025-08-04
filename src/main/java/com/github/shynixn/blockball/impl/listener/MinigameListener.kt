@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl.listener
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
@@ -41,6 +42,7 @@ class MinigameListener(
      */
     @EventHandler
     fun onPlayerGoalEvent(event: GameGoalEvent) {
+        checkForPluginMainThread()
         val game = event.game
 
         if (game is SoccerRefereeGame) {

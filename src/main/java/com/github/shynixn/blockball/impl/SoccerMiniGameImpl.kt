@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerMiniGame
@@ -8,8 +9,9 @@ import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.Team
-import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mccoroutine.bukkit.ticks
+import com.github.shynixn.mccoroutine.folia.entityDispatcher
+import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -22,6 +24,7 @@ import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import teleportCompat
 
 open class SoccerMiniGameImpl(
     arena: SoccerArena,
@@ -38,7 +41,6 @@ open class SoccerMiniGameImpl(
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
-    packetService,
     plugin,
     soccerBallFactory,
     commandService,
@@ -76,6 +78,8 @@ open class SoccerMiniGameImpl(
      * Does nothing if the player is already in a Game.
      */
     override fun join(player: Player, team: Team?): JoinResult {
+        checkForPluginMainThread()
+
         if (playing) {
             return JoinResult.GAME_ALREADY_RUNNING
         }
@@ -87,7 +91,9 @@ open class SoccerMiniGameImpl(
     /**
      * Tick handle.
      */
-    override fun handle(ticks: Int) {
+    override fun handle(hasSecondPassed: Boolean) {
+        checkForPluginMainThread()
+
         // Handle HubGame ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
@@ -107,7 +113,7 @@ open class SoccerMiniGameImpl(
             setGameClosing()
         }
 
-        if (ticks >= 20) {
+        if (hasSecondPassed) {
             if (lobbyCountDownActive) {
                 isQueueTimeRunning = false
 
@@ -206,13 +212,15 @@ open class SoccerMiniGameImpl(
         this.handleBallSpawning()
 
         // Update signs and protections.
-        super.handleMiniGameEssentials(ticks)
+        super.handleMiniGameEssentials(hasSecondPassed)
     }
 
     /**
      * Closes the given game and all underlying resources.
      */
     override fun close() {
+        checkForPluginMainThread()
+
         if (closed) {
             return
         }
@@ -230,6 +238,8 @@ open class SoccerMiniGameImpl(
      * Actives the next match time. Closes the match if no match time is available.
      */
     override fun switchToNextMatchTime() {
+        checkForPluginMainThread()
+
         matchTimeIndex++
 
         val matchTimes = arena.meta.minigameMeta.matchTimes
@@ -294,8 +304,14 @@ open class SoccerMiniGameImpl(
     }
 
     override fun setPlayerToArena(player: Player, team: Team) {
+        checkForPluginMainThread()
+
         val teamMeta = getTeamMetaFromTeam(team)
-        player.teleport(teamMeta.lobbySpawnpoint!!.toLocation())
+        val location = teamMeta.lobbySpawnpoint!!.toLocation()
+
+        plugin.launch(plugin.entityDispatcher(player)) {
+            player.teleportCompat(plugin, location)
+        }
     }
 
     /**

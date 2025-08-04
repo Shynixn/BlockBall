@@ -2,7 +2,6 @@ package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.blockball.enumeration.Team
 import org.bukkit.GameMode
-import org.bukkit.inventory.ItemStack
 
 class GameStorage {
     /** Team of the player. */
@@ -56,10 +55,10 @@ class GameStorage {
     /**
      * Inventory cache.
      */
-    var inventoryContents: Array<ItemStack?> = arrayOfNulls(0)
+    var inventoryContents: Array<String?> = arrayOfNulls(0)
 
     /**
      * Inventory armor cache.
      */
-    var armorContents: Array<ItemStack?> = arrayOfNulls(0)
+    var armorContents: Array<String?> = arrayOfNulls(0)
 }

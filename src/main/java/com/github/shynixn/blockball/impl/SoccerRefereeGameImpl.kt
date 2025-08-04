@@ -1,5 +1,6 @@
 package com.github.shynixn.blockball.impl
 
+import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
@@ -52,6 +53,8 @@ class SoccerRefereeGameImpl(
      * Toggles the lobby countdown if the game is not running yet.
      */
     override fun setLobbyCountdownActive(enabled: Boolean) {
+        checkForPluginMainThread()
+
         if (playing) {
             return
         }
@@ -64,6 +67,8 @@ class SoccerRefereeGameImpl(
      * Stops the game and sets it to the last match time.
      */
     override fun stopGame() {
+        checkForPluginMainThread()
+
         switchToNextMatchTime()
 
         isTimerBlockerEnabled = false
@@ -84,7 +89,9 @@ class SoccerRefereeGameImpl(
     /**
      * Tick handle.
      */
-    override fun handle(ticks: Int) {
+    override fun handle(hasSecondPassed: Boolean) {
+        checkForPluginMainThread()
+
         // Handle ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
@@ -104,7 +111,7 @@ class SoccerRefereeGameImpl(
             setGameClosing()
         }
 
-        if (ticks >= 20) {
+        if (hasSecondPassed) {
             // Display the message.
             if (!playing && !lobbyCountDownActive) {
                 sendBroadcastMessage(language.waitingForRefereeToStart.text, language.waitingForRefereeToStartHint.text)
@@ -227,7 +234,7 @@ class SoccerRefereeGameImpl(
         }
 
         // Update signs and protections.
-        super.handleMiniGameEssentials(ticks)
+        super.handleMiniGameEssentials(hasSecondPassed)
     }
 
     private fun sendBroadcastMessage(playerMessage: String, refereeMessage: String) {
