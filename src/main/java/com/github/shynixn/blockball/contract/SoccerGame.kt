@@ -31,6 +31,11 @@ interface SoccerGame {
     var redScore: Int
 
     /**
+     * Are the goals mirrored?
+     */
+    var mirroredGoals : Boolean
+
+    /**
      * Blue Score.
      */
     var blueScore: Int

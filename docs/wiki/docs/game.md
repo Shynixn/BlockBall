@@ -12,6 +12,12 @@ Execute the following command to create a new arena file.
 /blockball create game1 My first game
 ```
 
+If you have got an existing arena, you can also use this command to copy all settings from your previous arena.
+
+```
+/blockball copy game1 game2 My second game
+```
+
 ### Confirm that the arena has been created
 
 Execute the following command to list all games:

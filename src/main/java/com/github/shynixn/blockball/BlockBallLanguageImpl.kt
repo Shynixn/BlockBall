@@ -182,6 +182,8 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var commonErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details.")
 
+ override var commandCopyToolTip = LanguageItem("Copies an existing arena to create a new arena.")
+
  override var shyScoreboardPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found.")
 
  override var shyScoreboardNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")

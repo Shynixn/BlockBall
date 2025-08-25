@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.LeaderBoardStats
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
+import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import org.bukkit.entity.Player
 
@@ -192,6 +193,72 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     PLAYER_IS_IN_TEAM_BLUE("%blockball_player_isInTeamBlue%", { player, game, _ ->
         game?.blueTeam?.contains(player)?.toString()
+    }),
+
+    PLAYER_DISTANCE_OWN_GOAL("%blockball_player_distanceOwnGoal%", { player, game, _ ->
+        if (game != null && player != null) {
+            val gameStorage = game.ingamePlayersStorage[player]
+
+            if (gameStorage != null) {
+                if (gameStorage.goalTeam == Team.RED) {
+                    game.arena.meta.redTeamMeta.goal.center.distance(player.location.toVector3d()).toInt().toString()
+                } else if (gameStorage.goalTeam == Team.BLUE) {
+                    game.arena.meta.blueTeamMeta.goal.center.distance(player.location.toVector3d()).toInt().toString()
+                } else {
+                    "∞"
+                }
+            } else {
+                null
+            }
+        } else {
+            null
+        }
+    }),
+
+    PLAYER_DISTANCE_ENEMY_GOAL("%blockball_player_distanceEnemyGoal%", { player, game, _ ->
+        if (game != null && player != null) {
+            val gameStorage = game.ingamePlayersStorage[player]
+
+            if (gameStorage != null) {
+                if (gameStorage.goalTeam == Team.RED) {
+                    game.arena.meta.blueTeamMeta.goal.center.distance(player.location.toVector3d()).toInt().toString()
+                } else if (gameStorage.goalTeam == Team.BLUE) {
+                    game.arena.meta.redTeamMeta.goal.center.distance(player.location.toVector3d()).toInt().toString()
+                } else {
+                    "∞"
+                }
+            } else {
+                null
+            }
+        } else {
+            null
+        }
+    }),
+
+    PLAYER_DISTANCE_RED_GOAL("%blockball_player_distanceTeamRedGoal%", { player, game, _ ->
+        if (game != null && player != null) {
+            val teamMeta = if (game.mirroredGoals) {
+                game.arena.meta.blueTeamMeta
+            } else {
+                game.arena.meta.redTeamMeta
+            }
+            teamMeta.goal.center.distance(player.location.toVector3d()).toInt().toString()
+        } else {
+            null
+        }
+    }),
+
+    PLAYER_DISTANCE_BLUE_GOAL("%blockball_player_distanceTeamBlueGoal%", { player, game, _ ->
+        if (game != null && player != null) {
+            val teamMeta = if (game.mirroredGoals) {
+                game.arena.meta.redTeamMeta
+            } else {
+                game.arena.meta.blueTeamMeta
+            }
+            teamMeta.goal.center.distance(player.location.toVector3d()).toInt().toString()
+        } else {
+            null
+        }
     }),
 
     // Play Stats PlaceHolders

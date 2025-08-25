@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.impl
 
 import checkForPluginMainThread
+import com.github.shynixn.blockball.BlockBallPlugin
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.contract.SoccerBallFactory
@@ -132,7 +133,7 @@ abstract class SoccerGameImpl(
      */
     override var lastInteractedEntity: Player? = null
 
-    var mirroredGoals: Boolean = false
+    override var mirroredGoals: Boolean = false
 
     /**
      * All players which are already fix in team red.
@@ -636,13 +637,10 @@ abstract class SoccerGameImpl(
     }
 
     fun executeCommandsWithPlaceHolder(players: Set<Player>, commands: List<CommandMeta>) {
-        checkForPluginMainThread()
-        plugin.launch(plugin.globalRegionDispatcher) {
-            commandService.executeCommands(players.toList(), commands) { c, p ->
-                placeHolderService.resolvePlaceHolder(
-                    c, p
-                )
-            }
+        commandService.executeCommands(players.toList(), commands) { c, p ->
+            placeHolderService.resolvePlaceHolder(
+                c, p
+            )
         }
     }
 

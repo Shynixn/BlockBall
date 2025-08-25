@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.26.0"
+version = "7.27.0"
 
 repositories {
     mavenLocal()
@@ -32,7 +32,7 @@ dependencies {
     implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.1.0")
     implementation("com.github.shynixn.shybossbar:shybossbar:1.3.0")
     implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.8.0")
-    implementation("com.github.shynixn.mcutils:common:2025.34")
+    implementation("com.github.shynixn.mcutils:common:2025.40")
     implementation("com.github.shynixn.mcutils:packet:2025.31")
     implementation("com.github.shynixn.mcutils:database:2025.10")
     implementation("com.github.shynixn.mcutils:worldguard:2025.4")
@@ -87,7 +87,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-latest.${archiveExtension.get()}")
-    /// destinationDirectory.set(File("C:\\git\\mc\\plugins"))
+    // destinationDirectory.set(File("C:\\git\\mc\\plugins"))
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
