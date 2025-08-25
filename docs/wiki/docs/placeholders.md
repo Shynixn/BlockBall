@@ -33,14 +33,18 @@ The following placeholders are available in BlockBall and can also be used via P
 | %blockball_game_remainingPlayers%   | Remaining amount of players required to start a match in minigame mode                                        |
 | %blockball_game_refereeDisplayName% | Name of team referee                                                                                          |
 
-| Player Context Placeholders        | Description                                                    |
-|------------------------------------|----------------------------------------------------------------|
-| %blockball_player_name%            | Name of the player during a BlockBall event e.g. scoring goal  |
-| %blockball_player_team%            | Name of the team the player is currently in: red, blue         |
-| %blockball_player_teamDisplayName% | Display name of the team the player is currently in.           |   
-| %blockball_player_isInGame%        | true if the player is in a game, false if not                  |
-| %blockball_player_isInTeamRed%     | true if the player is in a game and in team red, false if not  |
-| %blockball_player_isInTeamBlue%    | true if the player is in a game and in team blue, false if not |
+| Player Context Placeholders             | Description                                                    |
+|-----------------------------------------|----------------------------------------------------------------|
+| %blockball_player_name%                 | Name of the player during a BlockBall event e.g. scoring goal  |
+| %blockball_player_team%                 | Name of the team the player is currently in: red, blue         |
+| %blockball_player_teamDisplayName%      | Display name of the team the player is currently in.           |   
+| %blockball_player_isInGame%             | true if the player is in a game, false if not                  |
+| %blockball_player_isInTeamRed%          | true if the player is in a game and in team red, false if not  |
+| %blockball_player_isInTeamBlue%         | true if the player is in a game and in team blue, false if not |
+| %blockball_player_distanceOwnGoal%      | Distance from the player to the goal of his own team           |
+| %blockball_player_distanceEnemyGoal%    | Distance from the player to the goal of the enemy team         |
+| %blockball_player_distanceTeamBlueGoal% | Distance from the player to the goal of team blue              |
+| %blockball_player_distanceTeamRedGoal%  | Distance from the player to the goal of team red               |
 
 | Stats Placeholders (Patreon Only)        | Description                                                                       |
 |------------------------------------------|-----------------------------------------------------------------------------------|

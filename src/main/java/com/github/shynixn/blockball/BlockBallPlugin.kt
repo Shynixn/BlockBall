@@ -8,21 +8,12 @@ import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
-import com.github.shynixn.mccoroutine.folia.entityDispatcher
-import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
-import com.github.shynixn.mccoroutine.folia.isFoliaLoaded
-import com.github.shynixn.mccoroutine.folia.launch
-import com.github.shynixn.mccoroutine.folia.mcCoroutineConfiguration
-import com.github.shynixn.mccoroutine.folia.regionDispatcher
-import com.github.shynixn.mcutils.common.ChatColor
-import com.github.shynixn.mcutils.common.CoroutinePlugin
-import com.github.shynixn.mcutils.common.Version
-import com.github.shynixn.mcutils.common.checkIfFoliaIsLoadable
+import com.github.shynixn.mccoroutine.folia.*
+import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
 import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderServiceImpl
-import com.github.shynixn.mcutils.common.selection.AreaSelectionService
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.packet.api.PacketInType
@@ -214,6 +205,15 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
             }
 
             Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
+        }
+    }
+
+    override fun execute(
+        coroutineContext: CoroutineContext,
+        f: suspend () -> Unit
+    ): Job {
+        return launch(coroutineContext) {
+            f.invoke()
         }
     }
 
