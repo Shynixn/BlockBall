@@ -296,6 +296,9 @@ reloadMessage:
 commonErrorMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details."
+commandCopyToolTip:
+  type: "CHAT"
+  text: "Copies an existing arena to create a new arena."
 shyScoreboardPlayerNotFoundMessage:
   # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
   # Please notice that some messages do only support chat.

@@ -275,6 +275,16 @@ class BlockBallCommandExecutor(
                     .validator(remainingStringValidator).tabs { listOf("<displayName>") }
                     .execute { sender, name, displayName -> createArena(sender, name, displayName) }
             }
+            subCommand("copy") {
+                permission(Permission.EDIT_GAME)
+                toolTip { language.commandCopyToolTip.text }
+                builder()
+                    .argument("source").validator(gameMustExistValidator).tabs(arenaTabs)
+                    .argument("name").validator(maxLengthValidator).validator(maxLengthValidator)
+                    .validator(gameMustNotExistValidator).tabs { listOf("<name>") }.argument("displayName")
+                    .validator(remainingStringValidator).tabs { listOf("<displayName>") }
+                    .execute { sender, source, name, displayName -> copyArena(sender, source, name, displayName) }
+            }
             subCommand("delete") {
                 permission(Permission.EDIT_GAME)
                 toolTip { language.commandDeleteToolTip.text }
@@ -523,6 +533,7 @@ class BlockBallCommandExecutor(
         mcCart.build()
     }
 
+
     private fun freezeTimeReferee(player: Player) {
         val game = gameService.getByPlayer(player) ?: return
         val ball = game.ball
@@ -657,6 +668,25 @@ class BlockBallCommandExecutor(
         arena.meta.refereeTeamMeta.armor = mapItemsToColoredSerializedItems(items, "16777215")
 
         arenaRepository.save(arena)
+        sender.sendLanguageMessage(language.gameCreatedMessage, name)
+    }
+
+
+    private suspend fun copyArena(sender: CommandSender, source: SoccerArena, name: String, displayName: String) {
+        arenaRepository.clearCache()
+        arenaRepository.getAll()
+        source.name = name
+        source.displayName = displayName
+        source.enabled = false
+        source.ballSpawnPoint = null
+        source.corner1 = null
+        source.corner2 = null
+        source.meta.redTeamMeta.goal.corner1 = null
+        source.meta.redTeamMeta.goal.corner2 = null
+        source.meta.blueTeamMeta.goal.corner1 = null
+        source.meta.blueTeamMeta.goal.corner2 = null
+
+        arenaRepository.save(source)
         sender.sendLanguageMessage(language.gameCreatedMessage, name)
     }
 

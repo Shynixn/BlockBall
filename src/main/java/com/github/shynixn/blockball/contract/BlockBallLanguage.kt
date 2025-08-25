@@ -182,4 +182,6 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
   var reloadMessage: LanguageItem
 
   var commonErrorMessage: LanguageItem
+
+  var commandCopyToolTip: LanguageItem
 }

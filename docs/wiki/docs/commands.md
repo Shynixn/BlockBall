@@ -17,6 +17,18 @@ Creates a new arena for a BlockBall game.
 * Name: Identifier of a game
 * DisplayName: Arbitrary Display for your game. Can contain ChatColors.
 
+### /blockball copy
+
+```
+/blockball copy <source> <name> <displayName>
+```
+
+Creates a new arena for a BlockBall game based on the settings of one of your existing arenas.
+
+* Source: Identifier of an already existing game
+* Name: Identifier of a game
+* DisplayName: Arbitrary Display for your game. Can contain ChatColors.
+
 ### /blockball delete
 
 ```
