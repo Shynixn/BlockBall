@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.impl.service
 
-import checkForPluginMainThread
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.LeaderBoardStats
@@ -24,8 +23,6 @@ class StatsServiceImpl(
      * Registers tracking the stats.
      */
     override fun register() {
-        checkForPluginMainThread()
-
         val refreshTime = plugin.config.getInt("leaderboard.intervalMinutes")
         val isEnabled = plugin.config.getBoolean("leaderboard.enabled")
 

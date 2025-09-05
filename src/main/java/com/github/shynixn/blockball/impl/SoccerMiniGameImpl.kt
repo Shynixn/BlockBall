@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.impl
 
-import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerMiniGame
@@ -19,7 +18,6 @@ import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
-import com.github.shynixn.mcutils.packet.api.PacketService
 import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -34,7 +32,6 @@ open class SoccerMiniGameImpl(
     private val chatMessageService: ChatMessageService,
     private val soundService: SoundService,
     language: BlockBallLanguage,
-    packetService: PacketService,
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
     itemService: ItemService
@@ -58,14 +55,9 @@ open class SoccerMiniGameImpl(
     var lobbyCountDownActive: Boolean = false
 
     /**
-     * Actual countdown.
-     */
-    var lobbyCountdown: Int = 20
-
-    /**
      * Actual game coutndown.
      */
-    override var gameCountdown: Int = 20
+    override var gameCountdown: Int = 0
 
     /**
      * Index of the current match time.
@@ -78,8 +70,6 @@ open class SoccerMiniGameImpl(
      * Does nothing if the player is already in a Game.
      */
     override fun join(player: Player, team: Team?): JoinResult {
-        checkForPluginMainThread()
-
         if (playing) {
             return JoinResult.GAME_ALREADY_RUNNING
         }
@@ -92,8 +82,6 @@ open class SoccerMiniGameImpl(
      * Tick handle.
      */
     override fun handle(hasSecondPassed: Boolean) {
-        checkForPluginMainThread()
-
         // Handle HubGame ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
@@ -117,25 +105,17 @@ open class SoccerMiniGameImpl(
             if (lobbyCountDownActive) {
                 isQueueTimeRunning = false
 
-                if (lobbyCountdown > 10) {
+                if (gameCountdown > 10) {
                     val amountPlayers = arena.meta.blueTeamMeta.maxAmount + arena.meta.redTeamMeta.maxAmount
 
                     if (ingamePlayersStorage.size >= amountPlayers) {
-                        lobbyCountdown = 10
+                        gameCountdown = 10
                     }
                 }
 
-                lobbyCountdown--
+                gameCountdown--
 
-                ingamePlayersStorage.keys.toTypedArray().forEach { p ->
-                    if (lobbyCountdown <= 10) {
-                        p.exp = 1.0F - (lobbyCountdown.toFloat() / 10.0F)
-                    }
-
-                    p.level = lobbyCountdown
-                }
-
-                if (lobbyCountdown < 5) {
+                if (gameCountdown < 5) {
                     ingamePlayersStorage.keys.forEach { p ->
                         soundService.playSound(
                             p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
@@ -143,15 +123,7 @@ open class SoccerMiniGameImpl(
                     }
                 }
 
-                if (lobbyCountdown <= 0) {
-                    ingamePlayersStorage.keys.toTypedArray().forEach { p ->
-                        if (lobbyCountdown <= 10) {
-                            p.exp = 1.0F
-                        }
-
-                        p.level = 0
-                    }
-
+                if (gameCountdown <= 0) {
                     lobbyCountDownActive = false
                     playing = true
                     status = GameState.RUNNING
@@ -167,7 +139,7 @@ open class SoccerMiniGameImpl(
             if (!lobbyCountDownActive) {
                 if (canStartLobbyCountdown()) {
                     lobbyCountDownActive = true
-                    lobbyCountdown = arena.meta.minigameMeta.lobbyDuration
+                    gameCountdown = arena.meta.minigameMeta.lobbyDuration
                 }
             }
 
@@ -175,17 +147,11 @@ open class SoccerMiniGameImpl(
                 gameCountdown--
 
                 ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
-                    if (gameCountdown <= 10) {
-                        p.exp = gameCountdown.toFloat() / 10.0F
-                    }
-
                     if (gameCountdown <= 5) {
                         soundService.playSound(
                             p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
                         )
                     }
-
-                    p.level = gameCountdown
                 }
 
                 if (gameCountdown <= 0) {
@@ -219,8 +185,6 @@ open class SoccerMiniGameImpl(
      * Closes the given game and all underlying resources.
      */
     override fun close() {
-        checkForPluginMainThread()
-
         if (closed) {
             return
         }
@@ -238,8 +202,6 @@ open class SoccerMiniGameImpl(
      * Actives the next match time. Closes the match if no match time is available.
      */
     override fun switchToNextMatchTime() {
-        checkForPluginMainThread()
-
         matchTimeIndex++
 
         val matchTimes = arena.meta.minigameMeta.matchTimes
@@ -298,14 +260,10 @@ open class SoccerMiniGameImpl(
                     )
                 }
             }
-
-            p.exp = 1.0F
         }
     }
 
     override fun setPlayerToArena(player: Player, team: Team) {
-        checkForPluginMainThread()
-
         val teamMeta = getTeamMetaFromTeam(team)
         val location = teamMeta.lobbySpawnpoint!!.toLocation()
 

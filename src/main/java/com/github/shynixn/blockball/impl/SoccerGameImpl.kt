@@ -1,7 +1,5 @@
 package com.github.shynixn.blockball.impl
 
-import checkForPluginMainThread
-import com.github.shynixn.blockball.BlockBallPlugin
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.contract.SoccerBallFactory
@@ -16,7 +14,6 @@ import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.mccoroutine.folia.entityDispatcher
-import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.ChatColor
@@ -176,8 +173,6 @@ abstract class SoccerGameImpl(
      * Does nothing if the player is already in a Game.
      */
     override fun join(player: Player, team: Team?): JoinResult {
-        checkForPluginMainThread()
-
         val event = GameJoinEvent(player, this)
         Bukkit.getPluginManager().callEvent(event)
 
@@ -245,8 +240,6 @@ abstract class SoccerGameImpl(
      * Leaves the given player.
      */
     override fun leave(player: Player): LeaveResult {
-        checkForPluginMainThread()
-
         if (!ingamePlayersStorage.containsKey(player)) {
             return LeaveResult.NOT_IN_MATCH
         }
@@ -298,8 +291,6 @@ abstract class SoccerGameImpl(
      * Tick handle.
      */
     fun handleMiniGameEssentials(hasSecondPassed: Boolean) {
-        checkForPluginMainThread()
-
         if (hasSecondPassed) {
             if (closing) {
                 return
@@ -311,7 +302,6 @@ abstract class SoccerGameImpl(
 
 
     fun onMatchEnd(team: Team? = null) {
-        checkForPluginMainThread()
         val winningPlayers = HashSet<Player>()
         var drawCounter = 0
 
@@ -370,7 +360,6 @@ abstract class SoccerGameImpl(
      * Gets called when the given [game] gets win by the given [team].
      */
     fun onWin(team: Team) {
-        checkForPluginMainThread()
         val event = GameEndEvent(team, this)
         Bukkit.getPluginManager().callEvent(event)
 
@@ -395,7 +384,6 @@ abstract class SoccerGameImpl(
      * Lets the given [player] in the given [game] respawn at the specified spawnpoint.
      */
     override fun respawn(player: Player) {
-        checkForPluginMainThread()
         if (!ingamePlayersStorage.containsKey(player)) {
             return
         }
@@ -427,7 +415,6 @@ abstract class SoccerGameImpl(
      * Returns if the ball was spawned when calling this method.
      */
     protected fun handleBallSpawning(): Boolean {
-        checkForPluginMainThread()
         if (ballSpawning && ballEnabled) {
             ballSpawnCounter--
             if (ballSpawnCounter <= 0) {
@@ -448,7 +435,6 @@ abstract class SoccerGameImpl(
      * Updates the cooldown of the double jump for the given game.
      */
     private fun updateDoubleJumpCooldown() {
-        checkForPluginMainThread()
         doubleJumpCoolDownPlayers.keys.toTypedArray().forEach { p ->
             var time = doubleJumpCoolDownPlayers[p]!!
             time -= 1
@@ -465,7 +451,6 @@ abstract class SoccerGameImpl(
      * Gets called when the given [game] ends with a draw.
      */
     fun onDraw() {
-        checkForPluginMainThread()
         for (player in getPlayers()) {
             chatMessageService.sendLanguageMessage(player, language.winDraw)
         }
@@ -477,7 +462,6 @@ abstract class SoccerGameImpl(
      * is handled inside of the method.
      */
     override fun notifyBallInGoal(team: Team) {
-        checkForPluginMainThread()
 
         if (ballSpawning) {
             return
@@ -522,8 +506,6 @@ abstract class SoccerGameImpl(
      * Applies points to the belonging teams when the given [player] dies in the given [game].
      */
     override fun applyDeathPoints(player: Player) {
-        checkForPluginMainThread()
-
         if (!ingamePlayersStorage.containsKey(player)) {
             return
         }
@@ -542,8 +524,6 @@ abstract class SoccerGameImpl(
      * Gets called when a goal gets scored on the given [game] by the given [team].
      */
     private fun onScore(team: Team) {
-        checkForPluginMainThread()
-
         var interactionEntity: Player? = null
 
         if (lastInteractedEntity != null && lastInteractedEntity is Player) {
@@ -775,8 +755,6 @@ abstract class SoccerGameImpl(
     abstract fun setPlayerToArena(player: Player, team: Team)
 
     protected fun respawnBall(delayInTicks: Int) {
-        checkForPluginMainThread()
-
         if (ballSpawning) {
             return
         }
@@ -813,8 +791,6 @@ abstract class SoccerGameImpl(
      * This is only relevant for the referee.
      */
     override fun setBallToLocation(location: Location) {
-        checkForPluginMainThread()
-
         destroyBall()
         ball = soccerBallFactory.createSoccerBallForGame(
             location, arena.ball, this
@@ -825,14 +801,11 @@ abstract class SoccerGameImpl(
     }
 
     protected fun destroyBall() {
-        checkForPluginMainThread()
         ball?.remove()
         ball = null
     }
 
     protected fun setGameClosing() {
-        checkForPluginMainThread()
-
         if (closing) {
             return
         }

@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.impl.listener
 
-import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerHubGame
@@ -305,7 +304,6 @@ class GameListener(
      */
     @EventHandler
     fun onBallInteractEvent(event: BallTouchPlayerEvent) {
-        checkForPluginMainThread()
         val game = gameService.getAll().find { p -> p.ball != null && p.ball!! == event.ball }
 
         if (game != null) {
@@ -319,8 +317,6 @@ class GameListener(
      */
     @EventHandler
     fun onBallRayTraceEvent(event: BallRayTraceEvent) {
-        checkForPluginMainThread()
-
         for (game in gameService.getAll()) {
             if (game.ball == event.ball && event.ball.isInteractable) {
                 val targetPosition = event.targetLocation.toVector3d()

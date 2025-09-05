@@ -6,14 +6,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import java.lang.reflect.Method
 
-var pluginMainThreadId = 0L
-
-fun checkForPluginMainThread() {
-    if (Thread.currentThread().id != pluginMainThreadId) {
-        throw IllegalArgumentException("Entered method not on plugin thread!")
-    }
-}
-
 private var teleportMethodRef: Method? = null
 
 fun Player.teleportCompat(plugin: Plugin, location: Location) {

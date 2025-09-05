@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.impl
 
-import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.event.BallRemoveEvent
@@ -86,8 +85,6 @@ class SoccerBallCrossPlatformProxy(
      * Teleports the ball to the given [location].
      */
     override fun teleport(location: Location) {
-        checkForPluginMainThread()
-
         val ballTeleportEvent = BallTeleportEvent(this, location)
         Bukkit.getPluginManager().callEvent(ballTeleportEvent)
 
@@ -120,8 +117,6 @@ class SoccerBallCrossPlatformProxy(
      * @param player
      */
     override fun kickByPlayer(player: Player) {
-        checkForPluginMainThread()
-
         if (!meta.hitbox.leftClickEnabled) {
             return
         }
@@ -140,8 +135,6 @@ class SoccerBallCrossPlatformProxy(
      * @param player
      */
     override fun passByPlayer(player: Player) {
-        checkForPluginMainThread()
-
         if (!meta.hitbox.rightClickEnabled) {
             return
         }
@@ -157,8 +150,6 @@ class SoccerBallCrossPlatformProxy(
      * Removes the ball.
      */
     override fun remove() {
-        checkForPluginMainThread()
-
         if (isDead) {
             return
         }
@@ -179,8 +170,6 @@ class SoccerBallCrossPlatformProxy(
      * Runnable. Should not be called directly.
      */
     private suspend fun run() {
-        checkForPluginMainThread()
-
         if (isDead) {
             return
         }
