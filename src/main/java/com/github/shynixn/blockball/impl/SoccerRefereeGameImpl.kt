@@ -164,7 +164,7 @@ class SoccerRefereeGameImpl(
                             }
                         }
 
-                        if (gameCountdown >= 0) {
+                        if (gameCountdown > 0) {
                             ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
                                 if (gameCountdown <= 5) {
                                     soundService.playSound(

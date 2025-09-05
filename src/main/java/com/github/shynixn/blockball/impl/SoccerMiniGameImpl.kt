@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
+import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.mccoroutine.folia.entityDispatcher
@@ -310,6 +311,10 @@ open class SoccerMiniGameImpl(
 
 
     private fun queueTimeOut() {
+        if (arena.gameType == GameType.REFEREEGAME) {
+            return
+        }
+
         currentQueueTime = arena.meta.customizingMeta.queueTimeOutSec // Reset queue timer each time someone joins.
 
         if (isQueueTimeRunning) {
