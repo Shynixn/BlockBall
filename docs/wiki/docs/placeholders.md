@@ -45,6 +45,9 @@ The following placeholders are available in BlockBall and can also be used via P
 | %blockball_player_distanceEnemyGoal%    | Distance from the player to the goal of the enemy team         |
 | %blockball_player_distanceTeamBlueGoal% | Distance from the player to the goal of team blue              |
 | %blockball_player_distanceTeamRedGoal%  | Distance from the player to the goal of team red               |
+| %blockball_player_cardDisplay%          | Displays the assigned cards from the referee                   |
+| %blockball_player_yellowCards%          | Displays the amount of assigned yellow cards from the referee  |
+| %blockball_player_redCards%             | Displays the amount of assigned red cards from the referee     |
 
 | Stats Placeholders (Patreon Only)        | Description                                                                       |
 |------------------------------------------|-----------------------------------------------------------------------------------|

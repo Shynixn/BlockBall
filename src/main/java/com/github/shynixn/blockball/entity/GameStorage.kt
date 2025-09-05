@@ -45,12 +45,22 @@ class GameStorage {
     /**
      * Counter of enemy goals.
      */
-    var scoredGoals : Int = 0
+    var scoredGoals: Int = 0
 
     /**
      * Counter of scored own goals.
      */
-    var scoredOwnGoals : Int = 0
+    var scoredOwnGoals: Int = 0
+
+    /**
+     * Amount of yellow cards.
+     */
+    var yellowCards: Int = 0
+
+    /**
+     * Amount of red cards.
+     */
+    var redCards: Int = 0
 
     /**
      * Inventory cache.

@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.impl
 
-import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerHubGame
@@ -13,7 +12,6 @@ import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
-import com.github.shynixn.mcutils.packet.api.PacketService
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -24,7 +22,6 @@ class SoccerHubGameImpl(
     plugin: Plugin,
     placeHolderService: PlaceHolderService,
     language: BlockBallLanguage,
-    packetService: PacketService,
     soccerBallFactory: SoccerBallFactory,
     commandService: CommandService,
     itemService: ItemService,
@@ -45,8 +42,6 @@ class SoccerHubGameImpl(
      * Handles the game actions per tick.
      */
     override fun handle(hasSecondPassed: Boolean) {
-        checkForPluginMainThread()
-
         // Handle HubGame ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
@@ -78,7 +73,6 @@ class SoccerHubGameImpl(
 
         // Handle SoccerBall.
         this.handleBallSpawning()
-        // TODO: Minigame essentials. Update signs and protections.
         super.handleMiniGameEssentials(hasSecondPassed)
     }
 
@@ -86,8 +80,6 @@ class SoccerHubGameImpl(
      * Closes the given game and all underlying resources.
      */
     override fun close() {
-        checkForPluginMainThread()
-
         if (closed) {
             return
         }
@@ -103,8 +95,6 @@ class SoccerHubGameImpl(
     }
 
     override fun setPlayerToArena(player: Player, team: Team) {
-        checkForPluginMainThread()
-
         if (arena.meta.hubLobbyMeta.teleportOnJoin) {
             this.respawn(player)
         } else {

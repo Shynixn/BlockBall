@@ -44,7 +44,6 @@ import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
-import pluginMainThreadId
 import java.util.logging.Level
 import kotlin.coroutines.CoroutineContext
 
@@ -135,10 +134,6 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
 
         if (isFoliaLoaded()) {
             logger.log(Level.INFO, "Loading Folia components.")
-        }
-
-        launch {
-            pluginMainThreadId = Thread.currentThread().id
         }
 
         // Load BlockBallLanguage

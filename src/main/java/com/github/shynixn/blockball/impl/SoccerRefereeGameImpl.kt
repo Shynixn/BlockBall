@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.impl
 
-import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
@@ -14,7 +13,6 @@ import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
-import com.github.shynixn.mcutils.packet.api.PacketService
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -27,7 +25,6 @@ class SoccerRefereeGameImpl(
     private val chatMessageService: ChatMessageService,
     private val soundService: SoundService,
     language: BlockBallLanguage,
-    packetService: PacketService,
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
     itemService: ItemService
@@ -39,7 +36,6 @@ class SoccerRefereeGameImpl(
     chatMessageService,
     soundService,
     language,
-    packetService,
     commandService,
     soccerBallFactory,
     itemService
@@ -53,22 +49,18 @@ class SoccerRefereeGameImpl(
      * Toggles the lobby countdown if the game is not running yet.
      */
     override fun setLobbyCountdownActive(enabled: Boolean) {
-        checkForPluginMainThread()
-
         if (playing) {
             return
         }
 
         lobbyCountDownActive = enabled
-        lobbyCountdown = arena.meta.minigameMeta.lobbyDuration
+        gameCountdown = arena.meta.minigameMeta.lobbyDuration
     }
 
     /**
      * Stops the game and sets it to the last match time.
      */
     override fun stopGame() {
-        checkForPluginMainThread()
-
         switchToNextMatchTime()
 
         isTimerBlockerEnabled = false
@@ -90,8 +82,6 @@ class SoccerRefereeGameImpl(
      * Tick handle.
      */
     override fun handle(hasSecondPassed: Boolean) {
-        checkForPluginMainThread()
-
         // Handle ticking.
         if (!arena.enabled || closing) {
             status = GameState.DISABLED
@@ -118,17 +108,8 @@ class SoccerRefereeGameImpl(
             }
 
             if (lobbyCountDownActive) {
-                lobbyCountdown--
-
-                ingamePlayersStorage.keys.toTypedArray().forEach { p ->
-                    if (lobbyCountdown <= 10) {
-                        p.exp = 1.0F - (lobbyCountdown.toFloat() / 10.0F)
-                    }
-
-                    p.level = lobbyCountdown
-                }
-
-                if (lobbyCountdown < 5) {
+                gameCountdown--
+                if (gameCountdown < 5) {
                     ingamePlayersStorage.keys.forEach { p ->
                         soundService.playSound(
                             p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
@@ -136,15 +117,7 @@ class SoccerRefereeGameImpl(
                     }
                 }
 
-                if (lobbyCountdown <= 0) {
-                    ingamePlayersStorage.keys.toTypedArray().forEach { p ->
-                        if (lobbyCountdown <= 10) {
-                            p.exp = 1.0F
-                        }
-
-                        p.level = 0
-                    }
-
+                if (gameCountdown <= 0) {
                     lobbyCountDownActive = false
                     playing = true
                     status = GameState.RUNNING
@@ -191,19 +164,13 @@ class SoccerRefereeGameImpl(
                             }
                         }
 
-                        if (gameCountdown >= 0) {
+                        if (gameCountdown > 0) {
                             ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
-                                if (gameCountdown <= 10) {
-                                    p.exp = gameCountdown.toFloat() / 10.0F
-                                }
-
                                 if (gameCountdown <= 5) {
                                     soundService.playSound(
                                         p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
                                     )
                                 }
-
-                                p.level = gameCountdown
                             }
                         }
                     }

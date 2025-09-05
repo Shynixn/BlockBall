@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.impl
 
-import checkForPluginMainThread
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.toLocation
 import org.bukkit.Location
@@ -18,8 +17,6 @@ class AllPlayerTracker(
      * Checks the players in the world and returns the interesting ones.
      */
     fun checkAndGet(): List<Pair<Player, Location>> {
-        checkForPluginMainThread()
-
         val players = locationFunction.invoke().toLocation().world!!.players
 
         for (player in players.toTypedArray()) {

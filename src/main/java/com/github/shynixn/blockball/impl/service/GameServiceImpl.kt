@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.impl.service
 
-import checkForPluginMainThread
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.GameService
@@ -71,7 +70,6 @@ class GameServiceImpl(
      * Reloads all games.
      */
     override suspend fun reloadAll() {
-        checkForPluginMainThread()
         closeGames()
 
         val arenas = arenaRepository.getAll()
@@ -85,8 +83,6 @@ class GameServiceImpl(
      * Reloads the specific game.
      */
     override suspend fun reload(arena: SoccerArena) {
-        checkForPluginMainThread()
-
         // A game with the same arena name is currently running. Stop it and reboot it.
         val existingGame = getByName(arena.name)
 
@@ -108,7 +104,6 @@ class GameServiceImpl(
                     plugin,
                     placeHolderService,
                     language,
-                    packetService,
                     soccerBallFactory,
                     commandService,
                     itemService,
@@ -123,7 +118,6 @@ class GameServiceImpl(
                     chatMessageService,
                     soundService,
                     language,
-                    packetService,
                     commandService,
                     soccerBallFactory,
                     itemService
@@ -139,7 +133,6 @@ class GameServiceImpl(
                     chatMessageService,
                     soundService,
                     language,
-                    packetService,
                     commandService,
                     soccerBallFactory,
                     itemService
@@ -158,8 +151,6 @@ class GameServiceImpl(
     }
 
     private suspend fun runGames() {
-        checkForPluginMainThread()
-
         val currentMilliSeconds = System.currentTimeMillis()
         val hasSecondPassed = if (currentMilliSeconds - timeStampLastSecond >= 1000) {
             timeStampLastSecond = currentMilliSeconds

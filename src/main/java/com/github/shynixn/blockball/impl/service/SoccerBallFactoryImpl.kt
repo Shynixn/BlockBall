@@ -1,6 +1,5 @@
 package com.github.shynixn.blockball.impl.service
 
-import checkForPluginMainThread
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerGame
@@ -32,7 +31,6 @@ class SoccerBallFactoryImpl(
      * Creates a new SoccerBall.
      */
     override fun createSoccerBall(location: Location, meta: SoccerBallMeta): SoccerBall {
-        checkForPluginMainThread()
         return createSoccerBallForGame(location, meta, null)
     }
 
@@ -40,8 +38,6 @@ class SoccerBallFactoryImpl(
      * Creates a new SoccerBall.
      */
     override fun createSoccerBallForGame(location: Location, meta: SoccerBallMeta, game: SoccerGame?): SoccerBall {
-        checkForPluginMainThread()
-
         val position = location.toVector3d()
         position.yaw = 0.0
         position.pitch = 0.0
@@ -73,8 +69,6 @@ class SoccerBallFactoryImpl(
      * Tries to locate the ball by the given id.
      */
     override fun findBallByEntityId(id: Int): SoccerBall? {
-        checkForPluginMainThread()
-
         if (ballDesignTracked.containsKey(id)) {
             return ballDesignTracked[id]
         }
@@ -90,8 +84,6 @@ class SoccerBallFactoryImpl(
      * Disables a ball from tracking.
      */
     override fun removeTrackedBall(ball: SoccerBall) {
-        checkForPluginMainThread()
-
         if (ballDesignTracked.containsKey(ball.designEntityId)) {
             ballDesignTracked.remove(ball.designEntityId)
         }

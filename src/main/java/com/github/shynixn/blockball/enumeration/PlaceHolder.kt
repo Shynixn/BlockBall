@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.LeaderBoardStats
 import com.github.shynixn.blockball.entity.PlayerInformation
+import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
@@ -158,6 +159,41 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
     // Player PlaceHolders
 
     PLAYER_NAME("%blockball_player_name%", { player, _, _ -> player?.name }),
+
+    PLAYER_YELLOW_CARDS("%blockball_player_yellowCards%", { player, game, _ ->
+        if (game != null && player != null && game.ingamePlayersStorage.containsKey(player)) {
+            val storage = game.ingamePlayersStorage[player]!!
+            (storage.yellowCards).toString()
+        } else {
+            "0"
+        }
+    }),
+
+    PLAYER_RED_CARDS("%blockball_player_redCards%", { player, game, _ ->
+        if (game != null && player != null && game.ingamePlayersStorage.containsKey(player)) {
+            val storage = game.ingamePlayersStorage[player]!!
+            (storage.redCards).toString()
+        } else {
+            "0"
+        }
+    }),
+
+    PLAYER_CARD_DISPLAY("%blockball_player_cardDisplay%", { player, game, _ ->
+        if (game != null && player != null && game.ingamePlayersStorage.containsKey(player)) {
+            val storage = game.ingamePlayersStorage[player]!!
+            if (storage.redCards > 0) {
+                "${ChatColor.BLACK}[${ChatColor.YELLOW}█${ChatColor.BLACK} ${ChatColor.RED}█${ChatColor.BLACK}]"
+            } else if (storage.yellowCards > 1) {
+                "${ChatColor.BLACK}[${ChatColor.YELLOW}█${ChatColor.BLACK} ${ChatColor.YELLOW}█${ChatColor.BLACK}]"
+            } else if (storage.yellowCards > 0) {
+                "${ChatColor.BLACK}[${ChatColor.YELLOW}█${ChatColor.BLACK} ${ChatColor.GRAY}-${ChatColor.BLACK}]"
+            } else {
+                "${ChatColor.BLACK}[${ChatColor.GRAY}-${ChatColor.BLACK} ${ChatColor.GRAY}-${ChatColor.BLACK}]"
+            }
+        } else {
+            "${ChatColor.BLACK}[${ChatColor.GRAY}-${ChatColor.BLACK} ${ChatColor.GRAY}-${ChatColor.BLACK}]"
+        }
+    }),
 
     PLAYER_TEAM("%blockball_player_team%", { player, game, _ ->
         if (game?.blueTeam != null && game.blueTeam.contains(player)) {

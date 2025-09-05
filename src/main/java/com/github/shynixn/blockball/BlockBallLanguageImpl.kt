@@ -184,6 +184,26 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var commandCopyToolTip = LanguageItem("Copies an existing arena to create a new arena.")
 
+ override var arenaNameHasToBeFormat = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c The name of the arena only allows characters a-z, A-Z, 0-9, -")
+
+ override var commandRefereeKickPlayerToolTip = LanguageItem("Removes a player from the current game.")
+
+ override var commandRefereeKickPlayerSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Player %blockball_param_1% was removed from the game by the referee.")
+
+ override var commandRefereeKickPlayerErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% cannot be kicked from the game.")
+
+ override var commandRefereeYellowCardToolTip = LanguageItem("Shows a yellow card to the given player.")
+
+ override var commandRefereeYellowCardSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Player %blockball_param_1% was shown a yellow card by the referee.")
+
+ override var commandRefereeYellowCardErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% cannot be awarded a yellow card.")
+
+ override var commandRefereeRedCardToolTip = LanguageItem("Shows a red card to the given player.")
+
+ override var commandRefereeRedCardSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Player %blockball_param_1% was shown a red card by the referee.")
+
+ override var commandRefereeRedCardErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% cannot be awarded a red card.")
+
  override var shyScoreboardPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found.")
 
  override var shyScoreboardNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")

@@ -184,4 +184,24 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
   var commonErrorMessage: LanguageItem
 
   var commandCopyToolTip: LanguageItem
+
+  var arenaNameHasToBeFormat: LanguageItem
+
+  var commandRefereeKickPlayerToolTip: LanguageItem
+
+  var commandRefereeKickPlayerSuccessMessage: LanguageItem
+
+  var commandRefereeKickPlayerErrorMessage: LanguageItem
+
+  var commandRefereeYellowCardToolTip: LanguageItem
+
+  var commandRefereeYellowCardSuccessMessage: LanguageItem
+
+  var commandRefereeYellowCardErrorMessage: LanguageItem
+
+  var commandRefereeRedCardToolTip: LanguageItem
+
+  var commandRefereeRedCardSuccessMessage: LanguageItem
+
+  var commandRefereeRedCardErrorMessage: LanguageItem
 }
