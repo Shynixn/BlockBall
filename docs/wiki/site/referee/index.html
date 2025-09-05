@@ -604,6 +604,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#showing-yellow-and-red-cards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Showing yellow and red cards
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -817,6 +826,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#showing-yellow-and-red-cards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Showing yellow and red cards
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -888,6 +906,22 @@ are also displayed hints for the referee during the game.</p>
 <li>Bind the <code>/playsound</code> vanilla minecraft command to these items to play a whistle sound</li>
 <li>Put the item in your inventory and execute the <code>/blockball inventory game1 referee</code> command to put that item into the inventory, which is received by the referee on join.</li>
 </ul>
+<h3 id="showing-yellow-and-red-cards">Showing yellow and red cards</h3>
+<p>The referee can assign yellow and red cards to players using the following commands:</p>
+<div class="highlight"><pre><span></span><code>/blockball referee yellowcard &lt;player&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>/blockball referee redcard &lt;player&gt;
+</code></pre></div>
+<p>This does not affect the player in any way. The referee is responsible to track the amount of assigned cards in a game and kick the player once he has received two yellow cards.</p>
+<div class="highlight"><pre><span></span><code>/blockball referee kickplayer &lt;player&gt;
+</code></pre></div>
+<p>You can customize the scoreboard to display the amount of cards of a player. 
+Open the <code>/plugins/BlockBall/scoreboard/blockball_scoreboard.yml</code> file and add the following line to display  the amount of yellow and red cards of a player.</p>
+<div class="highlight"><pre><span></span><code>  - &quot;Cards: %blockball_player_cardDisplay%&quot;
+</code></pre></div>
+<p>You alternatively can also display the amount of yellow and red cards.</p>
+<div class="highlight"><pre><span></span><code>  - &quot;%blockball_player_redCards% Red, %blockball_player_yellowCards% Yellow&quot;
+</code></pre></div>
 
 
 
