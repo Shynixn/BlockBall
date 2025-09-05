@@ -76,3 +76,40 @@ However, you can still do that by following these steps:
 * Bind the referee commands ``/blockball referee whistleresume`` and others to items
 * Bind the ``/playsound`` vanilla minecraft command to these items to play a whistle sound
 * Put the item in your inventory and execute the ``/blockball inventory game1 referee`` command to put that item into the inventory, which is received by the referee on join.
+
+### Showing yellow and red cards
+
+The referee can assign yellow and red cards to players using the following commands:
+
+```
+/blockball referee yellowcard <player>
+```
+
+```
+/blockball referee redcard <player>
+```
+
+This does not affect the player in any way. The referee is responsible to track the amount of assigned cards in a game and kick the player once he has received two yellow cards.
+
+```
+/blockball referee kickplayer <player>
+```
+
+You can customize the scoreboard to display the amount of cards of a player. 
+Open the ``/plugins/BlockBall/scoreboard/blockball_scoreboard.yml`` file and add the following line to display  the amount of yellow and red cards of a player.
+
+```
+  - "Cards: %blockball_player_cardDisplay%"
+```
+
+You alternatively can also display the amount of yellow and red cards.
+
+```
+  - "%blockball_player_redCards% Red, %blockball_player_yellowCards% Yellow"
+```
+
+
+
+
+
+

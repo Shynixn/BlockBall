@@ -299,6 +299,36 @@ commonErrorMessage:
 commandCopyToolTip:
   type: "CHAT"
   text: "Copies an existing arena to create a new arena."
+arenaNameHasToBeFormat:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c The name of the arena only allows characters a-z, A-Z, 0-9, -"
+commandRefereeKickPlayerToolTip:
+  type: "CHAT"
+  text: "Removes a player from the current game."
+commandRefereeKickPlayerSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Player %blockball_param_1% was removed from the game by the referee."
+commandRefereeKickPlayerErrorMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% cannot be kicked from the game."
+commandRefereeYellowCardToolTip:
+  type: "CHAT"
+  text: "Shows a yellow card to the given player."
+commandRefereeYellowCardSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Player %blockball_param_1% was shown a yellow card by the referee."
+commandRefereeYellowCardErrorMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% cannot be awarded a yellow card."
+commandRefereeRedCardToolTip:
+  type: "CHAT"
+  text: "Shows a red card to the given player."
+commandRefereeRedCardSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Player %blockball_param_1% was shown a red card by the referee."
+commandRefereeRedCardErrorMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% cannot be awarded a red card."
 shyScoreboardPlayerNotFoundMessage:
   # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
   # Please notice that some messages do only support chat.

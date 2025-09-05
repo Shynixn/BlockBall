@@ -46,12 +46,13 @@ class BlockBallCommandExecutor(
     private val chatMessageService: ChatMessageService
 ) {
     private val arenaTabs: (s: CommandSender) -> List<String> = {
-        val cache = arenaRepository.getCache()
-        if (cache != null) {
-            cache.map { e -> e.name }
-        } else {
-            gameService.getAll().map { e -> e.arena.name }
+        var cache = arenaRepository.getCache()
+        if (cache == null) {
+            cache = runBlocking {
+                arenaRepository.getAll()
+            }
         }
+        cache.map { e -> e.name }
     }
     private val onlinePlayerTabs: ((CommandSender) -> List<String>) = {
         Bukkit.getOnlinePlayers().map { e -> e.name }
@@ -100,6 +101,21 @@ class BlockBallCommandExecutor(
             return openArgs.joinToString(" ")
         }
     }
+
+    private val arenaNameRegex = object : Validator<String> {
+        private val regex = Regex("^[a-zA-Z0-9-]+$")
+
+        override suspend fun validate(
+            sender: CommandSender, prevArgs: List<Any>, argument: String, openArgs: List<String>
+        ): Boolean {
+            return argument.matches(regex)
+        }
+
+        override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
+            return language.arenaNameHasToBeFormat.text
+        }
+    }
+
     private val maxLengthValidator = object : Validator<String> {
         override suspend fun validate(
             sender: CommandSender, prevArgs: List<Any>, argument: String, openArgs: List<String>
@@ -220,18 +236,6 @@ class BlockBallCommandExecutor(
         }
     }
 
-    private val signTypeValidator = object : Validator<SignType> {
-        override suspend fun transform(
-            sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
-        ): SignType? {
-            return SignType.values().firstOrNull { e -> e.name.equals(openArgs[0], true) }
-        }
-
-        override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
-            return language.signTypeDoesNotExistMessage.text
-        }
-    }
-
     private val doubleValidator = object : Validator<Double> {
         override suspend fun transform(
             sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
@@ -270,7 +274,7 @@ class BlockBallCommandExecutor(
             subCommand("create") {
                 permission(Permission.EDIT_GAME)
                 toolTip { language.commandCreateToolTip.text }
-                builder().argument("name").validator(maxLengthValidator).validator(maxLengthValidator)
+                builder().argument("name").validator(maxLengthValidator).validator(arenaNameRegex)
                     .validator(gameMustNotExistValidator).tabs { listOf("<name>") }.argument("displayName")
                     .validator(remainingStringValidator).tabs { listOf("<displayName>") }
                     .execute { sender, name, displayName -> createArena(sender, name, displayName) }
@@ -280,7 +284,7 @@ class BlockBallCommandExecutor(
                 toolTip { language.commandCopyToolTip.text }
                 builder()
                     .argument("source").validator(gameMustExistValidator).tabs(arenaTabs)
-                    .argument("name").validator(maxLengthValidator).validator(maxLengthValidator)
+                    .argument("name").validator(maxLengthValidator).validator(arenaNameRegex)
                     .validator(gameMustNotExistValidator).tabs { listOf("<name>") }.argument("displayName")
                     .validator(remainingStringValidator).tabs { listOf("<displayName>") }
                     .execute { sender, source, name, displayName -> copyArena(sender, source, name, displayName) }
@@ -507,6 +511,30 @@ class BlockBallCommandExecutor(
                         nextPeriodReferee(player)
                     }
                 }
+                subCommand("kickplayer") {
+                    permission(Permission.REFEREE_JOIN)
+                    toolTip { language.commandRefereeKickPlayerToolTip.text }
+                    builder().argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, playerToKick ->
+                            kickPlayerFromGame(player, playerToKick)
+                        }
+                }
+                subCommand("yellowcard") {
+                    permission(Permission.REFEREE_JOIN)
+                    toolTip { language.commandRefereeYellowCardToolTip.text }
+                    builder().argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, playerToAssign ->
+                            setYellowCardToPlayer(player, playerToAssign)
+                        }
+                }
+                subCommand("redcard") {
+                    permission(Permission.REFEREE_JOIN)
+                    toolTip { language.commandRefereeRedCardToolTip.text }
+                    builder().argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, playerToAssign ->
+                            setRedCardToPlayer(player, playerToAssign)
+                        }
+                }
             }
             subCommand("placeholder") {
                 permission(Permission.EDIT_GAME)
@@ -533,6 +561,47 @@ class BlockBallCommandExecutor(
         mcCart.build()
     }
 
+    private fun setYellowCardToPlayer(referee: Player, playerToAssign: Player) {
+        val game = gameService.getByPlayer(referee) ?: return
+        val storage = game.ingamePlayersStorage[playerToAssign]
+        if (storage == null) {
+            referee.sendLanguageMessage(language.commandRefereeYellowCardErrorMessage, playerToAssign.name)
+            return
+        }
+
+        storage.yellowCards++
+
+        for (player in game.getPlayers()) {
+            player.sendLanguageMessage(language.commandRefereeYellowCardSuccessMessage, playerToAssign.name)
+        }
+    }
+
+    private fun setRedCardToPlayer(referee: Player, playerToAssign: Player) {
+        val game = gameService.getByPlayer(referee) ?: return
+        val storage = game.ingamePlayersStorage[playerToAssign]
+        if (storage == null) {
+            referee.sendLanguageMessage(language.commandRefereeRedCardErrorMessage, playerToAssign.name)
+            return
+        }
+
+        storage.redCards++
+
+        for (player in game.getPlayers()) {
+            player.sendLanguageMessage(language.commandRefereeRedCardSuccessMessage, playerToAssign.name)
+        }
+    }
+
+    private fun kickPlayerFromGame(referee: Player, playerToKick: Player) {
+        val game = gameService.getByPlayer(referee) ?: return
+        if (gameService.getByPlayer(playerToKick) != game) {
+            referee.sendLanguageMessage(language.commandRefereeKickPlayerErrorMessage, playerToKick.name)
+            return
+        }
+        for (player in game.getPlayers()) {
+            player.sendLanguageMessage(language.commandRefereeKickPlayerSuccessMessage, playerToKick.name)
+        }
+        game.leave(playerToKick)
+    }
 
     private fun freezeTimeReferee(player: Player) {
         val game = gameService.getByPlayer(player) ?: return
