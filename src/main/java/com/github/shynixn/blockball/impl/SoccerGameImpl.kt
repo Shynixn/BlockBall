@@ -77,10 +77,6 @@ abstract class SoccerGameImpl(
      */
     override val ingamePlayersStorage: MutableMap<Player, GameStorage> = ConcurrentHashMap()
 
-    /**
-     * Player who was the last one to hit the ball.
-     */
-    override var lastHitPlayer: Player? = null
 
     /**
      * Marks the game for being closed and will automatically
@@ -126,10 +122,10 @@ abstract class SoccerGameImpl(
     override var ballBumperCounter: Int = 0
 
     /**
-     * The last interacted entity with the ball. Can also be a non player.
+     * Contains the players which have touched the ball from the same team.
+     * Once another team touches the ball this stack is cleared.
      */
-    override var lastInteractedEntity: Player? = null
-
+    override var interactedWithBall: MutableList<Player> = ArrayList()
     override var mirroredGoals: Boolean = false
 
     /**
@@ -524,11 +520,7 @@ abstract class SoccerGameImpl(
      * Gets called when a goal gets scored on the given [game] by the given [team].
      */
     private fun onScore(team: Team) {
-        var interactionEntity: Player? = null
-
-        if (lastInteractedEntity != null && lastInteractedEntity is Player) {
-            interactionEntity = lastInteractedEntity!!
-        }
+        var interactionEntity = interactedWithBall.getOrNull(0)
 
         if (interactionEntity == null) {
             if (ingamePlayersStorage.isEmpty()) {
@@ -536,7 +528,7 @@ abstract class SoccerGameImpl(
             }
 
             interactionEntity = ingamePlayersStorage.keys.toTypedArray()[0]
-            lastInteractedEntity = interactionEntity
+            interactedWithBall.add(0, interactionEntity)
         }
 
         val gameGoalEntityEvent = GameGoalEvent(interactionEntity as Player?, team, this)
@@ -591,11 +583,8 @@ abstract class SoccerGameImpl(
      * The goal where the ball has been shot in.
      */
     private fun executeGoalCommands(goalTeam: Team) {
-        if (lastInteractedEntity == null) {
-            return
-        }
-
-        val goalShooter = lastInteractedEntity!!
+        val lastInteractedEntity = interactedWithBall.getOrNull(0) ?: return
+        val goalShooter = lastInteractedEntity
 
         if (redTeam.contains(goalShooter)) {
             if (goalTeam == Team.BLUE) {

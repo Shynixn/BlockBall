@@ -91,16 +91,31 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
     }),
 
     GAME_LASTHITPLAYER_NAME("%blockball_game_lastHitPlayerName_[game]%", { _, game, _ ->
-        if (game?.lastInteractedEntity != null) {
-            game.lastInteractedEntity!!.name
+        game?.interactedWithBall?.getOrNull(0)?.name
+    }),
+
+    GAME_LASTHITPLAYER_TEAM_NAME("%blockball_game_lastHitPlayerTeam_[game]%", { _, game, _ ->
+        val player = game?.interactedWithBall?.getOrNull(0)
+        if (player != null) {
+            if (game.redTeam.contains(player)) {
+                game.arena.meta.redTeamMeta.displayName
+            } else if (game.blueTeam.contains(player)) {
+                game.arena.meta.blueTeamMeta.displayName
+            } else {
+                ""
+            }
         } else {
             null
         }
     }),
 
-    GAME_LASTHITPLAYER_TEAM_NAME("%blockball_game_lastHitPlayerTeam_[game]%", { _, game, _ ->
-        val player = game?.lastInteractedEntity
-        if (player != null && true) {
+    GAME_SECONDLASTHITPLAYER_NAME("%blockball_game_secondLastHitPlayerName_[game]%", { _, game, _ ->
+        game?.interactedWithBall?.getOrNull(1)?.name
+    }),
+
+    GAME_SECONDLASTHITPLAYER_TEAM_NAME("%blockball_game_secondLastHitPlayerTeam_[game]%", { _, game, _ ->
+        val player = game?.interactedWithBall?.getOrNull(1)
+        if (player != null) {
             if (game.redTeam.contains(player)) {
                 game.arena.meta.redTeamMeta.displayName
             } else if (game.blueTeam.contains(player)) {

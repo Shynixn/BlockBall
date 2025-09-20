@@ -306,8 +306,30 @@ class GameListener(
     fun onBallInteractEvent(event: BallTouchPlayerEvent) {
         val game = gameService.getAll().find { p -> p.ball != null && p.ball!! == event.ball }
 
-        if (game != null) {
-            game.lastInteractedEntity = event.player
+        if (game == null) {
+            return
+        }
+
+        val player = event.player
+        val playerStorage = game.ingamePlayersStorage[player] ?: return
+        val interactionStack = game.interactedWithBall
+        val existingPlayer = interactionStack.getOrNull(0)
+        if (existingPlayer != null) {
+            val existingPlayerStorage = game.ingamePlayersStorage[existingPlayer]
+
+            if (existingPlayerStorage == null || existingPlayerStorage.team != playerStorage.team) {
+                interactionStack.clear()
+            }
+        }
+
+        if (existingPlayer == player) {
+            return
+        }
+
+        interactionStack.add(0, player)
+
+        while (interactionStack.size > 10) {
+            interactionStack.removeLast()
         }
     }
 
