@@ -92,6 +92,7 @@ class SoccerHubGameImpl(
         ingamePlayersStorage.clear()
         ball?.remove()
         doubleJumpCoolDownPlayers.clear()
+        interactedWithBall.clear()
     }
 
     override fun setPlayerToArena(player: Player, team: Team) {

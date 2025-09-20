@@ -9,29 +9,31 @@ The following placeholders are available in BlockBall and can also be used via P
     or ``%blockball_game_blueScore_mygame%``. This is only relevant in external plugins. For placeholders in BlockBall, you
     can directly use the placeholders below.
 
-| Game Context Placeholders           | Description                                                                                                   |
-|-------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| %blockball_game_name%               | Id of the game                                                                                                |
-| %blockball_game_displayName%        | DisplayName of the game                                                                                       |
-| %blockball_game_maxPlayers%         | Max amount of players who can join this game                                                                  |
-| %blockball_game_players%            | Current amount of players in this game                                                                        |
-| %blockball_game_redDisplayName%     | Name of team red                                                                                              |
-| %blockball_game_redScore%           | Score of the red team                                                                                         |
-| %blockball_game_redPlayers%         | Amount of players who are currently in the red team                                                           |
-| %blockball_game_redMaxPlayers%      | Max amount of players who can join the red team                                                               |
-| %blockball_game_blueDisplayName%    | Name of team blue                                                                                             |
-| %blockball_game_blueScore%          | Score of the blue team                                                                                        |
-| %blockball_game_bluePlayers%        | Amount of players who are currently in the blue team                                                          |
-| %blockball_game_blueMaxPlayers%     | Max amount of players who can join the blue team                                                              |
-| %blockball_game_time%               | Remaining time until the match ends                                                                           |
-| %blockball_game_lastHitPlayerName%  | Name of the player who was the last one to hit the ball, returns an empty text if no one has hit the ball yet |
-| %blockball_game_lastHitPlayerTeam%  | DisplayName of the team of the player who was the last one to hit the ball.                                   |
-| %blockball_game_state%              | Returns JOINABLE,RUNNING,DISABLED                                                                             |
-| %blockball_game_stateDisplayName%   | Returns the state color formatted from the language file                                                      |
-| %blockball_game_isEnabled%          | true if the game is enabled, false if not                                                                     |
-| %blockball_game_isJoinAble%         | true if the game is joinable, false if not                                                                    |
-| %blockball_game_remainingPlayers%   | Remaining amount of players required to start a match in minigame mode                                        |
-| %blockball_game_refereeDisplayName% | Name of team referee                                                                                          |
+| Game Context Placeholders                | Description                                                                 |
+|------------------------------------------|-----------------------------------------------------------------------------|
+| %blockball_game_name%                    | Id of the game                                                              |
+| %blockball_game_displayName%             | DisplayName of the game                                                     |
+| %blockball_game_maxPlayers%              | Max amount of players who can join this game                                |
+| %blockball_game_players%                 | Current amount of players in this game                                      |
+| %blockball_game_redDisplayName%          | Name of team red                                                            |
+| %blockball_game_redScore%                | Score of the red team                                                       |
+| %blockball_game_redPlayers%              | Amount of players who are currently in the red team                         |
+| %blockball_game_redMaxPlayers%           | Max amount of players who can join the red team                             |
+| %blockball_game_blueDisplayName%         | Name of team blue                                                           |
+| %blockball_game_blueScore%               | Score of the blue team                                                      |
+| %blockball_game_bluePlayers%             | Amount of players who are currently in the blue team                        |
+| %blockball_game_blueMaxPlayers%          | Max amount of players who can join the blue team                            |
+| %blockball_game_time%                    | Remaining time until the match ends                                         |
+| %blockball_game_lastHitPlayerName%       | Name of the player who was the last one to hit the ball                     |
+| %blockball_game_lastHitPlayerTeam%       | DisplayName of the team of the player who was the last one to hit the ball. |
+| %blockball_game_secondLastHitPlayerName% | Name of the player who was the second to last to thit the ball              |
+| %blockball_game_secondLastHitPlayerTeam% | DisplayName of the team of the player who was the second to last to hit the ball. 
+| %blockball_game_state%                   | Returns JOINABLE,RUNNING,DISABLED                                           |
+| %blockball_game_stateDisplayName%        | Returns the state color formatted from the language file                    |
+| %blockball_game_isEnabled%               | true if the game is enabled, false if not                                   |
+| %blockball_game_isJoinAble%              | true if the game is joinable, false if not                                  |
+| %blockball_game_remainingPlayers%        | Remaining amount of players required to start a match in minigame mode      |
+| %blockball_game_refereeDisplayName%      | Name of team referee                                                        |
 
 | Player Context Placeholders             | Description                                                    |
 |-----------------------------------------|----------------------------------------------------------------|
@@ -75,7 +77,7 @@ The following placeholders are available in BlockBall and can also be used via P
 | %blockball_player_totalGoalsPerGameFull% | Ratio between amount of games a player has fully played and scored total goals    |
 
 !!! note "LeaderBoard"
-    Replace **top_1** with **top_2** or **top_3** etc. to build a leaderboard.
+Replace **top_1** with **top_2** or **top_3** etc. to build a leaderboard.
 
 | LeaderBoard Placeholders (Patreon Only)                 | Description                                                                                  |
 |---------------------------------------------------------|----------------------------------------------------------------------------------------------|

@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.contract
 
-import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.GameStorage
+import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.LeaveResult
@@ -13,12 +13,7 @@ interface SoccerGame {
     /**
      * Generated game id.
      */
-    val id : String
-
-    /**
-     * Player who was the last one to hit the ball.
-     */
-    var lastHitPlayer: Player?
+    val id: String
 
     /**
      * Gets the soccerArena.
@@ -33,7 +28,7 @@ interface SoccerGame {
     /**
      * Are the goals mirrored?
      */
-    var mirroredGoals : Boolean
+    var mirroredGoals: Boolean
 
     /**
      * Blue Score.
@@ -66,9 +61,10 @@ interface SoccerGame {
     var ball: SoccerBall?
 
     /**
-     * The last interacted entity with the ball. Can also be a non player.
+     * Contains the players which have touched the ball from the same team.
+     * Once another team touches the ball this stack is cleared.
      */
-    var lastInteractedEntity: Player?
+    var interactedWithBall: MutableList<Player>
 
     /**
      * Marks the game for being closed and will automatically
@@ -100,7 +96,7 @@ interface SoccerGame {
     /**
      * Compatibility reference.
      */
-    val language : BlockBallLanguage
+    val language: BlockBallLanguage
 
     /**
      * Lets the given [player] leave join. Optional can the prefered
@@ -117,7 +113,7 @@ interface SoccerGame {
     /**
      * Tick handle.
      */
-    fun handle(hasSecondPassed : Boolean)
+    fun handle(hasSecondPassed: Boolean)
 
     /**
      * Lets the given [player] in the given [game] respawn at the specified spawnpoint.

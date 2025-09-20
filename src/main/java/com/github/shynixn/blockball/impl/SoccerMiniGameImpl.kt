@@ -197,6 +197,7 @@ open class SoccerMiniGameImpl(
         ingamePlayersStorage.clear()
         ball?.remove()
         doubleJumpCoolDownPlayers.clear()
+        interactedWithBall.clear()
     }
 
     /**
