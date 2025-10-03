@@ -1240,11 +1240,13 @@
 <h1 id="creating-your-first-soccer-arena">Creating Your First Soccer Arena</h1>
 <p>This comprehensive guide will walk you through setting up a BlockBall soccer arena from start to finish. By the end, you'll have a fully functional game ready for players to enjoy!</p>
 <h2 id="overview">🎯 Overview</h2>
-<p>Creating a BlockBall arena involves:
-1. <strong>Basic Setup</strong> - Create the game and define play areas
-2. <strong>Team Configuration</strong> - Set goals and spawn points<br />
-3. <strong>Game Activation</strong> - Enable and test your arena
-4. <strong>Optional Enhancements</strong> - Add advanced features</p>
+<p>Creating a BlockBall arena involves:</p>
+<ol>
+<li><strong>Basic Setup:</strong>  Create the game and define play areas</li>
+<li><strong>Team Configuration:</strong>  Set goals and spawn points  </li>
+<li><strong>Game Activation:</strong> Enable and test your arena</li>
+<li><strong>Optional Enhancements:</strong> Add advanced features</li>
+</ol>
 <hr />
 <h2 id="quick-setup-minimum-requirements">⚡ Quick Setup (Minimum Requirements)</h2>
 <h3 id="step-1-create-your-game">Step 1: Create Your Game</h3>
@@ -1344,15 +1346,13 @@
 </code></pre></div>
 <h4 id="configure-team-spawn-points">Configure Team Spawn Points</h4>
 <p>Give teams dedicated starting positions:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Temporarily disable to enter the field</span>
-/blockball<span class="w"> </span>toggle<span class="w"> </span>game1
-
-<span class="c1"># Set team positions</span>
-/blockball<span class="w"> </span>location<span class="w"> </span>game1<span class="w"> </span>red_spawnpoint
-/blockball<span class="w"> </span>location<span class="w"> </span>game1<span class="w"> </span>blue_spawnpoint
-
-<span class="c1"># Re-enable the game</span>
-/blockball<span class="w"> </span>toggle<span class="w"> </span>game1
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>toggle<span class="w"> </span>game1
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>location<span class="w"> </span>game1<span class="w"> </span>red_spawnpoint
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>location<span class="w"> </span>game1<span class="w"> </span>blue_spawnpoint
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>toggle<span class="w"> </span>game1
 </code></pre></div>
 <hr />
 <h2 id="create-a-minigame-mode">🏆 Create a Minigame Mode</h2>
@@ -1367,7 +1367,8 @@
 <h3 id="step-11-set-lobby-spawn-points">Step 11: Set Lobby Spawn Points</h3>
 <p>Players need somewhere to wait before games start:</p>
 <div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>location<span class="w"> </span>game1<span class="w"> </span>red_lobby
-/blockball<span class="w"> </span>location<span class="w"> </span>game1<span class="w"> </span>blue_lobby
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>location<span class="w"> </span>game1<span class="w"> </span>blue_lobby
 </code></pre></div>
 <h3 id="step-12-final-activation">Step 12: Final Activation</h3>
 <p>Enable your completed minigame:</p>
@@ -1395,7 +1396,7 @@
 </tr>
 <tr>
 <td>Players can't join</td>
-<td>Check that game is enabled and players have <code>blockball.join.*</code> permission</td>
+<td>Check that game is enabled and players have <code>blockball.command</code> <code>blockball.join.*</code> permission</td>
 </tr>
 <tr>
 <td>Ball doesn't appear</td>

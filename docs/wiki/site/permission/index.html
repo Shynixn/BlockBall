@@ -562,63 +562,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#permission-plugin-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      🛠️ Permission Plugin Configuration
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🛠️ Permission Plugin Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#luckperms-setup-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      LuckPerms Setup (Recommended)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="LuckPerms Setup (Recommended)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-player-group" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic Player Group
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#admin-group" class="md-nav__link">
-    <span class="md-ellipsis">
-      Admin Group
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#permissionsex-legacy" class="md-nav__link">
-    <span class="md-ellipsis">
-      PermissionsEx (Legacy)
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#game-specific-permission-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       🎮 Game-Specific Permission Scenarios
@@ -674,15 +617,6 @@
   <a href="#common-issues" class="md-nav__link">
     <span class="md-ellipsis">
       Common Issues
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#testing-permissions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Testing Permissions
     </span>
   </a>
   
@@ -1177,63 +1111,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#permission-plugin-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      🛠️ Permission Plugin Configuration
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🛠️ Permission Plugin Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#luckperms-setup-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      LuckPerms Setup (Recommended)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="LuckPerms Setup (Recommended)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-player-group" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic Player Group
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#admin-group" class="md-nav__link">
-    <span class="md-ellipsis">
-      Admin Group
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#permissionsex-legacy" class="md-nav__link">
-    <span class="md-ellipsis">
-      PermissionsEx (Legacy)
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#game-specific-permission-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       🎮 Game-Specific Permission Scenarios
@@ -1289,15 +1166,6 @@
   <a href="#common-issues" class="md-nav__link">
     <span class="md-ellipsis">
       Common Issues
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#testing-permissions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Testing Permissions
     </span>
   </a>
   
@@ -1687,52 +1555,6 @@
 /blockballsign<span class="w"> </span>add<span class="w"> </span>blockball_join_blue_sign<span class="w"> </span>arena<span class="w"> </span>stadium1
 </code></pre></div></p>
 <hr />
-<h2 id="permission-plugin-configuration">🛠️ Permission Plugin Configuration</h2>
-<h3 id="luckperms-setup-recommended">LuckPerms Setup (Recommended)</h3>
-<p>LuckPerms is the most popular permission plugin and integrates perfectly with BlockBall:</p>
-<h4 id="basic-player-group">Basic Player Group</h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create group for regular players</span>
-/lp<span class="w"> </span>creategroup<span class="w"> </span>blockball_players
-
-<span class="c1"># Add essential permissions</span>
-/lp<span class="w"> </span>group<span class="w"> </span>blockball_players<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>blockball.command<span class="w"> </span><span class="nb">true</span>
-/lp<span class="w"> </span>group<span class="w"> </span>blockball_players<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>blockball.join.*<span class="w"> </span><span class="nb">true</span>
-/lp<span class="w"> </span>group<span class="w"> </span>blockball_players<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>blockball.shyscoreboard.scoreboard.*<span class="w"> </span><span class="nb">true</span>
-/lp<span class="w"> </span>group<span class="w"> </span>blockball_players<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>blockball.shybossbar.bossbar.*<span class="w"> </span><span class="nb">true</span>
-
-<span class="c1"># Add players to group</span>
-/lp<span class="w"> </span>user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>parent<span class="w"> </span>add<span class="w"> </span>blockball_players
-</code></pre></div>
-<h4 id="admin-group">Admin Group</h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create admin group</span>
-/lp<span class="w"> </span>creategroup<span class="w"> </span>blockball_admins
-
-<span class="c1"># Inherit player permissions</span>
-/lp<span class="w"> </span>group<span class="w"> </span>blockball_admins<span class="w"> </span>parent<span class="w"> </span>add<span class="w"> </span>blockball_players
-
-<span class="c1"># Add admin permissions</span>
-/lp<span class="w"> </span>group<span class="w"> </span>blockball_admins<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>blockball.edit<span class="w"> </span><span class="nb">true</span>
-/lp<span class="w"> </span>group<span class="w"> </span>blockball_admins<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>blockball.referee.join<span class="w"> </span><span class="nb">true</span>
-/lp<span class="w"> </span>group<span class="w"> </span>blockball_admins<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>blockball.shyscoreboard.command<span class="w"> </span><span class="nb">true</span>
-/lp<span class="w"> </span>group<span class="w"> </span>blockball_admins<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>blockball.shybossbar.command<span class="w"> </span><span class="nb">true</span>
-</code></pre></div>
-<h3 id="permissionsex-legacy">PermissionsEx (Legacy)</h3>
-<div class="highlight"><pre><span></span><code><span class="nt">groups</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">blockball_players</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">permissions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.command</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.join.*</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyscoreboard.scoreboard.*</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shybossbar.bossbar.*</span>
-
-<span class="w">  </span><span class="nt">blockball_admins</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">inheritance</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball_players</span>
-<span class="w">    </span><span class="nt">permissions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.edit</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.referee.join</span>
-</code></pre></div>
-<hr />
 <h2 id="game-specific-permission-scenarios">🎮 Game-Specific Permission Scenarios</h2>
 <h3 id="scenario-1-public-server-with-multiple-arenas">Scenario 1: Public Server with Multiple Arenas</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># All players can join any arena</span>
@@ -1740,29 +1562,25 @@
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.command</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.join.*</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyscoreboard.scoreboard.*</span>
-
-<span class="c1"># VIP players get enhanced features  </span>
-<span class="nt">vip_group</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.command.staff</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.game.inventory</span>
 </code></pre></div>
 <h3 id="scenario-2-tournament-server-with-restricted-access">Scenario 2: Tournament Server with Restricted Access</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Players can only join assigned tournament arenas</span>
 <span class="nt">tournament_red</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.command</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.join.tournament_arena</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyscoreboard.scoreboard.tournament</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.join.tournament_red_arena</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyscoreboard.scoreboard.*</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shybossbar.bossbar.*</span>
 
 <span class="nt">tournament_blue</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.command</span><span class="w">  </span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.join.tournament_arena</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyscoreboard.scoreboard.tournament</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.join.tournament_blue_arena</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyscoreboard.scoreboard.*</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shybossbar.bossbar.*</span>
 
 <span class="c1"># Referees get full control</span>
 <span class="nt">referees</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.command</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.referee.join</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.edit</span>
 </code></pre></div>
 <h3 id="scenario-3-training-server-for-new-players">Scenario 3: Training Server for New Players</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Beginners get limited access</span>
@@ -1775,7 +1593,6 @@
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.command</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.join.training_arena</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.join.competitive_arena</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.command.staff</span>
 </code></pre></div>
 <hr />
 <h2 id="permission-troubleshooting">🔍 Permission Troubleshooting</h2>
@@ -1811,16 +1628,6 @@
 </tr>
 </tbody>
 </table>
-<h3 id="testing-permissions">Testing Permissions</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Check if player has permission</span>
-/lp<span class="w"> </span>user<span class="w"> </span>&lt;player&gt;<span class="w"> </span>permission<span class="w"> </span>check<span class="w"> </span>blockball.command
-
-<span class="c1"># List all BlockBall permissions for a player</span>
-/lp<span class="w"> </span>user<span class="w"> </span>&lt;player&gt;<span class="w"> </span>permission<span class="w"> </span>info<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>blockball
-
-<span class="c1"># Test in-game</span>
-/blockball<span class="w"> </span>join<span class="w"> </span>arena1<span class="w">  </span><span class="c1"># Should work with proper permissions</span>
-</code></pre></div>
 <hr />
 <h2 id="best-practices">💡 Best Practices</h2>
 <h3 id="security-guidelines">Security Guidelines</h3>
