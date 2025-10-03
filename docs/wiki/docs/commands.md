@@ -1,252 +1,314 @@
-# Commands
+# Command Reference
 
-The following commands are available in BlockBall. You can access them by typing:
+BlockBall provides a comprehensive set of commands for arena management, gameplay, and administration. All commands require the appropriate permissions.
 
-```
-/blockball help 1
-```
+!!! tip "Getting Help"
+    Access the in-game help system anytime:
+    ```bash
+    /blockball help 1
+    ```
 
-### /blockball create
+---
 
-```
+## 🏗️ Arena Management Commands
+
+### Create & Copy Arenas
+
+#### `/blockball create`
+Creates a new arena from scratch.
+
+```bash
 /blockball create <name> <displayName>
 ```
 
-Creates a new arena for a BlockBall game.
+**Parameters:**
+- `name` - Unique identifier for the arena (no spaces)
+- `displayName` - User-friendly name (supports color codes)
 
-* Name: Identifier of a game
-* DisplayName: Arbitrary Display for your game. Can contain ChatColors.
-
-### /blockball copy
-
+**Example:**
+```bash
+/blockball create stadium1 &6Golden Stadium
 ```
+
+#### `/blockball copy`
+Duplicates an existing arena with all its settings.
+
+```bash
 /blockball copy <source> <name> <displayName>
 ```
 
-Creates a new arena for a BlockBall game based on the settings of one of your existing arenas.
+**Parameters:**
+- `source` - Name of existing arena to copy
+- `name` - New arena identifier  
+- `displayName` - Display name for the new arena
 
-* Source: Identifier of an already existing game
-* Name: Identifier of a game
-* DisplayName: Arbitrary Display for your game. Can contain ChatColors.
-
-### /blockball delete
-
+**Example:**
+```bash
+/blockball copy stadium1 stadium2 &bBlue Stadium
 ```
+
+### Arena Control
+
+#### `/blockball delete`
+Permanently removes an arena and its configuration.
+
+```bash
 /blockball delete <name>
 ```
 
-Deletes a BlockBall game.
+!!! warning "Destructive Action"
+    This action cannot be undone. Make sure to backup your arena files if needed.
 
-* Name: Identifier of a game
+#### `/blockball list`
+Shows all arenas and their current status.
 
-### /blockball list
-
-```
+```bash
 /blockball list [player]
 ```
 
-Lists all games you have created.
-
-### /blockball toggle
-
+**Output Example:**
 ```
+stadium1 [Golden Stadium] [enabled]
+arena2 [Practice Field] [disabled]
+```
+
+#### `/blockball toggle`
+Enables or disables an arena.
+
+```bash
 /blockball toggle <name>
 ```
 
-Enables or disables your game. If a game is disabled, nobody can join.
+- **Enabled**: Players can join and play
+- **Disabled**: Arena is inaccessible to players
 
-* Name: Identifier of a game
+---
 
-### /blockball join
+## 🎮 Player Commands
 
-```
+### Joining & Leaving
+
+#### `/blockball join`
+Join a specific game, optionally choosing a team.
+
+```bash
 /blockball join <name> [team] [player]
 ```
 
-Lets the player executing the command join the game. If no team is specified, a random team will be selected.
-If the player has already joined a game, this command can also be used to switch teams. 
+**Parameters:**
+- `name` - Arena name to join
+- `team` - `red`, `blue`, or `referee` (optional)
+- `player` - Target player (admin only)
 
-* Name: Identifier of a game
-* Team: Optional name of the team. Is ``red``, ``blue`` or ``referee``.
-* Player: Optional name of the player to join. Requires the ``blockball.edit`` permission to use.
-
-### /blockball leave
-
+**Examples:**
+```bash
+/blockball join stadium1
+/blockball join stadium1 red
+/blockball join stadium1 blue Steve
 ```
+
+#### `/blockball leave`
+Leave the current game.
+
+```bash
 /blockball leave [player]
 ```
 
-Lets the player executing the command leave the game.
+---
 
-* Player: Optional name of the player to leave. Requires the ``blockball.edit`` permission to use.
+## 🔧 Setup & Configuration Commands
 
-### /blockball axe
+### Selection Tools
 
-```
+#### `/blockball axe`
+Get the selection tool for marking areas.
+
+```bash
 /blockball axe
 ```
 
-Adds the BlockBall axe for selection to your inventory.
+**Usage:**
+- **Left-click**: Select first corner (Point A)
+- **Right-click**: Select second corner (Point B)
 
-### /blockball select
+#### `/blockball select`
+Apply your axe selection to define arena areas.
 
-```
-/blockball select <name>
-```
-
-Sets a area for your arena.
-
-* Name: Identifier of a game
-* Type: Type of selection to set: e.g. field, blue_goal, red_goal. See tab completion for all values.
-
-### /blockball location
-
-```
-/blockball location <name>
+```bash
+/blockball select <name> <type>
 ```
 
-Sets a location for your arena.
+**Area Types:**
+- `field` - Main playing area
+- `red_goal` - Red team's goal
+- `blue_goal` - Blue team's goal
 
-* Name: Identifier of a game
-* Type: Type of location to set: ball, red_spawnpoint, blue_spawnpoint, leave_spawnpoint
-
-
-### /blockball highlight
-
+**Example:**
+```bash
+/blockball select stadium1 field
 ```
+
+#### `/blockball location`
+Set specific points using your current position.
+
+```bash
+/blockball location <name> <type>
+```
+
+**Location Types:**
+- `ball` - Where the ball spawns
+- `red_spawnpoint` - Red team spawn
+- `blue_spawnpoint` - Blue team spawn  
+- `red_lobby` - Red team lobby (minigames)
+- `blue_lobby` - Blue team lobby (minigames)
+- `referee_spawnpoint` - Referee position
+- `referee_lobby` - Referee lobby
+- `leave_spawnpoint` - Where players go when leaving
+
+### Visual Aids
+
+#### `/blockball highlight`
+Toggle visual boundaries for easier arena editing.
+
+```bash
 /blockball highlight <name>
 ```
 
-Starts highlighting your arena. When executing this command a second time, you stop highlighting an arena.
+Shows particle effects or blocks around defined areas.
 
-* Name: Identifier of a game
+---
 
-### /blockball inventory
+## ⚙️ Customization Commands
 
-```
+### Team Equipment
+
+#### `/blockball inventory`
+Copy your current inventory as the team's default gear.
+
+```bash
 /blockball inventory <name> <team>
 ```
 
-Copies the inventory of the player executing the command. This copy will be applied to players when they join a game.
+**Teams:** `red` or `blue`
 
-* Name: Identifier of a game
-* Team: Name of the team. Is always red or blue.
+#### `/blockball armor`
+Copy your current armor as the team's default equipment.
 
-### /blockball armor
-
-```
+```bash
 /blockball armor <name> <team>
 ```
 
-Copies the armor inventory of the player executing the command. This copy will be applied to players when they join a game.
+### Game Rules
 
-* Name: Identifier of a game
-* Team: Name of the team. Is always red or blue.
+#### `/blockball gamerule`
+Modify arena settings and game mechanics.
 
-### /blockball gamerule
-
-```
+```bash
 /blockball gamerule <key> <name> <value>
 ```
 
-Sets a gamerule of BlockBall.
+**Common Game Rules:**
+- `gameType` - `hubgame`, `minigame`, or `refereegame`
+- `maxScore` - Points needed to win
+- `duration` - Game length in seconds
 
-* Key: The name of the gamerule.
-* Name: Identifier of a game
-* Value: Value of a gamerule. See tab completions for all values.
-
-### /blockball sign
-
+**Example:**
+```bash
+/blockball gamerule gameType stadium1 minigame
 ```
+
+---
+
+## 🛡️ Referee Commands (Patreon Feature)
+
+Control match flow during tournaments and events.
+
+### Game Control
+
+| Command | Description |
+|---------|-------------|
+| `/blockball referee startgame` | Start lobby countdown |
+| `/blockball referee stop` | End current period/game |
+| `/blockball referee whistleresume` | Resume play, enable ball |
+| `/blockball referee whistlestop` | Pause game, disable ball |
+| `/blockball referee freezetime` | Freeze timer and ball |
+| `/blockball referee nextperiod` | Move to next game period |
+
+### Ball Control
+
+| Command | Description |
+|---------|-------------|
+| `/blockball referee setball [x] [y] [z] [yaw] [pitch] [world]` | Teleport ball to position |
+| `/blockball referee setballrel [forward] [sideward]` | Set ball relative to referee |
+
+### Player Management
+
+| Command | Description |
+|---------|-------------|
+| `/blockball referee yellowcard <player>` | Give yellow card |
+| `/blockball referee redcard <player>` | Give red card |
+| `/blockball referee kickplayer <player>` | Remove player from game |
+
+---
+
+## 🏷️ Signs & Integration
+
+#### `/blockball sign`
+Create interactive signs for easy player access.
+
+```bash
 /blockball sign <name> <type>
 ```
 
-Enables the player to add a specific sign by right-clicking any sign. You can remove signs by simply breaking the block.
+**Sign Types:**
+- `join` - Join any available team
+- `leave` - Leave current game
+- `team_red` - Join red team specifically  
+- `team_blue` - Join blue team specifically
 
-* Name: Identifier of a game
-* Type: Type of sign to create. Possible values: join, leave, team_red, team_blue
+**Usage:**
+1. Run the command
+2. Right-click any sign to convert it
 
-### /blockball referee startgame
+---
 
-```
-/blockball referee startgame
-```
+## 🔧 System Commands
 
-Starts the lobby countdown of a game.
+#### `/blockball placeholder`
+Test placeholder values for scoreboards and displays.
 
-### /blockball referee stop
-
-```
-/blockball referee stop
-```
-
-Transitions the game to the final period. Executing this command again stops it.
-
-### /blockball referee setball
-
-```
-/blockball referee setball [x] [y] [z] [yaw] [pitch] [world]
-```
-
-Teleports the ball to the position of the referee.
-
-### /blockball referee setballrel
-
-```
-/blockball referee setballrel [forward] [sideward]
-```
-
-Teleports the ball to the relative position of the referee.
-
-### /blockball referee whistleresume
-
-```
-/blockball referee whistleresume
-```
-
-Resumes the game and sets the ball interactable.
-
-### /blockball referee whistlestop
-
-```
-/blockball referee whistlestop
-```
-
-Stops the game and sets the ball inactive.
-
-### /blockball referee freezetime
-
-```
-/blockball referee freezetime
-```
-
-Freezes the countdown and sets the ball inactive.
-
-### /blockball referee nextperiod
-
-```
-/blockball referee nextperiod
-```
-
-Transitions to the next configured period.
-
-### /blockball placeholder
-
-```
+```bash
 /blockball placeholder <placeholder>
 ```
 
-Tries to resolve the value of a given placeholder.
-
-* PlaceHolder: PlaceHolder
-
-
-### /blockball reload
-
+**Example:**
+```bash
+/blockball placeholder %blockball_game_redScore%
 ```
+
+#### `/blockball reload`
+Reload arena configurations without restarting.
+
+```bash
 /blockball reload [name]
 ```
 
-Allows to reload all games or a specific single one.
+- **No name**: Reload all arenas
+- **With name**: Reload specific arena
 
-* Name: Optional identifier of a game
+---
+
+## 💡 Pro Tips
+
+!!! tip "Command Efficiency"
+    - Use tab completion to see available options
+    - Most commands support partial arena name matching
+    - Commands are case-insensitive for convenience
+
+!!! warning "Permission Requirements"
+    - Regular players need `blockball.command` for basic commands
+    - Arena editing requires `blockball.edit`
+    - Referee commands need `blockball.referee.join`
+
+!!! info "Admin Features"
+    Many commands accept a player parameter when you have admin permissions, allowing you to manage other players' arena participation.
