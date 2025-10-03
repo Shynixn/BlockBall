@@ -511,3 +511,9 @@ shyCommandSignsRightClickOnSign:
 shyCommandSignsRightClickOnSignSuccess:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 Added a sign of type %blockball_param_1% sign."
+shyCommandSignsServerCommandHint:
+  type: "CHAT"
+  text: "Sends the player to the given server."
+shyCommandSignsServerMessage:
+  type: "CHAT"
+  text: "[&9ShyCommandSigns&f] Connecting to server '%shycommandsigns_param_1%' ..."

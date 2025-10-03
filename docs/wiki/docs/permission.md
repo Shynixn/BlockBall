@@ -48,3 +48,5 @@ The following permissions are available in BlockBall.
 | blockball.shycommandsigns.command                      | Admin      | Allows to use the /blockballsign command.                                                            
 | blockball.shycommandsigns.add                          | Admin      | Allows to add a join and leave sign                                                                  
 | blockball.shycommandsigns.reload                       | Admin      | Allows to reload configurations.                                                                     
+| blockball.shycommandsigns.server	                      | Admin      | Server teleport command                                                                    
+| blockball.shycommandsigns.manipulateother | Admin | Modify other players	

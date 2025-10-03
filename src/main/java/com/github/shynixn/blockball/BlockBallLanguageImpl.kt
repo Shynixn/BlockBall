@@ -301,4 +301,8 @@ class BlockBallLanguageImpl : BlockBallLanguage {
  override var shyCommandSignsRightClickOnSign = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Click on a sign to convert it into a %blockball_param_1% sign.")
 
  override var shyCommandSignsRightClickOnSignSuccess = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Added a sign of type %blockball_param_1% sign.")
+
+ override var shyCommandSignsServerCommandHint = LanguageItem("Sends the player to the given server.")
+
+ override var shyCommandSignsServerMessage = LanguageItem("[&9ShyCommandSigns&f] Connecting to server '%shycommandsigns_param_1%' ...")
 }
