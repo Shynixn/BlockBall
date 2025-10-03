@@ -145,8 +145,8 @@ game1 [My first game] [enabled]
 ### Step 9: Test Your Arena
 
 Players can now join in two ways:
-- **Walk into the field** - Automatic join
-- **Use command**: `/blockball join game1`
+* **Walk into the field:** Automatic join
+* **Use command**: `/blockball join game1`
 
 ---
 

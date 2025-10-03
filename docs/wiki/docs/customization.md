@@ -520,37 +520,6 @@ meta:
       effectType: EVERYONE
 ```
 
-### Custom Sound Examples
-
-!!! info "Sound Configuration"
-    The examples below show how you could configure additional sounds if they were supported. Currently, BlockBall supports ball interaction sounds (`ONKICK`), countdown sounds, and double jump sounds as shown in the sections above.
-
-```yaml
-# These are example configurations - check plugin documentation 
-# for currently supported sound events
-
-# Goal celebration sound (example)
-goalScoredSound:
-  name: ENTITY_PLAYER_LEVELUP,LEVEL_UP
-  volume: 8.0
-  pitch: 1.2
-  effectType: EVERYONE
-
-# Whistle for game start (example)
-gameStartSound:
-  name: ENTITY_ARROW_SHOOT,SHOOT_ARROW
-  volume: 5.0
-  pitch: 0.8
-  effectType: EVERYONE
-  
-# Crowd cheer using note blocks (example)
-crowdCheerSound:
-  name: BLOCK_NOTE_BLOCK_CHIME,NOTE_PIANO
-  volume: 6.0
-  pitch: 1.8
-  effectType: EVERYONE
-```
-
 ---
 
 ## 🏆 Team Equipment and Visual Identity
@@ -800,7 +769,7 @@ lobbyMeta:
     Start with small modifications and gradually build complexity. The most successful arena configurations evolve over time based on player feedback and server needs.
 ---
 
-## 🤖 AI-Powered Configuration (Recommended)
+## 🤖 AI-Powered Configuration
 
 ### Using ChatGPT for Easy Setup
 
