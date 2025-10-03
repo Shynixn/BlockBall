@@ -29,9 +29,10 @@ Referee mode gives a designated admin or moderator complete control over match f
 ### Prerequisites
 
 Before setting up referee mode, ensure you have:
-1. **Patreon subscription** for BlockBall
-2. **Working minigame arena** (complete the [basic setup](game.md) first)
-3. **Proper permissions** configured for referees
+
+1. Patreon subscription for BlockBall
+2. Working minigame arena (complete the [basic setup](game.md) first)
+3. Proper permissions configured for referees
 
 ### Step-by-Step Setup
 
@@ -41,12 +42,13 @@ Before setting up referee mode, ensure you have:
     You **must** start with a working minigame arena before converting to referee mode. Follow the [game creation guide](game.md) completely first.
 
 Ensure your arena has all required elements:
-- ✅ Playing field defined
-- ✅ Both team goals set
-- ✅ Ball spawn point configured
-- ✅ Team spawn points established
-- ✅ Lobby spawn points configured
-- ✅ Arena enabled and tested
+
+* ✅ Playing field defined
+* ✅ Both team goals set
+* ✅ Ball spawn point configured
+* ✅ Team spawn points established
+* ✅ Lobby spawn points configured
+* ✅ Arena enabled and tested
 
 #### Step 2: Set Referee Positions
 
@@ -185,7 +187,7 @@ Remove disruptive players from the match:
 ```
 
 !!! note "Manual Tracking"
-    The referee system displays cards but doesn't automatically eject players for accumulating cards. Referees must manually track infractions and eject players as needed.
+    The referee system displays cards but doesn't automatically eject players for accumulating cards. Referees must manually track infractions and eject players as needed. However, you can setup a third party scoreboard plugin to display the amount of cards a player has received above their head using the placeholder %blockball_player_cardDisplay%.
 
 ### Card Display Integration
 
