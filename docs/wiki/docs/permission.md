@@ -178,62 +178,6 @@ Manage interactive BlockBall signs:
 
 ---
 
-## 🛠️ Permission Plugin Configuration
-
-### LuckPerms Setup (Recommended)
-
-LuckPerms is the most popular permission plugin and integrates perfectly with BlockBall:
-
-#### Basic Player Group
-```bash
-# Create group for regular players
-/lp creategroup blockball_players
-
-# Add essential permissions
-/lp group blockball_players permission set blockball.command true
-/lp group blockball_players permission set blockball.join.* true
-/lp group blockball_players permission set blockball.shyscoreboard.scoreboard.* true
-/lp group blockball_players permission set blockball.shybossbar.bossbar.* true
-
-# Add players to group
-/lp user <username> parent add blockball_players
-```
-
-#### Admin Group
-```bash
-# Create admin group
-/lp creategroup blockball_admins
-
-# Inherit player permissions
-/lp group blockball_admins parent add blockball_players
-
-# Add admin permissions
-/lp group blockball_admins permission set blockball.edit true
-/lp group blockball_admins permission set blockball.referee.join true
-/lp group blockball_admins permission set blockball.shyscoreboard.command true
-/lp group blockball_admins permission set blockball.shybossbar.command true
-```
-
-### PermissionsEx (Legacy)
-```yaml
-groups:
-  blockball_players:
-    permissions:
-      - blockball.command
-      - blockball.join.*
-      - blockball.shyscoreboard.scoreboard.*
-      - blockball.shybossbar.bossbar.*
-      
-  blockball_admins:
-    inheritance:
-      - blockball_players
-    permissions:
-      - blockball.edit
-      - blockball.referee.join
-```
-
----
-
 ## 🎮 Game-Specific Permission Scenarios
 
 ### Scenario 1: Public Server with Multiple Arenas
@@ -243,11 +187,6 @@ default_group:
   - blockball.command
   - blockball.join.*
   - blockball.shyscoreboard.scoreboard.*
-
-# VIP players get enhanced features  
-vip_group:
-  - blockball.command.staff
-  - blockball.game.inventory
 ```
 
 ### Scenario 2: Tournament Server with Restricted Access
@@ -255,19 +194,20 @@ vip_group:
 # Players can only join assigned tournament arenas
 tournament_red:
   - blockball.command
-  - blockball.join.tournament_arena
-  - blockball.shyscoreboard.scoreboard.tournament
+  - blockball.join.tournament_red_arena
+  - blockball.shyscoreboard.scoreboard.*
+  - blockball.shybossbar.bossbar.*
 
 tournament_blue:
   - blockball.command  
-  - blockball.join.tournament_arena
-  - blockball.shyscoreboard.scoreboard.tournament
+  - blockball.join.tournament_blue_arena
+  - blockball.shyscoreboard.scoreboard.*
+  - blockball.shybossbar.bossbar.*
 
 # Referees get full control
 referees:
   - blockball.command
   - blockball.referee.join
-  - blockball.edit
 ```
 
 ### Scenario 3: Training Server for New Players
@@ -282,7 +222,6 @@ advanced:
   - blockball.command
   - blockball.join.training_arena
   - blockball.join.competitive_arena
-  - blockball.command.staff
 ```
 
 ---
@@ -297,18 +236,6 @@ advanced:
 | Can't join arenas | Missing join permissions | Add `blockball.join.*` or specific arena |
 | Scoreboards not showing | Missing display permissions | Add scoreboard permissions |
 | Admin commands not working | Missing admin permissions | Add `blockball.edit` or specific admin perms |
-
-### Testing Permissions
-```bash
-# Check if player has permission
-/lp user <player> permission check blockball.command
-
-# List all BlockBall permissions for a player
-/lp user <player> permission info | grep blockball
-
-# Test in-game
-/blockball join arena1  # Should work with proper permissions
-```
 
 ---
 

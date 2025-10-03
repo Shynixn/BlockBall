@@ -5,10 +5,11 @@ This comprehensive guide will walk you through setting up a BlockBall soccer are
 ## 🎯 Overview
 
 Creating a BlockBall arena involves:
-1. **Basic Setup** - Create the game and define play areas
-2. **Team Configuration** - Set goals and spawn points  
-3. **Game Activation** - Enable and test your arena
-4. **Optional Enhancements** - Add advanced features
+
+1. **Basic Setup:**  Create the game and define play areas
+2. **Team Configuration:**  Set goals and spawn points  
+3. **Game Activation:** Enable and test your arena
+4. **Optional Enhancements:** Add advanced features
 
 ---
 
@@ -164,14 +165,19 @@ Prevent players from being teleported to random locations:
 Give teams dedicated starting positions:
 
 ```bash
-# Temporarily disable to enter the field
 /blockball toggle game1
+```
 
-# Set team positions
+```bash
 /blockball location game1 red_spawnpoint
-/blockball location game1 blue_spawnpoint
+```
 
-# Re-enable the game
+```bash
+/blockball location game1 blue_spawnpoint
+```
+
+
+```bash
 /blockball toggle game1
 ```
 
@@ -196,6 +202,9 @@ Players need somewhere to wait before games start:
 
 ```bash
 /blockball location game1 red_lobby
+```
+
+```bash
 /blockball location game1 blue_lobby
 ```
 
@@ -221,12 +230,12 @@ Set up tournament-style games with full referee control. See our [Referee Guide]
 
 ## 🆘 Troubleshooting
 
-| Problem | Solution |
-|---------|----------|
-| Game won't enable | Ensure all required areas are set (field, goals, ball spawn) |
-| Players can't join | Check that game is enabled and players have `blockball.join.*` permission |
-| Ball doesn't appear | Verify ball spawn point is set within the playing field |
-| Areas not visible | Use `/blockball highlight game1` to see boundaries |
+| Problem | Solution                                                                               |
+|---------|----------------------------------------------------------------------------------------|
+| Game won't enable | Ensure all required areas are set (field, goals, ball spawn)                           |
+| Players can't join | Check that game is enabled and players have `blockball.command` `blockball.join.*` permission |
+| Ball doesn't appear | Verify ball spawn point is set within the playing field                                |
+| Areas not visible | Use `/blockball highlight game1` to see boundaries                                     |
 
 ---
 
