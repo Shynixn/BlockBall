@@ -9,17 +9,20 @@ BlockBall is a powerful Spigot plugin that brings authentic soccer/football game
 ## 🎯 Key Features
 
 ### Core Gameplay
+
 * **Interactive Soccer Ball**: Realistic ball physics without requiring any resource packs
 * **Customizable Physics Engine**: Fine-tune ball behavior to match your server's style
 * **Multiple Game Modes**: Hub games, minigames, and referee-controlled matches
 
 ### Server Integration
+
 * **PlaceholderAPI Support**: Full integration for scoreboards and displays
 * **Cross-Platform Compatibility**: Works with Bukkit, Paper, and Folia
 * **Multiple Arenas**: Run unlimited concurrent games on your server
 * **Bedrock Support**: Compatible with Bedrock clients via GeyserMC
 
 ### Advanced Features
+
 * **Player Statistics**: Track goals, wins, and performance (Patreon feature)
 * **Referee System**: Full match control for tournaments and events (Patreon feature)
 * **Team Management**: Automatic team balancing and custom team configurations
