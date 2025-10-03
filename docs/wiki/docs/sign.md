@@ -7,10 +7,10 @@ Create user-friendly join and leave signs that allow players to interact with Bl
 BlockBall signs provide an intuitive way for players to join games without memorizing commands. Players simply right-click signs to join arenas, switch teams, or leave games.
 
 ### Sign Types Available
-- **Join Signs**: Join any available team automatically
-- **Leave Signs**: Exit the current game  
-- **Team-Specific Signs**: Join a specific team (Red/Blue)
-- **Custom Signs**: Advanced configurations for special needs
+* **Join Signs**: Join any available team automatically
+* **Leave Signs**: Exit the current game  
+* **Team-Specific Signs**: Join a specific team (Red/Blue)
+* **Custom Signs**: Advanced configurations for special needs
 
 ---
 
@@ -60,9 +60,9 @@ Right-click the sign you placed. The sign will automatically update with BlockBa
 **Command**: `/blockballsign add blockball_join_sign arena <game>`
 
 **Functionality**: 
-- Joins any available team automatically
-- Balances teams when possible
-- Shows current game status
+* Joins any available team automatically
+* Balances teams when possible
+* Shows current game status
 
 **Best For**: Main entrances, lobby areas
 
@@ -70,9 +70,9 @@ Right-click the sign you placed. The sign will automatically update with BlockBa
 **Command**: `/blockballsign add blockball_leave_sign arena <game>`
 
 **Functionality**:
-- Removes player from current game
-- Works regardless of which arena they're in
-- Safe exit from any BlockBall game
+* Removes player from current game
+* Works regardless of which arena they're in
+* Safe exit from any BlockBall game
 
 **Best For**: Exit areas, spawn points
 
@@ -82,17 +82,17 @@ Right-click the sign you placed. The sign will automatically update with BlockBa
 **Command**: `/blockballsign add blockball_join_red_sign arena <game>`
 
 **Functionality**: 
-- Joins red team specifically
-- Shows red team status and availability
-- May reject if team is full
+* Joins red team specifically
+* Shows red team status and availability
+* May reject if team is full
 
 #### Blue Team Join
 **Command**: `/blockballsign add blockball_join_blue_sign arena <game>`
 
 **Functionality**:
-- Joins blue team specifically  
-- Shows blue team status and availability
-- May reject if team is full
+* Joins blue team specifically  
+* Shows blue team status and availability
+* May reject if team is full
 
 **Best For**: Team selection areas, faction-based servers
 

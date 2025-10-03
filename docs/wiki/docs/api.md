@@ -56,9 +56,9 @@ public class YourPlugin extends JavaPlugin {
 
 BlockBall broadcasts various events that you can listen to:
 
-- **Game Events**: Start, end, goal scored, player join/leave
-- **Ball Events**: Kick, pass, interaction
-- **Player Events**: Team switch, respawn
+* **Game Events**: Start, end, goal scored, player join/leave
+* **Ball Events**: Kick, pass, interaction
+* **Player Events**: Team switch, respawn
 
 View all available events in the [GitHub repository](https://github.com/Shynixn/BlockBall/tree/master/src/main/java/com/github/shynixn/blockball/event).
 
