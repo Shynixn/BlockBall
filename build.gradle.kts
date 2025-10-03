@@ -29,11 +29,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.1.0")
-    implementation("com.github.shynixn.shybossbar:shybossbar:1.3.0")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.8.0")
-    implementation("com.github.shynixn.mcutils:common:2025.42")
-    implementation("com.github.shynixn.mcutils:packet:2025.31")
+    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.2.0")
+    implementation("com.github.shynixn.shybossbar:shybossbar:1.4.0")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.9.0")
+    implementation("com.github.shynixn.mcutils:common:2025.45")
+    implementation("com.github.shynixn.mcutils:packet:2025.37")
     implementation("com.github.shynixn.mcutils:database:2025.10")
     implementation("com.github.shynixn.mcutils:worldguard:2025.4")
 }
@@ -87,7 +87,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-latest.${archiveExtension.get()}")
-    // destinationDirectory.set(File("C:\\git\\mc\\plugins"))
+    destinationDirectory.set(File("C:\\git\\mc\\plugins"))
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")

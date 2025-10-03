@@ -101,10 +101,11 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
                 Version.VERSION_1_21_R3,
                 Version.VERSION_1_21_R4,
                 Version.VERSION_1_21_R5,
+                Version.VERSION_1_21_R6,
             )
         } else {
             arrayOf(
-                Version.VERSION_1_21_R5,
+                Version.VERSION_1_21_R6,
             )
         }
 
@@ -365,7 +366,9 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
                 "sign/blockball_join_blue_sign.yml" to "blockball_join_blue_sign.yml",
                 "sign/blockball_leave_sign.yml" to "blockball_leave_sign.yml"
             )
+            s.otherPlayerPermission = "blockball.shycommandsigns.other"
             s.reloadPermission = "blockball.shycommandsigns.reload"
+            s.serverPermission = "blockball.shycommandsigns.server"
         })
         settings.reload()
         val module =
