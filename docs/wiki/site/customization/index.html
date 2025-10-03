@@ -749,15 +749,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#custom-sound-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Sound Examples
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -935,13 +926,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ai-powered-configuration-recommended" class="md-nav__link">
+  <a href="#ai-powered-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      🤖 AI-Powered Configuration (Recommended)
+      🤖 AI-Powered Configuration
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🤖 AI-Powered Configuration (Recommended)">
+    <nav class="md-nav" aria-label="🤖 AI-Powered Configuration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1537,15 +1528,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#custom-sound-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Sound Examples
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1723,13 +1705,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ai-powered-configuration-recommended" class="md-nav__link">
+  <a href="#ai-powered-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      🤖 AI-Powered Configuration (Recommended)
+      🤖 AI-Powered Configuration
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🤖 AI-Powered Configuration (Recommended)">
+    <nav class="md-nav" aria-label="🤖 AI-Powered Configuration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2273,35 +2255,6 @@
 <span class="w">      </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 <span class="w">      </span><span class="nt">effectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
 </code></pre></div>
-<h3 id="custom-sound-examples">Custom Sound Examples</h3>
-<div class="admonition info">
-<p class="admonition-title">Sound Configuration</p>
-<p>The examples below show how you could configure additional sounds if they were supported. Currently, BlockBall supports ball interaction sounds (<code>ONKICK</code>), countdown sounds, and double jump sounds as shown in the sections above.</p>
-</div>
-<div class="highlight"><pre><span></span><code><span class="c1"># These are example configurations - check plugin documentation </span>
-<span class="c1"># for currently supported sound events</span>
-
-<span class="c1"># Goal celebration sound (example)</span>
-<span class="nt">goalScoredSound</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENTITY_PLAYER_LEVELUP,LEVEL_UP</span>
-<span class="w">  </span><span class="nt">volume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8.0</span>
-<span class="w">  </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2</span>
-<span class="w">  </span><span class="nt">effectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-
-<span class="c1"># Whistle for game start (example)</span>
-<span class="nt">gameStartSound</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENTITY_ARROW_SHOOT,SHOOT_ARROW</span>
-<span class="w">  </span><span class="nt">volume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0</span>
-<span class="w">  </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.8</span>
-<span class="w">  </span><span class="nt">effectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-
-<span class="c1"># Crowd cheer using note blocks (example)</span>
-<span class="nt">crowdCheerSound</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BLOCK_NOTE_BLOCK_CHIME,NOTE_PIANO</span>
-<span class="w">  </span><span class="nt">volume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6.0</span>
-<span class="w">  </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.8</span>
-<span class="w">  </span><span class="nt">effectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
-</code></pre></div>
 <hr />
 <h2 id="team-equipment-and-visual-identity">🏆 Team Equipment and Visual Identity</h2>
 <h3 id="leather-armor-color-system">Leather Armor Color System</h3>
@@ -2572,7 +2525,7 @@
 <p>Start with small modifications and gradually build complexity. The most successful arena configurations evolve over time based on player feedback and server needs.</p>
 </div>
 <hr />
-<h2 id="ai-powered-configuration-recommended">🤖 AI-Powered Configuration (Recommended)</h2>
+<h2 id="ai-powered-configuration">🤖 AI-Powered Configuration</h2>
 <h3 id="using-chatgpt-for-easy-setup">Using ChatGPT for Easy Setup</h3>
 <p>BlockBall's configuration files contain hundreds of options with detailed comments. Instead of learning every setting manually, you can use AI to make precise changes quickly and accurately.</p>
 <h4 id="step-by-step-process">Step-by-Step Process</h4>

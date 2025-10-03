@@ -1509,23 +1509,27 @@
 <hr />
 <h2 id="setup-guide">🏗️ Setup Guide</h2>
 <h3 id="prerequisites">Prerequisites</h3>
-<p>Before setting up referee mode, ensure you have:
-1. <strong>Patreon subscription</strong> for BlockBall
-2. <strong>Working minigame arena</strong> (complete the <a href="../game/">basic setup</a> first)
-3. <strong>Proper permissions</strong> configured for referees</p>
+<p>Before setting up referee mode, ensure you have:</p>
+<ol>
+<li>Patreon subscription for BlockBall</li>
+<li>Working minigame arena (complete the <a href="../game/">basic setup</a> first)</li>
+<li>Proper permissions configured for referees</li>
+</ol>
 <h3 id="step-by-step-setup">Step-by-Step Setup</h3>
 <h4 id="step-1-create-a-standard-minigame-arena">Step 1: Create a Standard Minigame Arena</h4>
 <div class="admonition warning">
 <p class="admonition-title">Required Foundation</p>
 <p>You <strong>must</strong> start with a working minigame arena before converting to referee mode. Follow the <a href="../game/">game creation guide</a> completely first.</p>
 </div>
-<p>Ensure your arena has all required elements:
-- ✅ Playing field defined
-- ✅ Both team goals set
-- ✅ Ball spawn point configured
-- ✅ Team spawn points established
-- ✅ Lobby spawn points configured
-- ✅ Arena enabled and tested</p>
+<p>Ensure your arena has all required elements:</p>
+<ul>
+<li>✅ Playing field defined</li>
+<li>✅ Both team goals set</li>
+<li>✅ Ball spawn point configured</li>
+<li>✅ Team spawn points established</li>
+<li>✅ Lobby spawn points configured</li>
+<li>✅ Arena enabled and tested</li>
+</ul>
 <h4 id="step-2-set-referee-positions">Step 2: Set Referee Positions</h4>
 <p><strong>Field Referee Position</strong>
 Position yourself where the referee should spawn during active gameplay:
@@ -1682,7 +1686,7 @@ Move to where the referee should wait during lobby phase:
 </code></pre></div></p>
 <div class="admonition note">
 <p class="admonition-title">Manual Tracking</p>
-<p>The referee system displays cards but doesn't automatically eject players for accumulating cards. Referees must manually track infractions and eject players as needed.</p>
+<p>The referee system displays cards but doesn't automatically eject players for accumulating cards. Referees must manually track infractions and eject players as needed. However, you can setup a third party scoreboard plugin to display the amount of cards a player has received above their head using the placeholder %blockball_player_cardDisplay%.</p>
 </div>
 <h3 id="card-display-integration">Card Display Integration</h3>
 <p>Show player cards on scoreboards by editing your scoreboard configuration:</p>
