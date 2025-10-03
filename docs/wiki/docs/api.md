@@ -1,17 +1,26 @@
-# Api
+# Developer API
 
-BlockBall offers a Developer Api, however it is not published to Maven Central or any other distribution system yet.
-You need to directly reference the BlockBall.jar file.
+BlockBall provides a comprehensive API for developers to integrate with the plugin programmatically.
 
-## Usage
+!!! warning "Installation Required"
+    The API is not published to Maven Central. You must reference the BlockBall.jar file directly in your project.
 
-Add a dependency in your plugin.yml
+---
+
+## 🚀 Quick Setup
+
+### 1. Plugin Dependency
+
+Add BlockBall as a soft dependency in your `plugin.yml`:
 
 ```yaml
 softdepend: [ BlockBall ]
 ```
 
-Take a look at the following example:
+### 2. Basic Usage
+
+Access BlockBall services through Bukkit's ServiceManager:
+
 ```java
 public class YourPlugin extends JavaPlugin {
     @Override
@@ -32,4 +41,29 @@ public class YourPlugin extends JavaPlugin {
 }
 ```
 
-BlockBall broadcasts the following [events.](https://github.com/Shynixn/BlockBall/tree/master/src/main/java/com/github/shynixn/blockball/event)
+---
+
+## 🎯 Core Services
+
+| Service | Purpose |
+|---------|---------|
+| **GameService** | Manage games, get game instances, player management |
+| **SoccerBallFactory** | Create and manage soccer balls outside of games |
+
+---
+
+## 📡 Event System
+
+BlockBall broadcasts various events that you can listen to:
+
+- **Game Events**: Start, end, goal scored, player join/leave
+- **Ball Events**: Kick, pass, interaction
+- **Player Events**: Team switch, respawn
+
+View all available events in the [GitHub repository](https://github.com/Shynixn/BlockBall/tree/master/src/main/java/com/github/shynixn/blockball/event).
+
+---
+
+## 📚 Documentation
+
+For detailed API documentation and method signatures, refer to the BlockBall source code on GitHub or use your IDE's intellisense when the plugin is loaded.
