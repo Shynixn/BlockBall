@@ -76,6 +76,7 @@ Choose your installation method:
 Thanks to **Patreon supporters** who funded this feature! ❤️ 
 
 The enhanced Bedrock experience includes:
+
 * Custom Ball Texture: Proper soccer ball appearance
 * Smooth Rotation: Realistic ball movement animations  
 * Optimized Performance: Better frame rates on mobile devices
