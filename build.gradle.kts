@@ -13,7 +13,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://shynixn.github.io/m2/repository/releases")
+    maven("https://maven.shynixn.com/releases")
     maven(System.getenv("SHYNIXN_MCUTILS_REPOSITORY_2025")) // All MCUTILS libraries are private and not OpenSource.
 }
 
