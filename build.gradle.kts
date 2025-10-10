@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.30.0"
+version = "7.31.0"
 
 repositories {
     mavenLocal()
@@ -29,13 +29,13 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.2.0")
-    implementation("com.github.shynixn.shybossbar:shybossbar:1.4.0")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.9.0")
-    implementation("com.github.shynixn.mcutils:common:2025.45")
-    implementation("com.github.shynixn.mcutils:packet:2025.37")
+    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.3.0")
+    implementation("com.github.shynixn.shybossbar:shybossbar:1.5.0")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.10.0")
+    implementation("com.github.shynixn.mcutils:common:2025.47")
+    implementation("com.github.shynixn.mcutils:packet:2025.42")
     implementation("com.github.shynixn.mcutils:database:2025.10")
-    implementation("com.github.shynixn.mcutils:worldguard:2025.4")
+    implementation("com.github.shynixn.mcutils:worldguard:2025.5")
 }
 
 tasks.withType<KotlinCompile> {
