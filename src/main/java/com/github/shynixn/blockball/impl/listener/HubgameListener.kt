@@ -93,6 +93,11 @@ class HubgameListener(
      * is going to the given [location].
      */
     private fun checkForForcefieldInteractions(player: Player, location: Location) {
+        if (player.gameMode == GameMode.SPECTATOR) {
+            // Explicitly ignore spectators because it would toggle off fly.
+            return
+        }
+
         val interactionCache = getInteractionCache(player)
         val gameInternal = gameService.getByPlayer(player)
 
