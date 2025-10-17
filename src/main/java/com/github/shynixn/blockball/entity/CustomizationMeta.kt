@@ -26,8 +26,8 @@ class CustomizationMeta {
     var queueTimeOutSec: Int = 30
 
     @Comment("The ball spawn delay in ticks when the game initially starts or when a new period is entered.")
-    var gameStartBallSpawnDelayTicks: Int = 2
+    var gameStartBallSpawnDelayTicks: Int = 40
 
     @Comment("The ball spawn delay in ticks when spawning after a goal has been scored.")
-    var goalScoredBallSpawnDelayTicks: Int = 1
+    var goalScoredBallSpawnDelayTicks: Int = 40
 }

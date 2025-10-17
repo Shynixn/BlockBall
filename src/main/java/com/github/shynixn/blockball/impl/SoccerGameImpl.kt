@@ -720,11 +720,15 @@ abstract class SoccerGameImpl(
 
         plugin.launch(plugin.entityDispatcher(player)) {
             player.gameMode = stats.gameMode
-            player.allowFlight = stats.gameMode == GameMode.CREATIVE
+            player.allowFlight = stats.gameMode == GameMode.CREATIVE || stats.gameMode == GameMode.SPECTATOR
             player.isFlying = false
             player.level = stats.level
             player.exp = stats.exp.toFloat()
             player.foodLevel = stats.hunger
+
+            if (stats.gameMode == GameMode.SPECTATOR) {
+                player.isFlying = true
+            }
 
             if (!arena.meta.customizingMeta.keepHealthEnabled) {
                 player.maxHealth = stats.maxHealth
