@@ -4,16 +4,16 @@ import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.enumeration.BallActionType
 import com.github.shynixn.blockball.event.*
-import com.github.shynixn.mcutils.common.sound.SoundService
+import com.github.shynixn.shyparticles.contract.ParticleEffectService
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
 /**
  * Handles common ball events.
  */
-class BallListener (
+class BallListener(
     private val soccerBallFactory: SoccerBallFactory,
-    private val soundService: SoundService
+    private val effectService: ParticleEffectService
 ) : Listener {
     /**
      * Gets called when the ball raytraces in the world.
@@ -85,12 +85,13 @@ class BallListener (
      * Plays effects.
      */
     private fun playEffects(ball: SoccerBall, actionEffect: BallActionType) {
-        if (ball.meta.soundEffects.containsKey(actionEffect)) {
-            this.soundService.playSound(
-                ball.getLocation(),
-                ball.getLocation().world!!.players,
-                ball.meta.soundEffects[actionEffect]!!,
-            )
+        val effectName = ball.meta.effects[actionEffect]
+
+        if (effectName != null) {
+            val effect = effectService.getEffectMetaFromName(effectName)
+            if (effect != null) {
+                effectService.startEffect(effect, { ball.getLocation() }, null, null)
+            }
         }
     }
 }

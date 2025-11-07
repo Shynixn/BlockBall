@@ -430,7 +430,8 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
                 "effects/box_tower.yml" to "box_tower.yml",
                 "effects/rainbow_spiral.yml" to "rainbow_spiral.yml",
                 "effects/pulsing_heart.yml" to "pulsing_heart.yml",
-                "effects/double_jump.yml" to "double_jump.yml"
+                "effects/double_jump.yml" to "double_jump.yml",
+                "effects/ball_kick.yml" to "ball_kick.yml"
             )
         })
         settings.reload()

@@ -1,8 +1,6 @@
 package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.mcutils.common.repository.Comment
-import com.github.shynixn.mcutils.common.sound.SoundMeta
-import com.github.shynixn.shyparticles.entity.ParticleEffectMeta
 
 class DoubleJumpMeta {
     @Comment("Are double jumps enabled or disabled?")
