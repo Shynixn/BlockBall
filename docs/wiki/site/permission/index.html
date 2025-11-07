@@ -562,6 +562,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#particle-system-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✨ Particle System Permissions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✨ Particle System Permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#player-particle-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      Player Particle Access
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#particle-administration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Particle Administration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#game-specific-permission-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       🎮 Game-Specific Permission Scenarios
@@ -1111,6 +1144,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#particle-system-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✨ Particle System Permissions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✨ Particle System Permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#player-particle-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      Player Particle Access
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#particle-administration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Particle Administration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#game-specific-permission-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       🎮 Game-Specific Permission Scenarios
@@ -1262,6 +1328,7 @@
 <span class="c1"># Display permissions (recommended for all players)  </span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyscoreboard.scoreboard.*</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shybossbar.bossbar.*</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.effect.visible.*</span>
 </code></pre></div>
 <h3 id="admin-permissions">Admin Permissions</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Arena management (staff only)</span>
@@ -1276,6 +1343,15 @@
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shycommandsigns.command</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shycommandsigns.add</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shycommandsigns.reload</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.command</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.reload</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.list</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.play</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.stop</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.follow</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.followother</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.stopfollow</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.stopfollowother</span>
 </code></pre></div>
 <hr />
 <h2 id="complete-permission-reference">📋 Complete Permission Reference</h2>
@@ -1555,6 +1631,93 @@
 /blockballsign<span class="w"> </span>add<span class="w"> </span>blockball_join_blue_sign<span class="w"> </span>arena<span class="w"> </span>stadium1
 </code></pre></div></p>
 <hr />
+<h2 id="particle-system-permissions">✨ Particle System Permissions</h2>
+<p>Control access to BlockBall's particle effects:</p>
+<h3 id="player-particle-access">Player Particle Access</h3>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Level</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blockball.shyparticles.effect.visible.*</code></td>
+<td><strong>User</strong></td>
+<td>See all particle effects</td>
+</tr>
+<tr>
+<td><code>blockball.shyparticles.effect.visible.[name]</code></td>
+<td><strong>User</strong></td>
+<td>See specific particle effect only</td>
+</tr>
+</tbody>
+</table>
+<h3 id="particle-administration">Particle Administration</h3>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Level</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blockball.shyparticles.command</code></td>
+<td><strong>Admin</strong></td>
+<td>Access <code>/blockballparticle</code> command</td>
+</tr>
+<tr>
+<td><code>blockball.shyparticles.reload</code></td>
+<td><strong>Admin</strong></td>
+<td>Reload particle configurations</td>
+</tr>
+<tr>
+<td><code>blockball.shyparticles.list</code></td>
+<td><strong>Admin</strong></td>
+<td>List available particle effects</td>
+</tr>
+<tr>
+<td><code>blockball.shyparticles.play</code></td>
+<td><strong>Admin</strong></td>
+<td>Play particle effects</td>
+</tr>
+<tr>
+<td><code>blockball.shyparticles.stop</code></td>
+<td><strong>Admin</strong></td>
+<td>Stop particle effects</td>
+</tr>
+<tr>
+<td><code>blockball.shyparticles.follow</code></td>
+<td><strong>Admin</strong></td>
+<td>Make particles follow yourself</td>
+</tr>
+<tr>
+<td><code>blockball.shyparticles.followother</code></td>
+<td><strong>Admin</strong></td>
+<td>Make particles follow other players</td>
+</tr>
+<tr>
+<td><code>blockball.shyparticles.stopfollow</code></td>
+<td><strong>Admin</strong></td>
+<td>Stop particles following yourself</td>
+</tr>
+<tr>
+<td><code>blockball.shyparticles.stopfollowother</code></td>
+<td><strong>Admin</strong></td>
+<td>Stop particles following other players</td>
+</tr>
+<tr>
+<td><code>blockball.shyparticles.effect.start.[name]</code></td>
+<td><strong>Admin</strong></td>
+<td>Start specific particle effect by name</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="game-specific-permission-scenarios">🎮 Game-Specific Permission Scenarios</h2>
 <h3 id="scenario-1-public-server-with-multiple-arenas">Scenario 1: Public Server with Multiple Arenas</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># All players can join any arena</span>
@@ -1562,6 +1725,7 @@
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.command</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.join.*</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyscoreboard.scoreboard.*</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.effect.visible.*</span>
 </code></pre></div>
 <h3 id="scenario-2-tournament-server-with-restricted-access">Scenario 2: Tournament Server with Restricted Access</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Players can only join assigned tournament arenas</span>
@@ -1570,12 +1734,14 @@
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.join.tournament_red_arena</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyscoreboard.scoreboard.*</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shybossbar.bossbar.*</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.effect.visible.*</span>
 
 <span class="nt">tournament_blue</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.command</span><span class="w">  </span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.join.tournament_blue_arena</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyscoreboard.scoreboard.*</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shybossbar.bossbar.*</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockball.shyparticles.effect.visible.*</span>
 
 <span class="c1"># Referees get full control</span>
 <span class="nt">referees</span><span class="p">:</span>
