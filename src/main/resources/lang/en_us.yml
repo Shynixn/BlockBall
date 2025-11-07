@@ -517,3 +517,69 @@ shyCommandSignsServerCommandHint:
 shyCommandSignsServerMessage:
   type: "CHAT"
   text: "[&9ShyCommandSigns&f] Connecting to server '%shycommandsigns_param_1%' ..."
+# All language key identifiers for ShyParticles
+shyParticlesPlayerNotFoundMessage:
+  # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
+  # Please notice that some messages do only support chat.
+  type: "CHAT"
+  # The primary text to be sent.
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found."
+  # Only available for type "TITLE". Adds a subTitle.
+  subTitle: ""
+  # Only available for type: "TITLE". Adds a fade in effect.
+  fadeInTicks: 20
+  # Only available for type: "TITLE". Adds a stay effect.
+  stayTicks: 60
+  # Only available for type: "TITLE". Adds a fade out effect.
+  fadeOutTicks: 20
+shyParticlesNoPermissionCommand:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to perform this action."
+shyParticlesReloadCommandHint:
+  type: "CHAT"
+  text: "Reloads all particle effects and configuration."
+shyParticlesReloadMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Reloaded all particle effects and configuration."
+shyParticlesCommonErrorMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cA problem occurred. Check the console log for details."
+shyParticlesCommandSenderHasToBePlayer:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player."
+shyParticlesCommandUsage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Use /shyparticles help to see more info about the plugin."
+shyParticlesCommandDescription:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 All commands for the ShyParticles plugin."
+shyParticlesEffectNotFoundMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cParticle effect %blockball_param_1% not found."
+shyParticlesEffectPlayMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Playing particle effect %blockball_param_1% with session %blockball_param_2%."
+shyParticlesEffectStopMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Stopped particle effect %blockball_param_1%."
+shyParticlesEffectStopAllMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Stopped all particle effects."
+shyParticlesEffectListMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Available effects: %blockball_param_1%"
+shyParticlesPlayCommandHint:
+  type: "CHAT"
+  text: "Plays a particle effect at your location or the specified location."
+shyParticlesStopCommandHint:
+  type: "CHAT"
+  text: "Stops a running particle effect."
+shyParticlesListCommandHint:
+  type: "CHAT"
+  text: "Lists all available particle effects."
+shyParticlesCoordinateValueMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cThe value %blockball_param_1% has to be a number with the following supported formats: 2, 2.0, -3.0, ~2.2 ~-2.3"
+shyParticlesWorldNotFoundMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cWorld %blockball_param_1% not found."  

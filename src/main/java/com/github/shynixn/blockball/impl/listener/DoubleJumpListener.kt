@@ -4,15 +4,17 @@ package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.mcutils.common.sound.SoundService
+import com.github.shynixn.shyparticles.contract.ParticleEffectService
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerToggleFlightEvent
 
-class DoubleJumpListener (
+class DoubleJumpListener(
     private val gameService: GameService,
-    private val soundService: SoundService
+    private val soundService: SoundService,
+    private val effectService: ParticleEffectService
 ) : Listener {
     /**
      * Gets called when a player moves. Allows the executing player to start flying
@@ -64,6 +66,9 @@ class DoubleJumpListener (
             .multiply(meta.horizontalStrength)
             .setY(meta.verticalStrength)
 
-        soundService.playSound(player.location, player.world.players, meta.soundEffect)
+        val effect = effectService.getEffectMetaFromName(game.arena.meta.doubleJumpMeta.effectName)
+        if (effect != null) {
+            effectService.startEffect(effect, { player.location }, null, null)
+        }
     }
 }

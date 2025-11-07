@@ -32,7 +32,7 @@ class TeamMeta {
     var armor: Array<String?> = arrayOfNulls(4)
 
     @Comment("The inventory a player receives when joining this team. Use the /blockball inventory command ingame to configure this.")
-    var inventory: Array<String?> = arrayOfNulls(36)
+    var inventory: Array<String?> = arrayOfNulls(41)
 
     /** Spawnpoint of the team inside the soccerArena. */
     @Comment("The spawnpoint of this team inside of the game.")

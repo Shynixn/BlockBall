@@ -284,6 +284,18 @@ class GameServiceImpl(
 
         validateGoalSize(arena, Team.BLUE, arena.meta.blueTeamMeta)
         validateGoalSize(arena, Team.RED, arena.meta.redTeamMeta)
+
+        // Ensures the inventory sizing is correct.
+        arena.meta.blueTeamMeta.inventory = fixInventorySizing(arena.meta.blueTeamMeta.inventory.toMutableList())
+        arena.meta.redTeamMeta.inventory = fixInventorySizing(arena.meta.redTeamMeta.inventory.toMutableList())
+        arena.meta.refereeTeamMeta.inventory = fixInventorySizing(arena.meta.refereeTeamMeta.inventory.toMutableList())
+    }
+
+    private fun fixInventorySizing(list: MutableList<String?>): Array<String?> {
+        while (list.size < 41) {
+            list.add(null)
+        }
+        return list.toTypedArray()
     }
 
     private fun validateGoalSize(arena: SoccerArena, team: Team, teamMeta: TeamMeta) {

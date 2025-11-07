@@ -49,7 +49,7 @@ class SoccerBallMeta {
     var defaultPitch: Int = 20
 
     @Comment("Sound effects.")
-    val soundEffects: MutableMap<BallActionType, SoundMeta> = HashMap()
+    val effects: MutableMap<BallActionType, String> = HashMap()
 
     class SoccerBallHitBoxMeta {
         @Comment("Size of the click-able hitbox. Press F3 + B in-game to view it.")
@@ -103,10 +103,6 @@ class SoccerBallMeta {
     }
 
     init {
-        val soundMetaKick = SoundMeta()
-        soundMetaKick.name = "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR,ENTITY_ZOMBIE_ATTACK_DOOR_WOOD,ZOMBIE_WOOD"
-        soundMetaKick.volume = 10.0
-        soundMetaKick.pitch = 1.5
-        soundEffects[BallActionType.ONKICK] = soundMetaKick
+        effects[BallActionType.ONKICK] = "ball_kick"
     }
 }

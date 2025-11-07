@@ -27,6 +27,9 @@ commands:
   blockballsign:
     aliases:
       - "soccersign"
+  blockballparticles:
+    aliases:
+      - "soccerparticles"
 
 ############################
 # Debug settings

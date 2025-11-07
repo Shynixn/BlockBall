@@ -305,4 +305,40 @@ class BlockBallLanguageImpl : BlockBallLanguage {
  override var shyCommandSignsServerCommandHint = LanguageItem("Sends the player to the given server.")
 
  override var shyCommandSignsServerMessage = LanguageItem("[&9ShyCommandSigns&f] Connecting to server '%shycommandsigns_param_1%' ...")
+
+ override var shyParticlesPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found.")
+
+ override var shyParticlesNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to perform this action.")
+
+ override var shyParticlesReloadCommandHint = LanguageItem("Reloads all particle effects and configuration.")
+
+ override var shyParticlesReloadMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Reloaded all particle effects and configuration.")
+
+ override var shyParticlesCommonErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cA problem occurred. Check the console log for details.")
+
+ override var shyParticlesCommandSenderHasToBePlayer = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player.")
+
+ override var shyParticlesCommandUsage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /shyparticles help to see more info about the plugin.")
+
+ override var shyParticlesCommandDescription = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 All commands for the ShyParticles plugin.")
+
+ override var shyParticlesEffectNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cParticle effect %blockball_param_1% not found.")
+
+ override var shyParticlesEffectPlayMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Playing particle effect %blockball_param_1% with session %blockball_param_2%.")
+
+ override var shyParticlesEffectStopMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Stopped particle effect %blockball_param_1%.")
+
+ override var shyParticlesEffectStopAllMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Stopped all particle effects.")
+
+ override var shyParticlesEffectListMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Available effects: %blockball_param_1%")
+
+ override var shyParticlesPlayCommandHint = LanguageItem("Plays a particle effect at your location or the specified location.")
+
+ override var shyParticlesStopCommandHint = LanguageItem("Stops a running particle effect.")
+
+ override var shyParticlesListCommandHint = LanguageItem("Lists all available particle effects.")
+
+ override var shyParticlesCoordinateValueMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cThe value %blockball_param_1% has to be a number with the following supported formats: 2, 2.0, -3.0, ~2.2 ~-2.3")
+
+ override var shyParticlesWorldNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cWorld %blockball_param_1% not found."  )
 }

@@ -31,6 +31,12 @@ import com.github.shynixn.shycommandsigns.contract.ShyCommandSignsLanguage
 import com.github.shynixn.shycommandsigns.entity.ShyCommandSignSettings
 import com.github.shynixn.shycommandsigns.impl.commandexecutor.ShyCommandSignCommandExecutor
 import com.github.shynixn.shycommandsigns.impl.listener.ShyCommandSignListener
+import com.github.shynixn.shyparticles.ShyParticlesDependencyInjectionModule
+import com.github.shynixn.shyparticles.contract.ParticleEffectService
+import com.github.shynixn.shyparticles.contract.ShyParticlesLanguage
+import com.github.shynixn.shyparticles.entity.ShyParticlesSettings
+import com.github.shynixn.shyparticles.impl.commandexecutor.ShyParticlesCommandExecutor
+import com.github.shynixn.shyparticles.impl.listener.ShyParticlesListener
 import com.github.shynixn.shyscoreboard.ShyScoreboardDependencyInjectionModule
 import com.github.shynixn.shyscoreboard.contract.ScoreboardService
 import com.github.shynixn.shyscoreboard.contract.ShyScoreboardLanguage
@@ -57,6 +63,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
     private var scoreboardModule: DependencyInjectionModule? = null
     private var bossBarModule: DependencyInjectionModule? = null
     private var signModule: DependencyInjectionModule? = null
+    private var particlesModule : DependencyInjectionModule? = null
     private var immediateDisable = false
 
     companion object {
@@ -147,7 +154,8 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
         this.scoreboardModule = loadShyScoreboardModule(language, placeHolderService)
         this.bossBarModule = loadShyBossBarModule(language, placeHolderService)
         this.signModule = loadShyCommandSignsModule(language, placeHolderService)
-        this.module = BlockBallDependencyInjectionModule(this, language, placeHolderService).build()
+        this.particlesModule = loadShyParticlesModule(language, placeHolderService)
+        this.module = BlockBallDependencyInjectionModule(this, language, placeHolderService, particlesModule!!).build()
 
         // Connect to database
         try {
@@ -249,6 +257,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
         scoreboardModule?.close()
         bossBarModule?.close()
         signModule?.close()
+        particlesModule?.close()
     }
 
     private fun loadShyBossBarModule(
@@ -393,6 +402,61 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
         val signService = module.getService<ShyCommandSignService>()
         launch {
             signService.reload()
+        }
+        return module
+    }
+
+    private fun loadShyParticlesModule(
+        language: ShyParticlesLanguage,
+        placeHolderService: PlaceHolderService
+    ): DependencyInjectionModule {
+        val settings = ShyParticlesSettings({ s ->
+            s.baseCommand = "blockballparticles"
+            s.commandAliases = config.getStringList("commands.blockballparticles.aliases")
+            s.commandPermission = "blockball.shyparticles.command"
+            s.reloadPermission = "blockball.shyparticles.reload"
+            s.listPermission = "blockball.shyparticles.list"
+            s.playPermission = "blockball.shyparticles.play"
+            s.stopPermission = "blockball.shyparticles.stop"
+            s.followPermission = "blockball.shyparticles.follow"
+            s.followOtherPermission = "blockball.shyparticles.followother"
+            s.stopFollowPermission = "blockball.shyparticles.stopfollow"
+            s.stopFollowOtherPermission ="blockball.shyparticles.stopfollowother"
+            s.effectStartPermission = "blockball.shyparticles.effect.start."
+            s.effectVisiblePermission =  "blockball.shyparticles.effect.visible."
+            s.defaultParticles =  listOf(
+                "effects/blue_sphere.yml" to "blue_sphere.yml",
+                "effects/yellow_star.yml" to "yellow_star.yml",
+                "effects/box_tower.yml" to "box_tower.yml",
+                "effects/rainbow_spiral.yml" to "rainbow_spiral.yml",
+                "effects/pulsing_heart.yml" to "pulsing_heart.yml",
+                "effects/double_jump.yml" to "double_jump.yml",
+                "effects/ball_kick.yml" to "ball_kick.yml"
+            )
+        })
+        settings.reload()
+        val module =
+            ShyParticlesDependencyInjectionModule(
+                this,
+                settings,
+                language,
+                placeHolderService
+            ).build()
+
+        // Register PlaceHolders
+        com.github.shynixn.shyparticles.enumeration.PlaceHolder.registerAll(
+            this,
+            placeHolderService
+        )
+
+        // Register Listener
+        Bukkit.getPluginManager().registerEvents(module.getService<ShyParticlesListener>(), this)
+
+        // Register CommandExecutor
+        module.getService<ShyParticlesCommandExecutor>()
+        val effectService = module.getService<ParticleEffectService>()
+        launch {
+            effectService.reload()
         }
         return module
     }
