@@ -1,6 +1,9 @@
 package com.github.shynixn.blockball
 
-import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.GameService
+import com.github.shynixn.blockball.contract.SoccerBallFactory
+import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.Permission
@@ -34,12 +37,14 @@ import com.github.shynixn.mcutils.database.impl.ConfigSelectedRepositoryImpl
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.mcutils.packet.impl.service.*
+import com.github.shynixn.shyparticles.contract.ParticleEffectService
 import org.bukkit.plugin.Plugin
 
 class BlockBallDependencyInjectionModule(
     private val plugin: BlockBallPlugin,
     private val language: BlockBallLanguage,
     private val placeHolderService: PlaceHolderService,
+    private val shyParticlesModule: DependencyInjectionModule
 ) {
     companion object {
         val areLegacyVersionsIncluded: Boolean by lazy {
@@ -109,6 +114,9 @@ class BlockBallDependencyInjectionModule(
         module.addService<ItemService> {
             ItemServiceImpl()
         }
+        module.addService<ParticleEffectService> {
+            shyParticlesModule.getService<ParticleEffectService>()
+        }
         module.addService<ChatMessageService> {
             ChatMessageServiceImpl(module.getService(), module.getService())
         }
@@ -145,11 +153,25 @@ class BlockBallDependencyInjectionModule(
             SoccerBallFactoryImpl(module.getService(), module.getService(), module.getService(), module.getService())
         }
         module.addService<BallListener> { BallListener(module.getService(), module.getService()) }
-        module.addService<DoubleJumpListener> { DoubleJumpListener(module.getService(), module.getService()) }
+        module.addService<DoubleJumpListener> { DoubleJumpListener(module.getService(), module.getService(), module.getService()) }
         module.addService<GameListener> {
-            GameListener(module.getService(), module.getService(), module.getService(), module.getService(), module.getService())
+            GameListener(
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService()
+            )
         }
-        module.addService<HubgameListener> { HubgameListener(module.getService(), module.getService(), module.getService(), module.getService(), module.getService()) }
+        module.addService<HubgameListener> {
+            HubgameListener(
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService()
+            )
+        }
         module.addService<MinigameListener> { MinigameListener(module.getService(), module.getService()) }
         module.addService<BlockBallCommandExecutor> {
             BlockBallCommandExecutor(

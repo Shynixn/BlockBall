@@ -32,7 +32,7 @@ dependencies {
     implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.3.0")
     implementation("com.github.shynixn.shybossbar:shybossbar:1.5.0")
     implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.10.0")
-    implementation("com.github.shynixn.shyparticles:shyparticles:1.0.0")
+    implementation("com.github.shynixn.shyparticles:shyparticles:1.1.0")
     implementation("com.github.shynixn.mcutils:common:2025.47")
     implementation("com.github.shynixn.mcutils:packet:2025.44")
     implementation("com.github.shynixn.mcutils:database:2025.10")

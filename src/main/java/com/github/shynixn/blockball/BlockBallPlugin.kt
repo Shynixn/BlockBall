@@ -155,7 +155,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
         this.bossBarModule = loadShyBossBarModule(language, placeHolderService)
         this.signModule = loadShyCommandSignsModule(language, placeHolderService)
         this.particlesModule = loadShyParticlesModule(language, placeHolderService)
-        this.module = BlockBallDependencyInjectionModule(this, language, placeHolderService).build()
+        this.module = BlockBallDependencyInjectionModule(this, language, placeHolderService, particlesModule!!).build()
 
         // Connect to database
         try {
@@ -430,6 +430,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
                 "effects/box_tower.yml" to "box_tower.yml",
                 "effects/rainbow_spiral.yml" to "rainbow_spiral.yml",
                 "effects/pulsing_heart.yml" to "pulsing_heart.yml",
+                "effects/double_jump.yml" to "double_jump.yml"
             )
         })
         settings.reload()
@@ -447,7 +448,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
             placeHolderService
         )
 
-        // Register Listeners
+        // Register Listener
         Bukkit.getPluginManager().registerEvents(module.getService<ShyParticlesListener>(), this)
 
         // Register CommandExecutor
