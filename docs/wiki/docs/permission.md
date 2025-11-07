@@ -34,6 +34,7 @@ For most servers, these permissions provide the best balance of functionality an
 # Display permissions (recommended for all players)  
 - blockball.shyscoreboard.scoreboard.*
 - blockball.shybossbar.bossbar.*
+- blockball.shyparticles.effect.visible.*
 ```
 
 ### Admin Permissions
@@ -50,6 +51,15 @@ For most servers, these permissions provide the best balance of functionality an
 - blockball.shycommandsigns.command
 - blockball.shycommandsigns.add
 - blockball.shycommandsigns.reload
+- blockball.shyparticles.command
+- blockball.shyparticles.reload
+- blockball.shyparticles.list
+- blockball.shyparticles.play
+- blockball.shyparticles.stop
+- blockball.shyparticles.follow
+- blockball.shyparticles.followother
+- blockball.shyparticles.stopfollow
+- blockball.shyparticles.stopfollowother
 ```
 
 ---
@@ -178,6 +188,34 @@ Manage interactive BlockBall signs:
 
 ---
 
+## ✨ Particle System Permissions
+
+Control access to BlockBall's particle effects:
+
+### Player Particle Access
+
+| Permission | Level | Description |
+|------------|-------|-------------|
+| `blockball.shyparticles.effect.visible.*` | **User** | See all particle effects |
+| `blockball.shyparticles.effect.visible.[name]` | **User** | See specific particle effect only |
+
+### Particle Administration
+
+| Permission | Level | Description |
+|------------|-------|-------------|
+| `blockball.shyparticles.command` | **Admin** | Access `/blockballparticle` command |
+| `blockball.shyparticles.reload` | **Admin** | Reload particle configurations |
+| `blockball.shyparticles.list` | **Admin** | List available particle effects |
+| `blockball.shyparticles.play` | **Admin** | Play particle effects |
+| `blockball.shyparticles.stop` | **Admin** | Stop particle effects |
+| `blockball.shyparticles.follow` | **Admin** | Make particles follow yourself |
+| `blockball.shyparticles.followother` | **Admin** | Make particles follow other players |
+| `blockball.shyparticles.stopfollow` | **Admin** | Stop particles following yourself |
+| `blockball.shyparticles.stopfollowother` | **Admin** | Stop particles following other players |
+| `blockball.shyparticles.effect.start.[name]` | **Admin** | Start specific particle effect by name |
+
+---
+
 ## 🎮 Game-Specific Permission Scenarios
 
 ### Scenario 1: Public Server with Multiple Arenas
@@ -187,6 +225,7 @@ default_group:
   - blockball.command
   - blockball.join.*
   - blockball.shyscoreboard.scoreboard.*
+  - blockball.shyparticles.effect.visible.*
 ```
 
 ### Scenario 2: Tournament Server with Restricted Access
@@ -197,12 +236,14 @@ tournament_red:
   - blockball.join.tournament_red_arena
   - blockball.shyscoreboard.scoreboard.*
   - blockball.shybossbar.bossbar.*
+  - blockball.shyparticles.effect.visible.*
 
 tournament_blue:
   - blockball.command  
   - blockball.join.tournament_blue_arena
   - blockball.shyscoreboard.scoreboard.*
   - blockball.shybossbar.bossbar.*
+  - blockball.shyparticles.effect.visible.*
 
 # Referees get full control
 referees:
