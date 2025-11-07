@@ -222,7 +222,7 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     dependsOn("relocateLegacyPluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocateLegacyPluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-legacy.${archiveExtension.get()}")
-    // destinationDirectory.set(File("C:\\temp\\plugins"))
+    // destinationDirectory.set(File("C:\\git\\mc\\plugins"))
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
     exclude("com/github/shynixn/mcutils/**")
