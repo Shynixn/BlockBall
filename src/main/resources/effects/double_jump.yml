@@ -16,7 +16,7 @@ layers:
       radius: 1
 
 sounds:
-  - name: "ENTITY_WIND_CHARGE_WIND_BURST,ENTITY_GHAST_SHOOT,GHAST_FIREBALL"
+  - name: "minecraft:entity.wind_charge.wind_burst,ENTITY_GHAST_SHOOT,GHAST_FIREBALL"
     pitch: 1.0
     volume: 10
     start: 0
