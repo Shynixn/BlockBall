@@ -3,7 +3,7 @@ duration: 1
 repeat: false
 
 layers:
-  - particle: "EXPLOSION"
+  - particle: "EXPLOSION,EXPLOSION_LARGE"
     shape: "POINT"
     options:
       particleCount: 1
