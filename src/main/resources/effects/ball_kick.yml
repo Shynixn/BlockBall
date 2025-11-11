@@ -3,7 +3,7 @@ duration: 1
 repeat: false
 
 layers:
-  - particle: "EXPLOSION"
+  - particle: "EXPLOSION,EXPLOSION_LARGE"
     shape: "POINT"
     options:
       particleCount: 1
@@ -12,7 +12,7 @@ layers:
       scale: 1.0
 
 sounds:
-  - name: "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR,ENTITY_ZOMBIE_ATTACK_DOOR_WOOD,ZOMBIE_WOOD"
+  - name: "minecraft:entity.zombie.attack_wooden_door,ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR,ENTITY_ZOMBIE_ATTACK_DOOR_WOOD,ZOMBIE_WOOD"
     pitch: 1.5
     volume: 10
     start: 0
