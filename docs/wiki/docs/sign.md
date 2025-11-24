@@ -1,3 +1,9 @@
+# Scoreboards
+
+BlockBall uses ShyScoreboard for its scoreboards internally. For more information, visit the [ShyScoreboard documentation](https://shynixn.github.io/ShyScoreboard/wiki/site/). You do not need to install anything. BlockBall already integrates ShyScoreboard.
+
+You are not limited to using ShyScoreboard, you can use any scoreboard plugin you like.
+
 # Interactive Signs
 
 Create user-friendly join and leave signs that allow players to interact with BlockBall arenas through simple right-clicks. This guide covers everything from basic sign creation to advanced customization.

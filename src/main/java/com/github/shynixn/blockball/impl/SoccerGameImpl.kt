@@ -32,8 +32,6 @@ import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import setInventoryContentsSecure
-import teleportCompat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 

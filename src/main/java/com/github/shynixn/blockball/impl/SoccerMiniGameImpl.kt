@@ -24,7 +24,6 @@ import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import teleportCompat
 
 open class SoccerMiniGameImpl(
     arena: SoccerArena,

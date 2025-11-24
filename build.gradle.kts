@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.32.1"
+version = "7.33.0"
 
 repositories {
     mavenLocal()
@@ -31,10 +31,10 @@ dependencies {
     // Custom dependencies
     implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.3.0")
     implementation("com.github.shynixn.shybossbar:shybossbar:1.5.0")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.10.0")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.11.0")
     implementation("com.github.shynixn.shyparticles:shyparticles:1.1.2")
     implementation("com.github.shynixn.mcutils:common:2025.47")
-    implementation("com.github.shynixn.mcutils:packet:2025.44")
+    implementation("com.github.shynixn.mcutils:packet:2025.51")
     implementation("com.github.shynixn.mcutils:database:2025.10")
     implementation("com.github.shynixn.mcutils:worldguard:2025.5")
 }
@@ -123,6 +123,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/zaxxer/**")
     exclude("templates/**")
     exclude("plugin-legacy.yml")
+    exclude("plugin-folia.yml")
 }
 
 /**
@@ -149,6 +150,7 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     exclude("com/zaxxer/**")
     exclude("templates/**")
     exclude("plugin-legacy.yml")
+    exclude("plugin-folia.yml")
 }
 
 /**
