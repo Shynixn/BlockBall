@@ -1,3 +1,5 @@
+package com.github.shynixn.blockball.impl
+
 import com.github.shynixn.mccoroutine.folia.isFoliaLoaded
 import com.github.shynixn.mcutils.common.Version
 import org.bukkit.Location

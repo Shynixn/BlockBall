@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallTouchPlayerEvent
+import com.github.shynixn.blockball.impl.setInventoryContentsSecure
 import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
@@ -32,7 +33,6 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
 import org.bukkit.plugin.Plugin
-import setInventoryContentsSecure
 import java.util.concurrent.ConcurrentHashMap
 
 /**
