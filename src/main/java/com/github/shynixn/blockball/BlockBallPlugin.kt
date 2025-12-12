@@ -109,10 +109,11 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
                 Version.VERSION_1_21_R4,
                 Version.VERSION_1_21_R5,
                 Version.VERSION_1_21_R6,
+                Version.VERSION_1_21_R7,
             )
         } else {
             arrayOf(
-                Version.VERSION_1_21_R6,
+                Version.VERSION_1_21_R7,
             )
         }
 
