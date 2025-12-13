@@ -329,6 +329,21 @@ commandRefereeRedCardSuccessMessage:
 commandRefereeRedCardErrorMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% cannot be awarded a red card."
+cloudLoginToolTip:
+  type: "CHAT"
+  text: "Starts a login flow to the BlockBall cloud."
+cloudLoginStart:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Starting login to %blockball_param_1%..."
+cloudLoginOpenInBrowser:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Open your web browser and login here: %blockball_param_1%"
+cloudLoginWait:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Waiting for login..."
+cloudLoginComplete:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully logged into %blockball_param_1%."
 shyScoreboardPlayerNotFoundMessage:
   # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
   # Please notice that some messages do only support chat.

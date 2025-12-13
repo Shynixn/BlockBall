@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.PlayerInformation
@@ -28,7 +29,8 @@ class SoccerRefereeGameImpl(
     language: BlockBallLanguage,
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
-    itemService: ItemService
+    itemService: ItemService,
+    cloudService: CloudService
 ) : SoccerMiniGameImpl(
     arena,
     playerDataRepository,
@@ -39,7 +41,8 @@ class SoccerRefereeGameImpl(
     language,
     commandService,
     soccerBallFactory,
-    itemService
+    itemService,
+    cloudService
 ), SoccerRefereeGame {
     /**
      * Is the timer blocker enabled.

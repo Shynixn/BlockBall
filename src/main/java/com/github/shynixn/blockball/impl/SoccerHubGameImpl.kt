@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerHubGame
 import com.github.shynixn.blockball.entity.PlayerInformation
@@ -25,7 +26,8 @@ class SoccerHubGameImpl(
     soccerBallFactory: SoccerBallFactory,
     commandService: CommandService,
     itemService: ItemService,
-    chatMessageService: ChatMessageService
+    chatMessageService: ChatMessageService,
+    cloudService: CloudService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -35,7 +37,7 @@ class SoccerHubGameImpl(
     language,
     playerDataRepository,
     itemService,
-    chatMessageService
+    chatMessageService, cloudService
 ),
     SoccerHubGame {
     /**

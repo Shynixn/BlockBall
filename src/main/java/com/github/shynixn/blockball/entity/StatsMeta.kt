@@ -45,9 +45,4 @@ class StatsMeta {
      * Amount of draws.
      */
     var drawsAmount: Int = 0
-
-    /**
-     * Last game ids.
-     */
-    var lastGames: List<StatsGame> = ArrayList()
 }

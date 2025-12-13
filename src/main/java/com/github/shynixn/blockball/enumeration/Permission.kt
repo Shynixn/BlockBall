@@ -6,6 +6,8 @@ enum class Permission(val permission: String) {
 
     JOIN("blockball.join.[name]"),
 
+    CLOUD("blockball.cloud"),
+
     /**
      * Permission for staff to allow executing commands while ingame.
      */

@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball
 
 import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.StatsService
@@ -9,6 +10,7 @@ import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.listener.*
+import com.github.shynixn.blockball.impl.service.CloudServiceImpl
 import com.github.shynixn.blockball.impl.service.GameServiceImpl
 import com.github.shynixn.blockball.impl.service.SoccerBallFactoryImpl
 import com.github.shynixn.blockball.impl.service.StatsServiceImpl
@@ -34,6 +36,8 @@ import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.database.impl.AutoSavePlayerDataRepositoryImpl
 import com.github.shynixn.mcutils.database.impl.CachedPlayerDataRepositoryImpl
 import com.github.shynixn.mcutils.database.impl.ConfigSelectedRepositoryImpl
+import com.github.shynixn.mcutils.http.HttpClientFactory
+import com.github.shynixn.mcutils.http.HttpClientFactoryImpl
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.mcutils.packet.impl.service.*
@@ -123,6 +127,10 @@ class BlockBallDependencyInjectionModule(
         module.addService<RayTracingService> {
             RayTracingServiceImpl()
         }
+        module.addService<HttpClientFactory> { HttpClientFactoryImpl() }
+        module.addService<CloudService> {
+            CloudServiceImpl(module.getService(), module.getService(), module.getService(), module.getService())
+        }
         module.addService<AreaSelectionService> {
             AreaSelectionServiceImpl(
                 Permission.EDIT_GAME.permission,
@@ -153,7 +161,13 @@ class BlockBallDependencyInjectionModule(
             SoccerBallFactoryImpl(module.getService(), module.getService(), module.getService(), module.getService())
         }
         module.addService<BallListener> { BallListener(module.getService(), module.getService()) }
-        module.addService<DoubleJumpListener> { DoubleJumpListener(module.getService(), module.getService(), module.getService()) }
+        module.addService<DoubleJumpListener> {
+            DoubleJumpListener(
+                module.getService(),
+                module.getService(),
+                module.getService()
+            )
+        }
         module.addService<GameListener> {
             GameListener(
                 module.getService(),
@@ -183,6 +197,7 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                module.getService()
             )
         }
         return module

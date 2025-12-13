@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.impl.commandexecutor
 
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.SoccerArena
@@ -43,7 +44,8 @@ class BlockBallCommandExecutor(
     private val selectionService: AreaSelectionService,
     private val placeHolderService: PlaceHolderService,
     private val itemService: ItemService,
-    private val chatMessageService: ChatMessageService
+    private val chatMessageService: ChatMessageService,
+    private val cloudService: CloudService
 ) {
     private val arenaTabs: (s: CommandSender) -> List<String> = {
         var cache = arenaRepository.getCache()
@@ -534,6 +536,21 @@ class BlockBallCommandExecutor(
                         .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, playerToAssign ->
                             setRedCardToPlayer(player, playerToAssign)
                         }
+                }
+            }
+            subCommand("cloud") {
+                permission(Permission.CLOUD)
+                subCommand("login") {
+                    permission(Permission.CLOUD)
+                    toolTip { language.cloudLoginToolTip.text }
+                    builder().execute { sender ->
+                        try {
+                            cloudService.performLoginFlow(sender)
+                            sender.sendLanguageMessage(language.cloudLoginComplete)
+                        } catch (_: Exception) {
+                            sender.sendLanguageMessage(language.commonErrorMessage)
+                        }
+                    }
                 }
             }
             subCommand("placeholder") {

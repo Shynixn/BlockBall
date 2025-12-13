@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.entity
 
 class StatsGame {
-    var id : String = ""
-    var name : String = ""
-    var displayName : String = ""
+    var publishName: String = ""
+    var teamBlue : MutableList<StatsPlayer> = arrayListOf()
+    var teamRed : MutableList<StatsPlayer> = arrayListOf()
 }

@@ -36,6 +36,7 @@ dependencies {
     implementation("com.github.shynixn.mcutils:common:2025.50")
     implementation("com.github.shynixn.mcutils:packet:2025.58")
     implementation("com.github.shynixn.mcutils:database:2025.10")
+    implementation("com.github.shynixn.mcutils:http:2025.9")
     implementation("com.github.shynixn.mcutils:worldguard:2025.5")
 }
 

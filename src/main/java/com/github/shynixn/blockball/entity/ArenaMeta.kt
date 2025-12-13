@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.entity
 
 class ArenaMeta {
-    /** Metadata of the customizing Properties. */
+    /** Metadata of the customizing properties. */
     val customizingMeta: CustomizationMeta = CustomizationMeta()
 
     /** Meta data of a generic lobby. */
@@ -27,6 +27,9 @@ class ArenaMeta {
 
     /** Metadata of the refereeTeam. */
     val refereeTeamMeta: TeamMeta = TeamMeta()
+
+    /** Metadata of the publishing properties. */
+    val cloudMeta: CloudMeta = CloudMeta()
 
     init {
         blueTeamMeta.displayName = "&9Team Blue"

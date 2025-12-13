@@ -109,6 +109,17 @@ sign:
   clickCooldownTicks: 30
 
 ############################
+# Website/Cloud (PatreonOnly)
+# The plugin can send data to the BlockBall Cloud. This is disabled per default and has to be explicitly enabled per game.
+############################
+cloud:
+  publishUrl: "https://blockball.shynixn.com"
+  apiUrl: "https://api.blockball.shynixn.com"
+  baseUrl: "https://blockball.shynixn.com"
+  authUrl: "https://sso.shynixn.com"
+  authApiUrl: "https://api.sso.shynixn.com"
+
+############################
 # LeaderBoard PlaceHolders (PatreonOnly)
 ############################
 leaderboard:

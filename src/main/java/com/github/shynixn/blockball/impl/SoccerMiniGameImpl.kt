@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.entity.PlayerInformation
@@ -35,7 +36,8 @@ open class SoccerMiniGameImpl(
     language: BlockBallLanguage,
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
-    itemService: ItemService
+    itemService: ItemService,
+    cloudService: CloudService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -45,7 +47,8 @@ open class SoccerMiniGameImpl(
     language,
     playerDataRepository,
     itemService,
-    chatMessageService
+    chatMessageService,
+    cloudService
 ), SoccerMiniGame {
     private var currentQueueTime = arena.meta.customizingMeta.queueTimeOutSec
     private var isQueueTimeRunning = false
