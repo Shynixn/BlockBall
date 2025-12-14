@@ -332,18 +332,24 @@ commandRefereeRedCardErrorMessage:
 cloudLoginToolTip:
   type: "CHAT"
   text: "Starts a login flow to the BlockBall cloud."
+cloudLogoutToolTip:
+  type: "CHAT"
+  text: "Logout from the BlockBall cloud and cancel all login processes."
+cloudLogoutSuccess:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully logged out."
 cloudLoginStart:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Starting login to %blockball_param_1%..."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Starting login..."
 cloudLoginOpenInBrowser:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Open your web browser and login here: %blockball_param_1%"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Open your web browser and login here:"
 cloudLoginWait:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 Waiting for login..."
 cloudLoginComplete:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully logged into %blockball_param_1%."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully logged into Blockball cloud."
 shyScoreboardPlayerNotFoundMessage:
   # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
   # Please notice that some messages do only support chat.

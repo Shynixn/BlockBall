@@ -5,5 +5,5 @@ class CloudCredentials {
 
     var refreshToken: String = ""
 
-    var accessTokenExpiration: Long = 0L
+    var accessTokenExpiration: String = ""
 }

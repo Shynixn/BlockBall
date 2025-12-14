@@ -208,6 +208,10 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
 
   var cloudLoginToolTip: LanguageItem
 
+  var cloudLogoutToolTip: LanguageItem
+
+  var cloudLogoutSuccess: LanguageItem
+
   var cloudLoginStart: LanguageItem
 
   var cloudLoginOpenInBrowser: LanguageItem

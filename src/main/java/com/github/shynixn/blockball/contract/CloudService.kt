@@ -10,6 +10,11 @@ interface CloudService {
     suspend fun performLoginFlow(sender: CommandSender)
 
     /**
+     * Performs logout.
+     */
+    suspend fun performLogout(sender: CommandSender)
+
+    /**
      * Publishes the game stats.
      */
     suspend fun publishGameStats(statsGame: StatsGame)

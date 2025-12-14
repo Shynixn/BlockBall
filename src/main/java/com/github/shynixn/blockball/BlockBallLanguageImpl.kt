@@ -206,11 +206,15 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var cloudLoginToolTip = LanguageItem("Starts a login flow to the BlockBall cloud.")
 
- override var cloudLoginStart = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Starting login to %blockball_param_1%...")
+ override var cloudLogoutToolTip = LanguageItem("Logout from the BlockBall cloud and cancel all login processes.")
 
- override var cloudLoginOpenInBrowser = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Click on the link to login: %blockball_param_1%")
+ override var cloudLogoutSuccess = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully logged out.")
 
- override var cloudLoginWait = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Click on the link to login: %blockball_param_1%")
+ override var cloudLoginStart = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Starting login...")
+
+ override var cloudLoginOpenInBrowser = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Open your web browser and login here:")
+
+ override var cloudLoginWait = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Waiting for login...")
 
  override var cloudLoginComplete = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully logged into %blockball_param_1%.")
 

@@ -2,11 +2,7 @@ package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.CloudService
-import com.github.shynixn.blockball.entity.CloudCredentials
-import com.github.shynixn.blockball.entity.CloudPublicKeys
-import com.github.shynixn.blockball.entity.CloudServerData
-import com.github.shynixn.blockball.entity.CloudSessionStart
-import com.github.shynixn.blockball.entity.StatsGame
+import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.fasterxml.jackson.databind.ObjectMapper
 import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -17,10 +13,15 @@ import com.github.shynixn.mcutils.http.post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.io.File
 import java.io.IOException
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 import java.util.logging.Level
 
 class CloudServiceImpl(
@@ -31,20 +32,22 @@ class CloudServiceImpl(
 ) : CloudService {
     private var trackingKey: String? = null
     private var serverId: String? = null
+    private var loginProcess = HashSet<CommandSender>()
 
     /**
      * Performs the login flow.
      */
     override suspend fun performLoginFlow(sender: CommandSender) {
+        loginProcess.add(sender)
+
         withContext(Dispatchers.IO) {
             plugin.logger.log(Level.INFO, "Starting login flow...")
-
             val authApiUrl = plugin.config.getString("cloud.authApiUrl")!!
             val authUrl = plugin.config.getString("cloud.authUrl")!!
             val baseUrl = plugin.config.getString("cloud.baseUrl")!!
 
             withContext(plugin.globalRegionDispatcher) {
-                chatMessageService.sendLanguageMessage(sender, language.cloudLoginStart, baseUrl)
+                chatMessageService.sendLanguageMessage(sender, language.cloudLoginStart)
             }
 
             if (trackingKey == null) {
@@ -52,11 +55,12 @@ class CloudServiceImpl(
             }
 
             // It's not a real api key. It is just usage tracking key ;)
-            val headers = hashMapOf("x-api-key" to trackingKey!!, "User-Agent" to plugin.name + "-Stats")
             var refreshToken: String? = null
             httpClientFactory.createHttpClient(HttpClientSettings(authApiUrl)).use { httpClient ->
                 val startResponse = httpClient.post<CloudSessionStart, String>(
-                    "/api/v1/auth/session/start?client_id=sso-blockball-client", "", headers
+                    "/api/v1/auth/session/start?client_id=sso-sporthub-client",
+                    "",
+                    hashMapOf("x-api-key" to trackingKey!!, "User-Agent" to plugin.name + "-Stats")
                 )
 
                 if (!startResponse.isSuccessStatusCode) {
@@ -66,26 +70,38 @@ class CloudServiceImpl(
                 withContext(plugin.globalRegionDispatcher) {
                     chatMessageService.sendLanguageMessage(
                         sender,
-                        language.cloudLoginOpenInBrowser,
-                        authUrl + "/authorize?device_code=${startResponse.result!!.deviceCode}"
+                        language.cloudLoginOpenInBrowser
                     )
+                    val url = authUrl + "/authorize?device_code=${startResponse.result!!.deviceCode}"
+                    if (sender is Player) {
+                        sender.sendMessage(ChatColor.GRAY.toString() + url)
+                    } else {
+                        sender.sendMessage(url)
+                    }
                 }
 
                 for (i in 0 until 3 * 10) {
                     val sessionResponse =
-                        httpClient.get<CloudCredentials, String>("/api/v1/auth/session/validate?client_id=sso-blockball-client")
+                        httpClient.get<CloudCredentials, String>(
+                            "/api/v1/auth/session/validate?client_id=sso-sporthub-client&device_code=${startResponse.result!!.deviceCode}",
+                            hashMapOf("x-api-key" to trackingKey!!, "User-Agent" to plugin.name + "-Stats")
+                        )
 
                     if (sessionResponse.isSuccessStatusCode) {
                         refreshToken = sessionResponse.result!!.refreshToken
                         break
                     }
 
-                    delay(20000)
+                    delay(5000)
                     withContext(plugin.globalRegionDispatcher) {
                         chatMessageService.sendLanguageMessage(
                             sender,
                             language.cloudLoginWait
                         )
+                    }
+
+                    if (!loginProcess.contains(sender)) {
+                        throw IOException("Login was cancelled!")
                     }
                 }
 
@@ -95,6 +111,21 @@ class CloudServiceImpl(
             }
 
             refreshTokens(refreshToken!!)
+            loginProcess.remove(sender)
+        }
+    }
+
+    /**
+     * Performs logout.
+     */
+    override suspend fun performLogout(sender: CommandSender) {
+        withContext(Dispatchers.IO) {
+            val tokenFile = File(plugin.dataFolder, "tokens")
+            if (tokenFile.exists()) {
+                Files.delete(tokenFile.toPath())
+            }
+
+            loginProcess.remove(sender)
         }
     }
 
@@ -154,15 +185,16 @@ class CloudServiceImpl(
             "Authorization" to "Bearer $refreshToken"
         )
         httpClientFactory.createHttpClient(HttpClientSettings(authApiUrl)).use { httpClient ->
-            val refreshTokenResponse = httpClient.post<String, String>(
-                "/api/v1/auth/session/start?client_id=sso-blockball-client", "", headers
+            val refreshTokenResponse = httpClient.get<CloudCredentials, String>(
+                "/api/v1/auth/authorize?client_id=sso-sporthub-client&redirect_uri=https://sso.shynixn.com",  headers
             )
 
             if (!refreshTokenResponse.isSuccessStatusCode) {
-                throw IOException("Failed to refresh tokens.")
+                throw IOException("Failed to refresh tokens: " + refreshTokenResponse.request.toString() + refreshTokenResponse.statusCode + "-" + refreshTokenResponse.error)
             }
 
-            File(plugin.dataFolder, "tokens").writeText(refreshTokenResponse.result!!)
+            val objectMapper = ObjectMapper()
+            File(plugin.dataFolder, "tokens").writeText(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(refreshTokenResponse.result!!))
         }
     }
 
@@ -196,7 +228,7 @@ class CloudServiceImpl(
     private fun fetchTrackingKey() {
         val baseUrl = plugin.config.getString("cloud.baseUrl")!!
         httpClientFactory.createHttpClient(HttpClientSettings(baseUrl)).use { httpClient ->
-            val response = httpClient.get<CloudPublicKeys, String>("/api/v1/publickeys.json")
+            val response = httpClient.get<CloudPublicKeys, String>("/publickeys.json")
 
             if (response.isSuccessStatusCode) {
                 trackingKey = response.result!!.ssoTrackingKey

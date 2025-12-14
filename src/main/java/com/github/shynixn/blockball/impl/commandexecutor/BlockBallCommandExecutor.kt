@@ -547,9 +547,18 @@ class BlockBallCommandExecutor(
                         try {
                             cloudService.performLoginFlow(sender)
                             sender.sendLanguageMessage(language.cloudLoginComplete)
-                        } catch (_: Exception) {
+                        } catch (e: Exception) {
                             sender.sendLanguageMessage(language.commonErrorMessage)
+                            plugin.logger.log(Level.SEVERE, "An error occurred during cloud login", e)
                         }
+                    }
+                }
+                subCommand("logout") {
+                    permission(Permission.CLOUD)
+                    toolTip { language.cloudLogoutToolTip.text }
+                    builder().execute { sender ->
+                        cloudService.performLogout(sender)
+                        sender.sendLanguageMessage(language.cloudLogoutSuccess)
                     }
                 }
             }
