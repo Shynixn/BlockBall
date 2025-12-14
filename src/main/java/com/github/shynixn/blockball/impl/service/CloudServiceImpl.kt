@@ -7,6 +7,7 @@ import com.github.shynixn.fasterxml.jackson.databind.DeserializationFeature
 import com.github.shynixn.fasterxml.jackson.databind.ObjectMapper
 import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
+import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.http.HttpClientFactory
 import com.github.shynixn.mcutils.http.HttpClientSettings
 import com.github.shynixn.mcutils.http.get
@@ -29,10 +30,12 @@ class CloudServiceImpl(
     private val httpClientFactory: HttpClientFactory,
     private val chatMessageService: ChatMessageService,
     private val language: BlockBallLanguage,
+    private val playerDataRepository: PlayerDataRepository<PlayerInformation>
 ) : CloudService {
     private var trackingKey: String? = null
     private var serverId: String? = null
     private var loginProcess = HashSet<CommandSender>()
+    private val emptyGuid = "00000000-0000-0000-0000-000000000000"
 
     /**
      * Performs the login flow.
@@ -119,11 +122,9 @@ class CloudServiceImpl(
      */
     override suspend fun performLogout(sender: CommandSender) {
         withContext(Dispatchers.IO) {
-            val tokenFile = File(plugin.dataFolder, "tokens")
-            if (tokenFile.exists()) {
-                Files.delete(tokenFile.toPath())
-            }
-
+            playerDataRepository.delete(PlayerInformation().also {
+                it.playerUUID = emptyGuid
+            })
             loginProcess.remove(sender)
         }
 
@@ -133,22 +134,17 @@ class CloudServiceImpl(
     /**
      * Publishes the game stats.
      */
-    override suspend fun publishGameStats(statsGame: StatsGame) {
+    override suspend fun publishGameStats(cloudGame: CloudGame) {
         withContext(Dispatchers.IO) {
-            val tokenFile = File(plugin.dataFolder, "tokens")
-            if (!tokenFile.exists()) {
-                throw IOException("You need to login first!")
-            }
-
             if (serverId == null) {
                 fetchServerId(true)
             }
 
-            sendGameData(statsGame, true)
+            sendGameData(cloudGame, true)
         }
     }
 
-    private fun sendGameData(statsGame: StatsGame, retry: Boolean) {
+    private suspend fun sendGameData(cloudGame: CloudGame, retry: Boolean) {
         val apiUrl = plugin.config.getString("cloud.apiUrl")!!
         val credentials = getCredentials()
         val headers = hashMapOf(
@@ -158,7 +154,7 @@ class CloudServiceImpl(
         )
         httpClientFactory.createHttpClient(HttpClientSettings(apiUrl)).use { httpClient ->
             val response = httpClient.post<String, String>(
-                "/api/v1/game/${serverId}", statsGame, headers
+                "/api/v1/game/${serverId}", cloudGame, headers
             )
 
             if (response.isSuccessStatusCode) {
@@ -166,14 +162,14 @@ class CloudServiceImpl(
                 return
             } else if (retry) {
                 refreshTokens(credentials.refreshToken)
-                return sendGameData(statsGame, false)
+                return sendGameData(cloudGame, false)
             } else {
                 throw IOException("Failed to sendGameData")
             }
         }
     }
 
-    private fun refreshTokens(refreshToken: String) {
+    private suspend fun refreshTokens(refreshToken: String) {
         val authApiUrl = plugin.config.getString("cloud.authApiUrl")!!
 
         if (trackingKey == null) {
@@ -195,13 +191,19 @@ class CloudServiceImpl(
             }
 
             val objectMapper = ObjectMapper()
-            File(plugin.dataFolder, "tokens").writeText(
-                objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(refreshTokenResponse.result!!)
-            )
+
+            playerDataRepository.save(PlayerInformation().also {
+                it.playerUUID = emptyGuid
+                it.playerName = "Cloud"
+                it.statsMeta = StatsMeta().also {
+                    it.optional =
+                        objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(refreshTokenResponse.result!!)
+                }
+            })
         }
     }
 
-    private fun fetchServerId(retry: Boolean) {
+    private suspend fun fetchServerId(retry: Boolean) {
         val apiUrl = plugin.config.getString("cloud.apiUrl")!!
         val credentials = getCredentials()
         val headers = hashMapOf(
@@ -222,10 +224,11 @@ class CloudServiceImpl(
         }
     }
 
-    private fun getCredentials(): CloudCredentials {
+    private suspend fun getCredentials(): CloudCredentials {
         val objectMapper = ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        val rawCredentials = File(plugin.dataFolder, "tokens").readText()
-        val cloudCredentials = objectMapper.readValue(rawCredentials, CloudCredentials::class.java)
+        val storageObject = playerDataRepository.getByPlayerUUID(UUID.fromString(emptyGuid))
+            ?: throw IOException("You need to login first!")
+        val cloudCredentials = objectMapper.readValue(storageObject.statsMeta.optional, CloudCredentials::class.java)
         val payload = Base64.getUrlDecoder().decode(cloudCredentials.accessToken.split(".")[1])
         cloudCredentials.apiKey =
             objectMapper.readValue(payload.toString(Charsets.UTF_8), CloudApiKeySet::class.java).apiKey

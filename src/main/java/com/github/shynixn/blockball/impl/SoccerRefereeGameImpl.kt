@@ -18,6 +18,7 @@ import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.time.Instant
 
 class SoccerRefereeGameImpl(
     arena: SoccerArena,
@@ -127,6 +128,7 @@ class SoccerRefereeGameImpl(
                     status = GameState.RUNNING
                     matchTimeIndex = -1
                     ballEnabled = true
+                    startDateUtc = Instant.now()
                     switchToNextMatchTime()
                     Bukkit.getPluginManager().callEvent(GameStartEvent(this))
                     executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.gameStartCommands)

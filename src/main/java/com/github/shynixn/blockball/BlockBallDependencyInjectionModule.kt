@@ -129,7 +129,7 @@ class BlockBallDependencyInjectionModule(
         }
         module.addService<HttpClientFactory> { HttpClientFactoryImpl() }
         module.addService<CloudService> {
-            CloudServiceImpl(module.getService(), module.getService(), module.getService(), module.getService())
+            CloudServiceImpl(module.getService(), module.getService(), module.getService(), module.getService(), module.getService())
         }
         module.addService<AreaSelectionService> {
             AreaSelectionServiceImpl(

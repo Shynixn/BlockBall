@@ -5,10 +5,13 @@ import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
+import com.github.shynixn.blockball.entity.CloudGame
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
+import com.github.shynixn.fasterxml.jackson.core.type.TypeReference
+import com.github.shynixn.fasterxml.jackson.databind.ObjectMapper
 import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -557,8 +560,37 @@ class BlockBallCommandExecutor(
                     permission(Permission.CLOUD)
                     toolTip { language.cloudLogoutToolTip.text }
                     builder().execute { sender ->
-                        cloudService.performLogout(sender)
-                        sender.sendLanguageMessage(language.cloudLogoutSuccess)
+                        try {
+                            cloudService.performLogout(sender)
+                            sender.sendLanguageMessage(language.cloudLogoutSuccess)
+                        } catch (e: Exception) {
+                            sender.sendLanguageMessage(language.cloudLogoutSuccess)
+                        }
+                    }
+                }
+                subCommand("demo") {
+                    permission(Permission.CLOUD)
+                    toolTip { language.cloudDemoDataToolTip.text }
+                    builder().execute { sender ->
+                        try {
+                            sender.sendLanguageMessage(language.cloudDemoDataStart)
+                            val cloudGames = withContext(Dispatchers.IO) {
+                                val rawData = plugin.getResource("cloud/cloud_demo_data.json")!!.readBytes()
+                                    .toString(Charsets.UTF_8)
+                                val objectMapper = ObjectMapper()
+                                objectMapper.readValue(rawData, object : TypeReference<List<CloudGame>>() {})
+                            }
+
+                            for (cloudGame in cloudGames) {
+                                cloudService.publishGameStats(cloudGame)
+                                break
+                            }
+
+                            sender.sendLanguageMessage(language.cloudDemoDataCompleted)
+                        } catch (e: Exception) {
+                            sender.sendLanguageMessage(language.commonErrorMessage)
+                            plugin.logger.log(Level.WARNING, "An error occurred during cloud upload", e)
+                        }
                     }
                 }
             }

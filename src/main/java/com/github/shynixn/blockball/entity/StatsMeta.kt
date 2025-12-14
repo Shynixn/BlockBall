@@ -45,4 +45,9 @@ class StatsMeta {
      * Amount of draws.
      */
     var drawsAmount: Int = 0
+
+    /**
+     * Optional payload.
+     */
+    var optional : String? = null
 }

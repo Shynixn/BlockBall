@@ -1,6 +1,6 @@
 package com.github.shynixn.blockball.contract
 
-import com.github.shynixn.blockball.entity.StatsGame
+import com.github.shynixn.blockball.entity.CloudGame
 import org.bukkit.command.CommandSender
 
 interface CloudService {
@@ -17,5 +17,5 @@ interface CloudService {
     /**
      * Publishes the game stats.
      */
-    suspend fun publishGameStats(statsGame: StatsGame)
+    suspend fun publishGameStats(cloudGame: CloudGame)
 }

@@ -1,10 +1,6 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.contract.BlockBallLanguage
-import com.github.shynixn.blockball.contract.CloudService
-import com.github.shynixn.blockball.contract.SoccerBall
-import com.github.shynixn.blockball.contract.SoccerBallFactory
-import com.github.shynixn.blockball.contract.SoccerGame
+import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.JoinResult
@@ -17,6 +13,7 @@ import com.github.shynixn.blockball.event.GameLeaveEvent
 import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
+import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandService
@@ -32,8 +29,10 @@ import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.time.Instant
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+
 
 abstract class SoccerGameImpl(
     /**
@@ -50,6 +49,7 @@ abstract class SoccerGameImpl(
     private val chatMessageService: ChatMessageService,
     private val cloudService: CloudService
 ) : SoccerGame {
+    protected var startDateUtc = Instant.now()
 
     /**
      * Generated game id.
@@ -325,8 +325,14 @@ abstract class SoccerGameImpl(
             ingamePlayersStorage.filter { e -> e.value.team != Team.REFEREE }.map { e -> Pair(e.key, e.value) }
 
         plugin.launch {
-            val statsGame = StatsGame()
-            statsGame.publishName = arena.meta.cloudMeta.name
+            val cloudGame = CloudGame()
+            cloudGame.courtName = arena.meta.cloudMeta.name
+            cloudGame.startDate = startDateUtc.toString()
+            cloudGame.endDate = Instant.now().toString()
+            cloudGame.teamRed.name = arena.meta.cloudMeta.redTeamName
+            cloudGame.teamRed.score = redScore
+            cloudGame.teamBlue.name = arena.meta.cloudMeta.blueTeamName
+            cloudGame.teamBlue.score = blueScore
 
             for (playerPair in participatingPlayers) {
                 val player = playerPair.first
@@ -343,21 +349,30 @@ abstract class SoccerGameImpl(
                     playerData.statsMeta.winsAmount++
                 }
 
-                val statsPlayer = StatsPlayer().also {
+                val cloudPlayer = CloudPlayer().also {
                     it.id = player.uniqueId.toString()
                     it.name = player.name
-                    it.meta = playerData.statsMeta
+                    it.goalsPerGameRate =
+                        playerData.statsMeta.scoredGoals.toDouble() / playerData.statsMeta.playedGames.toDouble()
+                    it.goalsScoredAmount = playerData.statsMeta.scoredGoalsFull
+                    it.gamesAmount = playerData.statsMeta.playedGames
+                    it.winsAmount = playerData.statsMeta.winsAmount
+                    it.drawsAmount = playerData.statsMeta.drawsAmount
+                    it.lossesAmount =
+                        playerData.statsMeta.playedGames - playerData.statsMeta.winsAmount - playerData.statsMeta.drawsAmount
+                    it.winRate =
+                        playerData.statsMeta.winsAmount.toDouble() / playerData.statsMeta.playedGames.toDouble()
                 }
 
                 if (data.team == Team.BLUE) {
-                    statsGame.teamBlue.add(statsPlayer)
+                    cloudGame.teamBlue.players.add(cloudPlayer)
                 } else if (data.team == Team.RED) {
-                    statsGame.teamRed.add(statsPlayer)
+                    cloudGame.teamRed.players.add(cloudPlayer)
                 }
             }
 
             if (arena.meta.cloudMeta.enabled) {
-                cloudService.publishGameStats(statsGame)
+                cloudService.publishGameStats(cloudGame)
             }
         }
     }

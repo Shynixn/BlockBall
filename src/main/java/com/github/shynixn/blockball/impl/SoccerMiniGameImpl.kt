@@ -25,6 +25,7 @@ import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.time.Instant
 
 open class SoccerMiniGameImpl(
     arena: SoccerArena,
@@ -133,6 +134,7 @@ open class SoccerMiniGameImpl(
                     status = GameState.RUNNING
                     matchTimeIndex = -1
                     ballEnabled = true
+                    startDateUtc = Instant.now()
                     switchToNextMatchTime()
                     Bukkit.getPluginManager().callEvent(GameStartEvent(this))
                     executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.gameStartCommands)
