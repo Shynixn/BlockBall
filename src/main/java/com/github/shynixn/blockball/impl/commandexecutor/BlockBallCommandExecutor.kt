@@ -583,7 +583,6 @@ class BlockBallCommandExecutor(
 
                             for (cloudGame in cloudGames) {
                                 cloudService.publishGameStats(cloudGame)
-                                break
                             }
 
                             sender.sendLanguageMessage(language.cloudDemoDataCompleted)

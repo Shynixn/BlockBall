@@ -150,7 +150,8 @@ class CloudServiceImpl(
         val headers = hashMapOf(
             "x-api-key" to credentials.apiKey,
             "User-Agent" to plugin.name + "-Stats",
-            "Authorization" to "Bearer ${credentials.accessToken}"
+            "Authorization" to "Bearer ${credentials.accessToken}",
+            "content-type" to "application/json"
         )
         httpClientFactory.createHttpClient(HttpClientSettings(apiUrl)).use { httpClient ->
             val response = httpClient.post<String, String>(
