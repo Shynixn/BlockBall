@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.impl.service
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.entity.*
+import com.github.shynixn.fasterxml.jackson.databind.DeserializationFeature
 import com.github.shynixn.fasterxml.jackson.databind.ObjectMapper
 import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -19,9 +20,8 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.io.File
 import java.io.IOException
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 import java.nio.file.Files
+import java.util.*
 import java.util.logging.Level
 
 class CloudServiceImpl(
@@ -54,7 +54,6 @@ class CloudServiceImpl(
                 fetchTrackingKey()
             }
 
-            // It's not a real api key. It is just usage tracking key ;)
             var refreshToken: String? = null
             httpClientFactory.createHttpClient(HttpClientSettings(authApiUrl)).use { httpClient ->
                 val startResponse = httpClient.post<CloudSessionStart, String>(
@@ -127,6 +126,8 @@ class CloudServiceImpl(
 
             loginProcess.remove(sender)
         }
+
+        getCredentials()
     }
 
     /**
@@ -151,7 +152,7 @@ class CloudServiceImpl(
         val apiUrl = plugin.config.getString("cloud.apiUrl")!!
         val credentials = getCredentials()
         val headers = hashMapOf(
-            "x-api-key" to trackingKey!!,
+            "x-api-key" to credentials.apiKey,
             "User-Agent" to plugin.name + "-Stats",
             "Authorization" to "Bearer ${credentials.accessToken}"
         )
@@ -186,7 +187,7 @@ class CloudServiceImpl(
         )
         httpClientFactory.createHttpClient(HttpClientSettings(authApiUrl)).use { httpClient ->
             val refreshTokenResponse = httpClient.get<CloudCredentials, String>(
-                "/api/v1/auth/authorize?client_id=sso-sporthub-client&redirect_uri=https://sso.shynixn.com",  headers
+                "/api/v1/auth/authorize?client_id=sso-sporthub-client&redirect_uri=https://sso.shynixn.com", headers
             )
 
             if (!refreshTokenResponse.isSuccessStatusCode) {
@@ -194,7 +195,9 @@ class CloudServiceImpl(
             }
 
             val objectMapper = ObjectMapper()
-            File(plugin.dataFolder, "tokens").writeText(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(refreshTokenResponse.result!!))
+            File(plugin.dataFolder, "tokens").writeText(
+                objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(refreshTokenResponse.result!!)
+            )
         }
     }
 
@@ -202,7 +205,7 @@ class CloudServiceImpl(
         val apiUrl = plugin.config.getString("cloud.apiUrl")!!
         val credentials = getCredentials()
         val headers = hashMapOf(
-            "x-api-key" to trackingKey!!,
+            "x-api-key" to credentials.apiKey,
             "User-Agent" to plugin.name + "-Stats",
             "Authorization" to "Bearer ${credentials.accessToken}"
         )
@@ -220,9 +223,13 @@ class CloudServiceImpl(
     }
 
     private fun getCredentials(): CloudCredentials {
-        val objectMapper = ObjectMapper()
+        val objectMapper = ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         val rawCredentials = File(plugin.dataFolder, "tokens").readText()
-        return objectMapper.readValue(rawCredentials, CloudCredentials::class.java)
+        val cloudCredentials = objectMapper.readValue(rawCredentials, CloudCredentials::class.java)
+        val payload = Base64.getUrlDecoder().decode(cloudCredentials.accessToken.split(".")[1])
+        cloudCredentials.apiKey =
+            objectMapper.readValue(payload.toString(Charsets.UTF_8), CloudApiKeySet::class.java).apiKey
+        return cloudCredentials
     }
 
     private fun fetchTrackingKey() {

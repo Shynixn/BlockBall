@@ -6,4 +6,6 @@ class CloudCredentials {
     var refreshToken: String = ""
 
     var accessTokenExpiration: String = ""
+
+    var apiKey : String = ""
 }

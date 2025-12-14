@@ -549,7 +549,7 @@ class BlockBallCommandExecutor(
                             sender.sendLanguageMessage(language.cloudLoginComplete)
                         } catch (e: Exception) {
                             sender.sendLanguageMessage(language.commonErrorMessage)
-                            plugin.logger.log(Level.SEVERE, "An error occurred during cloud login", e)
+                            plugin.logger.log(Level.WARNING, "An error occurred during cloud login", e)
                         }
                     }
                 }
