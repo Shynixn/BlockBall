@@ -192,8 +192,8 @@ class CloudServiceImpl(
             }
 
             val objectMapper = ObjectMapper()
-
             playerDataRepository.save(PlayerInformation().also {
+                it.isPersisted = playerDataRepository.getByPlayerUUID(UUID.fromString(emptyGuid)) != null
                 it.playerUUID = emptyGuid
                 it.playerName = "Cloud"
                 it.statsMeta = StatsMeta().also {
