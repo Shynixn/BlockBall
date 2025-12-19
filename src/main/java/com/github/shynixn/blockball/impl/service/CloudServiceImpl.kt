@@ -165,7 +165,7 @@ class CloudServiceImpl(
                 refreshTokens(credentials.refreshToken)
                 return sendGameData(cloudGame, false)
             } else {
-                throw IOException("Failed to sendGameData")
+                throw IOException("HTTP ${response.statusCode}: Failed to send game - ${response.error}")
             }
         }
     }
@@ -188,7 +188,7 @@ class CloudServiceImpl(
             )
 
             if (!refreshTokenResponse.isSuccessStatusCode) {
-                throw IOException("Failed to refresh tokens: " + refreshTokenResponse.request.toString() + refreshTokenResponse.statusCode + "-" + refreshTokenResponse.error)
+                throw IOException("HTTP ${refreshTokenResponse.statusCode}: Failed to refresh tokens - ${refreshTokenResponse.error}")
             }
 
             val objectMapper = ObjectMapper()
@@ -213,14 +213,14 @@ class CloudServiceImpl(
             "Authorization" to "Bearer ${credentials.accessToken}"
         )
         httpClientFactory.createHttpClient(HttpClientSettings(apiUrl)).use { httpClient ->
-            val response = httpClient.get<CloudServerData, String>("/api/v1/server", headers)
+            val response = httpClient.get<CloudServerDataResponse, String>("/api/v1/server", headers)
             if (response.isSuccessStatusCode) {
-                serverId = response.result!!.id
+                serverId = response.result!!.data.id
             } else if (retry) {
                 refreshTokens(credentials.refreshToken)
                 return fetchServerId(false)
             } else {
-                throw IOException("Failed to fetch serverId: ${response.error}")
+                throw IOException("HTTP ${response.statusCode}: Failed to fetch serverid - ${response.error}")
             }
         }
     }
@@ -244,7 +244,6 @@ class CloudServiceImpl(
             if (response.isSuccessStatusCode) {
                 trackingKey = response.result!!.ssoTrackingKey
             } else {
-                throw IOException("Failed to fetch publicKeys: ${response.error}")
             }
         }
     }
