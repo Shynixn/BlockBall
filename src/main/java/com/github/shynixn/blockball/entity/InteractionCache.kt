@@ -17,4 +17,6 @@ class InteractionCache {
      * Internal movement counter for interactions.
      */
     var movementCounter: Int = 0
+
+    var joinTimeStamp = 0L
 }

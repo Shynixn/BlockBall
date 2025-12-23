@@ -7,11 +7,13 @@ import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
+import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
+import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -19,7 +21,7 @@ import org.bukkit.plugin.Plugin
 class SoccerHubGameImpl(
     arena: SoccerArena,
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
-    plugin: Plugin,
+    private val plugin: Plugin,
     placeHolderService: PlaceHolderService,
     language: BlockBallLanguage,
     soccerBallFactory: SoccerBallFactory,
@@ -42,18 +44,12 @@ class SoccerHubGameImpl(
      * Handles the game actions per tick.
      */
     override fun handle(hasSecondPassed: Boolean) {
-        // Handle HubGame ticking.
-        if (!arena.enabled || closing) {
-            status = GameState.DISABLED
-            close()
+        if (Bukkit.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
             return
         }
 
-        if (status == GameState.DISABLED) {
-            status = GameState.JOINABLE
-        }
-
-        if (Bukkit.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
+        if (!arena.enabled || closing) {
+            close()
             return
         }
 
@@ -80,12 +76,11 @@ class SoccerHubGameImpl(
      * Closes the given game and all underlying resources.
      */
     override fun close() {
-        if (closed) {
+        if (status == GameState.DISABLED) {
             return
         }
 
         status = GameState.DISABLED
-        closed = true
         ingamePlayersStorage.keys.toTypedArray().forEach { p ->
             leave(p)
         }
@@ -93,6 +88,11 @@ class SoccerHubGameImpl(
         ball?.remove()
         doubleJumpCoolDownPlayers.clear()
         interactedWithBall.clear()
+
+        plugin.launch {
+            delay(3000)
+            closed = true
+        }
     }
 
     override fun setPlayerToArena(player: Player, team: Team) {

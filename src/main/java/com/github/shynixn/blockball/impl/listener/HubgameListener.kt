@@ -99,6 +99,11 @@ class HubgameListener(
         }
 
         val interactionCache = getInteractionCache(player)
+
+        if (System.currentTimeMillis() - interactionCache.joinTimeStamp < 4000) {
+            return
+        }
+
         val gameInternal = gameService.getByPlayer(player)
 
         if (gameInternal != null) {
@@ -126,7 +131,7 @@ class HubgameListener(
         var inArea = false
 
         for (game in gameService.getAll()) {
-            if (game.arena.enabled && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(
+            if (game.arena.enabled && !game.closed && !game.closing && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(
                     location.toVector3d()
                 )
             ) {
@@ -217,7 +222,9 @@ class HubgameListener(
 
     private fun getInteractionCache(player: Player): InteractionCache {
         if (!cache.containsKey(player)) {
-            cache[player] = InteractionCache()
+            cache[player] = InteractionCache().also {
+                it.joinTimeStamp = System.currentTimeMillis()
+            }
         }
 
         return cache[player]!!
