@@ -90,7 +90,7 @@ class SoccerHubGameImpl(
         interactedWithBall.clear()
 
         plugin.launch {
-            delay(2000)
+            delay(3000)
             closed = true
         }
     }

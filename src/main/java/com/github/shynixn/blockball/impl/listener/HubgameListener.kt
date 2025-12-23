@@ -100,7 +100,7 @@ class HubgameListener(
 
         val interactionCache = getInteractionCache(player)
 
-        if (System.currentTimeMillis() - interactionCache.joinTimeStamp < 2000) {
+        if (System.currentTimeMillis() - interactionCache.joinTimeStamp < 4000) {
             return
         }
 
