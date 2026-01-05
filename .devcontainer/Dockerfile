@@ -62,7 +62,8 @@ RUN cp /root/.m2/repository/org/spigotmc/spigot-1.21.11.jar /app/spigot.jar
 RUN echo "eula=true" > /app/eula.txt
 RUN echo "server-port=25565" >> /app/server.properties
 RUN echo "online-mode=false" >> /app/server.properties
-RUN echo "motd=Devcontainer Spigot Server" >> /app/server.properties    
+RUN echo "motd=Devcontainer Spigot Server" >> /app/server.properties   
+RUN echo "java -Djava.awt.headless=true -jar spigot.jar --nogui" > /app/start-spigot.sh
 
 # Set working directory
 WORKDIR /workspace
