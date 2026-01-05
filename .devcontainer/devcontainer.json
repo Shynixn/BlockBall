@@ -6,9 +6,12 @@
   "workspaceFolder": "/workspace",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
   "mounts": [
-    "source=${localWorkspaceFolder}/.server,target=/app/plugins,type=bind"
+    "source=${localWorkspaceFolder}/.server,target=/app/plugins,type=bind",
+    "source=${localWorkspaceFolder}/docs/resources/world-1.21.4/world,target=/app/world,type=bind"
   ],
-  "forwardPorts": [25565],
+  "forwardPorts": [
+    25565
+  ],
   "portsAttributes": {
     "25565": {
       "label": "Game",
@@ -17,7 +20,10 @@
   },
   "customizations": {
     "vscode": {
-      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"],
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
         "editor.formatOnSave": true,

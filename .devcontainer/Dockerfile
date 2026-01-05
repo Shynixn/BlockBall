@@ -56,9 +56,9 @@ COPY --from=buildtools-jdk21 /root/.m2/repository/org/spigotmc /root/.m2/reposit
 
 # Setup test server
 WORKDIR /app
+RUN mkdir /app/plugins
 RUN cp /root/.m2/repository/org/spigotmc/spigot/1.21.11-R0.1-SNAPSHOT/spigot-1.21.11-R0.1-SNAPSHOT.jar /app/spigot.jar 
 RUN echo "eula=true" > /app/eula.txt
-COPY docs/resources/world-1.21.4 /app/world
 RUN echo "server-port=25565" >> /app/server.properties
 RUN echo "online-mode=false" >> /app/server.properties
 RUN echo "motd=Devcontainer Spigot Server" >> /app/server.properties    
