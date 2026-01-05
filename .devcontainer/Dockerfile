@@ -47,10 +47,24 @@ RUN java -jar BuildTools.jar --rev 1.21.10 --remapped
 RUN java -jar BuildTools.jar --rev 1.21.11 --remapped
 
 # Build image for all versions.
-FROM amazoncorretto:21
+FROM eclipse-temurin:21-jdk
 LABEL stage=buildtools
+RUN apt-get update -y && apt-get install -y git wget
 COPY --from=buildtools-jdk8 /root/.m2/repository/org/spigotmc /root/.m2/repository/org/spigotmc/
 COPY --from=buildtools-jdk17 /root/.m2/repository/org/spigotmc /root/.m2/repository/org/spigotmc/
 COPY --from=buildtools-jdk21 /root/.m2/repository/org/spigotmc /root/.m2/repository/org/spigotmc/
 
-CMD ["sh","-c","/bin/bash"]
+# Setup test server
+WORKDIR /app
+RUN cp /root/.m2/repository/org/spigotmc/spigot/1.21.11-R0.1-SNAPSHOT/spigot-1.21.11-R0.1-SNAPSHOT.jar /app/spigot.jar 
+RUN echo "eula=true" > /app/eula.txt
+COPY docs/resources/world-1.21.4 /app/world
+RUN echo "server-port=25565" >> /app/server.properties
+RUN echo "online-mode=false" >> /app/server.properties
+RUN echo "motd=Devcontainer Spigot Server" >> /app/server.properties    
+
+# Set working directory
+WORKDIR /workspace
+
+# Set environment variable
+ENV LOCAL=true

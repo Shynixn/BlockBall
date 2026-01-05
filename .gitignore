@@ -17,6 +17,8 @@
 *.zip
 *.tar.gz
 *.rar
+.server/
+
 
 # IDEA Files
 /.idea
