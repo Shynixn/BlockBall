@@ -6,9 +6,12 @@
   "workspaceFolder": "/workspace",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
   "mounts": [
-    "source=${localWorkspaceFolder}/.server,target=/app/plugins,type=bind"
+    "source=${localWorkspaceFolder}/.server/plugins,target=/app/plugins,type=bind",
+    "source=${localWorkspaceFolder}/.server/world,target=/app/world,type=bind"
   ],
-  "forwardPorts": [25565],
+  "forwardPorts": [
+    25565
+  ],
   "portsAttributes": {
     "25565": {
       "label": "Game",
@@ -17,7 +20,13 @@
   },
   "customizations": {
     "vscode": {
-      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"],
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "vscjava.vscode-java-pack",
+        "fwcd.kotlin",
+        "richardwillis.vscode-gradle"
+      ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
         "editor.formatOnSave": true,
@@ -25,5 +34,8 @@
       }
     }
   },
-  "remoteUser": "root"
+  "remoteUser": "root",
+  "containerEnv": {
+    "SHYNIXN_MCUTILS_REPOSITORY_2025": "${localEnv:SHYNIXN_MCUTILS_REPOSITORY_2025}"
+  }
 }
