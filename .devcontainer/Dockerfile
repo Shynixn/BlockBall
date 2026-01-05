@@ -1,0 +1,56 @@
+# This docker file uses multi-stage builds to build multiple minecraft versions in parallel.
+# Minecraft JDK 8
+FROM adoptopenjdk/openjdk8 AS buildtools-jdk8
+WORKDIR /tmp
+RUN apt-get update && apt-get install maven wget git -y
+RUN wget "https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
+RUN java -jar BuildTools.jar --rev 1.8.8
+RUN java -jar BuildTools.jar --rev 1.9.4
+RUN java -jar BuildTools.jar --rev 1.13.2
+RUN java -jar BuildTools.jar --rev 1.16.4
+
+# Minecraft JDK 17
+FROM amazoncorretto:17 AS buildtools-jdk17
+WORKDIR /tmp
+RUN yum update -y
+RUN yum install maven -y
+RUN yum install wget -y
+RUN yum install git -y
+RUN wget "https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
+RUN java -jar BuildTools.jar --rev 1.17.1 --remapped
+RUN java -jar BuildTools.jar --rev 1.18 --remapped
+RUN java -jar BuildTools.jar --rev 1.18.2 --remapped
+RUN java -jar BuildTools.jar --rev 1.19 --remapped
+RUN java -jar BuildTools.jar --rev 1.19.3 --remapped
+RUN java -jar BuildTools.jar --rev 1.19.4 --remapped
+RUN java -jar BuildTools.jar --rev 1.20.1 --remapped
+RUN java -jar BuildTools.jar --rev 1.20.2 --remapped
+RUN java -jar BuildTools.jar --rev 1.20.4 --remapped
+
+# Minecraft JDK 21
+FROM amazoncorretto:21 AS buildtools-jdk21
+WORKDIR /tmp
+RUN yum update -y
+RUN yum install maven -y
+RUN yum install wget -y
+RUN yum install git -y
+RUN wget "https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
+RUN java -jar BuildTools.jar --rev 1.20.6 --remapped
+RUN java -jar BuildTools.jar --rev 1.21 --remapped
+RUN java -jar BuildTools.jar --rev 1.21.1 --remapped
+RUN java -jar BuildTools.jar --rev 1.21.3 --remapped
+RUN java -jar BuildTools.jar --rev 1.21.4 --remapped
+RUN java -jar BuildTools.jar --rev 1.21.5 --remapped
+RUN java -jar BuildTools.jar --rev 1.21.8 --remapped
+RUN java -jar BuildTools.jar --rev 1.21.9 --remapped
+RUN java -jar BuildTools.jar --rev 1.21.10 --remapped
+RUN java -jar BuildTools.jar --rev 1.21.11 --remapped
+
+# Build image for all versions.
+FROM amazoncorretto:21
+LABEL stage=buildtools
+COPY --from=buildtools-jdk8 /root/.m2/repository/org/spigotmc /root/.m2/repository/org/spigotmc/
+COPY --from=buildtools-jdk17 /root/.m2/repository/org/spigotmc /root/.m2/repository/org/spigotmc/
+COPY --from=buildtools-jdk21 /root/.m2/repository/org/spigotmc /root/.m2/repository/org/spigotmc/
+
+CMD ["sh","-c","/bin/bash"]
