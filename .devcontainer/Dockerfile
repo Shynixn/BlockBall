@@ -36,22 +36,21 @@ RUN yum install wget -y
 RUN yum install git -y
 RUN wget "https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
 RUN java -jar BuildTools.jar --rev 1.20.6 --remapped && cp /tmp/spigot-1.20.6.jar /root/.m2/repository/org/spigotmc/spigot-1.20.6.jar
-RUN java -jar BuildTools.jar --rev 1.21 --remapped && cp /tmp/spigot-1.21.jar /root/.m2/repository/org/spigotmc/spigot-1.21.jar
 RUN java -jar BuildTools.jar --rev 1.21.1 --remapped && cp /tmp/spigot-1.21.1.jar /root/.m2/repository/org/spigotmc/spigot-1.21.1.jar
 RUN java -jar BuildTools.jar --rev 1.21.3 --remapped && cp /tmp/spigot-1.21.3.jar /root/.m2/repository/org/spigotmc/spigot-1.21.3.jar
 RUN java -jar BuildTools.jar --rev 1.21.4 --remapped && cp /tmp/spigot-1.21.4.jar /root/.m2/repository/org/spigotmc/spigot-1.21.4.jar
 RUN java -jar BuildTools.jar --rev 1.21.5 --remapped && cp /tmp/spigot-1.21.5.jar /root/.m2/repository/org/spigotmc/spigot-1.21.5.jar
 RUN java -jar BuildTools.jar --rev 1.21.8 --remapped && cp /tmp/spigot-1.21.8.jar /root/.m2/repository/org/spigotmc/spigot-1.21.8.jar
-RUN java -jar BuildTools.jar --rev 1.21.9 --remapped && cp /tmp/spigot-1.21.9.jar /root/.m2/repository/org/spigotmc/spigot-1.21.9.jar
 RUN java -jar BuildTools.jar --rev 1.21.10 --remapped && cp /tmp/spigot-1.21.10.jar /root/.m2/repository/org/spigotmc/spigot-1.21.10.jar
 RUN java -jar BuildTools.jar --rev 1.21.11 --remapped && cp /tmp/spigot-1.21.11.jar /root/.m2/repository/org/spigotmc/spigot-1.21.11.jar
 RUN mkdir -p /root/.m2/repository/io/papermc && wget -O /root/.m2/repository/io/papermc/paper-1.21.11.jar "https://fill-data.papermc.io/v1/objects/5be84d9fc43181a72d5fdee7e3167824d9667bfc97b1bf9721713f9a971481ca/paper-1.21.11-88.jar"
 
 # Build image for all versions.
-FROM eclipse-temurin:21-jdk
+FROM ubuntu:latest
 LABEL stage=buildtools
-RUN apt-get update -y && apt-get install -y git wget nodejs npm python3-pip mkdocs
-RUN pip install mkdocs-material && pip install Pygments && npm install --global http-server
+RUN apt-get update -y && apt-get install -y git wget nodejs npm python3-pip openjdk-21-jdk
+RUN pip install mkdocs-material --break-system-packages
+RUN pip install Pygments --break-system-packages && npm install --global http-server
 COPY --from=buildtools-jdk8 /root/.m2/repository/org/spigotmc /root/.m2/repository/org/spigotmc/
 COPY --from=buildtools-jdk17 /root/.m2/repository/org/spigotmc /root/.m2/repository/org/spigotmc/
 COPY --from=buildtools-jdk21 /root/.m2/repository/org/spigotmc /root/.m2/repository/org/spigotmc/
@@ -75,4 +74,4 @@ WORKDIR /workspace
 
 # Set environment variable
 ENV LOCAL=true
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
