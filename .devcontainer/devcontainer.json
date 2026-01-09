@@ -9,9 +9,7 @@
     "source=${localWorkspaceFolder}/.server/plugins,target=/app/plugins,type=bind",
     "source=${localWorkspaceFolder}/.server/world,target=/app/world,type=bind"
   ],
-  "forwardPorts": [
-    25565
-  ],
+  "forwardPorts": [25565, 8080],
   "portsAttributes": {
     "25565": {
       "label": "Game",
