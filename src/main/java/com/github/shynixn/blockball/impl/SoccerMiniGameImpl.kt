@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.entity.PlayerInformation
@@ -24,6 +25,7 @@ import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.time.Instant
 
 open class SoccerMiniGameImpl(
     arena: SoccerArena,
@@ -35,7 +37,8 @@ open class SoccerMiniGameImpl(
     language: BlockBallLanguage,
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
-    itemService: ItemService
+    itemService: ItemService,
+    cloudService: CloudService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -45,7 +48,8 @@ open class SoccerMiniGameImpl(
     language,
     playerDataRepository,
     itemService,
-    chatMessageService
+    chatMessageService,
+    cloudService
 ), SoccerMiniGame {
     private var currentQueueTime = arena.meta.customizingMeta.queueTimeOutSec
     private var isQueueTimeRunning = false
@@ -130,6 +134,7 @@ open class SoccerMiniGameImpl(
                     status = GameState.RUNNING
                     matchTimeIndex = -1
                     ballEnabled = true
+                    startDateUtc = Instant.now()
                     switchToNextMatchTime()
                     Bukkit.getPluginManager().callEvent(GameStartEvent(this))
                     executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.gameStartCommands)

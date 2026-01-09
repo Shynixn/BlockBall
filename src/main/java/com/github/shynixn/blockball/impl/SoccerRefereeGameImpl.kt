@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.PlayerInformation
@@ -17,6 +18,7 @@ import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.time.Instant
 
 class SoccerRefereeGameImpl(
     arena: SoccerArena,
@@ -28,7 +30,8 @@ class SoccerRefereeGameImpl(
     language: BlockBallLanguage,
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
-    itemService: ItemService
+    itemService: ItemService,
+    cloudService: CloudService
 ) : SoccerMiniGameImpl(
     arena,
     playerDataRepository,
@@ -39,7 +42,8 @@ class SoccerRefereeGameImpl(
     language,
     commandService,
     soccerBallFactory,
-    itemService
+    itemService,
+    cloudService
 ), SoccerRefereeGame {
     /**
      * Is the timer blocker enabled.
@@ -124,6 +128,7 @@ class SoccerRefereeGameImpl(
                     status = GameState.RUNNING
                     matchTimeIndex = -1
                     ballEnabled = true
+                    startDateUtc = Instant.now()
                     switchToNextMatchTime()
                     Bukkit.getPluginManager().callEvent(GameStartEvent(this))
                     executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.gameStartCommands)

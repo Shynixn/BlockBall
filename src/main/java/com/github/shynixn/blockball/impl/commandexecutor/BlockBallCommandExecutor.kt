@@ -2,12 +2,16 @@ package com.github.shynixn.blockball.impl.commandexecutor
 
 import com.github.shynixn.blockball.BlockBallDependencyInjectionModule
 import com.github.shynixn.blockball.contract.BlockBallLanguage
+import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
+import com.github.shynixn.blockball.entity.CloudGame
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
+import com.github.shynixn.fasterxml.jackson.core.type.TypeReference
+import com.github.shynixn.fasterxml.jackson.databind.ObjectMapper
 import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -43,7 +47,8 @@ class BlockBallCommandExecutor(
     private val selectionService: AreaSelectionService,
     private val placeHolderService: PlaceHolderService,
     private val itemService: ItemService,
-    private val chatMessageService: ChatMessageService
+    private val chatMessageService: ChatMessageService,
+    private val cloudService: CloudService
 ) {
     private val arenaTabs: (s: CommandSender) -> List<String> = {
         var cache = arenaRepository.getCache()
@@ -534,6 +539,58 @@ class BlockBallCommandExecutor(
                         .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, playerToAssign ->
                             setRedCardToPlayer(player, playerToAssign)
                         }
+                }
+            }
+            subCommand("cloud") {
+                permission(Permission.CLOUD)
+                subCommand("login") {
+                    permission(Permission.CLOUD)
+                    toolTip { language.cloudLoginToolTip.text }
+                    builder().execute { sender ->
+                        try {
+                            cloudService.performLoginFlow(sender)
+                            sender.sendLanguageMessage(language.cloudLoginComplete)
+                        } catch (e: Exception) {
+                            sender.sendLanguageMessage(language.commonErrorMessage)
+                            plugin.logger.log(Level.WARNING, "An error occurred during cloud login", e)
+                        }
+                    }
+                }
+                subCommand("logout") {
+                    permission(Permission.CLOUD)
+                    toolTip { language.cloudLogoutToolTip.text }
+                    builder().execute { sender ->
+                        try {
+                            cloudService.performLogout(sender)
+                            sender.sendLanguageMessage(language.cloudLogoutSuccess)
+                        } catch (e: Exception) {
+                            sender.sendLanguageMessage(language.cloudLogoutSuccess)
+                        }
+                    }
+                }
+                subCommand("demo") {
+                    permission(Permission.CLOUD)
+                    toolTip { language.cloudDemoDataToolTip.text }
+                    builder().execute { sender ->
+                        try {
+                            sender.sendLanguageMessage(language.cloudDemoDataStart)
+                            val cloudGames = withContext(Dispatchers.IO) {
+                                val rawData = plugin.getResource("cloud/cloud_demo_data.json")!!.readBytes()
+                                    .toString(Charsets.UTF_8)
+                                val objectMapper = ObjectMapper()
+                                objectMapper.readValue(rawData, object : TypeReference<List<CloudGame>>() {})
+                            }
+
+                            for (cloudGame in cloudGames) {
+                                cloudService.publishGameStats(cloudGame)
+                            }
+
+                            sender.sendLanguageMessage(language.cloudDemoDataCompleted)
+                        } catch (e: Exception) {
+                            sender.sendLanguageMessage(language.commonErrorMessage)
+                            plugin.logger.log(Level.WARNING, "An error occurred during cloud upload", e)
+                        }
+                    }
                 }
             }
             subCommand("placeholder") {

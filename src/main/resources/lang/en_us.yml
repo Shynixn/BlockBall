@@ -329,6 +329,36 @@ commandRefereeRedCardSuccessMessage:
 commandRefereeRedCardErrorMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% cannot be awarded a red card."
+cloudLoginToolTip:
+  type: "CHAT"
+  text: "Starts a login flow to the BlockBall cloud."
+cloudLogoutToolTip:
+  type: "CHAT"
+  text: "Logout from the BlockBall cloud and cancel all login processes."
+cloudDemoDataToolTip:
+  type: "CHAT"
+  text: "Uploads demo data to your cloud."
+cloudLogoutSuccess:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully logged out."
+cloudLoginStart:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Starting login..."
+cloudLoginOpenInBrowser:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Open your web browser and login here:"
+cloudLoginWait:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Waiting for login..."
+cloudLoginComplete:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully logged into Blockball cloud."
+cloudDemoDataStart:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Uploading demo data to your cloud..."
+cloudDemoDataCompleted:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully uploaded demo data. It takes up to 5 minutes until the data is visible."
 shyScoreboardPlayerNotFoundMessage:
   # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
   # Please notice that some messages do only support chat.

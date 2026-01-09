@@ -205,4 +205,24 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
   var commandRefereeRedCardSuccessMessage: LanguageItem
 
   var commandRefereeRedCardErrorMessage: LanguageItem
+
+  var cloudLoginToolTip: LanguageItem
+
+  var cloudLogoutToolTip: LanguageItem
+
+  var cloudDemoDataToolTip: LanguageItem
+
+  var cloudLogoutSuccess: LanguageItem
+
+  var cloudLoginStart: LanguageItem
+
+  var cloudLoginOpenInBrowser: LanguageItem
+
+  var cloudLoginWait: LanguageItem
+
+  var cloudLoginComplete: LanguageItem
+
+  var cloudDemoDataStart: LanguageItem
+
+  var cloudDemoDataCompleted: LanguageItem
 }
