@@ -110,14 +110,13 @@ sign:
 
 ############################
 # Website/Cloud (PatreonOnly)
-# The plugin can send data to the BlockBall Cloud. This is disabled per default and has to be explicitly enabled per game.
+# The plugin can send data to https://blockball.shynixn.com. This is disabled per default and has to be explicitly enabled per game.
 ############################
 cloud:
+  # If you are using a custom domain like "soccer.myminecraftserver.com", you can set it here.
   publishUrl: "https://blockball.shynixn.com"
-  apiUrl: "https://api.blockball.shynixn.com"
-  baseUrl: "https://blockball.shynixn.com"
-  authUrl: "https://sso.shynixn.com"
-  authApiUrl: "https://api.sso.shynixn.com"
+  # If you are using a custom domain, you can hide the server id.
+  hideServerId: false
 
 ############################
 # LeaderBoard PlaceHolders (PatreonOnly)

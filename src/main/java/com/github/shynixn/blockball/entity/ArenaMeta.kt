@@ -1,5 +1,7 @@
 package com.github.shynixn.blockball.entity
 
+import com.github.shynixn.blockball.entity.cloud.CloudMeta
+
 class ArenaMeta {
     /** Metadata of the customizing properties. */
     val customizingMeta: CustomizationMeta = CustomizationMeta()

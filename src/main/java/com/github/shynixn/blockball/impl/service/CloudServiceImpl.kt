@@ -3,6 +3,13 @@ package com.github.shynixn.blockball.impl.service
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.entity.*
+import com.github.shynixn.blockball.entity.cloud.CloudApiKeySet
+import com.github.shynixn.blockball.entity.cloud.CloudCredentials
+import com.github.shynixn.blockball.entity.cloud.CloudGame
+import com.github.shynixn.blockball.entity.cloud.CloudGameDataResponse
+import com.github.shynixn.blockball.entity.cloud.CloudPublicKeys
+import com.github.shynixn.blockball.entity.cloud.CloudServerDataResponse
+import com.github.shynixn.blockball.entity.cloud.CloudSessionStart
 import com.github.shynixn.fasterxml.jackson.databind.DeserializationFeature
 import com.github.shynixn.fasterxml.jackson.databind.ObjectMapper
 import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
@@ -12,6 +19,7 @@ import com.github.shynixn.mcutils.http.HttpClientFactory
 import com.github.shynixn.mcutils.http.HttpClientSettings
 import com.github.shynixn.mcutils.http.get
 import com.github.shynixn.mcutils.http.post
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -19,9 +27,7 @@ import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import java.io.File
 import java.io.IOException
-import java.nio.file.Files
 import java.util.*
 import java.util.logging.Level
 
@@ -36,6 +42,12 @@ class CloudServiceImpl(
     private var serverId: String? = null
     private var loginProcess = HashSet<CommandSender>()
     private val emptyGuid = "00000000-0000-0000-0000-000000000000"
+    private val authApiUrl = "https://api.sso.shynixn.com"
+    private val authUrl = "https://sso.shynixn.com"
+    private val baseUrl = "https://blockball.shynixn.com"
+    private val apiUrl = "https://api.blockball.shynixn.com"
+    private val publishUrl = plugin.config.getString("cloud.publishUrl")
+    private val hideServerId = plugin.config.getBoolean("cloud.hideServerId")
 
     /**
      * Performs the login flow.
@@ -45,10 +57,6 @@ class CloudServiceImpl(
 
         withContext(Dispatchers.IO) {
             plugin.logger.log(Level.INFO, "Starting login flow...")
-            val authApiUrl = plugin.config.getString("cloud.authApiUrl")!!
-            val authUrl = plugin.config.getString("cloud.authUrl")!!
-            val baseUrl = plugin.config.getString("cloud.baseUrl")!!
-
             withContext(plugin.globalRegionDispatcher) {
                 chatMessageService.sendLanguageMessage(sender, language.cloudLoginStart)
             }
@@ -134,18 +142,22 @@ class CloudServiceImpl(
     /**
      * Publishes the game stats.
      */
-    override suspend fun publishGameStats(cloudGame: CloudGame) {
-        withContext(Dispatchers.IO) {
+    override suspend fun publishGameStats(cloudGame: CloudGame): String {
+        return withContext(Dispatchers.IO) {
             if (serverId == null) {
                 fetchServerId(true)
             }
 
-            sendGameData(cloudGame, true)
+            val gameId = sendGameData(cloudGame, true)
+            return@withContext if (hideServerId) {
+                publishUrl + "/games/${gameId}"
+            } else {
+                publishUrl + "/games/${gameId}?s=${serverId}"
+            }
         }
     }
 
-    private suspend fun sendGameData(cloudGame: CloudGame, retry: Boolean) {
-        val apiUrl = plugin.config.getString("cloud.apiUrl")!!
+    private suspend fun sendGameData(cloudGame: CloudGame, retry: Boolean): String {
         val credentials = getCredentials()
         val headers = hashMapOf(
             "x-api-key" to credentials.apiKey,
@@ -154,13 +166,13 @@ class CloudServiceImpl(
             "content-type" to "application/json"
         )
         httpClientFactory.createHttpClient(HttpClientSettings(apiUrl)).use { httpClient ->
-            val response = httpClient.post<String, String>(
-                "/api/v1/game/${serverId}", cloudGame, headers
+            val response = httpClient.post<CloudGameDataResponse, CloudGame>(
+                "/api/v1/game/${serverId}/import", cloudGame, headers
             )
 
             if (response.isSuccessStatusCode) {
                 plugin.logger.log(Level.INFO, "Successfully published game.")
-                return
+                return response.result!!.data.id
             } else if (retry) {
                 refreshTokens(credentials.refreshToken)
                 return sendGameData(cloudGame, false)
@@ -171,8 +183,6 @@ class CloudServiceImpl(
     }
 
     private suspend fun refreshTokens(refreshToken: String) {
-        val authApiUrl = plugin.config.getString("cloud.authApiUrl")!!
-
         if (trackingKey == null) {
             fetchTrackingKey()
         }
@@ -191,6 +201,7 @@ class CloudServiceImpl(
                 throw IOException("HTTP ${refreshTokenResponse.statusCode}: Failed to refresh tokens - ${refreshTokenResponse.error}")
             }
 
+            plugin.logger.log(Level.INFO, "Refreshed access tokens.")
             val objectMapper = ObjectMapper()
             playerDataRepository.save(PlayerInformation().also {
                 it.isPersisted = playerDataRepository.getByPlayerUUID(UUID.fromString(emptyGuid)) != null
@@ -205,7 +216,6 @@ class CloudServiceImpl(
     }
 
     private suspend fun fetchServerId(retry: Boolean) {
-        val apiUrl = plugin.config.getString("cloud.apiUrl")!!
         val credentials = getCredentials()
         val headers = hashMapOf(
             "x-api-key" to credentials.apiKey,
@@ -237,7 +247,6 @@ class CloudServiceImpl(
     }
 
     private fun fetchTrackingKey() {
-        val baseUrl = plugin.config.getString("cloud.baseUrl")!!
         httpClientFactory.createHttpClient(HttpClientSettings(baseUrl)).use { httpClient ->
             val response = httpClient.get<CloudPublicKeys, String>("/publickeys.json")
 

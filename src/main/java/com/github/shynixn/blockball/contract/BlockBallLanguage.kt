@@ -210,8 +210,6 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
 
   var cloudLogoutToolTip: LanguageItem
 
-  var cloudDemoDataToolTip: LanguageItem
-
   var cloudLogoutSuccess: LanguageItem
 
   var cloudLoginStart: LanguageItem
@@ -222,7 +220,5 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
 
   var cloudLoginComplete: LanguageItem
 
-  var cloudDemoDataStart: LanguageItem
-
-  var cloudDemoDataCompleted: LanguageItem
+  var cloudPublishGameMessage: LanguageItem
 }
