@@ -47,7 +47,7 @@ class StatsMeta {
     var drawsAmount: Int = 0
 
     /**
-     * Last game ids.
+     * Optional payload.
      */
-    var lastGames: List<StatsGame> = ArrayList()
+    var optional : String? = null
 }

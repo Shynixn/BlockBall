@@ -204,6 +204,22 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var commandRefereeRedCardErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% cannot be awarded a red card.")
 
+ override var cloudLoginToolTip = LanguageItem("Starts a login flow to the BlockBall Hub.")
+
+ override var cloudLogoutToolTip = LanguageItem("Logout from the BlockBall Hub and cancel all login processes.")
+
+ override var cloudLogoutSuccess = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully logged out.")
+
+ override var cloudLoginStart = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Starting login...")
+
+ override var cloudLoginOpenInBrowser = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Open your web browser and login here:")
+
+ override var cloudLoginWait = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Waiting for login...")
+
+ override var cloudLoginComplete = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully logged into Blockball Hub.")
+
+ override var cloudPublishGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 This game has been published to:")
+
  override var shyScoreboardPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found.")
 
  override var shyScoreboardNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")

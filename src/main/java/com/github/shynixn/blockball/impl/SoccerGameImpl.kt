@@ -1,10 +1,9 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.contract.BlockBallLanguage
-import com.github.shynixn.blockball.contract.SoccerBall
-import com.github.shynixn.blockball.contract.SoccerBallFactory
-import com.github.shynixn.blockball.contract.SoccerGame
+import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.*
+import com.github.shynixn.blockball.entity.cloud.CloudGame
+import com.github.shynixn.blockball.entity.cloud.CloudPlayer
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.LeaveResult
@@ -22,6 +21,7 @@ import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.deserializeItemStack
 import com.github.shynixn.mcutils.common.item.ItemService
+import com.github.shynixn.mcutils.common.language.LanguageType
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.serializeItemStack
 import com.github.shynixn.mcutils.common.toLocation
@@ -32,8 +32,13 @@ import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.logging.Level
+
 
 abstract class SoccerGameImpl(
     /**
@@ -47,8 +52,10 @@ abstract class SoccerGameImpl(
     override val language: BlockBallLanguage,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
     private val itemService: ItemService,
-    private val chatMessageService: ChatMessageService
+    private val chatMessageService: ChatMessageService,
+    private val cloudService: CloudService
 ) : SoccerGame {
+    protected var startDateUtc = Instant.now()
 
     /**
      * Generated game id.
@@ -322,29 +329,66 @@ abstract class SoccerGameImpl(
         // Store playing stats.
         val participatingPlayers =
             ingamePlayersStorage.filter { e -> e.value.team != Team.REFEREE }.map { e -> Pair(e.key, e.value) }
+        val allPlayers = ingamePlayersStorage.keys.toTypedArray()
 
         plugin.launch {
+            val cloudGame = CloudGame()
+            cloudGame.courtName = arena.meta.cloudMeta.name
+            cloudGame.startDate = DateTimeFormatter.ISO_INSTANT.format(startDateUtc.truncatedTo(ChronoUnit.MILLIS))
+            cloudGame.endDate = DateTimeFormatter.ISO_INSTANT.format(Instant.now().truncatedTo(ChronoUnit.MILLIS))
+            cloudGame.teamRed.name = arena.meta.cloudMeta.redTeamName
+            cloudGame.teamRed.score = redScore
+            cloudGame.teamBlue.name = arena.meta.cloudMeta.blueTeamName
+            cloudGame.teamBlue.score = blueScore
+
             for (playerPair in participatingPlayers) {
                 val player = playerPair.first
                 val data = playerPair.second
-                val playerData = playerDataRepository.getByPlayer(player)
+                val playerData = playerDataRepository.getByPlayer(player) ?: continue
 
-                if (playerData != null) {
-                    playerData.statsMeta.playedGames++
-                    playerData.statsMeta.scoredGoalsFull += data.scoredGoals
-                    playerData.statsMeta.scoredOwnGoalsFull += data.scoredOwnGoals
-                    playerData.playerName = player.name
-                    playerData.statsMeta.drawsAmount += drawCounter
-                    val lastGameIds = ArrayList(playerData.statsMeta.lastGames)
-                    lastGameIds.add(0, StatsGame().also {
-                        it.id = id
-                        it.name = arena.name
-                        it.displayName = ChatColor.stripChatColors(arena.displayName)
-                    })
-                    playerData.statsMeta.lastGames = lastGameIds.take(6).toList()
-                    if (winningPlayers.contains(player)) {
-                        playerData.statsMeta.winsAmount++
+                playerData.statsMeta.playedGames++
+                playerData.statsMeta.scoredGoalsFull += data.scoredGoals
+                playerData.statsMeta.scoredOwnGoalsFull += data.scoredOwnGoals
+                playerData.playerName = player.name
+                playerData.statsMeta.drawsAmount += drawCounter
+
+                if (winningPlayers.contains(player)) {
+                    playerData.statsMeta.winsAmount++
+                }
+
+                val cloudPlayer = CloudPlayer().also {
+                    it.id = player.uniqueId.toString()
+                    it.name = player.name
+                    it.goalsPerGameRate =
+                        playerData.statsMeta.scoredGoals.toDouble() / playerData.statsMeta.playedGames.toDouble()
+                    it.goalsScoredAmount = playerData.statsMeta.scoredGoalsFull
+                    it.gamesAmount = playerData.statsMeta.playedGames
+                    it.winsAmount = playerData.statsMeta.winsAmount
+                    it.drawsAmount = playerData.statsMeta.drawsAmount
+                    it.lossesAmount =
+                        playerData.statsMeta.playedGames - playerData.statsMeta.winsAmount - playerData.statsMeta.drawsAmount
+                    it.winRate =
+                        playerData.statsMeta.winsAmount.toDouble() / playerData.statsMeta.playedGames.toDouble()
+                }
+
+                if (data.team == Team.BLUE) {
+                    cloudGame.teamBlue.players.add(cloudPlayer)
+                } else if (data.team == Team.RED) {
+                    cloudGame.teamRed.players.add(cloudPlayer)
+                }
+            }
+
+            if (arena.meta.cloudMeta.enabled) {
+                try {
+                    val gameUrl = cloudService.publishGameStats(cloudGame)
+                    for (player in allPlayers) {
+                        if (player.isOnline && language.cloudPublishGameMessage.type != LanguageType.HIDDEN) {
+                            chatMessageService.sendLanguageMessage(player, language.cloudPublishGameMessage)
+                            player.sendMessage(ChatColor.GRAY.toString() + gameUrl)
+                        }
                     }
+                } catch (e: Exception) {
+                    plugin.logger.log(Level.WARNING, "Cannot publish game to BlockBall Hub.", e)
                 }
             }
         }
