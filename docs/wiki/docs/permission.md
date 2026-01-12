@@ -2,22 +2,13 @@
 
 BlockBall uses a comprehensive permission system to control player access to features and commands. This guide helps you configure permissions correctly for different user roles on your server.
 
-## 🎯 Permission Levels Overview
+## 🔐 Permission Levels
 
-BlockBall permissions are organized into three main levels:
+BlockBall uses three permission levels:
 
-### 🟢 User Level
-**Who gets this**: All players who should be able to play BlockBall  
-**Purpose**: Basic gameplay functionality
-
-### 🟡 Admin/User Level  
-**Who gets this**: Trusted players or staff members  
-**Purpose**: Enhanced features that could be abused if given to everyone  
-**Caution**: Review carefully before granting to regular players
-
-### 🔴 Admin Level
-**Who gets this**: Server administrators and staff only  
-**Purpose**: Arena management and server administration
+* **👤 User Level**: All players who should be able to play BlockBall
+* **🟡 Admin/User Level**: Trusted players or staff members. Review carefully before granting to regular players
+* **🔴 Admin Level**: Permissions that should only be given to trusted staff
 
 ---
 
@@ -60,6 +51,7 @@ For most servers, these permissions provide the best balance of functionality an
 - blockball.shyparticles.followother
 - blockball.shyparticles.stopfollow
 - blockball.shyparticles.stopfollowother
+- blockball.cloud
 ```
 
 ---

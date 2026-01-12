@@ -13,6 +13,7 @@ nav:
       - Referee: referee.md
       - Commands: commands.md
       - PlaceHolders: placeholders.md
+      - Website and Cloud: cloud.md  
       - Developer Api: api.md
 theme:
   name: material

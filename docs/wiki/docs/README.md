@@ -1,10 +1,10 @@
 # BlockBall Documentation
 
-Welcome to the official documentation for **BlockBall** - the ultimate soccer/football plugin for Minecraft servers!
+Welcome to the official documentation for **BlockBall** - the soccer/football plugin for Minecraft servers!
 
 ## What is BlockBall?
 
-BlockBall is a powerful Spigot plugin that brings authentic soccer/football gameplay to your Minecraft server. Whether you want to create a casual lobby game or a competitive tournament experience, BlockBall provides all the tools you need.
+BlockBall is a powerful Spigot plugin that brings authentic soccer/football gameplay to your Minecraft server. Whether you want to create a casual lobby game or a traditional minigame experience, BlockBall provides all the tools you need.
 
 ## 🎯 Key Features
 
