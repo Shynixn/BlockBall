@@ -137,7 +137,7 @@ https://blockball.shynixn.com/games?s=<yourserverid>
 
 **Custom Domain:**
 ```
-http://soccer.yourcustomdomain.com/games
+https://soccer.yourcustomdomain.com/games
 ```
 
 **Benefits:**
