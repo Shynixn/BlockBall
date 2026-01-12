@@ -1,4 +1,4 @@
-# BlockBall Hub Cloud Integration
+# BlockBall Hub - Cloud Integration (BETA)
 
 Share your BlockBall games with the world! The BlockBall Hub is a cloud service that automatically publishes game results and player statistics to a dedicated website.
 
@@ -12,7 +12,7 @@ Check out the demo on [https://blockball.shynixn.com](https://blockball.shynixn.
 BlockBall Hub allows you to:
 
 - **Automatically publish game results** from your Minecraft server to the web
-- **Track player statistics** with detailed breakdowns and leaderboards
+- **Track player statistics** with player statistic pages
 - **Share games publicly** with a personal server page
 - **Custom domain integration** (Elite & Legendary tiers only)
 
@@ -27,14 +27,19 @@ https://blockball.shynixn.com/games?s=<yourserverid>
 
 ### Step 1: Register Your Server
 
-1. Visit the [BlockBall Hub](https://blockball.shynixn.com)
-2. Navigate to [Registration](https://blockball.shynixn.com/info)
-3. Login with your **Patreon account**
-4. Complete registration to create your personal server page
+1. Navigate to [Registration](https://blockball.shynixn.com/info)
+2. Login with your **Patreon account**
+3. Complete registration to create your personal server page
 
 ✅ **Success!** Your unique server URL will be generated automatically.
 
 ### Step 2: Connect Your Minecraft Server
+
+Make sure you have got the following permission
+
+```bash
+blockball.cloud
+```
 
 Link your Minecraft server to your BlockBall Hub account:
 
@@ -43,6 +48,7 @@ Link your Minecraft server to your BlockBall Hub account:
 ```
 
 **What happens next:**
+
 - You'll be prompted to authenticate with the **same Patreon account** used during registration
 - Follow the authentication instructions in chat
 - Your server will be securely connected to BlockBall Hub
@@ -65,7 +71,7 @@ Enable cloud publishing for individual arenas by editing their configuration fil
 2. Find the `cloud:` section
 3. Set `enabled: true`
 4. Save the file
-5. Reload the arena: `/blockball reload <arena_name>`
+5. Reload the arena: `/blockball reload`
 
 **Example Configuration:**
 ```yaml
@@ -93,6 +99,7 @@ That's it! Now just play normally:
 ### Game Publishing
 
 Every completed game is automatically uploaded with:
+
 - Final scores and match results
 - Team compositions
 - Game duration and timing
@@ -101,14 +108,13 @@ Every completed game is automatically uploaded with:
 ### Player Statistics
 
 Player performance data is tracked and published:
-- Individual player stats per game
-- Cumulative statistics across all games
-- Detailed performance breakdowns
-- Leaderboards and rankings
+
+- Player statistics across all games
 
 ### Public Access
 
 Share your BlockBall Hub server URL with:
+
 - Players on your server
 - Your community website
 - Social media followers
@@ -135,6 +141,7 @@ http://soccer.yourcustomdomain.com/games
 ```
 
 **Benefits:**
+
 - Private server configuration
 - Branded experience matching your server
 - Professional appearance for your community
