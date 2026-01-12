@@ -68,14 +68,14 @@ Enable cloud publishing for individual arenas by editing their configuration fil
 **Configuration:**
 
 1. Open your arena YAML file in a text editor
-2. Find the `cloud:` section
+2. Find the `cloudMeta:` section
 3. Set `enabled: true`
 4. Save the file
 5. Reload the arena: `/blockball reload`
 
 **Example Configuration:**
 ```yaml
-cloud:
+cloudMeta:
   enabled: true
   # Optional: additional cloud properties
 ```
