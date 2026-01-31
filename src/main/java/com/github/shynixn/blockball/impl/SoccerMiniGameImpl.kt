@@ -128,6 +128,16 @@ open class SoccerMiniGameImpl(
                     }
                 }
 
+                if (gameCountdown % 10 == 0 || gameCountdown <= 5) {
+                    for (player in ingamePlayersStorage.keys) {
+                        chatMessageService.sendLanguageMessage(
+                            player,
+                            language.gameStartingMessage,
+                            gameCountdown.toString()
+                        )
+                    }
+                }
+
                 if (gameCountdown <= 0) {
                     lobbyCountDownActive = false
                     playing = true

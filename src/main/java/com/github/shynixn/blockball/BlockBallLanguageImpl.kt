@@ -220,6 +220,8 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var cloudPublishGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 This game has been published to:")
 
+ override var gameStartingMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Game starts in %blockball_param_1% second(s).")
+
  override var shyScoreboardPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found.")
 
  override var shyScoreboardNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")
