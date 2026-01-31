@@ -285,6 +285,17 @@ class GameServiceImpl(
         arena.meta.blueTeamMeta.inventory = fixInventorySizing(arena.meta.blueTeamMeta.inventory.toMutableList())
         arena.meta.redTeamMeta.inventory = fixInventorySizing(arena.meta.redTeamMeta.inventory.toMutableList())
         arena.meta.refereeTeamMeta.inventory = fixInventorySizing(arena.meta.refereeTeamMeta.inventory.toMutableList())
+
+        if (arena.outerField.corner1 == null || arena.outerField.corner2 == null) {
+            arena.outerField.corner1 = arena.corner1!!.copy()
+            arena.outerField.corner2 = arena.corner2!!.copy()
+            plugin.logger.log(Level.INFO, "Auto-set outer field for arena ${arena.name}.")
+        }
+
+        // If players set a too small arena height for outer field detection, automatically fix it.
+        if (abs(arena.outerField.corner1!!.y - arena.outerField.corner2!!.y) < 3) {
+            arena.outerField.corner1!!.y = 10.0
+        }
     }
 
     private fun fixInventorySizing(list: MutableList<String?>): Array<String?> {

@@ -221,4 +221,6 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
   var cloudLoginComplete: LanguageItem
 
   var cloudPublishGameMessage: LanguageItem
+
+  var gameStartingMessage: LanguageItem
 }

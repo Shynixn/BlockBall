@@ -1045,7 +1045,7 @@ class BlockBallCommandExecutor(
         val selectionLeft = selectionService.getLeftClickLocation(player)
         val selectionRight = selectionService.getRightClickLocation(player)
 
-        if (selectionType == SelectionType.FIELD || selectionType == SelectionType.RED_GOAL || selectionType == SelectionType.BLUE_GOAL) {
+        if (selectionType == SelectionType.FIELD || selectionType == SelectionType.RED_GOAL || selectionType == SelectionType.BLUE_GOAL || selectionType == SelectionType.OUTER_FIELD) {
             if (selectionLeft == null) {
                 player.sendLanguageMessage(language.noLeftClickSelectionMessage)
                 return
@@ -1067,6 +1067,12 @@ class BlockBallCommandExecutor(
                 arena.meta.blueTeamMeta.goal.corner2 =
                     convertToOutercorner2(selectionLeft.toVector3d(), selectionRight.toVector3d())
                 arena.meta.blueTeamMeta.goal.corner1 =
+                    convertToOutercorner1(selectionLeft.toVector3d(), selectionRight.toVector3d())
+            }
+            else if (selectionType == SelectionType.OUTER_FIELD) {
+                arena.outerField.corner2 =
+                    convertToOutercorner2(selectionLeft.toVector3d(), selectionRight.toVector3d())
+                arena.outerField.corner1 =
                     convertToOutercorner1(selectionLeft.toVector3d(), selectionRight.toVector3d())
             }
         }

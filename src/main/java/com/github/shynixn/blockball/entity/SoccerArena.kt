@@ -16,6 +16,9 @@ class SoccerArena : Selection(), Element {
     @Comment("The unique identifier of a soccer arena. Should be identical to the name of this file.")
     override var name: String = ""
 
+    @Comment("A version number for this arena configuration. Do not change this unless you know what you are doing.")
+    var version: Int = 1
+
     @Comment("A display name for this arena, which can contain chat colors and more. This name can be used in messages using the placeholder %blockball_game_displayName%.")
     var displayName: String = ""
 
@@ -32,10 +35,13 @@ class SoccerArena : Selection(), Element {
     override var corner2: Vector3d? = null
 
     @Comment("Spawn location of the ball.")
-    var ballSpawnPoint : Vector3d? = null
+    var ballSpawnPoint: Vector3d? = null
 
     @Comment("All settings related to the ball.")
-    var ball : SoccerBallMeta = SoccerBallMeta()
+    var ball: SoccerBallMeta = SoccerBallMeta()
+
+    @Comment("Outer field location properties.")
+    var outerField: Selection = Selection()
 
     @Comment("All configurable meta data of this arena.")
     var meta: ArenaMeta = ArenaMeta()

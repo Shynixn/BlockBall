@@ -4,4 +4,5 @@ enum class SelectionType {
     FIELD,
     RED_GOAL,
     BLUE_GOAL,
+    OUTER_FIELD
 }

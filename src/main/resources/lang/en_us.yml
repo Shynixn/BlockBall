@@ -353,6 +353,9 @@ cloudLoginComplete:
 cloudPublishGameMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 This game has been published to:"
+gameStartingMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Game starts in %blockball_param_1% second(s)."
 shyScoreboardPlayerNotFoundMessage:
   # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
   # Please notice that some messages do only support chat.

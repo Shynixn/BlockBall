@@ -114,10 +114,21 @@ class SoccerRefereeGameImpl(
 
             if (lobbyCountDownActive) {
                 gameCountdown--
+
                 if (gameCountdown < 5) {
                     ingamePlayersStorage.keys.forEach { p ->
                         soundService.playSound(
                             p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
+                        )
+                    }
+                }
+
+                if (gameCountdown % 10 == 0 || gameCountdown <= 5) {
+                    for (player in ingamePlayersStorage.keys) {
+                        chatMessageService.sendLanguageMessage(
+                            player,
+                            language.gameStartingMessage,
+                            gameCountdown.toString()
                         )
                     }
                 }

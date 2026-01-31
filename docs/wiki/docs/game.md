@@ -221,11 +221,24 @@ Enable your completed minigame:
 
 ## 🎖️ Advanced Features
 
+### Outer Playing Area
+
+The outer forcefield and the playable area is the same when using the default configuration. However, you may want your players to be able to move outside the playable area for certain scenarios (e.g. throw-ins, corner shots).
+
+1. **Select Corner A**: Left-click with the axe
+2. **Select Corner B**: Right-click with the axe
+3. **Apply Selection**: Run the command
+
+```bash
+/blockball select game1 outer_field
+```
+
+
 ### Time Periods & Overtime
 Configure half-times, breaks, and overtime rules by editing your `game1.yml` file in `/plugins/BlockBall/arena/`. See the [Customization Guide](customization.md) for details.
 
 ### Referee Mode (Patreon Feature)
-Set up tournament-style games with full referee control. See our [Referee Guide](referee.md) for complete setup instructions.
+Set up real soccer games with full referee control. See our [Referee Guide](referee.md) for complete setup instructions.
 
 ---
 
