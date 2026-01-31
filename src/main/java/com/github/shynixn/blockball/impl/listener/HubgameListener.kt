@@ -108,14 +108,14 @@ class HubgameListener(
 
         if (gameInternal != null) {
             if (gameInternal.arena.gameType == GameType.HUBGAME) {
-                if (!gameInternal.arena.isLocationIn2dSelection(location.toVector3d())) {
+                if (!gameInternal.arena.outerField.isLocationIn2dSelection(location.toVector3d())) {
                     plugin.launch {
                         gameInternal.leave(player)
                         chatMessageService.sendLanguageMessage(player, language.leftGameMessage)
                     }
                 }
             } else if ((gameInternal.arena.gameType == GameType.MINIGAME || gameInternal.arena.gameType == GameType.REFEREEGAME) && gameInternal.arena.meta.minigameMeta.forceFieldEnabled) {
-                if (gameInternal.status == GameState.RUNNING && !gameInternal.arena.isLocationIn2dSelection(location.toVector3d())) {
+                if (gameInternal.status == GameState.RUNNING && !gameInternal.arena.outerField.isLocationIn2dSelection(location.toVector3d())) {
                     val knockBack =
                         gameInternal.arena.ballSpawnPoint!!.toLocation().toVector().subtract(player.location.toVector())
                             .normalize().multiply(2.0)
@@ -131,7 +131,7 @@ class HubgameListener(
         var inArea = false
 
         for (game in gameService.getAll()) {
-            if (game.arena.enabled && !game.closed && !game.closing && game.arena.gameType == GameType.HUBGAME && game.arena.isLocationInSelection(
+            if (game.arena.enabled && !game.closed && !game.closing && game.arena.gameType == GameType.HUBGAME && game.arena.outerField.isLocationInSelection(
                     location.toVector3d()
                 )
             ) {
