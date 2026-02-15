@@ -88,7 +88,7 @@ class SoccerBallCrossPlatformProxy(
         val ballTeleportEvent = BallTeleportEvent(this, location)
         Bukkit.getPluginManager().callEvent(ballTeleportEvent)
 
-        if (ballTeleportEvent.isCancelled) {
+        if (ballTeleportEvent.isCancelled()) {
             return
         }
 
@@ -157,7 +157,7 @@ class SoccerBallCrossPlatformProxy(
         val ballDeathEvent = BallRemoveEvent(this)
         Bukkit.getPluginManager().callEvent(ballDeathEvent)
 
-        if (ballDeathEvent.isCancelled) {
+        if (ballDeathEvent.isCancelled()) {
             return
         }
 

@@ -50,7 +50,7 @@ class DoubleJumpListener(
 
         player.allowFlight = false
         player.isFlying = false
-        event.isCancelled = true
+        event.setCancelled(true)
 
         // This has to be to ensure that the minigame force field does not grant the players flight.
         if (!game.arena.meta.doubleJumpMeta.enabled) {

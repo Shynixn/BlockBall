@@ -160,6 +160,7 @@ class BlockBallHytaleDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                module.getService(),
                 module.getService()
             )
         }
@@ -211,6 +212,7 @@ class BlockBallHytaleDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                module.getService()
             )
         }
         return module

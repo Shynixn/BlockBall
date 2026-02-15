@@ -19,7 +19,7 @@ fun Player.teleportCompat(plugin: Plugin, location: Location) {
             )
         }
 
-        teleportMethodRef!!.invoke(player, location)
+        teleportMethodRef!!.invoke(this, location)
     } else {
         teleport(location)
     }

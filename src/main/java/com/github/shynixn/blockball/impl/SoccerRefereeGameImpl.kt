@@ -16,6 +16,7 @@ import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import org.bukkit.Bukkit
+import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.time.Instant
@@ -31,7 +32,8 @@ class SoccerRefereeGameImpl(
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
     itemService: ItemService,
-    cloudService: CloudService
+    cloudService: CloudService,
+    private val server: Server
 ) : SoccerMiniGameImpl(
     arena,
     playerDataRepository,
@@ -43,7 +45,8 @@ class SoccerRefereeGameImpl(
     commandService,
     soccerBallFactory,
     itemService,
-    cloudService
+    cloudService,
+    server
 ), SoccerRefereeGame {
     /**
      * Is the timer blocker enabled.
@@ -98,7 +101,7 @@ class SoccerRefereeGameImpl(
             status = GameState.JOINABLE
         }
 
-        if (Bukkit.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
+        if (server.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
             return
         }
 

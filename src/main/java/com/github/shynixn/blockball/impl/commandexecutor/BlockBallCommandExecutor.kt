@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
+import org.bukkit.Server
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -50,6 +51,7 @@ class BlockBallCommandExecutor(
     private val chatMessageService: ChatMessageService,
     private val cloudService: CloudService,
     coroutineHandler: CoroutineHandler,
+    private val server: Server
     ) {
     private val arenaTabs: (s: CommandSender) -> List<String> = {
         var cache = arenaRepository.getCache()
@@ -64,7 +66,7 @@ class BlockBallCommandExecutor(
         Bukkit.getOnlinePlayers().map { e -> e.name }
     }
     private val worldTabs: ((CommandSender) -> List<String>) = {
-        Bukkit.getWorlds().map { e -> e.name }
+        server.getWorlds().map { e -> e.name }
     }
     private val playerMustExist = object : Validator<Player> {
         override suspend fun transform(
@@ -72,12 +74,12 @@ class BlockBallCommandExecutor(
         ): Player? {
             try {
                 val playerId = openArgs[0]
-                val player = Bukkit.getPlayer(playerId)
+                val player = server.getPlayer(playerId)
 
                 if (player != null) {
                     return player
                 }
-                return Bukkit.getPlayer(UUID.fromString(playerId))
+                return server.getPlayer(UUID.fromString(playerId))
             } catch (e: Exception) {
                 return null
             }
@@ -259,7 +261,7 @@ class BlockBallCommandExecutor(
             sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
         ): World? {
             try {
-                return Bukkit.getWorld(openArgs[0])
+                return server.getWorld(openArgs[0])
             } catch (e: Exception) {
                 return null
             }
@@ -894,7 +896,7 @@ class BlockBallCommandExecutor(
                 )
             }
 
-            sender.sendMessage()
+            sender.sendMessage("")
         }
 
         val footerBuilder = java.lang.StringBuilder()

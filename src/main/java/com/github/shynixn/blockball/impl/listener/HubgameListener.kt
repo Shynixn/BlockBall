@@ -84,7 +84,7 @@ class HubgameListener(
 
         event.player.allowFlight = false
         event.player.isFlying = false
-        event.isCancelled = true
+        event.setCancelled(true)
         interactionCache.toggled = false
     }
 

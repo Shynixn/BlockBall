@@ -171,7 +171,7 @@ class GameListener(
         val game = gameService.getByPlayer(event.entity as Player)
 
         if (game != null) {
-            event.isCancelled = true
+            event.setCancelled(true)
         }
     }
 
@@ -183,7 +183,7 @@ class GameListener(
         val game = gameService.getByPlayer(event.whoClicked as Player)
 
         if (game != null && !(event.whoClicked as Player).hasPermission(Permission.OBSOLETE_INVENTORY.permission)) {
-            event.isCancelled = true
+            event.setCancelled(true)
             event.whoClicked.closeInventory()
         }
     }
@@ -196,7 +196,7 @@ class GameListener(
         val game = gameService.getByPlayer(event.player as Player)
 
         if (game != null && !(event.player).hasPermission(Permission.OBSOLETE_INVENTORY.permission)) {
-            event.isCancelled = true
+            event.setCancelled(true)
         }
     }
 
@@ -208,7 +208,7 @@ class GameListener(
         val game = gameService.getByPlayer(event.player)
 
         if (game != null && !(event.player).hasPermission(Permission.OBSOLETE_INVENTORY.permission)) {
-            event.isCancelled = true
+            event.setCancelled(true)
 
             plugin.launch(plugin.entityDispatcher(event.player)) {
                 delay(10.ticks)
@@ -272,12 +272,12 @@ class GameListener(
         val game = gameService.getByPlayer(player) ?: return
 
         if (event.cause == EntityDamageEvent.DamageCause.FALL) {
-            event.isCancelled = true
+            event.setCancelled(true)
             return
         }
 
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.arena.meta.customizingMeta.damageEnabled) {
-            event.isCancelled = true
+            event.setCancelled(true)
             return
         }
 

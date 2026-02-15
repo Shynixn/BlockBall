@@ -175,7 +175,7 @@ abstract class SoccerGameImpl(
         val event = GameJoinEvent(player, this)
         Bukkit.getPluginManager().callEvent(event)
 
-        if (event.isCancelled) {
+        if (event.isCancelled()) {
             return JoinResult.EVENT_CANCELLED
         }
 
@@ -246,7 +246,7 @@ abstract class SoccerGameImpl(
         val event = GameLeaveEvent(player, this)
         Bukkit.getPluginManager().callEvent(event)
 
-        if (event.isCancelled) {
+        if (event.isCancelled()) {
             return LeaveResult.EVENT_CANCELLED
         }
 
@@ -399,7 +399,7 @@ abstract class SoccerGameImpl(
         val event = GameEndEvent(team, this)
         Bukkit.getPluginManager().callEvent(event)
 
-        if (event.isCancelled) {
+        if (event.isCancelled()) {
             return
         }
 
@@ -574,7 +574,7 @@ abstract class SoccerGameImpl(
         val gameGoalEntityEvent = GameGoalEvent(interactionEntity as Player?, team, this)
         Bukkit.getPluginManager().callEvent(gameGoalEntityEvent)
 
-        if (gameGoalEntityEvent.isCancelled) {
+        if (gameGoalEntityEvent.isCancelled()) {
             return
         }
 

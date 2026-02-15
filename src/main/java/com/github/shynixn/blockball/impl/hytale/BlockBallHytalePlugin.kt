@@ -156,10 +156,10 @@ class BlockBallHytalePlugin(pluginInit: JavaPluginInit) : JavaPlugin(pluginInit)
             pluginManager.callEvent(PacketAsyncEvent(event.player, packet))
         })
         eventRegistry.register(PlayerDisconnectEvent::class.java, { event ->
-            pluginManager.callEvent(PlayerQuitEvent(HytalePlayerProxy(event.playerRef, null)))
+           // pluginManager.callEvent(PlayerQuitEvent(HytalePlayerProxy(event.playerRef, null)))
         })
         eventRegistry.register(PlayerConnectEvent::class.java, { event ->
-            pluginManager.callEvent(PlayerJoinEvent(HytalePlayerProxy(event.playerRef, null)))
+          //  pluginManager.callEvent(PlayerJoinEvent(HytalePlayerProxy(event.playerRef, null)))
         })
     }
 }

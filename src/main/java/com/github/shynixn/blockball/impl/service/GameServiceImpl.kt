@@ -22,6 +22,7 @@ import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import kotlinx.coroutines.delay
+import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
@@ -40,7 +41,8 @@ class GameServiceImpl(
     private val commandService: CommandService,
     private val soccerBallFactory: SoccerBallFactory,
     private val language: BlockBallLanguage,
-    private val itemService: ItemService
+    private val itemService: ItemService,
+    private val server: Server
 ) : GameService {
     @Volatile
     private var games: List<SoccerGame> = ArrayList()
@@ -101,7 +103,8 @@ class GameServiceImpl(
                     commandService,
                     itemService,
                     chatMessageService,
-                    cloudService
+                    cloudService,
+                    server
                 )
 
                 GameType.MINIGAME -> SoccerMiniGameImpl(
@@ -115,7 +118,8 @@ class GameServiceImpl(
                     commandService,
                     soccerBallFactory,
                     itemService,
-                    cloudService
+                    cloudService,
+                    server
                 ).also {
                     it.ballEnabled = false
                 }
@@ -131,7 +135,8 @@ class GameServiceImpl(
                     commandService,
                     soccerBallFactory,
                     itemService,
-                    cloudService
+                    cloudService,
+                    server
                 ).also {
                     it.ballEnabled = false
                 }

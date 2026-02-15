@@ -23,6 +23,7 @@ import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
+import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.time.Instant
@@ -38,7 +39,8 @@ open class SoccerMiniGameImpl(
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
     itemService: ItemService,
-    cloudService: CloudService
+    cloudService: CloudService,
+    private val server: Server
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -98,7 +100,7 @@ open class SoccerMiniGameImpl(
             status = GameState.JOINABLE
         }
 
-        if (Bukkit.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
+        if (server.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
             return
         }
 

@@ -32,7 +32,7 @@ class MinigameListener(
         val game = gameService.getByPlayer(event.player)
 
         if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME)) {
-            event.isCancelled = true
+            event.setCancelled(true)
         }
     }
 
@@ -81,7 +81,7 @@ class MinigameListener(
         val game = gameService.getByPlayer(event.player)
 
         if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME)) {
-            event.isCancelled = true
+            event.setCancelled(true)
         }
     }
 }

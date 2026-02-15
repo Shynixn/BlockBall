@@ -18,6 +18,7 @@ import com.github.shynixn.fasterxml.jackson.core.type.TypeReference
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.ConfigurationServiceImpl
 import com.github.shynixn.mcutils.common.CoroutineHandler
+import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.command.CommandServiceImpl
@@ -42,7 +43,9 @@ import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.mcutils.packet.impl.service.*
 import com.github.shynixn.shyparticles.contract.ParticleEffectService
+import org.bukkit.Server
 import org.bukkit.plugin.Plugin
+import org.bukkit.plugin.PluginManager
 
 class BlockBallDependencyInjectionModule(
     private val plugin: BlockBallPlugin,
@@ -66,7 +69,10 @@ class BlockBallDependencyInjectionModule(
 
         // Params
         module.addService<Plugin>(plugin)
+        module.addService<Version> { Version.HYTALE_LATEST }
         module.addService<CoroutineHandler>(plugin)
+        module.addService<PluginManager> { plugin.server.pluginManager }
+        module.addService<Server>(plugin.server)
         module.addService<BlockBallLanguage>(language)
         module.addService<PlaceHolderService>(placeHolderService)
 
@@ -156,6 +162,7 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                module.getService()
             )
         }
         module.addService<SoccerBallFactory> {
@@ -190,6 +197,7 @@ class BlockBallDependencyInjectionModule(
         module.addService<MinigameListener> { MinigameListener(module.getService(), module.getService()) }
         module.addService<BlockBallCommandExecutor> {
             BlockBallCommandExecutor(
+                module.getService(),
                 module.getService(),
                 module.getService(),
                 module.getService(),
