@@ -19,6 +19,7 @@ import com.github.shynixn.mcutils.common.toVector
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
+import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityMetadata
 import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityTeleport
 import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityVelocity
 import com.hypixel.hytale.component.Store
@@ -34,6 +35,7 @@ import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -60,6 +62,7 @@ class HytaleSoccerBall(
     private var motion = Vector3d(0.0, 0.0, 0.0)
     private var stuckCounter = 0
     private var cachedLength = 0.5
+    private var rotationDegrees: Int = 0
 
     /**
      * Origin coordinate to make relative rotations in the world.
@@ -80,7 +83,7 @@ class HytaleSoccerBall(
         coroutineHandler.execute(coroutineHandler.fetchLocationDispatcher(initLocation)) {
             while (!isDead && entity?.reference != null) {
                 tick(initLocation.world!!.players!!.map { e -> Pair(e, e.location) })
-                delay(33)
+                delay(20)
             }
         }
     }
@@ -93,7 +96,7 @@ class HytaleSoccerBall(
             location.x, location.y, location.z
         )
         val rotation = Vector3f(
-            location.yaw, location.pitch, 0.0f
+           0.0F , location.yaw, location.pitch
         )
         val transform = Transform(
             position, rotation
@@ -124,8 +127,25 @@ class HytaleSoccerBall(
         val position = com.hypixel.hytale.math.vector.Vector3d(
             location.x, oldTransform.position.y, location.z
         )
+
+        val length =  Vector3d(motion.x, 0.0, motion.z).length()
+
+        val angle = when {
+            length > 1.0 -> rotationDegrees - 20
+            length > 0.1 -> rotationDegrees - 10
+            length > 0.08 -> rotationDegrees - 5
+            else -> null
+        }
+
+        val fRotation = if(angle != null){
+            angle % 360F
+        }else{
+            0.0F
+        }
+
+        rotationDegrees = fRotation.toInt()
         val rotation = Vector3f(
-            location.yaw, location.pitch, 0.0f
+            0.0F , location.yaw, fRotation
         )
         val transform = Transform(
             position, rotation
@@ -135,7 +155,7 @@ class HytaleSoccerBall(
 
         val teleport = Teleport.createForPlayer(
             targetWorld, transform
-        )
+        ).withoutVelocityReset()
         store.addComponent(
             ref,
             Teleport.getComponentType(),
@@ -266,13 +286,13 @@ class HytaleSoccerBall(
                 stuckCounter++
                 this.motion = calculateWallBounce(this.motion, rayTraceEvent.blockDirection)
                 // Fix ball getting stuck in wall by moving back in the direction of its spawnpoint.
-                if (stuckCounter > 4) {
+             /*   if (stuckCounter > 4) {
                     val velocity =
                         this.initLocation.toVector3d().copy().subtract(this.position).normalize().multiply(cachedLength)
                     this.motion = velocity
                     this.motion.y = 0.1
                     this.position = this.position.add(this.motion.x, this.motion.y, this.motion.z)
-                }
+                }*/
 
                 // Correct the yaw of the ball after bouncing.
                 this.position.yaw = getYawFromVector(origin, this.motion.copy().normalize()) * -1
@@ -291,15 +311,14 @@ class HytaleSoccerBall(
      */
     private fun calculateBallOnGround(players: List<Pair<Player, Location>>, targetPosition: Vector3d) {
         targetPosition.y = this.position.y
-        motion.y = 0.0
+        motion.y = 0.01
         this.position = targetPosition
 
         // Visible position makes the slime hitbox better align with the ball.
         val visiblePosition = position.toLocation()
         teleportWithoutY(visiblePosition)
 
-        val rollingResistance = (1.0 - this.meta.rollingResistance)
-        this.motion = this.motion.multiply(rollingResistance)
+        this.motion = this.motion.multiply(0.999)
         this.isOnGround = true
     }
 
@@ -307,8 +326,7 @@ class HytaleSoccerBall(
      * Handles movement of the ball in air.
      */
     private fun calculateBallOnAir(players: List<Pair<Player, Location>>, targetPosition: Vector3d) {
-        val airResistance = 1.0 - this.meta.airResistance
-        this.motion = this.motion.multiply(airResistance)
+        this.motion = this.motion.multiply(0.999)
         this.motion.y -= this.meta.gravityModifier
         this.position = targetPosition
         this.isOnGround = false
@@ -324,13 +342,6 @@ class HytaleSoccerBall(
         val addVector = Vector3d(-motion.z, 0.0, motion.x).multiply(angularVelocity)
         this.motion = Vector3d(motion.x + addVector.x, motion.y, motion.z + addVector.z)
         angularVelocity /= 2
-    }
-
-    private fun setVelocity(){
-        val ref = entity?.getReference()
-        val store: Store<EntityStore?> = ref!!.getStore()
-        val velocityComponent = store.getComponent(ref, Velocity.getComponentType())!!
-        velocityComponent.addForce(motion.x, motion.y, motion.z)
     }
 
     /**
@@ -359,7 +370,7 @@ class HytaleSoccerBall(
                 val vector = position
                     .copy()
                     .subtract(playerLocation)
-                    .normalize().multiply(meta.horizontalTouchModifier)
+                    .normalize().multiply(meta.horizontalTouchModifier * 0.2) // Hytale reducer
                 vector.y = 0.1 * meta.verticalTouchModifier
 
                 val ballTouchPlayerEvent = BallTouchPlayerEvent(this, player.first, vector.toVector())
@@ -398,7 +409,7 @@ class HytaleSoccerBall(
 
         val verticalMod = baseMultiplier * spinDrag * sin(angle) * meta.shotPassYVelocityOverwrite
         val horizontalMod = baseMultiplier * spinDrag * cos(angle)
-        kickVector = kickVector.normalize().multiply(horizontalMod)
+        kickVector = kickVector.normalize().multiply(horizontalMod * 0.4) // Hytale reducer
         kickVector.y = verticalMod
 
         val event = if (isPass) {
@@ -419,9 +430,6 @@ class HytaleSoccerBall(
             this.angularVelocity = spinV * 2
             // Correct the yaw of the ball after bouncing.
             this.position.yaw = getYawFromVector(origin, this.motion.copy().normalize()) * -1
-
-            println("Motion" + this.motion)
-
         }
     }
 
