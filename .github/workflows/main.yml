@@ -109,7 +109,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-hytale-${{ env.RELEASE_VERSION }}-latest.jar
+          asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-root-${{ env.RELEASE_VERSION }}-hytale-latest.jar
           asset_name: BlockBall-Hytale.jar
           asset_content_type: application/jar
 
@@ -120,7 +120,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-hytale-${{ env.RELEASE_VERSION }}-premium.jar
+          asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-root-${{ env.RELEASE_VERSION }}-hytale-premium.jar
           asset_name: BlockBall-Hytale-Premium.jar
           asset_content_type: application/jar
 
