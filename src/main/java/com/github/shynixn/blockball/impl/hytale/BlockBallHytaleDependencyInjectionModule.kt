@@ -167,7 +167,9 @@ class BlockBallHytaleDependencyInjectionModule(
         }
         module.addService<SoccerBallFactory> {
             HytaleSoccerBallFactoryImpl(
-                module.getService()
+                module.getService(),
+                module.getService(),
+                module.getService(),
             )
         }
         module.addService<BallListener> { BallListener(module.getService(), module.getService()) }

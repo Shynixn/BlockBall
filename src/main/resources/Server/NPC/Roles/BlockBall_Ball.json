@@ -2,7 +2,7 @@
   "Type": "Generic",
   "MotionControllerList": [
     {
-      "Type": "Fly"
+      "Type": "Walk"
     }
   ],
   "Appearance": "BlockBall_Ball",
