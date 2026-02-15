@@ -9,9 +9,11 @@ import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.GameStartEvent
+import com.github.shynixn.htutils.plugin.HytaleServerProxy
 import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.commonServer
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.sound.SoundService
@@ -121,7 +123,7 @@ class SoccerRefereeGameImpl(
             if (lobbyCountDownActive) {
                 gameCountdown--
 
-                if (gameCountdown < 5) {
+                if (gameCountdown < 5 && commonServer !is HytaleServerProxy) {
                     ingamePlayersStorage.keys.forEach { p ->
                         soundService.playSound(
                             p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
@@ -187,10 +189,9 @@ class SoccerRefereeGameImpl(
                                 )
                             }
                         }
-
                         if (gameCountdown > 0) {
                             ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
-                                if (gameCountdown <= 5) {
+                                if (gameCountdown <= 5 && commonServer !is HytaleServerProxy) {
                                     soundService.playSound(
                                         p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
                                     )
