@@ -147,7 +147,7 @@ class SoccerRefereeGameImpl(
                     ballEnabled = true
                     startDateUtc = Instant.now()
                     switchToNextMatchTime()
-                    Bukkit.getPluginManager().callEvent(GameStartEvent(this))
+                    server.pluginManager.callEvent(GameStartEvent(this))
                     executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.gameStartCommands)
                     executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.gameStartCommands)
                     executeCommandsWithPlaceHolder(refereeTeam, arena.meta.refereeTeamMeta.gameStartCommands)

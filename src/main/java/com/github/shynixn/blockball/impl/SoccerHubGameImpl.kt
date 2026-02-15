@@ -42,7 +42,8 @@ class SoccerHubGameImpl(
     playerDataRepository,
     itemService,
     chatMessageService, cloudService,
-    coroutineHandler
+    coroutineHandler,
+    server
 ),
     SoccerHubGame {
     /**

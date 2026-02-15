@@ -24,9 +24,9 @@ import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import kotlinx.coroutines.delay
-import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
+import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.time.Instant
@@ -51,7 +51,8 @@ abstract class SoccerGameImpl(
     private val itemService: ItemService,
     private val chatMessageService: ChatMessageService,
     private val cloudService: CloudService,
-    private val coroutineHandler: CoroutineHandler
+    private val coroutineHandler: CoroutineHandler,
+    private val server: Server
 ) : SoccerGame {
     protected var startDateUtc = Instant.now()
 
@@ -173,7 +174,7 @@ abstract class SoccerGameImpl(
      */
     override fun join(player: Player, team: Team?): JoinResult {
         val event = GameJoinEvent(player, this)
-        Bukkit.getPluginManager().callEvent(event)
+        server.pluginManager.callEvent(event)
 
         if (event.isCancelled()) {
             return JoinResult.EVENT_CANCELLED
@@ -244,7 +245,7 @@ abstract class SoccerGameImpl(
         }
 
         val event = GameLeaveEvent(player, this)
-        Bukkit.getPluginManager().callEvent(event)
+        server.pluginManager.callEvent(event)
 
         if (event.isCancelled()) {
             return LeaveResult.EVENT_CANCELLED
@@ -397,7 +398,7 @@ abstract class SoccerGameImpl(
      */
     fun onWin(team: Team) {
         val event = GameEndEvent(team, this)
-        Bukkit.getPluginManager().callEvent(event)
+        server.pluginManager.callEvent(event)
 
         if (event.isCancelled()) {
             return
@@ -572,7 +573,7 @@ abstract class SoccerGameImpl(
         }
 
         val gameGoalEntityEvent = GameGoalEvent(interactionEntity as Player?, team, this)
-        Bukkit.getPluginManager().callEvent(gameGoalEntityEvent)
+        server.pluginManager.callEvent(gameGoalEntityEvent)
 
         if (gameGoalEntityEvent.isCancelled()) {
             return

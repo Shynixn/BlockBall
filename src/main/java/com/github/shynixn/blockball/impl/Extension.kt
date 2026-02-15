@@ -1,7 +1,10 @@
 package com.github.shynixn.blockball.impl
 
+import com.github.shynixn.htutils.plugin.HytaleServerProxy
 import com.github.shynixn.mccoroutine.folia.isFoliaLoaded
 import com.github.shynixn.mcutils.common.Version
+import com.github.shynixn.mcutils.common.commonServer
+import com.hypixel.hytale.server.core.HytaleServer
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
@@ -27,6 +30,11 @@ fun Player.teleportCompat(plugin: Plugin, location: Location) {
 
 fun Player.setInventoryContentsSecure(items: List<ItemStack?>) {
     val player = this
+
+    if (commonServer is HytaleServerProxy) {
+        return
+    }
+
     // There is a bug in 1.21.6. which returns a too many item array in getContents which causes bugs in setContents.
     var i = 0
     if (Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {

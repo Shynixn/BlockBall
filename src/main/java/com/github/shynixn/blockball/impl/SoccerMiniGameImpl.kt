@@ -52,7 +52,8 @@ open class SoccerMiniGameImpl(
     itemService,
     chatMessageService,
     cloudService,
-    coroutineHandler
+    coroutineHandler,
+    server
 ), SoccerMiniGame {
     private var currentQueueTime = arena.meta.customizingMeta.queueTimeOutSec
     private var isQueueTimeRunning = false
@@ -149,7 +150,7 @@ open class SoccerMiniGameImpl(
                     ballEnabled = true
                     startDateUtc = Instant.now()
                     switchToNextMatchTime()
-                    Bukkit.getPluginManager().callEvent(GameStartEvent(this))
+                    server.pluginManager.callEvent(GameStartEvent(this))
                     executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.gameStartCommands)
                     executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.gameStartCommands)
                     executeCommandsWithPlaceHolder(refereeTeam, arena.meta.refereeTeamMeta.gameStartCommands)
