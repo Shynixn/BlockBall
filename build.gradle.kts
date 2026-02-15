@@ -21,6 +21,11 @@ dependencies {
     // Compile Only
     compileOnly("org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT")
 
+    // Hytale
+    compileOnly("com.github.shynixn.htutils:hytaleserver:2026.1")
+    implementation(files("/home/christoph/git/BlockBall/htproxy-1.0-SNAPSHOT.jar"))
+    implementation(files("/home/christoph/git/BlockBall/htcommon-1.0-SNAPSHOT.jar"))
+
     // Library dependencies with legacy compatibility, we can use more up-to-date version in the plugin.yml
     implementation("com.github.shynixn.mccoroutine:mccoroutine-folia-api:2.22.0")
     implementation("com.github.shynixn.mccoroutine:mccoroutine-folia-core:2.22.0")
