@@ -475,7 +475,6 @@ tasks.register("languageFile") {
         }
     }
 }
-
 tasks.register("printVersion") {
     println(version)
 }
