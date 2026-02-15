@@ -114,7 +114,7 @@ tasks.register("pluginJarHytaleLatest", ShadowJar::class.java) {
     dependsOn("relocateHytalePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocateHytalePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-hytale-latest.${archiveExtension.get()}")
-    destinationDirectory.set(File(System.getenv("HOME"),"git/ht/mods"))
+    // destinationDirectory.set(File(System.getenv("HOME"),"git/ht/mods"))
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
