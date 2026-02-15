@@ -57,7 +57,7 @@ import kotlin.coroutines.CoroutineContext
  * Plugin Main.
  * @author Shynixn
  */
-class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
+class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
     private val prefix: String = ChatColor.BLUE.toString() + "[BlockBall] "
     private var module: DependencyInjectionModule? = null
     private var scoreboardModule: DependencyInjectionModule? = null
@@ -80,6 +80,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
     override fun onEnable() {
         Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Loading BlockBall ...")
         this.saveDefaultConfig()
+        commonServer = Bukkit.getServer()
         val versions = if (BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
             arrayOf(
                 Version.VERSION_1_8_R3,
@@ -151,7 +152,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutinePlugin {
         logger.log(Level.INFO, "Loaded language file.")
 
         // Module
-        val placeHolderService = PlaceHolderServiceImpl(this)
+        val placeHolderService = PlaceHolderServiceImpl(this, Bukkit.getPluginManager())
         this.scoreboardModule = loadShyScoreboardModule(language, placeHolderService)
         this.bossBarModule = loadShyBossBarModule(language, placeHolderService)
         this.signModule = loadShyCommandSignsModule(language, placeHolderService)

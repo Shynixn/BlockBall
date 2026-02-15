@@ -14,7 +14,7 @@ repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://maven.shynixn.com/releases")
-    maven(System.getenv("SHYNIXN_MCUTILS_REPOSITORY_2025")) // All MCUTILS libraries are private and not OpenSource.
+    maven(System.getenv("SHYNIXN_MCUTILS_REPOSITORY_2026")) // All MCUTILS libraries are private and not OpenSource.
 }
 
 dependencies {
@@ -29,15 +29,15 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.4.0")
-    implementation("com.github.shynixn.shybossbar:shybossbar:1.6.0")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.12.0")
-    implementation("com.github.shynixn.shyparticles:shyparticles:1.2.0")
-    implementation("com.github.shynixn.mcutils:common:2025.51")
-    implementation("com.github.shynixn.mcutils:packet:2025.60")
-    implementation("com.github.shynixn.mcutils:database:2025.10")
-    implementation("com.github.shynixn.mcutils:http:2025.9")
-    implementation("com.github.shynixn.mcutils:worldguard:2025.5")
+    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.4.1")
+    implementation("com.github.shynixn.shybossbar:shybossbar:1.6.1")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.12.1")
+    implementation("com.github.shynixn.shyparticles:shyparticles:1.2.1")
+    implementation("com.github.shynixn.mcutils:common:2026.2")
+    implementation("com.github.shynixn.mcutils:packet:2026.5")
+    implementation("com.github.shynixn.mcutils:database:2026.2")
+    implementation("com.github.shynixn.mcutils:http:2026.3")
+    implementation("com.github.shynixn.mcutils:worldguard:2026.1")
 }
 
 tasks.withType<KotlinCompile> {
@@ -90,7 +90,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-latest.${archiveExtension.get()}")
-    // destinationDirectory.set(File("/app/plugins"))
+    // destinationDirectory.set(File(System.getenv("HOME"),"git/mc/plugins"))
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")

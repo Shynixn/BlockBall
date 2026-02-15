@@ -17,7 +17,7 @@ import com.github.shynixn.blockball.impl.service.StatsServiceImpl
 import com.github.shynixn.fasterxml.jackson.core.type.TypeReference
 import com.github.shynixn.mcutils.common.ConfigurationService
 import com.github.shynixn.mcutils.common.ConfigurationServiceImpl
-import com.github.shynixn.mcutils.common.CoroutinePlugin
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.command.CommandServiceImpl
@@ -66,7 +66,7 @@ class BlockBallDependencyInjectionModule(
 
         // Params
         module.addService<Plugin>(plugin)
-        module.addService<CoroutinePlugin>(plugin)
+        module.addService<CoroutineHandler>(plugin)
         module.addService<BlockBallLanguage>(language)
         module.addService<PlaceHolderService>(placeHolderService)
 
@@ -122,7 +122,7 @@ class BlockBallDependencyInjectionModule(
             shyParticlesModule.getService<ParticleEffectService>()
         }
         module.addService<ChatMessageService> {
-            ChatMessageServiceImpl(module.getService(), module.getService())
+            ChatMessageServiceImpl(module.getService(), module.getService(), module.getService())
         }
         module.addService<RayTracingService> {
             RayTracingServiceImpl()
@@ -134,6 +134,7 @@ class BlockBallDependencyInjectionModule(
         module.addService<AreaSelectionService> {
             AreaSelectionServiceImpl(
                 Permission.EDIT_GAME.permission,
+                module.getService(),
                 module.getService(),
                 module.getService(),
                 module.getService(),
@@ -189,6 +190,8 @@ class BlockBallDependencyInjectionModule(
         module.addService<MinigameListener> { MinigameListener(module.getService(), module.getService()) }
         module.addService<BlockBallCommandExecutor> {
             BlockBallCommandExecutor(
+                module.getService(),
+                module.getService(),
                 module.getService(),
                 module.getService(),
                 module.getService(),

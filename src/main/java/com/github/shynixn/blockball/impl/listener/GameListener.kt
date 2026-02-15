@@ -12,7 +12,6 @@ import com.github.shynixn.blockball.impl.setInventoryContentsSecure
 import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
-import com.github.shynixn.mcutils.common.deserializeItemStack
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector3d
@@ -45,7 +44,7 @@ class GameListener(
     private val playerDataRepository: CachePlayerRepository<PlayerInformation>,
     private val itemService: ItemService
 ) : Listener {
-    private val playerCache: MutableSet<Player> = ConcurrentHashMap.newKeySet();
+    private val playerCache: MutableSet<Player> = ConcurrentHashMap.newKeySet()
 
     /**
      * Gets called when a packet arrives.

@@ -13,6 +13,7 @@ import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandBuilder
+import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.command.Validator
 import com.github.shynixn.mcutils.common.item.Item
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -29,6 +30,7 @@ import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import java.awt.Color
 import java.util.*
 import java.util.logging.Level
@@ -39,14 +41,16 @@ import kotlin.math.min
 class BlockBallCommandExecutor(
     private val arenaRepository: CacheRepository<SoccerArena>,
     private val gameService: GameService,
-    private val plugin: CoroutinePlugin,
+    private val plugin: Plugin,
+    private val commandService: CommandService,
     private val language: BlockBallLanguage,
     private val selectionService: AreaSelectionService,
     private val placeHolderService: PlaceHolderService,
     private val itemService: ItemService,
     private val chatMessageService: ChatMessageService,
-    private val cloudService: CloudService
-) {
+    private val cloudService: CloudService,
+    coroutineHandler: CoroutineHandler,
+    ) {
     private val arenaTabs: (s: CommandSender) -> List<String> = {
         var cache = arenaRepository.getCache()
         if (cache == null) {
@@ -267,7 +271,7 @@ class BlockBallCommandExecutor(
     }
 
     init {
-        val mcCart = CommandBuilder(plugin, "blockball", chatMessageService) {
+        val builder = CommandBuilder(coroutineHandler, plugin, "blockball", chatMessageService) {
             usage(language.commandUsage.text.translateChatColors())
             description(language.commandDescription.text)
             aliases(plugin.config.getStringList("commands.blockball.aliases"))
@@ -586,9 +590,8 @@ class BlockBallCommandExecutor(
                     reloadArena(sender, arena)
                 }
             }
-
         }
-        mcCart.build()
+        commandService.registerCommand(builder)
     }
 
     private fun setYellowCardToPlayer(referee: Player, playerToAssign: Player) {

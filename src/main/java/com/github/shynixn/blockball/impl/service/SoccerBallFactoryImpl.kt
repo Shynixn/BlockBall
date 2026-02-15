@@ -42,12 +42,12 @@ class SoccerBallFactoryImpl(
         position.yaw = 0.0
         position.pitch = 0.0
 
-        val ballHitBoxEntity = BallHitboxEntity(packetService.getNextEntityId(), position.copy(), game)
+        val ballHitBoxEntity = BallHitboxEntity(packetService.getNextEntityId(location.world!!), position.copy(), game)
         ballHitBoxEntity.position = position
         ballHitBoxEntity.rayTracingService = rayTracingService
         ballHitBoxEntity.packetService = packetService
 
-        val ballDesignEntity = BallDesignEntity(packetService.getNextEntityId())
+        val ballDesignEntity = BallDesignEntity(packetService.getNextEntityId(location.world!!))
         ballDesignEntity.packetService = packetService
         ballDesignEntity.itemService = itemService
 
