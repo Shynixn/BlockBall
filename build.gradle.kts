@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.36.0"
+version = "7.37.0"
 
 repositories {
     mavenLocal()
@@ -68,15 +68,20 @@ tasks.withType<ShadowJar> {
 /**
  * Create all plugin jar files.
  */
-tasks.register("pluginJars") {
+tasks.register("mcPluginJars") {
     dependsOn("pluginJarLatest")
     dependsOn("pluginJarPremium")
     dependsOn("pluginJarPremiumFolia")
     dependsOn("pluginJarLegacy")
+}
+
+/**
+ * Create all plugin jar files.
+ */
+tasks.register("htPluginJars") {
     dependsOn("pluginJarHytaleLatest")
     dependsOn("pluginJarHytalePremium")
 }
-
 
 /**
  * Relocate Plugin Jar.
