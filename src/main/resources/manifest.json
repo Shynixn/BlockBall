@@ -1,0 +1,16 @@
+{
+  "Group": "com.github.shynixn",
+  "Name": "BlockBall",
+  "Version": "7.35.0",
+  "Description": "A plugin to play soccer games in Hytale.",
+  "Main": "com.github.shynixn.blockball.impl.hytale.BlockBallHytalePlugin",
+  "Authors": [
+    {
+      "Name": "Shynixn",
+      "Email": "shynixn@email.com",
+      "Url": "https://github.com/Shynixn"
+    }
+  ],
+  "ServerVersion": ">=1.0.0",
+  "IncludesAssetPack": true
+}

@@ -9,13 +9,15 @@ import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.GameStartEvent
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.commonServer
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
-import org.bukkit.Bukkit
+import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.time.Instant
@@ -31,7 +33,9 @@ class SoccerRefereeGameImpl(
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
     itemService: ItemService,
-    cloudService: CloudService
+    cloudService: CloudService,
+    private val server: Server,
+    private val coroutineHandler: CoroutineHandler
 ) : SoccerMiniGameImpl(
     arena,
     playerDataRepository,
@@ -43,7 +47,9 @@ class SoccerRefereeGameImpl(
     commandService,
     soccerBallFactory,
     itemService,
-    cloudService
+    cloudService,
+    server,
+    coroutineHandler
 ), SoccerRefereeGame {
     /**
      * Is the timer blocker enabled.
@@ -98,7 +104,7 @@ class SoccerRefereeGameImpl(
             status = GameState.JOINABLE
         }
 
-        if (Bukkit.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
+        if (server.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
             return
         }
 
@@ -115,7 +121,7 @@ class SoccerRefereeGameImpl(
             if (lobbyCountDownActive) {
                 gameCountdown--
 
-                if (gameCountdown < 5) {
+                if (gameCountdown < 5 && !isHytaleLoaded) {
                     ingamePlayersStorage.keys.forEach { p ->
                         soundService.playSound(
                             p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
@@ -141,7 +147,7 @@ class SoccerRefereeGameImpl(
                     ballEnabled = true
                     startDateUtc = Instant.now()
                     switchToNextMatchTime()
-                    Bukkit.getPluginManager().callEvent(GameStartEvent(this))
+                    server.pluginManager.callEvent(GameStartEvent(this))
                     executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.gameStartCommands)
                     executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.gameStartCommands)
                     executeCommandsWithPlaceHolder(refereeTeam, arena.meta.refereeTeamMeta.gameStartCommands)
@@ -181,10 +187,9 @@ class SoccerRefereeGameImpl(
                                 )
                             }
                         }
-
                         if (gameCountdown > 0) {
                             ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
-                                if (gameCountdown <= 5) {
+                                if (gameCountdown <= 5 && !isHytaleLoaded) {
                                     soundService.playSound(
                                         p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
                                     )

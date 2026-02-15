@@ -7,19 +7,25 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.36.0"
+version = "7.37.0"
 
 repositories {
     mavenLocal()
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://maven.shynixn.com/releases")
-    maven(System.getenv("SHYNIXN_MCUTILS_REPOSITORY_2025")) // All MCUTILS libraries are private and not OpenSource.
+    maven(System.getenv("SHYNIXN_MCUTILS_REPOSITORY_2026")) // All MCUTILS libraries are private and not OpenSource.
 }
 
 dependencies {
     // Compile Only
     compileOnly("org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT")
+
+    // Hytale
+    compileOnly("com.github.shynixn.htutils:hytaleserver:2026.1")
+    // HTOnly implementation("org.xerial:sqlite-jdbc:3.51.1.0")
+    // HTOnly implementation("com.github.shynixn.htutils:htproxy:2026.4")
+    implementation("com.github.shynixn.htutils:htcommon:2026.4")
 
     // Library dependencies with legacy compatibility, we can use more up-to-date version in the plugin.yml
     implementation("com.github.shynixn.mccoroutine:mccoroutine-folia-api:2.22.0")
@@ -29,15 +35,15 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.4.0")
-    implementation("com.github.shynixn.shybossbar:shybossbar:1.6.0")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.12.0")
-    implementation("com.github.shynixn.shyparticles:shyparticles:1.2.0")
-    implementation("com.github.shynixn.mcutils:common:2025.51")
-    implementation("com.github.shynixn.mcutils:packet:2025.60")
-    implementation("com.github.shynixn.mcutils:database:2025.10")
-    implementation("com.github.shynixn.mcutils:http:2025.9")
-    implementation("com.github.shynixn.mcutils:worldguard:2025.5")
+    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.4.1")
+    implementation("com.github.shynixn.shybossbar:shybossbar:1.6.1")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.12.1")
+    implementation("com.github.shynixn.shyparticles:shyparticles:1.2.1")
+    implementation("com.github.shynixn.mcutils:common:2026.2")
+    implementation("com.github.shynixn.mcutils:packet:2026.5")
+    implementation("com.github.shynixn.mcutils:database:2026.2")
+    implementation("com.github.shynixn.mcutils:http:2026.3")
+    implementation("com.github.shynixn.mcutils:worldguard:2026.1")
 }
 
 tasks.withType<KotlinCompile> {
@@ -62,11 +68,141 @@ tasks.withType<ShadowJar> {
 /**
  * Create all plugin jar files.
  */
-tasks.register("pluginJars") {
+tasks.register("mcPluginJars") {
     dependsOn("pluginJarLatest")
     dependsOn("pluginJarPremium")
     dependsOn("pluginJarPremiumFolia")
     dependsOn("pluginJarLegacy")
+}
+
+/**
+ * Create all plugin jar files.
+ */
+tasks.register("htPluginJars") {
+    dependsOn("pluginJarHytaleLatest")
+    dependsOn("pluginJarHytalePremium")
+}
+
+/**
+ * Relocate Plugin Jar.
+ */
+tasks.register("relocateHytalePluginJar", ShadowJar::class.java) {
+    dependsOn("shadowJar")
+    from(zipTree(File("./build/libs/" + (tasks.getByName("shadowJar") as Jar).archiveFileName.get())))
+    archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-relocate-hytale.${archiveExtension.get()}")
+    relocate("kotlin", "com.github.shynixn.blockball.lib.kotlin")
+    relocate("kotlinx", "com.github.shynixn.blockball.lib.kotlinx")
+    relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intelli")
+    relocate("org.jetbrains", "com.github.shynixn.blockball.lib.org.jetbrains")
+    relocate("javax.inject", "com.github.shynixn.blockball.lib.javax.inject")
+    relocate("javax.annotation", "com.github.shynixn.blockball.lib.javax.annotation")
+    relocate("org.slf4j", "com.github.shynixn.blockball.lib.org.slf4j")
+    relocate("com.github.shynixn.mccoroutine", "com.github.shynixn.blockball.lib.com.github.shynixn.mccoroutine")
+    relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
+    relocate("com.github.shynixn.htutils", "com.github.shynixn.blockball.lib.com.github.shynixn.htutils")
+    relocate("com.github.shynixn.mcutils", "com.github.shynixn.blockball.lib.com.github.shynixn.mcutils")
+    relocate("com.github.shynixn.shyscoreboard", "com.github.shynixn.blockball.lib.com.github.shynixn.shyscoreboard")
+    relocate("com.github.shynixn.shybossbar", "com.github.shynixn.blockball.lib.com.github.shynixn.shybossbar")
+    relocate("com.github.shynixn.shycommandsigns", "com.github.shynixn.blockball.lib.com.github.shynixn.shycommandsigns")
+    relocate("com.github.shynixn.shyparticles", "com.github.shynixn.blockball.lib.com.github.shynixn.shyparticles")
+    relocate("com.github.shynixn.fasterxml", "com.github.shynixn.blockball.lib.com.github.shynixn.fasterxml")
+    relocate("org.bukkit", "com.github.shynixn.blockball.lib.org.bukkit")
+    exclude("plugin.yml")
+    exclude("plugin-legacy.yml")
+}
+
+
+/**
+ * Create latest plugin jar file.
+ */
+tasks.register("pluginJarHytaleLatest", ShadowJar::class.java) {
+    dependsOn("relocateHytalePluginJar")
+    from(zipTree(File("./build/libs/" + (tasks.getByName("relocateHytalePluginJar") as Jar).archiveFileName.get())))
+    archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-hytale-latest.${archiveExtension.get()}")
+    // destinationDirectory.set(File(System.getenv("HOME"),"git/ht/mods"))
+
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_9_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_17_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_18_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_18_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_19_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_19_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_19_R3/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R3/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R4/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R3/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R4/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R5/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R6/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R7/**")
+    exclude("com/github/shynixn/htutils/**")
+    exclude("com/github/shynixn/mcutils/**")
+    exclude("com/github/shynixn/mccoroutine/**")
+    exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("com/github/shynixn/shybossbar/**")
+    exclude("com/github/shynixn/shycommandsigns/**")
+    exclude("com/github/shynixn/shyparticles/**")
+    exclude("com/github/shynixn/fasterxml/**")
+    exclude("com/github/shynixn/fasterxml/**")
+    exclude("kotlin/**")
+    exclude("kotlinx/**")
+    exclude("javax/**")
+    exclude("com/zaxxer/**")
+    exclude("templates/**")
+    exclude("plugin-legacy.yml")
+    exclude("plugin-folia.yml")
+}
+
+/**
+ * Create latest plugin jar file.
+ */
+tasks.register("pluginJarHytalePremium", ShadowJar::class.java) {
+    dependsOn("relocateHytalePluginJar")
+    from(zipTree(File("./build/libs/" + (tasks.getByName("relocateHytalePluginJar") as Jar).archiveFileName.get())))
+    archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-hytale-premium.${archiveExtension.get()}")
+    // destinationDirectory.set(File(System.getenv("HOME"),"git/ht/mods"))
+
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_9_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_17_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_18_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_18_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_19_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_19_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_19_R3/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R3/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_20_R4/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R1/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R2/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R3/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R4/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R5/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R6/**")
+    exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R7/**")
+    exclude("com/github/shynixn/htutils/**")
+    exclude("com/github/shynixn/mcutils/**")
+    exclude("com/github/shynixn/mccoroutine/**")
+    exclude("com/github/shynixn/shyscoreboard/**")
+    exclude("com/github/shynixn/shybossbar/**")
+    exclude("com/github/shynixn/shycommandsigns/**")
+    exclude("com/github/shynixn/shyparticles/**")
+    exclude("com/github/shynixn/fasterxml/**")
+    exclude("com/github/shynixn/fasterxml/**")
+    exclude("kotlin/**")
+    exclude("kotlinx/**")
+    exclude("javax/**")
+    exclude("com/zaxxer/**")
+    exclude("templates/**")
+    exclude("plugin-legacy.yml")
+    exclude("plugin-folia.yml")
 }
 
 /**
@@ -90,7 +226,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-latest.${archiveExtension.get()}")
-    // destinationDirectory.set(File("/app/plugins"))
+    // destinationDirectory.set(File(System.getenv("HOME"),"git/mc/plugins"))
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
@@ -111,6 +247,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R4/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R5/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R6/**")
+    exclude("com/github/shynixn/htutils/**")
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
@@ -145,6 +282,7 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     exclude("com/github/shynixn/shycommandsigns/**")
     exclude("com/github/shynixn/shyparticles/**")
     exclude("com/github/shynixn/fasterxml/**")
+    exclude("com/github/shynixn/htutils/**")
     exclude("org/**")
     exclude("kotlin/**")
     exclude("kotlinx/**")
@@ -180,6 +318,7 @@ tasks.register("pluginJarPremiumFolia", com.github.jengelman.gradle.plugins.shad
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-premium-folia.${archiveExtension.get()}")
     // destinationDirectory.set(File("C:\\git\\mc\\Folia\\plugins"))
 
+    exclude("com/github/shynixn/htutils/**")
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
     exclude("com/github/shynixn/shyscoreboard/**")
@@ -235,6 +374,7 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-legacy.${archiveExtension.get()}")
     // destinationDirectory.set(File("C:\\git\\mc\\plugins"))
 
+    exclude("com/github/shynixn/htutils/**")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
     exclude("com/github/shynixn/mcutils/**")
     exclude("com/github/shynixn/mccoroutine/**")
@@ -335,7 +475,6 @@ tasks.register("languageFile") {
         }
     }
 }
-
 tasks.register("printVersion") {
     println(version)
 }

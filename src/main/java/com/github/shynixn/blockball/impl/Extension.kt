@@ -11,6 +11,13 @@ import java.lang.reflect.Method
 
 private var teleportMethodRef: Method? = null
 
+val isHytaleLoaded = try {
+    Class.forName("com.hypixel.hytale.server.core.plugin.JavaPlugin")
+    true
+} catch (e: ClassNotFoundException) {
+    false
+}
+
 fun Player.teleportCompat(plugin: Plugin, location: Location) {
     if (plugin.isFoliaLoaded()) {
         if (teleportMethodRef == null) {
@@ -19,7 +26,7 @@ fun Player.teleportCompat(plugin: Plugin, location: Location) {
             )
         }
 
-        teleportMethodRef!!.invoke(player, location)
+        teleportMethodRef!!.invoke(this, location)
     } else {
         teleport(location)
     }
@@ -27,6 +34,11 @@ fun Player.teleportCompat(plugin: Plugin, location: Location) {
 
 fun Player.setInventoryContentsSecure(items: List<ItemStack?>) {
     val player = this
+
+    if (isHytaleLoaded) {
+        return
+    }
+
     // There is a bug in 1.21.6. which returns a too many item array in getContents which causes bugs in setContents.
     var i = 0
     if (Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {

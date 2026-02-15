@@ -11,8 +11,8 @@ import com.github.shynixn.blockball.impl.SoccerHubGameImpl
 import com.github.shynixn.blockball.impl.SoccerMiniGameImpl
 import com.github.shynixn.blockball.impl.SoccerRefereeGameImpl
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
-import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
@@ -22,6 +22,7 @@ import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import kotlinx.coroutines.delay
+import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.logging.Level
@@ -40,7 +41,9 @@ class GameServiceImpl(
     private val commandService: CommandService,
     private val soccerBallFactory: SoccerBallFactory,
     private val language: BlockBallLanguage,
-    private val itemService: ItemService
+    private val itemService: ItemService,
+    private val server: Server,
+    private val coroutineHandler: CoroutineHandler
 ) : GameService {
     @Volatile
     private var games: List<SoccerGame> = ArrayList()
@@ -51,7 +54,7 @@ class GameServiceImpl(
      * Init.
      */
     init {
-        plugin.launch {
+        coroutineHandler.execute {
             while (!isDisposed) {
                 runGames()
                 delay(1.ticks)
@@ -101,7 +104,9 @@ class GameServiceImpl(
                     commandService,
                     itemService,
                     chatMessageService,
-                    cloudService
+                    cloudService,
+                    server,
+                    coroutineHandler
                 )
 
                 GameType.MINIGAME -> SoccerMiniGameImpl(
@@ -115,7 +120,9 @@ class GameServiceImpl(
                     commandService,
                     soccerBallFactory,
                     itemService,
-                    cloudService
+                    cloudService,
+                    server,
+                    coroutineHandler
                 ).also {
                     it.ballEnabled = false
                 }
@@ -131,7 +138,9 @@ class GameServiceImpl(
                     commandService,
                     soccerBallFactory,
                     itemService,
-                    cloudService
+                    cloudService,
+                    server,
+                    coroutineHandler
                 ).also {
                     it.ballEnabled = false
                 }

@@ -8,14 +8,14 @@ import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
-import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import kotlinx.coroutines.delay
-import org.bukkit.Bukkit
+import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
@@ -29,7 +29,9 @@ class SoccerHubGameImpl(
     commandService: CommandService,
     itemService: ItemService,
     chatMessageService: ChatMessageService,
-    cloudService: CloudService
+    cloudService: CloudService,
+    private val server: Server,
+    private val coroutineHandler: CoroutineHandler
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -39,14 +41,16 @@ class SoccerHubGameImpl(
     language,
     playerDataRepository,
     itemService,
-    chatMessageService, cloudService
+    chatMessageService, cloudService,
+    coroutineHandler,
+    server
 ),
     SoccerHubGame {
     /**
      * Handles the game actions per tick.
      */
     override fun handle(hasSecondPassed: Boolean) {
-        if (Bukkit.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
+        if (server.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
             return
         }
 
@@ -91,7 +95,7 @@ class SoccerHubGameImpl(
         doubleJumpCoolDownPlayers.clear()
         interactedWithBall.clear()
 
-        plugin.launch {
+        coroutineHandler.execute {
             delay(3000)
             closed = true
         }

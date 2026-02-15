@@ -11,18 +11,18 @@ import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.GameStartEvent
-import com.github.shynixn.mccoroutine.folia.entityDispatcher
-import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
+import com.github.shynixn.mcutils.common.commonServer
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import kotlinx.coroutines.delay
-import org.bukkit.Bukkit
+import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.time.Instant
@@ -38,7 +38,9 @@ open class SoccerMiniGameImpl(
     commandService: CommandService,
     soccerBallFactory: SoccerBallFactory,
     itemService: ItemService,
-    cloudService: CloudService
+    cloudService: CloudService,
+    private val server: Server,
+    private val coroutineHandler: CoroutineHandler
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -49,7 +51,9 @@ open class SoccerMiniGameImpl(
     playerDataRepository,
     itemService,
     chatMessageService,
-    cloudService
+    cloudService,
+    coroutineHandler,
+    server
 ), SoccerMiniGame {
     private var currentQueueTime = arena.meta.customizingMeta.queueTimeOutSec
     private var isQueueTimeRunning = false
@@ -98,7 +102,7 @@ open class SoccerMiniGameImpl(
             status = GameState.JOINABLE
         }
 
-        if (Bukkit.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
+        if (server.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
             return
         }
 
@@ -120,7 +124,7 @@ open class SoccerMiniGameImpl(
 
                 gameCountdown--
 
-                if (gameCountdown < 5) {
+                if (gameCountdown < 5 && !isHytaleLoaded) {
                     ingamePlayersStorage.keys.forEach { p ->
                         soundService.playSound(
                             p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
@@ -146,7 +150,7 @@ open class SoccerMiniGameImpl(
                     ballEnabled = true
                     startDateUtc = Instant.now()
                     switchToNextMatchTime()
-                    Bukkit.getPluginManager().callEvent(GameStartEvent(this))
+                    server.pluginManager.callEvent(GameStartEvent(this))
                     executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.gameStartCommands)
                     executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.gameStartCommands)
                     executeCommandsWithPlaceHolder(refereeTeam, arena.meta.refereeTeamMeta.gameStartCommands)
@@ -164,7 +168,7 @@ open class SoccerMiniGameImpl(
                 gameCountdown--
 
                 ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
-                    if (gameCountdown <= 5) {
+                    if (gameCountdown <= 5 && !isHytaleLoaded) {
                         soundService.playSound(
                             p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
                         )
@@ -266,7 +270,7 @@ open class SoccerMiniGameImpl(
             }
 
             if (!matchTime.startMessageTitle.isBlank() || !matchTime.startMessageSubTitle.isBlank()) {
-                plugin.launch {
+                coroutineHandler.execute {
                     delay(10.ticks)
                     chatMessageService.sendTitleMessage(
                         p,
@@ -285,7 +289,7 @@ open class SoccerMiniGameImpl(
         val teamMeta = getTeamMetaFromTeam(team)
         val location = teamMeta.lobbySpawnpoint!!.toLocation()
 
-        plugin.launch(plugin.entityDispatcher(player)) {
+        coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
             player.teleportCompat(plugin, location)
         }
     }
@@ -339,7 +343,7 @@ open class SoccerMiniGameImpl(
         }
 
         isQueueTimeRunning = true
-        plugin.launch {
+        coroutineHandler.execute {
             while (isQueueTimeRunning && status == GameState.JOINABLE) {
                 currentQueueTime -= 1
 
@@ -350,7 +354,7 @@ open class SoccerMiniGameImpl(
                         leave(player)
                     }
                     status = GameState.JOINABLE
-                    return@launch
+                    return@execute
                 }
 
                 delay(20.ticks)

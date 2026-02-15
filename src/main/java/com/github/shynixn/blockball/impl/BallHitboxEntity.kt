@@ -227,7 +227,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
         )
         Bukkit.getPluginManager().callEvent(rayTraceEvent)
 
-        if (rayTraceEvent.isCancelled) {
+        if (rayTraceEvent.isCancelled()) {
             return
         }
 
@@ -288,7 +288,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
             Pair(event, event.velocity.toVector3d())
         }
 
-        if (!event.first.isCancelled) {
+        if (!event.first.isCancelled()) {
             this.motion = event.second
             // Move the ball a little bit up otherwise wallcollision of ground immidately cancel movement.
             this.position.y += 0.25
@@ -331,7 +331,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
                 val ballTouchPlayerEvent = BallTouchPlayerEvent(ball, player.first, vector.toVector())
                 Bukkit.getPluginManager().callEvent(ballTouchPlayerEvent)
 
-                if (ballTouchPlayerEvent.isCancelled) {
+                if (ballTouchPlayerEvent.isCancelled()) {
                     continue
                 }
 

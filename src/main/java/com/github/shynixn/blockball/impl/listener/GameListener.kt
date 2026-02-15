@@ -9,10 +9,8 @@ import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallTouchPlayerEvent
 import com.github.shynixn.blockball.impl.setInventoryContentsSecure
-import com.github.shynixn.mccoroutine.folia.entityDispatcher
-import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
-import com.github.shynixn.mcutils.common.deserializeItemStack
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector3d
@@ -43,9 +41,10 @@ class GameListener(
     private val soccerBallFactory: SoccerBallFactory,
     private val plugin: Plugin,
     private val playerDataRepository: CachePlayerRepository<PlayerInformation>,
-    private val itemService: ItemService
+    private val itemService: ItemService,
+    private val coroutineHandler: CoroutineHandler
 ) : Listener {
-    private val playerCache: MutableSet<Player> = ConcurrentHashMap.newKeySet();
+    private val playerCache: MutableSet<Player> = ConcurrentHashMap.newKeySet()
 
     /**
      * Gets called when a packet arrives.
@@ -58,12 +57,12 @@ class GameListener(
             return
         }
 
-        plugin.launch {
-            val game = gameService.getByPlayer(event.player) ?: return@launch
-            val ball = soccerBallFactory.findBallByEntityId(packet.entityId) ?: return@launch
+        coroutineHandler.execute {
+            val game = gameService.getByPlayer(event.player) ?: return@execute
+            val ball = soccerBallFactory.findBallByEntityId(packet.entityId) ?: return@execute
 
             if (game.ball != ball) {
-                return@launch
+                return@execute
             }
 
             if (packet.actionType == InteractionType.ATTACK) {
@@ -80,7 +79,7 @@ class GameListener(
     @EventHandler
     fun onPlayerQuitEvent(event: PlayerQuitEvent) {
         val player = event.player
-        plugin.launch {
+        coroutineHandler.execute {
             val playerGame = gameService.getByPlayer(player)
             playerGame?.leave(player)
 
@@ -95,7 +94,7 @@ class GameListener(
 
     @EventHandler
     fun onPlayerJoinEvent(event: PlayerJoinEvent) {
-        plugin.launch {
+        coroutineHandler.execute {
             val player = event.player
             val existingPlayerData = playerDataRepository.getByPlayer(player)
 
@@ -114,7 +113,7 @@ class GameListener(
                 }
 
                 if (existingPlayerData.cachedStorage != null) {
-                    withContext(plugin.entityDispatcher(player)) {
+                    withContext(coroutineHandler.fetchEntityDispatcher(player)) {
                         val stats = existingPlayerData.cachedStorage!!
                         player.gameMode = stats.gameMode
                         player.allowFlight = stats.gameMode == GameMode.CREATIVE
@@ -155,9 +154,9 @@ class GameListener(
             return
         }
 
-        plugin.launch {
+        coroutineHandler.execute {
             if (game.arena.isLocationIn2dSelection(event.to!!.toVector3d())) {
-                return@launch
+                return@execute
             }
 
             game.leave(event.player)
@@ -172,7 +171,7 @@ class GameListener(
         val game = gameService.getByPlayer(event.entity as Player)
 
         if (game != null) {
-            event.isCancelled = true
+            event.setCancelled(true)
         }
     }
 
@@ -184,7 +183,7 @@ class GameListener(
         val game = gameService.getByPlayer(event.whoClicked as Player)
 
         if (game != null && !(event.whoClicked as Player).hasPermission(Permission.OBSOLETE_INVENTORY.permission)) {
-            event.isCancelled = true
+            event.setCancelled(true)
             event.whoClicked.closeInventory()
         }
     }
@@ -197,7 +196,7 @@ class GameListener(
         val game = gameService.getByPlayer(event.player as Player)
 
         if (game != null && !(event.player).hasPermission(Permission.OBSOLETE_INVENTORY.permission)) {
-            event.isCancelled = true
+            event.setCancelled(true)
         }
     }
 
@@ -209,9 +208,9 @@ class GameListener(
         val game = gameService.getByPlayer(event.player)
 
         if (game != null && !(event.player).hasPermission(Permission.OBSOLETE_INVENTORY.permission)) {
-            event.isCancelled = true
+            event.setCancelled(true)
 
-            plugin.launch(plugin.entityDispatcher(event.player)) {
+            coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(event.player)) {
                 delay(10.ticks)
                 event.player.updateInventory()
             }
@@ -255,7 +254,7 @@ class GameListener(
             return
         }
 
-        plugin.launch {
+        coroutineHandler.execute {
             game.applyDeathPoints(event.entity)
         }
     }
@@ -273,12 +272,12 @@ class GameListener(
         val game = gameService.getByPlayer(player) ?: return
 
         if (event.cause == EntityDamageEvent.DamageCause.FALL) {
-            event.isCancelled = true
+            event.setCancelled(true)
             return
         }
 
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.arena.meta.customizingMeta.damageEnabled) {
-            event.isCancelled = true
+            event.setCancelled(true)
             return
         }
 
@@ -290,7 +289,7 @@ class GameListener(
         player.health = player.maxHealth
         playerCache.add(player)
 
-        plugin.launch {
+        coroutineHandler.execute {
             game.applyDeathPoints(player)
             game.respawn(player)
 

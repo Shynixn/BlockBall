@@ -5,7 +5,7 @@ import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.LeaderBoardStats
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.StatsMeta
-import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import kotlinx.coroutines.delay
 import org.bukkit.plugin.Plugin
@@ -13,7 +13,8 @@ import java.util.logging.Level
 
 class StatsServiceImpl(
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
-    private val plugin: Plugin
+    private val plugin: Plugin,
+    private val coroutineHandler: CoroutineHandler
 ) : StatsService {
     private var aggregationLeaderBoardKey = "leaderBoardAg"
     private var leaderBoardStats: LeaderBoardStats? = null
@@ -35,7 +36,7 @@ class StatsServiceImpl(
                 computeLeaderBoard(playerInfo, leaderBoard)
             }
 
-            plugin.launch {
+            coroutineHandler.execute {
                 while (!isDisposed) {
                     leaderBoardStats =
                         playerDataRepository.getAggregationResult<LeaderBoardStats>(aggregationLeaderBoardKey)

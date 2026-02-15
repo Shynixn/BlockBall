@@ -14,14 +14,14 @@ import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import org.bukkit.entity.Player
 
 enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<String, Any>?) -> String?) {
-    PARAM_1("param_1", { _, _, context ->
+    PARAM_1("%blockball_param_1%", { _, _, context ->
         if (context != null) {
             context["0"] as String?
         } else {
             null
         }
     }),
-    PARAM_2("param_2", { _, _, context ->
+    PARAM_2("%blockball_param_2%", { _, _, context ->
         if (context != null) {
             context["1"] as kotlin.String?
         } else {
