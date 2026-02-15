@@ -1,10 +1,7 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.htutils.plugin.HytaleServerProxy
 import com.github.shynixn.mccoroutine.folia.isFoliaLoaded
 import com.github.shynixn.mcutils.common.Version
-import com.github.shynixn.mcutils.common.commonServer
-import com.hypixel.hytale.server.core.HytaleServer
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
@@ -13,6 +10,13 @@ import org.bukkit.plugin.Plugin
 import java.lang.reflect.Method
 
 private var teleportMethodRef: Method? = null
+
+val isHytaleLoaded = try {
+    Class.forName("com.hypixel.hytale.server.core.plugin.JavaPlugin")
+    true
+} catch (e: ClassNotFoundException) {
+    false
+}
 
 fun Player.teleportCompat(plugin: Plugin, location: Location) {
     if (plugin.isFoliaLoaded()) {
@@ -31,7 +35,7 @@ fun Player.teleportCompat(plugin: Plugin, location: Location) {
 fun Player.setInventoryContentsSecure(items: List<ItemStack?>) {
     val player = this
 
-    if (commonServer is HytaleServerProxy) {
+    if (isHytaleLoaded) {
         return
     }
 

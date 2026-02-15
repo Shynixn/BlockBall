@@ -11,7 +11,6 @@ import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.GameStartEvent
-import com.github.shynixn.htutils.plugin.HytaleServerProxy
 import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -23,7 +22,6 @@ import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import kotlinx.coroutines.delay
-import org.bukkit.Bukkit
 import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -126,7 +124,7 @@ open class SoccerMiniGameImpl(
 
                 gameCountdown--
 
-                if (gameCountdown < 5 && commonServer !is HytaleServerProxy) {
+                if (gameCountdown < 5 && !isHytaleLoaded) {
                     ingamePlayersStorage.keys.forEach { p ->
                         soundService.playSound(
                             p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
@@ -170,7 +168,7 @@ open class SoccerMiniGameImpl(
                 gameCountdown--
 
                 ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
-                    if (gameCountdown <= 5 && commonServer !is HytaleServerProxy) {
+                    if (gameCountdown <= 5 && !isHytaleLoaded) {
                         soundService.playSound(
                             p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
                         )
