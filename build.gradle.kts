@@ -23,7 +23,8 @@ dependencies {
 
     // Hytale
     compileOnly("com.github.shynixn.htutils:hytaleserver:2026.1")
-   implementation(files("/home/christoph/git/BlockBall/htproxy-1.0-SNAPSHOT.jar"))
+    implementation("org.xerial:sqlite-jdbc:3.51.1.0")
+    implementation(files("/home/christoph/git/BlockBall/htproxy-1.0-SNAPSHOT.jar"))
   implementation(files("/home/christoph/git/BlockBall/htcommon-1.0-SNAPSHOT.jar"))
 
     // Library dependencies with legacy compatibility, we can use more up-to-date version in the plugin.yml

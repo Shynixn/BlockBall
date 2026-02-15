@@ -11,9 +11,8 @@ import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.GameStartEvent
-import com.github.shynixn.mccoroutine.folia.entityDispatcher
-import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -40,7 +39,8 @@ open class SoccerMiniGameImpl(
     soccerBallFactory: SoccerBallFactory,
     itemService: ItemService,
     cloudService: CloudService,
-    private val server: Server
+    private val server: Server,
+    private val coroutineHandler: CoroutineHandler
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -51,7 +51,8 @@ open class SoccerMiniGameImpl(
     playerDataRepository,
     itemService,
     chatMessageService,
-    cloudService
+    cloudService,
+    coroutineHandler
 ), SoccerMiniGame {
     private var currentQueueTime = arena.meta.customizingMeta.queueTimeOutSec
     private var isQueueTimeRunning = false
@@ -268,7 +269,7 @@ open class SoccerMiniGameImpl(
             }
 
             if (!matchTime.startMessageTitle.isBlank() || !matchTime.startMessageSubTitle.isBlank()) {
-                plugin.launch {
+                coroutineHandler.execute {
                     delay(10.ticks)
                     chatMessageService.sendTitleMessage(
                         p,
@@ -287,7 +288,7 @@ open class SoccerMiniGameImpl(
         val teamMeta = getTeamMetaFromTeam(team)
         val location = teamMeta.lobbySpawnpoint!!.toLocation()
 
-        plugin.launch(plugin.entityDispatcher(player)) {
+        coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
             player.teleportCompat(plugin, location)
         }
     }
@@ -341,7 +342,7 @@ open class SoccerMiniGameImpl(
         }
 
         isQueueTimeRunning = true
-        plugin.launch {
+        coroutineHandler.execute {
             while (isQueueTimeRunning && status == GameState.JOINABLE) {
                 currentQueueTime -= 1
 
@@ -352,7 +353,7 @@ open class SoccerMiniGameImpl(
                         leave(player)
                     }
                     status = GameState.JOINABLE
-                    return@launch
+                    return@execute
                 }
 
                 delay(20.ticks)

@@ -12,10 +12,9 @@ import com.github.shynixn.blockball.event.GameEndEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
-import com.github.shynixn.mccoroutine.folia.entityDispatcher
-import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandService
@@ -51,7 +50,8 @@ abstract class SoccerGameImpl(
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
     private val itemService: ItemService,
     private val chatMessageService: ChatMessageService,
-    private val cloudService: CloudService
+    private val cloudService: CloudService,
+    private val coroutineHandler: CoroutineHandler
 ) : SoccerGame {
     protected var startDateUtc = Instant.now()
 
@@ -224,7 +224,7 @@ abstract class SoccerGameImpl(
             return result
         }
 
-        plugin.launch {
+        coroutineHandler.execute {
             val playerData = playerDataRepository.getByPlayer(player)
             if (playerData != null) {
                 playerData.cachedStorage = ingamePlayersStorage[player]
@@ -263,11 +263,11 @@ abstract class SoccerGameImpl(
 
         ingamePlayersStorage.remove(player)
 
-        plugin.launch {
+        coroutineHandler.execute {
             val playerData = playerDataRepository.getByPlayer(player)
 
             if (playerData != null) {
-                plugin.launch(plugin.entityDispatcher(player)) {
+                coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
                     if (player.isOnline) {
                         playerData.cachedStorage = null
                     }
@@ -278,7 +278,7 @@ abstract class SoccerGameImpl(
         if (arena.meta.lobbyMeta.leaveSpawnpoint != null) {
             val teleportTarget = arena.meta.lobbyMeta.leaveSpawnpoint!!.toLocation()
 
-            plugin.launch(plugin.entityDispatcher(player)) {
+            coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
                 player.teleportCompat(plugin, teleportTarget)
             }
         }
@@ -329,7 +329,7 @@ abstract class SoccerGameImpl(
             ingamePlayersStorage.filter { e -> e.value.team != Team.REFEREE }.map { e -> Pair(e.key, e.value) }
         val allPlayers = ingamePlayersStorage.keys.toTypedArray()
 
-        plugin.launch {
+        coroutineHandler.execute {
             val cloudGame = CloudGame()
             cloudGame.courtName = arena.meta.cloudMeta.name
             cloudGame.startDate = DateTimeFormatter.ISO_INSTANT.format(startDateUtc.truncatedTo(ChronoUnit.MILLIS))
@@ -442,7 +442,7 @@ abstract class SoccerGameImpl(
             teamMeta.spawnpoint!!.toLocation()
         }
 
-        plugin.launch(plugin.entityDispatcher(player)) {
+        coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
             player.teleportCompat(plugin, spawnPoint)
         }
     }
@@ -598,7 +598,7 @@ abstract class SoccerGameImpl(
             null
         }
 
-        plugin.launch {
+        coroutineHandler.execute {
             val playerData = playerDataRepository.getByPlayer(interactionEntity)
 
             if (playerData != null) {
@@ -664,7 +664,7 @@ abstract class SoccerGameImpl(
         }
 
         val tickDelay = 20 * arena.meta.customizingMeta.backTeleportDelay
-        plugin.launch {
+        coroutineHandler.execute {
             delay(tickDelay.ticks)
             var redTeamSpawnpoint = arena.meta.redTeamMeta.spawnpoint
 
@@ -697,7 +697,7 @@ abstract class SoccerGameImpl(
                 }
 
                 if (location != null) {
-                    plugin.launch(plugin.entityDispatcher(player)) {
+                    coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
                         player.teleportCompat(plugin, location)
                     }
                 }
@@ -720,7 +720,7 @@ abstract class SoccerGameImpl(
         stats.team = team
         stats.goalTeam = team
 
-        plugin.launch(plugin.entityDispatcher(player)) {
+        coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
             stats.gameMode = player.gameMode
             stats.armorContents =
                 player.inventory.armorContents.map { itemService.serializeItemStack(it) }.toTypedArray()
@@ -758,7 +758,7 @@ abstract class SoccerGameImpl(
     private fun restoreFromTemporaryPlayerData(player: Player) {
         val stats = ingamePlayersStorage[player]!!
 
-        plugin.launch(plugin.entityDispatcher(player)) {
+        coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
             player.gameMode = stats.gameMode
             player.allowFlight = stats.gameMode == GameMode.CREATIVE || stats.gameMode == GameMode.SPECTATOR
             player.isFlying = false

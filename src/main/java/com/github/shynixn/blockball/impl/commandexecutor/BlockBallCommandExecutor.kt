@@ -9,7 +9,6 @@ import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
-import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandBuilder
@@ -50,7 +49,7 @@ class BlockBallCommandExecutor(
     private val itemService: ItemService,
     private val chatMessageService: ChatMessageService,
     private val cloudService: CloudService,
-    coroutineHandler: CoroutineHandler,
+    private val coroutineHandler: CoroutineHandler,
     private val server: Server
     ) {
     private val arenaTabs: (s: CommandSender) -> List<String> = {
@@ -689,7 +688,7 @@ class BlockBallCommandExecutor(
 
     private suspend fun setBallRelativeToPlayerLocation(player: Player, forward: Double, sideWard: Double) {
         val game = gameService.getByPlayer(player) ?: return
-        val target = withContext(plugin.entityDispatcher(player)) {
+        val target = withContext(coroutineHandler.fetchEntityDispatcher(player)) {
             player.location.toVector3d().addRelativeFront(forward).addRelativeLeft(sideWard).toLocation()
         }
         game.setBallToLocation(target)
@@ -705,7 +704,7 @@ class BlockBallCommandExecutor(
         world: World? = null
     ) {
         val game = gameService.getByPlayer(player) ?: return
-        val location = withContext(plugin.entityDispatcher(player)) {
+        val location = withContext(coroutineHandler.fetchEntityDispatcher(player)) {
             player.location.clone()
         }
 
@@ -842,7 +841,7 @@ class BlockBallCommandExecutor(
     }
 
     private suspend fun setInventory(player: Player, arena: SoccerArena, teamMetadata: TeamMeta) {
-        teamMetadata.inventory = withContext(plugin.entityDispatcher(player)) {
+        teamMetadata.inventory = withContext(coroutineHandler.fetchEntityDispatcher(player)) {
             player.inventory.contents.clone().map { e -> itemService.serializeItemStack(e) }.toTypedArray()
         }
         arenaRepository.save(arena)
@@ -850,7 +849,7 @@ class BlockBallCommandExecutor(
     }
 
     private suspend fun setArmor(player: Player, arena: SoccerArena, teamMeta: TeamMeta) {
-        teamMeta.armor = withContext(plugin.entityDispatcher(player)) {
+        teamMeta.armor = withContext(coroutineHandler.fetchEntityDispatcher(player)) {
             player.inventory.armorContents.clone().map { e -> itemService.serializeItemStack(e) }.toTypedArray()
         }
         arenaRepository.save(arena)
@@ -865,18 +864,18 @@ class BlockBallCommandExecutor(
         val existingArenas = arenaRepository.getAll()
 
         val headerBuilder = StringBuilder()
-        headerBuilder.append(org.bukkit.ChatColor.GRAY)
-        headerBuilder.append(org.bukkit.ChatColor.STRIKETHROUGH)
+        headerBuilder.append(ChatColor.GRAY)
+        headerBuilder.append(ChatColor.STRIKETHROUGH)
         for (i in 0 until (30 - plugin.name.length) / 2) {
             headerBuilder.append(" ")
         }
-        headerBuilder.append(org.bukkit.ChatColor.RESET)
-        headerBuilder.append(org.bukkit.ChatColor.WHITE)
-        headerBuilder.append(org.bukkit.ChatColor.BOLD)
+        headerBuilder.append(ChatColor.RESET)
+        headerBuilder.append(ChatColor.WHITE)
+        headerBuilder.append(ChatColor.BOLD)
         headerBuilder.append(plugin.name)
-        headerBuilder.append(org.bukkit.ChatColor.RESET)
-        headerBuilder.append(org.bukkit.ChatColor.GRAY)
-        headerBuilder.append(org.bukkit.ChatColor.STRIKETHROUGH)
+        headerBuilder.append(ChatColor.RESET)
+        headerBuilder.append(ChatColor.GRAY)
+        headerBuilder.append(ChatColor.STRIKETHROUGH)
         for (i in 0 until (30 - plugin.name.length) / 2) {
             headerBuilder.append(" ")
         }
@@ -900,16 +899,16 @@ class BlockBallCommandExecutor(
         }
 
         val footerBuilder = java.lang.StringBuilder()
-        footerBuilder.append(org.bukkit.ChatColor.GRAY)
-        footerBuilder.append(org.bukkit.ChatColor.STRIKETHROUGH)
+        footerBuilder.append(ChatColor.GRAY)
+        footerBuilder.append(ChatColor.STRIKETHROUGH)
         footerBuilder.append("               ")
-        footerBuilder.append(org.bukkit.ChatColor.RESET)
-        footerBuilder.append(org.bukkit.ChatColor.WHITE)
-        footerBuilder.append(org.bukkit.ChatColor.BOLD)
+        footerBuilder.append(ChatColor.RESET)
+        footerBuilder.append(ChatColor.WHITE)
+        footerBuilder.append(ChatColor.BOLD)
         footerBuilder.append("1/1")
-        footerBuilder.append(org.bukkit.ChatColor.RESET)
-        footerBuilder.append(org.bukkit.ChatColor.GRAY)
-        footerBuilder.append(org.bukkit.ChatColor.STRIKETHROUGH)
+        footerBuilder.append(ChatColor.RESET)
+        footerBuilder.append(ChatColor.GRAY)
+        footerBuilder.append(ChatColor.STRIKETHROUGH)
         footerBuilder.append("               ")
         sender.sendMessage(footerBuilder.toString())
     }
@@ -1020,7 +1019,7 @@ class BlockBallCommandExecutor(
     }
 
     private suspend fun setLocation(player: Player, arena: SoccerArena, locationType: LocationType) {
-        val playerLocation = withContext(plugin.entityDispatcher(player)) {
+        val playerLocation = withContext(coroutineHandler.fetchEntityDispatcher(player)) {
             player.location.toVector3d()
         }
 

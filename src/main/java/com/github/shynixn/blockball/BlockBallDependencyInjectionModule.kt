@@ -135,7 +135,7 @@ class BlockBallDependencyInjectionModule(
         }
         module.addService<HttpClientFactory> { HttpClientFactoryImpl() }
         module.addService<CloudService> {
-            CloudServiceImpl(module.getService(), module.getService(), module.getService(), module.getService(), module.getService())
+            CloudServiceImpl(module.getService(), module.getService(), module.getService(), module.getService(), module.getService(), module.getService())
         }
         module.addService<AreaSelectionService> {
             AreaSelectionServiceImpl(
@@ -147,10 +147,11 @@ class BlockBallDependencyInjectionModule(
             )
         }
         module.addService<StatsService> {
-            StatsServiceImpl(module.getService(), module.getService())
+            StatsServiceImpl(module.getService(), module.getService(), module.getService())
         }
         module.addService<GameService> {
             GameServiceImpl(
+                module.getService(),
                 module.getService(),
                 module.getService(),
                 module.getService(),
@@ -182,11 +183,13 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                module.getService(),
                 module.getService()
             )
         }
         module.addService<HubgameListener> {
             HubgameListener(
+                module.getService(),
                 module.getService(),
                 module.getService(),
                 module.getService(),

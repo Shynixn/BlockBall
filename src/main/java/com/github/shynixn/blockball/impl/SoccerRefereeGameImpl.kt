@@ -9,6 +9,7 @@ import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.GameStartEvent
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -33,7 +34,8 @@ class SoccerRefereeGameImpl(
     soccerBallFactory: SoccerBallFactory,
     itemService: ItemService,
     cloudService: CloudService,
-    private val server: Server
+    private val server: Server,
+    private val coroutineHandler: CoroutineHandler
 ) : SoccerMiniGameImpl(
     arena,
     playerDataRepository,
@@ -46,7 +48,8 @@ class SoccerRefereeGameImpl(
     soccerBallFactory,
     itemService,
     cloudService,
-    server
+    server,
+    coroutineHandler
 ), SoccerRefereeGame {
     /**
      * Is the timer blocker enabled.

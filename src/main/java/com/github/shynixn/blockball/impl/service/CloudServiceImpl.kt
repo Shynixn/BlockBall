@@ -12,18 +12,17 @@ import com.github.shynixn.blockball.entity.cloud.CloudServerDataResponse
 import com.github.shynixn.blockball.entity.cloud.CloudSessionStart
 import com.github.shynixn.fasterxml.jackson.databind.DeserializationFeature
 import com.github.shynixn.fasterxml.jackson.databind.ObjectMapper
-import com.github.shynixn.mccoroutine.folia.globalRegionDispatcher
+import com.github.shynixn.mcutils.common.ChatColor
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.http.HttpClientFactory
 import com.github.shynixn.mcutils.http.HttpClientSettings
 import com.github.shynixn.mcutils.http.get
 import com.github.shynixn.mcutils.http.post
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -36,7 +35,8 @@ class CloudServiceImpl(
     private val httpClientFactory: HttpClientFactory,
     private val chatMessageService: ChatMessageService,
     private val language: BlockBallLanguage,
-    private val playerDataRepository: PlayerDataRepository<PlayerInformation>
+    private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
+    private val coroutineHandler: CoroutineHandler
 ) : CloudService {
     private var trackingKey: String? = null
     private var serverId: String? = null
@@ -57,7 +57,7 @@ class CloudServiceImpl(
 
         withContext(Dispatchers.IO) {
             plugin.logger.log(Level.INFO, "Starting login flow...")
-            withContext(plugin.globalRegionDispatcher) {
+            withContext(coroutineHandler.fetchGlobalRegionDispatcher()) {
                 chatMessageService.sendLanguageMessage(sender, language.cloudLoginStart)
             }
 
@@ -77,7 +77,7 @@ class CloudServiceImpl(
                     throw IOException("Failed to retrieve deviceCode: ${startResponse.error}")
                 }
 
-                withContext(plugin.globalRegionDispatcher) {
+                withContext(coroutineHandler.fetchGlobalRegionDispatcher()) {
                     chatMessageService.sendLanguageMessage(
                         sender,
                         language.cloudLoginOpenInBrowser
@@ -103,7 +103,7 @@ class CloudServiceImpl(
                     }
 
                     delay(5000)
-                    withContext(plugin.globalRegionDispatcher) {
+                    withContext(coroutineHandler.fetchGlobalRegionDispatcher()) {
                         chatMessageService.sendLanguageMessage(
                             sender,
                             language.cloudLoginWait

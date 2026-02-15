@@ -6,7 +6,7 @@ import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.entity.InteractionCache
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.GameType
-import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.chat.ClickEvent
 import com.github.shynixn.mcutils.common.chat.ClickEventType
@@ -32,7 +32,8 @@ class HubgameListener(
     private val gameService: GameService,
     private val chatMessageService: ChatMessageService,
     private val placeholderService: PlaceHolderService,
-    private val language: BlockBallLanguage
+    private val language: BlockBallLanguage,
+    private val coroutineHandler: CoroutineHandler
 ) : Listener {
     private val cache = ConcurrentHashMap<Player, InteractionCache>()
 
@@ -109,13 +110,16 @@ class HubgameListener(
         if (gameInternal != null) {
             if (gameInternal.arena.gameType == GameType.HUBGAME) {
                 if (!gameInternal.arena.outerField.isLocationIn2dSelection(location.toVector3d())) {
-                    plugin.launch {
+                    coroutineHandler.execute {
                         gameInternal.leave(player)
                         chatMessageService.sendLanguageMessage(player, language.leftGameMessage)
                     }
                 }
             } else if ((gameInternal.arena.gameType == GameType.MINIGAME || gameInternal.arena.gameType == GameType.REFEREEGAME) && gameInternal.arena.meta.minigameMeta.forceFieldEnabled) {
-                if (gameInternal.status == GameState.RUNNING && !gameInternal.arena.outerField.isLocationIn2dSelection(location.toVector3d())) {
+                if (gameInternal.status == GameState.RUNNING && !gameInternal.arena.outerField.isLocationIn2dSelection(
+                        location.toVector3d()
+                    )
+                ) {
                     val knockBack =
                         gameInternal.arena.ballSpawnPoint!!.toLocation().toVector().subtract(player.location.toVector())
                             .normalize().multiply(2.0)
@@ -137,7 +141,7 @@ class HubgameListener(
             ) {
                 inArea = true
                 if (game.arena.meta.hubLobbyMeta.instantForcefieldJoin) {
-                    plugin.launch {
+                    coroutineHandler.execute {
                         game.join(player)
                     }
                     return

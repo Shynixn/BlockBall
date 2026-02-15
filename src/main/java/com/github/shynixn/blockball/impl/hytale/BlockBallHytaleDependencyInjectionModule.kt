@@ -133,6 +133,7 @@ class BlockBallHytaleDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                module.getService()
             )
         }
         module.addService<AreaSelectionService> {
@@ -145,10 +146,11 @@ class BlockBallHytaleDependencyInjectionModule(
             )
         }
         module.addService<StatsService> {
-            StatsServiceImpl(module.getService(), module.getService())
+            StatsServiceImpl(module.getService(), module.getService(), module.getService())
         }
         module.addService<GameService> {
             GameServiceImpl(
+                module.getService(),
                 module.getService(),
                 module.getService(),
                 module.getService(),
@@ -183,10 +185,12 @@ class BlockBallHytaleDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                module.getService()
             )
         }
         module.addService<HubgameListener> {
             HubgameListener(
+                module.getService(),
                 module.getService(),
                 module.getService(),
                 module.getService(),

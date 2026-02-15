@@ -8,7 +8,7 @@ import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.Team
-import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -30,7 +30,8 @@ class SoccerHubGameImpl(
     itemService: ItemService,
     chatMessageService: ChatMessageService,
     cloudService: CloudService,
-    private val server: Server
+    private val server: Server,
+    private val coroutineHandler: CoroutineHandler
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -40,7 +41,8 @@ class SoccerHubGameImpl(
     language,
     playerDataRepository,
     itemService,
-    chatMessageService, cloudService
+    chatMessageService, cloudService,
+    coroutineHandler
 ),
     SoccerHubGame {
     /**
@@ -92,7 +94,7 @@ class SoccerHubGameImpl(
         doubleJumpCoolDownPlayers.clear()
         interactedWithBall.clear()
 
-        plugin.launch {
+        coroutineHandler.execute {
             delay(3000)
             closed = true
         }
