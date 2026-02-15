@@ -8,7 +8,6 @@ import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecuto
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.blockball.impl.service.CloudServiceImpl
 import com.github.shynixn.blockball.impl.service.GameServiceImpl
-import com.github.shynixn.blockball.impl.service.SoccerBallFactoryImpl
 import com.github.shynixn.blockball.impl.service.StatsServiceImpl
 import com.github.shynixn.fasterxml.jackson.core.type.TypeReference
 import com.github.shynixn.htutils.plugin.HytalePluginProxy
@@ -165,11 +164,8 @@ class BlockBallHytaleDependencyInjectionModule(
             )
         }
         module.addService<SoccerBallFactory> {
-            SoccerBallFactoryImpl(
-                module.getService(),
-                module.getService(),
-                module.getService(),
-                module.getService(),
+            HytaleSoccerBallFactoryImpl(
+                module.getService()
             )
         }
         module.addService<BallListener> { BallListener(module.getService(), module.getService()) }

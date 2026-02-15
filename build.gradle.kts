@@ -23,7 +23,7 @@ dependencies {
 
     // Hytale
     compileOnly("com.github.shynixn.htutils:hytaleserver:2026.1")
- //   implementation(files("/home/christoph/git/BlockBall/htproxy-1.0-SNAPSHOT.jar"))
+   implementation(files("/home/christoph/git/BlockBall/htproxy-1.0-SNAPSHOT.jar"))
   implementation(files("/home/christoph/git/BlockBall/htcommon-1.0-SNAPSHOT.jar"))
 
     // Library dependencies with legacy compatibility, we can use more up-to-date version in the plugin.yml
@@ -111,7 +111,7 @@ tasks.register("pluginJarHytaleLatest", ShadowJar::class.java) {
     dependsOn("relocateHytalePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocateHytalePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-hytale-latest.${archiveExtension.get()}")
-    destinationDirectory.set(File(System.getenv("HOME"),"git/BlockBall/.hytale/mods"))
+    destinationDirectory.set(File(System.getenv("HOME"),"git/ht/mods"))
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_8_R3/**")
