@@ -372,9 +372,9 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var shyGuildCommandSenderHasToBePlayer = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player if you do not specify the optional player argument.")
 
- override var shyGuildCommandUsage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /shyguild help to see more info about the plugin.")
+ override var shyGuildCommandUsage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /blockballclub help to see more info about the plugin.")
 
- override var shyGuildCommandDescription = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 All commands for the ShyGuild plugin.")
+ override var shyGuildCommandDescription = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 All commands for the BlockBallClub module.")
 
  override var shyGuildTemplateListCommandHint = LanguageItem("Displays all loaded guild templates.")
 
@@ -426,7 +426,7 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var shyGuildMemberInviteSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully invited player %blockball_param_1% to guild %blockball_param_2%.")
 
- override var shyGuildMemberInviteReceivedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 You have been invited to join guild %blockball_param_1% by %blockball_param_2%. Use /shyguild member accept %blockball_param_1% to join.")
+ override var shyGuildMemberInviteReceivedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 You have been invited to join guild %blockball_param_1% by %blockball_param_2%. Use /blockballclub member accept %blockball_param_1% to join.")
 
  override var shyGuildMemberRemoveCommandHint = LanguageItem("Removes a player from the given guild.")
 

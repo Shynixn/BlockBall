@@ -163,6 +163,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
         // Module
         val placeHolderService = PlaceHolderServiceImpl(this, Bukkit.getPluginManager())
         val sqlConnectionService = CommonSqlConnectionServiceImpl(this, dataFolder.toPath().resolve("BlockBall.sqlite"))
+        sqlConnectionService.connect()
         this.guildModule = loadShyGuildModule(language, placeHolderService, sqlConnectionService)
         this.scoreboardModule = loadShyScoreboardModule(language, placeHolderService)
         this.bossBarModule = loadShyBossBarModule(language, placeHolderService)

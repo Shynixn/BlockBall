@@ -642,10 +642,10 @@ shyGuildCommandSenderHasToBePlayer:
   text: "&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player if you do not specify the optional player argument."
 shyGuildCommandUsage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Use /shyguild help to see more info about the plugin."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Use /blockballclub help to see more info about the plugin."
 shyGuildCommandDescription:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 All commands for the ShyGuild plugin."
+  text: "&0&l[&f&lBlockBall&0&l]&7 All commands for the BlockBallClub module."
 shyGuildTemplateListCommandHint:
   type: "CHAT"
   text: "Displays all loaded guild templates."
@@ -723,7 +723,7 @@ shyGuildMemberInviteSuccessMessage:
   text: "&0&l[&f&lBlockBall&0&l]&7 Successfully invited player %blockball_param_1% to guild %blockball_param_2%."
 shyGuildMemberInviteReceivedMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 You have been invited to join guild %blockball_param_1% by %blockball_param_2%. Use /shyguild member accept %blockball_param_1% to join."
+  text: "&0&l[&f&lBlockBall&0&l]&7 You have been invited to join guild %blockball_param_1% by %blockball_param_2%. Use /blockballclub member accept %blockball_param_1% to join."
 shyGuildMemberRemoveCommandHint:
   type: "CHAT"
   text: "Removes a player from the given guild."
