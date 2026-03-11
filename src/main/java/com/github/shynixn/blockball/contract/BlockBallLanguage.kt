@@ -127,7 +127,7 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
 
   var gameIsNotARefereeGame: LanguageItem
 
-  var gameTypeRefereeOnlyForPatreons: LanguageItem
+  var onlyForPatreons: LanguageItem
 
   var joinTeamRefereeMessage: LanguageItem
 
@@ -224,4 +224,22 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
   var cloudPublishGameMessage: LanguageItem
 
   var gameStartingMessage: LanguageItem
+
+  var gameIsInClubModeMessage: LanguageItem
+
+  var gameIsInStandardModeMessage: LanguageItem
+
+  var gameNoPermissionToStartAGameInClubModeMessage: LanguageItem
+
+  var gameNoPermissionToJoinAGameInClubModeMessage: LanguageItem
+
+  var gameNotAMemberOfClubMessage: LanguageItem
+
+  var gameAllClubSlotsAreFilledMessage: LanguageItem
+
+  var joinTeamClubMessage: LanguageItem
+
+  var gameClubStartedGameMessage: LanguageItem
+
+  var commandClubJoinToolTip: LanguageItem
 }

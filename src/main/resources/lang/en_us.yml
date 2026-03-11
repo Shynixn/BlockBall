@@ -209,9 +209,9 @@ failedToReloadMessage:
 gameIsNotARefereeGame:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&c This game is not a game where you can use a referee. Convert the game to a referee game first."
-gameTypeRefereeOnlyForPatreons:
+onlyForPatreons:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&c The game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn."
+  text: "&0&l[&f&lBlockBall&0&l]&c This mode requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn."
 joinTeamRefereeMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 Successfully joined %blockball_player_teamDisplayName%."
@@ -356,6 +356,33 @@ cloudPublishGameMessage:
 gameStartingMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 Game starts in %blockball_param_1% second(s)."
+gameIsInClubModeMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c This game is in club mode. You cannot join it as a standard player as long as club players are playing it."
+gameIsInStandardModeMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c This game is in standard mode. You cannot join it with a club as long as standard players are playing it."
+gameNoPermissionToStartAGameInClubModeMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c You do not have permission to start a game in club mode."
+gameNoPermissionToJoinAGameInClubModeMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c You do not have permission to join a game in club mode."
+gameNotAMemberOfClubMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c You are not a member of the club %blockball_param_1%."
+gameAllClubSlotsAreFilledMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&c All club slots are already filled. Your club cannot join this game."
+joinTeamClubMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully joined team %blockball_param_1%&r&7."
+gameClubStartedGameMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Your club %blockball_param_1% has started the game %blockball_param_2%. Use '/blockball club join %blockball_param_2% %blockball_param_1%' to join too."
+commandClubJoinToolTip:
+  type: "CHAT"
+  text: "Lets the player executing the command join the game with the given club. The player has to be a member of the club and the club has to have free slots in the game."
 shyScoreboardPlayerNotFoundMessage:
   # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
   # Please notice that some messages do only support chat.

@@ -124,7 +124,7 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var gameIsNotARefereeGame = LanguageItem("&0&l[&f&lBlockBall&0&l]&c This game is not a game where you can use a referee. Convert the game to a referee game first.")
 
- override var gameTypeRefereeOnlyForPatreons = LanguageItem("&0&l[&f&lBlockBall&0&l]&c The game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn.")
+ override var onlyForPatreons = LanguageItem("&0&l[&f&lBlockBall&0&l]&c This mode requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn.")
 
  override var joinTeamRefereeMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully joined %blockball_player_teamDisplayName%.")
 
@@ -221,6 +221,24 @@ class BlockBallLanguageImpl : BlockBallLanguage {
  override var cloudPublishGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 This game has been published to:")
 
  override var gameStartingMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Game starts in %blockball_param_1% second(s).")
+
+ override var gameIsInClubModeMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c This game is in club mode. You cannot join it as a standard player as long as club players are playing it.")
+
+ override var gameIsInStandardModeMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c This game is in standard mode. You cannot join it with a club as long as standard players are playing it.")
+
+ override var gameNoPermissionToStartAGameInClubModeMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c You do not have permission to start a game in club mode.")
+
+ override var gameNoPermissionToJoinAGameInClubModeMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c You do not have permission to join a game in club mode.")
+
+ override var gameNotAMemberOfClubMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c You are not a member of the club %blockball_param_1%.")
+
+ override var gameAllClubSlotsAreFilledMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&c All club slots are already filled. Your club cannot join this game.")
+
+ override var joinTeamClubMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully joined team %blockball_param_1%&r&7.")
+
+ override var gameClubStartedGameMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Your club %blockball_param_1% has started the game %blockball_param_2%. Use '/blockball club join %blockball_param_2% %blockball_param_1%' to join too.")
+
+ override var commandClubJoinToolTip = LanguageItem("Lets the player executing the command join the game with the given club. The player has to be a member of the club and the club has to have free slots in the game.")
 
  override var shyScoreboardPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found.")
 

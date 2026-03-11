@@ -23,6 +23,7 @@ import com.github.shynixn.mcutils.common.language.LanguageType
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
+import com.github.shynixn.shyguild.entity.Guild
 import kotlinx.coroutines.delay
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -65,6 +66,16 @@ abstract class SoccerGameImpl(
      * Is the ball spawning?
      */
     protected var ballSpawning: Boolean = false
+
+    /**
+     * Red club in club mode.
+     */
+    override var redClub: Guild? = null
+
+    /**
+     * Blue club in club mode.
+     */
+    override var blueClub: Guild? = null
 
     /**
      * SoccerBall spawn counter.
@@ -131,6 +142,10 @@ abstract class SoccerGameImpl(
      */
     override var interactedWithBall: MutableList<Player> = ArrayList()
     override var mirroredGoals: Boolean = false
+
+    override fun areClubsPlaying(): Boolean {
+        return redClub != null || blueClub != null
+    }
 
     /**
      * All players which are already fix in team red.

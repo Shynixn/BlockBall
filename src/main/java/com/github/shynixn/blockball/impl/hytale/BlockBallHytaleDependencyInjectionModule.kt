@@ -217,7 +217,8 @@ class BlockBallHytaleDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
-                module.getService()
+                module.getService(),
+                HytaleMockedGuildServiceImpl()
             )
         }
         return module

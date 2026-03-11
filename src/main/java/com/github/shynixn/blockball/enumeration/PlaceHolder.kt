@@ -60,7 +60,13 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     GAME_RED_DISPLAYNAME(
         "%blockball_game_redDisplayName_[game]%",
-        { _, game, _ -> game?.arena?.meta?.redTeamMeta?.displayName }),
+        { _, game, _ ->
+            if (game != null && game.redClub != null) {
+                game.redClub?.displayNameColor
+            } else {
+                game?.arena?.meta?.redTeamMeta?.displayName
+            }
+        }),
 
     GAME_BLUE_SCORE("%blockball_game_blueScore_[game]%", { _, game, _ -> game?.blueScore?.toString() }),
 
@@ -76,7 +82,13 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
 
     GAME_BLUE_DISPLAYNAME(
         "%blockball_game_blueDisplayName_[game]%",
-        { _, game, _ -> game?.arena?.meta?.blueTeamMeta?.displayName }),
+        { _, game, _ ->
+            if (game != null && game.blueClub != null) {
+                game.blueClub?.displayNameColor
+            } else {
+                game?.arena?.meta?.blueTeamMeta?.displayName
+            }
+        }),
 
     GAME_REFEREE_DISPLAYNAME(
         "%blockball_game_refereeDisplayName_[game]%",
@@ -211,7 +223,11 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
     }),
 
     PLAYER_TEAM("%blockball_player_team%", { player, game, _ ->
-        if (game?.blueTeam != null && game.blueTeam.contains(player)) {
+        if (game?.redClub != null && game.redTeam.contains(player)) {
+            game.redClub!!.name
+        } else if (game?.blueClub != null && game.blueTeam.contains(player)) {
+            game.blueClub!!.name
+        } else if (game?.blueTeam != null && game.blueTeam.contains(player)) {
             "blue"
         } else if (game?.redTeam != null && game.redTeam.contains(player)) {
             "red"
@@ -223,7 +239,11 @@ enum class PlaceHolder(val text: String, val f: (Player?, SoccerGame?, Map<Strin
     }),
 
     PLAYER_TEAM_DISPLAY("%blockball_player_teamDisplayName%", { player, game, _ ->
-        if (game?.blueTeam != null && game.blueTeam.contains(player)) {
+        if (game?.redClub != null && game.redTeam.contains(player)) {
+            game.redClub!!.displayNameColor
+        } else if (game?.blueClub != null && game.blueTeam.contains(player)) {
+            game.blueClub!!.displayNameColor
+        } else if (game?.blueTeam != null && game.blueTeam.contains(player)) {
             game.arena.meta.blueTeamMeta.displayName
         } else if (game?.redTeam != null && game.redTeam.contains(player)) {
             game.arena.meta.redTeamMeta.displayName

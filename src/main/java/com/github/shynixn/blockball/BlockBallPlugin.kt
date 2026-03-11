@@ -174,6 +174,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
             language,
             placeHolderService,
             particlesModule!!,
+            guildModule!!,
             sqlConnectionService
         ).build()
 
@@ -507,31 +508,31 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
             settings.defaultTemplates = listOf(
                 "club/blockball_club.yml" to "blockball_club.yml"
             )
-            settings.commandPermission = "blockballclub.command"
-            settings.createCmdPermission = "blockball.club.cmd.create"
-            settings.templateUsePermission = "blockball.club.template.<template>"
-            settings.deleteCmdPermission = "blockball.club.cmd.delete"
-            settings.guildDeletePermission = "blockball.club.<guild>.delete"
-            settings.reloadCmdPermission = "blockball.club.cmd.reload"
-            settings.templateListCmdPermission = "blockball.club.cmd.template.list"
-            settings.addRoleCmdPermission = "blockball.club.cmd.role.add"
-            settings.guildAddRolePermission = "blockball.club.<guild>.role.add.<role>"
-            settings.removeRoleCmdPermission = "blockball.club.cmd.role.remove"
-            settings.guildRemoveRolePermission = "blockball.club.<guild>.role.remove.<role>"
-            settings.listRoleCmdPermission = "blockball.club.cmd.role.list"
-            settings.guildListRolePermission = "blockball.club.<guild>.role.list"
-            settings.addMemberPermission = "blockball.club.cmd.member.add"
-            settings.guildMemberAddPermission = "blockball.club.<guild>.member.add"
-            settings.removeMemberPermission = "blockball.club.cmd.member.remove"
-            settings.guildMemberRemovePermission = "blockball.club.<guild>.member.remove"
-            settings.listMembersPermission = "blockball.club.cmd.member.list"
-            settings.guildMemberListPermission = "blockball.club.<guild>.member.list"
-            settings.inviteMemberPermission = "blockball.club.cmd.member.invite"
-            settings.guildMemberInvitePermission = "blockball.club.<guild>.member.invite"
-            settings.acceptMemberPermission = "blockball.club.cmd.member.accept"
-            settings.leaveMemberPermission = "blockball.club.cmd.member.leave"
-            settings.guildMemberLeavePermission = "blockball.club.<guild>.member.leave"
-            settings.guildListPermission = "blockball.club.cmd.list"
+            settings.commandPermission = "blockball.shyguild.command"
+            settings.createCmdPermission = "blockball.shyguild.cmd.create"
+            settings.templateUsePermission = "blockball.shyguild.template.<template>"
+            settings.deleteCmdPermission = "blockball.shyguild.cmd.delete"
+            settings.guildDeletePermission = "blockball.shyguild.guild.<guild>.delete"
+            settings.reloadCmdPermission = "blockball.shyguild.cmd.reload"
+            settings.templateListCmdPermission = "blockball.shyguild.cmd.template.list"
+            settings.addRoleCmdPermission = "blockball.shyguild.cmd.role.add"
+            settings.guildAddRolePermission = "blockball.shyguild.guild.<guild>.role.add.<role>"
+            settings.removeRoleCmdPermission = "blockball.shyguild.cmd.role.remove"
+            settings.guildRemoveRolePermission = "blockball.shyguild.guild.<guild>.role.remove.<role>"
+            settings.listRoleCmdPermission = "blockball.shyguild.cmd.role.list"
+            settings.guildListRolePermission = "blockball.shyguild.guild.<guild>.role.list"
+            settings.addMemberPermission = "blockball.shyguild.cmd.member.add"
+            settings.guildMemberAddPermission = "blockball.shyguild.guild.<guild>.member.add"
+            settings.removeMemberPermission = "blockball.shyguild.cmd.member.remove"
+            settings.guildMemberRemovePermission = "blockball.shyguild.guild.<guild>.member.remove"
+            settings.listMembersPermission = "blockball.shyguild.cmd.member.list"
+            settings.guildMemberListPermission = "blockball.shyguild.guild.<guild>.member.list"
+            settings.inviteMemberPermission = "blockball.shyguild.cmd.member.invite"
+            settings.guildMemberInvitePermission = "blockball.shyguild.guild.<guild>.member.invite"
+            settings.acceptMemberPermission = "blockball.shyguild.cmd.member.accept"
+            settings.leaveMemberPermission = "blockball.shyguild.cmd.member.leave"
+            settings.guildMemberLeavePermission = "blockball.shyguild.guild.<guild>.member.leave"
+            settings.guildListPermission = "blockball.shyguild.cmd.list"
 
         }
         settings.reload()

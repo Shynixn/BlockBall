@@ -5,49 +5,49 @@ roles:
   # The club owner has full control over the guild
   - name: "owner"
     allowPermissions:
-      - "blockball.club.%blockball_guild_name%.delete"
-      - "blockball.club.%blockball_guild_name%.role.add.owner"
-      - "blockball.club.%blockball_guild_name%.role.remove.owner"
-      - "blockball.club.%blockball_guild_name%.role.add.coach"
-      - "blockball.club.%blockball_guild_name%.role.remove.coach"
-      - "blockball.club.%blockball_guild_name%.role.add.captain"
-      - "blockball.club.%blockball_guild_name%.role.remove.captain"
-      - "blockball.club.%blockball_guild_name%.role.add.player"
-      - "blockball.club.%blockball_guild_name%.role.remove.player"
-      - "blockball.club.%blockball_guild_name%.role.list"
-      - "blockball.club.%blockball_guild_name%.member.remove"
-      - "blockball.club.%blockball_guild_name%.member.list"
-      - "blockball.club.%blockball_guild_name%.invite"
-      - "blockball.club.%blockball_guild_name%.leave"
+      - "blockball.shyguild.guild.%blockball_guild_name%.delete"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.add.owner"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.remove.owner"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.add.coach"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.remove.coach"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.add.captain"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.remove.captain"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.add.player"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.remove.player"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.list"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.remove"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.list"
+      - "blockball.shyguild.guild.%blockball_guild_name%.invite"
+      - "blockball.shyguild.guild.%blockball_guild_name%.leave"
     denyPermissions: []
 
   # Coaches can manage captains and players, but cannot delete the club or assign owners
   - name: "coach"
     allowPermissions:
-      - "blockball.club.%blockball_guild_name%.role.add.captain"
-      - "blockball.club.%blockball_guild_name%.role.remove.captain"
-      - "blockball.club.%blockball_guild_name%.role.add.player"
-      - "blockball.club.%blockball_guild_name%.role.remove.player"
-      - "blockball.club.%blockball_guild_name%.role.list"
-      - "blockball.club.%blockball_guild_name%.member.remove"
-      - "blockball.club.%blockball_guild_name%.member.list"
-      - "blockball.club.%blockball_guild_name%.invite"
-      - "blockball.club.%blockball_guild_name%.leave"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.add.captain"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.remove.captain"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.add.player"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.remove.player"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.list"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.remove"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.list"
+      - "blockball.shyguild.guild.%blockball_guild_name%.invite"
+      - "blockball.shyguild.guild.%blockball_guild_name%.leave"
     denyPermissions: []
 
   # Captains can invite new players and view the roster, but cannot manage roles
   - name: "captain"
     allowPermissions:
-      - "blockball.club.%blockball_guild_name%.role.list"
-      - "blockball.club.%blockball_guild_name%.member.list"
-      - "blockball.club.%blockball_guild_name%.invite"
-      - "blockball.club.%blockball_guild_name%.leave"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.list"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.list"
+      - "blockball.shyguild.guild.%blockball_guild_name%.invite"
+      - "blockball.shyguild.guild.%blockball_guild_name%.leave"
     denyPermissions: []
 
   # Regular players can only view the roster and leave
   - name: "player"
     allowPermissions:
-      - "blockball.club.%blockball_guild_name%.role.list"
-      - "blockball.club.%blockball_guild_name%.member.list"
-      - "blockball.club.%blockball_guild_name%.leave"
+      - "blockball.shyguild.guild.%blockball_guild_name%.role.list"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.list"
+      - "blockball.shyguild.guild.%blockball_guild_name%.leave"
     denyPermissions: []

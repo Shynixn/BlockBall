@@ -228,7 +228,7 @@ class GameServiceImpl(
     private fun validateGame(arena: SoccerArena) {
         if (arena.gameType == GameType.REFEREEGAME && !BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
             throw SoccerGameException(
-                arena, language.gameTypeRefereeOnlyForPatreons.text
+                arena, language.onlyForPatreons.text
             )
         }
         if (arena.ballSpawnPoint == null) {

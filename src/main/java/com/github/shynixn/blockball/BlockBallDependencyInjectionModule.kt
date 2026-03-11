@@ -53,6 +53,7 @@ class BlockBallDependencyInjectionModule(
     private val language: BlockBallLanguage,
     private val placeHolderService: PlaceHolderService,
     private val shyParticlesModule: DependencyInjectionModule,
+    private val shyGuildModule : DependencyInjectionModule,
     private val sqlConnectionService: SqlConnectionService,
 ) {
     companion object {
@@ -221,7 +222,8 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
-                module.getService()
+                module.getService(),
+                shyGuildModule.getService()
             )
         }
         return module
