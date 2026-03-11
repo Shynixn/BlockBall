@@ -358,5 +358,109 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var shyParticlesCoordinateValueMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cThe value %blockball_param_1% has to be a number with the following supported formats: 2, 2.0, -3.0, ~2.2 ~-2.3")
 
- override var shyParticlesWorldNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cWorld %blockball_param_1% not found."  )
+ override var shyParticlesWorldNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cWorld %blockball_param_1% not found.")
+
+ override var shyGuildPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found.")
+
+ override var shyGuildNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")
+
+ override var shyGuildReloadCommandHint = LanguageItem("Reloads all guilds and configuration.")
+
+ override var shyGuildReloadMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Reloaded all guilds and configuration.")
+
+ override var shyGuildCommonErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details.")
+
+ override var shyGuildCommandSenderHasToBePlayer = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player if you do not specify the optional player argument.")
+
+ override var shyGuildCommandUsage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /shyguild help to see more info about the plugin.")
+
+ override var shyGuildCommandDescription = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 All commands for the ShyGuild plugin.")
+
+ override var shyGuildTemplateListCommandHint = LanguageItem("Displays all loaded guild templates.")
+
+ override var shyGuildTemplateListMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Templates:")
+
+ override var shyGuildWordNotAllowedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c The text contains invalid words, is too short or too long. Please make sure to follow the rules and try again.")
+
+ override var shyGuildCreateCommandHint = LanguageItem("Creates a new guild with the given name based on the given template.")
+
+ override var shyGuildCreateSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully created guild %blockball_param_1%.")
+
+ override var shyGuildAlreadyExistsMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c A guild with the name %blockball_param_1% already exists.")
+
+ override var shyGuildTemplateNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Guild template %blockball_param_1% not found.")
+
+ override var shyGuildNoPermissionTemplateMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c You do not have permission to use guild template %blockball_param_1%.")
+
+ override var shyGuildGuildNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Guild %blockball_param_1% not found.")
+
+ override var shyGuildRoleNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Role %blockball_param_1% not found in guild %blockball_param_2%.")
+
+ override var shyGuildNoPermissionRoleMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c You do not have permission to assign role %blockball_param_1%.")
+
+ override var shyGuildAddRoleCommandHint = LanguageItem("Assigns the given role to the given player in the given guild.")
+
+ override var shyGuildRemoveRoleCommandHint = LanguageItem("Removes the given role from the given player in the given guild.")
+
+ override var shyGuildListRolesCommandHint = LanguageItem("Lists all roles of the given guild or the roles of a single player in the given guild.")
+
+ override var shyGuildPlayerNotAMemberMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% is not a member of this guild.")
+
+ override var shyGuildAssignRoleSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully assigned role %blockball_param_1% to player %blockball_param_2%.")
+
+ override var shyGuildRemoveRoleSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully removed role %blockball_param_1% from player %blockball_param_2%.")
+
+ override var shyGuildRoleListAllMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 All roles of this guild:")
+
+ override var shyGuildRoleListPlayerMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 All roles of player %blockball_param_1%:")
+
+ override var shyGuildDeleteCommandHint = LanguageItem("Deletes the given guild.")
+
+ override var shyGuildDeleteSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully deleted guild %blockball_param_1%.")
+
+ override var shyGuildMemberAddCommandHint = LanguageItem("Adds a player directly to the given guild. Should only be used for administrative purposes.")
+
+ override var shyGuildMemberAddSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully added player %blockball_param_1% to guild %blockball_param_2%.")
+
+ override var shyGuildMemberInviteCommandHint = LanguageItem("Invites a player to the given guild.")
+
+ override var shyGuildMemberInviteSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully invited player %blockball_param_1% to guild %blockball_param_2%.")
+
+ override var shyGuildMemberInviteReceivedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 You have been invited to join guild %blockball_param_1% by %blockball_param_2%. Use /shyguild member accept %blockball_param_1% to join.")
+
+ override var shyGuildMemberRemoveCommandHint = LanguageItem("Removes a player from the given guild.")
+
+ override var shyGuildMemberRemoveSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully removed player %blockball_param_1% from guild %blockball_param_2%.")
+
+ override var shyGuildMemberListCommandHint = LanguageItem("Lists all members of the given guild.")
+
+ override var shyGuildMemberListMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Members of guild %blockball_param_1%:")
+
+ override var shyGuildMemberAlreadyInGuildMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% is already a member of guild %blockball_param_2%.")
+
+ override var shyGuildMemberMaxGuildsReachedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% has already reached the maximum number of guilds they can join.")
+
+ override var shyGuildMemberInviteFailedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Failed to invite player %blockball_param_1%. Please wait a few minutes until you can send invites again.")
+
+ override var shyGuildMemberAcceptCommandHint = LanguageItem("Accepts a pending guild invite.")
+
+ override var shyGuildMemberAcceptSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully accepted the invite and joined guild %blockball_param_1%.")
+
+ override var shyGuildMemberAcceptNoInviteMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c You do not have a pending invite for guild %blockball_param_1%.")
+
+ override var shyGuildMemberGuildFullMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c Failed to join guild %blockball_param_1% because it is already full.")
+
+ override var shyGuildCreateMaxGuildsReachedMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c You have already reached the maximum number of guilds you can create.")
+
+ override var shyGuildLeaveCommandHint = LanguageItem("Leaves the given guild.")
+
+ override var shyGuildLeaveSuccessMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Successfully left guild %blockball_param_1%.")
+
+ override var shyGuildCannotLeaveOwnerGuildMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c You cannot leave guild %blockball_param_1% because you are the only owner. Please assign the owner role to another player and try again.")
+
+ override var shyGuildThereCannotBeNoOwnerMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c There has to be at least one owner in guild %blockball_param_1%. Please assign the owner role to another player before you can remove it from yourself.")
+
+ override var shyGuildListGuildsCommandHint = LanguageItem("Lists all guilds you are a member of.")
+
+ override var shyGuildListGuildsMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 You are a member of the following guilds:")
 }

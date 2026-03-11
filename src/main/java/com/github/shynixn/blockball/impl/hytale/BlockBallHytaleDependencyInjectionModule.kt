@@ -38,7 +38,8 @@ import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.database.impl.AutoSavePlayerDataRepositoryImpl
 import com.github.shynixn.mcutils.database.impl.CachedPlayerDataRepositoryImpl
-import com.github.shynixn.mcutils.database.impl.ConfigSelectedRepositoryImpl
+import com.github.shynixn.mcutils.database.impl.CommonSqlConnectionServiceImpl
+import com.github.shynixn.mcutils.database.impl.PlayerDataSqlRepositoryImpl
 import com.github.shynixn.mcutils.http.HttpClientFactory
 import com.github.shynixn.mcutils.http.HttpClientFactoryImpl
 import com.github.shynixn.mcutils.packet.api.PacketService
@@ -87,11 +88,13 @@ class BlockBallHytaleDependencyInjectionModule(
             module.getService<CachePlayerRepository<PlayerInformation>>()
         }
         module.addService<CachePlayerRepository<PlayerInformation>> {
-            val configSelectedPlayerDataRepository = ConfigSelectedRepositoryImpl<PlayerInformation>(
-                plugin,
+            val sqlConnectionService =
+                CommonSqlConnectionServiceImpl(plugin, plugin.dataFolder.toPath().resolve("BlockBall.sqlite"))
+            val configSelectedPlayerDataRepository = PlayerDataSqlRepositoryImpl<PlayerInformation>(
                 "BlockBall",
-                plugin.dataFolder.toPath().resolve("BlockBall.sqlite"),
-                object : TypeReference<PlayerInformation>() {}
+                0L,
+                object : TypeReference<PlayerInformation>() {},
+                sqlConnectionService
             )
             AutoSavePlayerDataRepositoryImpl(
                 1000 * 60L * plugin.config.getInt("database.autoSaveIntervalMinutes"),

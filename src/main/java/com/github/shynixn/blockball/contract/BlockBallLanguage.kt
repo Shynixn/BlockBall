@@ -6,8 +6,9 @@ import com.github.shynixn.shybossbar.contract.ShyBossBarLanguage
 import com.github.shynixn.mcutils.common.language.LanguageProvider
 import com.github.shynixn.shycommandsigns.contract.ShyCommandSignsLanguage
 import com.github.shynixn.shyparticles.contract.ShyParticlesLanguage
+import com.github.shynixn.shyguild.contract.ShyGuildLanguage
 
-interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBarLanguage, ShyCommandSignsLanguage, ShyParticlesLanguage {
+interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBarLanguage, ShyCommandSignsLanguage, ShyParticlesLanguage, ShyGuildLanguage {
   var gameAlreadyExistsMessage: LanguageItem
 
   var commandUsage: LanguageItem

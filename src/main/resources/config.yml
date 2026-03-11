@@ -30,6 +30,9 @@ commands:
   blockballparticles:
     aliases:
       - "soccerparticles"
+  blockballclub:
+    aliases:
+      - "soccerclub"
 
 ############################
 # Debug settings
@@ -126,3 +129,32 @@ leaderboard:
   enabled: true
   # The interval how often the leader board is refreshed from the currently persisted stats.
   intervalMinutes: 15
+  
+############################
+# Soccer clubs (PatreonOnly)
+############################  
+club:
+  # When a new player joins the server, after how many seconds are the clubs loaded.
+  joinDelaySeconds: 3
+  # Synchronize club data every x seconds. If you are using a server network, this ensures changes to clubs on one server are synchronized to the other servers. This feature requires MySQL.
+  synchronizeClubsSeconds: 300
+  # Maximum amount of clubs a player can be in at the same time.
+  maxJoinClubsPerPlayer: 3
+  # Maximum amount of clubs a player can create.
+  maxCreateClubsPerPlayer: 1
+  # BlackList of words that are not allowed in club names and other messages.
+  blackList:
+    - "nigger"
+    - "nigga"
+    - "fuck"
+    - "shit"
+  # Minimum length for club names.
+  clubNameMinLength: 3
+  # Maximum length for club names.
+  clubNameMaxLength: 16
+  # Minimum length for club display names. This contains colored characters and spaces.
+  clubDisplayNameMinLength: 3
+  # Maximum length for club display names. This contains colored characters and spaces.
+  clubDisplayNameMaxLength: 32
+  # Maximum amount of invites a player can send out at the same time.
+  clubMaxInvites: 5  

@@ -609,4 +609,172 @@ shyParticlesCoordinateValueMessage:
   text: "&0&l[&f&lBlockBall&0&l]&7 &cThe value %blockball_param_1% has to be a number with the following supported formats: 2, 2.0, -3.0, ~2.2 ~-2.3"
 shyParticlesWorldNotFoundMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 &cWorld %blockball_param_1% not found."  
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cWorld %blockball_param_1% not found."
+# All language key identifiers.
+shyGuildPlayerNotFoundMessage:
+  # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
+  # Please notice that some messages do only support chat.
+  type: "CHAT"
+  # The primary text to be sent.
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found."
+  # Only available for type "TITLE". Adds a subTitle.
+  subTitle: ""
+  # Only available for type: "TITLE". Adds a fade in effect.
+  fadeInTicks: 20
+  # Only available for type: "TITLE". Adds a stay effect.
+  stayTicks: 60
+  # Only available for type: "TITLE". Adds a fade out effect.
+  fadeOutTicks: 20
+shyGuildNoPermissionCommand:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command."
+shyGuildReloadCommandHint:
+  type: "CHAT"
+  text: "Reloads all guilds and configuration."
+shyGuildReloadMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Reloaded all guilds and configuration."
+shyGuildCommonErrorMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details."
+shyGuildCommandSenderHasToBePlayer:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player if you do not specify the optional player argument."
+shyGuildCommandUsage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Use /shyguild help to see more info about the plugin."
+shyGuildCommandDescription:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 All commands for the ShyGuild plugin."
+shyGuildTemplateListCommandHint:
+  type: "CHAT"
+  text: "Displays all loaded guild templates."
+shyGuildTemplateListMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Templates:"
+shyGuildWordNotAllowedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c The text contains invalid words, is too short or too long. Please make sure to follow the rules and try again."
+shyGuildCreateCommandHint:
+  type: "CHAT"
+  text: "Creates a new guild with the given name based on the given template."
+shyGuildCreateSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully created guild %blockball_param_1%."
+shyGuildAlreadyExistsMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c A guild with the name %blockball_param_1% already exists."
+shyGuildTemplateNotFoundMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Guild template %blockball_param_1% not found."
+shyGuildNoPermissionTemplateMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c You do not have permission to use guild template %blockball_param_1%."
+shyGuildGuildNotFoundMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Guild %blockball_param_1% not found."
+shyGuildRoleNotFoundMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Role %blockball_param_1% not found in guild %blockball_param_2%."
+shyGuildNoPermissionRoleMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c You do not have permission to assign role %blockball_param_1%."
+shyGuildAddRoleCommandHint:
+  type: "CHAT"
+  text: "Assigns the given role to the given player in the given guild."
+shyGuildRemoveRoleCommandHint:
+  type: "CHAT"
+  text: "Removes the given role from the given player in the given guild."
+shyGuildListRolesCommandHint:
+  type: "CHAT"
+  text: "Lists all roles of the given guild or the roles of a single player in the given guild."
+shyGuildPlayerNotAMemberMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% is not a member of this guild."
+shyGuildAssignRoleSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully assigned role %blockball_param_1% to player %blockball_param_2%."
+shyGuildRemoveRoleSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully removed role %blockball_param_1% from player %blockball_param_2%."
+shyGuildRoleListAllMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 All roles of this guild:"
+shyGuildRoleListPlayerMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 All roles of player %blockball_param_1%:"
+shyGuildDeleteCommandHint:
+  type: "CHAT"
+  text: "Deletes the given guild."
+shyGuildDeleteSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully deleted guild %blockball_param_1%."
+shyGuildMemberAddCommandHint:
+  type: "CHAT"
+  text: "Adds a player directly to the given guild. Should only be used for administrative purposes."
+shyGuildMemberAddSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully added player %blockball_param_1% to guild %blockball_param_2%."
+shyGuildMemberInviteCommandHint:
+  type: "CHAT"
+  text: "Invites a player to the given guild."
+shyGuildMemberInviteSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully invited player %blockball_param_1% to guild %blockball_param_2%."
+shyGuildMemberInviteReceivedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 You have been invited to join guild %blockball_param_1% by %blockball_param_2%. Use /shyguild member accept %blockball_param_1% to join."
+shyGuildMemberRemoveCommandHint:
+  type: "CHAT"
+  text: "Removes a player from the given guild."
+shyGuildMemberRemoveSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully removed player %blockball_param_1% from guild %blockball_param_2%."
+shyGuildMemberListCommandHint:
+  type: "CHAT"
+  text: "Lists all members of the given guild."
+shyGuildMemberListMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Members of guild %blockball_param_1%:"
+shyGuildMemberAlreadyInGuildMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% is already a member of guild %blockball_param_2%."
+shyGuildMemberMaxGuildsReachedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% has already reached the maximum number of guilds they can join."
+shyGuildMemberInviteFailedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Failed to invite player %blockball_param_1%. Please wait a few minutes until you can send invites again."
+shyGuildMemberAcceptCommandHint:
+  type: "CHAT"
+  text: "Accepts a pending guild invite."
+shyGuildMemberAcceptSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully accepted the invite and joined guild %blockball_param_1%."
+shyGuildMemberAcceptNoInviteMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c You do not have a pending invite for guild %blockball_param_1%."
+shyGuildMemberGuildFullMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Failed to join guild %blockball_param_1% because it is already full."
+shyGuildCreateMaxGuildsReachedMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c You have already reached the maximum number of guilds you can create."
+shyGuildLeaveCommandHint:
+  type: "CHAT"
+  text: "Leaves the given guild."
+shyGuildLeaveSuccessMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully left guild %blockball_param_1%."
+shyGuildCannotLeaveOwnerGuildMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c You cannot leave guild %blockball_param_1% because you are the only owner. Please assign the owner role to another player and try again."
+shyGuildThereCannotBeNoOwnerMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7&c There has to be at least one owner in guild %blockball_param_1%. Please assign the owner role to another player before you can remove it from yourself."
+shyGuildListGuildsCommandHint:
+  type: "CHAT"
+  text: "Lists all guilds you are a member of."
+shyGuildListGuildsMessage:
+  type: "CHAT"
+  text: "&0&l[&f&lBlockBall&0&l]&7 You are a member of the following guilds:"

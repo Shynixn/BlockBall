@@ -14,8 +14,11 @@ import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
 import com.github.shynixn.mcutils.common.language.reloadTranslation
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderServiceImpl
+import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
+import com.github.shynixn.mcutils.database.api.SqlConnectionService
+import com.github.shynixn.mcutils.database.impl.CommonSqlConnectionServiceImpl
 import com.github.shynixn.mcutils.packet.api.PacketInType
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.worldguard.WorldGuardServiceImpl
@@ -31,6 +34,11 @@ import com.github.shynixn.shycommandsigns.contract.ShyCommandSignsLanguage
 import com.github.shynixn.shycommandsigns.entity.ShyCommandSignSettings
 import com.github.shynixn.shycommandsigns.impl.commandexecutor.ShyCommandSignCommandExecutor
 import com.github.shynixn.shycommandsigns.impl.listener.ShyCommandSignListener
+import com.github.shynixn.shyguild.contract.GuildMetaSqlRepository
+import com.github.shynixn.shyguild.contract.GuildService
+import com.github.shynixn.shyguild.contract.ShyGuildLanguage
+import com.github.shynixn.shyguild.entity.GuildTemplate
+import com.github.shynixn.shyguild.entity.ShyGuildSettings
 import com.github.shynixn.shyparticles.ShyParticlesDependencyInjectionModule
 import com.github.shynixn.shyparticles.contract.ParticleEffectService
 import com.github.shynixn.shyparticles.contract.ShyParticlesLanguage
@@ -63,7 +71,8 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
     private var scoreboardModule: DependencyInjectionModule? = null
     private var bossBarModule: DependencyInjectionModule? = null
     private var signModule: DependencyInjectionModule? = null
-    private var particlesModule : DependencyInjectionModule? = null
+    private var particlesModule: DependencyInjectionModule? = null
+    private var guildModule: DependencyInjectionModule? = null
     private var immediateDisable = false
 
     companion object {
@@ -153,11 +162,19 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
 
         // Module
         val placeHolderService = PlaceHolderServiceImpl(this, Bukkit.getPluginManager())
+        val sqlConnectionService = CommonSqlConnectionServiceImpl(this, dataFolder.toPath().resolve("BlockBall.sqlite"))
+        this.guildModule = loadShyGuildModule(language, placeHolderService, sqlConnectionService)
         this.scoreboardModule = loadShyScoreboardModule(language, placeHolderService)
         this.bossBarModule = loadShyBossBarModule(language, placeHolderService)
         this.signModule = loadShyCommandSignsModule(language, placeHolderService)
         this.particlesModule = loadShyParticlesModule(language, placeHolderService)
-        this.module = BlockBallDependencyInjectionModule(this, language, placeHolderService, particlesModule!!).build()
+        this.module = BlockBallDependencyInjectionModule(
+            this,
+            language,
+            placeHolderService,
+            particlesModule!!,
+            sqlConnectionService
+        ).build()
 
         // Connect to database
         try {
@@ -206,8 +223,10 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
             // Enable stats
             module!!.getService<StatsService>().register()
             val playerDataRepository = module!!.getService<PlayerDataRepository<PlayerInformation>>()
+            val guildService = guildModule!!.getService<GuildService>()
             for (player in Bukkit.getOnlinePlayers()) {
                 playerDataRepository.getByPlayer(player)
+                guildService.getGuilds(player)
             }
 
             Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
@@ -423,10 +442,10 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
             s.followPermission = "blockball.shyparticles.follow"
             s.followOtherPermission = "blockball.shyparticles.followother"
             s.stopFollowPermission = "blockball.shyparticles.stopfollow"
-            s.stopFollowOtherPermission ="blockball.shyparticles.stopfollowother"
+            s.stopFollowOtherPermission = "blockball.shyparticles.stopfollowother"
             s.effectStartPermission = "blockball.shyparticles.effect.start."
-            s.effectVisiblePermission =  "blockball.shyparticles.effect.visible."
-            s.defaultParticles =  listOf(
+            s.effectVisiblePermission = "blockball.shyparticles.effect.visible."
+            s.defaultParticles = listOf(
                 "effects/blue_sphere.yml" to "blue_sphere.yml",
                 "effects/yellow_star.yml" to "yellow_star.yml",
                 "effects/box_tower.yml" to "box_tower.yml",
@@ -459,6 +478,95 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
         val effectService = module.getService<ParticleEffectService>()
         launch {
             effectService.reload()
+        }
+        return module
+    }
+
+    private fun loadShyGuildModule(
+        language: ShyGuildLanguage,
+        placeHolderService: PlaceHolderService,
+        sqlConnectionService: SqlConnectionService
+    ): DependencyInjectionModule {
+        val settings = ShyGuildSettings { settings ->
+            settings.baseCommand = "blockballclub"
+            settings.commandAliases = config.getStringList("commands.blockballclub.aliases")
+            settings.guildArgument = "club"
+            settings.maxJoinGuildsPerPlayer = 1
+            settings.maxJoinGuildsPerPlayer = 3
+            settings.maxCreateGuildsPerPlayer = config.getInt("club.maxCreateClubsPerPlayer")
+            settings.maxJoinGuildsPerPlayer = config.getInt("club.maxJoinClubsPerPlayer")
+            settings.joinDelaySeconds = config.getInt("club.joinDelaySeconds")
+            settings.synchronizeGuildsSeconds = config.getInt("club.synchronizeClubsSeconds")
+            settings.blackList = config.getStringList("club.blackList")
+            settings.guildMaxInvites = config.getInt("club.clubMaxInvites")
+            settings.guildNameMinLength = config.getInt("club.clubNameMinLength")
+            settings.guildNameMaxLength = config.getInt("club.clubNameMaxLength")
+            settings.guildDisplayNameMinLength = config.getInt("club.clubDisplayNameMinLength")
+            settings.guildDisplayNameMaxLength = config.getInt("club.clubDisplayNameMaxLength")
+            settings.defaultTemplates = listOf(
+                "club/blockball_club.yml" to "blockball_club.yml"
+            )
+            settings.commandPermission = "blockballclub.command"
+            settings.createCmdPermission = "blockball.club.cmd.create"
+            settings.templateUsePermission = "blockball.club.template.<template>"
+            settings.deleteCmdPermission = "blockball.club.cmd.delete"
+            settings.guildDeletePermission = "blockball.club.<guild>.delete"
+            settings.reloadCmdPermission = "blockball.club.cmd.reload"
+            settings.templateListCmdPermission = "blockball.club.cmd.template.list"
+            settings.addRoleCmdPermission = "blockball.club.cmd.role.add"
+            settings.guildAddRolePermission = "blockball.club.<guild>.role.add.<role>"
+            settings.removeRoleCmdPermission = "blockball.club.cmd.role.remove"
+            settings.guildRemoveRolePermission = "blockball.club.<guild>.role.remove.<role>"
+            settings.listRoleCmdPermission = "blockball.club.cmd.role.list"
+            settings.guildListRolePermission = "blockball.club.<guild>.role.list"
+            settings.addMemberPermission = "blockball.club.cmd.member.add"
+            settings.guildMemberAddPermission = "blockball.club.<guild>.member.add"
+            settings.removeMemberPermission = "blockball.club.cmd.member.remove"
+            settings.guildMemberRemovePermission = "blockball.club.<guild>.member.remove"
+            settings.listMembersPermission = "blockball.club.cmd.member.list"
+            settings.guildMemberListPermission = "blockball.club.<guild>.member.list"
+            settings.inviteMemberPermission = "blockball.club.cmd.member.invite"
+            settings.guildMemberInvitePermission = "blockball.club.<guild>.member.invite"
+            settings.acceptMemberPermission = "blockball.club.cmd.member.accept"
+            settings.leaveMemberPermission = "blockball.club.cmd.member.leave"
+            settings.guildMemberLeavePermission = "blockball.club.<guild>.member.leave"
+            settings.guildListPermission = "blockball.club.cmd.list"
+
+        }
+        settings.reload()
+        val module =
+            com.github.shynixn.shyguild.ShyGuildDependencyInjectionModule(
+                this,
+                this,
+                settings,
+                language,
+                placeHolderService,
+                sqlConnectionService
+            ).build()
+        val guildService = module.getService<GuildService>()
+
+        // Register PlaceHolders
+        com.github.shynixn.shyguild.enumeration.PlaceHolder.registerAll(
+            this,
+            placeHolderService,
+            guildService
+        )
+
+        // Register Listener
+        Bukkit.getPluginManager()
+            .registerEvents(module.getService<com.github.shynixn.shyguild.impl.listener.ShyGuildListener>(), this)
+
+        // Register CommandExecutor
+        module.getService<com.github.shynixn.shyguild.impl.commandexecutor.ShyGuildCommandExecutor>()
+
+        val templateService = module.getService<CacheRepository<GuildTemplate>>()
+        val playerDataRepository =
+            module.getService<PlayerDataRepository<com.github.shynixn.shyguild.entity.PlayerInformation>>()
+        val guildMetaRepository = module.getService<GuildMetaSqlRepository>()
+        launch {
+            templateService.getAll()
+            playerDataRepository.createIfNotExist()
+            guildMetaRepository.createIfNotExist()
         }
         return module
     }
