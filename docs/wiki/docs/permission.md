@@ -26,6 +26,21 @@ For most servers, these permissions provide the best balance of functionality an
 - blockball.shyscoreboard.scoreboard.*
 - blockball.shybossbar.bossbar.*
 - blockball.shyparticles.effect.visible.*
+
+# Club system (if clubs are enabled on your server)
+- blockball.shyguild.command
+- blockball.shyguild.cmd.create
+- blockball.shyguild.cmd.delete
+- blockball.shyguild.cmd.guild.list
+- blockball.shyguild.cmd.role.add
+- blockball.shyguild.cmd.role.remove
+- blockball.shyguild.cmd.role.list
+- blockball.shyguild.cmd.member.invite
+- blockball.shyguild.cmd.member.accept
+- blockball.shyguild.cmd.member.leave
+- blockball.shyguild.cmd.member.remove
+- blockball.shyguild.cmd.member.list
+- blockball.shyguild.template.blockball_club
 ```
 
 ### Admin Permissions
@@ -33,6 +48,11 @@ For most servers, these permissions provide the best balance of functionality an
 # Arena management (staff only)
 - blockball.edit
 - blockball.referee.join
+
+# Club administration (staff only)
+- blockball.shyguild.cmd.member.add
+- blockball.shyguild.cmd.template.list
+- blockball.shyguild.cmd.reload
 
 # System administration (staff only)
 - blockball.shyscoreboard.command
@@ -208,6 +228,106 @@ Control access to BlockBall's particle effects:
 
 ---
 
+## ⚽ Club Permissions
+
+BlockBall includes an integrated club system (powered by ShyGuild internally). Club permissions are split into two layers — see the [Clubs guide](club.md) for full setup instructions.
+
+!!! info "LuckPerms Required"
+    Club-specific guild permissions (e.g. `blockball.shyguild.guild.<club>.delete`) are managed **automatically by LuckPerms** through role templates. You only need to assign the command-level permissions manually.
+
+### Club Command Permissions
+
+These control which commands a player can execute. Assign them to your player/staff groups.
+
+| Permission | Level | Description |
+|------------|-------|-------------|
+| `blockball.shyguild.command` | **User** | Access the `/blockballclub` command base |
+| `blockball.shyguild.cmd.create` | **User** | Create a new club |
+| `blockball.shyguild.cmd.delete` | **User** | Delete a club |
+| `blockball.shyguild.cmd.guild.list` | **User** | List all clubs the player has joined |
+| `blockball.shyguild.cmd.role.add` | **User** | Assign a role to a club member |
+| `blockball.shyguild.cmd.role.remove` | **User** | Remove a role from a club member |
+| `blockball.shyguild.cmd.role.list` | **User** | List roles in a club or a player's roles |
+| `blockball.shyguild.cmd.member.invite` | **User** | Invite a player to a club |
+| `blockball.shyguild.cmd.member.accept` | **User** | Accept a pending club invite |
+| `blockball.shyguild.cmd.member.leave` | **User** | Leave a club |
+| `blockball.shyguild.cmd.member.remove` | **User** | Remove a member from a club |
+| `blockball.shyguild.cmd.member.list` | **User** | List all members of a club |
+| `blockball.shyguild.template.blockball_club` | **User** | Use the `blockball_club` template when creating a club |
+| `blockball.shyguild.cmd.member.add` | **Admin** | Add a player directly to a club (bypasses invite) |
+| `blockball.shyguild.cmd.template.list` | **Admin** | List all loaded club templates |
+| `blockball.shyguild.cmd.reload` | **Admin** | Reload club configurations |
+
+### Club-Specific Guild Permissions
+
+These permissions are **per-club** and are automatically granted and revoked by LuckPerms when a player's role changes within that club. Do not assign these manually.
+
+| Permission | Granted To | Description |
+|------------|------------|-------------|
+| `blockball.shyguild.guild.<club>.delete` | `owner` | Delete the club |
+| `blockball.shyguild.guild.<club>.role.add.<role>` | `owner`, `coach` | Assign a specific role in the club |
+| `blockball.shyguild.guild.<club>.role.remove.<role>` | `owner`, `coach` | Remove a specific role in the club |
+| `blockball.shyguild.guild.<club>.role.list` | `owner`, `coach`, `captain`, `player` | List roles in the club |
+| `blockball.shyguild.guild.<club>.member.add` | — (admin only) | Add members directly to the club |
+| `blockball.shyguild.guild.<club>.member.remove` | `owner`, `coach` | Remove a member from the club |
+| `blockball.shyguild.guild.<club>.member.list` | `owner`, `coach`, `captain`, `player` | View the club roster |
+| `blockball.shyguild.guild.<club>.member.invite` | `owner`, `coach`, `captain` | Invite players to the club |
+| `blockball.shyguild.guild.<club>.member.leave` | `owner`, `coach`, `captain`, `player` | Leave the club |
+
+!!! tip "How the two layers work together"
+    A player needs **both** a command permission **and** the matching club-specific permission for most actions. For example, to delete the club `red-falcons` a player needs `blockball.shyguild.cmd.delete` (assigned to their group) **and** `blockball.shyguild.guild.red-falcons.delete` (assigned automatically by LuckPerms when they hold the `owner` role in that club).
+
+### Club Permission Scenarios
+
+**Scenario: Server with player-created clubs**
+```yaml
+default:
+  - blockball.shyguild.command
+  - blockball.shyguild.cmd.create
+  - blockball.shyguild.cmd.delete
+  - blockball.shyguild.cmd.guild.list
+  - blockball.shyguild.cmd.role.add
+  - blockball.shyguild.cmd.role.remove
+  - blockball.shyguild.cmd.role.list
+  - blockball.shyguild.cmd.member.invite
+  - blockball.shyguild.cmd.member.accept
+  - blockball.shyguild.cmd.member.leave
+  - blockball.shyguild.cmd.member.remove
+  - blockball.shyguild.cmd.member.list
+  - blockball.shyguild.template.blockball_club
+```
+
+**Scenario: Admin-managed clubs (staff sets up clubs, hands off ownership)**
+```yaml
+default:
+  # Players can only accept invites, view, and leave
+  - blockball.shyguild.command
+  - blockball.shyguild.cmd.guild.list
+  - blockball.shyguild.cmd.member.accept
+  - blockball.shyguild.cmd.member.leave
+  - blockball.shyguild.cmd.member.list
+  - blockball.shyguild.cmd.role.list
+
+staff:
+  # Staff can create clubs and add members directly
+  - blockball.shyguild.command
+  - blockball.shyguild.cmd.create
+  - blockball.shyguild.cmd.delete
+  - blockball.shyguild.cmd.guild.list
+  - blockball.shyguild.cmd.role.add
+  - blockball.shyguild.cmd.role.remove
+  - blockball.shyguild.cmd.role.list
+  - blockball.shyguild.cmd.member.add
+  - blockball.shyguild.cmd.member.remove
+  - blockball.shyguild.cmd.member.list
+  - blockball.shyguild.cmd.member.invite
+  - blockball.shyguild.cmd.member.accept
+  - blockball.shyguild.cmd.member.leave
+  - blockball.shyguild.cmd.template.list
+  - blockball.shyguild.cmd.reload
+  - blockball.shyguild.template.blockball_club
+```
+
 ## 🎮 Game-Specific Permission Scenarios
 
 ### Scenario 1: Public Server with Multiple Arenas
@@ -269,6 +389,8 @@ advanced:
 | Can't join arenas | Missing join permissions | Add `blockball.join.*` or specific arena |
 | Scoreboards not showing | Missing display permissions | Add scoreboard permissions |
 | Admin commands not working | Missing admin permissions | Add `blockball.edit` or specific admin perms |
+| Can't use `/blockballclub` | Missing club base permission | Add `blockball.shyguild.command` |
+| Club role permissions not applied | LuckPerms not installed | Install LuckPerms and reload |
 
 ---
 
