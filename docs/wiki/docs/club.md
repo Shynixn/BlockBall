@@ -286,6 +286,9 @@ roles:
       - "blockball.shyguild.guild.%blockball_guild_name%.member.list"
       - "blockball.shyguild.guild.%blockball_guild_name%.invite"
       - "blockball.shyguild.guild.%blockball_guild_name%.leave"
+      # Club arena access — add one entry per club arena
+      - "blockball.club.join.<arena>"
+      - "blockball.club.start.<arena>"
     denyPermissions: []
 
   # Coaches can manage captains and players, but cannot delete the club or assign owners
@@ -300,6 +303,9 @@ roles:
       - "blockball.shyguild.guild.%blockball_guild_name%.member.list"
       - "blockball.shyguild.guild.%blockball_guild_name%.invite"
       - "blockball.shyguild.guild.%blockball_guild_name%.leave"
+      # Club arena access — add one entry per club arena
+      - "blockball.club.join.<arena>"
+      - "blockball.club.start.<arena>"
     denyPermissions: []
 
   # Captains can invite new players and view the roster, but cannot manage roles
@@ -309,6 +315,9 @@ roles:
       - "blockball.shyguild.guild.%blockball_guild_name%.member.list"
       - "blockball.shyguild.guild.%blockball_guild_name%.invite"
       - "blockball.shyguild.guild.%blockball_guild_name%.leave"
+      # Club arena access — add one entry per club arena
+      - "blockball.club.join.<arena>"
+      - "blockball.club.start.<arena>"
     denyPermissions: []
 
   # Regular players can only view the roster and leave
@@ -317,6 +326,8 @@ roles:
       - "blockball.shyguild.guild.%blockball_guild_name%.role.list"
       - "blockball.shyguild.guild.%blockball_guild_name%.member.list"
       - "blockball.shyguild.guild.%blockball_guild_name%.leave"
+      # Club arena access — players can join but cannot start a club game
+      - "blockball.club.join.<arena>"
     denyPermissions: []
 ```
 
@@ -360,3 +371,6 @@ All commands use `/blockballclub` (alias: `/blockballclub`). The base permission
 | Template not found | `blockball_club.yml` missing | Ensure the file exists in the `clubs/` folder and run `/blockballclub reload` |
 | Owner can't delete club | Missing guild-level permission | Ensure LuckPerms applied `blockball.shyguild.guild.<club>.delete` — try `/blockballclub reload` |
 | Can't leave as owner | Only owner in club | Assign `owner` role to another member first, then leave |
+| Can't join a club arena | Missing `blockball.club.join.<arena>` | Add the permission to the appropriate roles in `blockball_club.yml` and reload |
+| Can't start a club game | Missing `blockball.club.start.<arena>` | Add the permission to `owner`, `coach`, and `captain` roles in `blockball_club.yml` and reload |
+| Non-club players can enter club arenas | `blockball.join.<arena>` granted to default group | Remove `blockball.join.<arena>` from the default group; club access should come from the template only |

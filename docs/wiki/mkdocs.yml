@@ -11,7 +11,9 @@ nav:
       - Scoreboards, Signs: sign.md
       - Bedrock: bedrock.md
       - Referee: referee.md
-      - Clubs: club.md
+      - Clubs:
+          - Managing Clubs: club.md
+          - Club vs Club Games: club-games.md
       - Commands: commands.md
       - PlaceHolders: placeholders.md
       - Website and Cloud: cloud.md  
