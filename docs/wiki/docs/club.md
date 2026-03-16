@@ -287,8 +287,8 @@ roles:
       - "blockball.shyguild.guild.%blockball_guild_name%.role.list"
       - "blockball.shyguild.guild.%blockball_guild_name%.member.remove"
       - "blockball.shyguild.guild.%blockball_guild_name%.member.list"
-      - "blockball.shyguild.guild.%blockball_guild_name%.invite"
-      - "blockball.shyguild.guild.%blockball_guild_name%.leave"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.invite"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.leave"
       # Club arena access — add one entry per club arena
       - "blockball.club.join.<arena>"
       - "blockball.club.start.<arena>"
@@ -304,8 +304,8 @@ roles:
       - "blockball.shyguild.guild.%blockball_guild_name%.role.list"
       - "blockball.shyguild.guild.%blockball_guild_name%.member.remove"
       - "blockball.shyguild.guild.%blockball_guild_name%.member.list"
-      - "blockball.shyguild.guild.%blockball_guild_name%.invite"
-      - "blockball.shyguild.guild.%blockball_guild_name%.leave"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.invite"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.leave"
       # Club arena access — add one entry per club arena
       - "blockball.club.join.<arena>"
       - "blockball.club.start.<arena>"
@@ -316,8 +316,8 @@ roles:
     allowPermissions:
       - "blockball.shyguild.guild.%blockball_guild_name%.role.list"
       - "blockball.shyguild.guild.%blockball_guild_name%.member.list"
-      - "blockball.shyguild.guild.%blockball_guild_name%.invite"
-      - "blockball.shyguild.guild.%blockball_guild_name%.leave"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.invite"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.leave"
       # Club arena access — add one entry per club arena
       - "blockball.club.join.<arena>"
       - "blockball.club.start.<arena>"
@@ -328,7 +328,7 @@ roles:
     allowPermissions:
       - "blockball.shyguild.guild.%blockball_guild_name%.role.list"
       - "blockball.shyguild.guild.%blockball_guild_name%.member.list"
-      - "blockball.shyguild.guild.%blockball_guild_name%.leave"
+      - "blockball.shyguild.guild.%blockball_guild_name%.member.leave"
       # Club arena access — players can join but cannot start a club game
       - "blockball.club.join.<arena>"
     denyPermissions: []

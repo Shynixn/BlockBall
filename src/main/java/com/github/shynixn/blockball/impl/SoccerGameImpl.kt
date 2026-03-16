@@ -213,18 +213,18 @@ abstract class SoccerGameImpl(
         }
 
         val result = if (joiningTeam == Team.RED && redTeam.size < arena.meta.redTeamMeta.maxAmount) {
-            storeTemporaryPlayerData(player, joiningTeam)
             setPlayerToArena(player, joiningTeam)
+            storeTemporaryPlayerData(player, joiningTeam)
             executeCommandsWithPlaceHolder(setOf(player), arena.meta.redTeamMeta.joinCommands)
             JoinResult.SUCCESS_RED
         } else if (joiningTeam == Team.BLUE && blueTeam.size < arena.meta.blueTeamMeta.maxAmount) {
-            storeTemporaryPlayerData(player, joiningTeam)
             setPlayerToArena(player, joiningTeam)
+            storeTemporaryPlayerData(player, joiningTeam)
             executeCommandsWithPlaceHolder(setOf(player), arena.meta.blueTeamMeta.joinCommands)
             JoinResult.SUCCESS_BLUE
         } else if (joiningTeam == Team.REFEREE && refereeTeam.size < arena.meta.refereeTeamMeta.maxAmount) {
-            storeTemporaryPlayerData(player, joiningTeam)
             setPlayerToArena(player, joiningTeam)
+            storeTemporaryPlayerData(player, joiningTeam)
             executeCommandsWithPlaceHolder(setOf(player), arena.meta.refereeTeamMeta.joinCommands)
             JoinResult.SUCCESS_REFEREE
         } else {

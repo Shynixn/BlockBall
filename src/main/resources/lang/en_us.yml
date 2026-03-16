@@ -657,10 +657,10 @@ shyGuildNoPermissionCommand:
   text: "&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command."
 shyGuildReloadCommandHint:
   type: "CHAT"
-  text: "Reloads all guilds and configuration."
+  text: "Reloads all clubs and configuration."
 shyGuildReloadMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Reloaded all guilds and configuration."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Reloaded all clubs and configuration."
 shyGuildCommonErrorMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details."
@@ -675,7 +675,7 @@ shyGuildCommandDescription:
   text: "&0&l[&f&lBlockBall&0&l]&7 All commands for the BlockBallClub module."
 shyGuildTemplateListCommandHint:
   type: "CHAT"
-  text: "Displays all loaded guild templates."
+  text: "Displays all loaded club templates."
 shyGuildTemplateListMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 Templates:"
@@ -684,40 +684,40 @@ shyGuildWordNotAllowedMessage:
   text: "&0&l[&f&lBlockBall&0&l]&7&c The text contains invalid words, is too short or too long. Please make sure to follow the rules and try again."
 shyGuildCreateCommandHint:
   type: "CHAT"
-  text: "Creates a new guild with the given name based on the given template."
+  text: "Creates a new club with the given name based on the given template."
 shyGuildCreateSuccessMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully created guild %blockball_param_1%."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully created club %blockball_param_1%."
 shyGuildAlreadyExistsMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c A guild with the name %blockball_param_1% already exists."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c A club with the name %blockball_param_1% already exists."
 shyGuildTemplateNotFoundMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c Guild template %blockball_param_1% not found."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Club template %blockball_param_1% not found."
 shyGuildNoPermissionTemplateMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c You do not have permission to use guild template %blockball_param_1%."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c You do not have permission to use club template %blockball_param_1%."
 shyGuildGuildNotFoundMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c Guild %blockball_param_1% not found."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Club %blockball_param_1% not found."
 shyGuildRoleNotFoundMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c Role %blockball_param_1% not found in guild %blockball_param_2%."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Role %blockball_param_1% not found in club %blockball_param_2%."
 shyGuildNoPermissionRoleMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7&c You do not have permission to assign role %blockball_param_1%."
 shyGuildAddRoleCommandHint:
   type: "CHAT"
-  text: "Assigns the given role to the given player in the given guild."
+  text: "Assigns the given role to the given player in the given club."
 shyGuildRemoveRoleCommandHint:
   type: "CHAT"
-  text: "Removes the given role from the given player in the given guild."
+  text: "Removes the given role from the given player in the given club."
 shyGuildListRolesCommandHint:
   type: "CHAT"
-  text: "Lists all roles of the given guild or the roles of a single player in the given guild."
+  text: "Lists all roles of the given club or the roles of a single player in the given club."
 shyGuildPlayerNotAMemberMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% is not a member of this guild."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% is not a member of this club."
 shyGuildAssignRoleSuccessMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 Successfully assigned role %blockball_param_1% to player %blockball_param_2%."
@@ -726,82 +726,82 @@ shyGuildRemoveRoleSuccessMessage:
   text: "&0&l[&f&lBlockBall&0&l]&7 Successfully removed role %blockball_param_1% from player %blockball_param_2%."
 shyGuildRoleListAllMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 All roles of this guild:"
+  text: "&0&l[&f&lBlockBall&0&l]&7 All roles of this club:"
 shyGuildRoleListPlayerMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 All roles of player %blockball_param_1%:"
 shyGuildDeleteCommandHint:
   type: "CHAT"
-  text: "Deletes the given guild."
+  text: "Deletes the given club."
 shyGuildDeleteSuccessMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully deleted guild %blockball_param_1%."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully deleted club %blockball_param_1%."
 shyGuildMemberAddCommandHint:
   type: "CHAT"
-  text: "Adds a player directly to the given guild. Should only be used for administrative purposes."
+  text: "Adds a player directly to the given club. Should only be used for administrative purposes."
 shyGuildMemberAddSuccessMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully added player %blockball_param_1% to guild %blockball_param_2%."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully added player %blockball_param_1% to club %blockball_param_2%."
 shyGuildMemberInviteCommandHint:
   type: "CHAT"
-  text: "Invites a player to the given guild."
+  text: "Invites a player to the given club."
 shyGuildMemberInviteSuccessMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully invited player %blockball_param_1% to guild %blockball_param_2%."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully invited player %blockball_param_1% to club %blockball_param_2%."
 shyGuildMemberInviteReceivedMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 You have been invited to join guild %blockball_param_1% by %blockball_param_2%. Use /blockballclub member accept %blockball_param_1% to join."
+  text: "&0&l[&f&lBlockBall&0&l]&7 You have been invited to join club %blockball_param_1% by %blockball_param_2%. Use /blockballclub member accept %blockball_param_1% to join."
 shyGuildMemberRemoveCommandHint:
   type: "CHAT"
-  text: "Removes a player from the given guild."
+  text: "Removes a player from the given club."
 shyGuildMemberRemoveSuccessMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully removed player %blockball_param_1% from guild %blockball_param_2%."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully removed player %blockball_param_1% from club %blockball_param_2%."
 shyGuildMemberListCommandHint:
   type: "CHAT"
-  text: "Lists all members of the given guild."
+  text: "Lists all members of the given club."
 shyGuildMemberListMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Members of guild %blockball_param_1%:"
+  text: "&0&l[&f&lBlockBall&0&l]&7 Members of club %blockball_param_1%:"
 shyGuildMemberAlreadyInGuildMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% is already a member of guild %blockball_param_2%."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% is already a member of club %blockball_param_2%."
 shyGuildMemberMaxGuildsReachedMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% has already reached the maximum number of guilds they can join."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Player %blockball_param_1% has already reached the maximum number of clubs they can join."
 shyGuildMemberInviteFailedMessage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7&c Failed to invite player %blockball_param_1%. Please wait a few minutes until you can send invites again."
 shyGuildMemberAcceptCommandHint:
   type: "CHAT"
-  text: "Accepts a pending guild invite."
+  text: "Accepts a pending club invite."
 shyGuildMemberAcceptSuccessMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully accepted the invite and joined guild %blockball_param_1%."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully accepted the invite and joined club %blockball_param_1%."
 shyGuildMemberAcceptNoInviteMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c You do not have a pending invite for guild %blockball_param_1%."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c You do not have a pending invite for club %blockball_param_1%."
 shyGuildMemberGuildFullMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c Failed to join guild %blockball_param_1% because it is already full."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c Failed to join club %blockball_param_1% because it is already full."
 shyGuildCreateMaxGuildsReachedMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c You have already reached the maximum number of guilds you can create."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c You have already reached the maximum number of clubs you can create."
 shyGuildLeaveCommandHint:
   type: "CHAT"
-  text: "Leaves the given guild."
+  text: "Leaves the given club."
 shyGuildLeaveSuccessMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully left guild %blockball_param_1%."
+  text: "&0&l[&f&lBlockBall&0&l]&7 Successfully left club %blockball_param_1%."
 shyGuildCannotLeaveOwnerGuildMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c You cannot leave guild %blockball_param_1% because you are the only owner. Please assign the owner role to another player and try again."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c You cannot leave club %blockball_param_1% because you are the only owner. Please assign the owner role to another player and try again."
 shyGuildThereCannotBeNoOwnerMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7&c There has to be at least one owner in guild %blockball_param_1%. Please assign the owner role to another player before you can remove it from yourself."
+  text: "&0&l[&f&lBlockBall&0&l]&7&c There has to be at least one owner in club %blockball_param_1%. Please assign the owner role to another player before you can remove it from yourself."
 shyGuildListGuildsCommandHint:
   type: "CHAT"
-  text: "Lists all guilds you are a member of."
+  text: "Lists all clubs you are a member of."
 shyGuildListGuildsMessage:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 You are a member of the following guilds:"
+  text: "&0&l[&f&lBlockBall&0&l]&7 You are a member of the following clubs:"

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.37.0"
+version = "7.38.0"
 
 repositories {
     mavenLocal()
@@ -106,6 +106,7 @@ tasks.register("relocateHytalePluginJar", ShadowJar::class.java) {
     relocate("com.github.shynixn.shybossbar", "com.github.shynixn.blockball.lib.com.github.shynixn.shybossbar")
     relocate("com.github.shynixn.shycommandsigns", "com.github.shynixn.blockball.lib.com.github.shynixn.shycommandsigns")
     relocate("com.github.shynixn.shyparticles", "com.github.shynixn.blockball.lib.com.github.shynixn.shyparticles")
+    relocate("com.github.shynixn.shyguild", "com.github.shynixn.blockball.lib.com.github.shynixn.shyguild")
     relocate("com.github.shynixn.fasterxml", "com.github.shynixn.blockball.lib.com.github.shynixn.fasterxml")
     relocate("org.bukkit", "com.github.shynixn.blockball.lib.org.bukkit")
     exclude("plugin.yml")
@@ -149,6 +150,7 @@ tasks.register("pluginJarHytaleLatest", ShadowJar::class.java) {
     exclude("com/github/shynixn/shybossbar/**")
     exclude("com/github/shynixn/shycommandsigns/**")
     exclude("com/github/shynixn/shyparticles/**")
+    exclude("com/github/shynixn/shyguild/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("kotlin/**")
@@ -195,7 +197,7 @@ tasks.register("pluginJarHytalePremium", ShadowJar::class.java) {
     exclude("com/github/shynixn/shybossbar/**")
     exclude("com/github/shynixn/shycommandsigns/**")
     exclude("com/github/shynixn/shyparticles/**")
-    exclude("com/github/shynixn/fasterxml/**")
+    exclude("com/github/shynixn/shyguild/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("kotlin/**")
     exclude("kotlinx/**")
@@ -218,6 +220,7 @@ tasks.register("relocatePluginJar", ShadowJar::class.java) {
     relocate("com.github.shynixn.shybossbar", "com.github.shynixn.blockball.lib.com.github.shynixn.shybossbar")
     relocate("com.github.shynixn.shycommandsigns", "com.github.shynixn.blockball.lib.com.github.shynixn.shycommandsigns")
     relocate("com.github.shynixn.shyparticles", "com.github.shynixn.blockball.lib.com.github.shynixn.shyparticles")
+    relocate("com.github.shynixn.shyguild", "com.github.shynixn.blockball.lib.com.github.shynixn.shyguild")
 }
 
 /**
@@ -255,6 +258,7 @@ tasks.register("pluginJarLatest", ShadowJar::class.java) {
     exclude("com/github/shynixn/shybossbar/**")
     exclude("com/github/shynixn/shycommandsigns/**")
     exclude("com/github/shynixn/shyparticles/**")
+    exclude("com/github/shynixn/shyguild/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("org/**")
     exclude("kotlin/**")
@@ -273,7 +277,7 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     dependsOn("relocatePluginJar")
     from(zipTree(File("./build/libs/" + (tasks.getByName("relocatePluginJar") as Jar).archiveFileName.get())))
     archiveFileName.set("${archiveBaseName.get()}-${archiveVersion.get()}-premium.${archiveExtension.get()}")
-    // destinationDirectory.set(File("C:\\git\\mc\\plugins"))
+    // destinationDirectory.set(File(System.getenv("HOME"),"git/mc/plugins"))
 
     exclude("com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/common/FoliaMarker.class")
     exclude("com/github/shynixn/mcutils/**")
@@ -282,6 +286,7 @@ tasks.register("pluginJarPremium", com.github.jengelman.gradle.plugins.shadow.ta
     exclude("com/github/shynixn/shybossbar/**")
     exclude("com/github/shynixn/shycommandsigns/**")
     exclude("com/github/shynixn/shyparticles/**")
+    exclude("com/github/shynixn/shyguild/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("com/github/shynixn/htutils/**")
     exclude("org/**")
@@ -306,6 +311,7 @@ tasks.register("relocateFoliaPluginJar", com.github.jengelman.gradle.plugins.sha
     relocate("com.github.shynixn.shybossbar", "com.github.shynixn.blockball.lib.com.github.shynixn.shybossbar")
     relocate("com.github.shynixn.shycommandsigns", "com.github.shynixn.blockball.lib.com.github.shynixn.shycommandsigns")
     relocate("com.github.shynixn.shyparticles", "com.github.shynixn.blockball.lib.com.github.shynixn.shyparticles")
+    relocate("com.github.shynixn.shyguild", "com.github.shynixn.blockball.lib.com.github.shynixn.shyguild")
     exclude("plugin.yml")
     rename("plugin-folia.yml", "plugin.yml")
 }
@@ -326,6 +332,7 @@ tasks.register("pluginJarPremiumFolia", com.github.jengelman.gradle.plugins.shad
     exclude("com/github/shynixn/shybossbar/**")
     exclude("com/github/shynixn/shycommandsigns/**")
     exclude("com/github/shynixn/shyparticles/**")
+    exclude("com/github/shynixn/shyguild/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("org/**")
     exclude("kotlin/**")
@@ -360,6 +367,7 @@ tasks.register("relocateLegacyPluginJar", ShadowJar::class.java) {
     relocate("com.github.shynixn.shybossbar", "com.github.shynixn.blockball.lib.com.github.shynixn.shybossbar")
     relocate("com.github.shynixn.shycommandsigns", "com.github.shynixn.blockball.lib.com.github.shynixn.shycommandsigns")
     relocate("com.github.shynixn.shyparticles", "com.github.shynixn.blockball.lib.com.github.shynixn.shyparticles")
+    relocate("com.github.shynixn.shyguild", "com.github.shynixn.blockball.lib.com.github.shynixn.shyguild")
     relocate("com.github.shynixn.fasterxml", "com.github.shynixn.blockball.lib.com.github.shynixn.fasterxml")
 
     exclude("plugin.yml")
@@ -383,6 +391,7 @@ tasks.register("pluginJarLegacy", ShadowJar::class.java) {
     exclude("com/github/shynixn/shybossbar/**")
     exclude("com/github/shynixn/shycommandsigns/**")
     exclude("com/github/shynixn/shyparticles/**")
+    exclude("com/github/shynixn/shyguild/**")
     exclude("com/github/shynixn/fasterxml/**")
     exclude("org/**")
     exclude("kotlin/**")
