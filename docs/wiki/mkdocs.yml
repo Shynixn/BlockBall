@@ -11,11 +11,10 @@ nav:
       - Scoreboards, Signs: sign.md
       - Bedrock: bedrock.md
       - Referee: referee.md
-      - Clubs:
-          - Managing Clubs: club.md
-          - Club vs Club Games: club-games.md
       - Commands: commands.md
       - PlaceHolders: placeholders.md
+      - Managing Clubs: club.md
+      - Club vs Club Games: club-games.md
       - Website and Cloud: cloud.md  
       - Developer Api: api.md
 theme:
