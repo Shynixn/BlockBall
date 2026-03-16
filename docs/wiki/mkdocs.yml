@@ -13,6 +13,8 @@ nav:
       - Referee: referee.md
       - Commands: commands.md
       - PlaceHolders: placeholders.md
+      - Managing Clubs: club.md
+      - Club vs Club Games: club-games.md
       - Website and Cloud: cloud.md  
       - Developer Api: api.md
 theme:
