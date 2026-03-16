@@ -34,9 +34,10 @@ import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.mcutils.common.sound.SoundServiceImpl
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
+import com.github.shynixn.mcutils.database.api.SqlConnectionService
 import com.github.shynixn.mcutils.database.impl.AutoSavePlayerDataRepositoryImpl
 import com.github.shynixn.mcutils.database.impl.CachedPlayerDataRepositoryImpl
-import com.github.shynixn.mcutils.database.impl.ConfigSelectedRepositoryImpl
+import com.github.shynixn.mcutils.database.impl.PlayerDataSqlRepositoryImpl
 import com.github.shynixn.mcutils.http.HttpClientFactory
 import com.github.shynixn.mcutils.http.HttpClientFactoryImpl
 import com.github.shynixn.mcutils.packet.api.PacketService
@@ -51,7 +52,9 @@ class BlockBallDependencyInjectionModule(
     private val plugin: BlockBallPlugin,
     private val language: BlockBallLanguage,
     private val placeHolderService: PlaceHolderService,
-    private val shyParticlesModule: DependencyInjectionModule
+    private val shyParticlesModule: DependencyInjectionModule,
+    private val shyGuildModule : DependencyInjectionModule,
+    private val sqlConnectionService: SqlConnectionService,
 ) {
     companion object {
         val areLegacyVersionsIncluded: Boolean by lazy {
@@ -95,15 +98,16 @@ class BlockBallDependencyInjectionModule(
             module.getService<CachePlayerRepository<PlayerInformation>>()
         }
         module.addService<CachePlayerRepository<PlayerInformation>> {
-            val configSelectedPlayerDataRepository = ConfigSelectedRepositoryImpl<PlayerInformation>(
-                plugin,
-                "BlockBall",
-                plugin.dataFolder.toPath().resolve("BlockBall.sqlite"),
-                object : TypeReference<PlayerInformation>() {}
-            )
             AutoSavePlayerDataRepositoryImpl(
                 1000 * 60L * plugin.config.getInt("database.autoSaveIntervalMinutes"),
-                CachedPlayerDataRepositoryImpl(configSelectedPlayerDataRepository),
+                CachedPlayerDataRepositoryImpl(
+                    PlayerDataSqlRepositoryImpl(
+                        "BlockBall",
+                        plugin.config.getLong("database.readDelayMs"),
+                        object : TypeReference<PlayerInformation>() {},
+                        sqlConnectionService
+                    )
+                ),
                 plugin
             )
         }
@@ -135,7 +139,14 @@ class BlockBallDependencyInjectionModule(
         }
         module.addService<HttpClientFactory> { HttpClientFactoryImpl() }
         module.addService<CloudService> {
-            CloudServiceImpl(module.getService(), module.getService(), module.getService(), module.getService(), module.getService(), module.getService())
+            CloudServiceImpl(
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService()
+            )
         }
         module.addService<AreaSelectionService> {
             AreaSelectionServiceImpl(
@@ -211,7 +222,8 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
-                module.getService()
+                module.getService(),
+                shyGuildModule.getService()
             )
         }
         return module

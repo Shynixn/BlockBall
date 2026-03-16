@@ -16,7 +16,6 @@ class StatsServiceImpl(
     private val plugin: Plugin,
     private val coroutineHandler: CoroutineHandler
 ) : StatsService {
-    private var aggregationLeaderBoardKey = "leaderBoardAg"
     private var leaderBoardStats: LeaderBoardStats? = null
     private var isDisposed: Boolean = false
 
@@ -27,21 +26,19 @@ class StatsServiceImpl(
         val refreshTime = plugin.config.getInt("leaderboard.intervalMinutes")
         val isEnabled = plugin.config.getBoolean("leaderboard.enabled")
 
-        if (isEnabled) {
-            plugin.logger.log(Level.INFO, "Enabled LeaderBoard tracking.")
+        if (!isEnabled) {
+            return
+        }
 
-            playerDataRepository.registerAggregation(
-                aggregationLeaderBoardKey,
-                { LeaderBoardStats() }) { playerInfo, leaderBoard ->
-                computeLeaderBoard(playerInfo, leaderBoard)
-            }
-
-            coroutineHandler.execute {
-                while (!isDisposed) {
-                    leaderBoardStats =
-                        playerDataRepository.getAggregationResult<LeaderBoardStats>(aggregationLeaderBoardKey)
-                    delay(1000L * 60 * refreshTime)
+        plugin.logger.log(Level.INFO, "Enabled LeaderBoard tracking.")
+        coroutineHandler.execute {
+            while (!isDisposed) {
+                val stats = LeaderBoardStats()
+                playerDataRepository.getAll().forEach { playerInfo ->
+                    computeLeaderBoard(playerInfo, stats)
                 }
+                leaderBoardStats = stats
+                delay(1000L * 60 * refreshTime)
             }
         }
     }

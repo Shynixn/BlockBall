@@ -6,8 +6,9 @@ import com.github.shynixn.shybossbar.contract.ShyBossBarLanguage
 import com.github.shynixn.mcutils.common.language.LanguageProvider
 import com.github.shynixn.shycommandsigns.contract.ShyCommandSignsLanguage
 import com.github.shynixn.shyparticles.contract.ShyParticlesLanguage
+import com.github.shynixn.shyguild.contract.ShyGuildLanguage
 
-interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBarLanguage, ShyCommandSignsLanguage, ShyParticlesLanguage {
+interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBarLanguage, ShyCommandSignsLanguage, ShyParticlesLanguage, ShyGuildLanguage {
   var gameAlreadyExistsMessage: LanguageItem
 
   var commandUsage: LanguageItem
@@ -126,7 +127,7 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
 
   var gameIsNotARefereeGame: LanguageItem
 
-  var gameTypeRefereeOnlyForPatreons: LanguageItem
+  var onlyForPatreons: LanguageItem
 
   var joinTeamRefereeMessage: LanguageItem
 
@@ -223,4 +224,22 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
   var cloudPublishGameMessage: LanguageItem
 
   var gameStartingMessage: LanguageItem
+
+  var gameIsInClubModeMessage: LanguageItem
+
+  var gameIsInStandardModeMessage: LanguageItem
+
+  var gameNoPermissionToStartAGameInClubModeMessage: LanguageItem
+
+  var gameNoPermissionToJoinAGameInClubModeMessage: LanguageItem
+
+  var gameNotAMemberOfClubMessage: LanguageItem
+
+  var gameAllClubSlotsAreFilledMessage: LanguageItem
+
+  var joinTeamClubMessage: LanguageItem
+
+  var gameClubStartedGameMessage: LanguageItem
+
+  var commandClubJoinToolTip: LanguageItem
 }

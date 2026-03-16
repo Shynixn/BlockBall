@@ -39,9 +39,10 @@ dependencies {
     implementation("com.github.shynixn.shybossbar:shybossbar:1.6.1")
     implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.12.1")
     implementation("com.github.shynixn.shyparticles:shyparticles:1.2.1")
+    implementation("com.github.shynixn.shyguild:shyguild:1.0.0")
     implementation("com.github.shynixn.mcutils:common:2026.2")
     implementation("com.github.shynixn.mcutils:packet:2026.5")
-    implementation("com.github.shynixn.mcutils:database:2026.2")
+    implementation("com.github.shynixn.mcutils:database:2026.3")
     implementation("com.github.shynixn.mcutils:http:2026.3")
     implementation("com.github.shynixn.mcutils:worldguard:2026.1")
 }
@@ -403,7 +404,8 @@ tasks.register("languageFile") {
        "shyBossBar",
         "shyScoreboard",
         "shyCommandSigns",
-        "shyParticles"
+        "shyParticles",
+        "shyGuild"
     )
     contractContents.add("package com.github.shynixn.blockball.contract")
     contractContents.add("")
@@ -413,8 +415,9 @@ tasks.register("languageFile") {
     contractContents.add("import com.github.shynixn.mcutils.common.language.LanguageProvider")
     contractContents.add("import com.github.shynixn.shycommandsigns.contract.ShyCommandSignsLanguage")
     contractContents.add("import com.github.shynixn.shyparticles.contract.ShyParticlesLanguage")
+    contractContents.add("import com.github.shynixn.shyguild.contract.ShyGuildLanguage")
     contractContents.add("")
-    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBarLanguage, ShyCommandSignsLanguage, ShyParticlesLanguage {")
+    contractContents.add("interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBarLanguage, ShyCommandSignsLanguage, ShyParticlesLanguage, ShyGuildLanguage {")
     for (key in lines) {
         if (key.toCharArray()[0].isLetter()) {
             if (ignoredKeys.firstOrNull { e -> key.startsWith(e) } != null) {

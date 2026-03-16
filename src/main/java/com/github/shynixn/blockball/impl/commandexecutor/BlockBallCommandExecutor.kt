@@ -22,6 +22,8 @@ import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.common.selection.AreaHighlight
 import com.github.shynixn.mcutils.common.selection.AreaSelectionService
+import com.github.shynixn.shyguild.contract.GuildService
+import com.github.shynixn.shyguild.entity.Guild
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -50,8 +52,9 @@ class BlockBallCommandExecutor(
     private val chatMessageService: ChatMessageService,
     private val cloudService: CloudService,
     private val coroutineHandler: CoroutineHandler,
-    private val server: Server
-    ) {
+    private val server: Server,
+    private val guildService: GuildService
+) {
     private val arenaTabs: (s: CommandSender) -> List<String> = {
         var cache = arenaRepository.getCache()
         if (cache == null) {
@@ -162,6 +165,39 @@ class BlockBallCommandExecutor(
             )
         }
     }
+
+    private val clubTabs: ((CommandSender) -> List<String>) = { s ->
+        if (s is Player) {
+            guildService.getGuildCache().filter { e -> e.isMember(s) }.map { e -> e.name }
+        } else {
+            guildService.getGuildCache().map { e -> e.name }
+        }
+    }
+
+    private val clubValidator = object : Validator<Guild> {
+        override suspend fun transform(
+            sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
+        ): Guild? {
+            return try {
+                if (sender is Player) {
+                    guildService.getGuildCache()
+                        .firstOrNull { e -> e.isMember(sender) && e.name.equals(openArgs[0], ignoreCase = true) }
+                } else {
+                    guildService.getGuildCache().firstOrNull { e -> e.name.equals(openArgs[0], ignoreCase = true) }
+                }
+            } catch (e: Exception) {
+                return null
+            }
+        }
+
+        override suspend fun message(sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>): String {
+            return placeHolderService.resolvePlaceHolder(
+                language.shyGuildGuildNotFoundMessage.text, null, mapOf("0" to openArgs[0])
+            )
+        }
+    }
+
+
     private val teamValidator = object : Validator<Team> {
         override suspend fun transform(
             sender: CommandSender, prevArgs: List<Any>, openArgs: List<String>
@@ -289,11 +325,10 @@ class BlockBallCommandExecutor(
             subCommand("copy") {
                 permission(Permission.EDIT_GAME)
                 toolTip { language.commandCopyToolTip.text }
-                builder()
-                    .argument("source").validator(gameMustExistValidator).tabs(arenaTabs)
-                    .argument("name").validator(maxLengthValidator).validator(arenaNameRegex)
-                    .validator(gameMustNotExistValidator).tabs { listOf("<name>") }.argument("displayName")
-                    .validator(remainingStringValidator).tabs { listOf("<displayName>") }
+                builder().argument("source").validator(gameMustExistValidator).tabs(arenaTabs).argument("name")
+                    .validator(maxLengthValidator).validator(arenaNameRegex).validator(gameMustNotExistValidator)
+                    .tabs { listOf("<name>") }.argument("displayName").validator(remainingStringValidator)
+                    .tabs { listOf("<displayName>") }
                     .execute { sender, source, name, displayName -> copyArena(sender, source, name, displayName) }
             }
             subCommand("delete") {
@@ -392,7 +427,7 @@ class BlockBallCommandExecutor(
                             }
                         }.execute { sender, arena, gameType ->
                             if (gameType == GameType.REFEREEGAME && !BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
-                                sender.sendLanguageMessage(language.gameTypeRefereeOnlyForPatreons)
+                                sender.sendLanguageMessage(language.onlyForPatreons)
                                 return@execute
                             }
 
@@ -430,6 +465,23 @@ class BlockBallCommandExecutor(
                         setArmor(player, arena, meta)
                     }
             }
+            subCommand("club") {
+                noPermission()
+                subCommand("join") {
+                    noPermission()
+                    toolTip { language.commandClubJoinToolTip.text }
+                    builder().argument("name").validator(gameMustExistValidator).tabs(arenaTabs).argument("club")
+                        .validator(clubValidator).tabs(clubTabs)
+                        .executePlayer({ language.commandSenderHasToBePlayer.text }) { sender, arena, club ->
+                            joinGameAsClub(sender, sender, arena.name, club)
+                        }.argument("player").validator(playerMustExist).tabs(onlinePlayerTabs)
+                        .permission { Permission.EDIT_GAME.permission }
+                        .permissionMessage { language.noPermissionMessage.text }
+                        .execute { sender, arena, team, player ->
+                            joinGameAsClub(sender, player, arena.name, team)
+                        }
+                }
+            }
             subCommand("referee") {
                 permission(Permission.REFEREE_JOIN)
                 subCommand("startgame") {
@@ -454,24 +506,19 @@ class BlockBallCommandExecutor(
                     }.argument("x").validator(doubleValidator).tabs { listOf("<x>") }
                         .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, x ->
                             setBallToPlayerLocation(player, x)
-                        }
-                        .argument("y").validator(doubleValidator).tabs { listOf("<y>") }
+                        }.argument("y").validator(doubleValidator).tabs { listOf("<y>") }
                         .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, x, y ->
                             setBallToPlayerLocation(player, x, y)
-                        }
-                        .argument("z").validator(doubleValidator).tabs { listOf("<z>") }
+                        }.argument("z").validator(doubleValidator).tabs { listOf("<z>") }
                         .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, x, y, z ->
                             setBallToPlayerLocation(player, x, y, z)
-                        }
-                        .argument("yaw").validator(doubleValidator).tabs { listOf("<yaw>") }
+                        }.argument("yaw").validator(doubleValidator).tabs { listOf("<yaw>") }
                         .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, x, y, z, yaw ->
                             setBallToPlayerLocation(player, x, y, z, yaw)
-                        }
-                        .argument("pitch").validator(doubleValidator).tabs { listOf("<pitch>") }
+                        }.argument("pitch").validator(doubleValidator).tabs { listOf("<pitch>") }
                         .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, x, y, z, yaw, pitch ->
                             setBallToPlayerLocation(player, x, y, z, yaw, pitch)
-                        }
-                        .argument("world").validator(worldValidator).tabs(worldTabs)
+                        }.argument("world").validator(worldValidator).tabs(worldTabs)
                         .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, x, y, z, yaw, pitch, wordl ->
                             setBallToPlayerLocation(player, x, y, z, yaw, pitch, wordl)
                         }
@@ -484,8 +531,7 @@ class BlockBallCommandExecutor(
                     }.argument("forward").validator(doubleValidator).tabs { listOf("<forward>") }
                         .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, forward ->
                             setBallRelativeToPlayerLocation(player, forward, 0.0)
-                        }
-                        .argument("sideward").validator(doubleValidator).tabs { listOf("<sideward>") }
+                        }.argument("sideward").validator(doubleValidator).tabs { listOf("<sideward>") }
                         .executePlayer({ language.commandSenderHasToBePlayer.text }) { player, forward, sideward ->
                             setBallRelativeToPlayerLocation(player, forward, sideward)
                         }
@@ -913,12 +959,126 @@ class BlockBallCommandExecutor(
         sender.sendMessage(footerBuilder.toString())
     }
 
+    private fun joinGameAsClub(sender: CommandSender, player: Player, name: String, club: Guild): Boolean {
+        if (!BlockBallDependencyInjectionModule.areLegacyVersionsIncluded) {
+            sender.sendLanguageMessage(language.onlyForPatreons)
+            return false
+        }
+
+        for (game in gameService.getAll()) {
+            if (game.getPlayers().contains(player)) {
+                if (game.arena.name.equals(name, true)) {
+                    // It is the same game.
+                    return false
+                }
+                game.leave(player)
+            }
+        }
+
+        val game = gameService.getByName(name)
+
+        if (game == null) {
+            sender.sendLanguageMessage(language.gameDoesNotExistMessage, name)
+            return false
+        }
+
+        if (!game.areClubsPlaying() && game.getPlayers().isNotEmpty()) {
+            sender.sendLanguageMessage(language.gameIsInStandardModeMessage, name)
+            return false
+        }
+
+        if (!game.areClubsPlaying() && !player.hasPermission(
+                Permission.CLUB_START.permission.replace(
+                    "[name]", game.arena.name
+                )
+            )
+        ) {
+            sender.sendLanguageMessage(language.gameNoPermissionToStartAGameInClubModeMessage, game.arena.name)
+            return false
+        }
+
+        if (!player.hasPermission(
+                Permission.CLUB_JOIN.permission.replace(
+                    "[name]", game.arena.name
+                )
+            )
+        ) {
+            sender.sendLanguageMessage(language.gameNoPermissionToJoinAGameInClubModeMessage, game.arena.name)
+            return false
+        }
+
+        if (!club.isMember(player)) {
+            sender.sendLanguageMessage(language.gameNotAMemberOfClubMessage, club.name)
+            return false
+        }
+
+        if (game.redClub != null && game.redTeam.isEmpty()) {
+            game.redClub = null
+        }
+        if (game.blueClub != null && game.blueTeam.isEmpty()) {
+            game.blueClub = null
+        }
+        if (game.redClub == null && game.blueClub != club) {
+            game.redClub = club
+            for (member in club.members) {
+                val onlinePlayer = getOnlinePlayer(member.playerUUID)
+                if (onlinePlayer != null && onlinePlayer != sender) {
+                    onlinePlayer.sendLanguageMessage(language.gameClubStartedGameMessage, club.name, game.arena.name)
+                }
+            }
+        }
+        if (game.blueClub == null && game.redClub != club) {
+            game.blueClub = club
+            for (member in club.members) {
+                val onlinePlayer = getOnlinePlayer(member.playerUUID)
+                if (onlinePlayer != null && onlinePlayer != sender) {
+                    onlinePlayer.sendLanguageMessage(language.gameClubStartedGameMessage, club.name, game.arena.name)
+                }
+            }
+        }
+
+        if (club != game.redClub && club != game.blueClub) {
+            sender.sendLanguageMessage(language.gameAllClubSlotsAreFilledMessage, game.arena.name)
+            return false
+        }
+
+        if (club.name.equals("referee", true)) {
+            if (game !is SoccerRefereeGame) {
+                sender.sendLanguageMessage(language.gameIsNotARefereeGame)
+                return false
+            }
+
+            if (!sender.hasPermission(Permission.REFEREE_JOIN.permission)) {
+                sender.sendLanguageMessage(language.noPermissionForGameMessage, game.arena.name)
+                return false
+            }
+        }
+
+        val team = if (club == game.redClub) {
+            Team.RED
+        } else if (club == game.blueClub) {
+            Team.BLUE
+        } else {
+            null
+        }
+
+        if (team == null) {
+            return false
+        }
+
+        val joinResult = game.join(player, team)
+
+        if (joinResult == JoinResult.TEAM_FULL || joinResult == JoinResult.GAME_ALREADY_RUNNING) {
+            sender.sendLanguageMessage(language.gameIsFullMessage)
+            return false
+        }
+
+        player.sendLanguageMessage(language.joinTeamClubMessage, club.displayName)
+        return true
+    }
+
     private fun joinGame(
-        sender: CommandSender,
-        player: Player,
-        name: String,
-        team: Team? = null,
-        retry: Boolean = true
+        sender: CommandSender, player: Player, name: String, team: Team? = null, retry: Boolean = true
     ): Boolean {
         for (game in gameService.getAll()) {
             if (game.getPlayers().contains(player)) {
@@ -955,6 +1115,14 @@ class BlockBallCommandExecutor(
             sender.sendLanguageMessage(language.gameDoesNotExistMessage, name)
             return false
         }
+
+        // Check club state.
+        if (game.areClubsPlaying() && game.getPlayers().isNotEmpty()) {
+            sender.sendLanguageMessage(language.gameIsInClubModeMessage, name)
+            return false
+        }
+        game.redClub = null
+        game.blueClub = null
 
         if (!sender.hasPermission(
                 Permission.JOIN.permission.replace(
@@ -1072,8 +1240,7 @@ class BlockBallCommandExecutor(
                     convertToOutercorner2(selectionLeft.toVector3d(), selectionRight.toVector3d())
                 arena.meta.blueTeamMeta.goal.corner1 =
                     convertToOutercorner1(selectionLeft.toVector3d(), selectionRight.toVector3d())
-            }
-            else if (selectionType == SelectionType.OUTER_FIELD) {
+            } else if (selectionType == SelectionType.OUTER_FIELD) {
                 arena.outerField.corner2 =
                     convertToOutercorner2(selectionLeft.toVector3d(), selectionRight.toVector3d())
                 arena.outerField.corner1 =
@@ -1254,5 +1421,13 @@ class BlockBallCommandExecutor(
     private fun CommandSender.sendLanguageMessage(languageItem: LanguageItem, vararg args: String) {
         val sender = this
         chatMessageService.sendLanguageMessage(sender, languageItem, *args)
+    }
+
+    private fun getOnlinePlayer(uuid: String): Player? {
+        try {
+            return Bukkit.getPlayer(UUID.fromString(uuid))
+        } catch (e: Exception) {
+            return null
+        }
     }
 }

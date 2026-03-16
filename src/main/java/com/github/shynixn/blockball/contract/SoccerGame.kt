@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.enumeration.GameState
 import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.LeaveResult
 import com.github.shynixn.blockball.enumeration.Team
+import com.github.shynixn.shyguild.entity.Guild
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
@@ -19,6 +20,16 @@ interface SoccerGame {
      * Gets the soccerArena.
      */
     val arena: SoccerArena
+
+    /**
+     * Red club in club mode.
+     */
+    var redClub : Guild?
+
+    /**
+     * Blue club in club mode.
+     */
+    var blueClub : Guild?
 
     /**
      * RedScore.
@@ -97,6 +108,11 @@ interface SoccerGame {
      * Compatibility reference.
      */
     val language: BlockBallLanguage
+
+    /**
+     * Checks if the game is in club mode and clubs are playing.
+     */
+    fun areClubsPlaying(): Boolean
 
     /**
      * Lets the given [player] leave join. Optional can the prefered
