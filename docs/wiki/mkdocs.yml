@@ -9,14 +9,14 @@ nav:
       - Customizing the game: customization.md
       - Interactions: interaction.md
       - Scoreboards, Signs: sign.md
-      - Bedrock: bedrock.md
-      - Referee: referee.md
       - Commands: commands.md
       - PlaceHolders: placeholders.md
-      - Managing Clubs: club.md
-      - Club vs Club Games: club-games.md
-      - Website and Cloud: cloud.md  
       - Developer Api: api.md
+      - Bedrock (Patreon): bedrock.md
+      - Referee (Patreon): referee.md
+      - Managing Clubs (Patreon): club.md
+      - Club vs Club Games (Patreon): club-games.md
+      - Website and Cloud (Patreon): cloud.md
 theme:
   name: material
   features:

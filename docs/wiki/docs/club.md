@@ -2,6 +2,9 @@
 
 BlockBall includes an integrated club system powered internally by **ShyGuild**. Clubs allow players to form teams, manage rosters, and join BlockBall games together. No extra plugin installation is required — BlockBall already ships with ShyGuild built in.
 
+!!! info "Premium Feature"
+    The club system is exclusive to **Patreon supporters** who have funded this advanced feature. [Support development](https://www.patreon.com/Shynixn) to access these tools! ❤️
+
 !!! info "LuckPerms Required"
     Clubs use automatic per-club permission management. **LuckPerms must be installed** for role permissions to be applied automatically when a player creates or joins a club.
 

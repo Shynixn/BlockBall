@@ -2,6 +2,9 @@
 
 By default, BlockBall arenas are open to all players via `blockball.join.*`. The club system adds a second layer of arena access so you can create **dedicated club arenas** that only club members can use — or mix both open and club-only arenas on the same server.
 
+!!! info "Premium Feature"
+    The club system is exclusive to **Patreon supporters** who have funded this advanced feature. [Support development](https://www.patreon.com/Shynixn) to access these tools! ❤️
+
 ## How Arena Access Works
 
 | Permission | Who has it | Effect |
