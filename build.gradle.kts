@@ -35,7 +35,7 @@ dependencies {
     implementation("com.github.shynixn.shyparticles:shyparticles:1.3.0")
     implementation("com.github.shynixn.shyguild:shyguild:1.1.0")
     implementation("com.github.shynixn.mcutils:common:2026.4")
-    implementation("com.github.shynixn.mcutils:packet:2026.10")
+    implementation("com.github.shynixn.mcutils:packet:2026.11")
     implementation("com.github.shynixn.mcutils:worldguard:2026.1")
     implementation("com.github.shynixn.mcutils:database:2026.3")
     implementation("com.github.shynixn.mcutils:http:2026.3")

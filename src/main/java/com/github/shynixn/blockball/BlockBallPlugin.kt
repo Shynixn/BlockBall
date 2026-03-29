@@ -196,6 +196,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
 
         // Register Packet
         module!!.getService<PacketService>().registerPacketListening(PacketInType.USEENTITY)
+        module!!.getService<PacketService>().registerPacketListening(PacketInType.ATTACKENTITY)
 
         // Register Listeners
         Bukkit.getPluginManager().registerEvents(module!!.getService<GameListener>(), this)

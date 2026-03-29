@@ -435,18 +435,22 @@ abstract class SoccerGameImpl(
     /**
      * Lets the given [player] in the given [game] respawn at the specified spawnpoint.
      */
-    override fun respawn(player: Player) {
-        if (!ingamePlayersStorage.containsKey(player)) {
+    override fun respawn(player: Player, team: Team?) {
+        val actualTeam = if (ingamePlayersStorage.containsKey(player)) {
+            ingamePlayersStorage[player]!!.goalTeam
+        } else {
+            team
+        }
+
+        if (actualTeam == null) {
             return
         }
 
-        val team = ingamePlayersStorage[player]!!.goalTeam
-
-        val teamMeta = if (team == Team.RED) {
+        val teamMeta = if (actualTeam == Team.RED) {
             arena.meta.redTeamMeta
-        } else if (team == Team.BLUE) {
+        } else if (actualTeam == Team.BLUE) {
             arena.meta.blueTeamMeta
-        } else if (team == Team.REFEREE) {
+        } else if (actualTeam == Team.REFEREE) {
             arena.meta.refereeTeamMeta
         } else {
             return

@@ -103,7 +103,7 @@ class SoccerHubGameImpl(
 
     override fun setPlayerToArena(player: Player, team: Team) {
         if (arena.meta.hubLobbyMeta.teleportOnJoin) {
-            this.respawn(player)
+            this.respawn(player, team)
         } else {
             val velocityIntoArena = player.location.direction.normalize().multiply(0.5)
             player.velocity = velocityIntoArena
