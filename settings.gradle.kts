@@ -1,1 +1,1 @@
-rootProject.name = "blockball-root"
+rootProject.name = "blockball"
