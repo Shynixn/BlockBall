@@ -120,10 +120,11 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
                 Version.VERSION_1_21_R5,
                 Version.VERSION_1_21_R6,
                 Version.VERSION_1_21_R7,
+                Version.VERSION_26_R1,
             )
         } else {
             arrayOf(
-                Version.VERSION_1_21_R7,
+                Version.VERSION_26_R1,
             )
         }
 
@@ -195,6 +196,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
 
         // Register Packet
         module!!.getService<PacketService>().registerPacketListening(PacketInType.USEENTITY)
+        module!!.getService<PacketService>().registerPacketListening(PacketInType.ATTACKENTITY)
 
         // Register Listeners
         Bukkit.getPluginManager().registerEvents(module!!.getService<GameListener>(), this)

@@ -134,7 +134,7 @@ interface SoccerGame {
     /**
      * Lets the given [player] in the given [game] respawn at the specified spawnpoint.
      */
-    fun respawn(player: Player)
+    fun respawn(player: Player, team : Team? = null)
 
     /**
      * Applies death points.

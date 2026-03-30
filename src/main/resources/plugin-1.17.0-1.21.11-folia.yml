@@ -1,0 +1,14 @@
+name: BlockBall
+version: 7.39.0
+author: Shynixn
+main: com.github.shynixn.blockball.BlockBallPlugin
+softdepend: [ PlaceholderAPI, LuckPerms]
+api-version: 1.13
+folia-supported: true
+libraries:
+  - com.github.shynixn.mccoroutine:mccoroutine-folia-api:2.22.0
+  - com.github.shynixn.mccoroutine:mccoroutine-folia-core:2.22.0
+  - com.github.shynixn:fasterxml:1.2.0
+  - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.25
+  - org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0
+  - com.zaxxer:HikariCP:5.1.0
