@@ -1,15 +1,54 @@
-                Shynixn Plugin Distribution LICENCE
+                   Shynixn Plugin Distribution License
+                        Version 2.0, 08 April 2026
 
-All terms and conditions of the GNU GENERAL PUBLIC LICENSE Version 3.0 below apply. The Shynixn Plugin Distribution LICENCE
-further restricts what you are allowed to do. Even if certain points are allowed under the GNU GENERAL PUBLIC LICENSE Version 3.0,
-the Shynixn Plugin Distribution LICENCE overrules them.
+1. Relation to GPLv3
+All terms of the GNU General Public License v3.0 apply.
+This document adds Additional Restrictions under Section 7 of the GPLv3.
+If there is a conflict, this License overrules the GPLv3.
 
-You are not allowed to redistribute the BlockBall binary files under any circumstances.
-The plugin binary files are BlockBall.jar, BlockBall-Legacy.jar and BlockBall-Premium.jar.
+2. Scope of Protected Files
+These terms apply to all files distributed by the Author (Shynixn).
+This includes, but is not limited to:
+* All JAR files (regardless of name)
+* All ZIP archives
+* All Metadata or Config files
+* All Derivative Works (modified versions) or source code of the above.
 
-Commercial usage of this plugin is only allowed by obtaining a licence of a particular version of the BlockBall-Legacy.jar, BlockBall-Premium.jar or BlockBall-Premium-Folia.jar plugin.
-e.g. being an actively paying subscribed member of the Patreon https://www.patreon.com/Shynixn at the time this particular version was available.
-You do not have any rights on any potential future released versions. You need to obtain a new licence for each individual version.
+3. Redistribution Rules
+You are strictly prohibited from redistributing any files.
+No re-hosting on 3rd party sites.
+No public mirrors.
+No sharing of ZIP/JAR files with others.
+Files must be obtained only from official Shynixn channels.
+
+4. Commercial Usage
+Usage in a revenue-generating environment requires a Version-Specific License.
+A "revenue-generating environment" includes any server, service, or platform that receives income
+(including donations, web-stores, or sponsorships), regardless of whether the Program is the direct source of that income.
+
+How to obtain a License:
+You must be an Active Subscriber of the Shynixn Patreon (https://patreon.com/Shynixn) during the month a version
+is released, or at the time you first download/access a previously released version.
+An Active Subscriber is defined strictly as a member with a successfully processed payment status for the current period.
+Being an Active Subscriber grants a lifetime commercial license for any version released during that subscription period
+or the version currently marked as "Latest" at the time of joining.
+A past subscription does not grant rights to future updates. To use a new version commercially, you must be an Active Subscriber
+at the time of that new version's release.
+Users are responsible for retaining their Patreon payment receipts as proof of their version-specific commercial rights.
+
+5. Support Services
+Technical support is provided as a courtesy and is subject to the following conditions:
+Active Eligibility: Support is only provided to currently Active Subscribers.
+Past Subscribers: Support services are immediately terminated upon the expiration or cancellation of a subscription. Access to historical support threads or documentation may be restricted.
+Verification: The Author reserves the right to request proof of active subscription status before providing assistance.
+
+6. Liability, Termination, and Enforcement
+No Warranty: The Program is provided "as is" without warranty of any kind. The Author is not liable for any damages arising from its use. See the GPLv3 for full details.
+Legal Action: The Author reserves the right to pursue legal action to the fullest extent of the law for any violations of these terms, including but not limited to claims for damages, lost revenue, and legal fees.
+
+7. Acceptance
+By downloading, receiving, or running any part of this Program:
+You acknowledge these terms. You agree to be bound by them.
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
