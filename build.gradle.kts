@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.39.0"
+version = "7.39.1"
 
 repositories {
     mavenCentral()
@@ -29,12 +29,12 @@ dependencies {
     implementation("com.zaxxer:HikariCP:4.0.3")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.5.0")
-    implementation("com.github.shynixn.shybossbar:shybossbar:1.7.0")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.13.0")
-    implementation("com.github.shynixn.shyparticles:shyparticles:1.3.0")
-    implementation("com.github.shynixn.shyguild:shyguild:1.1.0")
-    implementation("com.github.shynixn.mcutils:common:2026.4")
+    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.5.1")
+    implementation("com.github.shynixn.shybossbar:shybossbar:1.7.2")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.13.2")
+    implementation("com.github.shynixn.shyparticles:shyparticles:1.3.1")
+    implementation("com.github.shynixn.shyguild:shyguild:1.1.1")
+    implementation("com.github.shynixn.mcutils:common:2026.7")
     implementation("com.github.shynixn.mcutils:packet:2026.12")
     implementation("com.github.shynixn.mcutils:worldguard:2026.1")
     implementation("com.github.shynixn.mcutils:database:2026.3")

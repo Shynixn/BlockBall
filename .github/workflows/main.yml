@@ -111,7 +111,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-${{ env.RELEASE_VERSION }}-26.1.0-latest-free.jar
-          asset_name: BlockBall-26.1.0-latest-Free.jar
+          asset_name: BlockBall.jar
           asset_content_type: application/jar
 
   Documentation:
