@@ -204,7 +204,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
         Bukkit.getPluginManager().registerEvents(module!!.getService<BallListener>(), this)
         Bukkit.getPluginManager().registerEvents(module!!.getService<ForceFieldListener>(), this)
 
-        // Register CommandExecutor
+        //  Register CommandExecutor
         module!!.getService<BlockBallCommandExecutor>()
 
         // Service dependencies
