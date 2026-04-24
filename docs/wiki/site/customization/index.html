@@ -1,0 +1,3062 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Shynixn">
+      
+      
+      
+        <link rel="prev" href="../game/">
+      
+      
+        <link rel="next" href="../interaction/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Customizing the game - BlockBall</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#advanced-customization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="BlockBall" class="md-header__button md-logo" aria-label="BlockBall" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BlockBall
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Customizing the game
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Shynixn/BlockBall" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href=".." class="md-tabs__link">
+          
+  
+  
+  BlockBall Wiki
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="BlockBall" class="md-nav__button md-logo" aria-label="BlockBall" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BlockBall
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Shynixn/BlockBall" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BlockBall Wiki
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BlockBall Wiki
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Permission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating the game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing the game
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing the game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📁 Configuration Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📁 Configuration Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#location" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Location
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#editing-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-customization-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Common Customization Categories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Common Customization Categories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#game-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Game Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#team-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Team Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual &amp; Audio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permissions-restrictions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permissions &amp; Restrictions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Configuration File Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Configuration File Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#essential-arena-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Essential Arena Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ball-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ball Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#team-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Team Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#game-periods-and-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Game Periods and Timing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-game-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚙️ Detailed Game Mechanics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚙️ Detailed Game Mechanics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ball-physics-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ball Physics Deep Dive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#player-movement-and-abilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Player Movement and Abilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-team-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Team Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#game-mode-variations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Game Mode Variations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Game Mode Variations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minigame-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MINIGAME Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hubgame-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HUBGAME Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refereegame-mode-patreon-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REFEREEGAME Mode (Patreon Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#popular-customization-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎨 Popular Customization Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎨 Popular Customization Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fast-paced-quick-match" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fast-Paced Quick Match
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#traditional-soccer-match" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Traditional Soccer Match
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#casual-lobby-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Casual Lobby Game
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#speed-soccer-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Speed Soccer Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beginner-friendly-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Beginner-Friendly Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sound-effects-and-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎵 Sound Effects and Audio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎵 Sound Effects and Audio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ball-interaction-sounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ball Interaction Sounds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#countdown-and-ui-sounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Countdown and UI Sounds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#team-equipment-and-visual-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏆 Team Equipment and Visual Identity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏆 Team Equipment and Visual Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leather-armor-color-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Leather Armor Color System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color-examples-for-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Color Examples for Teams
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-ball-appearance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Ball Appearance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-command-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Command Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#essential-command-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Essential Command Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-based-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event-Based Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#available-placeholders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Placeholders
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#economy-integration-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Economy Integration Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-and-iteration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 Testing and Iteration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Testing and Iteration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#testing-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-issues-and-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues and Solutions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-optimization-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Optimization Tips
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yaml-syntax-reminders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        YAML Syntax Reminders
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Further Resources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Further Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#learning-more" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning More
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Topics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-powered-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🤖 AI-Powered Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🤖 AI-Powered Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-chatgpt-for-easy-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using ChatGPT for Easy Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using ChatGPT for Easy Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-conversation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Conversation Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-ai-prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample AI Prompts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-safety-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Safety Tips
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interaction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interactions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sign/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scoreboards, Signs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../placeholders/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PlaceHolders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developer Api
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bedrock/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bedrock (Patreon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../referee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referee (Patreon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../club/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managing Clubs (Patreon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../club-games/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Club vs Club Games (Patreon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Website and Cloud (Patreon)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📁 Configuration Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📁 Configuration Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#location" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Location
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#editing-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-customization-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Common Customization Categories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Common Customization Categories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#game-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Game Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#team-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Team Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual &amp; Audio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permissions-restrictions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permissions &amp; Restrictions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Configuration File Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Configuration File Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#essential-arena-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Essential Arena Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ball-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ball Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#team-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Team Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#game-periods-and-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Game Periods and Timing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-game-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚙️ Detailed Game Mechanics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚙️ Detailed Game Mechanics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ball-physics-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ball Physics Deep Dive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#player-movement-and-abilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Player Movement and Abilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-team-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Team Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#game-mode-variations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Game Mode Variations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Game Mode Variations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minigame-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MINIGAME Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hubgame-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HUBGAME Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refereegame-mode-patreon-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REFEREEGAME Mode (Patreon Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#popular-customization-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎨 Popular Customization Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎨 Popular Customization Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fast-paced-quick-match" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fast-Paced Quick Match
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#traditional-soccer-match" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Traditional Soccer Match
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#casual-lobby-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Casual Lobby Game
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#speed-soccer-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Speed Soccer Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beginner-friendly-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Beginner-Friendly Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sound-effects-and-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎵 Sound Effects and Audio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎵 Sound Effects and Audio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ball-interaction-sounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ball Interaction Sounds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#countdown-and-ui-sounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Countdown and UI Sounds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#team-equipment-and-visual-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏆 Team Equipment and Visual Identity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏆 Team Equipment and Visual Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leather-armor-color-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Leather Armor Color System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color-examples-for-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Color Examples for Teams
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-ball-appearance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Ball Appearance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-command-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Command Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#essential-command-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Essential Command Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-based-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event-Based Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#available-placeholders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Placeholders
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#economy-integration-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Economy Integration Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-and-iteration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 Testing and Iteration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Testing and Iteration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#testing-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-issues-and-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues and Solutions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-optimization-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Optimization Tips
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yaml-syntax-reminders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        YAML Syntax Reminders
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Further Resources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Further Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#learning-more" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning More
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Topics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-powered-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🤖 AI-Powered Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🤖 AI-Powered Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-chatgpt-for-easy-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using ChatGPT for Easy Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using ChatGPT for Easy Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-conversation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Conversation Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-ai-prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample AI Prompts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-safety-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Safety Tips
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="advanced-customization">Advanced Customization</h1>
+<p>Take your BlockBall arenas to the next level with extensive customization options. This guide covers everything from basic tweaks to advanced configurations using AI assistance.</p>
+<h2 id="overview">🎯 Overview</h2>
+<p>BlockBall offers hundreds of configuration options through arena YAML files. These files control everything from game mechanics to visual effects, allowing you to create unique gameplay experiences.</p>
+<hr />
+<h2 id="configuration-files">📁 Configuration Files</h2>
+<h3 id="location">Location</h3>
+<p>All arena customizations are stored in YAML files located at:
+<div class="highlight"><pre><span></span><code>/plugins/BlockBall/arena/&lt;arena_name&gt;.yml
+</code></pre></div></p>
+<p>For example, if your arena is named <code>game1</code>, the file will be:
+<div class="highlight"><pre><span></span><code>/plugins/BlockBall/arena/game1.yml
+</code></pre></div></p>
+<h3 id="editing-workflow">Editing Workflow</h3>
+<ol>
+<li><strong>Stop the arena</strong>: <code>/blockball toggle &lt;arena_name&gt;</code> (if enabled)</li>
+<li><strong>Edit the YAML file</strong> using your preferred text editor</li>
+<li><strong>Apply changes</strong>: <code>/blockball reload &lt;arena_name&gt;</code></li>
+<li><strong>Test your changes</strong> in-game</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Text Editor Recommendations</p>
+<ul>
+<li><strong>Notepad++</strong> (Windows) - Free with YAML syntax highlighting</li>
+<li><strong>Visual Studio Code</strong> - Cross-platform with excellent YAML support</li>
+<li><strong>Sublime Text</strong> - Lightweight with good plugin support</li>
+</ul>
+</div>
+<hr />
+<h2 id="common-customization-categories">🔧 Common Customization Categories</h2>
+<h3 id="game-mechanics">Game Mechanics</h3>
+<ul>
+<li><strong>Scoring Rules</strong>: Points per goal, win conditions, overtime rules</li>
+<li><strong>Physics</strong>: Ball speed, gravity, bounce behavior, player knockback</li>
+<li><strong>Timing</strong>: Game duration, period lengths, countdown timers</li>
+</ul>
+<h3 id="team-configuration">Team Configuration</h3>
+<ul>
+<li><strong>Team Settings</strong>: Names, colors, maximum players per team</li>
+<li><strong>Equipment</strong>: Default armor, tools, inventory items</li>
+<li><strong>Spawn Behavior</strong>: Respawn rules, spawn protection, team switching</li>
+</ul>
+<h3 id="visual-audio">Visual &amp; Audio</h3>
+<ul>
+<li><strong>Particle Effects</strong>: Goal celebrations, ball trails, area markers</li>
+<li><strong>Sound Effects</strong>: Custom sounds for events, ambient audio</li>
+<li><strong>Scoreboard Display</strong>: Layout, colors, update frequency</li>
+</ul>
+<h3 id="permissions-restrictions">Permissions &amp; Restrictions</h3>
+<ul>
+<li><strong>Player Abilities</strong>: Flying, breaking blocks, using commands</li>
+<li><strong>Inventory Management</strong>: Item restrictions, equipment changes</li>
+<li><strong>Command Access</strong>: Available commands during gameplay</li>
+</ul>
+<h3 id="integration-features">Integration Features</h3>
+<ul>
+<li><strong>PlaceholderAPI</strong>: Custom placeholders for external plugins</li>
+<li><strong>Hook Systems</strong>: Integration with economy, permission, and other plugins</li>
+<li><strong>Statistics</strong>: Player tracking, leaderboards, achievement systems</li>
+</ul>
+<hr />
+<h2 id="configuration-file-structure">📖 Configuration File Structure</h2>
+<h3 id="essential-arena-properties">Essential Arena Properties</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Unique arena identifier and display settings</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">game1</span>
+<span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;My</span><span class="nv"> </span><span class="s">first</span><span class="nv"> </span><span class="s">game&quot;</span>
+<span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">gameType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIGAME</span><span class="w">  </span><span class="c1"># HUBGAME, MINIGAME, REFEREEGAME</span>
+
+<span class="c1"># World boundaries - defines the playable area</span>
+<span class="nt">corner1</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">world</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">world</span>
+<span class="w">  </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1597.99</span>
+<span class="w">  </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0</span>
+<span class="w">  </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1588.01</span>
+<span class="nt">corner2</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">world</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">world</span>
+<span class="w">  </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1577.0</span>
+<span class="w">  </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.0</span>
+<span class="w">  </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1627.0</span>
+
+<span class="c1"># Ball spawn location in the center of the field</span>
+<span class="nt">ballSpawnPoint</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">world</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">world</span>
+<span class="w">  </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1586.99</span>
+<span class="w">  </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4.0</span>
+<span class="w">  </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1606.26</span>
+<span class="w">  </span><span class="nt">yaw</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">38.85</span>
+<span class="w">  </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45.45</span>
+</code></pre></div>
+<h3 id="ball-configuration">Ball Configuration</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">ball</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Visual appearance</span>
+<span class="w">  </span><span class="nt">render</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">  </span><span class="c1"># Ball size. You can set anything here in modern Minecraft versions. For older Minecraft versions only use 1.0 and 0.5.</span>
+<span class="w">    </span><span class="nt">rotating</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">offSetY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1.0</span><span class="w">  </span><span class="c1"># Vertical offset for visual positioning</span>
+
+<span class="w">  </span><span class="c1"># Player interaction settings</span>
+<span class="w">  </span><span class="nt">hitbox</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">clickHitBoxSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span>
+<span class="w">    </span><span class="nt">touchHitBoxSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">    </span><span class="nt">leftClickEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">rightClickEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">touchEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">interactionCoolDownTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">    </span><span class="nt">leftClickRightClickDelayTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">interactionCoolDownPerPlayerTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="w">    </span><span class="nt">slimeVisible</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">  </span><span class="c1"># Physics properties</span>
+<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.07</span><span class="w">      </span><span class="c1"># How fast ball falls</span>
+<span class="w">  </span><span class="nt">airResistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.001</span><span class="w">       </span><span class="c1"># Speed reduction in air</span>
+<span class="w">  </span><span class="nt">rollingResistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">     </span><span class="c1"># Speed reduction on ground</span>
+<span class="w">  </span><span class="nt">shotVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span><span class="w">          </span><span class="c1"># Power of left-click shots</span>
+<span class="w">  </span><span class="nt">shotPassYVelocityOverwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">  </span><span class="c1"># Vertical modifier override</span>
+<span class="w">  </span><span class="nt">passVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2</span><span class="w">          </span><span class="c1"># Power of right-click passes</span>
+</code></pre></div>
+<h3 id="team-setup">Team Setup</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Example team configuration</span>
+<span class="nt">blueTeamMeta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&amp;9Team</span><span class="nv"> </span><span class="s">Blue&#39;</span>
+<span class="w">  </span><span class="nt">pointsPerGoal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">minAmount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">      </span><span class="c1"># Minimum players to start</span>
+<span class="w">  </span><span class="nt">maxAmount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">     </span><span class="c1"># Maximum team size</span>
+
+<span class="w">  </span><span class="c1"># Goal area definition</span>
+<span class="w">  </span><span class="nt">goal</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">corner1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">world</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">world</span>
+<span class="w">      </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1591.99</span>
+<span class="w">      </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8.99</span>
+<span class="w">      </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1626.01</span>
+<span class="w">    </span><span class="nt">corner2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">world</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">world</span>
+<span class="w">      </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1584.0</span>
+<span class="w">      </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.0</span>
+<span class="w">      </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1631.0</span>
+
+<span class="w">  </span><span class="c1"># Team spawn points</span>
+<span class="w">  </span><span class="nt">spawnpoint</span><span class="p">:</span><span class="w">        </span><span class="c1"># In-game spawn</span>
+<span class="w">    </span><span class="nt">world</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">world</span>
+<span class="w">    </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1589.47</span>
+<span class="w">    </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4.0</span>
+<span class="w">    </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1619.19</span>
+<span class="w">  </span><span class="nt">lobbySpawnpoint</span><span class="p">:</span><span class="w">   </span><span class="c1"># Lobby spawn</span>
+<span class="w">    </span><span class="nt">world</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">world</span>
+<span class="w">    </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1603.18</span>
+<span class="w">    </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4.0</span>
+<span class="w">    </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1602.58</span>
+</code></pre></div>
+<h3 id="game-periods-and-timing">Game Periods and Timing</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Match structure with multiple periods</span>
+<span class="nt">minigameMeta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">lobbyDuration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">    </span><span class="c1"># Countdown before match starts</span>
+<span class="w">  </span><span class="nt">matchTimes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span><span class="w">          </span><span class="c1"># First half (2.5 minutes)</span>
+<span class="w">      </span><span class="nt">closeType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span>
+<span class="w">      </span><span class="nt">switchGoals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">playAbleBall</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">respawnEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">startMessageTitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+<span class="w">      </span><span class="nt">startMessageSubTitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+<span class="w">      </span><span class="nt">startMessageFadeIn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">      </span><span class="nt">startMessageStay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">      </span><span class="nt">startMessageFadeOut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">           </span><span class="c1"># Halftime break</span>
+<span class="w">      </span><span class="nt">closeType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span>
+<span class="w">      </span><span class="nt">switchGoals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">playAbleBall</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">    </span><span class="c1"># No ball during break</span>
+<span class="w">      </span><span class="nt">respawnEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">startMessageTitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+<span class="w">      </span><span class="nt">startMessageSubTitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&amp;0&amp;l[&amp;f&amp;lBreak&amp;0&amp;l]&amp;7&#39;</span>
+<span class="w">      </span><span class="nt">startMessageFadeIn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">      </span><span class="nt">startMessageStay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">      </span><span class="nt">startMessageFadeOut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span><span class="w">          </span><span class="c1"># Second half</span>
+<span class="w">      </span><span class="nt">closeType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span>
+<span class="w">      </span><span class="nt">switchGoals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">      </span><span class="c1"># Teams switch sides</span>
+<span class="w">      </span><span class="nt">playAbleBall</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">respawnEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">startMessageTitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+<span class="w">      </span><span class="nt">startMessageSubTitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+<span class="w">      </span><span class="nt">startMessageFadeIn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">      </span><span class="nt">startMessageStay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">      </span><span class="nt">startMessageFadeOut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+</code></pre></div>
+<h3 id="command-integration">Command Integration</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Commands executed when players join teams</span>
+<span class="nt">joinCommands</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/blockballscoreboard add blockball_scoreboard %blockball_player_name%</span>
+<span class="w">    </span><span class="nt">cooldown</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span><span class="w">  </span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/blockballbossbar add blockball_bossbar %blockball_player_name%</span>
+<span class="w">    </span><span class="nt">cooldown</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+
+<span class="c1"># Commands when players leave</span>
+<span class="nt">leaveCommands</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/blockballscoreboard remove blockball_scoreboard %blockball_player_name%</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/blockballbossbar remove blockball_bossbar %blockball_player_name%</span>
+</code></pre></div>
+<hr />
+<h2 id="detailed-game-mechanics">⚙️ Detailed Game Mechanics</h2>
+<h3 id="ball-physics-deep-dive">Ball Physics Deep Dive</h3>
+<p>Understanding ball physics is crucial for creating the right gameplay feel:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">ball</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Gravity and movement</span>
+<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.07</span><span class="w">        </span><span class="c1"># Higher = ball falls faster</span>
+<span class="w">  </span><span class="nt">airResistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.001</span><span class="w">         </span><span class="c1"># Higher = ball slows down more in air</span>
+<span class="w">  </span><span class="nt">rollingResistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">       </span><span class="c1"># Higher = ball stops rolling sooner</span>
+
+<span class="w">  </span><span class="c1"># Player interaction strengths</span>
+<span class="w">  </span><span class="nt">horizontalTouchModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">  </span><span class="c1"># Running into ball power</span>
+<span class="w">  </span><span class="nt">verticalTouchModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">    </span><span class="c1"># Jump-touch ball power</span>
+<span class="w">  </span><span class="nt">shotVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span><span class="w">            </span><span class="c1"># Left-click power shot</span>
+<span class="w">  </span><span class="nt">shotPassYVelocityOverwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">  </span><span class="c1"># Override vertical shot modifier</span>
+<span class="w">  </span><span class="nt">passVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2</span><span class="w">            </span><span class="c1"># Right-click gentle pass</span>
+
+<span class="w">  </span><span class="c1"># Ball rotation and limits</span>
+<span class="w">  </span><span class="nt">maximumSpinVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.08</span><span class="w">    </span><span class="c1"># How much the ball can spin</span>
+<span class="w">  </span><span class="nt">maximumPitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w">             </span><span class="c1"># Highest angle ball can fly</span>
+<span class="w">  </span><span class="nt">minimumPitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">              </span><span class="c1"># Lowest angle (ground level)</span>
+<span class="w">  </span><span class="nt">defaultPitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">             </span><span class="c1"># Standard launch angle</span>
+</code></pre></div>
+<h3 id="player-movement-and-abilities">Player Movement and Abilities</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">doubleJumpMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">              </span><span class="c1"># Allow double jumping</span>
+<span class="w">    </span><span class="nt">cooldown</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">                </span><span class="c1"># Seconds between double jumps</span>
+<span class="w">    </span><span class="nt">verticalStrength</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">      </span><span class="c1"># Jump height multiplier</span>
+<span class="w">    </span><span class="nt">horizontalStrength</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span><span class="w">    </span><span class="c1"># Forward momentum multiplier</span>
+<span class="w">    </span><span class="nt">soundEffect</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENTITY_WIND_CHARGE_WIND_BURST,ENTITY_GHAST_SHOOT,GHAST_FIREBALL</span>
+<span class="w">      </span><span class="nt">volume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0</span>
+<span class="w">      </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+
+<span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">customizingMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">damageEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">       </span><span class="c1"># Players can&#39;t take damage</span>
+<span class="w">    </span><span class="nt">backTeleport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">        </span><span class="c1"># Auto-teleport after goals</span>
+<span class="w">    </span><span class="nt">backTeleportDelay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">       </span><span class="c1"># Delay before teleporting</span>
+<span class="w">    </span><span class="nt">keepInventoryEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"> </span><span class="c1"># Players lose items when joining</span>
+<span class="w">    </span><span class="nt">keepHealthEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">    </span><span class="c1"># Maintain health when joining</span>
+<span class="w">    </span><span class="nt">queueTimeOutSec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">        </span><span class="c1"># Max queue wait time for MINIGAME mode</span>
+<span class="w">    </span><span class="nt">ignoreGoalSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">      </span><span class="c1"># Allow very small goals</span>
+<span class="w">    </span><span class="nt">gameStartBallSpawnDelayTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">   </span><span class="c1"># Ball spawn delay on game start</span>
+<span class="w">    </span><span class="nt">goalScoredBallSpawnDelayTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">  </span><span class="c1"># Ball spawn delay after goals</span>
+<span class="w">  </span><span class="nt">minigameMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">forceFieldEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">    </span><span class="c1"># Invisible walls keep players in bounds</span>
+<span class="w">  </span><span class="nt">protectionMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">rejoinProtectionEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">     </span><span class="c1"># Apply velocity when rejoining</span>
+<span class="w">    </span><span class="nt">rejoinProtection</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">x</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">      </span><span class="nt">y</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
+<span class="w">      </span><span class="nt">z</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+</code></pre></div>
+<h3 id="advanced-team-configuration">Advanced Team Configuration</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Complete team setup example</span>
+<span class="nt">redTeamMeta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&amp;cTeam</span><span class="nv"> </span><span class="s">Red&#39;</span>
+<span class="w">  </span><span class="nt">pointsPerGoal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">             </span><span class="c1"># Points awarded per goal</span>
+<span class="w">  </span><span class="nt">pointsPerEnemyDeath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">       </span><span class="c1"># Points for opponent deaths</span>
+<span class="w">  </span><span class="nt">minAmount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">                 </span><span class="c1"># Minimum players to start match</span>
+<span class="w">  </span><span class="nt">maxAmount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">                </span><span class="c1"># Team size limit</span>
+<span class="w">  </span><span class="nt">minPlayingPlayers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">         </span><span class="c1"># Minimum to keep game running</span>
+
+<span class="w">  </span><span class="c1"># Team equipment (auto-equipped on join)</span>
+<span class="w">  </span><span class="nt">armor</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEATHER_BOOTS with RED color</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEATHER_LEGGINGS with RED color</span><span class="w">  </span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEATHER_CHESTPLATE with RED color</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null (no helmet)</span>
+
+<span class="w">  </span><span class="c1"># Custom inventory items</span>
+<span class="w">  </span><span class="nt">inventory</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">  </span><span class="c1"># All 36 slots can be configured</span>
+<span class="w">    </span><span class="c1"># ... (slots 1-35 shown as null in example)</span>
+</code></pre></div>
+<h3 id="game-mode-variations">Game Mode Variations</h3>
+<h4 id="minigame-mode">MINIGAME Mode</h4>
+<ul>
+<li><strong>Structure</strong>: Lobby → Match → Results → Reset</li>
+<li><strong>Features</strong>: Scheduled matches, team balancing, periods</li>
+<li><strong>Best for</strong>: Competitive matches, tournaments</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">gameType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIGAME</span>
+<span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">minigameMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">lobbyDuration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">          </span><span class="c1"># Pre-match countdown</span>
+<span class="w">    </span><span class="nt">forceFieldEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">    </span><span class="c1"># Keep players in arena</span>
+<span class="w">  </span><span class="nt">customizingMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">queueTimeOutSec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">        </span><span class="c1"># Max wait time for players</span>
+</code></pre></div>
+<h4 id="hubgame-mode">HUBGAME Mode</h4>
+<ul>
+<li><strong>Structure</strong>: Continuous play, join/leave anytime</li>
+<li><strong>Features</strong>: Instant join, persistent scores</li>
+<li><strong>Best for</strong>: Casual play, practice areas</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">gameType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HUBGAME</span>
+<span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">hubLobbyMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">instantForcefieldJoin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># Show join prompt</span>
+<span class="w">    </span><span class="nt">resetArenaOnEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">      </span><span class="c1"># Keep scores when empty</span>
+<span class="w">    </span><span class="nt">teleportOnJoin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">          </span><span class="c1"># Move to team spawn</span>
+</code></pre></div>
+<h4 id="refereegame-mode-patreon-only">REFEREEGAME Mode (Patreon Only)</h4>
+<ul>
+<li><strong>Structure</strong>: Manual control, referee commands</li>
+<li><strong>Features</strong>: Pause/resume, manual scoring</li>
+<li><strong>Best for</strong>: Official matches, streaming</li>
+</ul>
+<hr />
+<h2 id="popular-customization-examples">🎨 Popular Customization Examples</h2>
+<h3 id="fast-paced-quick-match">Fast-Paced Quick Match</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 5-minute total game with no breaks</span>
+<span class="nt">gameType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIGAME</span>
+<span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">lobbyMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">maxScore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">              </span><span class="c1"># First to 3 goals wins</span>
+<span class="w">  </span><span class="nt">minigameMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">lobbyDuration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">        </span><span class="c1"># Quick 10-second countdown</span>
+<span class="w">    </span><span class="nt">matchTimes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w">        </span><span class="c1"># Single 5-minute period</span>
+<span class="w">        </span><span class="nt">closeType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span>
+<span class="w">        </span><span class="nt">playAbleBall</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="c1"># Faster ball physics</span>
+<span class="nt">ball</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">shotVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span><span class="w">          </span><span class="c1"># More powerful shots</span>
+<span class="w">  </span><span class="nt">passVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.8</span><span class="w">          </span><span class="c1"># Faster passes</span>
+<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span><span class="w">      </span><span class="c1"># Ball stays in air longer</span>
+
+<span class="c1"># Enhanced movement</span>
+<span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">doubleJumpMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cooldown</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">              </span><span class="c1"># Double jump every second</span>
+<span class="w">    </span><span class="nt">verticalStrength</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span><span class="w">    </span><span class="c1"># Higher jumps</span>
+</code></pre></div>
+<h3 id="traditional-soccer-match">Traditional Soccer Match</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Realistic 90-minute match structure</span>
+<span class="nt">gameType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIGAME</span>
+<span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">minigameMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">lobbyDuration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">        </span><span class="c1"># 30-second pre-match</span>
+<span class="w">    </span><span class="nt">matchTimes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2700</span><span class="w">       </span><span class="c1"># First half (45 min)</span>
+<span class="w">        </span><span class="nt">closeType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span>
+<span class="w">        </span><span class="nt">switchGoals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">startMessageSubTitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&amp;a&amp;lFirst</span><span class="nv"> </span><span class="s">Half&#39;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">900</span><span class="w">        </span><span class="c1"># Halftime (15 min)</span>
+<span class="w">        </span><span class="nt">closeType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span>
+<span class="w">        </span><span class="nt">playAbleBall</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">startMessageSubTitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&amp;e&amp;lHalftime</span><span class="nv"> </span><span class="s">Break&#39;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2700</span><span class="w">       </span><span class="c1"># Second half (45 min)</span>
+<span class="w">        </span><span class="nt">closeType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span>
+<span class="w">        </span><span class="nt">switchGoals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">     </span><span class="c1"># Teams switch sides</span>
+<span class="w">        </span><span class="nt">startMessageSubTitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&amp;a&amp;lSecond</span><span class="nv"> </span><span class="s">Half&#39;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800</span><span class="w">       </span><span class="c1"># Extra time if tied (30 min)</span>
+<span class="w">        </span><span class="nt">closeType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NEXT_GOAL</span><span class="w">  </span><span class="c1"># Sudden death</span>
+<span class="w">        </span><span class="nt">startMessageSubTitle</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&amp;c&amp;lExtra</span><span class="nv"> </span><span class="s">Time</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">Next</span><span class="nv"> </span><span class="s">Goal</span><span class="nv"> </span><span class="s">Wins!&#39;</span>
+</code></pre></div>
+<h3 id="casual-lobby-game">Casual Lobby Game</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">gameType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HUBGAME</span>
+<span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">lobbyMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">maxScore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">             </span><span class="c1"># Play to 10 goals</span>
+<span class="w">  </span><span class="nt">hubLobbyMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">instantForcefieldJoin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span><span class="c1"># Auto-join when entering</span>
+<span class="w">    </span><span class="nt">resetArenaOnEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">       </span><span class="c1"># Reset when no players</span>
+<span class="w">    </span><span class="nt">teleportOnJoin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">         </span><span class="c1"># Join where you stand</span>
+
+<span class="c1"># Relaxed physics</span>
+<span class="nt">ball</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">shotVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">          </span><span class="c1"># Standard power</span>
+<span class="w">  </span><span class="nt">rollingResistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span><span class="w">     </span><span class="c1"># Ball stops rolling sooner</span>
+
+<span class="c1"># No special abilities  </span>
+<span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">doubleJumpMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">           </span><span class="c1"># Disable double jumping</span>
+<span class="w">  </span><span class="nt">customizingMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">forceFieldEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"> </span><span class="c1"># Players can leave field</span>
+</code></pre></div>
+<h3 id="speed-soccer-mode">Speed Soccer Mode</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># High-speed, low-gravity soccer</span>
+<span class="nt">ball</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">render</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span><span class="w">               </span><span class="c1"># Smaller, faster ball</span>
+<span class="w">  </span><span class="nt">shotVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.0</span><span class="w">          </span><span class="c1"># Extremely powerful shots</span>
+<span class="w">  </span><span class="nt">passVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.5</span><span class="w">          </span><span class="c1"># Fast passes</span>
+<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.02</span><span class="w">      </span><span class="c1"># Low gravity, floaty ball</span>
+<span class="w">  </span><span class="nt">airResistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0005</span><span class="w">      </span><span class="c1"># Ball maintains speed longer</span>
+
+<span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">doubleJumpMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cooldown</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">            </span><span class="c1"># Double jump twice per second</span>
+<span class="w">    </span><span class="nt">verticalStrength</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span><span class="w">    </span><span class="c1"># Super high jumps</span>
+<span class="w">    </span><span class="nt">horizontalStrength</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.0</span><span class="w">  </span><span class="c1"># Rocket-like movement</span>
+
+<span class="w">  </span><span class="nt">customizingMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">damageEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">     </span><span class="c1"># No fall damage from high jumps</span>
+</code></pre></div>
+<h3 id="beginner-friendly-setup">Beginner-Friendly Setup</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Easy mode for new players</span>
+<span class="nt">ball</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">render</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span><span class="w">               </span><span class="c1"># Bigger ball, easier to see/hit</span>
+<span class="w">  </span><span class="nt">hitbox</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">clickHitBoxSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span><span class="w">     </span><span class="c1"># Larger click area</span>
+<span class="w">    </span><span class="nt">touchHitBoxSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span><span class="w">     </span><span class="c1"># Easier to run into</span>
+<span class="w">    </span><span class="nt">interactionCoolDownTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">  </span><span class="c1"># Faster interaction</span>
+
+<span class="w">  </span><span class="nt">shotVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.8</span><span class="w">          </span><span class="c1"># Gentler shots</span>
+<span class="w">  </span><span class="nt">passVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span><span class="w">          </span><span class="c1"># Slower passes</span>
+<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">       </span><span class="c1"># Ball doesn&#39;t fly too high</span>
+
+<span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">lobbyMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">maxScore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span><span class="w">             </span><span class="c1"># Longer games</span>
+<span class="w">  </span><span class="nt">minigameMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">lobbyDuration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span><span class="w">        </span><span class="c1"># More time to prepare</span>
+<span class="w">  </span><span class="nt">customizingMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">backTeleport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">       </span><span class="c1"># Reset positions after goals</span>
+<span class="w">    </span><span class="nt">backTeleportDelay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">     </span><span class="c1"># Give time to see the goal</span>
+</code></pre></div>
+<hr />
+<h2 id="sound-effects-and-audio">🎵 Sound Effects and Audio</h2>
+<h3 id="ball-interaction-sounds">Ball Interaction Sounds</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">ball</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">soundEffects</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">ONKICK</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Multiple sound names for different Minecraft versions</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR,ENTITY_ZOMBIE_ATTACK_DOOR_WOOD,ZOMBIE_WOOD</span>
+<span class="w">      </span><span class="nt">volume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0</span><span class="w">           </span><span class="c1"># Sound volume (0.0 to 10.0)</span>
+<span class="w">      </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span><span class="w">             </span><span class="c1"># Sound pitch (0.5 to 2.0)</span>
+<span class="w">      </span><span class="nt">effectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVERYONE</span><span class="w">   </span><span class="c1"># Who hears it: EVERYONE, TEAM, SELF</span>
+</code></pre></div>
+<h3 id="countdown-and-ui-sounds">Countdown and UI Sounds</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">minigameMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">countdownSound</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BLOCK_NOTE_BLOCK_PLING,BLOCK_NOTE_PLING,NOTE_PLING</span>
+<span class="w">      </span><span class="nt">volume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0</span>
+<span class="w">      </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
+<span class="w">      </span><span class="nt">effectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+
+<span class="w">  </span><span class="nt">doubleJumpMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">soundEffect</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENTITY_WIND_CHARGE_WIND_BURST,ENTITY_GHAST_SHOOT,GHAST_FIREBALL</span>
+<span class="w">      </span><span class="nt">volume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0</span>
+<span class="w">      </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">      </span><span class="nt">effectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVERYONE</span>
+</code></pre></div>
+<hr />
+<h2 id="team-equipment-and-visual-identity">🏆 Team Equipment and Visual Identity</h2>
+<h3 id="leather-armor-color-system">Leather Armor Color System</h3>
+<p>BlockBall uses leather armor with custom colors for team identification:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Team Red armor configuration</span>
+<span class="nt">redTeamMeta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">armor</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">item:</span>
+<span class="w">        </span><span class="no">==: org.bukkit.inventory.ItemStack</span>
+<span class="w">        </span><span class="no">v: 4554</span>
+<span class="w">        </span><span class="no">type: LEATHER_BOOTS</span>
+<span class="w">        </span><span class="no">meta:</span>
+<span class="w">          </span><span class="no">==: ItemMeta</span>
+<span class="w">          </span><span class="no">meta-type: COLORABLE_ARMOR</span>
+<span class="w">          </span><span class="no">color:</span>
+<span class="w">            </span><span class="no">==: Color</span>
+<span class="w">            </span><span class="no">ALPHA: 255</span>
+<span class="w">            </span><span class="no">RED: 255    # Full red</span>
+<span class="w">            </span><span class="no">GREEN: 0    # No green</span>
+<span class="w">            </span><span class="no">BLUE: 0     # No blue</span>
+</code></pre></div>
+<h3 id="color-examples-for-teams">Color Examples for Teams</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Classic team colors</span>
+<span class="c1"># Red Team: RGB(255, 0, 0)</span>
+<span class="c1"># Blue Team: RGB(0, 0, 255)</span>
+<span class="c1"># Green Team: RGB(0, 255, 0)</span>
+<span class="c1"># Yellow Team: RGB(255, 255, 0)</span>
+<span class="c1"># Purple Team: RGB(128, 0, 128)</span>
+<span class="c1"># Orange Team: RGB(255, 165, 0)</span>
+<span class="c1"># Pink Team: RGB(255, 192, 203)</span>
+<span class="c1"># Cyan Team: RGB(0, 255, 255)</span>
+</code></pre></div>
+<h3 id="custom-ball-appearance">Custom Ball Appearance</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">ball</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">render</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Custom ball item (soccer ball head texture)</span>
+<span class="w">    </span><span class="nt">item</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">typeName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAYER_HEAD,397</span>
+<span class="w">      </span><span class="nt">amount</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1&#39;</span>
+<span class="w">      </span><span class="nt">durability</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3&#39;</span>
+<span class="w">      </span><span class="c1"># Base64 encoded soccer ball skin</span>
+<span class="w">      </span><span class="nt">skinBase64</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==</span>
+
+<span class="w">    </span><span class="c1"># Ball positioning and rotation</span>
+<span class="w">    </span><span class="nt">rotating</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">           </span><span class="c1"># Ball spins as it moves</span>
+<span class="w">    </span><span class="nt">offSetY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1.0</span><span class="w">           </span><span class="c1"># Visual height adjustment</span>
+</code></pre></div>
+<h3 id="understanding-command-types">Understanding Command Types</h3>
+<p>BlockBall supports three types of command execution:</p>
+<ul>
+<li><strong>SERVER</strong>: Execute as console (admin privileges)</li>
+<li><strong>SERVER_PER_PLAYER</strong>: Execute as console for each player individually  </li>
+<li><strong>PER_PLAYER</strong>: Execute as the player themselves</li>
+</ul>
+<h3 id="essential-command-integration">Essential Command Integration</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Automatic scoreboard and bossbar setup</span>
+<span class="nt">joinCommands</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/blockballscoreboard add blockball_scoreboard %blockball_player_name%</span>
+<span class="w">    </span><span class="nt">cooldown</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">playerPermission</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w">  </span><span class="c1"># Optional permission requirement</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/blockballbossbar add blockball_bossbar %blockball_player_name%</span>
+<span class="w">    </span><span class="nt">cooldown</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+
+<span class="c1"># Cleanup when players leave</span>
+<span class="nt">leaveCommands</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/blockballscoreboard remove blockball_scoreboard %blockball_player_name%</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/blockballbossbar remove blockball_bossbar %blockball_player_name%</span>
+</code></pre></div>
+<h3 id="event-based-commands">Event-Based Commands</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Goal celebration commands</span>
+<span class="nt">goalCommands</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tellraw @a [&quot;&quot;,{&quot;text&quot;:&quot;GOAL! &quot;,&quot;color&quot;:&quot;gold&quot;,&quot;bold&quot;:true},{&quot;text&quot;:&quot;%blockball_player_name%&quot;,&quot;color&quot;:&quot;yellow&quot;},{&quot;text&quot;:&quot; scores for &quot;,&quot;color&quot;:&quot;white&quot;},{&quot;text&quot;:&quot;%blockball_team_displayName%&quot;,&quot;color&quot;:&quot;aqua&quot;}]</span>
+<span class="w">    </span><span class="nt">delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">  </span><span class="c1"># Wait 0.5 seconds after goal</span>
+
+<span class="c1"># Game start announcements  </span>
+<span class="nt">gameStartCommands</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/title @a title {&quot;text&quot;:&quot;MATCH START!&quot;,&quot;color&quot;:&quot;green&quot;,&quot;bold&quot;:true}</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER</span><span class="w">  </span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/playsound minecraft:entity.ender_dragon.growl master @a ~ ~ ~ 1 1.2</span>
+<span class="w">    </span><span class="nt">delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+
+<span class="c1"># Win/lose rewards</span>
+<span class="nt">winCommands</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/give %blockball_player_name% diamond 1</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/msg %blockball_player_name% Congratulations on your victory!</span>
+
+<span class="c1"># Tournament integration</span>
+<span class="nt">backTeleportCommands</span><span class="p">:</span><span class="w">  </span><span class="c1"># After each goal</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tournament match update %blockball_game_name%</span>
+</code></pre></div>
+<h3 id="available-placeholders">Available Placeholders</h3>
+<p>Use these placeholders in commands to access game data:</p>
+<ul>
+<li><code>%blockball_player_name%</code> - Player's username</li>
+<li><code>%blockball_team_displayName%</code> - Team's display name  </li>
+<li><code>%blockball_game_name%</code> - Arena name</li>
+<li><code>%blockball_game_displayName%</code> - Arena display name</li>
+<li><code>%blockball_team_score%</code> - Current team score</li>
+<li><code>%blockball_enemy_score%</code> - Opposing team score</li>
+</ul>
+<h3 id="economy-integration-example">Economy Integration Example</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Reward system with economy plugin</span>
+<span class="nt">goalCommands</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/eco give %blockball_player_name% 100</span>
+
+<span class="nt">winCommands</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span><span class="w">  </span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/eco give %blockball_player_name% 500</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/give %blockball_player_name% gold_ingot 3</span>
+<span class="w">    </span><span class="nt">playerPermission</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;myplayers.vip&quot;</span><span class="w"> </span><span class="c1"># If this is set, only players with this permission receive the gold ingots.</span>
+
+<span class="nt">looseCommands</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/eco give %blockball_player_name% 50</span><span class="w">  </span><span class="c1"># Participation reward</span>
+</code></pre></div>
+<hr />
+<h2 id="testing-and-iteration">🔄 Testing and Iteration</h2>
+<h3 id="testing-workflow">Testing Workflow</h3>
+<ol>
+<li><strong>Make small changes</strong> - Test one feature at a time</li>
+<li><strong>Use test server</strong> - Avoid disrupting live gameplay  </li>
+<li><strong>Get player feedback</strong> - Real users provide valuable insights</li>
+<li><strong>Document changes</strong> - Keep notes on what works well</li>
+</ol>
+<h3 id="common-issues-and-solutions">Common Issues and Solutions</h3>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Likely Cause</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arena won't load</td>
+<td>YAML syntax errors</td>
+<td>Use online YAML validator, check indentation</td>
+</tr>
+<tr>
+<td>Ball doesn't spawn</td>
+<td>ballSpawnPoint coordinates wrong</td>
+<td>Verify coordinates are within corner1/corner2 bounds</td>
+</tr>
+<tr>
+<td>Teams can't score</td>
+<td>Goal coordinates incorrect</td>
+<td>Check goal corner1/corner2 define valid goal areas</td>
+</tr>
+<tr>
+<td>Players stuck in walls</td>
+<td>Spawn points inside blocks</td>
+<td>Move spawnpoint coordinates to open areas</td>
+</tr>
+<tr>
+<td>Commands not executing</td>
+<td>Wrong command type or syntax</td>
+<td>Use SERVER_PER_PLAYER for most integrations</td>
+</tr>
+<tr>
+<td>Sounds not playing</td>
+<td>Outdated sound names</td>
+<td>Use comma-separated names for version compatibility</td>
+</tr>
+<tr>
+<td>Double jump not working</td>
+<td>Cooldown too high or disabled</td>
+<td>Check enabled: true and reduce cooldown value</td>
+</tr>
+<tr>
+<td>Ball physics feel wrong</td>
+<td>Velocity/gravity settings off</td>
+<td>Start with default values and adjust gradually</td>
+</tr>
+<tr>
+<td>Scoreboard errors</td>
+<td>Missing BlockBall scoreboard plugin</td>
+<td>Install companion plugins or remove scoreboard commands</td>
+</tr>
+<tr>
+<td>Armor not colored</td>
+<td>Incorrect RGB values</td>
+<td>Use values 0-255 for RED, GREEN, BLUE components</td>
+</tr>
+</tbody>
+</table>
+<h3 id="performance-optimization-tips">Performance Optimization Tips</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Reduce server load for large servers</span>
+<span class="nt">ball</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">hitbox</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">interactionCoolDownTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">      </span><span class="c1"># Prevent spam clicking</span>
+<span class="w">    </span><span class="nt">interactionCoolDownPerPlayerTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w">  </span><span class="c1"># Per-player cooldown</span>
+
+<span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">customizingMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">gameStartBallSpawnDelayTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">   </span><span class="c1"># Reduce instant spawn lag</span>
+<span class="w">    </span><span class="nt">goalScoredBallSpawnDelayTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">  </span><span class="c1"># Quick goal reset</span>
+
+<span class="c1"># Limit command spam</span>
+<span class="nt">joinCommands</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_PER_PLAYER</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/your-command-here</span>
+<span class="w">    </span><span class="nt">cooldown</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w">  </span><span class="c1"># 5-second cooldown prevents repeated execution</span>
+</code></pre></div>
+<h3 id="yaml-syntax-reminders">YAML Syntax Reminders</h3>
+<div class="admonition warning">
+<p class="admonition-title">Common YAML Mistakes</p>
+<ul>
+<li><strong>Indentation</strong>: Use spaces, not tabs. Each level = 2 spaces</li>
+<li><strong>Colons</strong>: Always add space after colons: <code>key: value</code></li>
+<li><strong>Quotes</strong>: Use quotes around text with special characters</li>
+<li><strong>Lists</strong>: Start list items with <code>-</code> (dash + space)</li>
+<li><strong>Null values</strong>: Use <code>null</code> for empty values, not blank</li>
+</ul>
+</div>
+<div class="highlight"><pre><span></span><code><span class="c1"># ✅ Correct YAML formatting</span>
+<span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">customizingMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">damageEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">backTeleport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">lobbyMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">maxScore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+
+<span class="c1"># ❌ Incorrect formatting (will cause errors)</span>
+<span class="nt">meta</span><span class="p">:</span>
+<span class="nt">customizingMeta</span><span class="p">:</span>
+<span class="l l-Scalar l-Scalar-Plain">damageEnabled:false</span><span class="w">  </span><span class="c1"># Missing space after colon</span>
+<span class="nt">backTeleport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">lobbyMeta</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">maxScore:10</span><span class="w">      </span><span class="c1"># Missing space after colon</span>
+</code></pre></div>
+<hr />
+<h2 id="further-resources">📚 Further Resources</h2>
+<h3 id="learning-more">Learning More</h3>
+<ul>
+<li><strong>In-game help</strong>: <code>/blockball help</code> for command reference</li>
+<li><strong>Community forums</strong>: Share configurations with other server owners</li>
+<li><strong>Plugin documentation</strong>: Detailed technical references</li>
+</ul>
+<h3 id="advanced-topics">Advanced Topics</h3>
+<ul>
+<li><strong>Custom scripting</strong>: Integration with other plugins</li>
+<li><strong>Performance optimization</strong>: Large server considerations  </li>
+<li><strong>Multi-arena management</strong>: Coordinating multiple games</li>
+<li><strong>Event integration</strong>: Tournament and competition setups</li>
+</ul>
+<div class="admonition success">
+<p class="admonition-title">Pro Tip</p>
+<p>Start with small modifications and gradually build complexity. The most successful arena configurations evolve over time based on player feedback and server needs.</p>
+</div>
+<hr />
+<h2 id="ai-powered-configuration">🤖 AI-Powered Configuration</h2>
+<h3 id="using-chatgpt-for-easy-setup">Using ChatGPT for Easy Setup</h3>
+<p>BlockBall's configuration files contain hundreds of options with detailed comments. Instead of learning every setting manually, you can use AI to make precise changes quickly and accurately.</p>
+<h4 id="step-by-step-process">Step-by-Step Process</h4>
+<ol>
+<li><strong>Upload your arena file</strong> to ChatGPT</li>
+<li><strong>Describe your desired changes</strong> in plain English  </li>
+<li><strong>Review the AI suggestions</strong> before applying</li>
+<li><strong>Apply changes manually</strong> to your file (recommended for safety)</li>
+</ol>
+<h4 id="example-conversation-flow">Example Conversation Flow</h4>
+<p><img alt="ChatGPT Arena Configuration" src="../assets/chatgpt1.png" /></p>
+<p><img alt="Configuration Analysis" src="../assets/chatgpt2.png" /></p>
+<p><img alt="Suggested Changes" src="../assets/chatgpt3.png" /></p>
+<p><img alt="Implementation Guide" src="../assets/chatgpt4.png" /></p>
+<p><img alt="Final Verification" src="../assets/chatgpt5.png" /></p>
+<h4 id="sample-ai-prompts">Sample AI Prompts</h4>
+<p><strong>Basic Game Modifications:</strong>
+<div class="highlight"><pre><span></span><code>&quot;Change the match to have 3 periods of 5 minutes each with 2-minute breaks&quot;
+&quot;Make the ball 50% larger and increase shot velocity to 2.0&quot;
+&quot;Set up a quick 3-goal match with 10-second lobby countdown&quot;
+&quot;Enable double jumping with 1-second cooldown and higher jump strength&quot;
+</code></pre></div></p>
+<p><strong>Team and Equipment Changes:</strong>
+<div class="highlight"><pre><span></span><code>&quot;Change team colors to green vs purple and update the armor accordingly&quot;
+&quot;Set maximum team size to 6 players and minimum of 2 to start&quot;
+&quot;Add custom join commands that give players a wooden sword and 64 bread&quot;
+&quot;Configure teams to switch goals every period automatically&quot;
+</code></pre></div></p>
+<p><strong>Ball Physics Adjustments:</strong>
+<div class="highlight"><pre><span></span><code>&quot;Make the ball more realistic: increase gravity to 0.1, reduce air resistance&quot;
+&quot;Create a low-gravity mode with gravityModifier 0.02 and higher shot velocity&quot;
+&quot;Reduce ball interaction cooldown to 10 ticks for faster gameplay&quot;
+&quot;Make the ball smaller (scale 0.7) and increase all hit box sizes&quot;
+</code></pre></div></p>
+<p><strong>Advanced Game Modes:</strong>
+<div class="highlight"><pre><span></span><code>&quot;Set up a sudden death overtime period that ends on next goal&quot;
+&quot;Create a tournament mode with referee controls and manual ball spawning&quot;  
+&quot;Configure automatic scoreboard and bossbar for all players&quot;
+&quot;Add goal celebration commands that give rewards and play sounds&quot;
+</code></pre></div></p>
+<p><strong>Sound and Visual Effects:</strong>
+<div class="highlight"><pre><span></span><code>&quot;Change the ball kick sound to a more realistic soccer ball sound&quot;
+&quot;Add countdown sounds during lobby with increasing pitch&quot;
+&quot;Configure different sounds for goals, double jumps, and game events&quot;
+&quot;Set up victory fanfare commands when a team wins&quot;
+</code></pre></div></p>
+<h3 id="ai-safety-tips">AI Safety Tips</h3>
+<div class="admonition warning">
+<p class="admonition-title">Backup First</p>
+<p>Always backup your arena files before applying AI-generated changes.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Manual Application</p>
+<p>While ChatGPT can generate download links, manually applying suggested changes ensures file integrity and gives you better understanding.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Verification</p>
+<p>After applying changes, use <code>/blockball reload</code> and test thoroughly before going live.</p>
+</div>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../game/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Creating the game">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Creating the game
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../interaction/" class="md-footer__link md-footer__link--next" aria-label="Next: Interactions">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Interactions
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tabs", "content.tabs.link", "content.code.copy", "navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
