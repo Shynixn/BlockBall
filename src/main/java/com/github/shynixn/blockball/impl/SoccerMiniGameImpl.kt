@@ -1,9 +1,7 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.contract.BlockBallLanguage
-import com.github.shynixn.blockball.contract.CloudService
-import com.github.shynixn.blockball.contract.SoccerBallFactory
-import com.github.shynixn.blockball.contract.SoccerMiniGame
+import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.entity.ForceField
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
@@ -15,7 +13,6 @@ import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
-import com.github.shynixn.mcutils.common.commonServer
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.sound.SoundService
@@ -31,8 +28,8 @@ open class SoccerMiniGameImpl(
     arena: SoccerArena,
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
     private val plugin: Plugin,
-    private val placeHolderService: PlaceHolderService,
-    private val chatMessageService: ChatMessageService,
+    placeHolderService: PlaceHolderService,
+    chatMessageService: ChatMessageService,
     private val soundService: SoundService,
     language: BlockBallLanguage,
     commandService: CommandService,
@@ -40,7 +37,8 @@ open class SoccerMiniGameImpl(
     itemService: ItemService,
     cloudService: CloudService,
     private val server: Server,
-    private val coroutineHandler: CoroutineHandler
+    private val coroutineHandler: CoroutineHandler,
+    private val forceFieldService: ForceFieldService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -57,6 +55,20 @@ open class SoccerMiniGameImpl(
 ), SoccerMiniGame {
     private var currentQueueTime = arena.meta.customizingMeta.queueTimeOutSec
     private var isQueueTimeRunning = false
+    private val forceField: ForceField = ForceField(arena.outerField.corner1!!, arena.outerField.corner2!!).also {
+        it.on2dOutSide = { player ->
+            if (arena.meta.minigameMeta.forceFieldEnabled && status == GameState.RUNNING && ingamePlayersStorage.containsKey(
+                    player
+                )
+            ) {
+                lockInsideForceField(player)
+            }
+        }
+    }
+
+    init {
+        forceFieldService.addForceField(forceField)
+    }
 
     /**
      * Is the lobby countdown active.
@@ -211,6 +223,7 @@ open class SoccerMiniGameImpl(
         }
         status = GameState.DISABLED
         closed = true
+        forceFieldService.removeForceField(forceField)
         ingamePlayersStorage.keys.toTypedArray().forEach { p ->
             leave(p)
         }
@@ -360,5 +373,9 @@ open class SoccerMiniGameImpl(
                 delay(20.ticks)
             }
         }
+    }
+
+    private fun lockInsideForceField(player: Player) {
+        forceFieldService.knockBackInside(forceField, player, 0.9F)
     }
 }

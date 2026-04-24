@@ -43,7 +43,8 @@ class GameServiceImpl(
     private val language: BlockBallLanguage,
     private val itemService: ItemService,
     private val server: Server,
-    private val coroutineHandler: CoroutineHandler
+    private val coroutineHandler: CoroutineHandler,
+    private val forceFieldService: ForceFieldService
 ) : GameService {
     @Volatile
     private var games: List<SoccerGame> = ArrayList()
@@ -106,7 +107,8 @@ class GameServiceImpl(
                     chatMessageService,
                     cloudService,
                     server,
-                    coroutineHandler
+                    coroutineHandler,
+                    forceFieldService
                 )
 
                 GameType.MINIGAME -> SoccerMiniGameImpl(
@@ -122,7 +124,8 @@ class GameServiceImpl(
                     itemService,
                     cloudService,
                     server,
-                    coroutineHandler
+                    coroutineHandler,
+                    forceFieldService
                 ).also {
                     it.ballEnabled = false
                 }
@@ -140,7 +143,8 @@ class GameServiceImpl(
                     itemService,
                     cloudService,
                     server,
-                    coroutineHandler
+                    coroutineHandler,
+                    forceFieldService
                 ).also {
                     it.ballEnabled = false
                 }

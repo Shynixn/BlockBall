@@ -18,9 +18,6 @@ class ArenaMeta {
     /** Meta data of the doubleJump. */
     val doubleJumpMeta: DoubleJumpMeta = DoubleJumpMeta()
 
-    /** Meta data of proection. */
-    val protectionMeta: ArenaProtectionMeta = ArenaProtectionMeta()
-
     /** Metadata of the blueTeam. */
     val blueTeamMeta: TeamMeta = TeamMeta()
 

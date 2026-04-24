@@ -1,9 +1,6 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.contract.BlockBallLanguage
-import com.github.shynixn.blockball.contract.CloudService
-import com.github.shynixn.blockball.contract.SoccerBallFactory
-import com.github.shynixn.blockball.contract.SoccerRefereeGame
+import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
@@ -12,7 +9,6 @@ import com.github.shynixn.blockball.event.GameStartEvent
 import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
-import com.github.shynixn.mcutils.common.commonServer
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.sound.SoundService
@@ -26,8 +22,8 @@ class SoccerRefereeGameImpl(
     arena: SoccerArena,
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
     plugin: Plugin,
-    private val placeHolderService: PlaceHolderService,
-    private val chatMessageService: ChatMessageService,
+    placeHolderService: PlaceHolderService,
+    chatMessageService: ChatMessageService,
     private val soundService: SoundService,
     language: BlockBallLanguage,
     commandService: CommandService,
@@ -35,7 +31,8 @@ class SoccerRefereeGameImpl(
     itemService: ItemService,
     cloudService: CloudService,
     private val server: Server,
-    private val coroutineHandler: CoroutineHandler
+    private val coroutineHandler: CoroutineHandler,
+    forceFieldService: ForceFieldService
 ) : SoccerMiniGameImpl(
     arena,
     playerDataRepository,
@@ -49,7 +46,8 @@ class SoccerRefereeGameImpl(
     itemService,
     cloudService,
     server,
-    coroutineHandler
+    coroutineHandler,
+    forceFieldService
 ), SoccerRefereeGame {
     /**
      * Is the timer blocker enabled.

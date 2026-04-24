@@ -43,14 +43,14 @@ abstract class SoccerGameImpl(
      * Gets the soccerArena.
      */
     override val arena: SoccerArena,
-    private val placeHolderService: PlaceHolderService,
+    val placeHolderService: PlaceHolderService,
     private val plugin: Plugin,
     private val soccerBallFactory: SoccerBallFactory,
     private val commandService: CommandService,
     override val language: BlockBallLanguage,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
     private val itemService: ItemService,
-    private val chatMessageService: ChatMessageService,
+    val chatMessageService: ChatMessageService,
     private val cloudService: CloudService,
     private val coroutineHandler: CoroutineHandler,
     private val server: Server
