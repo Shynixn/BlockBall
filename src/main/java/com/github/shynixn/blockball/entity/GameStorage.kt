@@ -63,6 +63,11 @@ class GameStorage {
     var redCards: Int = 0
 
     /**
+     * Has the player already received the death points for this match? This is used to prevent players from receiving multiple death points when they die multiple times in a match.
+     */
+    var appliedDeathPoints : Boolean = false
+
+    /**
      * Inventory cache.
      */
     var inventoryContents: Array<String?> = arrayOfNulls(0)

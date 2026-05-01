@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.GameService
@@ -36,7 +38,6 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
 import org.bukkit.plugin.Plugin
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Game Listener for the most important game events.
@@ -49,7 +50,6 @@ class GameListener(
     private val itemService: ItemService,
     private val coroutineHandler: CoroutineHandler
 ) : Listener {
-    private val playerCache: MutableSet<Player> = ConcurrentHashMap.newKeySet()
     private val commandMessages by lazy {
         val list = ArrayList<String>()
         list.add("/blockball")
@@ -182,7 +182,7 @@ class GameListener(
         val game = gameService.getByPlayer(event.entity as Player)
 
         if (game != null) {
-            event.setCancelled(true)
+            event.isCancelled = true
         }
     }
 
@@ -194,7 +194,7 @@ class GameListener(
         val game = gameService.getByPlayer(event.whoClicked as Player)
 
         if (game != null && !(event.whoClicked as Player).hasPermission(Permission.OBSOLETE_INVENTORY.permission)) {
-            event.setCancelled(true)
+            event.isCancelled = true
             event.whoClicked.closeInventory()
         }
     }
@@ -207,7 +207,7 @@ class GameListener(
         val game = gameService.getByPlayer(event.player as Player)
 
         if (game != null && !(event.player).hasPermission(Permission.OBSOLETE_INVENTORY.permission)) {
-            event.setCancelled(true)
+            event.isCancelled = true
         }
     }
 
@@ -219,7 +219,7 @@ class GameListener(
         val game = gameService.getByPlayer(event.player)
 
         if (game != null && !(event.player).hasPermission(Permission.OBSOLETE_INVENTORY.permission)) {
-            event.setCancelled(true)
+            event.isCancelled = true
 
             coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(event.player)) {
                 delay(10.ticks)
@@ -234,17 +234,21 @@ class GameListener(
     @EventHandler
     fun onPlayerRespawnEvent(event: PlayerRespawnEvent) {
         val game = gameService.getByPlayer(event.player) ?: return
-
         val team = game.ingamePlayersStorage[event.player]?.goalTeam
 
-        val teamMeta = if (team == Team.RED) {
-            game.arena.meta.redTeamMeta
-        } else if (team == Team.BLUE) {
-            game.arena.meta.blueTeamMeta
-        } else if (team == Team.REFEREE) {
-            game.arena.meta.refereeTeamMeta
-        } else {
-            return
+        val teamMeta = when (team) {
+            Team.RED -> {
+                game.arena.meta.redTeamMeta
+            }
+            Team.BLUE -> {
+                game.arena.meta.blueTeamMeta
+            }
+            Team.REFEREE -> {
+                game.arena.meta.refereeTeamMeta
+            }
+            else -> {
+                return
+            }
         }
 
         if (teamMeta.spawnpoint == null) {
@@ -259,9 +263,11 @@ class GameListener(
      */
     @EventHandler
     fun onPlayerDeathEvent(event: PlayerDeathEvent) {
-        val game = gameService.getByPlayer(event.entity) ?: return
+        val player = event.entity
+        val game = gameService.getByPlayer(player) ?: return
+        val gameData = game.ingamePlayersStorage[player] ?: return
 
-        if (playerCache.contains(event.entity)) {
+        if (gameData.appliedDeathPoints) {
             return
         }
 
@@ -281,14 +287,15 @@ class GameListener(
 
         val player = event.entity as Player
         val game = gameService.getByPlayer(player) ?: return
+        val gameData = game.ingamePlayersStorage[player] ?: return
 
         if (event.cause == EntityDamageEvent.DamageCause.FALL) {
-            event.setCancelled(true)
+            event.isCancelled = true
             return
         }
 
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !game.arena.meta.customizingMeta.damageEnabled) {
-            event.setCancelled(true)
+            event.isCancelled = true
             return
         }
 
@@ -296,16 +303,14 @@ class GameListener(
             return
         }
 
-        @Suppress("DEPRECATION")
         player.health = player.maxHealth
-        playerCache.add(player)
+        gameData.appliedDeathPoints = true
 
         coroutineHandler.execute {
             game.applyDeathPoints(player)
             game.respawn(player)
-
             delay(40.ticks)
-            playerCache.remove(player)
+            gameData.appliedDeathPoints = false
         }
     }
 
@@ -400,7 +405,7 @@ class GameListener(
         val game = gameService.getByPlayer(event.player)
 
         if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME)) {
-            event.setCancelled(true)
+            event.isCancelled = true
         }
     }
 

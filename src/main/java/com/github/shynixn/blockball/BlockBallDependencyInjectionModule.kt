@@ -190,7 +190,6 @@ class BlockBallDependencyInjectionModule(
         module.addService<DoubleJumpListener> {
             DoubleJumpListener(
                 module.getService(),
-                module.getService(),
                 module.getService()
             )
         }
