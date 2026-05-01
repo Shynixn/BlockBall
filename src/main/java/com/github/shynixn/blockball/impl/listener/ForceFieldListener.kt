@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerToggleFlightEvent
 class ForceFieldListener(private val forceFieldService: ForceFieldService) : Listener {
     @EventHandler
     fun onPlayerMoveEvent(event: PlayerMoveEvent) {
-        if (event.to == null || event.to!!.distance(event.from) <= 0) {
+        if (event.to == null || event.to?.world != event.from.world || event.to!!.distance(event.from) <= 0) {
             return
         }
 

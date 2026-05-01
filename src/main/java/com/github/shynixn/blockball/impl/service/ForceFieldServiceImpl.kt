@@ -59,7 +59,7 @@ class ForceFieldServiceImpl : ForceFieldService {
      * Checks if the player is currently interacting with a forceField and applies the according effects.
      */
     override fun checkInteractionsWithForceField(player: Player, location: Location) {
-        val now = Date().time
+        val now = System.currentTimeMillis()
         var playerData = playerForceFieldData[player]
 
         if (playerData == null) {
@@ -106,7 +106,6 @@ class ForceFieldServiceImpl : ForceFieldService {
     private fun knockBackPlayer(forceField: ForceField, player: Player, modifier: Float) {
         val playerData = playerForceFieldData[player] ?: return
         val knockBack = forceField.center.toVector().subtract(player.location.toVector()).normalize().multiply(modifier)
-        player.location.direction = knockBack
         player.velocity = knockBack
         player.allowFlight = true
         playerData.hasReceivedFlight = true

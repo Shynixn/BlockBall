@@ -1,11 +1,7 @@
 package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.BlockBallPlugin.Companion.gameKey
-import com.github.shynixn.blockball.contract.BlockBallLanguage
-import com.github.shynixn.blockball.contract.CloudService
-import com.github.shynixn.blockball.contract.ForceFieldService
-import com.github.shynixn.blockball.contract.SoccerBallFactory
-import com.github.shynixn.blockball.contract.SoccerHubGame
+import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.ForceField
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
@@ -25,9 +21,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import java.util.Date
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.collections.mapOf
 
 class SoccerHubGameImpl(
     arena: SoccerArena,
@@ -143,7 +137,7 @@ class SoccerHubGameImpl(
     private fun onPlayerLeaveHubGameForceField(player: Player) {
         forceFieldService.knockBackOutside(forceField, player)
         val lastJoinPromptTimeStamp = lastJoinPrompt[player]
-        val timeStamp = Date().time
+        val timeStamp = System.currentTimeMillis()
         if (lastJoinPromptTimeStamp != null && timeStamp - lastJoinPromptTimeStamp < 100) {
             return
         }
@@ -156,7 +150,7 @@ class SoccerHubGameImpl(
     private fun onPlayerEnterHubGameForceField(player: Player) {
         forceFieldService.knockBackOutside(forceField, player)
         val lastJoinPromptTimeStamp = lastJoinPrompt[player]
-        val timeStamp = Date().time
+        val timeStamp = System.currentTimeMillis()
         if (lastJoinPromptTimeStamp != null && timeStamp - lastJoinPromptTimeStamp < 5000) {
             return
         }
