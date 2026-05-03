@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.entity.ForceField
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
+import com.github.shynixn.blockball.enumeration.GameSubState
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.Team
@@ -103,114 +104,110 @@ open class SoccerMiniGameImpl(
      * Tick handle.
      */
     override fun handle(hasSecondPassed: Boolean) {
-        // Handle HubGame ticking.
-        if (!arena.enabled || closing) {
-            status = GameState.DISABLED
-            close()
-            return
-        }
-
-        if (status == GameState.DISABLED) {
-            status = GameState.JOINABLE
-        }
-
         if (server.getWorld(arena.ballSpawnPoint!!.world!!) == null) {
             return
         }
 
-        if (arena.meta.hubLobbyMeta.resetArenaOnEmpty && ingamePlayersStorage.isEmpty() && (redScore > 0 || blueScore > 0)) {
-            setGameClosing()
+        if (!arena.enabled || subState == GameSubState.CLOSED || isDisposed) {
+            close()
+            return
         }
 
-        if (hasSecondPassed) {
-            if (lobbyCountDownActive) {
-                isQueueTimeRunning = false
+        if (subStateNext != GameSubState.CLOSED) {
+            if (hasSecondPassed) {
+                if (lobbyCountDownActive) {
+                    isQueueTimeRunning = false
 
-                if (gameCountdown > 10) {
-                    val amountPlayers = arena.meta.blueTeamMeta.maxAmount + arena.meta.redTeamMeta.maxAmount
+                    if (gameCountdown > 10) {
+                        val amountPlayers = arena.meta.blueTeamMeta.maxAmount + arena.meta.redTeamMeta.maxAmount
 
-                    if (ingamePlayersStorage.size >= amountPlayers) {
-                        gameCountdown = 10
+                        if (ingamePlayersStorage.size >= amountPlayers) {
+                            gameCountdown = 10
+                        }
+                    }
+
+                    gameCountdown--
+
+                    if (gameCountdown < 5 && !isHytaleLoaded) {
+                        ingamePlayersStorage.keys.forEach { p ->
+                            soundService.playSound(
+                                p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
+                            )
+                        }
+                    }
+
+                    if (gameCountdown % 10 == 0 || gameCountdown <= 5) {
+                        for (player in ingamePlayersStorage.keys) {
+                            chatMessageService.sendLanguageMessage(
+                                player,
+                                language.gameStartingMessage,
+                                gameCountdown.toString()
+                            )
+                        }
+                    }
+
+                    if (gameCountdown <= 0) {
+                        lobbyCountDownActive = false
+                        playing = true
+                        status = GameState.RUNNING
+                        matchTimeIndex = -1
+                        ballEnabled = true
+                        startDateUtc = Instant.now()
+                        switchToNextMatchTime()
+                        server.pluginManager.callEvent(GameStartEvent(this))
+                        executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.gameStartCommands)
+                        executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.gameStartCommands)
+                        executeCommandsWithPlaceHolder(refereeTeam, arena.meta.refereeTeamMeta.gameStartCommands)
                     }
                 }
 
-                gameCountdown--
-
-                if (gameCountdown < 5 && !isHytaleLoaded) {
-                    ingamePlayersStorage.keys.forEach { p ->
-                        soundService.playSound(
-                            p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
-                        )
+                if (!lobbyCountDownActive) {
+                    if (canStartLobbyCountdown()) {
+                        lobbyCountDownActive = true
+                        gameCountdown = arena.meta.minigameMeta.lobbyDuration
                     }
                 }
 
-                if (gameCountdown % 10 == 0 || gameCountdown <= 5) {
-                    for (player in ingamePlayersStorage.keys) {
-                        chatMessageService.sendLanguageMessage(
-                            player,
-                            language.gameStartingMessage,
-                            gameCountdown.toString()
-                        )
+                if (playing) {
+                    gameCountdown--
+
+                    ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
+                        if (gameCountdown <= 5 && !isHytaleLoaded) {
+                            soundService.playSound(
+                                p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
+                            )
+                        }
+                    }
+
+                    if (gameCountdown <= 0) {
+                        switchToNextMatchTime()
+                    }
+
+                    if (ingamePlayersStorage.isEmpty() || redTeam.size < arena.meta.redTeamMeta.minPlayingPlayers || blueTeam.size < arena.meta.blueTeamMeta.minPlayingPlayers) {
+                        if (subStateNext != GameSubState.CLOSED) {
+                            setNextGameSubState(GameSubState.CLOSED, 1000L)
+                        }
                     }
                 }
-
-                if (gameCountdown <= 0) {
-                    lobbyCountDownActive = false
-                    playing = true
-                    status = GameState.RUNNING
-                    matchTimeIndex = -1
-                    ballEnabled = true
-                    startDateUtc = Instant.now()
-                    switchToNextMatchTime()
-                    server.pluginManager.callEvent(GameStartEvent(this))
-                    executeCommandsWithPlaceHolder(redTeam, arena.meta.redTeamMeta.gameStartCommands)
-                    executeCommandsWithPlaceHolder(blueTeam, arena.meta.blueTeamMeta.gameStartCommands)
-                    executeCommandsWithPlaceHolder(refereeTeam, arena.meta.refereeTeamMeta.gameStartCommands)
-                }
             }
 
-            if (!lobbyCountDownActive) {
-                if (canStartLobbyCountdown()) {
-                    lobbyCountDownActive = true
-                    gameCountdown = arena.meta.minigameMeta.lobbyDuration
-                }
+            if (arena.meta.hubLobbyMeta.resetArenaOnEmpty && ingamePlayersStorage.isEmpty() && (redScore > 0 || blueScore > 0)) {
+                setNextGameSubState(GameSubState.CLOSED, 1000L)
             }
 
-            if (playing) {
-                gameCountdown--
+            if (ball == null && ballEnabled && ingamePlayersStorage.isNotEmpty() && subStateNext != GameSubState.BALL_RESPAWNED) {
+                setNextGameSubState(
+                    GameSubState.BALL_RESPAWNED,
+                    arena.meta.customizingMeta.gameStartBallSpawnDelayTicks * 50L
+                )
+            }
 
-                ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
-                    if (gameCountdown <= 5 && !isHytaleLoaded) {
-                        soundService.playSound(
-                            p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
-                        )
-                    }
-                }
-
-                if (gameCountdown <= 0) {
-                    switchToNextMatchTime()
-                }
-
-                if (ingamePlayersStorage.isEmpty() || redTeam.size < arena.meta.redTeamMeta.minPlayingPlayers || blueTeam.size < arena.meta.blueTeamMeta.minPlayingPlayers) {
-                    setGameClosing()
-                }
+            if (!ballEnabled && ball != null && subStateNext != GameSubState.BALL_DESTROYED) {
+                setNextGameSubState(GameSubState.BALL_DESTROYED)
             }
         }
 
-        // Handle SoccerBall.
-        if (ball == null) {
-            if (ballEnabled && ingamePlayersStorage.isNotEmpty() && ballSpawning == false) {
-                respawnBall(arena.meta.customizingMeta.gameStartBallSpawnDelayTicks)
-            }
-        }
-
-        if (!ballEnabled && ball != null) {
-            destroyBall()
-        }
-
-        this.handleBallSpawning()
-
-        // Update signs and protections.
+        this.runStateMachine()
         super.handleMiniGameEssentials(hasSecondPassed)
     }
 
@@ -218,11 +215,11 @@ open class SoccerMiniGameImpl(
      * Closes the given game and all underlying resources.
      */
     override fun close() {
-        if (closed) {
+        if (isDisposed) {
             return
         }
         status = GameState.DISABLED
-        closed = true
+        isDisposed = true
         forceFieldService.removeForceField(forceField)
         ingamePlayersStorage.keys.toTypedArray().forEach { p ->
             leave(p)
@@ -231,6 +228,8 @@ open class SoccerMiniGameImpl(
         ball?.remove()
         doubleJumpCoolDownPlayers.clear()
         interactedWithBall.clear()
+        subStatePlayerParam = null
+        subStateLocationParam = null
     }
 
     /**
@@ -242,7 +241,9 @@ open class SoccerMiniGameImpl(
         val matchTimes = arena.meta.minigameMeta.matchTimes
 
         if (matchTimeIndex >= matchTimes.size) {
-            setGameClosing()
+            if (subStateNext != GameSubState.CLOSED) {
+                setNextGameSubState(GameSubState.CLOSED, 5000L)
+            }
             return
         }
 

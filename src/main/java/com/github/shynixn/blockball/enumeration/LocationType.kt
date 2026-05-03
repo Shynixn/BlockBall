@@ -9,4 +9,6 @@ enum class LocationType {
     RED_LOBBY,
     BLUE_LOBBY,
     REFEREE_LOBBY,
+    RED_KEEPER,
+    BLUE_KEEPER
 }

@@ -169,7 +169,7 @@ class GameServiceImpl(
         }
 
         games.toTypedArray().forEach { game ->
-            if (game.closed) {
+            if (game.isDisposed) {
                 reload(game.arena)
             } else {
                 game.handle(hasSecondPassed)
@@ -278,6 +278,15 @@ class GameServiceImpl(
                     arena,
                     "The game type where you can have a referee requires the premium version of BlockBall. Obtainable via https://www.patreon.com/Shynixn."
                 )
+            }
+        }
+
+        if (!arena.ballOutOfBounds.forceField) {
+            if (arena.meta.redTeamMeta.keeperSpawnpoint == null) {
+                throw SoccerGameException(arena, "Set the red keeper spawnpoint for arena ${arena.name}!")
+            }
+            if (arena.meta.blueTeamMeta.keeperSpawnpoint == null) {
+                throw SoccerGameException(arena, "Set the red keeper spawnpoint for arena ${arena.name}!")
             }
         }
 

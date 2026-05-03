@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.entity.ForceField
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
+import com.github.shynixn.blockball.enumeration.GameSubState
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
@@ -16,7 +17,6 @@ import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
-import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import org.bukkit.Server
 import org.bukkit.entity.Player
@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap
 class SoccerHubGameImpl(
     arena: SoccerArena,
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
-    private val plugin: Plugin,
+    plugin: Plugin,
     placeHolderService: PlaceHolderService,
     language: BlockBallLanguage,
     soccerBallFactory: SoccerBallFactory,
@@ -77,27 +77,29 @@ class SoccerHubGameImpl(
             return
         }
 
-        if (!arena.enabled || closing) {
+        if (!arena.enabled || subState == GameSubState.CLOSED || isDisposed) {
             close()
             return
         }
 
-        if (arena.meta.hubLobbyMeta.resetArenaOnEmpty && ingamePlayersStorage.isEmpty() && (redScore > 0 || blueScore > 0)) {
-            setGameClosing()
-        }
+        if (subStateNext != GameSubState.CLOSED) {
+            if (arena.meta.hubLobbyMeta.resetArenaOnEmpty && ingamePlayersStorage.isEmpty() && (redScore > 0 || blueScore > 0)) {
+                setNextGameSubState(GameSubState.CLOSED, 1000L)
+            }
 
-        if (ball == null) {
-            if (redTeam.size >= arena.meta.redTeamMeta.minAmount && blueTeam.size >= arena.meta.blueTeamMeta.minAmount && ingamePlayersStorage.isNotEmpty()) {
-                respawnBall(arena.meta.customizingMeta.gameStartBallSpawnDelayTicks)
+            if (ball == null && redTeam.size >= arena.meta.redTeamMeta.minAmount && blueTeam.size >= arena.meta.blueTeamMeta.minAmount && ingamePlayersStorage.isNotEmpty() && subStateNext != GameSubState.BALL_RESPAWNED) {
+                setNextGameSubState(
+                    GameSubState.BALL_RESPAWNED,
+                    arena.meta.customizingMeta.gameStartBallSpawnDelayTicks * 50L
+                )
+            }
+
+            if (ball != null && ingamePlayersStorage.isEmpty() && subStateNext != GameSubState.BALL_DESTROYED) {
+                setNextGameSubState(GameSubState.BALL_DESTROYED)
             }
         }
 
-        if (ball != null && ingamePlayersStorage.isEmpty()) {
-            destroyBall()
-        }
-
-        // Handle SoccerBall.
-        this.handleBallSpawning()
+        this.runStateMachine()
         super.handleMiniGameEssentials(hasSecondPassed)
     }
 
@@ -105,6 +107,10 @@ class SoccerHubGameImpl(
      * Closes the given game and all underlying resources.
      */
     override fun close() {
+        if (isDisposed) {
+            return
+        }
+
         if (status == GameState.DISABLED) {
             return
         }
@@ -119,10 +125,9 @@ class SoccerHubGameImpl(
         interactedWithBall.clear()
         forceFieldService.removeForceField(forceField)
         lastJoinPrompt.clear()
-        coroutineHandler.execute {
-            delay(3000)
-            closed = true
-        }
+        subStatePlayerParam = null
+        subStateLocationParam = null
+        isDisposed = true
     }
 
     override fun setPlayerToArena(player: Player, team: Team) {

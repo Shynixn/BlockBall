@@ -5,6 +5,7 @@ import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.entity.cloud.CloudGame
 import com.github.shynixn.blockball.entity.cloud.CloudPlayer
 import com.github.shynixn.blockball.enumeration.GameState
+import com.github.shynixn.blockball.enumeration.GameSubState
 import com.github.shynixn.blockball.enumeration.JoinResult
 import com.github.shynixn.blockball.enumeration.LeaveResult
 import com.github.shynixn.blockball.enumeration.Team
@@ -45,7 +46,7 @@ abstract class SoccerGameImpl(
     override val arena: SoccerArena,
     val placeHolderService: PlaceHolderService,
     private val plugin: Plugin,
-    private val soccerBallFactory: SoccerBallFactory,
+    val soccerBallFactory: SoccerBallFactory,
     private val commandService: CommandService,
     override val language: BlockBallLanguage,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
@@ -58,14 +59,41 @@ abstract class SoccerGameImpl(
     protected var startDateUtc = Instant.now()
 
     /**
+     * If set, then the game is already disposed and must not be used.
+     */
+    override var isDisposed: Boolean = false
+
+    /**
+     * The substate of the game.
+     * BlockBall uses a state machine to determine the next action for modern actions.
+     * Old actions are still being used but being refactored over time.
+     */
+    override var subState: GameSubState = GameSubState.FREE
+
+    /**
+     * When this substate has ended.
+     */
+    override var subStateEndTimeStamp: Long = Long.MAX_VALUE
+
+    /**
+     * The next substate in the game.
+     */
+    override var subStateNext: GameSubState = GameSubState.FREE
+
+    /**
+     * If the next substate requires a location then this is the parameter.
+     */
+    override var subStateLocationParam: Location? = null
+
+    /**
+     * If the next substate requires a player then this is the parameter.
+     */
+    override var subStatePlayerParam: Player? = null
+
+    /**
      * Generated game id.
      */
     override val id: String = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
-
-    /**
-     * Is the ball spawning?
-     */
-    protected var ballSpawning: Boolean = false
 
     /**
      * Red club in club mode.
@@ -78,11 +106,6 @@ abstract class SoccerGameImpl(
     override var blueClub: Guild? = null
 
     /**
-     * SoccerBall spawn counter.
-     */
-    private var ballSpawnCounter: Int = 0
-
-    /**
      * Is the ball currently enabled to spawn?
      */
     var ballEnabled: Boolean = true
@@ -91,15 +114,6 @@ abstract class SoccerGameImpl(
      * Storage.
      */
     override val ingamePlayersStorage: MutableMap<Player, GameStorage> = ConcurrentHashMap()
-
-
-    /**
-     * Marks the game for being closed and will automatically
-     * switch to close state once the resources are cleard.
-     */
-    override var closing: Boolean = false
-
-    override var closed: Boolean = false
 
     /**
      * RedScore.
@@ -307,7 +321,7 @@ abstract class SoccerGameImpl(
      */
     fun handleMiniGameEssentials(hasSecondPassed: Boolean) {
         if (hasSecondPassed) {
-            if (closing) {
+            if (isDisposed) {
                 return
             }
 
@@ -429,7 +443,7 @@ abstract class SoccerGameImpl(
             }
         }
 
-        setGameClosing()
+        setNextGameSubState(GameSubState.CLOSED, 1000 * 3L)
     }
 
     /**
@@ -468,23 +482,78 @@ abstract class SoccerGameImpl(
     }
 
     /**
-     * Returns if the ball was spawned when calling this method.
+     * Performs all state Machine actions.
      */
-    protected fun handleBallSpawning(): Boolean {
-        if (ballSpawning && ballEnabled) {
-            ballSpawnCounter--
-            if (ballSpawnCounter <= 0) {
-                destroyBall()
-                ball = soccerBallFactory.createSoccerBallForGame(
-                    arena.ballSpawnPoint!!.toLocation(), arena.ball, this
-                )
-                ballSpawning = false
-                ballSpawnCounter = 0
-                return true
-            }
+    override fun runStateMachine() {
+        if (subStateNext == GameSubState.FREE) {
+            // The next state of the state machine is not interesting skip.
+            return
         }
 
-        return false
+        val currentMilliseconds = System.currentTimeMillis()
+
+        if (currentMilliseconds < subStateEndTimeStamp) {
+            // The current state is still active skip.
+            return
+        }
+
+        val oldState = subState
+        subState = subStateNext
+        onStateMachineSubStateChange(oldState, subStateNext)
+    }
+
+    /**
+     * Is called when the substate of the game changes. This is used to perform actions when the substate changes.
+     */
+    override fun onStateMachineSubStateChange(
+        oldSubState: GameSubState, newSubState: GameSubState
+    ) {
+        when (newSubState) {
+            GameSubState.CLOSED -> {
+                close()
+            }
+
+            GameSubState.BALL_RESPAWNED -> {
+                if (ballEnabled) {
+                    destroyBall()
+                    ball = soccerBallFactory.createSoccerBallForGame(
+                        arena.ballSpawnPoint!!.toLocation(), arena.ball, this
+                    )
+                    setNextGameSubState(GameSubState.FREE)
+                }
+            }
+
+            GameSubState.BALL_DESTROYED -> {
+                destroyBall()
+                setNextGameSubState(GameSubState.FREE)
+            }
+
+            GameSubState.BALL_OUT_TELEPORT -> {
+                val lastInteractedWithBallPlayer = interactedWithBall.getOrNull(0)
+
+                if (lastInteractedWithBallPlayer == null) {
+                    destroyBall()
+                    setNextGameSubState(
+                        GameSubState.BALL_RESPAWNED, arena.meta.customizingMeta.gameStartBallSpawnDelayTicks * 50L
+                    )
+                    return
+                }
+
+                /* TODO val distanceToRedGoal = i
+                 subStateNext = GameSubState.BALL_OUT_THROW_IN_PERFORM
+                 subStateEndTimeStamp = currentMilliseconds + arena.ballOutOfBounds.timeToStartSec * 1000*/
+                return
+            }
+
+            GameSubState.BALL_OUT_THROW_IN_PERFORM -> {
+                // TODO:
+                return
+            }
+
+            else -> {
+                subStateNext = GameSubState.FREE
+            }
+        }
     }
 
     /**
@@ -518,11 +587,6 @@ abstract class SoccerGameImpl(
      * is handled inside of the method.
      */
     override fun notifyBallInGoal(team: Team) {
-
-        if (ballSpawning) {
-            return
-        }
-
         var teamOfGoal = team
 
         if (teamOfGoal == Team.BLUE && mirroredGoals) {
@@ -677,7 +741,8 @@ abstract class SoccerGameImpl(
      * Teleports all players and ball back to their spawnpoint if [game] has got back teleport enabled.
      */
     private fun relocatePlayersAndBall() {
-        respawnBall(arena.meta.customizingMeta.goalScoredBallSpawnDelayTicks)
+        destroyBall()
+        setNextGameSubState(GameSubState.BALL_RESPAWNED, arena.meta.customizingMeta.goalScoredBallSpawnDelayTicks * 50L)
 
         if (!arena.meta.customizingMeta.backTeleport) {
             return
@@ -807,16 +872,6 @@ abstract class SoccerGameImpl(
 
     abstract fun setPlayerToArena(player: Player, team: Team)
 
-    protected fun respawnBall(delayInTicks: Int) {
-        if (ballSpawning) {
-            return
-        }
-
-        destroyBall()
-        ballSpawning = true
-        ballSpawnCounter = delayInTicks
-    }
-
     fun getTeamMetaFromTeam(team: Team): TeamMeta {
         if (team == Team.RED) {
             return arena.meta.redTeamMeta
@@ -849,20 +904,20 @@ abstract class SoccerGameImpl(
             location, arena.ball, this
         )
         ball!!.isInteractable = false // We always block interacting with the ball until the referee has started.
-        ballSpawning = false
-        ballSpawnCounter = 0
+        setNextGameSubState(GameSubState.FREE)
     }
 
-    protected fun destroyBall() {
+    fun destroyBall() {
         ball?.remove()
         ball = null
     }
-
-    protected fun setGameClosing() {
-        if (closing) {
-            return
-        }
-
-        closing = true
+    /**
+     * Sets the next substate of the game. The substate is used to determine the next action of the game.
+     */
+    override fun setNextGameSubState(
+        subState: GameSubState, timeFromNowMilliSeconds: Long
+    ) {
+        subStateEndTimeStamp = System.currentTimeMillis() + timeFromNowMilliSeconds
+        subStateNext = subState
     }
 }

@@ -8,6 +8,7 @@ import com.github.shynixn.blockball.contract.SoccerHubGame
 import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.PlayerInformation
+import com.github.shynixn.blockball.enumeration.GameSubState
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.MatchTimeCloseType
 import com.github.shynixn.blockball.enumeration.Permission
@@ -240,12 +241,15 @@ class GameListener(
             Team.RED -> {
                 game.arena.meta.redTeamMeta
             }
+
             Team.BLUE -> {
                 game.arena.meta.blueTeamMeta
             }
+
             Team.REFEREE -> {
                 game.arena.meta.refereeTeamMeta
             }
+
             else -> {
                 return
             }
@@ -437,19 +441,22 @@ class GameListener(
                 if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(targetPosition)) {
                     return
                 }
-
                 if (!game.arena.isLocationIn2dSelection(targetPosition)) {
-                    event.hitBlock = true
-                    event.blockDirection = game.arena.getRelativeBlockDirectionToLocation(targetPosition)
-                    game.ballBumperCounter++
+                    if (game.arena.ballOutOfBounds.forceField) {
+                        event.hitBlock = true
+                        event.blockDirection = game.arena.getRelativeBlockDirectionToLocation(targetPosition)
+                        game.ballBumperCounter++
 
-                    if (game.ballBumperCounter > 60) {
-                        // Rescue system, if the ball gets stuck in the walls.
-                        event.ball.teleport(game.arena.ballSpawnPoint!!.toLocation())
-                        game.ballBumperCounter = 0
+                        if (game.ballBumperCounter > 60) {
+                            // Rescue system, if the ball gets stuck in the walls.
+                            event.ball.teleport(game.arena.ballSpawnPoint!!.toLocation())
+                            game.ballBumperCounter = 0
+                        }
+                        return
+                    } else {
+                        event.ball.isInteractable = false
+                        game.setNextGameSubState(GameSubState.BALL_OUT_TELEPORT)
                     }
-
-                    return
                 } else {
                     game.ballBumperCounter = 0
                 }
