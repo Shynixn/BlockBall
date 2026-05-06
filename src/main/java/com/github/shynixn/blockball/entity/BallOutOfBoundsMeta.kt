@@ -14,4 +14,7 @@ class BallOutOfBoundsMeta {
 
     @Comment("The time in seconds until teleported has no longer exclusive control of the ball.")
     var timeOutStartSec: Int = 5
+
+    @Comment("A player is protected by a force field while performing a throw-in, corner kick or goal kick position. This is the radius of the force field.")
+    var actionForceFieldSize = 3.0
 }

@@ -173,8 +173,9 @@ abstract class SoccerGameImpl(
      * all players except [designatedPlayer].
      */
     private fun createPlayerForceField(location: Location, designatedPlayer: Player) {
+        removePlayerForceField()
         val center = location.toVector3d()
-        val ff = ForceField(center, 1)
+        val ff = ForceField(center, arena.ballOutOfBounds.actionForceFieldSize)
         ff.on2dInside = { player ->
             if (player != designatedPlayer) {
                 forceFieldService.knockBackOutside(ff, player)
@@ -625,13 +626,14 @@ abstract class SoccerGameImpl(
                 } else {
                     // Goal-line exit: corner kick or goal kick.
                     val lastTouchedByDefender = (teamSide == Team.RED && redTeam.contains(lastInteractedWithBallPlayer))
-                        || (teamSide == Team.BLUE && blueTeam.contains(lastInteractedWithBallPlayer))
+                            || (teamSide == Team.BLUE && blueTeam.contains(lastInteractedWithBallPlayer))
 
                     if (lastTouchedByDefender) {
                         // Corner kick: defender last touched → attacking team kicks from the nearest corner.
                         val attackingTeam = if (teamSide == Team.RED) Team.BLUE else Team.RED
                         val cornerLocation = findCornerKickLocation(ballLocation, exitDirection)
-                        val cornerPlayer = findNearestPlayerInTeam(ballLocation, attackingTeam) ?: lastInteractedWithBallPlayer
+                        val cornerPlayer =
+                            findNearestPlayerInTeam(ballLocation, attackingTeam) ?: lastInteractedWithBallPlayer
                         subStateLocationParam = cornerLocation
                         subStatePlayerParam = cornerPlayer
                         plugin.launch {
@@ -647,9 +649,17 @@ abstract class SoccerGameImpl(
                         setNextGameSubState(GameSubState.BALL_OUT_CORNER_KICK_PERFORM, delaySeconds * 1000L)
                     } else {
                         // Goal kick: attacker last touched → defending team kicks from their goal area.
-                        val goalKickTeamMeta = if (teamSide == Team.RED) arena.meta.redTeamMeta else arena.meta.blueTeamMeta
-                        val goalKickLocation = (goalKickTeamMeta.keeperSpawnpoint ?: arena.ballSpawnPoint!!).toLocation()
-                        val goalKickPlayer = findNearestPlayerInTeam(ballLocation, teamSide) ?: lastInteractedWithBallPlayer
+                        // When goals are mirrored the defending team physically stands at the opposite goal,
+                        // so we read the keeper spawnpoint from the mirrored team's meta.
+                        val goalKickTeamMeta = if (mirroredGoals) {
+                            if (teamSide == Team.RED) arena.meta.blueTeamMeta else arena.meta.redTeamMeta
+                        } else {
+                            if (teamSide == Team.RED) arena.meta.redTeamMeta else arena.meta.blueTeamMeta
+                        }
+                        val goalKickLocation =
+                            (goalKickTeamMeta.keeperSpawnpoint ?: arena.ballSpawnPoint!!).toLocation()
+                        val goalKickPlayer =
+                            findNearestPlayerInTeam(ballLocation, teamSide) ?: lastInteractedWithBallPlayer
                         subStateLocationParam = goalKickLocation
                         subStatePlayerParam = goalKickPlayer
                         plugin.launch {
@@ -692,7 +702,7 @@ abstract class SoccerGameImpl(
                         }
                         delay(1000)
                     }
-                    if(getPlayers().contains(throwInPlayer)){
+                    if (getPlayers().contains(throwInPlayer)) {
                         chatMessageService.sendLanguageMessage(
                             throwInPlayer,
                             language.throwInPerformMessage,
@@ -701,8 +711,10 @@ abstract class SoccerGameImpl(
                     ball?.lockedPlayer = throwInPlayer // Important, the ball might be null here
                     ball?.isInteractable = true
                     delay(timeoutDelay)
-                    ball?.lockedPlayer = null
-                    removePlayerForceField()
+                    if (ball?.lockedPlayer != null) {
+                        removePlayerForceField()
+                        ball?.lockedPlayer = null
+                    }
                 }
                 setNextGameSubState(GameSubState.FREE)
                 return
@@ -737,8 +749,10 @@ abstract class SoccerGameImpl(
                     ball?.lockedPlayer = cornerPlayer
                     ball?.isInteractable = true
                     delay(timeoutDelay)
-                    ball?.lockedPlayer = null
-                    removePlayerForceField()
+                    if (ball?.lockedPlayer != null) {
+                        removePlayerForceField()
+                        ball?.lockedPlayer = null
+                    }
                 }
                 setNextGameSubState(GameSubState.FREE)
                 return
@@ -773,8 +787,10 @@ abstract class SoccerGameImpl(
                     ball?.lockedPlayer = goalKickPlayer
                     ball?.isInteractable = true
                     delay(timeoutDelay)
-                    ball?.lockedPlayer = null
-                    removePlayerForceField()
+                    if (ball?.lockedPlayer != null) {
+                        removePlayerForceField()
+                        ball?.lockedPlayer = null
+                    }
                 }
                 setNextGameSubState(GameSubState.FREE)
                 return
@@ -1145,18 +1161,22 @@ abstract class SoccerGameImpl(
                 val cornerX = if (ballLocation.x >= centerX) c1.x else c2.x
                 Location(world, cornerX, y, c1.z)
             }
+
             BlockDirection.SOUTH -> {
                 val cornerX = if (ballLocation.x >= centerX) c1.x else c2.x
                 Location(world, cornerX, y, c2.z)
             }
+
             BlockDirection.WEST -> {
                 val cornerZ = if (ballLocation.z >= centerZ) c1.z else c2.z
                 Location(world, c1.x, y, cornerZ)
             }
+
             BlockDirection.EAST -> {
                 val cornerZ = if (ballLocation.z >= centerZ) c1.z else c2.z
                 Location(world, c2.x, y, cornerZ)
             }
+
             else -> arena.ballSpawnPoint!!.toLocation()
         }
 
