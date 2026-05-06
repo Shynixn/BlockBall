@@ -36,7 +36,7 @@ class SoccerHubGameImpl(
     cloudService: CloudService,
     private val server: Server,
     private val coroutineHandler: CoroutineHandler,
-    private val forceFieldService: ForceFieldService
+    forceFieldService: ForceFieldService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -48,7 +48,8 @@ class SoccerHubGameImpl(
     itemService,
     chatMessageService, cloudService,
     coroutineHandler,
-    server
+    server,
+    forceFieldService
 ),
     SoccerHubGame {
     private val lastJoinPrompt = ConcurrentHashMap<Player, Long>()
@@ -128,6 +129,7 @@ class SoccerHubGameImpl(
         subStatePlayerParam = null
         subStateLocationParam = null
         isDisposed = true
+        removePlayerForceField()
     }
 
     override fun setPlayerToArena(player: Player, team: Team) {

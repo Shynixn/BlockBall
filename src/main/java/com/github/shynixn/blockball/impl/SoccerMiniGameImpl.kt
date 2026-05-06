@@ -39,7 +39,7 @@ open class SoccerMiniGameImpl(
     cloudService: CloudService,
     private val server: Server,
     private val coroutineHandler: CoroutineHandler,
-    private val forceFieldService: ForceFieldService
+    forceFieldService: ForceFieldService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -52,7 +52,8 @@ open class SoccerMiniGameImpl(
     chatMessageService,
     cloudService,
     coroutineHandler,
-    server
+    server,
+    forceFieldService
 ), SoccerMiniGame {
     private var currentQueueTime = arena.meta.customizingMeta.queueTimeOutSec
     private var isQueueTimeRunning = false
@@ -230,6 +231,7 @@ open class SoccerMiniGameImpl(
         interactedWithBall.clear()
         subStatePlayerParam = null
         subStateLocationParam = null
+        removePlayerForceField()
     }
 
     /**

@@ -58,7 +58,8 @@ abstract class SoccerGameImpl(
     val chatMessageService: ChatMessageService,
     private val cloudService: CloudService,
     private val coroutineHandler: CoroutineHandler,
-    private val server: Server
+    private val server: Server,
+    val forceFieldService: ForceFieldService
 ) : SoccerGame {
     protected var startDateUtc = Instant.now()
 
@@ -160,6 +161,37 @@ abstract class SoccerGameImpl(
      */
     override var interactedWithBall: MutableList<Player> = ArrayList()
     override var mirroredGoals: Boolean = false
+
+    /**
+     * The temporary force field placed around the throw-in / corner kick / goal kick position.
+     * Cleared after the designated player gains ball control.
+     */
+    private var playerForceField: ForceField? = null
+
+    /**
+     * Creates and registers a 2x2 force field centered on [location] that knocks back
+     * all players except [designatedPlayer].
+     */
+    private fun createPlayerForceField(location: Location, designatedPlayer: Player) {
+        val center = location.toVector3d()
+        val ff = ForceField(center, 1)
+        ff.on2dInside = { player ->
+            if (player != designatedPlayer) {
+                forceFieldService.knockBackOutside(ff, player)
+            }
+        }
+        playerForceField = ff
+        forceFieldService.addForceField(ff)
+    }
+
+    /**
+     * Removes and unregisters the current [playerForceField] if present.
+     */
+    fun removePlayerForceField() {
+        val ff = playerForceField ?: return
+        forceFieldService.removeForceField(ff)
+        playerForceField = null
+    }
 
     override fun areClubsPlaying(): Boolean {
         return redClub != null || blueClub != null
@@ -572,14 +604,13 @@ abstract class SoccerGameImpl(
                     }
                 }
 
+                val delaySeconds = arena.ballOutOfBounds.timeToTeleportSec
+
                 if (teamSide == null) {
-                    // Throw-in: project the ball's exit position onto the nearest inner-field boundary
-                    // to determine where the throw-in should be taken.
+                    // Throw-in: project the ball's exit position onto the nearest inner-field boundary.
                     val throwInLocation = findThrowInLocation(ballLocation, exitDirection)
-                    // The team opposing the last player who touched the ball performs the throw-in.
                     subStateLocationParam = throwInLocation
                     subStatePlayerParam = throwInPlayer
-                    val delaySeconds = arena.ballOutOfBounds.timeToTeleportSec
                     plugin.launch {
                         for (i in delaySeconds downTo 1) {
                             chatMessageService.sendLanguageMessage(
@@ -590,11 +621,49 @@ abstract class SoccerGameImpl(
                             delay(1000)
                         }
                     }
+                    setNextGameSubState(GameSubState.BALL_OUT_THROW_IN_PERFORM, delaySeconds * 1000L)
+                } else {
+                    // Goal-line exit: corner kick or goal kick.
+                    val lastTouchedByDefender = (teamSide == Team.RED && redTeam.contains(lastInteractedWithBallPlayer))
+                        || (teamSide == Team.BLUE && blueTeam.contains(lastInteractedWithBallPlayer))
 
-                    setNextGameSubState(
-                        GameSubState.BALL_OUT_THROW_IN_PERFORM,
-                        delaySeconds * 1000L
-                    )
+                    if (lastTouchedByDefender) {
+                        // Goal kick: defending team kicks from their goal area.
+                        val goalKickTeamMeta = if (teamSide == Team.RED) arena.meta.redTeamMeta else arena.meta.blueTeamMeta
+                        val goalKickLocation = (goalKickTeamMeta.keeperSpawnpoint ?: arena.ballSpawnPoint!!).toLocation()
+                        val goalKickPlayer = findNearestPlayerInTeam(ballLocation, teamSide) ?: lastInteractedWithBallPlayer
+                        subStateLocationParam = goalKickLocation
+                        subStatePlayerParam = goalKickPlayer
+                        plugin.launch {
+                            for (i in delaySeconds downTo 1) {
+                                chatMessageService.sendLanguageMessage(
+                                    subStatePlayerParam!!,
+                                    language.goalKickTeleportMessage,
+                                    i.toString()
+                                )
+                                delay(1000)
+                            }
+                        }
+                        setNextGameSubState(GameSubState.BALL_OUT_GOAL_KICK_PERFORM, delaySeconds * 1000L)
+                    } else {
+                        // Corner kick: attacking team kicks from the nearest corner.
+                        val attackingTeam = if (teamSide == Team.RED) Team.BLUE else Team.RED
+                        val cornerLocation = findCornerKickLocation(ballLocation, exitDirection)
+                        val cornerPlayer = findNearestPlayerInTeam(ballLocation, attackingTeam) ?: lastInteractedWithBallPlayer
+                        subStateLocationParam = cornerLocation
+                        subStatePlayerParam = cornerPlayer
+                        plugin.launch {
+                            for (i in delaySeconds downTo 1) {
+                                chatMessageService.sendLanguageMessage(
+                                    subStatePlayerParam!!,
+                                    language.cornerKickTeleportMessage,
+                                    i.toString()
+                                )
+                                delay(1000)
+                            }
+                        }
+                        setNextGameSubState(GameSubState.BALL_OUT_CORNER_KICK_PERFORM, delaySeconds * 1000L)
+                    }
                 }
 
                 return
@@ -610,6 +679,7 @@ abstract class SoccerGameImpl(
                 val ballSpawnPoint = throwInLocation.toVector3d().addRelativeFront(1.0).toLocation()
                 ball = soccerBallFactory.createSoccerBallForGame(ballSpawnPoint, arena.ball, this)
                 ball!!.isInteractable = false
+                createPlayerForceField(throwInLocation, throwInPlayer)
                 val timeoutDelay = arena.ballOutOfBounds.timeOutStartSec * 1000L
                 coroutineHandler.execute {
                     for (i in arena.ballOutOfBounds.timeToStartSec downTo 1) {
@@ -632,6 +702,79 @@ abstract class SoccerGameImpl(
                     ball?.isInteractable = true
                     delay(timeoutDelay)
                     ball?.lockedPlayer = null
+                    removePlayerForceField()
+                }
+                setNextGameSubState(GameSubState.FREE)
+                return
+            }
+
+            GameSubState.BALL_OUT_CORNER_KICK_PERFORM -> {
+                val cornerLocation = subStateLocationParam!!
+                val cornerPlayer = subStatePlayerParam!!
+                coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(cornerPlayer)) {
+                    cornerPlayer.teleportCompat(plugin, cornerLocation)
+                }
+                destroyBall()
+                val ballSpawnPoint = cornerLocation.toVector3d().addRelativeFront(1.0).toLocation()
+                ball = soccerBallFactory.createSoccerBallForGame(ballSpawnPoint, arena.ball, this)
+                ball!!.isInteractable = false
+                createPlayerForceField(cornerLocation, cornerPlayer)
+                val timeoutDelay = arena.ballOutOfBounds.timeOutStartSec * 1000L
+                coroutineHandler.execute {
+                    for (i in arena.ballOutOfBounds.timeToStartSec downTo 1) {
+                        for (player in getPlayers()) {
+                            chatMessageService.sendLanguageMessage(
+                                player,
+                                language.cornerKickReadyMessage,
+                                i.toString()
+                            )
+                        }
+                        delay(1000)
+                    }
+                    if (getPlayers().contains(cornerPlayer)) {
+                        chatMessageService.sendLanguageMessage(cornerPlayer, language.cornerKickPerformMessage)
+                    }
+                    ball?.lockedPlayer = cornerPlayer
+                    ball?.isInteractable = true
+                    delay(timeoutDelay)
+                    ball?.lockedPlayer = null
+                    removePlayerForceField()
+                }
+                setNextGameSubState(GameSubState.FREE)
+                return
+            }
+
+            GameSubState.BALL_OUT_GOAL_KICK_PERFORM -> {
+                val goalKickLocation = subStateLocationParam!!
+                val goalKickPlayer = subStatePlayerParam!!
+                coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(goalKickPlayer)) {
+                    goalKickPlayer.teleportCompat(plugin, goalKickLocation)
+                }
+                destroyBall()
+                val ballSpawnPoint = goalKickLocation.toVector3d().addRelativeFront(1.0).toLocation()
+                ball = soccerBallFactory.createSoccerBallForGame(ballSpawnPoint, arena.ball, this)
+                ball!!.isInteractable = false
+                createPlayerForceField(goalKickLocation, goalKickPlayer)
+                val timeoutDelay = arena.ballOutOfBounds.timeOutStartSec * 1000L
+                coroutineHandler.execute {
+                    for (i in arena.ballOutOfBounds.timeToStartSec downTo 1) {
+                        for (player in getPlayers()) {
+                            chatMessageService.sendLanguageMessage(
+                                player,
+                                language.goalKickReadyMessage,
+                                i.toString()
+                            )
+                        }
+                        delay(1000)
+                    }
+                    if (getPlayers().contains(goalKickPlayer)) {
+                        chatMessageService.sendLanguageMessage(goalKickPlayer, language.goalKickPerformMessage)
+                    }
+                    ball?.lockedPlayer = goalKickPlayer
+                    ball?.isInteractable = true
+                    delay(timeoutDelay)
+                    ball?.lockedPlayer = null
+                    removePlayerForceField()
                 }
                 setNextGameSubState(GameSubState.FREE)
                 return
@@ -973,6 +1116,47 @@ abstract class SoccerGameImpl(
             BlockDirection.EAST -> Location(world, c2.x, y, ballLocation.z.coerceIn(c2.z, c1.z))
             BlockDirection.NORTH -> Location(world, ballLocation.x.coerceIn(c2.x, c1.x), y, c1.z)
             BlockDirection.SOUTH -> Location(world, ballLocation.x.coerceIn(c2.x, c1.x), y, c2.z)
+            else -> arena.ballSpawnPoint!!.toLocation()
+        }
+
+        // Face the player toward the center of the arena.
+        val center = arena.center
+        val dx = center.x - location.x
+        val dz = center.z - location.z
+        location.yaw = Math.toDegrees(Math.atan2(-dx, dz)).toFloat()
+
+        return location
+    }
+
+    /**
+     * Returns the corner of the playing field nearest to [ballLocation] on the given [exitDirection] goal-line.
+     * The player facing direction is set toward the arena center.
+     */
+    private fun findCornerKickLocation(ballLocation: Vector3d, exitDirection: BlockDirection): Location {
+        val c1 = arena.corner1!!
+        val c2 = arena.corner2!!
+        val world = org.bukkit.Bukkit.getWorld(arena.ballSpawnPoint!!.world!!)
+        val y = arena.ballSpawnPoint!!.y
+        val centerX = (c1.x + c2.x) / 2.0
+        val centerZ = (c1.z + c2.z) / 2.0
+
+        val location = when (exitDirection) {
+            BlockDirection.NORTH -> {
+                val cornerX = if (ballLocation.x >= centerX) c1.x else c2.x
+                Location(world, cornerX, y, c1.z)
+            }
+            BlockDirection.SOUTH -> {
+                val cornerX = if (ballLocation.x >= centerX) c1.x else c2.x
+                Location(world, cornerX, y, c2.z)
+            }
+            BlockDirection.WEST -> {
+                val cornerZ = if (ballLocation.z >= centerZ) c1.z else c2.z
+                Location(world, c1.x, y, cornerZ)
+            }
+            BlockDirection.EAST -> {
+                val cornerZ = if (ballLocation.z >= centerZ) c1.z else c2.z
+                Location(world, c2.x, y, cornerZ)
+            }
             else -> arena.ballSpawnPoint!!.toLocation()
         }
 

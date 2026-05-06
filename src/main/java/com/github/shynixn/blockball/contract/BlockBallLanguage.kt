@@ -250,4 +250,16 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
   var throwInReadyMessage: LanguageItem
 
   var throwInPerformMessage: LanguageItem
+
+  var cornerKickTeleportMessage: LanguageItem
+
+  var cornerKickReadyMessage: LanguageItem
+
+  var cornerKickPerformMessage: LanguageItem
+
+  var goalKickTeleportMessage: LanguageItem
+
+  var goalKickReadyMessage: LanguageItem
+
+  var goalKickPerformMessage: LanguageItem
 }
