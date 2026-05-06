@@ -3,7 +3,6 @@
 package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.mcutils.common.sound.SoundService
 import com.github.shynixn.shyparticles.contract.ParticleEffectService
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
@@ -13,7 +12,6 @@ import org.bukkit.event.player.PlayerToggleFlightEvent
 
 class DoubleJumpListener(
     private val gameService: GameService,
-    private val soundService: SoundService,
     private val effectService: ParticleEffectService
 ) : Listener {
     /**

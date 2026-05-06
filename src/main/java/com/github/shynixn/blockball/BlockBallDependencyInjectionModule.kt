@@ -2,6 +2,7 @@ package com.github.shynixn.blockball
 
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.CloudService
+import com.github.shynixn.blockball.contract.ForceFieldService
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerBallFactory
 import com.github.shynixn.blockball.contract.StatsService
@@ -11,6 +12,7 @@ import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.blockball.impl.service.CloudServiceImpl
+import com.github.shynixn.blockball.impl.service.ForceFieldServiceImpl
 import com.github.shynixn.blockball.impl.service.GameServiceImpl
 import com.github.shynixn.blockball.impl.service.SoccerBallFactoryImpl
 import com.github.shynixn.blockball.impl.service.StatsServiceImpl
@@ -53,7 +55,7 @@ class BlockBallDependencyInjectionModule(
     private val language: BlockBallLanguage,
     private val placeHolderService: PlaceHolderService,
     private val shyParticlesModule: DependencyInjectionModule,
-    private val shyGuildModule : DependencyInjectionModule,
+    private val shyGuildModule: DependencyInjectionModule,
     private val sqlConnectionService: SqlConnectionService,
 ) {
     companion object {
@@ -116,6 +118,9 @@ class BlockBallDependencyInjectionModule(
         module.addService<CommandService> {
             CommandServiceImpl(module.getService())
         }
+        module.addService<ForceFieldService> {
+            ForceFieldServiceImpl()
+        }
         module.addService<PacketService> {
             PacketServiceImpl(module.getService())
         }
@@ -174,6 +179,7 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
+                module.getService(),
                 module.getService()
             )
         }
@@ -183,7 +189,6 @@ class BlockBallDependencyInjectionModule(
         module.addService<BallListener> { BallListener(module.getService(), module.getService()) }
         module.addService<DoubleJumpListener> {
             DoubleJumpListener(
-                module.getService(),
                 module.getService(),
                 module.getService()
             )
@@ -198,17 +203,9 @@ class BlockBallDependencyInjectionModule(
                 module.getService()
             )
         }
-        module.addService<HubgameListener> {
-            HubgameListener(
-                module.getService(),
-                module.getService(),
-                module.getService(),
-                module.getService(),
-                module.getService(),
-                module.getService()
-            )
+        module.addService<ForceFieldListener> {
+            ForceFieldListener(module.getService())
         }
-        module.addService<MinigameListener> { MinigameListener(module.getService(), module.getService()) }
         module.addService<BlockBallCommandExecutor> {
             BlockBallCommandExecutor(
                 module.getService(),

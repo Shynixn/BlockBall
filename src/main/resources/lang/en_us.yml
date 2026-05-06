@@ -383,6 +383,76 @@ gameClubStartedGameMessage:
 commandClubJoinToolTip:
   type: "CHAT"
   text: "Lets the player executing the command join the game with the given club. The player has to be a member of the club and the club has to have free slots in the game."
+outMessage:
+  type: "TITLE"
+  text: "&eOut"
+  subTitle: ""
+  fadeInTicks: 20
+  stayTicks: 60
+  fadeOutTicks: 20
+throwInTeleportMessage:
+  type: "TITLE"
+  text: "&eThrow-in"
+  subTitle: "Teleporting in %blockball_param_1% second(s)."
+  fadeInTicks: 0
+  stayTicks: 20
+  fadeOutTicks: 0
+throwInReadyMessage:
+  type: "ACTIONBAR"
+  text: "Prepare for throw-in in %blockball_param_1% second(s)."
+  subTitle: ""
+  fadeInTicks: 0
+  stayTicks: 20
+  fadeOutTicks: 20
+throwInPerformMessage:
+  type: "ACTIONBAR"
+  text: "&a&lGO!"
+  subTitle: ""
+  fadeInTicks: 0
+  stayTicks: 20
+  fadeOutTicks: 20
+cornerKickTeleportMessage:
+  type: "TITLE"
+  text: "&eCorner Kick"
+  subTitle: "Teleporting in %blockball_param_1% second(s)."
+  fadeInTicks: 0
+  stayTicks: 20
+  fadeOutTicks: 0
+cornerKickReadyMessage:
+  type: "ACTIONBAR"
+  text: "Prepare for corner kick in %blockball_param_1% second(s)."
+  subTitle: ""
+  fadeInTicks: 0
+  stayTicks: 20
+  fadeOutTicks: 20
+cornerKickPerformMessage:
+  type: "ACTIONBAR"
+  text: "&a&lGO!"
+  subTitle: ""
+  fadeInTicks: 0
+  stayTicks: 20
+  fadeOutTicks: 20
+goalKickTeleportMessage:
+  type: "TITLE"
+  text: "&eGoal Kick"
+  subTitle: "Teleporting in %blockball_param_1% second(s)."
+  fadeInTicks: 0
+  stayTicks: 20
+  fadeOutTicks: 0
+goalKickReadyMessage:
+  type: "ACTIONBAR"
+  text: "Prepare for goal kick in %blockball_param_1% second(s)."
+  subTitle: ""
+  fadeInTicks: 0
+  stayTicks: 20
+  fadeOutTicks: 20
+goalKickPerformMessage:
+  type: "ACTIONBAR"
+  text: "&a&lGO!"
+  subTitle: ""
+  fadeInTicks: 0
+  stayTicks: 20
+  fadeOutTicks: 20
 shyScoreboardPlayerNotFoundMessage:
   # Available types: "CHAT", "TITLE", "ACTIONBAR", "HIDDEN".
   # Please notice that some messages do only support chat.

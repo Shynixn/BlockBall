@@ -1,28 +1,32 @@
 package com.github.shynixn.blockball.impl
 
-import com.github.shynixn.blockball.contract.BlockBallLanguage
-import com.github.shynixn.blockball.contract.CloudService
-import com.github.shynixn.blockball.contract.SoccerBallFactory
-import com.github.shynixn.blockball.contract.SoccerHubGame
+import com.github.shynixn.blockball.BlockBallPlugin.Companion.gameKey
+import com.github.shynixn.blockball.contract.*
+import com.github.shynixn.blockball.entity.ForceField
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.enumeration.GameState
+import com.github.shynixn.blockball.enumeration.GameSubState
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
+import com.github.shynixn.mcutils.common.chat.ClickEvent
+import com.github.shynixn.mcutils.common.chat.ClickEventType
+import com.github.shynixn.mcutils.common.chat.TextComponent
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
-import kotlinx.coroutines.delay
+import org.bukkit.Bukkit
 import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.util.concurrent.ConcurrentHashMap
 
 class SoccerHubGameImpl(
     arena: SoccerArena,
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
-    private val plugin: Plugin,
+    plugin: Plugin,
     placeHolderService: PlaceHolderService,
     language: BlockBallLanguage,
     soccerBallFactory: SoccerBallFactory,
@@ -31,7 +35,8 @@ class SoccerHubGameImpl(
     chatMessageService: ChatMessageService,
     cloudService: CloudService,
     private val server: Server,
-    private val coroutineHandler: CoroutineHandler
+    private val coroutineHandler: CoroutineHandler,
+    forceFieldService: ForceFieldService
 ) : SoccerGameImpl(
     arena,
     placeHolderService,
@@ -43,9 +48,28 @@ class SoccerHubGameImpl(
     itemService,
     chatMessageService, cloudService,
     coroutineHandler,
-    server
+    server,
+    forceFieldService
 ),
     SoccerHubGame {
+    private val lastJoinPrompt = ConcurrentHashMap<Player, Long>()
+    private val forceField: ForceField = ForceField(arena.outerField.corner1!!, arena.outerField.corner2!!).also {
+        it.on3dInside = { player ->
+            if (!ingamePlayersStorage.containsKey(player)) {
+                onPlayerEnterHubGameForceField(player)
+            }
+        }
+        it.on2dOutSide = { player ->
+            if (ingamePlayersStorage.containsKey(player)) {
+                onPlayerLeaveHubGameForceField(player)
+            }
+        }
+    }
+
+    init {
+        forceFieldService.addForceField(forceField)
+    }
+
     /**
      * Handles the game actions per tick.
      */
@@ -54,27 +78,29 @@ class SoccerHubGameImpl(
             return
         }
 
-        if (!arena.enabled || closing) {
+        if (!arena.enabled || subState == GameSubState.CLOSED || isDisposed) {
             close()
             return
         }
 
-        if (arena.meta.hubLobbyMeta.resetArenaOnEmpty && ingamePlayersStorage.isEmpty() && (redScore > 0 || blueScore > 0)) {
-            setGameClosing()
-        }
+        if (subStateNext != GameSubState.CLOSED) {
+            if (arena.meta.hubLobbyMeta.resetArenaOnEmpty && ingamePlayersStorage.isEmpty() && (redScore > 0 || blueScore > 0)) {
+                setNextGameSubState(GameSubState.CLOSED, 1000L)
+            }
 
-        if (ball == null) {
-            if (redTeam.size >= arena.meta.redTeamMeta.minAmount && blueTeam.size >= arena.meta.blueTeamMeta.minAmount && ingamePlayersStorage.isNotEmpty()) {
-                respawnBall(arena.meta.customizingMeta.gameStartBallSpawnDelayTicks)
+            if (ball == null && redTeam.size >= arena.meta.redTeamMeta.minAmount && blueTeam.size >= arena.meta.blueTeamMeta.minAmount && ingamePlayersStorage.isNotEmpty() && subStateNext != GameSubState.BALL_RESPAWNED) {
+                setNextGameSubState(
+                    GameSubState.BALL_RESPAWNED,
+                    arena.meta.customizingMeta.gameStartBallSpawnDelayTicks * 50L
+                )
+            }
+
+            if (ball != null && ingamePlayersStorage.isEmpty() && subStateNext != GameSubState.BALL_DESTROYED) {
+                setNextGameSubState(GameSubState.BALL_DESTROYED)
             }
         }
 
-        if (ball != null && ingamePlayersStorage.isEmpty()) {
-            destroyBall()
-        }
-
-        // Handle SoccerBall.
-        this.handleBallSpawning()
+        this.runStateMachine()
         super.handleMiniGameEssentials(hasSecondPassed)
     }
 
@@ -82,6 +108,10 @@ class SoccerHubGameImpl(
      * Closes the given game and all underlying resources.
      */
     override fun close() {
+        if (isDisposed) {
+            return
+        }
+
         if (status == GameState.DISABLED) {
             return
         }
@@ -94,11 +124,12 @@ class SoccerHubGameImpl(
         ball?.remove()
         doubleJumpCoolDownPlayers.clear()
         interactedWithBall.clear()
-
-        coroutineHandler.execute {
-            delay(3000)
-            closed = true
-        }
+        forceFieldService.removeForceField(forceField)
+        lastJoinPrompt.clear()
+        subStatePlayerParam = null
+        subStateLocationParam = null
+        isDisposed = true
+        removePlayerForceField()
     }
 
     override fun setPlayerToArena(player: Player, team: Team) {
@@ -109,4 +140,69 @@ class SoccerHubGameImpl(
             player.velocity = velocityIntoArena
         }
     }
+
+    private fun onPlayerLeaveHubGameForceField(player: Player) {
+        forceFieldService.knockBackOutside(forceField, player)
+        val lastJoinPromptTimeStamp = lastJoinPrompt[player]
+        val timeStamp = System.currentTimeMillis()
+        if (lastJoinPromptTimeStamp != null && timeStamp - lastJoinPromptTimeStamp < 100) {
+            return
+        }
+
+        lastJoinPrompt[player] = timeStamp
+        Bukkit.getServer().dispatchCommand(player, "blockball leave")
+        return
+    }
+
+    private fun onPlayerEnterHubGameForceField(player: Player) {
+        forceFieldService.knockBackOutside(forceField, player)
+        val lastJoinPromptTimeStamp = lastJoinPrompt[player]
+        val timeStamp = System.currentTimeMillis()
+        if (lastJoinPromptTimeStamp != null && timeStamp - lastJoinPromptTimeStamp < 5000) {
+            return
+        }
+
+        // Makes sure to not execute this too often.
+        lastJoinPrompt[player] = timeStamp
+        if (arena.meta.hubLobbyMeta.instantForcefieldJoin) {
+            coroutineHandler.execute {
+                join(player)
+            }
+            return
+        }
+        chatMessageService.sendChatMessage(player, TextComponent().also {
+            it.components = mutableListOf(
+                TextComponent().also {
+                    it.text = placeHolderService.resolvePlaceHolder(
+                        language.hubGameJoinHeader.text,
+                        player,
+                        mapOf(gameKey to arena.name)
+                    ) + "\n"
+                },
+                TextComponent().also {
+                    it.text = placeHolderService.resolvePlaceHolder(
+                        language.hubGameJoinRed.text,
+                        player,
+                        mapOf(gameKey to arena.name)
+                    ) + "\n"
+                    it.clickEvent = ClickEvent(
+                        ClickEventType.RUN_COMMAND,
+                        "/blockball join ${arena.name} red"
+                    )
+                },
+                TextComponent().also {
+                    it.text = placeHolderService.resolvePlaceHolder(
+                        language.hubGameJoinBlue.text,
+                        player,
+                        mapOf(gameKey to this.arena.name)
+                    )
+                    it.clickEvent = ClickEvent(
+                        ClickEventType.RUN_COMMAND,
+                        "/blockball join ${arena.name} blue"
+                    )
+                }
+            )
+        })
+    }
 }
+

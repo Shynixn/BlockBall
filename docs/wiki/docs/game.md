@@ -221,9 +221,15 @@ Enable your completed minigame:
 
 ## 🎖️ Advanced Features
 
-### Outer Playing Area
+### Throw-Ins, Goal Kicks & Corner Kicks
 
-The outer forcefield and the playable area is the same when using the default configuration. However, you may want your players to be able to move outside the playable area for certain scenarios (e.g. throw-ins, corner shots).
+When the ball leaves the playing field, BlockBall can automatically trigger a **throw-in**, **corner kick**, or **goal kick** instead of simply bouncing the ball back. Three setup steps are required to enable this.
+
+---
+
+#### Step 1: Set the Outer Field
+
+The outer field defines the extended area players are allowed to move into when performing a throw-in, corner kick, or goal kick. It must be **larger than the standard playing field** so that players can reach the sideline and corner positions.
 
 1. **Select Corner A**: Left-click with the axe
 2. **Select Corner B**: Right-click with the axe
@@ -232,6 +238,64 @@ The outer forcefield and the playable area is the same when using the default co
 ```bash
 /blockball select game1 outer_field
 ```
+
+!!! tip "Sizing Recommendation"
+    Extend the outer field by at least 3–5 blocks beyond each sideline and goal line so players have enough room to take their positions.
+
+---
+
+#### Step 2: Set Keeper Spawn Points
+
+The keeper spawn point of each team is used as the **goal kick position** — the location the designated player is teleported to when their team is awarded a goal kick.
+
+Stand at the desired point front of each goal (it has to be in FRONT OF the goal), then run:
+
+```bash
+/blockball location game1 red_keeper
+```
+
+```bash
+/blockball location game1 blue_keeper
+```
+---
+
+#### Step 3: Enable Throw-Ins in the Arena Configuration
+
+By default the ball bounces back when it goes out of bounds. Open your arena file at  
+`plugins/BlockBall/arena/game1.yml` and set `forceField` to `false` under `ballOutOfBounds`:
+
+```yaml
+ballOutOfBounds:
+  # If set to true, the ball simply bounces back when it goes out of bounds.
+  # If set to false, a throw-in, corner kick or goal kick is triggered instead.
+  forceField: false
+  # Seconds until the selected player is teleported to the throw-in / corner kick / goal kick position.
+  timeToTeleportSec: 3
+  # Seconds the player has to prepare before they gain exclusive control of the ball.
+  timeToStartSec: 5
+  # Seconds of exclusive ball control before other players can interact.
+  timeOutStartSec: 5
+```
+
+Save the file and reload the arena:
+
+```bash
+/blockball reload game1
+```
+
+---
+
+#### How It Works
+
+Once all three steps are complete, the following rules apply automatically whenever the ball leaves the playing field:
+
+| Situation | Result |
+|---|---|
+| Ball exits over a **sideline** | **Throw-in** — nearest opponent of the last touching player performs it from the boundary |
+| Ball exits over a **goal line**, last touched by the **defending team** | **Corner kick** — nearest attacker is teleported to the nearest corner of the field |
+| Ball exits over a **goal line**, last touched by the **attacking team** | **Goal kick** — nearest defender is teleported to the keeper spawn point |
+
+A temporary force field is placed around the throw-in / corner kick / goal kick position to prevent other players from interfering until the designated player has taken their kick.
 
 
 ### Time Periods & Overtime

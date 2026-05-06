@@ -1207,6 +1207,10 @@ class BlockBallCommandExecutor(
             arena.meta.blueTeamMeta.lobbySpawnpoint = playerLocation
         } else if (locationType == LocationType.REFEREE_LOBBY) {
             arena.meta.refereeTeamMeta.lobbySpawnpoint = playerLocation
+        } else if (locationType == LocationType.RED_KEEPER) {
+            arena.meta.redTeamMeta.keeperSpawnpoint = playerLocation
+        } else if (locationType == LocationType.BLUE_KEEPER) {
+            arena.meta.blueTeamMeta.keeperSpawnpoint = playerLocation
         }
 
         arenaRepository.save(arena)

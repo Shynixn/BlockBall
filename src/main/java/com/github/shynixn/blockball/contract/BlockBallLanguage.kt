@@ -242,4 +242,24 @@ interface BlockBallLanguage : LanguageProvider, ShyScoreboardLanguage, ShyBossBa
   var gameClubStartedGameMessage: LanguageItem
 
   var commandClubJoinToolTip: LanguageItem
+
+  var outMessage: LanguageItem
+
+  var throwInTeleportMessage: LanguageItem
+
+  var throwInReadyMessage: LanguageItem
+
+  var throwInPerformMessage: LanguageItem
+
+  var cornerKickTeleportMessage: LanguageItem
+
+  var cornerKickReadyMessage: LanguageItem
+
+  var cornerKickPerformMessage: LanguageItem
+
+  var goalKickTeleportMessage: LanguageItem
+
+  var goalKickReadyMessage: LanguageItem
+
+  var goalKickPerformMessage: LanguageItem
 }

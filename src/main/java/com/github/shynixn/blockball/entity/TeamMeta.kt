@@ -41,6 +41,9 @@ class TeamMeta {
     @Comment("The lobby spawnpoint of this team inside of the game.")
     var lobbySpawnpoint: Vector3d? = null
 
+    @Comment("The keeper spawnpoint of this team inside of the game.")
+    var keeperSpawnpoint : Vector3d? = null
+
     @Comment("The commands being executed when a team wins. A command always starts with an slash. Possible values for type SERVER, SERVER_PER_PLAYER, PER_PLAYER.")
     var winCommands: List<CommandMeta> = ArrayList()
 

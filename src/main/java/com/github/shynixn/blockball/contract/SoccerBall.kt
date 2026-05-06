@@ -40,6 +40,11 @@ interface SoccerBall {
     var isInteractable: Boolean
 
     /**
+     * If set, only this player can interact with the ball.
+     */
+    var lockedPlayer : Player?
+
+    /**
      * Teleports the ball to the given [location].
      */
     fun teleport(location: Location)

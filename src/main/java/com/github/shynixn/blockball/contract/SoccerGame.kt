@@ -2,15 +2,49 @@ package com.github.shynixn.blockball.contract
 
 import com.github.shynixn.blockball.entity.GameStorage
 import com.github.shynixn.blockball.entity.SoccerArena
-import com.github.shynixn.blockball.enumeration.GameState
-import com.github.shynixn.blockball.enumeration.JoinResult
-import com.github.shynixn.blockball.enumeration.LeaveResult
-import com.github.shynixn.blockball.enumeration.Team
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.shyguild.entity.Guild
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
 interface SoccerGame {
+    /**
+     * Global Game State.
+     */
+    var status: GameState
+
+    /**
+     * If set, then the game is already disposed and must not be used.
+     */
+    val isDisposed: Boolean
+
+    /**
+     * The substate of the game.
+     * BlockBall uses a state machine to determine the next action for modern actions.
+     * Old actions are still being used but being refactored over time.
+     */
+    val subState: GameSubState
+
+    /**
+     * When this substate has ended.
+     */
+    val subStateEndTimeStamp: Long
+
+    /**
+     * The next substate in the game.
+     */
+    val subStateNext: GameSubState
+
+    /**
+     * If the next substate requires a location then this is the parameter.
+     */
+    val subStateLocationParam: Location?
+
+    /**
+     * If the next substate requires a player then this is the parameter.
+     */
+    val subStatePlayerParam: Player?
+
     /**
      * Generated game id.
      */
@@ -24,12 +58,12 @@ interface SoccerGame {
     /**
      * Red club in club mode.
      */
-    var redClub : Guild?
+    var redClub: Guild?
 
     /**
      * Blue club in club mode.
      */
-    var blueClub : Guild?
+    var blueClub: Guild?
 
     /**
      * RedScore.
@@ -62,11 +96,6 @@ interface SoccerGame {
     val refereeTeam: Set<Player>
 
     /**
-     * Status.
-     */
-    var status: GameState
-
-    /**
      * SoccerBall.
      */
     var ball: SoccerBall?
@@ -76,18 +105,6 @@ interface SoccerGame {
      * Once another team touches the ball this stack is cleared.
      */
     var interactedWithBall: MutableList<Player>
-
-    /**
-     * Marks the game for being closed and will automatically
-     * switch to close state once the resources are cleard.
-     */
-    var closing: Boolean
-
-    /**
-     * Marks the game for being closed and will automatically
-     * switch to close state once the resources are cleard.
-     */
-    var closed: Boolean
 
     /**
      * Contains players which are in cooldown by doublejump.
@@ -108,6 +125,16 @@ interface SoccerGame {
      * Compatibility reference.
      */
     val language: BlockBallLanguage
+
+    /**
+     * Performs all state Machine actions.
+     */
+    fun runStateMachine()
+
+    /**
+     * Is called when the substate of the game changes. This is used to perform actions when the substate changes.
+     */
+    fun onStateMachineSubStateChange(oldSubState: GameSubState, newSubState: GameSubState)
 
     /**
      * Checks if the game is in club mode and clubs are playing.
@@ -134,7 +161,7 @@ interface SoccerGame {
     /**
      * Lets the given [player] in the given [game] respawn at the specified spawnpoint.
      */
-    fun respawn(player: Player, team : Team? = null)
+    fun respawn(player: Player, team: Team? = null)
 
     /**
      * Applies death points.
@@ -162,4 +189,9 @@ interface SoccerGame {
      * Respawns the ball and sets it to the given location.
      */
     fun setBallToLocation(location: Location)
+
+    /**
+     * Sets the next substate of the game. The substate is used to determine the next action of the game.
+     */
+    fun setNextGameSubState(subState: GameSubState, timeFromNowMilliSeconds: Long = 0)
 }

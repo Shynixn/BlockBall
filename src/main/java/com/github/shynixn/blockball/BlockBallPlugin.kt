@@ -201,11 +201,10 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
         // Register Listeners
         Bukkit.getPluginManager().registerEvents(module!!.getService<GameListener>(), this)
         Bukkit.getPluginManager().registerEvents(module!!.getService<DoubleJumpListener>(), this)
-        Bukkit.getPluginManager().registerEvents(module!!.getService<HubgameListener>(), this)
-        Bukkit.getPluginManager().registerEvents(module!!.getService<MinigameListener>(), this)
         Bukkit.getPluginManager().registerEvents(module!!.getService<BallListener>(), this)
+        Bukkit.getPluginManager().registerEvents(module!!.getService<ForceFieldListener>(), this)
 
-        // Register CommandExecutor
+        //  Register CommandExecutor
         module!!.getService<BlockBallCommandExecutor>()
 
         // Service dependencies
