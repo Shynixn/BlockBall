@@ -10,7 +10,7 @@ class BallOutOfBoundsMeta {
     var timeToTeleportSec: Int = 3
 
     @Comment("The time in seconds until teleported player can perform an action.")
-    var timeToStartSec: Int = 3
+    var timeToStartSec: Int = 5
 
     @Comment("The time in seconds until teleported has no longer exclusive control of the ball.")
     var timeOutStartSec: Int = 5

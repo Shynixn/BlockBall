@@ -286,7 +286,7 @@ class GameServiceImpl(
                 throw SoccerGameException(arena, "Set the red keeper spawnpoint for arena ${arena.name}!")
             }
             if (arena.meta.blueTeamMeta.keeperSpawnpoint == null) {
-                throw SoccerGameException(arena, "Set the red keeper spawnpoint for arena ${arena.name}!")
+                throw SoccerGameException(arena, "Set the blue keeper spawnpoint for arena ${arena.name}!")
             }
         }
 

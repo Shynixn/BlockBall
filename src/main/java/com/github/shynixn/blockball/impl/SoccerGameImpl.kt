@@ -13,6 +13,7 @@ import com.github.shynixn.blockball.event.GameEndEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.blockball.event.GameJoinEvent
 import com.github.shynixn.blockball.event.GameLeaveEvent
+import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.CoroutineHandler
@@ -23,7 +24,10 @@ import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.language.LanguageType
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.toLocation
+import com.github.shynixn.mcutils.common.toVector3d
+import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
+import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 import com.github.shynixn.shyguild.entity.Guild
 import kotlinx.coroutines.delay
 import org.bukkit.GameMode
@@ -531,7 +535,7 @@ abstract class SoccerGameImpl(
             GameSubState.BALL_OUT_TELEPORT -> {
                 val lastInteractedWithBallPlayer = interactedWithBall.getOrNull(0)
 
-                if (lastInteractedWithBallPlayer == null) {
+                if (lastInteractedWithBallPlayer == null || ball == null) {
                     destroyBall()
                     setNextGameSubState(
                         GameSubState.BALL_RESPAWNED, arena.meta.customizingMeta.gameStartBallSpawnDelayTicks * 50L
@@ -539,14 +543,97 @@ abstract class SoccerGameImpl(
                     return
                 }
 
-                /* TODO val distanceToRedGoal = i
-                 subStateNext = GameSubState.BALL_OUT_THROW_IN_PERFORM
-                 subStateEndTimeStamp = currentMilliseconds + arena.ballOutOfBounds.timeToStartSec * 1000*/
+                val ballLocation = ball!!.getLocation().toVector3d()
+                ball!!.isInteractable = false
+                val exitDirection = arena.getRelativeBlockDirectionToLocation(ballLocation)
+
+                val relDirectionRed =
+                    arena.meta.redTeamMeta.goal.getRelativeBlockDirectionToLocation(arena.meta.redTeamMeta.keeperSpawnpoint!!)
+                val relDirectionBlue =
+                    arena.meta.blueTeamMeta.goal.getRelativeBlockDirectionToLocation(arena.meta.blueTeamMeta.keeperSpawnpoint!!)
+
+                val teamSide = if (mirroredGoals && exitDirection == relDirectionRed) {
+                    Team.RED
+                } else if (mirroredGoals && exitDirection == relDirectionBlue) {
+                    Team.BLUE
+                } else if (exitDirection == relDirectionRed) {
+                    Team.BLUE
+                } else if (exitDirection == relDirectionBlue) {
+                    Team.RED
+                } else {
+                    null
+                }
+
+                val throwInPlayer = findNearestOpposingPlayer(lastInteractedWithBallPlayer)
+
+                for (player in getPlayers()) {
+                    if (player != throwInPlayer) {
+                        chatMessageService.sendLanguageMessage(player, language.outMessage)
+                    }
+                }
+
+                if (teamSide == null) {
+                    // Throw-in: project the ball's exit position onto the nearest inner-field boundary
+                    // to determine where the throw-in should be taken.
+                    val throwInLocation = findThrowInLocation(ballLocation, exitDirection)
+                    // The team opposing the last player who touched the ball performs the throw-in.
+                    subStateLocationParam = throwInLocation
+                    subStatePlayerParam = throwInPlayer
+                    val delaySeconds = arena.ballOutOfBounds.timeToTeleportSec
+                    plugin.launch {
+                        for (i in delaySeconds downTo 1) {
+                            chatMessageService.sendLanguageMessage(
+                                subStatePlayerParam!!,
+                                language.throwInTeleportMessage,
+                                i.toString()
+                            )
+                            delay(1000)
+                        }
+                    }
+
+                    setNextGameSubState(
+                        GameSubState.BALL_OUT_THROW_IN_PERFORM,
+                        delaySeconds * 1000L
+                    )
+                }
+
                 return
             }
 
             GameSubState.BALL_OUT_THROW_IN_PERFORM -> {
-                // TODO:
+                val throwInLocation = subStateLocationParam!!
+                val throwInPlayer = subStatePlayerParam!!
+                coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(throwInPlayer)) {
+                    throwInPlayer.teleportCompat(plugin, throwInLocation)
+                }
+                destroyBall()
+                val ballSpawnPoint = throwInLocation.toVector3d().addRelativeFront(1.0).toLocation()
+                ball = soccerBallFactory.createSoccerBallForGame(ballSpawnPoint, arena.ball, this)
+                ball!!.isInteractable = false
+                val timeoutDelay = arena.ballOutOfBounds.timeOutStartSec * 1000L
+                coroutineHandler.execute {
+                    for (i in arena.ballOutOfBounds.timeToStartSec downTo 1) {
+                        for (player in getPlayers()) {
+                            chatMessageService.sendLanguageMessage(
+                                player,
+                                language.throwInReadyMessage,
+                                i.toString()
+                            )
+                        }
+                        delay(1000)
+                    }
+                    if(getPlayers().contains(throwInPlayer)){
+                        chatMessageService.sendLanguageMessage(
+                            throwInPlayer,
+                            language.throwInPerformMessage,
+                        )
+                    }
+                    ball?.lockedPlayer = throwInPlayer // Important, the ball might be null here
+                    ball?.isInteractable = true
+                    delay(timeoutDelay)
+                    ball?.lockedPlayer = null
+                }
+                setNextGameSubState(GameSubState.FREE)
                 return
             }
 
@@ -870,6 +957,55 @@ abstract class SoccerGameImpl(
         }
     }
 
+    /**
+     * Projects [ballLocation] onto the boundary of the inner playing field in the given [exitDirection].
+     * This gives the sideline position where a throw-in should be taken.
+     * If the exit direction cannot be determined (DOWN), the ball spawn point is used as fallback.
+     */
+    private fun findThrowInLocation(ballLocation: Vector3d, exitDirection: BlockDirection): Location {
+        val c1 = arena.corner1!!   // higher X (WEST edge) / higher Z (NORTH edge)
+        val c2 = arena.corner2!!   // lower  X (EAST edge) / lower  Z (SOUTH edge)
+        val world = org.bukkit.Bukkit.getWorld(arena.ballSpawnPoint!!.world!!)
+        val y = arena.ballSpawnPoint!!.y
+
+        val location = when (exitDirection) {
+            BlockDirection.WEST -> Location(world, c1.x, y, ballLocation.z.coerceIn(c2.z, c1.z))
+            BlockDirection.EAST -> Location(world, c2.x, y, ballLocation.z.coerceIn(c2.z, c1.z))
+            BlockDirection.NORTH -> Location(world, ballLocation.x.coerceIn(c2.x, c1.x), y, c1.z)
+            BlockDirection.SOUTH -> Location(world, ballLocation.x.coerceIn(c2.x, c1.x), y, c2.z)
+            else -> arena.ballSpawnPoint!!.toLocation()
+        }
+
+        // Face the player toward the center of the arena.
+        val center = arena.center
+        val dx = center.x - location.x
+        val dz = center.z - location.z
+        location.yaw = Math.toDegrees(Math.atan2(-dx, dz)).toFloat()
+
+        return location
+    }
+
+    /**
+     * Finds the nearest player of the team opposing the given [player].
+     * Used for throw-ins: the team that did not last touch the ball performs it.
+     */
+    private fun findNearestOpposingPlayer(player: Player): Player {
+        val opposingTeam = if (redTeam.contains(player)) blueTeam else redTeam
+        val ballPos: Vector3d? = ball?.getLocation()?.toVector3d() as Vector3d?
+        return opposingTeam.minByOrNull { p ->
+            if (ballPos != null) p.location.toVector3d().distance(ballPos) else 0.0
+        } ?: player
+    }
+
+    /**
+     * Finds the nearest player in the given [team] to the given [position].
+     * Used for goal kicks: the defending team's nearest player performs it.
+     */
+    private fun findNearestPlayerInTeam(position: Vector3d, team: Team): Player? {
+        val players = if (team == Team.RED) redTeam else blueTeam
+        return players.minByOrNull { p -> p.location.toVector3d().distance(position) }
+    }
+
     abstract fun setPlayerToArena(player: Player, team: Team)
 
     fun getTeamMetaFromTeam(team: Team): TeamMeta {
@@ -911,6 +1047,7 @@ abstract class SoccerGameImpl(
         ball?.remove()
         ball = null
     }
+
     /**
      * Sets the next substate of the game. The substate is used to determine the next action of the game.
      */

@@ -82,6 +82,15 @@ class SoccerBallCrossPlatformProxy(
         }
 
     /**
+     * If set, only this player can interact with the ball.
+     */
+    override var lockedPlayer: Player?
+        get() = ballHitBoxEntity.lockedPlayer
+        set(value) {
+            ballHitBoxEntity.lockedPlayer = value
+        }
+
+    /**
      * Teleports the ball to the given [location].
      */
     override fun teleport(location: Location) {
@@ -164,6 +173,7 @@ class SoccerBallCrossPlatformProxy(
         isDead = true
         allPlayerTracker.dispose()
         playerInteractionCoolDown.clear()
+        lockedPlayer = null
     }
 
     /**

@@ -62,6 +62,11 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
     var motion: Vector3d = Vector3d(0.0, -0.7, 0.0)
 
     /**
+     * Locked player.
+     */
+    var lockedPlayer: Player? = null
+
+    /**
      * Request a teleport at next tick.
      */
     var requestTeleport: Boolean = false
@@ -164,11 +169,16 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
             return
         }
 
+        if (lockedPlayer != null && player != lockedPlayer) {
+            return
+        }
+
         // Referee and game player check.
         if (game != null && !game.redTeam.contains(player) && !game.blueTeam.contains(player)) {
             return
         }
 
+        lockedPlayer = null
         val prevEyeLoc = player.eyeLocation.clone()
         this.skipCounter = meta.hitbox.interactionCoolDownTicks
 
@@ -318,6 +328,10 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
                 continue
             }
 
+            if (lockedPlayer != null && player != lockedPlayer) {
+                continue
+            }
+
             val playerLocation = player.second.toVector3d()
 
             if (playerLocation.distance(position) < hitboxSize
@@ -343,6 +357,7 @@ class BallHitboxEntity(val entityId: Int, val spawnpoint: Vector3d, val game: So
                 this.position.y += 0.25
                 this.motion = ballTouchPlayerEvent.velocity.toVector3d()
                 this.skipCounter = meta.hitbox.interactionCoolDownTicks
+                lockedPlayer = null
             }
         }
     }

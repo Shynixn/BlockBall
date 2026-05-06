@@ -240,6 +240,14 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var commandClubJoinToolTip = LanguageItem("Lets the player executing the command join the game with the given club. The player has to be a member of the club and the club has to have free slots in the game.")
 
+ override var outMessage = LanguageItem("&fOut")
+
+ override var throwInTeleportMessage = LanguageItem("Throw-in")
+
+ override var throwInReadyMessage = LanguageItem("Prepare for throw-in in %blockball_param_1% second(s).")
+
+ override var throwInPerformMessage = LanguageItem("&a&lGO!")
+
  override var shyScoreboardPlayerNotFoundMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cPlayer %blockball_param_1% not found.")
 
  override var shyScoreboardNoPermissionCommand = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 &cYou do not have permission to execute this command.")
