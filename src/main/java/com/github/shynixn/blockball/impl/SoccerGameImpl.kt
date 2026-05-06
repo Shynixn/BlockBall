@@ -628,25 +628,7 @@ abstract class SoccerGameImpl(
                         || (teamSide == Team.BLUE && blueTeam.contains(lastInteractedWithBallPlayer))
 
                     if (lastTouchedByDefender) {
-                        // Goal kick: defending team kicks from their goal area.
-                        val goalKickTeamMeta = if (teamSide == Team.RED) arena.meta.redTeamMeta else arena.meta.blueTeamMeta
-                        val goalKickLocation = (goalKickTeamMeta.keeperSpawnpoint ?: arena.ballSpawnPoint!!).toLocation()
-                        val goalKickPlayer = findNearestPlayerInTeam(ballLocation, teamSide) ?: lastInteractedWithBallPlayer
-                        subStateLocationParam = goalKickLocation
-                        subStatePlayerParam = goalKickPlayer
-                        plugin.launch {
-                            for (i in delaySeconds downTo 1) {
-                                chatMessageService.sendLanguageMessage(
-                                    subStatePlayerParam!!,
-                                    language.goalKickTeleportMessage,
-                                    i.toString()
-                                )
-                                delay(1000)
-                            }
-                        }
-                        setNextGameSubState(GameSubState.BALL_OUT_GOAL_KICK_PERFORM, delaySeconds * 1000L)
-                    } else {
-                        // Corner kick: attacking team kicks from the nearest corner.
+                        // Corner kick: defender last touched → attacking team kicks from the nearest corner.
                         val attackingTeam = if (teamSide == Team.RED) Team.BLUE else Team.RED
                         val cornerLocation = findCornerKickLocation(ballLocation, exitDirection)
                         val cornerPlayer = findNearestPlayerInTeam(ballLocation, attackingTeam) ?: lastInteractedWithBallPlayer
@@ -663,6 +645,24 @@ abstract class SoccerGameImpl(
                             }
                         }
                         setNextGameSubState(GameSubState.BALL_OUT_CORNER_KICK_PERFORM, delaySeconds * 1000L)
+                    } else {
+                        // Goal kick: attacker last touched → defending team kicks from their goal area.
+                        val goalKickTeamMeta = if (teamSide == Team.RED) arena.meta.redTeamMeta else arena.meta.blueTeamMeta
+                        val goalKickLocation = (goalKickTeamMeta.keeperSpawnpoint ?: arena.ballSpawnPoint!!).toLocation()
+                        val goalKickPlayer = findNearestPlayerInTeam(ballLocation, teamSide) ?: lastInteractedWithBallPlayer
+                        subStateLocationParam = goalKickLocation
+                        subStatePlayerParam = goalKickPlayer
+                        plugin.launch {
+                            for (i in delaySeconds downTo 1) {
+                                chatMessageService.sendLanguageMessage(
+                                    subStatePlayerParam!!,
+                                    language.goalKickTeleportMessage,
+                                    i.toString()
+                                )
+                                delay(1000)
+                            }
+                        }
+                        setNextGameSubState(GameSubState.BALL_OUT_GOAL_KICK_PERFORM, delaySeconds * 1000L)
                     }
                 }
 

@@ -386,7 +386,7 @@ commandClubJoinToolTip:
 outMessage:
   type: "TITLE"
   text: "&eOut"
-  subTitle: "The ball was kicked out of the arena. "
+  subTitle: ""
   fadeInTicks: 20
   stayTicks: 60
   fadeOutTicks: 20
