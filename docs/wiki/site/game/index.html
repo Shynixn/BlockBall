@@ -731,10 +731,77 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#outer-playing-area" class="md-nav__link">
+  <a href="#throw-ins-goal-kicks-corner-kicks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Outer Playing Area
+        Throw-Ins, Goal Kicks &amp; Corner Kicks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Throw-Ins, Goal Kicks &amp; Corner Kicks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-the-outer-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Set the Outer Field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-set-keeper-spawn-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Set Keeper Spawn Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blockball-location-game1-blue_keeper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /blockball location game1 blue_keeper
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="/blockball location game1 blue_keeper">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-3-enable-throw-ins-in-the-arena-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Enable Throw-Ins in the Arena Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
       
     </span>
   </a>
@@ -1448,10 +1515,77 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#outer-playing-area" class="md-nav__link">
+  <a href="#throw-ins-goal-kicks-corner-kicks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Outer Playing Area
+        Throw-Ins, Goal Kicks &amp; Corner Kicks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Throw-Ins, Goal Kicks &amp; Corner Kicks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-the-outer-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Set the Outer Field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-set-keeper-spawn-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Set Keeper Spawn Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blockball-location-game1-blue_keeper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /blockball location game1 blue_keeper
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="/blockball location game1 blue_keeper">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-3-enable-throw-ins-in-the-arena-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Enable Throw-Ins in the Arena Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
       
     </span>
   </a>
@@ -1668,8 +1802,11 @@
 </code></pre></div>
 <hr />
 <h2 id="advanced-features">🎖️ Advanced Features</h2>
-<h3 id="outer-playing-area">Outer Playing Area</h3>
-<p>The outer forcefield and the playable area is the same when using the default configuration. However, you may want your players to be able to move outside the playable area for certain scenarios (e.g. throw-ins, corner shots).</p>
+<h3 id="throw-ins-goal-kicks-corner-kicks">Throw-Ins, Goal Kicks &amp; Corner Kicks</h3>
+<p>When the ball leaves the playing field, BlockBall can automatically trigger a <strong>throw-in</strong>, <strong>corner kick</strong>, or <strong>goal kick</strong> instead of simply bouncing the ball back. Three setup steps are required to enable this.</p>
+<hr />
+<h4 id="step-1-set-the-outer-field">Step 1: Set the Outer Field</h4>
+<p>The outer field defines the extended area players are allowed to move into when performing a throw-in, corner kick, or goal kick. It must be <strong>larger than the standard playing field</strong> so that players can reach the sideline and corner positions.</p>
 <ol>
 <li><strong>Select Corner A</strong>: Left-click with the axe</li>
 <li><strong>Select Corner B</strong>: Right-click with the axe</li>
@@ -1677,6 +1814,61 @@
 </ol>
 <div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span><span class="k">select</span><span class="w"> </span>game1<span class="w"> </span>outer_field
 </code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Sizing Recommendation</p>
+<p>Extend the outer field by at least 3–5 blocks beyond each sideline and goal line so players have enough room to take their positions.</p>
+</div>
+<hr />
+<h4 id="step-2-set-keeper-spawn-points">Step 2: Set Keeper Spawn Points</h4>
+<p>The keeper spawn point of each team is used as the <strong>goal kick position</strong> — the location the designated player is teleported to when their team is awarded a goal kick.</p>
+<p>Stand at the desired point front of each goal (it has to be in FRONT OF the goal), then run:</p>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>location<span class="w"> </span>game1<span class="w"> </span>red_keeper
+</code></pre></div>
+<h2 id="blockball-location-game1-blue_keeper"><div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>location<span class="w"> </span>game1<span class="w"> </span>blue_keeper
+</code></pre></div></h2>
+<h4 id="step-3-enable-throw-ins-in-the-arena-configuration">Step 3: Enable Throw-Ins in the Arena Configuration</h4>
+<p>By default the ball bounces back when it goes out of bounds. Open your arena file at<br />
+<code>plugins/BlockBall/arena/game1.yml</code> and set <code>forceField</code> to <code>false</code> under <code>ballOutOfBounds</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">ballOutOfBounds</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># If set to true, the ball simply bounces back when it goes out of bounds.</span>
+<span class="w">  </span><span class="c1"># If set to false, a throw-in, corner kick or goal kick is triggered instead.</span>
+<span class="w">  </span><span class="nt">forceField</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="c1"># Seconds until the selected player is teleported to the throw-in / corner kick / goal kick position.</span>
+<span class="w">  </span><span class="nt">timeToTeleportSec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="c1"># Seconds the player has to prepare before they gain exclusive control of the ball.</span>
+<span class="w">  </span><span class="nt">timeToStartSec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">  </span><span class="c1"># Seconds of exclusive ball control before other players can interact.</span>
+<span class="w">  </span><span class="nt">timeOutStartSec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+</code></pre></div>
+<p>Save the file and reload the arena:</p>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>reload<span class="w"> </span>game1
+</code></pre></div>
+<hr />
+<h4 id="how-it-works">How It Works</h4>
+<p>Once all three steps are complete, the following rules apply automatically whenever the ball leaves the playing field:</p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ball exits over a <strong>sideline</strong></td>
+<td><strong>Throw-in</strong> — nearest opponent of the last touching player performs it from the boundary</td>
+</tr>
+<tr>
+<td>Ball exits over a <strong>goal line</strong>, last touched by the <strong>defending team</strong></td>
+<td><strong>Corner kick</strong> — nearest attacker is teleported to the nearest corner of the field</td>
+</tr>
+<tr>
+<td>Ball exits over a <strong>goal line</strong>, last touched by the <strong>attacking team</strong></td>
+<td><strong>Goal kick</strong> — nearest defender is teleported to the keeper spawn point</td>
+</tr>
+</tbody>
+</table>
+<p>A temporary force field is placed around the throw-in / corner kick / goal kick position to prevent other players from interfering until the designated player has taken their kick.</p>
 <h3 id="time-periods-overtime">Time Periods &amp; Overtime</h3>
 <p>Configure half-times, breaks, and overtime rules by editing your <code>game1.yml</code> file in <code>/plugins/BlockBall/arena/</code>. See the <a href="../customization/">Customization Guide</a> for details.</p>
 <h3 id="referee-mode-patreon-feature">Referee Mode (Patreon Feature)</h3>
