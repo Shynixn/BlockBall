@@ -743,10 +743,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-set-the-outer-field" class="md-nav__link">
+  <a href="#step-1-set-the-outer-field-red-out-and-blue-out-areas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Set the Outer Field
+        Step 1: Set the Outer Field, Red Out and Blue Out areas
       
     </span>
   </a>
@@ -763,28 +763,6 @@
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#blockball-location-game1-blue_keeper" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /blockball location game1 blue_keeper
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="/blockball location game1 blue_keeper">
-      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#step-3-enable-throw-ins-in-the-arena-configuration" class="md-nav__link">
@@ -805,6 +783,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1527,10 +1510,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-set-the-outer-field" class="md-nav__link">
+  <a href="#step-1-set-the-outer-field-red-out-and-blue-out-areas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Set the Outer Field
+        Step 1: Set the Outer Field, Red Out and Blue Out areas
       
     </span>
   </a>
@@ -1547,28 +1530,6 @@
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#blockball-location-game1-blue_keeper" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        /blockball location game1 blue_keeper
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="/blockball location game1 blue_keeper">
-      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#step-3-enable-throw-ins-in-the-arena-configuration" class="md-nav__link">
@@ -1589,6 +1550,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1805,7 +1771,7 @@
 <h3 id="throw-ins-goal-kicks-corner-kicks">Throw-Ins, Goal Kicks &amp; Corner Kicks</h3>
 <p>When the ball leaves the playing field, BlockBall can automatically trigger a <strong>throw-in</strong>, <strong>corner kick</strong>, or <strong>goal kick</strong> instead of simply bouncing the ball back. Three setup steps are required to enable this.</p>
 <hr />
-<h4 id="step-1-set-the-outer-field">Step 1: Set the Outer Field</h4>
+<h4 id="step-1-set-the-outer-field-red-out-and-blue-out-areas">Step 1: Set the Outer Field, Red Out and Blue Out areas</h4>
 <p>The outer field defines the extended area players are allowed to move into when performing a throw-in, corner kick, or goal kick. It must be <strong>larger than the standard playing field</strong> so that players can reach the sideline and corner positions.</p>
 <ol>
 <li><strong>Select Corner A</strong>: Left-click with the axe</li>
@@ -1814,6 +1780,12 @@
 </ol>
 <div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span><span class="k">select</span><span class="w"> </span>game1<span class="w"> </span>outer_field
 </code></pre></div>
+<p>The red out and blue out areas define the zones where the ball must exit to trigger a corner kick or goal kick for each team. These should be set to cover the area behind each goal line and include the outer field.</p>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span><span class="k">select</span><span class="w"> </span>game1<span class="w"> </span>red_out
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span><span class="k">select</span><span class="w"> </span>game1<span class="w"> </span>blue_out
+</code></pre></div>
+<p><img alt="Goal Selection Example" src="../assets/blockballarea.png" /></p>
 <div class="admonition tip">
 <p class="admonition-title">Sizing Recommendation</p>
 <p>Extend the outer field by at least 3–5 blocks beyond each sideline and goal line so players have enough room to take their positions.</p>
@@ -1824,8 +1796,8 @@
 <p>Stand at the desired point front of each goal (it has to be in FRONT OF the goal), then run:</p>
 <div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>location<span class="w"> </span>game1<span class="w"> </span>red_keeper
 </code></pre></div>
-<h2 id="blockball-location-game1-blue_keeper"><div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>location<span class="w"> </span>game1<span class="w"> </span>blue_keeper
-</code></pre></div></h2>
+<div class="highlight"><pre><span></span><code>/blockball<span class="w"> </span>location<span class="w"> </span>game1<span class="w"> </span>blue_keeper
+</code></pre></div>
 <h4 id="step-3-enable-throw-ins-in-the-arena-configuration">Step 3: Enable Throw-Ins in the Arena Configuration</h4>
 <p>By default the ball bounces back when it goes out of bounds. Open your arena file at<br />
 <code>plugins/BlockBall/arena/game1.yml</code> and set <code>forceField</code> to <code>false</code> under <code>ballOutOfBounds</code>:</p>
