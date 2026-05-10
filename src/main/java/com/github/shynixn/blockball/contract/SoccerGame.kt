@@ -38,7 +38,7 @@ interface SoccerGame {
     /**
      * If the next substate requires a location then this is the parameter.
      */
-    val subStateLocationParam: Location?
+    var subStateLocationParam: Location?
 
     /**
      * If the next substate requires a player then this is the parameter.

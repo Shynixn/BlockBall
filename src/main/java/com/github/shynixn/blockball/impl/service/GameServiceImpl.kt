@@ -288,6 +288,12 @@ class GameServiceImpl(
             if (arena.meta.blueTeamMeta.keeperSpawnpoint == null) {
                 throw SoccerGameException(arena, "Set the blue keeper spawnpoint for arena ${arena.name}!")
             }
+            if (arena.meta.redTeamMeta.outArea.corner1 == null || arena.meta.redTeamMeta.outArea.corner2 == null) {
+                throw SoccerGameException(arena, "Set the red_out selection for arena ${arena.name}!")
+            }
+            if (arena.meta.blueTeamMeta.outArea.corner1 == null || arena.meta.blueTeamMeta.outArea.corner2 == null) {
+                throw SoccerGameException(arena, "Set the blue_out selection for arena ${arena.name}!")
+            }
         }
 
         fixCorners(arena.corner2!!, arena.corner1!!)

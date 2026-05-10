@@ -576,23 +576,22 @@ abstract class SoccerGameImpl(
                     return
                 }
 
-                val ballLocation = ball!!.getLocation().toVector3d()
+                val ballLocation = subStateLocationParam!!.toVector3d()
                 ball!!.isInteractable = false
                 val exitDirection = arena.getRelativeBlockDirectionToLocation(ballLocation)
 
-                val relDirectionRed =
-                    arena.meta.redTeamMeta.goal.getRelativeBlockDirectionToLocation(arena.meta.redTeamMeta.keeperSpawnpoint!!)
-                val relDirectionBlue =
-                    arena.meta.blueTeamMeta.goal.getRelativeBlockDirectionToLocation(arena.meta.blueTeamMeta.keeperSpawnpoint!!)
-
-                val teamSide = if (mirroredGoals && exitDirection == relDirectionRed) {
-                    Team.RED
-                } else if (mirroredGoals && exitDirection == relDirectionBlue) {
-                    Team.BLUE
-                } else if (exitDirection == relDirectionRed) {
-                    Team.BLUE
-                } else if (exitDirection == relDirectionBlue) {
-                    Team.RED
+                val teamSide = if (arena.meta.redTeamMeta.outArea.isLocationIn2dSelection(ballLocation)) {
+                    if (mirroredGoals) {
+                        Team.BLUE
+                    } else {
+                        Team.RED
+                    }
+                } else if (arena.meta.blueTeamMeta.outArea.isLocationIn2dSelection(ballLocation)) {
+                    if (mirroredGoals) {
+                        Team.RED
+                    } else {
+                        Team.BLUE
+                    }
                 } else {
                     null
                 }
