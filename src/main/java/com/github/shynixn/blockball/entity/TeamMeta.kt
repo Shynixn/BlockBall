@@ -28,6 +28,9 @@ class TeamMeta {
     @Comment("Goal location properties.")
     val goal: Selection = Selection()
 
+    @Comment("Out location properties.")
+    val outArea : Selection = Selection()
+
     @Comment("The armor a player receives when joining this team. Use the /blockball armor command ingame to configure this.")
     var armor: Array<String?> = arrayOfNulls(4)
 

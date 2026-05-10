@@ -455,6 +455,7 @@ class GameListener(
                         return
                     } else {
                         event.ball.isInteractable = false
+                        game.subStateLocationParam = targetPosition.toLocation()
                         game.setNextGameSubState(GameSubState.BALL_OUT_TELEPORT)
                     }
                 } else {

@@ -227,7 +227,7 @@ When the ball leaves the playing field, BlockBall can automatically trigger a **
 
 ---
 
-#### Step 1: Set the Outer Field
+#### Step 1: Set the Outer Field, Red Out and Blue Out areas
 
 The outer field defines the extended area players are allowed to move into when performing a throw-in, corner kick, or goal kick. It must be **larger than the standard playing field** so that players can reach the sideline and corner positions.
 
@@ -239,8 +239,23 @@ The outer field defines the extended area players are allowed to move into when 
 /blockball select game1 outer_field
 ```
 
+The red out and blue out areas define the zones where the ball must exit to trigger a corner kick or goal kick for each team. These should be set to cover the area behind each goal line and include the outer field.
+
+```bash
+/blockball select game1 red_out
+```
+
+```bash
+/blockball select game1 blue_out
+```
+
+![Goal Selection Example](./assets/blockballarea.png)
+
 !!! tip "Sizing Recommendation"
     Extend the outer field by at least 3–5 blocks beyond each sideline and goal line so players have enough room to take their positions.
+
+
+
 
 ---
 
@@ -257,7 +272,6 @@ Stand at the desired point front of each goal (it has to be in FRONT OF the goal
 ```bash
 /blockball location game1 blue_keeper
 ```
----
 
 #### Step 3: Enable Throw-Ins in the Arena Configuration
 
