@@ -35,6 +35,40 @@ jobs:
           ./gradlew build pluginJars
           echo "RELEASE_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_ENV
 
+      - name: Rename Artifacts
+        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
+        env:
+          GEYSER_PASSWORD: ${{ secrets.GEYSER_PASSWORD }}
+        run: |
+          mv ./build/libs/blockball-${{ env.RELEASE_VERSION }}-26.1.0-latest-premium-folia.jar ./BlockBall-26.1.0-latest-Premium-Folia.jar
+          mv ./build/libs/blockball-${{ env.RELEASE_VERSION }}-1.17.0-1.21.11-premium-folia.jar ./BlockBall-1.17.0-1.21.11-Premium-Folia.jar
+          mv ./build/libs/blockball-${{ env.RELEASE_VERSION }}-1.8.8-1.16.5-premium.jar ./BlockBall-1.8.8-1.16.5-Premium.jar
+          mv ./build/libs/blockball-${{ env.RELEASE_VERSION }}-1.17.0-1.21.11-premium.jar ./BlockBall-1.17.0-1.21.11-Premium.jar
+          mv ./build/libs/blockball-${{ env.RELEASE_VERSION }}-26.1.0-latest-premium.jar ./BlockBall-26.1.0-latest-Premium.jar
+          7z x docs/wiki/docs/resources/BlockBall-GeyserMC.7z -p${{ env.GEYSER_PASSWORD }} 
+
+      - name: Parse Changelog
+        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
+        run: |
+          VERSION=${{ env.RELEASE_VERSION }}
+          CHANGES=$(awk '/^---/{exit} /^## Release /{found=1; next} found{print}' CHANGELOG.md)
+          FOOTER=$(cat docs/footer-github.md)
+          FOOTER="${FOOTER//<version>/$VERSION}"
+          PATREON_FOOTER_BASIC=$(cat docs/footer-patreon-basic.md)
+          PATREON_FOOTER_ELITE=$(cat docs/footer-patreon-elite.md)
+          BODY="$CHANGES"$'\n'"$FOOTER"
+          PATREON_BODY_BASIC="$CHANGES"$'\n'"$PATREON_FOOTER_BASIC"
+          PATREON_BODY_ELITE="$CHANGES"$'\n'"$PATREON_FOOTER_ELITE"
+          echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV
+          echo "$BODY" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "RELEASE_PATREON_BASIC<<EOF" >> $GITHUB_ENV
+          echo "$PATREON_BODY_BASIC" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "RELEASE_PATREON_ELITE<<EOF" >> $GITHUB_ENV
+          echo "$PATREON_BODY_ELITE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Create Github Release
         if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
         id: create_release
@@ -48,61 +82,6 @@ jobs:
           draft: true
           prerelease: false
 
-      - name: Upload BlockBall-1.8.8-1.16.5-Premium.jar
-        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-${{ env.RELEASE_VERSION }}-1.8.8-1.16.5-premium.jar
-          asset_name: BlockBall-1.8.8-1.16.5-Premium.jar
-          asset_content_type: application/jar
-
-      - name: Upload BlockBall-1.17.0-1.21.11-Premium.jar
-        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-${{ env.RELEASE_VERSION }}-1.17.0-1.21.11-premium.jar
-          asset_name: BlockBall-1.17.0-1.21.11-Premium.jar
-          asset_content_type: application/jar
-
-      - name: Upload BlockBall-1.17.0-1.21.11-Premium-Folia.jar
-        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-${{ env.RELEASE_VERSION }}-1.17.0-1.21.11-premium-folia.jar
-          asset_name: BlockBall-1.17.0-1.21.11-Premium-Folia.jar
-          asset_content_type: application/jar
-
-      - name: Upload BlockBall-26.1.0-latest-Premium.jar
-        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-${{ env.RELEASE_VERSION }}-26.1.0-latest-premium.jar
-          asset_name: BlockBall-26.1.0-latest-Premium.jar
-          asset_content_type: application/jar
-
-      - name: Upload BlockBall-26.1.0-latest-Premium-Folia.jar
-        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-${{ env.RELEASE_VERSION }}-26.1.0-latest-premium-folia.jar
-          asset_name: BlockBall-26.1.0-latest-Premium-Folia.jar
-          asset_content_type: application/jar
-
       - name: Upload BlockBall-26.1.0-latest-Free.jar
         if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
         uses: actions/upload-release-asset@v1
@@ -113,6 +92,57 @@ jobs:
           asset_path: /home/runner/work/BlockBall/BlockBall/build/libs/blockball-${{ env.RELEASE_VERSION }}-26.1.0-latest-free.jar
           asset_name: BlockBall.jar
           asset_content_type: application/jar
+
+      - name: Publish Patreon Release
+        if: "contains(github.event.head_commit.message, '--release') && contains(github.ref, 'master')"
+        env:
+          PAPOA_API_KEY: ${{ secrets.PAPOA_API_KEY }}
+          PAPOA_PASSWORD: ${{ secrets.PAPOA_PASSWORD }}
+        run: |
+          wget -O papoa https://github.com/Shynixn/PatreonPostApi/releases/latest/download/papoa-linux-x64
+          chmod +x papoa
+          ./papoa post create \
+            --title "BlockBall for Folia v${{ env.RELEASE_VERSION }} (1.8.9-26.1.2)" \
+            --content "$RELEASE_PATREON_ELITE" \
+            --content-format text/markdown \
+            --tier-name "Elite" \
+            --tier-name "Legendary" \
+            --collection-name "BlockBall" \
+            --tag blockball \
+            --tag minecraft \
+            --tag plugin \
+            --ttl-days 1 \
+            --file ./BlockBall-26.1.0-latest-Premium-Folia.jar \
+            --file ./BlockBall-1.17.0-1.21.11-Premium-Folia.jar \
+            --file /home/runner/work/BlockBall/BlockBall/docs/wiki/docs/assets/title.png \
+            --photo-attachment-file-name "title.png" \
+            --attachment-file-name "BlockBall-26.1.0-latest-Premium-Folia.jar" \
+            --attachment-file-name "BlockBall-1.17.0-1.21.11-Premium-Folia.jar" \
+            --password "$PAPOA_PASSWORD"
+          ./papoa post create \
+            --title "BlockBall v${{ env.RELEASE_VERSION }} (1.8.9-26.1.2)" \
+            --content "$RELEASE_PATREON_BASIC" \
+            --content-format text/markdown \
+            --tier-name "Basic" \
+            --tier-name "Elite" \
+            --tier-name "Legendary" \
+            --collection-name "BlockBall" \
+            --tag blockball \
+            --tag minecraft \
+            --tag plugin \
+            --ttl-days 1 \
+            --file ./BlockBall-1.8.8-1.16.5-Premium.jar \
+            --file ./BlockBall-1.17.0-1.21.11-Premium.jar \
+            --file ./BlockBall-26.1.0-latest-Premium.jar \
+            --file ./BlockBall-26.1.0-latest-Premium.jar \
+            --file ./BlockBall-GeyserMC.zip \
+            --file /home/runner/work/BlockBall/BlockBall/docs/wiki/docs/assets/title.png \
+            --photo-attachment-file-name "title.png" \
+            --attachment-file-name "BlockBall-1.8.8-1.16.5-Premium.jar" \
+            --attachment-file-name "BlockBall-1.17.0-1.21.11-Premium.jar" \
+            --attachment-file-name "BlockBall-26.1.0-latest-Premium.jar" \
+            --attachment-file-name "BlockBall-GeyserMC.zip" \
+            --password "$PAPOA_PASSWORD"     
 
   Documentation:
     runs-on: ubuntu-22.04
