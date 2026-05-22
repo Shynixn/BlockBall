@@ -134,7 +134,6 @@ jobs:
             --file ./BlockBall-1.8.8-1.16.5-Premium.jar \
             --file ./BlockBall-1.17.0-1.21.11-Premium.jar \
             --file ./BlockBall-26.1.0-latest-Premium.jar \
-            --file ./BlockBall-26.1.0-latest-Premium.jar \
             --file ./BlockBall-GeyserMC.zip \
             --file /home/runner/work/BlockBall/BlockBall/docs/wiki/docs/assets/title.png \
             --photo-attachment-file-name "title.png" \
