@@ -76,7 +76,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          body: "This release was automatically created by Github Actions. Please wait until the author manually sets the patchnotes for this release."
+          body: ${{ env.RELEASE_BODY }}
           tag_name: ${{ env.RELEASE_VERSION }}
           release_name: Release ${{ env.RELEASE_VERSION }}
           draft: true
@@ -148,9 +148,6 @@ jobs:
     if: "contains(github.ref, 'master')"
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
-        with:
-          java-version: '8'
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
