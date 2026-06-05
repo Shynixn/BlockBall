@@ -1,96 +1,33 @@
 package com.github.shynixn.blockball.impl.listener
 
-import com.github.shynixn.blockball.contract.SoccerBall
-import com.github.shynixn.blockball.contract.SoccerBallFactory
-import com.github.shynixn.blockball.enumeration.BallActionType
-import com.github.shynixn.blockball.event.*
-import com.github.shynixn.shyparticles.contract.ParticleEffectService
+import com.github.shynixn.blockball.contract.SoccerBallService
+import com.github.shynixn.blockball.enumeration.ClickType
+import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mcutils.packet.api.event.PacketAsyncEvent
+import com.github.shynixn.mcutils.packet.api.meta.enumeration.InteractionType
+import com.github.shynixn.mcutils.packet.api.packet.PacketInInteractEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.plugin.Plugin
 
-/**
- * Handles common ball events.
- */
-class BallListener(
-    private val soccerBallFactory: SoccerBallFactory,
-    private val effectService: ParticleEffectService
-) : Listener {
+class BallListener(private val plugin: Plugin, private val soccerBallService: SoccerBallService) : Listener {
     /**
-     * Gets called when the ball raytraces in the world.
+     * Gets called when a packet arrives.
      */
     @EventHandler
-    fun ballRayTraceEvent(event: BallRayTraceEvent) {
-        this.playEffects(event.ball, BallActionType.ONMOVE)
-    }
+    fun onPacketEvent(event: PacketAsyncEvent) {
+        val packet = event.packet
 
-    /**
-     * Gets called when a ball dies.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun ballDeathEvent(event: BallRemoveEvent) {
-        this.soccerBallFactory.removeTrackedBall(event.ball)
-    }
+        if (packet !is PacketInInteractEntity) {
+            return
+        }
 
-    /**
-     * Gets called when a player left clicks a ball.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun ballKickEvent(event: BallLeftClickEvent) {
-        this.playEffects(event.ball, BallActionType.ONKICK)
-    }
-
-    /**
-     * Gets called when a player right clicks a ball.
-     */
-    @EventHandler
-    fun ballPassEvent(event: BallRightClickEvent) {
-        this.playEffects(event.ball, BallActionType.ONPASS)
-    }
-
-    /**
-     * Gets called when a player interacts a ball.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun ballInteractEvent(event: BallTouchPlayerEvent) {
-        this.playEffects(event.ball, BallActionType.ONINTERACTION)
-    }
-
-    /**
-     * Gets called when the ball spawns.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun ballSpawnEvent(event: BallSpawnEvent) {
-        this.playEffects(event.ball, BallActionType.ONSPAWN)
-    }
-
-    /**
-     * Gets called when a ball gets shot into goal.
-     *
-     * @param event event
-     */
-    @EventHandler
-    fun gameGoalEvent(event: GameGoalEvent) {
-        playEffects(event.game.ball!!, BallActionType.ONGOAL)
-    }
-
-    /**
-     * Plays effects.
-     */
-    private fun playEffects(ball: SoccerBall, actionEffect: BallActionType) {
-        val effectName = ball.meta.effects[actionEffect]
-
-        if (effectName != null) {
-            val effect = effectService.getEffectMetaFromName(effectName)
-            if (effect != null) {
-                effectService.startEffect(effect, { ball.getLocation() }, null, null)
+        plugin.launch {
+            val ball = soccerBallService.getByEntityId(packet.entityId) ?: return@launch
+            if (packet.actionType == InteractionType.ATTACK) {
+                ball.applyInteraction(event.player, ClickType.LEFT)
+            } else {
+                ball.applyInteraction(event.player, ClickType.RIGHT)
             }
         }
     }

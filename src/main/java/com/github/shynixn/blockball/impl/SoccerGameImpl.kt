@@ -50,7 +50,7 @@ abstract class SoccerGameImpl(
     override val arena: SoccerArena,
     val placeHolderService: PlaceHolderService,
     private val plugin: Plugin,
-    val soccerBallFactory: SoccerBallFactory,
+    val soccerBallService: SoccerBallService,
     private val commandService: CommandService,
     override val language: BlockBallLanguage,
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
@@ -553,9 +553,7 @@ abstract class SoccerGameImpl(
             GameSubState.BALL_RESPAWNED -> {
                 if (ballEnabled) {
                     destroyBall()
-                    ball = soccerBallFactory.createSoccerBallForGame(
-                        arena.ballSpawnPoint!!.toLocation(), arena.ball, this
-                    )
+                    ball = soccerBallService.spawnForGame(arena.ballName, arena.ballSpawnPoint!!.toLocation(), this)
                     setNextGameSubState(GameSubState.FREE)
                 }
             }
@@ -686,7 +684,7 @@ abstract class SoccerGameImpl(
                 }
                 destroyBall()
                 val ballSpawnPoint = throwInLocation.toVector3d().addRelativeFront(1.0).toLocation()
-                ball = soccerBallFactory.createSoccerBallForGame(ballSpawnPoint, arena.ball, this)
+                ball = soccerBallService.spawnForGame(arena.ballName, ballSpawnPoint, this)
                 ball!!.isInteractable = false
                 createPlayerForceField(throwInLocation, throwInPlayer)
                 val timeoutDelay = arena.ballOutOfBounds.timeOutStartSec * 1000L
@@ -727,7 +725,7 @@ abstract class SoccerGameImpl(
                 }
                 destroyBall()
                 val ballSpawnPoint = cornerLocation.toVector3d().addRelativeFront(1.0).toLocation()
-                ball = soccerBallFactory.createSoccerBallForGame(ballSpawnPoint, arena.ball, this)
+                ball = soccerBallService.spawnForGame(arena.ballName, ballSpawnPoint, this)
                 ball!!.isInteractable = false
                 createPlayerForceField(cornerLocation, cornerPlayer)
                 val timeoutDelay = arena.ballOutOfBounds.timeOutStartSec * 1000L
@@ -765,7 +763,7 @@ abstract class SoccerGameImpl(
                 }
                 destroyBall()
                 val ballSpawnPoint = goalKickLocation.toVector3d().addRelativeFront(1.0).toLocation()
-                ball = soccerBallFactory.createSoccerBallForGame(ballSpawnPoint, arena.ball, this)
+                ball = soccerBallService.spawnForGame(arena.ballName, ballSpawnPoint, this)
                 ball!!.isInteractable = false
                 createPlayerForceField(goalKickLocation, goalKickPlayer)
                 val timeoutDelay = arena.ballOutOfBounds.timeOutStartSec * 1000L
@@ -1239,9 +1237,7 @@ abstract class SoccerGameImpl(
      */
     override fun setBallToLocation(location: Location) {
         destroyBall()
-        ball = soccerBallFactory.createSoccerBallForGame(
-            location, arena.ball, this
-        )
+        ball = soccerBallService.spawnForGame(arena.ballName, location, this)
         ball!!.isInteractable = false // We always block interacting with the ball until the referee has started.
         setNextGameSubState(GameSubState.FREE)
     }

@@ -12,6 +12,7 @@ import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.mcutils.packet.api.meta.EntityAttribute
 import com.github.shynixn.mcutils.packet.api.meta.InteractionMetadata
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.ArmorSlotType
@@ -27,10 +28,12 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
+import kotlin.math.abs
 import kotlin.math.atan2
 
 class SoccerBallImpl(
     location: Location, private val packetService: PacketService,
+    private val rayTracingService: RayTracingService,
     private val itemService: ItemService,
     /**
      * Gets the metadata.
@@ -55,6 +58,7 @@ class SoccerBallImpl(
     private var position: Vector3d = location.toVector3d()
     private var motion: Vector3d = Vector3d(0.0, -0.7, 0.0)
     private var rotationDegrees: Int = 0
+    private var spinVelocity: Double = 0.0
 
     // Tracker
     private val playerTracker = GameObjectPlayerTracker(
@@ -163,6 +167,7 @@ class SoccerBallImpl(
         }
 
         // Calculate physics
+        calculatePhysics(deltaMs)
 
         // Send changes
         updateEntityForAllPlayers()
@@ -192,7 +197,6 @@ class SoccerBallImpl(
             })
 
             if (meta.render.isRotationEnabled && !meta.render.isSlimeVisible) {
-                calculateNextRotation()
                 packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
                     it.armorStandHeadRotation = EulerAngle(-1 * rotationDegrees.toDouble(), 0.0, 0.0)
                     it.entityId = renderEntityId
@@ -364,25 +368,117 @@ class SoccerBallImpl(
         return yaw.toFloat()
     }
 
+
+    private fun calculatePhysics(deltaMs: Int) {
+        // Scale physics values from per-tick (50 ms) to actual elapsed time, capped to avoid instability on lag spikes
+        val tickScale = (deltaMs / 50.0).coerceAtMost(2.0)
+
+        // Ground check: cast a short ray downward to detect if the ball is still resting on a surface
+        if (isOnGround) {
+            val groundProbe = Vector3d(0.0, -0.05, 0.0)
+            val groundCheck = rayTracingService.rayTraceMotion(position, groundProbe, false, false)
+            if (!groundCheck.hitBlock) {
+                isOnGround = false
+            }
+        }
+
+        val velocity = Vector(motion.x, motion.y, motion.z)
+
+        if (isOnGround) {
+            // Apply surface rolling friction to horizontal axes
+            val friction = (1.0 - meta.physics.rollingFriction * tickScale).coerceAtLeast(0.0)
+            velocity.x *= friction
+            velocity.z *= friction
+            velocity.y = 0.0
+        } else {
+            // Apply gravity
+            velocity.y -= meta.physics.gravityModifier * tickScale
+            // Apply air drag to all axes
+            val drag = (1.0 - meta.physics.airDrag * tickScale).coerceAtLeast(0.0)
+            velocity.x *= drag
+            velocity.y *= drag
+            velocity.z *= drag
+        }
+
+        motion.x = velocity.x
+        motion.y = velocity.y
+        motion.z = velocity.z
+
+        // Update visual rotation once per physics tick
+        if (meta.render.isRotationEnabled && !meta.render.isSlimeVisible) {
+            calculateNextRotation()
+        }
+
+        // Stop the ball completely when speed drops below the rest threshold
+        if (velocity.length() < meta.physics.restVelocityThreshold) {
+            motion.x = 0.0
+            motion.y = 0.0
+            motion.z = 0.0
+            return
+        }
+
+        // Apply motion and resolve block collisions
+        rayTrace(position, motion)
+    }
+
+    private fun rayTrace(position: Vector3d, motion: Vector3d) {
+        val rayTraceResult = rayTracingService.rayTraceMotion(position, motion, false, false)
+        val targetPosition = rayTraceResult.targetPosition
+        val hasHitBlock = rayTraceResult.hitBlock
+        val blockDirectionHit = rayTraceResult.blockDirection
+
+        // Move the ball to where the ray trace ended (collision point or position + motion)
+        position.x = targetPosition.x
+        position.y = targetPosition.y
+        position.z = targetPosition.z
+
+        if (hasHitBlock) {
+            // Build the block face outward normal from the hit direction
+            val normalX = blockDirectionHit.modX.toDouble()
+            val normalY = blockDirectionHit.modY.toDouble()
+            val normalZ = blockDirectionHit.modZ.toDouble()
+
+            // Reflect velocity: v' = (v - 2*(v·n)*n) * bounciness
+            val velocity = Vector(motion.x, motion.y, motion.z)
+            val normal = Vector(normalX, normalY, normalZ)
+            val dot = velocity.dot(normal)
+            velocity.subtract(normal.multiply(2.0 * dot)).multiply(meta.physics.bounciness)
+
+            motion.x = velocity.x
+            motion.y = velocity.y
+            motion.z = velocity.z
+
+            // Upward-facing normal means the ball landed on the top of a block
+            isOnGround = normalY > 0.5
+
+            // Suppress residual vertical bounce when the reflected speed is negligible
+            if (isOnGround && abs(motion.y) < meta.physics.restVelocityThreshold) {
+                motion.y = 0.0
+            }
+        } else {
+            isOnGround = false
+        }
+    }
+
     private fun calculateNextRotation() {
         // 360 0 0 is a full forward rotation.
         // Length of the velocity is the speed of the ball.
         val velocity = getVelocity()
-        val length = if (isOnGround) {
-            Vector3d(velocity.x, 0.0, velocity.z).length()
+        val speed = if (isOnGround) {
+            Vector(velocity.x, 0.0, velocity.z).length()
         } else {
-            Vector3d(velocity.x, velocity.y, velocity.z).length()
+            velocity.length()
         }
 
-        val angle = when {
-            length > 1.0 -> rotationDegrees - 20
-            length > 0.1 -> rotationDegrees - 10
-            length > 0.08 -> rotationDegrees - 5
-            else -> null
-        }
+        // Ease spin velocity toward the ball's current speed, capped at maxSpinVelocity
+        val targetSpin = speed.coerceAtMost(meta.physics.maxSpinVelocity)
+        spinVelocity += (targetSpin - spinVelocity) * meta.physics.spinDampening
+        spinVelocity = spinVelocity.coerceIn(0.0, meta.physics.maxSpinVelocity)
 
-        if (angle != null) {
-            rotationDegrees = angle % 360
+        if (spinVelocity > 0.001) {
+            // Map spin velocity linearly to degrees per tick (20 deg/tick at maxSpinVelocity)
+            val degreesPerTick = (spinVelocity / meta.physics.maxSpinVelocity) * 20.0
+            rotationDegrees = (rotationDegrees - degreesPerTick.toInt()) % 360
         }
     }
 }

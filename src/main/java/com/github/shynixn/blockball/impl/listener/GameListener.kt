@@ -3,18 +3,17 @@
 package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.SoccerBallFactory
+import com.github.shynixn.blockball.contract.SoccerBallService
 import com.github.shynixn.blockball.contract.SoccerHubGame
 import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.PlayerInformation
-import com.github.shynixn.blockball.enumeration.GameSubState
+import com.github.shynixn.blockball.enumeration.ClickType
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.MatchTimeCloseType
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.enumeration.Team
 import com.github.shynixn.blockball.event.BallRayTraceEvent
-import com.github.shynixn.blockball.event.BallTouchPlayerEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.blockball.impl.setInventoryContentsSecure
 import com.github.shynixn.mccoroutine.folia.ticks
@@ -23,9 +22,6 @@ import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.database.api.CachePlayerRepository
-import com.github.shynixn.mcutils.packet.api.event.PacketAsyncEvent
-import com.github.shynixn.mcutils.packet.api.meta.enumeration.InteractionType
-import com.github.shynixn.mcutils.packet.api.packet.PacketInInteractEntity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.bukkit.GameMode
@@ -45,7 +41,6 @@ import org.bukkit.plugin.Plugin
  */
 class GameListener(
     private val gameService: GameService,
-    private val soccerBallFactory: SoccerBallFactory,
     private val plugin: Plugin,
     private val playerDataRepository: CachePlayerRepository<PlayerInformation>,
     private val itemService: ItemService,
@@ -58,32 +53,6 @@ class GameListener(
         list
     }
 
-    /**
-     * Gets called when a packet arrives.
-     */
-    @EventHandler
-    fun onPacketEvent(event: PacketAsyncEvent) {
-        val packet = event.packet
-
-        if (packet !is PacketInInteractEntity) {
-            return
-        }
-
-        coroutineHandler.execute {
-            val game = gameService.getByPlayer(event.player) ?: return@execute
-            val ball = soccerBallFactory.findBallByEntityId(packet.entityId) ?: return@execute
-
-            if (game.ball != ball) {
-                return@execute
-            }
-
-            if (packet.actionType == InteractionType.ATTACK) {
-                ball.kickByPlayer(event.player)
-            } else {
-                ball.passByPlayer(event.player)
-            }
-        }
-    }
 
     /**
      * Gets called when a player leaves the server and the game.
@@ -318,49 +287,21 @@ class GameListener(
         }
     }
 
-    /**
-     * Caches the last interacting entity with the ball.
-     */
-    @EventHandler
-    fun onBallInteractEvent(event: BallTouchPlayerEvent) {
-        val game = gameService.getAll().find { p -> p.ball != null && p.ball!! == event.ball }
-
-        if (game == null) {
-            return
-        }
-
-        val player = event.player
-        val playerStorage = game.ingamePlayersStorage[player] ?: return
-        val interactionStack = game.interactedWithBall
-        val existingPlayer = interactionStack.getOrNull(0)
-        if (existingPlayer != null) {
-            val existingPlayerStorage = game.ingamePlayersStorage[existingPlayer]
-
-            if (existingPlayerStorage == null || existingPlayerStorage.team != playerStorage.team) {
-                interactionStack.clear()
-            }
-        }
-
-        if (existingPlayer == player) {
-            return
-        }
-
-        interactionStack.add(0, player)
-
-        while (interactionStack.size > 10) {
-            interactionStack.removeLast()
-        }
-    }
 
     /**
      * Cancels actions in minigame and bungeecord games to restrict destroying the soccerArena.
      */
     @EventHandler
     fun onPlayerInteractEvent(event: PlayerInteractEvent) {
-        val game = gameService.getByPlayer(event.player)
+        val game = gameService.getByPlayer(event.player) ?: return
 
-        if (game != null && game.arena.enabled && (game.arena.gameType == GameType.MINIGAME)) {
+        if (game.arena.enabled && game.arena.gameType == GameType.MINIGAME) {
             event.setCancelled(true)
+        }
+
+        val ball = game.ball ?: return
+        if (ball.grabbingPlayer != null && ball.grabbingPlayer == event.player) {
+            ball.applyInteraction(event.player, ClickType.LEFT)
         }
     }
 
@@ -413,13 +354,49 @@ class GameListener(
         }
     }
 
+
+
+    /**
+     * Caches the last interacting entity with the ball.
+
+    @EventHandler
+    fun onBallInteractEvent(event: BallTouchPlayerEvent) {
+        val game = gameService.getAll().find { p -> p.ball != null && p.ball!! == event.ball }
+
+        if (game == null) {
+            return
+        }
+
+        val player = event.player
+        val playerStorage = game.ingamePlayersStorage[player] ?: return
+        val interactionStack = game.interactedWithBall
+        val existingPlayer = interactionStack.getOrNull(0)
+        if (existingPlayer != null) {
+            val existingPlayerStorage = game.ingamePlayersStorage[existingPlayer]
+
+            if (existingPlayerStorage == null || existingPlayerStorage.team != playerStorage.team) {
+                interactionStack.clear()
+            }
+        }
+
+        if (existingPlayer == player) {
+            return
+        }
+
+        interactionStack.add(0, player)
+
+        while (interactionStack.size > 10) {
+            interactionStack.removeLast()
+        }
+    }*/
+
     /**
      * Is called when the ball requests to move to a target position.
      * Handles the ball forceField of the soccerArena.
      */
     @EventHandler
     fun onBallRayTraceEvent(event: BallRayTraceEvent) {
-        for (game in gameService.getAll()) {
+       /* for (game in gameService.getAll()) {
             if (game.ball == event.ball && event.ball.isInteractable) {
                 val targetPosition = event.targetLocation.toVector3d()
                 val sourcePosition = event.ball.getLocation().toVector3d()
@@ -464,6 +441,6 @@ class GameListener(
 
                 return
             }
-        }
+        }*/
     }
 }

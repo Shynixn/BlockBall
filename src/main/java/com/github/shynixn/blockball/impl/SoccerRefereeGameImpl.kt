@@ -29,7 +29,7 @@ class SoccerRefereeGameImpl(
     private val soundService: SoundService,
     language: BlockBallLanguage,
     commandService: CommandService,
-    soccerBallFactory: SoccerBallFactory,
+    soccerBallFactory: SoccerBallService,
     itemService: ItemService,
     cloudService: CloudService,
     private val server: Server,
@@ -115,7 +115,7 @@ class SoccerRefereeGameImpl(
                 if (lobbyCountDownActive) {
                     gameCountdown--
 
-                    if (gameCountdown < 5 && !isHytaleLoaded) {
+                    if (gameCountdown < 5) {
                         ingamePlayersStorage.keys.forEach { p ->
                             soundService.playSound(
                                 p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
@@ -183,7 +183,7 @@ class SoccerRefereeGameImpl(
                             }
                             if (gameCountdown > 0) {
                                 ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
-                                    if (gameCountdown <= 5 && !isHytaleLoaded) {
+                                    if (gameCountdown <= 5) {
                                         soundService.playSound(
                                             p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
                                         )
@@ -232,8 +232,8 @@ class SoccerRefereeGameImpl(
             GameSubState.BALL_RESPAWNED -> {
                 if (ballEnabled) {
                     destroyBall()
-                    ball = soccerBallFactory.createSoccerBallForGame(
-                        arena.ballSpawnPoint!!.toLocation(), arena.ball, this
+                    ball = soccerBallService.spawnForGame(
+                        arena.ballName, arena.ballSpawnPoint!!.toLocation(), this
                     )
                     ball!!.isInteractable = false
                     setNextGameSubState(GameSubState.FREE)

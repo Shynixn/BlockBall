@@ -8,8 +8,10 @@ import com.github.shynixn.blockball.event.BallSpawnEvent
 import com.github.shynixn.blockball.impl.SoccerBallImpl
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.regionDispatcher
+import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.api.RayTracingService
 import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -18,6 +20,8 @@ import org.bukkit.plugin.Plugin
 class SoccerBallServiceImpl(
     private val repository: CacheRepository<SoccerBallMeta>,
     private val packetService: PacketService,
+    private val rayTracingService: RayTracingService,
+    private val itemService: ItemService,
     private val plugin: Plugin
 ) : SoccerBallService {
     private val soccerBallByEntity = HashMap<Int, SoccerBall>()
@@ -45,7 +49,15 @@ class SoccerBallServiceImpl(
             throw IllegalArgumentException("Ball with name $name does not exist!")
         }
 
-        val soccerBallImpl = SoccerBallImpl(location, ballMeta, hitBoxEntityId, renderEntityId)
+        val soccerBallImpl = SoccerBallImpl(
+            location,
+            packetService,
+            rayTracingService,
+            itemService,
+            ballMeta,
+            hitBoxEntityId,
+            renderEntityId
+        )
         soccerBallByEntity[renderEntityId] = soccerBallImpl
         soccerBallByEntity[hitBoxEntityId] = soccerBallImpl
 

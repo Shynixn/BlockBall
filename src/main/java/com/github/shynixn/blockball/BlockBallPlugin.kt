@@ -1,9 +1,10 @@
 package com.github.shynixn.blockball
 
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.SoccerBallFactory
+import com.github.shynixn.blockball.contract.SoccerBallService
 import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.PlayerInformation
+import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
@@ -58,6 +59,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
+import java.nio.file.Files
 import java.util.logging.Level
 import kotlin.coroutines.CoroutineContext
 
@@ -208,13 +210,20 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
         module!!.getService<BlockBallCommandExecutor>()
 
         // Service dependencies
+        val soccerBallRepository = module!!.getService<CacheRepository<SoccerBallMeta>>()
         Bukkit.getServicesManager().register(
-            SoccerBallFactory::class.java, module!!.getService<SoccerBallFactory>(), this, ServicePriority.Normal
+            SoccerBallService::class.java, module!!.getService<SoccerBallService>(), this, ServicePriority.Normal
         )
         Bukkit.getServicesManager()
             .register(GameService::class.java, module!!.getService<GameService>(), this, ServicePriority.Normal)
         val plugin = this
         plugin.launch {
+            val defaultSoccerBall = dataFolder.toPath().resolve("ball").resolve("soccer_ball.yml")
+            if (!Files.exists(defaultSoccerBall)) {
+                soccerBallRepository.save(SoccerBallMeta())
+            }
+            soccerBallRepository.getAll()
+
             // Load Games
             val gameService = module!!.getService<GameService>()
             try {
