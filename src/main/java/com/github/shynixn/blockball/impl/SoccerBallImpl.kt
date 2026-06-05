@@ -376,6 +376,7 @@ class SoccerBallImpl(
         return yaw.toFloat()
     }
 
+
     private fun calculatePhysics(deltaMs: Int) {
         val tickScale = (deltaMs / 50.0).coerceAtMost(2.0)
         writeDump("---- TICK SCALE: $tickScale")
@@ -393,32 +394,37 @@ class SoccerBallImpl(
         }
 
         val velocity = Vector(motion.x, motion.y, motion.z)
-        writeDump("Motion: " + motion.x + "-" + motion.y + "-" + motion.z)
-        writeDump("Position: " + position.x + "-" + position.y + "-" + position.z + "-" + position.yaw + "-")
+        writeDump("Motion-BeforePhysics: " + motion.x + "-" + motion.y + "-" + motion.z + " | isOnGround = $isOnGround")
+        writeDump("Position-BeforePhysics: " + position.x + "-" + position.y + "-" + position.z)
 
         if (isOnGround) {
             val friction = (1.0 - meta.physics.rollingFriction * tickScale).coerceAtLeast(0.0)
             velocity.x *= friction
             velocity.z *= friction
             velocity.y = 0.0
-            writeDump("Rolling friction" + motion.x + "-" + motion.y + "-" + motion.z)
+            writeDump("Applied Rolling Friction physics branch")
         } else {
             velocity.y -= meta.physics.gravityModifier * tickScale
             val drag = (1.0 - meta.physics.airDrag * tickScale).coerceAtLeast(0.0)
             velocity.x *= drag
             velocity.y *= drag
             velocity.z *= drag
-            writeDump("Gravity and drag" + motion.x + "-" + motion.y + "-" + motion.z)
+            writeDump("Applied Gravity and Drag physics branch")
         }
 
         motion.x = velocity.x
         motion.y = velocity.y
         motion.z = velocity.z
 
-        writeDump("Final Length: " + motion.x + "-" + motion.y + "-" + motion.z)
+        writeDump("Motion-AfterPhysics: " + motion.x + "-" + motion.y + "-" + motion.z)
 
         if (meta.render.rotationEnabled && !meta.render.slimeVisible) {
             calculateNextRotation()
+        }
+
+        // Capture dynamic yaw during high-velocity ticks before physics checks clear it
+        if (abs(motion.x) > 0.001 || abs(motion.z) > 0.001) {
+            this.lastYaw = vectorToYaw(motion)
         }
 
         if (motion.x == 0.0 && motion.y == 0.0 && motion.z == 0.0) {
@@ -426,37 +432,45 @@ class SoccerBallImpl(
             return
         }
 
-        if (velocity.length() < meta.physics.restVelocityThreshold) {
-            this.lastYaw = vectorToYaw(motion)
-            motion.x = 0.0
-            motion.y = 0.0
-            motion.z = 0.0
-            writeDump("Stop ball motion")
-            return
-        }
-
+        // Perform RayTracing step first so the ball moves down to the target block floor
         rayTrace(position, motion)
+
+        // FIX: Fallback rest check for air physics loops failing to snap properly
+        if (!isOnGround && velocity.length() < meta.physics.restVelocityThreshold) {
+            val groundProbe = Vector3d(0.0, -0.5, 0.0)
+            val groundResult = rayTracingService.rayTraceMotion(position, groundProbe, false, false)
+            if (groundResult.hitBlock && groundResult.blockDirection.modY > 0.5) {
+                position.y = groundResult.targetPosition.y
+                isOnGround = true
+                motion.x = 0.0
+                motion.y = 0.0
+                motion.z = 0.0
+                writeDump("Stop ball motion (rest threshold met and snapped to ground floor)")
+            }
+        }
     }
 
     private fun rayTrace(position: Vector3d, motion: Vector) {
-        // Save the original height before applying the raycast buffer offset
         val originalY = position.y
         val rayTraceStartPosition = position.copy().add(0.0, 0.2, 0.0)
+
+        writeDump("[DEBUG-RAY-START] originalY: $originalY, rayTraceStart: $rayTraceStartPosition, tracking motion: $motion")
 
         val rayTraceResult = rayTracingService.rayTraceMotion(rayTraceStartPosition, motion.toVector3d(), false, false)
         val targetPosition = rayTraceResult.targetPosition
         val hasHitBlock = rayTraceResult.hitBlock
         val blockDirectionHit = rayTraceResult.blockDirection
 
-        writeDump("Has hit block $hasHitBlock, blockDirectionHit: $blockDirectionHit")
+        writeDump("[DEBUG-RAY-RESULT] hitBlock: $hasHitBlock, direction: $blockDirectionHit, targetPos: $targetPosition")
 
         // Move horizontal coordinates unconditionally
         position.x = targetPosition.x
         position.z = targetPosition.z
 
         if (hasHitBlock) {
-            // If we hit a block, we trust the intersection point height explicitly
+            // Step 1: Commit position mapping immediately so we aren't suspended in mid air
             position.y = targetPosition.y
+            writeDump("[DEBUG-COLLISION] Block collision triggered! Updating Y to targetPosition.y: ${position.y}")
 
             val normalX = blockDirectionHit.modX.toDouble()
             val normalY = blockDirectionHit.modY.toDouble()
@@ -465,48 +479,68 @@ class SoccerBallImpl(
             val velocity = Vector(motion.x, motion.y, motion.z)
             val normal = Vector(normalX, normalY, normalZ)
             val dot = velocity.dot(normal)
+
+            writeDump("[DEBUG-COLLISION-MATH] Incoming motion: $velocity, Normal: $normal, Dot Product: $dot")
+
+            // Reflect vector based on impact angle
             velocity.subtract(normal.multiply(2.0 * dot)).multiply(meta.physics.bounciness)
 
             motion.x = velocity.x
             motion.y = velocity.y
             motion.z = velocity.z
 
-            writeDump("Reflect motion " + motion.x + "-" + motion.y + "-" + motion.z)
+            writeDump("[DEBUG-COLLISION-MATH] Outgoing reflected motion: " + motion.x + "-" + motion.y + "-" + motion.z)
 
-            isOnGround = normalY > 0.5
-            writeDump("[DEBUG-RAY] Hit registered. Normal Y: $normalY, set isOnGround = $isOnGround")
+            // Step 2: Evaluate resting threshold against floor surface normal conversions
+            if (normalY > 0.5) {
+                // Check overall length or vertical velocity against the rest threshold
+                if (abs(motion.y) < meta.physics.restVelocityThreshold) {
+                    writeDump("[DEBUG-COLLISION] Micro-bounce killed. motion.y was ${motion.y}, threshold is ${meta.physics.restVelocityThreshold}")
 
-            if (isOnGround && abs(motion.y) < meta.physics.restVelocityThreshold) {
-                writeDump("[DEBUG-RAY] Bounce threshold met (${abs(motion.y)} < ${meta.physics.restVelocityThreshold}). Suppressing vertical bounce entirely.")
-                motion.y = 0.0
-                position.y = targetPosition.y
-            }
-        } else {
-            if (motion.y == 0.0 && isOnGround) {
-                // The ball is rolling perfectly flat. Keep its floor height!
-                position.y = originalY
-                writeDump("[DEBUG-RAY] Pure flat roll. Preserved original height Y: ${position.y}")
+                    motion.y = 0.0
+                    isOnGround = true
+
+                    // If horizontal movement is completely trivial, zero out sliding artifacts entirely
+                    if (abs(motion.x) < meta.physics.restVelocityThreshold && abs(motion.z) < meta.physics.restVelocityThreshold) {
+                        motion.x = 0.0
+                        motion.z = 0.0
+                        writeDump("[DEBUG-COLLISION] Horizontal rest threshold met. Ball locked completely.")
+                    }
+                } else {
+                    writeDump("[DEBUG-COLLISION] Sufficient vertical energy detected (${motion.y}). Ball is BOUNCING back into flight.")
+                    isOnGround = false
+                }
             } else {
-                // The ball is genuinely airborne/falling, so we track the ray's clear flight path height
-                position.y = targetPosition.y - 0.2 // Subtract the start offset to get true physics coordinate
-                writeDump("[DEBUG-RAY] Flight path tracking. True calculated height Y: ${position.y}")
+                // Hit a wall or ceiling, bounce back into free air
+                isOnGround = false
+            }
+
+            writeDump("[DEBUG-COLLISION] Final assignment evaluated to: isOnGround = $isOnGround")
+        } else {
+            // Free air handling
+            if (motion.y == 0.0 && isOnGround) {
+                position.y = originalY
+                writeDump("[DEBUG-FLIGHT] Pure flat roll branch. Position Y kept at: ${position.y}")
+            } else {
+                position.y = originalY + motion.y
+                writeDump("[DEBUG-FLIGHT] Free air movement branch. Position Y advanced to: ${position.y}")
             }
 
             if (motion.y != 0.0) {
-                writeDump("[DEBUG-RAY] No block hit, vector has vertical velocity (${motion.y}). Setting isOnGround = false")
+                writeDump("[DEBUG-FLIGHT] No block hit, but vector has vertical velocity (${motion.y}). Setting isOnGround = false")
                 isOnGround = false
             } else {
-                writeDump("[DEBUG-RAY] No block hit, but vector is strictly horizontal. Preserving isOnGround = $isOnGround")
+                writeDump("[DEBUG-FLIGHT] No block hit, vector horizontal. Preserving isOnGround = $isOnGround")
             }
         }
 
-        writeDump("MOved into block position " + position.x + "-" + position.y + "-" + position.z)
+        writeDump("Final Position after update: " + position.x + "-" + position.y + "-" + position.z)
     }
 
     private fun calculateNextRotation() {
-        val minimumSpeedToShowRotation = 0.001
-        val degreesPerSpeedValueMultiplier = 20
-        val minimumDegreesWhenStillMoving =7
+        val minimumSpeedToShowRotation = 0.01
+        val degreesPerSpeedValueMultiplier = 15
+        val minimumDegreesWhenStillMoving = 7
         val velocity = getVelocity()
         val horizontalSpeed =  velocity.length()
 
