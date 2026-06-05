@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.enumeration.PlaceHolder
+import com.github.shynixn.blockball.impl.SoccerBallImpl
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
@@ -53,15 +54,18 @@ import com.github.shynixn.shyscoreboard.entity.ShyScoreboardSettings
 import com.github.shynixn.shyscoreboard.impl.commandexecutor.ShyScoreboardCommandExecutor
 import com.github.shynixn.shyscoreboard.impl.listener.ShyScoreboardListener
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.util.Vector
 import java.nio.file.Files
 import java.util.logging.Level
 import kotlin.coroutines.CoroutineContext
+import kotlin.io.path.absolutePathString
 
 /**
  * Plugin Main.
@@ -219,8 +223,11 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
         val plugin = this
         plugin.launch {
             val defaultSoccerBall = dataFolder.toPath().resolve("ball").resolve("soccer_ball.yml")
+            println("PATH: " + defaultSoccerBall.absolutePathString())
+            soccerBallRepository.getAll()
             if (!Files.exists(defaultSoccerBall)) {
                 soccerBallRepository.save(SoccerBallMeta())
+                soccerBallRepository.clearCache()
             }
             soccerBallRepository.getAll()
 
@@ -242,6 +249,15 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
             }
 
             Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
+
+            delay(1000)
+            val player = Bukkit.getPlayer("Shynixn")!!
+            val soccerBall = module!!.getService<SoccerBallService>().spawn("soccer_ball", player.location.add(1.0, 1.0,0.0))
+
+            delay(1000)
+            soccerBall.setVelocity(Vector(0.5, 0.0, 1.0))
+            delay(10000)
+            (soccerBall as SoccerBallImpl).enabledDump = false
         }
     }
 

@@ -9,7 +9,6 @@ import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.toLocation
-import com.github.shynixn.mcutils.common.toVector
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.PacketService
 import com.github.shynixn.mcutils.packet.api.RayTracingService
@@ -17,12 +16,7 @@ import com.github.shynixn.mcutils.packet.api.meta.EntityAttribute
 import com.github.shynixn.mcutils.packet.api.meta.InteractionMetadata
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.ArmorSlotType
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.EntityType
-import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityAttributes
-import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityDestroy
-import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityEquipment
-import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityMetadata
-import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntitySpawn
-import com.github.shynixn.mcutils.packet.api.packet.PacketOutEntityTeleport
+import com.github.shynixn.mcutils.packet.api.packet.*
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -56,9 +50,10 @@ class SoccerBallImpl(
 
     // Properties
     private var position: Vector3d = location.toVector3d()
-    private var motion: Vector3d = Vector3d(0.0, -0.7, 0.0)
+    private var motion: Vector = Vector(0.0, -0.7, 0.0)
     private var rotationDegrees: Int = 0
     private var spinVelocity: Double = 0.0
+    private var lastYaw: Float = 0.0F
 
     // Tracker
     private val playerTracker = GameObjectPlayerTracker(
@@ -117,14 +112,14 @@ class SoccerBallImpl(
      * Gets the velocity of the ball.
      */
     override fun getVelocity(): Vector {
-        return motion.toVector()
+        return motion.clone()
     }
 
     /**
      * Sets the velocity of the ball.
      */
     override fun setVelocity(velocity: Vector) {
-        this.motion = velocity.toVector3d()
+        this.motion = velocity.clone()
     }
 
     /**
@@ -155,6 +150,9 @@ class SoccerBallImpl(
         }
 
         isDead = true
+        for (player in playerTracker.cache.keys.toHashSet()) {
+            removeEntityForPlayer(player)
+        }
     }
 
     /**
@@ -180,13 +178,20 @@ class SoccerBallImpl(
     }
 
     private fun updateEntityForAllPlayers() {
+
+        val yaw = if (motion.x == 0.0 && motion.y == 0.0 && motion.z == 0.0) {
+            writeDump("USE LAST YAW")
+            lastYaw
+        } else {
+            vectorToYaw(getVelocity())
+        }
         val renderLocation = getLocation()
         renderLocation.y += meta.render.visualVerticalOffset
-        renderLocation.yaw = vectorToYaw(getVelocity())
+        renderLocation.yaw = yaw
 
         val hitBoxLocation = getLocation()
         hitBoxLocation.y += meta.physics.verticalOffset
-        hitBoxLocation.yaw = vectorToYaw(getVelocity())
+        hitBoxLocation.yaw = yaw
 
         val players = HashSet(playerTracker.cache.keys)
 
@@ -196,7 +201,7 @@ class SoccerBallImpl(
                 it.target = renderLocation
             })
 
-            if (meta.render.isRotationEnabled && !meta.render.isSlimeVisible) {
+            if (meta.render.rotationEnabled && !meta.render.slimeVisible) {
                 packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
                     it.armorStandHeadRotation = EulerAngle(-1 * rotationDegrees.toDouble(), 0.0, 0.0)
                     it.entityId = renderEntityId
@@ -221,7 +226,7 @@ class SoccerBallImpl(
             it.entityType = EntityType.ARMOR_STAND
         })
 
-        if (!meta.render.isSlimeVisible) {
+        if (!meta.render.slimeVisible) {
             val stack = itemService.toItemStack(meta.render.visualItem)
             packetService.sendPacketOutEntityEquipment(player, PacketOutEntityEquipment().also {
                 it.entityId = renderEntityId
@@ -276,7 +281,7 @@ class SoccerBallImpl(
                 it.target = hitBoxLocation
             })
 
-            if (meta.render.isSlimeVisible) {
+            if (meta.render.slimeVisible) {
                 packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
                     it.slimeSize = meta.physics.interactionBoundsSize.toInt()
                     it.entityId = hitBoxEntityId
@@ -368,21 +373,25 @@ class SoccerBallImpl(
         return yaw.toFloat()
     }
 
-
     private fun calculatePhysics(deltaMs: Int) {
         // Scale physics values from per-tick (50 ms) to actual elapsed time, capped to avoid instability on lag spikes
         val tickScale = (deltaMs / 50.0).coerceAtMost(2.0)
+        writeDump("---- TICK SCALE: $tickScale")
 
         // Ground check: cast a short ray downward to detect if the ball is still resting on a surface
         if (isOnGround) {
+            writeDump("Is on ground check")
             val groundProbe = Vector3d(0.0, -0.05, 0.0)
             val groundCheck = rayTracingService.rayTraceMotion(position, groundProbe, false, false)
             if (!groundCheck.hitBlock) {
                 isOnGround = false
+                writeDump("Still on ground")
             }
         }
 
         val velocity = Vector(motion.x, motion.y, motion.z)
+        writeDump("Motion: " + motion.x + "-" + motion.y + "-" + motion.z)
+        writeDump("Position: " + position.x + "-" + position.y + "-" + position.z + "-" + position.yaw + "-")
 
         if (isOnGround) {
             // Apply surface rolling friction to horizontal axes
@@ -390,6 +399,7 @@ class SoccerBallImpl(
             velocity.x *= friction
             velocity.z *= friction
             velocity.y = 0.0
+            writeDump("Rolling friction" + motion.x + "-" + motion.y + "-" + motion.z)
         } else {
             // Apply gravity
             velocity.y -= meta.physics.gravityModifier * tickScale
@@ -398,22 +408,34 @@ class SoccerBallImpl(
             velocity.x *= drag
             velocity.y *= drag
             velocity.z *= drag
+            writeDump("Gravity and drag" + motion.x + "-" + motion.y + "-" + motion.z)
         }
 
         motion.x = velocity.x
         motion.y = velocity.y
         motion.z = velocity.z
 
+        writeDump("Final Length: " + motion.x + "-" + motion.y + "-" + motion.z)
+
+
         // Update visual rotation once per physics tick
-        if (meta.render.isRotationEnabled && !meta.render.isSlimeVisible) {
+        if (meta.render.rotationEnabled && !meta.render.slimeVisible) {
             calculateNextRotation()
+        }
+
+        // Ball has already stopped
+        if (motion.x == 0.0 && motion.y == 0.0 && motion.z == 0.0) {
+            writeDump("Ball is currently stopped")
+            return
         }
 
         // Stop the ball completely when speed drops below the rest threshold
         if (velocity.length() < meta.physics.restVelocityThreshold) {
+            this.lastYaw = vectorToYaw(motion)
             motion.x = 0.0
             motion.y = 0.0
             motion.z = 0.0
+            writeDump("Stop ball motion")
             return
         }
 
@@ -421,16 +443,21 @@ class SoccerBallImpl(
         rayTrace(position, motion)
     }
 
-    private fun rayTrace(position: Vector3d, motion: Vector3d) {
-        val rayTraceResult = rayTracingService.rayTraceMotion(position, motion, false, false)
+    private fun rayTrace(position: Vector3d, motion: Vector) {
+        val rayTraceStartPosition = position.copy().add(0.0, 0.5, 0.0)
+        val rayTraceResult = rayTracingService.rayTraceMotion(rayTraceStartPosition, motion.toVector3d(), false, false)
         val targetPosition = rayTraceResult.targetPosition
         val hasHitBlock = rayTraceResult.hitBlock
         val blockDirectionHit = rayTraceResult.blockDirection
+
+        writeDump("Has hit block $hasHitBlock, blockDirectionHit: $blockDirectionHit")
 
         // Move the ball to where the ray trace ended (collision point or position + motion)
         position.x = targetPosition.x
         position.y = targetPosition.y
         position.z = targetPosition.z
+
+        writeDump("MOved into block position " + position.x + "-" + position.y + "-" + position.z)
 
         if (hasHitBlock) {
             // Build the block face outward normal from the hit direction
@@ -442,11 +469,14 @@ class SoccerBallImpl(
             val velocity = Vector(motion.x, motion.y, motion.z)
             val normal = Vector(normalX, normalY, normalZ)
             val dot = velocity.dot(normal)
-            velocity.subtract(normal.multiply(2.0 * dot)).multiply(meta.physics.bounciness)
+            velocity.subtract(normal.multiply(2.0 * dot)).multiply(meta.physics.bounciness).multiply(0.07)
 
             motion.x = velocity.x
             motion.y = velocity.y
             motion.z = velocity.z
+
+            writeDump("Reflect motion " + motion.x + "-" + motion.y + "-" + motion.z)
+
 
             // Upward-facing normal means the ball landed on the top of a block
             isOnGround = normalY > 0.5
@@ -454,6 +484,8 @@ class SoccerBallImpl(
             // Suppress residual vertical bounce when the reflected speed is negligible
             if (isOnGround && abs(motion.y) < meta.physics.restVelocityThreshold) {
                 motion.y = 0.0
+                writeDump("surprise bounce")
+
             }
         } else {
             isOnGround = false
@@ -479,6 +511,17 @@ class SoccerBallImpl(
             // Map spin velocity linearly to degrees per tick (20 deg/tick at maxSpinVelocity)
             val degreesPerTick = (spinVelocity / meta.physics.maxSpinVelocity) * 20.0
             rotationDegrees = (rotationDegrees - degreesPerTick.toInt()) % 360
+        }
+    }
+
+    private val fileId = Bukkit.getPluginManager().getPlugin("BlockBall")!!.dataFolder.resolve(
+        System.currentTimeMillis().toString() + "ball.txt"
+    )
+    var enabledDump = true
+
+    private fun writeDump(text: String) {
+        if (enabledDump) {
+            fileId.appendText(text + "\n")
         }
     }
 }

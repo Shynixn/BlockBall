@@ -15,7 +15,7 @@ import com.github.shynixn.mcutils.common.repository.Element
 )
 class SoccerBallMeta : Element {
     @Comment("Unique identifier for this ball configuration template used within the plugin system.")
-    override var name: String = ""
+    override var name: String = "soccer_ball"
 
     @Comment("Visual settings defining how the ball looks, its scale, and layout offsets.")
     var render = RenderMeta()
@@ -122,7 +122,7 @@ class SoccerBallMeta : Element {
         }
 
         @Comment("Enables or disables visual procedural rotation based on the ball's velocity vector.")
-        var isRotationEnabled: Boolean = true
+        var rotationEnabled: Boolean = true
 
         @Comment("Visual model offset matching the entity presentation strictly to your texture profile.")
         var visualVerticalOffset: Double = -1.0
@@ -131,6 +131,6 @@ class SoccerBallMeta : Element {
         var renderDistance : Int = 60
 
         @Comment("Legacy fallback: Determines if the physics-simulation Slime entity should be rendered visible.")
-        var isSlimeVisible: Boolean = false
+        var slimeVisible: Boolean = false
     }
 }
