@@ -6,6 +6,7 @@ import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.contract.GameService
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.SoccerArena
+import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.entity.TeamMeta
 import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
@@ -42,6 +43,7 @@ import kotlin.math.min
 
 class BlockBallCommandExecutor(
     private val arenaRepository: CacheRepository<SoccerArena>,
+    private val ballRepository : CacheRepository<SoccerBallMeta>,
     private val gameService: GameService,
     private val plugin: Plugin,
     private val commandService: CommandService,
@@ -632,6 +634,8 @@ class BlockBallCommandExecutor(
                 permission(Permission.EDIT_GAME)
                 toolTip { language.commandReloadToolTip.text }
                 builder().execute { sender ->
+                    ballRepository.clearCache()
+                    ballRepository.getAll()
                     reloadArena(sender, null)
                 }.argument("name").validator(gameMustExistValidator).tabs(arenaTabs).execute { sender, arena ->
                     reloadArena(sender, arena)

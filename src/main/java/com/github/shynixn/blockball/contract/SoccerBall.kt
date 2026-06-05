@@ -1,6 +1,7 @@
 package com.github.shynixn.blockball.contract
 
 import com.github.shynixn.blockball.entity.SoccerBallMeta
+import com.github.shynixn.blockball.enumeration.ClickType
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
@@ -10,12 +11,12 @@ import org.bukkit.util.Vector
  */
 interface SoccerBall {
     /**
-     * Gets the meta data.
+     * Gets the metadata.
      */
     val meta: SoccerBallMeta
 
     /**
-     * Is the entity dead?
+     * Gets if the entity is dead.
      */
     val isDead: Boolean
 
@@ -25,14 +26,19 @@ interface SoccerBall {
     val hitBoxEntityId: Int
 
     /**
-     * Entity id of the design.
+     * Entity id of the render.
      */
-    val designEntityId: Int
+    val renderEntityId: Int
 
     /**
      * Gets if the ball is on ground.
      */
     val isOnGround: Boolean
+
+    /**
+     * If set, the ball is currently grabbed by a player.
+     */
+    val grabbingPlayer: Player?
 
     /**
      * Sets or gets if the ball can be interacted with.
@@ -42,7 +48,7 @@ interface SoccerBall {
     /**
      * If set, only this player can interact with the ball.
      */
-    var lockedPlayer : Player?
+    var lockedPlayer: Player?
 
     /**
      * Teleports the ball to the given [location].
@@ -60,20 +66,14 @@ interface SoccerBall {
     fun getVelocity(): Vector
 
     /**
-     * Shoot the ball by the given player.
-     * The calculated velocity can be manipulated by the BallKickEvent.
-     *
-     * @param player
+     * Sets the velocity of the ball.
      */
-    fun kickByPlayer(player: Player)
+    fun setVelocity(velocity: Vector)
 
     /**
-     * Pass the ball by the given player.
-     * The calculated velocity can be manipulated by the BallKickEvent
-     *
-     * @param player
+     * Checks if the player is interacting with the ball in some way.
      */
-    fun passByPlayer(player: Player)
+    fun applyInteraction(player: Player, clickType: ClickType)
 
     /**
      * Removes the ball.

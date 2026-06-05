@@ -40,9 +40,6 @@ class SoccerArena : Selection(), Element {
     @Comment("All settings when the ball goes out of bounds.")
     var ballOutOfBounds : BallOutOfBoundsMeta = BallOutOfBoundsMeta()
 
-    @Comment("All settings related to the ball.")
-    var ball: SoccerBallMeta = SoccerBallMeta()
-
     @Comment("Outer field location properties.")
     var outerField: Selection = Selection()
 
