@@ -119,6 +119,10 @@ class SoccerBallImpl(
      */
     override fun setVelocity(velocity: Vector) {
         this.motion = velocity.clone()
+        if (this.motion.y > 0.0) {
+            this.isOnGround = false
+            writeDump("[DEBUG-VELOCITY] External velocity applied with upward force (${this.motion.y}). Setting isOnGround = false")
+        }
     }
 
     /**
