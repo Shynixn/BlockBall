@@ -377,6 +377,7 @@ class SoccerBallImpl(
     }
 
 
+
     private fun calculatePhysics(deltaMs: Int) {
         val tickScale = (deltaMs / 50.0).coerceAtMost(2.0)
         writeDump("---- TICK SCALE: $tickScale")
@@ -427,25 +428,33 @@ class SoccerBallImpl(
             this.lastYaw = vectorToYaw(motion)
         }
 
+        // FIX: Hard stop for ground state rolling when it runs completely out of steam
+        if (isOnGround && abs(motion.x) < meta.physics.restVelocityThreshold && abs(motion.z) < meta.physics.restVelocityThreshold) {
+            motion.x = 0.0
+            motion.y = 0.0
+            motion.z = 0.0
+            writeDump("Ball rolling speed dropped below threshold. Stopping completely.")
+            return
+        }
+
         if (motion.x == 0.0 && motion.y == 0.0 && motion.z == 0.0) {
             writeDump("Ball is currently stopped")
             return
         }
 
-        // Perform RayTracing step first so the ball moves down to the target block floor
+        // Perform RayTracing step
         rayTrace(position, motion)
 
-        // FIX: Fallback rest check for air physics loops failing to snap properly
-        if (!isOnGround && velocity.length() < meta.physics.restVelocityThreshold) {
+        // FIX: Optimized fallback check. Only capture downward micro-falls,
+        // preserving horizontal momentum for rolling friction cycles.
+        if (!isOnGround && motion.y < 0.0 && abs(motion.y) < meta.physics.restVelocityThreshold) {
             val groundProbe = Vector3d(0.0, -0.5, 0.0)
             val groundResult = rayTracingService.rayTraceMotion(position, groundProbe, false, false)
             if (groundResult.hitBlock && groundResult.blockDirection.modY > 0.5) {
                 position.y = groundResult.targetPosition.y
                 isOnGround = true
-                motion.x = 0.0
-                motion.y = 0.0
-                motion.z = 0.0
-                writeDump("Stop ball motion (rest threshold met and snapped to ground floor)")
+                motion.y = 0.0 // Clear only vertical velocity!
+                writeDump("Stop vertical fallback flight. Snapped to ground floor. Remaining XZ velocity preserved for rolling.")
             }
         }
     }
@@ -468,7 +477,6 @@ class SoccerBallImpl(
         position.z = targetPosition.z
 
         if (hasHitBlock) {
-            // Step 1: Commit position mapping immediately so we aren't suspended in mid air
             position.y = targetPosition.y
             writeDump("[DEBUG-COLLISION] Block collision triggered! Updating Y to targetPosition.y: ${position.y}")
 
@@ -491,27 +499,25 @@ class SoccerBallImpl(
 
             writeDump("[DEBUG-COLLISION-MATH] Outgoing reflected motion: " + motion.x + "-" + motion.y + "-" + motion.z)
 
-            // Step 2: Evaluate resting threshold against floor surface normal conversions
             if (normalY > 0.5) {
-                // Check overall length or vertical velocity against the rest threshold
+                // Check ONLY vertical velocity components against bouncing constraints
                 if (abs(motion.y) < meta.physics.restVelocityThreshold) {
                     writeDump("[DEBUG-COLLISION] Micro-bounce killed. motion.y was ${motion.y}, threshold is ${meta.physics.restVelocityThreshold}")
 
                     motion.y = 0.0
                     isOnGround = true
 
-                    // If horizontal movement is completely trivial, zero out sliding artifacts entirely
+                    // Only clean kill the horizontal vectors if they are BOTH individually near zero
                     if (abs(motion.x) < meta.physics.restVelocityThreshold && abs(motion.z) < meta.physics.restVelocityThreshold) {
                         motion.x = 0.0
                         motion.z = 0.0
-                        writeDump("[DEBUG-COLLISION] Horizontal rest threshold met. Ball locked completely.")
+                        writeDump("[DEBUG-COLLISION] Total rest threshold met. Ball locked completely.")
                     }
                 } else {
                     writeDump("[DEBUG-COLLISION] Sufficient vertical energy detected (${motion.y}). Ball is BOUNCING back into flight.")
                     isOnGround = false
                 }
             } else {
-                // Hit a wall or ceiling, bounce back into free air
                 isOnGround = false
             }
 
