@@ -51,8 +51,7 @@ class SoccerBallImpl(
     // Properties
     private var position: Vector3d = location.toVector3d()
     private var motion: Vector = Vector(0.0, -0.7, 0.0)
-    private var rotationDegrees: Int = 0
-    private var spinVelocity: Double = 0.0
+    private var rotationDegrees: Double = 0.0
     private var lastYaw: Float = 0.0F
 
     // Tracker
@@ -444,7 +443,7 @@ class SoccerBallImpl(
     }
 
     private fun rayTrace(position: Vector3d, motion: Vector) {
-        val rayTraceStartPosition = position.copy().add(0.0, 0.5, 0.0)
+        val rayTraceStartPosition = position.copy().add(0.0, 0.2, 0.0)
         val rayTraceResult = rayTracingService.rayTraceMotion(rayTraceStartPosition, motion.toVector3d(), false, false)
         val targetPosition = rayTraceResult.targetPosition
         val hasHitBlock = rayTraceResult.hitBlock
@@ -469,7 +468,7 @@ class SoccerBallImpl(
             val velocity = Vector(motion.x, motion.y, motion.z)
             val normal = Vector(normalX, normalY, normalZ)
             val dot = velocity.dot(normal)
-            velocity.subtract(normal.multiply(2.0 * dot)).multiply(meta.physics.bounciness).multiply(0.07)
+            velocity.subtract(normal.multiply(2.0 * dot)).multiply(meta.physics.bounciness)
 
             motion.x = velocity.x
             motion.y = velocity.y
@@ -493,24 +492,20 @@ class SoccerBallImpl(
     }
 
     private fun calculateNextRotation() {
-        // 360 0 0 is a full forward rotation.
-        // Length of the velocity is the speed of the ball.
+        val minimumSpeedToShowRotation = 0.001
+        val degreesPerSpeedValueMultiplier = 17
+        val minimumDegreesWhenStillMoving = 2
         val velocity = getVelocity()
-        val speed = if (isOnGround) {
-            Vector(velocity.x, 0.0, velocity.z).length()
-        } else {
-            velocity.length()
-        }
+        val horizontalSpeed =  velocity.length()
 
-        // Ease spin velocity toward the ball's current speed, capped at maxSpinVelocity
-        val targetSpin = speed.coerceAtMost(meta.physics.maxSpinVelocity)
-        spinVelocity += (targetSpin - spinVelocity) * meta.physics.spinDampening
-        spinVelocity = spinVelocity.coerceIn(0.0, meta.physics.maxSpinVelocity)
+        if (horizontalSpeed > minimumSpeedToShowRotation) {
+            val degreesPerTick = horizontalSpeed * degreesPerSpeedValueMultiplier + minimumDegreesWhenStillMoving
 
-        if (spinVelocity > 0.001) {
-            // Map spin velocity linearly to degrees per tick (20 deg/tick at maxSpinVelocity)
-            val degreesPerTick = (spinVelocity / meta.physics.maxSpinVelocity) * 20.0
-            rotationDegrees = (rotationDegrees - degreesPerTick.toInt()) % 360
+            // Accumulate rotation smoothly, wrapping cleanly between 0.0 and 360.0
+            rotationDegrees = (rotationDegrees - degreesPerTick) % 360.0
+            if (rotationDegrees < 0) {
+                rotationDegrees += 360.0
+            }
         }
     }
 
