@@ -477,9 +477,6 @@ class SoccerBallImpl(
         position.z = targetPosition.z
 
         if (hasHitBlock) {
-            position.y = targetPosition.y
-            writeDump("[DEBUG-COLLISION] Block collision triggered! Updating Y to targetPosition.y: ${position.y}")
-
             val normalX = blockDirectionHit.modX.toDouble()
             val normalY = blockDirectionHit.modY.toDouble()
             val normalZ = blockDirectionHit.modZ.toDouble()
@@ -500,6 +497,10 @@ class SoccerBallImpl(
             writeDump("[DEBUG-COLLISION-MATH] Outgoing reflected motion: " + motion.x + "-" + motion.y + "-" + motion.z)
 
             if (normalY > 0.5) {
+                // Floor hit: targetPosition.y is the physical floor surface, unaffected by the ray-start offset
+                position.y = targetPosition.y
+                writeDump("[DEBUG-COLLISION] Floor collision. Y set to: ${position.y}")
+
                 // Check ONLY vertical velocity components against bouncing constraints
                 if (abs(motion.y) < meta.physics.restVelocityThreshold) {
                     writeDump("[DEBUG-COLLISION] Micro-bounce killed. motion.y was ${motion.y}, threshold is ${meta.physics.restVelocityThreshold}")
@@ -518,7 +519,19 @@ class SoccerBallImpl(
                     isOnGround = false
                 }
             } else {
-                isOnGround = false
+                // Wall or ceiling hit: targetPosition.y encodes the 0.2 ray-start offset — subtract it to
+                // recover the true ball Y at the moment of impact, preventing cumulative upward drift.
+                position.y = targetPosition.y - 0.2
+                writeDump("[DEBUG-COLLISION] Wall/ceiling collision. Corrected Y to: ${position.y}")
+
+                // Push the ball slightly away from the wall surface so the next tick's ray trace
+                // does not immediately re-detect the same face and cause the ball to stick.
+                val epsilon = 0.05
+                position.x += normalX * epsilon
+                position.z += normalZ * epsilon
+
+                // Preserve isOnGround: a wall bounce while rolling should keep the ball grounded
+                // so rolling friction (not gravity) is applied on the very next tick.
             }
 
             writeDump("[DEBUG-COLLISION] Final assignment evaluated to: isOnGround = $isOnGround")
