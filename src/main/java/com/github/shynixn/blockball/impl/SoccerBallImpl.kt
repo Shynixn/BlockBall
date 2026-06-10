@@ -19,6 +19,7 @@ import com.github.shynixn.mcutils.packet.api.packet.*
 import org.bukkit.Bukkit
 import org.bukkit.FluidCollisionMode
 import org.bukkit.Location
+import org.bukkit.block.BlockFace
 import org.bukkit.entity.Player
 import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
@@ -377,7 +378,6 @@ class SoccerBallImpl(
     }
 
 
-
     private fun calculatePhysics(deltaMs: Int) {
         val tickScale = (deltaMs / 50.0).coerceAtMost(2.0)
         writeDump("---- TICK SCALE: $tickScale")
@@ -385,7 +385,9 @@ class SoccerBallImpl(
         if (isOnGround) {
             writeDump("[DEBUG-GROUND] Evaluating ground check. Current Position Y: ${position.y}")
             val groundProbe = Vector(0.0, -0.05, 0.0)
-            val groundCheck = rayTracingService.rayTrace(position.toLocation(), groundProbe, 0.25, false, false)
+            val movementLength = groundProbe.length()
+            val maxTraceDistance = movementLength.coerceAtLeast(0.01)
+            val groundCheck = rayTracingService.rayTrace(position.toLocation(), groundProbe, maxTraceDistance, false, false)
             if (!groundCheck.hasHitBlock) {
                 isOnGround = false
                 writeDump("[DEBUG-GROUND] Detached from surface! Setting isOnGround = false")
@@ -448,7 +450,9 @@ class SoccerBallImpl(
         // Snap to ground to avoid micro bounces.
         if (!isOnGround && motion.y < 0.0 && abs(motion.y) < meta.physics.restVelocityThreshold) {
             val groundProbe = Vector(0.0, -0.5, 0.0)
-            val groundResult = rayTracingService.rayTrace(position.toLocation(), groundProbe, 0.25, false, false)
+            val movementLength = groundProbe.length()
+            val maxTraceDistance = movementLength.coerceAtLeast(0.01)
+            val groundResult = rayTracingService.rayTrace(position.toLocation(), groundProbe, maxTraceDistance, false, false)
             if (groundResult.hasHitBlock && groundResult.blockFace!!.modY > 0.5) {
                 position.y = groundResult.targetLocation.y
                 isOnGround = true
@@ -461,9 +465,12 @@ class SoccerBallImpl(
     private fun rayTrace(position: Vector3d, motion: Vector) {
         val originalY = position.y
         val rayTraceStartPosition = position.copy().add(0.0, 0.2, 0.0)
+        val movementLength = motion.length()
+        val maxTraceDistance = movementLength.coerceAtLeast(0.01)
 
         val customRaytracing = CustomRayTracingServiceNativeImpl()
-        val rayTraceResult = customRaytracing.rayTrace(rayTraceStartPosition.toLocation(),motion.clone(), 0.5,false, false )
+        val rayTraceResult =
+            customRaytracing.rayTrace(rayTraceStartPosition.toLocation(), motion.clone(), maxTraceDistance, false, false)
         val targetPosition = rayTraceResult.targetLocation
         val hasHitBlock = rayTraceResult.hasHitBlock
         val blockDirectionHit = rayTraceResult.blockFace
@@ -484,6 +491,14 @@ class SoccerBallImpl(
             motion.x = velocity.x
             motion.y = velocity.y
             motion.z = velocity.z
+
+            if(blockDirectionHit == BlockFace.EAST) {
+                writeDump("[A")
+            }
+
+        //    position.x = targetPosition.x + normal.x
+        //    position.y = targetPosition.y + normal.y
+       //     position.z = targetPosition.z + normal.z
         } else {
             writeDump("HAS NOT HIT " + blockDirectionHit)
 
@@ -509,7 +524,7 @@ class SoccerBallImpl(
         val degreesPerSpeedValueMultiplier = 15
         val minimumDegreesWhenStillMoving = 7
         val velocity = getVelocity()
-        val horizontalSpeed =  velocity.length()
+        val horizontalSpeed = velocity.length()
 
         if (horizontalSpeed > minimumSpeedToShowRotation) {
             val degreesPerTick = horizontalSpeed * degreesPerSpeedValueMultiplier + minimumDegreesWhenStillMoving
