@@ -53,7 +53,6 @@ class SoccerBallImpl(
     private var motion: Vector = Vector(0.0, -0.7, 0.0)
     private var rotationDegrees: Double = 0.0
     private var lastYaw: Float = 0.0F
-    private var maxDistance = 3.0
 
     // Tracker
     private val playerTracker = GameObjectPlayerTracker(
@@ -386,7 +385,7 @@ class SoccerBallImpl(
         if (isOnGround) {
             writeDump("[DEBUG-GROUND] Evaluating ground check. Current Position Y: ${position.y}")
             val groundProbe = Vector(0.0, -0.05, 0.0)
-            val groundCheck = rayTracingService.rayTrace(position.toLocation(), groundProbe, maxDistance, false, false)
+            val groundCheck = rayTracingService.rayTrace(position.toLocation(), groundProbe, 0.25, false, false)
             if (!groundCheck.hasHitBlock) {
                 isOnGround = false
                 writeDump("[DEBUG-GROUND] Detached from surface! Setting isOnGround = false")
@@ -446,11 +445,10 @@ class SoccerBallImpl(
         // Perform RayTracing step
         rayTrace(position, motion)
 
-        // Optimized fallback check. Only capture downward micro-falls,
-        // preserving horizontal momentum for rolling friction cycles.
+        // Snap to ground to avoid micro bounces.
         if (!isOnGround && motion.y < 0.0 && abs(motion.y) < meta.physics.restVelocityThreshold) {
             val groundProbe = Vector(0.0, -0.5, 0.0)
-            val groundResult = rayTracingService.rayTrace(position.toLocation(), groundProbe, maxDistance, false, false)
+            val groundResult = rayTracingService.rayTrace(position.toLocation(), groundProbe, 0.25, false, false)
             if (groundResult.hasHitBlock && groundResult.blockFace!!.modY > 0.5) {
                 position.y = groundResult.targetLocation.y
                 isOnGround = true
@@ -465,12 +463,13 @@ class SoccerBallImpl(
         val rayTraceStartPosition = position.copy().add(0.0, 0.2, 0.0)
 
         val customRaytracing = CustomRayTracingServiceNativeImpl()
-        val rayTraceResult = customRaytracing.rayTrace(rayTraceStartPosition.toLocation(),motion.clone(), maxDistance,false, false )
+        val rayTraceResult = customRaytracing.rayTrace(rayTraceStartPosition.toLocation(),motion.clone(), 0.5,false, false )
         val targetPosition = rayTraceResult.targetLocation
         val hasHitBlock = rayTraceResult.hasHitBlock
         val blockDirectionHit = rayTraceResult.blockFace
 
         if (hasHitBlock) {
+            writeDump("HAS HIT BLOCK " + blockDirectionHit)
             val normalX = blockDirectionHit!!.modX.toDouble()
             val normalY = blockDirectionHit!!.modY.toDouble()
             val normalZ = blockDirectionHit!!.modZ.toDouble()
@@ -486,6 +485,9 @@ class SoccerBallImpl(
             motion.y = velocity.y
             motion.z = velocity.z
         } else {
+            writeDump("HAS NOT HIT " + blockDirectionHit)
+
+
             // Free air handling (No block hit)
             position.x = targetPosition.x
             position.z = targetPosition.z
@@ -529,5 +531,6 @@ class SoccerBallImpl(
         if (enabledDump) {
             fileId.appendText(text + "\n")
         }
+        println(text)
     }
 }
