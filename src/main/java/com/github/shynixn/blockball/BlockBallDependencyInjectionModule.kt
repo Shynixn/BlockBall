@@ -10,6 +10,7 @@ import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
 import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.enumeration.Permission
+import com.github.shynixn.blockball.impl.CustomRayTracingServiceNativeImpl
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.blockball.impl.service.CloudServiceImpl
@@ -44,7 +45,6 @@ import com.github.shynixn.mcutils.database.impl.PlayerDataSqlRepositoryImpl
 import com.github.shynixn.mcutils.http.HttpClientFactory
 import com.github.shynixn.mcutils.http.HttpClientFactoryImpl
 import com.github.shynixn.mcutils.packet.api.PacketService
-import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.mcutils.packet.impl.service.*
 import com.github.shynixn.shyparticles.contract.ParticleEffectService
 import org.bukkit.Server
@@ -154,8 +154,8 @@ class BlockBallDependencyInjectionModule(
         module.addService<ChatMessageService> {
             ChatMessageServiceImpl(module.getService(), module.getService(), module.getService())
         }
-        module.addService<RayTracingService> {
-            RayTracingServiceImpl()
+        module.addService<CustomRayTracingServiceNativeImpl> {
+            CustomRayTracingServiceNativeImpl()
         }
         module.addService<HttpClientFactory> { HttpClientFactoryImpl() }
         module.addService<CloudService> {

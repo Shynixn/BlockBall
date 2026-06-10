@@ -70,7 +70,7 @@ registerPluginJar("1.17.0-1.21.11-premium", "plugin-1.17.0-1.21.11.yml")
 registerPluginJar("1.17.0-1.21.11-premium-folia", "plugin-1.17.0-1.21.11-folia.yml", isFolia = true)
 registerPluginJar("26.1.0-latest-premium", "plugin-26.1.0-latest.yml")
 registerPluginJar("26.1.0-latest-premium-folia", "plugin-26.1.0-latest-folia.yml", isFolia = true)
-registerPluginJar("26.1.0-latest-free", "plugin-26.1.0-latest.yml", excludeOldNms = true)
+registerPluginJar("26.1.0-latest-free", "plugin-26.1.0-latest.yml", excludeOldNms = true, debug = true)
 
 fun registerPluginJar(
     taskName: String,
