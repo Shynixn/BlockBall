@@ -10,4 +10,4 @@ open class BallEvent(
      * SoccerBall.
      */
     val ball: SoccerBall
-) : BlockBallEvent()
+) : BlockBallEvent(false)

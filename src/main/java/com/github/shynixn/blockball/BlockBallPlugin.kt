@@ -252,10 +252,12 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
 
             delay(1000)
             val player = Bukkit.getPlayer("Shynixn")!!
-            val soccerBall = module!!.getService<SoccerBallService>().spawn("soccer_ball", Location(player.world, 1789.0, 4.0, -1627.0))
+            var location = Location(player.world, 1789.0, 4.0, -1627.0)
+            location = player.location
+            val soccerBall = module!!.getService<SoccerBallService>().spawn("soccer_ball",location )
 
             delay(1000)
-         soccerBall.setVelocity(Vector(0.0, 1.5, 0.0))
+         soccerBall.setVelocity(Vector(3.0, 2.5, 0.0))
             delay(10000)
             (soccerBall as SoccerBallImpl).enabledDump = false
         }

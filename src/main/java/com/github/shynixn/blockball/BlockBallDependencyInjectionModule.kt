@@ -199,7 +199,7 @@ class BlockBallDependencyInjectionModule(
             )
         }
         module.addService<SoccerBallService> {
-            SoccerBallServiceImpl(module.getService(), module.getService(), module.getService(), module.getService(),module.getService())
+            SoccerBallServiceImpl(module.getService(), module.getService(), module.getService(), module.getService(),module.getService(),module.getService())
         }
         module.addService<BallListener> { BallListener(module.getService(), module.getService()) }
         module.addService<DoubleJumpListener> {

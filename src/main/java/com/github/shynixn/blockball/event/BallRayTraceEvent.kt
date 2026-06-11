@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.event
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 import org.bukkit.Location
+import org.bukkit.block.BlockFace
 
 /**
  * The ray trace event is called when the ball has got a velocity in a certain
@@ -31,5 +32,5 @@ class BallRayTraceEvent(
      * Block Direction which was hit. If hitBlock is false, it may contain any
      * direction. If changed and the hitBlock is true the outgoing Vector is differently calculated later.
      */
-    var blockDirection: BlockDirection
+    var blockFace: BlockFace? = null
 ) : BallEvent(ball)

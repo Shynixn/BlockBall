@@ -12,6 +12,7 @@ import com.github.shynixn.mccoroutine.folia.regionDispatcher
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.shyparticles.contract.ParticleEffectService
 import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -22,6 +23,7 @@ class SoccerBallServiceImpl(
     private val packetService: PacketService,
     private val rayTracingService: CustomRayTracingServiceNativeImpl,
     private val itemService: ItemService,
+    private val particleEffectService: ParticleEffectService,
     private val plugin: Plugin
 ) : SoccerBallService {
     private val soccerBallByEntity = HashMap<Int, SoccerBall>()
@@ -52,6 +54,7 @@ class SoccerBallServiceImpl(
         val soccerBallImpl = SoccerBallImpl(
             location,
             packetService,
+            particleEffectService,
             rayTracingService,
             itemService,
             ballMeta,

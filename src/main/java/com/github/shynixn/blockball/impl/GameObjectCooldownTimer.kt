@@ -1,32 +1,19 @@
 package com.github.shynixn.blockball.impl
 
 class GameObjectCooldownTimer(val cooldownMs: Int) {
-    private var remainingTimeMs: Int = 0
+    private var earliestNextExecutionTimeStamp = 0L
 
     /**
-     * Checks if the cooldown is over. If ready, it consumes the cooldown
-     * immediately and returns true. Requires delta time from your tick loop.
+     * Executes the action.
      */
-    fun tryExecute(deltaMs: Int): Boolean {
-        if (remainingTimeMs > 0) {
-            remainingTimeMs -= deltaMs
-            if (remainingTimeMs < 0) {
-                remainingTimeMs = 0
-            }
-        }
-
-        if (remainingTimeMs == 0) {
-            remainingTimeMs = cooldownMs
-            return true
-        }
-
-        return false
+    fun execute() {
+       earliestNextExecutionTimeStamp = System.currentTimeMillis() + cooldownMs
     }
 
     /**
      * Checks if the cooldown is over.
      */
     fun canExecute(): Boolean {
-        return remainingTimeMs == 0
+        return System.currentTimeMillis() >= earliestNextExecutionTimeStamp
     }
 }

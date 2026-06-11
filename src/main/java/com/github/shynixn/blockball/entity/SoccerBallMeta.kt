@@ -24,7 +24,14 @@ class SoccerBallMeta : Element {
     var physics = PhysicsMeta()
 
     @Comment("Gameplay modifiers determining how players interact with the ball via hotbars and clicks.")
-    val interactions: List<InteractionMeta> = ArrayList()
+    val interactions: MutableList<InteractionMeta> = ArrayList()
+
+    init {
+        interactions.add(InteractionMeta().also {
+            it.triggerType = BallTriggerActionType.COLLIDE
+            it.executionType = BallExecuteActionType.KICK_BALL
+        })
+    }
 
     class InteractionMeta {
         @Comment(
@@ -33,25 +40,25 @@ class SoccerBallMeta : Element {
             " - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK",
             " - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE"
         )
-        val triggerType: BallTriggerActionType = BallTriggerActionType.LEFT_CLICK
+        var triggerType: BallTriggerActionType = BallTriggerActionType.LEFT_CLICK
 
         @Comment("The starting index (0-8) of the player's hotbar range allowed to trigger this action.")
-        val hotbarRangeStart: Int = 0
+        var hotbarRangeStart: Int = 0
 
         @Comment("The ending index (0-8) of the player's hotbar range allowed to trigger this action.")
-        val hotbarRangeEnd: Int = 8
+        var hotbarRangeEnd: Int = 8
 
         @Comment("The mechanical action applied to the ball upon a successful trigger (e.g., KICK, PASS, GRAB).")
-        val executionType: BallExecuteActionType = BallExecuteActionType.KICK_BALL
+        var executionType: BallExecuteActionType = BallExecuteActionType.KICK_BALL
 
         @Comment("The instantaneous horizontal impulse vector applied to the ball.")
-        val horizontalImpulse: Double = 1.0
+        var horizontalImpulse: Double = 1.0
 
         @Comment("The instantaneous vertical impulse vector applied to the ball.")
-        val verticalImpulse: Double = 1.0
+        var verticalImpulse: Double = 1.0
 
         @Comment("The particle/sound effect name to play when this interaction is successfully triggered.")
-        val effectName: String = ""
+        var effectName: String = ""
     }
 
     class PhysicsMeta {
@@ -99,9 +106,6 @@ class SoccerBallMeta : Element {
 
         @Comment("Global cooldown in server ticks before the ball can process another physics interaction.")
         var globalInteractionCooldownTicks: Int = 20
-
-        @Comment("Input processing delay in ticks to filter duplicate incoming click packets and stabilize tracking.")
-        val inputProcessingDelayTicks: Int = 1
 
         @Comment("Per-player input throttling cooldown in ticks to prevent rapid-fire physics exploits.")
         var perPlayerInteractionCooldownTicks: Int = 7
