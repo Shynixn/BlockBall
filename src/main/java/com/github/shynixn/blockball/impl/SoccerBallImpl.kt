@@ -54,8 +54,8 @@ class SoccerBallImpl(
     companion object {
         const val SCALE: String = "scale"
     }
+
     private var consecutiveBounceCount: Int = 0
-    private val maxAllowedBouncesBeforeStuck: Int = 10
 
     // Properties
     private var position: Vector3d = location.toVector3d()
@@ -127,7 +127,7 @@ class SoccerBallImpl(
      * Sets the velocity of the ball.
      */
     override fun setVelocity(velocity: Vector) {
-        if(!Bukkit.isPrimaryThread()){
+        if (!Bukkit.isPrimaryThread()) {
             throw IllegalArgumentException("Thread violation!")
         }
 
@@ -144,7 +144,7 @@ class SoccerBallImpl(
     override fun applyInteraction(
         player: Player, clickType: ClickType
     ) {
-        if(!Bukkit.isPrimaryThread()){
+        if (!Bukkit.isPrimaryThread()) {
             throw IllegalArgumentException("Thread violation!")
         }
 
@@ -416,28 +416,40 @@ class SoccerBallImpl(
         val triggerTypes = when {
             clickType == ClickType.LEFT && player.isSneaking ->
                 arrayOf(BallTriggerActionType.SNEAK_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK)
+
             clickType == ClickType.LEFT && player.isSprinting ->
                 arrayOf(BallTriggerActionType.SPRINT_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK)
+
             clickType == ClickType.LEFT && !player.isOnGround ->
                 arrayOf(BallTriggerActionType.JUMP_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK)
+
             clickType == ClickType.RIGHT && player.isSneaking ->
                 arrayOf(BallTriggerActionType.SNEAK_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK)
+
             clickType == ClickType.RIGHT && player.isSprinting ->
                 arrayOf(BallTriggerActionType.SPRINT_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK)
+
             clickType == ClickType.RIGHT && !player.isOnGround ->
                 arrayOf(BallTriggerActionType.JUMP_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK)
+
             clickType == ClickType.LEFT ->
                 arrayOf(BallTriggerActionType.LEFT_CLICK)
+
             clickType == ClickType.RIGHT ->
                 arrayOf(BallTriggerActionType.RIGHT_CLICK)
+
             clickType == ClickType.NONE && player.isSneaking ->
                 arrayOf(BallTriggerActionType.SNEAK_COLLIDE, BallTriggerActionType.COLLIDE)
+
             clickType == ClickType.NONE && player.isSprinting ->
                 arrayOf(BallTriggerActionType.SPRINT_COLLIDE, BallTriggerActionType.COLLIDE)
+
             clickType == ClickType.NONE && !player.isOnGround ->
                 arrayOf(BallTriggerActionType.JUMP_COLLIDE, BallTriggerActionType.COLLIDE)
+
             clickType == ClickType.NONE ->
                 arrayOf(BallTriggerActionType.COLLIDE)
+
             else ->
                 emptyArray()
         }
@@ -570,7 +582,8 @@ class SoccerBallImpl(
             false
         )
 
-        val rayTraceEvent = BallRayTraceEvent(this, rayTraceResult.hasHitBlock, rayTraceResult.targetLocation, rayTraceResult.blockFace)
+        val rayTraceEvent =
+            BallRayTraceEvent(this, rayTraceResult.hasHitBlock, rayTraceResult.targetLocation, rayTraceResult.blockFace)
         Bukkit.getPluginManager().callEvent(rayTraceEvent)
 
         val targetPosition = rayTraceResult.targetLocation
@@ -667,7 +680,7 @@ class SoccerBallImpl(
      * Detects if the ball is infinitely bouncing or stuck, and teleports it to the nearest player.
      */
     private fun checkAndHandleStuckBall() {
-        if (consecutiveBounceCount >= maxAllowedBouncesBeforeStuck) {
+        if (consecutiveBounceCount >= 20) {
             val ballLocation = getLocation()
 
             // Find the nearest player out of the actively tracked nearby players
@@ -686,6 +699,11 @@ class SoccerBallImpl(
 
             // Reset counter after executing fallback
             consecutiveBounceCount = 0
+        } else if (consecutiveBounceCount >= 10) {
+            val ballLocation = getLocation()
+            ballLocation.y += 1
+            teleport(ballLocation)
+            println("Simple recovery")
         }
     }
 
