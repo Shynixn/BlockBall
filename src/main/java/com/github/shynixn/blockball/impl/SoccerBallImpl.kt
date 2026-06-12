@@ -54,6 +54,8 @@ class SoccerBallImpl(
     companion object {
         const val SCALE: String = "scale"
     }
+    private var consecutiveBounceCount: Int = 0
+    private val maxAllowedBouncesBeforeStuck: Int = 10
 
     // Properties
     private var position: Vector3d = location.toVector3d()
@@ -235,6 +237,9 @@ class SoccerBallImpl(
 
         // Calculate physics
         calculatePhysics(deltaMs)
+
+        // Check if ball is stuck
+        checkAndHandleStuckBall()
 
         // Send changes
         updateEntityForAllPlayers()
@@ -578,6 +583,8 @@ class SoccerBallImpl(
         val blockDirectionHit = rayTraceResult.blockFace
 
         if (hasHitBlock) {
+            consecutiveBounceCount++
+
             writeDump("HAS HIT BLOCK " + blockDirectionHit + " target position " + targetPosition)
             val normalX = blockDirectionHit!!.modX.toDouble()
             val normalY = blockDirectionHit.modY.toDouble()
@@ -625,6 +632,7 @@ class SoccerBallImpl(
                 writeDump("HIT FLOAT")
             }
         } else {
+            consecutiveBounceCount = 0
             writeDump("HAS NOT HIT " + blockDirectionHit)
 
             position.x = targetPosition.x
@@ -657,6 +665,32 @@ class SoccerBallImpl(
             if (rotationDegrees < 0) {
                 rotationDegrees += 360.0
             }
+        }
+    }
+
+    /**
+     * Detects if the ball is infinitely bouncing or stuck, and teleports it to the nearest player.
+     */
+    private fun checkAndHandleStuckBall() {
+        if (consecutiveBounceCount >= maxAllowedBouncesBeforeStuck) {
+            val ballLocation = getLocation()
+
+            // Find the nearest player out of the actively tracked nearby players
+            val nearestPlayer = playerTracker.cache.entries
+                .minByOrNull { entry -> entry.value.distanceSquared(ballLocation) }
+
+            if (nearestPlayer != null) {
+                val targetSpawnLocation = nearestPlayer.value.clone()
+                targetSpawnLocation.y += 0.5
+
+                // Execute fallback recovery
+                this.teleport(targetSpawnLocation)
+                this.isOnGround = false
+                println("[BlockBall] Ball became stuck! Resetting to player: ${nearestPlayer.key.name}")
+            }
+
+            // Reset counter after executing fallback
+            consecutiveBounceCount = 0
         }
     }
 
