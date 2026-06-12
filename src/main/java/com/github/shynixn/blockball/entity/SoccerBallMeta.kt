@@ -29,7 +29,7 @@ class SoccerBallMeta : Element {
     init {
         interactions.add(InteractionMeta().also {
             it.triggerType = BallTriggerActionType.COLLIDE
-            it.executionType = BallExecuteActionType.KICK_BALL
+            it.executionType = BallExecuteActionType.SHOOT
         })
     }
 
@@ -43,13 +43,16 @@ class SoccerBallMeta : Element {
         var triggerType: BallTriggerActionType = BallTriggerActionType.LEFT_CLICK
 
         @Comment("The starting index (0-8) of the player's hotbar range allowed to trigger this action.")
-        var hotbarRangeStart: Int = 0
+        var conditionHotBarRangeStart: Int = 0
 
         @Comment("The ending index (0-8) of the player's hotbar range allowed to trigger this action.")
-        var hotbarRangeEnd: Int = 8
+        var conditionHotBarRangeEnd: Int = 8
 
-        @Comment("The mechanical action applied to the ball upon a successful trigger (e.g., KICK, PASS, GRAB).")
-        var executionType: BallExecuteActionType = BallExecuteActionType.KICK_BALL
+        @Comment("If set to true then this action is only executed when the ball is grabbed.")
+        var conditionGrabbed : Boolean = false
+
+        @Comment("The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB")
+        var executionType: BallExecuteActionType = BallExecuteActionType.SHOOT
 
         @Comment("The instantaneous horizontal impulse vector applied to the ball.")
         var horizontalImpulse: Double = 1.0

@@ -7,7 +7,6 @@ import com.github.shynixn.blockball.enumeration.ClickType
 import com.github.shynixn.blockball.event.BallActionEvent
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallRemoveEvent
-import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -22,7 +21,6 @@ import com.github.shynixn.mcutils.packet.api.packet.*
 import com.github.shynixn.shyparticles.contract.ParticleEffectService
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.block.BlockFace
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.util.EulerAngle
@@ -457,7 +455,7 @@ class SoccerBallImpl(
         val itemSlot = player.inventory.heldItemSlot
         val interaction = triggerTypes.firstNotNullOfOrNull { type ->
             meta.interactions.firstOrNull { e ->
-                e.triggerType == type && itemSlot >= e.hotbarRangeStart && itemSlot <= e.hotbarRangeEnd
+                e.triggerType == type && itemSlot >= e.conditionHotBarRangeStart && itemSlot <= e.conditionHotBarRangeEnd
             }
         }
 
