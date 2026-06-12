@@ -56,6 +56,7 @@ class SoccerBallServiceImpl(
             packetService,
             particleEffectService,
             rayTracingService,
+            plugin,
             itemService,
             ballMeta,
             hitBoxEntityId,
@@ -77,8 +78,10 @@ class SoccerBallServiceImpl(
             soccerBallByEntity.remove(soccerBallImpl.hitBoxEntityId)
         }
 
-        val event = BallSpawnEvent(soccerBallImpl)
-        Bukkit.getPluginManager().callEvent(event)
+        plugin.launch(plugin.regionDispatcher(location)) {
+            val event = BallSpawnEvent(soccerBallImpl)
+            Bukkit.getPluginManager().callEvent(event)
+        }
         return soccerBallImpl
     }
 

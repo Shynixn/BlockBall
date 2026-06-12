@@ -7,6 +7,7 @@ import com.github.shynixn.blockball.enumeration.ClickType
 import com.github.shynixn.blockball.event.BallActionEvent
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallRemoveEvent
+import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -23,6 +24,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import org.bukkit.util.EulerAngle
 import org.bukkit.util.Vector
 import kotlin.math.abs
@@ -32,6 +34,7 @@ class SoccerBallImpl(
     location: Location, private val packetService: PacketService,
     private val particleEffectService: ParticleEffectService,
     private val rayTracingService: CustomRayTracingServiceNativeImpl,
+    private val plugin: Plugin,
     private val itemService: ItemService,
     /**
      * Gets the metadata.
@@ -122,6 +125,10 @@ class SoccerBallImpl(
      * Sets the velocity of the ball.
      */
     override fun setVelocity(velocity: Vector) {
+        if(!Bukkit.isPrimaryThread()){
+            throw IllegalArgumentException("Thread violation!")
+        }
+
         this.motion = velocity.clone()
         if (this.motion.y > 0.0) {
             this.isOnGround = false
@@ -135,6 +142,10 @@ class SoccerBallImpl(
     override fun applyInteraction(
         player: Player, clickType: ClickType
     ) {
+        if(!Bukkit.isPrimaryThread()){
+            throw IllegalArgumentException("Thread violation!")
+        }
+
         if (!canPlayerInteractWithBall(player)) {
             return
         }
@@ -235,7 +246,6 @@ class SoccerBallImpl(
         val ballLocation = getLocation()
         val playerHittingTheBall = playerLocationPairs.asSequence()
             .map { e ->
-                println("DISTANCE: " + e.value.distance(ballLocation))
                 Pair(e.key, e.value.distance(ballLocation))
             }.filter { p -> p.second < hitboxSize }
             .sortedBy { e -> e.second }.firstOrNull { e -> canPlayerInteractWithBall(e.first) }
