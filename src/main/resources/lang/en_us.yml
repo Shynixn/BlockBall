@@ -481,7 +481,7 @@ shyScoreboardCommonErrorMessage:
   text: "&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details."
 shyScoreboardCommandSenderHasToBePlayer:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player if you do not specify the optional player argument."
+  text: ""
 shyScoreboardCommandUsage:
   type: "CHAT"
   text: "[&9ShyScoreboard&f] Use /shyscoreboard help to see more info about the plugin."
@@ -547,7 +547,7 @@ shyBossBarCommonErrorMessage:
   text: "&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details."
 shyBossBarCommandSenderHasToBePlayer:
   type: "CHAT"
-  text: "&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player if you do not specify the optional player argument."
+  text: ""
 shyBossBarCommandUsage:
   type: "CHAT"
   text: "&0&l[&f&lBlockBall&0&l]&7 Use /blockballbossbar help to see more info about the plugin."
