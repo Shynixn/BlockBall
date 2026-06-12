@@ -562,17 +562,15 @@ class SoccerBallImpl(
         val maxTraceDistance = movementLength.coerceAtLeast(0.01)
 
         val customRaytracing = CustomRayTracingServiceNativeImpl()
-        val rayTraceResult =
-            customRaytracing.rayTrace(
-                rayTraceStartPosition.toLocation(),
-                motion.clone(),
-                maxTraceDistance,
-                false,
-                false
-            )
+        val rayTraceResult = customRaytracing.rayTrace(
+            rayTraceStartPosition.toLocation(),
+            motion.clone(),
+            maxTraceDistance,
+            false,
+            false
+        )
 
-        val rayTraceEvent =
-            BallRayTraceEvent(this, rayTraceResult.hasHitBlock, rayTraceResult.targetLocation, rayTraceResult.blockFace)
+        val rayTraceEvent = BallRayTraceEvent(this, rayTraceResult.hasHitBlock, rayTraceResult.targetLocation, rayTraceResult.blockFace)
         Bukkit.getPluginManager().callEvent(rayTraceEvent)
 
         val targetPosition = rayTraceResult.targetLocation
@@ -589,27 +587,19 @@ class SoccerBallImpl(
             val normal = Vector(normalX, normalY, normalZ)
             val dot = velocity.dot(normal)
 
-            // Reflect velocity safely using the cloned vector normal (No more mutation bug!)
+            // Reflect velocity safely using the cloned vector normal
             velocity.subtract(normal.clone().multiply((1.0 + meta.physics.bounciness) * dot))
 
             motion.x = velocity.x
             motion.y = velocity.y
             motion.z = velocity.z
 
-            if (blockDirectionHit == BlockFace.EAST) {
-                writeDump("[A")
-            }
-
-            // Use a clean, microscopic skin-depth epsilon buffer.
-            // 0.3 is too large and shifts the ball into bounding boxes above/below it.
             val epsilon = 0.002
 
             // If we hit a vertical wall (EAST, WEST, NORTH, SOUTH)
             if (abs(normal.x) > 0.1 || abs(normal.z) > 0.1) {
                 position.x = targetPosition.x + (normal.x * epsilon)
                 position.z = targetPosition.z + (normal.z * epsilon)
-
-                // Let it advance normally along its original vertical path for this tick.
                 position.y = originalY + motion.y
                 writeDump("HIT WALL")
             }
@@ -618,15 +608,25 @@ class SoccerBallImpl(
                 position.x = targetPosition.x
                 position.z = targetPosition.z
 
-                // FIXED: We must strip away the 0.2 offset that we added to the ray's start
-                // position so the ball anchors cleanly relative to its baseline footprint center!
+                // FIX: If we hit a floor surface (BlockFace.UP) from above
+                if (normal.y > 0.1) {
+                    // Check if vertical speed is low enough to drop into rolling physics
+                    if (motion.y <= 0.0 || abs(motion.y) < (meta.physics.restVelocityThreshold * 4.0)) {
+                        position.y = targetPosition.y - 0.2 // Anchor perfectly to the block floor
+                        this.isOnGround = true
+                        this.motion.y = 0.0 // Completely kill the vertical bounce bounce loop
+                        writeDump("HIT FLOAT -> Grounded smoothly. Velocity zeroed.")
+                        return
+                    }
+                }
+
+                // Normal bouncing tracking for high speed drops
                 position.y = (targetPosition.y - 0.2) + (normal.y * epsilon)
                 writeDump("HIT FLOAT")
             }
         } else {
             writeDump("HAS NOT HIT " + blockDirectionHit)
 
-            // Free air handling (No block hit)
             position.x = targetPosition.x
             position.z = targetPosition.z
 
@@ -667,7 +667,7 @@ class SoccerBallImpl(
 
     private fun writeDump(text: String) {
         if (enabledDump) {
-            // fileId.appendText(text + "\n")
+            fileId.appendText(text + "\n")
         }
     }
 }

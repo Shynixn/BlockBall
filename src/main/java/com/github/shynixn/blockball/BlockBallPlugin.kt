@@ -253,7 +253,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
             delay(1000)
             val player = Bukkit.getPlayer("Shynixn")!!
             var location = Location(player.world, 1789.0, 4.0, -1627.0)
-            location = player.location
+            location = player.location.toVector3d().addRelativeFront(2.0).toLocation()
             val soccerBall = module!!.getService<SoccerBallService>().spawn("soccer_ball",location )
 
             delay(10000)
