@@ -106,9 +106,13 @@ class ForceFieldServiceImpl : ForceFieldService {
     private fun knockBackPlayer(forceField: ForceField, player: Player, modifier: Float) {
         val playerData = playerForceFieldData[player] ?: return
         val knockBack = forceField.center.toVector().subtract(player.location.toVector()).normalize().multiply(modifier)
-        player.velocity = knockBack
-        player.allowFlight = true
         playerData.hasReceivedFlight = true
+        try {
+            player.velocity = knockBack
+            player.allowFlight = true
+        } catch (e: Exception) {
+            // Finite Vector Check
+        }
     }
 
     private fun checkInsideOutSide(player: Player, location: Vector3d, forceField: ForceField) {
