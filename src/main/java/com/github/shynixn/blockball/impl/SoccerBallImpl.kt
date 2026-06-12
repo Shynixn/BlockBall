@@ -174,24 +174,20 @@ class SoccerBallImpl(
         val playerLocation = player.location
         val yawDegrees = playerLocation.yaw.toDouble()
 
-        // 1. Gather look pitch and invert it (Minecraft looking UP is negative, but math needs UP positive)
-        var launchPitch = -playerLocation.pitch.toInt()
-
-        // 2. Clamp the launch pitch using your SoccerBallMeta constraints
-        val clampedPitch = launchPitch.coerceIn(meta.physics.minLaunchPitch, meta.physics.maxLaunchPitch)
-
-        // 3. Convert pitch and yaw angles into radians for trigonometry
-        val pitchRadians = Math.toRadians(clampedPitch.toDouble())
+        // 1. Convert horizontal yaw angles into radians for direction
         val yawRadians = Math.toRadians(yawDegrees)
 
-        // 4. Compute vector components combining directional angles with configuration impulses
+        // 2. Gather raw force configurations directly from the trigger action asset data
         val horizontalForce = interactionMeta.horizontalImpulse
-        val verticalForce = interactionMeta.verticalImpulse * Math.sin(pitchRadians)
+        val verticalForce = interactionMeta.verticalImpulse
 
-        // Minecraft vectors: -sin(yaw) for X, cos(yaw) for Z, and scaled by horizontal look direction cos(pitch)
-        val x = horizontalForce * -Math.sin(yawRadians) * Math.cos(pitchRadians)
-        val z = horizontalForce * Math.cos(yawRadians) * Math.cos(pitchRadians)
-        val y = 0.2
+        // 3. Compute vector components flatly across the 2D horizontal X/Z plane.
+        // This ignores player look pitch entirely, ensuring max horizontal power regardless of looking down.
+        val x = horizontalForce * -Math.sin(yawRadians)
+        val z = horizontalForce * Math.cos(yawRadians)
+
+        // 4. Set the vertical velocity to directly follow your configuration value.
+        val y = verticalForce
 
         // 5. Build the final Bukkit Vector and apply it to your soccer ball
         val calculatedVelocity = Vector(x, y, z)
@@ -417,40 +413,39 @@ class SoccerBallImpl(
     }
 
     private fun findPlayerAction(player: Player, clickType: ClickType): SoccerBallMeta.InteractionMeta? {
-        val triggerType = if (clickType == ClickType.LEFT && player.isSneaking) {
-            BallTriggerActionType.SNEAK_LEFT_CLICK
-        } else if (clickType == ClickType.LEFT && player.isSprinting) {
-            BallTriggerActionType.SPRINT_LEFT_CLICK
-        } else if (clickType == ClickType.LEFT && !player.isOnGround) {
-            BallTriggerActionType.JUMP_LEFT_CLICK
-        } else if (clickType == ClickType.RIGHT && player.isSneaking) {
-            BallTriggerActionType.SNEAK_RIGHT_CLICK
-        } else if (clickType == ClickType.RIGHT && player.isSprinting) {
-            BallTriggerActionType.SPRINT_RIGHT_CLICK
-        } else if (clickType == ClickType.RIGHT && !player.isOnGround) {
-            BallTriggerActionType.JUMP_RIGHT_CLICK
-        } else if (clickType == ClickType.LEFT) {
-            BallTriggerActionType.LEFT_CLICK
-        } else if (clickType == ClickType.RIGHT) {
-            BallTriggerActionType.RIGHT_CLICK
-        } else if (clickType == ClickType.NONE && player.isSneaking) {
-            BallTriggerActionType.SNEAK_COLLIDE
-        } else if (clickType == ClickType.NONE && player.isSprinting) {
-            BallTriggerActionType.SPRINT_COLLIDE
-        } else if (clickType == ClickType.NONE && !player.isOnGround) {
-            BallTriggerActionType.JUMP_COLLIDE
-        } else {
-            BallTriggerActionType.COLLIDE
+        val triggerTypes = when {
+            clickType == ClickType.LEFT && player.isSneaking ->
+                arrayOf(BallTriggerActionType.SNEAK_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK)
+            clickType == ClickType.LEFT && player.isSprinting ->
+                arrayOf(BallTriggerActionType.SPRINT_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK)
+            clickType == ClickType.LEFT && !player.isOnGround ->
+                arrayOf(BallTriggerActionType.JUMP_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK)
+            clickType == ClickType.RIGHT && player.isSneaking ->
+                arrayOf(BallTriggerActionType.SNEAK_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK)
+            clickType == ClickType.RIGHT && player.isSprinting ->
+                arrayOf(BallTriggerActionType.SPRINT_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK)
+            clickType == ClickType.RIGHT && !player.isOnGround ->
+                arrayOf(BallTriggerActionType.JUMP_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK)
+            clickType == ClickType.LEFT ->
+                arrayOf(BallTriggerActionType.LEFT_CLICK)
+            clickType == ClickType.RIGHT ->
+                arrayOf(BallTriggerActionType.RIGHT_CLICK)
+            clickType == ClickType.NONE && player.isSneaking ->
+                arrayOf(BallTriggerActionType.SNEAK_COLLIDE, BallTriggerActionType.COLLIDE)
+            clickType == ClickType.NONE && player.isSprinting ->
+                arrayOf(BallTriggerActionType.SPRINT_COLLIDE, BallTriggerActionType.COLLIDE)
+            clickType == ClickType.NONE && !player.isOnGround ->
+                arrayOf(BallTriggerActionType.JUMP_COLLIDE, BallTriggerActionType.COLLIDE)
+            clickType == ClickType.NONE ->
+                arrayOf(BallTriggerActionType.COLLIDE)
+            else ->
+                emptyArray()
         }
 
         val itemSlot = player.inventory.heldItemSlot
-        var interaction = meta.interactions.firstOrNull { e ->
-            e.triggerType == triggerType && itemSlot >= e.hotbarRangeStart && itemSlot <= e.hotbarRangeEnd
-        }
-        if (interaction == null) {
-            // Fallback to collide
-            interaction = meta.interactions.firstOrNull { e ->
-                e.triggerType == BallTriggerActionType.COLLIDE && itemSlot >= e.hotbarRangeStart && itemSlot <= e.hotbarRangeEnd
+        val interaction = triggerTypes.firstNotNullOfOrNull { type ->
+            meta.interactions.firstOrNull { e ->
+                e.triggerType == type && itemSlot >= e.hotbarRangeStart && itemSlot <= e.hotbarRangeEnd
             }
         }
 
