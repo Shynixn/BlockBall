@@ -56,6 +56,11 @@ interface SoccerGame {
     val arena: SoccerArena
 
     /**
+     * On Stuck of arena forcefield bounces.
+     */
+    var consecutiveBounceCount: Int
+
+    /**
      * Red club in club mode.
      */
     var redClub: Guild?

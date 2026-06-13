@@ -81,6 +81,11 @@ abstract class SoccerGameImpl(
     override var subStateEndTimeStamp: Long = Long.MAX_VALUE
 
     /**
+     * On Stuck of arena forceField bounces.
+     */
+    override var consecutiveBounceCount: Int = 0
+
+    /**
      * The next substate in the game.
      */
     override var subStateNext: GameSubState = GameSubState.FREE
@@ -139,6 +144,8 @@ abstract class SoccerGameImpl(
      * SoccerBall.
      */
     override var ball: SoccerBall? = null
+
+
 
     /**
      * Contains players which are in cooldown by doublejump.

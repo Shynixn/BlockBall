@@ -3,6 +3,7 @@ package com.github.shynixn.blockball.entity
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 import org.bukkit.block.BlockFace
+import kotlin.math.abs
 
 open class Selection {
 
@@ -75,22 +76,37 @@ open class Selection {
      * in which the soccerArena can be reached.
      */
     fun getRelativeBlockDirectionToLocation(location: Vector3d): BlockFace {
-        if (location.blockX >= corner1!!.blockX && this.corner1!!.z >= location.z && this.corner2!!.z <= location.z) {
-            return BlockFace.WEST
-        }
+        // Dynamically resolve min/max coordinates regardless of how corners were selected
+        val minX = minOf(corner1!!.x, corner2!!.x)
+        val maxX = maxOf(corner1!!.x, corner2!!.x)
+        val minZ = minOf(corner1!!.z, corner2!!.z)
+        val maxZ = maxOf(corner1!!.z, corner2!!.z)
 
-        if (location.blockX <= corner2!!.blockX && this.corner1!!.z >= location.z && this.corner2!!.z <= location.z) {
-            return BlockFace.EAST
-        }
+        // Calculate the distance from the point to all 4 bounding planes
+        val distanceToEast = abs(location.x - maxX)
+        val distanceToWest = abs(location.x - minX)
+        val distanceToSouth = abs(location.z - maxZ)
+        val distanceToNorth = abs(location.z - minZ)
 
-        if (location.blockZ >= corner1!!.blockZ && this.corner1!!.x >= location.x && this.corner2!!.x <= location.x) {
-            return BlockFace.NORTH
-        }
+        // Find the smallest distance to determine which wall it hit/crossed
+        val minDistance = minOf(distanceToEast, distanceToWest, distanceToSouth, distanceToNorth)
 
-        if (location.blockZ <= corner2!!.blockZ && this.corner1!!.x >= location.x && this.corner2!!.x <= location.x) {
-            return BlockFace.SOUTH
+        return when (minDistance) {
+            distanceToWest -> {
+                BlockFace.WEST
+            }
+            distanceToEast -> {
+                BlockFace.EAST
+            }
+            distanceToNorth -> {
+                BlockFace.NORTH
+            }
+            distanceToSouth -> {
+                BlockFace.SOUTH
+            }
+            else -> {
+                BlockFace.DOWN
+            }
         }
-
-        return BlockFace.DOWN
     }
 }

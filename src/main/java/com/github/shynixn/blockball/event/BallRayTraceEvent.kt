@@ -26,7 +26,7 @@ class BallRayTraceEvent(
      * Gets the resulting position if the object actually
      * performs the raytrace. Current Position is the position of the ball.
      */
-    val targetLocation: Location,
+    var targetLocation: Location,
 
     /**
      * Block Direction which was hit. If hitBlock is false, it may contain any

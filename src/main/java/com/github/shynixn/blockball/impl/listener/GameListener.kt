@@ -17,6 +17,7 @@ import com.github.shynixn.blockball.event.BallActionEvent
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.blockball.impl.setInventoryContentsSecure
+import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -357,7 +358,7 @@ class GameListener(
 
     /**
      * Caches the last interacting entity with the ball.
-    */
+     */
     @EventHandler
     fun onBallInteractEvent(event: BallActionEvent) {
         val game = gameService.getAll().find { p -> p.ball != null && p.ball!! == event.ball }
@@ -395,7 +396,8 @@ class GameListener(
      */
     @EventHandler
     fun onBallRayTraceEvent(event: BallRayTraceEvent) {
-        val game = gameService.getAll().find { p -> p.ball != null && p.ball!! == event.ball && event.ball.isInteractable }
+        val game =
+            gameService.getAll().find { p -> p.ball != null && p.ball!! == event.ball && event.ball.isInteractable }
 
         if (game == null) {
             return
@@ -405,12 +407,16 @@ class GameListener(
         val targetPosition = event.targetLocation.toVector3d()
 
         if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(sourcePosition)) {
-            game.notifyBallInGoal(Team.RED)
+            plugin.launch {
+                game.notifyBallInGoal(Team.RED)
+            }
             return
         }
 
         if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(sourcePosition)) {
-            game.notifyBallInGoal(Team.BLUE)
+            plugin.launch {
+                game.notifyBallInGoal(Team.BLUE)
+            }
             return
         }
 
@@ -425,13 +431,21 @@ class GameListener(
         if (!game.arena.isLocationIn2dSelection(targetPosition)) {
             if (game.arena.ballOutOfBounds.forceField) {
                 event.hasHitBlock = true
+                event.targetLocation = sourcePosition.toLocation()
                 event.blockFace = game.arena.getRelativeBlockDirectionToLocation(targetPosition)
-                println("BLOCKFACE: " + event.blockFace)
+                game.consecutiveBounceCount++
+
+                if (game.consecutiveBounceCount >= 10) {
+                    event.ball.teleport(game.arena.ballSpawnPoint!!.toLocation())
+                    game.consecutiveBounceCount = 0
+                }
             } else {
                 event.ball.isInteractable = false
                 game.subStateLocationParam = targetPosition.toLocation()
                 game.setNextGameSubState(GameSubState.BALL_OUT_TELEPORT)
             }
+        } else {
+            game.consecutiveBounceCount = 0
         }
     }
 }
