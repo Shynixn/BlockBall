@@ -9,6 +9,8 @@ import com.github.shynixn.mcutils.packet.api.meta.enumeration.InteractionType
 import com.github.shynixn.mcutils.packet.api.packet.PacketInInteractEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.Action
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.plugin.Plugin
 
 class BallListener(private val plugin: Plugin, private val soccerBallService: SoccerBallService) : Listener {
@@ -30,6 +32,19 @@ class BallListener(private val plugin: Plugin, private val soccerBallService: So
             } else {
                 ball.applyInteraction(event.player, BallInputActionType.RIGHT_CLICK)
             }
+        }
+    }
+
+    /**
+     * Gets called when ball is already grabbed.
+     */
+    @EventHandler
+    fun onPlayerInteractEvent(event: PlayerInteractEvent) {
+        val ball = soccerBallService.getAll().firstOrNull { e -> e.grabbingPlayer == event.player }
+        if (event.action == Action.LEFT_CLICK_AIR || event.action == Action.LEFT_CLICK_BLOCK) {
+            ball?.applyInteraction(event.player, BallInputActionType.LEFT_CLICK)
+        } else if (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR) {
+            ball?.applyInteraction(event.player, BallInputActionType.RIGHT_CLICK)
         }
     }
 }

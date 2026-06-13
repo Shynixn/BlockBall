@@ -16,5 +16,5 @@ interface SoccerBallService : AutoCloseable {
     /**
      * Gets all active soccer balls.
      */
-    fun getAllActive(): List<SoccerBall>
+    fun getAll(): List<SoccerBall>
 }

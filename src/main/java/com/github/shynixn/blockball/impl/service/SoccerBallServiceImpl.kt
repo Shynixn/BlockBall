@@ -84,7 +84,7 @@ class SoccerBallServiceImpl(
     /**
      * Gets all active soccer balls.
      */
-    override fun getAllActive(): List<SoccerBall> {
+    override fun getAll(): List<SoccerBall> {
         return HashSet(soccerBallByEntity.values).toList()
     }
 

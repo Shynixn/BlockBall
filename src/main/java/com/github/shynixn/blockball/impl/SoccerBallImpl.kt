@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.impl
 
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.entity.SoccerBallMeta
+import com.github.shynixn.blockball.enumeration.BallExecuteActionType
 import com.github.shynixn.blockball.enumeration.BallTriggerActionType
 import com.github.shynixn.blockball.enumeration.BallInputActionType
 import com.github.shynixn.blockball.event.BallActionEvent
@@ -31,6 +32,7 @@ import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.random.Random
 
 /**
  * Implementation of the SoccerBall contract representing a physics-based ball entity in the game.
@@ -58,6 +60,11 @@ class SoccerBallImpl(
          * representation from slipping through solid block geometry over continuous steps.
          */
         const val RAYTRACE_OFFSET = 0.2
+
+        /**
+         * Random
+         */
+        val random = java.util.Random()
     }
 
     /**
@@ -127,7 +134,7 @@ class SoccerBallImpl(
     /**
      * The player currently holding or grabbing the ball, if any.
      */
-    override val grabbingPlayer: Player? = null
+    override var grabbingPlayer: Player? = null
 
     /**
      * Indicates whether players can interact with the ball.
@@ -207,10 +214,15 @@ class SoccerBallImpl(
             Bukkit.getPluginManager().callEvent(ballDeathEvent)
         }
 
+        resetGrabbingState()
         isDead = true
         for (player in playerTracker.cache.keys.toHashSet()) {
             removeEntityForPlayer(player)
         }
+        perPlayerCooldown.clear()
+        playerTracker.close()
+        grabbingPlayer = null
+        lockedPlayer = null
     }
 
     /**
@@ -223,8 +235,14 @@ class SoccerBallImpl(
             checkPlayerTouchInteractions()
         }
 
-        calculatePhysics(deltaMs)
-        checkAndHandleStuckBall()
+        if (grabbingPlayer != null) {
+            position = grabbingPlayer!!.location.toVector3d().addRelativeFront(1.0)
+            position.y += 1.0
+        } else {
+            calculatePhysics(deltaMs)
+            checkAndHandleStuckBall()
+        }
+
         updateEntityForAllPlayers()
     }
 
@@ -239,7 +257,14 @@ class SoccerBallImpl(
         }
 
         val ballTriggerActionEvent =
-            BallActionEvent(this, player, interactionMeta.executionType, interactionMeta.triggerType)
+            BallActionEvent(
+                this,
+                player,
+                ballInputActionType,
+                interactionMeta.executionType,
+                interactionMeta.triggerType,
+                interactionMeta
+            )
         Bukkit.getPluginManager().callEvent(ballTriggerActionEvent)
         if (ballTriggerActionEvent.isCancelled) {
             // Reset the global cooldown if the event was canceled to prevent locked states
@@ -247,28 +272,40 @@ class SoccerBallImpl(
             return
         }
 
-        // Grab directional looking coordinates to determine forward flat impulse values
-        val playerLocation = player.location
-        val yawDegrees = playerLocation.yaw.toDouble()
-        val yawRadians = Math.toRadians(yawDegrees)
+        if (interactionMeta.executionType == BallExecuteActionType.SHOOT) {
+            // Reset grabbing state.
+            resetGrabbingState()
 
-        // Protect against zero or negative mass definitions producing infinite values
-        val ballMass = meta.physics.mass.coerceAtLeast(0.01)
-        val horizontalForce = interactionMeta.horizontalImpulse / ballMass
-        val verticalForce = interactionMeta.verticalImpulse / ballMass
+            // Grab directional looking coordinates to determine forward flat impulse values
+            val playerLocation = player.location
+            val yawDegrees = playerLocation.yaw.toDouble()
+            val yawRadians = Math.toRadians(yawDegrees)
 
-        // Distribute planar forces flatly across coordinate offsets using standard trigonometry
-        val x = horizontalForce * -sin(yawRadians)
-        val z = horizontalForce * cos(yawRadians)
+            // Protect against zero or negative mass definitions producing infinite values
+            val ballMass = meta.physics.mass.coerceAtLeast(0.01)
+            val horizontalForce = interactionMeta.horizontalImpulse / ballMass
+            val verticalForce = interactionMeta.verticalImpulse / ballMass
 
-        // Assign linear velocity adjustments along with horizontal aerodynamic spin components
-        val calculatedVelocity = Vector(x, verticalForce, z)
-        this.setVelocity(calculatedVelocity, Vector(0.0, interactionMeta.spinImpulse / ballMass, 0.0))
+            // Distribute planar forces flatly across coordinate offsets using standard trigonometry
+            val x = horizontalForce * -sin(yawRadians)
+            val z = horizontalForce * cos(yawRadians)
 
-        // Play particle visual effects if configured
-        val effect = particleEffectService.getEffectMetaFromName(interactionMeta.effectName)
-        if (effect != null) {
-            particleEffectService.startEffect(effect, { getLocation() }, null, null)
+            // Assign linear velocity adjustments along with horizontal aerodynamic spin components
+            val calculatedVelocity = Vector(x, verticalForce, z)
+            this.setVelocity(calculatedVelocity, Vector(0.0, interactionMeta.spinImpulse / ballMass, 0.0))
+
+            // Play particle visual effects if configured
+            val effect = particleEffectService.getEffectMetaFromName(interactionMeta.effectName)
+            if (effect != null) {
+                particleEffectService.startEffect(effect, { getLocation() }, null, null)
+            }
+            return
+        }
+
+        if (interactionMeta.executionType == BallExecuteActionType.GRAB) {
+            grabbingPlayer = player
+            removeEntityForPlayer(player)
+            sendGrabbedInventory(player)
         }
     }
 
@@ -328,6 +365,10 @@ class SoccerBallImpl(
         // Process packets down to all localized tracking view clients
         val players = HashSet(playerTracker.cache.keys)
         for (player in players) {
+            if (player == grabbingPlayer) {
+                continue
+            }
+
             // Relocate the display armor stand object
             packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
                 it.entityId = renderEntityId
@@ -355,6 +396,10 @@ class SoccerBallImpl(
      * targeted entities (Interaction vs. Slime blocks) based on the active server engine version.
      */
     private fun spawnEntityForPlayer(player: Player) {
+        if (player == grabbingPlayer) {
+            return
+        }
+
         val renderLocation = getLocation()
 
         // Establish core baseline base armor stand visual model objects
@@ -531,6 +576,7 @@ class SoccerBallImpl(
         return triggerTypes.firstNotNullOfOrNull { type ->
             meta.interactions.firstOrNull { e ->
                 e.triggerType == type && itemSlot >= e.conditionHotBarRangeStart && itemSlot <= e.conditionHotBarRangeEnd
+                        && ((grabbingPlayer == null && !e.conditionGrabbed) || (grabbingPlayer != null && e.conditionGrabbed))
             }
         }
     }
@@ -783,5 +829,45 @@ class SoccerBallImpl(
             teleport(ballLocation)
             consecutiveBounceCount = 0
         }
+    }
+
+    private fun resetGrabbingState() {
+        if (grabbingPlayer != null) {
+            val grabbedPlayer = grabbingPlayer!!
+            grabbingPlayer = null
+            grabbedPlayer.updateInventory()
+            spawnEntityForPlayer(grabbedPlayer)
+        }
+    }
+
+    private fun sendGrabbedInventory(player: Player) {
+        val (hotbarStart, hotbarEnd, slots) = if (Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_9_R1)) {
+            Triple(36, 44, 46) // 1.9 to 1.21+ (Total 46 slots over network. 45 is Offhand)
+        } else {
+            Triple(36, 44, 45) // 1.8.8 (No offhand slot)
+        }
+
+        val inv = player.inventory
+        val fakeItem = itemService.toItemStack(meta.render.visualItem)
+
+        val compiledItems = Array<org.bukkit.inventory.ItemStack?>(slots) { null }
+
+        for (i in 0 until slots) {
+            compiledItems[i] = when {
+                i in hotbarStart..hotbarEnd -> fakeItem
+                i == 5 -> inv.helmet
+                i == 6 -> inv.chestplate
+                i == 7 -> inv.leggings
+                i == 8 -> inv.boots
+                i in 9 until hotbarStart -> inv.getItem(i)
+                else -> null
+            }
+        }
+
+        packetService.sendPacketOutInventoryContent(player, PacketOutInventoryContent().also {
+            it.containerId = 0
+            it.items = compiledItems
+            it.stateId = random.nextInt(999)
+        })
     }
 }

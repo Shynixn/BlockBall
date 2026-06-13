@@ -300,11 +300,6 @@ class GameListener(
         if (game.arena.enabled && game.arena.gameType == GameType.MINIGAME) {
             event.setCancelled(true)
         }
-
-        val ball = game.ball ?: return
-        if (ball.grabbingPlayer != null && ball.grabbingPlayer == event.player) {
-            ball.applyInteraction(event.player, BallInputActionType.LEFT_CLICK)
-        }
     }
 
     /**
