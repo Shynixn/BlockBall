@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.contract
 
 import com.github.shynixn.blockball.entity.SoccerBallMeta
-import com.github.shynixn.blockball.enumeration.ClickType
+import com.github.shynixn.blockball.enumeration.BallInputActionType
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
@@ -80,7 +80,7 @@ interface SoccerBall {
     /**
      * Checks if the player is interacting with the ball in some way.
      */
-    fun applyInteraction(player: Player, clickType: ClickType)
+    fun applyInteraction(player: Player, ballInputActionType: BallInputActionType)
 
     /**
      * Removes the ball.

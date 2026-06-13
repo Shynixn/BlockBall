@@ -7,7 +7,7 @@ class GameObjectCooldownTimer(val cooldownMs: Int) {
      * Executes the action.
      */
     fun execute() {
-       earliestNextExecutionTimeStamp = System.currentTimeMillis() + cooldownMs
+        earliestNextExecutionTimeStamp = System.currentTimeMillis() + cooldownMs
     }
 
     /**
@@ -15,5 +15,12 @@ class GameObjectCooldownTimer(val cooldownMs: Int) {
      */
     fun canExecute(): Boolean {
         return System.currentTimeMillis() >= earliestNextExecutionTimeStamp
+    }
+
+    /**
+     * Resets the cooldown.
+     */
+    fun reset() {
+        earliestNextExecutionTimeStamp = 0L
     }
 }

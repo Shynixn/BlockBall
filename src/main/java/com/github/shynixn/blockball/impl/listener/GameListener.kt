@@ -3,12 +3,11 @@
 package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.SoccerBallService
 import com.github.shynixn.blockball.contract.SoccerHubGame
 import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.PlayerInformation
-import com.github.shynixn.blockball.enumeration.ClickType
+import com.github.shynixn.blockball.enumeration.BallInputActionType
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.MatchTimeCloseType
 import com.github.shynixn.blockball.enumeration.Permission
@@ -301,7 +300,7 @@ class GameListener(
 
         val ball = game.ball ?: return
         if (ball.grabbingPlayer != null && ball.grabbingPlayer == event.player) {
-            ball.applyInteraction(event.player, ClickType.LEFT)
+            ball.applyInteraction(event.player, BallInputActionType.LEFT_CLICK)
         }
     }
 

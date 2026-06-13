@@ -1,7 +1,7 @@
 package com.github.shynixn.blockball.impl.listener
 
 import com.github.shynixn.blockball.contract.SoccerBallService
-import com.github.shynixn.blockball.enumeration.ClickType
+import com.github.shynixn.blockball.enumeration.BallInputActionType
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.regionDispatcher
 import com.github.shynixn.mcutils.packet.api.event.PacketAsyncEvent
@@ -26,9 +26,9 @@ class BallListener(private val plugin: Plugin, private val soccerBallService: So
         val ball = soccerBallService.getByEntityId(packet.entityId) ?: return
         plugin.launch(plugin.regionDispatcher(ball.getLocation())) {
             if (packet.actionType == InteractionType.ATTACK) {
-                ball.applyInteraction(event.player, ClickType.LEFT)
+                ball.applyInteraction(event.player, BallInputActionType.LEFT_CLICK)
             } else {
-                ball.applyInteraction(event.player, ClickType.RIGHT)
+                ball.applyInteraction(event.player, BallInputActionType.RIGHT_CLICK)
             }
         }
     }

@@ -257,7 +257,6 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
             val soccerBall = module!!.getService<SoccerBallService>().spawn("soccer_ball",location )
 
             delay(10000)
-            (soccerBall as SoccerBallImpl).enabledDump = false
         }
     }
 
