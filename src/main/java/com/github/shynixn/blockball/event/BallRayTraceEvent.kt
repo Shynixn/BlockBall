@@ -20,7 +20,7 @@ class BallRayTraceEvent(
     /**
      * Modifies if the raytrace has ended in a block hit.
      */
-    var hitBlock: Boolean = false,
+    var hasHitBlock: Boolean = false,
 
     /**
      * Gets the resulting position if the object actually

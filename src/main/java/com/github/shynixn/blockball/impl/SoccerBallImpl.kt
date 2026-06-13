@@ -681,9 +681,9 @@ class SoccerBallImpl(
             BallRayTraceEvent(this, rayTraceResult.hasHitBlock, rayTraceResult.targetLocation, rayTraceResult.blockFace)
         Bukkit.getPluginManager().callEvent(rayTraceEvent)
 
-        val targetPosition = rayTraceResult.targetLocation
-        val hasHitBlock = rayTraceResult.hasHitBlock
-        val blockDirectionHit = rayTraceResult.blockFace
+        val targetPosition = rayTraceEvent.targetLocation
+        val hasHitBlock = rayTraceEvent.hasHitBlock
+        val blockDirectionHit = rayTraceEvent.blockFace
 
         // Process geometric bounce calculations if a block collision interface is hit
         if (hasHitBlock) {
