@@ -6,6 +6,8 @@
 
 * #740 Fixed scoreboard race conditions which could cause players to see a wrong scoreboard.
 
+---
+
 ## Release 7.40.2
 
 ### Changes
