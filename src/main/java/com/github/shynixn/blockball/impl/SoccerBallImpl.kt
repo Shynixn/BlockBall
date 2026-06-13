@@ -183,12 +183,12 @@ class SoccerBallImpl(
         // 1. Convert horizontal yaw angles into radians for direction
         val yawRadians = Math.toRadians(yawDegrees)
 
-        // 2. Gather raw force configurations directly from the trigger action asset data
-        val horizontalForce = interactionMeta.horizontalImpulse
-        val verticalForce = interactionMeta.verticalImpulse
+        // 2. Gather raw force configurations and process through configured mass matrix limits
+        val ballMass = meta.physics.mass.coerceAtLeast(0.01)
+        val horizontalForce = interactionMeta.horizontalImpulse / ballMass
+        val verticalForce = interactionMeta.verticalImpulse / ballMass
 
         // 3. Compute vector components flatly across the 2D horizontal X/Z plane.
-        // This ignores player look pitch entirely, ensuring max horizontal power regardless of looking down.
         val x = horizontalForce * -Math.sin(yawRadians)
         val z = horizontalForce * Math.cos(yawRadians)
 
@@ -197,7 +197,7 @@ class SoccerBallImpl(
 
         // 5. Build the final Bukkit Vector and apply it to your soccer ball
         val calculatedVelocity = Vector(x, y, z)
-        this.setVelocity(calculatedVelocity, Vector(0.0, interactionMeta.spinImpulse, 0.0))
+        this.setVelocity(calculatedVelocity, Vector(0.0, interactionMeta.spinImpulse / ballMass, 0.0))
 
         // Apply Effect
         val effect = particleEffectService.getEffectMetaFromName(interactionMeta.effectName)
@@ -471,10 +471,8 @@ class SoccerBallImpl(
     }
 
     private fun vectorToYaw(vector: Vector): Float {
-        // Invert X because Minecraft yaw is reversed around the Y-axis
         var yaw = Math.toDegrees(atan2(-vector.x, vector.z))
 
-        // Normalize to the range (-180, 180]
         if (yaw < -180) {
             yaw += 360.0
         }
@@ -488,6 +486,7 @@ class SoccerBallImpl(
 
     private fun calculatePhysics(deltaMs: Int) {
         val tickScale = (deltaMs / 50.0).coerceAtMost(2.0)
+        val ballMass = meta.physics.mass.coerceAtLeast(0.01)
         writeDump("---- TICK SCALE: $tickScale")
 
         if (isOnGround) {
@@ -502,8 +501,6 @@ class SoccerBallImpl(
                 writeDump("[DEBUG-GROUND] Detached from surface! Setting isOnGround = false")
             } else {
                 writeDump("[DEBUG-GROUND] Maintained surface contact. Staying grounded.")
-
-                // Ground Friction: Friction against the turf dampens horizontal curve spinning quickly
                 spinY *= (1.0 - meta.physics.rollingFriction * 2.0 * tickScale).coerceIn(0.0, 1.0)
             }
         }
@@ -512,24 +509,14 @@ class SoccerBallImpl(
         writeDump("Motion-BeforePhysics: " + motion.x + "-" + motion.y + "-" + motion.z + " | isOnGround = $isOnGround")
         writeDump("Position-BeforePhysics: " + position.x + "-" + position.y + "-" + position.z)
 
-        // -------------------------------------------------------------------------
-        // MAGNUS EFFECT (CURVED SHOTS PHYSICS)
-        // -------------------------------------------------------------------------
+        // Magnus Effect Calculations
         if (!isOnGround && velocity.lengthSquared() > 0.01 && abs(spinY) > 0.01) {
-            // Create a direction vector representing the rotational spin axis around Y
             val spinVector = Vector(0.0, spinY, 0.0)
-
-            // Cross product produces a horizontal vector perfectly perpendicular to the direction of travel
             val curveForce = velocity.clone().crossProduct(spinVector)
-
-            // Scale curve acceleration according to your PhysicsMeta configurations and tick rates
             curveForce.multiply(meta.physics.curveMultiplier * tickScale)
-
-            // Apply curve acceleration directly onto horizontal velocity properties
             velocity.add(curveForce)
             writeDump("Applied curve force vector: ${curveForce.x}, ${curveForce.y}, ${curveForce.z}")
         }
-        // -------------------------------------------------------------------------
 
         if (isOnGround) {
             val friction = (1.0 - meta.physics.rollingFriction * tickScale).coerceAtLeast(0.0)
@@ -538,7 +525,8 @@ class SoccerBallImpl(
             velocity.y = 0.0
             writeDump("Applied Rolling Friction physics branch")
         } else {
-            velocity.y -= meta.physics.gravityModifier * tickScale
+            // Apply mass scaling directly onto falling velocity modifiers
+            velocity.y -= (meta.physics.gravityModifier / ballMass) * tickScale
             val drag = (1.0 - meta.physics.airDrag * tickScale).coerceAtLeast(0.0)
             velocity.x *= drag
             velocity.y *= drag
@@ -546,7 +534,6 @@ class SoccerBallImpl(
             writeDump("Applied Gravity and Drag physics branch")
         }
 
-        // --- DECAY RUNTIME SPIN OVER TIME ---
         if (abs(spinY) > 0.001) {
             val spinDragFactor = (1.0 - meta.physics.spinDrag * tickScale).coerceIn(0.0, 1.0)
             spinY *= spinDragFactor
@@ -564,17 +551,15 @@ class SoccerBallImpl(
             calculateNextRotation()
         }
 
-        // Capture dynamic yaw during high-velocity ticks before physics checks clear it
         if (abs(motion.x) > 0.001 || abs(motion.z) > 0.001) {
             this.lastYaw = vectorToYaw(motion)
         }
 
-        // Hard stop for ground state rolling when it runs completely out of steam
         if (isOnGround && abs(motion.x) < meta.physics.restVelocityThreshold && abs(motion.z) < meta.physics.restVelocityThreshold) {
             motion.x = 0.0
             motion.y = 0.0
             motion.z = 0.0
-            spinY = 0.0 // Ensure spinning drops dead when the ball settles completely
+            spinY = 0.0
             writeDump("Ball rolling speed dropped below threshold. Stopping completely.")
             return
         }
@@ -584,10 +569,8 @@ class SoccerBallImpl(
             return
         }
 
-        // Perform RayTracing step
         rayTrace(position, motion)
 
-        // Snap to ground to avoid micro bounces.
         if (!isOnGround && motion.y < 0.0 && abs(motion.y) < meta.physics.restVelocityThreshold) {
             val groundProbe = Vector(0.0, -0.5, 0.0)
             val movementLength = groundProbe.length()
@@ -597,7 +580,7 @@ class SoccerBallImpl(
             if (groundResult.hasHitBlock && groundResult.blockFace!!.modY > 0.5) {
                 position.y = groundResult.targetLocation.y
                 isOnGround = true
-                motion.y = 0.0 // Clear only vertical velocity!
+                motion.y = 0.0
                 println("SNAP")
                 writeDump("Stop vertical fallback flight. Snapped to ground floor. Remaining XZ velocity preserved for rolling.")
             }
@@ -610,8 +593,7 @@ class SoccerBallImpl(
         val movementLength = motion.length()
         val maxTraceDistance = movementLength.coerceAtLeast(0.01)
 
-        val customRaytracing = CustomRayTracingServiceNativeImpl()
-        val rayTraceResult = customRaytracing.rayTrace(
+        val rayTraceResult = rayTracingService.rayTrace(
             rayTraceStartPosition.toLocation(),
             motion.clone(),
             maxTraceDistance,
@@ -639,44 +621,36 @@ class SoccerBallImpl(
             val normal = Vector(normalX, normalY, normalZ)
             val dot = velocity.dot(normal)
 
-            // Reflect velocity safely using the cloned vector normal
             velocity.subtract(normal.clone().multiply((1.0 + meta.physics.bounciness) * dot))
 
             motion.x = velocity.x
             motion.y = velocity.y
             motion.z = velocity.z
 
-            // --- BOUNCE SPIN DAMPENING ---
-            // Lightly reverses and significantly dampens spin velocity on structural block collisions
             spinY *= -0.25
-
             val epsilon = 0.002
 
-            // If we hit a vertical wall (EAST, WEST, NORTH, SOUTH)
             if (abs(normal.x) > 0.1 || abs(normal.z) > 0.1) {
-                position.x = targetPosition.x + (normal.x * epsilon)
-                position.z = targetPosition.z + (normal.z * epsilon)
+                // Resolved Wall Collision: Add motion vector vectors to pass position boundaries outwards
+                position.x = targetPosition.x + (normal.x * epsilon) + motion.x
+                position.z = targetPosition.z + (normal.z * epsilon) + motion.z
                 position.y = originalY + motion.y
                 writeDump("HIT WALL")
             }
-            // If we hit a floor or ceiling (UP, DOWN)
             else if (abs(normal.y) > 0.1) {
                 position.x = targetPosition.x
                 position.z = targetPosition.z
 
-                // FIX: If we hit a floor surface (BlockFace.UP) from above
                 if (normal.y > 0.1) {
-                    // Check if vertical speed is low enough to drop into rolling physics
                     if (motion.y <= 0.0 || abs(motion.y) < (meta.physics.restVelocityThreshold * 4.0)) {
-                        position.y = targetPosition.y - 0.2 // Anchor perfectly to the block floor
+                        position.y = targetPosition.y - 0.2
                         this.isOnGround = true
-                        this.motion.y = 0.0 // Completely kill the vertical bounce bounce loop
+                        this.motion.y = 0.0
                         writeDump("HIT FLOAT -> Grounded smoothly. Velocity zeroed.")
                         return
                     }
                 }
 
-                // Normal bouncing tracking for high speed drops
                 position.y = (targetPosition.y - 0.2) + (normal.y * epsilon)
                 writeDump("HIT FLOAT")
             }
@@ -709,7 +683,6 @@ class SoccerBallImpl(
         if (horizontalSpeed > minimumSpeedToShowRotation) {
             val degreesPerTick = horizontalSpeed * degreesPerSpeedValueMultiplier + minimumDegreesWhenStillMoving
 
-            // Accumulate rotation smoothly, wrapping cleanly between 0.0 and 360.0
             rotationDegrees = (rotationDegrees - degreesPerTick) % 360.0
             if (rotationDegrees < 0) {
                 rotationDegrees += 360.0
@@ -717,34 +690,13 @@ class SoccerBallImpl(
         }
     }
 
-    /**
-     * Detects if the ball is infinitely bouncing or stuck, and teleports it to the nearest player.
-     */
     private fun checkAndHandleStuckBall() {
-        if (consecutiveBounceCount >= 20) {
-            val ballLocation = getLocation()
-
-            // Find the nearest player out of the actively tracked nearby players
-            val nearestPlayer = playerTracker.cache.entries
-                .minByOrNull { entry -> entry.value.distanceSquared(ballLocation) }
-
-            if (nearestPlayer != null) {
-                val targetSpawnLocation = nearestPlayer.value.clone()
-                targetSpawnLocation.y += 0.5
-
-                // Execute fallback recovery
-                this.teleport(targetSpawnLocation)
-                this.isOnGround = false
-                println("[BlockBall] Ball became stuck! Resetting to player: ${nearestPlayer.key.name}")
-            }
-
-            // Reset counter after executing fallback
-            consecutiveBounceCount = 0
-        } else if (consecutiveBounceCount >= 10) {
+        if (consecutiveBounceCount >= 10) {
             val ballLocation = getLocation()
             ballLocation.y += 1
             teleport(ballLocation)
             println("Simple recovery")
+            consecutiveBounceCount = 0
         }
     }
 
