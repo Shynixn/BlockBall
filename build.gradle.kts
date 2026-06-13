@@ -70,7 +70,7 @@ registerPluginJar("1.17.0-1.21.11-premium", "plugin-1.17.0-1.21.11.yml")
 registerPluginJar("1.17.0-1.21.11-premium-folia", "plugin-1.17.0-1.21.11-folia.yml", isFolia = true)
 registerPluginJar("26.1.0-latest-premium", "plugin-26.1.0-latest.yml")
 registerPluginJar("26.1.0-latest-premium-folia", "plugin-26.1.0-latest-folia.yml", isFolia = true)
-registerPluginJar("26.1.0-latest-free", "plugin-26.1.0-latest.yml", excludeOldNms = true, debug = true)
+registerPluginJar("26.1.0-latest-free", "plugin-26.1.0-latest.yml", excludeOldNms = true)
 
 fun registerPluginJar(
     taskName: String,
@@ -107,7 +107,7 @@ fun registerPluginJar(
             relocate("kotlinx", "com.github.shynixn.blockball.lib.kotlinx")
             relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intellij")
             relocate("org.jetbrains", "com.github.shynixn.blockball.lib.org.jetbrains")
-            relocate("javax", "com.github.shynixn.blockball.lib.javax")
+            relocate("org.slf4j", "com.github.shynixn.blockball.lib.org.slf4j")
             relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
         }
     }
@@ -143,7 +143,6 @@ fun registerPluginJar(
         exclude("kotlin/**")
         exclude("org/**")
         exclude("kotlinx/**")
-        exclude("javax/**")
         exclude("com/zaxxer/**")
         exclude("com/github/shynixn/shyscoreboard/**")
         exclude("com/github/shynixn/shyparticles/**")
