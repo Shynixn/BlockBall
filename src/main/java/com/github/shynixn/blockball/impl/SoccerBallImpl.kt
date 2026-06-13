@@ -234,9 +234,11 @@ class SoccerBallImpl(
         }
 
         val ball = this
-        plugin.launch(plugin.regionDispatcher(getLocation())) {
-            val ballDeathEvent = BallRemoveEvent(ball)
-            Bukkit.getPluginManager().callEvent(ballDeathEvent)
+        if (plugin.isEnabled) {
+            plugin.launch(plugin.regionDispatcher(getLocation())) {
+                val ballDeathEvent = BallRemoveEvent(ball)
+                Bukkit.getPluginManager().callEvent(ballDeathEvent)
+            }
         }
 
         cancelGrab()
