@@ -223,7 +223,6 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
         val plugin = this
         plugin.launch {
             val defaultSoccerBall = dataFolder.toPath().resolve("ball").resolve("soccer_ball.yml")
-            println("PATH: " + defaultSoccerBall.absolutePathString())
             soccerBallRepository.getAll()
             if (!Files.exists(defaultSoccerBall)) {
                 soccerBallRepository.save(SoccerBallMeta())
@@ -249,14 +248,6 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
             }
 
             Bukkit.getServer().consoleSender.sendMessage(prefix + ChatColor.GREEN + "Enabled BlockBall " + plugin.description.version + " by Shynixn")
-
-            delay(1000)
-            val player = Bukkit.getPlayer("Shynixn")!!
-            var location = Location(player.world, 1789.0, 4.0, -1627.0)
-            location = player.location.toVector3d().addRelativeFront(2.0).toLocation()
-            val soccerBall = module!!.getService<SoccerBallService>().spawn("soccer_ball",location )
-
-            delay(10000)
         }
     }
 

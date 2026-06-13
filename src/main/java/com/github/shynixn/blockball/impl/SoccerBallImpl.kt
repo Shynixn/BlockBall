@@ -7,6 +7,8 @@ import com.github.shynixn.blockball.enumeration.BallInputActionType
 import com.github.shynixn.blockball.event.BallActionEvent
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.BallRemoveEvent
+import com.github.shynixn.mccoroutine.folia.launch
+import com.github.shynixn.mccoroutine.folia.regionDispatcher
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.item.ItemService
@@ -195,18 +197,14 @@ class SoccerBallImpl(
      * Destroys virtual entity registrations and clears them from all active client-side view contexts.
      */
     override fun remove() {
-        if (!Bukkit.isPrimaryThread()) {
-            throw IllegalArgumentException("Thread violation!")
-        }
-
         if (isDead) {
             return
         }
 
-        val ballDeathEvent = BallRemoveEvent(this)
-        Bukkit.getPluginManager().callEvent(ballDeathEvent)
-        if (ballDeathEvent.isCancelled) {
-            return
+        val ball = this
+        plugin.launch(plugin.regionDispatcher(getLocation())) {
+            val ballDeathEvent = BallRemoveEvent(ball)
+            Bukkit.getPluginManager().callEvent(ballDeathEvent)
         }
 
         isDead = true
@@ -471,7 +469,10 @@ class SoccerBallImpl(
      * Evaluates a player's physical context (sneaking, sprinting, jumping, hotbar selections)
      * against asset maps to determine the matching interaction target profile.
      */
-    private fun findPlayerAction(player: Player, ballInputActionType: BallInputActionType): SoccerBallMeta.InteractionMeta? {
+    private fun findPlayerAction(
+        player: Player,
+        ballInputActionType: BallInputActionType
+    ): SoccerBallMeta.InteractionMeta? {
         // Map dynamic locomotion context sets into contextual prioritized arrays
         val triggerTypes = when {
             ballInputActionType == BallInputActionType.LEFT_CLICK && player.isSneaking -> arrayOf(

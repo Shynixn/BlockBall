@@ -117,11 +117,6 @@ interface SoccerGame {
     val ingamePlayersStorage: MutableMap<Player, GameStorage>
 
     /**
-     * SoccerBall bumper counter
-     */
-    var ballBumperCounter: Int
-
-    /**
      * Compatibility reference.
      */
     val language: BlockBallLanguage

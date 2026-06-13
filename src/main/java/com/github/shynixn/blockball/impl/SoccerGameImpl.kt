@@ -27,12 +27,12 @@ import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
-import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 import com.github.shynixn.shyguild.entity.Guild
 import kotlinx.coroutines.delay
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Server
+import org.bukkit.block.BlockFace
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.time.Instant
@@ -149,11 +149,6 @@ abstract class SoccerGameImpl(
      * Are currently players actively playing in this game?
      */
     var playing: Boolean = false
-
-    /**
-     * SoccerBall bumper counter
-     */
-    override var ballBumperCounter: Int = 0
 
     /**
      * Contains the players which have touched the ball from the same team.
@@ -553,7 +548,7 @@ abstract class SoccerGameImpl(
             GameSubState.BALL_RESPAWNED -> {
                 if (ballEnabled) {
                     destroyBall()
-                    ball = soccerBallService.spawnForGame(arena.ballName, arena.ballSpawnPoint!!.toLocation(), this)
+                    ball = soccerBallService.spawn(arena.ballName, arena.ballSpawnPoint!!.toLocation())
                     setNextGameSubState(GameSubState.FREE)
                 }
             }
@@ -684,7 +679,7 @@ abstract class SoccerGameImpl(
                 }
                 destroyBall()
                 val ballSpawnPoint = throwInLocation.toVector3d().addRelativeFront(1.0).toLocation()
-                ball = soccerBallService.spawnForGame(arena.ballName, ballSpawnPoint, this)
+                ball = soccerBallService.spawn(arena.ballName, ballSpawnPoint)
                 ball!!.isInteractable = false
                 createPlayerForceField(throwInLocation, throwInPlayer)
                 val timeoutDelay = arena.ballOutOfBounds.timeOutStartSec * 1000L
@@ -725,7 +720,7 @@ abstract class SoccerGameImpl(
                 }
                 destroyBall()
                 val ballSpawnPoint = cornerLocation.toVector3d().addRelativeFront(1.0).toLocation()
-                ball = soccerBallService.spawnForGame(arena.ballName, ballSpawnPoint, this)
+                ball = soccerBallService.spawn(arena.ballName, ballSpawnPoint)
                 ball!!.isInteractable = false
                 createPlayerForceField(cornerLocation, cornerPlayer)
                 val timeoutDelay = arena.ballOutOfBounds.timeOutStartSec * 1000L
@@ -763,7 +758,7 @@ abstract class SoccerGameImpl(
                 }
                 destroyBall()
                 val ballSpawnPoint = goalKickLocation.toVector3d().addRelativeFront(1.0).toLocation()
-                ball = soccerBallService.spawnForGame(arena.ballName, ballSpawnPoint, this)
+                ball = soccerBallService.spawn(arena.ballName, ballSpawnPoint)
                 ball!!.isInteractable = false
                 createPlayerForceField(goalKickLocation, goalKickPlayer)
                 val timeoutDelay = arena.ballOutOfBounds.timeOutStartSec * 1000L
@@ -1118,17 +1113,17 @@ abstract class SoccerGameImpl(
      * This gives the sideline position where a throw-in should be taken.
      * If the exit direction cannot be determined (DOWN), the ball spawn point is used as fallback.
      */
-    private fun findThrowInLocation(ballLocation: Vector3d, exitDirection: BlockDirection): Location {
+    private fun findThrowInLocation(ballLocation: Vector3d, exitDirection: BlockFace): Location {
         val c1 = arena.corner1!!   // higher X (WEST edge) / higher Z (NORTH edge)
         val c2 = arena.corner2!!   // lower  X (EAST edge) / lower  Z (SOUTH edge)
         val world = org.bukkit.Bukkit.getWorld(arena.ballSpawnPoint!!.world!!)
         val y = arena.ballSpawnPoint!!.y
 
         val location = when (exitDirection) {
-            BlockDirection.WEST -> Location(world, c1.x, y, ballLocation.z.coerceIn(c2.z, c1.z))
-            BlockDirection.EAST -> Location(world, c2.x, y, ballLocation.z.coerceIn(c2.z, c1.z))
-            BlockDirection.NORTH -> Location(world, ballLocation.x.coerceIn(c2.x, c1.x), y, c1.z)
-            BlockDirection.SOUTH -> Location(world, ballLocation.x.coerceIn(c2.x, c1.x), y, c2.z)
+            BlockFace.WEST -> Location(world, c1.x, y, ballLocation.z.coerceIn(c2.z, c1.z))
+            BlockFace.EAST -> Location(world, c2.x, y, ballLocation.z.coerceIn(c2.z, c1.z))
+            BlockFace.NORTH -> Location(world, ballLocation.x.coerceIn(c2.x, c1.x), y, c1.z)
+            BlockFace.SOUTH -> Location(world, ballLocation.x.coerceIn(c2.x, c1.x), y, c2.z)
             else -> arena.ballSpawnPoint!!.toLocation()
         }
 
@@ -1145,7 +1140,7 @@ abstract class SoccerGameImpl(
      * Returns the corner of the playing field nearest to [ballLocation] on the given [exitDirection] goal-line.
      * The player facing direction is set toward the arena center.
      */
-    private fun findCornerKickLocation(ballLocation: Vector3d, exitDirection: BlockDirection): Location {
+    private fun findCornerKickLocation(ballLocation: Vector3d, exitDirection: BlockFace): Location {
         val c1 = arena.corner1!!
         val c2 = arena.corner2!!
         val world = org.bukkit.Bukkit.getWorld(arena.ballSpawnPoint!!.world!!)
@@ -1154,22 +1149,22 @@ abstract class SoccerGameImpl(
         val centerZ = (c1.z + c2.z) / 2.0
 
         val location = when (exitDirection) {
-            BlockDirection.NORTH -> {
+            BlockFace.NORTH -> {
                 val cornerX = if (ballLocation.x >= centerX) c1.x else c2.x
                 Location(world, cornerX, y, c1.z)
             }
 
-            BlockDirection.SOUTH -> {
+            BlockFace.SOUTH -> {
                 val cornerX = if (ballLocation.x >= centerX) c1.x else c2.x
                 Location(world, cornerX, y, c2.z)
             }
 
-            BlockDirection.WEST -> {
+            BlockFace.WEST -> {
                 val cornerZ = if (ballLocation.z >= centerZ) c1.z else c2.z
                 Location(world, c1.x, y, cornerZ)
             }
 
-            BlockDirection.EAST -> {
+            BlockFace.EAST -> {
                 val cornerZ = if (ballLocation.z >= centerZ) c1.z else c2.z
                 Location(world, c2.x, y, cornerZ)
             }
@@ -1192,7 +1187,7 @@ abstract class SoccerGameImpl(
      */
     private fun findNearestOpposingPlayer(player: Player): Player {
         val opposingTeam = if (redTeam.contains(player)) blueTeam else redTeam
-        val ballPos: Vector3d? = ball?.getLocation()?.toVector3d() as Vector3d?
+        val ballPos: Vector3d? = ball?.getLocation()?.toVector3d()
         return opposingTeam.minByOrNull { p ->
             if (ballPos != null) p.location.toVector3d().distance(ballPos) else 0.0
         } ?: player
@@ -1237,7 +1232,7 @@ abstract class SoccerGameImpl(
      */
     override fun setBallToLocation(location: Location) {
         destroyBall()
-        ball = soccerBallService.spawnForGame(arena.ballName, location, this)
+        ball = soccerBallService.spawn(arena.ballName, location)
         ball!!.isInteractable = false // We always block interacting with the ball until the referee has started.
         setNextGameSubState(GameSubState.FREE)
     }

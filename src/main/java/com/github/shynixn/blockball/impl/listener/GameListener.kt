@@ -8,10 +8,12 @@ import com.github.shynixn.blockball.contract.SoccerMiniGame
 import com.github.shynixn.blockball.contract.SoccerRefereeGame
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.enumeration.BallInputActionType
+import com.github.shynixn.blockball.enumeration.GameSubState
 import com.github.shynixn.blockball.enumeration.GameType
 import com.github.shynixn.blockball.enumeration.MatchTimeCloseType
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.enumeration.Team
+import com.github.shynixn.blockball.event.BallActionEvent
 import com.github.shynixn.blockball.event.BallRayTraceEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.blockball.impl.setInventoryContentsSecure
@@ -353,13 +355,11 @@ class GameListener(
         }
     }
 
-
-
     /**
      * Caches the last interacting entity with the ball.
-
+    */
     @EventHandler
-    fun onBallInteractEvent(event: BallTouchPlayerEvent) {
+    fun onBallInteractEvent(event: BallActionEvent) {
         val game = gameService.getAll().find { p -> p.ball != null && p.ball!! == event.ball }
 
         if (game == null) {
@@ -387,7 +387,7 @@ class GameListener(
         while (interactionStack.size > 10) {
             interactionStack.removeLast()
         }
-    }*/
+    }
 
     /**
      * Is called when the ball requests to move to a target position.
@@ -395,51 +395,43 @@ class GameListener(
      */
     @EventHandler
     fun onBallRayTraceEvent(event: BallRayTraceEvent) {
-       /* for (game in gameService.getAll()) {
-            if (game.ball == event.ball && event.ball.isInteractable) {
-                val targetPosition = event.targetLocation.toVector3d()
-                val sourcePosition = event.ball.getLocation().toVector3d()
+        val game = gameService.getAll().find { p -> p.ball != null && p.ball!! == event.ball && event.ball.isInteractable }
 
-                if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(sourcePosition)) {
-                    game.notifyBallInGoal(Team.RED)
-                    return
-                }
+        if (game == null) {
+            return
+        }
 
-                if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(sourcePosition)) {
-                    game.notifyBallInGoal(Team.BLUE)
-                    return
-                }
+        val sourcePosition = event.ball.getLocation().toVector3d()
+        val targetPosition = event.targetLocation.toVector3d()
 
-                if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(targetPosition)) {
-                    return
-                }
+        if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(sourcePosition)) {
+            game.notifyBallInGoal(Team.RED)
+            return
+        }
 
-                if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(targetPosition)) {
-                    return
-                }
-                if (!game.arena.isLocationIn2dSelection(targetPosition)) {
-                    if (game.arena.ballOutOfBounds.forceField) {
-                        event.hitBlock = true
-                        event.blockDirection = game.arena.getRelativeBlockDirectionToLocation(targetPosition)
-                        game.ballBumperCounter++
+        if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(sourcePosition)) {
+            game.notifyBallInGoal(Team.BLUE)
+            return
+        }
 
-                        if (game.ballBumperCounter > 60) {
-                            // Rescue system, if the ball gets stuck in the walls.
-                            event.ball.teleport(game.arena.ballSpawnPoint!!.toLocation())
-                            game.ballBumperCounter = 0
-                        }
-                        return
-                    } else {
-                        event.ball.isInteractable = false
-                        game.subStateLocationParam = targetPosition.toLocation()
-                        game.setNextGameSubState(GameSubState.BALL_OUT_TELEPORT)
-                    }
-                } else {
-                    game.ballBumperCounter = 0
-                }
+        if (game.arena.meta.redTeamMeta.goal.isLocationInSelection(targetPosition)) {
+            return
+        }
 
-                return
+        if (game.arena.meta.blueTeamMeta.goal.isLocationInSelection(targetPosition)) {
+            return
+        }
+
+        if (!game.arena.isLocationIn2dSelection(targetPosition)) {
+            if (game.arena.ballOutOfBounds.forceField) {
+                event.hasHitBlock = true
+                event.blockFace = game.arena.getRelativeBlockDirectionToLocation(targetPosition)
+                println("BLOCKFACE: " + event.blockFace)
+            } else {
+                event.ball.isInteractable = false
+                game.subStateLocationParam = targetPosition.toLocation()
+                game.setNextGameSubState(GameSubState.BALL_OUT_TELEPORT)
             }
-        }*/
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
+import org.bukkit.block.BlockFace
 
 open class Selection {
 
@@ -73,23 +74,23 @@ open class Selection {
      * If the given location is outside the soccerArena it returns the block direction
      * in which the soccerArena can be reached.
      */
-    fun getRelativeBlockDirectionToLocation(location: Vector3d): BlockDirection {
+    fun getRelativeBlockDirectionToLocation(location: Vector3d): BlockFace {
         if (location.blockX >= corner1!!.blockX && this.corner1!!.z >= location.z && this.corner2!!.z <= location.z) {
-            return BlockDirection.WEST
+            return BlockFace.WEST
         }
 
         if (location.blockX <= corner2!!.blockX && this.corner1!!.z >= location.z && this.corner2!!.z <= location.z) {
-            return BlockDirection.EAST
+            return BlockFace.EAST
         }
 
         if (location.blockZ >= corner1!!.blockZ && this.corner1!!.x >= location.x && this.corner2!!.x <= location.x) {
-            return BlockDirection.NORTH
+            return BlockFace.NORTH
         }
 
         if (location.blockZ <= corner2!!.blockZ && this.corner1!!.x >= location.x && this.corner2!!.x <= location.x) {
-            return BlockDirection.SOUTH
+            return BlockFace.SOUTH
         }
 
-        return BlockDirection.DOWN
+        return BlockFace.DOWN
     }
 }

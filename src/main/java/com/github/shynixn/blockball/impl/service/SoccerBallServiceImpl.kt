@@ -32,17 +32,6 @@ class SoccerBallServiceImpl(
      * Spawns a soccer ball of the given name.
      */
     override fun spawn(name: String, location: Location): SoccerBall {
-        return spawnBall(name, location, null)
-    }
-
-    /**
-     * Spawns a soccer ball of the given name and attaches it to a game.
-     */
-    override fun spawnForGame(name: String, location: Location, game: SoccerGame): SoccerBall {
-        return spawnBall(name, location, game)
-    }
-
-    private fun spawnBall(name: String, location: Location, game: SoccerGame?): SoccerBall {
         val renderEntityId = packetService.getNextEntityId(location.world!!)
         val hitBoxEntityId = packetService.getNextEntityId(location.world!!)
         val ballMeta = repository.getCache()?.firstOrNull() { e -> e.name.equals(name, true) }

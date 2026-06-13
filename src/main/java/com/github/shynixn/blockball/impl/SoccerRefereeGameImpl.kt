@@ -232,8 +232,8 @@ class SoccerRefereeGameImpl(
             GameSubState.BALL_RESPAWNED -> {
                 if (ballEnabled) {
                     destroyBall()
-                    ball = soccerBallService.spawnForGame(
-                        arena.ballName, arena.ballSpawnPoint!!.toLocation(), this
+                    ball = soccerBallService.spawn(
+                        arena.ballName, arena.ballSpawnPoint!!.toLocation()
                     )
                     ball!!.isInteractable = false
                     setNextGameSubState(GameSubState.FREE)
