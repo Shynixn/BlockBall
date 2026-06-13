@@ -94,7 +94,8 @@ class BlockBallDependencyInjectionModule(
                     plugin.dataFolder.toPath().resolve("ball"),
                     listOf(
                         "ball/soccer_ball.yml" to "soccer_ball.yml",
-                        "ball/curve_soccer_ball.yml" to "curve_soccer_ball.yml"
+                        "ball/curve_soccer_ball.yml" to "curve_soccer_ball.yml",
+                        "ball/hand_ball.yml" to "hand_ball.yml"
                     ),
                     listOf(),
                     object : TypeReference<SoccerBallMeta>() {}
