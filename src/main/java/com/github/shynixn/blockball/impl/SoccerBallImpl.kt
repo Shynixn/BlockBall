@@ -51,9 +51,8 @@ class SoccerBallImpl(
 ) : SoccerBall {
     companion object {
         const val SCALE: String = "scale"
+        const val RAYTRACE_OFFSET = 0.2
     }
-
-    private var consecutiveBounceCount: Int = 0
 
     // Properties
     private var position: Vector3d = location.toVector3d()
@@ -61,6 +60,7 @@ class SoccerBallImpl(
     private var rotationDegrees: Double = 0.0
     private var spinY: Double = 0.0
     private var lastYaw: Float = 0.0F
+    private var consecutiveBounceCount: Int = 0
 
     // Tracker
     private val playerTracker = GameObjectPlayerTracker(
@@ -589,7 +589,7 @@ class SoccerBallImpl(
 
     private fun rayTrace(position: Vector3d, motion: Vector) {
         val originalY = position.y
-        val rayTraceStartPosition = position.copy().add(0.0, 0.2, 0.0)
+        val rayTraceStartPosition = position.copy().add(0.0,RAYTRACE_OFFSET, 0.0)
         val movementLength = motion.length()
         val maxTraceDistance = movementLength.coerceAtLeast(0.01)
 
@@ -631,10 +631,9 @@ class SoccerBallImpl(
             val epsilon = 0.002
 
             if (abs(normal.x) > 0.1 || abs(normal.z) > 0.1) {
-                // Resolved Wall Collision: Add motion vector vectors to pass position boundaries outwards
-                position.x = targetPosition.x + (normal.x * epsilon) + motion.x
-                position.z = targetPosition.z + (normal.z * epsilon) + motion.z
-                position.y = originalY + motion.y
+                position.x = targetPosition.x + (normal.x * epsilon)
+                position.z = targetPosition.z + (normal.z * epsilon)
+                position.y = targetPosition.y // Keep the raycast hit Y to avoid vertical drift during wall slides
                 writeDump("HIT WALL")
             }
             else if (abs(normal.y) > 0.1) {
@@ -643,7 +642,7 @@ class SoccerBallImpl(
 
                 if (normal.y > 0.1) {
                     if (motion.y <= 0.0 || abs(motion.y) < (meta.physics.restVelocityThreshold * 4.0)) {
-                        position.y = targetPosition.y - 0.2
+                        position.y = targetPosition.y - RAYTRACE_OFFSET
                         this.isOnGround = true
                         this.motion.y = 0.0
                         writeDump("HIT FLOAT -> Grounded smoothly. Velocity zeroed.")
@@ -651,7 +650,7 @@ class SoccerBallImpl(
                     }
                 }
 
-                position.y = (targetPosition.y - 0.2) + (normal.y * epsilon)
+                position.y = (targetPosition.y - RAYTRACE_OFFSET) + (normal.y * epsilon)
                 writeDump("HIT FLOAT")
             }
         } else {
