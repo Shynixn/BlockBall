@@ -6,7 +6,6 @@ import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.enumeration.PlaceHolder
-import com.github.shynixn.blockball.impl.SoccerBallImpl
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
 import com.github.shynixn.blockball.impl.listener.*
@@ -222,12 +221,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
             .register(GameService::class.java, module!!.getService<GameService>(), this, ServicePriority.Normal)
         val plugin = this
         plugin.launch {
-            val defaultSoccerBall = dataFolder.toPath().resolve("ball").resolve("soccer_ball.yml")
-            soccerBallRepository.getAll()
-            if (!Files.exists(defaultSoccerBall)) {
-                soccerBallRepository.save(SoccerBallMeta())
-                soccerBallRepository.clearCache()
-            }
+            // Load Balls
             soccerBallRepository.getAll()
 
             // Load Games

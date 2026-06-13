@@ -26,19 +26,6 @@ class SoccerBallMeta : Element {
     @Comment("Gameplay modifiers determining how players interact with the ball via hotbars and clicks.")
     val interactions: MutableList<InteractionMeta> = ArrayList()
 
-    init {
-        interactions.add(InteractionMeta().also {
-            it.triggerType = BallTriggerActionType.COLLIDE
-            it.executionType = BallExecuteActionType.SHOOT
-        })
-        interactions.add(InteractionMeta().also {
-            it.triggerType = BallTriggerActionType.LEFT_CLICK
-            it.executionType = BallExecuteActionType.SHOOT
-            it.horizontalImpulse = 1.0
-            it.verticalImpulse = 0.5
-        })
-    }
-
     class InteractionMeta {
         @Comment(
             "The input trigger required to execute this action. Available types:",

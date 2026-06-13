@@ -92,7 +92,10 @@ class BlockBallDependencyInjectionModule(
                     plugin,
                     "ball",
                     plugin.dataFolder.toPath().resolve("ball"),
-                    listOf(),
+                    listOf(
+                        "ball/soccer_ball.yml" to "soccer_ball.yml",
+                        "ball/curve_soccer_ball.yml" to "curve_soccer_ball.yml"
+                    ),
                     listOf(),
                     object : TypeReference<SoccerBallMeta>() {}
                 ))
@@ -199,7 +202,14 @@ class BlockBallDependencyInjectionModule(
             )
         }
         module.addService<SoccerBallService> {
-            SoccerBallServiceImpl(module.getService(), module.getService(), module.getService(), module.getService(),module.getService(),module.getService())
+            SoccerBallServiceImpl(
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService()
+            )
         }
         module.addService<BallListener> { BallListener(module.getService(), module.getService()) }
         module.addService<DoubleJumpListener> {
