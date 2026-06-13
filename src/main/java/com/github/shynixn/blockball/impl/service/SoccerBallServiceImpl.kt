@@ -2,16 +2,15 @@ package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.SoccerBall
 import com.github.shynixn.blockball.contract.SoccerBallService
-import com.github.shynixn.blockball.contract.SoccerGame
 import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.event.BallSpawnEvent
-import com.github.shynixn.blockball.impl.CustomRayTracingServiceNativeImpl
 import com.github.shynixn.blockball.impl.SoccerBallImpl
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.regionDispatcher
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.repository.CacheRepository
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.shyparticles.contract.ParticleEffectService
 import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
@@ -21,7 +20,7 @@ import org.bukkit.plugin.Plugin
 class SoccerBallServiceImpl(
     private val repository: CacheRepository<SoccerBallMeta>,
     private val packetService: PacketService,
-    private val rayTracingService: CustomRayTracingServiceNativeImpl,
+    private val rayTracingService: RayTracingService,
     private val itemService: ItemService,
     private val particleEffectService: ParticleEffectService,
     private val plugin: Plugin

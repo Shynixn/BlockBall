@@ -1,7 +1,6 @@
 package com.github.shynixn.blockball.entity
 
 import com.github.shynixn.mcutils.common.Vector3d
-import com.github.shynixn.mcutils.packet.api.meta.enumeration.BlockDirection
 import org.bukkit.block.BlockFace
 import kotlin.math.abs
 

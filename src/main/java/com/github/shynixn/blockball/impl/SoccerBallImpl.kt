@@ -16,6 +16,7 @@ import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.PacketService
+import com.github.shynixn.mcutils.packet.api.RayTracingService
 import com.github.shynixn.mcutils.packet.api.meta.EntityAttribute
 import com.github.shynixn.mcutils.packet.api.meta.InteractionMetadata
 import com.github.shynixn.mcutils.packet.api.meta.enumeration.ArmorSlotType
@@ -40,7 +41,7 @@ class SoccerBallImpl(
     location: Location,
     private val packetService: PacketService,
     private val particleEffectService: ParticleEffectService,
-    private val rayTracingService: CustomRayTracingServiceNativeImpl,
+    private val rayTracingService: RayTracingService,
     private val plugin: Plugin,
     private val itemService: ItemService,
     override val meta: SoccerBallMeta,
@@ -619,7 +620,7 @@ class SoccerBallImpl(
         // Verify that ground attachment profiles remain valid via downward trace rays
         if (isOnGround) {
             val groundProbe = Vector(0.0, -0.05, 0.0)
-            val groundCheck = rayTracingService.rayTrace(
+            val groundCheck = rayTracingService.rayTraceMotion(
                 position.toLocation(), groundProbe, groundProbe.length().coerceAtLeast(0.01), false, false
             )
             if (!groundCheck.hasHitBlock) {
@@ -696,7 +697,7 @@ class SoccerBallImpl(
         // Prevent mathematical micro-bounces near surfaces by snapping down safely
         if (!isOnGround && motion.y < 0.0 && abs(motion.y) < meta.physics.restVelocityThreshold) {
             val groundProbe = Vector(0.0, -0.5, 0.0)
-            val groundResult = rayTracingService.rayTrace(
+            val groundResult = rayTracingService.rayTraceMotion(
                 position.toLocation(), groundProbe, groundProbe.length().coerceAtLeast(0.01), false, false
             )
             if (groundResult.hasHitBlock && groundResult.blockFace!!.modY > 0.5) {
@@ -717,7 +718,7 @@ class SoccerBallImpl(
         val maxTraceDistance = motion.length().coerceAtLeast(0.01)
 
         // Issue bounding inquiries down into block collision maps
-        val rayTraceResult = rayTracingService.rayTrace(
+        val rayTraceResult = rayTracingService.rayTraceMotion(
             rayTraceStartPosition.toLocation(), motion.clone(), maxTraceDistance, false, false
         )
 
