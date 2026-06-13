@@ -54,8 +54,8 @@ class SoccerBallMeta : Element {
         @Comment("The ending index (0-8) of the player's hotbar range allowed to trigger this action.")
         var conditionHotBarRangeEnd: Int = 8
 
-        @Comment("If set to true then this action is only executed when the ball is grabbed.")
-        var conditionGrabbed : Boolean = false
+        @Comment("If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.")
+        var conditionGrabbedBySelf : Boolean = false
 
         @Comment("The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB")
         var executionType: BallExecuteActionType = BallExecuteActionType.SHOOT

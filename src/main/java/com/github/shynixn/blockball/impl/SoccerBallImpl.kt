@@ -585,7 +585,8 @@ class SoccerBallImpl(
         val itemSlot = player.inventory.heldItemSlot
         return triggerTypes.firstNotNullOfOrNull { type ->
             meta.interactions.firstOrNull { e ->
-                e.triggerType == type && itemSlot >= e.conditionHotBarRangeStart && itemSlot <= e.conditionHotBarRangeEnd && ((grabbingPlayer == null && !e.conditionGrabbed) || (grabbingPlayer != null && e.conditionGrabbed))
+                e.triggerType == type && itemSlot >= e.conditionHotBarRangeStart && itemSlot <= e.conditionHotBarRangeEnd
+                        && ((grabbingPlayer != player && !e.conditionGrabbedBySelf) || (grabbingPlayer == player && e.conditionGrabbedBySelf))
             }
         }
     }
