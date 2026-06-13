@@ -29,32 +29,28 @@ import kotlin.math.abs
 import kotlin.math.atan2
 
 class SoccerBallImpl(
-    location: Location, private val packetService: PacketService,
+    location: Location,
+    private val packetService: PacketService,
     private val particleEffectService: ParticleEffectService,
     private val rayTracingService: CustomRayTracingServiceNativeImpl,
     private val plugin: Plugin,
     private val itemService: ItemService,
-    /**
-     * Gets the metadata.
-     */
     override val meta: SoccerBallMeta,
-
-    /**
-     * Entity id of the hitbox.
-     */
     override val hitBoxEntityId: Int,
-
-    /**
-     * Entity id of the render.
-     */
     override val renderEntityId: Int
 ) : SoccerBall {
+
     companion object {
         const val SCALE: String = "scale"
+
+        /**
+         * Vertical buffer offset used during ray-tracing calculations to keep the point-mass
+         * representation from slipping through solid block geometry over continuous steps.
+         */
         const val RAYTRACE_OFFSET = 0.2
     }
 
-    // Properties
+    // --- Core Kinematic & Structural Properties ---
     private var position: Vector3d = location.toVector3d()
     private var motion: Vector = Vector(0.0, -0.7, 0.0)
     private var rotationDegrees: Double = 0.0
@@ -62,77 +58,47 @@ class SoccerBallImpl(
     private var lastYaw: Float = 0.0F
     private var consecutiveBounceCount: Int = 0
 
-    // Tracker
+    // --- Entity Trackers & Network Utilities ---
     private val playerTracker = GameObjectPlayerTracker(
         meta.render.renderDistance,
         { p -> spawnEntityForPlayer(p) },
         { p -> removeEntityForPlayer(p) }
     )
 
-    // Interact Cooldowns
+    // --- Throttling & Input Cooldown Engines ---
     private val perPlayerCooldown = HashMap<Player, GameObjectCooldownTimer>()
     private val globalCooldown = GameObjectCooldownTimer(meta.physics.globalInteractionCooldownTicks * 50)
-
-    // Interval Timers
     private val playerFetchTimer = GameObjectIntervalTimer(meta.physics.fetchPlayerPositionsIntervalTicks * 50)
 
-    /**
-     * Gets if the entity is dead.
-     */
     override var isDead: Boolean = false
-
-    /**
-     * Gets if the ball is on ground.
-     */
     override var isOnGround: Boolean = false
-
-    /**
-     * If set, the ball is currently grabbed by a player.
-     */
     override val grabbingPlayer: Player? = null
-
-    /**
-     * Sets or gets if the ball can be interacted with.
-     */
     override var isInteractable: Boolean = true
-
-    /**
-     * If set, only this player can interact with the ball.
-     */
     override var lockedPlayer: Player? = null
 
     /**
-     * Teleports the ball to the given [location].
+     * Instantly relocates the ball to a target destination and clears rotational energy.
      */
     override fun teleport(location: Location) {
         this.position = location.toVector3d()
         this.spinY = 0.0
     }
 
-    /**
-     * Gets the location of the ball.
-     */
     override fun getLocation(): Location {
         return position.toLocation()
     }
 
-    /**
-     * Gets the velocity of the ball.
-     */
     override fun getVelocity(): Vector {
         return motion.clone()
     }
 
-    /**
-     * Sets the velocity of the ball.
-     */
     override fun setVelocity(velocity: Vector) {
         setVelocity(velocity, Vector(0.0, 0.0, 0.0))
     }
 
     /**
-     * Sets the velocity of the ball.
-     * Sets the y value of the spin vector to the horizontal spin.
+     * Explicitly updates the linear motion and vertical angular spin axes of the entity.
+     * Must be called synchronized on the primary server thread.
      */
     override fun setVelocity(velocity: Vector, spin: Vector) {
         if (!Bukkit.isPrimaryThread()) {
@@ -145,11 +111,9 @@ class SoccerBallImpl(
     }
 
     /**
-     * Checks if the player is interacting with the ball in some way.
+     * Evaluates thread and gameplay constraints before routing player inputs into action impulses.
      */
-    override fun applyInteraction(
-        player: Player, clickType: ClickType
-    ) {
+    override fun applyInteraction(player: Player, clickType: ClickType) {
         if (!Bukkit.isPrimaryThread()) {
             throw IllegalArgumentException("Thread violation!")
         }
@@ -162,44 +126,39 @@ class SoccerBallImpl(
     }
 
     /**
-     * Performs the actual player action to ball trigger action conversion.
+     * Maps user action context to configured execution profiles, computes multi-axis impulse
+     * distributions modified by ball mass constraints, and commits the resulting physics shifts.
      */
     private fun applyInteractionToBall(player: Player, clickType: ClickType) {
         val interactionMeta = findPlayerAction(player, clickType) ?: return
 
-        println("SHOOT!")
-
-        // Check Event
-        val ballTriggerActionEvent =
-            BallActionEvent(this, player, interactionMeta.executionType, interactionMeta.triggerType)
+        // Fire plugin event framework step
+        val ballTriggerActionEvent = BallActionEvent(this, player, interactionMeta.executionType, interactionMeta.triggerType)
         Bukkit.getPluginManager().callEvent(ballTriggerActionEvent)
         if (ballTriggerActionEvent.isCancelled) {
             return
         }
 
+        // Calculate planar horizontal look directions
         val playerLocation = player.location
         val yawDegrees = playerLocation.yaw.toDouble()
-
-        // 1. Convert horizontal yaw angles into radians for direction
         val yawRadians = Math.toRadians(yawDegrees)
 
-        // 2. Gather raw force configurations and process through configured mass matrix limits
+        // Process impulse distribution against mass constraints to determine target acceleration
         val ballMass = meta.physics.mass.coerceAtLeast(0.01)
         val horizontalForce = interactionMeta.horizontalImpulse / ballMass
         val verticalForce = interactionMeta.verticalImpulse / ballMass
 
-        // 3. Compute vector components flatly across the 2D horizontal X/Z plane.
+        // Distribute planar components flatly across the 2D horizontal coordinates
         val x = horizontalForce * -Math.sin(yawRadians)
         val z = horizontalForce * Math.cos(yawRadians)
-
-        // 4. Set the vertical velocity to directly follow your configuration value.
         val y = verticalForce
 
-        // 5. Build the final Bukkit Vector and apply it to your soccer ball
+        // Apply derived linear velocities and structural curve spin factors
         val calculatedVelocity = Vector(x, y, z)
         this.setVelocity(calculatedVelocity, Vector(0.0, interactionMeta.spinImpulse / ballMass, 0.0))
 
-        // Apply Effect
+        // Play particle assets if defined
         val effect = particleEffectService.getEffectMetaFromName(interactionMeta.effectName)
         if (effect != null) {
             particleEffectService.startEffect(effect, { getLocation() }, null, null)
@@ -207,7 +166,7 @@ class SoccerBallImpl(
     }
 
     /**
-     * Removes the ball.
+     * Destroys virtual entity registrations and clears them from all active client-side view contexts.
      */
     override fun remove() {
         if (isDead) {
@@ -216,7 +175,6 @@ class SoccerBallImpl(
 
         val ballDeathEvent = BallRemoveEvent(this)
         Bukkit.getPluginManager().callEvent(ballDeathEvent)
-
         if (ballDeathEvent.isCancelled) {
             return
         }
@@ -228,52 +186,60 @@ class SoccerBallImpl(
     }
 
     /**
-     * Delta Ms.
+     * The master ticker cycle managing positional fetches, environmental physics simulations,
+     * stuck-state resolution, and client-side visualization synchronization.
      */
     fun update(deltaMs: Int) {
-        // Fetch players
         if (playerFetchTimer.update(deltaMs)) {
             playerTracker.update(getLocation())
             checkPlayerTouchInteractions()
         }
 
-        // Calculate physics
         calculatePhysics(deltaMs)
-
-        // Check if ball is stuck
         checkAndHandleStuckBall()
-
-        // Send changes
         updateEntityForAllPlayers()
     }
 
+    /**
+     * Scans proximity profiles of tracked players to execute automatic collision contacts (touches)
+     * when a player breaks inside the structural bounds of the ball configuration.
+     */
     private fun checkPlayerTouchInteractions() {
         val playerLocationPairs = HashSet(playerTracker.cache.entries)
         val hitboxSize = meta.physics.collisionBoundsSize
         val ballLocation = getLocation()
+
         val playerHittingTheBall = playerLocationPairs.asSequence()
-            .map { e ->
-                Pair(e.key, e.value.distance(ballLocation))
-            }.filter { p -> p.second < hitboxSize }
-            .sortedBy { e -> e.second }.firstOrNull { e -> canPlayerInteractWithBall(e.first) }
+            .map { e -> Pair(e.key, e.value.distance(ballLocation)) }
+            .filter { p -> p.second < hitboxSize }
+            .sortedBy { e -> e.second }
+            .firstOrNull { e -> canPlayerInteractWithBall(e.first) }
 
         if (playerHittingTheBall != null) {
             applyInteractionToBall(playerHittingTheBall.first, ClickType.NONE)
         }
     }
 
+    /**
+     * Despawns virtual tracked packets from a targeted player's game client.
+     */
     private fun removeEntityForPlayer(player: Player) {
         packetService.sendPacketOutEntityDestroy(player, PacketOutEntityDestroy().also {
             it.entityIds = listOf(hitBoxEntityId, renderEntityId)
         })
     }
 
+    /**
+     * Generates and transmits virtual packet movements, client-side metadata updates, and structural
+     * roll rotations to all players within the visualization distance threshold.
+     */
     private fun updateEntityForAllPlayers() {
         val yaw = if (motion.x == 0.0 && motion.y == 0.0 && motion.z == 0.0) {
             lastYaw
         } else {
             vectorToYaw(getVelocity())
         }
+
         val renderLocation = getLocation()
         renderLocation.y += meta.render.visualVerticalOffset
         renderLocation.yaw = yaw
@@ -283,7 +249,6 @@ class SoccerBallImpl(
         hitBoxLocation.yaw = yaw
 
         val players = HashSet(playerTracker.cache.keys)
-
         for (player in players) {
             packetService.sendPacketOutEntityTeleport(player, PacketOutEntityTeleport().also {
                 it.entityId = renderEntityId
@@ -304,10 +269,14 @@ class SoccerBallImpl(
         }
     }
 
+    /**
+     * Builds and sends custom entity spawning sequences to newly tracking clients, selecting
+     * targeted entities (Interaction vs. Slime blocks) based on the active server engine version.
+     */
     private fun spawnEntityForPlayer(player: Player) {
         val renderLocation = getLocation()
 
-        // Armorstand
+        // Handle structural base ArmorStand initialization
         renderLocation.y += meta.render.visualVerticalOffset
         packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
             it.target = renderLocation
@@ -323,6 +292,7 @@ class SoccerBallImpl(
             })
         }
 
+        // Apply scale matrices according to server generation rules
         if (Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_20_R4)) {
             packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
                 it.entityId = renderEntityId
@@ -343,18 +313,16 @@ class SoccerBallImpl(
             })
         }
 
-        // HitBox
+        // Initialize structural physical tracking boundaries
         val hitBoxLocation = getLocation()
         hitBoxLocation.y += meta.physics.verticalOffset
 
         if (Version.serverVersion.isVersionSameOrGreaterThan(Version.VERSION_1_19_R3)) {
-            // We use the Interaction Entity since 1.19.4.
             packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
                 it.entityId = hitBoxEntityId
                 it.entityType = EntityType.INTERACTION
                 it.target = hitBoxLocation
             })
-
             packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
                 it.entityId = hitBoxEntityId
                 it.interactionMetadata = InteractionMetadata().also {
@@ -363,189 +331,138 @@ class SoccerBallImpl(
                 }
             })
         } else {
-            // Use Slime for older versions.
             packetService.sendPacketOutEntitySpawn(player, PacketOutEntitySpawn().also {
                 it.entityId = hitBoxEntityId
                 it.entityType = EntityType.SLIME
                 it.target = hitBoxLocation
             })
-
-            if (meta.render.slimeVisible) {
-                packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
-                    it.slimeSize = meta.physics.interactionBoundsSize.toInt()
-                    it.entityId = hitBoxEntityId
-                })
-            } else {
-                packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
-                    it.slimeSize = meta.physics.interactionBoundsSize.toInt()
-                    it.entityId = hitBoxEntityId
-                    it.isInvisible = true
-                })
-            }
+            packetService.sendPacketOutEntityMetadata(player, PacketOutEntityMetadata().also {
+                it.slimeSize = meta.physics.interactionBoundsSize.toInt()
+                it.entityId = hitBoxEntityId
+                if (!meta.render.slimeVisible) it.isInvisible = true
+            })
         }
     }
 
+    /**
+     * Assesses interaction state and tracks personal/global throttling cooldown thresholds
+     * to safeguard the physics thread from spam input corruption exploits.
+     */
     private fun canPlayerInteractWithBall(player: Player): Boolean {
-        println("TRY")
-
-        if (!isInteractable) {
-            return false
-        }
-
-        if (lockedPlayer != null && player != lockedPlayer) {
-            return false
-        }
-
-        if (!globalCooldown.canExecute()) {
-            println("GLOBAL COOLDOWN")
-            return false
-        }
+        if (!isInteractable) return false
+        if (lockedPlayer != null && player != lockedPlayer) return false
+        if (!globalCooldown.canExecute()) return false
 
         var playerCooldown = perPlayerCooldown[player]
         if (playerCooldown == null) {
             playerCooldown = GameObjectCooldownTimer(meta.physics.perPlayerInteractionCooldownTicks * 50)
             perPlayerCooldown[player] = playerCooldown
         }
-
-        if (!playerCooldown.canExecute()) {
-            println("PLAYER COOL")
-            return false
-        }
+        if (!playerCooldown.canExecute()) return false
 
         globalCooldown.execute()
         playerCooldown.execute()
-        println("EXECUTE")
         return true
     }
 
+    /**
+     * Evaluates a player's physical context (sneaking, sprinting, jumping, hotbar selections)
+     * against asset maps to determine the matching interaction target profile.
+     */
     private fun findPlayerAction(player: Player, clickType: ClickType): SoccerBallMeta.InteractionMeta? {
         val triggerTypes = when {
-            clickType == ClickType.LEFT && player.isSneaking ->
-                arrayOf(BallTriggerActionType.SNEAK_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK)
-
-            clickType == ClickType.LEFT && player.isSprinting ->
-                arrayOf(BallTriggerActionType.SPRINT_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK)
-
-            clickType == ClickType.LEFT && !player.isOnGround ->
-                arrayOf(BallTriggerActionType.JUMP_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK)
-
-            clickType == ClickType.RIGHT && player.isSneaking ->
-                arrayOf(BallTriggerActionType.SNEAK_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK)
-
-            clickType == ClickType.RIGHT && player.isSprinting ->
-                arrayOf(BallTriggerActionType.SPRINT_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK)
-
-            clickType == ClickType.RIGHT && !player.isOnGround ->
-                arrayOf(BallTriggerActionType.JUMP_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK)
-
-            clickType == ClickType.LEFT ->
-                arrayOf(BallTriggerActionType.LEFT_CLICK)
-
-            clickType == ClickType.RIGHT ->
-                arrayOf(BallTriggerActionType.RIGHT_CLICK)
-
-            clickType == ClickType.NONE && player.isSneaking ->
-                arrayOf(BallTriggerActionType.SNEAK_COLLIDE, BallTriggerActionType.COLLIDE)
-
-            clickType == ClickType.NONE && player.isSprinting ->
-                arrayOf(BallTriggerActionType.SPRINT_COLLIDE, BallTriggerActionType.COLLIDE)
-
-            clickType == ClickType.NONE && !player.isOnGround ->
-                arrayOf(BallTriggerActionType.JUMP_COLLIDE, BallTriggerActionType.COLLIDE)
-
-            clickType == ClickType.NONE ->
-                arrayOf(BallTriggerActionType.COLLIDE)
-
-            else ->
-                emptyArray()
+            clickType == ClickType.LEFT && player.isSneaking -> arrayOf(BallTriggerActionType.SNEAK_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK)
+            clickType == ClickType.LEFT && player.isSprinting -> arrayOf(BallTriggerActionType.SPRINT_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK)
+            clickType == ClickType.LEFT && !player.isOnGround -> arrayOf(BallTriggerActionType.JUMP_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK)
+            clickType == ClickType.RIGHT && player.isSneaking -> arrayOf(BallTriggerActionType.SNEAK_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK)
+            clickType == ClickType.RIGHT && player.isSprinting -> arrayOf(BallTriggerActionType.SPRINT_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK)
+            clickType == ClickType.RIGHT && !player.isOnGround -> arrayOf(BallTriggerActionType.JUMP_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK)
+            clickType == ClickType.LEFT -> arrayOf(BallTriggerActionType.LEFT_CLICK)
+            clickType == ClickType.RIGHT -> arrayOf(BallTriggerActionType.RIGHT_CLICK)
+            clickType == ClickType.NONE && player.isSneaking -> arrayOf(BallTriggerActionType.SNEAK_COLLIDE, BallTriggerActionType.COLLIDE)
+            clickType == ClickType.NONE && player.isSprinting -> arrayOf(BallTriggerActionType.SPRINT_COLLIDE, BallTriggerActionType.COLLIDE)
+            clickType == ClickType.NONE && !player.isOnGround -> arrayOf(BallTriggerActionType.JUMP_COLLIDE, BallTriggerActionType.COLLIDE)
+            clickType == ClickType.NONE -> arrayOf(BallTriggerActionType.COLLIDE)
+            else -> emptyArray()
         }
 
         val itemSlot = player.inventory.heldItemSlot
-        val interaction = triggerTypes.firstNotNullOfOrNull { type ->
+        return triggerTypes.firstNotNullOfOrNull { type ->
             meta.interactions.firstOrNull { e ->
                 e.triggerType == type && itemSlot >= e.conditionHotBarRangeStart && itemSlot <= e.conditionHotBarRangeEnd
             }
         }
-
-        return interaction
     }
 
+    /**
+     * Direct Translation vector converter yielding angular horizontal degrees mapped to
+     * standard Minecraft specifications. (-180 to 180 Range).
+     */
     private fun vectorToYaw(vector: Vector): Float {
         var yaw = Math.toDegrees(atan2(-vector.x, vector.z))
-
-        if (yaw < -180) {
-            yaw += 360.0
-        }
-        if (yaw > 180) {
-            yaw -= 360.0
-        }
-
+        if (yaw < -180) yaw += 360.0
+        if (yaw > 180) yaw -= 360.0
         return yaw.toFloat()
     }
 
-
+    /**
+     * Simulates continuous external physics over custom time steps. Tracks ground contact profiles,
+     * executes Magnus aerodynamic curved shots logic, calculates dampening frictions, and resolves
+     * rest thresholds.
+     */
     private fun calculatePhysics(deltaMs: Int) {
         val tickScale = (deltaMs / 50.0).coerceAtMost(2.0)
         val ballMass = meta.physics.mass.coerceAtLeast(0.01)
-        writeDump("---- TICK SCALE: $tickScale")
 
+        // Verify continuous structural surface attachment profiles
         if (isOnGround) {
-            writeDump("[DEBUG-GROUND] Evaluating ground check. Current Position Y: ${position.y}")
             val groundProbe = Vector(0.0, -0.05, 0.0)
-            val movementLength = groundProbe.length()
-            val maxTraceDistance = movementLength.coerceAtLeast(0.01)
-            val groundCheck =
-                rayTracingService.rayTrace(position.toLocation(), groundProbe, maxTraceDistance, false, false)
+            val groundCheck = rayTracingService.rayTrace(position.toLocation(), groundProbe, groundProbe.length().coerceAtLeast(0.01), false, false)
             if (!groundCheck.hasHitBlock) {
                 isOnGround = false
-                writeDump("[DEBUG-GROUND] Detached from surface! Setting isOnGround = false")
             } else {
-                writeDump("[DEBUG-GROUND] Maintained surface contact. Staying grounded.")
+                // Decay airborne rotational spin immediately via turf frictional contact
                 spinY *= (1.0 - meta.physics.rollingFriction * 2.0 * tickScale).coerceIn(0.0, 1.0)
             }
         }
 
         val velocity = Vector(motion.x, motion.y, motion.z)
-        writeDump("Motion-BeforePhysics: " + motion.x + "-" + motion.y + "-" + motion.z + " | isOnGround = $isOnGround")
-        writeDump("Position-BeforePhysics: " + position.x + "-" + position.y + "-" + position.z)
 
-        // Magnus Effect Calculations
+        // -------------------------------------------------------------------------
+        // AERODYNAMIC MAGNUS EFFECT SIMULATION (CURVED SHOTS)
+        // -------------------------------------------------------------------------
         if (!isOnGround && velocity.lengthSquared() > 0.01 && abs(spinY) > 0.01) {
             val spinVector = Vector(0.0, spinY, 0.0)
             val curveForce = velocity.clone().crossProduct(spinVector)
             curveForce.multiply(meta.physics.curveMultiplier * tickScale)
             velocity.add(curveForce)
-            writeDump("Applied curve force vector: ${curveForce.x}, ${curveForce.y}, ${curveForce.z}")
         }
 
+        // Apply environmental resistance branches based on surface states
         if (isOnGround) {
             val friction = (1.0 - meta.physics.rollingFriction * tickScale).coerceAtLeast(0.0)
             velocity.x *= friction
             velocity.z *= friction
             velocity.y = 0.0
-            writeDump("Applied Rolling Friction physics branch")
         } else {
-            // Apply mass scaling directly onto falling velocity modifiers
             velocity.y -= (meta.physics.gravityModifier / ballMass) * tickScale
             val drag = (1.0 - meta.physics.airDrag * tickScale).coerceAtLeast(0.0)
             velocity.x *= drag
             velocity.y *= drag
             velocity.z *= drag
-            writeDump("Applied Gravity and Drag physics branch")
         }
 
+        // Decay structural spin over time
         if (abs(spinY) > 0.001) {
-            val spinDragFactor = (1.0 - meta.physics.spinDrag * tickScale).coerceIn(0.0, 1.0)
-            spinY *= spinDragFactor
+            spinY *= (1.0 - meta.physics.spinDrag * tickScale).coerceIn(0.0, 1.0)
         } else {
             spinY = 0.0
         }
 
+        // Commit calculated updates back to storage vectors
         motion.x = velocity.x
         motion.y = velocity.y
         motion.z = velocity.z
-
-        writeDump("Motion-AfterPhysics: " + motion.x + "-" + motion.y + "-" + motion.z)
 
         if (meta.render.rotationEnabled && !meta.render.slimeVisible) {
             calculateNextRotation()
@@ -555,54 +472,46 @@ class SoccerBallImpl(
             this.lastYaw = vectorToYaw(motion)
         }
 
+        // Enforce hard-stop thresholds if rolling speed falls completely out of steam
         if (isOnGround && abs(motion.x) < meta.physics.restVelocityThreshold && abs(motion.z) < meta.physics.restVelocityThreshold) {
             motion.x = 0.0
             motion.y = 0.0
             motion.z = 0.0
             spinY = 0.0
-            writeDump("Ball rolling speed dropped below threshold. Stopping completely.")
             return
         }
 
         if (motion.x == 0.0 && motion.y == 0.0 && motion.z == 0.0) {
-            writeDump("Ball is currently stopped")
             return
         }
 
+        // Delegate structural block intersection queries to the raytrace processing loop
         rayTrace(position, motion)
 
+        // Prevent mathematical micro-bounces near standard surfaces by snapping down safely
         if (!isOnGround && motion.y < 0.0 && abs(motion.y) < meta.physics.restVelocityThreshold) {
             val groundProbe = Vector(0.0, -0.5, 0.0)
-            val movementLength = groundProbe.length()
-            val maxTraceDistance = movementLength.coerceAtLeast(0.01)
-            val groundResult =
-                rayTracingService.rayTrace(position.toLocation(), groundProbe, maxTraceDistance, false, false)
+            val groundResult = rayTracingService.rayTrace(position.toLocation(), groundProbe, groundProbe.length().coerceAtLeast(0.01), false, false)
             if (groundResult.hasHitBlock && groundResult.blockFace!!.modY > 0.5) {
                 position.y = groundResult.targetLocation.y
                 isOnGround = true
                 motion.y = 0.0
-                println("SNAP")
-                writeDump("Stop vertical fallback flight. Snapped to ground floor. Remaining XZ velocity preserved for rolling.")
             }
         }
     }
 
+    /**
+     * Executes line-of-sight intersection tests across target block bounds. Computes physical vector
+     * reflections based on hit surface normals, factoring in bounciness coefficients and spin flips.
+     */
     private fun rayTrace(position: Vector3d, motion: Vector) {
         val originalY = position.y
-        val rayTraceStartPosition = position.copy().add(0.0,RAYTRACE_OFFSET, 0.0)
-        val movementLength = motion.length()
-        val maxTraceDistance = movementLength.coerceAtLeast(0.01)
+        val rayTraceStartPosition = position.copy().add(0.0, RAYTRACE_OFFSET, 0.0)
+        val maxTraceDistance = motion.length().coerceAtLeast(0.01)
 
-        val rayTraceResult = rayTracingService.rayTrace(
-            rayTraceStartPosition.toLocation(),
-            motion.clone(),
-            maxTraceDistance,
-            false,
-            false
-        )
+        val rayTraceResult = rayTracingService.rayTrace(rayTraceStartPosition.toLocation(), motion.clone(), maxTraceDistance, false, false)
 
-        val rayTraceEvent =
-            BallRayTraceEvent(this, rayTraceResult.hasHitBlock, rayTraceResult.targetLocation, rayTraceResult.blockFace)
+        val rayTraceEvent = BallRayTraceEvent(this, rayTraceResult.hasHitBlock, rayTraceResult.targetLocation, rayTraceResult.blockFace)
         Bukkit.getPluginManager().callEvent(rayTraceEvent)
 
         val targetPosition = rayTraceResult.targetLocation
@@ -612,7 +521,6 @@ class SoccerBallImpl(
         if (hasHitBlock) {
             consecutiveBounceCount++
 
-            writeDump("HAS HIT BLOCK " + blockDirectionHit + " target position " + targetPosition)
             val normalX = blockDirectionHit!!.modX.toDouble()
             val normalY = blockDirectionHit.modY.toDouble()
             val normalZ = blockDirectionHit.modZ.toDouble()
@@ -621,41 +529,41 @@ class SoccerBallImpl(
             val normal = Vector(normalX, normalY, normalZ)
             val dot = velocity.dot(normal)
 
+            // Safely execute mathematical vector reflection logic against structural geometry normals
             velocity.subtract(normal.clone().multiply((1.0 + meta.physics.bounciness) * dot))
 
             motion.x = velocity.x
             motion.y = velocity.y
             motion.z = velocity.z
 
+            // Invert and dampen rotation energy upon rigid impact structures
             spinY *= -0.25
             val epsilon = 0.002
 
+            // Vertical structural wall boundaries (North, South, East, West)
             if (abs(normal.x) > 0.1 || abs(normal.z) > 0.1) {
                 position.x = targetPosition.x + (normal.x * epsilon)
                 position.z = targetPosition.z + (normal.z * epsilon)
-                position.y = targetPosition.y // Keep the raycast hit Y to avoid vertical drift during wall slides
-                writeDump("HIT WALL")
+                position.y = targetPosition.y
             }
+            // Horizontal surface structural configurations (Floor and Ceiling bounds)
             else if (abs(normal.y) > 0.1) {
                 position.x = targetPosition.x
                 position.z = targetPosition.z
 
-                if (normal.y > 0.1) {
+                if (normal.y > 0.1) { // Ground Contact Hit (UP)
                     if (motion.y <= 0.0 || abs(motion.y) < (meta.physics.restVelocityThreshold * 4.0)) {
                         position.y = targetPosition.y - RAYTRACE_OFFSET
                         this.isOnGround = true
                         this.motion.y = 0.0
-                        writeDump("HIT FLOAT -> Grounded smoothly. Velocity zeroed.")
                         return
                     }
                 }
-
                 position.y = (targetPosition.y - RAYTRACE_OFFSET) + (normal.y * epsilon)
-                writeDump("HIT FLOAT")
             }
         } else {
+            // Re-zero collision counters if a clear structural flight line is achieved
             consecutiveBounceCount = 0
-            writeDump("HAS NOT HIT " + blockDirectionHit)
 
             position.x = targetPosition.x
             position.z = targetPosition.z
@@ -672,6 +580,10 @@ class SoccerBallImpl(
         }
     }
 
+    /**
+     * Processes structural angular step parameters per update cycle based on linear horizontal
+     * velocities to produce progressive visual models.
+     */
     private fun calculateNextRotation() {
         val minimumSpeedToShowRotation = 0.01
         val degreesPerSpeedValueMultiplier = 15
@@ -681,7 +593,6 @@ class SoccerBallImpl(
 
         if (horizontalSpeed > minimumSpeedToShowRotation) {
             val degreesPerTick = horizontalSpeed * degreesPerSpeedValueMultiplier + minimumDegreesWhenStillMoving
-
             rotationDegrees = (rotationDegrees - degreesPerTick) % 360.0
             if (rotationDegrees < 0) {
                 rotationDegrees += 360.0
@@ -689,24 +600,16 @@ class SoccerBallImpl(
         }
     }
 
+    /**
+     * Safety recovery fallback engine that forces a step reset if an unresolvable infinite geometry
+     * looping trap condition is registered by consecutive loop structures.
+     */
     private fun checkAndHandleStuckBall() {
         if (consecutiveBounceCount >= 10) {
             val ballLocation = getLocation()
             ballLocation.y += 1
             teleport(ballLocation)
-            println("Simple recovery")
             consecutiveBounceCount = 0
-        }
-    }
-
-    private val fileId = Bukkit.getPluginManager().getPlugin("BlockBall")!!.dataFolder.resolve(
-        System.currentTimeMillis().toString() + "ball.txt"
-    )
-    var enabledDump = true
-
-    private fun writeDump(text: String) {
-        if (enabledDump) {
-            fileId.appendText(text + "\n")
         }
     }
 }
