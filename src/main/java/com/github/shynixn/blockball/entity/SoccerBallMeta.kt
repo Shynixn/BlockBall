@@ -31,6 +31,12 @@ class SoccerBallMeta : Element {
             it.triggerType = BallTriggerActionType.COLLIDE
             it.executionType = BallExecuteActionType.SHOOT
         })
+        interactions.add(InteractionMeta().also {
+            it.triggerType = BallTriggerActionType.LEFT_CLICK
+            it.executionType = BallExecuteActionType.SHOOT
+            it.horizontalImpulse = 1.0
+            it.verticalImpulse = 0.5
+        })
     }
 
     class InteractionMeta {
@@ -59,6 +65,12 @@ class SoccerBallMeta : Element {
 
         @Comment("The instantaneous vertical impulse vector applied to the ball.")
         var verticalImpulse: Double = 1.0
+
+        @Comment(
+            "The initial rotational spin impulse applied around the Y-axis upon interaction.",
+            "Negative values create left-curving spin (slice); positive values create right-curving spin (hook)."
+        )
+        var spinImpulse: Double = 0.0
 
         @Comment("The particle/sound effect name to play when this interaction is successfully triggered.")
         var effectName: String = ""
@@ -92,20 +104,11 @@ class SoccerBallMeta : Element {
         @Comment("Velocity dampening coefficient applied per tick while rolling along the ground (Surface Friction).")
         var rollingFriction: Double = 0.1
 
-        @Comment("The physical ceiling capping maximum angular spin velocity.")
-        var maxSpinVelocity: Double = 0.08
+        @Comment("The rate at which the ball's rotational spin decays per tick (0.0 to 1.0). 0.0 means no spin loss.")
+        var spinDrag: Double = 0.05
 
-        @Comment("Velocity dampening modifier applied continuously to the ball's angular spin vector.")
-        var spinDampening: Double = 0.05
-
-        @Comment("The maximum pitch angle constraint for launch trajectories.")
-        var maxLaunchPitch: Int = 60
-
-        @Comment("The minimum pitch angle constraint for launch trajectories.")
-        var minLaunchPitch: Int = 0
-
-        @Comment("The default baseline pitch angle used when calculations are omitted or neutral.")
-        var defaultLaunchPitch: Int = 20
+        @Comment("How drastically the active spinning axis curves the flight path vector. Higher values create sharper arcs.")
+        var curveMultiplier: Double = 0.05
 
         @Comment("Global cooldown in server ticks before the ball can process another physics interaction.")
         var globalInteractionCooldownTicks: Int = 20

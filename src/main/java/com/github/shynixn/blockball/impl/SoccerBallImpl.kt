@@ -59,6 +59,7 @@ class SoccerBallImpl(
     private var position: Vector3d = location.toVector3d()
     private var motion: Vector = Vector(0.0, -0.7, 0.0)
     private var rotationDegrees: Double = 0.0
+    private var spinY: Double = 0.0
     private var lastYaw: Float = 0.0F
 
     // Tracker
@@ -105,6 +106,7 @@ class SoccerBallImpl(
      */
     override fun teleport(location: Location) {
         this.position = location.toVector3d()
+        this.spinY = 0.0
     }
 
     /**
@@ -125,15 +127,21 @@ class SoccerBallImpl(
      * Sets the velocity of the ball.
      */
     override fun setVelocity(velocity: Vector) {
+        setVelocity(velocity, Vector(0.0, 0.0, 0.0))
+    }
+
+    /**
+     * Sets the velocity of the ball.
+     * Sets the y value of the spin vector to the horizontal spin.
+     */
+    override fun setVelocity(velocity: Vector, spin: Vector) {
         if (!Bukkit.isPrimaryThread()) {
             throw IllegalArgumentException("Thread violation!")
         }
 
         this.motion = velocity.clone()
-        if (this.motion.y > 0.0) {
-            this.isOnGround = false
-            writeDump("[DEBUG-VELOCITY] External velocity applied with upward force (${this.motion.y}). Setting isOnGround = false")
-        }
+        this.spinY = spin.y
+        this.isOnGround = false
     }
 
     /**
@@ -189,7 +197,7 @@ class SoccerBallImpl(
 
         // 5. Build the final Bukkit Vector and apply it to your soccer ball
         val calculatedVelocity = Vector(x, y, z)
-        this.setVelocity(calculatedVelocity)
+        this.setVelocity(calculatedVelocity, Vector(0.0, interactionMeta.spinImpulse, 0.0))
 
         // Apply Effect
         val effect = particleEffectService.getEffectMetaFromName(interactionMeta.effectName)
@@ -494,12 +502,34 @@ class SoccerBallImpl(
                 writeDump("[DEBUG-GROUND] Detached from surface! Setting isOnGround = false")
             } else {
                 writeDump("[DEBUG-GROUND] Maintained surface contact. Staying grounded.")
+
+                // Ground Friction: Friction against the turf dampens horizontal curve spinning quickly
+                spinY *= (1.0 - meta.physics.rollingFriction * 2.0 * tickScale).coerceIn(0.0, 1.0)
             }
         }
 
         val velocity = Vector(motion.x, motion.y, motion.z)
         writeDump("Motion-BeforePhysics: " + motion.x + "-" + motion.y + "-" + motion.z + " | isOnGround = $isOnGround")
         writeDump("Position-BeforePhysics: " + position.x + "-" + position.y + "-" + position.z)
+
+        // -------------------------------------------------------------------------
+        // MAGNUS EFFECT (CURVED SHOTS PHYSICS)
+        // -------------------------------------------------------------------------
+        if (!isOnGround && velocity.lengthSquared() > 0.01 && abs(spinY) > 0.01) {
+            // Create a direction vector representing the rotational spin axis around Y
+            val spinVector = Vector(0.0, spinY, 0.0)
+
+            // Cross product produces a horizontal vector perfectly perpendicular to the direction of travel
+            val curveForce = velocity.clone().crossProduct(spinVector)
+
+            // Scale curve acceleration according to your PhysicsMeta configurations and tick rates
+            curveForce.multiply(meta.physics.curveMultiplier * tickScale)
+
+            // Apply curve acceleration directly onto horizontal velocity properties
+            velocity.add(curveForce)
+            writeDump("Applied curve force vector: ${curveForce.x}, ${curveForce.y}, ${curveForce.z}")
+        }
+        // -------------------------------------------------------------------------
 
         if (isOnGround) {
             val friction = (1.0 - meta.physics.rollingFriction * tickScale).coerceAtLeast(0.0)
@@ -514,6 +544,14 @@ class SoccerBallImpl(
             velocity.y *= drag
             velocity.z *= drag
             writeDump("Applied Gravity and Drag physics branch")
+        }
+
+        // --- DECAY RUNTIME SPIN OVER TIME ---
+        if (abs(spinY) > 0.001) {
+            val spinDragFactor = (1.0 - meta.physics.spinDrag * tickScale).coerceIn(0.0, 1.0)
+            spinY *= spinDragFactor
+        } else {
+            spinY = 0.0
         }
 
         motion.x = velocity.x
@@ -536,6 +574,7 @@ class SoccerBallImpl(
             motion.x = 0.0
             motion.y = 0.0
             motion.z = 0.0
+            spinY = 0.0 // Ensure spinning drops dead when the ball settles completely
             writeDump("Ball rolling speed dropped below threshold. Stopping completely.")
             return
         }
@@ -606,6 +645,10 @@ class SoccerBallImpl(
             motion.x = velocity.x
             motion.y = velocity.y
             motion.z = velocity.z
+
+            // --- BOUNCE SPIN DAMPENING ---
+            // Lightly reverses and significantly dampens spin velocity on structural block collisions
+            spinY *= -0.25
 
             val epsilon = 0.002
 

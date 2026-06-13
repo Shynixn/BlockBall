@@ -67,8 +67,15 @@ interface SoccerBall {
 
     /**
      * Sets the velocity of the ball.
+     * Resets the spin value.
      */
     fun setVelocity(velocity: Vector)
+
+    /**
+     * Sets the velocity of the ball.
+     * Sets the y value of the spin vector to the horizontal spin.
+     */
+    fun setVelocity(velocity: Vector, spin: Vector)
 
     /**
      * Checks if the player is interacting with the ball in some way.
