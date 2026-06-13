@@ -51,6 +51,16 @@ interface SoccerBall {
     var lockedPlayer: Player?
 
     /**
+     * Lets the given player grab the ball.
+     */
+    fun grab(player: Player)
+
+    /**
+     * Stops grabbing the ball.
+     */
+    fun cancelGrab()
+
+    /**
      * Teleports the ball to the given [location].
      */
     fun teleport(location: Location)

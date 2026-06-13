@@ -32,7 +32,6 @@ import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
-import kotlin.random.Random
 
 /**
  * Implementation of the SoccerBall contract representing a physics-based ball entity in the game.
@@ -103,8 +102,7 @@ class SoccerBallImpl(
     private val playerTracker = GameObjectPlayerTracker(
         meta.render.renderDistance,
         { p -> spawnEntityForPlayer(p) },
-        { p -> removeEntityForPlayer(p) }
-    )
+        { p -> removeEntityForPlayer(p) })
 
     /**
      * Cooldown timers mapped per player to throttle interaction rates.
@@ -145,6 +143,32 @@ class SoccerBallImpl(
      * A specific player that has exclusive locking rights to interact with this ball.
      */
     override var lockedPlayer: Player? = null
+
+    /**
+     * Lets the given player grab the ball.
+     */
+    override fun grab(player: Player) {
+        if (grabbingPlayer == null || player != grabbingPlayer) {
+            cancelGrab()
+            grabbingPlayer = player
+            removeEntityForPlayer(player)
+            sendGrabbedInventory(player)
+        }
+    }
+
+    /**
+     * Stops grabbing the ball.
+     */
+    override fun cancelGrab() {
+        if (grabbingPlayer == null) {
+            return
+        }
+
+        val grabbedPlayer = grabbingPlayer!!
+        grabbingPlayer = null
+        grabbedPlayer.updateInventory()
+        spawnEntityForPlayer(grabbedPlayer)
+    }
 
     /**
      * Instantly relocates the ball to a target destination and clears rotational energy.
@@ -214,7 +238,7 @@ class SoccerBallImpl(
             Bukkit.getPluginManager().callEvent(ballDeathEvent)
         }
 
-        resetGrabbingState()
+        cancelGrab()
         isDead = true
         for (player in playerTracker.cache.keys.toHashSet()) {
             removeEntityForPlayer(player)
@@ -256,15 +280,14 @@ class SoccerBallImpl(
             return
         }
 
-        val ballTriggerActionEvent =
-            BallActionEvent(
-                this,
-                player,
-                ballInputActionType,
-                interactionMeta.executionType,
-                interactionMeta.triggerType,
-                interactionMeta
-            )
+        val ballTriggerActionEvent = BallActionEvent(
+            this,
+            player,
+            ballInputActionType,
+            interactionMeta.executionType,
+            interactionMeta.triggerType,
+            interactionMeta
+        )
         Bukkit.getPluginManager().callEvent(ballTriggerActionEvent)
         if (ballTriggerActionEvent.isCancelled) {
             // Reset the global cooldown if the event was canceled to prevent locked states
@@ -274,7 +297,7 @@ class SoccerBallImpl(
 
         if (interactionMeta.executionType == BallExecuteActionType.SHOOT) {
             // Reset grabbing state.
-            resetGrabbingState()
+            cancelGrab()
 
             // Grab directional looking coordinates to determine forward flat impulse values
             val playerLocation = player.location
@@ -303,9 +326,7 @@ class SoccerBallImpl(
         }
 
         if (interactionMeta.executionType == BallExecuteActionType.GRAB) {
-            grabbingPlayer = player
-            removeEntityForPlayer(player)
-            sendGrabbedInventory(player)
+            grab(player)
         }
     }
 
@@ -319,11 +340,10 @@ class SoccerBallImpl(
         val ballLocation = getLocation()
 
         // Track closest valid player violating interaction boundaries
-        val playerHittingTheBall = playerLocationPairs.asSequence()
-            .map { e -> Pair(e.key, e.value.distance(ballLocation)) }
-            .filter { p -> p.second < hitboxSize }
-            .sortedBy { e -> e.second }
-            .firstOrNull { e -> canPlayerInteractWithBall(e.first) }
+        val playerHittingTheBall =
+            playerLocationPairs.asSequence().map { e -> Pair(e.key, e.value.distance(ballLocation)) }
+                .filter { p -> p.second < hitboxSize }.sortedBy { e -> e.second }
+                .firstOrNull { e -> canPlayerInteractWithBall(e.first) }
 
         if (playerHittingTheBall != null) {
             applyInteractionToBall(playerHittingTheBall.first, BallInputActionType.COLLIDE)
@@ -515,56 +535,46 @@ class SoccerBallImpl(
      * against asset maps to determine the matching interaction target profile.
      */
     private fun findPlayerAction(
-        player: Player,
-        ballInputActionType: BallInputActionType
+        player: Player, ballInputActionType: BallInputActionType
     ): SoccerBallMeta.InteractionMeta? {
         // Map dynamic locomotion context sets into contextual prioritized arrays
         val triggerTypes = when {
             ballInputActionType == BallInputActionType.LEFT_CLICK && player.isSneaking -> arrayOf(
-                BallTriggerActionType.SNEAK_LEFT_CLICK,
-                BallTriggerActionType.LEFT_CLICK
+                BallTriggerActionType.SNEAK_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK
             )
 
             ballInputActionType == BallInputActionType.LEFT_CLICK && player.isSprinting -> arrayOf(
-                BallTriggerActionType.SPRINT_LEFT_CLICK,
-                BallTriggerActionType.LEFT_CLICK
+                BallTriggerActionType.SPRINT_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK
             )
 
             ballInputActionType == BallInputActionType.LEFT_CLICK && !player.isOnGround -> arrayOf(
-                BallTriggerActionType.JUMP_LEFT_CLICK,
-                BallTriggerActionType.LEFT_CLICK
+                BallTriggerActionType.JUMP_LEFT_CLICK, BallTriggerActionType.LEFT_CLICK
             )
 
             ballInputActionType == BallInputActionType.RIGHT_CLICK && player.isSneaking -> arrayOf(
-                BallTriggerActionType.SNEAK_RIGHT_CLICK,
-                BallTriggerActionType.RIGHT_CLICK
+                BallTriggerActionType.SNEAK_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK
             )
 
             ballInputActionType == BallInputActionType.RIGHT_CLICK && player.isSprinting -> arrayOf(
-                BallTriggerActionType.SPRINT_RIGHT_CLICK,
-                BallTriggerActionType.RIGHT_CLICK
+                BallTriggerActionType.SPRINT_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK
             )
 
             ballInputActionType == BallInputActionType.RIGHT_CLICK && !player.isOnGround -> arrayOf(
-                BallTriggerActionType.JUMP_RIGHT_CLICK,
-                BallTriggerActionType.RIGHT_CLICK
+                BallTriggerActionType.JUMP_RIGHT_CLICK, BallTriggerActionType.RIGHT_CLICK
             )
 
             ballInputActionType == BallInputActionType.LEFT_CLICK -> arrayOf(BallTriggerActionType.LEFT_CLICK)
             ballInputActionType == BallInputActionType.RIGHT_CLICK -> arrayOf(BallTriggerActionType.RIGHT_CLICK)
             ballInputActionType == BallInputActionType.COLLIDE && player.isSneaking -> arrayOf(
-                BallTriggerActionType.SNEAK_COLLIDE,
-                BallTriggerActionType.COLLIDE
+                BallTriggerActionType.SNEAK_COLLIDE, BallTriggerActionType.COLLIDE
             )
 
             ballInputActionType == BallInputActionType.COLLIDE && player.isSprinting -> arrayOf(
-                BallTriggerActionType.SPRINT_COLLIDE,
-                BallTriggerActionType.COLLIDE
+                BallTriggerActionType.SPRINT_COLLIDE, BallTriggerActionType.COLLIDE
             )
 
             ballInputActionType == BallInputActionType.COLLIDE && !player.isOnGround -> arrayOf(
-                BallTriggerActionType.JUMP_COLLIDE,
-                BallTriggerActionType.COLLIDE
+                BallTriggerActionType.JUMP_COLLIDE, BallTriggerActionType.COLLIDE
             )
 
             ballInputActionType == BallInputActionType.COLLIDE -> arrayOf(BallTriggerActionType.COLLIDE)
@@ -575,8 +585,7 @@ class SoccerBallImpl(
         val itemSlot = player.inventory.heldItemSlot
         return triggerTypes.firstNotNullOfOrNull { type ->
             meta.interactions.firstOrNull { e ->
-                e.triggerType == type && itemSlot >= e.conditionHotBarRangeStart && itemSlot <= e.conditionHotBarRangeEnd
-                        && ((grabbingPlayer == null && !e.conditionGrabbed) || (grabbingPlayer != null && e.conditionGrabbed))
+                e.triggerType == type && itemSlot >= e.conditionHotBarRangeStart && itemSlot <= e.conditionHotBarRangeEnd && ((grabbingPlayer == null && !e.conditionGrabbed) || (grabbingPlayer != null && e.conditionGrabbed))
             }
         }
     }
@@ -610,11 +619,7 @@ class SoccerBallImpl(
         if (isOnGround) {
             val groundProbe = Vector(0.0, -0.05, 0.0)
             val groundCheck = rayTracingService.rayTrace(
-                position.toLocation(),
-                groundProbe,
-                groundProbe.length().coerceAtLeast(0.01),
-                false,
-                false
+                position.toLocation(), groundProbe, groundProbe.length().coerceAtLeast(0.01), false, false
             )
             if (!groundCheck.hasHitBlock) {
                 isOnGround = false
@@ -691,11 +696,7 @@ class SoccerBallImpl(
         if (!isOnGround && motion.y < 0.0 && abs(motion.y) < meta.physics.restVelocityThreshold) {
             val groundProbe = Vector(0.0, -0.5, 0.0)
             val groundResult = rayTracingService.rayTrace(
-                position.toLocation(),
-                groundProbe,
-                groundProbe.length().coerceAtLeast(0.01),
-                false,
-                false
+                position.toLocation(), groundProbe, groundProbe.length().coerceAtLeast(0.01), false, false
             )
             if (groundResult.hasHitBlock && groundResult.blockFace!!.modY > 0.5) {
                 position.y = groundResult.targetLocation.y
@@ -716,11 +717,7 @@ class SoccerBallImpl(
 
         // Issue bounding inquiries down into block collision maps
         val rayTraceResult = rayTracingService.rayTrace(
-            rayTraceStartPosition.toLocation(),
-            motion.clone(),
-            maxTraceDistance,
-            false,
-            false
+            rayTraceStartPosition.toLocation(), motion.clone(), maxTraceDistance, false, false
         )
 
         // Fire custom tracking events representing raw raytrace calculations
@@ -828,15 +825,6 @@ class SoccerBallImpl(
             ballLocation.y += 1
             teleport(ballLocation)
             consecutiveBounceCount = 0
-        }
-    }
-
-    private fun resetGrabbingState() {
-        if (grabbingPlayer != null) {
-            val grabbedPlayer = grabbingPlayer!!
-            grabbingPlayer = null
-            grabbedPlayer.updateInventory()
-            spawnEntityForPlayer(grabbedPlayer)
         }
     }
 
