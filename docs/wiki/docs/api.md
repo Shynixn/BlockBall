@@ -27,11 +27,17 @@ public class YourPlugin extends JavaPlugin {
     public void onEnable() {
         Player player = Bukkit.getPlayer("YourPlayerName");
 
-        // Creating a soccer ball independent of a game.
-        SoccerBallFactory soccerBallFactory = Bukkit.getServicesManager().load(SoccerBallFactory.class);
-        SoccerBall soccerBall = soccerBallFactory.createSoccerBall(player.getLocation(), new SoccerBallSettings());
-        // The is no way to directly set the velocity, but you can kick it relative to the position the player.
-        soccerBall.kickByPlayer(player);
+        // Creating a ball for your custom use case (MiniGame, Lobby Ball, etc.)
+        SoccerBallService soccerBallService = Bukkit.getServicesManager().load(SoccerBallService.class);
+        // Create a file BlockBall/ball/my_custom_ball.yml and design your ball
+        String ballName = "my_custom_ball";
+        Location spawnLocation = player.getLocation();
+        // The soccer ball is already ready and can be played by any player.
+        SoccerBall soccerBall = soccerBallService.spawn(ballName, spawnLocation);
+        // You can additionally move it by code.
+        soccerBall.setVelocity(new Vector(0.3, 0.3, 0.2));
+        // Teleporting does only work in the same world.
+        soccerBall.teleport(player.getLocation().add(1.0, 0.0, 0.0));
 
         // Letting a player join a game.
         GameService gameService = Bukkit.getServicesManager().load(GameService.class);

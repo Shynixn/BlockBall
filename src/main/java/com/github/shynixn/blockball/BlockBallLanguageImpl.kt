@@ -270,7 +270,7 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var shyScoreboardCommonErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details.")
 
- override var shyScoreboardCommandSenderHasToBePlayer = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player if you do not specify the optional player argument.")
+ override var shyScoreboardCommandSenderHasToBePlayer = LanguageItem("")
 
  override var shyScoreboardCommandUsage = LanguageItem("[&9ShyScoreboard&f] Use /shyscoreboard help to see more info about the plugin.")
 
@@ -306,7 +306,7 @@ class BlockBallLanguageImpl : BlockBallLanguage {
 
  override var shyBossBarCommonErrorMessage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7&c A problem occurred. Check the console log for details.")
 
- override var shyBossBarCommandSenderHasToBePlayer = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 The command sender has to be a player if you do not specify the optional player argument.")
+ override var shyBossBarCommandSenderHasToBePlayer = LanguageItem("")
 
  override var shyBossBarCommandUsage = LanguageItem("&0&l[&f&lBlockBall&0&l]&7 Use /blockballbossbar help to see more info about the plugin.")
 

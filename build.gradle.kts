@@ -35,7 +35,7 @@ dependencies {
     implementation("com.github.shynixn.shyparticles:shyparticles:1.3.1")
     implementation("com.github.shynixn.shyguild:shyguild:1.1.1")
     implementation("com.github.shynixn.mcutils:common:2026.9")
-    implementation("com.github.shynixn.mcutils:packet:2026.12")
+    implementation("com.github.shynixn.mcutils:packet:2026.17")
     implementation("com.github.shynixn.mcutils:worldguard:2026.1")
     implementation("com.github.shynixn.mcutils:database:2026.3")
     implementation("com.github.shynixn.mcutils:http:2026.3")
@@ -107,7 +107,7 @@ fun registerPluginJar(
             relocate("kotlinx", "com.github.shynixn.blockball.lib.kotlinx")
             relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intellij")
             relocate("org.jetbrains", "com.github.shynixn.blockball.lib.org.jetbrains")
-            relocate("javax", "com.github.shynixn.blockball.lib.javax")
+            relocate("org.slf4j", "com.github.shynixn.blockball.lib.org.slf4j")
             relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
         }
     }
@@ -143,7 +143,6 @@ fun registerPluginJar(
         exclude("kotlin/**")
         exclude("org/**")
         exclude("kotlinx/**")
-        exclude("javax/**")
         exclude("com/zaxxer/**")
         exclude("com/github/shynixn/shyscoreboard/**")
         exclude("com/github/shynixn/shyparticles/**")

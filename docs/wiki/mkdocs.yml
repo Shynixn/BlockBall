@@ -7,6 +7,7 @@ nav:
       - Permission: permission.md
       - Creating the game: game.md
       - Customizing the game: customization.md
+      - Customizing the ball: ball.md
       - Interactions: interaction.md
       - Scoreboards, Signs: sign.md
       - Commands: commands.md

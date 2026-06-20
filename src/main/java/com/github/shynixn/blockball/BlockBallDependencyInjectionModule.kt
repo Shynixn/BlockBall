@@ -4,17 +4,18 @@ import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.CloudService
 import com.github.shynixn.blockball.contract.ForceFieldService
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.SoccerBallFactory
+import com.github.shynixn.blockball.contract.SoccerBallService
 import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.SoccerArena
+import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.enumeration.Permission
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.listener.*
 import com.github.shynixn.blockball.impl.service.CloudServiceImpl
 import com.github.shynixn.blockball.impl.service.ForceFieldServiceImpl
 import com.github.shynixn.blockball.impl.service.GameServiceImpl
-import com.github.shynixn.blockball.impl.service.SoccerBallFactoryImpl
+import com.github.shynixn.blockball.impl.service.SoccerBallServiceImpl
 import com.github.shynixn.blockball.impl.service.StatsServiceImpl
 import com.github.shynixn.fasterxml.jackson.core.type.TypeReference
 import com.github.shynixn.mcutils.common.ConfigurationService
@@ -82,6 +83,24 @@ class BlockBallDependencyInjectionModule(
         module.addService<PlaceHolderService>(placeHolderService)
 
         // Repositories
+        module.addService<Repository<SoccerBallMeta>> {
+            module.getService<CacheRepository<SoccerBallMeta>>()
+        }
+        module.addService<CacheRepository<SoccerBallMeta>> {
+            CachedRepositoryImpl(
+                YamlFileRepositoryImpl<SoccerBallMeta>(
+                    plugin,
+                    "ball",
+                    plugin.dataFolder.toPath().resolve("ball"),
+                    listOf(
+                        "ball/soccer_ball.yml" to "soccer_ball.yml",
+                        "ball/curve_soccer_ball.yml" to "curve_soccer_ball.yml",
+                        "ball/hand_ball.yml" to "hand_ball.yml"
+                    ),
+                    listOf(),
+                    object : TypeReference<SoccerBallMeta>() {}
+                ))
+        }
         module.addService<Repository<SoccerArena>> {
             module.getService<CacheRepository<SoccerArena>>()
         }
@@ -183,8 +202,15 @@ class BlockBallDependencyInjectionModule(
                 module.getService()
             )
         }
-        module.addService<SoccerBallFactory> {
-            SoccerBallFactoryImpl(module.getService(), module.getService(), module.getService(), module.getService())
+        module.addService<SoccerBallService> {
+            SoccerBallServiceImpl(
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService(),
+                module.getService()
+            )
         }
         module.addService<BallListener> { BallListener(module.getService(), module.getService()) }
         module.addService<DoubleJumpListener> {
@@ -200,7 +226,6 @@ class BlockBallDependencyInjectionModule(
                 module.getService(),
                 module.getService(),
                 module.getService(),
-                module.getService()
             )
         }
         module.addService<ForceFieldListener> {
@@ -208,6 +233,7 @@ class BlockBallDependencyInjectionModule(
         }
         module.addService<BlockBallCommandExecutor> {
             BlockBallCommandExecutor(
+                module.getService(),
                 module.getService(),
                 module.getService(),
                 module.getService(),

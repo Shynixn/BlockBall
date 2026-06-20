@@ -11,4 +11,4 @@ open class GameEvent(
      * Game firing this event.
      */
     val game: SoccerGame
-) : BlockBallEvent()
+) : BlockBallEvent(true)

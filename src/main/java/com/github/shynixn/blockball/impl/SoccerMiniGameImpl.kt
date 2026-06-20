@@ -34,7 +34,7 @@ open class SoccerMiniGameImpl(
     private val soundService: SoundService,
     language: BlockBallLanguage,
     commandService: CommandService,
-    soccerBallFactory: SoccerBallFactory,
+    soccerBallFactory: SoccerBallService,
     itemService: ItemService,
     cloudService: CloudService,
     private val server: Server,
@@ -129,7 +129,7 @@ open class SoccerMiniGameImpl(
 
                     gameCountdown--
 
-                    if (gameCountdown < 5 && !isHytaleLoaded) {
+                    if (gameCountdown < 5) {
                         ingamePlayersStorage.keys.forEach { p ->
                             soundService.playSound(
                                 p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
@@ -173,7 +173,7 @@ open class SoccerMiniGameImpl(
                     gameCountdown--
 
                     ingamePlayersStorage.keys.toTypedArray().asSequence().forEach { p ->
-                        if (gameCountdown <= 5 && !isHytaleLoaded) {
+                        if (gameCountdown <= 5) {
                             soundService.playSound(
                                 p.location, arrayListOf(p), arena.meta.minigameMeta.countdownSound
                             )

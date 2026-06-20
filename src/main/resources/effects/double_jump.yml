@@ -3,7 +3,7 @@ duration: 1
 repeat: false
 
 layers:
-  - particle: "DUST,REDSTONE"
+  - particle: "DUST,REDSTONE,minecraft:dust"
     shape: "SPHERE"
     options:
       particleCount: 50

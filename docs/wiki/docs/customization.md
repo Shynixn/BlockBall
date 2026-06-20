@@ -98,37 +98,6 @@ ballSpawnPoint:
   pitch: 45.45
 ```
 
-### Ball Configuration
-
-```yaml
-ball:
-  # Visual appearance
-  render:
-    scale: 1.0  # Ball size. You can set anything here in modern Minecraft versions. For older Minecraft versions only use 1.0 and 0.5.
-    rotating: true
-    offSetY: -1.0  # Vertical offset for visual positioning
-    
-  # Player interaction settings
-  hitbox:
-    clickHitBoxSize: 1.5
-    touchHitBoxSize: 1.0
-    leftClickEnabled: true
-    rightClickEnabled: true
-    touchEnabled: true
-    interactionCoolDownTicks: 20
-    leftClickRightClickDelayTicks: 1
-    interactionCoolDownPerPlayerTicks: 7
-    slimeVisible: false
-    
-  # Physics properties
-  gravityModifier: 0.07      # How fast ball falls
-  airResistance: 0.001       # Speed reduction in air
-  rollingResistance: 0.1     # Speed reduction on ground
-  shotVelocity: 1.5          # Power of left-click shots
-  shotPassYVelocityOverwrite: 1.0  # Vertical modifier override
-  passVelocity: 1.2          # Power of right-click passes
-```
-
 ### Team Setup
 
 ```yaml
@@ -233,31 +202,6 @@ leaveCommands:
 ---
 
 ## ⚙️ Detailed Game Mechanics
-
-### Ball Physics Deep Dive
-
-Understanding ball physics is crucial for creating the right gameplay feel:
-
-```yaml
-ball:
-  # Gravity and movement
-  gravityModifier: 0.07        # Higher = ball falls faster
-  airResistance: 0.001         # Higher = ball slows down more in air
-  rollingResistance: 0.1       # Higher = ball stops rolling sooner
-  
-  # Player interaction strengths
-  horizontalTouchModifier: 1.0  # Running into ball power
-  verticalTouchModifier: 1.0    # Jump-touch ball power
-  shotVelocity: 1.5            # Left-click power shot
-  shotPassYVelocityOverwrite: 1.0  # Override vertical shot modifier
-  passVelocity: 1.2            # Right-click gentle pass
-  
-  # Ball rotation and limits
-  maximumSpinVelocity: 0.08    # How much the ball can spin
-  maximumPitch: 60             # Highest angle ball can fly
-  minimumPitch: 0              # Lowest angle (ground level)
-  defaultPitch: 20             # Standard launch angle
-```
 
 ### Player Movement and Abilities
 
@@ -373,12 +317,6 @@ meta:
         closeType: TIME_OVER
         playAbleBall: true
         
-# Faster ball physics
-ball:
-  shotVelocity: 2.0          # More powerful shots
-  passVelocity: 1.8          # Faster passes
-  gravityModifier: 0.05      # Ball stays in air longer
-  
 # Enhanced movement
 meta:
   doubleJumpMeta:
@@ -425,11 +363,6 @@ meta:
     resetArenaOnEmpty: true       # Reset when no players
     teleportOnJoin: false         # Join where you stand
     
-# Relaxed physics
-ball:
-  shotVelocity: 1.0          # Standard power
-  rollingResistance: 0.2     # Ball stops rolling sooner
-  
 # No special abilities  
 meta:
   doubleJumpMeta:
@@ -438,42 +371,9 @@ meta:
     forceFieldEnabled: false # Players can leave field
 ```
 
-### Speed Soccer Mode
-```yaml
-# High-speed, low-gravity soccer
-ball:
-  render:
-    scale: 0.7               # Smaller, faster ball
-  shotVelocity: 3.0          # Extremely powerful shots
-  passVelocity: 2.5          # Fast passes
-  gravityModifier: 0.02      # Low gravity, floaty ball
-  airResistance: 0.0005      # Ball maintains speed longer
-  
-meta:
-  doubleJumpMeta:
-    cooldown: 0.5            # Double jump twice per second
-    verticalStrength: 2.0    # Super high jumps
-    horizontalStrength: 3.0  # Rocket-like movement
-    
-  customizingMeta:
-    damageEnabled: false     # No fall damage from high jumps
-```
-
 ### Beginner-Friendly Setup
 ```yaml
 # Easy mode for new players
-ball:
-  render:
-    scale: 1.5               # Bigger ball, easier to see/hit
-  hitbox:
-    clickHitBoxSize: 2.0     # Larger click area
-    touchHitBoxSize: 1.5     # Easier to run into
-    interactionCoolDownTicks: 10  # Faster interaction
-    
-  shotVelocity: 0.8          # Gentler shots
-  passVelocity: 0.6          # Slower passes
-  gravityModifier: 0.1       # Ball doesn't fly too high
-  
 meta:
   lobbyMeta:
     maxScore: 15             # Longer games
@@ -487,19 +387,6 @@ meta:
 ---
 
 ## 🎵 Sound Effects and Audio
-
-### Ball Interaction Sounds
-
-```yaml
-ball:
-  soundEffects:
-    ONKICK:
-      # Multiple sound names for different Minecraft versions
-      name: ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR,ENTITY_ZOMBIE_ATTACK_DOOR_WOOD,ZOMBIE_WOOD
-      volume: 10.0           # Sound volume (0.0 to 10.0)
-      pitch: 1.5             # Sound pitch (0.5 to 2.0)
-      effectType: EVERYONE   # Who hears it: EVERYONE, TEAM, SELF
-```
 
 ### Countdown and UI Sounds
 
@@ -560,24 +447,6 @@ redTeamMeta:
 # Orange Team: RGB(255, 165, 0)
 # Pink Team: RGB(255, 192, 203)
 # Cyan Team: RGB(0, 255, 255)
-```
-
-### Custom Ball Appearance
-
-```yaml
-ball:
-  render:
-    # Custom ball item (soccer ball head texture)
-    item:
-      typeName: PLAYER_HEAD,397
-      amount: '1'
-      durability: '3'
-      # Base64 encoded soccer ball skin
-      skinBase64: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==
-      
-    # Ball positioning and rotation
-    rotating: true           # Ball spins as it moves
-    offSetY: -1.0           # Visual height adjustment
 ```
 
 ### Understanding Command Types
@@ -706,11 +575,6 @@ looseCommands:
 
 ```yaml
 # Reduce server load for large servers
-ball:
-  hitbox:
-    interactionCoolDownTicks: 20      # Prevent spam clicking
-    interactionCoolDownPerPlayerTicks: 7  # Per-player cooldown
-    
 meta:
   customizingMeta:
     gameStartBallSpawnDelayTicks: 2   # Reduce instant spawn lag

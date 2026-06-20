@@ -1,9 +1,10 @@
 package com.github.shynixn.blockball
 
 import com.github.shynixn.blockball.contract.GameService
-import com.github.shynixn.blockball.contract.SoccerBallFactory
+import com.github.shynixn.blockball.contract.SoccerBallService
 import com.github.shynixn.blockball.contract.StatsService
 import com.github.shynixn.blockball.entity.PlayerInformation
+import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
@@ -52,14 +53,18 @@ import com.github.shynixn.shyscoreboard.entity.ShyScoreboardSettings
 import com.github.shynixn.shyscoreboard.impl.commandexecutor.ShyScoreboardCommandExecutor
 import com.github.shynixn.shyscoreboard.impl.listener.ShyScoreboardListener
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.util.Vector
+import java.nio.file.Files
 import java.util.logging.Level
 import kotlin.coroutines.CoroutineContext
+import kotlin.io.path.absolutePathString
 
 /**
  * Plugin Main.
@@ -208,13 +213,17 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
         module!!.getService<BlockBallCommandExecutor>()
 
         // Service dependencies
+        val soccerBallRepository = module!!.getService<CacheRepository<SoccerBallMeta>>()
         Bukkit.getServicesManager().register(
-            SoccerBallFactory::class.java, module!!.getService<SoccerBallFactory>(), this, ServicePriority.Normal
+            SoccerBallService::class.java, module!!.getService<SoccerBallService>(), this, ServicePriority.Normal
         )
         Bukkit.getServicesManager()
             .register(GameService::class.java, module!!.getService<GameService>(), this, ServicePriority.Normal)
         val plugin = this
         plugin.launch {
+            // Load Balls
+            soccerBallRepository.getAll()
+
             // Load Games
             val gameService = module!!.getService<GameService>()
             try {

@@ -1,0 +1,127 @@
+# ###############
+# 
+# Configuration profile for a physical ball instance in the BlockBall engine.
+# 
+# ###############
+# Unique identifier for this ball configuration template used within the plugin system.
+name: soccer_ball
+# Visual settings defining how the ball looks, its scale, and layout offsets.
+render:
+  # The global scale modifier transforming the physical scale of the rendered model entity.
+  modelScale: 1.0
+  # The underlying item structure holding texture, metadata, and skin maps for rendering.
+  visualItem:
+    typeName: PLAYER_HEAD,397
+    amount: '1'
+    durability: '3'
+    displayName: null
+    skinBase64: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==
+    lore: null
+    nbt: null
+    component: null
+  # Enables or disables visual procedural rotation based on the ball's velocity vector.
+  rotationEnabled: true
+  # Visual model offset matching the entity presentation strictly to your texture profile.
+  visualVerticalOffset: -1.0
+  # Render radius where the ball is visible to players. Beyond this distance, the ball will not be rendered.
+  renderDistance: 60
+  # Legacy fallback: Determines if the physics-simulation Slime entity should be rendered visible.
+  slimeVisible: false
+# Physical and kinematic properties governing gravity, friction, drag, and collision bounds.
+physics:
+  # The bounding diameter used for tracking player click/interact selections. View via F3 + B.
+  interactionBoundsSize: 1.5
+  # The bounding diameter used for physical player cross-contact and touch-handling.
+  collisionBoundsSize: 1.0
+  # Vertical positioning offset on the Y-axis to align the physical simulation boundaries.
+  verticalOffset: -0.3
+  # The coefficient of restitution (0.0 to 1.0). 0.0 means no bounce, 1.0 means perfectly elastic bounce back.
+  bounciness: 0.7
+  # The simulated weight of the ball. Higher mass requires more impulse force to shift velocity.
+  mass: 1.0
+  # The minimum speed threshold. If velocity falls below this value, the ball comes to a complete rest.
+  restVelocityThreshold: 0.01
+  # Downward acceleration constant applied per tick when the ball is airborne.
+  gravityModifier: 0.07
+  # Velocity dampening coefficient applied per tick while airborne (Air Drag).
+  airDrag: 0.001
+  # Velocity dampening coefficient applied per tick while rolling along the ground (Surface Friction).
+  rollingFriction: 0.1
+  # The rate at which the ball's rotational spin decays per tick (0.0 to 1.0). 0.0 means no spin loss.
+  spinDrag: 0.05
+  # How drastically the active spinning axis curves the flight path vector. Higher values create sharper arcs.
+  curveMultiplier: 0.05
+  # Global cooldown in server ticks before the ball can process another physics interaction.
+  globalInteractionCooldownTicks: 20
+  # Per-player input throttling cooldown in ticks to prevent rapid-fire physics exploits.
+  perPlayerInteractionCooldownTicks: 7
+  # Interval in ticks for refreshing player position data used in collision and interaction calculations.
+  fetchPlayerPositionsIntervalTicks: 2
+# Gameplay modifiers determining how players interact with the ball via hotbars and clicks.
+interactions:
+- # The input trigger required to execute this action. Available types:
+  #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
+  #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
+  #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
+  triggerType: COLLIDE
+  # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
+  conditionHotBarRangeStart: 0
+  # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
+  conditionHotBarRangeEnd: 8
+  # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
+  conditionGrabbedBySelf: false
+  # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
+  executionType: SHOOT
+  # The instantaneous horizontal impulse vector applied to the ball.
+  horizontalImpulse: 1.0
+  # The instantaneous vertical impulse vector applied to the ball.
+  verticalImpulse: 0.2
+  # The initial rotational spin impulse applied around the Y-axis upon interaction.
+  # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
+  spinImpulse: 0.0
+  # The particle/sound effect name to play when this interaction is successfully triggered.
+  effectName: ''
+- # The input trigger required to execute this action. Available types:
+  #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
+  #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
+  #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
+  triggerType: LEFT_CLICK
+  # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
+  conditionHotBarRangeStart: 0
+  # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
+  conditionHotBarRangeEnd: 8
+  # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
+  conditionGrabbedBySelf: false
+  # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
+  executionType: SHOOT
+  # The instantaneous horizontal impulse vector applied to the ball.
+  horizontalImpulse: 1.0
+  # The instantaneous vertical impulse vector applied to the ball.
+  verticalImpulse: 0.6
+  # The initial rotational spin impulse applied around the Y-axis upon interaction.
+  # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
+  spinImpulse: 0.0
+  # The particle/sound effect name to play when this interaction is successfully triggered.
+  effectName: ball_kick
+- # The input trigger required to execute this action. Available types:
+  #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
+  #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
+  #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
+  triggerType: SPRINT_LEFT_CLICK
+  # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
+  conditionHotBarRangeStart: 0
+  # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
+  conditionHotBarRangeEnd: 8
+  # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
+  conditionGrabbedBySelf: false
+  # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
+  executionType: SHOOT
+  # The instantaneous horizontal impulse vector applied to the ball.
+  horizontalImpulse: 1.0
+  # The instantaneous vertical impulse vector applied to the ball.
+  verticalImpulse: 1.0
+  # The initial rotational spin impulse applied around the Y-axis upon interaction.
+  # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
+  spinImpulse: 0.0
+  # The particle/sound effect name to play when this interaction is successfully triggered.
+  effectName: ball_kick
