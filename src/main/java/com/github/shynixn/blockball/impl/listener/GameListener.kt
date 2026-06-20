@@ -297,7 +297,7 @@ class GameListener(
     fun onPlayerInteractEvent(event: PlayerInteractEvent) {
         val game = gameService.getByPlayer(event.player) ?: return
 
-        if (game.arena.enabled && game.arena.gameType == GameType.MINIGAME) {
+        if (game.arena.enabled && game.arena.gameType == GameType.MINIGAME && game.arena.meta.customizingMeta.restrictInteractionsEnabled) {
             event.setCancelled(true)
         }
     }

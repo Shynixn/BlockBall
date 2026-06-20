@@ -123,6 +123,7 @@ class SoccerBallImpl(
     /**
      * Indicates whether the ball has been removed or destroyed.
      */
+    @Volatile
     override var isDead: Boolean = false
 
     /**
@@ -257,6 +258,10 @@ class SoccerBallImpl(
      * stuck-state resolution, and client-side visualization synchronization.
      */
     fun update(deltaMs: Int) {
+        if (isDead) {
+            return
+        }
+
         if (playerFetchTimer.update(deltaMs)) {
             playerTracker.update(getLocation())
             checkPlayerTouchInteractions()

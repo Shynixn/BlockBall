@@ -75,7 +75,6 @@ class BlockBallDependencyInjectionModule(
 
         // Params
         module.addService<Plugin>(plugin)
-        module.addService<Version> { Version.HYTALE_LATEST }
         module.addService<CoroutineHandler>(plugin)
         module.addService<PluginManager> { plugin.server.pluginManager }
         module.addService<Server>(plugin.server)

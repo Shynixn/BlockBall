@@ -16,6 +16,9 @@ class CustomizationMeta {
     @Comment("Should players keep their inventory when they join a game?")
     var keepInventoryEnabled: Boolean = false
 
+    @Comment("Should players be restricted to interact with blocks or items during a game?")
+    var restrictInteractionsEnabled : Boolean = true
+
     @Comment("Should players keep their current health when they join a game?")
     var keepHealthEnabled: Boolean = true
 

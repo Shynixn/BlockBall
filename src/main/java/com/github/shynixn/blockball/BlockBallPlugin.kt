@@ -125,11 +125,12 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
                 Version.VERSION_1_21_R5,
                 Version.VERSION_1_21_R6,
                 Version.VERSION_1_21_R7,
-                Version.VERSION_26_R1,
+                Version.VERSION_26_1_R1,
+                Version.VERSION_26_2_R1,
             )
         } else {
             arrayOf(
-                Version.VERSION_26_R1,
+                Version.VERSION_26_2_R1,
             )
         }
 
