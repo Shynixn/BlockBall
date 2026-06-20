@@ -1,108 +1,133 @@
 package com.github.shynixn.blockball.entity
 
-import com.github.shynixn.blockball.enumeration.BallActionType
+import com.github.shynixn.blockball.enumeration.BallExecuteActionType
+import com.github.shynixn.blockball.enumeration.BallTriggerActionType
 import com.github.shynixn.mcutils.common.item.Item
 import com.github.shynixn.mcutils.common.repository.Comment
-import com.github.shynixn.mcutils.common.sound.SoundMeta
+import com.github.shynixn.mcutils.common.repository.Element
 
-class SoccerBallMeta {
-    @Comment("A ball consists of 2 entities. Everything below render are parts being visible for your players. e.g. skin and size.")
-    var render: SoccerBallRenderMeta = SoccerBallRenderMeta()
+@Comment(
+    "###############",
+    "",
+    "Configuration profile for a physical ball instance in the BlockBall engine.",
+    "",
+    "###############"
+)
+class SoccerBallMeta : Element {
+    @Comment("Unique identifier for this ball configuration template used within the plugin system.")
+    override var name: String = "soccer_ball"
 
-    @Comment("A ball consists of 2 entities. Everything below hitbox are parts being used to let players interact with the ball.")
-    var hitbox: SoccerBallHitBoxMeta = SoccerBallHitBoxMeta()
+    @Comment("Visual settings defining how the ball looks, its scale, and layout offsets.")
+    var render = RenderMeta()
 
-    @Comment("The gravity modifier how fast a ball falls to the ground after being kicked.")
-    var gravityModifier: Double = 0.07
+    @Comment("Physical and kinematic properties governing gravity, friction, drag, and collision bounds.")
+    var physics = PhysicsMeta()
 
-    @Comment("The speed reducement of the ball in the air.")
-    var airResistance: Double = 0.001
+    @Comment("Gameplay modifiers determining how players interact with the ball via hotbars and clicks.")
+    val interactions: MutableList<InteractionMeta> = ArrayList()
 
-    @Comment("The speed reducement of the ball on the ground.")
-    var rollingResistance: Double = 0.1
+    class InteractionMeta {
+        @Comment(
+            "The input trigger required to execute this action. Available types:",
+            " - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK",
+            " - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK",
+            " - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE"
+        )
+        var triggerType: BallTriggerActionType = BallTriggerActionType.LEFT_CLICK
 
-    @Comment("The horizontal speed gain after touching the ball.")
-    var horizontalTouchModifier: Double = 1.0
+        @Comment("The starting index (0-8) of the player's hotbar range allowed to trigger this action.")
+        var conditionHotBarRangeStart: Int = 0
 
-    @Comment("The vertical speed gain after touching the ball.")
-    var verticalTouchModifier: Double = 1.0
+        @Comment("The ending index (0-8) of the player's hotbar range allowed to trigger this action.")
+        var conditionHotBarRangeEnd: Int = 8
 
-    @Comment("The horizontal and vertical speed gain after left clicking the ball.")
-    var shotVelocity: Double = 1.5
+        @Comment("If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.")
+        var conditionGrabbedBySelf : Boolean = false
 
-    @Comment("Allows to override the shotVelocity with a vertical modifier if it is any other value than 1.0.")
-    var shotPassYVelocityOverwrite: Double = 1.0
+        @Comment("The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB")
+        var executionType: BallExecuteActionType = BallExecuteActionType.SHOOT
 
-    @Comment("The horizontal and vertical speed gain after right clicking the ball.")
-    var passVelocity: Double = 1.2
+        @Comment("The instantaneous horizontal impulse vector applied to the ball.")
+        var horizontalImpulse: Double = 1.0
 
-    @Comment("Maximum spin velocity.")
-    var maximumSpinVelocity: Double = 0.08
+        @Comment("The instantaneous vertical impulse vector applied to the ball.")
+        var verticalImpulse: Double = 1.0
 
-    @Comment("Maximum pitch velocity.")
-    var maximumPitch: Int = 60
+        @Comment(
+            "The initial rotational spin impulse applied around the Y-axis upon interaction.",
+            "Negative values create left-curving spin (slice); positive values create right-curving spin (hook)."
+        )
+        var spinImpulse: Double = 0.0
 
-    @Comment("Maximum pitch velocity.")
-    var minimumPitch: Int = 0
-
-    @Comment("Default pitch velocity.")
-    var defaultPitch: Int = 20
-
-    @Comment("Sound effects.")
-    val effects: MutableMap<BallActionType, String> = HashMap()
-
-    class SoccerBallHitBoxMeta {
-        @Comment("Size of the click-able hitbox. Press F3 + B in-game to view it.")
-        var clickHitBoxSize: Double = 1.5
-
-        @Comment("Is leftClicking the ball enabled?")
-        var leftClickEnabled: Boolean = true
-
-        @Comment("Is rightClicking the ball enabled?")
-        var rightClickEnabled: Boolean = true
-
-        @Comment("Size of the running-into hitbox.")
-        var touchHitBoxSize: Double = 1.0
-
-        @Comment("Is running-into the ball enabled?")
-        var touchEnabled: Boolean = true
-
-        @Comment("Allows to move the hitbox up and down on the y-axe to make the ball appear more in the air or closer to the ground.")
-        var offSetY: Double = -0.3
-
-        @Comment("Amount of ticks until the ball can intercept interaction again.")
-        var interactionCoolDownTicks: Int = 20
-
-        @Comment("Delay in ticks until the ball executes the kick pass requested by the player. If you set this to 0, the ball will be more smooth but direction manipulations may not be as accurate anymore.")
-        var leftClickRightClickDelayTicks: Int = 1
-
-        @Comment("Amount of ticks until the ball can intercept interaction by the same player again.")
-        var interactionCoolDownPerPlayerTicks: Int = 7
-
-        @Comment("In older Minecraft versions BlockBall uses a Slime instead of an InteractionEntity to simulate a hitbox. If true, you can make this slime visible in older versions.")
-        var slimeVisible: Boolean = false
+        @Comment("The particle/sound effect name to play when this interaction is successfully triggered.")
+        var effectName: String = ""
     }
 
-    class SoccerBallRenderMeta {
-        @Comment("Size of the rendered ball. These days you can set an arbitrary size. In older Minecraft versions, this version only supported 1.0 (STANDARD) and 0.5 (SMALL). ")
-        var scale: Double = 1.0
+    class PhysicsMeta {
+        @Comment("The bounding diameter used for tracking player click/interact selections. View via F3 + B.")
+        var interactionBoundsSize: Double = 1.5
 
-        @Comment("The item rendering the ball.")
-        var item: Item = Item().also {
+        @Comment("The bounding diameter used for physical player cross-contact and touch-handling.")
+        var collisionBoundsSize: Double = 1.0
+
+        @Comment("Vertical positioning offset on the Y-axis to align the physical simulation boundaries.")
+        var verticalOffset: Double = -0.3
+
+        @Comment("The coefficient of restitution (0.0 to 1.0). 0.0 means no bounce, 1.0 means perfectly elastic bounce back.")
+        var bounciness: Double = 0.7
+
+        @Comment("The simulated weight of the ball. Higher mass requires more impulse force to shift velocity.")
+        var mass: Double = 1.0
+
+        @Comment("The minimum speed threshold. If velocity falls below this value, the ball comes to a complete rest.")
+        var restVelocityThreshold: Double = 0.01
+
+        @Comment("Downward acceleration constant applied per tick when the ball is airborne.")
+        var gravityModifier: Double = 0.07
+
+        @Comment("Velocity dampening coefficient applied per tick while airborne (Air Drag).")
+        var airDrag: Double = 0.001
+
+        @Comment("Velocity dampening coefficient applied per tick while rolling along the ground (Surface Friction).")
+        var rollingFriction: Double = 0.1
+
+        @Comment("The rate at which the ball's rotational spin decays per tick (0.0 to 1.0). 0.0 means no spin loss.")
+        var spinDrag: Double = 0.05
+
+        @Comment("How drastically the active spinning axis curves the flight path vector. Higher values create sharper arcs.")
+        var curveMultiplier: Double = 0.05
+
+        @Comment("Global cooldown in server ticks before the ball can process another physics interaction.")
+        var globalInteractionCooldownTicks: Int = 20
+
+        @Comment("Per-player input throttling cooldown in ticks to prevent rapid-fire physics exploits.")
+        var perPlayerInteractionCooldownTicks: Int = 7
+
+        @Comment("Interval in ticks for refreshing player position data used in collision and interaction calculations.")
+        var fetchPlayerPositionsIntervalTicks : Int = 2
+    }
+    class RenderMeta {
+        @Comment("The global scale modifier transforming the physical scale of the rendered model entity.")
+        var modelScale: Double = 1.0
+
+        @Comment("The underlying item structure holding texture, metadata, and skin maps for rendering.")
+        var visualItem: Item = Item().also {
             it.typeName = "PLAYER_HEAD,397"
             it.durability = "3"
             it.skinBase64 =
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ=="
         }
 
-        @Comment("Should the ball rotate?")
-        var rotating: Boolean = true
+        @Comment("Enables or disables visual procedural rotation based on the ball's velocity vector.")
+        var rotationEnabled: Boolean = true
 
-        @Comment("Allows to move the ball up and down on the y-axe to make the ball appear more in the air or closer to the ground.")
-        var offSetY: Double = -1.0
-    }
+        @Comment("Visual model offset matching the entity presentation strictly to your texture profile.")
+        var visualVerticalOffset: Double = -1.0
 
-    init {
-        effects[BallActionType.ONKICK] = "ball_kick"
+        @Comment("Render radius where the ball is visible to players. Beyond this distance, the ball will not be rendered.")
+        var renderDistance : Int = 60
+
+        @Comment("Legacy fallback: Determines if the physics-simulation Slime entity should be rendered visible.")
+        var slimeVisible: Boolean = false
     }
 }

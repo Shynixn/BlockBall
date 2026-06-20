@@ -29,7 +29,7 @@ class SoccerHubGameImpl(
     plugin: Plugin,
     placeHolderService: PlaceHolderService,
     language: BlockBallLanguage,
-    soccerBallFactory: SoccerBallFactory,
+    soccerBallFactory: SoccerBallService,
     commandService: CommandService,
     itemService: ItemService,
     chatMessageService: ChatMessageService,

@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.shynixn"
-version = "7.40.3"
+version = "7.41.0"
 
 repositories {
     mavenCentral()
@@ -29,13 +29,13 @@ dependencies {
     implementation("com.zaxxer:HikariCP:4.0.3")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.5.1")
-    implementation("com.github.shynixn.shybossbar:shybossbar:1.7.3")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.13.4")
-    implementation("com.github.shynixn.shyparticles:shyparticles:1.3.1")
-    implementation("com.github.shynixn.shyguild:shyguild:1.1.1")
-    implementation("com.github.shynixn.mcutils:common:2026.9")
-    implementation("com.github.shynixn.mcutils:packet:2026.12")
+    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.6.0")
+    implementation("com.github.shynixn.shybossbar:shybossbar:1.8.0")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.14.0")
+    implementation("com.github.shynixn.shyparticles:shyparticles:1.4.0")
+    implementation("com.github.shynixn.shyguild:shyguild:1.2.0")
+    implementation("com.github.shynixn.mcutils:common:2026.11")
+    implementation("com.github.shynixn.mcutils:packet:2026.23")
     implementation("com.github.shynixn.mcutils:worldguard:2026.1")
     implementation("com.github.shynixn.mcutils:database:2026.3")
     implementation("com.github.shynixn.mcutils:http:2026.3")
@@ -107,7 +107,7 @@ fun registerPluginJar(
             relocate("kotlinx", "com.github.shynixn.blockball.lib.kotlinx")
             relocate("org.intellij", "com.github.shynixn.blockball.lib.org.intellij")
             relocate("org.jetbrains", "com.github.shynixn.blockball.lib.org.jetbrains")
-            relocate("javax", "com.github.shynixn.blockball.lib.javax")
+            relocate("org.slf4j", "com.github.shynixn.blockball.lib.org.slf4j")
             relocate("com.zaxxer", "com.github.shynixn.blockball.lib.com.zaxxer")
         }
     }
@@ -143,7 +143,6 @@ fun registerPluginJar(
         exclude("kotlin/**")
         exclude("org/**")
         exclude("kotlinx/**")
-        exclude("javax/**")
         exclude("com/zaxxer/**")
         exclude("com/github/shynixn/shyscoreboard/**")
         exclude("com/github/shynixn/shyparticles/**")
@@ -171,7 +170,8 @@ fun registerPluginJar(
                 "com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R4/**",
                 "com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R5/**",
                 "com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R6/**",
-                "com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R7/**"
+                "com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v1_21_R7/**",
+                "com/github/shynixn/blockball/lib/com/github/shynixn/mcutils/packet/nms/v26_1_R1/**"
             )
             for (path in oldNmsPaths) exclude(path)
         }

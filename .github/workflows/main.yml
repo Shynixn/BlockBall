@@ -102,7 +102,7 @@ jobs:
           wget -O papoa https://github.com/Shynixn/PatreonPostApi/releases/latest/download/papoa-linux-x64
           chmod +x papoa
           ./papoa post create \
-            --title "BlockBall for Folia v${{ env.RELEASE_VERSION }} (1.8.9-26.1.2)" \
+            --title "BlockBall for Folia v${{ env.RELEASE_VERSION }} (1.8.9-26.2)" \
             --content "$RELEASE_PATREON_ELITE" \
             --content-format text/markdown \
             --tier-name "Elite" \
@@ -120,7 +120,7 @@ jobs:
             --attachment-file-name "BlockBall-1.17.0-1.21.11-Premium-Folia.jar" \
             --password "$PAPOA_PASSWORD"
           ./papoa post create \
-            --title "BlockBall v${{ env.RELEASE_VERSION }} (1.8.9-26.1.2)" \
+            --title "BlockBall v${{ env.RELEASE_VERSION }} (1.8.9-26.2)" \
             --content "$RELEASE_PATREON_BASIC" \
             --content-format text/markdown \
             --tier-name "Basic" \
