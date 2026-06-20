@@ -420,6 +420,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../ball/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing the ball
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../interaction/" class="md-nav__link">
         
   
@@ -956,11 +984,17 @@
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onEnable</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">Player</span><span class="w"> </span><span class="n">player</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bukkit</span><span class="p">.</span><span class="na">getPlayer</span><span class="p">(</span><span class="s">&quot;YourPlayerName&quot;</span><span class="p">);</span>
 
-<span class="w">        </span><span class="c1">// Creating a soccer ball independent of a game.</span>
-<span class="w">        </span><span class="n">SoccerBallFactory</span><span class="w"> </span><span class="n">soccerBallFactory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bukkit</span><span class="p">.</span><span class="na">getServicesManager</span><span class="p">().</span><span class="na">load</span><span class="p">(</span><span class="n">SoccerBallFactory</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
-<span class="w">        </span><span class="n">SoccerBall</span><span class="w"> </span><span class="n">soccerBall</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">soccerBallFactory</span><span class="p">.</span><span class="na">createSoccerBall</span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="na">getLocation</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SoccerBallSettings</span><span class="p">());</span>
-<span class="w">        </span><span class="c1">// The is no way to directly set the velocity, but you can kick it relative to the position the player.</span>
-<span class="w">        </span><span class="n">soccerBall</span><span class="p">.</span><span class="na">kickByPlayer</span><span class="p">(</span><span class="n">player</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// Creating a ball for your custom use case (MiniGame, Lobby Ball, etc.)</span>
+<span class="w">        </span><span class="n">SoccerBallService</span><span class="w"> </span><span class="n">soccerBallService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bukkit</span><span class="p">.</span><span class="na">getServicesManager</span><span class="p">().</span><span class="na">load</span><span class="p">(</span><span class="n">SoccerBallService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// Create a file BlockBall/ball/my_custom_ball.yml and design your ball</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">ballName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;my_custom_ball&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">spawnLocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">player</span><span class="p">.</span><span class="na">getLocation</span><span class="p">();</span>
+<span class="w">        </span><span class="c1">// The soccer ball is already ready and can be played by any player.</span>
+<span class="w">        </span><span class="n">SoccerBall</span><span class="w"> </span><span class="n">soccerBall</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">soccerBallService</span><span class="p">.</span><span class="na">spawn</span><span class="p">(</span><span class="n">ballName</span><span class="p">,</span><span class="w"> </span><span class="n">spawnLocation</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// You can additionally move it by code.</span>
+<span class="w">        </span><span class="n">soccerBall</span><span class="p">.</span><span class="na">setVelocity</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Vector</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span><span class="w"> </span><span class="mf">0.3</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2</span><span class="p">));</span>
+<span class="w">        </span><span class="c1">// Teleporting does only work in the same world.</span>
+<span class="w">        </span><span class="n">soccerBall</span><span class="p">.</span><span class="na">teleport</span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="na">getLocation</span><span class="p">().</span><span class="na">add</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">));</span>
 
 <span class="w">        </span><span class="c1">// Letting a player join a game.</span>
 <span class="w">        </span><span class="n">GameService</span><span class="w"> </span><span class="n">gameService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bukkit</span><span class="p">.</span><span class="na">getServicesManager</span><span class="p">().</span><span class="na">load</span><span class="p">(</span><span class="n">GameService</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>

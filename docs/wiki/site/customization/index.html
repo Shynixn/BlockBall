@@ -14,7 +14,7 @@
         <link rel="prev" href="../game/">
       
       
-        <link rel="next" href="../interaction/">
+        <link rel="next" href="../ball/">
       
       
         
@@ -597,17 +597,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ball-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ball Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#team-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -656,17 +645,6 @@
   
     <nav class="md-nav" aria-label="⚙️ Detailed Game Mechanics">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ball-physics-deep-dive" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ball Physics Deep Dive
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#player-movement-and-abilities" class="md-nav__link">
@@ -791,17 +769,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#speed-soccer-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Speed Soccer Mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#beginner-friendly-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -828,17 +795,6 @@
   
     <nav class="md-nav" aria-label="🎵 Sound Effects and Audio">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ball-interaction-sounds" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ball Interaction Sounds
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#countdown-and-ui-sounds" class="md-nav__link">
@@ -884,17 +840,6 @@
     <span class="md-ellipsis">
       
         Color Examples for Teams
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-ball-appearance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom Ball Appearance
       
     </span>
   </a>
@@ -1143,6 +1088,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ball/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing the ball
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1607,17 +1580,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ball-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ball Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#team-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1666,17 +1628,6 @@
   
     <nav class="md-nav" aria-label="⚙️ Detailed Game Mechanics">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ball-physics-deep-dive" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ball Physics Deep Dive
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#player-movement-and-abilities" class="md-nav__link">
@@ -1801,17 +1752,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#speed-soccer-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Speed Soccer Mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#beginner-friendly-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1838,17 +1778,6 @@
   
     <nav class="md-nav" aria-label="🎵 Sound Effects and Audio">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ball-interaction-sounds" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ball Interaction Sounds
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#countdown-and-ui-sounds" class="md-nav__link">
@@ -1894,17 +1823,6 @@
     <span class="md-ellipsis">
       
         Color Examples for Teams
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-ball-appearance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom Ball Appearance
       
     </span>
   </a>
@@ -2259,34 +2177,6 @@
 <span class="w">  </span><span class="nt">yaw</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">38.85</span>
 <span class="w">  </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45.45</span>
 </code></pre></div>
-<h3 id="ball-configuration">Ball Configuration</h3>
-<div class="highlight"><pre><span></span><code><span class="nt">ball</span><span class="p">:</span>
-<span class="w">  </span><span class="c1"># Visual appearance</span>
-<span class="w">  </span><span class="nt">render</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">  </span><span class="c1"># Ball size. You can set anything here in modern Minecraft versions. For older Minecraft versions only use 1.0 and 0.5.</span>
-<span class="w">    </span><span class="nt">rotating</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">offSetY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1.0</span><span class="w">  </span><span class="c1"># Vertical offset for visual positioning</span>
-
-<span class="w">  </span><span class="c1"># Player interaction settings</span>
-<span class="w">  </span><span class="nt">hitbox</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">clickHitBoxSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span>
-<span class="w">    </span><span class="nt">touchHitBoxSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="w">    </span><span class="nt">leftClickEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">rightClickEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">touchEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">interactionCoolDownTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
-<span class="w">    </span><span class="nt">leftClickRightClickDelayTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="w">    </span><span class="nt">interactionCoolDownPerPlayerTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
-<span class="w">    </span><span class="nt">slimeVisible</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-
-<span class="w">  </span><span class="c1"># Physics properties</span>
-<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.07</span><span class="w">      </span><span class="c1"># How fast ball falls</span>
-<span class="w">  </span><span class="nt">airResistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.001</span><span class="w">       </span><span class="c1"># Speed reduction in air</span>
-<span class="w">  </span><span class="nt">rollingResistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">     </span><span class="c1"># Speed reduction on ground</span>
-<span class="w">  </span><span class="nt">shotVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span><span class="w">          </span><span class="c1"># Power of left-click shots</span>
-<span class="w">  </span><span class="nt">shotPassYVelocityOverwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">  </span><span class="c1"># Vertical modifier override</span>
-<span class="w">  </span><span class="nt">passVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2</span><span class="w">          </span><span class="c1"># Power of right-click passes</span>
-</code></pre></div>
 <h3 id="team-setup">Team Setup</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Example team configuration</span>
 <span class="nt">blueTeamMeta</span><span class="p">:</span>
@@ -2381,27 +2271,6 @@
 </code></pre></div>
 <hr />
 <h2 id="detailed-game-mechanics">⚙️ Detailed Game Mechanics</h2>
-<h3 id="ball-physics-deep-dive">Ball Physics Deep Dive</h3>
-<p>Understanding ball physics is crucial for creating the right gameplay feel:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">ball</span><span class="p">:</span>
-<span class="w">  </span><span class="c1"># Gravity and movement</span>
-<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.07</span><span class="w">        </span><span class="c1"># Higher = ball falls faster</span>
-<span class="w">  </span><span class="nt">airResistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.001</span><span class="w">         </span><span class="c1"># Higher = ball slows down more in air</span>
-<span class="w">  </span><span class="nt">rollingResistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">       </span><span class="c1"># Higher = ball stops rolling sooner</span>
-
-<span class="w">  </span><span class="c1"># Player interaction strengths</span>
-<span class="w">  </span><span class="nt">horizontalTouchModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">  </span><span class="c1"># Running into ball power</span>
-<span class="w">  </span><span class="nt">verticalTouchModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">    </span><span class="c1"># Jump-touch ball power</span>
-<span class="w">  </span><span class="nt">shotVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span><span class="w">            </span><span class="c1"># Left-click power shot</span>
-<span class="w">  </span><span class="nt">shotPassYVelocityOverwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">  </span><span class="c1"># Override vertical shot modifier</span>
-<span class="w">  </span><span class="nt">passVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2</span><span class="w">            </span><span class="c1"># Right-click gentle pass</span>
-
-<span class="w">  </span><span class="c1"># Ball rotation and limits</span>
-<span class="w">  </span><span class="nt">maximumSpinVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.08</span><span class="w">    </span><span class="c1"># How much the ball can spin</span>
-<span class="w">  </span><span class="nt">maximumPitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w">             </span><span class="c1"># Highest angle ball can fly</span>
-<span class="w">  </span><span class="nt">minimumPitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">              </span><span class="c1"># Lowest angle (ground level)</span>
-<span class="w">  </span><span class="nt">defaultPitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">             </span><span class="c1"># Standard launch angle</span>
-</code></pre></div>
 <h3 id="player-movement-and-abilities">Player Movement and Abilities</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">meta</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">doubleJumpMeta</span><span class="p">:</span>
@@ -2505,12 +2374,6 @@
 <span class="w">        </span><span class="nt">closeType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIME_OVER</span>
 <span class="w">        </span><span class="nt">playAbleBall</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="c1"># Faster ball physics</span>
-<span class="nt">ball</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">shotVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span><span class="w">          </span><span class="c1"># More powerful shots</span>
-<span class="w">  </span><span class="nt">passVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.8</span><span class="w">          </span><span class="c1"># Faster passes</span>
-<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span><span class="w">      </span><span class="c1"># Ball stays in air longer</span>
-
 <span class="c1"># Enhanced movement</span>
 <span class="nt">meta</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">doubleJumpMeta</span><span class="p">:</span>
@@ -2553,11 +2416,6 @@
 <span class="w">    </span><span class="nt">resetArenaOnEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">       </span><span class="c1"># Reset when no players</span>
 <span class="w">    </span><span class="nt">teleportOnJoin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">         </span><span class="c1"># Join where you stand</span>
 
-<span class="c1"># Relaxed physics</span>
-<span class="nt">ball</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">shotVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">          </span><span class="c1"># Standard power</span>
-<span class="w">  </span><span class="nt">rollingResistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span><span class="w">     </span><span class="c1"># Ball stops rolling sooner</span>
-
 <span class="c1"># No special abilities  </span>
 <span class="nt">meta</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">doubleJumpMeta</span><span class="p">:</span>
@@ -2565,39 +2423,8 @@
 <span class="w">  </span><span class="nt">customizingMeta</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">forceFieldEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"> </span><span class="c1"># Players can leave field</span>
 </code></pre></div>
-<h3 id="speed-soccer-mode">Speed Soccer Mode</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># High-speed, low-gravity soccer</span>
-<span class="nt">ball</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">render</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span><span class="w">               </span><span class="c1"># Smaller, faster ball</span>
-<span class="w">  </span><span class="nt">shotVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.0</span><span class="w">          </span><span class="c1"># Extremely powerful shots</span>
-<span class="w">  </span><span class="nt">passVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.5</span><span class="w">          </span><span class="c1"># Fast passes</span>
-<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.02</span><span class="w">      </span><span class="c1"># Low gravity, floaty ball</span>
-<span class="w">  </span><span class="nt">airResistance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0005</span><span class="w">      </span><span class="c1"># Ball maintains speed longer</span>
-
-<span class="nt">meta</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">doubleJumpMeta</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cooldown</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">            </span><span class="c1"># Double jump twice per second</span>
-<span class="w">    </span><span class="nt">verticalStrength</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span><span class="w">    </span><span class="c1"># Super high jumps</span>
-<span class="w">    </span><span class="nt">horizontalStrength</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.0</span><span class="w">  </span><span class="c1"># Rocket-like movement</span>
-
-<span class="w">  </span><span class="nt">customizingMeta</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">damageEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">     </span><span class="c1"># No fall damage from high jumps</span>
-</code></pre></div>
 <h3 id="beginner-friendly-setup">Beginner-Friendly Setup</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Easy mode for new players</span>
-<span class="nt">ball</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">render</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span><span class="w">               </span><span class="c1"># Bigger ball, easier to see/hit</span>
-<span class="w">  </span><span class="nt">hitbox</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">clickHitBoxSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span><span class="w">     </span><span class="c1"># Larger click area</span>
-<span class="w">    </span><span class="nt">touchHitBoxSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span><span class="w">     </span><span class="c1"># Easier to run into</span>
-<span class="w">    </span><span class="nt">interactionCoolDownTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">  </span><span class="c1"># Faster interaction</span>
-
-<span class="w">  </span><span class="nt">shotVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.8</span><span class="w">          </span><span class="c1"># Gentler shots</span>
-<span class="w">  </span><span class="nt">passVelocity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span><span class="w">          </span><span class="c1"># Slower passes</span>
-<span class="w">  </span><span class="nt">gravityModifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">       </span><span class="c1"># Ball doesn&#39;t fly too high</span>
-
 <span class="nt">meta</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">lobbyMeta</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">maxScore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span><span class="w">             </span><span class="c1"># Longer games</span>
@@ -2609,16 +2436,6 @@
 </code></pre></div>
 <hr />
 <h2 id="sound-effects-and-audio">🎵 Sound Effects and Audio</h2>
-<h3 id="ball-interaction-sounds">Ball Interaction Sounds</h3>
-<div class="highlight"><pre><span></span><code><span class="nt">ball</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">soundEffects</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">ONKICK</span><span class="p">:</span>
-<span class="w">      </span><span class="c1"># Multiple sound names for different Minecraft versions</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR,ENTITY_ZOMBIE_ATTACK_DOOR_WOOD,ZOMBIE_WOOD</span>
-<span class="w">      </span><span class="nt">volume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0</span><span class="w">           </span><span class="c1"># Sound volume (0.0 to 10.0)</span>
-<span class="w">      </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span><span class="w">             </span><span class="c1"># Sound pitch (0.5 to 2.0)</span>
-<span class="w">      </span><span class="nt">effectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVERYONE</span><span class="w">   </span><span class="c1"># Who hears it: EVERYONE, TEAM, SELF</span>
-</code></pre></div>
 <h3 id="countdown-and-ui-sounds">Countdown and UI Sounds</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">meta</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">minigameMeta</span><span class="p">:</span>
@@ -2667,21 +2484,6 @@
 <span class="c1"># Orange Team: RGB(255, 165, 0)</span>
 <span class="c1"># Pink Team: RGB(255, 192, 203)</span>
 <span class="c1"># Cyan Team: RGB(0, 255, 255)</span>
-</code></pre></div>
-<h3 id="custom-ball-appearance">Custom Ball Appearance</h3>
-<div class="highlight"><pre><span></span><code><span class="nt">ball</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">render</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># Custom ball item (soccer ball head texture)</span>
-<span class="w">    </span><span class="nt">item</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">typeName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAYER_HEAD,397</span>
-<span class="w">      </span><span class="nt">amount</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1&#39;</span>
-<span class="w">      </span><span class="nt">durability</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3&#39;</span>
-<span class="w">      </span><span class="c1"># Base64 encoded soccer ball skin</span>
-<span class="w">      </span><span class="nt">skinBase64</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==</span>
-
-<span class="w">    </span><span class="c1"># Ball positioning and rotation</span>
-<span class="w">    </span><span class="nt">rotating</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">           </span><span class="c1"># Ball spins as it moves</span>
-<span class="w">    </span><span class="nt">offSetY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1.0</span><span class="w">           </span><span class="c1"># Visual height adjustment</span>
 </code></pre></div>
 <h3 id="understanding-command-types">Understanding Command Types</h3>
 <p>BlockBall supports three types of command execution:</p>
@@ -2842,11 +2644,6 @@
 </table>
 <h3 id="performance-optimization-tips">Performance Optimization Tips</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Reduce server load for large servers</span>
-<span class="nt">ball</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">hitbox</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">interactionCoolDownTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">      </span><span class="c1"># Prevent spam clicking</span>
-<span class="w">    </span><span class="nt">interactionCoolDownPerPlayerTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w">  </span><span class="c1"># Per-player cooldown</span>
-
 <span class="nt">meta</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">customizingMeta</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">gameStartBallSpawnDelayTicks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">   </span><span class="c1"># Reduce instant spawn lag</span>
@@ -3014,13 +2811,13 @@
         
         
           
-          <a href="../interaction/" class="md-footer__link md-footer__link--next" aria-label="Next: Interactions">
+          <a href="../ball/" class="md-footer__link md-footer__link--next" aria-label="Next: Customizing the ball">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Interactions
+                Customizing the ball
               </div>
             </div>
             <div class="md-footer__button md-icon">
