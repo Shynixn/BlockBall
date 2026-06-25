@@ -1,5 +1,13 @@
 # Changelog
 
+## Release 7.41.1
+
+### Bugs/Issues
+
+* #747 Fixed compatibility with Paper 26.2 builds.
+
+---
+
 ## Release 7.41.0
 
 ### Changes
