@@ -29,11 +29,11 @@ dependencies {
     implementation("com.zaxxer:HikariCP:4.0.3")
 
     // Custom dependencies
-    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.6.0")
-    implementation("com.github.shynixn.shybossbar:shybossbar:1.8.0")
-    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.14.0")
-    implementation("com.github.shynixn.shyparticles:shyparticles:1.4.0")
-    implementation("com.github.shynixn.shyguild:shyguild:1.2.0")
+    implementation("com.github.shynixn.shycommandsigns:shycommandsigns:1.6.1")
+    implementation("com.github.shynixn.shybossbar:shybossbar:1.8.1")
+    implementation("com.github.shynixn.shyscoreboard:shyscoreboard:1.14.1")
+    implementation("com.github.shynixn.shyparticles:shyparticles:1.4.1")
+    implementation("com.github.shynixn.shyguild:shyguild:1.2.1")
     implementation("com.github.shynixn.mcutils:common:2026.13")
     implementation("com.github.shynixn.mcutils:packet:2026.24")
     implementation("com.github.shynixn.mcutils:worldguard:2026.1")
