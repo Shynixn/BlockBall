@@ -1,5 +1,5 @@
 name: BlockBall
-version: 7.41.0
+version: 7.41.1
 author: Shynixn
 main: com.github.shynixn.blockball.BlockBallPlugin
 softdepend: [ PlaceholderAPI, LuckPerms]
