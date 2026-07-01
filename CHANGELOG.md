@@ -1,5 +1,13 @@
 # Changelog
 
+## Release 7.41.2
+
+### Bugs/Issues
+
+* #749 Fixed throw-ins and corner kicks positions were not calculated correctly.
+
+---
+
 ## Release 7.41.1
 
 ### Bugs/Issues

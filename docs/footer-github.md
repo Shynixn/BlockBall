@@ -1,7 +1,7 @@
 
 ### BlockBall (Premium)
 
-* For Minecraft 1.8.9 - 26.1
+* For Minecraft 1.8.9 - 26.2
 * Bedrock GeyserMC resource pack (skin and ball rotation for bedrock servers)
 * Stats tracking (Amount of Goals, WinRate, etc.)
 * Supports Folia
@@ -12,5 +12,5 @@
 
 ### BlockBall (Free)
 
-* For Minecraft 26.1 (the free version only supports the latest Minecraft version)
+* For Minecraft 26.2 (the free version only supports the latest Minecraft version)
 * Download: [BlockBall.jar](https://github.com/Shynixn/BlockBall/releases/download/<version>/BlockBall.jar)
