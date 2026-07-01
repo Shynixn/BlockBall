@@ -1119,18 +1119,24 @@ abstract class SoccerGameImpl(
      * Projects [ballLocation] onto the boundary of the inner playing field in the given [exitDirection].
      * This gives the sideline position where a throw-in should be taken.
      * If the exit direction cannot be determined (DOWN), the ball spawn point is used as fallback.
+     *
+     * Coordinate convention (from [Selection.getRelativeBlockDirectionToLocation]):
+     * - EAST  = maxX (corner1.x)
+     * - WEST  = minX (corner2.x)
+     * - SOUTH = maxZ (corner1.z)
+     * - NORTH = minZ (corner2.z)
      */
     private fun findThrowInLocation(ballLocation: Vector3d, exitDirection: BlockFace): Location {
-        val c1 = arena.corner1!!   // higher X (WEST edge) / higher Z (NORTH edge)
-        val c2 = arena.corner2!!   // lower  X (EAST edge) / lower  Z (SOUTH edge)
+        val c1 = arena.corner1!!   // max corner (maxX, maxZ) — East / South
+        val c2 = arena.corner2!!   // min corner (minX, minZ) — West / North
         val world = org.bukkit.Bukkit.getWorld(arena.ballSpawnPoint!!.world!!)
         val y = arena.ballSpawnPoint!!.y
 
         val location = when (exitDirection) {
-            BlockFace.WEST -> Location(world, c1.x, y, ballLocation.z.coerceIn(c2.z, c1.z))
-            BlockFace.EAST -> Location(world, c2.x, y, ballLocation.z.coerceIn(c2.z, c1.z))
-            BlockFace.NORTH -> Location(world, ballLocation.x.coerceIn(c2.x, c1.x), y, c1.z)
-            BlockFace.SOUTH -> Location(world, ballLocation.x.coerceIn(c2.x, c1.x), y, c2.z)
+            BlockFace.WEST -> Location(world, c2.x, y, ballLocation.z.coerceIn(c2.z, c1.z))
+            BlockFace.EAST -> Location(world, c1.x, y, ballLocation.z.coerceIn(c2.z, c1.z))
+            BlockFace.NORTH -> Location(world, ballLocation.x.coerceIn(c2.x, c1.x), y, c2.z)
+            BlockFace.SOUTH -> Location(world, ballLocation.x.coerceIn(c2.x, c1.x), y, c1.z)
             else -> arena.ballSpawnPoint!!.toLocation()
         }
 
@@ -1146,10 +1152,19 @@ abstract class SoccerGameImpl(
     /**
      * Returns the corner of the playing field nearest to [ballLocation] on the given [exitDirection] goal-line.
      * The player facing direction is set toward the arena center.
+     *
+     * Coordinate convention (from [Selection.getRelativeBlockDirectionToLocation]):
+     * - EAST  = maxX (corner1.x)
+     * - WEST  = minX (corner2.x)
+     * - SOUTH = maxZ (corner1.z)
+     * - NORTH = minZ (corner2.z)
+     *
+     * Note: corner kicks are only triggered for goal-line exits (EAST/WEST), so the
+     * NORTH/SOUTH branches serve as a safe fallback.
      */
     private fun findCornerKickLocation(ballLocation: Vector3d, exitDirection: BlockFace): Location {
-        val c1 = arena.corner1!!
-        val c2 = arena.corner2!!
+        val c1 = arena.corner1!!   // max corner (maxX, maxZ) — East / South
+        val c2 = arena.corner2!!   // min corner (minX, minZ) — West / North
         val world = org.bukkit.Bukkit.getWorld(arena.ballSpawnPoint!!.world!!)
         val y = arena.ballSpawnPoint!!.y
         val centerX = (c1.x + c2.x) / 2.0
@@ -1158,22 +1173,22 @@ abstract class SoccerGameImpl(
         val location = when (exitDirection) {
             BlockFace.NORTH -> {
                 val cornerX = if (ballLocation.x >= centerX) c1.x else c2.x
-                Location(world, cornerX, y, c1.z)
+                Location(world, cornerX, y, c2.z)
             }
 
             BlockFace.SOUTH -> {
                 val cornerX = if (ballLocation.x >= centerX) c1.x else c2.x
-                Location(world, cornerX, y, c2.z)
+                Location(world, cornerX, y, c1.z)
             }
 
             BlockFace.WEST -> {
                 val cornerZ = if (ballLocation.z >= centerZ) c1.z else c2.z
-                Location(world, c1.x, y, cornerZ)
+                Location(world, c2.x, y, cornerZ)
             }
 
             BlockFace.EAST -> {
                 val cornerZ = if (ballLocation.z >= centerZ) c1.z else c2.z
-                Location(world, c2.x, y, cornerZ)
+                Location(world, c1.x, y, cornerZ)
             }
 
             else -> arena.ballSpawnPoint!!.toLocation()
