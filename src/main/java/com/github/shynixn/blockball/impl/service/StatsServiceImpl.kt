@@ -6,10 +6,10 @@ import com.github.shynixn.blockball.entity.LeaderBoardStats
 import com.github.shynixn.blockball.entity.PlayerInformation
 import com.github.shynixn.blockball.entity.StatsMeta
 import com.github.shynixn.mcutils.common.CoroutineHandler
+import com.github.shynixn.mcutils.common.log
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import kotlinx.coroutines.delay
 import org.bukkit.plugin.Plugin
-import java.util.logging.Level
 
 class StatsServiceImpl(
     private val playerDataRepository: PlayerDataRepository<PlayerInformation>,
@@ -30,7 +30,7 @@ class StatsServiceImpl(
             return
         }
 
-        plugin.logger.log(Level.INFO, "Enabled LeaderBoard tracking.")
+        plugin.log.info( "Enabled LeaderBoard tracking.")
         coroutineHandler.execute {
             while (!isDisposed) {
                 val stats = LeaderBoardStats()

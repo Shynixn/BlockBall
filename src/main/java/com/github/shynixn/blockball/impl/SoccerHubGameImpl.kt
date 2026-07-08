@@ -15,6 +15,7 @@ import com.github.shynixn.mcutils.common.chat.ClickEventType
 import com.github.shynixn.mcutils.common.chat.TextComponent
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
+import com.github.shynixn.mcutils.common.log
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import org.bukkit.Bukkit
@@ -136,6 +137,7 @@ class SoccerHubGameImpl(
         if (arena.meta.hubLobbyMeta.teleportOnJoin) {
             this.respawn(player, team)
         } else {
+            plugin.log.debug("Player ${player.name} is moved towards the arena ${arena.name}.")
             val velocityIntoArena = player.location.direction.normalize().multiply(0.5)
             player.velocity = velocityIntoArena
         }

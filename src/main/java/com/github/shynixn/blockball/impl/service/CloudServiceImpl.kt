@@ -2,19 +2,15 @@ package com.github.shynixn.blockball.impl.service
 
 import com.github.shynixn.blockball.contract.BlockBallLanguage
 import com.github.shynixn.blockball.contract.CloudService
-import com.github.shynixn.blockball.entity.*
-import com.github.shynixn.blockball.entity.cloud.CloudApiKeySet
-import com.github.shynixn.blockball.entity.cloud.CloudCredentials
-import com.github.shynixn.blockball.entity.cloud.CloudGame
-import com.github.shynixn.blockball.entity.cloud.CloudGameDataResponse
-import com.github.shynixn.blockball.entity.cloud.CloudPublicKeys
-import com.github.shynixn.blockball.entity.cloud.CloudServerDataResponse
-import com.github.shynixn.blockball.entity.cloud.CloudSessionStart
+import com.github.shynixn.blockball.entity.PlayerInformation
+import com.github.shynixn.blockball.entity.StatsMeta
+import com.github.shynixn.blockball.entity.cloud.*
 import com.github.shynixn.fasterxml.jackson.databind.DeserializationFeature
 import com.github.shynixn.fasterxml.jackson.databind.ObjectMapper
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.CoroutineHandler
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
+import com.github.shynixn.mcutils.common.log
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.mcutils.http.HttpClientFactory
 import com.github.shynixn.mcutils.http.HttpClientSettings
@@ -28,7 +24,6 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.io.IOException
 import java.util.*
-import java.util.logging.Level
 
 class CloudServiceImpl(
     private val plugin: Plugin,
@@ -56,7 +51,7 @@ class CloudServiceImpl(
         loginProcess.add(sender)
 
         withContext(Dispatchers.IO) {
-            plugin.logger.log(Level.INFO, "Starting login flow...")
+            plugin.log.info("Starting login flow...")
             withContext(coroutineHandler.fetchGlobalRegionDispatcher()) {
                 chatMessageService.sendLanguageMessage(sender, language.cloudLoginStart)
             }
@@ -171,7 +166,7 @@ class CloudServiceImpl(
             )
 
             if (response.isSuccessStatusCode) {
-                plugin.logger.log(Level.INFO, "Successfully published game.")
+                plugin.log.info("Successfully published game.")
                 return response.result!!.data.id
             } else if (retry) {
                 refreshTokens(credentials.refreshToken)
@@ -201,7 +196,7 @@ class CloudServiceImpl(
                 throw IOException("HTTP ${refreshTokenResponse.statusCode}: Failed to refresh tokens - ${refreshTokenResponse.error}")
             }
 
-            plugin.logger.log(Level.INFO, "Refreshed access tokens.")
+            plugin.log.info("Refreshed access tokens.")
             val objectMapper = ObjectMapper()
             playerDataRepository.save(PlayerInformation().also {
                 it.isPersisted = playerDataRepository.getByPlayerUUID(UUID.fromString(emptyGuid)) != null

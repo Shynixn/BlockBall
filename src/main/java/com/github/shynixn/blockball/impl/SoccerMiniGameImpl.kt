@@ -28,7 +28,7 @@ import java.time.Instant
 open class SoccerMiniGameImpl(
     arena: SoccerArena,
     playerDataRepository: PlayerDataRepository<PlayerInformation>,
-    private val plugin: Plugin,
+   plugin: Plugin,
     placeHolderService: PlaceHolderService,
     chatMessageService: ChatMessageService,
     private val soundService: SoundService,

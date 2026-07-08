@@ -1,5 +1,19 @@
 # Changelog
 
+## Release 7.42.0
+
+### Changes
+
+* #753 Added new logging settings to the config.yml. It is highly recommended to delete the config.yml to let it be recreated.
+* #753 You can now configure the log level of BlockBall for the main server console and BlockBall-only log file found in the /plugins/BlockBall/logs folder.
+* #753 Log levels can be switched without server shutdown and applied via the /blockball reload command. This is useful for cases where you want to actively investigate something using DEBUG mode.
+
+### Bugs/Issues
+
+* #752 Fixed html color codes did not work in standard chat messages.
+
+---
+
 ## Release 7.41.2
 
 ### Bugs/Issues

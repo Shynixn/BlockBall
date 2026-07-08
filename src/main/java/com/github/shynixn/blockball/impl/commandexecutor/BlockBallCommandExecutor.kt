@@ -36,7 +36,6 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.awt.Color
 import java.util.*
-import java.util.logging.Level
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
@@ -602,7 +601,7 @@ class BlockBallCommandExecutor(
                             sender.sendLanguageMessage(language.cloudLoginComplete)
                         } catch (e: Exception) {
                             sender.sendLanguageMessage(language.commonErrorMessage)
-                            plugin.logger.log(Level.WARNING, "An error occurred during cloud login", e)
+                            plugin.log.error("An error occurred during cloud login", e)
                         }
                     }
                 }
@@ -1307,8 +1306,7 @@ class BlockBallCommandExecutor(
         if (arena == null) {
             plugin.reloadConfig()
             plugin.reloadTranslation(language)
-            plugin.logger.log(Level.INFO, "Loaded language file.")
-
+            plugin.log.reload()
             try {
                 arenaRepository.clearCache()
                 gameService.reloadAll()
