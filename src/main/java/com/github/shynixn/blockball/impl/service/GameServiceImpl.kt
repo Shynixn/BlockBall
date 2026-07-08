@@ -17,6 +17,7 @@ import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
+import com.github.shynixn.mcutils.common.log
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.repository.Repository
 import com.github.shynixn.mcutils.common.sound.SoundService
@@ -25,7 +26,6 @@ import kotlinx.coroutines.delay
 import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import java.util.logging.Level
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -88,7 +88,7 @@ class GameServiceImpl(
             val copy = games.toMutableList()
             copy.remove(existingGame)
             games = copy
-            plugin.logger.log(Level.INFO, "Stopped game '" + arena.name + "'.")
+            plugin.log.info("Stopped game '" + arena.name + "'.")
         }
 
         if (arena.enabled) {
@@ -153,9 +153,9 @@ class GameServiceImpl(
             val copy = games.toMutableList()
             copy.add(game)
             games = copy
-            plugin.logger.log(Level.INFO, "Game '" + arena.name + "' is ready.")
+            plugin.log.info( "Game '" + arena.name + "' is ready.")
         } else {
-            plugin.logger.log(Level.INFO, "Cannot boot game '" + arena.name + "' because it is not enabled.")
+            plugin.log.warning("Cannot boot game '" + arena.name + "' because it is not enabled.")
         }
     }
 
@@ -222,7 +222,7 @@ class GameServiceImpl(
             try {
                 game.close()
             } catch (e: Exception) {
-                plugin.logger.log(Level.SEVERE, "Failed to dispose game.", e)
+                plugin.log.error("Failed to dispose game.", e)
             }
         }
 
@@ -317,7 +317,7 @@ class GameServiceImpl(
         if (arena.outerField.corner1 == null || arena.outerField.corner2 == null) {
             arena.outerField.corner1 = arena.corner1!!.copy()
             arena.outerField.corner2 = arena.corner2!!.copy()
-            plugin.logger.log(Level.INFO, "Auto-set outer field for arena ${arena.name}.")
+            plugin.log.info("Auto-set outer field for arena ${arena.name}.")
         }
 
         // If players set a too small arena height for outer field detection, automatically fix it.

@@ -8,7 +8,10 @@ import com.github.shynixn.blockball.entity.SoccerBallMeta
 import com.github.shynixn.blockball.enumeration.PlaceHolder
 import com.github.shynixn.blockball.impl.commandexecutor.BlockBallCommandExecutor
 import com.github.shynixn.blockball.impl.exception.SoccerGameException
-import com.github.shynixn.blockball.impl.listener.*
+import com.github.shynixn.blockball.impl.listener.BallListener
+import com.github.shynixn.blockball.impl.listener.DoubleJumpListener
+import com.github.shynixn.blockball.impl.listener.ForceFieldListener
+import com.github.shynixn.blockball.impl.listener.GameListener
 import com.github.shynixn.mccoroutine.folia.*
 import com.github.shynixn.mcutils.common.*
 import com.github.shynixn.mcutils.common.di.DependencyInjectionModule
@@ -53,18 +56,13 @@ import com.github.shynixn.shyscoreboard.entity.ShyScoreboardSettings
 import com.github.shynixn.shyscoreboard.impl.commandexecutor.ShyScoreboardCommandExecutor
 import com.github.shynixn.shyscoreboard.impl.listener.ShyScoreboardListener
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.plugin.ServicePriority
 import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.util.Vector
-import java.nio.file.Files
-import java.util.logging.Level
 import kotlin.coroutines.CoroutineContext
-import kotlin.io.path.absolutePathString
 
 /**
  * Plugin Main.
@@ -136,36 +134,36 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
 
         if (!Version.serverVersion.isCompatible(*versions)) {
             immediateDisable = true
-            logger.log(Level.SEVERE, "================================================")
-            logger.log(Level.SEVERE, "BlockBall does not support your server version")
-            logger.log(Level.SEVERE, "Install v" + versions[0].from + " - v" + versions[versions.size - 1].to)
-            logger.log(Level.SEVERE, "Need support for a particular version? Go to https://www.patreon.com/Shynixn")
-            logger.log(Level.SEVERE, "Plugin gets now disabled!")
-            logger.log(Level.SEVERE, "================================================")
+            log.error("================================================")
+            log.error("BlockBall does not support your server version")
+            log.error("Install v" + versions[0].from + " - v" + versions[versions.size - 1].to)
+            log.error("Need support for a particular version? Go to https://www.patreon.com/Shynixn")
+            log.error("Plugin gets now disabled!")
+            log.error("================================================")
             Bukkit.getPluginManager().disablePlugin(this)
             return
         }
 
-        logger.log(Level.INFO, "Loaded NMS version ${Version.serverVersion}.")
+        log.info("Loaded NMS version ${Version.serverVersion}.")
 
         if (mcCoroutineConfiguration.isFoliaLoaded && !checkIfFoliaIsLoadable()) {
-            logger.log(Level.SEVERE, "================================================")
-            logger.log(Level.SEVERE, "BlockBall for Folia requires BlockBall-Premium-Folia.jar")
-            logger.log(Level.SEVERE, "Go to https://www.patreon.com/Shynixn to download it.")
-            logger.log(Level.SEVERE, "Plugin gets now disabled!")
-            logger.log(Level.SEVERE, "================================================")
+            log.error("================================================")
+            log.error("BlockBall for Folia requires BlockBall-Premium-Folia.jar")
+            log.error("Go to https://www.patreon.com/Shynixn to download it.")
+            log.error("Plugin gets now disabled!")
+            log.error("================================================")
             Bukkit.getPluginManager().disablePlugin(this)
             return
         }
 
         if (isFoliaLoaded()) {
-            logger.log(Level.INFO, "Loading Folia components.")
+            log.info("Loading Folia components.")
         }
 
         // Load BlockBallLanguage
         val language = BlockBallLanguageImpl()
         reloadTranslation(language)
-        logger.log(Level.INFO, "Loaded language file.")
+        log.info("Loaded language file.")
 
         // Module
         val placeHolderService = PlaceHolderServiceImpl(this, Bukkit.getPluginManager())
@@ -230,7 +228,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
             try {
                 gameService.reloadAll()
             } catch (e: SoccerGameException) {
-                plugin.logger.log(Level.WARNING, " Cannot start game of soccerArena ${e.arena.name}.", e)
+                plugin.log.warning(" Cannot start game of soccerArena ${e.arena.name}.", e)
             }
 
             // Enable stats
@@ -292,6 +290,7 @@ class BlockBallPlugin : JavaPlugin(), CoroutineHandler {
         bossBarModule?.close()
         signModule?.close()
         particlesModule?.close()
+        log.close()
     }
 
     private fun loadShyBossBarModule(

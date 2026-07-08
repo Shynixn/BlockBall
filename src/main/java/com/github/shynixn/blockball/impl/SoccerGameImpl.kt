@@ -4,11 +4,7 @@ import com.github.shynixn.blockball.contract.*
 import com.github.shynixn.blockball.entity.*
 import com.github.shynixn.blockball.entity.cloud.CloudGame
 import com.github.shynixn.blockball.entity.cloud.CloudPlayer
-import com.github.shynixn.blockball.enumeration.GameState
-import com.github.shynixn.blockball.enumeration.GameSubState
-import com.github.shynixn.blockball.enumeration.JoinResult
-import com.github.shynixn.blockball.enumeration.LeaveResult
-import com.github.shynixn.blockball.enumeration.Team
+import com.github.shynixn.blockball.enumeration.*
 import com.github.shynixn.blockball.event.GameEndEvent
 import com.github.shynixn.blockball.event.GameGoalEvent
 import com.github.shynixn.blockball.event.GameJoinEvent
@@ -17,15 +13,16 @@ import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
 import com.github.shynixn.mcutils.common.ChatColor
 import com.github.shynixn.mcutils.common.CoroutineHandler
+import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.chat.ChatMessageService
 import com.github.shynixn.mcutils.common.command.CommandMeta
 import com.github.shynixn.mcutils.common.command.CommandService
 import com.github.shynixn.mcutils.common.item.ItemService
 import com.github.shynixn.mcutils.common.language.LanguageType
+import com.github.shynixn.mcutils.common.log
 import com.github.shynixn.mcutils.common.placeholder.PlaceHolderService
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector3d
-import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.database.api.PlayerDataRepository
 import com.github.shynixn.shyguild.entity.Guild
 import kotlinx.coroutines.delay
@@ -40,8 +37,6 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import java.util.logging.Level
-
 
 abstract class SoccerGameImpl(
     /**
@@ -49,7 +44,7 @@ abstract class SoccerGameImpl(
      */
     override val arena: SoccerArena,
     val placeHolderService: PlaceHolderService,
-    private val plugin: Plugin,
+    val plugin: Plugin,
     val soccerBallService: SoccerBallService,
     private val commandService: CommandService,
     override val language: BlockBallLanguage,
@@ -146,7 +141,6 @@ abstract class SoccerGameImpl(
     override var ball: SoccerBall? = null
 
 
-
     /**
      * Contains players which are in cooldown by doublejump.
      */
@@ -241,10 +235,12 @@ abstract class SoccerGameImpl(
      * Does nothing if the player is already in a Game.
      */
     override fun join(player: Player, team: Team?): JoinResult {
+        plugin.log.debug("[BlockBall] Player '${player.name}' initiating entry sequence for Arena: '${arena.name}' (Game ID: $id). Requested Team: ${team ?: "AUTOMATIC"}")
         val event = GameJoinEvent(player, this)
         server.pluginManager.callEvent(event)
 
         if (event.isCancelled()) {
+            plugin.log.debug("[BlockBall] GameJoinEvent for '${player.name}' in Arena: '${arena.name}' was cancelled by an external listener.")
             return JoinResult.EVENT_CANCELLED
         }
 
@@ -266,25 +262,32 @@ abstract class SoccerGameImpl(
         }
 
         val result = if (joiningTeam == Team.RED && redTeam.size < arena.meta.redTeamMeta.maxAmount) {
+            plugin.log.debug("[BlockBall] Allocating player '${player.name}' to Team RED in Arena: '${arena.name}'. Current capacity: ${redTeam.size}/${arena.meta.redTeamMeta.maxAmount}")
             setPlayerToArena(player, joiningTeam)
             storeTemporaryPlayerData(player, joiningTeam)
             executeCommandsWithPlaceHolder(setOf(player), arena.meta.redTeamMeta.joinCommands)
+            plugin.log.debug("[BlockBall] Successfully processed registration for player '${player.name}' to Team RED in Arena: '${arena.name}'.")
             JoinResult.SUCCESS_RED
         } else if (joiningTeam == Team.BLUE && blueTeam.size < arena.meta.blueTeamMeta.maxAmount) {
+            plugin.log.debug("[BlockBall] Allocating player '${player.name}' to Team BLUE in Arena: '${arena.name}'. Current capacity: ${blueTeam.size}/${arena.meta.blueTeamMeta.maxAmount}")
             setPlayerToArena(player, joiningTeam)
             storeTemporaryPlayerData(player, joiningTeam)
             executeCommandsWithPlaceHolder(setOf(player), arena.meta.blueTeamMeta.joinCommands)
+            plugin.log.debug("[BlockBall] Successfully processed registration for player '${player.name}' to Team BLUE in Arena: '${arena.name}'.")
             JoinResult.SUCCESS_BLUE
         } else if (joiningTeam == Team.REFEREE && refereeTeam.size < arena.meta.refereeTeamMeta.maxAmount) {
+            plugin.log.debug("[BlockBall] Allocating player '${player.name}' as REFEREE in Arena: '${arena.name}'. Current capacity: ${refereeTeam.size}/${arena.meta.refereeTeamMeta.maxAmount}")
             setPlayerToArena(player, joiningTeam)
             storeTemporaryPlayerData(player, joiningTeam)
             executeCommandsWithPlaceHolder(setOf(player), arena.meta.refereeTeamMeta.joinCommands)
+            plugin.log.debug("[BlockBall] Successfully processed registration for player '${player.name}' as REFEREE in Arena: '${arena.name}'.")
             JoinResult.SUCCESS_REFEREE
         } else {
             JoinResult.TEAM_FULL
         }
 
         if (result == JoinResult.TEAM_FULL) {
+            plugin.log.debug("[BlockBall] Allocation rejected: Target group/team '$joiningTeam' is full or unavailable for player '${player.name}' in Arena: '${arena.name}'.")
             return result
         }
 
@@ -298,6 +301,7 @@ abstract class SoccerGameImpl(
             if (playerData != null) {
                 playerData.cachedStorage = ingamePlayersStorage[player]
                 playerData.statsMeta.joinedGames++
+                plugin.log.debug("[BlockBall] Performance stats adjusted for '${player.name}' in Arena: '${arena.name}'. Stats: Games Joined: ${playerData.statsMeta.joinedGames}, Cached Level: ${playerData.cachedStorage?.level}, Cached Exp: ${playerData.cachedStorage?.exp}")
             }
         }
 
@@ -308,7 +312,10 @@ abstract class SoccerGameImpl(
      * Leaves the given player.
      */
     override fun leave(player: Player): LeaveResult {
+        plugin.log.debug("[BlockBall] Player '${player.name}' initiated exit sequence from Arena: '${arena.name}' (Game ID: $id).")
+
         if (!ingamePlayersStorage.containsKey(player)) {
+            plugin.log.debug("[BlockBall] Player '${player.name}' requested leave but was not registered active in Arena: '${arena.name}'.")
             return LeaveResult.NOT_IN_MATCH
         }
 
@@ -316,11 +323,12 @@ abstract class SoccerGameImpl(
         server.pluginManager.callEvent(event)
 
         if (event.isCancelled()) {
+            plugin.log.debug("[BlockBall] GameLeaveEvent for '${player.name}' in Arena: '${arena.name}' was cancelled by an external listener.")
             return LeaveResult.EVENT_CANCELLED
         }
 
         val playerData = ingamePlayersStorage[player]!!
-        restoreFromTemporaryPlayerData(player)
+        restoreFromTemporaryPlayerData(player, playerData)
 
         if (playerData.team == Team.RED) {
             executeCommandsWithPlaceHolder(setOf(player), arena.meta.redTeamMeta.leaveCommands)
@@ -339,6 +347,7 @@ abstract class SoccerGameImpl(
                 coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
                     if (player.isOnline) {
                         playerData.cachedStorage = null
+                        plugin.log.debug("[BlockBall] Flushed session cached player storage data for '${player.name}' upon departure from Arena: '${arena.name}'.")
                     }
                 }
             }
@@ -349,9 +358,11 @@ abstract class SoccerGameImpl(
 
             coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
                 player.teleportCompat(plugin, teleportTarget)
+                plugin.log.debug("[BlockBall] Teleported departing player '${player.name}' to designated exit spawnpoint for Arena: '${arena.name}'.")
             }
         }
 
+        plugin.log.debug("[BlockBall] Clean up complete. Player '${player.name}' has successfully left Arena: '${arena.name}'.")
         return LeaveResult.SUCCESS
     }
 
@@ -455,7 +466,7 @@ abstract class SoccerGameImpl(
                         }
                     }
                 } catch (e: Exception) {
-                    plugin.logger.log(Level.WARNING, "Cannot publish game to BlockBall Hub.", e)
+                    plugin.log.error("Failed to publish structured game records to the cloud stats server network for Arena: '${arena.name}'.", e)
                 }
             }
         }
@@ -489,6 +500,7 @@ abstract class SoccerGameImpl(
      * Lets the given [player] in the given [game] respawn at the specified spawnpoint.
      */
     override fun respawn(player: Player, team: Team?) {
+        plugin.log.debug("[BlockBall] Initializing respawn calculations for player '${player.name}' in Arena: '${arena.name}'.")
         val actualTeam = if (ingamePlayersStorage.containsKey(player)) {
             ingamePlayersStorage[player]!!.goalTeam
         } else {
@@ -515,8 +527,10 @@ abstract class SoccerGameImpl(
             teamMeta.spawnpoint!!.toLocation()
         }
 
+        plugin.log.debug("[BlockBall] Queuing sync entity dispatcher to teleport player '${player.name}' to respawn point ($spawnPoint) in Arena: '${arena.name}'.")
         coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
             player.teleportCompat(plugin, spawnPoint)
+            plugin.log.debug("[BlockBall] Respawn task finalized. Player '${player.name}' safely relocated inside Arena: '${arena.name}'.")
         }
     }
 
@@ -1044,6 +1058,7 @@ abstract class SoccerGameImpl(
      * TODO: Migrate to minigame essentials.
      */
     private fun storeTemporaryPlayerData(player: Player, team: Team) {
+        plugin.log.debug("[BlockBall] Scheduling player profile capture task for '${player.name}' in Arena: '${arena.name}'.")
         // Store
         val stats = GameStorage()
         ingamePlayersStorage[player] = stats
@@ -1051,6 +1066,7 @@ abstract class SoccerGameImpl(
         stats.goalTeam = team
 
         coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
+            plugin.log.debug("[BlockBall] Persisting temporary profile states (Inventory, XP, Status) for player '${player.name}' inside Arena: '${arena.name}'.")
             stats.gameMode = player.gameMode
             stats.armorContents =
                 player.inventory.armorContents.map { itemService.serializeItemStack(it) }.toTypedArray()
@@ -1082,13 +1098,15 @@ abstract class SoccerGameImpl(
                     .toTypedArray())
                 player.updateInventory()
             }
+
+            plugin.log.debug("[BlockBall] Temporary profile mapping succeeded for '${player.name}' in Arena: '${arena.name}'. Mapped initial tracking data - Stored Level: ${stats.level}, Stored Exp: ${stats.exp}.")
         }
     }
 
-    private fun restoreFromTemporaryPlayerData(player: Player) {
-        val stats = ingamePlayersStorage[player]!!
-
+    private fun restoreFromTemporaryPlayerData(player: Player, stats : GameStorage) {
+        plugin.log.debug("[BlockBall] Scheduling baseline profile data restoration task for '${player.name}' in Arena: '${arena.name}'.")
         coroutineHandler.execute(coroutineHandler.fetchEntityDispatcher(player)) {
+            plugin.log.debug("[BlockBall] Processing raw structural rollbacks (XP, GameMode, Status) for player '${player.name}' returning from Arena: '${arena.name}'.")
             player.gameMode = stats.gameMode
             player.allowFlight = stats.gameMode == GameMode.CREATIVE || stats.gameMode == GameMode.SPECTATOR
             player.isFlying = false
@@ -1112,6 +1130,8 @@ abstract class SoccerGameImpl(
                     .toTypedArray())
                 player.updateInventory()
             }
+
+            plugin.log.debug("[BlockBall] Verification complete. Pre-match profile successfully re-applied to player '${player.name}' leaving Arena: '${arena.name}'. Rolled Back Level: ${stats.level}, Rolled Back Exp: ${stats.exp}.")
         }
     }
 

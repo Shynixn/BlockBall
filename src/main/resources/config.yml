@@ -1,16 +1,14 @@
 #######################################################################
-#                          BlockBall                                  #
-# 		            	   by Shynixn							      #
+#                              BlockBall                              #
+#                             by Shynixn                              #
 #######################################################################
-
-############################
-# Language settings
-############################
+# The locale file used for in-game messages, menus, and system prompts.
 language: "en_us"
 
-############################
-# Command settings
-############################
+#######################################################################
+#                          Command Settings                           #
+#######################################################################
+# Register optional command aliases to make commands easier for players.
 commands:
   blockball:
     aliases:
@@ -34,33 +32,52 @@ commands:
     aliases:
       - "soccerclub"
 
-############################
-# Debug settings
-# This setting should only be turned on if you want to get additional debugging information.
-############################
-debug: false
+#######################################################################
+#                           Logging Settings                          #
+#######################################################################
+logging:
+  # The minimum log level printed directly to the main server console.
+  # Available levels: DEBUG, INFO, WARNING, ERROR
+  consoleLevel: "INFO"
 
-############################
-# Database
-############################
+  # The minimum log level written to your custom 'BlockBall/logs/' files.
+  # Available levels: DEBUG, INFO, WARNING, ERROR
+  fileLevel: "ERROR"
+
+  # The maximum size allowed for a single log file (in Megabytes) before
+  # a new log file generation is created.
+  maxFileSizeMb: 2
+
+  # The maximum number of backup log files to keep in rotation history.
+  # Once this limit is reached, the oldest log file is automatically deleted.
+  maxFileCount: 4
+
+#######################################################################
+#                          Database Settings                          #
+#######################################################################
 database:
-  # The data of a player is automatically saved when the player quits. You can additionally configure a saving interval for all cached data.
+  # Automatically saves modified player data to the storage backend on this interval.
+  # Data is also automatically saved when a player disconnects from the server.
   autoSaveIntervalMinutes: 5
-  # An artificial delay for read requests to the database in milliseconds. This can be used in server networks where multiple servers share the same database.
-  # If the data is not in sync when switching between servers, try increasing this delay in steps e.g. 50, 100, 250, 500, 1000.
+
+  # An artificial delay (in milliseconds) added before executing read requests.
+  # Critical for multi-server networks sharing a database to prevent race conditions
+  # during fast server switches. Increase in steps (50, 100, 250, 500) if data syncs slowly.
   readDelayMs: 0
-  # The type of database to use. Possible values: sqlite, mysql
+
+  # The storage backend type to use. Supported options: sqlite, mysql
   type: "sqlite"
-  # The JDBC properties are only used for type 'mysql'
+
+  # MySQL specific credentials and engine pooling. (Ignored if type is set to 'sqlite')
   jdbc:
-    # Replace localhost with your server name, 3306 with your port, BlockBall with your database name.
+    # JDBC Connection String. Replace localhost, 3306, and BlockBall with your specific details.
     url: "jdbc:mysql://localhost:3306/BlockBall"
-    # Username of your database.
+    # Database authentication username.
     username: ""
-    # Password of your database.
+    # Database authentication password.
     password: ""
-    # Additional database properties. BlockBall uses HikariCP (https://github.com/brettwooldridge/HikariCP) to cache SQL connections.
-    # You may want to customize these depending on the size of your player base and your database performance.
+    # Performance properties utilizing HikariCP (https://github.com/brettwooldridge/HikariCP).
+    # Tune these connection values based on your network traffic and database hardware.
     properties:
       - "useSSL=true"
       - "maximumPoolSize=5"
@@ -68,93 +85,97 @@ database:
       - "prepStmtCacheSize=250"
       - "prepStmtCacheSqlLimit=2048"
 
-############################
-# Security settings
-# Settings to adjust the position of players.
-# fallback-spawnpoint: Spawnpoint for players who try to spawn in a blockball field.
-############################
-security:
-  fallback-spawnpoint:
-    enabled: false
-    world: "world"
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    yaw: 0.0
-    pitch: 0.0
-
-############################
-# Scoreboard
-# All global scoreboard settings.
-############################
+#######################################################################
+#                         Scoreboard Settings                         #
+#######################################################################
 scoreboard:
-  # How often are the permissions of a player checked to determine if he has got access to any scoreboard.
+  # How frequently (in seconds) the system re-evaluates player permissions
+  # to dynamically add or remove visible scoreboards.
   checkForChangeChangeSeconds: 3
-  # When a new player joins the server, after how many seconds are the scoreboards created.
+
+  # The grace period (in seconds) to wait after a player joins the server
+  # before fully building and displaying their personal scoreboard.
   joinDelaySeconds: 3
 
-############################
-# BossBar
-# All global bossbar settings.
-############################
+#######################################################################
+#                           BossBar Settings                          #
+#######################################################################
 bossbar:
-  # How often are the permissions of a player checked to determine if he has got access to any bossbar.
+  # How frequently (in seconds) the system re-evaluates player permissions
+  # to dynamically add or remove visible bossbars.
   checkForChangeChangeSeconds: 3
-  # When a new player joins the server, after how many seconds are the bossbars created.
+
+  # The grace period (in seconds) to wait after a player joins the server
+  # before fully building and assigning active bossbars.
   joinDelaySeconds: 3
 
-############################
-# Sign
-# All global sign settings.
-############################
+#######################################################################
+#                            Sign Settings                            #
+#######################################################################
 sign:
-  # How often clicks on signs are detected.
+  # Anti-spam click interval constraint (in server ticks).
+  # 20 ticks = 1 second. (30 ticks = 1.5 seconds)
   clickCooldownTicks: 30
 
-############################
-# Website/Cloud (PatreonOnly)
-# The plugin can send data to https://blockball.shynixn.com. This is disabled per default and has to be explicitly enabled per game.
-############################
+#######################################################################
+#                  Website/Cloud Logs (Patreon Only)                 #
+#######################################################################
+# The plugin can send data to https://blockball.shynixn.com.
+# This is disabled by default and must be explicitly enabled per game.
 cloud:
-  # If you are using a custom domain like "soccer.myminecraftserver.com", you can set it here.
+  # The endpoint where analytics, matches, and server profiles are dispatched.
+  # Change this if you have a private white-label site domain.
   publishUrl: "https://blockball.shynixn.com"
-  # If you are using a custom domain, you can hide the server id.
+
+  # Toggles whether your unique server identification should be hidden for custom domains.
   hideServerId: false
 
-############################
-# LeaderBoard PlaceHolders (PatreonOnly)
-############################
+#######################################################################
+#                Leaderboard Placeholders (Patreon Only)              #
+#######################################################################
 leaderboard:
-  # Toggles if the leader board is continuously generated. You can disable the leaderboard to save memory and computation time if you do not need.
+  # If you do not track active player stats, disable this setting to
+  # conserve engine memory footprints and skip scheduled data computation tasks.
   enabled: true
-  # The interval how often the leader board is refreshed from the currently persisted stats.
+
+  # How frequently (in minutes) the server queries the database backend
+  # to refresh cached records for leaderboard displays.
   intervalMinutes: 15
-  
-############################
-# Soccer clubs (PatreonOnly)
-############################  
+
+#######################################################################
+#                      Soccer Clubs (Patreon Only)                    #
+#######################################################################
 club:
-  # When a new player joins the server, after how many seconds are the clubs loaded.
+  # The grace period (in seconds) to wait after a player joins the server
+  # before checking, loading, and parsing their club profile states.
   joinDelaySeconds: 3
-  # Synchronize club data every x seconds. If you are using a server network, this ensures changes to clubs on one server are synchronized to the other servers. This feature requires MySQL.
+
+  # Network synchronization threshold (in seconds). Cross-server updates
+  # require a central connection and type 'mysql' to work correctly.
   synchronizeClubsSeconds: 300
-  # Maximum amount of clubs a player can be in at the same time.
+
+  # Restricts the maximum amount of teams a single player can be affiliated with concurrently.
   maxJoinClubsPerPlayer: 3
-  # Maximum amount of clubs a player can create.
+
+  # Restricts the total amount of custom soccer clubs a single player is allowed to manage/create.
   maxCreateClubsPerPlayer: 1
-  # BlackList of words that are not allowed in club names and other messages.
+
+  # Profanity filter matrix. Substrings matching items on this list
+  # will block team name registrations and systemic messages.
   blackList:
     - "nigger"
     - "nigga"
     - "fuck"
     - "shit"
-  # Minimum length for club names.
+
+  # Structural name boundaries for core registration validation.
   clubNameMinLength: 3
-  # Maximum length for club names.
   clubNameMaxLength: 16
-  # Minimum length for club display names. This contains colored characters and spaces.
+
+  # Structural name boundaries for visual formats (includes raw colors and space padding).
   clubDisplayNameMinLength: 3
-  # Maximum length for club display names. This contains colored characters and spaces.
   clubDisplayNameMaxLength: 32
-  # Maximum amount of invites a player can send out at the same time.
-  clubMaxInvites: 5  
+
+  # Limits the maximum amount of pending, unaccepted club invitations a player
+  # can have open at any single given time.
+  clubMaxInvites: 5
