@@ -59,6 +59,39 @@ class SoccerBallMeta : Element {
         )
         var spinImpulse: Double = 0.0
 
+        @Comment(
+            "Delay in ticks before sampling post velocity processing such the player's pitch/yaw for mid-flight steering.",
+            "Players naturally look down to click the ball, then flick up to steer it in flight.",
+            "Set to 0 to disable mid-flight pitch/yaw steering entirely."
+        )
+        var postImpulseTicks: Int = 0
+
+        @Comment(
+            "How strongly the player's pitch adds vertical steering force mid-flight.",
+            "The shot fires immediately with the configured verticalImpulse, then after postImpulseTicks",
+            "the player's pitch is sampled and this fraction of the horizontal impulse is added vertically.",
+            "0.0 = no pitch steering, 1.0 = full pitch steering applied on top of the base trajectory.",
+            "With postPitchClampAngle=0.0, looking up adds upward force; looking down is ignored."
+        )
+        var postPitchInfluence: Double = 0.0
+
+        @Comment(
+            "Clamps the player's pitch to at most this angle for post-impulse steering calculations.",
+            "Minecraft pitch: -90° = straight up, +90° = straight down.",
+            "Default 0.0 means looking down produces no downward steering instead of pulling the ball into the ground.",
+            "Set to 90.0 to allow full downward steering."
+        )
+        var postPitchClampAngle: Double = 0.0
+
+        @Comment(
+            "Scales how much the player's yaw change (between click and delayed sample) adds spin mid-flight.",
+            "When postImpulseTicks > 0, the difference between the player's yaw at click time and at sample time",
+            "is multiplied by this value and added to the ball's existing Y-axis spin for left/right curve.",
+            "0.0 = no yaw-based spin addition.",
+            "Example: a 90° mouse flick with scale 0.5 adds 0.25 spin. Typical range: 0.1 (subtle) to 1.0 (strong)."
+        )
+        var postYawSpinScale: Double = 0.0
+
         @Comment("The particle/sound effect name to play when this interaction is successfully triggered.")
         var effectName: String = ""
     }
