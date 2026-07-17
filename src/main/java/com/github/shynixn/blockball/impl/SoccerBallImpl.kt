@@ -13,6 +13,7 @@ import com.github.shynixn.mccoroutine.folia.regionDispatcher
 import com.github.shynixn.mcutils.common.Vector3d
 import com.github.shynixn.mcutils.common.Version
 import com.github.shynixn.mcutils.common.item.ItemService
+import com.github.shynixn.mcutils.common.log
 import com.github.shynixn.mcutils.common.toLocation
 import com.github.shynixn.mcutils.common.toVector3d
 import com.github.shynixn.mcutils.packet.api.PacketService
@@ -121,6 +122,28 @@ class SoccerBallImpl(
     private val playerFetchTimer = GameObjectIntervalTimer(meta.physics.fetchPlayerPositionsIntervalTicks * 50)
 
     /**
+     * Player whose mid-flight steering is pending. Null when no modification is scheduled.
+     * Volatile because written on the main thread and read on the region coroutine thread.
+     */
+    @Volatile
+    private var pendingModificationPlayer: Player? = null
+
+    /**
+     * Interaction metadata for the pending mid-flight steering modification.
+     */
+    private var pendingModificationMeta: SoccerBallMeta.InteractionMeta? = null
+
+    /**
+     * Yaw captured at click time, used to compute yaw delta for spin steering.
+     */
+    private var pendingModificationCapturedYaw: Float = 0.0f
+
+    /**
+     * Remaining milliseconds until the mid-flight steering forces are applied.
+     */
+    private var pendingModificationRemainingMs: Int = 0
+
+    /**
      * Indicates whether the ball has been removed or destroyed.
      */
     @Volatile
@@ -152,6 +175,7 @@ class SoccerBallImpl(
     override fun grab(player: Player) {
         if (grabbingPlayer == null || player != grabbingPlayer) {
             cancelGrab()
+            pendingModificationPlayer = null
             grabbingPlayer = player
             removeEntityForPlayer(player)
             sendGrabbedInventory(player)
@@ -244,6 +268,7 @@ class SoccerBallImpl(
 
         cancelGrab()
         isDead = true
+        pendingModificationPlayer = null
         for (player in playerTracker.cache.keys.toHashSet()) {
             removeEntityForPlayer(player)
         }
@@ -261,6 +286,8 @@ class SoccerBallImpl(
         if (isDead) {
             return
         }
+
+        processPendingModification(deltaMs)
 
         if (playerFetchTimer.update(deltaMs)) {
             playerTracker.update(getLocation())
@@ -322,13 +349,25 @@ class SoccerBallImpl(
             val z = horizontalForce * cos(yawRadians)
 
             // Assign linear velocity adjustments along with horizontal aerodynamic spin components
+            val baseSpin = interactionMeta.spinImpulse / ballMass
             val calculatedVelocity = Vector(x, verticalForce, z)
-            this.setVelocity(calculatedVelocity, Vector(0.0, interactionMeta.spinImpulse / ballMass, 0.0))
+            this.setVelocity(calculatedVelocity, Vector(0.0, baseSpin, 0.0))
+
+            plugin.log.debug("Shot fired. velocity=($x, $verticalForce, $z) spin=$baseSpin mass=$ballMass yaw=$yawDegrees trigger=${interactionMeta.triggerType}")
 
             // Play particle visual effects if configured
             val effect = particleEffectService.getEffectMetaFromName(interactionMeta.effectName)
             if (effect != null) {
                 particleEffectService.startEffect(effect, { getLocation() }, null, null)
+            }
+
+            // Schedule mid-flight pitch/yaw steering if enabled
+            if (interactionMeta.postImpulseTicks > 0) {
+                pendingModificationPlayer = player
+                pendingModificationMeta = interactionMeta
+                pendingModificationCapturedYaw = playerLocation.yaw
+                pendingModificationRemainingMs = interactionMeta.postImpulseTicks * 50
+                plugin.log.debug("Post-impulse scheduled. delay=${interactionMeta.postImpulseTicks}ticks capturedYaw=${playerLocation.yaw} player=${player.name}")
             }
             return
         }
@@ -355,6 +394,47 @@ class SoccerBallImpl(
 
         if (playerHittingTheBall != null) {
             applyInteractionToBall(playerHittingTheBall.first, BallInputActionType.COLLIDE)
+        }
+    }
+
+    /**
+     * Decrements the pending modification timer and, when expired, reads the player's
+     * current pitch and yaw to apply additive steering forces to the ball mid-flight.
+     * Cleans up if the player has disconnected in the meantime.
+     */
+    private fun processPendingModification(deltaMs: Int) {
+        val player = pendingModificationPlayer ?: return
+        pendingModificationRemainingMs -= deltaMs
+
+        if (pendingModificationRemainingMs <= 0) {
+            pendingModificationPlayer = null
+            if (!player.isOnline) {
+                return
+            }
+
+            val interactionMeta = pendingModificationMeta ?: return
+            val playerLocation = player.location
+            val yawDegrees = playerLocation.yaw.toDouble()
+
+            // Read and clamp pitch: prevent downward steering when postPitchClampAngle is 0.0
+            val rawPitch = playerLocation.pitch.toDouble()
+            val effectivePitch = rawPitch.coerceAtMost(interactionMeta.postPitchClampAngle)
+            val pitchRadians = Math.toRadians(effectivePitch)
+
+            val ballMass = meta.physics.mass.coerceAtLeast(0.01)
+            val horizontalForce = interactionMeta.horizontalImpulse / ballMass
+
+            // Add pitch-based vertical steering on top of the existing trajectory
+            // -sin(pitch) because Minecraft pitch: -90° = up, +90° = down
+            val pitchAddition = horizontalForce * -sin(pitchRadians) * interactionMeta.postPitchInfluence
+            motion.y += pitchAddition
+
+            // Add yaw-change spin on top of existing spin
+            val yawDeltaDegrees = normalizeAngleDelta(yawDegrees - pendingModificationCapturedYaw.toDouble())
+            val spinAddition = (yawDeltaDegrees / 180.0) * interactionMeta.postYawSpinScale
+            spinY += spinAddition
+
+            plugin.log.debug("Post-impulse applied. pitchAddition=$pitchAddition spinAddition=$spinAddition playerPitch=$rawPitch effectivePitch=$effectivePitch yawDelta=$yawDeltaDegrees")
         }
     }
 
@@ -835,6 +915,16 @@ class SoccerBallImpl(
             teleport(ballLocation)
             consecutiveBounceCount = 0
         }
+    }
+
+    /**
+     * Normalizes an angular delta to the range [-180, 180] degrees.
+     */
+    private fun normalizeAngleDelta(delta: Double): Double {
+        var d = delta % 360.0
+        if (d > 180.0) d -= 360.0
+        if (d < -180.0) d += 360.0
+        return d
     }
 
     private fun sendGrabbedInventory(player: Player) {

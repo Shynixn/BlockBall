@@ -1,7 +1,7 @@
 # ###############
-# 
+#
 # Configuration profile for a physical ball instance in the BlockBall engine.
-# 
+#
 # ###############
 # Unique identifier for this ball configuration template used within the plugin system.
 name: curve_soccer_ball
@@ -12,8 +12,8 @@ render:
   # The underlying item structure holding texture, metadata, and skin maps for rendering.
   visualItem:
     typeName: PLAYER_HEAD,397
-    amount: '1'
-    durability: '3'
+    amount: "1"
+    durability: "3"
     displayName: null
     skinBase64: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHBzOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzhlNGE3MGI3YmJjZDdhOGMzMjJkNTIyNTIwNDkxYTI3ZWE2YjgzZDYwZWNmOTYxZDJiNGVmYmJmOWY2MDVkIn19fQ==
     lore: null
@@ -36,17 +36,17 @@ physics:
   # Vertical positioning offset on the Y-axis to align the physical simulation boundaries.
   verticalOffset: -0.3
   # The coefficient of restitution (0.0 to 1.0). 0.0 means no bounce, 1.0 means perfectly elastic bounce back.
-  bounciness: 0.7
+  bounciness: 0.4
   # The simulated weight of the ball. Higher mass requires more impulse force to shift velocity.
   mass: 1.0
   # The minimum speed threshold. If velocity falls below this value, the ball comes to a complete rest.
   restVelocityThreshold: 0.01
   # Downward acceleration constant applied per tick when the ball is airborne.
-  gravityModifier: 0.07
+  gravityModifier: 0.06
   # Velocity dampening coefficient applied per tick while airborne (Air Drag).
-  airDrag: 0.001
+  airDrag: 0.002
   # Velocity dampening coefficient applied per tick while rolling along the ground (Surface Friction).
-  rollingFriction: 0.1
+  rollingFriction: 0.04
   # The rate at which the ball's rotational spin decays per tick (0.0 to 1.0). 0.0 means no spin loss.
   spinDrag: 0.05
   # How drastically the active spinning axis curves the flight path vector. Higher values create sharper arcs.
@@ -59,179 +59,261 @@ physics:
   fetchPlayerPositionsIntervalTicks: 2
 # Gameplay modifiers determining how players interact with the ball via hotbars and clicks.
 interactions:
-- # The input trigger required to execute this action. Available types:
-  #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
-  #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
-  #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
-  triggerType: COLLIDE
-  # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeStart: 0
-  # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeEnd: 8
-  # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
-  conditionGrabbedBySelf: false
-  # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
-  executionType: SHOOT
-  # The instantaneous horizontal impulse vector applied to the ball.
-  horizontalImpulse: 1.0
-  # The instantaneous vertical impulse vector applied to the ball.
-  verticalImpulse: 0.2
-  # The initial rotational spin impulse applied around the Y-axis upon interaction.
-  # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
-  spinImpulse: 0.0
-  # The particle/sound effect name to play when this interaction is successfully triggered.
-  effectName: ''
-- # The input trigger required to execute this action. Available types:
-  #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
-  #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
-  #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
-  triggerType: LEFT_CLICK
-  # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeStart: 0
-  # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeEnd: 2
-  # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
-  conditionGrabbedBySelf: false
-  # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
-  executionType: SHOOT
-  # The instantaneous horizontal impulse vector applied to the ball.
-  horizontalImpulse: 1.0
-  # The instantaneous vertical impulse vector applied to the ball.
-  verticalImpulse: 0.6
-  # The initial rotational spin impulse applied around the Y-axis upon interaction.
-  # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
-  spinImpulse: -2.0
-  # The particle/sound effect name to play when this interaction is successfully triggered.
-  effectName: ball_kick
-- # The input trigger required to execute this action. Available types:
-  #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
-  #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
-  #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
-  triggerType: LEFT_CLICK
-  # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeStart: 3
-  # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeEnd: 5
-  # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
-  conditionGrabbedBySelf: false
-  # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
-  executionType: SHOOT
-  # The instantaneous horizontal impulse vector applied to the ball.
-  horizontalImpulse: 1.0
-  # The instantaneous vertical impulse vector applied to the ball.
-  verticalImpulse: 0.6
-  # The initial rotational spin impulse applied around the Y-axis upon interaction.
-  # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
-  spinImpulse: 0.0
-  # The particle/sound effect name to play when this interaction is successfully triggered.
-  effectName: ball_kick
-- # The input trigger required to execute this action. Available types:
-  #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
-  #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
-  #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
-  triggerType: LEFT_CLICK
-  # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeStart: 6
-  # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeEnd: 8
-  # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
-  conditionGrabbedBySelf: false
-  # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
-  executionType: SHOOT
-  # The instantaneous horizontal impulse vector applied to the ball.
-  horizontalImpulse: 1.0
-  # The instantaneous vertical impulse vector applied to the ball.
-  verticalImpulse: 0.6
-  # The initial rotational spin impulse applied around the Y-axis upon interaction.
-  # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
-  spinImpulse: 2.0
-  # The particle/sound effect name to play when this interaction is successfully triggered.
-  effectName: ball_kick
-- # The input trigger required to execute this action. Available types:
-  #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
-  #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
-  #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
-  triggerType: SPRINT_LEFT_CLICK
-  # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeStart: 0
-  # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeEnd: 2
-  # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
-  conditionGrabbedBySelf: false
-  # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
-  executionType: SHOOT
-  # The instantaneous horizontal impulse vector applied to the ball.
-  horizontalImpulse: 1.0
-  # The instantaneous vertical impulse vector applied to the ball.
-  verticalImpulse: 1.0
-  # The initial rotational spin impulse applied around the Y-axis upon interaction.
-  # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
-  spinImpulse: -2.0
-  # The particle/sound effect name to play when this interaction is successfully triggered.
-  effectName: ball_kick
-- # The input trigger required to execute this action. Available types:
-  #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
-  #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
-  #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
-  triggerType: SPRINT_LEFT_CLICK
-  # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeStart: 3
-  # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeEnd: 5
-  # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
-  conditionGrabbedBySelf: false
-  # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
-  executionType: SHOOT
-  # The instantaneous horizontal impulse vector applied to the ball.
-  horizontalImpulse: 1.0
-  # The instantaneous vertical impulse vector applied to the ball.
-  verticalImpulse: 1.0
-  # The initial rotational spin impulse applied around the Y-axis upon interaction.
-  # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
-  spinImpulse: 0.0
-  # The particle/sound effect name to play when this interaction is successfully triggered.
-  effectName: ball_kick
-- # The input trigger required to execute this action. Available types:
-  #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
-  #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
-  #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
-  triggerType: SPRINT_LEFT_CLICK
-  # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeStart: 6
-  # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeEnd: 8
-  # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
-  conditionGrabbedBySelf: false
-  # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
-  executionType: SHOOT
-  # The instantaneous horizontal impulse vector applied to the ball.
-  horizontalImpulse: 1.0
-  # The instantaneous vertical impulse vector applied to the ball.
-  verticalImpulse: 1.0
-  # The initial rotational spin impulse applied around the Y-axis upon interaction.
-  # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
-  spinImpulse: 2.0
-  # The particle/sound effect name to play when this interaction is successfully triggered.
-  effectName: ball_kick
-- # The input trigger required to execute this action. Available types:
-  #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
-  #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
-  #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
-  triggerType: SNEAK_LEFT_CLICK
-  # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeStart: 0
-  # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
-  conditionHotBarRangeEnd: 8
-  # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
-  conditionGrabbedBySelf: false
-  # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
-  executionType: SHOOT
-  # The instantaneous horizontal impulse vector applied to the ball.
-  horizontalImpulse: -0.6
-  # The instantaneous vertical impulse vector applied to the ball.
-  verticalImpulse: 0.2
-  # The initial rotational spin impulse applied around the Y-axis upon interaction.
-  # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
-  spinImpulse: 0.0
-  # The particle/sound effect name to play when this interaction is successfully triggered.
-  effectName: ball_kick
+  - # The input trigger required to execute this action. Available types:
+    #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
+    #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
+    #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
+    triggerType: COLLIDE
+    # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
+    conditionHotBarRangeStart: 0
+    # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
+    conditionHotBarRangeEnd: 8
+    # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
+    conditionGrabbedBySelf: false
+    # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
+    executionType: SHOOT
+    # The instantaneous horizontal impulse vector applied to the ball.
+    horizontalImpulse: 0.6
+    # The instantaneous vertical impulse vector applied to the ball.
+    verticalImpulse: 0.2
+    # The initial rotational spin impulse applied around the Y-axis upon interaction.
+    # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
+    spinImpulse: 0.0
+    # Delay in ticks before sampling post velocity processing such the player's pitch/yaw for mid-flight steering.
+    # Players naturally look down to click the ball, then flick up to steer it in flight.
+    # Set to 0 to disable mid-flight pitch/yaw steering entirely.
+    postImpulseTicks: 0
+    # How strongly the player's pitch adds vertical steering force mid-flight.
+    # The shot fires immediately with the configured verticalImpulse, then after postImpulseTicks
+    # the player's pitch is sampled and this fraction of the horizontal impulse is added vertically.
+    # 0.0 = no pitch steering, 1.0 = full pitch steering applied on top of the base trajectory.
+    # With postPitchClampAngle=0.0, looking up adds upward force; looking down is ignored.
+    postPitchInfluence: 0.0
+    # Clamps the player's pitch to at most this angle for post-impulse steering calculations.
+    # Minecraft pitch: -90° = straight up, +90° = straight down.
+    # Default 0.0 means looking down produces no downward steering instead of pulling the ball into the ground.
+    # Set to 90.0 to allow full downward steering.
+    postPitchClampAngle: 0.0
+    # Scales how much the player's yaw change (between click and delayed sample) adds spin mid-flight.
+    # When postImpulseTicks > 0, the difference between the player's yaw at click time and at sample time
+    # is multiplied by this value and added to the ball's existing Y-axis spin for left/right curve.
+    # 0.0 = no yaw-based spin addition.
+    # Example: a 90° mouse flick with scale 0.5 adds 0.25 spin. Typical range: 0.1 (subtle) to 1.0 (strong).
+    postYawSpinScale: 0.0
+    # The particle/sound effect name to play when this interaction is successfully triggered.
+    effectName: ""
+  - # The input trigger required to execute this action. Available types:
+    #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
+    #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
+    #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
+    triggerType: LEFT_CLICK
+    # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
+    conditionHotBarRangeStart: 0
+    # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
+    conditionHotBarRangeEnd: 8
+    # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
+    conditionGrabbedBySelf: false
+    # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
+    executionType: SHOOT
+    # The instantaneous horizontal impulse vector applied to the ball.
+    horizontalImpulse: 0.9
+    # The instantaneous vertical impulse vector applied to the ball.
+    verticalImpulse: 0.6
+    # The initial rotational spin impulse applied around the Y-axis upon interaction.
+    # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
+    spinImpulse: 0.0
+    # Delay in ticks before sampling post velocity processing such the player's pitch/yaw for mid-flight steering.
+    # Players naturally look down to click the ball, then flick up to steer it in flight.
+    # Set to 0 to disable mid-flight pitch/yaw steering entirely.
+    postImpulseTicks: 7
+    # How strongly the player's pitch adds vertical steering force mid-flight.
+    # The shot fires immediately with the configured verticalImpulse, then after postImpulseTicks
+    # the player's pitch is sampled and this fraction of the horizontal impulse is added vertically.
+    # 0.0 = no pitch steering, 1.0 = full pitch steering applied on top of the base trajectory.
+    # With postPitchClampAngle=0.0, looking up adds upward force; looking down is ignored.
+    postPitchInfluence: 0.5
+    # Clamps the player's pitch to at most this angle for post-impulse steering calculations.
+    # Minecraft pitch: -90° = straight up, +90° = straight down.
+    # Default 0.0 means looking down produces no downward steering instead of pulling the ball into the ground.
+    # Set to 90.0 to allow full downward steering.
+    postPitchClampAngle: 0.0
+    # Scales how much the player's yaw change (between click and delayed sample) adds spin mid-flight.
+    # When postImpulseTicks > 0, the difference between the player's yaw at click time and at sample time
+    # is multiplied by this value and added to the ball's existing Y-axis spin for left/right curve.
+    # 0.0 = no yaw-based spin addition.
+    # Example: a 90° mouse flick with scale 0.5 adds 0.25 spin. Typical range: 0.1 (subtle) to 1.0 (strong).
+    postYawSpinScale: 1.0
+    # The particle/sound effect name to play when this interaction is successfully triggered.
+    effectName: ball_kick
+  - # The input trigger required to execute this action. Available types:
+    #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
+    #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
+    #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
+    triggerType: SPRINT_LEFT_CLICK
+    # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
+    conditionHotBarRangeStart: 0
+    # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
+    conditionHotBarRangeEnd: 2
+    # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
+    conditionGrabbedBySelf: false
+    # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
+    executionType: SHOOT
+    # The instantaneous horizontal impulse vector applied to the ball.
+    horizontalImpulse: 1.0
+    # The instantaneous vertical impulse vector applied to the ball.
+    verticalImpulse: 0.7
+    # The initial rotational spin impulse applied around the Y-axis upon interaction.
+    # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
+    spinImpulse: -2.0
+    # Delay in ticks before sampling post velocity processing such the player's pitch/yaw for mid-flight steering.
+    # Players naturally look down to click the ball, then flick up to steer it in flight.
+    # Set to 0 to disable mid-flight pitch/yaw steering entirely.
+    postImpulseTicks: 0
+    # How strongly the player's pitch adds vertical steering force mid-flight.
+    # The shot fires immediately with the configured verticalImpulse, then after postImpulseTicks
+    # the player's pitch is sampled and this fraction of the horizontal impulse is added vertically.
+    # 0.0 = no pitch steering, 1.0 = full pitch steering applied on top of the base trajectory.
+    # With postPitchClampAngle=0.0, looking up adds upward force; looking down is ignored.
+    postPitchInfluence: 0.0
+    # Clamps the player's pitch to at most this angle for post-impulse steering calculations.
+    # Minecraft pitch: -90° = straight up, +90° = straight down.
+    # Default 0.0 means looking down produces no downward steering instead of pulling the ball into the ground.
+    # Set to 90.0 to allow full downward steering.
+    postPitchClampAngle: 0.0
+    # Scales how much the player's yaw change (between click and delayed sample) adds spin mid-flight.
+    # When postImpulseTicks > 0, the difference between the player's yaw at click time and at sample time
+    # is multiplied by this value and added to the ball's existing Y-axis spin for left/right curve.
+    # 0.0 = no yaw-based spin addition.
+    # Example: a 90° mouse flick with scale 0.5 adds 0.25 spin. Typical range: 0.1 (subtle) to 1.0 (strong).
+    postYawSpinScale: 0.0
+    # The particle/sound effect name to play when this interaction is successfully triggered.
+    effectName: ball_kick
+  - # The input trigger required to execute this action. Available types:
+    #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
+    #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
+    #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
+    triggerType: SPRINT_LEFT_CLICK
+    # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
+    conditionHotBarRangeStart: 3
+    # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
+    conditionHotBarRangeEnd: 5
+    # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
+    conditionGrabbedBySelf: false
+    # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
+    executionType: SHOOT
+    # The instantaneous horizontal impulse vector applied to the ball.
+    horizontalImpulse: 1.0
+    # The instantaneous vertical impulse vector applied to the ball.
+    verticalImpulse: 0.7
+    # The initial rotational spin impulse applied around the Y-axis upon interaction.
+    # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
+    spinImpulse: 0.0
+    # Delay in ticks before sampling post velocity processing such the player's pitch/yaw for mid-flight steering.
+    # Players naturally look down to click the ball, then flick up to steer it in flight.
+    # Set to 0 to disable mid-flight pitch/yaw steering entirely.
+    postImpulseTicks: 0
+    # How strongly the player's pitch adds vertical steering force mid-flight.
+    # The shot fires immediately with the configured verticalImpulse, then after postImpulseTicks
+    # the player's pitch is sampled and this fraction of the horizontal impulse is added vertically.
+    # 0.0 = no pitch steering, 1.0 = full pitch steering applied on top of the base trajectory.
+    # With postPitchClampAngle=0.0, looking up adds upward force; looking down is ignored.
+    postPitchInfluence: 0.0
+    # Clamps the player's pitch to at most this angle for post-impulse steering calculations.
+    # Minecraft pitch: -90° = straight up, +90° = straight down.
+    # Default 0.0 means looking down produces no downward steering instead of pulling the ball into the ground.
+    # Set to 90.0 to allow full downward steering.
+    postPitchClampAngle: 0.0
+    # Scales how much the player's yaw change (between click and delayed sample) adds spin mid-flight.
+    # When postImpulseTicks > 0, the difference between the player's yaw at click time and at sample time
+    # is multiplied by this value and added to the ball's existing Y-axis spin for left/right curve.
+    # 0.0 = no yaw-based spin addition.
+    # Example: a 90° mouse flick with scale 0.5 adds 0.25 spin. Typical range: 0.1 (subtle) to 1.0 (strong).
+    postYawSpinScale: 0.0
+    # The particle/sound effect name to play when this interaction is successfully triggered.
+    effectName: ball_kick
+  - # The input trigger required to execute this action. Available types:
+    #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
+    #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
+    #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
+    triggerType: SPRINT_LEFT_CLICK
+    # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
+    conditionHotBarRangeStart: 6
+    # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
+    conditionHotBarRangeEnd: 8
+    # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
+    conditionGrabbedBySelf: false
+    # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
+    executionType: SHOOT
+    # The instantaneous horizontal impulse vector applied to the ball.
+    horizontalImpulse: 1.0
+    # The instantaneous vertical impulse vector applied to the ball.
+    verticalImpulse: 0.7
+    # The initial rotational spin impulse applied around the Y-axis upon interaction.
+    # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
+    spinImpulse: 2.0
+    # Delay in ticks before sampling post velocity processing such the player's pitch/yaw for mid-flight steering.
+    # Players naturally look down to click the ball, then flick up to steer it in flight.
+    # Set to 0 to disable mid-flight pitch/yaw steering entirely.
+    postImpulseTicks: 0
+    # How strongly the player's pitch adds vertical steering force mid-flight.
+    # The shot fires immediately with the configured verticalImpulse, then after postImpulseTicks
+    # the player's pitch is sampled and this fraction of the horizontal impulse is added vertically.
+    # 0.0 = no pitch steering, 1.0 = full pitch steering applied on top of the base trajectory.
+    # With postPitchClampAngle=0.0, looking up adds upward force; looking down is ignored.
+    postPitchInfluence: 0.0
+    # Clamps the player's pitch to at most this angle for post-impulse steering calculations.
+    # Minecraft pitch: -90° = straight up, +90° = straight down.
+    # Default 0.0 means looking down produces no downward steering instead of pulling the ball into the ground.
+    # Set to 90.0 to allow full downward steering.
+    postPitchClampAngle: 0.0
+    # Scales how much the player's yaw change (between click and delayed sample) adds spin mid-flight.
+    # When postImpulseTicks > 0, the difference between the player's yaw at click time and at sample time
+    # is multiplied by this value and added to the ball's existing Y-axis spin for left/right curve.
+    # 0.0 = no yaw-based spin addition.
+    # Example: a 90° mouse flick with scale 0.5 adds 0.25 spin. Typical range: 0.1 (subtle) to 1.0 (strong).
+    postYawSpinScale: 0.0
+    # The particle/sound effect name to play when this interaction is successfully triggered.
+    effectName: ball_kick
+  - # The input trigger required to execute this action. Available types:
+    #  - Clicks: LEFT_CLICK, JUMP_LEFT_CLICK, SNEAK_LEFT_CLICK, SPRINT_LEFT_CLICK
+    #  - Right Clicks: RIGHT_CLICK, JUMP_RIGHT_CLICK, SNEAK_RIGHT_CLICK, SPRINT_RIGHT_CLICK
+    #  - Collisions: COLLIDE, JUMP_COLLIDE, SNEAK_COLLIDE, SPRINT_COLLIDE
+    triggerType: SNEAK_LEFT_CLICK
+    # The starting index (0-8) of the player's hotbar range allowed to trigger this action.
+    conditionHotBarRangeStart: 0
+    # The ending index (0-8) of the player's hotbar range allowed to trigger this action.
+    conditionHotBarRangeEnd: 8
+    # If set to true then this action is only executed when the ball is grabbed by the player performing the trigger action.
+    conditionGrabbedBySelf: false
+    # The mechanical action applied to the ball upon a successful trigger. Available types: SHOOT, GRAB
+    executionType: SHOOT
+    # The instantaneous horizontal impulse vector applied to the ball.
+    horizontalImpulse: -0.6
+    # The instantaneous vertical impulse vector applied to the ball.
+    verticalImpulse: 0.2
+    # The initial rotational spin impulse applied around the Y-axis upon interaction.
+    # Negative values create left-curving spin (slice); positive values create right-curving spin (hook).
+    spinImpulse: 0.0
+    # Delay in ticks before sampling post velocity processing such the player's pitch/yaw for mid-flight steering.
+    # Players naturally look down to click the ball, then flick up to steer it in flight.
+    # Set to 0 to disable mid-flight pitch/yaw steering entirely.
+    postImpulseTicks: 0
+    # How strongly the player's pitch adds vertical steering force mid-flight.
+    # The shot fires immediately with the configured verticalImpulse, then after postImpulseTicks
+    # the player's pitch is sampled and this fraction of the horizontal impulse is added vertically.
+    # 0.0 = no pitch steering, 1.0 = full pitch steering applied on top of the base trajectory.
+    # With postPitchClampAngle=0.0, looking up adds upward force; looking down is ignored.
+    postPitchInfluence: 0.0
+    # Clamps the player's pitch to at most this angle for post-impulse steering calculations.
+    # Minecraft pitch: -90° = straight up, +90° = straight down.
+    # Default 0.0 means looking down produces no downward steering instead of pulling the ball into the ground.
+    # Set to 90.0 to allow full downward steering.
+    postPitchClampAngle: 0.0
+    # Scales how much the player's yaw change (between click and delayed sample) adds spin mid-flight.
+    # When postImpulseTicks > 0, the difference between the player's yaw at click time and at sample time
+    # is multiplied by this value and added to the ball's existing Y-axis spin for left/right curve.
+    # 0.0 = no yaw-based spin addition.
+    # Example: a 90° mouse flick with scale 0.5 adds 0.25 spin. Typical range: 0.1 (subtle) to 1.0 (strong).
+    postYawSpinScale: 0.0
+    # The particle/sound effect name to play when this interaction is successfully triggered.
+    effectName: ball_kick
